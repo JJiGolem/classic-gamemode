@@ -1,2 +1,4 @@
-require('./base/index');
+require('base');
+require('browser');
+
 require('chat');
