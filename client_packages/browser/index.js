@@ -1,4 +1,4 @@
-let browser = mp.browsers.new("package://ragerp/browser/index.html");
+let browser = mp.browsers.new("package://browser/index.html");
 
 mp.callCEFR = function (eventName, args) { 
     let argumentsString = '';

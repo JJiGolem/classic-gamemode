@@ -17,7 +17,7 @@ module.exports = {
     loadModels: function() {
         console.log("[DATABASE] load models...");
         fs.readdirSync(path.dirname(__dirname)).forEach(dir => {
-            if (dir != 'base') {
+            if (dir != 'base' && fs.existsSync(path.dirname(__dirname)+ "/" + dir + '/db')) {
                 fs.readdirSync(path.dirname(__dirname)+ "/" + dir + '/db').forEach(file => {
                     // let model = this.sequelize.import(path.dirname(__dirname)+ "/" + dir + '/db/' + file);
                     // this.Models[model.name] = model;

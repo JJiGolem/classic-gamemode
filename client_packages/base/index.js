@@ -1,1 +1,1 @@
-require('./base/moduleLoader');
+console.log('base');
