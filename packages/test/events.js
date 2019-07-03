@@ -1,3 +1,4 @@
+"use strict";
 let test = require("./index.js");
 
 module.exports = {

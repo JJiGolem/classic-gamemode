@@ -1,3 +1,4 @@
+"use strict";
 let browser = mp.browsers.new("package://browser/index.html");
 
 mp.callCEFR = function (eventName, args) { 

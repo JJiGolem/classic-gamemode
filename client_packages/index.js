@@ -1,3 +1,4 @@
+"use strict";
 /// Служебные модули
 require('base');
 require('browser');
