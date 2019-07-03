@@ -30,7 +30,7 @@ module.exports = {
         } else {
             switch (type) {
                 case 0: {
-                    mp.events.call('playerSaySomething', player, message);
+                    mp.events.call('chat.action.say', player, message);
                     break;
                 }
                 case 1: {
@@ -61,7 +61,7 @@ module.exports = {
         }
     },
 
-    "player.say": (player, message) => {
+    "chat.action.say": (player, message) => {
         mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
                 currentPlayer.call('playerSaySomething', [player.name, player.id, message]);
