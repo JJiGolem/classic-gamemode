@@ -1,0 +1,130 @@
+module.exports = {
+
+    // TODO: Получать ник персонажа для сообщения
+
+    "chat.tags.update": () => {
+        /* 
+        TODO:
+        Вызывать функцию при выборе персонажа/принятии/увольнении
+        Сделать проверку на то, состоит ли человек в организации
+        Если состоит, вызываем на клиенте addChatTags и передаем туда массив нужных тэгов
+        Рация
+        */
+    },
+
+
+    //TODO: добавить проверки на мут, организацию, знакомство (???)
+    "chat.message.get": (player, type, message) => {
+
+        if (message.length > 100) {
+            message = message.slice(0, 100);
+        };
+
+        if (message[0] == '/') {
+
+            let args = message.split(' ');
+            let command = args[0];
+            args.splice(0, 1);
+            mp.events.call(command, player, args);
+
+        } else {
+            switch (type) {
+                case 0: {
+                    mp.events.call('playerSaySomething', player, message);
+                    break;
+                }
+                case 1: {
+                    mp.events.call('/s', player, message);
+                    break;
+                }
+                case 2: {
+                    mp.events.call('/r', player, message);
+                    break;
+                }
+                case 3: {
+                    mp.events.call('/n', player, message);
+                    break;
+                }
+                case 4: {
+                    mp.events.call('/me', player, message);
+                    break;
+                }
+                case 5: {
+                    mp.events.call('/do', player, message);
+                    break;
+                }
+                case 6: {
+                    mp.events.call('/try', player, message);
+                    break;
+                }
+            }
+        }
+    },
+
+    "player.say": (player, message) => {
+        mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
+            if (currentPlayer.dimension == player.dimension) {
+                currentPlayer.call('playerSaySomething', [player.name, player.id, message]);
+            };
+        });
+    },
+
+    "/s": (player, message) => {
+        mp.players.forEachInRange(player.position, 20, (currentPlayer) => {
+            if (currentPlayer.dimension == player.dimension) {
+                currentPlayer.call('playerShout', [player.name, player.id, message]);
+            };
+        });
+    },
+
+    "/r": (player, message) => {
+        mp.players.forEach((currentPlayer) => {
+            if (true) {
+                currentPlayer.call('playerWalkieTalkie', [player.name, player.id, message]);
+            };
+        });
+    },
+
+    "/n": (player, message) => {
+        mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
+            if (currentPlayer.dimension == player.dimension) {
+                currentPlayer.call('playerNonrpMessage', [player.name, player.id, message]);
+            };
+        });
+    },
+
+    "/me": (player, message) => {
+        mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
+            if (currentPlayer.dimension == player.dimension) {
+                currentPlayer.call('playerMeAction', [player.name, player.id, message]);
+            };
+        });
+    },
+    "/do": (player, message) => {
+        mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
+            if (currentPlayer.dimension == player.dimension) {
+                currentPlayer.call('playerDoAction', [player.name, player.id, message]);
+            };
+        });
+    },
+
+
+    "/gnews": (player, message) => {
+        mp.players.forEach((currentPlayer) => {
+            currentPlayer.call('playerGnews', [player.name, player.id, message]);
+        });
+    },
+
+    "/try": (player, message) => {
+
+        let result = false;
+        if (Math.random() > 0.5) result = true;
+
+        mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
+            if (currentPlayer.dimension == player.dimension) {
+                currentPlayer.call('playerTryAction', [player.name, player.id, message, result]);
+            };
+        });
+    }
+
+}
