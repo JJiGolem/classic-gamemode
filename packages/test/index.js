@@ -1,5 +1,6 @@
 module.exports = {
+    /// Тестовая функция
     test() {
-        console.log("test function of module 'test'")
+        console.log("test message");
     },
 };
