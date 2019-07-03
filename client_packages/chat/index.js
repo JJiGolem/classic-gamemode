@@ -59,6 +59,20 @@ function setDefaultTags() {
     )
 }
 
+setDefaultTags();
+mp.callCEFR('setTagsChat', [availableTags]);
+mp.callCEFR('showChat', [true]);
+mp.callCEFR('setOpacityChat', [1.0]);
+mp.callCEFR('setTimeChat', [true]);
+
+mp.keys.bind(0x54, true, function () {
+    if (!mp.consoleActive) {
+        mp.chat.isOpen = true;
+        mp.gui.cursor.show(true, true);
+        mp.callCEFR('setFocusChat', [true]);
+    }
+});
+
 mp.events.add('chat.load', () => {
     setDefaultTags();
     mp.callCEFR('setTagsChat', [availableTags]);
