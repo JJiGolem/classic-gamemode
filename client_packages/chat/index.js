@@ -2,13 +2,12 @@
 
 mp.gui.chat.activate(false);
 mp.gui.chat.show(false);
+mp.chat = {
 
-// mp.chat = {
+};
 
-// };
-
-// mp.chat.isOpen = false;
-// // TODO: цвета тэгов
+mp.chat.isOpen = false;
+// TODO: цвета тэгов
 
 const TAGS_LIST = [
     {
@@ -65,14 +64,6 @@ mp.callCEFR('showChat', [true]);
 mp.callCEFR('setOpacityChat', [1.0]);
 mp.callCEFR('setTimeChat', [true]);
 
-mp.keys.bind(0x54, true, function () {
-    if (!mp.consoleActive) {
-        mp.chat.isOpen = true;
-        mp.gui.cursor.show(true, true);
-        mp.callCEFR('setFocusChat', [true]);
-    }
-});
-
 mp.events.add('chat.load', () => {
     setDefaultTags();
     mp.callCEFR('setTagsChat', [availableTags]);
@@ -90,7 +81,7 @@ mp.events.add('chat.load', () => {
 
 });
 
-mp.events.add('chat.close', () => {
+mp.events.add('closeChat', () => {
     mp.gui.cursor.show(false, false);
     mp.chat.isOpen = false;
 });
@@ -118,7 +109,7 @@ function sortTagsById() {
     });
 }
 
-mp.events.add('chat.message.get', (type, message) => {
+mp.events.add('getChatMessage', (type, message) => {
     mp.events.callRemote('chat.message.get', type, message);
 });
 

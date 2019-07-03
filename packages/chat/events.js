@@ -64,7 +64,7 @@ module.exports = {
     "chat.action.say": (player, message) => {
         mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
-                currentPlayer.call('playerSaySomething', [player.name, player.id, message]);
+                currentPlayer.call('chat.action.say', [player.name, player.id, message]);
             };
         });
     },
@@ -72,7 +72,7 @@ module.exports = {
     "/s": (player, message) => {
         mp.players.forEachInRange(player.position, 20, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
-                currentPlayer.call('playerShout', [player.name, player.id, message]);
+                currentPlayer.call('chat.action.shout', [player.name, player.id, message]);
             };
         });
     },
@@ -80,7 +80,7 @@ module.exports = {
     "/r": (player, message) => {
         mp.players.forEach((currentPlayer) => {
             if (true) {
-                currentPlayer.call('playerWalkieTalkie', [player.name, player.id, message]);
+                currentPlayer.call('chat.action.walkietalkie', [player.name, player.id, message]);
             };
         });
     },
@@ -88,7 +88,7 @@ module.exports = {
     "/n": (player, message) => {
         mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
-                currentPlayer.call('playerNonrpMessage', [player.name, player.id, message]);
+                currentPlayer.call('chat.action.nonrp', [player.name, player.id, message]);
             };
         });
     },
@@ -96,24 +96,24 @@ module.exports = {
     "/me": (player, message) => {
         mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
-                currentPlayer.call('playerMeAction', [player.name, player.id, message]);
+                currentPlayer.call('chat.action.me', [player.name, player.id, message]);
             };
         });
     },
     "/do": (player, message) => {
         mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
-                currentPlayer.call('playerDoAction', [player.name, player.id, message]);
+                currentPlayer.call('chat.action.do', [player.name, player.id, message]);
             };
         });
     },
 
 
-    "/gnews": (player, message) => {
-        mp.players.forEach((currentPlayer) => {
-            currentPlayer.call('playerGnews', [player.name, player.id, message]);
-        });
-    },
+    // "/gnews": (player, message) => {
+    //     mp.players.forEach((currentPlayer) => {
+    //         currentPlayer.call('playerGnews', [player.name, player.id, message]);
+    //     });
+    // },
 
     "/try": (player, message) => {
 
@@ -122,7 +122,7 @@ module.exports = {
 
         mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
-                currentPlayer.call('playerTryAction', [player.name, player.id, message, result]);
+                currentPlayer.call('chat.action.try', [player.name, player.id, message, result]);
             };
         });
     }
