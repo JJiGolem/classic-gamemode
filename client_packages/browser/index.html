@@ -1,18 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="theme-color" content="#000000" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <link rel="stylesheet" type="text/css" href="./css/chat.css" />
+    <link rel="stylesheet" type="text/css" href="css/hud.css" />
+    
+    <!-- development version, includes helpful console warnings -->
+    <script src="js/vue-development.js"></script>
+    <!-- production version, optimized for size and speed -->
+    <!-- <script src="js/vue-production.js"></script> -->
+
     <title>React App</title>
 </head>
+
 <body>
-<script async src="js/build.js" type="text/javascript"> </script>
-<div id="root"></div>
+    <!-- ************************** VUE JS **************************  -->
+    <div id="hud" v-show="show">
+        <div class="server-online">
+            <img class="logo" src="img/logo.png" />
+            <p>Онлайн: {{ players }} / {{ maxPlayers }}</p>
+        </div>
+        <div class="money">
+            <div class="cash">
+                <img src="img/hud/cash.svg" />
+                $ {{ pretty(cash) }}
+            </div>
+            <div class="bank">
+                <img src="img/hud/credit-card.svg" />
+                $ {{ pretty(bank) }}
+            </div>
+            <div class="time">{{ time }}</div>
+        </div>
+        <div class="voice">
+            <img :src="(voice)? 'img/hud/voice-on.png' : 'img/hud/voice-off.png'" />
+        </div>
+        <div class="weather" :style="{left: leftWeather }">
+            <div class="region">{{ region }}</div>
+            <div class="street">{{ street }}</div>
+            <div class="temperature">{{ temperature }} C°</div>
+            <div class="city">{{ city }}</div>
+            <img :src="'img/weather/' + weather + '.svg'" />
+        </div>
+    </div>
+
+
+    <!--  ------------------------  REACT ------------------------------ -->
+    <script async src="js/build.js" type="text/javascript"> </script>
+    <div id="root"></div>
+    <!--    ------------------------------------------------------------- -->
+    <script src="js/hud.js"></script>
 </body>
+
 </html>

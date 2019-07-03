@@ -1,0 +1,90 @@
+#hud {
+    color: #fff;
+    font-family: Montserrat;
+    height: 100%;
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+}
+
+#hud>div {
+    position: absolute;
+}
+
+#hud .logo {
+    width: 7vh;
+}
+
+#hud .money {
+    background: rgb(0, 0, 0, 0.6);
+    bottom: 2vh;
+    display: flex;
+    font-size: 2vh;
+    justify-content: space-around;
+    padding: 1vh;
+    right: 2vh;
+    width: 40vh;
+}
+
+#hud .money img {
+    margin-bottom: -0.1vh;
+    margin-right: 1vh;
+    width: 2vh;
+}
+
+#hud .money .cash {
+    color: #a2dd03;
+}
+
+#hud .money .time {
+    color: #ddd;
+}
+
+#hud .server-online {
+    background: linear-gradient(to right, #0000, rgb(0, 0, 0, 0.6));
+    right: 2vh;
+    padding: 1vh;
+    text-align: right;
+    top: 2vh;
+}
+
+#hud .server-online p {
+    font-size: 1vh;
+    margin: 0;
+    margin-top: 1vh;
+}
+
+#hud .voice {
+    left: 48%;
+    bottom: 2vh;
+}
+
+#hud .weather {
+    background: linear-gradient(to left, #0000, rgb(0, 0, 0, 0.6));
+    bottom: 2vh;
+    left: 35vh;
+    padding: 3vh 2vh;
+    width: 17vh;
+}
+
+#hud .weather>img {
+    bottom: 4vh;
+    left: 13vh;
+    position: absolute;
+    width: 5vh;
+}
+
+#hud .weather .city {
+    margin-top: -0.5vh;
+}
+
+#hud .weather .temperature {
+    font-size: 3.5vh;
+    margin-top: 2vh;
+}
+
+#hud .weather .region {
+    color: #f1d941;
+    font-size: 2.2vh;
+    font-weight: bold;
+}
