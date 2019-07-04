@@ -4,7 +4,7 @@ let fs = require('fs');
 let path = require('path');
 
 
-let db = require('./db');
+global.db = require('./db');
 let ignoreModules = require('./ignoreModules');
 
 /// Вызов подключения к БД, подключение всех модулей и вызов их инициализации
