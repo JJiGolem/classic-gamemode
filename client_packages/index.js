@@ -11,3 +11,4 @@ require('utils');
 require('auth');
 require('chat');
 require('hud');
+require('weather');
