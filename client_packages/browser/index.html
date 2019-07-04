@@ -23,7 +23,7 @@
 
 <body>
     <!-- ************************** VUE JS **************************  -->
-    <div id="hud" v-show="show">
+    <div v-cloak id="hud" v-show="show">
         <div class="server-online">
             <img class="logo" src="img/logo.png" />
             <p>Онлайн: {{ players }} / {{ maxPlayers }}</p>

@@ -32,3 +32,8 @@ mp.callCEFR = function (eventName, args) {
 mp.callCEFV = function (text) {
     browser.execute(text);
 }
+
+/// Передача значений в VUE в виде объекта
+mp.callCEFVNew = function () {
+    //todo
+}
