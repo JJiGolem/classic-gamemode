@@ -1,4 +1,5 @@
 "use strict";
+/// Тестовый модуль, призванный показать строение модулей
 let test = require("./index.js");
 
 module.exports = {

@@ -1,4 +1,5 @@
 "use strict";
+/// Документ по работе с БД, не подключает игнорируемые модули
 const Sequelize = require('sequelize');
 const fs = require("fs");
 
@@ -8,6 +9,7 @@ let ignoreModules = require('./ignoreModules');
 module.exports = {
     sequelize: null,
     Models: {},
+    /// Подключение к БД
     connect: function(callback) {
         console.log("[DATABASE] db connect...")
         this.sequelize = new Sequelize('classic-gamemode', 'root', '', {
@@ -18,6 +20,7 @@ module.exports = {
         this.loadModels();
         callback();
     },
+    /// Загрузка моделей таблиц из папки 'db' в каждом из модулей, кроме игнорируемого
     loadModels: function() {
         console.log("[DATABASE] load models...");
         fs.readdirSync(path.dirname(__dirname)).forEach(dir => {
