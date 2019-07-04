@@ -2,6 +2,7 @@
 /// Служебные модули
 require('base');
 require('browser');
+require('utils');
 /// Пользовательские модули
 require('chat');
 require('hud');
