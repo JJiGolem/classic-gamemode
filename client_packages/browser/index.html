@@ -42,7 +42,7 @@
         <div class="voice">
             <img :src="(voice)? 'img/hud/voice-on.png' : 'img/hud/voice-off.png'" />
         </div>
-        <div class="weather" :style="{left: leftWeather }">
+        <div class="weather" v-bind:style="{left: leftWeather + 'px'}">
             <div class="region">{{ region }}</div>
             <div class="street">{{ street }}</div>
             <div class="temperature">{{ temperature }} C°</div>

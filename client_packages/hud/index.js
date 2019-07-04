@@ -1,7 +1,12 @@
+"use strict";
+
 var prevValues = {};
 
 mp.events.add('hud.load', () => {
-    // TODO: считать якорь
+
+    var anchor = mp.utils.getMinimapAnchor();
+    var resolution = mp.game.graphics.getScreenActiveResolution(0, 0);
+    mp.callCEFV(`hud.leftWeather = ${resolution.x * (anchor.rightX * 1.1)}`);
     mp.callCEFV('hud.show = true');
 });
 
@@ -18,21 +23,11 @@ mp.events.add("hud.setData", (data) => {
 mp.events.add("hud.tick", () => {
     var pos = mp.players.local.position;
     mp.events.call("hud.setData", {
-        street: getStreetName(pos),
-        region: getRegionName(pos)
+        street: mp.utils.getStreetName(pos),
+        region: mp.utils.getRegionName(pos)
     });
 });
 
 // TEMP: Перенести в index/base
-
-function getStreetName(pos) {
-    var getStreet = mp.game.pathfind.getStreetNameAtCoord(pos.x, pos.y, pos.z, 0, 0);
-    var streetName = mp.game.ui.getStreetNameFromHashKey(getStreet["streetName"]);
-    return streetName;
-}
-
-function getRegionName(pos) {
-    return mp.game.ui.getLabelText(mp.game.zone.getNameOfZone(pos.x, pos.y, pos.z));
-}
 
 var mainTimerId = setInterval(() => { mp.events.call('hud.tick') }, 1000);
