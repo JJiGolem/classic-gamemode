@@ -1,7 +1,9 @@
 "use strict";
 module.exports = {
 
-    // TODO: Получать ник персонажа для сообщения
+    "playerJoin": (player) => {
+        player.call('chat.load');
+    },
 
     "chat.tags.update": () => {
         /* 
