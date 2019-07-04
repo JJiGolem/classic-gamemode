@@ -1,12 +1,25 @@
 "use strict";
 
 var prevValues = {};
-
+var hudState = false;
 mp.events.add('hud.load', () => {
     var anchor = mp.utils.getMinimapAnchor();
     var resolution = mp.game.graphics.getScreenActiveResolution(0, 0);
     mp.callCEFV(`hud.leftWeather = ${resolution.x * (anchor.rightX * 1.1)}`);
-    mp.callCEFVN({"hud.show" : true});
+    mp.events.call('hud.enable', true);
+
+    mp.keys.bind(0x74, true, function () { /// Включение/отключение худа на F5
+      if (hudState) {
+        mp.events.call('hud.enable', false);
+      } else {
+        mp.events.call('hud.enable', true);
+      }
+    });
+});
+
+mp.events.add('hud.enable', (state) => {
+    mp.callCEFVN({"hud.show" : state});
+    hudState = state;
 });
 
 mp.events.add("hud.setData", (data) => {

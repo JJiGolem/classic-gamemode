@@ -6,6 +6,7 @@ mp.chat = {
 
 };
 
+var chatOpacity = 1.0;
 mp.chat.isOpen = false;
 // TODO: цвета тэгов
 
@@ -58,12 +59,6 @@ function setDefaultTags() {
     )
 }
 
-setDefaultTags();
-mp.callCEFR('setTagsChat', [availableTags]);
-mp.callCEFR('showChat', [true]);
-mp.callCEFR('setOpacityChat', [1.0]);
-mp.callCEFR('setTimeChat', [true]);
-
 mp.events.add('chat.load', () => {
     setDefaultTags();
     mp.callCEFR('setTagsChat', [availableTags]);
@@ -72,12 +67,28 @@ mp.events.add('chat.load', () => {
     mp.callCEFR('setTimeChat', [true]);
 
     mp.keys.bind(0x54, true, function () {
-        if (!mp.consoleActive) {
             mp.chat.isOpen = true;
             mp.gui.cursor.show(true, true);
             mp.callCEFR('setFocusChat', [true]);
-        }
     });
+
+    mp.keys.bind(0x76, true, function () {
+        
+        if (mp.chat.isOpen) return;
+
+        switch(chatOpacity) {
+            case 1.0:
+                chatOpacity = 0.5;
+                break;
+            case 0.5:
+                chatOpacity = 0.0;
+                break;
+            case 0.0:
+                chatOpacity = 1.0
+                break;
+        }
+        mp.callCEFR('setOpacityChat', [chatOpacity]);
+});
 
 });
 
