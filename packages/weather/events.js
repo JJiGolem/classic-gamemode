@@ -5,4 +5,8 @@ module.exports = {
     "init": () => {
         weather.init();
     },
+
+    "playerJoin": (player) => {
+            player.call('weather.info.update', [weather.getCurrentWeather()]);
+    }
 };

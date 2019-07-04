@@ -27,6 +27,4 @@ mp.events.add("hud.tick", () => {
     });
 });
 
-// TEMP: Перенести в index/base
-
 var mainTimerId = setInterval(() => { mp.events.call('hud.tick') }, 1000);

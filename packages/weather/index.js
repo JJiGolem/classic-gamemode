@@ -1,22 +1,33 @@
+"use strict";
+
+let weather = {};
+weather.isSet = false;
+
+const request = require("request");
+const WEATHER_LOADING = true; // Загрузка погоды с сайта
+const REQUEST_TIME = 30 * 60 * 1000; // Время повторного запроса в случае ошибки (в мс)
+const API_KEY = "dec51824772fb8b5c61f1964fc56370c"; // ключ с darksky.net
+const TIME_ZONE = "America/Los_Angeles";
+const DEFAULT_SUMMARY = "Ясно";
+const DEFAULT_TEMPERATURE = 20;
+const DEFAULT_ICON = "clear-day";
+
+let weatherForecast = [];
+
 module.exports = {
 
+    getCurrentWeather() {
+        if (!weather.current) {
+           let current = {};
+           current.summary = DEFAULT_SUMMARY;
+           current.temperature = DEFAULT_TEMPERATURE;
+           current.icon = DEFAULT_ICON;
+           return current;
+        }
+        return weather.current;
+    },
+
     init() {
-
-        var weather = {};
-        weather.current = {};
-        weather.isSet = false;
-
-        const request = require("request");
-        const WEATHER_LOADING = true; // Загрузка погоды с сайта
-        const REQUEST_TIME = 30 * 60 * 1000; // Время повторного запроса в случае ошибки (в мс)
-        const API_KEY = "dec51824772fb8b5c61f1964fc56370c"; // ключ с darksky.net
-        const TIME_ZONE = "America/Los_Angeles";
-        const DEFAULT_SUMMARY = "Ясно";
-        const DEFAULT_TEMPERATURE = 20;
-        const DEFAULT_ICON = "clear-day";
-
-        var weatherForecast = [];
-
         if (WEATHER_LOADING) {
             requestWeather();
         } else {
@@ -56,7 +67,7 @@ module.exports = {
                         return;
                     }
 
-                    console.log("[Погода] Данные о погоде загружены с api.darksky.net");
+                    console.log("[WEATHER] Данные о погоде загружены с api.darksky.net");
                     if (!weather.isSet) {
                         setWeather();
                     }
@@ -68,14 +79,14 @@ module.exports = {
             if (!weather.isSet) {
                 setWeather();
             }
-            console.log(`[Погода] Ошибка загрузки данных о погоде. Повторный запрос через ${REQUEST_TIME / (60 * 1000)} минут...`);
+            console.log(`[WEATHER] Ошибка загрузки данных о погоде. Повторный запрос через ${REQUEST_TIME / (60 * 1000)} минут...`);
             setTimeout(requestWeather, REQUEST_TIME);
         }
 
         function getForecastDataByHour(hours) {
             let currentWeather = {};
             if (weatherForecast.length == 0) {
-                console.log("[Погода] Данных о погоде нет, запрашиваем стандартные данные");
+                console.log("[WEATHER] Данных о погоде нет, запрашиваем стандартные данные");
                 currentWeather.summary = DEFAULT_SUMMARY;
                 currentWeather.temperature = DEFAULT_TEMPERATURE;
                 currentWeather.icon = DEFAULT_ICON;
@@ -95,7 +106,7 @@ module.exports = {
             weather.isSet = true;
             let now = new Date();
             weather.current = getForecastDataByHour(now.getHours());
-            console.log(`[Погода] Погода на этот час: ${JSON.stringify(weather.current)}`);
+            console.log(`[WEATHER] Погода на этот час: ${JSON.stringify(weather.current)}`);
 
             switch (weather.current.icon) {
                 case 'clear-day':
@@ -131,11 +142,11 @@ module.exports = {
             }
 
             mp.players.forEach((currentPlayer) => {
-                currentPlayer.call('updateWeatherInfo', [weather.current]);
+                currentPlayer.call('weather.info.update', [weather.current]);
             });
 
             setTimeout(() => { setWeather() }, (60 - now.getMinutes()) * 60 * 1000);
-            console.log(`[Погода] Следующее обновление погоды через ${60 - now.getMinutes()} минут`);
+            console.log(`[WEATHER] Следующее обновление погоды через ${60 - now.getMinutes()} минут`);
         }
 
     }

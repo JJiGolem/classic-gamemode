@@ -6,3 +6,4 @@ require('utils');
 /// Пользовательские модули
 require('chat');
 require('hud');
+require('weather');
