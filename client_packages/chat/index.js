@@ -116,6 +116,7 @@ mp.events.add('getChatMessage', (type, message) => {
 mp.events.add('chat.action.say', (nickname, id, message) => {
     message = `!{#ffffff}${nickname}[${id}] сказал: ${message}`;
     mp.events.call('chat.message.push', message);
+    mp.callCEFVN({"test.key": "myvalue"});
 });
 
 mp.events.add('chat.action.shout', (nickname, id, message) => {

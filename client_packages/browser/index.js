@@ -34,6 +34,9 @@ mp.callCEFV = function (text) {
 }
 
 /// Передача значений в VUE в виде объекта
-mp.callCEFVNew = function () {
-    //todo
+/// Example: object = {"hud.show" : true, "hud.players": 100}
+mp.callCEFVN = function (object) {
+    for (let objectKey in object) {
+        browser.execute(`${objectKey} = ${JSON.stringify(object[objectKey])}`);
+    }
 }

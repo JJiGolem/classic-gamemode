@@ -2,7 +2,7 @@ var prevValues = {};
 
 mp.events.add('hud.load', () => {
     // TODO: считать якорь
-    mp.callCEFV('hud.show = true');
+    mp.callCEFVN({"hud.show" : true});
 });
 
 mp.events.add("hud.setData", (data) => {
