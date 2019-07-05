@@ -81,5 +81,35 @@ module.exports = {
                 player.call('chat.message.push', [`!{#ffffff}Игрок отключился`]);
             }
         }
-    }
+    },
+    "/restart": {
+        access: 4,
+        description: "Рестарт сервера (Linux)",
+        args: "",
+        handler: (player, args) => {
+            mp.players.forEach((current) => {
+                current.call('chat.message.push', [`!{#edffc2}${player.name} запустил рестарт сервера через ${20000 / 1000} сек.`]);
+            });
+            setTimeout(() => {
+                process.exit();
+            }, 20000);
+        }
+    },
+    "/update": {
+        access: 4,
+        description: "Обновить мод до выбранной ветки",
+        args: "[название ветки]",
+        handler: (player, args) => {
+
+            var exec = require("exec");
+            exec(`cd ${__dirname} && git clean -d -f && git stash && git checkout ${args[0]} && git pull`, (error, stdout, stderr) => {
+                if (error) console.log(stderr);
+                console.log(stdout);
+
+                mp.players.forEach((current) => {
+                    current.call('chat.message.push', [`!{#edffc2}${player.name} запустил обновление сервера`]);
+                });
+            });
+        }
+    },
 }
