@@ -29,7 +29,7 @@ module.exports = {
             let args = message.split(' ');
             let command = args[0];
             args.splice(0, 1);
-            mp.events.call(command, player, args);
+            mp.events.call('chat.command.handle', player, command, args)
 
         } else {
             switch (type) {
@@ -62,6 +62,23 @@ module.exports = {
                     break;
                 }
             }
+        }
+    },
+
+    "chat.command.handle": (player, command, args) => {
+        switch (command) {
+            case '/s':
+            case '/r':
+            case '/n':
+            case '/me':
+            case '/do':
+            case 'try':
+                mp.events.call(command, player, args);
+                break;
+            default:
+                // TODO: проверка на админа
+                mp.events.call('admin.command.handle', player, command, args);
+                break;
         }
     },
 
