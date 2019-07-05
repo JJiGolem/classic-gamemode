@@ -117,8 +117,12 @@ module.exports = {
         description: "Заспавнить транспорт",
         args: "[название т/c] [ID цвета #1] [ID цвета #2]",
         handler: (player, args) => {
-        let vehicle = vehicles.spawnVehicle(mp.joaat(args[0]), "CLASSIC", [player.position.x, player.position.y, player.position.z], player.heading, parseInt(args[1], 10),parseInt(args[2], 10));
-        player.putIntoVehicle(vehicle, -1);
+            let vehicle = mp.vehicles.new(mp.joaat(args[0]), new mp.Vector3(player.position.x, player.position.y, player.position.z),
+                {
+                    numberPlate: "CLASSIC",
+                    color: [[0, args[1], 0], [0, args[2], 0]]
+                });
+            player.putIntoVehicle(vehicle, -1);
         }
     }
 }
