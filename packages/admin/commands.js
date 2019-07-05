@@ -5,9 +5,81 @@ module.exports = {
         args: "[сообщение]",
         handler: (player, args) => {
             mp.players.forEach((target) => {
-                let admin = player;
-                target.call('chat.message.push', [`!{#ebc71b}Администратор ${admin.name}[${admin.id}]: ${args.join(' ')}`]);
+                target.call('chat.message.push', [`!{#ebc71b}Администратор ${player.name}[${player.id}]: ${args.join(' ')}`]);
             });
+        }
+    },
+    "/goto": {
+        access: 3,
+        description: "Телепорт к игроку",
+        args: "[ID игрока]",
+        handler: (player, args) => {
+            if (!args[0]) {
+                return;
+            }
+            let target = mp.players.at(args[0]);
+            if (!target) {
+                player.call('chat.message.push', [`!{#ffffff} Игрок не найден`]);
+                return;
+            }
+            try {
+                player.position = new mp.Vector3(target.position.x + 2, target.position.y, target.position.z);
+                mp.players.forEach((current) => { //TODO проверка на адм
+                    current.call('chat.message.push', [`!{#edffc2}[A] ${player.name} телепортировался к ${target.name}`]);
+                });
+            }
+            catch (err) {
+                player.call('chat.message.push', [`!{#ffffff}Игрок отключился`]);
+            }
+        }
+    },
+    "/gethere": {
+        access: 4,
+        description: "Телепорт игрока к себе",
+        args: "[ID игрока]",
+        handler: (player, args) => {
+            if (!args[0]) {
+                return;
+            }
+            let target = mp.players.at(args[0]);
+            if (!target) {
+                player.call('chat.message.push', [`!{#ffffff}Игрок не найден`]);
+                return;
+            }
+            try {
+                target.position = new mp.Vector3(player.position.x + 2, player.position.y, player.position.z);
+                mp.players.forEach((current) => { //TODO проверка на адм
+                    current.call('chat.message.push', [`!{#edffc2}[A] ${player.name} телепортировал к себе ${target.name}`]);
+                });
+                target.call('chat.message.push', [`!{#ffffff}${player.name} телепортировал вас к себе`]);
+            }
+            catch (err) {
+                player.call('chat.message.push', [`!{#ffffff}Игрок отключился`]);
+            }
+        }
+    },
+    "/hp": {
+        access: 2,
+        description: "Выдать здоровье игроку",
+        args: "[ID игрока]",
+        handler: (player, args) => {
+            if (!args[0] || !args[1]) {
+                return;
+            }
+            let target = mp.players.at(args[0]);
+            if (!target) {
+                player.call('chat.message.push', [`!{#ffffff}Игрок не найден`]);
+                return;
+            }
+            try {
+                target.health = parseInt(args[1], 10);
+                mp.players.forEach((current) => { //TODO проверка на адм
+                    current.call('chat.message.push', [`!{#edffc2}[A] ${player.name} изменил здоровье игроку ${target.name}`]);
+                });
+            }
+            catch (err) {
+                player.call('chat.message.push', [`!{#ffffff}Игрок отключился`]);
+            }
         }
     }
 }
