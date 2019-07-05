@@ -1,6 +1,9 @@
-let commands = require("./commands.js");
+let commands = {};
 
 module.exports = {
+    "init": () => {
+        commands = require("./index.js").init();
+    },
     "admin.command.handle": (player, command, args) => {
         if (command == "/ahelp") return mp.events.call('admin.command.help', player, args);
         let cmd = commands[command];
@@ -19,6 +22,6 @@ module.exports = {
             if (commands[cmd].access == args[0]) {
                 player.call('chat.message.push', [`!{#ffffff} ${commands[cmd].description}: ${cmd} ${commands[cmd].args}`]);
             }
-          }
+        }
     }
 }

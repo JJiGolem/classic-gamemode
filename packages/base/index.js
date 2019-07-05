@@ -5,7 +5,7 @@ let path = require('path');
 
 
 global.db = require('./db');
-let ignoreModules = require('./ignoreModules');
+global.ignoreModules = require('./ignoreModules');
 
 /// Вызов подключения к БД, подключение всех модулей и вызов их инициализации
 db.connect(function() {

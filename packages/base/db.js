@@ -4,8 +4,6 @@ const Sequelize = require('sequelize');
 const fs = require("fs");
 
 
-let ignoreModules = require('./ignoreModules');
-
 module.exports = {
     sequelize: null,
     Models: {},
@@ -38,5 +36,6 @@ module.exports = {
             if (model.associate) model.associate(this.Models);
         }
         this.sequelize.sync();
+        console.log("[DATABASE] loaded.");
     }
 }
