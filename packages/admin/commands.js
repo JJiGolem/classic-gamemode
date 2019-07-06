@@ -6,7 +6,7 @@ module.exports = {
         args: "[сообщение]",
         handler: (player, args) => {
             mp.players.forEach((target) => {
-                target.chat.push(`!{#ebc71b}Администратор ${player.name}[${player.id}]: ${args.join(' ')}`);
+                target.call('chat.message.push', [`!{#ebc71b}Администратор ${player.name}[${player.id}]: ${args.join(' ')}`]);
             });
         }
     },
@@ -20,17 +20,17 @@ module.exports = {
             }
             let target = mp.players.at(args[0]);
             if (!target) {
-                player.chat.push(`!{#ffffff} Игрок не найден`);
+                player.call('chat.message.push', [`!{#ffffff} Игрок не найден`]);
                 return;
             }
             try {
                 player.position = new mp.Vector3(target.position.x + 2, target.position.y, target.position.z);
                 mp.players.forEach((current) => { //TODO проверка на адм
-                    current.chat.push(`!{#edffc2}[A] ${player.name} телепортировался к ${target.name}`);
+                    current.call('chat.message.push', [`!{#edffc2}[A] ${player.name} телепортировался к ${target.name}`]);
                 });
             }
             catch (err) {
-                player.chat.push(`!{#ffffff}Игрок отключился`);
+                player.call('chat.message.push', [`!{#ffffff}Игрок отключился`]);
             }
         }
     },
@@ -44,18 +44,18 @@ module.exports = {
             }
             let target = mp.players.at(args[0]);
             if (!target) {
-                player.chat.push(`!{#ffffff}Игрок не найден`);
+                player.call('chat.message.push', [`!{#ffffff}Игрок не найден`]);
                 return;
             }
             try {
                 target.position = new mp.Vector3(player.position.x + 2, player.position.y, player.position.z);
                 mp.players.forEach((current) => { //TODO проверка на адм
-                    current.chat.push(`!{#edffc2}[A] ${player.name} телепортировал к себе ${target.name}`);
+                    current.call('chat.message.push', [`!{#edffc2}[A] ${player.name} телепортировал к себе ${target.name}`]);
                 });
-                target.chat.push(`!{#ffffff}${player.name} телепортировал вас к себе`);
+                target.call('chat.message.push', [`!{#ffffff}${player.name} телепортировал вас к себе`]);
             }
             catch (err) {
-                player.chat.push(`!{#ffffff}Игрок отключился`);
+                player.call('chat.message.push', [`!{#ffffff}Игрок отключился`]);
             }
         }
     },
@@ -69,17 +69,17 @@ module.exports = {
             }
             let target = mp.players.at(args[0]);
             if (!target) {
-                player.chat.push(`!{#ffffff}Игрок не найден`);
+                player.call('chat.message.push', [`!{#ffffff}Игрок не найден`]);
                 return;
             }
             try {
                 target.health = parseInt(args[1], 10);
                 mp.players.forEach((current) => { //TODO проверка на адм
-                    current.chat.push(`!{#edffc2}[A] ${player.name} изменил здоровье игроку ${target.name}`);
+                    current.call('chat.message.push', [`!{#edffc2}[A] ${player.name} изменил здоровье игроку ${target.name}`]);
                 });
             }
             catch (err) {
-                player.chat.push(`!{#ffffff}Игрок отключился`);
+                player.call('chat.message.push', [`!{#ffffff}Игрок отключился`]);
             }
         }
     },
@@ -89,7 +89,7 @@ module.exports = {
         args: "",
         handler: (player, args) => {
             mp.players.forEach((current) => {
-                current.chat.push(`!{#edffc2}${player.name} запустил рестарт сервера через ${20000 / 1000} сек.`);
+                current.call('chat.message.push', [`!{#edffc2}${player.name} запустил рестарт сервера через ${20000 / 1000} сек.`]);
             });
             setTimeout(() => {
                 process.exit();
@@ -108,7 +108,7 @@ module.exports = {
                 console.log(stdout);
 
                 mp.players.forEach((current) => {
-                    current.chat.push(`!{#edffc2}${player.name} запустил обновление сервера`);
+                    current.call('chat.message.push', [`!{#edffc2}${player.name} запустил обновление сервера`]);
                 });
             });
         }
