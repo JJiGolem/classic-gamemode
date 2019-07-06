@@ -4,14 +4,14 @@
     position: absolute;
     color: white;
     /*width: 600px;*/
-    width: 50%;
+    width: 60%;
     max-width: 70vw;
     font-size: 1.1vw;
     font-family: Arial, Helvetica, sans-serif
 }
 
 #message-list-chat-react {
-    height: 30vh;
+    height: 25vh;
     overflow-y: auto;
     overflow-x: hidden;
     padding-top: 10px;
@@ -34,7 +34,7 @@
 #chat-message-input-react {
     width: 80%;
     bottom: 0px;
-    position: absolute;
+    position: relative;
     outline: none;
     background: transparent;
     border: none;
@@ -42,7 +42,7 @@
     display: inline-block;
     /*padding: 10px 10px 10px 40px;*/
     /*position: absolute;*/
-    margin-left: 4vw;
+    margin-left: 1vw;
     margin-bottom: 1vh;
     font-size: 1.1vw;
 }
@@ -52,9 +52,8 @@
     text-align: center;
     color: white;
     /*font-size: 14px;*/
-    width: 35px;
+    width: 120px;
     font-size: 1.1vw;
-    /*bottom: 10px;*/
 }
 
 .word-chat-react {
