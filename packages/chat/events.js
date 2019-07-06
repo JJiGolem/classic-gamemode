@@ -3,7 +3,14 @@ module.exports = {
 
     "playerJoin": (player) => {
         player.call('chat.load');
-        player.call('chat.message.push', ['!{#00abff} Добро пожаловать на Classic Roleplay!']);
+
+        player.chat = {};
+        player.chat.push = (message) => {
+            player.call('chat.message.push', [message]);
+        }
+
+        player.chat.push('!{#00abff} Добро пожаловать на Classic Roleplay!');
+       
     },
 
     "chat.tags.update": () => {
