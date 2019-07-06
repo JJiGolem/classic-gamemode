@@ -211,7 +211,7 @@ class Chat extends React.Component {
                             id="chat-message-input-react"
                             onKeyDown={this.keyDownInput}
                             onKeyUp={this.keyUpInput}
-                            maxLength='100'
+                            maxLength='90'
                             onFocus={this.focusInput.bind(this)}
                             onBlur={() => {this.refInput.focus()}}
                             autoFocus={true}

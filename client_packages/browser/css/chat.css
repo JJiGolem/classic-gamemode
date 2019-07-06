@@ -41,6 +41,7 @@
     color: white;
     display: inline-block;
     /*padding: 10px 10px 10px 40px;*/
+    padding-top: 5px;
     /*position: absolute;*/
     margin-left: 1vw;
     margin-bottom: 1vh;
@@ -52,7 +53,7 @@
     text-align: center;
     color: white;
     /*font-size: 14px;*/
-    width: 120px;
+    width: 6vw;
     font-size: 1.1vw;
 }
 

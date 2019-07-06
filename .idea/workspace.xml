@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="3b4f40e7-2b00-4af6-93b4-f955a86f8251" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client_packages/browser/css/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/css/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client_packages/browser/css/chat.css" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/css/chat.css" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -39,22 +39,22 @@
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client_packages/browser/css/chat.css">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="355">
-              <caret line="78" column="1" selection-start-line="78" selection-start-column="1" selection-end-line="78" selection-end-column="1" />
+              <caret line="79" column="1" selection-start-line="79" selection-start-column="1" selection-end-line="79" selection-end-column="1" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ReactSource/src/components/houses/HouseCart.jsx">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/ReactSource/src/components/chat/Chat.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6400">
-              <caret line="323" column="92" selection-start-line="323" selection-start-column="92" selection-end-line="323" selection-end-column="92" />
+            <state relative-caret-position="240">
+              <caret line="213" column="41" selection-start-line="213" selection-start-column="41" selection-end-line="213" selection-end-column="41" />
               <folding>
-                <element signature="e#0#26#0" expanded="true" />
+                <element signature="e#0#38#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -123,6 +123,7 @@
         <option value="$PROJECT_DIR$/ReactSource/webpack.config.js" />
         <option value="$PROJECT_DIR$/client_packages/browser/css/main.css" />
         <option value="$PROJECT_DIR$/client_packages/browser/css/chat.css" />
+        <option value="$PROJECT_DIR$/ReactSource/src/components/chat/Chat.jsx" />
       </list>
     </option>
   </component>
@@ -221,6 +222,14 @@
               <item name="ReactSource" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="chat" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
+              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
+              <item name="ReactSource" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
               <item name="houses" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -270,12 +279,12 @@
       <workItem from="1562166160892" duration="574000" />
       <workItem from="1562166859182" duration="1304000" />
       <workItem from="1562169403430" duration="2477000" />
-      <workItem from="1562443476631" duration="213000" />
+      <workItem from="1562443476631" duration="1283000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4568000" />
+    <option name="totallyTimeSpent" value="5638000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -423,7 +432,17 @@
     <entry file="file://$PROJECT_DIR$/client_packages/browser/css/chat.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="355">
-          <caret line="78" column="1" selection-start-line="78" selection-start-column="1" selection-end-line="78" selection-end-column="1" />
+          <caret line="79" column="1" selection-start-line="79" selection-start-column="1" selection-end-line="79" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ReactSource/src/components/chat/Chat.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="213" column="41" selection-start-line="213" selection-start-column="41" selection-end-line="213" selection-end-column="41" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
