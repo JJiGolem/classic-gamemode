@@ -1,0 +1,49 @@
+#notifications {
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    font-family: Montserrat;
+    justify-content: flex-end;
+    height: 35%;
+    left: 3%;
+    max-width: 30vh;
+    min-width: 15vh;
+    position: absolute;
+    top: 40%;
+}
+
+#notifications > div {
+    background: linear-gradient(to right, #000a, #0000);
+    display: flex;
+    margin-bottom: 0.5vh;
+}
+
+#notifications > div img {
+    margin: 0 1.5vh;
+    width: 1.5vh;
+}
+
+#notifications > div .header {
+    font-weight: bold;
+}
+
+#notifications > div .message {
+    padding: 1vh 0;
+    padding-right: 1vh;
+}
+
+#notifications .error {
+    border-left: 2px solid #c22;
+}
+
+#notifications .info {
+    border-left: 2px solid #23c;
+}
+
+#notifications .success {
+    border-left: 2px solid #3c2;
+}
+
+#notifications .warning {
+    border-left: 2px solid #c82;
+}
