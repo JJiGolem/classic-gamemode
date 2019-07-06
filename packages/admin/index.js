@@ -1,5 +1,7 @@
 "use strict";
+/// Модуль реализующий админские функции
 module.exports = {
+    /// Инициализация админских команд из всех модулей
     init() {
         console.log("[COMMANDS] load commands...");
         let commands = {};
