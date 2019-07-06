@@ -14,8 +14,11 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/classicroleplay/classic-gamemode#readme",
   "devDependencies": {
-    "@types/ragemp-c": "github:CocaColaBear/types-ragemp-c#master",
-    "@types/ragemp-s": "github:CocaColaBear/types-ragemp-s#master"
+    "@types/ragemp-c": "https://github.com/CocaColaBear/types-ragemp-c/tarball/master",
+    "@types/ragemp-s": "https://github.com/CocaColaBear/types-ragemp-s/tarball/master",
+    "install": "^0.13.0",
+    "npm": "^6.10.0",
+    "or": "^0.2.0"
   },
   "dependencies": {
     "exec": "^0.2.1",
