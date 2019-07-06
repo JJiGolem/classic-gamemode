@@ -10,5 +10,5 @@ module.exports = {
     "console": (player, message) => {
         //todo player nick or id
         console.log(`[INFO] Player ... send: "${message}"`);
-    },
+    }
 };

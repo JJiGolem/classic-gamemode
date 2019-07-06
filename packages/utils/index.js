@@ -4,5 +4,27 @@ module.exports = {
     /// Инициализатор функций
     init() {
         
+    },
+    /// Отправка писем на почту
+    sendMail(to, subject, message) {
+        var nodemailer = require("nodemailer");
+        var transporter = nodemailer.createTransport({
+            service: 'yandex',
+            auth: {
+                user: 'admin@classic-rp.ru',
+                pass: '4dm1ni0_228'
+            }
+        });
+        message += "<br /><br / > С Уважением, Команда Classic RolePlay.";
+        const mailOptions = {
+            from: 'admin@classic-rp.ru',
+            to: to,
+            subject: subject,
+            html: message
+        };
+        transporter.sendMail(mailOptions, function(err, info) {
+            if (err) console.log(`[MAIL] ${err}`)
+            else console.log(`[MAIL] ${info}`);
+        });
     }
 };

@@ -48,7 +48,7 @@ module.exports = {
         } else {
             if (data.emailCode == -1) {
                 var code = mp.randomInteger(100000, 999999);
-                mp.mailer.sendMail(data.email, `Подтверждение электронной почты`, `Код подтверждения: <b>${code}</b>`);
+                call("utils").sendMail(data.email, `Подтверждение электронной почты`, `Код подтверждения: <b>${code}</b>`);
                 mp.emailCodes.set(data.email, code);
                 return player.call("showConfirmCodeModal");
             }

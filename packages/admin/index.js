@@ -9,7 +9,7 @@ module.exports = {
             if (file != 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname) + "/" + file + '/commands.js'))
             {
                 Object.assign(commands, require('../' + file + '/commands'));
-                console.log(`[COMMANDS] -${file}`);
+                console.log(`[COMMANDS] --${file}`);
             }
         });
         console.log("[COMMANDS] loaded.");
