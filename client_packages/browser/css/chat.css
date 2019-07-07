@@ -17,6 +17,7 @@
     padding-top: 10px;
     text-overflow: ellipsis;
     user-select: none;
+    word-wrap: normal;
 }
 
 .block-input-chat-react {
@@ -56,7 +57,18 @@
     font-size: 1.1vw;
 }
 
+.message-chat-react {
+    width: 100%;
+    overflow-wrap: break-word;  /* не поддерживает IE, Firefox; является копией word-wrap */
+    word-wrap: break-word;
+    word-break: break-all;  /* не поддерживает Opera12.14, значение keep-all не поддерживается IE, Chrome */
+    line-break: auto;  /* нет поддержки для русского языка */
+    hyphens: manual;  /* значение auto не поддерживается Chrome */
+}
+
 .word-chat-react {
+    word-wrap: normal;
+    text-overflow: ellipsis;
     text-shadow:
             -0   -1px 0   #000000,
             0   -1px 0   #000000,
