@@ -135,7 +135,7 @@ module.exports = {
                     fuel: 50
                 }
                 veh = vehicles.spawnVehicle(veh);
-                player.putIntoVehicle(veh, -1);
+                //player.putIntoVehicle(veh, -1);
             }
         }
     },

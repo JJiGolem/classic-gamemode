@@ -1,7 +1,7 @@
 "use strict";
 var vehicles = require('./index.js')
 module.exports = {
-    "init": ()=> {
+    "init": () => {
         vehicles.init();
     },
     "playerJoin": (player) => { // temp
@@ -25,6 +25,24 @@ module.exports = {
         if (!vehicle.engine && seat == -1) {
             player.call('chat.message.push', [`!{#adff9e} Нажмите 2, чтобы завести транспортное средство`]);
         }
+        // TEMP
+        if (seat == -1) {
+            player.call('vehicles.indicators.show', [true]);
+            player.call('vehicles.indicators.update', [vehicle.fuel]);
+            player.indicatorsUpdateTimer = setInterval(() => {
+                try {
+                    player.call('vehicles.indicators.update', [vehicle.fuel]);
+                } catch (err) {
+                    console.log(err);
+                }
+            }, 1000);
+        }
+    },
+    "playerExitVehicle": (player, vehicle) => {
+        if (player.indicatorsUpdateTimer) {
+            clearInterval(player.indicatorsUpdateTimer);
+        }
+        player.call('vehicles.indicators.show', [false]);
     },
     "playerStartExitVehicle": (player) => {
         if (player.vehicle.engine) player.vehicle.engine = true;
