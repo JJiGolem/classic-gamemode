@@ -24,17 +24,17 @@
     background: rgba(0, 0, 0, 0.8);
     width: 100%;
     /*padding: 1.1vh 1vh 0.9vh 1vh;*/
-    padding-top: 5px;
-    padding-bottom: 5px;
+    /*padding-top: 5px;*/
+    /*padding-bottom: 5px;*/
     padding-left: 10px;
     margin-left: 30px;
 }
 
 #chat-message-input-react {
-    padding-top: 1vh;
-    padding-bottom: 1vh;
+    padding-top: .9vh;
+    padding-bottom: .9vh;
     width: 80%;
-    bottom: 0px;
+    /*bottom: 0px;*/
     position: relative;
     outline: none;
     background: transparent;
