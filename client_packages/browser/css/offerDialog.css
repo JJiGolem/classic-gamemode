@@ -1,0 +1,53 @@
+#offerDialog {
+    bottom: 10%;
+    display: flex;
+    font-family: Montserrat;
+    left: 36%;
+    min-height: 10%;
+    position: absolute;
+    width: 28%;
+}
+
+#offerDialog .agree, #offerDialog .cancel {
+    align-items: center;
+    color: #fff;
+    display: flex;
+    font-family: monospace;
+    font-size: 5vh;
+    font-weight: bold;
+    justify-content: center;
+    width: 30%;
+}
+
+#offerDialog .agree {
+    background: linear-gradient(to right, #0000, rgb(0, 255, 0, 0.6));
+}
+
+#offerDialog .cancel {
+    background: linear-gradient(to right, rgb(255, 0, 0, 0.6), #0000);
+}
+
+#offerDialog .content {
+    background: rgb(0, 0, 0, 0.6);
+}
+
+#offerDialog .content div {
+    text-align: center;
+}
+
+#offerDialog .content .header {
+    color: #f1d941;
+    font-size: 2vh;
+    font-weight: bold;
+    margin: 1vh 0;
+}
+
+#offerDialog .content .message {
+    color: #fff;
+    padding: 0 3vh;
+}
+
+#offerDialog .content .price {
+    color: #a2dd03;
+    margin: 1vh 0;
+}

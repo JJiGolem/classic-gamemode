@@ -14,13 +14,14 @@
     <link rel="stylesheet" type="text/css" href="css/hud.css" />
     <link rel="stylesheet" type="text/css" href="css/prompt.css" />
     <link rel="stylesheet" type="text/css" href="css/notifications.css" />
+    <link rel="stylesheet" type="text/css" href="css/offerDialog.css" />
 
     <!-- development version, includes helpful console warnings -->
     <script src="js/vue-development.js"></script>
     <!-- production version, optimized for size and speed -->
     <!-- <script src="js/vue-production.js"></script> -->
 
-    <title>React App</title>
+    <title>[GUI] Classic Roleplay</title>
 </head>
 
 <body>
@@ -68,6 +69,17 @@
         </div>
     </div>
 
+    <div id="offerDialog" v-if="dialog">
+        <div class="agree" @click="dialog.yes(); hide()">Y</div>
+        <div class="content">
+            <div class="header">Предложение</div>
+            <div class="message">
+                {{ dialog.text }}
+            </div>
+            <div class="price" v-if="dialog.price">$ {{ pretty(dialog.price) }}</div>
+        </div>
+        <div class="cancel" @click="dialog.no(); hide()">N</div>
+    </div>
 
     <!--  ------------------------  REACT ------------------------------ -->
     <script async src="js/build.js" type="text/javascript"> </script>
@@ -76,6 +88,7 @@
     <script src="js/hud.js"></script>
     <script src="js/prompt.js"></script>
     <script src="js/notifications.js"></script>
+    <script src="js/offerDialog.js"></script>
 </body>
 
 </html>
