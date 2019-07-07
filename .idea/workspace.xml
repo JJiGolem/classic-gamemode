@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3b4f40e7-2b00-4af6-93b4-f955a86f8251" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/ReactSource/src/components/chat/Chat.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/ReactSource/src/components/chat/Chat.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client_packages/browser/css/chat.css" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/css/chat.css" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -27,8 +28,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client_packages/browser/css/chat.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
-              <caret line="7" column="20" lean-forward="true" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
+            <state relative-caret-position="579">
+              <caret line="78" column="1" selection-start-line="78" selection-start-column="1" selection-end-line="78" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -36,8 +37,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ReactSource/src/components/chat/Chat.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="420">
-              <caret line="213" column="41" selection-start-line="213" selection-start-column="41" selection-end-line="213" selection-end-column="41" />
+            <state relative-caret-position="120">
+              <caret line="213" column="40" selection-start-line="213" selection-start-column="40" selection-end-line="213" selection-end-column="40" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
               </folding>
@@ -107,8 +108,8 @@
         <option value="$PROJECT_DIR$/ReactSource/src/components/businesses/BusinessCard.jsx" />
         <option value="$PROJECT_DIR$/ReactSource/src/components/houses/HouseCart.jsx" />
         <option value="$PROJECT_DIR$/ReactSource/webpack.config.js" />
-        <option value="$PROJECT_DIR$/ReactSource/src/components/chat/Chat.jsx" />
         <option value="$PROJECT_DIR$/client_packages/browser/css/main.css" />
+        <option value="$PROJECT_DIR$/ReactSource/src/components/chat/Chat.jsx" />
         <option value="$PROJECT_DIR$/client_packages/browser/css/chat.css" />
       </list>
     </option>
@@ -266,18 +267,18 @@
       <workItem from="1562166859182" duration="1304000" />
       <workItem from="1562169403430" duration="2477000" />
       <workItem from="1562443476631" duration="4567000" />
-      <workItem from="1562484106878" duration="1892000" />
+      <workItem from="1562484106878" duration="3612000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10814000" />
+    <option name="totallyTimeSpent" value="12534000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24983476" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.24983476" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -291,11 +292,31 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.32941177" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.32941177" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
+    <layout-to-restore>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24983476" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="npm" order="2" side_tool="true" />
+      <window_info id="Favorites" order="3" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.32941177" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -402,16 +423,6 @@
     <entry file="file://$PROJECT_DIR$/ReactSource/src/reducers/chat.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/ReactSource/src/components/chat/Chat.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="213" column="41" selection-start-line="213" selection-start-column="41" selection-end-line="213" selection-end-column="41" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client_packages/browser/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="200">
@@ -431,10 +442,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/ReactSource/src/components/chat/Chat.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="213" column="40" selection-start-line="213" selection-start-column="40" selection-end-line="213" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/client_packages/browser/css/chat.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="7" column="20" lean-forward="true" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
+        <state relative-caret-position="579">
+          <caret line="78" column="1" selection-start-line="78" selection-start-column="1" selection-end-line="78" selection-end-column="1" />
         </state>
       </provider>
     </entry>

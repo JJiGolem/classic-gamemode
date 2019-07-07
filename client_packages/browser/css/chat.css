@@ -23,12 +23,16 @@
     position: absolute;
     background: rgba(0, 0, 0, 0.8);
     width: 100%;
-    padding: 1.1vh 1vh 0.9vh 1vh;
+    /*padding: 1.1vh 1vh 0.9vh 1vh;*/
+    padding-top: 5px;
+    padding-bottom: 5px;
     padding-left: 10px;
     margin-left: 30px;
 }
 
 #chat-message-input-react {
+    padding-top: 1vh;
+    padding-bottom: 1vh;
     width: 80%;
     bottom: 0px;
     position: relative;
@@ -37,10 +41,9 @@
     border: none;
     color: white;
     display: inline-block;
-    padding: 0px 0 0px 0;
     /*position: absolute;*/
     margin-left: 1vw;
-    margin-bottom: 1vh;
+    /*margin-bottom: 1vh;*/
     font-size: 1.1vw;
 }
 
