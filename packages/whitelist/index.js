@@ -1,9 +1,10 @@
 "use strict";
 
-let enabled = false; /// Включение/отключение вайтлиста
+let enabled = true; /// Включение/отключение вайтлиста
 let allowed = [ /// Список разрешенных social club'ов
     "kirswift",
-    "Alex_Cortez"
+    "Alex_Cortez",
+    "Pigeon_Gangsta"
 ]; 
 
 module.exports = {
