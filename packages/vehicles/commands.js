@@ -35,5 +35,16 @@ module.exports = {
         handler: (player, args) => {
             mp.events.call("vehicle.engine.toggle", player);
         }
+    },
+    "/fuel": {
+        handler: (player, args) => {
+           player.call('chat.message.push', [`!{#ffffff} ${player.vehicle.fuel}`]);
+        }
+    },
+    "/setfuel": {
+        handler: (player, args) => {
+            if (!player.vehicle) return;
+            vehicles.setFuel(player.vehicle, parseInt(args[0]));
+        }
     }
 }

@@ -131,7 +131,8 @@ module.exports = {
                     color2: parseInt(args[2]),
                     license: 0,
                     key: "admin",
-                    owner: 0
+                    owner: 0,
+                    fuel: 50
                 }
                 veh = vehicles.spawnVehicle(veh);
                 player.putIntoVehicle(veh, -1);

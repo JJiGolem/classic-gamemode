@@ -33,6 +33,7 @@ color2
 key
 owner
 license
+fuel
 */
 
 var testdb = [
@@ -47,7 +48,8 @@ var testdb = [
         key: "newbie",
         owner: 0,
         license: 0,
-        id: 123
+        id: 123,
+        fuel: 10
     },
     {
         model: "blista",
@@ -60,7 +62,8 @@ var testdb = [
         key: "newbie",
         owner: 0,
         license: 0,
-        id: 456
+        id: 456,
+        fuel: 20
     },
     {
         model: "blista",
@@ -73,7 +76,8 @@ var testdb = [
         key: "newbie",
         owner: 0,
         license: 0,
-        id: 789
+        id: 789,
+        fuel: 10
     }
 ]
 
@@ -97,16 +101,32 @@ module.exports = {
         vehicle.key = veh.key; /// faction, job, private, newbie
         vehicle.owner = veh.owner;
         vehicle.license = veh.license;
+        vehicle.fuel = veh.fuel;
         if (source == 0) {
             vehicle.sqlId = veh.id;
         } 
         if (source == 1 && veh.sqlId) {
             vehicle.sqlId = veh.sqlId;
         }
+        vehicle.fuelTimer = setInterval(()=>{
+            try {
+                if (vehicle.engine) {
+                    vehicle.fuel = vehicle.fuel - 1;
+                    if (vehicle.fuel<=0) {
+                        vehicle.engine = false;
+                        vehicle.fuel = 0;
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        }, 1000);
         return vehicle;
     },
     respawnVehicle (veh) {
         this.spawnVehicle(veh, 1);
+        clearInterval(veh.fuelTimer);
         veh.destroy();
     },
     loadVehiclesFromDB() {
@@ -117,5 +137,8 @@ module.exports = {
             }
         }
         console.log(`[VEHICLES] Загружено транспортных средств: ${i}`);
+    },
+    setFuel(vehicle, litres) {
+        vehicle.fuel = litres;
     }
 }
