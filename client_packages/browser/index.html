@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="css/prompt.css" />
     <link rel="stylesheet" type="text/css" href="css/notifications.css" />
     <link rel="stylesheet" type="text/css" href="css/offerDialog.css" />
+    <link rel="stylesheet" type="text/css" href="css/infoTable.css" />
 
     <!-- development version, includes helpful console warnings -->
     <script src="js/vue-development.js"></script>
@@ -81,6 +82,21 @@
         <div class="cancel" @click="dialog.no(); hide()">N</div>
     </div>
 
+    <div v-cloak id="infoTable" v-if="show && name">
+        <div class="header">{{ tables[name].header }}</div>
+        <div class="content">
+            <div class="row" v-for="param in tables[name].params">
+                <div class="param">
+                    <div class="key">{{ param.key }}</div>
+                    <div class="value" :class="{empty: param.value == 0, full: param.value == 100}">{{ prettyValue(param) }}</div>
+                </div>
+                <div class="progress" v-if="param.isProgress">
+                    <div class="fill" :class="{full: param.value == 100}" :style="{width: param.value + '%'}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!--  ------------------------  REACT ------------------------------ -->
     <script async src="js/build.js" type="text/javascript"> </script>
     <div id="root"></div>
@@ -89,6 +105,7 @@
     <script src="js/prompt.js"></script>
     <script src="js/notifications.js"></script>
     <script src="js/offerDialog.js"></script>
+    <script src="js/infoTable.js"></script>
 </body>
 
 </html>
