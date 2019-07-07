@@ -51,5 +51,11 @@ var infoTable = new Vue({
                 table.params[i].value = values[i];
             }
         },
+        showByName(name, values) {
+            if (!this.tables[name]) return;
+            this.setValues(name, values);
+            this.name = name;
+            this.show = true;
+        },
     }
 });

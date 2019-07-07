@@ -1,7 +1,7 @@
 "use strict";
 
 /*
-    Модуль диалога предложения на сервере.
+    Модуль диалога предложения в GUI (VUE).
     Используется для подтверждения операции, в основном, финансовой, но не только.
     Например: при продаже дома/бизнеса/авто, при принятии в организацию и пр.
 
@@ -19,17 +19,18 @@ mp.offerDialog = {
 
 
 mp.events.add("offerDialog.show", (name, values) => {
-    if (values) {
-        var player;
-        if (values.owner) {
-            player = getPlayerByName(values.owner);
-            if (player && !player.isFamiliar) values.owner = "Гражданин";
-        }
-        else if (values.name) {
-            player = getPlayerByName(values.name);
-            if (player && !player.isFamiliar) values.name = "Гражданин";
-        }
-    }
+    // if (values) {
+    //     var player;
+    //     if (values.owner) {
+    //         player = getPlayerByName(values.owner);
+    //         if (player && !player.isFamiliar) values.owner = "Гражданин";
+    //     }
+    //     else if (values.name) {
+    //         player = getPlayerByName(values.name);
+    //         if (player && !player.isFamiliar) values.name = "Гражданин";
+    //     }
+    // }
+    // TODO: Прикрутить сис-му знакомств, чтобы не было видно ника незнакомца. ^^^
 
     menu.execute(`offerDialog.show('${name}', '${JSON.stringify(values)}')`);
 });
