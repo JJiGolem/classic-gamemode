@@ -1,0 +1,80 @@
+#characterInfo {
+    background: rgb(0, 0, 0, 0.6);
+    border-radius: 25px;
+    box-shadow: 0px 5px 10px #0008;
+    font-family: Montserrat;
+    position: absolute;
+    right: 10vh;
+    top: 30%;
+    transform: rotateY(-10deg) rotateX(0) translateZ(0);
+    width: 36vh;
+}
+
+#characterInfo .content {
+    color: #fff;
+    padding: 3vh;
+}
+
+#characterInfo .content .money {
+    display: flex;
+    font-size: 2vh;
+    justify-content: space-around;
+    margin: 2vh 0;
+}
+
+#characterInfo .content .money img {
+    margin-bottom: -0.1vh;
+    margin-right: 1vh;
+    width: 2vh;
+}
+
+#characterInfo .content .money .cash {
+    color: #a2dd03;
+}
+
+#characterInfo .content .name {
+    font-size: 3vh;
+    font-weight: bold;
+    text-align: center;
+}
+
+#characterInfo .content .info {
+    color: #fff;
+    font-size: 1.3vh;
+    width: 100%;
+}
+
+#characterInfo .content .info td:nth-child(2) {
+    text-align: right;
+}
+
+#characterInfo .content .info tr {
+    height: 5vh;
+}
+
+#characterInfo .content .info div {
+    color: #f1d941;
+    font-weight: bold;
+}
+
+#characterInfo .content .warns {
+    color: #b50000;
+    font-weight: bold;
+    margin: 1vh 0;
+    text-align: center;
+}
+
+#characterInfo .content .warns img {
+    margin-bottom: -0.3vh;
+    margin-right: 0.5vh;
+    width: 2vh;
+}
+
+#characterInfo .header {
+    background: #f1d941;
+    border-radius: 20px 20px 0 0;
+    font-size: 1.7vh;
+    font-weight: bold;
+    padding: 1.5vh;
+    text-align: center;
+}
