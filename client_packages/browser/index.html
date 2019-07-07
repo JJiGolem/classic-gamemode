@@ -8,12 +8,13 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <link rel="stylesheet" type="text/css" href="./css/chat.css" />
 
-    
+
     <link rel="stylesheet" type="text/css" href="css/main.css" />
     <link rel="stylesheet" type="text/css" href="css/fonts.css" />
     <link rel="stylesheet" type="text/css" href="css/hud.css" />
+    <link rel="stylesheet" type="text/css" href="css/prompt.css" />
     <link rel="stylesheet" type="text/css" href="css/notifications.css" />
-    
+
     <!-- development version, includes helpful console warnings -->
     <script src="js/vue-development.js"></script>
     <!-- production version, optimized for size and speed -->
@@ -53,9 +54,13 @@
         </div>
     </div>
 
+    <div id="prompt" v-if="text">
+        <div class="text" v-html="text"></div>
+    </div>
+
     <div id="notifications" v-if="messages.length">
         <div :class="notif.type" v-for="notif in messages">
-            <img :src="'img/notifs/' + notif.type + '.svg'"/>
+            <img :src="'img/notifs/' + notif.type + '.svg'" />
             <div v-cloak class="message">
                 <div class="header" v-if="notif.header">{{ notif.header }}</div>
                 {{ notif.text }}
@@ -69,6 +74,7 @@
     <div id="root"></div>
     <!--    ------------------------------------------------------------- -->
     <script src="js/hud.js"></script>
+    <script src="js/prompt.js"></script>
     <script src="js/notifications.js"></script>
 </body>
 
