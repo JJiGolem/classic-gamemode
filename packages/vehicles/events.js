@@ -20,6 +20,13 @@ module.exports = {
             player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);
             player.removeFromVehicle();
         }
+
+        if (!vehicle.engine && seat == -1) {
+            player.call('chat.message.push', [`!{#adff9e} Нажмите 2, чтобы завести транспортное средство`]);
+        }
+    },
+    "playerStartExitVehicle": (player) => {
+        if (player.vehicle.engine) player.vehicle.engine = true;
     },
     "vehicle.engine.toggle": (player) => {
         if (!player.vehicle) return;
