@@ -194,5 +194,8 @@ mp.events.add('payDayMessage.client', (hours) => {
 });
 */
 mp.events.add('chat.message.push', (message) => {
+    if (message.length > 100) {
+        message = message.slice(0, 95);
+    };
     mp.callCEFR('pushChatMessage', [message]);
 });

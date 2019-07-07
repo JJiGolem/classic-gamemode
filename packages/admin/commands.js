@@ -6,7 +6,7 @@ module.exports = {
         args: "[сообщение]",
         handler: (player, args) => {
             mp.players.forEach((target) => {
-                target.call('chat.message.push', [`!{#ebc71b}Администратор ${player.name}[${player.id}]: ${args.join(' ')}`]);
+                target.call('chat.message.push', [`!{#ebc71b}${player.name}[${player.id}]: ${args.join(' ')}`]);
             });
         }
     },
