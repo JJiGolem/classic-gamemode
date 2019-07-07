@@ -71,7 +71,7 @@ class Chat extends React.Component {
         const { chat } = this.props;
 
         return (
-            <div key={index}>
+            <div key={index} className='message-chat-react'>
                 { chat.time &&
                 <span style={{ color: message.text[0].color }} className="word-chat-react">
                     { message.time }
