@@ -8,3 +8,4 @@ mp.events.add('playerEnterVehicle', (vehicle, seat) => { ///Убираем ав�
 mp.keys.bind(0x32, true, function () {
     mp.events.callRemote('vehicle.engine.toggle');
 });
+
