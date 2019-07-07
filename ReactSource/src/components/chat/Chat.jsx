@@ -95,7 +95,7 @@ class Chat extends React.Component {
 
         let message = this.refInput.value;
 
-        if(message && message.length <= 100) {
+        if(message && message.length <= 300) {
             this.history.push(message);
             this.setState({index: this.history.length});
             mp.trigger('getChatMessage', chat.tags[curTagIndex].id, message);
