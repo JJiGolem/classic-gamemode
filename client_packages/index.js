@@ -12,4 +12,5 @@ require('auth');
 require('chat');
 require('hud');
 require('notifications');
+require('vehicles');
 require('weather');

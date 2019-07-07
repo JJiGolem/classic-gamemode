@@ -1,4 +1,6 @@
 /// Базовые админские команды, описание их структуры находится в модуле test
+var vehicles = call("vehicles");
+
 module.exports = {
     "/msg": {
         access: 4,
@@ -118,12 +120,33 @@ module.exports = {
         description: "Заспавнить транспорт",
         args: "[название т/c] [ID цвета #1] [ID цвета #2]",
         handler: (player, args) => {
-            let vehicle = mp.vehicles.new(mp.joaat(args[0]), new mp.Vector3(player.position.x, player.position.y, player.position.z),
-                {
-                    numberPlate: "CLASSIC",
-                    color: [[0, args[1], 0], [0, args[2], 0]]
-                });
-            player.putIntoVehicle(vehicle, -1);
+            if (vehicles != null) {
+                let veh = {
+                    model: mp.joaat(args[0]),
+                    x: player.position.x,
+                    y: player.position.y + 2,
+                    z: player.position.z,
+                    spawnHeading: player.heading,
+                    color1: args[1],
+                    color2: args[2],
+                    license: 0,
+                    key: "admin",
+                    owner: 0
+                }
+                veh = vehicles.spawnVehicle(veh);
+                player.putIntoVehicle(veh, -1);
+            }
+        }
+    },
+    "/pos": {
+        handler: (player, args) => {
+            player.call('chat.message.push', [`!{#ffffff} ${player.position.x} ${player.position.y} ${player.position.z}`]);
+            console.log(`${player.position.x} ${player.position.y} ${player.position.z}`);
+        }
+    },
+    "/tpos": {
+        handler: (player, args) => {
+            player.spawn(new mp.Vector3(parseFloat(args[0]), parseFloat(args[1]), parseFloat(args[2])));
         }
     }
 }
