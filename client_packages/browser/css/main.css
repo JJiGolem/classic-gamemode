@@ -1,3 +1,16 @@
+[v-cloak] {
+    display: none;
+}
+
+body {
+    font-family: monospace, sans-serif;
+    font-size: 1.4vh;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    user-select: none;
+}
+
 ::-webkit-scrollbar-button {
     background-image:url('');
     background-repeat:no-repeat;
