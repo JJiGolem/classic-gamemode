@@ -17,6 +17,7 @@
     <link rel="stylesheet" type="text/css" href="css/offerDialog.css" />
     <link rel="stylesheet" type="text/css" href="css/infoTable.css" />
     <link rel="stylesheet" type="text/css" href="css/characterInfo.css" />
+    <link rel="stylesheet" type="text/css" href="css/characterSelector.css" />
 
     <!-- development version, includes helpful console warnings -->
     <script src="js/vue-development.js"></script>
@@ -145,6 +146,12 @@
         </div>
     </div>
 
+    <div v-cloak id="characterSelector" v-if="show">
+        <div class="arrow" @click="left"><</div>
+        <button @click="enter">Выбрать</button>
+        <div class="arrow" @click="right">></div>
+    </div>
+
     <!--  ------------------------  REACT ------------------------------ -->
     <script async src="js/build.js" type="text/javascript"> </script>
     <div id="root"></div>
@@ -155,6 +162,7 @@
     <script src="js/offerDialog.js"></script>
     <script src="js/infoTable.js"></script>
     <script src="js/characterInfo.js"></script>
+    <script src="js/characterSelector.js"></script>
 </body>
 
 </html>
