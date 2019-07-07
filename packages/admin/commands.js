@@ -86,7 +86,7 @@ module.exports = {
         }
     },
     "/restart": {
-        access: 4,
+        access: 6,
         description: "Рестарт сервера (Linux)",
         args: "",
         handler: (player, args) => {
@@ -99,7 +99,7 @@ module.exports = {
         }
     },
     "/update": {
-        access: 4,
+        access: 6,
         description: "Обновить мод до выбранной ветки",
         args: "[название ветки]",
         handler: (player, args) => {
@@ -115,7 +115,7 @@ module.exports = {
             });
         }
     },
-    "/veh": { // TEMP
+    "/veh": {
         access: 4,
         description: "Заспавнить транспорт",
         args: "[название т/c] [ID цвета #1] [ID цвета #2]",
@@ -127,8 +127,8 @@ module.exports = {
                     y: player.position.y + 2,
                     z: player.position.z,
                     spawnHeading: player.heading,
-                    color1: args[1],
-                    color2: args[2],
+                    color1: parseInt(args[1]),
+                    color2: parseInt(args[2]),
                     license: 0,
                     key: "admin",
                     owner: 0
@@ -139,12 +139,18 @@ module.exports = {
         }
     },
     "/pos": {
+        access: 5,
+        description: "Получить текущие координаты",
+        args: "",
         handler: (player, args) => {
             player.call('chat.message.push', [`!{#ffffff} ${player.position.x} ${player.position.y} ${player.position.z}`]);
             console.log(`${player.position.x} ${player.position.y} ${player.position.z}`);
         }
     },
     "/tpos": {
+        access: 3,
+        description: "Телепорт по координате",
+        args: "[x] [y] [z]",
         handler: (player, args) => {
             player.spawn(new mp.Vector3(parseFloat(args[0]), parseFloat(args[1]), parseFloat(args[2])));
         }
