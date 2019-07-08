@@ -13,7 +13,7 @@ module.exports = {
             }
         }
     },
-    "/fuel": { //temp 
+    "/fuel": { // temp 
         handler: (player, args) => {
             player.call('chat.message.push', [`!{#ffffff} ${player.vehicle.fuel}`]);
         }

@@ -27,7 +27,7 @@ module.exports = {
             }
             try {
                 player.position = new mp.Vector3(target.position.x + 2, target.position.y, target.position.z);
-                mp.players.forEach((current) => { //TODO проверка на адм
+                mp.players.forEach((current) => { //TODO проверка на адм, сделать функцию для уведомления всех админов
                     current.call('chat.message.push', [`!{#edffc2}[A] ${player.name} телепортировался к ${target.name}`]);
                 });
             }

@@ -18,6 +18,7 @@ module.exports = {
         player.call('chat.message.push', [`!{#70a7ff} Владелец ${vehicle.owner}`]);
         player.call('chat.message.push', [`!{#70a7ff} sqlId ${vehicle.sqlId}`]);
         player.call('chat.message.push', [`!{#70a7ff} fuel ${vehicle.fuel}`]);
+
         if ((vehicle.license != 0) && vehicle.license != player.license) {
             player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);
             player.removeFromVehicle();
@@ -48,7 +49,7 @@ module.exports = {
     "playerStartExitVehicle": (player) => {
         if (player.vehicle.engine) player.vehicle.engine = true;
     },
-    "vehicle.engine.toggle": (player) => {
+    "vehicle.engine.toggle": (player) => { /// Включение/выключение двигателя
         if (!player.vehicle) return;
         if (player.vehicle.fuel <= 0) return player.call('notifications.push.error', ['Нет топлива', 'Транспорт']);
         if (player.vehicle.engine == true) {

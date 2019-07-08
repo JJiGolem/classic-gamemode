@@ -1,6 +1,6 @@
 "use strict";
 const Sequelize = require('sequelize');
-const Op = Sequelize.Op; //
+const Op = Sequelize.Op; // TEMP, добавить к глобальным
 /*
 temp
 свойства авто:
@@ -36,49 +36,6 @@ license
 fuel
 */
 
-// db.Models.Vehicle.create(
-//     {
-//         model: "blista",
-//         x: -250.40139770507812,
-//         y: -317.3185729980469,
-//         z: 30.105422973632812,
-//         h: 45,
-//         color1: 27,
-//         color2: 111,
-//         key: "newbie",
-//         owner: 0,
-//         license: 0,
-//         fuel: 10
-//     });
-// db.Models.Vehicle.create(
-//     {
-//         model: "blista",
-//         x: -250.40139770507812,
-//         y: -317.3185729980469,
-//         z: 30.105422973632812,
-//         h: 45,
-//         color1: 27,
-//         color2: 111,
-//         key: "newbie",
-//         owner: 0,
-//         license: 0,
-//         fuel: 10
-//     });
-// db.Models.Vehicle.create(
-//     {
-//         model: "blista",
-//         x: -250.40139770507812,
-//         y: -317.3185729980469,
-//         z: 30.105422973632812,
-//         h: 45,
-//         color1: 27,
-//         color2: 111,
-//         key: "newbie",
-//         owner: 0,
-//         license: 0,
-//         fuel: 10
-//     });
-
 module.exports = {
     init() {
         this.loadVehiclesFromDB();
@@ -97,7 +54,7 @@ module.exports = {
             vehicle.y = veh.y,
             vehicle.z = veh.z,
             vehicle.h = veh.h;
-        vehicle.key = veh.key; /// faction, job, private, newbie
+        vehicle.key = veh.key; /// ключ показывает тип авто: faction, job, private, newbie
         vehicle.owner = veh.owner;
         vehicle.license = veh.license;
         vehicle.fuel = veh.fuel;
@@ -129,7 +86,7 @@ module.exports = {
         clearInterval(veh.fuelTimer);
         veh.destroy();
     },
-    async loadVehiclesFromDB() {
+    async loadVehiclesFromDB() { /// Загрузка автомобилей фракций/работ из БД 
         var dbVehicles = await db.Models.Vehicle.findAll({
             where: {
                 key: { [Op.ne]: "private" }
