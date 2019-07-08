@@ -72,7 +72,7 @@ module.exports = {
             case '/n':
             case '/me':
             case '/do':
-            case 'try':
+            case '/try':
                 mp.events.call(command, player, args);
                 break;
             default:

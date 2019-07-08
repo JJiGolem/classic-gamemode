@@ -7,6 +7,7 @@ mp.chat = {
 };
 
 var chatOpacity = 1.0;
+var timestamp = true;
 mp.chat.isOpen = false;
 // TODO: цвета тэгов
 
@@ -19,32 +20,32 @@ const TAGS_LIST = [
     {
         id: 1,
         name: "Крикнуть",
-        color: "#ffffff"
+        color: "#ffdfa8"
     },
     {
         id: 2,
         name: "Рация",
-        color: "#ffffff"
+        color: "#33cc66"
     },
     {
         id: 3,
         name: "НонРП",
-        color: "#ffffff"
+        color: "#c6c695"
     },
     {
         id: 4,
         name: "Действие",
-        color: "#ffffff"
+        color: "#dd90ff"
     },
     {
         id: 5,
         name: "Пояснение",
-        color: "#ffffff"
+        color: "#82dbff"
     },
     {
         id: 6,
         name: "Попытка",
-        color: "#ffffff"
+        color: "#ddff82"
     }
 ];
 
@@ -67,16 +68,16 @@ mp.events.add('chat.load', () => {
     mp.callCEFR('setTimeChat', [true]);
 
     mp.keys.bind(0x54, true, function () {
-            mp.chat.isOpen = true;
-            mp.gui.cursor.show(true, true);
-            mp.callCEFR('setFocusChat', [true]);
+        mp.chat.isOpen = true;
+        mp.gui.cursor.show(true, true);
+        mp.callCEFR('setFocusChat', [true]);
     });
 
     mp.keys.bind(0x76, true, function () {
-        
+
         if (mp.chat.isOpen) return;
 
-        switch(chatOpacity) {
+        switch (chatOpacity) {
             case 1.0:
                 chatOpacity = 0.5;
                 break;
@@ -88,7 +89,7 @@ mp.events.add('chat.load', () => {
                 break;
         }
         mp.callCEFR('setOpacityChat', [chatOpacity]);
-});
+    });
 
 });
 
@@ -121,6 +122,16 @@ function sortTagsById() {
 }
 
 mp.events.add('getChatMessage', (type, message) => {
+    if (message == "/timestamp") {
+        if (timestamp) {
+            mp.callCEFR('setTimeChat', [false]);
+            timestamp = false;
+        } else {
+            mp.callCEFR('setTimeChat', [true]);
+            timestamp = true;
+        }
+        return;
+    }
     mp.events.callRemote('chat.message.get', type, message);
 });
 
