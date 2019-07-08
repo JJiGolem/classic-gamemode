@@ -46,7 +46,7 @@ module.exports = {
                 args[1] = 0;
                 veh.license = 0;
             }
-            if (veh.sqlId) {
+            if (veh.sqlId) { /// Если автомобиль уже загружен из БД, то обновляем его
                 await veh.db.update({
                     key: args[0],
                     owner: args[1],
@@ -59,7 +59,7 @@ module.exports = {
                     h: veh.heading
                 });
             } else {
-                var data = await db.Models.Vehicle.create({
+                var data = await db.Models.Vehicle.create({ /// Если автомобиля нет в БД, то создаем запись в БД 
                     key: args[0],
                     owner: args[1],
                     model: veh.modelName,
@@ -72,9 +72,14 @@ module.exports = {
                     license: veh.license
                 });
                 veh.sqlId = data.id;
+                veh.db = data;
             }
             veh.key = args[0];
             veh.owner = args[1];
+            veh.x = veh.position.x;
+            veh.y = veh.position.y;
+            veh.z = veh.position.z;
+            veh.h = veh.heading;
 
             switch (args[0]) {
                 case "newbie":

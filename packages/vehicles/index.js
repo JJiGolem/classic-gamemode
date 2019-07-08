@@ -46,24 +46,32 @@ module.exports = {
                 heading: veh.h,
                 engine: false
             });
-        vehicle.modelName = veh.model;
         vehicle.setColor(veh.color1, veh.color2);
         vehicle.color1 = veh.color1;
         vehicle.color2 = veh.color2;
-        vehicle.x = veh.x,
-            vehicle.y = veh.y,
-            vehicle.z = veh.z,
-            vehicle.h = veh.h;
+        vehicle.x = veh.x;
+        vehicle.y = veh.y;
+        vehicle.z = veh.z;
+        vehicle.h = veh.h;
         vehicle.key = veh.key; /// ключ показывает тип авто: faction, job, private, newbie
         vehicle.owner = veh.owner;
         vehicle.license = veh.license;
         vehicle.fuel = veh.fuel;
-        vehicle.db = veh;
-        if (source == 0) {
+
+        if (source == 0) { /// Если авто спавнится из БД
+            vehicle.modelName = veh.model;
             vehicle.sqlId = veh.id;
+            vehicle.db = veh;
         }
-        if (source == 1 && veh.sqlId) {
-            vehicle.sqlId = veh.sqlId;
+        if (source == 1) { /// Если авто респавнится
+            if (veh.sqlId) {
+                vehicle.sqlId = veh.sqlId;
+                vehicle.db = veh.db;
+            }
+            vehicle.modelName = veh.modelName;
+        }
+        if (!source) { /// Авто спавнится администратором
+            vehicle.modelName = veh.model;
         }
         vehicle.fuelTimer = setInterval(() => {
             try {
