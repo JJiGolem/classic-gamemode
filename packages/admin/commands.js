@@ -122,7 +122,7 @@ module.exports = {
         handler: (player, args) => {
             if (vehicles != null) {
                 let veh = {
-                    model: mp.joaat(args[0]),
+                    model: args[0],
                     x: player.position.x,
                     y: player.position.y + 2,
                     z: player.position.z,

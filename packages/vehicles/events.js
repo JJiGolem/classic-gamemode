@@ -13,6 +13,7 @@ module.exports = {
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         player.call('chat.message.push', [`!{#70a7ff} Модель ${vehicle.model}`]);
+        player.call('chat.message.push', [`!{#70a7ff} Имя модели ${vehicle.modelName}`]);
         player.call('chat.message.push', [`!{#70a7ff} Ключ ${vehicle.key}`]);
         player.call('chat.message.push', [`!{#70a7ff} Владелец ${vehicle.owner}`]);
         player.call('chat.message.push', [`!{#70a7ff} sqlId ${vehicle.sqlId}`]);
