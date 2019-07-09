@@ -8,24 +8,24 @@ module.exports = {
         //  data = '{"loginOrEmail":"Carter", "password":"123123"}';
         data = JSON.parse(data);
 
-        if (!loginOrEmail || loginOrEmail.length == 0) {
+        if (!data.loginOrEmail || data.loginOrEmail.length == 0) {
             /// Заполните поле логина или почты!
             return player.call('auth.login.result', [0]);
         }
 
         let regLogin = /^[0-9a-z_\.-]{5,20}$/i;
         let regEmail = /^[0-9a-z-_\.]+\@[0-9a-z-_]{1,}\.[a-z]{1,}$/i;
-        if (!regLogin.test(loginOrEmail) && !regEmail.test(loginOrEmail)) {
+        if (!regLogin.test(data.loginOrEmail) && !regEmail.test(data.loginOrEmail)) {
             /// Некорректное значение логина или почты!
             return player.call('auth.login.result', [1]);
         }
 
-        if (password.length < 6 || password.length > 20) {
+        if (data.password.length < 6 || data.password.length > 20) {
             /// Неверный пароль!
             return player.call('auth.login.result', [2]);
         }
 
-        // let ban = await DB.Models.IpBan.findOne({
+        // let ban = await db.Models.IpBan.findOne({
         //     where: {
         //         ip: player.ip
         //     }
@@ -61,13 +61,14 @@ module.exports = {
             /// Неверный Social Club 
             return player.call('auth.login.result', [5]);
 
-        if (accountIsOnline(account.id))
+        if (auth.accountIsOnline(account.id))
             /// Аккаунт уже авторизован
             return player.call('auth.login.result', [6]);
 
         player.account = account;
         /// Вход в аккаунт выполнен успешно
         player.call('auth.login.result', [7]);
+        console.log(player);
     },
     'auth.register': async (player, data) => {
         // data = '{"login":"Carter","email":"test@mail.ru","password":"123123","emailCode":-1}';
@@ -89,7 +90,7 @@ module.exports = {
         r = /^[0-9a-z-_\.]+\@[0-9a-z-_]{1,}\.[a-z]{1,}$/i;
         if (!r.test(data.email)) return player.call('auth.register.result', [5]);
 
-        let account = await DB.Models.Account.findOne({
+        let account = await db.Models.Account.findOne({
             attributes: ["login", "email", "socialClub", "confirmEmail"],
             where: {
                 [Op.or]: {
@@ -115,20 +116,21 @@ module.exports = {
                 return player.call('auth.register.result', [8, player.socialClub]);
             }
         } else {
-            var newAccount = await DB.Models.Account.create({
+            var newAccount = await db.Models.Account.create({
                 login: data.login,
                 socialClub: player.socialClub,
                 password: auth.hashPassword(data.password),
                 email: data.email,
                 regIp: player.ip,
                 lastIp: player.ip,
-                confirmEmail: confirmEmail,
+                confirmEmail: 0,
             });
 
             player.account = newAccount;
             player.accountRegistrated = true;
             /// Аккаунт зарегестрирован успешно
             player.call('auth.register.result', [9]);
+            console.log(player);
         }
     },
     "auth.email.confirm": (player) => {
