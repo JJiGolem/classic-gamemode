@@ -2,7 +2,7 @@
 /// Функции модуля авторизации
 const bcrypt = require('bcryptjs');
 
-emailCodes = new Map();
+//emailCodes = new Map();
 module.exports = {
     accountIsOnline(id) {
         if (!id) return false;

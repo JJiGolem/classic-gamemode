@@ -4,7 +4,7 @@ let auth = require("./index.js");
 let utils = call("utils");
 
 module.exports = {
-    'auth.login': (player, data) => {
+    'auth.login': async (player, data) => {
         //  data = '{"loginOrEmail":"Carter", "password":"123123"}';
         data = JSON.parse(data);
 
@@ -25,19 +25,19 @@ module.exports = {
             return player.call('auth.login.result', [2]);
         }
 
-        let ban = await DB.Models.IpBan.findOne({
-            where: {
-                ip: player.ip
-            }
-        });
-        if (ban) {
-            /// Игрок забанен
-            player.call('auth.login.result', [3]);
-            player.kick();
-            return;
-        }
+        // let ban = await DB.Models.IpBan.findOne({
+        //     where: {
+        //         ip: player.ip
+        //     }
+        // });
+        // if (ban) {
+        //     /// Игрок забанен
+        //     player.call('auth.login.result', [3]);
+        //     player.kick();
+        //     return;
+        // }
 
-        let account = await DB.Models.Account.findOne({
+        let account = await db.Models.Account.findOne({
             where: {
                 [Op.or]: {
                     login: data.loginOrEmail,
