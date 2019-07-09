@@ -2,7 +2,7 @@
 /// Документ по работе с БД, не подключает игнорируемые модули
 const Sequelize = require('sequelize');
 const fs = require("fs");
-
+global.Op = Sequelize.Op;
 
 module.exports = {
     sequelize: null,

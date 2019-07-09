@@ -1,7 +1,7 @@
 "use strict";
 var vehicles = require('./index.js')
 module.exports = {
-    "init": ()=> {
+    "init": () => {
         vehicles.init();
     },
     "playerJoin": (player) => { // temp
@@ -13,10 +13,16 @@ module.exports = {
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         player.call('chat.message.push', [`!{#70a7ff} Модель ${vehicle.model}`]);
+        player.call('chat.message.push', [`!{#70a7ff} Имя модели ${vehicle.modelName}`]);
         player.call('chat.message.push', [`!{#70a7ff} Ключ ${vehicle.key}`]);
         player.call('chat.message.push', [`!{#70a7ff} Владелец ${vehicle.owner}`]);
         player.call('chat.message.push', [`!{#70a7ff} sqlId ${vehicle.sqlId}`]);
         player.call('chat.message.push', [`!{#70a7ff} fuel ${vehicle.fuel}`]);
+        player.call('chat.message.push', [`!{#70a0ff} maxfuel ${vehicle.properties.maxFuel}`]);
+        player.call('chat.message.push', [`!{#70a0ff} name ${vehicle.properties.name}`]);
+        player.call('chat.message.push', [`!{#70a0ff} defaultCons ${vehicle.properties.defaultConsumption}`]);
+        player.call('chat.message.push', [`!{#70a0ff} defaultCons ${vehicle.properties.license}`]);
+
         if ((vehicle.license != 0) && vehicle.license != player.license) {
             player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);
             player.removeFromVehicle();
@@ -25,11 +31,29 @@ module.exports = {
         if (!vehicle.engine && seat == -1) {
             player.call('chat.message.push', [`!{#adff9e} Нажмите 2, чтобы завести транспортное средство`]);
         }
+        // TEMP
+        if (seat == -1) {
+            player.call('vehicles.indicators.show', [true]);
+            player.call('vehicles.indicators.update', [vehicle.fuel]);
+            player.indicatorsUpdateTimer = setInterval(() => {
+                try {
+                    player.call('vehicles.indicators.update', [vehicle.fuel]);
+                } catch (err) {
+                    console.log(err);
+                }
+            }, 1000);
+        }
+    },
+    "playerExitVehicle": (player, vehicle) => {
+        if (player.indicatorsUpdateTimer) {
+            clearInterval(player.indicatorsUpdateTimer);
+        }
+        player.call('vehicles.indicators.show', [false]);
     },
     "playerStartExitVehicle": (player) => {
         if (player.vehicle.engine) player.vehicle.engine = true;
     },
-    "vehicle.engine.toggle": (player) => {
+    "vehicle.engine.toggle": (player) => { /// Включение/выключение двигателя
         if (!player.vehicle) return;
         if (player.vehicle.fuel <= 0) return player.call('notifications.push.error', ['Нет топлива', 'Транспорт']);
         if (player.vehicle.engine == true) {

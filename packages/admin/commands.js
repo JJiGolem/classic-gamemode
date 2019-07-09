@@ -27,7 +27,7 @@ module.exports = {
             }
             try {
                 player.position = new mp.Vector3(target.position.x + 2, target.position.y, target.position.z);
-                mp.players.forEach((current) => { //TODO проверка на адм
+                mp.players.forEach((current) => { //TODO проверка на адм, сделать функцию для уведомления всех админов
                     current.call('chat.message.push', [`!{#edffc2}[A] ${player.name} телепортировался к ${target.name}`]);
                 });
             }
@@ -122,7 +122,7 @@ module.exports = {
         handler: (player, args) => {
             if (vehicles != null) {
                 let veh = {
-                    model: mp.joaat(args[0]),
+                    modelName: args[0],
                     x: player.position.x,
                     y: player.position.y + 2,
                     z: player.position.z,
@@ -135,7 +135,7 @@ module.exports = {
                     fuel: 50
                 }
                 veh = vehicles.spawnVehicle(veh);
-                player.putIntoVehicle(veh, -1);
+                //player.putIntoVehicle(veh, -1);
             }
         }
     },
