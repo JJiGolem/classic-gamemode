@@ -18,6 +18,9 @@
     <link rel="stylesheet" type="text/css" href="css/infoTable.css" />
     <link rel="stylesheet" type="text/css" href="css/characterInfo.css" />
     <link rel="stylesheet" type="text/css" href="css/characterSelector.css" />
+    <link rel="stylesheet" type="text/css" href="css/selectMenu.css" />
+
+    <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
     <script src="js/vue-development.js"></script>
@@ -147,22 +150,51 @@
     </div>
 
     <div v-cloak id="characterSelector" v-if="show">
-        <div class="arrow" @click="left"><</div>
-        <button @click="enter">Выбрать</button>
-        <div class="arrow" @click="right">></div>
-    </div>
+        <div class="arrow" @click="left">
+            <</div> <button @click="enter">Выбрать</button>
+                <div class="arrow" @click="right">></div>
+        </div>
 
-    <!--  ------------------------  REACT ------------------------------ -->
-    <script async src="js/build.js" type="text/javascript"> </script>
-    <div id="root"></div>
-    <!--    ------------------------------------------------------------- -->
-    <script src="js/hud.js"></script>
-    <script src="js/prompt.js"></script>
-    <script src="js/notifications.js"></script>
-    <script src="js/offerDialog.js"></script>
-    <script src="js/infoTable.js"></script>
-    <script src="js/characterInfo.js"></script>
-    <script src="js/characterSelector.js"></script>
+        <div v-cloak id="selectMenu" v-if="show && menu">
+            <div class="header">{{ menu.header }}</div>
+            <div class="content">
+                <div class="arrow arr-up" :class="{active: menu.j > 0}"></div>
+                <div class="items">
+                    <div class="item" v-for="(item, index) in items" v-if="isItemShow(index)" :class="{selected: index == menu.i}">
+                        <div class="name">{{ item.text }}</div>
+                        <div class="value" v-if="item.values">{{ item.values[item.i] }}</div>
+                    </div>
+                </div>
+                <div class="arrow arr-down" :class="{active: menu.j < menu.items.length - maxItems}"></div>
+            </div>
+            <div class="selector" v-show="menu.items[menu.i].values">
+                <div v-for="value in values">{{ value }}</div>
+            </div>
+            <div class="selector select-color" style="display: none">
+                <div class="arrow arr-left active"></div>
+                <div class="color-type"></div>
+                <div class="color-type"></div>
+                <div class="color-type"></div>
+                <div class="color-type active"></div>
+                <div class="color-type"></div>
+                <div class="color-type"></div>
+                <div class="color-type"></div>
+                <div class="arrow arr-right"></div>
+            </div>
+        </div>
+
+        <!--  ------------------------  REACT ------------------------------ -->
+        <script async src="js/build.js" type="text/javascript"> </script>
+        <div id="root"></div>
+        <!--    ------------------------------------------------------------- -->
+        <script src="js/hud.js"></script>
+        <script src="js/prompt.js"></script>
+        <script src="js/notifications.js"></script>
+        <script src="js/offerDialog.js"></script>
+        <script src="js/infoTable.js"></script>
+        <script src="js/characterInfo.js"></script>
+        <script src="js/characterSelector.js"></script>
+        <script src="js/selectMenu.js"></script>
 </body>
 
 </html>
