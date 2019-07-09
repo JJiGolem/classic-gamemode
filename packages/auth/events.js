@@ -21,7 +21,7 @@ module.exports = {
         }
 
         if (password.length < 6 || password.length > 20) {
-            /// "Неверный пароль!
+            /// Неверный пароль!
             return player.call('auth.login.result', [2]);
         }
 
@@ -132,8 +132,10 @@ module.exports = {
         }
     },
     "auth.email.confirm": (player) => {
+        /// На данный момент подтвердить почту невозможно
+        if (utils == null) return player.call('auth.email.confirm.result', [2]);
         let code = mp.randomInteger(100000, 999999);
-        mp.mailer.sendMail(data.email, `Подтверждение электронной почты`, `Код подтверждения: <b>${code}</b>`);
+        utils.sendMail(data.email, `Подтверждение электронной почты`, `Код подтверждения: <b>${code}</b>`);
         auth.setEmailCode(player.account.email, code);
     },
     "auth.email.confirm.code": (player, code) => {
@@ -146,10 +148,12 @@ module.exports = {
                     login: player.account.login
                 }
             });
-            player.call('auth.email.confirm', [1]);
+            /// Подтверждение почты прошло успешно
+            player.call('auth.email.confirm.result', [1]);
         }
         else {
-            player.call('auth.email.confirm', [0]);
+            /// Код подтверждения неверный
+            player.call('auth.email.confirm.result', [0]);
         }
     }
 };
