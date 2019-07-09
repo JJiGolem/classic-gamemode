@@ -136,8 +136,8 @@ module.exports = {
     "auth.email.confirm": (player) => {
         /// На данный момент подтвердить почту невозможно
         if (utils == null) return player.call('auth.email.confirm.result', [2]);
-        let code = mp.randomInteger(100000, 999999);
-        utils.sendMail(data.email, `Подтверждение электронной почты`, `Код подтверждения: <b>${code}</b>`);
+        let code = utils.randomInteger(100000, 999999);
+        utils.sendMail(player.account.email, `Подтверждение электронной почты`, `Код подтверждения: <b>${code}</b>`);
         auth.setEmailCode(player.account.email, code);
     },
     "auth.email.confirm.code": (player, code) => {
