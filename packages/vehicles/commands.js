@@ -50,7 +50,7 @@ module.exports = {
                 await veh.db.update({
                     key: args[0],
                     owner: args[1],
-                    model: veh.modelName,
+                    modelName: veh.modelName,
                     color1: veh.getColor(0),
                     color2: veh.getColor(1),
                     x: veh.position.x,
@@ -62,7 +62,7 @@ module.exports = {
                 var data = await db.Models.Vehicle.create({ /// Если автомобиля нет в БД, то создаем запись в БД 
                     key: args[0],
                     owner: args[1],
-                    model: veh.modelName,
+                    modelName: veh.modelName,
                     color1: veh.getColor(0),
                     color2: veh.getColor(1),
                     x: veh.position.x,

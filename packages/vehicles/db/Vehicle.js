@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.INTEGER(11),
 			allowNull: false
 		},
-		model: {
+		modelName: {
 			type: DataTypes.STRING(128),
 			allowNull: false
 		},

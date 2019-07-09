@@ -1,27 +1,10 @@
 "use strict";
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op; // TEMP, добавить к глобальным
-/*
-temp
-свойства авто:
-sqlId
-model
-x
-y
-z
-heading
-color1
-color2
-fuel
-maxFuel
-consumption
-mileage
-health
-key
-owner
-license
 
-v1.0:
+var dbVehicleProperties;
+/*
+Vehicle:
 sqlId
 model
 x
@@ -32,21 +15,30 @@ color1
 color2
 key
 owner
-license
+license(?)
 fuel
+
+VehicleProperties:
+model
+name
+maxFuel
+defaultConsumption
+license
 */
 
 module.exports = {
     init() {
+        this.loadVehiclePropertiesFromDB();
         this.loadVehiclesFromDB();
     },
     spawnVehicle(veh, source) { /// source: 0 - спавн автомобиля из БД, 1 - респавн любого автомобиля, null - спавн админского авто и т. д.
-        let vehicle = mp.vehicles.new(veh.model, new mp.Vector3(veh.x, veh.y, veh.z),
+        let vehicle = mp.vehicles.new(veh.modelName, new mp.Vector3(veh.x, veh.y, veh.z),
             {
                 heading: veh.h,
                 engine: false
             });
         vehicle.setColor(veh.color1, veh.color2);
+        vehicle.modelName = veh.modelName;
         vehicle.color1 = veh.color1;
         vehicle.color2 = veh.color2;
         vehicle.x = veh.x;
@@ -59,20 +51,19 @@ module.exports = {
         vehicle.fuel = veh.fuel;
 
         if (source == 0) { /// Если авто спавнится из БД
-            vehicle.modelName = veh.model;
             vehicle.sqlId = veh.id;
             vehicle.db = veh;
         }
-        if (source == 1) { /// Если авто респавнится
-            if (veh.sqlId) {
-                vehicle.sqlId = veh.sqlId;
-                vehicle.db = veh.db;
-            }
-            vehicle.modelName = veh.modelName;
+        if (source == 1 && veh.sqlId) { /// Если авто респавнится (есть в БД)
+            vehicle.sqlId = veh.sqlId;
+            vehicle.db = veh.db;
         }
-        if (!source) { /// Авто спавнится администратором
-            vehicle.modelName = veh.model;
+        if (!veh.properties) {
+            vehicle.properties = this.setVehiclePropertiesByModel(veh.modelName);
+        } else {
+            vehicle.properties = veh.properties;
         }
+
         vehicle.fuelTimer = setInterval(() => {
             try {
                 if (vehicle.engine) {
@@ -106,7 +97,35 @@ module.exports = {
         }
         console.log(`[VEHICLES] Загружено транспортных средств: ${i}`);
     },
+    async loadVehiclePropertiesFromDB() {
+        dbVehicleProperties = await db.Models.VehicleProperties.findAll();
+        console.log(`[VEHICLES] Загружено характеристик моделей транспорта: ${dbVehicleProperties.length}`);
+    },
     setFuel(vehicle, litres) {
         vehicle.fuel = litres;
+    },
+    setVehiclePropertiesByModel(modelName) {
+        console.log("find props");
+        for (let i = 0; i < dbVehicleProperties.length; i++) {
+            if (dbVehicleProperties[i].model == modelName) {
+                var properties = {
+                    name: dbVehicleProperties[i].name,
+                    maxFuel: dbVehicleProperties[i].maxFuel,
+                    defaultConsumption: dbVehicleProperties[i].defaultConsumption,
+                    license: dbVehicleProperties[i].license
+                }
+                if (properties.name == null) properties.name = modelName;
+                return properties;
+            }
+        }
+
+        var properties = {
+            name: modelName,
+            maxFuel: 50,
+            defaultConsumption: 2,
+            license: 1
+        }
+
+        return properties;
     }
 }
