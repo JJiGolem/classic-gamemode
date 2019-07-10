@@ -8,7 +8,7 @@ mp.events.add('auth.login', (data) => {
 mp.events.add('auth.login.result', result => {
     mp.callCEFVN({"auth.login.result": result});
     //temp
-    mp.callCEFR('pushChatMessage', ["Результат входа " + result]);
+    mp.chat.debug("Результат входа " + result);
 });
 
 /// Регистрация аккаунта
@@ -19,7 +19,7 @@ mp.events.add('auth.register', (data) => {
 mp.events.add('auth.register.result', (result, data) => {
     mp.callCEFVN('auth.register.result', {"auth.register.result": result, "auth.register.data": data});
     //temp
-    mp.callCEFR('pushChatMessage', ["Результат регистрации " + result]);
+    mp.chat.debug("Результат регистрации " + result);
 });
 
 /// Запрос на отправку кода подтверждения почты
@@ -34,5 +34,5 @@ mp.events.add('auth.email.confirm.code', (code) => {
 mp.events.add('auth.email.confirm.result', (result) => {
     mp.callCEFVN('auth.email.result', {"auth.email.result": result});
     //temp
-    mp.callCEFR('pushChatMessage', ["Результат проверки кода подтверждения почты " + result]);
+    mp.chat.debug("Результат проверки кода подтверждения почты " + result);
 });
