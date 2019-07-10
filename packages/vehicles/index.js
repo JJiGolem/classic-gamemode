@@ -1,6 +1,5 @@
 "use strict";
 const Sequelize = require('sequelize');
-const Op = Sequelize.Op; // TEMP, добавить к глобальным
 
 var dbVehicleProperties;
 /*
