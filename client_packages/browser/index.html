@@ -20,6 +20,7 @@
         <link rel="stylesheet" type="text/css" href="css/selectMenu.css"/>
         <link rel="stylesheet" type="text/css" href="css/auth.css"/>
         <link rel="stylesheet" type="text/css" href="css/loader.css"/>
+        <link rel="stylesheet" type="text/css" href="css/characterPass.css"/>
 
         <script src="js/main.js"></script>
 
@@ -202,7 +203,7 @@
                 <div class="header">{{ header }}</div>
                 <div class="authAccount" v-if="form == 0">
                     <label>Логин или Email
-                        <input type="text" v-model="loginOrEmail" v-on:keyup.enter="authAccountHandler" />
+                        <input type="text" v-model="loginOrEmail" v-on:keyup.enter="authAccountHandler"/>
                         <img class="ic-login" src="img/auth/login.png"/>
                     </label>
                     <label>Пароль
@@ -215,19 +216,19 @@
                 </div>
                 <div class="regAccount" v-if="form == 1">
                     <label>Логин
-                        <input type="text" v-model="login" v-on:keyup.enter="regAccountHandler" />
+                        <input type="text" v-model="login" v-on:keyup.enter="regAccountHandler"/>
                         <img class="ic-login" src="img/auth/login.png"/>
                     </label>
                     <label>Email
-                        <input type="text" v-model="email" v-on:keyup.enter="regAccountHandler" />
+                        <input type="text" v-model="email" v-on:keyup.enter="regAccountHandler"/>
                         <img class="ic-email" src="img/auth/email.png"/>
                     </label>
                     <label>Пароль
-                        <input type="password" v-model="password" v-on:keyup.enter="regAccountHandler" />
+                        <input type="password" v-model="password" v-on:keyup.enter="regAccountHandler"/>
                         <img class="ic-password" src="img/auth/password.png"/>
                     </label>
                     <label>Повторите пароль
-                        <input type="password" v-model="password2" v-on:keyup.enter="regAccountHandler" />
+                        <input type="password" v-model="password2" v-on:keyup.enter="regAccountHandler"/>
                         <img class="ic-password2" src="img/auth/password.png"/>
                     </label>
                     <a class="authAccountBtn" @click="form = 0">Войти в аккаунт</a>
@@ -235,19 +236,19 @@
                 </div>
                 <div class="recoveryAccount" v-if="form == 2">
                     <label>Логин или Email
-                        <input type="text" v-model="loginOrEmail" v-on:keyup.enter="recoveryAccountHandler" />
+                        <input type="text" v-model="loginOrEmail" v-on:keyup.enter="recoveryAccountHandler"/>
                         <img class="ic-login" src="img/auth/login.png"/>
                     </label>
                     <label style="display: none">Код подтверждения
-                        <input type="text" v-model="code" v-on:keyup.enter="recoveryAccountHandler" />
+                        <input type="text" v-model="code" v-on:keyup.enter="recoveryAccountHandler"/>
                         <img class="ic-password" src="img/auth/password.png"/>
                     </label>
                     <label style="display: none">Пароль
-                        <input type="text" v-model="password" v-on:keyup.enter="recoveryAccountHandler" />
+                        <input type="text" v-model="password" v-on:keyup.enter="recoveryAccountHandler"/>
                         <!-- <img class="ic-password" src="img/auth/password.png" /> -->
                     </label>
                     <label style="display: none">Повторите пароль
-                        <input type="text" v-model="password2" v-on:keyup.enter="recoveryAccountHandler" />
+                        <input type="text" v-model="password2" v-on:keyup.enter="recoveryAccountHandler"/>
                         <!-- <img class="ic-password" src="img/auth/password.png" /> -->
                     </label>
                     <a class="authAccountBtn" @click="form = 0">Войти в аккаунт</a>
@@ -273,6 +274,31 @@
             </div>
         </div>
 
+        <div v-cloak="v-cloak" id="characterPass" v-if="show">
+            <span class="close" @click="show = false">x</span>
+            <div class="header">{{ header }}</div>
+            <div class="content">
+                <div class="infoA">
+                    <div class="label">Имя</div>
+                    <div class="value">{{ fullname }}</div>
+                    <div class="label">Гражданство</div>
+                    <div class="value">UNITED STATED OF AMERICA</div>
+                    <div class="label">Дата получения</div>
+                    <div class="value">{{ regDate }}</div>
+                </div>
+                <div class="infoB">
+                    <div class="label">Пол</div>
+                    <div class="value">{{ prettySex }}</div>
+                    <div class="label">Выдан</div>
+                    <div class="value">United States Department of State</div>
+                </div>
+            </div>
+            <div class="number">{{ prettyNumber }}</div>
+            <div class="footer">P&lt;USA{{ fName }}&lt;&lt;{{ sName }}&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br/>
+                Numpass&lt;&lt;{{ prettyNumber }}
+            </div>
+        </div>
+
         <!-- ------------------------ REACT ------------------------------ -->
         <script async="async" src="js/build.js" type="text/javascript"></script>
         <div id="root"></div>
@@ -287,6 +313,7 @@
         <script src="js/selectMenu.js"></script>
         <script src="js/auth.js"></script>
         <script src="js/loader.js"></script>
+        <script src="js/characterPass.js"></script>
     </body>
 
 </html>

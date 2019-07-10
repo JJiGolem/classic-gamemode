@@ -1,0 +1,66 @@
+#characterPass {
+    background: #eee;
+    border-radius: 1vh;
+    font-family: Montserrat;
+    padding: 0.5vh;
+    position: absolute;
+    right: 10%;
+    top: 40%;
+    width: 50vh;
+}
+
+#characterPass .close {
+    font-size: 2vh;
+    position: absolute;
+    right: 1vh;
+}
+
+#characterPass .close:hover {
+    color: red;
+}
+
+#characterPass .content {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 5vh;
+}
+
+#characterPass .content .infoA {
+    width: fit-content;
+}
+
+#characterPass .content .infoB {
+    float: right;
+    margin-top: 6vh;
+    text-align: center;
+    width: 15vh;
+}
+
+#characterPass .header {
+    text-align: center;
+    font-size: 2vh;
+    font-weight: bold;
+}
+
+#characterPass .footer {
+    padding: 1vh 3vh;
+    text-transform: uppercase;
+}
+
+#characterPass .label {
+    text-transform: uppercase;
+}
+
+#characterPass .number {
+    bottom: 8vh;
+    font-size: 2.5vh;
+    position: relative;
+    right: -41vh;
+    transform: rotate(90deg);
+    width: fit-content;
+}
+
+#characterPass .value {
+    font-weight: bold;
+    margin-bottom: 1vh;
+}
