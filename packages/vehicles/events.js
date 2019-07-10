@@ -43,6 +43,9 @@ module.exports = {
                 }
             }, 1000);
         }
+        console.log(vehicle.mileage);
+        console.log(typeof(vehicle.mileage))
+        player.call('vehicles.mileage.start', [vehicle.mileage]);
     },
     "playerExitVehicle": (player, vehicle) => {
         if (player.indicatorsUpdateTimer) {
@@ -53,7 +56,7 @@ module.exports = {
     "playerStartExitVehicle": (player) => {
         if (player.vehicle.engine) player.vehicle.engine = true;
     },
-    "vehicle.engine.toggle": (player) => { /// Включение/выключение двигателя
+    "vehicles.engine.toggle": (player) => { /// Включение/выключение двигателя
         if (!player.vehicle) return;
         if (player.vehicle.fuel <= 0) return player.call('notifications.push.error', ['Нет топлива', 'Транспорт']);
         if (player.vehicle.engine == true) {
@@ -61,5 +64,13 @@ module.exports = {
         } else {
             player.vehicle.engine = true;
         }
+    },
+    "vehicles.mileage.add": (player, value) => {
+        if (!player.vehicle) return;
+
+        if (value < 0.1) return;
+        player.vehicle.mileage += value;
+        vehicles.updateMileage(player);
+        player.call('chat.message.push', [`!{#adff9e} Пробег ${player.vehicle.mileage}`]);
     }
 }

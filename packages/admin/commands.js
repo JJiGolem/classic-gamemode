@@ -132,7 +132,8 @@ module.exports = {
                     license: 0,
                     key: "admin",
                     owner: 0,
-                    fuel: 50
+                    fuel: 50,
+                    mileage: 0
                 }
                 veh = vehicles.spawnVehicle(veh);
                 //player.putIntoVehicle(veh, -1);
