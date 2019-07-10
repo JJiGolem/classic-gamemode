@@ -156,5 +156,10 @@ module.exports = {
         handler: (player, args) => {
             player.spawn(new mp.Vector3(parseFloat(args[0]), parseFloat(args[1]), parseFloat(args[2])));
         }
+    },
+    "/kick": {
+        handler: (player, args) => {
+            mp.players.at(args[0]).kick("q");
+        }
     }
 }

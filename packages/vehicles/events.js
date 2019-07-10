@@ -47,6 +47,11 @@ module.exports = {
         console.log(typeof(vehicle.mileage))
         player.call('vehicles.mileage.start', [vehicle.mileage]);
     },
+    "playerQuit": (player) => {
+        if (player.indicatorsUpdateTimer) {
+            clearInterval(player.indicatorsUpdateTimer);
+        }
+    },
     "playerExitVehicle": (player, vehicle) => {
         if (player.indicatorsUpdateTimer) {
             clearInterval(player.indicatorsUpdateTimer);
