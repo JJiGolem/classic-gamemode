@@ -1,5 +1,4 @@
 "use strict";
-const Sequelize = require('sequelize');
 
 var dbVehicleProperties;
 /*
@@ -26,9 +25,9 @@ license
 */
 
 module.exports = {
-    init() {
-        this.loadVehiclePropertiesFromDB();
-        this.loadVehiclesFromDB();
+    async init() {
+        await this.loadVehiclePropertiesFromDB();
+        await this.loadVehiclesFromDB();
     },
     spawnVehicle(veh, source) { /// source: 0 - спавн автомобиля из БД, 1 - респавн любого автомобиля, null - спавн админского авто и т. д.
         let vehicle = mp.vehicles.new(veh.modelName, new mp.Vector3(veh.x, veh.y, veh.z),

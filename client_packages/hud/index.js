@@ -11,8 +11,10 @@ mp.events.add('hud.load', () => {
     mp.keys.bind(0x74, true, function () { /// Включение/отключение худа на F5
       if (hudState) {
         mp.events.call('hud.enable', false);
+        mp.game.ui.displayRadar(false);
       } else {
         mp.events.call('hud.enable', true);
+        mp.game.ui.displayRadar(true);
       }
     });
 });
