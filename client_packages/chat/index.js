@@ -3,12 +3,15 @@
 mp.gui.chat.activate(false);
 mp.gui.chat.show(false);
 mp.chat = {
-
+    debug: (message) => { /// выводит в чат строку белым цветом (для дебага)
+        mp.events.call('chat.message.push', `!{#ffffff} ${message}`);
+    }
 };
+
 
 var chatOpacity = 1.0;
 var timestamp = true;
-mp.chat.isOpen = false;
+var isOpen = false;
 // TODO: цвета тэгов
 
 const TAGS_LIST = [
@@ -68,14 +71,14 @@ mp.events.add('chat.load', () => {
     mp.callCEFR('setTimeChat', [true]);
 
     mp.keys.bind(0x54, true, function () {
-        mp.chat.isOpen = true;
+       isOpen = true;
         mp.gui.cursor.show(true, true);
         mp.callCEFR('setFocusChat', [true]);
     });
 
     mp.keys.bind(0x76, true, function () {
 
-        if (mp.chat.isOpen) return;
+        if (isOpen) return;
 
         switch (chatOpacity) {
             case 1.0:
@@ -95,7 +98,7 @@ mp.events.add('chat.load', () => {
 
 mp.events.add('closeChat', () => {
     mp.gui.cursor.show(false, false);
-    mp.chat.isOpen = false;
+    isOpen = false;
 });
 
 mp.events.add('chat.tags.add', (tagIDs) => {
