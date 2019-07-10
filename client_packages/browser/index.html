@@ -19,7 +19,7 @@
     <link rel="stylesheet" type="text/css" href="css/characterInfo.css" />
     <link rel="stylesheet" type="text/css" href="css/characterSelector.css" />
     <link rel="stylesheet" type="text/css" href="css/selectMenu.css" />
-    <link rel="stylesheet" type="text/css" href="css/enterAccount.css" />
+    <link rel="stylesheet" type="text/css" href="css/auth.css" />
     <link rel="stylesheet" type="text/css" href="css/loader.css" />
 
     <script src="js/main.js"></script>
@@ -185,7 +185,7 @@
             </div>
         </div>
 
-        <div id="enterAccount" v-if="show">
+        <div v-cloak id="auth" v-if="show">
             <div class="content">
                 <center>
                     <img class="logo" src="img/logo.png" />
@@ -194,11 +194,11 @@
                 <div class="authAccount" v-if="form == 0">
                     <label>Логин или Email
                         <input type="text" v-model="loginOrEmail" />
-                        <img class="ic-login" src="img/enterAccount/login.png" />
+                        <img class="ic-login" src="img/auth/login.png" />
                     </label>
                     <label>Пароль
                         <input type="password" v-model="password" />
-                        <img class="ic-password" src="img/enterAccount/password.png" />
+                        <img class="ic-password" src="img/auth/password.png" />
                     </label>
                     <a class="recoveryAccountBtn" @click="form = 2">Забыли пароль?</a>
                     <a class="regAccountBtn" @click="form = 1">Создать аккаунт</a>
@@ -207,47 +207,47 @@
                 <div class="regAccount" v-if="form == 1">
                     <label>Логин
                         <input type="text" v-model="login" />
-                        <img class="ic-login" src="img/enterAccount/login.png" />
+                        <img class="ic-login" src="img/auth/login.png" />
                     </label>
                     <label>Email
                         <input type="text" v-model="email" />
-                        <img class="ic-email" src="img/enterAccount/email.png" />
+                        <img class="ic-email" src="img/auth/email.png" />
                     </label>
                     <label>Пароль
                         <input type="password" v-model="password" />
-                        <img class="ic-password" src="img/enterAccount/password.png" />
+                        <img class="ic-password" src="img/auth/password.png" />
                     </label>
                     <label>Повторите пароль
                         <input type="password" v-model="password2" />
-                        <img class="ic-password2" src="img/enterAccount/password.png" />
+                        <img class="ic-password2" src="img/auth/password.png" />
                     </label>
                     <a class="authAccountBtn" @click="form = 0">Войти в аккаунт</a>
-                    <button onclick="regAccountHandler(-1)">Далее</button>
+                    <button @click="regAccountHandler(-1)">Далее</button>
                 </div>
                 <div class="recoveryAccount" v-if="form == 2">
                     <label>Логин или Email
                         <input type="text" v-model="loginOrEmail" />
-                        <img class="ic-login" src="img/enterAccount/login.png" />
+                        <img class="ic-login" src="img/auth/login.png" />
                     </label>
                     <label style="display: none">Код подтверждения
                         <input type="text" v-model="code" />
-                        <img class="ic-password" src="img/enterAccount/password.png" />
+                        <img class="ic-password" src="img/auth/password.png" />
                     </label>
                     <label style="display: none">Пароль
                         <input type="text" v-model="password" />
-                        <!-- <img class="ic-password" src="img/enterAccount/password.png" /> -->
+                        <!-- <img class="ic-password" src="img/auth/password.png" /> -->
                     </label>
                     <label style="display: none">Повторите пароль
                         <input type="text" v-model="password2" />
-                        <!-- <img class="ic-password" src="img/enterAccount/password.png" /> -->
+                        <!-- <img class="ic-password" src="img/auth/password.png" /> -->
                     </label>
                     <a class="authAccountBtn" @click="form = 0">Войти в аккаунт</a>
-                    <button onclick="recoveryAccountHandler()">Далее</button>
+                    <button @click="recoveryAccountHandler()">Далее</button>
                 </div>
                 <div class="confirmEmail" v-if="form == 3">
                     <label>Код подтверждения
                         <input type="text" v-model="code" />
-                        <img class="ic-password" src="img/enterAccount/password.png" />
+                        <img class="ic-password" src="img/auth/password.png" />
                     </label>
                     <a class="confirmEmailBtn" onclick="regAccountHandler()">Пропустить</a>
                     <button>Далее</button>
@@ -258,7 +258,7 @@
             </div>
         </div>
 
-        <div id="loader" class="lds-css ng-scope" v-if="show">
+        <div v-cloak id="loader" class="lds-css ng-scope" v-if="show">
             <div class="lds-rolling">
                 <div> </div>
             </div>
@@ -276,7 +276,7 @@
         <script src="js/characterInfo.js"></script>
         <script src="js/characterSelector.js"></script>
         <script src="js/selectMenu.js"></script>
-        <script src="js/enterAccount.js"></script>
+        <script src="js/auth.js"></script>
         <script src="js/loader.js"></script>
 </body>
 

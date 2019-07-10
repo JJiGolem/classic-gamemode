@@ -1,5 +1,5 @@
-var enterAccount = new Vue({
-    el: "#enterAccount",
+var auth = new Vue({
+    el: "#auth",
     data: {
         show: false,
         loaderShow: true,
@@ -85,6 +85,21 @@ var enterAccount = new Vue({
 
             // if (emailCode) this.emailCode = emailCode;
             // mp.trigger(`regAccount`, JSON.stringify(data));
+            // TODO: call event
+        },
+        recoveryAccountHandler() {
+            if (!this.loginOrEmail) {
+                this.prompt = "Введите логин или Email";
+                return;
+            }
+            var regLogin = /^[0-9a-z_\.-]{5,20}$/i;
+            var regEmail = /^[0-9a-z-_\.]+\@[0-9a-z-_]{1,}\.[a-z]{1,}$/i;
+            if (!regLogin.test(this.loginOrEmail) && !regEmail.test(this.loginOrEmail)) {
+                this.prompt = "Некорректное значение";
+                return;
+            }
+
+            // mp.trigger("recoveryAccount", loginOrEmail);
             // TODO: call event
         },
     },
