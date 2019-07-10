@@ -8,7 +8,7 @@ module.exports = {
     },
     "playerQuit": (player) => {
         mp.players.forEach((current) => {
-            current.call("hud.setData", [{players: mp.players.length - 1}]); /// После выхода из игры игрок какое-то время висит в пуле, поэтому передаем на 1 меньше
+            current.call("hud.setData", [{players: mp.players.length}]); /// После выхода из игры игрок какое-то время висит в пуле, возможно стоит создать таймер
         });
     }
 }
