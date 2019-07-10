@@ -1,4 +1,4 @@
-#enterAccount {
+#auth {
     background: #111d;
     font-family: 'Chalet-LondonNineteenSixty';
     height: 100%;
@@ -6,7 +6,7 @@
     width: 100%;
 }
 
-#enterAccount button {
+#auth button {
     background: #f1d941;
     border: none;
     border-radius: 2px;
@@ -19,17 +19,17 @@
     outline: none;
 }
 
-#enterAccount button:hover {
+#auth button:hover {
     color: #111;
     background: #f1d941dd;
 }
 
-#enterAccount button:active {
+#auth button:active {
     color: #fff;
     background: #f1d941dd;
 }
 
-#enterAccount input {
+#auth input {
     background: none;
     border: none;
     border-bottom: 2px solid #aaa;
@@ -41,54 +41,54 @@
     width: 100%;
 }
 
-#enterAccount input:focus {
+#auth input:focus {
     border-color: #fff;
 }
 
-#enterAccount label {
+#auth label {
     color: #fffd;
     font-size: 1.2vh;
     margin-bottom: 0.2vh;
 }
 
-#enterAccount label img {
+#auth label img {
     height: 1.7vh;
     position: absolute;
 }
 
-#enterAccount .authAccount label .ic-login {
+#auth .authAccount label .ic-login {
     top: 11%;
     right: 0;
 }
 
-#enterAccount label .ic-password {
+#auth label .ic-password {
     top: 49%;
     right: 0;
 }
 
-#enterAccount .authAccount, #enterAccount .regAccount, #enterAccount .recoveryAccount, #enterAccount .confirmEmail {
+#auth .authAccount, #auth .regAccount, #auth .recoveryAccount, #auth .confirmEmail {
     left: 12%;
     position: relative;
     width: 74%;
 }
 
-#enterAccount .confirmEmail button {
+#auth .confirmEmail button {
     right: -22vh;
 }
 
-#enterAccount .confirmEmail label .ic-password {
+#auth .confirmEmail label .ic-password {
     top: 18%;
     right: 0;
 }
 
-#enterAccount .content {
+#auth .content {
     left: 35%;
     position: relative;
     top: 34%;
     width: 50vh;
 }
 
-#enterAccount .header {
+#auth .header {
     color: #fff;
     font-size: 2.4vh;
     margin-bottom: 3vh;
@@ -96,7 +96,7 @@
     text-align: center;
 }
 
-#enterAccount .input-prompt {
+#auth .input-prompt {
     background: #0007;
     border-radius: 4px;
     color: #fff;
@@ -108,51 +108,51 @@
     left: -23vh;
 }
 
-#enterAccount .logo {
+#auth .logo {
     height: 6vh;
 }
 
-#enterAccount .recoveryAccount label .ic-login {
+#auth .recoveryAccount label .ic-login {
     top: 19%;
     right: 0;
 }
 
-#enterAccount .recoveryAccount label .ic-password {
+#auth .recoveryAccount label .ic-password {
     top: 18%;
     right: 0;
 }
 
-#enterAccount .recoveryAccountBtn {
+#auth .recoveryAccountBtn {
     bottom: 2.7vh;
     color: #777;
     font-size: 1.2vh;
     position: absolute;
 }
 
-#enterAccount .recoveryAccountBtn:hover {
+#auth .recoveryAccountBtn:hover {
     color: #ddd;
 }
 
-#enterAccount .regAccount label .ic-email {
+#auth .regAccount label .ic-email {
     top: 29%;
     right: 0;
 }
 
-#enterAccount .regAccount label .ic-login {
+#auth .regAccount label .ic-login {
     top: 7%;
     right: 0;
 }
 
-#enterAccount .regAccount label .ic-password2 {
+#auth .regAccount label .ic-password2 {
     top: 73%;
     right: 0;
 }
 
-#enterAccount .regAccountBtn, #enterAccount .authAccountBtn, #enterAccount .confirmEmailBtn {
+#auth .regAccountBtn, #auth .authAccountBtn, #auth .confirmEmailBtn {
     color: #fff;
     font-weight: bold;
 }
 
-#enterAccount .regAccountBtn:hover, #enterAccount .authAccountBtn:hover, #enterAccount .confirmEmailBtn:hover {
+#auth .regAccountBtn:hover, #auth .authAccountBtn:hover, #auth .confirmEmailBtn:hover {
     color: #fffd;
 }

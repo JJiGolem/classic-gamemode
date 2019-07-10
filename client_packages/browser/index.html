@@ -1,163 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="theme-color" content="#000000" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <link rel="stylesheet" type="text/css" href="./css/chat.css" />
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <meta name="theme-color" content="#000000"/>
+        <link rel="manifest" href="%PUBLIC_URL%/manifest.json"/>
+        <link rel="stylesheet" type="text/css" href="./css/chat.css"/>
 
+        <link rel="stylesheet" type="text/css" href="css/main.css"/>
+        <link rel="stylesheet" type="text/css" href="css/fonts.css"/>
+        <link rel="stylesheet" type="text/css" href="css/hud.css"/>
+        <link rel="stylesheet" type="text/css" href="css/prompt.css"/>
+        <link rel="stylesheet" type="text/css" href="css/notifications.css"/>
+        <link rel="stylesheet" type="text/css" href="css/offerDialog.css"/>
+        <link rel="stylesheet" type="text/css" href="css/infoTable.css"/>
+        <link rel="stylesheet" type="text/css" href="css/characterInfo.css"/>
+        <link rel="stylesheet" type="text/css" href="css/characterSelector.css"/>
+        <link rel="stylesheet" type="text/css" href="css/selectMenu.css"/>
+        <link rel="stylesheet" type="text/css" href="css/auth.css"/>
+        <link rel="stylesheet" type="text/css" href="css/loader.css"/>
+        <link rel="stylesheet" type="text/css" href="css/characterPass.css"/>
 
-    <link rel="stylesheet" type="text/css" href="css/main.css" />
-    <link rel="stylesheet" type="text/css" href="css/fonts.css" />
-    <link rel="stylesheet" type="text/css" href="css/hud.css" />
-    <link rel="stylesheet" type="text/css" href="css/prompt.css" />
-    <link rel="stylesheet" type="text/css" href="css/notifications.css" />
-    <link rel="stylesheet" type="text/css" href="css/offerDialog.css" />
-    <link rel="stylesheet" type="text/css" href="css/infoTable.css" />
-    <link rel="stylesheet" type="text/css" href="css/characterInfo.css" />
-    <link rel="stylesheet" type="text/css" href="css/characterSelector.css" />
-    <link rel="stylesheet" type="text/css" href="css/selectMenu.css" />
-    <link rel="stylesheet" type="text/css" href="css/enterAccount.css" />
-    <link rel="stylesheet" type="text/css" href="css/loader.css" />
+        <script src="js/main.js"></script>
 
-    <script src="js/main.js"></script>
+        <!-- development version, includes helpful console warnings -->
+        <script src="js/vue-development.js"></script>
+        <!-- production version, optimized for size and speed -->
+        <!-- <script src="js/vue-production.js"></script> -->
 
-    <!-- development version, includes helpful console warnings -->
-    <script src="js/vue-development.js"></script>
-    <!-- production version, optimized for size and speed -->
-    <!-- <script src="js/vue-production.js"></script> -->
+        <title>[GUI] Classic Roleplay</title>
+    </head>
 
-    <title>[GUI] Classic Roleplay</title>
-</head>
-
-<body>
-    <!-- ************************** VUE JS **************************  -->
-    <!-- v-cloak в контейнерах VUE используется для того, что бы решить проблему мерцания UI при запуске -->
-    <div v-cloak id="hud" v-show="show">
-        <div class="server-online">
-            <img class="logo" src="img/logo.png" />
-            <p>Онлайн: {{ players }} / {{ maxPlayers }}</p>
-        </div>
-        <div class="money">
-            <div class="cash">
-                <img src="img/hud/cash.svg" />
-                $ {{ pretty(cash) }}
+    <body>
+        <!-- ************************** VUE JS ************************** -->
+        <!-- v-cloak в контейнерах VUE используется для того, что бы решить проблему мерцания UI при запуске -->
+        <div v-cloak="v-cloak" id="hud" v-show="show">
+            <div class="server-online">
+                <img class="logo" src="img/logo.png"/>
+                <p>Онлайн:
+                    {{ players }}
+                    /
+                    {{ maxPlayers }}</p>
             </div>
-            <div class="bank">
-                <img src="img/hud/credit-card.svg" />
-                $ {{ pretty(bank) }}
-            </div>
-            <div class="time">{{ time }}</div>
-        </div>
-        <div class="voice">
-            <img :src="(voice)? 'img/hud/voice-on.png' : 'img/hud/voice-off.png'" />
-        </div>
-        <div class="weather" v-bind:style="{left: leftWeather + 'px'}">
-            <div class="region">{{ region }}</div>
-            <div class="street">{{ street }}</div>
-            <div class="temperature">{{ temperature }} C°</div>
-            <div class="city">{{ city }}</div>
-            <img :src="'img/weather/' + weather + '.svg'" />
-        </div>
-    </div>
-
-    <div v-cloak id="prompt" v-if="text">
-        <div class="text" v-html="text"></div>
-    </div>
-
-    <div id="notifications" v-if="messages.length">
-        <div :class="notif.type" v-for="notif in messages">
-            <img :src="'img/notifs/' + notif.type + '.svg'" />
-            <div v-cloak class="message">
-                <div class="header" v-if="notif.header">{{ notif.header }}</div>
-                {{ notif.text }}
-            </div>
-        </div>
-    </div>
-
-    <div id="offerDialog" v-if="dialog">
-        <div class="agree" @click="dialog.yes(); hide()">Y</div>
-        <div class="content">
-            <div class="header">Предложение</div>
-            <div class="message">
-                {{ dialog.text }}
-            </div>
-            <div class="price" v-if="dialog.price">$ {{ pretty(dialog.price) }}</div>
-        </div>
-        <div class="cancel" @click="dialog.no(); hide()">N</div>
-    </div>
-
-    <div v-cloak id="infoTable" v-if="show && name">
-        <div class="header">{{ tables[name].header }}</div>
-        <div class="content">
-            <div class="row" v-for="param in tables[name].params">
-                <div class="param">
-                    <div class="key">{{ param.key }}</div>
-                    <div class="value" :class="{empty: param.value == 0, full: param.value == 100}">{{ prettyValue(param) }}</div>
-                </div>
-                <div class="progress" v-if="param.isProgress">
-                    <div class="fill" :class="{full: param.value == 100}" :style="{width: param.value + '%'}"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div v-cloak id="characterInfo" v-if="show && characters.length">
-        <div class="header">Статистика персонажа</div>
-        <div class="content">
-            <div class="name">{{ characters[i].name.split(' ')[0] }}<br />{{ characters[i].name.split(' ')[1] }}</div>
             <div class="money">
                 <div class="cash">
-                    <img src="img/hud/cash.svg" />
-                    $ {{ pretty(characters[i].cash) }}
+                    <img src="img/hud/cash.svg"/>
+                    $
+                    {{ pretty(cash) }}
                 </div>
                 <div class="bank">
-                    <img src="img/hud/credit-card.svg" />
-                    $ {{ pretty(characters[i].bank) }}
+                    <img src="img/hud/credit-card.svg"/>
+                    $
+                    {{ pretty(bank) }}
+                </div>
+                <div class="time">{{ time }}</div>
+            </div>
+            <div class="voice">
+                <img :src="(voice)? 'img/hud/voice-on.png' : 'img/hud/voice-off.png'"/>
+            </div>
+            <div class="weather" v-bind:style="{left: leftWeather + 'px'}">
+                <div class="region">{{ region }}</div>
+                <div class="street">{{ street }}</div>
+                <div class="temperature">{{ temperature }}
+                    C°</div>
+                <div class="city">{{ city }}</div>
+                <img :src="'img/weather/' + weather + '.svg'"/>
+            </div>
+        </div>
+
+        <div v-cloak="v-cloak" id="prompt" v-if="text">
+            <div class="text" v-html="text"></div>
+        </div>
+
+        <div id="notifications" v-if="messages.length">
+            <div :class="notif.type" v-for="notif in messages">
+                <img :src="'img/notifs/' + notif.type + '.svg'"/>
+                <div v-cloak="v-cloak" class="message">
+                    <div class="header" v-if="notif.header">{{ notif.header }}</div>
+                    {{ notif.text }}
                 </div>
             </div>
-            <table class="info">
-                <tr>
-                    <td>Игровой статус:
-                        <div>{{ characters[i].status }}</div>
-                    </td>
-                    <td>Отыграно:
-                        <div>{{ characters[i].hours }} часов</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Организация:
-                        <div>{{ characters[i].faction }}</div>
-                    </td>
-                    <td>Профессия:
-                        <div>{{ characters[i].job }}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Проживание:
-                        <div>{{ characters[i].house }}</div>
-                    </td>
-                    <td>Бизнес:
-                        <div>{{ characters[i].biz }}</div>
-                    </td>
-                </tr>
-            </table>
-            <div class="warns" v-show="characters[i].warns">
-                <img src="img/characterInfo/warn.svg" />
-                Предупреждений: {{ characters[i].warns }}
+        </div>
+
+        <div id="offerDialog" v-if="dialog">
+            <div class="agree" @click="dialog.yes(); hide()">Y</div>
+            <div class="content">
+                <div class="header">Предложение</div>
+                <div class="message">
+                    {{ dialog.text }}
+                </div>
+                <div class="price" v-if="dialog.price">$
+                    {{ pretty(dialog.price) }}</div>
+            </div>
+            <div class="cancel" @click="dialog.no(); hide()">N</div>
+        </div>
+
+        <div v-cloak="v-cloak" id="infoTable" v-if="show && name">
+            <div class="header">{{ tables[name].header }}</div>
+            <div class="content">
+                <div class="row" v-for="param in tables[name].params">
+                    <div class="param">
+                        <div class="key">{{ param.key }}</div>
+                        <div class="value" :class="{empty: param.value == 0, full: param.value == 100}">{{ prettyValue(param) }}</div>
+                    </div>
+                    <div class="progress" v-if="param.isProgress">
+                        <div class="fill" :class="{full: param.value == 100}" :style="{width: param.value + '%'}"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div v-cloak id="characterSelector" v-if="show">
-        <div class="arrow" @click="left">
-            <</div> <button @click="enter">Выбрать</button>
-                <div class="arrow" @click="right">></div>
+        <div v-cloak="v-cloak" id="characterInfo" v-if="show && characters.length">
+            <div class="header">Статистика персонажа</div>
+            <div class="content">
+                <div class="name">{{ characters[i].name.split(' ')[0] }}<br/>{{ characters[i].name.split(' ')[1] }}</div>
+                <div class="money">
+                    <div class="cash">
+                        <img src="img/hud/cash.svg"/>
+                        $
+                        {{ pretty(characters[i].cash) }}
+                    </div>
+                    <div class="bank">
+                        <img src="img/hud/credit-card.svg"/>
+                        $
+                        {{ pretty(characters[i].bank) }}
+                    </div>
+                </div>
+                <table class="info">
+                    <tr>
+                        <td>Игровой статус:
+                            <div>{{ characters[i].status }}</div>
+                        </td>
+                        <td>Отыграно:
+                            <div>{{ characters[i].hours }}
+                                часов</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Организация:
+                            <div>{{ characters[i].faction }}</div>
+                        </td>
+                        <td>Профессия:
+                            <div>{{ characters[i].job }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Проживание:
+                            <div>{{ characters[i].house }}</div>
+                        </td>
+                        <td>Бизнес:
+                            <div>{{ characters[i].biz }}</div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="warns" v-show="characters[i].warns">
+                    <img src="img/characterInfo/warn.svg"/>
+                    Предупреждений:
+                    {{ characters[i].warns }}
+                </div>
+            </div>
         </div>
 
-        <div v-cloak id="selectMenu" v-if="show && menu">
+        <div v-cloak="v-cloak" id="characterSelector" v-if="show">
+            <div class="arrow" @click="left">
+                <</div> <button @click="enter">Выбрать</button> <div class="arrow" @click="right">></div>
+        </div>
+
+        <div v-cloak="v-cloak" id="selectMenu" v-if="show && menu">
             <div class="header">{{ menu.header }}</div>
             <div class="content">
                 <div class="arrow arr-up" :class="{active: menu.j > 0}"></div>
@@ -185,20 +195,20 @@
             </div>
         </div>
 
-        <div id="enterAccount" v-if="show">
+        <div v-cloak="v-cloak" id="auth" v-if="show">
             <div class="content">
                 <center>
-                    <img class="logo" src="img/logo.png" />
+                    <img class="logo" src="img/logo.png"/>
                 </center>
                 <div class="header">{{ header }}</div>
                 <div class="authAccount" v-if="form == 0">
                     <label>Логин или Email
-                        <input type="text" v-model="loginOrEmail" />
-                        <img class="ic-login" src="img/enterAccount/login.png" />
+                        <input type="text" v-model="loginOrEmail" v-on:keyup.enter="authAccountHandler"/>
+                        <img class="ic-login" src="img/auth/login.png"/>
                     </label>
                     <label>Пароль
-                        <input type="password" v-model="password" />
-                        <img class="ic-password" src="img/enterAccount/password.png" />
+                        <input type="password" v-model="password" v-on:keyup.enter="authAccountHandler"/>
+                        <img class="ic-password" src="img/auth/password.png"/>
                     </label>
                     <a class="recoveryAccountBtn" @click="form = 2">Забыли пароль?</a>
                     <a class="regAccountBtn" @click="form = 1">Создать аккаунт</a>
@@ -206,48 +216,48 @@
                 </div>
                 <div class="regAccount" v-if="form == 1">
                     <label>Логин
-                        <input type="text" v-model="login" />
-                        <img class="ic-login" src="img/enterAccount/login.png" />
+                        <input type="text" v-model="login" v-on:keyup.enter="regAccountHandler"/>
+                        <img class="ic-login" src="img/auth/login.png"/>
                     </label>
                     <label>Email
-                        <input type="text" v-model="email" />
-                        <img class="ic-email" src="img/enterAccount/email.png" />
+                        <input type="text" v-model="email" v-on:keyup.enter="regAccountHandler"/>
+                        <img class="ic-email" src="img/auth/email.png"/>
                     </label>
                     <label>Пароль
-                        <input type="password" v-model="password" />
-                        <img class="ic-password" src="img/enterAccount/password.png" />
+                        <input type="password" v-model="password" v-on:keyup.enter="regAccountHandler"/>
+                        <img class="ic-password" src="img/auth/password.png"/>
                     </label>
                     <label>Повторите пароль
-                        <input type="password" v-model="password2" />
-                        <img class="ic-password2" src="img/enterAccount/password.png" />
+                        <input type="password" v-model="password2" v-on:keyup.enter="regAccountHandler"/>
+                        <img class="ic-password2" src="img/auth/password.png"/>
                     </label>
                     <a class="authAccountBtn" @click="form = 0">Войти в аккаунт</a>
-                    <button onclick="regAccountHandler(-1)">Далее</button>
+                    <button @click="regAccountHandler(-1)">Далее</button>
                 </div>
                 <div class="recoveryAccount" v-if="form == 2">
                     <label>Логин или Email
-                        <input type="text" v-model="loginOrEmail" />
-                        <img class="ic-login" src="img/enterAccount/login.png" />
+                        <input type="text" v-model="loginOrEmail" v-on:keyup.enter="recoveryAccountHandler"/>
+                        <img class="ic-login" src="img/auth/login.png"/>
                     </label>
                     <label style="display: none">Код подтверждения
-                        <input type="text" v-model="code" />
-                        <img class="ic-password" src="img/enterAccount/password.png" />
+                        <input type="text" v-model="code" v-on:keyup.enter="recoveryAccountHandler"/>
+                        <img class="ic-password" src="img/auth/password.png"/>
                     </label>
                     <label style="display: none">Пароль
-                        <input type="text" v-model="password" />
-                        <!-- <img class="ic-password" src="img/enterAccount/password.png" /> -->
+                        <input type="text" v-model="password" v-on:keyup.enter="recoveryAccountHandler"/>
+                        <!-- <img class="ic-password" src="img/auth/password.png" /> -->
                     </label>
                     <label style="display: none">Повторите пароль
-                        <input type="text" v-model="password2" />
-                        <!-- <img class="ic-password" src="img/enterAccount/password.png" /> -->
+                        <input type="text" v-model="password2" v-on:keyup.enter="recoveryAccountHandler"/>
+                        <!-- <img class="ic-password" src="img/auth/password.png" /> -->
                     </label>
                     <a class="authAccountBtn" @click="form = 0">Войти в аккаунт</a>
-                    <button onclick="recoveryAccountHandler()">Далее</button>
+                    <button @click="recoveryAccountHandler">Далее</button>
                 </div>
                 <div class="confirmEmail" v-if="form == 3">
                     <label>Код подтверждения
-                        <input type="text" v-model="code" />
-                        <img class="ic-password" src="img/enterAccount/password.png" />
+                        <input type="text" v-model="code"/>
+                        <img class="ic-password" src="img/auth/password.png"/>
                     </label>
                     <a class="confirmEmailBtn" onclick="regAccountHandler()">Пропустить</a>
                     <button>Далее</button>
@@ -258,16 +268,41 @@
             </div>
         </div>
 
-        <div id="loader" class="lds-css ng-scope" v-if="show">
+        <div v-cloak="v-cloak" id="loader" class="lds-css ng-scope" v-if="show">
             <div class="lds-rolling">
-                <div> </div>
+                <div></div>
             </div>
         </div>
 
-        <!--  ------------------------  REACT ------------------------------ -->
-        <script async src="js/build.js" type="text/javascript"> </script>
+        <div v-cloak="v-cloak" id="characterPass" v-if="show">
+            <span class="close" @click="show = false">x</span>
+            <div class="header">{{ header }}</div>
+            <div class="content">
+                <div class="infoA">
+                    <div class="label">Имя</div>
+                    <div class="value">{{ fullname }}</div>
+                    <div class="label">Гражданство</div>
+                    <div class="value">UNITED STATED OF AMERICA</div>
+                    <div class="label">Дата получения</div>
+                    <div class="value">{{ regDate }}</div>
+                </div>
+                <div class="infoB">
+                    <div class="label">Пол</div>
+                    <div class="value">{{ prettySex }}</div>
+                    <div class="label">Выдан</div>
+                    <div class="value">United States Department of State</div>
+                </div>
+            </div>
+            <div class="number">{{ prettyNumber }}</div>
+            <div class="footer">P&lt;USA{{ fName }}&lt;&lt;{{ sName }}&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br/>
+                Numpass&lt;&lt;{{ prettyNumber }}
+            </div>
+        </div>
+
+        <!-- ------------------------ REACT ------------------------------ -->
+        <script async="async" src="js/build.js" type="text/javascript"></script>
         <div id="root"></div>
-        <!--    ------------------------------------------------------------- -->
+        <!-- ------------------------------------------------------------- -->
         <script src="js/hud.js"></script>
         <script src="js/prompt.js"></script>
         <script src="js/notifications.js"></script>
@@ -276,8 +311,9 @@
         <script src="js/characterInfo.js"></script>
         <script src="js/characterSelector.js"></script>
         <script src="js/selectMenu.js"></script>
-        <script src="js/enterAccount.js"></script>
+        <script src="js/auth.js"></script>
         <script src="js/loader.js"></script>
-</body>
+        <script src="js/characterPass.js"></script>
+    </body>
 
 </html>
