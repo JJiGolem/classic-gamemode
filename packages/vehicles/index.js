@@ -49,6 +49,9 @@ module.exports = {
         vehicle.owner = veh.owner;
         vehicle.license = veh.license;
         vehicle.fuel = veh.fuel;
+        vehicle.mileage = veh.mileage;
+        
+        vehicle.lastMileage = veh.mileage; /// Последний сохраненный пробег
 
         if (source == 0) { /// Если авто спавнится из БД
             vehicle.sqlId = veh.id;
@@ -127,5 +130,23 @@ module.exports = {
         }
 
         return properties;
+    },
+    async updateMileage(player) {
+        if (!player.vehicle) return;
+        let veh = player.vehicle;
+
+        if (veh.sqlId) {
+            try {
+                var value = parseInt(veh.mileage);
+                if ((veh.lastMileage - value) == 0) return;
+                veh.lastMileage = value;
+                await veh.db.update({
+                    mileage: value
+                });
+                console.log(`[DEBUG] Обновили пробег для ${veh.properties.name}. Текущий пробег: ${veh.mileage}. К занесению: ${value}`);
+            } catch (err) {
+                console.log(err);
+            }      
+        }
     }
 }
