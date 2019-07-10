@@ -6,7 +6,8 @@ mp.events.add('auth.login', (data) => {
 });
 /// Результат входа в аккаунт
 mp.events.add('auth.login.result', result => {
-    mp.callCEFVN({"auth.login.result": result});
+    // mp.callCEFVN({"auth.login.result": result});
+    mp.callCEFV(`auth.showLoginResult(${result})`);
     //temp
     mp.chat.debug("Результат входа " + result);
 });
@@ -17,7 +18,8 @@ mp.events.add('auth.register', (data) => {
 });
 /// Результат регистрации аккаунта
 mp.events.add('auth.register.result', (result, data) => {
-    mp.callCEFVN('auth.register.result', {"auth.register.result": result, "auth.register.data": data});
+    // mp.callCEFVN('auth.register.result', {"auth.register.result": result, "auth.register.data": data});
+    mp.callCEFV(`auth.showRegisterResult(${result})`);
     //temp
     mp.chat.debug("Результат регистрации " + result);
 });
@@ -32,7 +34,8 @@ mp.events.add('auth.email.confirm.code', (code) => {
 });
 /// Ответ проверки почты
 mp.events.add('auth.email.confirm.result', (result) => {
-    mp.callCEFVN('auth.email.result', {"auth.email.result": result});
+    // mp.callCEFVN('auth.email.result', {"auth.email.result": result});
+    mp.callCEFV(`auth.showEmailConfirmResult(${result})`);
     //temp
     mp.chat.debug("Результат проверки кода подтверждения почты " + result);
 });
