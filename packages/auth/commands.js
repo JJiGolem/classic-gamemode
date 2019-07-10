@@ -15,4 +15,20 @@ module.exports = {
             mp.events.call("auth.login", player, `{"loginOrEmail": "${args[0]}", "password": "${args[1]}"}`);
         }
     },
+    "/getmail": {
+        access: 5,
+        description: "Получить письмо с кодом подтверждения",
+        args: "",
+        handler: (player, args) => {
+            mp.events.call("auth.email.confirm", player);
+        }
+    },
+    "/setcode": {
+        access: 5,
+        description: "Получить код",
+        args: "[код]",
+        handler: (player, args) => {
+            mp.events.call("auth.email.confirm.code", player, args[0]);
+        }
+    },
 }

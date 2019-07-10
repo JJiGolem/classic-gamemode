@@ -34,7 +34,8 @@ module.exports = {
         let vehicle = mp.vehicles.new(veh.modelName, new mp.Vector3(veh.x, veh.y, veh.z),
             {
                 heading: veh.h,
-                engine: false
+                engine: false,
+                locked: false
             });
         vehicle.setColor(veh.color1, veh.color2);
         vehicle.modelName = veh.modelName;
@@ -66,7 +67,7 @@ module.exports = {
         vehicle.fuelTimer = setInterval(() => {
             try {
                 if (vehicle.engine) {
-                    vehicle.fuel = vehicle.fuel - 1;
+                    vehicle.fuel = vehicle.fuel - vehicle.properties.defaultConsumption;
                     if (vehicle.fuel <= 0) {
                         vehicle.engine = false;
                         vehicle.fuel = 0;
@@ -76,7 +77,7 @@ module.exports = {
             } catch (err) {
                 console.log(err);
             }
-        }, 1000);
+        }, 60000);
         return vehicle;
     },
     respawnVehicle(veh) {
