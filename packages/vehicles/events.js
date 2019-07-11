@@ -43,8 +43,7 @@ module.exports = {
                 }
             }, 1000);
         }
-        console.log(vehicle.mileage);
-        console.log(typeof(vehicle.mileage))
+
         player.call('vehicles.mileage.start', [vehicle.mileage]);
     },
     "playerQuit": (player) => {
@@ -77,5 +76,26 @@ module.exports = {
         player.vehicle.mileage += value;
         vehicles.updateMileage(player);
         player.call('chat.message.push', [`!{#adff9e} Пробег ${player.vehicle.mileage}`]);
-    }
+    },
+    "entityCreated": (entity) => {
+        if (entity.type == "vehicle") {
+            entity.setVariable("leftTurnSignal", false);
+            entity.setVariable("rightTurnSignal", false);
+        }
+    },
+    "vehicles.signals.left": (player, state) => {
+        if (!player.vehicle) return;
+        player.vehicle.setVariable("leftTurnSignal", state);
+        player.vehicle.setVariable("rightTurnSignal", false);
+    },
+    "vehicles.signals.right": (player, state) => {
+        if (!player.vehicle) return;
+        player.vehicle.setVariable("rightTurnSignal", state);
+        player.vehicle.setVariable("leftTurnSignal", false);
+    },
+    "vehicles.signals.emergency": (player, state) => {
+        if (!player.vehicle) return;
+        player.vehicle.setVariable("rightTurnSignal", state);
+        player.vehicle.setVariable("leftTurnSignal", state);
+    },
 }

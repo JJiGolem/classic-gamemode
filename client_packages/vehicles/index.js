@@ -87,3 +87,80 @@ function stopMileageCounter() {
     mp.events.callRemote(`vehicles.mileage.add`, currentDist);
     currentDist = 0;
 };
+
+mp.keys.bind(0xDB, true, function () {
+
+    var player = mp.players.local;
+    var vehicle = player.vehicle;
+    if (!vehicle) return;
+    if (vehicle.getPedInSeat(-1) != player.handle) return;
+    mp.chat.debug(vehicle.getVariable(`leftTurnSignal`));
+    var left = vehicle.getVariable(`leftTurnSignal`);
+    var right = vehicle.getVariable(`rightTurnSignal`);
+
+    if (!left || !right) {
+        mp.events.callRemote("vehicles.signals.left", !left);
+    }   
+ });
+
+ mp.keys.bind(0xDD, true, function () {
+
+    var player = mp.players.local;
+    var vehicle = player.vehicle;
+    if (!vehicle) return;
+    if (vehicle.getPedInSeat(-1) != player.handle) return;
+
+    var left = vehicle.getVariable(`leftTurnSignal`);
+    var right = vehicle.getVariable(`rightTurnSignal`);
+
+    if (!left || !right) {
+        mp.events.callRemote("vehicles.signals.right", !right);
+    }   
+ });
+
+
+ mp.keys.bind(0xDC, false, () => {
+    var player = mp.players.local;
+    var vehicle = player.vehicle;
+    if (!vehicle) return;
+    if (vehicle.getPedInSeat(-1) != player.handle) return;
+
+    var left = vehicle.getVariable(`leftTurnSignal`);
+    var right = vehicle.getVariable(`rightTurnSignal`);
+
+    if (left && right) {
+        mp.events.callRemote(`vehicles.signals.emergency`, false);
+    } else {
+        mp.events.callRemote(`vehicles.signals.emergency`, true);
+    }
+});
+
+
+ mp.events.addDataHandler("leftTurnSignal", (entity) => {
+    var player = mp.players.local;
+    var left = entity.getVariable('leftTurnSignal');
+    entity.setIndicatorLights(1, left);
+
+    if (player.vehicle && entity.remoteId == player.vehicle.remoteId) {
+        // todo обновление спидометра
+    }
+});
+
+mp.events.addDataHandler("rightTurnSignal", (entity) => {
+    var player = mp.players.local;
+    var right = entity.getVariable('rightTurnSignal');
+    entity.setIndicatorLights(0, right);
+
+    if (player.vehicle && entity.remoteId == player.vehicle.remoteId) {
+        // todo обновление спидометра
+    }
+});
+
+mp.events.add('entityStreamIn', (entity) => {
+    if (entity.type == 'vehicle') {
+        var left = entity.getVariable("leftTurnSignal");
+        var right = entity.getVariable("rightTurnSignal");
+        entity.setIndicatorLights(1, left);
+        entity.setIndicatorLights(0, right);
+    }
+});
