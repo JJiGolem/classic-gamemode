@@ -24,7 +24,7 @@ module.exports = {
         emailCodes.set(email, code);
     },
     hashPassword(passwordNotHashed) {
-        return bcrypt.hashSync(passwordNotHashed, bcrypt.genSaltSync(5));
+        return bcrypt.hashSync(passwordNotHashed, bcrypt.genSaltSync(3));
     },
     comparePassword(password, hash) {
         return bcrypt.compareSync(password, hash);
