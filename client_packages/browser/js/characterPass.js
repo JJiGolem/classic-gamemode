@@ -21,3 +21,6 @@ var characterPass = new Vue({
         },
     }
 });
+
+// for tests
+// characterPass.show = true;
