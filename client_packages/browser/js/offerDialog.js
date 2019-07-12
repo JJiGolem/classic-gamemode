@@ -316,8 +316,7 @@ var offerDialog = new Vue({
             this.dialog = null;
         },
         pretty(val) {
-            val += '';
-            return val.replace(/(\d)(?=(\d{3})+(\D|$))/g, '$1 ');
+            return prettyMoney(val);
         }
     },
     mounted() {

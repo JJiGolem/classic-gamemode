@@ -8,8 +8,7 @@ var characterInfo = new Vue({
     },
     methods: {
         pretty(val) {
-            val += '';
-            return val.replace(/(\d)(?=(\d{3})+(\D|$))/g, '$1 ');
+            return prettyMoney(val);
         },
         addCharacter(character) {
             if (typeof character == 'string') character = JSON.parse(character);
