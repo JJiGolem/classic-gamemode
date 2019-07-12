@@ -1,5 +1,5 @@
 module.exports = {
-    "/auth": {
+    "/register": {
         access: 5,
         description: "Регистрация",
         args: "[логин] [почта] [пароль]",
