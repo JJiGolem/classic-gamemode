@@ -25,7 +25,7 @@ mp.events.add('vehicles.indicators.update', (litres) => {
 mp.events.add('render', () => {
     if (indicators.show && mp.players.local.vehicle) {
 
-        mp.game.graphics.drawText(`SPEED: ${Math.floor(mp.players.local.vehicle.getSpeed() * 2.236936)}km/h FUEL: ${indicators.fuel} MILEAGE: ${parseInt(indicators.mileage)}`, [0.8, 0.9],
+        mp.game.graphics.drawText(`SPEED: ${Math.floor(mp.players.local.vehicle.getSpeed() * 3.6)}km/h FUEL: ${indicators.fuel} MILEAGE: ${parseInt(indicators.mileage)}`, [0.8, 0.9],
             {
                 font: 4,
                 color: [255, 255, 255, 255],
