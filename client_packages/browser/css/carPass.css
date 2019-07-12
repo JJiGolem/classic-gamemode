@@ -1,4 +1,4 @@
-#characterPass {
+#carPass {
     background: #eee;
     border-radius: 1vh;
     box-shadow: 0px 0px 10px #0008;
@@ -10,57 +10,52 @@
     width: 50vh;
 }
 
-#characterPass .close {
+#carPass .close {
     font-size: 2vh;
     position: absolute;
     right: 1vh;
 }
 
-#characterPass .close:hover {
+#carPass .close:hover {
     color: red;
 }
 
-#characterPass .content {
+#carPass .content {
     display: flex;
     justify-content: space-around;
-    margin-top: 5vh;
+    margin-top: 2vh;
 }
 
-#characterPass .content .infoA {
+#carPass .content .infoA {
     width: fit-content;
 }
 
-#characterPass .content .infoB {
-    margin-top: 6vh;
-    text-align: center;
+#carPass .content .infoB {
+    text-align: right;
     width: 15vh;
 }
 
-#characterPass .header {
+#carPass .header {
     text-align: center;
     font-size: 2vh;
     font-weight: bold;
 }
 
-#characterPass .footer {
-    padding: 1vh 3vh;
+#carPass .label {
     text-transform: uppercase;
 }
 
-#characterPass .label {
-    text-transform: uppercase;
+#carPass .number {
+    bottom: 6vh;
+    font-family: monospace;
+    font-size: 3vh;
+    font-weight: bold;
+    opacity: 0.6;
+    position: absolute;
+    right: 6vh;
 }
 
-#characterPass .number {
-    bottom: 8vh;
-    font-size: 2.5vh;
-    position: relative;
-    right: -41vh;
-    transform: rotate(90deg);
-    width: fit-content;
-}
-
-#characterPass .value {
+#carPass .value {
     font-weight: bold;
     margin-bottom: 1vh;
 }

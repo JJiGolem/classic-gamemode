@@ -20,8 +20,7 @@ var hud = new Vue({
             this.time = new Date().toTimeString().replace(/(\d{2}:\d{2}).*/, '$1');
         },
         pretty(val) {
-            val += '';
-            return val.replace(/(\d)(?=(\d{3})+(\D|$))/g, '$1 ');
+            return prettyMoney(val);
         }
     },
     mounted() {

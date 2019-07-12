@@ -68,7 +68,6 @@ module.exports = {
         player.account = account;
         /// Вход в аккаунт выполнен успешно
         player.call('auth.login.result', [7]);
-        console.log(player);
     },
     'auth.register': async (player, data) => {
         // data = '{"login":"Carter","email":"test@mail.ru","password":"123123","emailCode":-1}';
@@ -130,7 +129,6 @@ module.exports = {
             player.accountRegistrated = true;
             /// Аккаунт зарегестрирован успешно
             player.call('auth.register.result', [9]);
-            console.log(player);
         }
     },
     "auth.email.confirm": (player) => {
