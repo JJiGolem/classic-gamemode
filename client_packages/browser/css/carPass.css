@@ -1,5 +1,7 @@
 #carPass {
-    background: #eee;
+    background: #e7dccf;
+    background-image: url(../img/carPass/bg.png);
+    background-size: cover;
     border-radius: 1vh;
     box-shadow: 0px 0px 10px #0008;
     font-family: Montserrat;
@@ -23,7 +25,7 @@
 #carPass .content {
     display: flex;
     justify-content: space-around;
-    margin-top: 2vh;
+    margin: 2vh 0;
 }
 
 #carPass .content .infoA {
@@ -37,7 +39,7 @@
 
 #carPass .header {
     text-align: center;
-    font-size: 2vh;
+    font-size: 1.5vh;
     font-weight: bold;
 }
 
@@ -49,7 +51,6 @@
     bottom: 6vh;
     font-family: monospace;
     font-size: 3vh;
-    font-weight: bold;
     opacity: 0.6;
     position: absolute;
     right: 6vh;
