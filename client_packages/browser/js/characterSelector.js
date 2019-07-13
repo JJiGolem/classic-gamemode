@@ -5,6 +5,8 @@ var characterSelector = new Vue({
             mp.trigger("characterChoose.left");
         },
         enter() {
+            if (loader.show) return;
+            loader.show = true;
             mp.trigger("characterChoose.enter");
         },
         right() {
