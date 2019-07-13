@@ -1,5 +1,7 @@
 #characterPass {
-    background: #eee;
+    background: #e9e9e9;
+    background-image: url(../img/characterPass/bg.png);
+    background-size: cover;
     border-radius: 1vh;
     box-shadow: 0px 0px 10px #0008;
     font-family: Montserrat;
@@ -23,7 +25,7 @@
 #characterPass .content {
     display: flex;
     justify-content: space-around;
-    margin-top: 5vh;
+    margin-top: 2vh;
 }
 
 #characterPass .content .infoA {
@@ -38,7 +40,7 @@
 
 #characterPass .header {
     text-align: center;
-    font-size: 2vh;
+    font-size: 1.5vh;
     font-weight: bold;
 }
 
@@ -54,6 +56,7 @@
 #characterPass .number {
     bottom: 8vh;
     font-size: 2.5vh;
+    opacity: 0.6;
     position: relative;
     right: -41vh;
     transform: rotate(90deg);
