@@ -4,6 +4,7 @@ module.exports = {
     "playerJoin": (player) => {
         player.call('chat.load');
         player.call('chat.message.push', ['!{#00abff} Добро пожаловать на Classic Roleplay!']);
+        player.setVariable('nick', player.name); // TEMP!!!
     },
 
     "chat.tags.update": () => {

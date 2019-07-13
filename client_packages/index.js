@@ -15,3 +15,4 @@ require('hud');
 require('notifications');
 require('vehicles');
 require('weather');
+require('nametags');
