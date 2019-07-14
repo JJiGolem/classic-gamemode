@@ -23,6 +23,7 @@
     <link rel="stylesheet" type="text/css" href="css/characterPass.css" />
     <link rel="stylesheet" type="text/css" href="css/carPass.css" />
     <link rel="stylesheet" type="text/css" href="css/driverLicense.css" />
+    <link rel="stylesheet" type="text/css" href="css/speedometer.css" />
 
     <script src="js/main.js"></script>
 
@@ -347,6 +348,30 @@
                         <img :src="imgSrc(index)" />
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div id="speedometer" style="display: none">
+            <div class="content">
+                <img src="img/speedometer/headlights/0.png" />
+                <img src="img/speedometer/lock/0.png" />
+                <div class="speed">
+                    <div class="value">240</div>
+                    <div class="unit">км/ч</div>
+                </div>
+                <img src="img/speedometer/fuel.svg" />
+                <img src="img/speedometer/danger.svg" />
+            </div>
+            <div class="footer">
+                <img class="signalLeft" src="img/speedometer/signal/0.svg" />
+                <div class="mileage">
+                    <img src="img/speedometer/mileage.png" />
+                    23.004 км
+                    <div class="progress">
+                        <div class="fill" style="width: 50%"></div>
+                    </div>
+                </div>
+                <img class="signalRight" src="img/speedometer/signal/0.svg" />
             </div>
         </div>
 

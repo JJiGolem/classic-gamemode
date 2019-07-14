@@ -1,0 +1,88 @@
+#speedometer {
+    background: linear-gradient(to bottom, #0000, rgb(0, 0, 0, 0.6));
+    /* background: #000; */
+    border-radius: 20vh 20vh 0 0;
+    bottom: 33%;
+    color: #fff;
+    font-family: Montserrat;
+    height: 20vh;
+    position: absolute;
+    right: 4%;
+    width: 40vh;
+}
+
+#speedometer b {
+    background: #000;
+}
+
+#speedometer .content {
+    align-items: center;
+    display: flex;
+    font-size: 4vh;
+    justify-content: center;
+    margin-top: 11vh;
+}
+
+#speedometer .content img {
+    height: 2.5vh;
+    margin: 0 1vh;
+}
+
+#speedometer .content img:nth-child(1) {
+    height: 2vh;
+}
+
+#speedometer .content img:nth-child(2) {
+    height: 3vh;
+}
+
+#speedometer .content .speed {
+    line-height: 3vh;
+    margin-bottom: 1vh;
+    text-align: center;
+}
+
+#speedometer .content .speed .value {
+    font-weight: bold;
+}
+
+#speedometer .content .speed .unit {
+    font-size: 1vh;
+    font-weight: none;
+}
+
+#speedometer .footer {
+    bottom: 1vh;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    width: 100%;
+}
+
+#speedometer .footer img {
+    height: 2vh;
+}
+
+#speedometer .footer .progress {
+    background: #fff;
+    height: 1px;
+    width: 100%;
+}
+
+#speedometer .footer .progress .fill {
+    background: #35c82a;
+    height: 1px;
+}
+
+#speedometer .footer .mileage {
+    margin: 0 4vh;
+}
+
+#speedometer .footer .mileage img {
+    height: 1.3vh;
+    margin-right: 0.5vh;
+}
+
+#speedometer .footer .signalRight {
+    transform: rotate(180deg);
+}
