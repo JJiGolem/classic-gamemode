@@ -111,7 +111,7 @@ module.exports = {
             switch (weather.current.icon) {
                 case 'clear-day':
                 case 'clear-night':
-                    mp.world.setWeatherTransition("CLEAR");
+                    mp.world.setWeatherTransition("EXTRASUNNY");
                     break;
                 case 'rain':
                     mp.world.setWeatherTransition("RAIN");
