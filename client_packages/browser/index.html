@@ -351,25 +351,25 @@
             </div>
         </div>
 
-        <div id="speedometer" style="display: none">
+        <div v-cloak id="speedometer" v-if="show">
             <div class="content">
-                <img src="img/speedometer/headlights/0.png" />
-                <img src="img/speedometer/lock/0.png" />
+                <img :src="'img/speedometer/headlights/'+headlights+'.png'" />
+                <img :src="'img/speedometer/lock/'+lock+'.png'" />
                 <div class="speed">
-                    <div class="value">240</div>
+                    <div class="value">{{ speed }}</div>
                     <div class="unit">км/ч</div>
                 </div>
                 <img src="img/speedometer/fuel.svg" />
-                <img src="img/speedometer/danger.svg" />
+                <img :src="'img/speedometer/danger/'+danger+'.svg'" />
             </div>
             <div class="footer">
                 <img class="signalLeft" src="img/speedometer/signal/0.svg" />
                 <div class="mileage">
                     <img src="img/speedometer/mileage.png" />
-                    23.004 км
-                    <div class="progress">
+                    {{ mileage }} км
+                    <!-- <div class="progress">
                         <div class="fill" style="width: 50%"></div>
-                    </div>
+                    </div> -->
                 </div>
                 <img class="signalRight" src="img/speedometer/signal/0.svg" />
             </div>
@@ -392,6 +392,7 @@
         <script src="js/characterPass.js"></script>
         <script src="js/carPass.js"></script>
         <script src="js/driverLicense.js"></script>
+        <script src="js/speedometer.js"></script>
 </body>
 
 </html>
