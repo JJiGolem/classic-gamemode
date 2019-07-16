@@ -166,233 +166,234 @@
     </div>
 
     <div v-cloak="v-cloak" id="characterSelector" v-if="show">
-        <div class="arrow" @click="left">
-            <</div> <button @click="enter">Выбрать</button>
-                <div class="arrow" @click="right">></div>
+        <div class="arrow" @click="left">&lt;</div>
+        <button @click="enter">Выбрать</button>
+        <div class="arrow" @click="right">&gt;</div>
+    </div>
+
+    <div v-cloak="v-cloak" id="selectMenu" v-if="show && menu">
+        <div class="header">{{ menu.header }}</div>
+        <div class="content">
+            <div class="arrow arr-up" :class="{active: menu.j > 0}"></div>
+            <div class="items">
+                <div class="item" v-for="(item, index) in items" v-if="isItemShow(index)" :class="{selected: index == menu.i}">
+                    <div class="name">{{ item.text }}</div>
+                    <div class="value" v-if="item.values">{{ item.values[item.i] }}</div>
+                </div>
+            </div>
+            <div class="arrow arr-down" :class="{active: menu.j < menu.items.length - maxItems}"></div>
         </div>
-
-        <div v-cloak="v-cloak" id="selectMenu" v-if="show && menu">
-            <div class="header">{{ menu.header }}</div>
-            <div class="content">
-                <div class="arrow arr-up" :class="{active: menu.j > 0}"></div>
-                <div class="items">
-                    <div class="item" v-for="(item, index) in items" v-if="isItemShow(index)" :class="{selected: index == menu.i}">
-                        <div class="name">{{ item.text }}</div>
-                        <div class="value" v-if="item.values">{{ item.values[item.i] }}</div>
-                    </div>
-                </div>
-                <div class="arrow arr-down" :class="{active: menu.j < menu.items.length - maxItems}"></div>
-            </div>
-            <div class="selector" v-show="menu.items[menu.i].values">
-                <div v-for="value in values">{{ value }}</div>
-            </div>
-            <div class="selector select-color" style="display: none">
-                <div class="arrow arr-left active"></div>
-                <div class="color-type"></div>
-                <div class="color-type"></div>
-                <div class="color-type"></div>
-                <div class="color-type active"></div>
-                <div class="color-type"></div>
-                <div class="color-type"></div>
-                <div class="color-type"></div>
-                <div class="arrow arr-right"></div>
-            </div>
+        <div class="selector" v-show="menu.items[menu.i].values">
+            <div v-for="value in values">{{ value }}</div>
         </div>
-
-        <div v-cloak="v-cloak" id="auth" v-if="show">
-            <div class="content">
-                <center>
-                    <img class="logo" src="img/logo.png" />
-                </center>
-                <div class="header">{{ header }}</div>
-                <div class="authAccount" v-if="form == 0">
-                    <label>Логин или Email
-                        <input type="text" v-model="loginOrEmail" v-on:keyup.enter="authAccountHandler" />
-                        <img class="ic-login" src="img/auth/login.png" />
-                    </label>
-                    <label>Пароль
-                        <input type="password" v-model="password" v-on:keyup.enter="authAccountHandler" />
-                        <img class="ic-password" src="img/auth/password.png" />
-                    </label>
-                    <a class="recoveryAccountBtn" @click="form = 2">Забыли пароль?</a>
-                    <a class="regAccountBtn" @click="form = 1">Создать аккаунт</a>
-                    <button @click="authAccountHandler">Далее</button>
-                </div>
-                <div class="regAccount" v-if="form == 1">
-                    <label>Логин
-                        <input type="text" v-model="login" v-on:keyup.enter="regAccountHandler" />
-                        <img class="ic-login" src="img/auth/login.png" />
-                    </label>
-                    <label>Email
-                        <input type="text" v-model="email" v-on:keyup.enter="regAccountHandler" />
-                        <img class="ic-email" src="img/auth/email.png" />
-                    </label>
-                    <label>Пароль
-                        <input type="password" v-model="password" v-on:keyup.enter="regAccountHandler" />
-                        <img class="ic-password" src="img/auth/password.png" />
-                    </label>
-                    <label>Повторите пароль
-                        <input type="password" v-model="password2" v-on:keyup.enter="regAccountHandler" />
-                        <img class="ic-password2" src="img/auth/password.png" />
-                    </label>
-                    <a class="authAccountBtn" @click="form = 0">Войти в аккаунт</a>
-                    <button @click="regAccountHandler(-1)">Далее</button>
-                </div>
-                <div class="recoveryAccount" v-if="form == 2">
-                    <label>Логин или Email
-                        <input type="text" v-model="loginOrEmail" v-on:keyup.enter="recoveryAccountHandler" />
-                        <img class="ic-login" src="img/auth/login.png" />
-                    </label>
-                    <label style="display: none">Код подтверждения
-                        <input type="text" v-model="code" v-on:keyup.enter="recoveryAccountHandler" />
-                        <img class="ic-password" src="img/auth/password.png" />
-                    </label>
-                    <label style="display: none">Пароль
-                        <input type="text" v-model="password" v-on:keyup.enter="recoveryAccountHandler" />
-                        <!-- <img class="ic-password" src="img/auth/password.png" /> -->
-                    </label>
-                    <label style="display: none">Повторите пароль
-                        <input type="text" v-model="password2" v-on:keyup.enter="recoveryAccountHandler" />
-                        <!-- <img class="ic-password" src="img/auth/password.png" /> -->
-                    </label>
-                    <a class="authAccountBtn" @click="form = 0">Войти в аккаунт</a>
-                    <button @click="recoveryAccountHandler">Далее</button>
-                </div>
-                <div class="confirmEmail" v-if="form == 3">
-                    <label>Код подтверждения
-                        <input type="text" v-model="code" />
-                        <img class="ic-password" src="img/auth/password.png" />
-                    </label>
-                    <a class="confirmEmailBtn" onclick="regAccountHandler()">Пропустить</a>
-                    <button>Далее</button>
-                </div>
-
-                <div class="input-prompt" v-if="prompt">{{ prompt }}</div>
-
-            </div>
+        <div class="selector select-color" style="display: none">
+            <div class="arrow arr-left active"></div>
+            <div class="color-type"></div>
+            <div class="color-type"></div>
+            <div class="color-type"></div>
+            <div class="color-type active"></div>
+            <div class="color-type"></div>
+            <div class="color-type"></div>
+            <div class="color-type"></div>
+            <div class="arrow arr-right"></div>
         </div>
+    </div>
 
-        <div v-cloak="v-cloak" id="loader" class="lds-css ng-scope" v-if="show">
-            <div class="lds-rolling">
-                <div></div>
-            </div>
-        </div>
-
-        <div v-cloak="v-cloak" id="characterPass" v-if="show">
-            <span class="close" @click="show = false">x</span>
+    <div v-cloak="v-cloak" id="auth" v-if="show">
+        <div class="content">
+            <center>
+                <img class="logo" src="img/logo.png" />
+            </center>
             <div class="header">{{ header }}</div>
-            <div class="content">
-                <div class="infoA">
-                    <div class="label">Имя</div>
-                    <div class="value">{{ fullname }}</div>
-                    <div class="label">Гражданство</div>
-                    <div class="value">UNITED STATED OF AMERICA</div>
-                    <div class="label">Дата получения</div>
-                    <div class="value">{{ regDate }}</div>
-                </div>
-                <div class="infoB">
-                    <div class="label">Пол</div>
-                    <div class="value">{{ prettySex }}</div>
-                    <div class="label">Выдан</div>
-                    <div class="value">United States Department of State</div>
-                </div>
+            <div class="authAccount" v-if="form == 0">
+                <label>Логин или Email
+                    <input type="text" v-model="loginOrEmail" v-on:keyup.enter="authAccountHandler" />
+                    <img class="ic-login" src="img/auth/login.png" />
+                </label>
+                <label>Пароль
+                    <input type="password" v-model="password" v-on:keyup.enter="authAccountHandler" />
+                    <img class="ic-password" src="img/auth/password.png" />
+                </label>
+                <a class="recoveryAccountBtn" @click="form = 2">Забыли пароль?</a>
+                <a class="regAccountBtn" @click="form = 1">Создать аккаунт</a>
+                <button @click="authAccountHandler">Далее</button>
             </div>
-            <div class="number">{{ prettyNumber }}</div>
-            <div class="footer">P&lt;USA{{ fName }}&lt;&lt;{{ sName }}&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br />
-                Numpass&lt;&lt;{{ prettyNumber }}
+            <div class="regAccount" v-if="form == 1">
+                <label>Логин
+                    <input type="text" v-model="login" v-on:keyup.enter="regAccountHandler" />
+                    <img class="ic-login" src="img/auth/login.png" />
+                </label>
+                <label>Email
+                    <input type="text" v-model="email" v-on:keyup.enter="regAccountHandler" />
+                    <img class="ic-email" src="img/auth/email.png" />
+                </label>
+                <label>Пароль
+                    <input type="password" v-model="password" v-on:keyup.enter="regAccountHandler" />
+                    <img class="ic-password" src="img/auth/password.png" />
+                </label>
+                <label>Повторите пароль
+                    <input type="password" v-model="password2" v-on:keyup.enter="regAccountHandler" />
+                    <img class="ic-password2" src="img/auth/password.png" />
+                </label>
+                <a class="authAccountBtn" @click="form = 0">Войти в аккаунт</a>
+                <button @click="regAccountHandler(-1)">Далее</button>
+            </div>
+            <div class="recoveryAccount" v-if="form == 2">
+                <label>Логин или Email
+                    <input type="text" v-model="loginOrEmail" v-on:keyup.enter="recoveryAccountHandler" />
+                    <img class="ic-login" src="img/auth/login.png" />
+                </label>
+                <label style="display: none">Код подтверждения
+                    <input type="text" v-model="code" v-on:keyup.enter="recoveryAccountHandler" />
+                    <img class="ic-password" src="img/auth/password.png" />
+                </label>
+                <label style="display: none">Пароль
+                    <input type="text" v-model="password" v-on:keyup.enter="recoveryAccountHandler" />
+                    <!-- <img class="ic-password" src="img/auth/password.png" /> -->
+                </label>
+                <label style="display: none">Повторите пароль
+                    <input type="text" v-model="password2" v-on:keyup.enter="recoveryAccountHandler" />
+                    <!-- <img class="ic-password" src="img/auth/password.png" /> -->
+                </label>
+                <a class="authAccountBtn" @click="form = 0">Войти в аккаунт</a>
+                <button @click="recoveryAccountHandler">Далее</button>
+            </div>
+            <div class="confirmEmail" v-if="form == 3">
+                <label>Код подтверждения
+                    <input type="text" v-model="code" />
+                    <img class="ic-password" src="img/auth/password.png" />
+                </label>
+                <a class="confirmEmailBtn" onclick="regAccountHandler()">Пропустить</a>
+                <button>Далее</button>
+            </div>
+
+            <div class="input-prompt" v-if="prompt">{{ prompt }}</div>
+
+        </div>
+    </div>
+
+    <div v-cloak="v-cloak" id="loader" class="lds-css ng-scope" v-if="show">
+        <div class="lds-rolling">
+            <div></div>
+        </div>
+    </div>
+
+    <div v-cloak="v-cloak" id="characterPass" v-if="show">
+        <span class="close" @click="show = false">x</span>
+        <div class="header">{{ header }}</div>
+        <div class="content">
+            <div class="infoA">
+                <div class="label">Имя</div>
+                <div class="value">{{ fullname }}</div>
+                <div class="label">Гражданство</div>
+                <div class="value">UNITED STATED OF AMERICA</div>
+                <div class="label">Дата получения</div>
+                <div class="value">{{ regDate }}</div>
+            </div>
+            <div class="infoB">
+                <div class="label">Пол</div>
+                <div class="value">{{ prettySex }}</div>
+                <div class="label">Выдан</div>
+                <div class="value">United States Department of State</div>
             </div>
         </div>
-
-        <div v-cloak="v-cloak" id="carPass" v-if="show">
-            <span class="close" @click="show = false">x</span>
-            <div class="header">{{ header }}</div>
-            <div class="content">
-                <div class="infoA">
-                    <div class="label">Идентификатор</div>
-                    <div class="value">{{ prettyId }}</div>
-                    <div class="label">Марка</div>
-                    <div class="value">{{ mark }}</div>
-                    <div class="label">Название</div>
-                    <div class="value">{{ name }}</div>
-                    <div class="label">Дата регистрации</div>
-                    <div class="value">{{ regDate }}</div>
-                    <div class="label">Гос. стоимость</div>
-                    <div class="value">${{ prettyPrice }}</div>
-                </div>
-                <div class="infoB">
-                    <div class="label">Владельцев</div>
-                    <div class="value">{{ owners }}</div>
-                    <div class="label">Номер авто</div>
-                    <div class="value">{{ number }}</div>
-                </div>
-            </div>
-            <div class="number">{{ number }}</div>
+        <div class="number">{{ prettyNumber }}</div>
+        <div class="footer">P&lt;USA{{ fName }}&lt;&lt;{{ sName }}&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br />
+            Numpass&lt;&lt;{{ prettyNumber }}
         </div>
+    </div>
 
-        <div v-cloak="v-cloak" id="driverLicense" v-if="show">
-            <span class="close" @click="show = false">x</span>
-            <div class="header">{{ header }}</div>
-            <div class="content">
-                <div class="infoA">
-                    <h3>Driver License</h3>
-                    <div class="label">ID Лицензии</div>
-                    <div class="value">{{ prettyNumber }}</div>
-                    <div class="label">Имя</div>
-                    <div class="value">{{ name }}</div>
-                    <div class="label">Пол</div>
-                    <div class="value">{{ prettySex }}</div>
-                </div>
-                <div class="infoB">
-                    <div class="category" :class="{active: categories[index]}" v-for="(cat, index) in catNames">
-                        <div class="label">{{ cat }}</div>
-                        <img :src="imgSrc(index)" />
-                    </div>
-                </div>
+    <div v-cloak="v-cloak" id="carPass" v-if="show">
+        <span class="close" @click="show = false">x</span>
+        <div class="header">{{ header }}</div>
+        <div class="content">
+            <div class="infoA">
+                <div class="label">Идентификатор</div>
+                <div class="value">{{ prettyId }}</div>
+                <div class="label">Марка</div>
+                <div class="value">{{ mark }}</div>
+                <div class="label">Название</div>
+                <div class="value">{{ name }}</div>
+                <div class="label">Дата регистрации</div>
+                <div class="value">{{ regDate }}</div>
+                <div class="label">Гос. стоимость</div>
+                <div class="value">${{ prettyPrice }}</div>
+            </div>
+            <div class="infoB">
+                <div class="label">Владельцев</div>
+                <div class="value">{{ owners }}</div>
+                <div class="label">Номер авто</div>
+                <div class="value">{{ number }}</div>
             </div>
         </div>
+        <div class="number">{{ number }}</div>
+    </div>
 
-        <div v-cloak id="speedometer" v-if="show">
-            <div class="content">
-                <img :src="'img/speedometer/headlights/'+headlights+'.png'" />
-                <img :src="'img/speedometer/lock/'+lock+'.png'" />
-                <div class="speed">
-                    <div class="value">{{ speed }}</div>
-                    <div class="unit">км/ч</div>
-                </div>
-                <img src="img/speedometer/fuel.svg" />
-                <img :src="'img/speedometer/danger/'+danger+'.svg'" />
+    <div v-cloak="v-cloak" id="driverLicense" v-if="show">
+        <span class="close" @click="show = false">x</span>
+        <div class="header">{{ header }}</div>
+        <div class="content">
+            <div class="infoA">
+                <h3>Driver License</h3>
+                <div class="label">ID Лицензии</div>
+                <div class="value">{{ prettyNumber }}</div>
+                <div class="label">Имя</div>
+                <div class="value">{{ name }}</div>
+                <div class="label">Пол</div>
+                <div class="value">{{ prettySex }}</div>
             </div>
-            <div class="footer">
-                <img class="signalLeft" src="img/speedometer/signal/0.svg" />
-                <div class="mileage">
-                    <img src="img/speedometer/mileage.png" />
-                    {{ mileage }} км
-                    <!-- <div class="progress">
+            <div class="infoB">
+                <div class="category" :class="{active: categories[index]}" v-for="(cat, index) in catNames">
+                    <div class="label">{{ cat }}</div>
+                    <img :src="imgSrc(index)" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div v-cloak id="speedometer" v-if="show">
+        <div class="content">
+            <img :src="'img/speedometer/headlights/'+headlights+'.png'" />
+            <img :src="'img/speedometer/lock/'+lock+'.png'" />
+            <div class="speed">
+                <div class="value">{{ speed }}</div>
+                <div class="unit">км/ч</div>
+            </div>
+            <img src="img/speedometer/fuel.svg" />
+            <img :src="'img/speedometer/danger/'+danger+'.svg'" />
+            <div class="fuel">{{ fuel }} л.</div>
+        </div>
+        <div class="footer">
+            <img class="signalLeft" src="img/speedometer/signal/0.svg" />
+            <div class="mileage">
+                <img src="img/speedometer/mileage.png" />
+                {{ mileage }} км
+                <!-- <div class="progress">
                         <div class="fill" style="width: 50%"></div>
                     </div> -->
-                </div>
-                <img class="signalRight" src="img/speedometer/signal/0.svg" />
             </div>
+            <img class="signalRight" src="img/speedometer/signal/0.svg" />
         </div>
+    </div>
 
-        <!-- ------------------------ REACT ------------------------------ -->
-        <script async="async" src="js/build.js" type="text/javascript"></script>
-        <div id="root"></div>
-        <!-- ------------------------------------------------------------- -->
-        <script src="js/hud.js"></script>
-        <script src="js/prompt.js"></script>
-        <script src="js/notifications.js"></script>
-        <script src="js/offerDialog.js"></script>
-        <script src="js/infoTable.js"></script>
-        <script src="js/characterInfo.js"></script>
-        <script src="js/characterSelector.js"></script>
-        <script src="js/selectMenu.js"></script>
-        <script src="js/auth.js"></script>
-        <script src="js/loader.js"></script>
-        <script src="js/characterPass.js"></script>
-        <script src="js/carPass.js"></script>
-        <script src="js/driverLicense.js"></script>
-        <script src="js/speedometer.js"></script>
+    <!-- ------------------------ REACT ------------------------------ -->
+    <script async="async" src="js/build.js" type="text/javascript"></script>
+    <div id="root"></div>
+    <!-- ------------------------------------------------------------- -->
+    <script src="js/hud.js"></script>
+    <script src="js/prompt.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/offerDialog.js"></script>
+    <script src="js/infoTable.js"></script>
+    <script src="js/characterInfo.js"></script>
+    <script src="js/characterSelector.js"></script>
+    <script src="js/selectMenu.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/loader.js"></script>
+    <script src="js/characterPass.js"></script>
+    <script src="js/carPass.js"></script>
+    <script src="js/driverLicense.js"></script>
+    <script src="js/speedometer.js"></script>
 </body>
 
 </html>
