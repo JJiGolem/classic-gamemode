@@ -201,5 +201,5 @@ module.exports = {
                 player.setClothes(2, 16, 0, 0);
             }
         }
-    }
+    }   
 }
