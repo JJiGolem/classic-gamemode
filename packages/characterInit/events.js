@@ -35,8 +35,8 @@ module.exports = {
     "playerJoin": player => {
         player.usingCreator = false;
     },
-    "characterInit.create.check": async (player, fullname, charData) => {
-        await characterInit.save(player, fullname, charData);
+    "characterInit.create.check": (player, fullname, charData) => {
+        characterInit.save(player, fullname, charData);
     },
     "characterInit.create.exit": player => {
         if (player.usingCreator) {

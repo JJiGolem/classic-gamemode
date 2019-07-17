@@ -79,6 +79,8 @@ mp.events.add("characterInit.done", () => {
     mp.game.ui.displayHud(true);
     
     mp.game.controls.disableControlAction(1, 199, false);    //ESC
+
+    mp.game.cam.renderScriptCams(false, false, 0, true, false);
 });
 
 mp.events.add('characterInit.choose', (charnumber) => {
@@ -108,7 +110,7 @@ mp.events.add('characterInit.chooseLeft', () => {
 
 
 let changeChar = async function() {
-    //setCharCustom();
+    setCharCustom();
     //setCharClothes();
     let up = 0;
     if (!isExist) up = 4;
@@ -177,35 +179,35 @@ let setCharClothes = function() {
 };
 let setCharCustom = function () {
     if (charCustomizations.length <= currentCharacter) return;
-    mp.players.local.model = freemodeCharacters[charCustomizations[currentCharacter].Gender];
+    mp.players.local.model = freemodeCharacters[charCustomizations[currentCharacter].gender];
     mp.players.local.setHeadBlendData(
         // shape
-        charCustomizations[currentCharacter].Parents.Mother,
-        charCustomizations[currentCharacter].Parents.Father,
+        charCustomizations[currentCharacter].mother,
+        charCustomizations[currentCharacter].father,
         0,
 
         // skin
         0,
-        charCustomizations[currentCharacter].Parents.Skin,
+        charCustomizations[currentCharacter].skin,
         0,
 
         // mixes
-        charCustomizations[currentCharacter].Parents.Similarity,
+        charCustomizations[currentCharacter].similarity,
         1.0,
         0.0,
 
         false
     );
-    mp.players.local.setComponentVariation(2, charCustomizations[currentCharacter].Hair.Hair, 0, 2);
-    mp.players.local.setHairColor(charCustomizations[currentCharacter].Hair.Color, charCustomizations[currentCharacter].Hair.HighlightColor);
-    mp.players.local.setEyeColor(charCustomizations[currentCharacter].EyeColor);
+    mp.players.local.setComponentVariation(2, charCustomizations[currentCharacter].hair, 0, 2);
+    mp.players.local.setHairColor(charCustomizations[currentCharacter].hairColor, charCustomizations[currentCharacter].hairHighlightColor);
+    mp.players.local.setEyeColor(charCustomizations[currentCharacter].eyeColor);
     for (let i = 0; i < 10; i++) {
         mp.players.local.setHeadOverlay(i, charCustomizations[currentCharacter].Appearance[i].value,
             charCustomizations[currentCharacter].Appearance[i].opacity, colorForOverlayIdx(i), 0);
         
     }
     for (let i = 0; i < 20; i++) {
-        mp.players.local.setFaceFeature(i, charCustomizations[currentCharacter].Features[i]);
+        mp.players.local.setFaceFeature(i, charCustomizations[currentCharacter].Features[i].value);
     }
 };
 let colorForOverlayIdx = function(index) {

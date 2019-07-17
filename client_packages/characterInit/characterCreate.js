@@ -170,8 +170,9 @@ mp.events.add('characterInit.create.check', (name, surname) => {
 });
 
 mp.events.add('characterInit.create.check.ans', (ans) => {
-    mp.callCEFR('checkCustom', [ans]);
+    //mp.callCEFR('checkCustom', [ans]);
     if (ans == 1) {
+        mp.chat.debug("Персоонаж создан и ник одобрен");
         mp.events.call('characterInit.create', false);
     }
 });
@@ -185,9 +186,9 @@ mp.events.add("characterInit.create", (active, rawCharData) => {
         camInit();
         applyTorsoCamera();
         
-        mp.callCEFR('showCustomization', []);
+        //mp.callCEFR('showCustomization', []);
     } else {
-        mp.gui.cursor.show(true, true);
+        mp.gui.cursor.show(false, false);
         mp.events.callRemote('characterInit.create.exit');
     }
 });
@@ -366,7 +367,7 @@ for (let i = 0; i < Data.faceFeaturesNames.length; i++) {
             value = parseInt(value);
             const valueScale = value * FACE_FETURE_STEP - 1;
             if (valueScale >= -1 && valueScale <= 1) {
-                charData.Feature[i] = valueScale;
+                charData.Features[i].value = valueScale;
                 localPlayer.setFaceFeature(i, valueScale);
             }
         });
@@ -378,7 +379,7 @@ for (let i = 0; i < Data.faceFeaturesNames.length; i++) {
             value = parseInt(value);
             const valueScale = value * FACE_FETURE_STEP - 1;
             if (valueScale >= -1 && valueScale <= 1) {
-                charData.Feature[i] = valueScale;
+                charData.Features[i].value = valueScale;
                 localPlayer.setFaceFeature(i, valueScale);
             }
         });
@@ -401,7 +402,7 @@ for (let i = 0; i < Data.headOverlays.length; i++) {
         const opacityScale = 1.0;
         if (opacityScale >= 0 && opacityScale <= 1 && value >= 0 && value <= Data.headOverlayItems[i].length) {
             value--;
-            charData.Appearance[i] = {
+            charData.Appearances[i] = {
                 value: value,
                 opacity: opacityScale
             };
