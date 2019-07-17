@@ -26,3 +26,9 @@ db.connect(function() {
 
     mp.events.call('init');
 });
+
+
+
+/// Main events list
+/// auth.done - пользователь авторизован
+/// characterChoose.done - пользователь выбрал персоонажа

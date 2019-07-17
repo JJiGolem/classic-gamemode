@@ -9,7 +9,7 @@ require('utils');
 /// Пользовательские модули (располагать по алфавиту для более удобного поиска)
 /// Положение в списке не должно влиять на работоспособность
 require('auth');
-require('characterChoose');
+require('characterInit');
 require('chat');
 require('hud');
 require('notifications');

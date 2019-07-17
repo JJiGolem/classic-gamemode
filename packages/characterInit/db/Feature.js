@@ -3,18 +3,18 @@ const Sequelize = require('sequelize');
 
 /// Модель персоонажа аккаунта
 module.exports = (sequelize, DataTypes) => {
-    const model = sequelize.define("Character", {
+    const model = sequelize.define("Feature", {
         id: {
             type: DataTypes.INTEGER(11),
             primaryKey: true,
             autoIncrement: true
         },
-        accountId: {
+        characterId: {
             type: DataTypes.INTEGER(11),
             allowNull: false
         },
-        name: {
-            type: DataTypes.STRING(50),
+        value: {
+            type: DataTypes.FLOAT(11),
             allowNull: false
         },
     }, 
@@ -23,9 +23,10 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     model.associate = (models) => {
-        model.belongsTo(models.Account, {
-            foreignKey: "accountId"
+        model.belongsTo(models.Character, {
+            foreignKey: "characterId"
         });
     };
+
     return model;
 };
