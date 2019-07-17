@@ -18,7 +18,6 @@
 #speedometer .content {
     align-items: center;
     display: flex;
-    font-size: 4vh;
     justify-content: center;
     margin-top: 11vh;
 }
@@ -36,7 +35,15 @@
     height: 3vh;
 }
 
+#speedometer .content .fuel {
+    bottom: 3vh;
+    font-size: 1vh;
+    position: absolute;
+    right: 13.2vh;
+}
+
 #speedometer .content .speed {
+    font-size: 4vh;
     line-height: 3vh;
     margin-bottom: 1vh;
     text-align: center;
