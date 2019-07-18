@@ -4,14 +4,6 @@ module.exports = {
     "init": () => {
         vehicles.init();
     },
-    "playerJoin": (player) => { // temp
-        //player.spawn(new mp.Vector3(-252.91534423828125, -338.6800231933594, 29.70627212524414));
-        player.spawn(new mp.Vector3(-57.3, -1095.9, 26.4));
-    },
-    "playerDeath": (player) => { // temp
-        player.health = 100;
-        player.spawn(new mp.Vector3(-252.91534423828125, -338.6800231933594, 29.70627212524414));
-    },
     "playerEnterVehicle": (player, vehicle, seat) => {
         player.call('chat.message.push', [`!{#70a7ff} Модель ${vehicle.model}`]);
         player.call('chat.message.push', [`!{#70a7ff} Имя модели ${vehicle.modelName}`]);

@@ -1,5 +1,14 @@
 "use strict";
 
+/// Инициализация перед авторизацией
+mp.events.add('auth.init', () => {
+    mp.gui.cursor.show(true, true);
+    mp.players.local.freezePosition(true);
+    mp.game.ui.displayRadar(false);
+    mp.game.ui.displayHud(false);
+    mp.game.controls.disableControlAction(1, 199, true);    //ESC
+});
+
 /// Вход в аккаунт
 mp.events.add('auth.login', (data) => {
     mp.events.callRemote('auth.login', data);

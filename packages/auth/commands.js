@@ -1,6 +1,6 @@
 module.exports = {
     "/register": {
-        access: 5,
+        access: 6,
         description: "Регистрация",
         args: "[логин] [почта] [пароль]",
         handler: (player, args) => {
@@ -8,7 +8,7 @@ module.exports = {
         }
     },
     "/login": {
-        access: 5,
+        access: 6,
         description: "Вход",
         args: "[логин|почта] [пароль]",
         handler: (player, args) => {
@@ -16,7 +16,7 @@ module.exports = {
         }
     },
     "/getmail": {
-        access: 5,
+        access: 6,
         description: "Получить письмо с кодом подтверждения",
         args: "",
         handler: (player, args) => {
@@ -24,7 +24,7 @@ module.exports = {
         }
     },
     "/setcode": {
-        access: 5,
+        access: 6,
         description: "Получить код",
         args: "[код]",
         handler: (player, args) => {

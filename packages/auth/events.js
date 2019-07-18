@@ -1,9 +1,13 @@
 "use strict";
-/// Модуль авторизации персоонажа
+/// Модуль авторизации игрока
 let auth = require("./index.js");
 let utils = call("utils");
 
 module.exports = {
+    /// Заморозка игрока перед авторизацией
+    'playerJoin': (player) => {
+        player.call('auth.init', []);
+    },
     'auth.login': async (player, data) => {
         //  data = '{"loginOrEmail":"Carter", "password":"123123"}';
         data = JSON.parse(data);
@@ -68,6 +72,7 @@ module.exports = {
         player.account = account;
         /// Вход в аккаунт выполнен успешно
         player.call('auth.login.result', [7]);
+        mp.events.call('auth.done', player);
     },
     'auth.register': async (player, data) => {
         // data = '{"login":"Carter","email":"test@mail.ru","password":"123123","emailCode":-1}';
@@ -129,6 +134,7 @@ module.exports = {
             player.accountRegistrated = true;
             /// Аккаунт зарегестрирован успешно
             player.call('auth.register.result', [9]);
+            mp.events.call('auth.done', player);
         }
     },
     "auth.email.confirm": (player) => {
