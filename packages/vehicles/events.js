@@ -44,6 +44,9 @@ module.exports = {
             clearInterval(player.indicatorsUpdateTimer);
         }
     },
+    "vehicleDeath": (vehicle) => {
+        vehicles.respawnVehicle(vehicle);
+    },
     "playerExitVehicle": (player, vehicle) => {
         if (player.indicatorsUpdateTimer) {
             clearInterval(player.indicatorsUpdateTimer);
