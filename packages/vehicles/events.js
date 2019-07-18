@@ -14,7 +14,7 @@ module.exports = {
         player.call('chat.message.push', [`!{#71a0ff} maxfuel ${vehicle.properties.maxFuel}`]);
         player.call('chat.message.push', [`!{#71a0ff} name ${vehicle.properties.name}`]);
         player.call('chat.message.push', [`!{#71a0ff} defaultCons ${vehicle.properties.defaultConsumption}`]);
-        player.call('chat.message.push', [`!{#71a0ff} defaultCons ${vehicle.properties.license}`]);
+        player.call('chat.message.push', [`!{#71a0ff} license ${vehicle.properties.license}`]);
 
         if ((vehicle.license != 0) && vehicle.license != player.license) {
             player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);

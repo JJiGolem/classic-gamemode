@@ -121,5 +121,36 @@ module.exports = {
                 return carShow[i][prop];
             }
         }
+    },
+    buyCarFromCarList(player, carId) {
+        for (var i = 0; i < carList.length; i++) {
+            if (carList[i].sqlId == carId) {
+                // проверки на деньги и т д
+                if (carList[i].count < 1) return player.call('carshow.car.buy.ans', [0]);
+                try {
+                    var data = db.Models.Vehicle.create({
+                        key: "private",
+                        owner: player.account.id,
+                        modelName: carList[i].vehiclePropertyModel,
+                        color1: 0,
+                        color2: 0,
+                        x: 0,
+                        y: 0,
+                        z: 0,
+                        h: 0
+                    });
+                    // veh.sqlId = data.id;
+                    // veh.db = data;
+                    carList[i].db.update({
+                        count: carList[i].count - 1
+                    });
+                    carList[i].count = carList[i].count - 1;
+                    player.call('carshow.car.buy.ans', [1, carList[i]]);
+                } catch (err) {
+                    console.log(err);
+                    player.call('carshow.car.buy.ans', [2]);
+                }
+            }
+        }
     }
 }

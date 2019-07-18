@@ -14,5 +14,8 @@ module.exports = {
         var list = carshow.getCarShowList(carShowId);
         player.dimension = player.id + 1;
         player.call('carshow.list.show', [list]);
+    },
+    "carshow.car.buy": (player, carId) => {
+        carshow.buyCarFromCarList(player, carId);
     }
 }
