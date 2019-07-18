@@ -177,7 +177,6 @@ module.exports = {
             player.setHeadOverlay(parseInt(args[0]), [parseInt(args[1]), parseInt(args[2]), parseInt(args[3]), parseInt(args[4])]);
         }
     },
-    
     "/tempwear": {
         handler: (player, args) => {
             if (args[0] == 0) {
@@ -201,5 +200,15 @@ module.exports = {
                 player.setClothes(2, 16, 0, 0);
             }
         }
-    }   
+    },
+    "/rot": {
+        handler: (player, args) => {
+            player.call('chat.message.push', [`!{#ffffff} ${player.heading}`]);
+            console.log(`${player.heading}`);
+            if (player.vehicle) {
+                player.call('chat.message.push', [`!{#ffffff} ${player.vehicle.heading}`]);
+                console.log(`${player.vehicle.heading}`);
+            }
+        }
+    }
 }

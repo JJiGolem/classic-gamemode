@@ -1,13 +1,30 @@
 var vehicles = call('vehicles');
 var dbCarList;
+var dbCarShow;
+var carShow = [];
 var carList = [];
+
+const CARLIST_UPDATE_INTERVAL = 60 * 60 * 1000; /// Интервал заполнения автосалона автомобилями (в секундах)
+
 module.exports = {
     async init() {
         await this.loadCarShowsFromDB();
         await this.loadCarListsFromDB();
+        this.startCarListUpdating();
     },
-    async loadCarShowsFromDB() { /// Загрузка автомобилей фракций/работ из БД 
-        var dbCarShow = await db.Models.CarShow.findAll();
+    async loadCarShowsFromDB() { /// Загрузка автосалонов из БД
+        dbCarShow = await db.Models.CarShow.findAll();
+        for (var i = 0; i < dbCarShow.length; i++) {
+            carShow.push({
+                sqlId: dbCarShow[i].id,
+                name: dbCarShow[i].name,
+                x: dbCarShow[i].x,
+                y: dbCarShow[i].y,
+                z: dbCarShow[i].z,
+                blipId: dbCarShow[i].blipId,
+                blipColor: dbCarShow[i].blipColor
+            });
+        }
         for (var i = 0; i < dbCarShow.length; i++) {
             this.createCarShow(dbCarShow[i]);
         }
@@ -37,13 +54,16 @@ module.exports = {
 
         for (var i = 0; i < dbCarList.length; i++) {
             carList.push({
-                id: dbCarList[i].id,
+                sqlId: dbCarList[i].id,
                 carShowId: dbCarList[i].carShowId,
                 count: dbCarList[i].count,
-                vehiclePropertyModel: dbCarList[i].vehiclePropertyModel
+                vehiclePropertyModel: dbCarList[i].vehiclePropertyModel,
+                percentage: dbCarList[i].percentage,
+                db: dbCarList[i]
             });
         }
-        for (var i = 0; i < carList.length; i++) {
+
+        for (var i = 0; i < carList.length; i++) { /// Устанавливаем характеристики для каждого автомобиля, расположенного в автосалоне
             carList[i] = this.setCarListProperties(carList[i]);
         }
         console.log(`[CARSHOW] Загружено моделей авто для автосалонов: ${i}`);
@@ -61,5 +81,45 @@ module.exports = {
         let properties = vehicles.setVehiclePropertiesByModel(veh.vehiclePropertyModel);
         veh.properties = properties;
         return veh;
+    },
+    startCarListUpdating() {
+        setInterval(() => {
+            try {
+                this.updateCarList();
+            } catch (err) {
+                console.log(err);
+            }
+        }, CARLIST_UPDATE_INTERVAL);
+
+        /* ДЛЯ ТЕСТОВ
+                for (let j = 0; j < 720; j++) {
+                    this.updateCarList();
+                }
+        */
+    },
+    updateCarList() {
+        console.log("[CARSHOW] Запуск обновления автосалонов");
+        for (var i = 0; i < carList.length; i++) {
+            let randomInt = this.generateRandomInt();
+            console.log(randomInt);
+            if (randomInt <= carList[i].percentage) {
+                console.log(`[CARSHOW] В автосалон добавлен т/c ${carList[i].vehiclePropertyModel}`);
+                carList[i].count = carList[i].count + 1;
+                carList[i].db.update({
+                    count: carList[i].count + 1
+                });
+            }
+        }
+        console.log("[CARSHOW] Обновление автосалонов завершено");
+    },
+    generateRandomInt() {
+        return Math.floor(Math.random() * 1000);
+    },
+    getCarShowPropertyBySqlId(prop, sqlId) {
+        for (var i = 0; i < carShow.length; i++) {
+            if (carShow[i].sqlId == sqlId) {
+                return carShow[i][prop];
+            }
+        }
     }
 }

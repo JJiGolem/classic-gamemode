@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(128),
             allowNull: false
         },
+        percentage: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 1,
+            allowNull: false
+        },
         count: {
             type: DataTypes.INTEGER(11),
             defaultValue: 10,
