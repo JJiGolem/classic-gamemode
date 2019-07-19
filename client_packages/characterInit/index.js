@@ -6,6 +6,8 @@ const freemodeCharacters = [mp.game.joaat("mp_m_freemode_01"), mp.game.joaat("mp
 let charNum;
 //let charClothes = new Array();
 let charCustomizations = new Array();
+let charInfo = new Array();
+
 let selectMarkers = new Array();
 let currentCharacter = 0;
 
@@ -38,6 +40,7 @@ mp.events.add('characterInit.init', (characters) => {
         for (let i = 0; i < characters.length; i++) {
             charCustomizations.push(characters[i].customizations);
             //charClothes.push(characters[i].charClothes);
+            charInfo.push(characters[i].info);
         }
         
     }

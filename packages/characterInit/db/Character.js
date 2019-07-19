@@ -17,6 +17,43 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(50),
             allowNull: false
         },
+        /// Финансы
+        cash: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false
+        },
+        bank: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false
+        },
+        /// Последние сохраненные координаты
+        x: {
+            type: DataTypes.FLOAT,
+            allowNull: false
+        },
+        y: {
+            type: DataTypes.FLOAT,
+            allowNull: false
+        },
+        z: {
+            type: DataTypes.FLOAT,
+            allowNull: false
+        },
+        /// Статус
+        admin: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false
+        },
+        /// Статистика
+        minutes: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false
+        },
+        /// Внешность
         gender: {
             type: DataTypes.INTEGER(11),
             allowNull: false
