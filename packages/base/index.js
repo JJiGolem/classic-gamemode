@@ -31,4 +31,4 @@ db.connect(function() {
 
 /// Main events list
 /// auth.done - пользователь авторизован
-/// characterChoose.done - пользователь выбрал персоонажа
+/// characterInit.done - пользователь выбрал персоонажа
