@@ -76,7 +76,7 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		parkingId: {
 			type: DataTypes.INTEGER(11),
-			defaultValue: 0,
+			defaultValue: 1,
 			allowNull: false
 		}
 	}, {timestamps: false});

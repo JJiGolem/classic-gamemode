@@ -142,7 +142,9 @@ module.exports = {
         });
         // if (player.home) spawnHomeVehicles()
         // проверка на отсутствие дома todo
-        mp.events.call('parkings.vehicle.add', dbPrivate[0]);
+        if (dbPrivate.length > 0) {
+            mp.events.call('parkings.vehicle.add', dbPrivate[0]);
+        }
         console.log(`Для игрока ${player.character.name} загружено ${dbPrivate.length} авто`)
     }
 }

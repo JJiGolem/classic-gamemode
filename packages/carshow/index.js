@@ -130,7 +130,7 @@ module.exports = {
                 try {
                     var data = db.Models.Vehicle.create({
                         key: "private",
-                        owner: player.account.id,
+                        owner: player.character.id,
                         modelName: carList[i].vehiclePropertyModel,
                         color1: 0,
                         color2: 0,
@@ -139,8 +139,19 @@ module.exports = {
                         z: 0,
                         h: 0
                     });
-                    // veh.sqlId = data.id;
-                    // veh.db = data;
+
+                    // var veh = {
+                    //     key: data.key,
+                    //     owner: data.owner,
+                    //     modelName: data.modelName,
+                    //     color1: data.color1,
+                    //     color2: data.color2,
+                    //     sqlId: data.id,
+                    //     db: data
+                    // }
+                    // TODO исправить добавление на парковку при покупке
+                    mp.events.call('parkings.vehicle.add', veh);
+
                     carList[i].db.update({
                         count: carList[i].count - 1
                     });
