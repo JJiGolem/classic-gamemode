@@ -7,6 +7,9 @@ mp.events.add('auth.init', () => {
     mp.game.ui.displayRadar(false);
     mp.game.ui.displayHud(false);
     mp.game.controls.disableControlAction(1, 199, true);    //ESC
+
+    mp.players.local.position = new mp.Vector3(-1685.21, -1653.46, 183.55);
+    mp.utils.cam.create(-1685.21, -1653.46, 193.55, -1639.35, -1575.13, 187.48);
 });
 
 /// Вход в аккаунт

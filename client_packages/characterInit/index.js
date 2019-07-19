@@ -3,44 +3,32 @@
 require("characterInit/characterCreate.js");
 const freemodeCharacters = [mp.game.joaat("mp_m_freemode_01"), mp.game.joaat("mp_f_freemode_01")];
 
-let menuCameras = new Array();
-
 let charNum;
-let charClothes = new Array();
+//let charClothes = new Array();
 let charCustomizations = new Array();
+let selectMarkers = new Array();
 let currentCharacter = 0;
-let isExist = false;
 
-const menuCamPos = [1207.15, 176.36, 79.82];//[-1828.8, -870.1, 3.1];//-1828.8 -867.6
-const menuCamDist = 2.5;
-const playerPosZ = [79.83, 79.83, 79.83]//[3.151, 3.155, 3.234];
-const cos30 = 0.866;
-const sin30 = 0.5;
+/// ИЗМЕНЯТЬ ДАННЫЕ НАСТРОЙки ДЛЯ УСТАНОВКИ ПЕДОВ
+/// Начальная координата камеры
+const camPos = [1220.15, 195.36, 81];//[-1828.8, -870.1, 3.1];//-1828.8 -867.6
+/// Координата педа по оси Z для того, что бы ногами расположить на земле
+const pedZPos = [81, 81, 81, 81, 81];
+/// Расстояние от камеры до текущего педа
+const camDist = 2.5;
+/// Расстояние между педами
+const pedDist = 2.5;
+/// Поворот педа
+const pedRotation = 180;
+/// Поворот камеры
+const camRotation = 30;
+
+const cosCamRot = Math.cos(camRotation * Math.PI/180);
+const sinCamRot = Math.sin(camRotation * Math.PI/180);
+const cosPedRot = Math.cos((pedRotation - 90) * Math.PI/180);
+const sinPedRot = Math.sin((pedRotation - 90) * Math.PI/180);
 
 let isBinding = false;
-
-
-
-menuCameras.push(mp.cameras.new('menu0', new mp.Vector3(menuCamPos[0], menuCamPos[1], menuCamPos[2] + 0.5), new mp.Vector3(0,0,0), 50));
-menuCameras[0].pointAtCoord(menuCamPos[0] + menuCamDist * cos30, menuCamPos[1] - menuCamDist * sin30, menuCamPos[2]);
-menuCameras[0].setActive(false);
-
-menuCameras.push(mp.cameras.new('menu1', new mp.Vector3(menuCamPos[0], menuCamPos[1], menuCamPos[2] + 0.5), new mp.Vector3(0,0,0), 50));
-menuCameras[1].pointAtCoord(menuCamPos[0] - menuCamDist * cos30, menuCamPos[1] - menuCamDist * sin30, menuCamPos[2]);
-menuCameras[1].setActive(false);
-
-menuCameras.push(mp.cameras.new('menu2', new mp.Vector3(menuCamPos[0], menuCamPos[1], menuCamPos[2] + 0.5), new mp.Vector3(0,0,0), 50));
-menuCameras[2].pointAtCoord(menuCamPos[0], menuCamPos[1] + menuCamDist, menuCamPos[2]);
-menuCameras[2].setActive(false);
-
-menuCameras.push(mp.cameras.new('menu3', new mp.Vector3(menuCamPos[0], menuCamPos[1], menuCamPos[2] + 0.5), new mp.Vector3(0,0,0), 50));
-menuCameras[3].pointAtCoord(menuCamPos[0] + menuCamDist * cos30, menuCamPos[1] - menuCamDist * sin30, menuCamPos[2]);
-menuCameras[3].setActive(false);
-
-menuCameras.push(mp.cameras.new('menu4', new mp.Vector3(menuCamPos[0], menuCamPos[1], menuCamPos[2] + 0.5), new mp.Vector3(0,0,0), 50));
-menuCameras[4].pointAtCoord(menuCamPos[0] - menuCamDist * cos30, menuCamPos[1] - menuCamDist * sin30, menuCamPos[2]);
-menuCameras[4].setActive(false);
-
 
 
 mp.events.add('characterInit.init', (characters) => {
@@ -49,7 +37,7 @@ mp.events.add('characterInit.init', (characters) => {
         charNum = characters.length;
         for (let i = 0; i < characters.length; i++) {
             charCustomizations.push(characters[i].customizations);
-            charClothes.push(characters[i].charClothes);
+            //charClothes.push(characters[i].charClothes);
         }
         
     }
@@ -57,19 +45,14 @@ mp.events.add('characterInit.init', (characters) => {
         binding(true);
         isBinding = true;
     }
-    //setCharCustom();
-    //setCharClothes();
-    mp.players.local.setRotation(0, 0, 60, 0, true);
-    if (charNum == currentCharacter) {
-        mp.players.local.position = new mp.Vector3(menuCamPos[0] + menuCamDist * cos30, menuCamPos[1] - menuCamDist * sin30, playerPosZ[0] + 4);
-    }
-    else {
-        mp.players.local.position = new mp.Vector3(menuCamPos[0] + menuCamDist * cos30, menuCamPos[1] - menuCamDist * sin30, playerPosZ[0]);
-    }
 
+    mp.players.local.position = new mp.Vector3(camPos[0], camPos[1], camPos[2]);
 
-    menuCameras[currentCharacter].setActive(true);
-    mp.game.cam.renderScriptCams(true, false, 0, true, false);
+    mp.utils.cam.create(camPos[0], camPos[1], camPos[2], camPos[0] + camDist * sinCamRot, camPos[1] + camDist * cosCamRot, camPos[2]);
+
+    createPeds();
+
+    mp.players.local.setAlpha(0);
 });
 
 mp.events.add("characterInit.done", () => {
@@ -80,7 +63,10 @@ mp.events.add("characterInit.done", () => {
     
     mp.game.controls.disableControlAction(1, 199, false);    //ESC
 
-    mp.game.cam.renderScriptCams(false, false, 0, true, false);
+    mp.utils.cam.destroy();
+
+    for (let i = 0; i < selectMarkers.length; i++)
+        selectMarkers[i].destroy();
 });
 
 mp.events.add('characterInit.choose', (charnumber) => {
@@ -107,37 +93,49 @@ mp.events.add('characterInit.chooseLeft', () => {
     chooseLeft();
 });
 
+let createPeds = function() {
+    for (let i = 0; i < charNum; i++) {
+        //setCharCustom(i);
+        //setCharClothes(i);
+    
+        let ped = mp.peds.new(mp.players.local.model, new mp.Vector3(
+            (camPos[0] + i * pedDist * sinPedRot) + camDist * sinCamRot, 
+            (camPos[1] + i * pedDist * cosPedRot) + camDist * cosCamRot, 
+            pedZPos[i]), 
+            pedRotation, mp.players.local.dimension);
+        mp.players.local.cloneToTarget(ped.handle);
 
-
-let changeChar = async function() {
-    setCharCustom();
-    //setCharClothes();
-    let up = 0;
-    if (!isExist) up = 4;
-    switch(currentCharacter)
-    {
-        case 0:
-        mp.players.local.setRotation(0, 0, 60, 0, true);
-        mp.players.local.position = new mp.Vector3(menuCamPos[0] + menuCamDist * cos30, menuCamPos[1] - menuCamDist * sin30, playerPosZ[0] + up);
-        break;
-        case 1:
-        mp.players.local.setRotation(0, 0, 300, 0, true);
-        mp.players.local.position = new mp.Vector3(menuCamPos[0] - menuCamDist * cos30, menuCamPos[1] - menuCamDist * sin30, playerPosZ[1] + up);
-        break;
-        case 2:
-        mp.players.local.setRotation(0, 0, 180, 0, true);
-        mp.players.local.position = new mp.Vector3(menuCamPos[0], menuCamPos[1] + menuCamDist, playerPosZ[2] + up);
-        break;
-        case 3:
-        mp.players.local.setRotation(0, 0, 60, 0, true);
-        mp.players.local.position = new mp.Vector3(menuCamPos[0] + menuCamDist * cos30, menuCamPos[1] - menuCamDist * sin30, playerPosZ[0] + up);
-        break;
-        case 4:
-        mp.players.local.setRotation(0, 0, 300, 0, true);
-        mp.players.local.position = new mp.Vector3(menuCamPos[0] - menuCamDist * cos30, menuCamPos[1] - menuCamDist * sin30, playerPosZ[1] + up);
-        break;
+        selectMarkers.push(mp.markers.new(2, new mp.Vector3(
+            (camPos[0] + i * pedDist * sinPedRot) + camDist * sinCamRot, 
+            (camPos[1] + i * pedDist * cosPedRot) + camDist * cosCamRot, 
+            pedZPos[i] + 1),
+            0.2, {
+            direction: 0,
+            rotation: new mp.Vector3(0, 180, 0),
+            color: (i == currentCharacter) ? [255, 221, 85, 255] : [255, 255, 255, 120],
+            visible: true,
+            dimension: mp.players.local.dimension
+        }));
     }
-};
+}
+
+let updateMarkers = function() {
+    for (let i = 0; i < selectMarkers.length; i++) {
+        selectMarkers[i].destroy();
+        selectMarkers[i] = mp.markers.new(2, new mp.Vector3(
+            (camPos[0] + i * pedDist * sinPedRot) + camDist * sinCamRot, 
+            (camPos[1] + i * pedDist * cosPedRot) + camDist * cosCamRot, 
+            pedZPos[i] + 1),
+            0.2, {
+            direction: 0,
+            rotation: new mp.Vector3(0, 180, 0),
+            color: (i == currentCharacter) ? [255, 221, 85, 255] : [255, 255, 255, 120],
+            visible: true,
+            dimension: mp.players.local.dimension
+        });
+    }
+}
+
 let chooseLeft = function() { 
     if (currentCharacter > 0) {
         currentCharacter--;
@@ -146,9 +144,17 @@ let chooseLeft = function() {
         return;
     }
     
-    menuCameras[currentCharacter].setActiveWithInterp(menuCameras[currentCharacter + 1].handle, 500, 0, 0);
-    isExist = currentCharacter < charNum;
-    setTimeout(changeChar, 250);
+    updateMarkers();
+    mp.utils.cam.moveTo(
+        camPos[0] + currentCharacter * pedDist * sinPedRot,
+        camPos[1] + currentCharacter * pedDist * cosPedRot, 
+        camPos[2],
+        (camPos[0] + currentCharacter * pedDist * sinPedRot) + camDist * sinCamRot, 
+        (camPos[1] + currentCharacter * pedDist * cosPedRot) + camDist * cosCamRot, 
+        pedZPos[i], 
+        500);
+
+    
     //ui.callCEF('chooseLeft');
 };
 let chooseRight = function() { 
@@ -158,80 +164,87 @@ let chooseRight = function() {
     else {
         return;
     }
+    updateMarkers();
+    mp.utils.cam.moveTo(
+        camPos[0] + currentCharacter * pedDist * sinPedRot,
+        camPos[1] + currentCharacter * pedDist * cosPedRot, 
+        camPos[2],
+        (camPos[0] + currentCharacter * pedDist * sinPedRot) + camDist * sinCamRot, 
+        (camPos[1] + currentCharacter * pedDist * cosPedRot) + camDist * cosCamRot, 
+        camPos[2], 
+        500);
+    
 
-    menuCameras[currentCharacter].setActiveWithInterp(menuCameras[currentCharacter - 1].handle, 500, 0, 0);
-    isExist = currentCharacter < charNum;
-    setTimeout(changeChar, 250);
     //ui.callCEF('chooseRight');
 };
 let choose = function() {
     //ui.callCEF('choose');
     //temp
-    mp.events.call('characterInit.choose', currentCharacter, 0);
+    mp.events.call('characterInit.choose', currentCharacter);
 };
-let setCharClothes = function() {
-    if (charClothes.length <= currentCharacter) return;
-    for (let i = 0; i < charClothes[currentCharacter].length; i++) {
-        for (let j = 6; j < charClothes[currentCharacter][i].length; j++) {
-            mp.players.local.setComponentVariation(charClothes[currentCharacter][i][j][0], charClothes[currentCharacter][i][j][1], charClothes[currentCharacter][i][j][2], charClothes[currentCharacter][i][j][3]);
+let setCharClothes = function(indexPed) {
+    if (charClothes.length <= indexPed) return;
+    for (let i = 0; i < charClothes[indexPed].length; i++) {
+        for (let j = 6; j < charClothes[indexPed][i].length; j++) {
+            mp.players.local.setComponentVariation(charClothes[indexPed][i][j][0], charClothes[indexPed][i][j][1], charClothes[indexPed][i][j][2], charClothes[indexPed][i][j][3]);
         }
     }
 };
-let setCharCustom = function () {
-    if (charCustomizations.length <= currentCharacter) return;
-    mp.players.local.model = freemodeCharacters[charCustomizations[currentCharacter].gender];
+let setCharCustom = function (indexPed) {
+    if (charCustomizations.length <= indexPed) return;
+    mp.players.local.model = freemodeCharacters[charCustomizations[indexPed].gender];
     mp.players.local.setHeadBlendData(
         // shape
-        charCustomizations[currentCharacter].mother,
-        charCustomizations[currentCharacter].father,
+        charCustomizations[indexPed].mother,
+        charCustomizations[indexPed].father,
         0,
 
         // skin
         0,
-        charCustomizations[currentCharacter].skin,
+        charCustomizations[indexPed].skin,
         0,
 
         // mixes
-        charCustomizations[currentCharacter].similarity,
+        charCustomizations[indexPed].similarity,
         1.0,
         0.0,
 
         false
     );
-    mp.players.local.setComponentVariation(2, charCustomizations[currentCharacter].hair, 0, 2);
-    mp.players.local.setHairColor(charCustomizations[currentCharacter].hairColor, charCustomizations[currentCharacter].hairHighlightColor);
-    mp.players.local.setEyeColor(charCustomizations[currentCharacter].eyeColor);
+    mp.players.local.setComponentVariation(2, charCustomizations[indexPed].hair, 0, 2);
+    mp.players.local.setHairColor(charCustomizations[indexPed].hairColor, charCustomizations[indexPed].hairHighlightColor);
+    mp.players.local.setEyeColor(charCustomizations[indexPed].eyeColor);
     for (let i = 0; i < 10; i++) {
-        mp.players.local.setHeadOverlay(i, charCustomizations[currentCharacter].Appearance[i].value,
-            charCustomizations[currentCharacter].Appearance[i].opacity, colorForOverlayIdx(i), 0);
+        mp.players.local.setHeadOverlay(i, charCustomizations[indexPed].Appearance[i].value,
+            charCustomizations[indexPed].Appearance[i].opacity, colorForOverlayIdx(i, indexPed), 0);
         
     }
     for (let i = 0; i < 20; i++) {
-        mp.players.local.setFaceFeature(i, charCustomizations[currentCharacter].Features[i].value);
+        mp.players.local.setFaceFeature(i, charCustomizations[indexPed].Features[i].value);
     }
 };
-let colorForOverlayIdx = function(index) {
+let colorForOverlayIdx = function(index, indexPed) {
     let color;
 
     switch (index) {
         case 1:
-            color = charCustomizations[currentCharacter].BeardColor;
+            color = charCustomizations[indexPed].BeardColor;
         break;
 
         case 2:
-            color = charCustomizations[currentCharacter].EyebrowColor;
+            color = charCustomizations[indexPed].EyebrowColor;
         break;
 
         case 5:
-            color = charCustomizations[currentCharacter].BlushColor;
+            color = charCustomizations[indexPed].BlushColor;
         break;
 
         case 8:
-            color = charCustomizations[currentCharacter].LipstickColor;
+            color = charCustomizations[indexPed].LipstickColor;
         break;
 
         case 10:
-            color = charCustomizations[currentCharacter].ChestHairColor;
+            color = charCustomizations[indexPed].ChestHairColor;
         break;
 
         default:

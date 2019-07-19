@@ -34,3 +34,6 @@ mp.utils.getMinimapAnchor = () => {
     minimap.topY = minimap.bottomY - minimap.height;
     return minimap;
 }
+
+/// Управление камерой
+mp.utils.cam = require('utils/camera.js');
