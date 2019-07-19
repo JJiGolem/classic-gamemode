@@ -5,7 +5,7 @@ module.exports = {
             current.call("hud.setData", [{players: mp.players.length}]);
         });
     },
-    "characterChoose.done": (player) => {
+    "characterInit.done": (player) => {
         player.call('hud.load'); 
     },
     "playerQuit": (player) => {
