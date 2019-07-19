@@ -28,7 +28,7 @@ module.exports = {
     /// Разморозка игрока после выбора персоонажа
     "characterInit.done": (player) => {
         player.call('characterInit.done');
-        player.spawn(new mp.Vector3(-252.91534423828125, -338.6800231933594, 29.70627212524414));
+        player.spawn(new mp.Vector3(player.character.x, player.character.y, player.character.z));
         player.dimension = 0;
     },
     /// События создания персоонажа

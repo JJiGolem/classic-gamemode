@@ -14,7 +14,7 @@ module.exports = {
         });
         let charInfos = new Array();
         for(let i = 0; i < player.characters.length; i++) {
-            charInfos.push({customizations: player.characters[i], charClothes: null/*player.characters[i].inventory.usedObjects.getPlayerClothes()*/});
+            charInfos.push({charInfo: player.characters[i], charClothes: null});
         }
         return charInfos;
     },
@@ -56,6 +56,10 @@ module.exports = {
         if (characters.length != 0) return player.call('characterInit.create.check.ans', [0]); 
         player.character = JSON.parse(charData);
         player.character.name = fullname;
+        let pos = this.getSpawn();
+        player.character.x = pos[0];
+        player.character.y = pos[1];
+        player.character.z = pos[2];
         this.applyCharacter(player);
         player.character = await db.Models.Character.create(player.character, {
             include: [db.Models.Feature, db.Models.Appearance]
@@ -127,5 +131,17 @@ module.exports = {
                 color = 0;
         }
         return color;
+    },
+    getSpawn() {
+        switch(call('utils').randomInteger(0, 2)) {
+            case 0:
+                return [-252.91534423828125, -338.6800231933594, 29.70627212524414];
+            case 1:
+                return [-252.91534423828125, -338.6800231933594, 29.70627212524414];
+            case 2:
+                return [-252.91534423828125, -338.6800231933594, 29.70627212524414];
+            default:
+                return [-252.91534423828125, -338.6800231933594, 29.70627212524414];
+        }
     }
 };
