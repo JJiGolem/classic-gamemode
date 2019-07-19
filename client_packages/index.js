@@ -17,3 +17,4 @@ require('vehicles');
 require('weather');
 require('nametags');
 require('carshow');
+require('parkings');
