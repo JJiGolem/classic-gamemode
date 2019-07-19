@@ -27,6 +27,12 @@ module.exports = {
             vehicles.setFuel(player.vehicle, parseInt(args[0]));
         }
     },
+    "/ex": {
+        handler: (player, args) => {
+            if (!player.vehicle) return;
+            player.vehicle.explode();
+        }
+    },
     "/setveh": {
         access: 5,
         description: "Установить транспорт для новичков/фракции/работы",

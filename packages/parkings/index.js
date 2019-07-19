@@ -1,5 +1,7 @@
 var dbParkings;
 var parkings = [];
+var parkingVehicles = []; /// автомобили на парковке
+var vehicles = call("vehicles");
 
 module.exports = {
     async init() {
@@ -43,4 +45,35 @@ module.exports = {
         shape.isParking = true;
         shape.parkingId = parking.id;
     },
+    addVehicleToParking(veh) {
+        console.log(`добавили на парковку ${veh.modelName}`);
+        parkingVehicles.push(veh);
+    },
+    spawnParkingVehicle(player, parkingId) {
+        for (var i = 0; i < parkingVehicles.length; i++) {
+            if ((parkingVehicles[i].owner == player.character.id) && (parkingId == parkingVehicles[i].parkingId)) {
+
+                let index = this.findParkingIndexById(parkingVehicles[i].parkingId);
+                parkingVehicles[i].x = parkings[index].carX;
+                parkingVehicles[i].y = parkings[index].carY;
+                parkingVehicles[i].z = parkings[index].carZ;
+                parkingVehicles[i].h = parkings[index].carH;
+                if (!parkingVehicles[i].sqlId) {
+                    vehicles.spawnVehicle(parkingVehicles[i], 0);
+                } else {
+                    vehicles.spawnVehicle(parkingVehicles[i], 1);
+                }
+                parkingVehicles.splice(i, 1);
+                return;
+            }
+        }
+        player.call('notifications.push.error', ["На парковке нет вашего т/c", "Ошибка"]);
+    },
+    findParkingIndexById(id) {
+        for (var i = 0; i < parkings.length; i++) {
+            if (parkings[i].sqlId == id) {
+                return i;
+            }
+        }
+    }
 }

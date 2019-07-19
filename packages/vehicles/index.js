@@ -1,28 +1,6 @@
 "use strict";
 
 var dbVehicleProperties;
-/*
-Vehicle:
-sqlId
-model
-x
-y
-z
-heading
-color1
-color2
-key
-owner
-license(?)
-fuel
-
-VehicleProperties:
-model
-name
-maxFuel
-defaultConsumption
-license
-*/
 
 module.exports = {
     async init() {
@@ -49,7 +27,8 @@ module.exports = {
         vehicle.license = veh.license;
         vehicle.fuel = veh.fuel;
         vehicle.mileage = veh.mileage;
-        
+        vehicle.parkingId = veh.parkingId;
+
         vehicle.lastMileage = veh.mileage; /// Последний сохраненный пробег
 
         if (source == 0) { /// Если авто спавнится из БД
@@ -83,8 +62,14 @@ module.exports = {
         return vehicle;
     },
     respawnVehicle(veh) {
-        this.spawnVehicle(veh, 1);
         clearInterval(veh.fuelTimer);
+
+        if (veh.key == "private") {
+            mp.events.call('parkings.vehicle.add', veh);
+            veh.destroy();
+            return;
+        }
+        this.spawnVehicle(veh, 1);
         veh.destroy();
     },
     async loadVehiclesFromDB() { /// Загрузка автомобилей фракций/работ из БД 
@@ -147,5 +132,17 @@ module.exports = {
                 console.log(err);
             }      
         }
+    },
+    async loadPrivateVehicles(player) {
+        var dbPrivate = await db.Models.Vehicle.findAll({
+            where: {
+                key: "private",
+                owner: player.character.id    
+            }
+        });
+        // if (player.home) spawnHomeVehicles()
+        // проверка на отсутствие дома todo
+        mp.events.call('parkings.vehicle.add', dbPrivate[0]);
+        console.log(`Для игрока ${player.character.name} загружено ${dbPrivate.length} авто`)
     }
 }

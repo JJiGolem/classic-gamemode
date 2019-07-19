@@ -94,4 +94,10 @@ module.exports = {
         player.vehicle.setVariable("rightTurnSignal", state);
         player.vehicle.setVariable("leftTurnSignal", state);
     },
+    "characterInit.done": (player) => {
+        mp.events.call('vehicles.private.load', player);
+    },
+    "vehicles.private.load": (player) => {
+        vehicles.loadPrivateVehicles(player);
+    }
 }
