@@ -96,7 +96,7 @@ mp.events.add('chat.load', () => {
 
 });
 
-mp.events.add('closeChat', () => {
+mp.events.add('chat.close', () => {
     mp.gui.cursor.show(false, false);
     isOpen = false;
 });
@@ -124,7 +124,7 @@ function sortTagsById() {
     });
 }
 
-mp.events.add('getChatMessage', (type, message) => {
+mp.events.add('chat.message.get', (type, message) => {
     if (message == "/timestamp") {
         if (timestamp) {
             mp.callCEFR('setTimeChat', [false]);
