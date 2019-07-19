@@ -42,7 +42,22 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         /// Статус
+        status: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false
+        },
         admin: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false
+        },
+        /// Ограничения
+        warnDate: {
+            type: DataTypes.DATE,
+            defaultValue: null,
+        },
+        warnNumber: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
             allowNull: false

@@ -2,15 +2,17 @@ var characterSelector = new Vue({
     el: "#characterSelector",
     methods: {
         left() {
-            mp.trigger("characterChoose.left");
+            if (loader.show) return;
+            mp.trigger("characterInit.chooseLeft");
         },
         enter() {
             if (loader.show) return;
             loader.show = true;
-            mp.trigger("characterChoose.enter");
+            mp.trigger("characterInit.choose");
         },
         right() {
-            mp.trigger("characterChoose.right");
+            if (loader.show) return;
+            mp.trigger("characterInit.chooseRight");
         }
     },
     computed: {

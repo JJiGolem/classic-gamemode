@@ -5,8 +5,7 @@ const freemodeCharacters = [mp.game.joaat("mp_m_freemode_01"), mp.game.joaat("mp
 
 let charNum;
 //let charClothes = new Array();
-let charCustomizations = new Array();
-let charInfo = new Array();
+let charInfos = new Array();
 
 let selectMarkers = new Array();
 let currentCharacter = 0;
@@ -38,9 +37,8 @@ mp.events.add('characterInit.init', (characters) => {
     if (characters != null) {
         charNum = characters.length;
         for (let i = 0; i < characters.length; i++) {
-            charCustomizations.push(characters[i].customizations);
+            charInfos.push(characters[i].charInfo);
             //charClothes.push(characters[i].charClothes);
-            charInfo.push(characters[i].info);
         }
         
     }
@@ -54,6 +52,7 @@ mp.events.add('characterInit.init', (characters) => {
     mp.utils.cam.create(camPos[0], camPos[1], camPos[2], camPos[0] + camDist * sinCamRot, camPos[1] + camDist * cosCamRot, camPos[2] + camPosZDelta);
 
     createPeds();
+    setInfo();
 
     mp.players.local.setAlpha(0);
 });
@@ -72,12 +71,12 @@ mp.events.add("characterInit.done", () => {
         selectMarkers[i].destroy();
 });
 
-mp.events.add('characterInit.choose', (charnumber) => {
+mp.events.add('characterInit.choose', () => {
     if(isBinding) {
         binding(false);
         isBinding = false;
     }
-    mp.events.callRemote('characterInit.choose', charnumber);
+    mp.events.callRemote('characterInit.choose', currentCharacter);
 });
 
 mp.events.add('characterInit.choose.ans', (ans) => {     //0 - не успешно     1 - успешно
@@ -87,6 +86,8 @@ mp.events.add('characterInit.choose.ans', (ans) => {     //0 - не успешн
             isBinding = true;
         }
     }
+    mp.callCEFV(`loader.show = false;`);
+    mp.callCEFV(`characterInfo.show = false;`);
 });
 
 mp.events.add('characterInit.chooseRight', () => {
@@ -116,7 +117,7 @@ let createPeds = function() {
             dimension: mp.players.local.dimension
         }));
     }
-}
+};
 
 let updateMarkers = function() {
     for (let i = 0; i < selectMarkers.length; i++) {
@@ -135,7 +136,25 @@ let updateMarkers = function() {
             dimension: mp.players.local.dimension
         });
     }
-}
+};
+
+let setInfo = function() {
+    charInfos.forEach(charInfo => {
+        mp.callCEFV(`characterInfo.addCharacter({
+            name: "${charInfo.name}",
+            cash: ${charInfo.cash},
+            bank: ${charInfo.bank},
+            status: "${charInfo.admin == 0 ? (charInfo.status == 0 ? "Обычный" : "Премиум") : "Администратор"}",
+            hours: ${parseInt(charInfo.minutes / 60)},
+            faction: "Cooming Soon",
+            job: "Cooming Soon",
+            house: "Cooming Soon",
+            biz: "Cooming Soon",
+            warns: ${charInfo.warnNumber}
+        });`);
+    });
+    mp.callCEFV(`characterInfo.show = true;`);
+};
 
 let chooseLeft = function() { 
     if (currentCharacter > 0) {
@@ -146,6 +165,7 @@ let chooseLeft = function() {
     }
     
     updateMarkers();
+    mp.callCEFV(`characterInfo.i = ${currentCharacter};`);
     mp.utils.cam.moveTo(
         camPos[0] + currentCharacter * pedDist * sinPedRot,
         camPos[1] + currentCharacter * pedDist * cosPedRot, 
@@ -154,9 +174,6 @@ let chooseLeft = function() {
         (camPos[1] + currentCharacter * pedDist * cosPedRot) + camDist * cosCamRot, 
         camPos[2] + camPosZDelta, 
         500);
-
-    
-    //ui.callCEF('chooseLeft');
 };
 
 let chooseRight = function() { 
@@ -167,6 +184,7 @@ let chooseRight = function() {
         return;
     }
     updateMarkers();
+    mp.callCEFV(`characterInfo.i = ${currentCharacter};`);
     mp.utils.cam.moveTo(
         camPos[0] + currentCharacter * pedDist * sinPedRot,
         camPos[1] + currentCharacter * pedDist * cosPedRot, 
@@ -175,15 +193,11 @@ let chooseRight = function() {
         (camPos[1] + currentCharacter * pedDist * cosPedRot) + camDist * cosCamRot, 
         camPos[2] + camPosZDelta, 
         500);
-    
-
-    //ui.callCEF('chooseRight');
 };
 
 let choose = function() {
-    //ui.callCEF('choose');
-    //temp
-    mp.events.call('characterInit.choose', currentCharacter);
+    mp.callCEFV(`loader.show = true;`);
+    mp.events.call('characterInit.choose');
 };
 
 let setCharClothes = function(indexPed) {
@@ -196,36 +210,36 @@ let setCharClothes = function(indexPed) {
 };
 
 let setCharCustom = function (indexPed) {
-    if (charCustomizations.length <= indexPed) return;
-    mp.players.local.model = freemodeCharacters[charCustomizations[indexPed].gender];
+    if (charInfos.length <= indexPed) return;
+    mp.players.local.model = freemodeCharacters[charInfos[indexPed].gender];
     mp.players.local.setHeadBlendData(
         // shape
-        charCustomizations[indexPed].mother,
-        charCustomizations[indexPed].father,
+        charInfos[indexPed].mother,
+        charInfos[indexPed].father,
         0,
 
         // skin
         0,
-        charCustomizations[indexPed].skin,
+        charInfos[indexPed].skin,
         0,
 
         // mixes
-        charCustomizations[indexPed].similarity,
+        charInfos[indexPed].similarity,
         1.0,
         0.0,
 
         false
     );
-    mp.players.local.setComponentVariation(2, charCustomizations[indexPed].hair, 0, 2);
-    mp.players.local.setHairColor(charCustomizations[indexPed].hairColor, charCustomizations[indexPed].hairHighlightColor);
-    mp.players.local.setEyeColor(charCustomizations[indexPed].eyeColor);
+    mp.players.local.setComponentVariation(2, charInfos[indexPed].hair, 0, 2);
+    mp.players.local.setHairColor(charInfos[indexPed].hairColor, charInfos[indexPed].hairHighlightColor);
+    mp.players.local.setEyeColor(charInfos[indexPed].eyeColor);
     for (let i = 0; i < 10; i++) {
-        mp.players.local.setHeadOverlay(i, charCustomizations[indexPed].Appearances[i].value,
-            charCustomizations[indexPed].Appearances[i].opacity, colorForOverlayIdx(i, indexPed), 0);
+        mp.players.local.setHeadOverlay(i, charInfos[indexPed].Appearances[i].value,
+            charInfos[indexPed].Appearances[i].opacity, colorForOverlayIdx(i, indexPed), 0);
         
     }
     for (let i = 0; i < 20; i++) {
-        mp.players.local.setFaceFeature(i, charCustomizations[indexPed].Features[i].value);
+        mp.players.local.setFaceFeature(i, charInfos[indexPed].Features[i].value);
     }
 };
 
@@ -234,23 +248,23 @@ let colorForOverlayIdx = function(index, indexPed) {
 
     switch (index) {
         case 1:
-            color = charCustomizations[indexPed].beardColor;
+            color = charInfos[indexPed].beardColor;
         break;
 
         case 2:
-            color = charCustomizations[indexPed].eyebrowColor;
+            color = charInfos[indexPed].eyebrowColor;
         break;
 
         case 5:
-            color = charCustomizations[indexPed].blushColor;
+            color = charInfos[indexPed].blushColor;
         break;
 
         case 8:
-            color = charCustomizations[indexPed].lipstickColor;
+            color = charInfos[indexPed].lipstickColor;
         break;
 
         case 10:
-            color = charCustomizations[indexPed].chestHairColor;
+            color = charInfos[indexPed].chestHairColor;
         break;
 
         default:
