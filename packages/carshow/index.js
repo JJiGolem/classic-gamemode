@@ -1,4 +1,5 @@
 var vehicles = call('vehicles');
+var parkings = call('parkings');
 var dbCarList;
 var dbCarShow;
 var carShow = [];
@@ -122,13 +123,13 @@ module.exports = {
             }
         }
     },
-    buyCarFromCarList(player, carId) {
+    async buyCarFromCarList(player, carId) {
         for (var i = 0; i < carList.length; i++) {
             if (carList[i].sqlId == carId) {
                 // проверки на деньги и т д
                 if (carList[i].count < 1) return player.call('carshow.car.buy.ans', [0]);
                 try {
-                    var data = db.Models.Vehicle.create({
+                    var data = await db.Models.Vehicle.create({
                         key: "private",
                         owner: player.character.id,
                         modelName: carList[i].vehiclePropertyModel,
@@ -137,19 +138,25 @@ module.exports = {
                         x: 0,
                         y: 0,
                         z: 0,
-                        h: 0
+                        h: 0,
+                        parkingId: parkings.getClosestParkingId(player)
                     });
-
-                    // var veh = {
-                    //     key: data.key,
-                    //     owner: data.owner,
-                    //     modelName: data.modelName,
-                    //     color1: data.color1,
-                    //     color2: data.color2,
-                    //     sqlId: data.id,
-                    //     db: data
-                    // }
-                    // TODO исправить добавление на парковку при покупке
+                    var veh = {
+                        key: "private",
+                        owner: player.character.id,
+                        modelName: carList[i].vehiclePropertyModel,
+                        color1: 0,
+                        color2: 0,
+                        x: 0,
+                        y: 0,
+                        z: 0,
+                        h: 0,
+                        parkingId: parkings.getClosestParkingId(player),
+                        fuel: 50,
+                        mileage: 0
+                    }
+                    veh.sqlId = data.id;
+                    veh.db = data;
                     mp.events.call('parkings.vehicle.add', veh);
 
                     carList[i].db.update({

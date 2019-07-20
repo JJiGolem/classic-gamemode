@@ -42,6 +42,7 @@ module.exports = {
                 dimension: 0
             });
         let shape = mp.colshapes.newSphere(parking.x, parking.y, parking.z, 2);
+        shape.pos = new mp.Vector3(parking.x, parking.y, parking.z);
         shape.isParking = true;
         shape.parkingId = parking.id;
     },
@@ -75,5 +76,19 @@ module.exports = {
                 return i;
             }
         }
+    },
+    getClosestParkingId(player) {
+        var minId = 1;
+        var minDist = 10000;
+        mp.colshapes.forEach((shape) => {
+            if (shape.isParking) {
+                let dist = player.dist(shape.pos);
+                if (dist < minDist) {
+                    minDist = dist;
+                    minId = shape.parkingId;
+                }
+            }
+        });
+        return minId;
     }
 }
