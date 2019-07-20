@@ -18,11 +18,11 @@ module.exports = {
 
     getCurrentWeather() {
         if (!weather.current) {
-           let current = {};
-           current.summary = DEFAULT_SUMMARY;
-           current.temperature = DEFAULT_TEMPERATURE;
-           current.icon = DEFAULT_ICON;
-           return current;
+            let current = {};
+            current.summary = DEFAULT_SUMMARY;
+            current.temperature = DEFAULT_TEMPERATURE;
+            current.icon = DEFAULT_ICON;
+            return current;
         }
         return weather.current;
     },
@@ -111,32 +111,32 @@ module.exports = {
             switch (weather.current.icon) {
                 case 'clear-day':
                 case 'clear-night':
-                    mp.world.setWeatherTransition("EXTRASUNNY");
+                    mp.world.weather = "EXTRASUNNY";
                     break;
                 case 'rain':
-                    mp.world.setWeatherTransition("RAIN");
+                    mp.world.weather = "RAIN";
                     break;
                 case 'snow':
-                    mp.world.setWeatherTransition("SNOW");
+                    mp.world.weather = "SNOW";
                     break;
                 case 'sleet':
-                    mp.world.setWeatherTransition("SNOWLIGHT");
+                    mp.world.weather = "SNOWLIGHT";
                     break;
                 case 'wind':
-                    mp.world.setWeatherTransition("OVERCAST");
+                    mp.world.weather = "OVERCAST";
                     break;
                 case 'fog':
-                    mp.world.setWeatherTransition("FOGGY");
+                    mp.world.weather = "FOGGY";
                     break;
                 case 'cloudy':
-                    mp.world.setWeatherTransition("SMOG");
+                    mp.world.weather = "SMOG";
                     break;
                 case 'partly-cloudy-day':
                 case 'partly-cloudy-night':
-                    mp.world.setWeatherTransition("CLOUDY");
+                    mp.world.weather = "CLOUDY";
                     break;
                 default:
-                    mp.world.setWeatherTransition("SMOG");
+                    mp.world.weather = "SMOG";
                     weather.current.icon = 'cloudy';
                     break;
             }
