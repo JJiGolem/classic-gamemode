@@ -1,5 +1,6 @@
 "use strict";
 
+mp.voiceChat.muted = true;
 mp.events.add('characterInit.done', function() {
 	mp.keys.bind(0x55, true, function() {		// U
 		//if (mp.gui.cursor.visible) return;
