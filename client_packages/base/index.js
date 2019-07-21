@@ -23,4 +23,4 @@ mp.game.controls.disableControlAction(1, 200, true);    //Pause Menu
 /// Модуль с сервисными функциями
 /// mp.utils
 /// Модуль войсчата
-/// mp.voice
+/// mp.speechChanel
