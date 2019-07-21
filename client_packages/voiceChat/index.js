@@ -5,15 +5,13 @@ mp.events.add('characterInit.done', function() {
 	mp.keys.bind(0x55, true, function() {		// U
 		//if (mp.gui.cursor.visible) return;
 		mp.voiceChat.muted = false;
-		//temp
-		//mp.gui.chat.push("Voice Chat: enabled");
+		mp.busy.push('voicechat');
 	});
 
 	mp.keys.bind(0x55, false, function() {		// U
-		
 		mp.voiceChat.muted = true;
-		//temp
-		//mp.gui.chat.push("Voice Chat: disabled");
+		let index = mp.busy.findIndex(x => x == 'voicechat');
+        index != -1 && mp.busy.splice(index, 1);
 	});
 });
 
