@@ -1,5 +1,22 @@
 "use strict";
 
+mp.events.add('characterInit.done', function() {
+	mp.keys.bind(0x55, true, function() {		// U
+		//if (mp.gui.cursor.visible) return;
+		mp.voiceChat.muted = false;
+		//temp
+		//mp.gui.chat.push("Voice Chat: enabled");
+	});
+
+	mp.keys.bind(0x55, false, function() {		// U
+		
+		mp.voiceChat.muted = true;
+		//temp
+		//mp.gui.chat.push("Voice Chat: disabled");
+	});
+});
+
+
 mp.voice = {};
 
 const Use3d = true;

@@ -11,6 +11,10 @@ mp.game.controls.disableControlAction(1, 200, true);    //Pause Menu
 
 
 
+/// Осноные клиентские события
+/// auth.init
+/// characterInit.init
+/// characterInit.done
 
 
 /// Описание основных функций клиентской части
