@@ -3,7 +3,7 @@
 mp.voiceChat.muted = true;
 mp.events.add('characterInit.done', function() {
 	mp.keys.bind(0x55, true, function() {		// U
-		//if (mp.gui.cursor.visible) return;
+		if (mp.busy.findIndex(x => x == 'chat') == -1) return;
 		mp.voiceChat.muted = false;
 		mp.busy.push('voicechat');
 	});
@@ -16,7 +16,7 @@ mp.events.add('characterInit.done', function() {
 });
 
 
-mp.voice = {};
+mp.speechChanel = {};
 
 const Use3d = true;
 const UseAutoVolume = false;
@@ -110,5 +110,14 @@ setInterval(() => {
 	});
 }, 250);
 
-// todo
-// Удалить все связи с игроком в случае его смерти
+
+mp.events.add("playerQuit", (player) => {
+    for (let idx = listeners.findIndex(x => x.playerId === player.remoteId); idx !== -1; 
+        idx = listeners.findIndex(x => x.playerId === player.remoteId)) {
+            listeners.splice(idx, 1);
+        }
+});
+
+mp.events.add("playerDeath", (player) => {
+    mp.chat.debug(player.remoteId);
+});
