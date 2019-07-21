@@ -44,7 +44,7 @@ mp.speechChanel.disconnect = (player, channel) => {
         if (idx !== -1) listeners.splice(idx, 1);
 
         if(listeners.findIndex(x => x.playerId === player.remoteId) === -1) {
-            mp.events.callRemote("removeVoice.server", player);
+            mp.events.callRemote("voiceChat.remove", player);
         }
     }
 }
