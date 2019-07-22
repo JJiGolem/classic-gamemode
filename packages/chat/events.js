@@ -1,10 +1,10 @@
 "use strict";
 module.exports = {
 
-    "playerJoin": (player) => {
+    "characterInit.done": (player) => {
         player.call('chat.load');
         player.call('chat.message.push', ['!{#00abff} Добро пожаловать на Classic Roleplay!']);
-        player.setVariable('nick', player.name); // TEMP!!!
+        player.setVariable('nick', player.character.name);
     },
 
     "chat.tags.update": () => {
@@ -86,7 +86,7 @@ module.exports = {
     "chat.action.say": (player, message) => {
         mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
-                currentPlayer.call('chat.action.say', [player.name, player.id, message]);
+                currentPlayer.call('chat.action.say', [player.character.name, player.id, message]);
             };
         });
     },
@@ -94,7 +94,7 @@ module.exports = {
     "/s": (player, message) => {
         mp.players.forEachInRange(player.position, 20, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
-                currentPlayer.call('chat.action.shout', [player.name, player.id, message]);
+                currentPlayer.call('chat.action.shout', [player.character.name, player.id, message]);
             };
         });
     },
@@ -102,7 +102,7 @@ module.exports = {
     "/r": (player, message) => {
         mp.players.forEach((currentPlayer) => {
             if (true) {
-                currentPlayer.call('chat.action.walkietalkie', [player.name, player.id, message]);
+                currentPlayer.call('chat.action.walkietalkie', [player.character.name, player.id, message]);
             };
         });
     },
@@ -110,7 +110,7 @@ module.exports = {
     "/n": (player, message) => {
         mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
-                currentPlayer.call('chat.action.nonrp', [player.name, player.id, message]);
+                currentPlayer.call('chat.action.nonrp', [player.character.name, player.id, message]);
             };
         });
     },
@@ -118,14 +118,14 @@ module.exports = {
     "/me": (player, message) => {
         mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
-                currentPlayer.call('chat.action.me', [player.name, player.id, message]);
+                currentPlayer.call('chat.action.me', [player.character.name, player.id, message]);
             };
         });
     },
     "/do": (player, message) => {
         mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
-                currentPlayer.call('chat.action.do', [player.name, player.id, message]);
+                currentPlayer.call('chat.action.do', [player.character.name, player.id, message]);
             };
         });
     },
@@ -133,7 +133,7 @@ module.exports = {
 
     // "/gnews": (player, message) => {
     //     mp.players.forEach((currentPlayer) => {
-    //         currentPlayer.call('playerGnews', [player.name, player.id, message]);
+    //         currentPlayer.call('playerGnews', [player.character.name, player.id, message]);
     //     });
     // },
 
@@ -144,7 +144,7 @@ module.exports = {
 
         mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
-                currentPlayer.call('chat.action.try', [player.name, player.id, message, result]);
+                currentPlayer.call('chat.action.try', [player.character.name, player.id, message, result]);
             };
         });
     }

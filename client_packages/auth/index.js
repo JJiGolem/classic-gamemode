@@ -17,11 +17,11 @@ mp.events.add('auth.init', () => {
 /// Вход в аккаунт
 mp.events.add('auth.login', (data) => {
     mp.events.callRemote('auth.login', data);
-    mp.console(JSON.stringify(data));
 });
 /// Результат входа в аккаунт
 mp.events.add('auth.login.result', result => {
     mp.callCEFV(`auth.showLoginResult(${result})`);
+    if (result == 7) mp.callCEFV(`auth.show = false;`);
 });
 
 /// Регистрация аккаунта
@@ -31,11 +31,13 @@ mp.events.add('auth.register', (data) => {
 /// Результат регистрации аккаунта
 mp.events.add('auth.register.result', (result, data) => {
     mp.callCEFV(`auth.showRegisterResult(${result})`);
+    //temp
+    result == 9 && mp.events.call('auth.email.confirm', 0);
 });
 
 /// Запрос на отправку кода подтверждения почты
-mp.events.add('auth.email.confirm', () => {
-    mp.events.callRemote('auth.email.confirm');
+mp.events.add('auth.email.confirm', (state) => {
+    mp.events.callRemote('auth.email.confirm', state == 1);
 });
 /// Запорос на проверку кода из письма
 mp.events.add('auth.email.confirm.code', (code) => {
