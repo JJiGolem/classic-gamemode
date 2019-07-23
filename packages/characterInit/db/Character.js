@@ -140,6 +140,9 @@ module.exports = (sequelize, DataTypes) => {
         model.hasMany(models.Appearance, {
             foreignKey: "characterId"
         });
+        model.hasMany(models.Phone, {
+            foreignKey: "characterId"
+        });
     };
     return model;
 };
