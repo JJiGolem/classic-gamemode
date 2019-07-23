@@ -20,6 +20,7 @@ require('offerDialog');
 require('parkings');
 require('phone');
 require('prompt');
+require('selectMenu');
 require('vehicles');
 require('voiceChat');
 require('weather');
