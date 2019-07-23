@@ -63,7 +63,7 @@ class DialogPage extends Component {
     getMessages(number) {
         const { dialogs } = this.props;
 
-        let messages = dialogs.find(d => d.number === number).messages;
+        let messages = dialogs.find(d => d.number === number).PhoneMessages;
 
         if (messages.length !== 0) {
             return (

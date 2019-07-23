@@ -1,5 +1,4 @@
 #phone-form-react {
-    /*font-family: phone-font;*/
     font-family: bank-font;
     position: absolute;
     bottom: 3%;
@@ -146,7 +145,12 @@
 .contact_field-phone-react {
     padding: 5%;
     border-bottom: 1px solid rgb(199, 196, 196);
-    /*overflow-x: hidden;*/
+    transition: .1s ease-in-out;
+}
+
+.contact_field-phone-react:hover {
+    background: #343c47;
+    color: white;
 }
 
 .contact_page-phone-react {
@@ -345,6 +349,12 @@
     text-overflow: ellipsis;
     border-bottom: .1px solid #9f9f9f;
     padding: 5% 0 5% 0;
+    transition: .1s ease-in-out;
+}
+
+.dialog_field-phone-react:hover {
+    background: #343c47;
+    color: white;
 }
 
 .messages_list-phone-react {
@@ -487,6 +497,11 @@
     background: white;
     font-size: 120%;
     padding-top: 5%;
+    transition: .1s ease-in-out;
+}
+
+.digit-phone-react:hover {
+    filter: brightness(80%);
 }
 
 .digit-phone-react:active {

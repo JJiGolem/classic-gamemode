@@ -6,10 +6,11 @@ import MainContainer from './MainContainer.jsx';
 import store from './helpers/store/store.js';
 import './styles/main.css';
 import './fonts/fonts.css';
+import './styles/animations.css'
 import myEventEmmiter from './helpers/events.js';
 
 // eslint-disable-next-line no-undef
-mp.events = myEventEmmiter;
+//mp.events = myEventEmmiter;
 
 ReactDOM.render(
     <Provider store={store}>
