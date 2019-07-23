@@ -39,7 +39,7 @@
     <!-- ************************** VUE JS ************************** -->
     <!-- v-cloak в контейнерах VUE используется для того, что бы решить проблему мерцания UI при запуске -->
     <div v-cloak="v-cloak" id="hud" v-show="show">
-        <div class="server-online">
+        <div class="server-online" v-show="showOnline">
             <img class="logo" src="img/logo.png" />
             <p>Онлайн:
                 {{ players }}

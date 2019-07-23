@@ -13,6 +13,7 @@ var hud = new Vue({
         weather: "clear-day",
         voice: false,
         show: false,
+        showOnline: true,
         leftWeather: 300,
     },
     methods: {

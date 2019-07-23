@@ -44,14 +44,16 @@ var prompt = new Vue({
         showByName(name) {
             var prompt = this.prompts[name];
             if (!prompt) return;
-
             this.text = prompt.text;
+            hud.showOnline = false;
         },
         show(text) {
             this.text = text;
+            hud.showOnline = false;
         },
         hide() {
             this.text = null;
+            hud.showOnline = true;
         }
     },
     watch: {
