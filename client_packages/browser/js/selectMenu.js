@@ -45,55 +45,19 @@ var selectMenu = new Vue({
         // ************** События взаимодействия с меню **************
         // Выбран пункт меню
         onItemSelected(e) {
-            var item = this.menu.items[this.menu.i];
-            var e = {
-                menuName: this.menu.name,
-                itemName: item.text,
-                itemIndex: this.menu.i,
-                itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
-                valueIndex: item.i
-            };
-            console.log(`selectMenu.onItemSelected`);
-            console.log(e);
+            this.menu.handler("onItemSelected");
         },
         // Изменено значение пункта меню
         onItemValueChanged() {
-            var item = this.menu.items[this.menu.i];
-            var e = {
-                menuName: this.menu.name,
-                itemName: item.text,
-                itemIndex: this.menu.i,
-                itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
-                valueIndex: item.i
-            };
-            console.log(`selectMenu.onItemValueChanged`);
-            console.log(e);
+            this.menu.handler("onItemValueChanged");
         },
         // Изменен фокус пункта меню
         onItemFocusChanged() {
-            var item = this.menu.items[this.menu.i];
-            var e = {
-                menuName: this.menu.name,
-                itemName: item.text,
-                itemIndex: this.menu.i,
-                itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
-                valueIndex: item.i
-            };
-            console.log(`selectMenu.onItemFocusChanged`);
-            console.log(e);
+            this.menu.handler("onItemFocusChanged");
         },
         // Нажата клавиша 'Назад'
         onBackspacePressed() {
-            var item = this.menu.items[this.menu.i];
-            var e = {
-                menuName: this.menu.name,
-                itemName: item.text,
-                itemIndex: this.menu.i,
-                itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
-                valueIndex: item.i
-            };
-            console.log(`selectMenu.onBackspacePressed`);
-            console.log(e);
+            this.menu.handler("onBackspacePressed");
         },
     },
     computed: {
@@ -121,13 +85,14 @@ var selectMenu = new Vue({
 });
 
 // for tests
+// Для своего меню необходимо создать след. структуру (комментарии внутри):
 /*var testMenu = {
     name: "test", // название меню, необходимо для отловки событий
-    header: "Меню выбора",
+    header: "Меню выбора", // заголовок меню, видимый на экране
     items: [{
-            text: "Выборочный тип 1",
-            values: ['Выбор 1', 'Выбор 2', 'Выбор 3', 'Выбор 4', 'Выбор 5', 'Выбор 6'],
-            i: 0,
+            text: "Выборочный тип 1", // текст пункта меню, видимый на экране
+            values: ['Выбор 1', 'Выбор 2', 'Выбор 3', 'Выбор 4', 'Выбор 5', 'Выбор 6'], // доступные значения пункта меню
+            i: 0, // индекс выбранного значения пункта меню
         },
         {
             text: "Выбор цвета 2",
@@ -161,11 +126,25 @@ var selectMenu = new Vue({
             i: 0,
         },
         {
-            text: "Обычный тип 9"
+            text: "Обычный тип 9",
         },
     ],
     i: 1, // индекс выбранного пункта
     j: 0, // индекс первого видимого пункта
+    handler(eventName) { // обработчик взаимодействия с меню
+        var item = this.items[this.i];
+        var e = {
+            menuName: this.name, // название меню
+            itemName: item.text, // текст пункта меню
+            itemIndex: this.i, // индекс пункта меню
+            itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
+            valueIndex: item.i, // индекс значения пункта меню
+        };
+        console.log(`Событие: ${eventName}`);
+        console.log(e);
+    }
 };
+// Далее, присвоить эту структуру модулю selectMenu:
 selectMenu.menu = testMenu;
+// Показываем меню:
 selectMenu.show = true;*/
