@@ -6,11 +6,13 @@ React-часть проекта.
 
 Команда для тестирования в реальном времени.<br>
 Открывается на порте 3000 - [http://localhost:3000](http://localhost:3000).
+Обязательно <b>закомментировать</b> строчку `mp.events = myEventEmmiter;` в файле [index.js](./src/index.js).
 
 
 ### `npm run build`
 
 Команда для сборки проекта. Все собирается уже в нужную папку client_packages.
+Обязательно <b>раскомментировать</b> строчку `mp.events = myEventEmmiter;` в файле [index.js](./src/index.js).
 
 ## Структура проекта
 

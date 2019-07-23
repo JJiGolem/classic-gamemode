@@ -1,5 +1,5 @@
 const initialState = {
-    phone: true,
+    phone: false,
     house: false,
 };
 
