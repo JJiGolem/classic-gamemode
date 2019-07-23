@@ -39,7 +39,9 @@
     bottom: 3vh;
     font-size: 1vh;
     position: absolute;
-    right: 13.2vh;
+    right: 12vh;
+    text-align: center;
+    width: 3vh;
 }
 
 #speedometer .content .speed {
@@ -47,6 +49,7 @@
     line-height: 3vh;
     margin-bottom: 1vh;
     text-align: center;
+    width: 9vh;
 }
 
 #speedometer .content .speed .value {
@@ -83,6 +86,8 @@
 
 #speedometer .footer .mileage {
     margin: 0 4vh;
+    text-align: center;
+    width: 11vh;
 }
 
 #speedometer .footer .mileage img {
