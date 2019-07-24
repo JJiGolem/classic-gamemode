@@ -1,7 +1,7 @@
 "use strict";
 module.exports = {
 
-    "playerJoin": (player) => {     //characterInit.done
+    "characterInit.done": (player) => {     //characterInit.done
         player.call('chat.load');
         player.call('chat.message.push', ['!{#00abff} Добро пожаловать на Classic Roleplay!']);
         player.setVariable('nick', player.name);
