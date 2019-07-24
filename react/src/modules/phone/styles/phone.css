@@ -1,14 +1,14 @@
 #phone-form-react {
     font-family: bank-font;
     position: absolute;
-    bottom: 3%;
+    bottom: 7%;
     right: 3%;
     width: 16vw;
     height: 31.9vw;
     min-height: 100px;
     max-height: 1000px;
     max-width: 500px;
-    transform: scale(1.1);
+    transform: scale(1);
     overflow: hidden;
     color: #343c47;
 }

@@ -13,8 +13,7 @@ class House extends Component {
             colorBuy: '#e1c631',
             colorLook: '#e1c631',
             isEnterMenu: false,
-            isActionsMenu: false,
-            items: ['Click', 'To', 'Remove', 'An', 'Item']
+            isActionsMenu: false
         };
 
         this.getForm = this.getForm.bind(this);
@@ -238,58 +237,20 @@ class House extends Component {
         }
     }
 
-    renderItems() {
-        return this.state.items.map((item, i) => {
-            return (
-                <div key={item} onClick={() => this.removeItem(i)} className="item">
-                    {item}
-                </div>
-            );
-        });
-    }
-
-    removeItem(i) {
-        let newItems = this.state.items.slice();
-        newItems.splice(i, 1);
-        this.setState({
-            items: newItems
-        });
-    }
-
     render() {
         const { house } = this.props;
         const { isEnterMenu, isActionsMenu } = this.state;
 
         return (
-           /* <div>
-                <ReactCSSTransitionGroup
-                    transitionName={
-                        {     enter: 'enter',
-                            leave: 'leave',
-                            appear: 'appear'
-                        }}
-                    transitionEnterTimeout={500}
-                    transitionLeaveTimeout={300}>
-                    >
-                    <Fragment>
-                        <div className='house_form-react'>
-                            { this.getForm() }
-                            { house.answer && this.getMessage(house.answer) }
-                            { isEnterMenu && this.showEnterMenu(house) }
-                            { isActionsMenu && this.showActionsMenu(house) }
-                        </div>
-                        { house.isLoading && this.getLoader() }
-                    </Fragment>
-                </ReactCSSTransitionGroup>
-            </div>*/
-
-            <div className="container">
-                <div className="animation-container">
-                    <ReactCSSTransitionGroup transitionName="example">
-                        {this.renderItems()}
-                    </ReactCSSTransitionGroup>
+            <Fragment>
+                <div className='house_form-react'>
+                    { this.getForm() }
+                    { house.answer && this.getMessage(house.answer) }
+                    { isEnterMenu && this.showEnterMenu(house) }
+                    { isActionsMenu && this.showActionsMenu(house) }
                 </div>
-            </div>
+                { house.isLoading && this.getLoader() }
+            </Fragment>
         );
     }
 }
