@@ -9,10 +9,6 @@ mp.events.add('phone.load', function (phoneInfo, phoneDialogs) {
     bindButtons(phoneInfo.isHave);
 });
 
-mp.events.add('addContact.client', function (name, number) {
-    
-});
-
 // добавление приложения
 // house
 // biz
@@ -89,11 +85,12 @@ mp.events.add("playerQuit", (player) => {
 
 // Отправка сообщения
 mp.events.add('phone.message.send', function (message, number) {
-    mp.events.callRemote('sendMessage.server', message, number);
+    mp.events.callRemote('phone.message.send', message, number);
 });
 
 // Получение сообщения
-mp.events.add('setMessage.client', function (message, number) {
+mp.events.add('phone.message.set', function (message, number) {
+    mp.chat.debug(message + "from" + number);
     mp.callCEFR('phone.message.set', [message, number]);
 });
 
@@ -113,7 +110,6 @@ mp.events.add('phone.contact.rename', function (number, name) {
 
 
 let bindButtons = (state) => {
-    mp.chat.debug('bind');
     if (state) {
         if (isBinding) return;
         isBinding = true;

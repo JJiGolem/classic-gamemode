@@ -6,9 +6,14 @@ let utils = call('utils');
 module.exports = {
     async init() {
         console.log("[PHONE] load numbers from DB...");
-        phoneNumbers = await db.Models.Phone.findAll({
+        let phoneNumbersTemp = await db.Models.Phone.findAll({
             attributes: ['number'],
+            raw: true
         });
+        for (let i = 0; i < phoneNumbersTemp.length; i++) {
+            phoneNumbers.push(phoneNumbersTemp[i].number);
+        }
+        console.log(phoneNumbers);
         console.log("[PHONE] loaded.");
     },
     generateNumber() {
@@ -22,7 +27,8 @@ module.exports = {
         return newNumber + "";
     },
     loadPhoneOnClient(player) {
-        let jsonPhone = player.phone.toJSON();
+        let jsonPhone;
+        if (player.phone != null) jsonPhone = player.phone.toJSON();
         player.call('phone.load', [{
                 isHave: player.phone != null,
                 name: player.character.name,
@@ -33,5 +39,7 @@ module.exports = {
             player.phone != null ? (player.phone.PhoneDialogs != null ? jsonPhone['PhoneDialogs'] : []) : []
         ]);
     },
-
+    isExists(number) {
+        return phoneNumbers.includes(number);
+    }
 };

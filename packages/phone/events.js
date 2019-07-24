@@ -13,6 +13,9 @@ module.exports = {
     'playerJoin': player => {
         player.isTalking = false;
     },
+    'playerQuit': player => {
+        player.phone.save();
+    },
     'characterInit.done': async (player) => {
         // PhoneDialogs = [{name: null, number: "5553535", PhoneMessages: [isMine: true, text: "Займы под 100% годовых"]}];
         player.phone = await db.Models.Phone.findOne({
@@ -110,20 +113,57 @@ module.exports = {
             }
         }
     },
-    'sendMessage.server': (player, message, number) => {
-        if (player.info.inventory.phone.number == number) {
-            player.info.inventory.phone.newMessage(number, message, true);
-        }
-        else {
-            for (let i = 0; i < mp.players.length; i++) {
-                if (player.id == i) continue;
-                if (mp.players.at(i).info.inventory.phone.number == number) {
-                    console.log("Message" + message);
-                    mp.players.at(i).info.inventory.phone.newMessage(player.info.inventory.phone.number, message, false);
-                    mp.players.at(i).call('setMessage.client', [message, player.info.inventory.phone.number]);
+    /// Отправка сообщения игроку данным номером
+    'phone.message.send': (player, message, number) => {
+        if (player.phone == null) return;
+        //if (player.phone.number == number) return;
+        if (message.length > 100) return;
+        if (!phone.isExists(number)) return;
+        for (let i = 0; i < mp.players.length; i++) {
+            //if (player.id == i) continue;
+            if (player.phone == null) continue;
+            if (mp.players.at(i).phone.number == number) {
+                /// Работа с получателем
+                if (mp.players.at(i).phone.PhoneDialogs == null) mp.players.at(i).phone.PhoneDialogs = new Array();
+                let index = mp.players.at(i).phone.PhoneDialogs.findIndex( x => x.number == player.phone.number);
+                if (index == -1) {
+                    let contact = null;
+                    if (mp.players.at(i).phone.PhoneContacts != null) contact = mp.players.at(i).phone.PhoneContacts.find( x => x.number == player.phone.number);
+                    mp.players.at(i).phone.PhoneDialogs.push({ name: contact == null ? contact.name : null, number: player.phone.number, PhoneMessages: []});
+                    index = mp.players.at(i).phone.PhoneDialogs.findIndex( x => x.number == player.phone.number);
                 }
+                if (mp.players.at(i).phone.PhoneDialogs[index].PhoneMessages == null) mp.players.at(i).phone.PhoneDialogs[index].PhoneMessages = new Array();
+                mp.players.at(i).phone.PhoneDialogs[index].PhoneMessages.push({isMine: false, text: message, isRead: false, date: Date.now()});
+                mp.players.at(i).call('phone.message.set', [message, player.phone.number]);
+                /// Работа с отправителем
+                if (player.phone.PhoneDialogs == null) player.phone.PhoneDialogs = new Array();
+                index = player.phone.PhoneDialogs.findIndex( x => x.number == number);
+                if (index == -1) {
+                    let contact = null;
+                    if (player.phone.PhoneContacts != null) contact = player.phone.PhoneContacts.find( x => x.number == number);
+                    player.phone.PhoneDialogs.push({ name: contact == null ? contact.name : null, number: number, PhoneMessages: []});
+                    index = player.phone.PhoneDialogs.findIndex( x => x.number == number);
+                }
+                if (player.phone.PhoneDialogs[index].PhoneMessages == null) player.phone.PhoneDialogs[index].PhoneMessages = new Array();
+                player.phone.PhoneDialogs[index].PhoneMessages.push({isMine: false, text: message, isRead: false, date: Date.now()});
+                console.log(player.phone);
+                // todo решить вопрос с сохранением
+                // player.phone.update({
+                // include: [
+                //     db.Models.PhoneContact, {
+                //         model: db.Models.PhoneDialog,
+                //         include: [db.Models.PhoneMessage]
+                //     }
+                // ]});
+                return;
             }
         }
+        console.log("not found");
+        // db.Models.PhoneMessage.create({
+        //     phoneDialogId: ,
+        //     isMine: false,
+        //     text: message
+        // },{});
     },
     'addContact.server': (player, name, number) => {
         player.info.inventory.phone.addContact(name, number);
