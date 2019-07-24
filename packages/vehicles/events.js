@@ -22,7 +22,8 @@ module.exports = {
         }
 
         if (!vehicle.engine && seat == -1) {
-            player.call('chat.message.push', [`!{#adff9e} Нажмите 2, чтобы завести транспортное средство`]);
+            //player.call('chat.message.push', [`!{#adff9e} Нажмите 2, чтобы завести транспортное средство`]);
+            player.call('prompt.showByName', ['vehicle_engine']);
         }
         // TEMP
         if (seat == -1) {
