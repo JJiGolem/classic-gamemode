@@ -21,6 +21,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(100),
             allowNull: false
         },
+        isRead: {
+            type: DataTypes.INTEGER(1),
+            allowNull: false
+        },
+        date: {
+            type: DataTypes.DATE,
+            allowNull: false
+        }
     }, 
     {
         timestamps: false

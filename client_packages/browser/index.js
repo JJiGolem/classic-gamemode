@@ -37,6 +37,8 @@ mp.callCEFV = function (text) {
 /// Example: object = {"hud.show" : true, "hud.players": 100}
 mp.callCEFVN = function (object) {
     for (let objectKey in object) {
-        browser.execute(`${objectKey} = ${JSON.stringify(object[objectKey])}`);
+
+        browser.execute(`${objectKey} = ${mp.utils.objToString(object[objectKey])}`);
     }
 }
+

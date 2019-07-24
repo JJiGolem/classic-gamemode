@@ -3,24 +3,18 @@ const freemodeCharacters = [mp.joaat("mp_m_freemode_01"), mp.joaat("mp_f_freemod
 const creatorPlayerPos = new mp.Vector3(402.8664, -996.4108, -99.00027);
 const creatorPlayerHeading = -185.0;
 
-let characterInfo = [
-    db.Models.Feature, 
-    db.Models.Appearance
-];
 
 /// Функции модуля выбора и создания персоонажа
 module.exports = {
-    /// Позволяет добавлять модели, которые вы хотите загрузить из БД к персоонажу
-    /// currentModuleInfo - массив
-    addLoadedInfo(currentModuleInfo) {
-        characterInfo = characterInfo.concat(currentModuleInfo);
-    },
     async init(player) {
         player.characters = await db.Models.Character.findAll({
             where: {
                 accountId: player.account.id
             },
-            include: characterInfo
+            include: [
+                db.Models.Feature, 
+                db.Models.Appearance
+            ]
         });
         let charInfos = new Array();
         for(let i = 0; i < player.characters.length; i++) {

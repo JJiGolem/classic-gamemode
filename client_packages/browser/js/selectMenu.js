@@ -6,6 +6,8 @@ var selectMenu = new Vue({
         menu: null,
         // Макс. количество пунктов на экране
         maxItems: 5,
+        // Макс. количество цветов в селекторе
+        maxColorValues: 11,
         menus: {
             "parkingMenu": {
                 name: "parking", // название меню, необходимо для отловки событий
@@ -69,6 +71,17 @@ var selectMenu = new Vue({
             var i = this.menu.items[this.menu.i].i;
             return index <= 2;
         },
+        valuesType(index) {
+            // 0 - обычное значение, 1 - цвет, 2 - ползунок, -1 - нет значений
+            var values = this.menu.items[index].values;
+            if (!values) return -1;
+            if (values[0][0] == '#') return 1;
+            for (var i = 0; i < values.length; i++) {
+                var value = values[i];
+                if (typeof value != 'number') return 0;
+            }
+            return 2;
+        },
         // ************** События взаимодействия с меню **************
         // Выбран пункт меню
         onItemSelected(e) {
@@ -100,6 +113,17 @@ var selectMenu = new Vue({
             if (!values) return null;
             var result = [values[i - 1] || "", values[i], values[i + 1] || ""];
             return result;
+        },
+        colorValues() {
+            return this.menu.items[this.menu.i].values.slice(0, this.maxColorValues);
+        },
+        leftNumberType() {
+            var offset = 3.5; // половина от ширины шарика ползунка
+            if (this.menu.items[this.menu.i].i == 0) return 0 - offset + '%';
+            var values = this.menu.items[this.menu.i].values;
+            var maxValue = values[values.length - 1];
+            var curValue = values[this.menu.items[this.menu.i].i];
+            return curValue / maxValue * 100 - offset + '%';
         }
     },
     mounted() {
@@ -118,16 +142,33 @@ var selectMenu = new Vue({
     header: "Меню выбора", // заголовок меню, видимый на экране
     items: [{
             text: "Выборочный тип 1", // текст пункта меню, видимый на экране
+            // если ОДНО ИЗ значений начинается с '#', то снизу появится селектор цветов
+            // если ВСЕ значения - числа, то снизу появится селектор с ползунком
+            // в любом другом случае, появится обычный селектор со значениями
             values: ['Выбор 1', 'Выбор 2', 'Выбор 3', 'Выбор 4', 'Выбор 5', 'Выбор 6'], // доступные значения пункта меню
             i: 0, // индекс выбранного значения пункта меню
         },
         {
             text: "Выбор цвета 2",
-            values: ['#0bf', '#fb0', '#bf0'],
+            values: ['#0bf', '#fb0', '#bf0', '#fb0', '#fb0', '#fb0', '#bf0', '#0fe', '#cd3', 'yellow', 'pink'],
             i: 0,
         },
         {
+            text: "Ползунок 2.5",
+            values: [0, 10, 20, 30, 40, 50],
+            i: 0,
+            min: "Минимум", // слово слева от ползунка
+            max: "Максимум", // слово справа от ползунка
+        },
+        {
             text: "Обычный тип 3"
+        },
+        {
+            text: "Ползунок 3.5",
+            values: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100],
+            i: 0,
+            min: "Округлые", // слово слева от ползунка
+            max: "Впалые", // слово справа от ползунка
         },
         {
             text: "Выборочный тип 4",
