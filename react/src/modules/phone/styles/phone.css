@@ -1,0 +1,653 @@
+#phone-form-react {
+    font-family: bank-font;
+    position: absolute;
+    bottom: 3%;
+    right: 3%;
+    width: 16vw;
+    height: 31.9vw;
+    min-height: 100px;
+    max-height: 1000px;
+    max-width: 500px;
+    transform: scale(1.1);
+    overflow: hidden;
+    color: #343c47;
+}
+
+#phone-background-react {
+    width: 16vw;
+    min-height: 100px;
+    max-width: 500px;
+    object-fit: cover;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    user-select: none;
+}
+
+.panel_home-phone-react {
+    height: 11.5%;
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+}
+
+#but_home-phone-react {
+    width: 16%;
+    height: 60%;
+    /*max-width: 39px;*/
+    /*max-height: 39px;*/
+    margin-top: 1vh;
+    border-radius: 30px;
+    outline: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.display-phone-react {
+    width: 90%;
+    height: 77.5%;
+    left: 5%;
+    bottom: 11.5%;
+    position: absolute;
+    /*background: #2e2e2e;*/
+    font-size: 100%;
+}
+.menu_panel-display-react {
+    width: 92%;
+    height: 15%;
+    left: 4%;
+    bottom: 2%;
+    position: absolute;
+    background: rgba(225, 230, 255, 0.2);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.clock-phone-react {
+    color: white;
+    width: 100%;
+    text-align: center;
+    /*font-size: 30px;*/
+    position: absolute;
+    /*min-font-size: 26px;*/
+    /*max-font-size: 34px;*/
+    margin-top: 18%;
+    font-size: 230%;
+}
+
+.menu_panel_app-phone-react {
+    width: 20%;
+    /*height: 75%;*/
+    /*background: aqua;*/
+    margin: 3% 5% 2% 5%;
+    display: inline-block;
+}
+
+.menu_panel_app-phone-react:active {
+    filter: brightness(50%);
+    transition: ease-in-out .1s;
+}
+
+.list_apps-phone-react {
+    height: 15%;
+    display: table;
+    width: 92%;
+    position: absolute;
+    left: 8%;
+    bottom: 35%;
+}
+
+.back_page-phone-react {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: white;
+}
+
+.head_app-phone-react {
+    width: 100%;
+    height: 12%;
+    position: absolute;
+    background: #343c47;
+    color: white;
+    font-size: 90%;
+}
+
+.contacts_list-phone-react {
+    height: 65%;
+    top: 15%;
+    width: 90%;
+    padding: 5%;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    font-size: 100%;
+}
+.search-phone-react {
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 30%;
+}
+
+.search_input-phone-react {
+    width: 100%;
+    height: 8%;
+    padding: 5%;
+    border: none;
+    box-sizing: border-box;
+    outline: none;
+    border-radius: 8px;
+    background: #eeeeed;
+    font-size: 100%;
+}
+
+.contact_field-phone-react {
+    padding: 5%;
+    border-bottom: 1px solid rgb(199, 196, 196);
+    transition: .1s ease-in-out;
+}
+
+.contact_field-phone-react:hover {
+    background: #343c47;
+    color: white;
+}
+
+.contact_page-phone-react {
+    top: 45%;
+    height: 55%;
+    width: 100%;
+    position: absolute;
+    overflow-x: hidden;
+    font-size: 100%;
+}
+
+.contact_icon-phone-react {
+    text-align: center;
+    border-radius: 20px;
+    width: 90%;
+    margin: 15% 0 0 5%;
+}
+
+.but_create_contact-phone-react {
+    position: absolute;
+    bottom: 5%;
+    right: 5%;
+    background: #343c47;
+    width: 19%;
+    height: 11%;
+    border-radius: 50px;
+}
+
+.crt_cnt_err-phone-react {
+    margin-top: 5%;
+    height: 10%;
+    width: 90%;
+    background: #ececec;
+    margin-left: 5%;
+    border-radius: 10px;
+    box-sizing: border-box;
+    padding: 4% 6% 4% 6%;
+    font-size: 90%;
+}
+
+.crt_cnt_err-phone-react span {
+    float: left;
+}
+
+.block_crt_cnt-phone-react {
+    background: #ececec;
+    margin-top: 5%;
+    width: 90%;
+    height: 40%;
+    margin-left: 5%;
+    border-radius: 10px;
+    padding: 5%;
+    box-sizing: border-box;
+    color: #343c47;
+}
+
+.block_crt_cnt-phone-react span {
+    float: left;
+    margin-left: 4%;
+    color: #343c47;
+    font-size: 90%;
+    /*font-weight: 900;*/
+}
+
+.block_crt_cnt-phone-react button {
+    position: absolute;
+    width: 40%;
+    height: 9%;
+    left: 50%;
+    top: 86%;
+    background: #f44343;
+    color: white;
+    font-size: 78%;
+    border: none;
+    outline: none;
+    border-radius: 30px;
+}
+
+.block_crt_cnt-phone-react input {
+    width: 90%;
+    color: #343c47;
+    border: none;
+    border-bottom: .5px solid #b7b7b7;
+    background: transparent;
+    outline: none;
+    padding: 2% 3% 2% 3%;
+    font-size: 100%;
+    margin-top: 0%;
+}
+
+.back_icon_contact-phone-react {
+    width: 30%;
+    height: 43.5%;
+    border-radius: 50px;
+    background: #ececec;
+    overflow: hidden;
+    display: inline-block;
+    margin-left: 10%;
+    top: 30%;
+}
+
+.contact_name-phone-react {
+    width: 50%;
+    display: inline-block;
+    position: absolute;
+    margin-left: 10%;
+    top: 30%;
+    font-size: 110%;
+    color: #e1c631;
+}
+
+.panel_call_mess_contact-phone-react {
+    position: absolute;
+    /*position: static;*/
+    top: 90%;
+    text-align: center;
+    height: 20%;
+    width: 100%;
+}
+
+.button_panel_contact-phone-react {
+    width: 35%;
+    height: 100%;
+    display: inline-block;
+    border-radius: 30px;
+    background: black;
+    margin-right: 5%;
+    margin-left: 5%;
+    /*padding-top: 5px;*/
+}
+
+.contact_number-phone-react {
+    position: absolute;
+    top: 10%;
+    width: 70%;
+    left: 10%;
+    padding: 5%;
+    background: #f1f1f1;
+    border-radius: 6px;
+    border-left: #e1c631 solid 3px;
+    font-size: 90%;
+}
+
+.contact_rename-phone-react {
+    position: absolute;
+    top: 35%;
+    width: 70%;
+    height: 40%;
+    padding: 5%;
+    left: 10%;
+    background: #f1f1f1;
+    border-radius: 6px;
+    font-size: 70%;
+}
+
+.input_rename_contact-phone-react {
+    width: 70%;
+    left: 10%;
+    outline: none;
+    background: transparent;
+    border: none;
+    border-bottom: .1px solid #9f9f9f;
+    margin-top: 15%;
+    margin-bottom: 15%;
+    padding-left: 5%;
+    padding-right: 5%;
+    position: absolute;
+    font-size: 150%;
+}
+
+.button_rename_contact-phone-react {
+    outline: none;
+    border: none;
+    border-radius: 20px;
+    width: 70%;
+    height: 30%;
+    background: #e1c631;
+    color: white;
+    margin-top: 47%;
+    position: absolute;
+    left: 15%;
+    font-size: 120%;
+}
+
+.error_span-phone-react {
+    position: absolute;
+    color: #f44343;
+    text-align: center;
+    top: 60%;
+    left: 5%;
+    width: 90%;
+}
+
+.dialog_field-phone-react {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    border-bottom: .1px solid #9f9f9f;
+    padding: 5% 0 5% 0;
+    transition: .1s ease-in-out;
+}
+
+.dialog_field-phone-react:hover {
+    background: #343c47;
+    color: white;
+}
+
+.messages_list-phone-react {
+    height: 70%;
+    /*position: absolute;*/
+    margin-top: 21%;
+    overflow-y: auto;
+    word-wrap: normal;
+    overflow-x: hidden;
+    font-size: 100%;
+}
+
+.my_message_block-phone-react {
+    margin: 3% 5%;
+    box-sizing: border-box;
+    float: right;
+    width: auto;
+    max-width: 80%;
+    position: relative;
+    clear: both;
+    padding: 3% 5%;
+    color: black;
+    background-color: #b8f0c7;
+    border-radius: 20px;
+    justify-content: flex-end;
+    font-size: 80%;
+}
+
+.my_message_block-phone-react:before, .my_message_block-phone-react:after {
+    content: '';
+    display: block;
+    position: absolute;
+}
+
+.my_message_block-phone-react:before {
+    bottom: 0;
+    left: -7px;
+    z-index: -2;
+}
+
+.my_message_block-phone-react:after {
+    bottom: 1px;
+    left: -5px;
+    z-index: -2;
+}
+
+.him_message_block-phone-react {
+    margin: 3% 5%;
+    box-sizing: border-box;
+    float: left;
+    width: auto;
+    max-width: 80%;
+    position: relative;
+    clear: both;
+    padding: 4%;
+    color: black;
+    word-wrap: break-word;
+    background-color: #e4dede;
+    border-radius: 20px;
+    font-size: 80%;
+}
+
+.him_message_block-phone-react:before, .him_message_block-phone-react:after {
+    content: '';
+    display: block;
+    position: absolute;
+}
+
+.him_message_block-phone-react:before {
+    bottom: 0;
+    left: -7px;
+    z-index: -2;
+}
+
+.him_message_block-phone-react:after {
+    bottom: 1px;
+    left: -5px;
+    z-index: -2;
+}
+
+.input_message-phone-react {
+    position: absolute;
+    left: 5%;
+    margin-top: 10%;
+    width: 63%;
+    resize: none;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    background: #ececec;
+    padding: 5%;
+    height: 4%;
+    font-size: 95%;
+}
+
+#button_send_message-phone-react {
+    position: absolute;
+    left: 80%;
+    margin-top: 10%;
+    background: #ececec;
+    border: none;
+    border-radius: 10px;
+    padding: 5%;
+    width: 15%;
+    height: 10%;
+    outline: none;
+}
+
+#button_send_message-phone-react:active {
+    filter: brightness(70%);
+    transition: ease-in-out .1s;
+}
+
+.ico_but_send_message {
+    width: 100%;
+    height: 100%;
+}
+
+.table_digits-phone-react {
+    display: table;
+    position: absolute;
+    /*background: #9f9f9f;*/
+    width: 94%;
+    height: 60%;
+    margin-left: 3%;
+    margin-top: 7%;
+    text-align: center;
+}
+
+.digit-phone-react {
+    width: 21%;
+    height: 19%;
+    margin: 2% 5%;
+    display: inline-block;
+    border-radius: 50%;
+    border: 1px solid #343c47;
+    color: #343c47;
+    text-align: center;
+    box-sizing: border-box;
+    background: white;
+    font-size: 120%;
+    padding-top: 5%;
+    transition: .1s ease-in-out;
+}
+
+.digit-phone-react:hover {
+    filter: brightness(80%);
+}
+
+.digit-phone-react:active {
+    filter: brightness(80%);
+}
+
+.input_number-phone-react {
+    position: relative;
+    width: 90%;
+    margin-top: 25%;
+    /*margin-bottom: 10%;*/
+    left: 5%;
+    box-sizing: border-box;
+    padding: 5%;
+    height: 10%;
+    background: #e3e3e3;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 100%;
+}
+
+.incoming_call-phone-react {
+    background: linear-gradient(77deg, rgb(33, 73, 85) 0%, rgb(52, 60, 71) 100%);
+    /*background: #3a3a39;*/
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.number_filed-phone-react {
+    color: white;
+    width: 100%;
+    text-align: center;
+    margin-top: 10%;
+    position: absolute;
+}
+
+.house_info-phone-react {
+    margin-top: 30%;
+    margin-left: 5%;
+    font-size: 100%;
+}
+
+.table_info-phone-react {
+    padding: 5%;
+    margin-top: 2%;
+    color: #343c47;
+    border: .5px solid #343c47;
+    border-radius: 10px;
+    box-sizing: border-box;
+    width: 95%;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.3);
+}
+
+.house_buttons-phone-react {
+    margin-top: 10%;
+    width: 90%;
+    margin-left: 5%;
+    text-align: center;
+    font-size: 100%;
+}
+
+.house_button-phone-react {
+    background: #343c47;
+    padding: 4%;
+    color: white;
+    margin-bottom: 5%;
+    border-radius: 5px;
+    transition: ease-in-out .1s;
+    font-size: 90%;
+}
+
+.house_button-phone-react:hover {
+    transform: scale(1.05);
+    /*padding: 3%;*/
+}
+
+.ico_button_house-phone-react {
+    position: absolute;
+    left: 8%;
+    margin-top: -1%;
+    width: 10%;
+}
+
+.manager_buttons-phone-react {
+    width: 95%;
+    margin-left: 2.5%;
+    margin-top: 3%;
+    text-align: center;
+}
+
+.manager_button-phone-react {
+    border: 1px solid #313539;
+    border-radius: 8px;
+    display: inline-block;
+    width: 42%;
+    height: 10%;
+    padding: 3%;
+    cursor: pointer;
+    text-align: center;
+    font-size: 100%;
+    transition: .1s ease-in-out;
+    box-sizing: border-box;
+    margin: 2%;
+}
+
+.manager_button-phone-react span {
+    font-size: .7em;
+}
+
+.manager_button-phone-react:hover {
+    background: #343c47;
+    color: white;
+    fill: white;
+}
+
+.block_sell_inputs-phone-react {
+    margin: 10%;
+    width: 80%;
+    text-align: center;
+    margin-bottom: 30%;
+}
+
+.block_sell-phone-react {
+    margin-bottom: 8%;
+    height: 20%;
+}
+
+.block_sell-phone-react label {
+    margin-left: 6%;
+    float: left;
+}
+
+.block_sell-phone-react span {
+    /*margin-left: 6%;*/
+    /*float: left;*/
+    margin-top: 2%;
+    color: #f44343;
+    font-size: .8em;
+}
+
+.input_sell-phone-react {
+    width: 80%;
+    border: 1px solid #343c47;
+    border-radius: 5px;
+    outline: none;
+    padding: 3%;
+    font-size: 100%;
+}

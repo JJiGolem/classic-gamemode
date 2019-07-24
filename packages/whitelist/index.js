@@ -4,7 +4,8 @@ let enabled = true; /// Включение/отключение вайтлист
 let allowed = [ /// Список разрешенных social club'ов
     "kirswift",
     "Alex_Cortez",
-    "Pigeon_Gangsta"
+    "Pigeon_Gangsta",
+    "deusmemes"
 ]; 
 
 module.exports = {

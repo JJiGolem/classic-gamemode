@@ -28,6 +28,7 @@ var auth = new Vue({
             "Некорректный логин!",
             "Некорректный email!",
             "Логин занят!",
+            "Email занят!",
             "Аккаунт с вашим Social Club уже зарегистрирован!",
             "Аккаунт зарегистрирован успешно"
         ],
@@ -54,10 +55,10 @@ var auth = new Vue({
                 return;
             }
 
-            mp.trigger("auth.login", {
+            mp.trigger("auth.login", JSON.stringify({
                 loginOrEmail: this.loginOrEmail,
                 password: this.password
-            });
+            }));
             loader.show = true;
         },
         regAccountHandler(emailCode) {
@@ -108,12 +109,12 @@ var auth = new Vue({
                 return;
             }
 
-            mp.trigger("auth.register", {
+            mp.trigger("auth.register", JSON.stringify({
                 login: this.login,
                 email: this.email,
                 password: this.password,
                 emailCode: emailCode
-            });
+            }));
             loader.show = true;
         },
         recoveryAccountHandler() {

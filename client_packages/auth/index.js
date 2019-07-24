@@ -10,6 +10,8 @@ mp.events.add('auth.init', () => {
 
     mp.players.local.position = new mp.Vector3(-1685.21, -1653.46, 183.55);
     mp.utils.cam.create(-1685.21, -1653.46, 193.55, -1639.35, -1575.13, 187.48);
+
+    mp.callCEFV(`auth.show = true;`);
 });
 
 /// Вход в аккаунт
@@ -18,10 +20,8 @@ mp.events.add('auth.login', (data) => {
 });
 /// Результат входа в аккаунт
 mp.events.add('auth.login.result', result => {
-    // mp.callCEFVN({"auth.login.result": result});
     mp.callCEFV(`auth.showLoginResult(${result})`);
-    //temp
-    mp.chat.debug("Результат входа " + result);
+    result == 7 && mp.callCEFV(`auth.show = false;`);
 });
 
 /// Регистрация аккаунта
@@ -30,15 +30,16 @@ mp.events.add('auth.register', (data) => {
 });
 /// Результат регистрации аккаунта
 mp.events.add('auth.register.result', (result, data) => {
-    // mp.callCEFVN('auth.register.result', {"auth.register.result": result, "auth.register.data": data});
     mp.callCEFV(`auth.showRegisterResult(${result})`);
+
     //temp
-    mp.chat.debug("Результат регистрации " + result);
+    result == 9 && mp.events.call('auth.email.confirm', 0);
 });
 
 /// Запрос на отправку кода подтверждения почты
-mp.events.add('auth.email.confirm', () => {
-    mp.events.callRemote('auth.email.confirm');
+mp.events.add('auth.email.confirm', (state) => {
+    mp.events.callRemote('auth.email.confirm', state == 1);
+    state == 0 && mp.callCEFV(`auth.show = false;`);
 });
 /// Запорос на проверку кода из письма
 mp.events.add('auth.email.confirm.code', (code) => {
@@ -46,8 +47,6 @@ mp.events.add('auth.email.confirm.code', (code) => {
 });
 /// Ответ проверки почты
 mp.events.add('auth.email.confirm.result', (result) => {
-    // mp.callCEFVN('auth.email.result', {"auth.email.result": result});
     mp.callCEFV(`auth.showEmailConfirmResult(${result})`);
-    //temp
-    mp.chat.debug("Результат проверки кода подтверждения почты " + result);
+    result == 1 && mp.callCEFV(`auth.show = false;`);
 });

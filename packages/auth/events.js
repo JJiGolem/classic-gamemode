@@ -120,7 +120,7 @@ module.exports = {
                 return player.call('auth.register.result', [8, player.socialClub]);
             }
         } else {
-            var newAccount = await db.Models.Account.create({
+            player.account = await db.Models.Account.create({
                 login: data.login,
                 socialClub: player.socialClub,
                 password: auth.hashPassword(data.password),
@@ -129,15 +129,16 @@ module.exports = {
                 lastIp: player.ip,
                 confirmEmail: 0,
             });
-
-            player.account = newAccount;
+            console.log("REGISTER");
+            console.log(player.account);
+            console.log("REGISTER END");
             player.accountRegistrated = true;
             /// Аккаунт зарегестрирован успешно
             player.call('auth.register.result', [9]);
-            mp.events.call('auth.done', player);
         }
     },
-    "auth.email.confirm": (player) => {
+    "auth.email.confirm": (player, state) => {
+        if (!state) return mp.events.call('auth.done', player);
         /// На данный момент подтвердить почту невозможно
         if (utils == null) return player.call('auth.email.confirm.result', [2]);
         let code = utils.randomInteger(100000, 999999);
@@ -156,6 +157,7 @@ module.exports = {
             });
             /// Подтверждение почты прошло успешно
             player.call('auth.email.confirm.result', [1]);
+            mp.events.call('auth.done', player);
         }
         else {
             /// Код подтверждения неверный
