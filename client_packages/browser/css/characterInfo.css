@@ -80,11 +80,14 @@
 }
 
 #characterSelector {
-    align-items: center;
     bottom: 5vh;
-    display: flex;
     left: 37%;
     position: absolute;
+}
+
+#characterSelector > div {
+    align-items: center;
+    display: flex;
 }
 
 #characterSelector button {

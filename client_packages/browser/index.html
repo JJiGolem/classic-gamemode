@@ -86,17 +86,19 @@
         </div>
     </div>
 
-    <div id="offerDialog" v-if="dialog">
-        <div class="agree" @click="dialog.yes(); hide()">Y</div>
-        <div class="content">
-            <div class="header">Предложение</div>
-            <div class="message">
-                {{ dialog.text }}
+    <div v-cloak id="offerDialog" v-if="dialog">
+        <div>
+            <div class="agree" @click="dialog.yes(); hide()">Y</div>
+            <div class="content">
+                <div class="header">Предложение</div>
+                <div class="message">
+                    {{ dialog.text }}
+                </div>
+                <div class="price" v-if="dialog.price">$
+                    {{ pretty(dialog.price) }}</div>
             </div>
-            <div class="price" v-if="dialog.price">$
-                {{ pretty(dialog.price) }}</div>
+            <div class="cancel" @click="dialog.no(); hide()">N</div>
         </div>
-        <div class="cancel" @click="dialog.no(); hide()">N</div>
     </div>
 
     <div v-cloak="v-cloak" id="infoTable" v-if="show && name">
@@ -166,9 +168,11 @@
     </div>
 
     <div v-cloak="v-cloak" id="characterSelector" v-if="show">
-        <div class="arrow" @click="left">&lt;</div>
-        <button @click="enter">Выбрать</button>
-        <div class="arrow" @click="right">&gt;</div>
+        <div>
+            <div class="arrow" @click="left">&lt;</div>
+            <button @click="enter">Выбрать</button>
+            <div class="arrow" @click="right">&gt;</div>
+        </div>
     </div>
 
     <div v-cloak="v-cloak" id="selectMenu" v-if="show && menu">
