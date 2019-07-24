@@ -14,6 +14,7 @@ require('characterInit');
 require('chat');
 require('hud');
 require('infoTable');
+require('interactionMenu');
 require('nametags');
 require('notifications');
 require('offerDialog');

@@ -20,13 +20,13 @@ mp.prompt = {
 
 
 mp.events.add("prompt.show", (text) => {
-    menu.execute(`prompt.show('${text}')`);
+    mp.callCEFV(`prompt.show('${text}')`);
 });
 
 mp.events.add("prompt.hide", () => {
-    menu.execute(`prompt.hide()`);
+    mp.callCEFV(`prompt.hide()`);
 });
 
 mp.events.add("prompt.showByName", (name) => {
-    menu.execute(`prompt.showByName('${name}')`);
+    mp.callCEFV(`prompt.showByName('${name}')`);
 });

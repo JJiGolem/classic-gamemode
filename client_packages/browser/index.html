@@ -22,6 +22,7 @@
     <link rel="stylesheet" type="text/css" href="css/carPass.css" />
     <link rel="stylesheet" type="text/css" href="css/driverLicense.css" />
     <link rel="stylesheet" type="text/css" href="css/speedometer.css" />
+    <link rel="stylesheet" type="text/css" href="css/interactionMenu.css" />
     <link rel="stylesheet" type="text/css" href="build/css/styles.css">
 
     <script src="js/main.js"></script>
@@ -85,17 +86,19 @@
         </div>
     </div>
 
-    <div id="offerDialog" v-if="dialog">
-        <div class="agree" @click="dialog.yes(); hide()">Y</div>
-        <div class="content">
-            <div class="header">Предложение</div>
-            <div class="message">
-                {{ dialog.text }}
+    <div v-cloak id="offerDialog" v-if="dialog">
+        <div>
+            <div class="agree" @click="dialog.yes(); hide()">Y</div>
+            <div class="content">
+                <div class="header">Предложение</div>
+                <div class="message">
+                    {{ dialog.text }}
+                </div>
+                <div class="price" v-if="dialog.price">$
+                    {{ pretty(dialog.price) }}</div>
             </div>
-            <div class="price" v-if="dialog.price">$
-                {{ pretty(dialog.price) }}</div>
+            <div class="cancel" @click="dialog.no(); hide()">N</div>
         </div>
-        <div class="cancel" @click="dialog.no(); hide()">N</div>
     </div>
 
     <div v-cloak="v-cloak" id="infoTable" v-if="show && name">
@@ -165,9 +168,11 @@
     </div>
 
     <div v-cloak="v-cloak" id="characterSelector" v-if="show">
-        <div class="arrow" @click="left">&lt;</div>
-        <button @click="enter">Выбрать</button>
-        <div class="arrow" @click="right">&gt;</div>
+        <div>
+            <div class="arrow" @click="left">&lt;</div>
+            <button @click="enter">Выбрать</button>
+            <div class="arrow" @click="right">&gt;</div>
+        </div>
     </div>
 
     <div v-cloak="v-cloak" id="selectMenu" v-if="show && menu">
@@ -177,24 +182,30 @@
             <div class="items">
                 <div class="item" v-for="(item, index) in items" v-if="isItemShow(index)" :class="{selected: index == menu.i}">
                     <div class="name">{{ item.text }}</div>
-                    <div class="value" v-if="item.values">{{ item.values[item.i] }}</div>
+                    <div class="value" v-if="item.values && valuesType(index) != 1">{{ item.values[item.i] }}</div>
+                    <div class="value color-type" v-else-if="item.values"
+                        :style="{background: item.values[item.i]}"></div>
                 </div>
             </div>
             <div class="arrow arr-down" :class="{active: menu.j < menu.items.length - maxItems}"></div>
         </div>
-        <div class="selector" v-show="menu.items[menu.i].values">
+        <div v-if="valuesType(menu.i) == 0" class="selector" v-show="menu.items[menu.i].values">
             <div v-for="value in values">{{ value }}</div>
         </div>
-        <div class="selector select-color" style="display: none">
-            <div class="arrow arr-left active"></div>
-            <div class="color-type"></div>
-            <div class="color-type"></div>
-            <div class="color-type"></div>
-            <div class="color-type active"></div>
-            <div class="color-type"></div>
-            <div class="color-type"></div>
-            <div class="color-type"></div>
-            <div class="arrow arr-right"></div>
+        <div v-else-if="valuesType(menu.i) == 1" class="selector select-color">
+            <!-- <div class="arrow arr-left" :class="{active: menu.items[menu.i].i > 0}"></div> -->
+            <div class="color-type"
+                v-for="(value, index) in colorValues"
+                :class="{active: index == menu.items[menu.i].i}"
+                :style="{background: value}"></div>
+            <!-- <div class="arrow arr-right" :class="{active: menu.items[menu.i].i < menu.items.length - maxColorValues}"></div> -->
+        </div>
+        <div v-else-if="valuesType(menu.i) == 2" class="selector select-number">
+            <div>{{ menu.items[menu.i].min }}</div>
+            <div class="progress">
+                <div class="fill" :style="{left: leftNumberType}"></div>
+            </div>
+            <div>{{ menu.items[menu.i].max }}</div>
         </div>
     </div>
 
@@ -375,6 +386,14 @@
         </div>
     </div>
 
+    <div v-cloak id="interactionMenu" v-if="show">
+        <div class="interaction_item" v-for="(item, index) in menu.items" @click="onClick(index)">
+            <div class="icon"><img :src="imgSrc(index)" />
+            </div>
+            <div class="text">{{ item.text }}</div>
+        </div>
+    </div>
+
     <!-- ------------------------ REACT ------------------------------ -->
     <script async="async" src="build/js/build.js" type="text/javascript"></script>
     <div id="root"></div>
@@ -392,6 +411,7 @@
     <script src="js/carPass.js"></script>
     <script src="js/driverLicense.js"></script>
     <script src="js/speedometer.js"></script>
+    <script src="js/interactionMenu.js"></script>
 </body>
 
 </html>
