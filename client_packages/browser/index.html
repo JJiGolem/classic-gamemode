@@ -22,6 +22,7 @@
     <link rel="stylesheet" type="text/css" href="css/carPass.css" />
     <link rel="stylesheet" type="text/css" href="css/driverLicense.css" />
     <link rel="stylesheet" type="text/css" href="css/speedometer.css" />
+    <link rel="stylesheet" type="text/css" href="css/interactionMenu.css" />
     <link rel="stylesheet" type="text/css" href="build/css/styles.css">
 
     <script src="js/main.js"></script>
@@ -375,6 +376,14 @@
         </div>
     </div>
 
+    <div v-cloak id="interactionMenu" v-if="show">
+        <div class="interaction_item" v-for="(item, index) in menu.items" @click="onClick(index)">
+            <div class="icon"><img :src="imgSrc(index)" />
+            </div>
+            <div class="text">{{ item.text }}</div>
+        </div>
+    </div>
+
     <!-- ------------------------ REACT ------------------------------ -->
     <script async="async" src="build/js/build.js" type="text/javascript"></script>
     <div id="root"></div>
@@ -392,6 +401,7 @@
     <script src="js/carPass.js"></script>
     <script src="js/driverLicense.js"></script>
     <script src="js/speedometer.js"></script>
+    <script src="js/interactionMenu.js"></script>
 </body>
 
 </html>
