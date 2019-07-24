@@ -182,24 +182,30 @@
             <div class="items">
                 <div class="item" v-for="(item, index) in items" v-if="isItemShow(index)" :class="{selected: index == menu.i}">
                     <div class="name">{{ item.text }}</div>
-                    <div class="value" v-if="item.values">{{ item.values[item.i] }}</div>
+                    <div class="value" v-if="item.values && valuesType(index) != 1">{{ item.values[item.i] }}</div>
+                    <div class="value color-type" v-else-if="item.values"
+                        :style="{background: item.values[item.i]}"></div>
                 </div>
             </div>
             <div class="arrow arr-down" :class="{active: menu.j < menu.items.length - maxItems}"></div>
         </div>
-        <div class="selector" v-show="menu.items[menu.i].values">
+        <div v-if="valuesType(menu.i) == 0" class="selector" v-show="menu.items[menu.i].values">
             <div v-for="value in values">{{ value }}</div>
         </div>
-        <div class="selector select-color" style="display: none">
-            <div class="arrow arr-left active"></div>
-            <div class="color-type"></div>
-            <div class="color-type"></div>
-            <div class="color-type"></div>
-            <div class="color-type active"></div>
-            <div class="color-type"></div>
-            <div class="color-type"></div>
-            <div class="color-type"></div>
-            <div class="arrow arr-right"></div>
+        <div v-else-if="valuesType(menu.i) == 1" class="selector select-color">
+            <!-- <div class="arrow arr-left" :class="{active: menu.items[menu.i].i > 0}"></div> -->
+            <div class="color-type"
+                v-for="(value, index) in colorValues"
+                :class="{active: index == menu.items[menu.i].i}"
+                :style="{background: value}"></div>
+            <!-- <div class="arrow arr-right" :class="{active: menu.items[menu.i].i < menu.items.length - maxColorValues}"></div> -->
+        </div>
+        <div v-else-if="valuesType(menu.i) == 2" class="selector select-number">
+            <div>{{ menu.items[menu.i].min }}</div>
+            <div class="progress">
+                <div class="fill" :style="{left: leftNumberType}"></div>
+            </div>
+            <div>{{ menu.items[menu.i].max }}</div>
         </div>
     </div>
 

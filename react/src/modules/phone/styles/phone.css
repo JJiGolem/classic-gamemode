@@ -3,18 +3,21 @@
     position: absolute;
     bottom: 7%;
     right: 3%;
-    width: 16vw;
-    height: 31.9vw;
+    /*width: 16vw;*/
+    /*height: 31.9vw;*/
+    width: 25vh;
+    height: 50vh;
+    /*background: #f44343;*/
     min-height: 100px;
     max-height: 1000px;
     max-width: 500px;
-    transform: scale(1);
+    transform: scale(.9);
     overflow: hidden;
     color: #343c47;
 }
 
 #phone-background-react {
-    width: 16vw;
+    width: 25vh;
     min-height: 100px;
     max-width: 500px;
     object-fit: cover;
@@ -69,12 +72,9 @@
     color: white;
     width: 100%;
     text-align: center;
-    /*font-size: 30px;*/
     position: absolute;
-    /*min-font-size: 26px;*/
-    /*max-font-size: 34px;*/
     margin-top: 18%;
-    font-size: 230%;
+    font-size: 320%;
 }
 
 .menu_panel_app-phone-react {
@@ -112,7 +112,11 @@
     position: absolute;
     background: #343c47;
     color: white;
-    font-size: 90%;
+    font-size: 100%;
+}
+
+.head_app-phone-react svg {
+    margin-right: 5%;
 }
 
 .contacts_list-phone-react {

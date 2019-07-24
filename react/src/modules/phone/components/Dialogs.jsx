@@ -3,6 +3,8 @@ import HeadAppPhone from "./HeadAppPhone";
 import DialogPage from "./DialogPage";
 import {addAppDisplay, closeAppDisplay} from "../actions/action.apps";
 import {connect} from "react-redux";
+import CreateContactPage from "./CreateContactPage";
+import DialingNumber from "./DialingNumber";
 
 class Dialogs extends Component {
     constructor(props) {
@@ -46,27 +48,28 @@ class Dialogs extends Component {
 
     render() {
         const { search } = this.state;
+        const  { addApp } = this.props;
 
         var dialogs = this.props.dialogs;
 
         if (search) {
-            dialogs = dialogs.filter(dialog => dialog.name.toLowerCase().startsWith(search) || dialog.number.toLowerCase().startsWith(search))
+            dialogs = dialogs.filter(dialog => (dialog.name && dialog.name.toLowerCase().startsWith(search)) || dialog.number.toLowerCase().startsWith(search))
         }
 
         return (
             <Fragment>
                 <div className="back_page-phone-react">
                     <HeadAppPhone title='Диалоги' />
+                    <div className='search-phone-react'>
+                        <input
+                            className="search_input-phone-react"
+                            placeholder='Поиск'
+                            onChange={this.handleSearchInput}
+                        />
+                    </div>
                     {
                         dialogs && dialogs.length > 0
                         ? <Fragment>
-                                <div className='search-phone-react'>
-                                    <input
-                                        className="search_input-phone-react"
-                                        placeholder='Поиск'
-                                        onChange={this.handleSearchInput}
-                                    />
-                                </div>
                                 <div className='contacts_list-phone-react'>
                                     {
                                         dialogs && dialogs.length !== 0
@@ -77,6 +80,11 @@ class Dialogs extends Component {
                             </Fragment>
                             : <div style={{ marginTop: '30%', textAlign: 'center' }}>Список диалогов пуст</div>
                     }
+                    <div className='but_create_contact-phone-react' onClick={() => addApp({name: 'DialingNumber', form: <DialingNumber />})}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="45%" height="45%" viewBox="0 0 37.824 37.824" style={{ position: 'absolute', top: '25%', left: '26%'}}>
+                            <path id="_5A" data-name="5A" d="M20.412,20.412H36.325a1.5,1.5,0,0,0,0-3H20.412V1.5a1.5,1.5,0,0,0-3,0V17.412H1.5a1.5,1.5,0,1,0,0,3H17.412V36.325a1.5,1.5,0,0,0,3,0V20.412" transform="translate(0 0)" fill="#fff"/>
+                        </svg>
+                    </div>
                 </div>
             </Fragment>
         );
