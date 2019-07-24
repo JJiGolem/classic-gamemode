@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3b4f40e7-2b00-4af6-93b4-f955a86f8251" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/styles/phone.css" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/styles/phone.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -16,10 +15,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/react/src/modules/phone/styles/phone.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="361">
+            <state relative-caret-position="874">
               <caret line="73" column="23" selection-start-line="73" selection-start-column="23" selection-end-line="73" selection-end-column="23" />
               <folding>
                 <marker date="1563978269174" expanded="true" signature="109:145" ph="..." />
@@ -37,11 +36,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="382">
-              <caret line="152" column="38" selection-start-line="152" selection-start-column="38" selection-end-line="152" selection-end-column="38" />
+            <state relative-caret-position="344">
+              <caret line="102" column="92" selection-start-line="102" selection-start-column="92" selection-end-line="102" selection-end-column="92" />
               <folding>
                 <element signature="e#0#49#0" expanded="true" />
               </folding>
@@ -57,8 +56,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/react/src/styles/main.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="19">
-              <caret line="1" selection-start-line="1" selection-start-column="2" selection-end-line="10" selection-end-column="3" />
+            <state>
+              <caret lean-forward="true" />
               <folding>
                 <marker date="1563977304415" expanded="true" signature="3:396" ph="..." />
               </folding>
@@ -186,8 +185,8 @@
         <option value="$PROJECT_DIR$/react/src/index.js" />
         <option value="$PROJECT_DIR$/react/src/styles/main.css" />
         <option value="$PROJECT_DIR$/react/src/helpers/store/forms.js" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/styles/phone.css" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx" />
       </list>
     </option>
   </component>
@@ -410,12 +409,12 @@
       <workItem from="1563735767010" duration="1169000" />
       <workItem from="1563783564117" duration="14228000" />
       <workItem from="1563879070933" duration="6518000" />
-      <workItem from="1563956921549" duration="8762000" />
+      <workItem from="1563956921549" duration="9058000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="46533000" />
+    <option name="totallyTimeSpent" value="46829000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1296" height="1000" extended-state="6" />
@@ -733,6 +732,23 @@
     <entry file="file://$PROJECT_DIR$/react/src/modules/phone/index.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/helpers/store/forms.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="1" column="16" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/styles/phone.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="874">
+          <caret line="73" column="23" selection-start-line="73" selection-start-column="23" selection-end-line="73" selection-end-column="23" />
+          <folding>
+            <marker date="1563978269174" expanded="true" signature="109:145" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/react/src/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="247">
@@ -745,37 +761,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/react/src/styles/main.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" selection-start-line="1" selection-start-column="2" selection-end-line="10" selection-end-column="3" />
+        <state>
+          <caret lean-forward="true" />
           <folding>
             <marker date="1563977304415" expanded="true" signature="3:396" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/helpers/store/forms.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" column="16" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="382">
-          <caret line="152" column="38" selection-start-line="152" selection-start-column="38" selection-end-line="152" selection-end-column="38" />
+        <state relative-caret-position="344">
+          <caret line="102" column="92" selection-start-line="102" selection-start-column="92" selection-end-line="102" selection-end-column="92" />
           <folding>
             <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/styles/phone.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="73" column="23" selection-start-line="73" selection-start-column="23" selection-end-line="73" selection-end-column="23" />
-          <folding>
-            <marker date="1563978269174" expanded="true" signature="109:145" ph="..." />
           </folding>
         </state>
       </provider>

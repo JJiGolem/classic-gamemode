@@ -100,7 +100,7 @@ class ContactPage extends Component {
                         >
                             {'< '}Назад
                         </span>
-                        <span style={{ float: 'right', opacity: (isDeleted || contact.isMe) ? '0' : '1' }}>
+                        <span style={{ float: 'right', opacity: (isDeleted || contact.name === 'Мой номер') ? '0' : '1' }}>
                             <svg style={{float: 'right', margin: '-7% 10% 5% 0' }} xmlns="http://www.w3.org/2000/svg" width="7%" height="7%" viewBox="0 0 33.88 38.88"
                                  onClick={() => this.deleteContact()}
                             >
@@ -137,7 +137,7 @@ class ContactPage extends Component {
                             </div>
 
                             {
-                                !contact.isMe &&
+                                contact.name !== 'Мой номер' &&
                                 <div className='contact_rename-phone-react'>
                                     <span style={{ marginLeft: '5%' }}>Переименовать</span>
                                     <input className='input_rename_contact-phone-react'
