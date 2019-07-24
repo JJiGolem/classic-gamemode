@@ -80,6 +80,7 @@
 }
 
 #selectMenu .selector {
+    align-items: center;
     background: rgb(0, 0, 0, 0.6);
     border-radius: 1vh;
     display: flex;
@@ -99,6 +100,26 @@
 #selectMenu .selector.select-color > div.active:not(.arrow) {
     /* border: 1px solid #f1d941; */
     opacity: 1;
+}
+
+#selectMenu .selector.select-number > div {
+    color: #fff;
+}
+
+#selectMenu .selector.select-number .progress {
+    align-items: center;
+    background: #fff;
+    display: flex;
+    height: 0.3vh;
+    width: 65%;
+}
+
+#selectMenu .selector.select-number .progress .fill {
+    background: #f1d941;
+    border-radius: 1vh;
+    height: 1.3vh;
+    position: relative;
+    width: 7%;
 }
 
 #selectMenu .selector > div {

@@ -200,6 +200,13 @@
                 :style="{background: value}"></div>
             <!-- <div class="arrow arr-right" :class="{active: menu.items[menu.i].i < menu.items.length - maxColorValues}"></div> -->
         </div>
+        <div v-else-if="valuesType(menu.i) == 2" class="selector select-number">
+            <div>{{ menu.items[menu.i].min }}</div>
+            <div class="progress">
+                <div class="fill" :style="{left: leftNumberType}"></div>
+            </div>
+            <div>{{ menu.items[menu.i].max }}</div>
+        </div>
     </div>
 
     <div v-cloak="v-cloak" id="auth" v-if="show">
