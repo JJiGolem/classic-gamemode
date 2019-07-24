@@ -1,5 +1,5 @@
 const inittialState = [
-    {
+/*    {
         name: 'Данила',
         number: '134432',
         PhoneMessages: [
@@ -100,8 +100,7 @@ const inittialState = [
                 isMine: true
             },
         ]
-    },
-
+    },*/
 ];
 
 export default function dialogs(state = inittialState, action) {

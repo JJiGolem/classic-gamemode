@@ -45,7 +45,6 @@ class Dialogs extends Component {
     }
 
     render() {
-        console.log('rend')
         const { search } = this.state;
 
         var dialogs = this.props.dialogs;
@@ -76,7 +75,7 @@ class Dialogs extends Component {
                                     }
                                 </div>
                             </Fragment>
-                            : <div className="loader01" style={{ margin: '10% 5%' }}></div>
+                            : <div style={{ marginTop: '30%', textAlign: 'center' }}>Список диалогов пуст</div>
                     }
                 </div>
             </Fragment>

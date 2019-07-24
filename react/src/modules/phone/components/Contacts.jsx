@@ -75,7 +75,7 @@ class Contacts extends Component {
                         {
                             contacts && contacts.length !== 0
                                 ? contacts.map((contact, index) => this.getContact(contact, index))
-                                : <div>Список контактов пуст</div>
+                                : <div style={{ textAlign: 'center' }}>Список контактов пуст</div>
                         }
                     </div>
                     <div className='but_create_contact-phone-react' onClick={() => addApp({name: 'CreateContactPage', form: <CreateContactPage />})}>
