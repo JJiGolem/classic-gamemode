@@ -2,16 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3b4f40e7-2b00-4af6-93b4-f955a86f8251" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client_packages/browser/build/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/build/css/styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client_packages/browser/build/css/styles.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/build/css/styles.css.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client_packages/browser/build/js/build.js" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/build/js/build.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client_packages/browser/build/js/build.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/build/js/build.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/react/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/modules/house/components/House.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/house/components/House.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/Contacts.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/Contacts.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/CreateContactPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/CreateContactPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/DialingNumber.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/DialingNumber.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/Dialogs.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/Dialogs.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/HeadAppPhone.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/HeadAppPhone.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.dialogs.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.dialogs.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react/src/modules/phone/styles/phone.css" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/styles/phone.css" afterDir="false" />
     </list>
@@ -27,10 +26,51 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.dialogs.js">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/styles/phone.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="361">
+              <caret line="121" column="19" selection-start-line="121" selection-start-column="19" selection-end-line="121" selection-end-column="19" />
+              <folding>
+                <marker date="1563976760619" expanded="true" signature="109:145" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/react/src/helpers/store/forms.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="19">
-              <caret line="1" column="2" selection-start-line="1" selection-end-line="102" selection-end-column="8" />
+              <caret line="1" column="16" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1351">
+              <caret line="152" column="38" selection-start-line="152" selection-start-column="38" selection-end-line="152" selection-end-column="38" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/index.js">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/react/src/styles/main.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="19">
+              <caret line="1" selection-start-line="1" selection-start-column="2" selection-end-line="10" selection-end-column="3" />
+              <folding>
+                <marker date="1563977304415" expanded="true" signature="3:396" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -47,79 +87,40 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/react/src/helpers/store/forms.js">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/CreateContactPage.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="19">
-              <caret line="1" column="16" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
+            <state relative-caret-position="349">
+              <caret line="37" column="12" selection-start-line="37" selection-start-column="12" selection-end-line="37" selection-end-column="12" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/index.js">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/DialogPage.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="266">
+              <caret line="47" column="12" selection-start-line="47" selection-start-column="12" selection-end-line="47" selection-end-column="12" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/actions/action.dialogs.js">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/styles/phone.css">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/HeadAppPhone.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="19" selection-start-column="19" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/styles/main.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="19">
-              <caret line="1" selection-start-line="1" selection-start-column="2" selection-end-line="10" selection-end-column="3" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/Dialogs.jsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="268">
-              <caret line="77" column="57" selection-start-line="77" selection-start-column="57" selection-end-line="77" selection-end-column="57" />
-              <folding>
-                <element signature="e#0#49#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/Contacts.jsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="254">
-              <caret line="77" column="69" selection-start-line="77" selection-start-column="69" selection-end-line="77" selection-end-column="69" />
-              <folding>
-                <element signature="e#0#49#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/MainContainer.jsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="116">
-              <caret line="14" column="37" selection-start-line="14" selection-start-column="37" selection-end-line="14" selection-end-column="37" />
-              <folding>
-                <element signature="e#0#49#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/house/components/House.jsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1254">
-              <caret line="15" column="32" selection-start-line="15" selection-start-column="32" selection-end-line="15" selection-end-column="32" />
+            <state relative-caret-position="380">
+              <caret line="20" column="114" selection-start-line="20" selection-start-column="114" selection-end-line="20" selection-end-column="114" />
               <folding>
                 <element signature="e#0#49#0" expanded="true" />
               </folding>
@@ -178,28 +179,32 @@
         <option value="$PROJECT_DIR$/react/src/modules/house/components/styles.css" />
         <option value="$PROJECT_DIR$/react/src/modules/house/components/TodoList.jsx" />
         <option value="$PROJECT_DIR$/react/src/MainContainer.jsx" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/components/DialogPage.jsx" />
         <option value="$PROJECT_DIR$/client_packages/browser/build/js/build.js" />
         <option value="$PROJECT_DIR$/react/config/paths.js" />
         <option value="$PROJECT_DIR$/react/package.json" />
         <option value="$PROJECT_DIR$/react/config/webpack.config.prod.js" />
         <option value="$PROJECT_DIR$/react/README.md" />
         <option value="$PROJECT_DIR$/react/src/modules/house/components/House.jsx" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/styles/phone.css" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/Contacts.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.dialogs.js" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/Dialogs.jsx" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/components/Contacts.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/DialingNumber.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/DialogPage.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/CreateContactPage.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/HeadAppPhone.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/styles/phone.css" />
         <option value="$PROJECT_DIR$/react/src/index.js" />
         <option value="$PROJECT_DIR$/react/src/styles/main.css" />
         <option value="$PROJECT_DIR$/react/src/helpers/store/forms.js" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="215" />
-    <option name="y" value="65" />
-    <option name="width" value="1400" />
-    <option name="height" value="820" />
+    <option name="x" value="10" />
+    <option name="y" value="20" />
+    <option name="width" value="1260" />
+    <option name="height" value="944" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -326,6 +331,15 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="modules" type="462c0819:PsiDirectoryNode" />
               <item name="phone" type="462c0819:PsiDirectoryNode" />
+              <item name="actions" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
+              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
+              <item name="react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+              <item name="phone" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -363,7 +377,7 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="D:/testing/testing-proj" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../rage" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -405,18 +419,18 @@
       <workItem from="1563735767010" duration="1169000" />
       <workItem from="1563783564117" duration="14228000" />
       <workItem from="1563879070933" duration="6518000" />
-      <workItem from="1563956921549" duration="2083000" />
+      <workItem from="1563956921549" duration="7971000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="39854000" />
+    <option name="totallyTimeSpent" value="45742000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1296" height="1000" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24960254" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24960254" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -430,7 +444,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.32871974" />
+      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.32871974" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -460,8 +474,6 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/ReactSource/package-lock.json" />
-    <entry file="file://$PROJECT_DIR$/ReactSource/src/index.js" />
     <entry file="file://$PROJECT_DIR$/ReactSource/src/reducers/chat.js" />
     <entry file="file://$PROJECT_DIR$/ReactSource/src/components/chat/Chat.jsx" />
     <entry file="file://$PROJECT_DIR$/client_packages/browser/css/main.css">
@@ -513,19 +525,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/actions/action.dialogs.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/DialogPage.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1163">
-          <caret line="67" column="36" selection-start-line="67" selection-start-column="36" selection-end-line="67" selection-end-column="36" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/IncomingCall.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -535,38 +534,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/CreateContactPage.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-31">
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/ActiveCall.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-31">
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="292">
-          <caret line="17" column="10" selection-start-line="17" selection-start-column="10" selection-end-line="17" selection-end-column="10" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/MainDisplay.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="42" column="10" selection-start-line="42" selection-start-column="10" selection-end-line="42" selection-end-column="10" />
           <folding>
             <element signature="e#0#49#0" expanded="true" />
           </folding>
@@ -689,27 +659,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/styles/phone.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="19" selection-start-column="19" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.dialogs.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" column="2" selection-start-line="1" selection-end-line="102" selection-end-column="8" />
+        <state relative-caret-position="285">
+          <caret line="42" column="14" lean-forward="true" selection-start-line="42" selection-start-column="14" selection-end-line="42" selection-end-column="14" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/Dialogs.jsx">
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/MainDisplay.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="268">
-          <caret line="77" column="57" selection-start-line="77" selection-start-column="57" selection-end-line="77" selection-end-column="57" />
+        <state>
+          <caret line="36" lean-forward="true" selection-start-line="36" selection-end-line="36" />
           <folding>
             <element signature="e#0#49#0" expanded="true" />
           </folding>
@@ -718,13 +678,79 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/Contacts.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="254">
-          <caret line="77" column="69" selection-start-line="77" selection-start-column="69" selection-end-line="77" selection-end-column="69" />
+        <state relative-caret-position="273">
+          <caret line="84" column="26" lean-forward="true" selection-start-line="80" selection-start-column="20" selection-end-line="84" selection-end-column="26" />
           <folding>
             <element signature="e#0#49#0" expanded="true" />
           </folding>
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/Dialogs.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="173">
+          <caret line="50" column="39" selection-start-line="50" selection-start-column="39" selection-end-line="50" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/DialingNumber.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="197">
+          <caret line="128" column="26" selection-start-line="128" selection-start-column="26" selection-end-line="128" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/actions/action.dialogs.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/DialogPage.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="47" column="12" selection-start-line="47" selection-start-column="12" selection-end-line="47" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/CreateContactPage.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="349">
+          <caret line="37" column="12" selection-start-line="37" selection-start-column="12" selection-end-line="37" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/HeadAppPhone.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="380">
+          <caret line="20" column="114" selection-start-line="20" selection-start-column="114" selection-end-line="20" selection-end-column="114" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/styles/phone.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="121" column="19" selection-start-line="121" selection-start-column="19" selection-end-line="121" selection-end-column="19" />
+          <folding>
+            <marker date="1563976760619" expanded="true" signature="109:145" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/index.js">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/react/src/index.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -740,6 +766,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="19">
           <caret line="1" selection-start-line="1" selection-start-column="2" selection-end-line="10" selection-end-column="3" />
+          <folding>
+            <marker date="1563977304415" expanded="true" signature="3:396" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -747,6 +776,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="19">
           <caret line="1" column="16" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1351">
+          <caret line="152" column="38" selection-start-line="152" selection-start-column="38" selection-end-line="152" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
