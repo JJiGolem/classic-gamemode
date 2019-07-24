@@ -6,6 +6,8 @@ var selectMenu = new Vue({
         menu: null,
         // Макс. количество пунктов на экране
         maxItems: 5,
+        // Макс. количество цветов в селекторе
+        maxColorValues: 11,
     },
     methods: {
         onKeyUp(e) {
@@ -42,6 +44,13 @@ var selectMenu = new Vue({
             var i = this.menu.items[this.menu.i].i;
             return index <= 2;
         },
+        valuesType(index) {
+            // 0 - обычное значение, 1 - цвет, 2 - ползунок
+            var values = this.menu.items[index].values;
+            if (!values) return -1;
+            if (values[0][0] == '#') return 1;
+            return 0;
+        },
         // ************** События взаимодействия с меню **************
         // Выбран пункт меню
         onItemSelected(e) {
@@ -73,6 +82,9 @@ var selectMenu = new Vue({
             if (!values) return null;
             var result = [values[i - 1] || "", values[i], values[i + 1] || ""];
             return result;
+        },
+        colorValues() {
+            return this.menu.items[this.menu.i].values.slice(0, this.maxColorValues);
         }
     },
     mounted() {
@@ -96,7 +108,7 @@ var selectMenu = new Vue({
         },
         {
             text: "Выбор цвета 2",
-            values: ['#0bf', '#fb0', '#bf0'],
+            values: ['#0bf', '#fb0', '#bf0', '#fb0', '#fb0', '#fb0', '#bf0', '#0fe', '#cd3', 'yellow', 'pink'],
             i: 0,
         },
         {
