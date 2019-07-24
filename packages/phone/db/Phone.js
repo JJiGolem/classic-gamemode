@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         number: {
-            type: DataTypes.INTEGER(11),
+            type: DataTypes.STRING(16),
             allowNull: false
         },
         money: {
