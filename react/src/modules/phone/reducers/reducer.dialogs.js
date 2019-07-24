@@ -2,7 +2,7 @@ const inittialState = [
     {
         name: 'Данила',
         number: '134432',
-        messages: [
+        PhoneMessages: [
             {
                 text: 'ты как',
                 isMine: false
@@ -34,9 +34,9 @@ const inittialState = [
         ]
     },
     {
-        name: '',
+        name: null,
         number: '1212333',
-        messages: [
+        PhoneMessages: [
             {
                 text: 'ты как',
                 isMine: false
@@ -70,7 +70,7 @@ const inittialState = [
     {
         name: 'Влад',
         number: '0982',
-        messages: [
+        PhoneMessages: [
             {
                 text: 'ты как',
                 isMine: false
@@ -117,7 +117,7 @@ export default function dialogs(state = inittialState, action) {
             newDial.push({
                 name: payload.name,
                 number: payload.number,
-                messages: []
+                PhoneMessages: []
             });
             return newDial;
 
@@ -136,19 +136,19 @@ export default function dialogs(state = inittialState, action) {
             const newState = [ ...state ];
 
             if(ind !== -1) {
-                if(state[ind].messages.length < DIALOG_SIZE) {
-                    newState[ind].messages.push({text: payload.text, isMine: payload.isMine});
+                if(state[ind].PhoneMessages.length < DIALOG_SIZE) {
+                    newState[ind].PhoneMessages.push({text: payload.text, isMine: payload.isMine});
                     return newState;
                 } else {
-                    newState[ind].messages.splice(0, 1);
-                    newState[ind].messages.push({text: payload.text, isMine: payload.isMine});
+                    newState[ind].PhoneMessages.splice(0, 1);
+                    newState[ind].PhoneMessages.push({text: payload.text, isMine: payload.isMine});
                     return newState;
                 }
             } else {
                 newState.push({
                     name: '',
                     number: payload.number,
-                    messages: [
+                    PhoneMessages: [
                         {
                             text: payload.text,
                             isMine: payload.isMine

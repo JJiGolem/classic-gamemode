@@ -22,8 +22,8 @@ class Dialogs extends Component {
 
         let lastMessage;
 
-        if (dialog.messages.length !== 0) {
-            lastMessage = dialog.messages[dialog.messages.length - 1].text;
+        if (dialog.PhoneMessages.length !== 0) {
+            lastMessage = dialog.PhoneMessages[dialog.PhoneMessages.length - 1].text;
         } else {
             lastMessage = 'Пустой диалог';
         }
@@ -31,8 +31,8 @@ class Dialogs extends Component {
         return (
             <div className='dialog_field-phone-react' key={index}
                  onClick={() => this.props.addApp({name: 'DialogPage', form: <DialogPage dialog={dialog}/>})}>
-                <div className='back_icon_contact-phone-react' style={{ height: '10%', width: '17%', marginLeft: '0%' }}>
-                    <svg className='contact_icon-phone-react' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 33" style={{ marginTop: '21%' }}>
+                <div className='back_icon_contact-phone-react' style={{ height: '10%', width: '15%', marginLeft: '5%' }}>
+                    <svg className='contact_icon-phone-react' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 33" style={{ marginTop: '15%' }}>
                         <path id="_4F" data-name="4F" d="M17.877,37.19A32.219,32.219,0,0,1,4.442,34.554c-3.589-1.7-5.565-3.96-5.565-6.364s1.976-4.664,5.565-6.364A32.219,32.219,0,0,1,17.877,19.19a32.219,32.219,0,0,1,13.435,2.636c3.588,1.7,5.565,3.96,5.565,6.364s-1.976,4.664-5.565,6.364A32.219,32.219,0,0,1,17.877,37.19Zm.29-19.537A8.892,8.892,0,0,1,9.23,8.826a8.939,8.939,0,0,1,17.876,0A8.893,8.893,0,0,1,18.167,17.653Z" transform="translate(1.123 0)" fill="#cacaca"/>
                     </svg>
                 </div>

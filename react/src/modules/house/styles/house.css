@@ -14,7 +14,7 @@
     max-height: 1000px;
     min-width: 300px;
     min-height: 150px;
-    animation: show-react .1s ease-in-out;
+    /*animation: show-react .1s ease-in-out;*/
 }
 
 .header-house-react {
@@ -149,4 +149,5 @@
     text-align: center;
     padding: 5%;
     border-radius: 10px;
+    animation: show-react .1s ease-in-out;
 }

@@ -1,6 +1,9 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
+import ReactCSSTransitionGroup from 'react-addons-transition-group';
+
 import '../styles/house.css';
+
 import {setAnswerHouse, setLoadingHouse, showHouse} from "../actions/action.house";
 
 class House extends Component {
@@ -8,7 +11,10 @@ class House extends Component {
         super(props);
         this.state = {
             colorBuy: '#e1c631',
-            colorLook: '#e1c631'
+            colorLook: '#e1c631',
+            isEnterMenu: false,
+            isActionsMenu: false,
+            items: ['Click', 'To', 'Remove', 'An', 'Item']
         };
 
         this.getForm = this.getForm.bind(this);
@@ -40,24 +46,23 @@ class House extends Component {
 
     }
 
-    getButtons() {
-        const { house } = this.props;
+    showEnterMenu(house) {
+        return (
+            <div className='message_back-house-react'>
+                { this.getButton('enterHouse') }
+                { house.garage && this.getButton('enterGarage') }
+            </div>
+        )
+    }
 
-        if (house.owner) {
-            return (
-                <Fragment>
-                    <div className='button-house-react' onClick={this.startBuy}>
+    showActionsMenu(house) {
 
-                        Войти
-                    </div>
-                    <div className='button-house-react' onClick={this.lookHouse}>
-                        Действия
-                    </div>
-                </Fragment>
-            )
-        } else {
-            return (
-                <Fragment>
+    }
+
+    getButton(name) {
+        switch (name) {
+            case 'buy':
+                return (
                     <div className='button-house-react'
                          onClick={this.startBuy}
                          onMouseOver={() => this.setState({ colorBuy: 'black' })}
@@ -79,6 +84,10 @@ class House extends Component {
                         </div>
                         Купить
                     </div>
+                )
+
+            case 'look':
+                return (
                     <div className='button-house-react'
                          onClick={this.lookHouse}
                          onMouseOver={() => this.setState({ colorLook: 'black' })}
@@ -94,6 +103,57 @@ class House extends Component {
                         </div>
                         Осмотреть
                     </div>
+                )
+
+            case 'enter':
+                return (
+                    <div className='button-house-react' onClick={() => this.setState({ isEnterMenu: true })}>
+
+                        Войти
+                    </div>
+                )
+
+            case 'actions':
+                return (
+                    <div className='button-house-react' onClick={() => this.setState({ isActionsMenu: true })}>
+
+                        Действия
+                    </div>
+                )
+
+            case 'enterHouse':
+                return (
+                    <div className='button-house-react' onClick={() => this.setState({ isEnterMenu: false })}>
+
+                        Войти в дом
+                    </div>
+                )
+
+            case 'enterGarage':
+                return (
+                    <div className='button-house-react' onClick={() => this.setState({ isEnterMenu: true })}>
+
+                        Войти в гараж
+                    </div>
+                )
+        }
+    }
+
+    getButtons() {
+        const { house } = this.props;
+
+        if (house.owner) {
+            return (
+                <Fragment>
+                    { this.getButton('enter') }
+                    { this.getButton('actions') }
+                </Fragment>
+            )
+        } else {
+            return (
+                <Fragment>
+                    { this.getButton('buy') }
+                    { this.getButton('look') }
                 </Fragment>
             )
         }
@@ -161,8 +221,8 @@ class House extends Component {
 
         if (answer === 'У Вас недостаточно денег для покупки') {
             return (
-                <div className='message_back-house-react'>
-                    <div className='exitEnterHouse' name='exit' onClick={() => setAnswer({ answer: null })}></div>
+                <div className='message_back-house-react' onClick={() => setAnswer({ answer: null })}>
+                    <div className='exitEnterHouse' name='exit'></div>
                     { answer }
                 </div>
             )
@@ -170,25 +230,66 @@ class House extends Component {
 
         if (answer === 'Дом успешно куплен') {
             return (
-                <div className='message_back-house-react'>
-                    <div className='exitEnterHouse' name='exit' onClick={() => setAnswer({ answer: null })}></div>
+                <div className='message_back-house-react' onClick={() => setAnswer({ answer: null })}>
+                    <div className='exitEnterHouse' name='exit' ></div>
                     { answer }
                 </div>
             )
         }
     }
 
+    renderItems() {
+        return this.state.items.map((item, i) => {
+            return (
+                <div key={item} onClick={() => this.removeItem(i)} className="item">
+                    {item}
+                </div>
+            );
+        });
+    }
+
+    removeItem(i) {
+        let newItems = this.state.items.slice();
+        newItems.splice(i, 1);
+        this.setState({
+            items: newItems
+        });
+    }
+
     render() {
         const { house } = this.props;
+        const { isEnterMenu, isActionsMenu } = this.state;
 
         return (
-            <Fragment>
-                <div className='house_form-react'>
-                    { this.getForm() }
-                    { house.answer && this.getMessage(house.answer) }
+           /* <div>
+                <ReactCSSTransitionGroup
+                    transitionName={
+                        {     enter: 'enter',
+                            leave: 'leave',
+                            appear: 'appear'
+                        }}
+                    transitionEnterTimeout={500}
+                    transitionLeaveTimeout={300}>
+                    >
+                    <Fragment>
+                        <div className='house_form-react'>
+                            { this.getForm() }
+                            { house.answer && this.getMessage(house.answer) }
+                            { isEnterMenu && this.showEnterMenu(house) }
+                            { isActionsMenu && this.showActionsMenu(house) }
+                        </div>
+                        { house.isLoading && this.getLoader() }
+                    </Fragment>
+                </ReactCSSTransitionGroup>
+            </div>*/
+
+            <div className="container">
+                <div className="animation-container">
+                    <ReactCSSTransitionGroup transitionName="example">
+                        {this.renderItems()}
+                    </ReactCSSTransitionGroup>
                 </div>
-                { house.isLoading && this.getLoader() }
-            </Fragment>
+            </div>
         );
     }
 }

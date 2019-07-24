@@ -3,7 +3,7 @@ const initialState = {
     area: 'Санта-Моника',
     class: 'Люкс',
     numRooms: 4,
-    garage: true,
+    garage: false,
     carPlaces: 2,
     price: 45000,
     rent: 350,

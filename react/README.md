@@ -1,44 +1,61 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React-часть проекта.
 
-## Available Scripts
-
-In the project directory, you can run:
+## Основные команды
 
 ### `npm start`
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Команда для тестирования в реальном времени.<br>
+Открывается на порте 3000 - [http://localhost:3000](http://localhost:3000).
+Обязательно <b>закомментировать</b> строчку `mp.events = myEventEmmiter;` в файле [index.js](./src/index.js).
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Команда для сборки проекта. Все собирается уже в нужную папку client_packages.
+Обязательно <b>раскомментировать</b> строчку `mp.events = myEventEmmiter;` в файле [index.js](./src/index.js).
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+## Структура проекта
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### `public`
+Папка с index.html - используется для тестирования (там ничего не трогать) 
 
-### `npm run eject`
+### `config, scripts`
+Папки, необходимые для сборки - тоже не трогать ничего там.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### `src`
+Основная папка с исходным кодом
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Структура кода (папка src)
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### `events`
+Здесь лежит один файл - [playerEvents.js](./src/events/playerEvents.js) <br/>
+В нем прописываются клиентские события. Названия событий можно менять спокойно:
+myEventEmmiter.on('<b>phone.call.end</b>'...
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### `fonts`
+Папка со шрифтами.
 
-## Learn More
+###`helpers`
+Папка с настройками Redux.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### `imgs`
+Папка с картинками.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### `styles`
+Папка с общими стилями (в том числе и анимации).
+
+### `modules`
+Папка с модулями (телефон, чат и тд.). Структура модуля рассмотрена ниже.
+
+## Структура отдельного модуля
+### `actions`
+Основные функции для работы модуля.
+
+### `reducers`
+Взаимодействие с Redux (локальное хранилище данных).
+
+### `components`
+Представления и логика работы.
+
+### `styles`
+Стили для конкретного модуля.
