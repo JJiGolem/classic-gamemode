@@ -12,8 +12,8 @@
 #loader .lds-rolling div,
 #loader .lds-rolling div:after {
     position: absolute;
-    width: 15vh;
-    height: 15vh;
+    width: 9vh;
+    height: 9vh;
     border: 20px solid #ffdf29;
     border-top-color: transparent;
     border-radius: 50%;
@@ -32,8 +32,8 @@
 }
 
 #loader .lds-rolling {
-    width: 15vh !important;
-    height: 15vh !important;
+    width: 9vh !important;
+    height: 9vh !important;
     -webkit-transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
     transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
 }

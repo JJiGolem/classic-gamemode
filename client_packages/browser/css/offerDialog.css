@@ -1,11 +1,14 @@
 #offerDialog {
     bottom: 10%;
-    display: flex;
     font-family: Montserrat;
     left: 36%;
     min-height: 10%;
     position: absolute;
     width: 28%;
+}
+
+#offerDialog > div {
+    display: flex;
 }
 
 #offerDialog .agree, #offerDialog .cancel {
