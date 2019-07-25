@@ -1,7 +1,5 @@
 mp.events.add('parkings.menu.show', () => {
-    //mp.callCEFVN({ "selectMenu.menu": defaultMenu });
-    //mp.callCEFV(`selectMenu.menu.handler = '${handler}'`)
-    //mp.callCEFV(`selectMenu.menu.handler = '${handler}'`)
+    mp.callCEFV(`selectMenu.menu = selectMenu.menus["parkingMenu"]`);
     mp.callCEFVN({ "selectMenu.show": true });
 });
 
