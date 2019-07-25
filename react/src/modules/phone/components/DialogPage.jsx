@@ -1,7 +1,9 @@
 import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
+import 'moment/locale/ru';
 
-import { addMessageToPhone } from '../actions/action.dialogs';
+import {addMessageToPhone, deleteDialog, readDialogMessages} from '../actions/action.dialogs';
 import {addAppDisplay, closeAppDisplay} from "../actions/action.apps";
 import Contacts from "./Contacts";
 import Dialogs from "./Dialogs";
@@ -25,8 +27,12 @@ class DialogPage extends Component {
     }
 
     componentDidMount() {
+        const { readDialog, dialog } = this.props;
+
         const objDiv = this.refList;
         objDiv.scrollTop = objDiv.scrollHeight;
+
+        readDialog(dialog.number);
     }
 
     componentDidUpdate() {
@@ -43,9 +49,9 @@ class DialogPage extends Component {
         const { dialog, addMessage } = this.props;
 
         if (inputMessage) {
-            addMessage(inputMessage, dialog.number, true);
+            addMessage(inputMessage, Date.now(), dialog.number, true);
             // eslint-disable-next-line no-undef
-            mp.trigger('phone.message.send', inputMessage, dialog.number);
+            //mp.trigger('phone.message.send', inputMessage, dialog.number);
             this.setState({ inputMessage: '' });
         }
     }
@@ -68,18 +74,28 @@ class DialogPage extends Component {
         if (messages.length !== 0) {
             return (
                 messages.map((message, index) => (
-                    message.isMine ?
-                        <div className='my_message_block-phone-react' style={ !this.isValid(message.text) ? styles : {}}>
-                            <span key={index*100} className='my_message-phone-react'>
+                    <div>
+                        {
+                            (index === 0 || (message.date && (new Date(message.date).toDateString() !== new Date(messages[index - 1].date).toDateString()))) &&
+                            <div className='date_messages_block-phone-react'>
+                                { new Date(message.date).toLocaleDateString('ru-RU') }
+                            </div>
+                        }
+                        <div className={message.isMine ? 'my_message_block-phone-react' : 'him_message_block-phone-react'} style={ !this.isValid(message.text) ? styles : {}}>
+                            <span key={index*100} className={message.isMine ? 'my_message-phone-react' : 'him_message-phone-react'}>
                                 {message.text}
                             </span>
                         </div>
-                        :
-                        <div className='him_message_block-phone-react' style={!this.isValid(message.text) ? styles : {}}>
-                            <span key={index*100} className='him_message-phone-react'>
-                                {message.text}
-                            </span>
-                        </div>
+                        {
+                            message.date &&
+                            <div
+                                className='time_message_block-phone-react'
+                                style={{ float: message.isMine ? 'right' : 'left', marginLeft: !message.isMine && '-3%' }}
+                            >
+                                { `${new Date(message.date).getHours()}:${new Date(message.date).getMinutes()}` }
+                            </div>
+                        }
+                    </div>
                 ))
             )
         }
@@ -93,27 +109,33 @@ class DialogPage extends Component {
     }
 
     back() {
-        const { closeApp, addApp } = this.props;
+        const { closeApp, deleteDialog, dialog, dialogs } = this.props;
+
+        if (dialogs.find(d => d.number === dialog.number).PhoneMessages.length === 0) {
+            deleteDialog(dialog.number);
+        }
 
         closeApp();
-        addApp({name: 'Dialogs', form: <Dialogs />});
     }
 
     render() {
 
-        const { dialog, dialogs, closeApp } = this.props;
+        const { dialog } = this.props;
 
         return (
             <Fragment>
                 <div className="back_page-phone-react">
                     <div className="head_app-phone-react">
-                        <span style={{ float: 'left', margin: '5% 0 0 10%' }} onClick={this.back.bind(this)}
-                        >
-                            {'< '}Назад
-                        </span>
-                        <span style={{ float: 'right', margin: '5% 10% 0 0' }}>
+                        <div style={{ float: 'left', margin: '6% 0 0 10%', display: 'inline-block', width: '40%' }}
+                             onClick={this.back.bind(this)}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="6%" height="6%" viewBox="0 0 18.812 35.125">
+                                <path id="_6A" data-name="6A" d="M17.311,35.125a1.5,1.5,0,0,0,1.069-2.553L3.6,17.562,18.38,2.552a1.5,1.5,0,1,0-2.137-2.1L.431,16.51a1.5,1.5,0,0,0,0,2.1L16.243,34.677a1.5,1.5,0,0,0,1.068.448" transform="translate(0 0)" fill="#fff"/>
+                            </svg>
+                            Назад
+                        </div>
+                        <div style={{ float: 'right', margin: '6% 10% 0 0' }}>
                             { dialog.name ? dialog.name : dialog.number }
-                        </span>
+                        </div>
                     </div>
 
                     <div className='messages_list-phone-react' ref={(list) => {this.refList = list}}>
@@ -146,9 +168,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    addMessage: (text, number, isMine) => dispatch(addMessageToPhone(text, number, isMine)),
+    addMessage: (text, date, number, isMine) => dispatch(addMessageToPhone(text, date, number, isMine)),
     closeApp: () => dispatch(closeAppDisplay()),
     addApp: app => dispatch(addAppDisplay(app)),
+    deleteDialog: number => dispatch(deleteDialog(number)),
+    readDialog: number => dispatch(readDialogMessages(number))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DialogPage);

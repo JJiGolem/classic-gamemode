@@ -66,15 +66,17 @@ class DialingNumber extends Component {
         const { inputNumber } = this.state;
         const { addApp, dialogs, addDialog } = this.props;
 
-        let dialogIndex = dialogs.findIndex(d => d.number === inputNumber);
+        if (inputNumber) {
+            let dialogIndex = dialogs.findIndex(d => d.number === inputNumber);
 
-        if (dialogIndex === -1) {
-            let dialog = { name: '', number: inputNumber };
-            addDialog('', inputNumber);
-            addApp({ name: 'DialogPage', form: <DialogPage dialog={dialog} /> });
-        } else {
-            let dialog = dialogs[dialogIndex];
-            addApp({ name: 'DialogPage', form: <DialogPage dialog={dialog} /> });
+            if (dialogIndex === -1) {
+                let dialog = { name: '', number: inputNumber };
+                addDialog('', inputNumber);
+                addApp({ name: 'DialogPage', form: <DialogPage dialog={dialog} /> });
+            } else {
+                let dialog = dialogs[dialogIndex];
+                addApp({ name: 'DialogPage', form: <DialogPage dialog={dialog} /> });
+            }
         }
     }
 

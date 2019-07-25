@@ -57,8 +57,16 @@ class MainDisplay extends Component {
     render() {
 
         const { time } = this.state;
-        const { addApp, info } = this.props;
+        const { addApp, info, dialogs } = this.props;
         const date = new Date();
+
+        let countNotReadMessages = 0;
+
+        for (let i = 0; i < dialogs.length; i++) {
+            if (dialogs[i].PhoneMessages.some(message => !message.isRead)) {
+                countNotReadMessages++;
+            }
+        }
 
         return (
             <Fragment>
@@ -116,6 +124,7 @@ class MainDisplay extends Component {
                                 <path data-name="1H" d="M5.1,26.079a1.006,1.006,0,0,1-.447-.1,1.065,1.065,0,0,1-.606-.957V19.666H2.461A2.39,2.39,0,0,1,0,17.36V2.306A2.39,2.39,0,0,1,2.461,0H25.312a2.39,2.39,0,0,1,2.461,2.306V17.36a2.39,2.39,0,0,1-2.461,2.307h-12.1L5.771,25.839A1.033,1.033,0,0,1,5.1,26.079ZM2.461,2.109c-.219,0-.352.137-.352.2V17.36c0,.06.133.2.352.2H5.1a1.056,1.056,0,0,1,1.054,1.055v4.17L12.158,17.8l.02-.01.021-.011a.309.309,0,0,1,.095-.063.505.505,0,0,1,.085-.049l.1-.042c.016,0,.032-.009.048-.014a.509.509,0,0,1,.05-.014l.049-.01.049-.01a.6.6,0,0,1,.111-.007.115.115,0,0,1,.05-.008h12.48c.219,0,.352-.137.352-.2V2.306c0-.06-.133-.2-.352-.2Z" transform="translate(146.418 13.601)" fill="#fff"/>
                             </g>
                         </svg>
+                        {countNotReadMessages !== 0 && <span className='dialogs_notif-phone-react' >{ countNotReadMessages }</span>}
                     </div>
                     <div className="menu_panel_app-phone-react"
                          onClick={() => addApp({name: 'Contacts', form: <Contacts />})}

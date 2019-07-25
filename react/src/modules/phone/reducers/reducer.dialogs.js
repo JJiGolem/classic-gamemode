@@ -1,3 +1,7 @@
+import moment from 'moment';
+import 'moment/locale/ru';
+
+moment.locale('ru');
 const inittialState = [
     {
         name: 'Данила',
@@ -5,7 +9,8 @@ const inittialState = [
         PhoneMessages: [
             {
                 text: 'ты как',
-                isMine: false
+                isMine: false,
+                date: Date.now()
             },
             {
                 text: '?',
@@ -21,7 +26,7 @@ const inittialState = [
             },
             {
                 text: 'унесло так унесло',
-                isMine: true
+                isMine: true,
             },
             {
                 text: 'я думал вообще откинусь ))000 ладно хоть не блевал',
@@ -73,31 +78,38 @@ const inittialState = [
         PhoneMessages: [
             {
                 text: 'ты как',
+                isRead: true,
                 isMine: false
             },
             {
                 text: '?',
+                isRead: true,
                 isMine: false
             },
             {
                 text: 'пиздец меня разъебало вчера',
+                isRead: true,
                 isMine: true
             },
             {
                 text: 'ну ясен хуй епт',
+                isRead: true,
                 isMine: false
             },
             {
                 text: 'унесло так унесло',
+                isRead: true,
                 isMine: true
             },
             {
                 text: 'я думал вообще откинусь ))000 ладно хоть не блевал',
-                isMine: true
+                isRead: false,
+                isMine: false
             },
             {
                 text: 'в',
-                isMine: true
+                isMine: false,
+                isRead: false
             },
         ]
     },
@@ -106,41 +118,52 @@ const inittialState = [
 export default function dialogs(state = inittialState, action) {
     const { type, payload } = action;
     const DIALOG_SIZE = 100;
+    var newState;
 
     switch(type) {
         case 'LOAD_DIALOGS':
             return payload;
 
         case 'ADD_DIALOG':
-            const newDial = [ ...state ];
-            newDial.push({
+            newState = [ ...state ];
+            newState.push({
                 name: payload.name,
                 number: payload.number,
                 PhoneMessages: []
             });
-            return newDial;
+            return newState;
 
         case 'RENAME_DIALOG':
-            let newRenameState = [ ...state ];
-            let renameDialogIndex = newRenameState.findIndex(dialog => dialog.number === payload.number);
+            newState = [ ...state ];
+            let renameDialogIndex = newState.findIndex(dialog => dialog.number === payload.number);
 
             if (renameDialogIndex !== -1) {
-                newRenameState[renameDialogIndex].name = payload.newName;
+                newState[renameDialogIndex].name = payload.newName;
             }
 
-            return newRenameState;
+            return newState;
+
+        case 'DELETE_DIALOG':
+            newState = [ ...state ];
+            let removeIndex = newState.findIndex(dialog => dialog.number === payload);
+
+            if (removeIndex !== -1) {
+                newState.splice(removeIndex, 1);
+            }
+
+            return newState;
 
         case 'ADD_MESSAGE_TO_PHONE':
             let ind = state.findIndex(con => con.number === payload.number);
-            const newState = [ ...state ];
+            newState = [ ...state ];
 
             if(ind !== -1) {
                 if(state[ind].PhoneMessages.length < DIALOG_SIZE) {
-                    newState[ind].PhoneMessages.push({text: payload.text, isMine: payload.isMine});
+                    newState[ind].PhoneMessages.push({text: payload.text, date: payload.date, isMine: payload.isMine});
                     return newState;
                 } else {
                     newState[ind].PhoneMessages.splice(0, 1);
-                    newState[ind].PhoneMessages.push({text: payload.text, isMine: payload.isMine});
+                    newState[ind].PhoneMessages.push({text: payload.text, date: payload.date, isMine: payload.isMine});
                     return newState;
                 }
             } else {
@@ -155,6 +178,25 @@ export default function dialogs(state = inittialState, action) {
                     ]
                 })
             }
+            return newState;
+
+        case 'SORT_DIALOGS_BY_DATE':
+            newState = [ ...state ];
+            newState.sort((a, b) =>
+                a.PhoneMessages.length !== 0 && b.PhoneMessages.length !== 0 &&
+                new Date(a.PhoneMessages[a.PhoneMessages.length - 1].date).toLocaleString()
+                    .localeCompare(new Date(b.PhoneMessages[b.PhoneMessages.length - 1].date).toLocaleString()) * -1
+            )
+            return newState;
+
+        case 'READ_DIALOG_MESSAGES':
+            newState = [ ...state ];
+            let readIndex = newState.findIndex(dialog => dialog.number === payload);
+
+            if (removeIndex !== -1) {
+                newState[readIndex].PhoneMessages.forEach(message => message.isRead = true);
+            }
+
             return newState;
     }
 
