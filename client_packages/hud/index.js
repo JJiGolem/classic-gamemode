@@ -6,6 +6,7 @@ mp.events.add('hud.load', () => {
   var anchor = mp.utils.getMinimapAnchor();
   var resolution = mp.game.graphics.getScreenActiveResolution(0, 0);
   mp.callCEFV(`hud.leftWeather = ${resolution.x * (anchor.rightX * 1.1)}`);
+  mp.callCEFV(`speedometer.show = true`);
   mp.events.call('hud.enable', true);
 
   mp.keys.bind(0x74, true, function () { /// Включение/отключение худа на F5
