@@ -8,6 +8,33 @@ var selectMenu = new Vue({
         maxItems: 5,
         // Макс. количество цветов в селекторе
         maxColorValues: 11,
+        menus: {
+            "parkingMenu": {
+                name: "parking", // название меню, необходимо для отловки событий
+                header: "Парковка", // заголовок меню, видимый на экране
+                items: [{
+                    text: "Забрать автомобиль",
+                },
+                {
+                    text: "Закрыть меню",
+                }
+                ],
+                i: 0, // индекс выбранного пункта
+                j: 0, // индекс первого видимого пункта
+                handler(eventName) { // обработчик взаимодействия с меню
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name, // название меню
+                        itemName: item.text, // текст пункта меню
+                        itemIndex: this.i, // индекс пункта меню
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
+                        valueIndex: item.i, // индекс значения пункта меню
+                    };
+                    mp.trigger(`chat.message.push`, `!{#ffffff} Событие: ${eventName}`);
+                    mp.trigger(`chat.message.push`, `!{#ffffff} ${JSON.stringify(e)}`);
+                }
+            }
+        }
     },
     methods: {
         onKeyUp(e) {
@@ -101,7 +128,7 @@ var selectMenu = new Vue({
     },
     mounted() {
         let self = this;
-        window.addEventListener('keyup', function(e) {
+        window.addEventListener('keyup', function (e) {
             if (!self.menu) return;
             self.onKeyUp(e);
         });

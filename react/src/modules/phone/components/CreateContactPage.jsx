@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import {addAppDisplay, closeAppDisplay} from "../actions/action.apps";
 import {addContact} from "../actions/action.info";
 import ContactPage from "./ContactPage";
+import {renameDialog} from "../actions/action.dialogs";
 
 class CreateContactPage extends Component {
     constructor(props) {
@@ -22,12 +23,17 @@ class CreateContactPage extends Component {
 
     createContact(e) {
         e.preventDefault();
-        const { addContact, addApp, closeApp } = this.props;
+        const { addContact, addApp, closeApp, dialogs, renameDialog } = this.props;
         const { name, number } = this.state;
 
         if (this.validateForm()) {
             let contact = { name, number };
             addContact(contact);
+            let dialogIndex = dialogs.findIndex(d => d.number === number);
+
+            if (dialogIndex !== -1) {
+                renameDialog(number, name);
+            }
             // eslint-disable-next-line no-undef
             mp.trigger('phone.contact.add', name, number);
             closeApp();
@@ -128,13 +134,15 @@ class CreateContactPage extends Component {
 }
 
 const mapStateToProps = state => ({
-    info: state.info
+    info: state.info,
+    dialogs: state.dialogs
 });
 
 const mapDispatchToProps = dispatch => ({
     addContact: contact => dispatch(addContact(contact)),
     addApp: app => dispatch(addAppDisplay(app)),
     closeApp: () => dispatch(closeAppDisplay()),
+    renameDialog: (number, newName) => dispatch(renameDialog(number, newName))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateContactPage);
