@@ -15,6 +15,23 @@
     background: #000;
 }
 
+#speedometer .scale {
+    position: absolute;
+    height: 95%;
+    width: 90%;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+#speedometer .scale path {
+    fill: #fff;
+    fill-rule: evenodd;
+}
+
+#speedometer .scale .fill {
+    fill: #ff2929;
+}
+
 #speedometer .content {
     align-items: center;
     display: flex;

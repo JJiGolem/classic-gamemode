@@ -167,7 +167,7 @@
         </div>
         <div class="createCharacter" @click="onClickCreateCharacter" v-show="showCreateCharacter">
             <div class="plus">+</div>
-            <div class="text">Создать<br/>персонажа</div>
+            <div class="text">Создать<br />персонажа</div>
         </div>
     </div>
 
@@ -362,11 +362,14 @@
     </div>
 
     <div v-cloak id="speedometer" v-if="show">
+        <svg id="speedometerscale" class="scale" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="766.625" height="387.906" viewBox="0 0 766.625 387.906">
+            <path v-for="path in svgPaths" :class="{ fill: path.isFill }" :d="path.d" transform="translate(-116.688 -293.5)" />
+        </svg>
         <div class="content">
             <img :src="'img/speedometer/headlights/'+headlights+'.png'" />
             <img :src="'img/speedometer/lock/'+lock+'.png'" />
             <div class="speed">
-                <div class="value">{{ speed }}</div>
+                <div class="value">{{ compSpeed }}</div>
                 <div class="unit">км/ч</div>
             </div>
             <img src="img/speedometer/fuel.svg" />
