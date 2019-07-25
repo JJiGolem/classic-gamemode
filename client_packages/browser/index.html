@@ -165,6 +165,10 @@
                 {{ characters[i].warns }}
             </div>
         </div>
+        <div class="createCharacter" @click="onClickCreateCharacter" v-show="showCreateCharacter">
+            <div class="plus">+</div>
+            <div class="text">Создать<br/>персонажа</div>
+        </div>
     </div>
 
     <div v-cloak="v-cloak" id="characterSelector" v-if="show">
@@ -183,8 +187,7 @@
                 <div class="item" v-for="(item, index) in items" v-if="isItemShow(index)" :class="{selected: index == menu.i}">
                     <div class="name">{{ item.text }}</div>
                     <div class="value" v-if="item.values && valuesType(index) != 1">{{ item.values[item.i] }}</div>
-                    <div class="value color-type" v-else-if="item.values"
-                        :style="{background: item.values[item.i]}"></div>
+                    <div class="value color-type" v-else-if="item.values" :style="{background: item.values[item.i]}"></div>
                 </div>
             </div>
             <div class="arrow arr-down" :class="{active: menu.j < menu.items.length - maxItems}"></div>
@@ -194,10 +197,7 @@
         </div>
         <div v-else-if="valuesType(menu.i) == 1" class="selector select-color">
             <!-- <div class="arrow arr-left" :class="{active: menu.items[menu.i].i > 0}"></div> -->
-            <div class="color-type"
-                v-for="(value, index) in colorValues"
-                :class="{active: index == menu.items[menu.i].i}"
-                :style="{background: value}"></div>
+            <div class="color-type" v-for="(value, index) in colorValues" :class="{active: index == menu.items[menu.i].i}" :style="{background: value}"></div>
             <!-- <div class="arrow arr-right" :class="{active: menu.items[menu.i].i < menu.items.length - maxColorValues}"></div> -->
         </div>
         <div v-else-if="valuesType(menu.i) == 2" class="selector select-number">
