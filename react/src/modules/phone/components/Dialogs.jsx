@@ -3,8 +3,8 @@ import HeadAppPhone from "./HeadAppPhone";
 import DialogPage from "./DialogPage";
 import {addAppDisplay, closeAppDisplay} from "../actions/action.apps";
 import {connect} from "react-redux";
-import CreateContactPage from "./CreateContactPage";
 import DialingNumber from "./DialingNumber";
+import {sortDialogsByDate} from "../actions/action.dialogs";
 
 class Dialogs extends Component {
     constructor(props) {
@@ -16,6 +16,20 @@ class Dialogs extends Component {
         this.handleSearchInput = this.handleSearchInput.bind(this)
     }
 
+    componentWillMount() {
+        const { dialogs, sortDialogsByDate } = this.props;
+
+        dialogs && sortDialogsByDate();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        const { dialogs, sortDialogsByDate } = this.props;
+
+        console.log(prevProps.dialogs, dialogs)
+
+       // dialogs && prevProps.dialogs.PhoneMessages.length != dialogs.PhoneMessages.length && sortDialogsByDate();
+    }
+
     handleSearchInput(e) {
         this.setState({ search: String(e.target.value).toLowerCase() });
     }
@@ -23,11 +37,11 @@ class Dialogs extends Component {
     getDialog(dialog, index) {
 
         let lastMessage;
+        let countNotReadMessages;
 
         if (dialog.PhoneMessages.length !== 0) {
             lastMessage = dialog.PhoneMessages[dialog.PhoneMessages.length - 1].text;
-        } else {
-            lastMessage = 'Пустой диалог';
+            countNotReadMessages = dialog.PhoneMessages.filter(message => !message.isRead).length;
         }
 
         return (
@@ -41,6 +55,7 @@ class Dialogs extends Component {
                 <div style={{ display: 'inline-block', width: '50%', marginLeft: '10%', position: 'absolute', overflowX: 'hidden' }}>
                     <span style={{ fontSize: '1em' }}>{ dialog.name ? dialog.name : dialog.number }</span>
                     <span style={{ fontSize: '0.8em', color: 'gray', display: 'block', marginTop: '3%' }}>{ lastMessage }</span>
+                    {countNotReadMessages !== 0 && <span className='dialog_notif-phone-react' >{ countNotReadMessages }</span>}
                 </div>
             </div>
         )
@@ -98,6 +113,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     addApp: app => dispatch(addAppDisplay(app)),
     closeApp: () => dispatch(closeAppDisplay()),
+    sortDialogsByDate: () => dispatch(sortDialogsByDate())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dialogs);

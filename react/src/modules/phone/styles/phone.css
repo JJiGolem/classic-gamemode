@@ -356,6 +356,32 @@
     transition: .1s ease-in-out;
 }
 
+.dialog_notif-phone-react {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: .85em;
+    background: #e1c631;
+    padding: 4%;
+    width: 10%;
+    height: 37%;
+    border-radius: 20px;
+    color: #343c47;
+    text-align: center;
+}
+
+.dialogs_notif-phone-react {
+    position: absolute;
+    background: #f44343;
+    color: white;
+    padding: 3%;
+    width: 2%;
+    height: 5%;
+    border-radius: 20px;
+    text-align: center;
+    font-size: .85em;
+}
+
 .dialog_field-phone-react:hover {
     background: #343c47;
     color: white;
@@ -384,25 +410,30 @@
     background-color: #b8f0c7;
     border-radius: 20px;
     justify-content: flex-end;
-    font-size: 80%;
+    font-size: 90%;
+    /*display: block;*/
 }
 
-.my_message_block-phone-react:before, .my_message_block-phone-react:after {
-    content: '';
+.date_messages_block-phone-react {
+    text-align: center;
+    width: auto;
+    position: relative;
+    clear: both;
+    color: gray;
+    font-size: .8em;
     display: block;
-    position: absolute;
+    margin: 2% auto 2% auto;
 }
 
-.my_message_block-phone-react:before {
-    bottom: 0;
-    left: -7px;
-    z-index: -2;
-}
-
-.my_message_block-phone-react:after {
-    bottom: 1px;
-    left: -5px;
-    z-index: -2;
+.time_message_block-phone-react {
+    color: gray;
+    font-size: .7em;
+    display: inline-block;
+    width: 10%;
+    margin-top: 7%;
+    float: left;
+    margin-right: -5%;
+    margin-bottom: 2%;
 }
 
 .him_message_block-phone-react {
@@ -418,25 +449,8 @@
     word-wrap: break-word;
     background-color: #e4dede;
     border-radius: 20px;
-    font-size: 80%;
-}
-
-.him_message_block-phone-react:before, .him_message_block-phone-react:after {
-    content: '';
+    font-size: 90%;
     display: block;
-    position: absolute;
-}
-
-.him_message_block-phone-react:before {
-    bottom: 0;
-    left: -7px;
-    z-index: -2;
-}
-
-.him_message_block-phone-react:after {
-    bottom: 1px;
-    left: -5px;
-    z-index: -2;
 }
 
 .input_message-phone-react {

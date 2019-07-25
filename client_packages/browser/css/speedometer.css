@@ -2,17 +2,34 @@
     background: linear-gradient(to bottom, #0000, rgb(0, 0, 0, 0.6));
     /* background: #000; */
     border-radius: 20vh 20vh 0 0;
-    bottom: 33%;
+    bottom: 7vh;
     color: #fff;
     font-family: Montserrat;
     height: 20vh;
     position: absolute;
-    right: 4%;
-    width: 40vh;
+    right: 2vh;
+    width: 42vh;
 }
 
 #speedometer b {
     background: #000;
+}
+
+#speedometer .scale {
+    position: absolute;
+    height: 95%;
+    width: 90%;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+#speedometer .scale path {
+    fill: #fff;
+    fill-rule: evenodd;
+}
+
+#speedometer .scale .fill {
+    fill: #ff2929;
 }
 
 #speedometer .content {
