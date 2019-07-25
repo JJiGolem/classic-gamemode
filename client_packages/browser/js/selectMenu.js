@@ -10,7 +10,7 @@ var selectMenu = new Vue({
         maxColorValues: 11,
         menus: {
             "parkingMenu": {
-                name: "parking", // название меню, необходимо для отловки событий
+                name: "parking",
                 header: "Парковка", // заголовок меню, видимый на экране
                 items: [{
                     text: "Забрать автомобиль",
@@ -32,6 +32,14 @@ var selectMenu = new Vue({
                     };
                     mp.trigger(`chat.message.push`, `!{#ffffff} Событие: ${eventName}`);
                     mp.trigger(`chat.message.push`, `!{#ffffff} ${JSON.stringify(e)}`);
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Забрать автомобиль') {
+                            mp.trigger(`parkings.vehicle.get`);
+                        }
+                        if (e.itemName == 'Закрыть меню') {
+                            mp.trigger(`parkings.menu.close`);
+                        }
+                    }
                 }
             }
         }
