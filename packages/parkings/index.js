@@ -28,16 +28,16 @@ module.exports = {
         console.log(`[PARKINGS] Загружено парковок: ${i}`);
     },
     createParking(parking) {
-        mp.blips.new(1, new mp.Vector3(parking.x, parking.y, parking.z),
+        mp.blips.new(267, new mp.Vector3(parking.x, parking.y, parking.z),
             {
-                name: "Парковка",
+                name: "Подземная парковка",
                 shortRange: true,
             });
         mp.markers.new(1, new mp.Vector3(parking.x, parking.y, parking.z), 2,
             {
                 direction: new mp.Vector3(parking.x, parking.y, parking.z),
                 rotation: 0,
-                color: [255, 255, 255, 255],
+                color: [102, 186, 255, 128],
                 visible: true,
                 dimension: 0
             });
@@ -45,6 +45,15 @@ module.exports = {
         shape.pos = new mp.Vector3(parking.x, parking.y, parking.z);
         shape.isParking = true;
         shape.parkingId = parking.id;
+
+        let label = mp.labels.new(`Парковка \n ~y~${parking.name}`, new mp.Vector3(parking.x, parking.y, parking.z + 1.5),
+        {
+            los: false,
+            font: 0,
+            drawDistance: 10,
+        });
+        label.isParking = true;
+        label.parkingId = parking.id;
     },
     addVehicleToParking(veh) {
         console.log(`добавили на парковку ${veh.modelName}`);
@@ -90,5 +99,9 @@ module.exports = {
             }
         });
         return minId;
+    },
+    addNewParking(parking) {
+        parkings.push(parking);
+        this.createParking(parking);
     }
 }

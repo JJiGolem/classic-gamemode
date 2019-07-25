@@ -10,17 +10,17 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: true
         },
         x: {
-            type: DataTypes.INTEGER(11),
+            type: DataTypes.FLOAT(11),
             defaultValue: 100,
 			allowNull: false
         },
         y: {
-            type: DataTypes.INTEGER(11),
+            type: DataTypes.FLOAT(11),
             defaultValue: 100,
 			allowNull: false
         },
         z: {
-            type: DataTypes.INTEGER(11),
+            type: DataTypes.FLOAT(11),
             defaultValue: 100,
 			allowNull: false
         },
