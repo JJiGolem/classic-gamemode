@@ -51,7 +51,7 @@ class DialogPage extends Component {
         if (inputMessage) {
             addMessage(inputMessage, Date.now(), dialog.number, true);
             // eslint-disable-next-line no-undef
-            //mp.trigger('phone.message.send', inputMessage, dialog.number);
+            mp.trigger('phone.message.send', inputMessage, dialog.number);
             this.setState({ inputMessage: '' });
         }
     }
