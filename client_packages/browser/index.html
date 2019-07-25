@@ -165,13 +165,17 @@
                 {{ characters[i].warns }}
             </div>
         </div>
+        <div class="createCharacter" @click="onClickCreateCharacter" v-show="showCreateCharacter">
+            <div class="plus">+</div>
+            <div class="text">Создать<br />персонажа</div>
+        </div>
     </div>
 
     <div v-cloak="v-cloak" id="characterSelector" v-if="show">
         <div>
-            <div class="arrow" @click="left">&lt;</div>
+            <div class="arrow" @click="left" :class="{disabled: leftArrowDisabled()}">&lt;</div>
             <button @click="enter">Выбрать</button>
-            <div class="arrow" @click="right">&gt;</div>
+            <div class="arrow" @click="right" :class="{disabled: rightArrowDisabled()}">&gt;</div>
         </div>
     </div>
 
@@ -183,8 +187,7 @@
                 <div class="item" v-for="(item, index) in items" v-if="isItemShow(index)" :class="{selected: index == menu.i}">
                     <div class="name">{{ item.text }}</div>
                     <div class="value" v-if="item.values && valuesType(index) != 1">{{ item.values[item.i] }}</div>
-                    <div class="value color-type" v-else-if="item.values"
-                        :style="{background: item.values[item.i]}"></div>
+                    <div class="value color-type" v-else-if="item.values" :style="{background: item.values[item.i]}"></div>
                 </div>
             </div>
             <div class="arrow arr-down" :class="{active: menu.j < menu.items.length - maxItems}"></div>
@@ -194,10 +197,7 @@
         </div>
         <div v-else-if="valuesType(menu.i) == 1" class="selector select-color">
             <!-- <div class="arrow arr-left" :class="{active: menu.items[menu.i].i > 0}"></div> -->
-            <div class="color-type"
-                v-for="(value, index) in colorValues"
-                :class="{active: index == menu.items[menu.i].i}"
-                :style="{background: value}"></div>
+            <div class="color-type" v-for="(value, index) in colorValues" :class="{active: index == menu.items[menu.i].i}" :style="{background: value}"></div>
             <!-- <div class="arrow arr-right" :class="{active: menu.items[menu.i].i < menu.items.length - maxColorValues}"></div> -->
         </div>
         <div v-else-if="valuesType(menu.i) == 2" class="selector select-number">
@@ -362,11 +362,14 @@
     </div>
 
     <div v-cloak id="speedometer" v-if="show">
+        <svg id="speedometerscale" class="scale" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="766.625" height="387.906" viewBox="0 0 766.625 387.906">
+            <path v-for="path in svgPaths" :class="{ fill: path.isFill }" :d="path.d" transform="translate(-116.688 -293.5)" />
+        </svg>
         <div class="content">
             <img :src="'img/speedometer/headlights/'+headlights+'.png'" />
             <img :src="'img/speedometer/lock/'+lock+'.png'" />
             <div class="speed">
-                <div class="value">{{ speed }}</div>
+                <div class="value">{{ compSpeed }}</div>
                 <div class="unit">км/ч</div>
             </div>
             <img src="img/speedometer/fuel.svg" />

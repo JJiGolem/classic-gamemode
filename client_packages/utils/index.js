@@ -45,3 +45,24 @@ mp.console = function(object) {
 
 /// Управление камерой
 mp.utils.cam = require('utils/camera.js');
+
+/// Convert the object to a string 
+mp.utils.objToString = (obj) => {
+    var rs = '';
+    var not_first = false;
+    
+    for(var k in obj){
+        if(not_first) rs += ',';
+        if(typeof obj[k] === 'object'){
+            rs +=  '"'+k+'": {'+objToString(obj[k])+'}';
+        }
+        else if(typeof obj[k] === 'string' || typeof obj[k] === 'function'){
+            rs += '"'+k+'":"'+obj[k]+'"';
+        }
+        else if(typeof obj[k] === 'number'){
+            rs += '"'+k+'":'+obj[k]+'';
+        }
+        not_first = true;
+    }
+    return rs;
+}

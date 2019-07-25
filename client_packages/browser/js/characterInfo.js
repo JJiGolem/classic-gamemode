@@ -2,9 +2,10 @@ var characterInfo = new Vue({
     el: "#characterInfo",
     data: {
         show: false,
-        characters: [],
+        characters: [], // массив с данными о персонажах
         // Индекс текущего персонажа
-        i: 0
+        i: 0,
+        showCreateCharacter: false, // если true, то показаваем кнопку 'Создать персонажа'
     },
     methods: {
         pretty(val) {
@@ -13,6 +14,10 @@ var characterInfo = new Vue({
         addCharacter(character) {
             if (typeof character == 'string') character = JSON.parse(character);
             this.characters.push(character);
+        },
+        onClickCreateCharacter() {
+            console.log("Кликнули на создание персонажа");
+            // TODO: Реализация...
         }
     }
 });
@@ -43,6 +48,7 @@ characterInfo.addCharacter({
     warns: 0
 });
 characterInfo.show = true;*/
+// characterInfo.showCreateCharacter = true;
 
 var characterSelector = new Vue({
     el: "#characterSelector",
@@ -59,6 +65,12 @@ var characterSelector = new Vue({
         right() {
             if (loader.show) return;
             mp.trigger("characterInit.chooseRight");
+        },
+        leftArrowDisabled() {
+            return characterInfo.i == 0;
+        },
+        rightArrowDisabled() {
+            return characterInfo.i == characterInfo.characters.length - 1;
         }
     },
     computed: {

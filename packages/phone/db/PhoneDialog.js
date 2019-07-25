@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true
         },
         number: {
-            type: DataTypes.INTEGER(11),
+            type: DataTypes.STRING(16),
             allowNull: false
         },
     }, 

@@ -77,12 +77,12 @@ module.exports = {
             }
         }
     },
-    getClosestParkingId(player) {
+    getClosestParkingId(entity) {
         var minId = 1;
         var minDist = 10000;
         mp.colshapes.forEach((shape) => {
             if (shape.isParking) {
-                let dist = player.dist(shape.pos);
+                let dist = entity.dist(shape.pos);
                 if (dist < minDist) {
                     minDist = dist;
                     minId = shape.parkingId;
