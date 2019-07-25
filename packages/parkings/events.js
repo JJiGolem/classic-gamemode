@@ -9,18 +9,21 @@ module.exports = {
     "playerEnterColshape": (player, shape) => {
         if (shape.isParking) {
             player.call('chat.message.push', [`!{#ffffff}${player.name} зашел в колшейп с parkingId ${shape.parkingId}`]);
-            player.call('parkings.menu.show');
-            parkings.spawnParkingVehicle(player, shape.parkingId);
+            player.call('parkings.menu.show', [shape.parkingId]);
+            //parkings.spawnParkingVehicle(player, shape.parkingId);
         }
     },
     "playerExitColshape": (player, shape) => {
         if (shape.isParking) {
             player.call('chat.message.push', [`!{#ffffff}${player.name} вышел из колшейпа с parkingId ${shape.parkingId}`]);
             player.call('parkings.menu.close');
-            //parkings.spawnParkingVehicle(player, shape.parkingId);
         }
     },
     "parkings.vehicle.add": (veh) => {
         parkings.addVehicleToParking(veh);
+    },
+    "parkings.vehicle.get": (player, parkingId) => {
+        console.log(parkingId);
+        parkings.spawnParkingVehicle(player, parkingId);
     }
 }

@@ -15,8 +15,9 @@ mp.events.add('carshow.list.show', (inputList) => {
     for (var j = 0; j < list.length; j++) {
         mp.chat.debug(`${j}Модель: ${list[j].vehiclePropertyModel} Количество: ${list[j].count} ${list[j].properties.maxFuel}`);
     }
-    mp.callCEFVN({ "selectMenu.show": "true" });
-    mp.callCEFVN({ "selectMenu.menu.header": "hi" });
+    mp.callCEFV(`selectMenu.menu = selectMenu.menus["carShowMenu"]`);
+    mp.callCEFV(`selectMenu.open()`);
+    //mp.callCEFVN({ "selectMenu.show": "true" });
 }
 );
 mp.keys.bind(0x25, true, function () {

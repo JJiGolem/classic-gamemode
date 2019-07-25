@@ -1,10 +1,16 @@
-mp.events.add('parkings.menu.show', () => {
-    //mp.callCEFVN({ "selectMenu.menu": defaultMenu });
-    //mp.callCEFV(`selectMenu.menu.handler = '${handler}'`)
-    //mp.callCEFV(`selectMenu.menu.handler = '${handler}'`)
-    mp.callCEFVN({ "selectMenu.show": true });
+var currentParkingId;
+
+mp.events.add('parkings.menu.show', (parkingId) => {
+    currentParkingId = parkingId;
+    mp.callCEFV(`selectMenu.menu = selectMenu.menus["parkingMenu"]`);
+    mp.callCEFV(`selectMenu.open()`);
 });
 
 mp.events.add('parkings.menu.close', () => {
-    mp.callCEFVN({ "selectMenu.show": false });
+    mp.callCEFV(`selectMenu.close()`);
+});
+
+mp.events.add('parkings.vehicle.get', () => {
+    mp.events.call('parkings.menu.close');
+    mp.events.callRemote('parkings.vehicle.get', currentParkingId);
 });

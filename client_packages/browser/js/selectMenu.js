@@ -10,7 +10,7 @@ var selectMenu = new Vue({
         maxColorValues: 11,
         menus: {
             "parkingMenu": {
-                name: "parking", // название меню, необходимо для отловки событий
+                name: "parking",
                 header: "Парковка", // заголовок меню, видимый на экране
                 items: [{
                     text: "Забрать автомобиль",
@@ -32,8 +32,99 @@ var selectMenu = new Vue({
                     };
                     mp.trigger(`chat.message.push`, `!{#ffffff} Событие: ${eventName}`);
                     mp.trigger(`chat.message.push`, `!{#ffffff} ${JSON.stringify(e)}`);
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Забрать автомобиль') {
+                            mp.trigger(`parkings.vehicle.get`);
+                        }
+                        if (e.itemName == 'Закрыть меню') {
+                            mp.trigger(`parkings.menu.close`);
+                        }
+                    }
                 }
-            }
+            },
+            "carShowMenu": {
+                name: "parking",
+                header: "Автосалон", // заголовок меню, видимый на экране
+                items: [{
+                    text: "Выборочный тип 1", // текст пункта меню, видимый на экране
+                    // если ОДНО ИЗ значений начинается с '#', то снизу появится селектор цветов
+                    // если ВСЕ значения - числа, то снизу появится селектор с ползунком
+                    // в любом другом случае, появится обычный селектор со значениями
+                    values: ['Выбор 1', 'Выбор 2', 'Выбор 3', 'Выбор 4', 'Выбор 5', 'Выбор 6'], // доступные значения пункта меню
+                    i: 0, // индекс выбранного значения пункта меню
+                },
+                {
+                    text: "Выбор цвета 2",
+                    values: ['#0bf', '#fb0', '#bf0', '#fb0', '#fb0', '#fb0', '#bf0', '#0fe', '#cd3', 'yellow', 'pink'],
+                    i: 0,
+                },
+                {
+                    text: "Ползунок 2.5",
+                    values: [0, 10, 20, 30, 40, 50],
+                    i: 0,
+                    min: "Минимум", // слово слева от ползунка
+                    max: "Максимум", // слово справа от ползунка
+                },
+                {
+                    text: "Обычный тип 3"
+                },
+                {
+                    text: "Ползунок 3.5",
+                    values: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100],
+                    i: 0,
+                    min: "Округлые", // слово слева от ползунка
+                    max: "Впалые", // слово справа от ползунка
+                },
+                {
+                    text: "Выборочный тип 4",
+                    values: ['Выбор 1', 'Выбор 2', 'Выбор 3'],
+                    i: 0,
+                },
+                {
+                    text: "Выбор цвета 5",
+                    values: ['#0bf', '#fb0', '#bf0'],
+                    i: 0,
+                },
+                {
+                    text: "Обычный тип 6"
+                },
+                {
+                    text: "Выборочный тип 7",
+                    values: ['Выбор 1', 'Выбор 2', 'Выбор 3'],
+                    i: 0,
+                },
+                {
+                    text: "Выбор цвета 8",
+                    values: ['#0bf', '#fb0', '#bf0'],
+                    i: 0,
+                },
+                {
+                    text: "Обычный тип 9",
+                },
+            ],
+                i: 0, // индекс выбранного пункта
+                j: 0, // индекс первого видимого пункта
+                handler(eventName) { // обработчик взаимодействия с меню
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name, // название меню
+                        itemName: item.text, // текст пункта меню
+                        itemIndex: this.i, // индекс пункта меню
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
+                        valueIndex: item.i, // индекс значения пункта меню
+                    };
+                    mp.trigger(`chat.message.push`, `!{#ffffff} Событие: ${eventName}`);
+                    mp.trigger(`chat.message.push`, `!{#ffffff} ${JSON.stringify(e)}`);
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Забрать автомобиль') {
+                            mp.trigger(`parkings.vehicle.get`);
+                        }
+                        if (e.itemName == 'Закрыть меню') {
+                            mp.trigger(`parkings.menu.close`);
+                        }
+                    }
+                }
+            },
         }
     },
     methods: {
@@ -99,6 +190,14 @@ var selectMenu = new Vue({
         onBackspacePressed() {
             this.menu.handler("onBackspacePressed");
         },
+        open() {
+            this.menu.i = 0; // TEMP, нужно разобраться, почему i/j остаются прежними при закрытии/открытии меню
+            this.menu.j = 0;
+            this.show = true;
+        },
+        close() {
+            this.menu = null;
+        }
     },
     computed: {
         items() {
