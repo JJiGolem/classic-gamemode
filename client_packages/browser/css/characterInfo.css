@@ -151,6 +151,10 @@
     margin-bottom: 0.9vh;
 }
 
-#characterSelector .arrow:hover {
+#characterSelector .arrow:not(.disabled):hover {
     color: #e0c830;
+}
+
+#characterSelector .arrow.disabled {
+    opacity: 0.5;
 }

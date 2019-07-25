@@ -65,6 +65,12 @@ var characterSelector = new Vue({
         right() {
             if (loader.show) return;
             mp.trigger("characterInit.chooseRight");
+        },
+        leftArrowDisabled() {
+            return characterInfo.i == 0;
+        },
+        rightArrowDisabled() {
+            return characterInfo.i == characterInfo.characters.length - 1;
         }
     },
     computed: {
