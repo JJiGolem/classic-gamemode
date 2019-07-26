@@ -39,6 +39,7 @@ mp.speechChanel.addChannel = (name, maxRange = 0, autoConnection = false) => {
 
 /// Подключить выбранного игрока к каналу связи
 mp.speechChanel.connect = (player, channel) => {
+    mp.chat.debug("Connect" + channel);
     listeners.push({"playerId": player.remoteId, "channel": channel});
     mp.events.callRemote("voiceChat.add", player);
     
@@ -55,6 +56,7 @@ mp.speechChanel.connect = (player, channel) => {
 
 /// Отключить выбранного игрока от канала связи
 mp.speechChanel.disconnect = (player, channel) => {
+    mp.chat.debug("Disconnect" + channel);
     if (channel == null) {
         for (let idx = listeners.findIndex(x => x.playerId === player.remoteId); idx !== -1; 
         idx = listeners.findIndex(x => x.playerId === player.remoteId)) {
@@ -103,6 +105,7 @@ setInterval(() => {
                     mp.speechChanel.disconnect(player, listener.channel);
                 }
                 else if(!UseAutoVolume) {
+                    //mp.chat.debug("voiceVolume = " + (1 - (dist / channels[listener.channel].maxRange)));
                     player.voiceVolume = 1 - (dist / channels[listener.channel].maxRange);
                 }
             }
