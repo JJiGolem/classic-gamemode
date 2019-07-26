@@ -114,56 +114,51 @@ module.exports = {
         }
     },
     /// Отправка сообщения игроку данным номером
-    'phone.message.send': (player, message, number) => {
+    'phone.message.send': async (player, message, number) => {
         if (player.phone == null) return;
-        //if (player.phone.number == number) return;
         if (message.length > 100) return;
         if (!phone.isExists(number)) return;
+
+        /// Работа с отправителем
+        let index = player.phone.PhoneDialogs.findIndex( x => x.number == number);
+        if (index == -1) {
+            let contact = null;
+            if (player.phone.PhoneContacts != null) contact = player.phone.PhoneContacts.find( x => x.number == number);
+            let newDialog = db.Models.PhoneDialog.build({phoneId: player.phone.id, name: contact != null ? contact.name : null, number: number, PhoneMessages: [
+                {isMine: true, text: message, isRead: true, date: Date.now()}
+            ]}, { include: [db.Models.PhoneMessage]});
+            let result = await newDialog.save();
+            player.phone.PhoneDialogs.push(result);
+        }
+        else {
+            let newMessage = db.Models.PhoneMessage.build({phoneDialogId: player.phone.PhoneDialogs[index].id, isMine: true, text: message, isRead: true, date: Date.now()});
+            let result = await newMessage.save();
+            player.phone.PhoneDialogs[index].PhoneMessages.push(result);
+        }
+        /// Работа с получателем
         for (let i = 0; i < mp.players.length; i++) {
-            //if (player.id == i) continue;
+            if (player.id == i) continue;
             if (player.phone == null) continue;
             if (mp.players.at(i).phone.number == number) {
-                /// Работа с получателем
-                if (mp.players.at(i).phone.PhoneDialogs == null) mp.players.at(i).phone.PhoneDialogs = new Array();
-                let index = mp.players.at(i).phone.PhoneDialogs.findIndex( x => x.number == player.phone.number);
+                index = mp.players.at(i).phone.PhoneDialogs.findIndex( x => x.number == player.phone.number);
                 if (index == -1) {
                     let contact = null;
                     if (mp.players.at(i).phone.PhoneContacts != null) contact = mp.players.at(i).phone.PhoneContacts.find( x => x.number == player.phone.number);
-                    mp.players.at(i).phone.PhoneDialogs.push({ name: contact == null ? contact.name : null, number: player.phone.number, PhoneMessages: []});
-                    index = mp.players.at(i).phone.PhoneDialogs.findIndex( x => x.number == player.phone.number);
+                    let newDialog = db.Models.PhoneDialog.build({phoneId: mp.players.at(i).phone.id, name: contact != null ? contact.name : null, number: player.phone.number, PhoneMessages: [
+                        {isMine: false, text: message, isRead: false, date: Date.now()}
+                    ]}, { include: [db.Models.PhoneMessage]});
+                    let result = await newDialog.save();
+                    mp.players.at(i).phone.PhoneDialogs.push(result);
                 }
-                if (mp.players.at(i).phone.PhoneDialogs[index].PhoneMessages == null) mp.players.at(i).phone.PhoneDialogs[index].PhoneMessages = new Array();
-                mp.players.at(i).phone.PhoneDialogs[index].PhoneMessages.push({isMine: false, text: message, isRead: false, date: Date.now()});
-                mp.players.at(i).call('phone.message.set', [message, player.phone.number]);
-                /// Работа с отправителем
-                if (player.phone.PhoneDialogs == null) player.phone.PhoneDialogs = new Array();
-                index = player.phone.PhoneDialogs.findIndex( x => x.number == number);
-                if (index == -1) {
-                    let contact = null;
-                    if (player.phone.PhoneContacts != null) contact = player.phone.PhoneContacts.find( x => x.number == number);
-                    player.phone.PhoneDialogs.push({ name: contact == null ? contact.name : null, number: number, PhoneMessages: []});
-                    index = player.phone.PhoneDialogs.findIndex( x => x.number == number);
+                else {
+                    let newMessage = db.Models.PhoneMessage.build({phoneDialogId: mp.players.at(i).phone.PhoneDialogs[index].id, isMine: true, text: message, isRead: true, date: Date.now()});
+                    let result = await newMessage.save();
+                    mp.players.at(i).phone.PhoneDialogs[index].PhoneMessages.push(result);
                 }
-                if (player.phone.PhoneDialogs[index].PhoneMessages == null) player.phone.PhoneDialogs[index].PhoneMessages = new Array();
-                player.phone.PhoneDialogs[index].PhoneMessages.push({isMine: false, text: message, isRead: false, date: Date.now()});
-                console.log(player.phone);
-                // todo решить вопрос с сохранением
-                // player.phone.update({
-                // include: [
-                //     db.Models.PhoneContact, {
-                //         model: db.Models.PhoneDialog,
-                //         include: [db.Models.PhoneMessage]
-                //     }
-                // ]});
-                return;
+                return mp.players.at(i).call('phone.message.set', [message, player.phone.number]);
             }
         }
         console.log("not found");
-        // db.Models.PhoneMessage.create({
-        //     phoneDialogId: ,
-        //     isMine: false,
-        //     text: message
-        // },{});
     },
     'addContact.server': (player, name, number) => {
         player.info.inventory.phone.addContact(name, number);
