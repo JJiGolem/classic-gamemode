@@ -135,5 +135,5 @@ var dataForSpeedScale = [
     });
     
     // for tests
-    speedometer.show = true;
+    // speedometer.show = true;
     

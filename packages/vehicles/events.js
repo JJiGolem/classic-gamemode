@@ -27,6 +27,7 @@ module.exports = {
         }
         // TEMP
         if (seat == -1) {
+            player.call('vehicles.speedometer.show', [true]);
             player.call('vehicles.indicators.show', [true]);
             player.call('vehicles.indicators.update', [vehicle.fuel]);
             player.indicatorsUpdateTimer = setInterval(() => {

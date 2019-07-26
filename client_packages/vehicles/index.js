@@ -35,6 +35,15 @@ mp.events.add('render', () => {
     }
 });
 
+mp.events.add('vehicles.speedometer.show', (state) => {
+    if (state) {
+        mp.callCEFV('speedometer.show = true');
+    } else {
+        mp.callCEFV('speedometer.show = false');
+    }
+
+});
+
 var mileageTimer, mileageUpdateTimer, lastPos, currentDist = 0;
 
 mp.events.add('vehicles.mileage.start', (value) => {
