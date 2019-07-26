@@ -28,11 +28,10 @@ module.exports = {
         // TEMP
         if (seat == -1) {
             player.call('vehicles.speedometer.show', [true]);
-            player.call('vehicles.indicators.show', [true]);
-            player.call('vehicles.indicators.update', [vehicle.fuel]);
+            player.call('vehicles.speedometer.max.update', [vehicle.properties.maxFuel]);
             player.indicatorsUpdateTimer = setInterval(() => {
                 try {
-                    player.call('vehicles.indicators.update', [vehicle.fuel]);
+                    player.call('vehicles.speedometer.fuel.update', [vehicle.fuel]);
                 } catch (err) {
                     console.log(err);
                 }
@@ -54,6 +53,7 @@ module.exports = {
             clearInterval(player.indicatorsUpdateTimer);
         }
         player.call('vehicles.indicators.show', [false]);
+        player.call('vehicles.speedometer.show', [false]);
     },
     "playerStartExitVehicle": (player) => {
         if (player.vehicle.engine) player.vehicle.engine = true;
@@ -63,8 +63,12 @@ module.exports = {
         if (player.vehicle.fuel <= 0) return player.call('notifications.push.error', ['Нет топлива', 'Транспорт']);
         if (player.vehicle.engine == true) {
             player.vehicle.engine = false;
+            player.call('vehicles.engine.toggle', [false]);
+            player.vehicle.setVariable("engine", false);
         } else {
             player.vehicle.engine = true;
+            player.call('vehicles.engine.toggle', [true]);
+            player.vehicle.setVariable("engine", true);
         }
     },
     "vehicles.mileage.add": (player, value) => {

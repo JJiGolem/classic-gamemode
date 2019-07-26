@@ -9,102 +9,117 @@ mp.events.add('phone.load', function (phoneInfo, phoneDialogs) {
     bindButtons(phoneInfo.isHave);
 });
 
-// добавление приложения
-// house
-// biz
+/// Добавление приложения
+/// house
+/// biz
 mp.events.add('addApp.client', function (appName, info) {
     mp.callCEFR('addApp', [appName, info]);
 });
-// удаление приложения
+/// Удаление приложения
 mp.events.add('removeApp.client', function (appName, index) {
-    //index - номер дропнутого дома
+    /// index - номер дропнутого дома(для возможности иметь несколько домов)
     mp.callCEFR('removeApp', [appName]);
 });
 
-
-// начало разговора на нашем конце
-mp.events.add('phone.call.start', function (number) {
-    mp.events.callRemote('phoneCall.server', number);
+mp.events.add('characterInit.done', function () {
+    /// Добавление канала в войсчат
+    mp.speechChanel.addChannel("phone");
 });
 
-mp.events.add('startCallAns.client', function (ans, targetId) {
-    switch(ans) {
-        case 0:     // Вызов принят
+/// Начало разговора на нашем конце
+mp.events.add('phone.call.start', function (number) {
+    mp.events.callRemote('phone.call.ask', number);
+});
+
+/// Ответ на наше начало разговора
+mp.events.add('phone.call.start.ans', function (ans, targetId) {
+    if (ans == 0) {  /// 0 Вызов принят, 1 Нет номера, 2 Занято, 3 Сброс вызова, 4 Не поднял трубку
         callerId = targetId;
-        mp.events.call('playerTalkByPhone.client', callerId);
-        break;
-        case 1:     // Нет номера
-        break;
-        case 2:     // Занято
-        break;
-        case 3:     // Сброс вызова
-        break;
-        case 4:     // Не поднял трубку
-        break;
+        mp.speechChanel.connect(mp.players.atRemoteId(callerId), "phone");
     }
-    // ответ на звонок
+    /// Ответ на звонок
     mp.callCEFR('phone.call.ans', [ans]);
 });
 
-// сброс на нашем конце
+/// Сброс на нашем конце
 mp.events.add('phone.call.end', function () {
-    mp.events.callRemote('endCall.server', callerId);
+    mp.events.callRemote('phone.call.end', callerId);
+    mp.speechChanel.disconnect(mp.players.atRemoteId(callerId), "phone");
     callerId = -1;
-    mp.events.call('playerStopTalkByPhone.client');
 });
 
-// сброс звонка на другом конце
-mp.events.add('endCallAns.client', function () {
+/// Сброс звонка на другом конце
+mp.events.add('phone.call.end.in', function () {
+    mp.speechChanel.disconnect(mp.players.atRemoteId(callerId), "phone");
     callerId = -1;
-    mp.events.call('playerStopTalkByPhone.client');
     mp.callCEFR('phone.call.end', []);
 });
 
-// Уведомление о том, что нам звонят
-mp.events.add('inCall.client', function (startedPlayerNumber, id) {
-    callerId = id;
-    // звонок игроку на телефон
+/// Уведомление о том, что нам звонят
+mp.events.add('phone.call.in', function (startedPlayerNumber, targetId) {
+    callerId = targetId;
+    /// Звонок игроку на телефон
     mp.callCEFR('phone.call.in', [startedPlayerNumber]);
 });
 
-// Когда звонят нам и мы принимаем/отклоняем звонок
+/// Когда звонят нам и мы принимаем/отклоняем звонок
 mp.events.add('phone.call.in.ans', function (ans) {
-    mp.events.callRemote('phoneCallAns.server', ans, callerId);
-    if (ans == 1 && callerId != -1) {
-        mp.events.call('playerTalkByPhone.client', callerId);
+    mp.events.callRemote('phone.call.ans', ans, callerId);
+    if (ans == 1) {
+        if (callerId != -1) {
+            mp.speechChanel.connect(mp.players.atRemoteId(callerId), "phone");
+        }
+        else {
+            mp.callCEFR('phone.call.end', []);
+        }
+    }
+    else {
+        callerId = -1;
+    }
+});
+
+mp.events.add("playerDeath", (player) => {
+	if (player.remoteId == callerId) {
+        mp.callCEFR('phone.call.end', []);
+    }
+    if (player.remoteId == mp.players.local.remoteId) {
+        mp.callCEFR('phone.call.end', []);
+        mp.callCEFR('phone.show', [false]); 
     }
 });
 
 mp.events.add("playerQuit", (player) => {
-	if (player.id == callerId) {
-        mp.events.call('endCall.client');
+	if (player.remoteId == callerId) {
         mp.callCEFR('phone.call.end', []);
     }
 });
 
 
-// Отправка сообщения
+/// Отправка сообщения
 mp.events.add('phone.message.send', function (message, number) {
     mp.events.callRemote('phone.message.send', message, number);
 });
 
-// Получение сообщения
+/// Получение сообщения
 mp.events.add('phone.message.set', function (message, number) {
     mp.callCEFR('phone.message.set', [message, number]);
 });
 
-
+/// Добавить контакт
 mp.events.add('phone.contact.add', function (name, number) {
-    mp.events.callRemote('addContact.server', name, number);
+    mp.events.callRemote('phone.contact.add', name, number);
 });
 
-mp.events.add('phone.contact.remove', function (number) {
-    mp.events.callRemote('removeContact.server', number);
-});
-
+/// Изменить контакт
 mp.events.add('phone.contact.rename', function (number, name) {
-    mp.events.callRemote('renameContact.server', number, name);
+    mp.events.callRemote('phone.contact.rename', number, name);
 });
+
+/// Удалить контакт
+mp.events.add('phone.contact.remove', function (number) {
+    mp.events.callRemote('phone.contact.remove', number);
+});
+
 
 
 

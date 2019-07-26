@@ -59,12 +59,12 @@ var dataForSpeedScale = [
         data: {
             show: false,
             isActive: true, //подсветка
-            headlights: 3, //0-выкл,1-габариты,2-ближний,3-дальний (фары)
+            headlights: 2, //0-выкл,1-габариты,2-ближний,3-дальний (фары)
             lock: 0, //0-открыт,1-закрыт (двери)
-            speed: 240,
-            fuel: 50,
+            speed: 0,
+            fuel: 0,
             maxFuel: 70,
-            mileage: 1.004,
+            mileage: 0,
             danger: 0, //0-выкл,1-вкл (аварийка)
             maxSpeed: 480,
             arrow: 0, //0-выкл,1-левый,2-правый (поворотики)
@@ -91,7 +91,9 @@ var dataForSpeedScale = [
                     this.rightArrow = false;
                     return;
                 }
-    
+                this.leftArrow = (this.emergency == 1 || this.arrow == 1) ? !this.leftArrow : false;
+                this.rightArrow = (this.emergency == 1 || this.arrow == 2) ? !this.rightArrow : false;
+                
                 this.arrowInterval = setInterval(() => {
                     this.leftArrow = (this.emergency == 1 || this.arrow == 1) ? !this.leftArrow : false;
                     this.rightArrow = (this.emergency == 1 || this.arrow == 2) ? !this.rightArrow : false;

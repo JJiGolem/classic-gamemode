@@ -42,7 +42,7 @@ mp.events.add("hud.tick", () => {
   });
 });
 
-var mainTimerId = setInterval(() => { mp.events.call('hud.tick') }, 1000);
+var hudUpdateTimer = setInterval(() => { mp.events.call('hud.tick') }, 1000);
 
 mp.events.add('render', () => {
   mp.game.ui.hideHudComponentThisFrame(1);

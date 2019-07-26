@@ -30,6 +30,10 @@ module.exports = {
         vehicle.parkingId = veh.parkingId;
 
         vehicle.lastMileage = veh.mileage; /// Последний сохраненный пробег
+        
+        vehicle.numberPlate = "CLASSIC";
+ 
+        vehicle.setVariable("engine", false);
 
         if (source == 0) { /// Если авто спавнится из БД
             vehicle.sqlId = veh.id;
@@ -51,6 +55,7 @@ module.exports = {
                     vehicle.fuel = vehicle.fuel - vehicle.properties.defaultConsumption;
                     if (vehicle.fuel <= 0) {
                         vehicle.engine = false;
+                        vehicle.setVariable("engine", false);
                         vehicle.fuel = 0;
                         return;
                     }
@@ -60,6 +65,13 @@ module.exports = {
             }
         }, 60000);
         return vehicle;
+    },
+    getDriver(vehicle) {
+        let driver = vehicle.getOccupants()[0];
+        if (driver.seat != -1) { 
+            return null 
+        }
+        return driver;
     },
     respawnVehicle(veh) {
         clearInterval(veh.fuelTimer);
@@ -89,6 +101,7 @@ module.exports = {
         console.log(`[VEHICLES] Загружено характеристик моделей транспорта: ${dbVehicleProperties.length}`);
     },
     setFuel(vehicle, litres) {
+        if (litres < 1) return;
         vehicle.fuel = litres;
     },
     setVehiclePropertiesByModel(modelName) {
@@ -130,14 +143,14 @@ module.exports = {
                 console.log(`[DEBUG] Обновили пробег для ${veh.properties.name}. Текущий пробег: ${veh.mileage}. К занесению: ${value}`);
             } catch (err) {
                 console.log(err);
-            }      
+            }
         }
     },
     async loadPrivateVehicles(player) {
         var dbPrivate = await db.Models.Vehicle.findAll({
             where: {
                 key: "private",
-                owner: player.character.id    
+                owner: player.character.id
             }
         });
         // if (player.home) spawnHomeVehicles()
