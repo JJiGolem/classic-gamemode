@@ -95,27 +95,27 @@ setInterval(() => {
     
     /// Автоматическое отключение заданных каналов всех игроков
 	listeners.forEach(listener => {
-        let player = mp.players.atRemoteId(listener.playerId);
-		if(player.handle !== 0) {		
-            let dist = mp.game.system.vdist(player.position.x, player.position.y, player.position.z,  
+		if(mp.players.atRemoteId(listener.playerId).handle !== 0) {		
+            let dist = mp.game.system.vdist(mp.players.atRemoteId(listener.playerId).position.x, 
+                mp.players.atRemoteId(listener.playerId).position.y, mp.players.atRemoteId(listener.playerId).position.z,  
                 mp.players.local.position.x,  mp.players.local.position.y,  mp.players.local.position.z);
             
             if (channels[listener.channel].maxRange != 0) {
                 if(dist > channels[listener.channel].maxRange) {
-                    mp.speechChanel.disconnect(player, listener.channel);
+                    mp.speechChanel.disconnect(mp.players.atRemoteId(listener.playerId), listener.channel);
                 }
                 else if(!UseAutoVolume) {
-                    mp.chat.debug("playerId = " + player.remoteId);
-                    mp.chat.debug("player.voiceVolume = " + player.voiceVolume);
-                    player.voiceVolume = 1 - (dist / channels[listener.channel].maxRange);
+                    mp.chat.debug("playerId = " + mp.players.atRemoteId(listener.playerId).remoteId);
+                    mp.chat.debug("player.voiceVolume = " + mp.players.atRemoteId(listener.playerId).voiceVolume);
+                    mp.players.atRemoteId(listener.playerId).voiceVolume = 1 - (dist / channels[listener.channel].maxRange);
                 }
             }
             else {
-                player.voiceVolume = 1;
+                mp.players.atRemoteId(listener.playerId).voiceVolume = 1;
             }
 		}
 		else {
-			mp.speechChanel.disconnect(player, null);
+			mp.speechChanel.disconnect(mp.players.atRemoteId(listener.playerId), null);
 		}
 	});
 }, 250);
