@@ -64,11 +64,11 @@ var dataForSpeedScale = [
             speed: 240,
             fuel: 50,
             maxFuel: 70,
-            mileage: 1223.004,
+            mileage: 1.004,
             danger: 0, //0-выкл,1-вкл (аварийка)
             maxSpeed: 480,
             arrow: 0, //0-выкл,1-левый,2-правый (поворотики)
-            hp: 80, //%
+            emergency: 0,
     
             leftArrow: false,
             rightArrow: false,
@@ -86,15 +86,15 @@ var dataForSpeedScale = [
                 if (this.arrowInterval)
                     clearInterval(this.arrowInterval);
     
-                if (!(this.arrow + this.danger)) {
+                if (!(this.arrow + this.emergency)) {
                     this.leftArrow = false;
                     this.rightArrow = false;
                     return;
                 }
     
                 this.arrowInterval = setInterval(() => {
-                    this.leftArrow = (this.danger == 1 || this.arrow == 1) ? !this.leftArrow : false;
-                    this.rightArrow = (this.danger == 1 || this.arrow == 2) ? !this.rightArrow : false;
+                    this.leftArrow = (this.emergency == 1 || this.arrow == 1) ? !this.leftArrow : false;
+                    this.rightArrow = (this.emergency == 1 || this.arrow == 2) ? !this.rightArrow : false;
                 }, 500);
             },
         },
@@ -126,7 +126,7 @@ var dataForSpeedScale = [
             arrow: function () {
                 this.flickerLight();
             },
-            danger: function () {
+            emergency: function () {
                 this.flickerLight();
             }
         }
@@ -135,5 +135,5 @@ var dataForSpeedScale = [
     });
     
     // for tests
-    //speedometer.show = true;
+    speedometer.show = true;
     

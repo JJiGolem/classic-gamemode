@@ -108,9 +108,16 @@
     top: 10%;
 }
 
+#speedometer .headlights svg {
+    top: 10%;
+}
+
 #speedometer .lock {
     grid-row: 2/3;
     grid-column: 2/3;
+}
+
+#speedometer .lock svg {
     height: 85%!important;
     width: 85%!important;
 }
@@ -130,19 +137,20 @@
 #speedometer .danger {
     grid-row: 2/3;
     grid-column: 5/6;
-    fill: #7778;
 }
 
 #speedometer .left-arrow {
     grid-row: 4/5;
     grid-column: 1/2;
-    fill: #7778;
 }
 
 #speedometer .right-arrow {
     grid-row: 4/5;
     grid-column: 5/6;
-    fill: #7778;
+    left: 60%!important;
+}
+
+#speedometer .right-arrow svg {
     left: 60%!important;
 }
 
@@ -152,18 +160,10 @@
     grid-template-columns: 20% 5fr;
     display: grid;
     white-space: nowrap;
+    text-align: center;
 }
 
 #speedometer .bottom-panel .road-perspective {
     margin-left: -20%;
     height: 50%;
-}
-
-#speedometer.noActive .bottom-panel .hp {
-    background: #7778!important;
-}
-
-#speedometer .bottom-panel .hp {
-    grid-column: 1/3;
-    height: 1px;
 }
