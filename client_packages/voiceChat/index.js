@@ -2,14 +2,16 @@
 
 mp.voiceChat.muted = true;
 mp.events.add('characterInit.done', function() {
-	mp.keys.bind(0x55, true, function() {		// U
-		if (mp.busy.findIndex(x => x == 'chat') == -1) return;
-		mp.voiceChat.muted = false;
-		mp.busy.push('voicechat');
+    mp.keys.bind(0x55, true, function() {		// U
+		if (mp.busy.findIndex(x => x == 'chat') != -1) return;
+        mp.voiceChat.muted = false;
+        mp.callCEFV("hud.voice = true");
+        mp.busy.push('voicechat');
 	});
 
 	mp.keys.bind(0x55, false, function() {		// U
-		mp.voiceChat.muted = true;
+        mp.voiceChat.muted = true;
+        mp.callCEFV("hud.voice = false");
 		let index = mp.busy.findIndex(x => x == 'voicechat');
         index != -1 && mp.busy.splice(index, 1);
 	});
