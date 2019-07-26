@@ -68,7 +68,10 @@ module.exports = {
         player.character.z = pos[2];
         this.applyCharacter(player);
         player.character = await db.Models.Character.create(player.character, {
-            include: characterInfo
+            include: [
+                db.Models.Feature, 
+                db.Models.Appearance
+            ]
         });
         
         player.call('characterInit.create.check.ans', [1]);
