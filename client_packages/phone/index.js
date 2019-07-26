@@ -90,7 +90,6 @@ mp.events.add('phone.message.send', function (message, number) {
 
 // Получение сообщения
 mp.events.add('phone.message.set', function (message, number) {
-    mp.chat.debug(message + "from" + number);
     mp.callCEFR('phone.message.set', [message, number]);
 });
 
