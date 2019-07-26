@@ -13,7 +13,6 @@ module.exports = {
         for (let i = 0; i < phoneNumbersTemp.length; i++) {
             phoneNumbers.push(phoneNumbersTemp[i].number);
         }
-        console.log(phoneNumbers);
         console.log("[PHONE] loaded.");
     },
     generateNumber() {

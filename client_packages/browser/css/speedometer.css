@@ -15,6 +15,18 @@
     background: #000;
 }
 
+#speedometer.noActive {
+    color: #7778!important;
+}
+
+#speedometer.noActive svg {
+    filter: drop-shadow(0 0 0 #000)!important;
+}
+
+#speedometer.noActive svg path {
+    fill: #7778!important;
+}
+
 #speedometer .scale {
     position: absolute;
     height: 95%;
@@ -32,41 +44,53 @@
     fill: #ff2929;
 }
 
+#speedometer .red {
+    fill: #f00!important;
+    filter: drop-shadow(0 0 5px #f00);
+}
+
+#speedometer .green {
+    fill: #0f0!important;
+    filter: drop-shadow(0 0 5px #0f0);
+}
+
+#speedometer .yellow {
+    fill: #f1d941!important;
+    filter: drop-shadow(0 0 5px #f1d941);
+}
+
+#speedometer .white {
+    fill: white!important;
+    filter: drop-shadow(0 0 5px white);
+}
+
 #speedometer .content {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    margin-top: 11vh;
+    position: relative;
+    width: 60%;
+    margin-top: 22%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr 1fr 1fr;
+    grid-template-rows: 3vh 3vh 1vh 3vh;
+    grid-gap: 1px;
+    left: 50%;
+    transform: translate(-50%);
 }
 
-#speedometer .content img {
-    height: 2.5vh;
-    margin: 0 1vh;
-}
-
-#speedometer .content img:nth-child(1) {
-    height: 2vh;
-}
-
-#speedometer .content img:nth-child(2) {
-    height: 3vh;
-}
-
-#speedometer .content .fuel {
-    bottom: 3vh;
-    font-size: 1vh;
-    position: absolute;
-    right: 12vh;
-    text-align: center;
-    width: 3vh;
+#speedometer .content svg {
+    position: relative;
+    left: 50%;
+    fill: #7778;
+    transform: translate(-50%);
+    height: 90%;
+    width: 90%;
 }
 
 #speedometer .content .speed {
-    font-size: 4vh;
-    line-height: 3vh;
-    margin-bottom: 1vh;
+    grid-row: 1/3;
+    grid-column: 3/4;
+    font-size: 4.8vh;
+    line-height: 3.6vh;
     text-align: center;
-    width: 9vh;
 }
 
 #speedometer .content .speed .value {
@@ -74,44 +98,72 @@
 }
 
 #speedometer .content .speed .unit {
-    font-size: 1vh;
+    font-size: 1.5vh;
     font-weight: none;
 }
 
-#speedometer .footer {
-    bottom: 1vh;
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    width: 100%;
+#speedometer .headlights {
+    grid-row: 2/3;
+    grid-column: 1/2;
+    top: 10%;
 }
 
-#speedometer .footer img {
-    height: 2vh;
+#speedometer .headlights svg {
+    top: 10%;
 }
 
-#speedometer .footer .progress {
-    background: #fff;
-    height: 1px;
-    width: 100%;
+#speedometer .lock {
+    grid-row: 2/3;
+    grid-column: 2/3;
 }
 
-#speedometer .footer .progress .fill {
-    background: #35c82a;
-    height: 1px;
+#speedometer .lock svg {
+    height: 85%!important;
+    width: 85%!important;
 }
 
-#speedometer .footer .mileage {
-    margin: 0 4vh;
+#speedometer .fuel {
+    grid-row: 2/3;
+    grid-column: 4/5;
+}
+
+#speedometer .fuel-unit {
+    grid-row: 3/4;
+    grid-column: 4/5;
+    font-size: 1.3vh;
     text-align: center;
-    width: 11vh;
 }
 
-#speedometer .footer .mileage img {
-    height: 1.3vh;
-    margin-right: 0.5vh;
+#speedometer .danger {
+    grid-row: 2/3;
+    grid-column: 5/6;
 }
 
-#speedometer .footer .signalRight {
-    transform: rotate(180deg);
+#speedometer .left-arrow {
+    grid-row: 4/5;
+    grid-column: 1/2;
+}
+
+#speedometer .right-arrow {
+    grid-row: 4/5;
+    grid-column: 5/6;
+    left: 60%!important;
+}
+
+#speedometer .right-arrow svg {
+    left: 60%!important;
+}
+
+#speedometer .bottom-panel {
+    grid-row: 4/5;
+    grid-column: 3/4;
+    grid-template-columns: 20% 5fr;
+    display: grid;
+    white-space: nowrap;
+    text-align: center;
+}
+
+#speedometer .bottom-panel .road-perspective {
+    margin-left: -20%;
+    height: 50%;
 }
