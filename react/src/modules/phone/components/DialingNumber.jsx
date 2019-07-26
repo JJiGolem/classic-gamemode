@@ -75,6 +75,7 @@ class DialingNumber extends Component {
                 addApp({ name: 'DialogPage', form: <DialogPage dialog={dialog} /> });
             } else {
                 let dialog = dialogs[dialogIndex];
+                console.log(dialog);
                 addApp({ name: 'DialogPage', form: <DialogPage dialog={dialog} /> });
             }
         }

@@ -14,8 +14,9 @@ module.exports = {
         player.isTalking = false;
     },
     'playerQuit': player => {
-        player.phone.save();
+        
     },
+    /// Загрузка телефона после выбора персоонажа
     'characterInit.done': async (player) => {
         // PhoneDialogs = [{name: null, number: "5553535", PhoneMessages: [isMine: true, text: "Займы под 100% годовых"]}];
         player.phone = await db.Models.Phone.findOne({
@@ -31,7 +32,9 @@ module.exports = {
         });
         phone.loadPhoneOnClient(player);
     },
+    /// Покупка телефона
     "phone.buy": async (player) => {
+        if (player.phone != null) return;
         let number = phone.generateNumber();
         if (!number) return;
         player.phone = {
@@ -52,63 +55,56 @@ module.exports = {
         });
         phone.loadPhoneOnClient(player);
     },
-    'phoneCall.server': (player, number) => {
-        if (player.info == null) return;
-        if (!player.info.inventory.phone.isHave) return;
-        if (player.phone.isTalking) {
-            player.call('startCallAns.client', [2]);
-            return;
-        };
-        if (!isExist(number)) {
-            player.call('startCallAns.client', [1]);
-            return;
-        }
+    /// Начало звонка игроку
+    'phone.call.ask': (player, number) => {
+        if (player.phone == null) return;
+        if (player.isTalking) return player.call('phone.call.start.ans', [2]);
+        if (!phone.isExists(number)) return player.call('phone.call.start.ans', [1]);
+
         for (let i = 0; i < mp.players.length; i++) {
-            if (mp.players[i].info == null) continue;
-            if (!mp.players[i].info.inventory.phone.isHave) continue;
-            if (mp.players[i].info.inventory.phone.number != number) continue;
-            if (mp.players[i].phone.isTalking) {
-                player.call('startCallAns.client', [2]);
-                return;
-            }
-            mp.players[i].call('inCall.client', [player.info.inventory.phone.number, player.id]);
-            return;
+            if (mp.players[i].phone == null) continue;
+            if (mp.players[i].phone.number != number) continue;
+            if (mp.players[i].isTalking) return player.call('phone.call.start.ans', [2]);
+            player.isTalking = true;
+            return mp.players[i].call('phone.call.in', [player.phone.number, player.id]);
         }
-        player.call('startCallAns.client', [3]);
+        player.call('phone.call.start.ans', [4]);
     },
-    'phoneCallAns.server': (player, ans, callerId) => {
+    /// Ответ на начало звонка игроку
+    'phone.call.ans': (player, ans, callerId) => {
         if (callerId == -1) return;
         if (ans == 1) {
-            if (mp.players.at(callerId).info == null) {
-                if (player.info != null) {
+            if (mp.players.at(callerId).phone == null) {
+                if (player.phone != null) {
                     player.call('endCallAns.client', []);
                 }
             }
             else {
-                if (player.info != null) {
-                    player.phone.isTalking = true;
-                    mp.players.at(callerId).phone.isTalking = true;
-                    mp.players.at(callerId).call('startCallAns.client', [0, player.id]);
+                if (player.phone != null) {
+                    player.isTalking = true;
+                    mp.players.at(callerId).call('phone.call.start.ans', [0, player.id]);
                     return;
                 }
                 else {
-                    mp.players.at(callerId).call('startCallAns.client', [3]);
+                    mp.players.at(callerId).call('phone.call.start.ans', [4]);
                 }
             }
         }
         else {
-            if (mp.players.at(callerId).info != null) {
-                mp.players.at(callerId).call('startCallAns.client', [3]);
+            if (mp.players.at(callerId).phone != null) {
+                mp.players.at(callerId).isTalking = false;
+                mp.players.at(callerId).call('phone.call.start.ans', [3]);
             }
         }
     },
-    'endCall.server': (player, callerId) => {
-        player.phone.isTalking = false;
+    /// Окончание звонка с игроком
+    'phone.call.end': (player, callerId) => {
+        player.isTalking = false;
         if (callerId != -1) {
             if (mp.players.at(callerId) != null) {
-                if (mp.players.at(callerId).info != null) {
-                    mp.players.at(callerId).phone.isTalking = false;
-                    mp.players.at(callerId).call('endCallAns.client', []);
+                if (mp.players.at(callerId).phone != null) {
+                    mp.players.at(callerId).isTalking = false;
+                    mp.players.at(callerId).call('phone.call.end.in', []);
                 }
             }
         }
@@ -117,7 +113,7 @@ module.exports = {
     'phone.message.send': async (player, message, number) => {
         if (player.phone == null) return;
         if (message.length > 100) return;
-        if (!phone.isExists(number)) return;
+        if (!phone.isExists(number)) return console.log("Номера не существует");
 
         /// Работа с отправителем
         let index = player.phone.PhoneDialogs.findIndex( x => x.number == number);
@@ -135,7 +131,9 @@ module.exports = {
             let result = await newMessage.save();
             player.phone.PhoneDialogs[index].PhoneMessages.push(result);
         }
+        
         /// Работа с получателем
+        if (player.phone.number == number) return;
         for (let i = 0; i < mp.players.length; i++) {
             if (player.id == i) continue;
             if (player.phone == null) continue;
@@ -158,15 +156,24 @@ module.exports = {
                 return mp.players.at(i).call('phone.message.set', [message, player.phone.number]);
             }
         }
-        console.log("not found");
+        console.log("Абонент вне зоны действия сети");
     },
-    'addContact.server': (player, name, number) => {
-        player.info.inventory.phone.addContact(name, number);
+    'phone.contact.add': async (player, name, number) => {
+        if (player.phone.PhoneContacts.findIndex( x => x.name === name) != -1) return console.log("Запись с таким имененем уже существует");
+        let newContact = db.Models.PhoneContact.build({phoneId: player.phone.id, name: name, number: number});
+        let result = await newContact.save();
+        player.phone.PhoneContacts.push(result);
     },
-    'removeContact.server': (player, number) => {
-        player.info.inventory.phone.removeContact(number);
+    'phone.contact.rename': async (player, number, name) => {
+        if (player.phone.PhoneContacts.findIndex( x => x.name === name) != -1) return console.log("Запись с таким имененем уже существует");
+        let index = player.phone.PhoneContacts.findIndex( x => x.number === number);
+        if (index == -1) return console.log("Запись не найдена");
+        await player.phone.PhoneContacts[index].update({name: name});
     },
-    'renameContact.server': (player, number, name) => {
-        player.info.inventory.phone.renameContact(player.info.inventory.phone.findContact(number), name, number);
+    'phone.contact.remove': async (player, number) => {
+        let index = player.phone.PhoneContacts.findIndex( x => x.number === number);
+        if (index == -1) return console.log("Запись не найдена");
+        await player.phone.PhoneContacts[index].destroy();
+        player.phone.PhoneContacts.splice(index, 1);
     },
 };

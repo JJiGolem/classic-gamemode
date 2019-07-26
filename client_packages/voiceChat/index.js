@@ -2,14 +2,16 @@
 
 mp.voiceChat.muted = true;
 mp.events.add('characterInit.done', function() {
-	mp.keys.bind(0x55, true, function() {		// U
-		if (mp.busy.findIndex(x => x == 'chat') == -1) return;
-		mp.voiceChat.muted = false;
-		mp.busy.push('voicechat');
+    mp.keys.bind(0x55, true, function() {		// U
+		if (mp.busy.findIndex(x => x == 'chat') != -1) return;
+        mp.voiceChat.muted = false;
+        mp.callCEFV("hud.voice = true");
+        mp.busy.push('voicechat');
 	});
 
 	mp.keys.bind(0x55, false, function() {		// U
-		mp.voiceChat.muted = true;
+        mp.voiceChat.muted = true;
+        mp.callCEFV("hud.voice = false");
 		let index = mp.busy.findIndex(x => x == 'voicechat');
         index != -1 && mp.busy.splice(index, 1);
 	});
@@ -27,7 +29,7 @@ let channels = {};
 /// Добавить канал связи с требуемыми настройками
 /// maxRange = 0 - на любой дистанции volume = 1
 /// autoConnection будет ли автоматически подключаться/отключаться
-mp.speechChanel.addChannel = (name, maxRange = 50.0, autoConnection = false) => {
+mp.speechChanel.addChannel = (name, maxRange = 0, autoConnection = false) => {
     channels[name] = {"maxRange": maxRange, "autoConnection": autoConnection};
 }
 
@@ -115,9 +117,19 @@ mp.events.add("playerQuit", (player) => {
     for (let idx = listeners.findIndex(x => x.playerId === player.remoteId); idx !== -1; 
         idx = listeners.findIndex(x => x.playerId === player.remoteId)) {
             listeners.splice(idx, 1);
-        }
+    }
 });
 
 mp.events.add("playerDeath", (player) => {
-    mp.chat.debug(player.remoteId);
+    if (player.remoteId == mp.players.local.remoteId) {
+        while (listeners.length != 0) {
+            mp.speechChanel.disconnect(player, listeners[0].channel);
+        }
+    }
+    else {
+        for (let idx = listeners.findIndex(x => x.playerId === player.remoteId); idx !== -1; 
+        idx = listeners.findIndex(x => x.playerId === player.remoteId)) {
+            mp.speechChanel.disconnect(player, listener.channel);
+        }
+    }
 });
