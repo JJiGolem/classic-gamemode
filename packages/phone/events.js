@@ -135,7 +135,9 @@ module.exports = {
             let result = await newMessage.save();
             player.phone.PhoneDialogs[index].PhoneMessages.push(result);
         }
+        
         /// Работа с получателем
+        if (player.phone.number == number) return;
         for (let i = 0; i < mp.players.length; i++) {
             if (player.id == i) continue;
             if (player.phone == null) continue;
@@ -160,13 +162,20 @@ module.exports = {
         }
         console.log("not found");
     },
-    'addContact.server': (player, name, number) => {
-        player.info.inventory.phone.addContact(name, number);
+    'addContact.server': async (player, name, number) => {
+        let newContact = db.Models.PhoneContact.build({phoneId: player.phone.id, name: name, number: number});
+        let result = await newContact.save();
+        player.phone.PhoneContacts.push(result);
     },
-    'removeContact.server': (player, number) => {
-        player.info.inventory.phone.removeContact(number);
+    'renameContact.server': async (player, number, name) => {
+        let index = player.phone.PhoneContacts.findIndex( x => x.number === number);
+        if (index == -1) return console.log("error");
+        await player.phone.PhoneContacts[index].update({name: name});
     },
-    'renameContact.server': (player, number, name) => {
-        player.info.inventory.phone.renameContact(player.info.inventory.phone.findContact(number), name, number);
+    'removeContact.server': async (player, number) => {
+        let index = player.phone.PhoneContacts.findIndex( x => x.number === number);
+        if (index == -1) return console.log("error");
+        await player.phone.PhoneContacts[index].destroy();
+        player.phone.PhoneContacts.splice(index, 1);
     },
 };
