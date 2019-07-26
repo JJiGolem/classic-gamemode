@@ -5,6 +5,7 @@ import {addAppDisplay, closeAppDisplay} from "../actions/action.apps";
 import {connect} from "react-redux";
 import DialingNumber from "./DialingNumber";
 import {addMessageToPhone, renameDialog, sortDialogsByDate} from "../actions/action.dialogs";
+import CreateDialogPage from "./CreateDialogPage";
 
 class Dialogs extends Component {
     constructor(props) {
@@ -23,11 +24,11 @@ class Dialogs extends Component {
         dialogs && sortDialogsByDate();
     }
 
-    componentDidMount() {
+    /*componentDidMount() {
         setTimeout(() => {
             this.props.addMessage('Привет', Date.now(), '123', false, false)
         }, 3000)
-    }
+    }*/
 
     componentDidUpdate(prevProps, prevState) {
         const { dialogs, sortDialogsByDate } = this.props;
@@ -120,7 +121,7 @@ class Dialogs extends Component {
                             </Fragment>
                             : <div style={{ marginTop: '30%', textAlign: 'center' }}>Список диалогов пуст</div>
                     }
-                    <div className='but_create_contact-phone-react' onClick={() => addApp({name: 'DialingNumber', form: <DialingNumber />})}>
+                    <div className='but_create_contact-phone-react' onClick={() => addApp({name: 'CreateDialogPage', form: <CreateDialogPage />})}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="45%" height="45%" viewBox="0 0 37.824 37.824" style={{ position: 'absolute', top: '25%', left: '26%'}}>
                             <path id="_5A" data-name="5A" d="M20.412,20.412H36.325a1.5,1.5,0,0,0,0-3H20.412V1.5a1.5,1.5,0,0,0-3,0V17.412H1.5a1.5,1.5,0,1,0,0,3H17.412V36.325a1.5,1.5,0,0,0,3,0V20.412" transform="translate(0 0)" fill="#fff"/>
                         </svg>

@@ -17,3 +17,8 @@ export const setAnswerHouse = answer => ({
     type: 'ANS_BUY_HOUSE',
     payload: answer
 });
+
+export const setHouseFormBlock = flag => ({
+   type: 'BLOCK_HOUSE_FORM',
+   payload: flag
+});

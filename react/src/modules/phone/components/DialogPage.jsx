@@ -96,7 +96,6 @@ class DialogPage extends Component {
                                 className='time_message_block-phone-react'
                                 style={{ float: message.isMine ? 'right' : 'left', marginLeft: !message.isMine && '-3%' }}
                             >
-                                {/*{ `${new Date(message.date).getHours()}:${new Date(message.date).getMinutes()}` }*/}
                                 { this.getTimeMessage(message.date) }
                             </div>
                         }

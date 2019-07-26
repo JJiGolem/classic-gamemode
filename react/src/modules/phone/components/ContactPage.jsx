@@ -48,12 +48,14 @@ class ContactPage extends Component {
     }
 
     deleteContact(e) {
-        const { contact, deleteContact } = this.props;
+        const { contact, deleteContact, closeApp } = this.props;
 
         this.setState({ isDeleted: true });
         deleteContact(contact.number);
         // eslint-disable-next-line no-undef
         mp.trigger('phone.contact.remove', contact.number);
+
+        this.back();
     }
 
     callContact() {
@@ -89,7 +91,7 @@ class ContactPage extends Component {
 
     render() {
 
-        const { contact, closeApp } = this.props;
+        const { contact } = this.props;
         const { error, isDeleted } = this.state;
 
         return (

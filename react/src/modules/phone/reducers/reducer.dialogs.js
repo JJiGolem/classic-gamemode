@@ -213,7 +213,8 @@ export default function dialogs(state = inittialState, action) {
             newState = [ ...state ];
             let readIndex = newState.findIndex(dialog => dialog.number === payload);
 
-            if (removeIndex !== -1) {
+            if (readIndex !== -1) {
+                newState[readIndex].PhoneMessages &&
                 newState[readIndex].PhoneMessages.forEach(message => message.isRead = true);
             }
 

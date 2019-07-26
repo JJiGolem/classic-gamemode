@@ -17,37 +17,6 @@ const initialState = {
         {
             name: 'Вика',
             number: '55555'
-        },
-        {
-            name: 'Влад Кузнецов',
-            number: '773631'
-        },
-        {
-            name: 'Данила',
-            number: '134432'
-        },
-        {
-            name: 'Диман',
-            number: '123'
-        },
-        {
-            name: 'Вика',
-            number: '55555'
-        },{
-            name: 'Влад Кузнецов',
-            number: '773631'
-        },
-        {
-            name: 'Данила',
-            number: '134432'
-        },
-        {
-            name: 'Диман',
-            number: '123'
-        },
-        {
-            name: 'Вика',
-            number: '55555'
         }
     ],
     houses: [
