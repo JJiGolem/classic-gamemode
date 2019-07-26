@@ -5,8 +5,6 @@ import 'moment/locale/ru';
 
 import {addMessageToPhone, deleteDialog, readDialogMessages} from '../actions/action.dialogs';
 import {addAppDisplay, closeAppDisplay} from "../actions/action.apps";
-import Contacts from "./Contacts";
-import Dialogs from "./Dialogs";
 
 const styles = {
     overflowWrap: 'break-word',
@@ -40,6 +38,12 @@ class DialogPage extends Component {
         objDiv.scrollTop = objDiv.scrollHeight;
     }
 
+    componentWillUnmount() {
+        const { readDialog, dialog } = this.props;
+
+        readDialog(dialog.number);
+    }
+
     handleChangeMessage(e) {
         this.setState({ inputMessage: e.target.value })
     }
@@ -49,7 +53,7 @@ class DialogPage extends Component {
         const { dialog, addMessage } = this.props;
 
         if (inputMessage) {
-            addMessage(inputMessage, Date.now(), dialog.number, true);
+            addMessage(inputMessage, Date.now(), dialog.number, true, true);
             // eslint-disable-next-line no-undef
             mp.trigger('phone.message.send', inputMessage, dialog.number);
             this.setState({ inputMessage: '' });
@@ -92,13 +96,18 @@ class DialogPage extends Component {
                                 className='time_message_block-phone-react'
                                 style={{ float: message.isMine ? 'right' : 'left', marginLeft: !message.isMine && '-3%' }}
                             >
-                                { `${new Date(message.date).getHours()}:${new Date(message.date).getMinutes()}` }
+                                {/*{ `${new Date(message.date).getHours()}:${new Date(message.date).getMinutes()}` }*/}
+                                { this.getTimeMessage(message.date) }
                             </div>
                         }
                     </div>
                 ))
             )
         }
+    }
+
+    getTimeMessage(date) {
+        return `${String('00' + new Date(date).getHours()).slice(-2)}:${String('00' + new Date(date).getMinutes()).slice(-2)}`
     }
 
     keyDown(e) {
@@ -126,9 +135,9 @@ class DialogPage extends Component {
             <Fragment>
                 <div className="back_page-phone-react">
                     <div className="head_app-phone-react">
-                        <div style={{ float: 'left', margin: '6% 0 0 10%', display: 'inline-block', width: '40%' }}
+                        <div style={{ float: 'left', margin: '6% 0 0 10%', display: 'inline-block', width: '21%' }}
                              onClick={this.back.bind(this)}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="6%" height="6%" viewBox="0 0 18.812 35.125">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="11%" height="6%" viewBox="0 0 18.812 35.125">
                                 <path id="_6A" data-name="6A" d="M17.311,35.125a1.5,1.5,0,0,0,1.069-2.553L3.6,17.562,18.38,2.552a1.5,1.5,0,1,0-2.137-2.1L.431,16.51a1.5,1.5,0,0,0,0,2.1L16.243,34.677a1.5,1.5,0,0,0,1.068.448" transform="translate(0 0)" fill="#fff"/>
                             </svg>
                             Назад
@@ -168,7 +177,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    addMessage: (text, date, number, isMine) => dispatch(addMessageToPhone(text, date, number, isMine)),
+    addMessage: (text, date, number, isMine, isRead) => dispatch(addMessageToPhone(text, date, number, isMine, isRead)),
     closeApp: () => dispatch(closeAppDisplay()),
     addApp: app => dispatch(addAppDisplay(app)),
     deleteDialog: number => dispatch(deleteDialog(number)),

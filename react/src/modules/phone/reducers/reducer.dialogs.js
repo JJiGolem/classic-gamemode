@@ -159,11 +159,23 @@ export default function dialogs(state = inittialState, action) {
 
             if(ind !== -1) {
                 if(state[ind].PhoneMessages.length < DIALOG_SIZE) {
-                    newState[ind].PhoneMessages.push({text: payload.text, date: payload.date, isMine: payload.isMine});
+                    newState[ind].PhoneMessages.push(
+                        {
+                            text: payload.text,
+                            date: payload.date,
+                            isMine: payload.isMine,
+                            isRead: payload.isRead
+                        });
                     return newState;
                 } else {
                     newState[ind].PhoneMessages.splice(0, 1);
-                    newState[ind].PhoneMessages.push({text: payload.text, date: payload.date, isMine: payload.isMine});
+                    newState[ind].PhoneMessages.push(
+                        {
+                            text: payload.text,
+                            date: payload.date,
+                            isMine: payload.isMine,
+                            isRead: payload.isRead
+                        });
                     return newState;
                 }
             } else {
@@ -173,11 +185,16 @@ export default function dialogs(state = inittialState, action) {
                     PhoneMessages: [
                         {
                             text: payload.text,
-                            isMine: payload.isMine
+                            isMine: payload.isMine,
+                            date: payload.date,
+                            isRead: payload.isRead
                         }
                     ]
                 })
             }
+
+            newState.isSorted = false;
+
             return newState;
 
         case 'SORT_DIALOGS_BY_DATE':
@@ -186,7 +203,10 @@ export default function dialogs(state = inittialState, action) {
                 a.PhoneMessages.length !== 0 && b.PhoneMessages.length !== 0 &&
                 new Date(a.PhoneMessages[a.PhoneMessages.length - 1].date).toLocaleString()
                     .localeCompare(new Date(b.PhoneMessages[b.PhoneMessages.length - 1].date).toLocaleString()) * -1
-            )
+            );
+
+            newState.isSorted = true;
+
             return newState;
 
         case 'READ_DIALOG_MESSAGES':

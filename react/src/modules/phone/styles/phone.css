@@ -79,14 +79,13 @@
 
 .menu_panel_app-phone-react {
     width: 20%;
-    /*height: 75%;*/
-    /*background: aqua;*/
     margin: 3% 5% 2% 5%;
     display: inline-block;
 }
 
 .menu_panel_app-phone-react:active {
-    filter: brightness(50%);
+    /*filter: brightness(50%);*/
+    opacity: .4;
     transition: ease-in-out .1s;
 }
 
@@ -116,7 +115,7 @@
 }
 
 .head_app-phone-react svg {
-    margin-right: 5%;
+    margin-right: 8%;
 }
 
 .contacts_list-phone-react {
@@ -357,29 +356,32 @@
 }
 
 .dialog_notif-phone-react {
-    position: absolute;
-    top: 0;
-    right: 0;
+    /*position: relative;*/
     font-size: .85em;
+    margin-right: 5%;
     background: #e1c631;
-    padding: 4%;
-    width: 10%;
-    height: 37%;
+    padding: 2%;
+    width: 6.5%;
+    /*height: 5%;*/
     border-radius: 20px;
     color: #343c47;
     text-align: center;
+    display: inline-block;
+    float: right;
 }
 
 .dialogs_notif-phone-react {
     position: absolute;
     background: #f44343;
     color: white;
-    padding: 3%;
-    width: 2%;
-    height: 5%;
+    padding: 1.5%;
+    width: 7%;
+    /*height: 5%;*/
     border-radius: 20px;
     text-align: center;
     font-size: .85em;
+    margin-left: -5%;
+    margin-top: -2%;
 }
 
 .dialog_field-phone-react:hover {
@@ -432,7 +434,7 @@
     width: 10%;
     margin-top: 7%;
     float: left;
-    margin-right: -5%;
+    margin-right: -3%;
     margin-bottom: 2%;
 }
 

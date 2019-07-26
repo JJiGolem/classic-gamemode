@@ -96,9 +96,12 @@ class ContactPage extends Component {
             <Fragment>
                 <div className="back_page-phone-react">
                     <div className="head_app-phone-react" style={{ height: '40%' }}>
-                        <span style={{ float: 'left', margin: '5% 0 0 10%' }} onClick={this.back.bind(this)}
+                        <span style={{ float: 'left', margin: '6% 0 0 10%', display: 'inline-block', width: '21%' }} onClick={this.back.bind(this)}
                         >
-                            {'< '}Назад
+                             <svg xmlns="http://www.w3.org/2000/svg" width="11%" height="6%" viewBox="0 0 18.812 35.125">
+                                <path id="_6A" data-name="6A" d="M17.311,35.125a1.5,1.5,0,0,0,1.069-2.553L3.6,17.562,18.38,2.552a1.5,1.5,0,1,0-2.137-2.1L.431,16.51a1.5,1.5,0,0,0,0,2.1L16.243,34.677a1.5,1.5,0,0,0,1.068.448" transform="translate(0 0)" fill="#fff"/>
+                            </svg>
+                            Назад
                         </span>
                         <span style={{ float: 'right', opacity: (isDeleted || contact.name === 'Мой номер') ? '0' : '1' }}>
                             <svg style={{float: 'right', margin: '-7% 10% 5% 0' }} xmlns="http://www.w3.org/2000/svg" width="7%" height="7%" viewBox="0 0 33.88 38.88"

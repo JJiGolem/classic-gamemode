@@ -1,6 +1,6 @@
-export const addMessageToPhone = (text, date, number, isMine) => ({
+export const addMessageToPhone = (text, date, number, isMine, isRead) => ({
     type: 'ADD_MESSAGE_TO_PHONE',
-    payload: { text, date, number, isMine }
+    payload: { text, date, number, isMine, isRead }
 });
 
 export const addDialog = (name, number) => ({

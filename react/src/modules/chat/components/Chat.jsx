@@ -141,7 +141,8 @@ class Chat extends React.Component {
         if(code === 27) {
             setFocusChat(false);
             setOpacityChat(this.state.opacity);
-            //mp.trigger('closeChat');
+            // eslint-disable-next-line no-undef
+            mp.trigger('chat.close');
         }
     }
 
