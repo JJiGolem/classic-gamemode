@@ -37,6 +37,7 @@ mp.events.add('phone.call.start.ans', function (ans, targetId) {
         callerId = targetId;
         mp.speechChanel.connect(mp.players.atRemoteId(callerId), "phone");
     }
+    mp.chat.debug(ans);
     /// Ответ на звонок
     mp.callCEFR('phone.call.ans', [ans]);
 });
@@ -76,6 +77,7 @@ mp.events.add('phone.call.in.ans', function (ans) {
     else {
         callerId = -1;
     }
+    mp.chat.debug(ans);
 });
 
 mp.events.add("playerDeath", (player) => {
