@@ -7,6 +7,10 @@ mp.events.add('characterInit.done', function() {
         mp.voiceChat.muted = false;
         mp.callCEFV("hud.voice = true");
         mp.busy.push('voicechat');
+        mp.chat.debug("Listeners");
+        mp.chat.debug(JSON.stringify(listeners));
+        mp.chat.debug("Channels");
+        mp.chat.debug(JSON.stringify(channels));
 	});
 
 	mp.keys.bind(0x55, false, function() {		// U
