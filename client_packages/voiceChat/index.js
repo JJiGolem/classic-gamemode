@@ -106,7 +106,7 @@ setInterval(() => {
                 }
                 else if(!UseAutoVolume) {
                     mp.chat.debug("before player.voiceVolume = " + player.voiceVolume);
-                    player.voiceVolume = 1;// - (dist / channels[listener.channel].maxRange);
+                    player.voiceVolume = 1 - (dist / channels[listener.channel].maxRange);
                     mp.chat.debug("after player.voiceVolume = " + player.voiceVolume);
                 }
             }
