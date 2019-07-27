@@ -93,6 +93,9 @@ var selectMenu = new Vue({
                             mp.trigger(`carshow.car.buy`);
                         }
                     }
+                    if (eventName == 'onEscapePressed') {
+                            mp.trigger(`carshow.list.close`);    
+                    }
                 }
             },
         }

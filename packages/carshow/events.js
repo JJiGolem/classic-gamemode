@@ -18,6 +18,12 @@ module.exports = {
         console.log(info.sqlId);
         player.call('carshow.list.show', [list, info]);
     },
+    "carshow.list.close": (player, carShowId) => {
+        player.dimension = 0;
+        let info = carshow.getCarShowInfoById(carShowId);
+        player.position = new mp.Vector3(info.returnX, info.returnY, info.returnZ);
+        player.heading = info.returnH;
+    },
     "carshow.car.buy": (player, carId, primaryColor, secondaryColor) => {
         carshow.buyCarFromCarList(player, carId, primaryColor, secondaryColor);
     }

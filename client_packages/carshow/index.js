@@ -13,6 +13,9 @@ var list = [];
 var carShowInfo;
 var currentIndex = 0;
 var primary = 0, secondary = 0;
+var camera;
+
+var controlsDisabled = false;
 
 mp.events.add('carshow.list.show', (inputList, inputInfo) => {
 
@@ -23,7 +26,7 @@ mp.events.add('carshow.list.show', (inputList, inputInfo) => {
     list = inputList;
     carShowInfo = inputInfo;
     //let camera = mp.cameras.new('default', new mp.Vector3(-44 - 4, -1098 - 4, 25 + 2.5), new mp.Vector3(0, 0, 0), 70);
-    let camera = mp.cameras.new('default', new mp.Vector3(carShowInfo.cameraX, carShowInfo.cameraY, carShowInfo.cameraZ), new mp.Vector3(0, 0, 0), 70);
+    camera = mp.cameras.new('default', new mp.Vector3(carShowInfo.cameraX, carShowInfo.cameraY, carShowInfo.cameraZ), new mp.Vector3(0, 0, 0), 70);
     //31.673555374145508
     //126.1431884765625
     //camera.pointAtCoord(-44, -1098, 25);
@@ -49,8 +52,28 @@ mp.events.add('carshow.list.show', (inputList, inputInfo) => {
     mp.callCEFVN({"selectMenu.menu.items[1].values": colorValues});
     mp.callCEFVN({"selectMenu.menu.items[2].values": colorValues});
     mp.callCEFV(`selectMenu.open()`);
+    controlsDisabled = true;
 }
 );
+
+mp.events.add('render', () => { 
+    if (controlsDisabled) {
+        mp.game.controls.disableControlAction(1, 200, true); 
+    }
+});
+
+mp.events.add('carshow.list.close', () => {
+    current.destroy();
+    camera.setActive(false);
+    camera.destroy();
+    mp.game.cam.renderScriptCams(false, false, 0, true, false);
+    mp.players.local.freezePosition(false);
+    mp.events.call('hud.enable', true);
+    mp.game.ui.displayRadar(true);
+    mp.callCEFV(`selectMenu.close()`);
+    controlsDisabled = false;
+    mp.events.callRemote('carshow.list.close', carShowInfo.sqlId);
+});
 
 mp.events.add('carshow.vehicle.show', (i)=> {
     currentIndex = i;
