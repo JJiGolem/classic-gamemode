@@ -98,12 +98,15 @@ mp.events.add("carshow.car.buy.ans", (ans, carInfo) => {
     switch (ans) {
         case 0:
             mp.chat.debug('Автомобилей нет');
+            mp.notify.error('Т/с нет в наличии', 'Ошибка');
             break;
         case 1:
             mp.chat.debug('Успешно куплен');
+            mp.notify.success('Вы приобрели транспорт', 'Успех');
             mp.events.call('chat.message.push', `!{#80c102}Вы успешно приобрели транспортное средство !{#009eec}${carInfo.properties.name}`);
             mp.events.call('chat.message.push', '!{#f3c800}Транспорт доставлен на подземную парковку !{#009eec}Ричман-Глен');
             mp.events.call('chat.message.push', '!{#f3c800}Местоположение парковки отмечено на карте');
+            mp.events.call('carshow.list.close');
             break;
     }
 });
