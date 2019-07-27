@@ -35,10 +35,12 @@ mp.busy.list = new Array();
 /// В данный массив добавляется название модуля, которым занят игрок, если игрок освобождается от данного модуля, то название модуля удаляется из массива
 /// Название модуля записывать маленькими буквами, модули которые учитывают занятость(вписать свои):
 mp.busy.add = function(name) {
-
+    if (mp.busy.includes(name)) return;
+    mp.busy.push(name);
 }
 mp.busy.remove = function(name) {
-
+    let index = mp.busy.findIndex(x => x == name);
+    index != -1 && mp.busy.splice(index, 1);
 }
 /// LIST
 /// voicechat
@@ -46,7 +48,7 @@ mp.busy.remove = function(name) {
 /// END LIST
 /// EXAMPLE
 /// при открытии чата(не обязательно делать точь в точь, это лишь пример использования)
-/// if (mp.busy.findIndex(x => x == 'voicechat') == -1) return;     или if (mp.busy.length != 0) return; или if (mp.busy.includes('voicechat')) return;
+/// if (mp.busy.includes('voicechat')) return;     или if (mp.busy.length != 0) return;
 /// mp.busy.push('chat');
 /// при закрытии чата
 /// let index = mp.busy.findIndex(x => x == 'chat');
