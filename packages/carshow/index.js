@@ -22,6 +22,17 @@ module.exports = {
                 x: dbCarShow[i].x,
                 y: dbCarShow[i].y,
                 z: dbCarShow[i].z,
+                cameraX: dbCarShow[i].cameraX,
+                cameraY: dbCarShow[i].cameraY,
+                cameraZ: dbCarShow[i].cameraZ,
+                toX: dbCarShow[i].toX,
+                toY: dbCarShow[i].toY,
+                toZ: dbCarShow[i].toZ,
+                toH: dbCarShow[i].toH,
+                returnX: dbCarShow[i].returnX,
+                returnY: dbCarShow[i].returnY,
+                returnZ: dbCarShow[i].returnZ,
+                returnH: dbCarShow[i].returnH,
                 blipId: dbCarShow[i].blipId,
                 blipColor: dbCarShow[i].blipColor
             });
@@ -124,6 +135,7 @@ module.exports = {
         }
     },
     async buyCarFromCarList(player, carId) {
+        console.log(carId);
         for (var i = 0; i < carList.length; i++) {
             if (carList[i].sqlId == carId) {
                 // проверки на деньги и т д
@@ -168,6 +180,13 @@ module.exports = {
                     console.log(err);
                     player.call('carshow.car.buy.ans', [2]);
                 }
+            }
+        }
+    },
+    getCarShowInfoById(sqlId) {
+        for (var i = 0; i < carShow.length; i++) {
+            if (carShow[i].sqlId == sqlId) {
+                return carShow[i];
             }
         }
     }

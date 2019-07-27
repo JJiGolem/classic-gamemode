@@ -3,6 +3,16 @@ mp.events.add('playerEnterVehicle', (vehicle, seat) => { ///Убираем ав�
         return;
     }
     vehicle.setEngineOn(false, true, true);
+    // setTimeout(()=>{
+
+    // }, 4000);
+
+});
+
+
+mp.events.add("playerLeaveVehicle", () => {
+    mp.callCEFV('speedometer.arrow = 0');
+    mp.callCEFV('speedometer.emergency = false');
 });
 
 mp.events.addDataHandler("engine", (entity) => {
@@ -73,13 +83,29 @@ mp.events.add('vehicles.speedometer.show', (state) => {
     if (state) {
         let vehicle = mp.players.local.vehicle;
         if (!vehicle) return;
-        mp.chat.debug('показываем спидометр');
         let engine = vehicle.getIsEngineRunning()
         mp.callCEFV(`speedometer.isActive = ${engine}`);
         mp.callCEFV('speedometer.show = true');
     } else {
-        mp.chat.debug('прячем спидометр');
         mp.callCEFV('speedometer.show = false');
+    }
+});
+
+mp.events.add('vehicles.speedometer.sync', () => {
+
+    let vehicle = mp.players.local.vehicle;
+
+    var left = vehicle.getVariable(`leftTurnSignal`);
+    var right = vehicle.getVariable(`rightTurnSignal`);
+
+    if (left && right) {
+        mp.callCEFV('speedometer.emergency = true');
+    }
+    if (left && !right) {
+        mp.callCEFV('speedometer.arrow = 1');
+    }
+    if (!left && right) {
+        mp.callCEFV('speedometer.arrow = 2');
     }
 });
 
@@ -96,7 +122,6 @@ mp.events.add('vehicles.speedometer.max.update', (fuel) => {
     mp.callCEFV(`speedometer.maxFuel = ${fuel}`);
 
     let maxSpeed = (mp.game.vehicle.getVehicleModelMaxSpeed(mp.players.local.vehicle.model) * 3.6).toFixed(0);
-    mp.chat.debug(maxSpeed);
     mp.callCEFV(`speedometer.maxSpeed = ${maxSpeed}`);
 });
 
@@ -144,8 +169,6 @@ function stopMileageCounter() {
 
     clearInterval(mileageTimer);
     clearInterval(mileageUpdateTimer);
-    mileageTimer = 0;
-    mileageUpdateTimer = 0;
 
     if (currentDist < 0.1) return;
     mp.events.callRemote(`vehicles.mileage.add`, currentDist);
@@ -158,7 +181,7 @@ mp.keys.bind(0x25, true, function () {
     var vehicle = player.vehicle;
     if (!vehicle) return;
     if (vehicle.getPedInSeat(-1) != player.handle) return;
-    
+
     var left = vehicle.getVariable(`leftTurnSignal`);
     var right = vehicle.getVariable(`rightTurnSignal`);
     mp.callCEFV('speedometer.arrow = 0');

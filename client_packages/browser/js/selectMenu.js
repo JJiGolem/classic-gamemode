@@ -52,12 +52,12 @@ var selectMenu = new Vue({
                 },
                 {
                     text: "Основной цвет",
-                    values: ['#0bf', '#fb0', '#bf0', '#fb0', '#fb0', '#fb0', '#bf0', '#0fe', '#cd3', 'yellow', 'pink', '#0bf', '#fb0', '#bf0', '#fb0', '#fb0', '#fb0', '#bf0', '#0fe', '#cd3', 'yellow', 'pink'],
+                    values: [],
                     i: 0,
                 },
                 {
-                    text: "Основной цвет",
-                    values: ['#0bf', '#fb0', '#bf0', '#fb0', '#fb0', '#fb0', '#bf0', '#0fe', '#cd3', 'yellow', 'pink'],
+                    text: "Дополнительный цвет",
+                    values: [],
                     i: 0,
                 },
                 {
@@ -80,6 +80,17 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemValueChanged') {
                         if (e.itemName == 'Модель') {
                             mp.trigger(`carshow.vehicle.show`, e.valueIndex);
+                        }
+                        if (e.itemName == 'Основной цвет') {
+                            mp.trigger(`carshow.vehicle.color`, e.valueIndex, -1);
+                        }
+                        if (e.itemName == 'Дополнительный цвет') {
+                            mp.trigger(`carshow.vehicle.color`, -1, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Купить') {
+                            mp.trigger(`carshow.car.buy`);
                         }
                     }
                 }

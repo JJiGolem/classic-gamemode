@@ -1,17 +1,36 @@
+var data = require('carshow/data.js');
+
+var colorIDs = [];
+var colorValues = [];
+
+data.colors.forEach((current)=> {
+    colorIDs.push(current.id);
+    colorValues.push(current.value);
+});
+
 var current;
 var list = [];
-var i = 0;
-mp.events.add('carshow.list.show', (inputList) => {
+var carShowInfo;
+var currentIndex = 0;
+var primary = 0, secondary = 0;
+
+mp.events.add('carshow.list.show', (inputList, inputInfo) => {
     list = inputList;
-    let sceneryCamera = mp.cameras.new('default', new mp.Vector3(-44 - 4, -1098 - 4, 25 + 2.5), new mp.Vector3(0, 0, 0), 70);
+    carShowInfo = inputInfo;
+    //let camera = mp.cameras.new('default', new mp.Vector3(-44 - 4, -1098 - 4, 25 + 2.5), new mp.Vector3(0, 0, 0), 70);
+    let camera = mp.cameras.new('default', new mp.Vector3(carShowInfo.cameraX, carShowInfo.cameraY, carShowInfo.cameraZ), new mp.Vector3(0, 0, 0), 70);
     //31.673555374145508
     //126.1431884765625
-    sceneryCamera.pointAtCoord(-44, -1098, 25);
-    sceneryCamera.setActive(true);
+    //camera.pointAtCoord(-44, -1098, 25);
+    camera.pointAtCoord(carShowInfo.toX, carShowInfo.toY, carShowInfo.toZ);
+    camera.setActive(true);
     mp.game.cam.renderScriptCams(true, false, 0, true, false);
 
-    current = mp.vehicles.new(mp.game.joaat(list[i].vehiclePropertyModel), new mp.Vector3(-44.08749008178711, -1098.660400390625, 25.74812889099121));
-    current.setHeading(115);
+    //current = mp.vehicles.new(mp.game.joaat(list[i].vehiclePropertyModel), new mp.Vector3(-44.08749008178711, -1098.660400390625, 25.74812889099121));
+    current = mp.vehicles.new(mp.game.joaat(list[currentIndex].vehiclePropertyModel), new mp.Vector3(carShowInfo.toX, carShowInfo.toY, carShowInfo.toZ));
+    //current.setHeading(115);
+    current.setHeading(carShowInfo.toH);
+    current.setColours(primary, secondary);
     for (var j = 0; j < list.length; j++) {
         mp.chat.debug(`${j}Модель: ${list[j].vehiclePropertyModel} Количество: ${list[j].count} ${list[j].properties.maxFuel}`);
     }
@@ -22,52 +41,29 @@ mp.events.add('carshow.list.show', (inputList) => {
     })
     mp.callCEFV(`selectMenu.menu = selectMenu.menus["carShowMenu"]`);
     mp.callCEFVN({"selectMenu.menu.items[0].values": models});
+    mp.callCEFVN({"selectMenu.menu.items[1].values": colorValues});
+    mp.callCEFVN({"selectMenu.menu.items[2].values": colorValues});
     mp.callCEFV(`selectMenu.open()`);
 }
 );
 
 mp.events.add('carshow.vehicle.show', (i)=> {
+    currentIndex = i;
     current.destroy();
     current = mp.vehicles.new(mp.game.joaat(list[i].vehiclePropertyModel), new mp.Vector3(-44.08749008178711, -1098.660400390625, 25.74812889099121));
-    current.setHeading(115);
+    //current.setHeading(115);
+    current.setHeading(carShowInfo.toH);
+    current.setColours(primary, secondary);
 });
-// function showCar(i) {
 
-// }
-// mp.keys.bind(0x25, true, function () {
-//     showPreviousCar();
-// });
-
-// mp.keys.bind(0x27, true, function () {
-//     showNextCar();
-// });
-
-// function showNextCar() {
-//     current.destroy();
-//     if (i == list.length - 1) {
-//         i = 0;
-//         current = mp.vehicles.new(mp.game.joaat(list[i].vehiclePropertyModel), new mp.Vector3(-44.08749008178711, -1098.660400390625, 25.74812889099121));
-//     } else {
-//         current = mp.vehicles.new(mp.game.joaat(list[i + 1].vehiclePropertyModel), new mp.Vector3(-44.08749008178711, -1098.660400390625, 25.74812889099121));
-//         i++;
-//     }
-//     current.setHeading(115);
-// }
-
-// function showPreviousCar() {
-//     current.destroy();
-//     if (i == 0) {
-//         i = list.length - 1;
-//         current = mp.vehicles.new(mp.game.joaat(list[i].vehiclePropertyModel), new mp.Vector3(-44.08749008178711, -1098.660400390625, 25.74812889099121));
-//     } else {
-//         current = mp.vehicles.new(mp.game.joaat(list[i - 1].vehiclePropertyModel), new mp.Vector3(-44.08749008178711, -1098.660400390625, 25.74812889099121));
-//         i--;
-//     }
-//     current.setHeading(115);
-// }
+mp.events.add('carshow.vehicle.color', (color1, color2) => {
+    if (color1 != -1) primary = color1;
+    if (color2 != -1) secondary = color2;
+    current.setColours(primary, secondary);
+});
 
 mp.events.add("carshow.car.buy", (carId) => {
-    mp.events.callRemote('carshow.car.buy', carId);
+    mp.events.callRemote('carshow.car.buy', list[currentIndex].sqlId);
 });
 
 mp.events.add("carshow.car.buy.ans", (ans, carInfo) => {

@@ -37,7 +37,7 @@ module.exports = {
                 }
             }, 1000);
         }
-
+        player.call('vehicles.speedometer.sync');
         player.call('vehicles.mileage.start', [vehicle.mileage]);
     },
     "playerQuit": (player) => {
