@@ -46,7 +46,7 @@ mp.busy.remove = function(name) {
 /// END LIST
 /// EXAMPLE
 /// при открытии чата(не обязательно делать точь в точь, это лишь пример использования)
-/// if (mp.busy.findIndex(x => x == 'voicechat') == -1) return;     или if (mp.busy.length != 0) return;
+/// if (mp.busy.findIndex(x => x == 'voicechat') == -1) return;     или if (mp.busy.length != 0) return; или if (mp.busy.includes('voicechat')) return;
 /// mp.busy.push('chat');
 /// при закрытии чата
 /// let index = mp.busy.findIndex(x => x == 'chat');
