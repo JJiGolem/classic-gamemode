@@ -34,25 +34,29 @@ mp.game.controls.disableControlAction(1, 200, true);    //Pause Menu
 mp.busy.list = new Array();
 /// В данный массив добавляется название модуля, которым занят игрок, если игрок освобождается от данного модуля, то название модуля удаляется из массива
 /// Название модуля записывать маленькими буквами, модули которые учитывают занятость(вписать свои):
-mp.busy.add = function(name) {
-    if (mp.busy.includes(name)) return;
-    mp.busy.push(name);
-}
-mp.busy.remove = function(name) {
-    let index = mp.busy.findIndex(x => x == name);
-    index != -1 && mp.busy.splice(index, 1);
-}
 /// LIST
 /// voicechat
 /// chat
 /// END LIST
-/// EXAMPLE
-/// при открытии чата(не обязательно делать точь в точь, это лишь пример использования)
-/// if (mp.busy.includes('voicechat')) return;     или if (mp.busy.length != 0) return;
-/// mp.busy.push('chat');
-/// при закрытии чата
-/// let index = mp.busy.findIndex(x => x == 'chat');
-/// index != -1 && mp.busy.splice(index, 1);
-/// EXAMPLE END
+/// Добавить модуль
+mp.busy.add = function(name) {
+    if (mp.busy.list.includes(name)) return;
+    mp.busy.list.push(name);
+}
+/// Содержит ли массив данный модуль
+/// В случае если name = null, содержит ли массив какой-либо модуль
+mp.busy.includes = function(name) {
+    if (name == null) {
+        if (mp.busy.list.length != 0) return;
+    }
+    else {
+        if (mp.busy.list.includes(name)) return;
+    }
+}
+/// Удалить модуль
+mp.busy.remove = function(name) {
+    let index = mp.busy.list.findIndex(x => x == name);
+    index != -1 && mp.busy.list.splice(index, 1);
+}
 /// 2)
 /// ...
