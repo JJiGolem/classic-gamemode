@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
 
-import {setCall, setCallStatus} from "../actions/action.info";
+import {setCall, setCallStatus, startMyCall} from "../actions/action.info";
 import {closeAppDisplay} from "../actions/action.apps";
 
 class ActiveCall extends Component {
@@ -21,34 +21,40 @@ class ActiveCall extends Component {
     }
 
     componentDidMount() {
-        const { callStatus, setCall } = this.props;
+        const { setCall, info, setCallStatus } = this.props;
         setCall(true);
 
-        if(!this.state.isStart) {
-            this.setState({time: '00:00'});
-            this.startCall();
-            this.setState({isStart: true});
+        if(info.callStatus === 0) {
+            if(!this.state.isStart) {
+                this.setState({time: '00:00'});
+                this.startCall();
+                this.setState({isStart: true})
+            }
         }
+
+        /*setTimeout(() => {
+            setCallStatus(0);
+        }, 1500)*/
     }
 
     componentDidUpdate() {
-        const { info } = this.props;
-        if(info.callStatus === 'Нет номера' || info.callStatus === 'Абонент занят' || info.callStatus === 'Сброс вызова') {
-            this.state.time !== '00:00' && this.setState({time: '00:00'});
-            !this.state.isEnd && this.setState({isEnd: true});
-            setTimeout(() => {
-                this.props.closeApp()
-            }, 1500)
+        const { info, closeApp } = this.props;
+
+        if(info.callStatus === 1
+            || info.callStatus === 2
+            || info.callStatus === 3
+            || info.callStatus === 4
+            || info.callStatus === 5) {
+
+            if (!this.state.isEnd) {
+                this.setState({isEnd: true});
+                setTimeout(() => {
+                    this.props.closeApp()
+                }, 1500)
+            }
         }
 
-        if(info.callStatus === 'Звонок завершен') {
-            !this.state.isEnd && this.setState({isEnd: true});
-            setTimeout(() => {
-                this.props.closeApp()
-            }, 1500)
-        }
-
-        if(info.callStatus === 'Звонок идет') {
+        if(info.callStatus === 0) {
             if(!this.state.isStart) {
                 this.setState({time: '00:00'});
                 this.startCall();
@@ -60,6 +66,7 @@ class ActiveCall extends Component {
     componentWillUnmount() {
         this.props.setCallStatus(null);
         this.props.setCall(false);
+        this.props.startMyCall(false);
     }
 
     increment() {
@@ -133,7 +140,7 @@ class ActiveCall extends Component {
         const { setCall, setCallStatus, closeApp } = this.props;
 
         setCall(false);
-        setCallStatus('Звонок завершен');
+        setCallStatus(5);
         this.setState({ isEnd: true });
 
         // eslint-disable-next-line no-undef
@@ -145,6 +152,23 @@ class ActiveCall extends Component {
         }, 1500);
     }
 
+    convertCallStatus(status) {
+        switch (status) {
+            case 0:
+                return 'Звонок идет';
+            case 1:
+                return 'Нет номера';
+            case 2:
+                return 'Абонент занят';
+            case 3:
+                return 'Сброс вызова';
+            case 4:
+                return 'Абонент не поднял трубку';
+            case 5:
+                return 'Звонок завершен';
+        }
+    }
+
     render() {
 
         const { number, info } = this.props;
@@ -153,8 +177,8 @@ class ActiveCall extends Component {
         return (
             <Fragment>
                 <div className="incoming_call-phone-react">
-                    <div className='number_filed-phone-react'>Исходящий вызов</div>
-                    <div className='number_filed-phone-react' style={{ color: 'gray', marginTop: '20%' }}>{ info.callStatus }</div>
+                    <div className='number_filed-phone-react'>{ info.isMyCall ? 'Исходящий вызов' : 'Входящий вызов' }</div>
+                    <div className='number_filed-phone-react' style={{ color: 'gray', marginTop: '20%' }}>{ this.convertCallStatus(info.callStatus) }</div>
 
                     <div style={{ width: '100%', textAlign: 'center', marginTop: '35%', height: '20%' }}>
                         <div className='back_icon_contact-phone-react' style={{ height: '85%', margin: '0' }}>
@@ -170,14 +194,17 @@ class ActiveCall extends Component {
                     </div>
 
                     <div className='panel_call_mess_contact-phone-react' style={{ marginTop: '-5%' }}>
-                        <div className='button_panel_contact-phone-react' style={{ height: '40%', background: '#f44343' }} onClick={this.endCall}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="45.327" height="45.748" viewBox="0 0 45.327 45.748" style={{ height: '60%', marginTop: '10%' }}>
-                                <g id="Group_2" data-name="Group 2" transform="translate(-191.727 -94.812)">
-                                    <path id="_2J" data-name="2J" d="M36.868,0c-2.248,0-6.229,1.263-10.649,3.379-3.88,1.854-9.34,6.414-14.606,12.2S2.607,26.9,1.6,30.41C.33,33.72-.2,36.32.068,37.929c.083.5.254,1.537,6.459,6.92l.082.06a4.4,4.4,0,0,0,2.524.838,3.545,3.545,0,0,0,2.367-.9c1.423-1.217,4.575-5.987,5.507-7.42.2-.329,1.931-3.277.635-5.47-.6-1-1.7-3.194-2.306-4.41A54.382,54.382,0,0,1,26.981,15.41l3.954,2.14a5.894,5.894,0,0,0,2.262.432,6.485,6.485,0,0,0,2.212-.392l.337-.17,8.03-5.449a4.574,4.574,0,0,0,1.544-2.911A3.674,3.674,0,0,0,44.311,6.31c-.306-.339-.7-.817-1.087-1.28C41.057,2.441,39.416.576,38.028.149A4.009,4.009,0,0,0,36.868,0ZM9.082,42.742a1.26,1.26,0,0,1-.652-.223,50.407,50.407,0,0,1-5.421-5.24c-.04-.551.019-2.227,1.417-5.86l.045-.13C6.343,24.563,19.911,9.72,27.514,6.079c5.113-2.446,8.264-3.1,9.321-3.1a1.267,1.267,0,0,1,.308.029c.725.287,2.845,2.824,3.75,3.908l.027.033.1.118c.411.493.765.918,1.058,1.242.263.3.255.465.252.529a1.494,1.494,0,0,1-.454.8l-7.64,5.179a3.584,3.584,0,0,1-1.046.157,3.238,3.238,0,0,1-.984-.147l-5.44-2.959L26,12.41A56.145,56.145,0,0,0,12.336,26.63l-.448.709.37.76.1.206c1.272,2.561,2.18,4.3,2.7,5.184.228.391-.132,1.579-.594,2.34a53.2,53.2,0,0,1-4.918,6.74A.694.694,0,0,1,9.082,42.742Z" transform="translate(191.727 94.812)" fill="#fff"/>
-                                    <path id="Path_1" data-name="Path 1" d="M354.175,1708.405l27.1,28.016" transform="translate(-156.999 -1608.864)" fill="none" stroke="#fff" stroke-width="3"/>
-                                </g>
-                            </svg>
-                        </div>
+                        {
+                            !this.state.isEnd &&
+                            <div className='button_panel_contact-phone-react' style={{ height: '40%', background: '#f44343' }} onClick={this.endCall}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="45.327" height="45.748" viewBox="0 0 45.327 45.748" style={{ height: '60%', marginTop: '10%' }}>
+                                    <g id="Group_2" data-name="Group 2" transform="translate(-191.727 -94.812)">
+                                        <path id="_2J" data-name="2J" d="M36.868,0c-2.248,0-6.229,1.263-10.649,3.379-3.88,1.854-9.34,6.414-14.606,12.2S2.607,26.9,1.6,30.41C.33,33.72-.2,36.32.068,37.929c.083.5.254,1.537,6.459,6.92l.082.06a4.4,4.4,0,0,0,2.524.838,3.545,3.545,0,0,0,2.367-.9c1.423-1.217,4.575-5.987,5.507-7.42.2-.329,1.931-3.277.635-5.47-.6-1-1.7-3.194-2.306-4.41A54.382,54.382,0,0,1,26.981,15.41l3.954,2.14a5.894,5.894,0,0,0,2.262.432,6.485,6.485,0,0,0,2.212-.392l.337-.17,8.03-5.449a4.574,4.574,0,0,0,1.544-2.911A3.674,3.674,0,0,0,44.311,6.31c-.306-.339-.7-.817-1.087-1.28C41.057,2.441,39.416.576,38.028.149A4.009,4.009,0,0,0,36.868,0ZM9.082,42.742a1.26,1.26,0,0,1-.652-.223,50.407,50.407,0,0,1-5.421-5.24c-.04-.551.019-2.227,1.417-5.86l.045-.13C6.343,24.563,19.911,9.72,27.514,6.079c5.113-2.446,8.264-3.1,9.321-3.1a1.267,1.267,0,0,1,.308.029c.725.287,2.845,2.824,3.75,3.908l.027.033.1.118c.411.493.765.918,1.058,1.242.263.3.255.465.252.529a1.494,1.494,0,0,1-.454.8l-7.64,5.179a3.584,3.584,0,0,1-1.046.157,3.238,3.238,0,0,1-.984-.147l-5.44-2.959L26,12.41A56.145,56.145,0,0,0,12.336,26.63l-.448.709.37.76.1.206c1.272,2.561,2.18,4.3,2.7,5.184.228.391-.132,1.579-.594,2.34a53.2,53.2,0,0,1-4.918,6.74A.694.694,0,0,1,9.082,42.742Z" transform="translate(191.727 94.812)" fill="#fff"/>
+                                        <path id="Path_1" data-name="Path 1" d="M354.175,1708.405l27.1,28.016" transform="translate(-156.999 -1608.864)" fill="none" stroke="#fff" stroke-width="3"/>
+                                    </g>
+                                </svg>
+                            </div>
+                        }
                     </div>
                 </div>
             </Fragment>
@@ -192,7 +219,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     setCallStatus: status => dispatch(setCallStatus(status)),
     setCall: flag => dispatch(setCall(flag)),
-    closeApp: () => dispatch(closeAppDisplay())
+    closeApp: () => dispatch(closeAppDisplay()),
+    startMyCall: flag => dispatch(startMyCall(flag))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ActiveCall);

@@ -50,6 +50,7 @@ const initialState = {
 export default function info(state = initialState, action) {
 
     const { type, payload } = action;
+    var newState;
 
     switch (type) {
 
@@ -66,10 +67,10 @@ export default function info(state = initialState, action) {
             };
 
         case 'DELETE_CONTACT':
-            const newStateCont = { ...state };
-            let deletedIndex = newStateCont.contacts.findIndex(con => con.number === payload);
-            deletedIndex !== -1 && newStateCont.contacts.splice(deletedIndex, 1);
-            return newStateCont;
+            newState = { ...state };
+            let deletedIndex = newState.contacts.findIndex(con => con.number === payload);
+            deletedIndex !== -1 && newState.contacts.splice(deletedIndex, 1);
+            return newState;
 
         case 'RENAME_CONTACT':
             let indexContact = state.contacts.findIndex(con => con.number === payload.number);
@@ -77,27 +78,22 @@ export default function info(state = initialState, action) {
             return state;
 
         case 'SET_CALL_STATUS':
-            const newStateStatus = { ...state };
-            if (payload === 0) {
-                newStateStatus.callStatus = 'Звонок идет';
-            } else if (payload === 1) {
-                newStateStatus.callStatus = 'Нет номера';
-            } else if (payload === 2) {
-                newStateStatus.callStatus = 'Абонент занят';
-            } else if (payload === 3) {
-                newStateStatus.callStatus = 'Сброс вызова';
-            } else {
-                newStateStatus.callStatus = payload;
-            }
-            return newStateStatus;
+            newState = { ...state };
+            newState.callStatus = payload;
+            return newState;
 
         case 'SET_CALL':
-            const newStateCall = { ...state };
-            newStateCall.isCall = payload;
-            return newStateCall;
+            newState = { ...state };
+            newState.isCall = payload;
+            return newState;
+
+        case 'START_MY_CALL':
+            newState = { ...state };
+            newState.isMyCall = payload;
+            return newState;
 
         case 'CHANGE_STATE_HOUSE':
-            let newState = { ...state };
+            newState = { ...state };
             newState.houses[0].isOpened = !newState.houses[0].isOpened;
             return newState;
 

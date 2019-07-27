@@ -79,7 +79,8 @@ export const PlayerEvents = (dispatch, getState) => {
             payload: {
                 number: number,
                 text: message,
-                isMine: false
+                isMine: false,
+                isRead: false
             }
         });
     });
@@ -114,7 +115,7 @@ export const PlayerEvents = (dispatch, getState) => {
     myEventEmmiter.on('phone.call.end', () => {
         dispatch({
             type: 'SET_CALL_STATUS',
-            payload: 'Звонок завершен'
+            payload: 5
         });
     });
 

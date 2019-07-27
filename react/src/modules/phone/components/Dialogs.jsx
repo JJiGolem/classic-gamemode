@@ -33,7 +33,6 @@ class Dialogs extends Component {
     componentDidUpdate(prevProps, prevState) {
         const { dialogs, sortDialogsByDate } = this.props;
 
-        console.log(prevProps.dialogs, dialogs);
         dialogs && !dialogs.isSorted && sortDialogsByDate();
     }
 

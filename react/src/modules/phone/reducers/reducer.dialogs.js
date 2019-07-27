@@ -162,7 +162,7 @@ export default function dialogs(state = inittialState, action) {
                     newState[ind].PhoneMessages.push(
                         {
                             text: payload.text,
-                            date: payload.date,
+                            date: Date.now(),
                             isMine: payload.isMine,
                             isRead: payload.isRead
                         });
@@ -172,7 +172,7 @@ export default function dialogs(state = inittialState, action) {
                     newState[ind].PhoneMessages.push(
                         {
                             text: payload.text,
-                            date: payload.date,
+                            date: Date.now(),
                             isMine: payload.isMine,
                             isRead: payload.isRead
                         });
@@ -186,7 +186,7 @@ export default function dialogs(state = inittialState, action) {
                         {
                             text: payload.text,
                             isMine: payload.isMine,
-                            date: payload.date,
+                            date:Date.now(),
                             isRead: payload.isRead
                         }
                     ]
