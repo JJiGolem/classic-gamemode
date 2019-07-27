@@ -23,6 +23,11 @@ export const setCall = (flag) => ({
     payload: flag
 });
 
+export const startMyCall = (flag) => ({
+    type: 'START_MY_CALL',
+    payload: flag
+});
+
 export const renameContact = (number, newName) => ({
     type: 'RENAME_CONTACT',
     payload: {

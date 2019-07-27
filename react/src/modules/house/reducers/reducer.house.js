@@ -7,7 +7,6 @@ const initialState = {
     carPlaces: 2,
     price: 45000,
     rent: 350,
-    isLoading: false
 };
 
 export default function house(state = initialState, action) {
@@ -41,6 +40,11 @@ export default function house(state = initialState, action) {
             }
 
             newState.isLoading = false;
+            return newState;
+
+        case 'BLOCK_HOUSE_FORM':
+            newState = { ...state };
+            newState.isBlock = payload;
             return newState;
     }
 

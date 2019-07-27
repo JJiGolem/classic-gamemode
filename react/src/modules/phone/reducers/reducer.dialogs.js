@@ -162,7 +162,7 @@ export default function dialogs(state = inittialState, action) {
                     newState[ind].PhoneMessages.push(
                         {
                             text: payload.text,
-                            date: payload.date,
+                            date: Date.now(),
                             isMine: payload.isMine,
                             isRead: payload.isRead
                         });
@@ -172,7 +172,7 @@ export default function dialogs(state = inittialState, action) {
                     newState[ind].PhoneMessages.push(
                         {
                             text: payload.text,
-                            date: payload.date,
+                            date: Date.now(),
                             isMine: payload.isMine,
                             isRead: payload.isRead
                         });
@@ -186,7 +186,7 @@ export default function dialogs(state = inittialState, action) {
                         {
                             text: payload.text,
                             isMine: payload.isMine,
-                            date: payload.date,
+                            date:Date.now(),
                             isRead: payload.isRead
                         }
                     ]
@@ -213,7 +213,8 @@ export default function dialogs(state = inittialState, action) {
             newState = [ ...state ];
             let readIndex = newState.findIndex(dialog => dialog.number === payload);
 
-            if (removeIndex !== -1) {
+            if (readIndex !== -1) {
+                newState[readIndex].PhoneMessages &&
                 newState[readIndex].PhoneMessages.forEach(message => message.isRead = true);
             }
 

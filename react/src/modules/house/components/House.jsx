@@ -4,7 +4,7 @@ import ReactCSSTransitionGroup from 'react-addons-transition-group';
 
 import '../styles/house.css';
 
-import {setAnswerHouse, setLoadingHouse, showHouse} from "../actions/action.house";
+import {setAnswerHouse, setHouseFormBlock, setLoadingHouse, showHouse} from "../actions/action.house";
 
 class House extends Component {
     constructor(props) {
@@ -31,10 +31,11 @@ class House extends Component {
     }
 
     startBuy() {
-        const { house, setLoading, setAnswer } = this.props;
+        const { house, setLoading, setAnswer, blockForm } = this.props;
 
         if (!house.isLoading) {
             setLoading(true);
+            //blockForm(true);
             setTimeout(() => {
                 setAnswer({answer: 1, owner: 'Dun Hill'});
             }, 1000)
@@ -262,7 +263,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     setLoading: flag => dispatch(setLoadingHouse(flag)),
     showHouse: flag => dispatch(showHouse(flag)),
-    setAnswer: answer => dispatch(setAnswerHouse(answer))
+    setAnswer: answer => dispatch(setAnswerHouse(answer)),
+    blockForm: flag => dispatch(setHouseFormBlock(flag))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(House);

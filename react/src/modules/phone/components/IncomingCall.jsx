@@ -22,7 +22,7 @@ class IncomingCall extends Component {
         const { number, addApp, closeApp, setCallStatus, setCall } = this.props;
         // eslint-disable-next-line no-undef
         mp.trigger('phone.call.in.ans', 1);
-        setCallStatus('Звонок идет');
+        setCallStatus(0);
         setCall(true);
         closeApp();
         addApp({name: 'ActiveCall', form: <ActiveCall number={number}/>});

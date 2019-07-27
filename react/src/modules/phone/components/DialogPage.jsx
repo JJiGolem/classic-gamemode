@@ -1,7 +1,5 @@
 import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
-import 'moment/locale/ru';
 
 import {addMessageToPhone, deleteDialog, readDialogMessages} from '../actions/action.dialogs';
 import {addAppDisplay, closeAppDisplay} from "../actions/action.apps";
@@ -96,7 +94,6 @@ class DialogPage extends Component {
                                 className='time_message_block-phone-react'
                                 style={{ float: message.isMine ? 'right' : 'left', marginLeft: !message.isMine && '-3%' }}
                             >
-                                {/*{ `${new Date(message.date).getHours()}:${new Date(message.date).getMinutes()}` }*/}
                                 { this.getTimeMessage(message.date) }
                             </div>
                         }

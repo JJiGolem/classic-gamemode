@@ -493,6 +493,29 @@
     height: 100%;
 }
 
+.create_dialog-phone-react {
+    margin-top: 5%;
+}
+
+.create_dialog-phone-react span {
+    text-decoration: underline;
+    font-size: 1.2em;
+    display: block;
+    font-weight: bold;
+}
+
+.create_dialog-phone-react button {
+    margin-top: 5%;
+    outline: none;
+    border: none;
+    background: #343c47;
+    color: white;
+    border-radius: 30px;
+    width: 40%;
+    padding: 5%;
+    font-size: 100%;
+}
+
 .table_digits-phone-react {
     display: table;
     position: absolute;
