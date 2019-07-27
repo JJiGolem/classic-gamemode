@@ -7,10 +7,6 @@ mp.events.add('characterInit.done', function() {
         mp.voiceChat.muted = false;
         mp.callCEFV("hud.voice = true");
         mp.busy.push('voicechat');
-        mp.chat.debug("Listeners");
-        mp.chat.debug(JSON.stringify(listeners));
-        mp.chat.debug("Channels");
-        mp.chat.debug(JSON.stringify(channels));
 	});
 
 	mp.keys.bind(0x55, false, function() {		// U
@@ -39,7 +35,6 @@ mp.speechChanel.addChannel = (name, maxRange = 0, autoConnection = false) => {
 
 /// Подключить выбранного игрока к каналу связи
 mp.speechChanel.connect = (player, channel) => {
-    mp.chat.debug("Connect" + channel);
     listeners.push({"playerId": player.remoteId, "channel": channel});
     mp.events.callRemote("voiceChat.add", player);
     
@@ -56,7 +51,6 @@ mp.speechChanel.connect = (player, channel) => {
 
 /// Отключить выбранного игрока от канала связи
 mp.speechChanel.disconnect = (player, channel) => {
-    mp.chat.debug("Disconnect" + channel);
     if (channel == null) {
         for (let idx = listeners.findIndex(x => x.playerId === player.remoteId); idx !== -1; 
         idx = listeners.findIndex(x => x.playerId === player.remoteId)) {
@@ -91,23 +85,31 @@ setInterval(() => {
                 }
             }
 		}
-	});
-    
+    });
+    /// Сортировка листенеров по приоритетности
+    listeners.sort((a, b) => {
+        if (a.maxRange < b.maxRange ) {
+            return 1;
+          }
+          if (a.maxRange > b.maxRange) {
+            return -1;
+          }
+          return 0;
+    });
+    mp.chat.debug(JSON.stringify(listeners));
     /// Автоматическое отключение заданных каналов всех игроков
 	listeners.forEach(listener => {
         let player = mp.players.atRemoteId(listener.playerId);
-		if(player.handle !== 0) {		
-            let dist = mp.game.system.vdist(player.position.x, player.position.y, player.position.z,  
-                mp.players.local.position.x,  mp.players.local.position.y,  mp.players.local.position.z);
-            
-            if (channels[listener.channel].maxRange != 0) {
+		if(player.handle !== 0) {
+            if (channels[listener.channel].maxRange != 0) {		
+                let dist = mp.game.system.vdist(player.position.x, player.position.y, player.position.z,  
+                    mp.players.local.position.x,  mp.players.local.position.y,  mp.players.local.position.z);
+                    
                 if(dist > channels[listener.channel].maxRange) {
                     mp.speechChanel.disconnect(player, listener.channel);
                 }
                 else if(!UseAutoVolume) {
-                    mp.chat.debug("before player.voiceVolume = " + player.voiceVolume);
                     player.voiceVolume = 1 - (dist / channels[listener.channel].maxRange);
-                    mp.chat.debug("after player.voiceVolume = " + player.voiceVolume);
                 }
             }
             else {

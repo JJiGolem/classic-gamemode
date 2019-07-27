@@ -58,12 +58,14 @@ module.exports = {
     /// Начало звонка игроку
     'phone.call.ask': (player, number) => {
         if (player.phone == null) return;
+        console.log("me " + player.isTalking);
         if (player.isTalking) return player.call('phone.call.start.ans', [2]);
         if (!phone.isExists(number)) return player.call('phone.call.start.ans', [1]);
 
         for (let i = 0; i < mp.players.length; i++) {
             if (mp.players[i].phone == null) continue;
             if (mp.players[i].phone.number != number) continue;
+            console.log("another " + mp.players[i].isTalking);
             if (mp.players[i].isTalking) return player.call('phone.call.start.ans', [2]);
             player.isTalking = true;
             return mp.players[i].call('phone.call.in', [player.phone.number, player.id]);
