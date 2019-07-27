@@ -134,7 +134,7 @@ module.exports = {
             }
         }
     },
-    async buyCarFromCarList(player, carId) {
+    async buyCarFromCarList(player, carId, primaryColor, secondaryColor) {
         console.log(carId);
         for (var i = 0; i < carList.length; i++) {
             if (carList[i].sqlId == carId) {
@@ -145,8 +145,8 @@ module.exports = {
                         key: "private",
                         owner: player.character.id,
                         modelName: carList[i].vehiclePropertyModel,
-                        color1: 0,
-                        color2: 0,
+                        color1: primaryColor,
+                        color2: secondaryColor,
                         x: 0,
                         y: 0,
                         z: 0,

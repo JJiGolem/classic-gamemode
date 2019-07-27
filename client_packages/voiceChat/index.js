@@ -96,7 +96,7 @@ setInterval(() => {
           }
           return 0;
     });
-    mp.chat.debug(JSON.stringify(listeners));
+    //mp.chat.debug(JSON.stringify(listeners));
     /// Автоматическое отключение заданных каналов всех игроков
 	listeners.forEach(listener => {
         let player = mp.players.atRemoteId(listener.playerId);

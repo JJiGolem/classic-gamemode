@@ -15,6 +15,11 @@ var currentIndex = 0;
 var primary = 0, secondary = 0;
 
 mp.events.add('carshow.list.show', (inputList, inputInfo) => {
+
+    mp.players.local.freezePosition(true);
+    mp.events.call('hud.enable', false);
+    mp.game.ui.displayRadar(false);
+
     list = inputList;
     carShowInfo = inputInfo;
     //let camera = mp.cameras.new('default', new mp.Vector3(-44 - 4, -1098 - 4, 25 + 2.5), new mp.Vector3(0, 0, 0), 70);
@@ -63,7 +68,7 @@ mp.events.add('carshow.vehicle.color', (color1, color2) => {
 });
 
 mp.events.add("carshow.car.buy", (carId) => {
-    mp.events.callRemote('carshow.car.buy', list[currentIndex].sqlId);
+    mp.events.callRemote('carshow.car.buy', list[currentIndex].sqlId, primary, secondary);
 });
 
 mp.events.add("carshow.car.buy.ans", (ans, carInfo) => {

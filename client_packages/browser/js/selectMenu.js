@@ -123,6 +123,8 @@ var selectMenu = new Vue({
                 this.onItemSelected();
             } else if (e.keyCode == 8) { // BACKSPACE
                 this.onBackspacePressed();
+            } else if (e.keyCode == 27) { // ESCAPE
+                this.onEscapePressed();
             }
         },
         isItemShow(index) {
@@ -159,6 +161,9 @@ var selectMenu = new Vue({
         // Нажата клавиша 'Назад'
         onBackspacePressed() {
             this.menu.handler("onBackspacePressed");
+        },
+        onEscapePressed() {
+            this.menu.handler("onEscapePressed");
         },
         open() {
             this.menu.i = 0; // TEMP, нужно разобраться, почему i/j остаются прежними при закрытии/открытии меню

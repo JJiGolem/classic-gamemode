@@ -18,7 +18,7 @@ module.exports = {
         console.log(info.sqlId);
         player.call('carshow.list.show', [list, info]);
     },
-    "carshow.car.buy": (player, carId) => {
-        carshow.buyCarFromCarList(player, carId);
+    "carshow.car.buy": (player, carId, primaryColor, secondaryColor) => {
+        carshow.buyCarFromCarList(player, carId, primaryColor, secondaryColor);
     }
 }
