@@ -17,10 +17,10 @@ module.exports = {
         player.call('chat.message.push', [`!{#71a0ff} license ${vehicle.properties.license}`]);
         player.call('chat.message.push', [`!{#71a0ff} parkingHours ${vehicle.parkingHours}`]);
 
-        if ((vehicle.license != 0) && vehicle.license != player.license) {
-            player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);
-            player.removeFromVehicle();
-        }
+        // if ((vehicle.license != 0) && vehicle.license != player.license) {
+        //     player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);
+        //     player.removeFromVehicle();
+        // }
 
         if (!vehicle.engine && seat == -1) {
             player.call('prompt.showByName', ['vehicle_engine']);
@@ -68,6 +68,7 @@ module.exports = {
             player.vehicle.engine = true;
             player.call('vehicles.engine.toggle', [true]);
             player.vehicle.setVariable("engine", true);
+            player.call('prompt.hide');
         }
     },
     "vehicles.mileage.add": (player, value) => {

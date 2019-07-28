@@ -102,5 +102,16 @@ module.exports = {
         } else {
             return false;
         }
+    },
+    sellCar(vehicle) {
+        vehicle.key = "market";
+        vehicle.db.update({
+            key: "market"
+        });
+        this.addMarketVehicle(vehicle);
+        if (vehicle.fuelTimer) {
+            clearInterval(vehicle.fuelTimer);
+        }
+        vehicle.destroy();
     }
 }
