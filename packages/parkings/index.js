@@ -120,7 +120,7 @@ module.exports = {
             } catch (err) {
                 console.log(err);
             }
-        }, 60000);
+        }, 60*60*1000);
     },
     async parkingHoursUpdater() {
         let data = await db.Models.Vehicle.findAll({

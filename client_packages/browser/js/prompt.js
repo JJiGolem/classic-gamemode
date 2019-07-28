@@ -12,7 +12,13 @@ var prompt = new Vue({
             },
             "carshow_control": {
                 text: "Нажмите <span>Esc</span> для того, чтобы выйти из автосалона"
-            }
+            },
+            "carmarket_noveh": {
+                text: "Чтобы продать транспортное средство, вы должны находиться в нем"
+            },
+            "carmarket_control": {
+                text: "Нажмите <span>E</span> для того, чтобы продать транспортное средство"
+            },
         },
         text: null
     },

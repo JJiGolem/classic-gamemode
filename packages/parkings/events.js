@@ -10,7 +10,6 @@ module.exports = {
         if (shape.isParking) {
             player.call('chat.message.push', [`!{#ffffff}${player.name} зашел в колшейп с parkingId ${shape.parkingId}`]);
             player.call('parkings.menu.show', [shape.parkingId]);
-            //parkings.spawnParkingVehicle(player, shape.parkingId);
         }
     },
     "playerExitColshape": (player, shape) => {

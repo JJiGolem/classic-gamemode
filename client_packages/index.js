@@ -9,6 +9,7 @@ require('browser');
 /// Пользовательские модули (располагать по алфавиту для более удобного поиска)
 /// Положение в списке не должно влиять на работоспособность
 require('auth');
+require('carmarket');
 require('carshow');
 require('characterInit');
 require('chat');
