@@ -37,7 +37,7 @@ mp.speechChanel.connect = (player, channel) => {
     if (index != -1) {
         if (!listeners[index].channels.includes(channel)) {
             listeners[index].channels.push(channel);
-            updateCurrent(index);
+            updateCurrent(player, index);
         }
     }
     else {
@@ -79,7 +79,7 @@ mp.speechChanel.disconnect = (player, channel, death = false) => {
     }
 }
 
-let updateCurrent = function(index) {
+let updateCurrent = function(player, index) {
     let maxI = -1;
     for (let i = 0, max = -1; i < listeners[index].channels.length; i++) {
         if (channels[listeners[index].channels[i]].maxRange == 0) {
