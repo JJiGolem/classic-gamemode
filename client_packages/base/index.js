@@ -40,19 +40,20 @@ mp.busy.list = new Array();
 /// chat
 /// carshow
 /// END LIST
-/// Добавить модуль
+/// Добавить модуль (true - операция провшла успешно, false - такой модуль уже содержится в массиве)
 mp.busy.add = function(name) {
-    if (mp.busy.list.includes(name)) return;
+    if (mp.busy.list.includes(name)) return false;
     mp.busy.list.push(name);
+    return true;
 }
 /// Содержит ли массив данный модуль
 /// В случае если name = null, содержит ли массив какой-либо модуль
 mp.busy.includes = function(name) {
     if (name == null) {
-        if (mp.busy.list.length != 0) return;
+        return mp.busy.list.length != 0;
     }
     else {
-        if (mp.busy.list.includes(name)) return true;
+        return mp.busy.list.includes(name);
     }
 }
 /// Удалить модуль
