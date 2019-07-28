@@ -5,7 +5,6 @@ mp.events.add('characterInit.done', function() {
     mp.keys.bind(0x4E, true, function() {		// N
         if (mp.busy.includes('chat')) return;
         if (!mp.busy.add('voicechat')) return;
-        mp.chat.debug(JSON.stringify(listeners));
         mp.voiceChat.muted = false;
         mp.callCEFV("hud.voice = true");
 	});
@@ -127,6 +126,7 @@ setInterval(() => {
                 }
                 else if(!UseAutoVolume) {
                     player.voiceVolume = 1 - (dist / channels[listener.channels[listener.current]].maxRange);
+                    mp.chat.debug("playerId = " + player.remoteId + " volume = " + player.voiceVolume);
                 }
             }
             else {
