@@ -126,7 +126,8 @@ setInterval(() => {
                 }
                 else if(!UseAutoVolume) {
                     player.voiceVolume = 1 - (dist / channels[listener.channels[listener.current]].maxRange);
-                    mp.chat.debug("playerId = " + player.remoteId + " volume = " + player.voiceVolume);
+                    mp.chat.debug("playerId = " + player.remoteId + " volumeMath = " + (1 - (dist / channels[listener.channels[listener.current]].maxRange)));
+                    mp.chat.debug("playerId = " + player.remoteId + " volumeReal = " + player.voiceVolume);
                 }
             }
             else {
