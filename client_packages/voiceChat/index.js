@@ -71,7 +71,9 @@ mp.speechChanel.disconnect = (player, channel, death = false) => {
             mp.events.callRemote("voiceChat.remove", player);
             return;
         }
-        updateCurrent(index);
+        else {
+            updateCurrent(index);
+        }
     }
     if (channel == null && death) {
         mp.events.callRemote("voiceChat.remove", player);
