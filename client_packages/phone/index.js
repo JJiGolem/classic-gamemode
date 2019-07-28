@@ -141,8 +141,8 @@ let bindButtons = (state) => {
 }
 
 let showPhone = () => {		
-    if (mp.busy.length != 0) return;
-    !mp.busy.includes('phone') && mp.busy.push('phone');
+    if (mp.busy.includes()) return;
+    if (!mp.busy.add('phone')) return;
 
     mp.callCEFR('phone.show', [true]);
     mp.gui.cursor.show(true, true);
@@ -151,7 +151,5 @@ let showPhone = () => {
 let hidePhone = () => {		
     mp.callCEFR('phone.show', [false]); 
     mp.gui.cursor.show(false, false);
-    
-    let index = mp.busy.findIndex(x => x == 'phone');
-    index != -1 && mp.busy.splice(index, 1);
+    mp.busy.remove('phone');
 }
