@@ -20,10 +20,11 @@ module.exports = {
 
     },
     createCarMarket() {
-        mp.blips.new(267, new mp.Vector3(carMarket.x, carMarket.y, carMarket.z),
+        mp.blips.new(225, new mp.Vector3(carMarket.x, carMarket.y, carMarket.z),
             {
                 name: "Авторынок",
                 shortRange: true,
+                color: 73
             });
         mp.markers.new(1, new mp.Vector3(carMarket.x, carMarket.y, carMarket.z - 3.5), 4,
             {
