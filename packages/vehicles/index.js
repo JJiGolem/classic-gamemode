@@ -28,7 +28,8 @@ module.exports = {
         vehicle.fuel = veh.fuel;
         vehicle.mileage = veh.mileage;
         vehicle.parkingId = veh.parkingId;
-
+        vehicle.parkingHours = veh.parkingHours;
+        vehicle.isOnParking = veh.isOnParking;
         vehicle.lastMileage = veh.mileage; /// Последний сохраненный пробег
         
         vehicle.numberPlate = "CLASSIC";
@@ -156,7 +157,9 @@ module.exports = {
         // if (player.home) spawnHomeVehicles()
         // проверка на отсутствие дома todo
         if (dbPrivate.length > 0) {
-            mp.events.call('parkings.vehicle.add', dbPrivate[0]);
+            if (dbPrivate[0].isOnParking == 1) {
+                mp.events.call('parkings.vehicle.add', dbPrivate[0]);
+            }
         }
         console.log(`Для игрока ${player.character.name} загружено ${dbPrivate.length} авто`)
     }

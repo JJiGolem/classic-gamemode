@@ -15,6 +15,7 @@ module.exports = {
         player.call('chat.message.push', [`!{#71a0ff} name ${vehicle.properties.name}`]);
         player.call('chat.message.push', [`!{#71a0ff} defaultCons ${vehicle.properties.defaultConsumption}`]);
         player.call('chat.message.push', [`!{#71a0ff} license ${vehicle.properties.license}`]);
+        player.call('chat.message.push', [`!{#71a0ff} parkingHours ${vehicle.parkingHours}`]);
 
         if ((vehicle.license != 0) && vehicle.license != player.license) {
             player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);
@@ -22,13 +23,12 @@ module.exports = {
         }
 
         if (!vehicle.engine && seat == -1) {
-            //player.call('chat.message.push', [`!{#adff9e} Нажмите 2, чтобы завести транспортное средство`]);
             player.call('prompt.showByName', ['vehicle_engine']);
         }
-        // TEMP
         if (seat == -1) {
             player.call('vehicles.speedometer.show', [true]);
             player.call('vehicles.speedometer.max.update', [vehicle.properties.maxFuel]);
+            player.call('vehicles.speedometer.sync');
             player.indicatorsUpdateTimer = setInterval(() => {
                 try {
                     player.call('vehicles.speedometer.fuel.update', [vehicle.fuel]);
@@ -37,7 +37,6 @@ module.exports = {
                 }
             }, 1000);
         }
-        player.call('vehicles.speedometer.sync');
         player.call('vehicles.mileage.start', [vehicle.mileage]);
     },
     "playerQuit": (player) => {
