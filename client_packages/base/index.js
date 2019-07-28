@@ -38,6 +38,7 @@ mp.busy.list = new Array();
 /// LIST
 /// voicechat
 /// chat
+/// carshow
 /// END LIST
 /// Добавить модуль
 mp.busy.add = function(name) {
@@ -51,7 +52,7 @@ mp.busy.includes = function(name) {
         if (mp.busy.list.length != 0) return;
     }
     else {
-        if (mp.busy.list.includes(name)) return;
+        if (mp.busy.list.includes(name)) return true;
     }
 }
 /// Удалить модуль

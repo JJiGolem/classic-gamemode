@@ -22,6 +22,10 @@ mp.events.add('carshow.list.show', (inputList, inputInfo) => {
     mp.players.local.freezePosition(true);
     mp.events.call('hud.enable', false);
     mp.game.ui.displayRadar(false);
+    mp.callCEFR('setOpacityChat', [0.0]);
+    controlsDisabled = true;
+    mp.busy.add('carshow');
+    mp.prompt.showByName('carshow_control');
 
     list = inputList;
     carShowInfo = inputInfo;
@@ -52,7 +56,7 @@ mp.events.add('carshow.list.show', (inputList, inputInfo) => {
     mp.callCEFVN({"selectMenu.menu.items[1].values": colorValues});
     mp.callCEFVN({"selectMenu.menu.items[2].values": colorValues});
     mp.callCEFV(`selectMenu.open()`);
-    controlsDisabled = true;
+
 }
 );
 
@@ -63,6 +67,7 @@ mp.events.add('render', () => {
 });
 
 mp.events.add('carshow.list.close', () => {
+    mp.prompt.hide();
     current.destroy();
     camera.setActive(false);
     camera.destroy();
@@ -72,6 +77,8 @@ mp.events.add('carshow.list.close', () => {
     mp.game.ui.displayRadar(true);
     mp.callCEFV(`selectMenu.close()`);
     controlsDisabled = false;
+    mp.busy.remove('carshow');
+    mp.callCEFR('setOpacityChat', [1.0]);
     mp.events.callRemote('carshow.list.close', carShowInfo.sqlId);
 });
 

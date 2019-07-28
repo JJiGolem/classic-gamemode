@@ -9,6 +9,7 @@ mp.events.add('hud.load', () => {
   mp.events.call('hud.enable', true);
 
   mp.keys.bind(0x74, true, function () { /// Включение/отключение худа на F5
+    if (mp.busy.list.includes("carshow")) return;
     if (hudState) {
       mp.events.call('hud.enable', false);
       mp.game.ui.displayRadar(false);

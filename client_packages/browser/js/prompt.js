@@ -10,33 +10,9 @@ var prompt = new Vue({
             "vehicle_engine": {
                 text: "Нажмите <span>2</span> для того, чтобы завести двигатель автомобиля"
             },
-            "vehicle_repair": {
-                text: "Автомобиль поломался. Необходимо вызвать механика."
-            },
-            "offerDialog_help": {
-                text: "Используйте клавиши <span>y</span> и <span>n</span>",
-            },
-            "documents_help": {
-                text: "Нажмите <span>e</span> для закрытия",
-            },
-            "health_help": {
-                text: "Приобрести медикаменты можно в больнице.",
-            },
-            "police_service_recovery_carkeys": {
-                text: "Вызовите службу, чтобы пригнать авто к участку.",
-            },
-            "band_zones_attack_win": {
-                text: "Влияние Вашей группировки увеличилось!",
-            },
-            "band_zones_attack_lose": {
-                text: "Вашей группировке не удалось увеличить влияние!",
-            },
-            "band_zones_defender_win": {
-                text: "Ваша группировка отстояла территорию!",
-            },
-            "band_zones_defender_lose": {
-                text: "Влияние Вашей группировки уменьшилось!",
-            },
+            "carshow_control": {
+                text: "Нажмите <span>Esc</span> для того, чтобы выйти из автосалона"
+            }
         },
         text: null
     },

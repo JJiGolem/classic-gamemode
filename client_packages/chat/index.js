@@ -71,12 +71,16 @@ mp.events.add('chat.load', () => {
     mp.callCEFR('setTimeChat', [true]);
 
     mp.keys.bind(0x54, true, function () {
-       isOpen = true;
+
+        if (mp.busy.includes('carshow')) return;
+        isOpen = true;
         mp.gui.cursor.show(true, true);
         mp.callCEFR('setFocusChat', [true]);
     });
 
     mp.keys.bind(0x76, true, function () {
+
+        if (mp.busy.includes('carshow')) return;
 
         if (isOpen) return;
 
