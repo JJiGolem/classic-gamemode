@@ -71,7 +71,7 @@ mp.speechChanel.disconnect = (player, channel, death = false) => {
             return;
         }
         else {
-            updateCurrent(index);
+            updateCurrent(player, index);
         }
     }
     if (channel == null && death) {
@@ -125,8 +125,6 @@ setInterval(() => {
                 }
                 else if(!UseAutoVolume) {
                     player.voiceVolume = 1 - (dist / channels[listener.channels[listener.current]].maxRange);
-                    mp.chat.debug("playerId = " + player.remoteId + " volumeMath = " + (1 - (dist / channels[listener.channels[listener.current]].maxRange)));
-                    mp.chat.debug("playerId = " + player.remoteId + " volumeReal = " + player.voiceVolume);
                 }
             }
             else {
