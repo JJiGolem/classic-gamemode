@@ -19,7 +19,6 @@ mp.events.add('characterInit.done', function() {
 
 mp.speechChanel = {};
 
-const Use3d = true;
 const UseAutoVolume = false;
 
 let listeners = new Array();
