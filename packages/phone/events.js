@@ -118,9 +118,7 @@ module.exports = {
         /// Работа с отправителем
         let index = player.phone.PhoneDialogs.findIndex( x => x.number == number);
         if (index == -1) {
-            let contact = null;
-            if (player.phone.PhoneContacts != null) contact = player.phone.PhoneContacts.find( x => x.number == number);
-            let newDialog = db.Models.PhoneDialog.build({phoneId: player.phone.id, name: contact != null ? contact.name : null, number: number, PhoneMessages: [
+            let newDialog = db.Models.PhoneDialog.build({phoneId: player.phone.id, number: number, PhoneMessages: [
                 {isMine: true, text: message, isRead: true, date: Date.now()}
             ]}, { include: [db.Models.PhoneMessage]});
             let result = await newDialog.save();
@@ -140,9 +138,7 @@ module.exports = {
             if (mp.players.at(i).phone.number == number) {
                 index = mp.players.at(i).phone.PhoneDialogs.findIndex( x => x.number == player.phone.number);
                 if (index == -1) {
-                    let contact = null;
-                    if (mp.players.at(i).phone.PhoneContacts != null) contact = mp.players.at(i).phone.PhoneContacts.find( x => x.number == player.phone.number);
-                    let newDialog = db.Models.PhoneDialog.build({phoneId: mp.players.at(i).phone.id, name: contact != null ? contact.name : null, number: player.phone.number, PhoneMessages: [
+                    let newDialog = db.Models.PhoneDialog.build({phoneId: mp.players.at(i).phone.id, number: player.phone.number, PhoneMessages: [
                         {isMine: false, text: message, isRead: false, date: Date.now()}
                     ]}, { include: [db.Models.PhoneMessage]});
                     let result = await newDialog.save();

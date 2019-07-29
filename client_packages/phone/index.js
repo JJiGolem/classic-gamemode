@@ -84,7 +84,7 @@ mp.events.add("playerDeath", (player) => {
 	if (player.remoteId == callerId) {
         mp.callCEFR('phone.call.end', []);
     }
-    if (player.remoteId == mp.players.local.remoteId) {
+    if (callerId != -1 && player.remoteId == mp.players.local.remoteId) {
         mp.callCEFR('phone.call.end', []);
         mp.callCEFR('phone.show', [false]); 
     }
