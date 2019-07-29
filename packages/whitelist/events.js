@@ -7,7 +7,7 @@ module.exports = {
     "init": () => {
         whitelist.init();
     },
-    "playerJoin": (player) => {
+    "player.joined": (player) => {
         if (!whitelist.isEnabled()) return;
 
         if (allowed.includes(player.socialClub)) {
