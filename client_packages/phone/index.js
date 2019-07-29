@@ -85,8 +85,7 @@ mp.events.add("playerDeath", (player) => {
         mp.events.call('phone.call.end');
         mp.callCEFR('phone.call.end', []);
         if (mp.busy.includes('phone')) {
-            mp.gui.cursor.show(false, false);
-            mp.callCEFR('phone.show', [false]); 
+            hidePhone();
         }
     }
 });
