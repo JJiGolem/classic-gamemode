@@ -109,6 +109,11 @@ mp.events.add('phone.message.set', function (message, number) {
     mp.callCEFR('phone.message.set', [message, number]);
 });
 
+/// Прочтение диалога
+mp.events.add('phone.dialog.read', function (dialogNumber) {
+    mp.events.callRemote('phone.dialog.read', dialogNumber);
+});
+
 /// Добавить контакт
 mp.events.add('phone.contact.add', function (name, number) {
     mp.events.callRemote('phone.contact.add', name, number);
@@ -124,6 +129,14 @@ mp.events.add('phone.contact.remove', function (number) {
     mp.events.callRemote('phone.contact.remove', number);
 });
 
+/// Передать сообщение об ошибке на телефон
+/// 1) Номера не существует
+/// 2) Абонент вне зоны действия сети
+/// 3) Запись с таким имененем уже существует
+/// 4) Запись не найдена
+mp.events.add('phone.error', function (number) {
+    mp.callCEFR('phone.error', [number]);
+});
 
 
 
