@@ -78,6 +78,16 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.INTEGER(11),
 			defaultValue: 1,
 			allowNull: false
+		},
+		isOnParking: {
+			type: DataTypes.TINYINT(1),
+			defaultValue: 0,
+			allowNull: false
+		},
+		parkingHours: {
+			type: DataTypes.INTEGER(11),
+			defaultValue: 0,
+			allowNull: false
 		}
 	}, {timestamps: false});
 

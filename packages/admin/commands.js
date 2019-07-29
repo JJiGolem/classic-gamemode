@@ -207,7 +207,7 @@ module.exports = {
             console.log(`${player.heading}`);
             if (player.vehicle) {
                 player.call('chat.message.push', [`!{#ffffff} ${player.vehicle.heading}`]);
-                console.log(`${player.vehicle.heading}`);
+                console.log(`veh= ${player.vehicle.heading}`);
             }
         }
     }

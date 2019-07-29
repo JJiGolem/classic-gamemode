@@ -52,12 +52,12 @@ var selectMenu = new Vue({
                 },
                 {
                     text: "Основной цвет",
-                    values: ['#0bf', '#fb0', '#bf0', '#fb0', '#fb0', '#fb0', '#bf0', '#0fe', '#cd3', 'yellow', 'pink', '#0bf', '#fb0', '#bf0', '#fb0', '#fb0', '#fb0', '#bf0', '#0fe', '#cd3', 'yellow', 'pink'],
+                    values: [],
                     i: 0,
                 },
                 {
-                    text: "Основной цвет",
-                    values: ['#0bf', '#fb0', '#bf0', '#fb0', '#fb0', '#fb0', '#bf0', '#0fe', '#cd3', 'yellow', 'pink'],
+                    text: "Дополнительный цвет",
+                    values: [],
                     i: 0,
                 },
                 {
@@ -81,6 +81,55 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Модель') {
                             mp.trigger(`carshow.vehicle.show`, e.valueIndex);
                         }
+                        if (e.itemName == 'Основной цвет') {
+                            mp.trigger(`carshow.vehicle.color`, e.valueIndex, -1);
+                        }
+                        if (e.itemName == 'Дополнительный цвет') {
+                            mp.trigger(`carshow.vehicle.color`, -1, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Купить') {
+                            mp.trigger(`carshow.car.buy`);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed') {
+                            mp.trigger(`carshow.list.close`);    
+                    }
+                }
+            },
+            "carMarketMenu": {
+                name: "carmarket",
+                header: "Авторынок", 
+                items: [{
+                    text: "Продать транспорт", 
+                    i: 0, 
+                },
+                {
+                    text: "Отмена",
+                    i: 0,
+                }
+            ],
+                i: 0, 
+                j: 0, 
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name, 
+                        itemName: item.text,
+                        itemIndex: this.i, 
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    mp.trigger(`chat.message.push`, `!{#ffffff} Событие: ${eventName}`);
+                    mp.trigger(`chat.message.push`, `!{#ffffff} ${JSON.stringify(e)}`);
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Продать транспорт') {
+                            mp.trigger(`carmarket.car.sell`);
+                        }
+                        if (e.itemName == 'Отмена') {
+                            mp.trigger(`carmarket.menu.close`);    
+                    }
                     }
                 }
             },
@@ -112,6 +161,8 @@ var selectMenu = new Vue({
                 this.onItemSelected();
             } else if (e.keyCode == 8) { // BACKSPACE
                 this.onBackspacePressed();
+            } else if (e.keyCode == 27) { // ESCAPE
+                this.onEscapePressed();
             }
         },
         isItemShow(index) {
@@ -148,6 +199,9 @@ var selectMenu = new Vue({
         // Нажата клавиша 'Назад'
         onBackspacePressed() {
             this.menu.handler("onBackspacePressed");
+        },
+        onEscapePressed() {
+            this.menu.handler("onEscapePressed");
         },
         open() {
             this.menu.i = 0; // TEMP, нужно разобраться, почему i/j остаются прежними при закрытии/открытии меню

@@ -3,9 +3,12 @@ var parkings = [];
 var parkingVehicles = []; /// автомобили на парковке
 var vehicles = call("vehicles");
 
+const PARKING_PRICE = 2; /// цена парковки за час
+
 module.exports = {
     async init() {
         await this.loadParkingsFromDB();
+        this.startParkingHoursUpdater();
     },
     async loadParkingsFromDB() {
         dbParkings = await db.Models.Parking.findAll();
@@ -46,12 +49,12 @@ module.exports = {
         shape.isParking = true;
         shape.parkingId = parking.id;
 
-        let label = mp.labels.new(`Парковка \n ~y~${parking.name}`, new mp.Vector3(parking.x, parking.y, parking.z + 1.5),
-        {
-            los: false,
-            font: 0,
-            drawDistance: 10,
-        });
+        let label = mp.labels.new(`Парковка \n ~y~${parking.name}\n~g~$2 ~w~в час`, new mp.Vector3(parking.x, parking.y, parking.z + 1.6),
+            {
+                los: false,
+                font: 0,
+                drawDistance: 10,
+            });
         label.isParking = true;
         label.parkingId = parking.id;
     },
@@ -60,14 +63,19 @@ module.exports = {
         parkingVehicles.push(veh);
     },
     spawnParkingVehicle(player, parkingId) {
+        
         for (var i = 0; i < parkingVehicles.length; i++) {
             if ((parkingVehicles[i].owner == player.character.id) && (parkingId == parkingVehicles[i].parkingId)) {
 
                 let index = this.findParkingIndexById(parkingVehicles[i].parkingId);
+                // TODO Проверки на деньги и снятие денег
+                player.call('chat.message.push', [`!{#80c102} Вы забрали транспорт с парковки за !{#009eec}$${parkingVehicles[i].parkingHours*PARKING_PRICE}`]);
+                player.call('notifications.push.success', ["Вы забрали т/с с парковки", "Успешно"]);
                 parkingVehicles[i].x = parkings[index].carX;
                 parkingVehicles[i].y = parkings[index].carY;
                 parkingVehicles[i].z = parkings[index].carZ;
                 parkingVehicles[i].h = parkings[index].carH;
+                parkingVehicles[i].parkingHours = 0;
                 if (!parkingVehicles[i].sqlId) {
                     vehicles.spawnVehicle(parkingVehicles[i], 0);
                 } else {
@@ -103,5 +111,60 @@ module.exports = {
     addNewParking(parking) {
         parkings.push(parking);
         this.createParking(parking);
+    },
+    startParkingHoursUpdater() {
+        setInterval(() => {
+            try {
+                this.parkingHoursUpdater();
+                console.log('[PARKINGS] Обновление платных часов у парковок');
+            } catch (err) {
+                console.log(err);
+            }
+        }, 60*60*1000);
+    },
+    async parkingHoursUpdater() {
+        let data = await db.Models.Vehicle.findAll({
+            where: {
+                key: "private",
+                isOnParking: 1
+            }
+        });
+        data.forEach((current) => {
+            current.update({
+                parkingHours: data[0].parkingHours + 1,
+            });
+        })
+        parkingVehicles.forEach((veh) => {
+            veh.parkingHours = veh.parkingHours + 1;
+        });
+    },
+    savePlayerParkingVehicles(player) {
+        console.log(player.character.id);
+        mp.vehicles.forEach((current) => {
+            console.log("key" + current.key);
+            console.log("owner" + current.owner);
+            console.log(current.key == "private");
+            console.log(current.owner == player.character.id);
+            if (current.key == "private" && current.owner == player.character.id) {
+                if (current.isOnParking) {
+                    console.log("нашли");
+                    current.db.update({
+                        parkingId: this.getClosestParkingId(player),
+                        parkingHours: 0
+                    });
+                }
+            }
+        });
+        parkingVehicles.forEach((current) => {
+            if (current.db) {
+                current.db.update({
+                    parkingHours: current.parkingHours
+                });
+            } else {
+                current.update({
+                    parkingHours: current.parkingHours
+                });
+            }
+        });
     }
 }

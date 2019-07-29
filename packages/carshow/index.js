@@ -22,6 +22,17 @@ module.exports = {
                 x: dbCarShow[i].x,
                 y: dbCarShow[i].y,
                 z: dbCarShow[i].z,
+                cameraX: dbCarShow[i].cameraX,
+                cameraY: dbCarShow[i].cameraY,
+                cameraZ: dbCarShow[i].cameraZ,
+                toX: dbCarShow[i].toX,
+                toY: dbCarShow[i].toY,
+                toZ: dbCarShow[i].toZ,
+                toH: dbCarShow[i].toH,
+                returnX: dbCarShow[i].returnX,
+                returnY: dbCarShow[i].returnY,
+                returnZ: dbCarShow[i].returnZ,
+                returnH: dbCarShow[i].returnH,
                 blipId: dbCarShow[i].blipId,
                 blipColor: dbCarShow[i].blipColor
             });
@@ -42,13 +53,23 @@ module.exports = {
             {
                 direction: new mp.Vector3(carShow.x, carShow.y, carShow.z),
                 rotation: 0,
-                color: [255, 255, 255, 255],
+                color: [255, 255, 125, 128],
                 visible: true,
                 dimension: 0
             });
         let shape = mp.colshapes.newSphere(carShow.x, carShow.y, carShow.z, 2);
         shape.isCarShow = true;
         shape.carShowId = carShow.id;
+        
+        let shortName = carShow.name.split(' ')[0];
+        let label = mp.labels.new(`${shortName}`, new mp.Vector3(carShow.x, carShow.y, carShow.z + 1.5),
+        {
+            los: false,
+            font: 0,
+            drawDistance: 10,
+        });
+        label.isCarShow = true;
+        label.carShowId = carShow.id;
     },
     async loadCarListsFromDB() {
         dbCarList = await db.Models.CarList.findAll();
@@ -123,7 +144,8 @@ module.exports = {
             }
         }
     },
-    async buyCarFromCarList(player, carId) {
+    async buyCarFromCarList(player, carId, primaryColor, secondaryColor) {
+        console.log(carId);
         for (var i = 0; i < carList.length; i++) {
             if (carList[i].sqlId == carId) {
                 // проверки на деньги и т д
@@ -133,8 +155,8 @@ module.exports = {
                         key: "private",
                         owner: player.character.id,
                         modelName: carList[i].vehiclePropertyModel,
-                        color1: 0,
-                        color2: 0,
+                        color1: primaryColor,
+                        color2: secondaryColor,
                         x: 0,
                         y: 0,
                         z: 0,
@@ -168,6 +190,13 @@ module.exports = {
                     console.log(err);
                     player.call('carshow.car.buy.ans', [2]);
                 }
+            }
+        }
+    },
+    getCarShowInfoById(sqlId) {
+        for (var i = 0; i < carShow.length; i++) {
+            if (carShow[i].sqlId == sqlId) {
+                return carShow[i];
             }
         }
     }

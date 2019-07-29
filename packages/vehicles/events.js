@@ -15,20 +15,27 @@ module.exports = {
         player.call('chat.message.push', [`!{#71a0ff} name ${vehicle.properties.name}`]);
         player.call('chat.message.push', [`!{#71a0ff} defaultCons ${vehicle.properties.defaultConsumption}`]);
         player.call('chat.message.push', [`!{#71a0ff} license ${vehicle.properties.license}`]);
+        player.call('chat.message.push', [`!{#71a0ff} parkingHours ${vehicle.parkingHours}`]);
 
-        if ((vehicle.license != 0) && vehicle.license != player.license) {
-            player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);
-            player.removeFromVehicle();
+
+        if (vehicle.key == 'market') {
+            player.call('chat.message.push', [`!{#f494ff} [MARKET INFO]`]);
+            player.call('chat.message.push', [`!{#f494ff} Пробег ${vehicle.mileage}`]);
+            player.call('chat.message.push', [`!{#f494ff} Название ${vehicle.properties.name}`]);
         }
+
+        // if ((vehicle.license != 0) && vehicle.license != player.license) {
+        //     player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);
+        //     player.removeFromVehicle();
+        // }
 
         if (!vehicle.engine && seat == -1) {
-            //player.call('chat.message.push', [`!{#adff9e} Нажмите 2, чтобы завести транспортное средство`]);
             player.call('prompt.showByName', ['vehicle_engine']);
         }
-        // TEMP
         if (seat == -1) {
             player.call('vehicles.speedometer.show', [true]);
             player.call('vehicles.speedometer.max.update', [vehicle.properties.maxFuel]);
+            player.call('vehicles.speedometer.sync');
             player.indicatorsUpdateTimer = setInterval(() => {
                 try {
                     player.call('vehicles.speedometer.fuel.update', [vehicle.fuel]);
@@ -37,7 +44,6 @@ module.exports = {
                 }
             }, 1000);
         }
-
         player.call('vehicles.mileage.start', [vehicle.mileage]);
     },
     "playerQuit": (player) => {
@@ -60,6 +66,7 @@ module.exports = {
     },
     "vehicles.engine.toggle": (player) => { /// Включение/выключение двигателя
         if (!player.vehicle) return;
+        if (player.vehicle.key == "market") return;
         if (player.vehicle.fuel <= 0) return player.call('notifications.push.error', ['Нет топлива', 'Транспорт']);
         if (player.vehicle.engine == true) {
             player.vehicle.engine = false;
@@ -69,6 +76,7 @@ module.exports = {
             player.vehicle.engine = true;
             player.call('vehicles.engine.toggle', [true]);
             player.vehicle.setVariable("engine", true);
+            player.call('prompt.hide');
         }
     },
     "vehicles.mileage.add": (player, value) => {

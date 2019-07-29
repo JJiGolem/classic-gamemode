@@ -9,6 +9,7 @@ mp.events.add('hud.load', () => {
   mp.events.call('hud.enable', true);
 
   mp.keys.bind(0x74, true, function () { /// Включение/отключение худа на F5
+    if (mp.busy.list.includes("carshow")) return;
     if (hudState) {
       mp.events.call('hud.enable', false);
       mp.game.ui.displayRadar(false);
@@ -42,7 +43,9 @@ mp.events.add("hud.tick", () => {
   });
 });
 
-var hudUpdateTimer = setInterval(() => { mp.events.call('hud.tick') }, 1000);
+var hudUpdateTimer = setInterval(() => {
+  mp.events.call('hud.tick');
+}, 1000);
 
 mp.events.add('render', () => {
   mp.game.ui.hideHudComponentThisFrame(1);
