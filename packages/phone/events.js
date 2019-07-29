@@ -58,14 +58,12 @@ module.exports = {
     /// Начало звонка игроку
     'phone.call.ask': (player, number) => {
         if (player.phone == null) return;
-        console.log("me " + player.isTalking);
         if (player.isTalking) return player.call('phone.call.start.ans', [2]);
         if (!phone.isExists(number)) return player.call('phone.call.start.ans', [1]);
 
         for (let i = 0; i < mp.players.length; i++) {
             if (mp.players[i].phone == null) continue;
             if (mp.players[i].phone.number != number) continue;
-            console.log("another " + mp.players[i].isTalking);
             if (mp.players[i].isTalking) return player.call('phone.call.start.ans', [2]);
             player.isTalking = true;
             return mp.players[i].call('phone.call.in', [player.phone.number, player.id]);
@@ -138,7 +136,7 @@ module.exports = {
         if (player.phone.number == number) return;
         for (let i = 0; i < mp.players.length; i++) {
             if (player.id == i) continue;
-            if (player.phone == null) continue;
+            if (mp.players.at(i).phone == null) continue;
             if (mp.players.at(i).phone.number == number) {
                 index = mp.players.at(i).phone.PhoneDialogs.findIndex( x => x.number == player.phone.number);
                 if (index == -1) {
@@ -151,7 +149,7 @@ module.exports = {
                     mp.players.at(i).phone.PhoneDialogs.push(result);
                 }
                 else {
-                    let newMessage = db.Models.PhoneMessage.build({phoneDialogId: mp.players.at(i).phone.PhoneDialogs[index].id, isMine: true, text: message, isRead: true, date: Date.now()});
+                    let newMessage = db.Models.PhoneMessage.build({phoneDialogId: mp.players.at(i).phone.PhoneDialogs[index].id, isMine: false, text: message, isRead: false, date: Date.now()});
                     let result = await newMessage.save();
                     mp.players.at(i).phone.PhoneDialogs[index].PhoneMessages.push(result);
                 }
