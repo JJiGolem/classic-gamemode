@@ -81,10 +81,8 @@ mp.events.add('phone.call.in.ans', function (ans) {
 });
 
 mp.events.add("playerDeath", (player) => {
-	if (player.remoteId == callerId) {
-        mp.callCEFR('phone.call.end', []);
-    }
     if (callerId != -1 && player.remoteId == mp.players.local.remoteId) {
+        mp.events.call('phone.call.end');
         mp.callCEFR('phone.call.end', []);
         if (mp.busy.includes('phone')) {
             mp.gui.cursor.show(false, false);
@@ -96,6 +94,8 @@ mp.events.add("playerDeath", (player) => {
 mp.events.add("playerQuit", (player) => {
 	if (player.remoteId == callerId) {
         mp.callCEFR('phone.call.end', []);
+        callerId = -1;
+        mp.events.call('phone.call.end');
     }
 });
 
