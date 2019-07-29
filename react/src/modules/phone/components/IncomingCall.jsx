@@ -40,6 +40,8 @@ class IncomingCall extends Component {
 
         const { info, number } = this.props;
 
+        let contact = info.contacts.find(con => con.number === number);
+
         return (
             <Fragment>
                 <div className="incoming_call-phone-react">
@@ -53,7 +55,7 @@ class IncomingCall extends Component {
                             </svg>
                         </div>
                     </div>
-                    <div className='number_filed-phone-react'>{ number }</div>
+                    <div className='number_filed-phone-react'>{ contact ? contact.name : number }</div>
 
                     <div className='panel_call_mess_contact-phone-react' style={{ marginTop: '-5%' }}>
                         <div className='button_panel_contact-phone-react' style={{ height: '40%', background: '#31e15f' }} onClick={this.startCall}>

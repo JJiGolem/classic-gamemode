@@ -13,10 +13,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: false
         },
-        name: {
-            type: DataTypes.STRING(50),
-            allowNull: true
-        },
         number: {
             type: DataTypes.STRING(16),
             allowNull: false
