@@ -17,6 +17,13 @@ module.exports = {
         player.call('chat.message.push', [`!{#71a0ff} license ${vehicle.properties.license}`]);
         player.call('chat.message.push', [`!{#71a0ff} parkingHours ${vehicle.parkingHours}`]);
 
+
+        if (vehicle.key == 'market') {
+            player.call('chat.message.push', [`!{#f494ff} [MARKET INFO]`]);
+            player.call('chat.message.push', [`!{#f494ff} Пробег ${vehicle.mileage}`]);
+            player.call('chat.message.push', [`!{#f494ff} Название ${vehicle.properties.name}`]);
+        }
+
         // if ((vehicle.license != 0) && vehicle.license != player.license) {
         //     player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);
         //     player.removeFromVehicle();
@@ -59,6 +66,7 @@ module.exports = {
     },
     "vehicles.engine.toggle": (player) => { /// Включение/выключение двигателя
         if (!player.vehicle) return;
+        if (player.vehicle.key == "market") return;
         if (player.vehicle.fuel <= 0) return player.call('notifications.push.error', ['Нет топлива', 'Транспорт']);
         if (player.vehicle.engine == true) {
             player.vehicle.engine = false;

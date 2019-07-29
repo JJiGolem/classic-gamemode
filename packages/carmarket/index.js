@@ -38,7 +38,6 @@ module.exports = {
         shape.pos = new mp.Vector3(carMarket.x, carMarket.y, carMarket.z);
         shape.isCarMarket = true;
 
-
         let label = mp.labels.new(`Продажа транспорта`, new mp.Vector3(carMarket.x, carMarket.y, carMarket.z + 0.5),
             {
                 los: false,
@@ -73,14 +72,15 @@ module.exports = {
             }
         });
 
-        for (var i = 0; i < dbMarket.length; i++) { 
-            if (i>= marketCapacity) return;
+        for (var i = 0; i < dbMarket.length; i++) {
+            if (i >= marketCapacity) return;
             this.addMarketVehicle(dbMarket[i]);
         }
     },
     addMarketVehicle(veh) {
         for (let i = 0; i < marketSpots.length; i++) {
             if (marketSpots[i].isFree) {
+                console.log('Нашли свободный спот, ставим на него')
                 marketSpots[i].vehicle = veh;
                 veh.x = marketSpots[i].x;
                 veh.y = marketSpots[i].y;
@@ -96,6 +96,29 @@ module.exports = {
                 return;
             }
         }
+        console.log('Свободных спотов нет');
+        let spotIndex = this.getRandomCarSpot();
+        console.log(`Выбрали рандомный спот ${spotIndex}`);
+        if (marketSpots[spotIndex].vehicle.db) {
+            marketSpots[spotIndex].vehicle.db.destroy();
+            this.destroyMarketVehicleById(marketSpots[spotIndex].vehicle.sqlId);
+        } else {
+            marketSpots[spotIndex].vehicle.destroy();
+            this.destroyMarketVehicleById(marketSpots[spotIndex].vehicle.id);
+        }
+        
+        marketSpots[spotIndex].vehicle = veh;
+            veh.x = marketSpots[spotIndex].x;
+            veh.y = marketSpots[spotIndex].y;
+            veh.z = marketSpots[spotIndex].z;
+            veh.h = marketSpots[spotIndex].h;
+
+            if (!veh.sqlId) {
+                vehicles.spawnVehicle(veh, 0);
+            } else {
+                vehicles.spawnVehicle(veh, 1);
+            }
+            return;
     },
     isPlayerInCarMarketColshape(player) {
         if (shape.isPointWithin(player.position)) {
@@ -114,5 +137,15 @@ module.exports = {
             clearInterval(vehicle.fuelTimer);
         }
         vehicle.destroy();
+    },
+    getRandomCarSpot() {
+        return Math.floor(Math.random() * (marketCapacity));
+    },
+    destroyMarketVehicleById(id) {
+        mp.vehicles.forEach((current) => {
+            if (current.sqlId == id) {
+                current.destroy();
+            }
+        });
     }
 }
