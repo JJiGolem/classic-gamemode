@@ -1,6 +1,7 @@
 "use strict";
 
 let callerId = -1;
+let isOpened = false;
 let isBinding = false;
 
 mp.events.add('phone.load', function (phoneInfo, phoneDialogs) {
@@ -86,7 +87,9 @@ mp.events.add("playerDeath", (player) => {
     }
     if (callerId != -1 && player.remoteId == mp.players.local.remoteId) {
         mp.callCEFR('phone.call.end', []);
-        mp.callCEFR('phone.show', [false]); 
+        if (mp.busy.includes('phone')) {
+            mp.callCEFR('phone.show', [false]); 
+        }
     }
 });
 
