@@ -2,7 +2,6 @@
 
 let callerId = -1;
 let isOpened = false;
-let isBinding = false;
 
 mp.events.add('phone.load', function (phoneInfo, phoneDialogs) {
     mp.callCEFR('phone.load', [phoneInfo]);
@@ -88,6 +87,7 @@ mp.events.add("playerDeath", (player) => {
     if (callerId != -1 && player.remoteId == mp.players.local.remoteId) {
         mp.callCEFR('phone.call.end', []);
         if (mp.busy.includes('phone')) {
+            mp.gui.cursor.show(false, false);
             mp.callCEFR('phone.show', [false]); 
         }
     }
@@ -146,7 +146,6 @@ let bindButtons = (state) => {
 let showPhone = () => {		
     if (mp.busy.includes()) return;
     if (!mp.busy.add('phone')) return;
-
     mp.callCEFR('phone.show', [true]);
     mp.gui.cursor.show(true, true);
 }
