@@ -139,6 +139,8 @@ module.exports = {
         });
     },
     savePlayerParkingVehicles(player) {
+        if(!player.character.id) return;
+        
         console.log(player.character.id);
         mp.vehicles.forEach((current) => {
             console.log("key" + current.key);

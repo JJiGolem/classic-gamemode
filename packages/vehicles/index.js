@@ -31,7 +31,7 @@ module.exports = {
         vehicle.parkingHours = veh.parkingHours;
         vehicle.isOnParking = veh.isOnParking;
         vehicle.lastMileage = veh.mileage; /// Последний сохраненный пробег
-        
+        vehicle.marketSpot = veh.marketSpot;
         vehicle.numberPlate = "CLASSIC";
  
         vehicle.setVariable("engine", false);

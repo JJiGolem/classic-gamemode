@@ -18,12 +18,6 @@ module.exports = {
         player.call('chat.message.push', [`!{#71a0ff} parkingHours ${vehicle.parkingHours}`]);
 
 
-        if (vehicle.key == 'market') {
-            player.call('chat.message.push', [`!{#f494ff} [MARKET INFO]`]);
-            player.call('chat.message.push', [`!{#f494ff} Пробег ${vehicle.mileage}`]);
-            player.call('chat.message.push', [`!{#f494ff} Название ${vehicle.properties.name}`]);
-        }
-
         // if ((vehicle.license != 0) && vehicle.license != player.license) {
         //     player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);
         //     player.removeFromVehicle();
@@ -60,6 +54,7 @@ module.exports = {
         }
         player.call('vehicles.indicators.show', [false]);
         player.call('vehicles.speedometer.show', [false]);
+        player.call('prompt.hide');
     },
     "playerStartExitVehicle": (player) => {
         if (player.vehicle.engine) player.vehicle.engine = true;
