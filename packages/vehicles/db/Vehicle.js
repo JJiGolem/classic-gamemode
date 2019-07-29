@@ -16,6 +16,11 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		modelName: {
 			type: DataTypes.STRING(128),
+			defaultValue: "NOTREG",
+			allowNull: false
+		},
+		plate: {
+			type: DataTypes.STRING(128),
 			allowNull: false
 		},
 		color1: {

@@ -151,6 +151,8 @@ module.exports = {
                 // проверки на деньги и т д
                 if (carList[i].count < 1) return player.call('carshow.car.buy.ans', [0]);
                 try {
+                    var carPlate = vehicles.generateVehiclePlate();
+
                     var data = await db.Models.Vehicle.create({
                         key: "private",
                         owner: player.character.id,
@@ -161,7 +163,8 @@ module.exports = {
                         y: 0,
                         z: 0,
                         h: 0,
-                        parkingId: parkings.getClosestParkingId(player)
+                        parkingId: parkings.getClosestParkingId(player),
+                        plate: carPlate
                     });
                     var veh = {
                         key: "private",
@@ -175,7 +178,8 @@ module.exports = {
                         h: 0,
                         parkingId: parkings.getClosestParkingId(player),
                         fuel: 50,
-                        mileage: 0
+                        mileage: 0,
+                        plate: carPlate
                     }
                     veh.sqlId = data.id;
                     veh.db = data;
