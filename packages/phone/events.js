@@ -10,7 +10,7 @@ module.exports = {
     "init": () => {
         phone.init();
     },
-    'playerJoin': player => {
+    'player.joined': player => {
         player.isTalking = false;
     },
     'playerQuit': player => {
