@@ -23,6 +23,7 @@
     <link rel="stylesheet" type="text/css" href="css/driverLicense.css" />
     <link rel="stylesheet" type="text/css" href="css/speedometer.css" />
     <link rel="stylesheet" type="text/css" href="css/interactionMenu.css" />
+    <link rel="stylesheet" type="text/css" href="css/inventory.css" />
     <link rel="stylesheet" type="text/css" href="build/css/styles.css">
 
     <script src="js/main.js"></script>
@@ -363,7 +364,7 @@
 
     <div v-cloak id="speedometer" :class="{ noActive: !isActive }" v-if="show">
         <svg class="scale" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="766.625" height="387.906" viewBox="0 0 766.625 387.906">
-            <path v-for="path in svgScalePaths" :class="{ fill: path.isFill }" :d="path.d" transform="translate(-116.688 -293.5)"/>
+            <path v-for="path in svgScalePaths" :class="{ fill: path.isFill }" :d="path.d" transform="translate(-116.688 -293.5)" />
         </svg>
         <div class="content">
             <div class="speed">
@@ -372,16 +373,16 @@
             </div>
             <div class="headlights">
                 <svg :class=" { white: (headlights && headlights != 3), yellow: (headlights == 3) }" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 492.031 492.031" width="512" height="512">
-                    <path d="M157.551,88.436c-87.313,0-157.881,70.853-157.55,158.2c0.33,86.55,71.85,156.96,159.44,156.96h73.83   c39.62-100.7,39.62-214.46,0-315.16H157.551z"/>
-        	       <path d="M265.371,88.436c18.48,50.56,27.83,103.46,27.83,157.58s-9.35,107.02-27.83,157.58h36.339   c6.278,0,11.922-3.898,14.075-9.795c34.668-94.968,34.668-200.602,0-295.57c-2.153-5.897-7.797-9.795-14.075-9.795H265.371z"/>
+                    <path d="M157.551,88.436c-87.313,0-157.881,70.853-157.55,158.2c0.33,86.55,71.85,156.96,159.44,156.96h73.83   c39.62-100.7,39.62-214.46,0-315.16H157.551z" />
+                    <path d="M265.371,88.436c18.48,50.56,27.83,103.46,27.83,157.58s-9.35,107.02-27.83,157.58h36.339   c6.278,0,11.922-3.898,14.075-9.795c34.668-94.968,34.668-200.602,0-295.57c-2.153-5.897-7.797-9.795-14.075-9.795H265.371z" />
 
-                   <path v-if="headlights > 1" v-for="path in svgLightPaths" :d="path.d" :style="(headlights == 2) ? path : ''"/>
-               </svg>
+                    <path v-if="headlights > 1" v-for="path in svgLightPaths" :d="path.d" :style="(headlights == 2) ? path : ''" />
+                </svg>
             </div>
             <div class="lock">
                 <svg :class="svgLockPaths[lock].class" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 490.1 490.1">
-                    <path :d="svgLockPaths[lock].d"/>
-                    <path d="M245.05,416.3c11.4,0,20.8-9.3,20.8-20.8v-54c0-11.4-9.3-20.8-20.8-20.8c-11.5,0-20.8,9.3-20.8,20.8v54C224.25,407,233.65,416.3,245.05,416.3z"/>
+                    <path :d="svgLockPaths[lock].d" />
+                    <path d="M245.05,416.3c11.4,0,20.8-9.3,20.8-20.8v-54c0-11.4-9.3-20.8-20.8-20.8c-11.5,0-20.8,9.3-20.8,20.8v54C224.25,407,233.65,416.3,245.05,416.3z" />
                 </svg>
             </div>
             <div class="fuel">
@@ -392,29 +393,29 @@
                             <stop :offset="perFuel + '%'" style="stop-color: #e1a030"></stop>
                         </linearGradient>
                     </defs>
-                    <path fill="url(#fuel-gradient)" :d="svgFuelPath"/>
+                    <path fill="url(#fuel-gradient)" :d="svgFuelPath" />
                 </svg>
             </div>
             <div class="fuel-unit">{{ fuel }} л</div>
             <div class="danger">
                 <svg :class="{ red: danger }" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512">
-                    <path :d="svgDangerPath"/>
+                    <path :d="svgDangerPath" />
                 </svg>
             </div>
             <div class="left-arrow">
                 <svg :class="{ green: leftArrow }" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="0.736in" height="0.5in" viewBox="0 0 51.657 35.688">
-                    <path d="M52.581,9.487 L25.498,9.487 L25.498,0.248 L0.933,18.099 L25.498,35.949 L25.498,26.710 L52.581,26.710 L52.581,9.487 Z"/>
+                    <path d="M52.581,9.487 L25.498,9.487 L25.498,0.248 L0.933,18.099 L25.498,35.949 L25.498,26.710 L52.581,26.710 L52.581,9.487 Z" />
                 </svg>
             </div>
             <div class="right-arrow">
                 <svg :class="{ green: rightArrow }" xmlns="http://www.w3.org/2000/svg" width="51.657" height="35.688" viewBox="0 0 51.657 35.688">
-                  <path d="M683.418,679.71H710.5v9.239l24.565-17.85L710.5,653.248v9.24H683.418V679.71Z" transform="translate(-683.406 -653.25)"/>
+                    <path d="M683.418,679.71H710.5v9.239l24.565-17.85L710.5,653.248v9.24H683.418V679.71Z" transform="translate(-683.406 -653.25)" />
                 </svg>
             </div>
             <div class="bottom-panel">
                 <div class="road-perspective">
                     <svg class="white" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 34.2 34.2">
-                        <path d="M25.243,0h-5.869l0.332,5.4h-4.984L15.096,0H9.228L0.725,34.2h12l0.607-8.774h7.604l0.539,8.774h12L25.243,0zM13.675,20.475l0.702-10.125h5.631l0.621,10.125H13.675z"/>
+                        <path d="M25.243,0h-5.869l0.332,5.4h-4.984L15.096,0H9.228L0.725,34.2h12l0.607-8.774h7.604l0.539,8.774h12L25.243,0zM13.675,20.475l0.702-10.125h5.631l0.621,10.125H13.675z" />
                     </svg>
                 </div>
                 <div class="mileage">{{ mileage }} км</div>
@@ -428,6 +429,161 @@
             <div class="icon"><img :src="imgSrc(index)" />
             </div>
             <div class="text">{{ item.text }}</div>
+        </div>
+    </div>
+
+    <div id="inventory" v-show="show">
+        <div class="environment">
+            <div class="container" v-for="place in environment" v-bind:key="place.header">
+                <div class="header" @click="place.showPockets = !place.showPockets" :class="{hidden: !place.showPockets}">
+                    <div class="title">{{ place.header }} {{ (debug)? place.sqlId : "" }}</div>
+                    <div>{{ getPlaceWeight(place).toFixed(1) }} кг</div>
+                </div>
+                <div class="pockets" v-show="place.showPockets">
+                    <div class="items" v-for="pocket in place.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
+                        <div class="column" v-for="n in pocket.cols * pocket.rows" :key="n-1" :class="columnClass(n-1, pocket, place)" @mouseenter="columnMouseHandler(place, pocket, n-1, $event)" @mouseleave="columnMouseHandler(place, pocket, n-1, $event)">
+                            <div class="item" v-if="pocket.items[n-1]" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
+                                @contextmenu="itemMouseHandler(pocket.items[n-1], $event)" @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1].itemId)" :class="{dragging: pocket.items[n-1] == itemDrag.item}">
+                                <div class="count" v-if="pocket.items[n-1].params.count">{{ pocket.items[n-1].params.count }}</div>
+                                <div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%'}"></div>
+                                <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="empty" v-show="!environment.length">Не доступно</div>
+        </div>
+        <div class="equipment">
+            <div class="header">
+                <div class="title">Экипировка</div>
+                <!-- <img src="../img/inventory/satiety.png" /><span class="satiety">{{ satiety }}</span>% -->
+                <!-- <img src="../img/inventory/thirst.png" /><span class="thirst">{{ thirst }}</span>% -->
+                <div>Голод <span class="satiety">{{ satiety }}</span>%</div>
+                <div>Жажда <span class="thirst">{{ thirst }}</span>%</div>
+            </div>
+            <div class="body-items">
+                <div class="column" v-for="n in 13">
+                    <!-- <div class="item" v-if="equipment[n-1]" v-bind:style="{backgroundImage: 'url(' + urlItemImg(equipment[n-1].itemId) + ')'}">
+                       <div class="count" v-if="equipment[n-1].params.count">{{ equipment[n-1].params.count }}</div>
+                       <div class="health" v-if="equipment[n-1].params.health" v-bind:style="{top: 100 - equipment[n-1].params.health + '%'}"></div>
+                       <div class="sqlid" v-if="debug">#{{ equipment[n-1].sqlId }}</div>
+                   </div> -->
+                    <div class="item" v-if="equipment[n-1]" @mouseenter="itemMouseHandler(equipment[n-1], $event)" @mouseleave="itemMouseHandler(equipment[n-1], $event)" @mousemove="itemMouseHandler(equipment[n-1], $event)" @contextmenu="itemMouseHandler(equipment[n-1], $event)"
+                        @mousedown="itemMouseHandler(equipment[n-1], $event)" :class="{dragging: equipment[n-1] == itemDrag.item}">
+                        <div class="count" v-if="equipment[n-1].params.count">{{ equipment[n-1].params.count }}</div>
+                        <div class="health" v-if="equipment[n-1].params.health" v-bind:style="{top: 100 - equipment[n-1].params.health + '%'}"></div>
+                        <div class="sqlid" v-if="debug">#{{ equipment[n-1].sqlId }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="playerInventory">
+            <div class="header">
+                <div class="title">Инвентарь</div>
+                <div>Тяжесть {{ playerWeight.toFixed(1) }}%</div>
+            </div>
+            <div class="container" v-for="item in equipment" v-if="item.pockets">
+                <div class="header" @click="item.showPockets = !item.showPockets" :class="{hidden: !item.showPockets}">
+                    <div class="title">{{ item.params.name || itemsInfo[item.itemId].name }}</div>
+                    <div>{{ getPlaceWeight(item).toFixed(1) }} кг</div>
+                </div>
+                <div class="pockets" v-show="item.showPockets">
+                    <div class="items" v-for="pocket in item.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
+                        <div class="column" v-for="n in pocket.cols * pocket.rows" :key="n-1" :class="columnClass(n, pocket, item)" @mouseenter="columnMouseHandler(item, pocket, n-1, $event)" @mouseleave="columnMouseHandler(item, pocket, n-1, $event)">
+                            <div class="item" v-if="pocket.items[n-1]" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
+                                @contextmenu="itemMouseHandler(pocket.items[n-1], $event)" @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1].itemId)" :class="{dragging: pocket.items[n-1] == itemDrag.item}">
+                                <div class="count" v-if="pocket.items[n-1].params.count">{{ pocket.items[n-1].params.count }}</div>
+                                <div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%'}"></div>
+                                <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hands">
+            <div class="left-slot" v-bind:class="{busy: hands.left}">
+                <div class="item" v-if="hands.left && getItem(hands.left.sqlId)" v-bind:style="{backgroundImage: 'url(' + urlItemImg(hands.left.itemId) + ')'}">
+                    <div class="count" v-if="hands.left.params.count">{{ hands.left.params.count }}</div>
+                    <div class="health" v-if="hands.left.params.health" v-bind:style="{top: 100 - hands.left.params.health + '%'}"></div>
+                    <div class="sqlid" v-if="debug">#{{ hands.left.sqlId }}</div>
+                </div>
+                <img v-else src="img/inventory/hand.png" />
+                <span v-if="!hands.left">в левой <br />руке</span>
+            </div>
+            <div class="right-slot" v-bind:class="{busy: hands.right}">
+                <div class="item" v-if="hands.right" v-bind:style="{backgroundImage: 'url(' + urlItemImg(hands.right.itemId) + ')'}">
+                    <div class="count" v-if="hands.right.params.count">{{ hands.right.params.count }}</div>
+                    <div class="health" v-if="hands.right.params.health" v-bind:style="{top: 100 - hands.right.params.health + '%'}"></div>
+                    <div class="sqlid" v-if="debug">#{{ hands.right.sqlId }}</div>
+                </div>
+                <span v-else>в правой <br />руке</span>
+                <img v-if="!hands.right" src="img/inventory/hand.png" />
+            </div>
+        </div>
+        <div class="hotkeys">
+            <div class="key" v-for="n in 10">
+                <div class="item" v-if="hotkeys[n] && getItem(hotkeys[n].sqlId)" v-bind:style="{backgroundImage: 'url('+urlItemImg(hotkeys[n].itemId)+')'}">
+                    <span class="hotkey">{{ (n == 10)? 0 : n }}</span>
+
+                    <div class="count" v-if="hotkeys[n].params.count">{{ hotkeys[n].params.count }}</div>
+                    <div class="health" v-if="hotkeys[n].params.health" v-bind:style="{top: 100 - hotkeys[n].params.health + '%'}"></div>
+                    <div class="sqlid" v-if="debug">#{{ hotkeys[n].sqlId }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="item-desc" v-if="itemDesc.item && !itemMenu.item && !itemDrag.item" :style="{left: itemDesc.x, top: itemDesc.y}">
+            <div class="title">{{ itemsInfo[itemDesc.item.itemId].name }}</div>
+            <div class="item" v-if="itemDesc.item" :style="itemStyle(itemDesc.item.itemId)">
+                <div class="sqlid" v-if="debug">#{{ itemDesc.item.sqlId }}</div>
+                <div class="count" v-if="itemDesc.item.params.count">{{ itemDesc.item.params.count }}</div>
+                <div class="health" v-if="itemDesc.item.params.health" :style="{top: 100 - itemDesc.item.params.health + '%'}"></div>
+            </div>
+            <div class="description">{{ itemsInfo[itemDesc.item.itemId].description }}</div>
+            <div class="params">
+                <div class="param">
+                    <div class="name">Вес</div>
+                    <div class="value">{{ getItemWeight(itemDesc.item) }} кг</div>
+                </div>
+                <div class="param">
+                    <div class="name">Занимает</div>
+                    <div class="value">{{ itemsInfo[itemDesc.item.itemId].width+'x'+itemsInfo[itemDesc.item.itemId].height }} ячейки</div>
+                </div>
+                <div class="param" v-if="itemDesc.item.params.health">
+                    <div class="name">Прочность</div>
+                    <div class="value">{{ itemDesc.item.params.health}}%</div>
+                </div>
+                <div class="param" v-if="itemDesc.item.params.count">
+                    <div class="name">Количество</div>
+                    <div class="value">{{ itemDesc.item.params.count}} ед.</div>
+                </div>
+                <div class="param" v-if="itemDesc.item.pockets">
+                    <div class="name">Карманы</div>
+                    <div class="value">{{ itemDesc.item.pockets.length }} ед.</div>
+                </div>
+                <div class="param" v-if="getItemsCount(itemDesc.item)">
+                    <div class="name">Содержит</div>
+                    <div class="value">{{ getItemsCount(itemDesc.item) }} предметов</div>
+                </div>
+            </div>
+        </div>
+        <div class="item-menu" v-if="itemMenu.item && !itemDrag.item" :style="{left: itemMenu.x, top: itemMenu.y}">
+            <div class="menu-item" v-for="(value, key) in itemsInfo[itemMenu.item.itemId].menu">
+                {{ key }}
+                <div class="arrow" v-if="value.items">></div>
+            </div>
+        </div>
+        <!-- <div class="item-menu" style="left: 230px; top: 353px">
+           <div class="menu-item">Полностью</div>
+           <div class="menu-item">Для переноски</div>
+       </div> -->
+        <div class="item-drag" v-if="itemDrag.item" :style="{left: itemDrag.x, top: itemDrag.y}">
+            <div class="item" v-if="itemDrag.item" :style="itemStyle(itemDrag.item.itemId)">
+                <!-- <div class="count" v-if="itemDrag.item.params.count">{{ itemDrag.item.params.count }}</div>
+               <div class="health" v-if="itemDrag.item.params.health" :style="{top: 100 - itemDrag.item.params.health + '%'}"></div>
+               <div class="sqlid" v-if="debug">#{{ itemDrag.item.sqlId }}</div> -->
+            </div>
         </div>
     </div>
 
@@ -449,6 +605,7 @@
     <script src="js/driverLicense.js"></script>
     <script src="js/speedometer.js"></script>
     <script src="js/interactionMenu.js"></script>
+    <script src="js/inventory.js"></script>
 </body>
 
 </html>
