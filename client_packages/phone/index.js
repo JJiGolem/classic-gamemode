@@ -1,7 +1,7 @@
 "use strict";
 
 let callerId = -1;
-let isOpened = false;
+let isBinding = false;
 
 mp.events.add('phone.load', function (phoneInfo, phoneDialogs) {
     mp.callCEFR('phone.load', [phoneInfo]);
