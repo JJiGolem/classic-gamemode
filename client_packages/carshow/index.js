@@ -98,10 +98,12 @@ mp.events.add('carshow.vehicle.color', (color1, color2) => {
 });
 
 mp.events.add("carshow.car.buy", (carId) => {
+    mp.callCEFV(`loader.show = true;`);
     mp.events.callRemote('carshow.car.buy', list[currentIndex].sqlId, primary, secondary);
 });
 
 mp.events.add("carshow.car.buy.ans", (ans, carInfo) => {
+    mp.callCEFV(`loader.show = false;`);
     switch (ans) {
         case 0:
             mp.chat.debug('Автомобилей нет');

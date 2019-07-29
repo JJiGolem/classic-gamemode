@@ -71,7 +71,7 @@ mp.events.add('chat.load', () => {
     mp.callCEFR('setTimeChat', [true]);
 
     mp.keys.bind(0x54, true, function () {
-
+        mp.busy.add('chat');
         if (mp.busy.includes('carshow')) return;
         isOpen = true;
         mp.gui.cursor.show(true, true);
@@ -103,6 +103,7 @@ mp.events.add('chat.load', () => {
 mp.events.add('chat.close', () => {
     mp.gui.cursor.show(false, false);
     isOpen = false;
+    mp.busy.remove('chat');
 });
 
 mp.events.add('chat.tags.add', (tagIDs) => {

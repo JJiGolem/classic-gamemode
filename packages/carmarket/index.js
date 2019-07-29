@@ -78,7 +78,7 @@ module.exports = {
         }
     },
     addMarketVehicle(veh) {
-        for (let i = 0; i < marketSpots.length; i++) {
+        for (var i = 0; i < marketSpots.length; i++) {
             if (marketSpots[i].isFree) {
                 console.log('Нашли свободный спот, ставим на него')
                 marketSpots[i].vehicle = veh;
@@ -86,7 +86,8 @@ module.exports = {
                 veh.y = marketSpots[i].y;
                 veh.z = marketSpots[i].z;
                 veh.h = marketSpots[i].h;
-
+                veh.marketSpot = i;
+                
                 if (!veh.sqlId) {
                     vehicles.spawnVehicle(veh, 0);
                 } else {
@@ -112,6 +113,7 @@ module.exports = {
             veh.y = marketSpots[spotIndex].y;
             veh.z = marketSpots[spotIndex].z;
             veh.h = marketSpots[spotIndex].h;
+            veh.marketSpot = spotIndex;
 
             if (!veh.sqlId) {
                 vehicles.spawnVehicle(veh, 0);
@@ -130,7 +132,9 @@ module.exports = {
     sellCar(vehicle) {
         vehicle.key = "market";
         vehicle.db.update({
-            key: "market"
+            key: "market",
+            isOnParking: 0,
+            parkingHours: 0
         });
         this.addMarketVehicle(vehicle);
         if (vehicle.fuelTimer) {
@@ -147,5 +151,8 @@ module.exports = {
                 current.destroy();
             }
         });
+    },
+    setMarketSpotFree(spotId) {
+        marketSpots[spotId].isFree = true;
     }
 }

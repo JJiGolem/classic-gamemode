@@ -98,8 +98,8 @@ var selectMenu = new Vue({
                     }
                 }
             },
-            "carMarketMenu": {
-                name: "carmarket",
+            "carMarketSellMenu": {
+                name: "carmarketsell",
                 header: "Авторынок", 
                 items: [{
                     text: "Продать транспорт", 
@@ -121,14 +121,45 @@ var selectMenu = new Vue({
                         itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
                         valueIndex: item.i,
                     };
-                    mp.trigger(`chat.message.push`, `!{#ffffff} Событие: ${eventName}`);
-                    mp.trigger(`chat.message.push`, `!{#ffffff} ${JSON.stringify(e)}`);
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Продать транспорт') {
                             mp.trigger(`carmarket.car.sell`);
                         }
                         if (e.itemName == 'Отмена') {
-                            mp.trigger(`carmarket.menu.close`);    
+                            mp.trigger(`carmarket.sellmenu.close`);    
+                    }
+                    }
+                }
+            },
+            "carMarketBuyMenu": {
+                name: "carmarketbuy",
+                header: "Авторынок", 
+                items: [{
+                    text: "Купить транспорт", 
+                    i: 0, 
+                },
+                {
+                    text: "Отмена",
+                    i: 0,
+                }
+            ],
+                i: 0, 
+                j: 0, 
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name, 
+                        itemName: item.text,
+                        itemIndex: this.i, 
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Купить транспорт') {
+                            mp.trigger(`carmarket.car.buy`);
+                        }
+                        if (e.itemName == 'Отмена') {
+                            mp.trigger(`carmarket.buymenu.close`);    
                     }
                     }
                 }
