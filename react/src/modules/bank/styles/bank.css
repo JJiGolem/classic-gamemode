@@ -1,0 +1,17 @@
+.main-form-bank {
+    position: absolute;
+    font-family: bank-font;
+    width: 50vw;
+    height: 30vw;
+    background: white;
+    border-radius: 15px;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    max-width: 1500px;
+    max-height: 1000px;
+    min-width: 300px;
+    min-height: 150px;
+}

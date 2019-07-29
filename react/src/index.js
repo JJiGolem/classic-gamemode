@@ -16,6 +16,6 @@ mp.events = myEventEmmiter;
 ReactDOM.render(
     <Provider store={store}>
         <MainContainer />
-    </Provider> ,
+    </Provider>,
     document.getElementById('root')
 );

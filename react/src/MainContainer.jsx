@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import Chat from './modules/chat';
 import Phone from "./modules/phone";
 import House from './modules/house';
+import Business from "./modules/business";
+import Bank from './modules/bank';
 
 class MainContainer extends Component {
     constructor(props) {
@@ -17,8 +19,10 @@ class MainContainer extends Component {
         return (
             <Fragment>
                 <Chat />
-                { forms.phone && <Phone /> }
+                { <div style={{ display: !forms.phone && 'none'}}><Phone /></div>}
                 { forms.house && <House /> }
+                { forms.business && <Business /> }
+                { forms.bank && <Bank /> }
             </Fragment>
         );
     }

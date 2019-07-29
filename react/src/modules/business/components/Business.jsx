@@ -1,12 +1,11 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
-import ReactCSSTransitionGroup from 'react-addons-transition-group';
 
-import '../styles/house.css';
+import '../styles/business.css';
 
-import {setAnswerHouse, setHouseFormBlock, setLoadingHouse, showHouse} from "../actions/action.house";
+import {setAnswerBusiness, setBusinessFormBlock, setLoadingBusiness, showBusiness} from "../actions/action.business";
 
-class House extends Component {
+class Business extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -19,7 +18,7 @@ class House extends Component {
         this.getForm = this.getForm.bind(this);
         this.getButtons = this.getButtons.bind(this);
         this.startBuy = this.startBuy.bind(this);
-        this.lookHouse = this.lookHouse.bind(this);
+        this.lookBusiness = this.lookBusiness.bind(this);
     }
 
     getLoader() {
@@ -31,9 +30,9 @@ class House extends Component {
     }
 
     startBuy() {
-        const { house, setLoading, setAnswer, blockForm } = this.props;
+        const { business, setLoading, setAnswer } = this.props;
 
-        if (!house.isLoading) {
+        if (!business.isLoading) {
             setLoading(true);
             //blockForm(true);
             setTimeout(() => {
@@ -42,20 +41,20 @@ class House extends Component {
         }
     }
 
-    lookHouse() {
+    lookBusiness() {
 
     }
 
-    showEnterMenu(house) {
+    showEnterMenu(business) {
         return (
             <div className='message_back-house-react'>
-                { this.getButton('enterHouse') }
-                { house.garage && this.getButton('enterGarage') }
+                { this.getButton('enterBusiness') }
+                { business.garage && this.getButton('enterGarage') }
             </div>
         )
     }
 
-    showActionsMenu(house) {
+    showActionsMenu(business) {
 
     }
 
@@ -89,7 +88,7 @@ class House extends Component {
             case 'look':
                 return (
                     <div className='button-house-react'
-                         onClick={this.lookHouse}
+                         onClick={this.lookBusiness}
                          onMouseOver={() => this.setState({ colorLook: 'black' })}
                          onMouseOut={() => this.setState({ colorLook: '#e1c631' })}
                     >
@@ -121,7 +120,7 @@ class House extends Component {
                     </div>
                 )
 
-            case 'enterHouse':
+            case 'enterBusiness':
                 return (
                     <div className='button-house-react' onClick={() => this.setState({ isEnterMenu: false })}>
 
@@ -140,9 +139,9 @@ class House extends Component {
     }
 
     getButtons() {
-        const { house } = this.props;
+        const { business } = this.props;
 
-        if (house.owner) {
+        if (business.owner) {
             return (
                 <Fragment>
                     { this.getButton('enter') }
@@ -160,50 +159,50 @@ class House extends Component {
     }
 
     exit() {
-        const { showHouse, house } = this.props;
+        const { showBusiness, business } = this.props;
 
-        if (!house.isLoading) {
-            showHouse(false);
+        if (!business.isLoading) {
+            showBusiness(false);
         }
     }
 
     getForm() {
-        const { house, setLoading } = this.props;
+        const { business, setLoading } = this.props;
 
         return (
             <Fragment>
-                <div style={{ filter: house.isLoading || house.answer ? 'blur(2px)' : 'blur(0px)' }}>
+                <div style={{ filter: business.isLoading || business.answer ? 'blur(2px)' : 'blur(0px)' }}>
                     <div className='header-house-react'>
-                        <span>Дом №{ house.name }</span>
+                        <span>{ business.name }</span>
                         <div className='exitHouse' name='exit' onClick={this.exit.bind(this)}></div>
                     </div>
 
                     <div className='main_page-house-react'>
                         <div className='label-house-react'>Общая информация</div>
                         {
-                            !house.owner &&
+                            !business.owner &&
                             <div className='block_price-house-react'>
                                 <span>Цена: </span>
-                                <span style={{ color: 'green', marginLeft: '5%' }}>${ house.price }</span>
+                                <span style={{ color: 'green', marginLeft: '5%' }}>${ business.price }</span>
                             </div>
                         }
 
                         <div className='info-house-react'>
-                            <div>Район: <span>{ house.area }</span></div>
-                            <div>Класс: <span>{ house.class }</span></div>
-                            <div>Количество комнат: <span>{ house.numRooms }</span></div>
-                            <div>Гараж: { house.garage
+                            <div>Район: <span>{ business.area }</span></div>
+                            <div>Класс: <span>{ business.class }</span></div>
+                            <div>Количество комнат: <span>{ business.numRooms }</span></div>
+                            <div>Гараж: { business.garage
                                 ? <span style={{ color: 'green' }}>есть</span>
                                 : <span style={{ color: 'red' }}>нет</span> }
                             </div>
-                            <div>Парковочных мест: <span>{ house.carPlaces }</span></div>
+                            <div>Парковочных мест: <span>{ business.carPlaces }</span></div>
                             <div>Аренда:
-                                <span style={{ color: 'green' }}> ${ house.rent }</span>
+                                <span style={{ color: 'green' }}> ${ business.rent }</span>
                                 <span> в сутки</span>
                             </div>
                             {
-                                house.owner &&
-                                <div>Владелец: <span>{ house.owner }</span></div>
+                                business.owner &&
+                                <div>Владелец: <span>{ business.owner }</span></div>
                             }
                         </div>
 
@@ -232,39 +231,39 @@ class House extends Component {
             return (
                 <div className='message_back-house-react' onClick={() => setAnswer({ answer: null })}>
                     <div className='exitEnterHouse' name='exit' ></div>
-                    Дом успешно куплен
+                    Бизнес успешно куплен
                 </div>
             )
         }
     }
 
     render() {
-        const { house } = this.props;
+        const { business } = this.props;
         const { isEnterMenu, isActionsMenu } = this.state;
 
         return (
             <Fragment>
                 <div className='house_form-react'>
                     { this.getForm() }
-                    { house.answer && this.getMessage(house.answer) }
-                    { isEnterMenu && this.showEnterMenu(house) }
-                    { isActionsMenu && this.showActionsMenu(house) }
+                    { business.answer && this.getMessage(business.answer) }
+                    { isEnterMenu && this.showEnterMenu(business) }
+                    { isActionsMenu && this.showActionsMenu(business) }
                 </div>
-                { house.isLoading && this.getLoader() }
+                { business.isLoading && this.getLoader() }
             </Fragment>
         );
     }
 }
 
 const mapStateToProps = state => ({
-    house: state.house
+    business: state.business
 });
 
 const mapDispatchToProps = dispatch => ({
-    setLoading: flag => dispatch(setLoadingHouse(flag)),
-    showHouse: flag => dispatch(showHouse(flag)),
-    setAnswer: answer => dispatch(setAnswerHouse(answer)),
-    blockForm: flag => dispatch(setHouseFormBlock(flag))
+    setLoading: flag => dispatch(setLoadingBusiness(flag)),
+    showBusiness: flag => dispatch(showBusiness(flag)),
+    setAnswer: answer => dispatch(setAnswerBusiness(answer)),
+    blockForm: flag => dispatch(setBusinessFormBlock(flag))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(House);
+export default connect(mapStateToProps, mapDispatchToProps)(Business);
