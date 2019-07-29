@@ -39,6 +39,7 @@ mp.busy.list = new Array();
 /// voicechat
 /// chat
 /// carshow
+/// phone
 /// END LIST
 /// Добавить модуль (true - операция провшла успешно, false - такой модуль уже содержится в массиве)
 mp.busy.add = function(name) {

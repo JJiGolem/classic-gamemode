@@ -2,30 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3b4f40e7-2b00-4af6-93b4-f955a86f8251" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/react/src/modules/bank/actions/action.bank.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react/src/modules/bank/components/Main.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react/src/modules/bank/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react/src/modules/bank/reducers/reducer.bank.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react/src/modules/bank/styles/bank.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react/src/modules/business/actions/action.business.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react/src/modules/business/components/Business.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react/src/modules/business/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react/src/modules/business/reducers/reducer.business.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react/src/modules/business/styles/business.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client_packages/browser/build/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/build/css/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client_packages/browser/build/css/styles.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/build/css/styles.css.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client_packages/browser/build/js/build.js" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/build/js/build.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client_packages/browser/build/js/build.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/build/js/build.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client_packages/browser/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/MainContainer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/MainContainer.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/helpers/store/forms.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/helpers/store/forms.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/helpers/store/rootReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/helpers/store/rootReducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/modules/house/components/House.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/house/components/House.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/modules/house/reducers/reducer.house.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/house/reducers/reducer.house.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client_packages/browser/build/css/styles.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client_packages/browser/build/css/styles.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client_packages/browser/build/fonts/DINAlternateBold.4e108eed.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client_packages/browser/build/fonts/main.4de91283.otf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client_packages/browser/build/fonts/sf.9e14b4e7.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client_packages/browser/build/img/background_phone.bed04124.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client_packages/browser/build/js/build.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client_packages/browser/build/js/build.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/actions/action.info.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/actions/action.info.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/Contacts.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/Contacts.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/DialogPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/DialogPage.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/IncomingCall.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/IncomingCall.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/styles/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/styles/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.apps.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.apps.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.info.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.info.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -38,11 +30,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/react/src/index.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="266">
-              <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+              <caret line="14" selection-start-line="14" selection-end-line="14" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
@@ -53,35 +45,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/react/src/styles/main.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="190">
-              <caret line="10" column="3" lean-forward="true" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
-              <folding>
-                <marker date="1564396504680" expanded="true" signature="3:360" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/MainContainer.jsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="350">
-              <caret line="21" column="62" selection-start-line="21" selection-start-column="62" selection-end-line="21" selection-end-column="62" />
-              <folding>
-                <element signature="e#0#49#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/IncomingCall.jsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="446">
-              <caret line="49" lean-forward="true" selection-start-line="49" selection-end-line="49" />
-              <folding>
-                <element signature="e#0#49#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="19">
+              <caret line="1" column="2" selection-start-line="1" selection-end-line="10" selection-end-column="3" />
             </state>
           </provider>
         </entry>
@@ -89,8 +54,86 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/react/src/helpers/store/forms.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="38">
-              <caret line="2" column="16" selection-start-line="2" selection-start-column="16" selection-end-line="2" selection-end-column="16" />
+            <state relative-caret-position="19">
+              <caret line="1" column="16" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="190">
+              <caret line="58" selection-start-line="58" selection-end-line="58" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/DialogPage.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="532">
+              <caret line="46" lean-forward="true" selection-start-line="46" selection-end-line="46" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/Dialogs.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="418">
+              <caret line="34" selection-start-line="34" selection-end-line="34" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/actions/action.info.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="209">
+              <caret line="11" column="22" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.info.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-311">
+              <caret line="84" column="31" selection-start-line="84" selection-start-column="31" selection-end-line="84" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/Contacts.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="475">
+              <caret line="28" column="74" selection-start-line="28" selection-start-column="74" selection-end-line="28" selection-end-column="74" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/CreateContactPage.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="513">
+              <caret line="38" column="12" selection-start-line="38" selection-start-column="12" selection-end-line="38" selection-end-column="12" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -138,7 +181,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/ReactSource/src/components/chat/Chat.jsx" />
         <option value="$PROJECT_DIR$/client_packages/browser/css/chat.css" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/react/src/styles/animations.css" />
@@ -152,24 +194,18 @@
         <option value="$PROJECT_DIR$/react/package.json" />
         <option value="$PROJECT_DIR$/react/config/webpack.config.prod.js" />
         <option value="$PROJECT_DIR$/react/README.md" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/components/CreateContactPage.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/HeadAppPhone.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/chat/components/Chat.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/MainDisplay.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/actions/action.dialogs.js" />
         <option value="$PROJECT_DIR$/react/src/modules/house/actions/action.house.js" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/components/Contacts.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/styles/phone.css" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/CreateDialogPage.jsx" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/components/DialogPage.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.dialogs.js" />
         <option value="$PROJECT_DIR$/react/src/events/playerEvents.js" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.info.js" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/actions/action.info.js" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/Dialogs.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/ActiveCall.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/DialingNumber.jsx" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/business/styles/business.css" />
         <option value="$PROJECT_DIR$/react/src/modules/business/index.js" />
         <option value="$PROJECT_DIR$/react/src/modules/business/actions/action.business.js" />
@@ -184,11 +220,18 @@
         <option value="$PROJECT_DIR$/react/src/modules/bank/reducers/reducer.bank.js" />
         <option value="$PROJECT_DIR$/react/src/modules/bank/components/Main.jsx" />
         <option value="$PROJECT_DIR$/client_packages/browser/index.html" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/components/IncomingCall.jsx" />
         <option value="$PROJECT_DIR$/react/src/MainContainer.jsx" />
-        <option value="$PROJECT_DIR$/react/src/helpers/store/forms.js" />
-        <option value="$PROJECT_DIR$/react/src/styles/main.css" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/IncomingCall.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.apps.js" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/actions/action.info.js" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.info.js" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/Contacts.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/CreateContactPage.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx" />
         <option value="$PROJECT_DIR$/react/src/index.js" />
+        <option value="$PROJECT_DIR$/react/src/styles/main.css" />
+        <option value="$PROJECT_DIR$/react/src/helpers/store/forms.js" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/DialogPage.jsx" />
       </list>
     </option>
   </component>
@@ -204,46 +247,13 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
               <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
-              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
-              <item name="client_packages" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
-              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
-              <item name="client_packages" type="462c0819:PsiDirectoryNode" />
-              <item name="browser" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
-              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
-              <item name="client_packages" type="462c0819:PsiDirectoryNode" />
-              <item name="browser" type="462c0819:PsiDirectoryNode" />
-              <item name="build" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
-              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
-              <item name="client_packages" type="462c0819:PsiDirectoryNode" />
-              <item name="browser" type="462c0819:PsiDirectoryNode" />
-              <item name="build" type="462c0819:PsiDirectoryNode" />
-              <item name="css" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
-              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
-              <item name="client_packages" type="462c0819:PsiDirectoryNode" />
-              <item name="browser" type="462c0819:PsiDirectoryNode" />
-              <item name="build" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
@@ -309,111 +319,6 @@
               <item name="react" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="modules" type="462c0819:PsiDirectoryNode" />
-              <item name="bank" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
-              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="modules" type="462c0819:PsiDirectoryNode" />
-              <item name="bank" type="462c0819:PsiDirectoryNode" />
-              <item name="actions" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
-              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="modules" type="462c0819:PsiDirectoryNode" />
-              <item name="bank" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
-              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="modules" type="462c0819:PsiDirectoryNode" />
-              <item name="bank" type="462c0819:PsiDirectoryNode" />
-              <item name="reducers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
-              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="modules" type="462c0819:PsiDirectoryNode" />
-              <item name="bank" type="462c0819:PsiDirectoryNode" />
-              <item name="styles" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
-              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="modules" type="462c0819:PsiDirectoryNode" />
-              <item name="business" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
-              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="modules" type="462c0819:PsiDirectoryNode" />
-              <item name="business" type="462c0819:PsiDirectoryNode" />
-              <item name="actions" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
-              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="modules" type="462c0819:PsiDirectoryNode" />
-              <item name="business" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
-              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="modules" type="462c0819:PsiDirectoryNode" />
-              <item name="business" type="462c0819:PsiDirectoryNode" />
-              <item name="reducers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
-              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="modules" type="462c0819:PsiDirectoryNode" />
-              <item name="business" type="462c0819:PsiDirectoryNode" />
-              <item name="styles" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
-              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="modules" type="462c0819:PsiDirectoryNode" />
-              <item name="house" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
-              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="modules" type="462c0819:PsiDirectoryNode" />
-              <item name="house" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
-              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="modules" type="462c0819:PsiDirectoryNode" />
               <item name="phone" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -423,7 +328,25 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="modules" type="462c0819:PsiDirectoryNode" />
               <item name="phone" type="462c0819:PsiDirectoryNode" />
+              <item name="actions" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
+              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
+              <item name="react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+              <item name="phone" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
+              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
+              <item name="react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+              <item name="phone" type="462c0819:PsiDirectoryNode" />
+              <item name="reducers" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
@@ -436,7 +359,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -490,12 +412,13 @@
       <workItem from="1564129374075" duration="20645000" />
       <workItem from="1564214682783" duration="11501000" />
       <workItem from="1564322746973" duration="6904000" />
-      <workItem from="1564395229336" duration="1091000" />
+      <workItem from="1564395229336" duration="1786000" />
+      <workItem from="1564405352811" duration="2330000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="103969000" />
+    <option name="totallyTimeSpent" value="106994000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1296" height="1000" extended-state="6" />
@@ -545,26 +468,6 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/CreateContactPage.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="589">
-          <caret line="37" column="12" selection-start-line="37" selection-start-column="12" selection-end-line="37" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/CreateDialogPage.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="36" column="39" selection-start-line="36" selection-start-column="39" selection-end-line="36" selection-end-column="39" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/react/src/modules/phone/styles/phone.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="650">
@@ -604,70 +507,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/actions/action.info.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="26" column="24" selection-start-line="26" selection-start-column="24" selection-end-line="26" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.info.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="98" selection-start-line="98" selection-end-line="98" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/Dialogs.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1283">
-          <caret line="34" selection-start-line="34" selection-end-line="34" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/DialogPage.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-665">
-          <caret line="1" column="38" selection-start-line="1" selection-start-column="38" selection-end-line="1" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/ActiveCall.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="836">
-          <caret line="146" column="8" selection-start-line="146" selection-start-column="8" selection-end-line="146" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-            <element signature="n#!!block;n#increment#0;n#ActiveCall#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1421">
-          <caret line="64" column="8" selection-start-line="64" selection-start-column="8" selection-end-line="64" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/react/src/modules/business/styles/business.css">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/DialingNumber.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-376">
-          <caret line="52" column="12" selection-start-line="52" selection-start-column="12" selection-end-line="52" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/react/src/modules/business/index.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -761,9 +602,6 @@
     <entry file="file://$PROJECT_DIR$/client_packages/browser/build/css/styles.css">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/react/src/modules/house/styles/fade.css">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -852,16 +690,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/Contacts.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="59" column="85" selection-start-line="59" selection-start-column="74" selection-end-line="59" selection-end-column="85" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/react/src/modules/house/components/House.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-91">
@@ -888,25 +716,49 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/IncomingCall.jsx">
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/DialingNumber.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="446">
-          <caret line="49" lean-forward="true" selection-start-line="49" selection-end-line="49" />
+        <state relative-caret-position="-266">
+          <caret line="52" column="12" selection-start-line="52" selection-start-column="12" selection-end-line="52" selection-end-column="12" />
           <folding>
             <element signature="e#0#49#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/styles/main.css">
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/ActiveCall.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="10" column="3" lean-forward="true" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
+        <state relative-caret-position="-475">
+          <caret line="146" column="8" selection-start-line="146" selection-start-column="8" selection-end-line="146" selection-end-column="8" />
           <folding>
-            <marker date="1564396504680" expanded="true" signature="3:360" ph="..." />
+            <element signature="e#0#49#0" expanded="true" />
+            <element signature="n#!!block;n#increment#0;n#ActiveCall#0" />
           </folding>
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/IncomingCall.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="551">
+          <caret line="44" column="5" lean-forward="true" selection-start-line="44" selection-start-column="5" selection-end-line="44" selection-end-column="5" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.apps.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="532">
+          <caret line="28" column="56" selection-start-line="28" selection-start-column="56" selection-end-line="28" selection-end-column="56" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/index.js">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/react/src/MainContainer.jsx">
       <provider selected="true" editor-type-id="text-editor">
@@ -918,19 +770,90 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/helpers/store/forms.js">
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/Dialogs.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" column="16" selection-start-line="2" selection-start-column="16" selection-end-line="2" selection-end-column="16" />
+        <state relative-caret-position="418">
+          <caret line="34" selection-start-line="34" selection-end-line="34" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/actions/action.info.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="11" column="22" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/Contacts.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="475">
+          <caret line="28" column="74" selection-start-line="28" selection-start-column="74" selection-end-line="28" selection-end-column="74" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/CreateContactPage.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="38" column="12" selection-start-line="38" selection-start-column="12" selection-end-line="38" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/react/src/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="266">
-          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/styles/main.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="1" column="2" selection-start-line="1" selection-end-line="10" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/helpers/store/forms.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="1" column="16" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="58" selection-start-line="58" selection-end-line="58" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.info.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-311">
+          <caret line="84" column="31" selection-start-line="84" selection-start-column="31" selection-end-line="84" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/DialogPage.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="532">
+          <caret line="46" lean-forward="true" selection-start-line="46" selection-end-line="46" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
           </folding>
         </state>
       </provider>

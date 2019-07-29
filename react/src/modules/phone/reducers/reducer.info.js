@@ -77,6 +77,11 @@ export default function info(state = initialState, action) {
             state.contacts[indexContact].name = payload.newName;
             return state;
 
+        case 'SORT_CONTACTS':
+            newState = { ...state };
+            newState.contacts.sort((a, b) => a.name.localeCompare(b.name));
+            return newState;
+
         case 'SET_CALL_STATUS':
             newState = { ...state };
             newState.callStatus = payload;

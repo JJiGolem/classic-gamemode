@@ -5,6 +5,7 @@ import ActiveCall from "./ActiveCall";
 import {addAppDisplay, closeAppDisplay} from "../actions/action.apps";
 import {connect} from "react-redux";
 import CreateContactPage from "./CreateContactPage";
+import {sortContacts} from "../actions/action.info";
 
 class Contacts extends Component {
     constructor(props) {
@@ -17,27 +18,25 @@ class Contacts extends Component {
     }
 
     componentWillMount() {
-        const { contacts } = this.props;
-        contacts && contacts.sort((a, b) => a.name.localeCompare(b.name))
+        const { contacts, sortContacts } = this.props;
+        //contacts && contacts.isSorted && sortContacts();
+        contacts && contacts.sort((a, b) => a.name.localeCompare(b.name));
     }
 
-    componentDidUpdate(prevState, prevProps) {
-        const { contacts } = this.props;
-        contacts && contacts.sort((a, b) => a.name.localeCompare(b.name))
+    componentDidUpdate() {
+        const { contacts, sortContacts } = this.props;
+        //contacts && contacts.isSorted && sortContacts();
+        contacts && contacts.sort((a, b) => a.name.localeCompare(b.name));
     }
 
     handleSearchInput(e) {
         this.setState({ search: String(e.target.value).toLowerCase() });
     }
 
-    callContact(event, contact) {
-        console.log(event.target.className)
-    }
-
     toContactPage(event, contact) {
         const { addApp, closeApp } = this.props;
 
-        closeApp();
+        //closeApp();
         addApp({name: 'ContactPage', form: <ContactPage contact={contact}/>})
     }
 
@@ -51,6 +50,7 @@ class Contacts extends Component {
     }
 
     render() {
+        console.log('render');
         const { addApp } = this.props;
         const { search } = this.state;
 
@@ -90,12 +90,14 @@ class Contacts extends Component {
 }
 
 const mapStateToProps = state => ({
-    contacts: state.info.contacts
+    contacts: state.info.contacts,
+    info: state.info
 });
 
 const mapDispatchToProps = dispatch => ({
     addApp: app => dispatch(addAppDisplay(app)),
     closeApp: () => dispatch(closeAppDisplay()),
+    sortContacts: () => dispatch(sortContacts())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Contacts);

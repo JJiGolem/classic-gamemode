@@ -40,6 +40,9 @@ class DialogPage extends Component {
         const { readDialog, dialog } = this.props;
 
         readDialog(dialog.number);
+
+        // eslint-disable-next-line no-undef
+        mp.trigger('phone.dialog.read', dialog.number);
     }
 
     handleChangeMessage(e) {

@@ -113,7 +113,7 @@ module.exports = {
     'phone.message.send': async (player, message, number) => {
         if (player.phone == null) return;
         if (message.length > 100) return;
-        if (!phone.isExists(number)) return console.log("Номера не существует");
+        if (!phone.isExists(number)) return player.call('phone.error', [1]);
 
         /// Работа с отправителем
         let index = player.phone.PhoneDialogs.findIndex( x => x.number == number);
@@ -152,23 +152,48 @@ module.exports = {
                 return mp.players.at(i).call('phone.message.set', [message, player.phone.number]);
             }
         }
-        console.log("Абонент вне зоны действия сети");
+        player.call('phone.error', [2]);
+    },
+    'phone.dialog.read': async (player, dialogNumber) => {
+        if (player == null) return;
+        if (player.phone == null) return;
+        if (player.phone.PhoneDialogs == null) return;
+        let index = player.phone.PhoneDialogs.findIndex( x => x.number == dialogNumber);
+        if (index == -1) return;
+        if (player.phone.PhoneDialogs[index].PhoneMessages == null) return;
+
+        let isChanged = false;
+        for (let i = 0; i < player.phone.PhoneDialogs[index].PhoneMessages.length; i++) {
+            if (player.phone.PhoneDialogs[index].PhoneMessages[i].isRead) continue;
+            player.phone.PhoneDialogs[index].PhoneMessages[i].set("isRead", true);
+            isChanged = true;
+        }
+        if (!isChanged) return;
+        await db.Models.PhoneMessage.update({
+                isRead: true
+            }, 
+            {
+                where: {
+                    phoneDialogId: player.phone.PhoneDialogs[index].id
+                }
+            }
+        );
     },
     'phone.contact.add': async (player, name, number) => {
-        if (player.phone.PhoneContacts.findIndex( x => x.name === name) != -1) return console.log("Запись с таким имененем уже существует");
+        if (player.phone.PhoneContacts.findIndex( x => x.name === name) != -1) return player.call('phone.error', [3]);
         let newContact = db.Models.PhoneContact.build({phoneId: player.phone.id, name: name, number: number});
         let result = await newContact.save();
         player.phone.PhoneContacts.push(result);
     },
     'phone.contact.rename': async (player, number, name) => {
-        if (player.phone.PhoneContacts.findIndex( x => x.name === name) != -1) return console.log("Запись с таким имененем уже существует");
+        if (player.phone.PhoneContacts.findIndex( x => x.name === name) != -1) return player.call('phone.error', [3]);
         let index = player.phone.PhoneContacts.findIndex( x => x.number === number);
-        if (index == -1) return console.log("Запись не найдена");
+        if (index == -1) return player.call('phone.error', [4]);
         await player.phone.PhoneContacts[index].update({name: name});
     },
     'phone.contact.remove': async (player, number) => {
         let index = player.phone.PhoneContacts.findIndex( x => x.number === number);
-        if (index == -1) return console.log("Запись не найдена");
+        if (index == -1) return player.call('phone.error', [4]);
         await player.phone.PhoneContacts[index].destroy();
         player.phone.PhoneContacts.splice(index, 1);
     },
