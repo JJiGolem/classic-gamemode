@@ -44,11 +44,11 @@ var selectMenu = new Vue({
             },
             "carShowMenu": {
                 name: "carshow",
-                header: "Автосалон", 
+                header: "Автосалон",
                 items: [{
-                    text: "Модель", 
+                    text: "Модель",
                     values: [],
-                    i: 0, 
+                    i: 0,
                 },
                 {
                     text: "Основной цвет",
@@ -94,30 +94,30 @@ var selectMenu = new Vue({
                         }
                     }
                     if (eventName == 'onEscapePressed') {
-                            mp.trigger(`carshow.list.close`);    
+                            mp.trigger(`carshow.list.close`);
                     }
                 }
             },
             "carMarketSellMenu": {
                 name: "carmarketsell",
-                header: "Авторынок", 
+                header: "Авторынок",
                 items: [{
-                    text: "Продать транспорт", 
-                    i: 0, 
+                    text: "Продать транспорт",
+                    i: 0,
                 },
                 {
                     text: "Отмена",
                     i: 0,
                 }
             ],
-                i: 0, 
-                j: 0, 
+                i: 0,
+                j: 0,
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
-                        menuName: this.name, 
+                        menuName: this.name,
                         itemName: item.text,
-                        itemIndex: this.i, 
+                        itemIndex: this.i,
                         itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
                         valueIndex: item.i,
                     };
@@ -126,31 +126,31 @@ var selectMenu = new Vue({
                             mp.trigger(`carmarket.car.sell`);
                         }
                         if (e.itemName == 'Отмена') {
-                            mp.trigger(`carmarket.sellmenu.close`);    
+                            mp.trigger(`carmarket.sellmenu.close`);
                     }
                     }
                 }
             },
             "carMarketBuyMenu": {
                 name: "carmarketbuy",
-                header: "Авторынок", 
+                header: "Авторынок",
                 items: [{
-                    text: "Купить транспорт", 
-                    i: 0, 
+                    text: "Купить транспорт",
+                    i: 0,
                 },
                 {
                     text: "Отмена",
                     i: 0,
                 }
             ],
-                i: 0, 
-                j: 0, 
+                i: 0,
+                j: 0,
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
-                        menuName: this.name, 
+                        menuName: this.name,
                         itemName: item.text,
-                        itemIndex: this.i, 
+                        itemIndex: this.i,
                         itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
                         valueIndex: item.i,
                     };
@@ -159,7 +159,7 @@ var selectMenu = new Vue({
                             mp.trigger(`carmarket.car.buy`);
                         }
                         if (e.itemName == 'Отмена') {
-                            mp.trigger(`carmarket.buymenu.close`);    
+                            mp.trigger(`carmarket.buymenu.close`);
                     }
                     }
                 }
@@ -204,10 +204,11 @@ var selectMenu = new Vue({
             return index <= 2;
         },
         valuesType(index) {
-            // 0 - обычное значение, 1 - цвет, 2 - ползунок, -1 - нет значений
+            // 0 - обычное значение, 1 - цвет, 2 - ползунок, 3 - ввод текста, -1 - нет значений
             var values = this.menu.items[index].values;
             if (!values) return -1;
             if (values[0][0] == '#') return 1;
+            if (this.menu.items[index].type == "editable") return 3;
             for (var i = 0; i < values.length; i++) {
                 var value = values[i];
                 if (typeof value != 'number') return 0;
@@ -304,7 +305,10 @@ var selectMenu = new Vue({
             max: "Максимум", // слово справа от ползунка
         },
         {
-            text: "Обычный тип 3"
+            text: "Ввод",
+            values: ["Текст"],
+            i: 0,
+            type: "editable" // возможность редактирования значения пункта меню
         },
         {
             text: "Ползунок 3.5",

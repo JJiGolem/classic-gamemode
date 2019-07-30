@@ -8,6 +8,16 @@
     top: 30%;
 }
 
+#selectMenu input {
+    background: none;
+    border: none;
+    color: #fff;
+    font-family: Chalet-LondonNineteenSixty;
+    font-size: 1.6vh;
+    outline: none;
+    text-align: right;
+}
+
 #selectMenu .arrow {
     background-image: url('../img/selectMenu/arrow-off.png');
     background-repeat: no-repeat;
@@ -63,6 +73,12 @@
     background: #f1d941;
     border-radius: 0.7vh;
     color: #000;
+}
+
+#selectMenu .content .item.selected input {
+    border-bottom: 1px solid #000;
+    color: #000;
+    text-align: center;
 }
 
 #selectMenu .content .items {
