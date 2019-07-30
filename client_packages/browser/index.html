@@ -533,7 +533,7 @@
                 </div>
             </div>
         </div>
-        <div class="item-desc" v-if="itemDesc.item && !itemMenu.item && !itemDrag.item" :style="{left: itemDesc.x, top: itemDesc.y}">
+        <div class="item-desc" v-if="itemDesc.item && !itemMenu.item && !itemDrag.item" :style="{left: itemDesc.x + 'px', top: itemDesc.y + 'px'}">
             <div class="title">{{ itemsInfo[itemDesc.item.itemId].name }}</div>
             <div class="item" v-if="itemDesc.item" :style="itemStyle(itemDesc.item.itemId)">
                 <div class="sqlid" v-if="debug">#{{ itemDesc.item.sqlId }}</div>
@@ -568,7 +568,7 @@
                 </div>
             </div>
         </div>
-        <div class="item-menu" v-if="itemMenu.item && !itemDrag.item" :style="{left: itemMenu.x, top: itemMenu.y}">
+        <div class="item-menu" v-if="itemMenu.item && !itemDrag.item" :style="{left: itemMenu.x + 'px', top: itemMenu.y + 'px'}">
             <div class="menu-item" v-for="(value, key) in itemsInfo[itemMenu.item.itemId].menu">
                 {{ key }}
                 <div class="arrow" v-if="value.items">></div>
@@ -578,7 +578,7 @@
            <div class="menu-item">Полностью</div>
            <div class="menu-item">Для переноски</div>
        </div> -->
-        <div class="item-drag" v-if="itemDrag.item" :style="{left: itemDrag.x, top: itemDrag.y}">
+        <div class="item-drag" v-if="itemDrag.item" :style="{left: itemDrag.x + 'px', top: itemDrag.y + 'px'}">
             <div class="item" v-if="itemDrag.item" :style="itemStyle(itemDrag.item.itemId)">
                 <!-- <div class="count" v-if="itemDrag.item.params.count">{{ itemDrag.item.params.count }}</div>
                <div class="health" v-if="itemDrag.item.params.health" :style="{top: 100 - itemDrag.item.params.health + '%'}"></div>

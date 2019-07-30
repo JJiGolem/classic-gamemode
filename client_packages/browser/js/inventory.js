@@ -190,7 +190,6 @@ var inventory = new Vue({
             return style;
         },
         itemMouseHandler(item, e) {
-            console.log(e)
             var handlers = {
                 'mouseenter': (e) => {
                     this.itemDesc.item = item;
@@ -716,4 +715,5 @@ inventory.addEnvironmentPlace({
         }
     }]
 });
-inventory.show = true;*/
+inventory.show = true;
+inventory.enable = true;*/
