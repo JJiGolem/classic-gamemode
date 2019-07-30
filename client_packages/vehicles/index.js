@@ -305,7 +305,6 @@ mp.events.add('vehicles.hood', () => {
     let veh = mp.getCurrentInteractionEntity();
     if (!veh) return;
     if (veh.type != 'vehicle') return;
-    mp.chat.debug('hood');
 
     if (veh.getVariable("hood")) {
         mp.events.callRemote('vehicles.hood', veh.remoteId, false);
@@ -318,7 +317,6 @@ mp.events.add('vehicles.trunk', () => {
     let veh = mp.getCurrentInteractionEntity();
     if (!veh) return;
     if (veh.type != 'vehicle') return;
-    mp.chat.debug('trunk');
 
     if (veh.getVariable("trunk")) {
         mp.events.callRemote('vehicles.trunk', veh.remoteId, false);
