@@ -6,7 +6,7 @@ let interiors = require('./files/interiors.json');
 /// Функции модуля парсера JSON в БД
 module.exports = {
     async init() {
-        console.log("[PARSE] START");
+        console.log("[PARSE] start");
         let interiorsDB = await db.Models.Interior.findAll();
         if (interiorsDB.length == 0) {
             for (let i = 0; i < interiors.length; i++) {
@@ -25,12 +25,13 @@ module.exports = {
                     exitZ: interiors[i].exitZ
                 }, {});
             }
+            console.log("[PARSE] interiors loaded");
         }
 
         let housesDB = await db.Models.House.findAll();
         if (housesDB.length == 0) {
             for (let i = 0; i < houses.length; i++) {
-                if (interiors.findIndex( x => x.id == houses[i].interior) == -1) return;
+                if (interiors.findIndex( x => x.id == houses[i].interior) == -1) continue;
                 await db.Models.House.create({
                     characterId: null,
                     interiorId: houses[i].interior + 1,
@@ -50,7 +51,8 @@ module.exports = {
                     carAngle: houses[i].carangle
                 }, {});
             }
+            console.log("[PARSE] houses loaded");
         }
-        console.log("[PARSE] END");
+        console.log("[PARSE] end");
     },
 }
