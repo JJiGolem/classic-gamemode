@@ -1,10 +1,16 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
-import ReactCSSTransitionGroup from 'react-addons-transition-group';
 
 import '../styles/house.css';
 
-import {setAnswerHouse, setHouseFormBlock, setLoadingHouse, showHouse} from "../actions/action.house";
+import {
+    closeHouse,
+    loadHouseInfo,
+    setAnswerHouse,
+    setHouseFormBlur,
+    setLoadingHouse,
+    showHouse
+} from "../actions/action.house";
 
 class House extends Component {
     constructor(props) {
@@ -12,6 +18,10 @@ class House extends Component {
         this.state = {
             colorBuy: '#e1c631',
             colorLook: '#e1c631',
+            colorEnterHouse: '#e1c631',
+            colorEnterGarage: '#e1c631',
+            colorEnter: '#e1c631',
+            colorActions: '#e1c631',
             isEnterMenu: false,
             isActionsMenu: false
         };
@@ -20,7 +30,23 @@ class House extends Component {
         this.getButtons = this.getButtons.bind(this);
         this.startBuy = this.startBuy.bind(this);
         this.lookHouse = this.lookHouse.bind(this);
+        this.closeMenu = this.closeMenu.bind(this);
     }
+
+    /*componentWillMount() {
+        const houseInfo = {
+            name: 228,
+            area: 'Санта-Моника',
+            class: 'Люкс',
+            numRooms: 4,
+            garage: true,
+            carPlaces: 2,
+            price: 45000,
+            rent: 350,
+        };
+
+        this.props.loadInfo(houseInfo);
+    }*/
 
     getLoader() {
         return (
@@ -31,35 +57,61 @@ class House extends Component {
     }
 
     startBuy() {
-        const { house, setLoading, setAnswer, blockForm } = this.props;
+        const { house, setLoading, setAnswer, blurForm } = this.props;
 
         if (!house.isLoading) {
             setLoading(true);
-            //blockForm(true);
-            setTimeout(() => {
+            blurForm(true);
+
+            // eslint-disable-next-line no-undef
+            mp.trigger('house.buy');
+
+            /*setTimeout(() => {
                 setAnswer({answer: 1, owner: 'Dun Hill'});
-            }, 1000)
+            }, 1000)*/
         }
     }
 
     lookHouse() {
-
+        // eslint-disable-next-line no-undef
+        mp.trigger('house.enter', 1)
     }
 
     showEnterMenu(house) {
-        return (
-            <div className='message_back-house-react'>
-                { this.getButton('enterHouse') }
-                { house.garage && this.getButton('enterGarage') }
-            </div>
-        )
+        if(!this.state.isActionsMenu) {
+            return (
+                <div className='message_back-house-react'>
+                    { this.getButton('enterHouse') }
+                    { house.garage && this.getButton('enterGarage') }
+                </div>
+            )
+        }
     }
 
     showActionsMenu(house) {
-
+        if (!this.state.isEnterMenu) {
+            return (
+                <div className='message_back-house-react' onClick={() => {
+                    this.setState({ isActionsMenu: false });
+                    this.props.blurForm(false);
+                }}>
+                    <div className='exitEnterHouse' name='exit'></div>
+                    Список действий пуст<br/>
+                    <div>
+                        <svg style={{ display: 'block', margin: '5% 45%' }} id="Group_10" data-name="Group 10" xmlns="http://www.w3.org/2000/svg" width="10%" height="10%" viewBox="0 0 233.069 233.069">
+                            <path id="Path_26" data-name="Path 26" d="M116.535,0A116.535,116.535,0,1,0,233.069,116.535,116.666,116.666,0,0,0,116.535,0Zm0,224.1A107.57,107.57,0,1,1,224.1,116.535,107.7,107.7,0,0,1,116.535,224.1Z" fill="#e1c631"/>
+                            <path id="Path_27" data-name="Path 27" d="M104.33,17.314a4.477,4.477,0,0,0-6.338,0l-37.17,37.17-37.17-37.17a4.481,4.481,0,1,0-6.338,6.338l37.17,37.17-37.17,37.17a4.481,4.481,0,1,0,6.338,6.338l37.17-37.17,37.17,37.17a4.481,4.481,0,0,0,6.338-6.338L67.16,60.822l37.17-37.17A4.477,4.477,0,0,0,104.33,17.314Z" transform="translate(55.713 55.713)" fill="#e1c631"/>
+                        </svg>
+                    </div>
+                    Нажмите на это сообщение для продолжения
+                </div>
+            )
+        }
     }
 
     getButton(name) {
+        const { blurForm } = this.props;
+
         switch (name) {
             case 'buy':
                 return (
@@ -107,32 +159,78 @@ class House extends Component {
 
             case 'enter':
                 return (
-                    <div className='button-house-react' onClick={() => this.setState({ isEnterMenu: true })}>
-
+                    <div className='button-house-react' onClick={() => {
+                        !this.state.isActionsMenu && this.setState({ isEnterMenu: true });
+                        blurForm(true)
+                    }}
+                         onMouseOver={() => this.setState({ colorEnter: 'black' })}
+                         onMouseOut={() => this.setState({ colorEnter: '#e1c631' })}
+                    >
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40%" height="40%" viewBox="0 0 504.043 512" fill={this.state.colorEnter}>
+                                <g id="Group_13" data-name="Group 13" transform="translate(-3.978)">
+                                    <path id="Path_34" data-name="Path 34" d="M387.638,73.144a47.237,47.237,0,1,0,47.237,47.237A47.29,47.29,0,0,0,387.638,73.144Zm0,69.252a22.015,22.015,0,1,1,22.015-22.015A22.04,22.04,0,0,1,387.638,142.4Z"/>
+                                    <path id="Path_35" data-name="Path 35" d="M334.974,0C239.555,0,161.925,77.63,161.925,173.049a171.967,171.967,0,0,0,11.211,61.4L7.672,399.928a12.613,12.613,0,0,0-3.694,8.917v90.544A12.611,12.611,0,0,0,16.589,512H91.205a12.61,12.61,0,0,0,8.91-3.686l25.145-25.107a12.611,12.611,0,0,0,3.7-8.925V443.406H159.8A12.611,12.611,0,0,0,172.409,430.8v-12.36H184.77a12.611,12.611,0,0,0,12.611-12.611V378.688h27.136a12.614,12.614,0,0,0,8.917-3.694l40.121-40.121A171.881,171.881,0,0,0,334.972,346.1c95.419,0,173.049-77.63,173.049-173.049S430.393,0,334.974,0Zm0,320.874a146.7,146.7,0,0,1-59.339-12.393,12.611,12.611,0,0,0-13.871,2.525c-.039.037-.077.067-.115.106L219.3,353.466H184.772a12.611,12.611,0,0,0-12.611,12.611v27.136H159.8a12.611,12.611,0,0,0-12.611,12.611v12.36H116.351a12.611,12.611,0,0,0-12.611,12.611v38.257L85.987,486.777H29.2V468.956l154.141-154.14a11.35,11.35,0,0,0-16.053-16.051L29.2,436.854V414.07L196.9,246.362c.038-.038.067-.073.1-.11a12.609,12.609,0,0,0,2.53-13.872,146.8,146.8,0,0,1-12.38-59.33c0-81.512,66.315-147.827,147.827-147.827S482.8,91.537,482.8,173.05,416.484,320.874,334.974,320.874Z"/>
+                                </g>
+                            </svg>
+                        </div>
                         Войти
                     </div>
                 )
 
             case 'actions':
                 return (
-                    <div className='button-house-react' onClick={() => this.setState({ isActionsMenu: true })}>
-
+                    <div className='button-house-react' onClick={() => {
+                        !this.state.isEnterMenu && this.setState({ isActionsMenu: true });
+                        blurForm(true)
+                    }}
+                         onMouseOver={() => this.setState({ colorActions: 'black' })}
+                         onMouseOut={() => this.setState({ colorActions: '#e1c631' })}
+                    >
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40%" height="40%" viewBox="0 0 217.794 216.8" fill={this.state.colorActions}>
+                                <path id="two-settings-cogwheels" d="M113.6,133.642l-5.932-13.169a57.493,57.493,0,0,0,14.307-15.209l13.507,5.118a5,5,0,0,0,6.447-2.9l4.964-13.1a5,5,0,0,0-2.9-6.447L130.476,82.81a57.471,57.471,0,0,0-.637-20.871l13.169-5.932a5,5,0,0,0,2.5-6.613l-5.755-12.775a5,5,0,0,0-6.612-2.505l-13.169,5.932a57.493,57.493,0,0,0-15.209-14.307l5.118-13.507a5,5,0,0,0-2.9-6.447L93.88.82a5,5,0,0,0-6.447,2.905L82.316,17.231a57.327,57.327,0,0,0-20.872.636L55.513,4.7a5,5,0,0,0-6.613-2.5L36.124,7.949a5,5,0,0,0-2.505,6.612L39.551,27.73A57.493,57.493,0,0,0,25.244,42.939L11.737,37.821a5,5,0,0,0-6.447,2.9L.326,53.828a5,5,0,0,0,2.9,6.447l13.507,5.118a57.471,57.471,0,0,0,.637,20.871L4.2,92.2a5,5,0,0,0-2.5,6.613l5.755,12.775a5,5,0,0,0,6.612,2.505l13.169-5.932a57.462,57.462,0,0,0,15.209,14.307l-5.118,13.507a5,5,0,0,0,2.9,6.447l13.1,4.964a5,5,0,0,0,6.447-2.9L64.9,130.971a57.348,57.348,0,0,0,20.872-.636L91.7,143.5a5,5,0,0,0,6.613,2.5l12.775-5.754A5,5,0,0,0,113.6,133.642Zm-8.286-47.529A33.864,33.864,0,0,1,61.595,105.8,33.9,33.9,0,0,1,41.9,62.09,33.864,33.864,0,0,1,85.618,42.4a33.9,33.9,0,0,1,19.691,43.714Zm111.169,68.276a5,5,0,0,0-3.469-1.615l-9.418-.4a43.2,43.2,0,0,0-4.633-12.7L205.9,133.3a5,5,0,0,0,.3-7.064l-6.9-7.514a5,5,0,0,0-7.065-.3l-6.944,6.374a43.211,43.211,0,0,0-12.254-5.7l.4-9.418a5,5,0,0,0-4.782-5.209l-10.189-.437a5.018,5.018,0,0,0-5.209,4.781l-.4,9.418a43.251,43.251,0,0,0-12.7,4.632l-6.374-6.945a5,5,0,0,0-7.064-.3l-7.514,6.9a5,5,0,0,0-.3,7.064l6.374,6.945a43.2,43.2,0,0,0-5.7,12.254l-9.417-.4a5.012,5.012,0,0,0-5.21,4.781l-.437,10.189a5,5,0,0,0,4.782,5.21l9.417.4a43.247,43.247,0,0,0,4.632,12.7l-6.944,6.374a5,5,0,0,0-.3,7.064L123,202.6a5,5,0,0,0,7.065.3l6.944-6.374a43.211,43.211,0,0,0,12.254,5.7l-.4,9.418a5,5,0,0,0,4.781,5.209l10.189.437c.072,0,.143,0,.214,0a5,5,0,0,0,5-4.785l.4-9.418a43.251,43.251,0,0,0,12.7-4.632l6.374,6.945a5,5,0,0,0,7.064.3l7.514-6.9a5,5,0,0,0,.3-7.064l-6.374-6.945a43.2,43.2,0,0,0,5.7-12.254l9.417.4a5.011,5.011,0,0,0,5.21-4.781l.437-10.189A5,5,0,0,0,216.478,154.389Zm-56.321,29.564a23.315,23.315,0,0,1,.978-46.609q.507,0,1.019.022a23.315,23.315,0,1,1-2,46.587Z" transform="translate(0 -0.496)"/>
+                            </svg>
+                        </div>
                         Действия
                     </div>
                 )
 
             case 'enterHouse':
                 return (
-                    <div className='button-house-react' onClick={() => this.setState({ isEnterMenu: false })}>
-
+                    <div className='button-house-react' onClick={() => {
+                        this.setState({ isEnterMenu: false });
+                        blurForm(false)
+                    }}
+                         onMouseOver={() => this.setState({ colorEnterHouse: 'black' })}
+                         onMouseOut={() => this.setState({ colorEnterHouse: '#e1c631' })}
+                    >
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30%" height="30%" viewBox="0 0 323.815 494.238" fill={this.state.colorEnterHouse}>
+                                <path id="Path_30" data-name="Path 30" d="M199.725,0V36.025H85.211v421.66l114.514.094v36.459L408.81,456.683l.216-418.867ZM234.4,230.574c7.022,0,12.715,7.408,12.715,16.545s-5.692,16.545-12.715,16.545-12.715-7.406-12.715-16.545S227.382,230.574,234.4,230.574ZM119.211,423.713V70.025h80.514V423.778Z" transform="translate(-85.211)"/>
+                            </svg>
+                        </div>
                         Войти в дом
                     </div>
                 )
 
             case 'enterGarage':
                 return (
-                    <div className='button-house-react' onClick={() => this.setState({ isEnterMenu: true })}>
-
+                    <div className='button-house-react' onClick={() => {
+                        this.setState({ isEnterMenu: false });
+                        blurForm(false)
+                    }}
+                         onMouseOver={() => this.setState({ colorEnterGarage: 'black' })}
+                         onMouseOut={() => this.setState({ colorEnterGarage: '#e1c631' })}
+                    >
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="51.8%" height="30%" viewBox="0 0 250.988 224.46" fill={this.state.colorEnterGarage}>
+                                <g id="Group_12" data-name="Group 12" transform="translate(0 -13.264)">
+                                    <path id="Path_31" data-name="Path 31" d="M201.345,135.041a11.312,11.312,0,0,0-3,.418l-5.693,1.567-7.285-17.744c-3.352-8.166-13.261-14.811-22.088-14.811H87.589c-8.827,0-18.736,6.645-22.088,14.811L58.229,137l-5.586-1.538a11.325,11.325,0,0,0-3-.418c-5.385,0-9.294,4.113-9.294,9.781v.209a12.013,12.013,0,0,0,9.755,11.781,90.5,90.5,0,0,0-5.464,28.155v36.854a12.015,12.015,0,0,0,12,12h6.914a12.015,12.015,0,0,0,12-12v-7.693h99.762v7.693a12.015,12.015,0,0,0,12,12h6.914a12.015,12.015,0,0,0,12-12V184.967a90.493,90.493,0,0,0-5.458-28.138,12.013,12.013,0,0,0,9.866-11.8v-.209C210.639,139.155,206.73,135.041,201.345,135.041Zm-135.4,14.276,11.57-28.188a15.517,15.517,0,0,1,13.245-8.881h69.352a15.517,15.517,0,0,1,13.245,8.881l11.572,28.188c2.005,4.885-.675,8.881-5.954,8.881H71.9C66.619,158.2,63.939,154.2,65.944,149.317Zm29,42.321a4.814,4.814,0,0,1-4.8,4.8H67.1a4.814,4.814,0,0,1-4.8-4.8v-9.809a4.814,4.814,0,0,1,4.8-4.8H90.15a4.814,4.814,0,0,1,4.8,4.8v9.809Zm93.383,0a4.814,4.814,0,0,1-4.8,4.8H160.481a4.814,4.814,0,0,1-4.8-4.8v-9.809a4.814,4.814,0,0,1,4.8-4.8h23.051a4.814,4.814,0,0,1,4.8,4.8Z"/>
+                                    <path id="Path_32" data-name="Path 32" d="M228.488,13.264H22.5A22.526,22.526,0,0,0,0,35.764V225.223a12.5,12.5,0,0,0,25,0V92.82H225.988v132.4a12.5,12.5,0,0,0,25,0V35.764A22.526,22.526,0,0,0,228.488,13.264ZM25,64.083H225.988v4.369H25Zm0-10V50.576H225.988v3.507ZM25,82.82V78.452H225.988V82.82H25Z"/>
+                                </g>
+                            </svg>
+                        </div>
                         Войти в гараж
                     </div>
                 )
@@ -160,19 +258,20 @@ class House extends Component {
     }
 
     exit() {
-        const { showHouse, house } = this.props;
+        const { showHouse, house, closeHouse } = this.props;
 
         if (!house.isLoading) {
-            showHouse(false);
+            //showHouse(false);
+            closeHouse();
         }
     }
 
     getForm() {
-        const { house, setLoading } = this.props;
+        const { house } = this.props;
 
         return (
             <Fragment>
-                <div style={{ filter: house.isLoading || house.answer ? 'blur(2px)' : 'blur(0px)' }}>
+                <div style={{ filter: house.isBlur ? 'blur(2px)' : 'blur(0px)' }}>
                     <div className='header-house-react'>
                         <span>Дом №{ house.name }</span>
                         <div className='exitHouse' name='exit' onClick={this.exit.bind(this)}></div>
@@ -216,23 +315,44 @@ class House extends Component {
         )
     }
 
-    getMessage(answer) {
-        const { setAnswer } = this.props;
+    closeMenu() {
+        const { setAnswer, blurForm } = this.props;
 
+        setAnswer({ answer: null });
+        blurForm(false);
+    }
+
+    getMessage(answer) {
         if (answer === 0) {
             return (
-                <div className='message_back-house-react' onClick={() => setAnswer({ answer: null })}>
+                <div className='message_back-house-react' onClick={this.closeMenu}>
                     <div className='exitEnterHouse' name='exit'></div>
-                    У Вас недостаточно денег для покупки
+                    У Вас недостаточно денег для покупки<br/>
+                    <div>
+                        <svg style={{ display: 'block', margin: '5% 45%' }} id="Group_10" data-name="Group 10" xmlns="http://www.w3.org/2000/svg" width="10%" height="10%" viewBox="0 0 233.069 233.069">
+                            <path id="Path_26" data-name="Path 26" d="M116.535,0A116.535,116.535,0,1,0,233.069,116.535,116.666,116.666,0,0,0,116.535,0Zm0,224.1A107.57,107.57,0,1,1,224.1,116.535,107.7,107.7,0,0,1,116.535,224.1Z" fill="#e1c631"/>
+                            <path id="Path_27" data-name="Path 27" d="M104.33,17.314a4.477,4.477,0,0,0-6.338,0l-37.17,37.17-37.17-37.17a4.481,4.481,0,1,0-6.338,6.338l37.17,37.17-37.17,37.17a4.481,4.481,0,1,0,6.338,6.338l37.17-37.17,37.17,37.17a4.481,4.481,0,0,0,6.338-6.338L67.16,60.822l37.17-37.17A4.477,4.477,0,0,0,104.33,17.314Z" transform="translate(55.713 55.713)" fill="#e1c631"/>
+                        </svg>
+                    </div>
+                    Нажмите на это сообщение для продолжения
                 </div>
             )
         }
 
         if (answer === 1) {
             return (
-                <div className='message_back-house-react' onClick={() => setAnswer({ answer: null })}>
+                <div className='message_back-house-react' onClick={this.closeMenu}>
                     <div className='exitEnterHouse' name='exit' ></div>
-                    Дом успешно куплен
+                    Дом успешно куплен<br/>
+                    <div>
+                        <svg style={{ display: 'block', margin: '5% 45%' }} xmlns="http://www.w3.org/2000/svg" width="10%" height="10%" viewBox="0 0 52 52">
+                            <g id="Group_11" data-name="Group 11" transform="translate(-469 -736.982)">
+                                <path id="Path_28" data-name="Path 28" d="M26,0A26,26,0,1,0,52,26,26.029,26.029,0,0,0,26,0Zm0,50A24,24,0,1,1,50,26,24.028,24.028,0,0,1,26,50Z" transform="translate(469 736.982)" fill="#e1c631"/>
+                                <path id="Path_29" data-name="Path 29" d="M38.252,15.336,22.883,32.626l-9.259-7.407a1,1,0,0,0-1.249,1.562l10,8a1,1,0,0,0,1.373-.117l16-18a1,1,0,0,0-1.5-1.328Z" transform="translate(469 736.982)" fill="#e1c631"/>
+                            </g>
+                        </svg>
+                    </div>
+                    Нажмите на это сообщение для продолжения
                 </div>
             )
         }
@@ -245,8 +365,8 @@ class House extends Component {
         return (
             <Fragment>
                 <div className='house_form-react'>
-                    { this.getForm() }
-                    { house.answer && this.getMessage(house.answer) }
+                    { Object.keys(house).length > 0 ? this.getForm() : this.getLoader() }
+                    { house.answer !== null && this.getMessage(house.answer) }
                     { isEnterMenu && this.showEnterMenu(house) }
                     { isActionsMenu && this.showActionsMenu(house) }
                 </div>
@@ -261,10 +381,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    loadInfo: info => dispatch(loadHouseInfo(info)),
     setLoading: flag => dispatch(setLoadingHouse(flag)),
     showHouse: flag => dispatch(showHouse(flag)),
     setAnswer: answer => dispatch(setAnswerHouse(answer)),
-    blockForm: flag => dispatch(setHouseFormBlock(flag))
+    blurForm: flag => dispatch(setHouseFormBlur(flag)),
+    closeHouse: () => dispatch(closeHouse())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(House);
