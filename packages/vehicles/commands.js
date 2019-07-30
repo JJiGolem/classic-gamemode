@@ -62,7 +62,8 @@ module.exports = {
                     x: veh.position.x,
                     y: veh.position.y,
                     z: veh.position.z,
-                    h: veh.heading
+                    h: veh.heading,
+                    plate: veh.plate
                 });
             } else {
                 var data = await db.Models.Vehicle.create({ /// Если автомобиля нет в БД, то создаем запись в БД 
@@ -75,7 +76,8 @@ module.exports = {
                     y: veh.position.y,
                     z: veh.position.z,
                     h: veh.heading,
-                    license: veh.license
+                    license: veh.license,
+                    plate: veh.plate
                 });
                 veh.sqlId = data.id;
                 veh.db = data;
