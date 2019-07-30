@@ -183,8 +183,8 @@ var inventory = new Vue({
             var url = this.urlItemImg(itemId);
             var style = {
                 backgroundImage: `url(${url})`,
-                height: this.itemsInfo[itemId].height * 2.2 + "vh",
-                width: this.itemsInfo[itemId].width * 2.2 + "vh",
+                height: this.itemsInfo[itemId].height * 2 + "vh",
+                width: this.itemsInfo[itemId].width * 2 + "vh",
                 pointerEvents: (this.itemDrag.item) ? 'none' : '',
             };
             return style;
@@ -531,6 +531,8 @@ var inventory = new Vue({
         show(val) {
             setCursor(val);
             mp.trigger("blur", val, 300);
+            hud.show = !val;
+            // TODO: Скрытие/показ чата.
         }
     },
     mounted() {

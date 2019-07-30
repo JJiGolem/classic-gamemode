@@ -5,10 +5,10 @@
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(10, 1fr);
     height: 80%;
-    left: 5%;
+    left: 15%;
     position: absolute;
     top: 10%;
-    width: 90%;
+    width: 70%;
     z-index: 100;
 }
 
@@ -512,10 +512,10 @@
 #inventory .items .column {
     border-bottom: 1px solid #5557;
     border-right: 1px solid #5557;
-    height: 2.2vh;
+    height: 2vh;
     margin-bottom: -1px;
     margin-right: -1px;
-    width: 2.2vh;
+    width: 2vh;
 }
 
 #inventory .items .column.access {
