@@ -10,7 +10,8 @@ module.exports = {
             includes: [db.Models.Interior]
         });
         for (let i = 0; i < infoHouses.length; i++) {
-            this.addHouse(infoHouses);
+            console.log(infoHouses[i]);
+            //this.addHouse(infoHouses);
         }
 
     },
