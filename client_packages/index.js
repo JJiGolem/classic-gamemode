@@ -16,6 +16,7 @@ require('chat');
 require('hud');
 require('infoTable');
 require('interactionMenu');
+require('inventory');
 require('nametags');
 require('notifications');
 require('offerDialog');

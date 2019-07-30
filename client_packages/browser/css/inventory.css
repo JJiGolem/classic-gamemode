@@ -9,6 +9,7 @@
     position: absolute;
     top: 10%;
     width: 90%;
+    z-index: 100;
 }
 
 #inventory>div {

@@ -383,6 +383,7 @@ var inventory = new Vue({
             } else Vue.set(this.equipment, index, item);
         },
         initItems(items) {
+            if (typeof items == 'string') items = JSON.parse(items);
             for (var index in items) {
                 var item = items[index];
                 this.addItem(item, null, index);
@@ -526,6 +527,10 @@ var inventory = new Vue({
     watch: {
         enable(val) {
             if (!val) this.show = false;
+        },
+        show(val) {
+            setCursor(val);
+            mp.trigger("blur", val, 300);
         }
     },
     mounted() {

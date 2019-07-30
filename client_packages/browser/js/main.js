@@ -17,3 +17,7 @@ function prettyMoney(val) {
     val += '';
     return val.replace(/(\d)(?=(\d{3})+(\D|$))/g, '$1 ');
 }
+
+function setCursor(enable) {
+    mp.invoke('focus', enable);
+}
