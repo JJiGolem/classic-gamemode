@@ -86,6 +86,8 @@ module.exports = {
         if (entity.type == "vehicle") {
             entity.setVariable("leftTurnSignal", false);
             entity.setVariable("rightTurnSignal", false);
+            entity.setVariable("hood", false);
+            entity.setVariable("trunk", false);
         }
     },
     "vehicles.signals.left": (player, state) => {
@@ -103,10 +105,37 @@ module.exports = {
         player.vehicle.setVariable("rightTurnSignal", state);
         player.vehicle.setVariable("leftTurnSignal", state);
     },
+    "vehicles.hood": (player, vehicleId, state) => {
+        let vehicle = mp.vehicles.at(vehicleId);
+        if (!vehicle) return;
+
+        vehicle.setVariable("hood", state);
+    },
+    "vehicles.trunk": (player, vehicleId, state) => {
+        let vehicle = mp.vehicles.at(vehicleId);
+        if (!vehicle) return;
+
+        vehicle.setVariable("trunk", state);
+    },
     "characterInit.done": (player) => {
         mp.events.call('vehicles.private.load', player);
     },
     "vehicles.private.load": (player) => {
         vehicles.loadPrivateVehicles(player);
+    },
+    "vehicles.lock": (player, vehicleId) => {
+        let vehicle = mp.vehicles.at(vehicleId);
+        if (!vehicle) return;
+        if (vehicle.key != 'private') return player.call('notifications.push.error', ['У вас нет ключей', 'Транспорт']);
+        if (vehicle.owner != player.character.id) return player.call('notifications.push.error', ['У вас нет ключей', 'Транспорт']);
+
+        let state = vehicle.locked;
+        if (state) {
+            vehicle.locked = false;
+            player.call('notifications.push.success', ['Вы открыли т/с', 'Транспорт']);
+        } else {
+            vehicle.locked = true;
+            player.call('notifications.push.success', ['Вы закрыли т/с', 'Транспорт']);
+        }
     }
 }

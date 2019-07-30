@@ -3,7 +3,41 @@ var interactionMenu = new Vue({
     data: {
         show: false,
         // Текущее меню
-        menu: null
+        menu: null,
+        menus: {
+            "vehicle": {
+                name: "vehicle", // название меню
+                items: [
+                    {
+                        text: "Двери",
+                        icon: "key.png"
+                    },
+                    {
+                        text: "Капот",
+                        icon: "hood.png"
+                    },
+                    {
+                        text: "Багажник",
+                        icon: "trunk.png"
+                    }
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    if (item.text == 'Двери') {
+                        mp.trigger(`vehicles.lock`);
+                        mp.trigger(`interaction.menu.close`);
+                    }
+                    if (item.text == 'Капот') {
+                        mp.trigger(`vehicles.hood`);
+                        mp.trigger(`interaction.menu.close`);
+                    }
+                    if (item.text == 'Багажник') {
+                        mp.trigger(`vehicles.trunk`);
+                        mp.trigger(`interaction.menu.close`);
+                    }
+                }
+            }
+        }
     },
     methods: {
         imgSrc(index) {

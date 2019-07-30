@@ -30,6 +30,8 @@ mp.game.controls.disableControlAction(1, 200, true);    //Pause Menu
 /// mp.callCEFR('setOpacityChat', [0.0]);
 /// Показ чата
 /// mp.callCEFR('setOpacityChat', [1.0]);
+/// Получение текущей сущности, с которой идет взаимодействие
+/// mp.getCurrentInteractionEntity()
 
 /// Описание основных клиентских переменных:
 /// 1)

@@ -40,12 +40,6 @@ mp.events.add('documents.close', (type, data) => {
     controlsDisabled = false;
 });
 
-
-mp.keys.bind(0x72, true, function () {
-    mp.events.call('documents.show', 'carPass');
-});
-
-
 mp.keys.bind(0x1B, false, function () {
     mp.events.call('documents.close');
 });

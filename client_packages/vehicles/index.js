@@ -249,11 +249,80 @@ mp.events.addDataHandler("rightTurnSignal", (entity) => {
     entity.setIndicatorLights(0, right);
 });
 
+mp.events.addDataHandler("hood", (entity) => {
+    var hood = entity.getVariable('hood');
+    if (hood) {
+        entity.setDoorOpen(4, false, false);
+    }
+    else {
+        entity.setDoorShut(4, false);
+    }
+});
+
+
+mp.events.addDataHandler("trunk", (entity) => {
+    var trunk = entity.getVariable('trunk');
+    if (trunk) {
+        entity.setDoorOpen(5, false, false);
+    } else {
+        entity.setDoorShut(5, false);
+    }
+});
+
 mp.events.add('entityStreamIn', (entity) => {
     if (entity.type == 'vehicle') {
         var left = entity.getVariable("leftTurnSignal");
         var right = entity.getVariable("rightTurnSignal");
         entity.setIndicatorLights(1, left);
         entity.setIndicatorLights(0, right);
+
+        var hood = entity.getVariable("hood");
+        var trunk = entity.getVariable("trunk");
+
+        if (hood) {
+            entity.setDoorOpen(4, false, false);
+        } else {
+            entity.setDoorShut(4, false);
+        }
+
+        if (trunk) {
+            entity.setDoorOpen(5, false, false);
+        } else {
+            entity.setDoorShut(5, false);
+        }
+    }
+});
+
+mp.events.add('vehicles.lock', () => {
+    let veh = mp.getCurrentInteractionEntity();
+    if (!veh) return;
+    if (veh.type != 'vehicle') return;
+    mp.chat.debug('lock');
+    mp.events.callRemote('vehicles.lock', veh.remoteId);
+})
+
+mp.events.add('vehicles.hood', () => {
+    let veh = mp.getCurrentInteractionEntity();
+    if (!veh) return;
+    if (veh.type != 'vehicle') return;
+    mp.chat.debug('hood');
+
+    if (veh.getVariable("hood")) {
+        mp.events.callRemote('vehicles.hood', veh.remoteId, false);
+    } else {
+        mp.events.callRemote('vehicles.hood', veh.remoteId, true);
+    }
+});
+
+mp.events.add('vehicles.trunk', () => {
+    let veh = mp.getCurrentInteractionEntity();
+    if (!veh) return;
+    if (veh.type != 'vehicle') return;
+    mp.chat.debug('trunk');
+
+    if (veh.getVariable("trunk")) {
+        mp.events.callRemote('vehicles.trunk', veh.remoteId, false);
+    } else {
+        mp.events.callRemote('vehicles.trunk', veh.remoteId, true);
     }
 });
