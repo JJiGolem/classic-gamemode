@@ -19,6 +19,9 @@ var prompt = new Vue({
             "carmarket_control": {
                 text: "Нажмите <span>E</span> для того, чтобы продать транспортное средство"
             },
+            "documents_close": {
+                text: "Нажмите <span>Esc</span> для того, чтобы закрыть документ"
+            },
         },
         text: null
     },
