@@ -4,7 +4,8 @@ module.exports = {
     "characterInit.done": (player) => {     //characterInit.done
         player.call('chat.load');
         player.call('chat.message.push', ['!{#00abff} Добро пожаловать на Classic Roleplay!']);
-        player.setVariable('nick', player.name);
+        player.setVariable('nick', player.character.name);
+        player.name = player.character.name; 
     },
 
     // "playerJoin": (player) => {
