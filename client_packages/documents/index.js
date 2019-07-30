@@ -1,25 +1,58 @@
+var controlsDisabled = false;
+var isOpen = false;
+var currentType;
 
 mp.events.add('documents.show', (type, data) => {
-    mp.game.graphics.transitionToBlurred(1000);
-    mp.callCEFV('carPass.show = true');
+    if (isOpen) return;
+    setTimeout(() => {
+        isOpen = true;
+    }, 500);
+    controlsDisabled = true;
+    mp.game.graphics.transitionToBlurred(500);
+    mp.gui.cursor.show(true, true);
     mp.events.call("prompt.showByName", 'documents_close');
+
+    currentType = type;
+    if (type == 'carPass') {
+        mp.callCEFV('carPass.show = true');
+        for (var key in data) {
+            if (typeof data[key] == 'string') data[key] = `'${data[key]}'`;
+            mp.callCEFV(`carPass.${key} = ${data[key]}`);
+        }
+    }
 });
 
 mp.events.add('documents.close', (type, data) => {
-    mp.callCEFV('carPass.show = false');
-    setTimeout(()=> {
-        mp.game.graphics.transitionFromBlurred(1000);
-    }, 1000);
-    
+    if (!isOpen) return;
+    setTimeout(() => {
+        isOpen = false;
+    }, 500);
+
+    switch (currentType) {
+        case 'carPass':
+            mp.callCEFV('carPass.show = false');
+            break;
+    }
+
+    mp.game.graphics.transitionFromBlurred(500);
+    mp.gui.cursor.show(false, false);
     mp.events.call("prompt.hide");
+    controlsDisabled = false;
 });
 
 
-mp.keys.bind(0x72, true, function () { 
-    //mp.game.graphics.transitionToBlurred(1000);
-    mp.events.call('documents.show');
+mp.keys.bind(0x72, true, function () {
+    mp.events.call('documents.show', 'carPass');
 });
 
-mp.keys.bind(0x73, true, function () { 
+
+mp.keys.bind(0x1B, false, function () {
     mp.events.call('documents.close');
+});
+
+
+mp.events.add('render', () => {
+    if (controlsDisabled) {
+        mp.game.controls.disableControlAction(1, 200, true);
+    }
 });

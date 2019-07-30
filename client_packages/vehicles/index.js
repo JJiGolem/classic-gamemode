@@ -3,10 +3,6 @@ mp.events.add('playerEnterVehicle', (vehicle, seat) => { ///Убираем ав�
         return;
     }
     vehicle.setEngineOn(false, true, true);
-    // setTimeout(()=>{
-
-    // }, 4000);
-
 });
 
 

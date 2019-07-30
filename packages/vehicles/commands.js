@@ -33,6 +33,22 @@ module.exports = {
             player.vehicle.explode();
         }
     },
+    "/carpass": {
+        handler: (player, args) => {
+            if (!player.vehicle) return;
+            let vehicle = player.vehicle;
+            let data = {
+                id: 3940123342,
+                vehType: "Автомобиль",
+                name: vehicle.properties.name,
+                regDate: "06 Дек 2012",
+                price: 111111,
+                owners: 1,
+                number: vehicle.plate
+            }
+            player.call('documents.show', ['carPass', data]);
+        }
+    },
     "/setveh": {
         access: 5,
         description: "Установить транспорт для новичков/фракции/работы",
