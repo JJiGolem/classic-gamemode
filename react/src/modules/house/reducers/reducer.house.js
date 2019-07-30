@@ -1,12 +1,5 @@
 const initialState = {
-    name: 228,
-    area: 'Санта-Моника',
-    class: 'Люкс',
-    numRooms: 4,
-    garage: false,
-    carPlaces: 2,
-    price: 45000,
-    rent: 350,
+
 };
 
 export default function house(state = initialState, action) {
@@ -25,12 +18,25 @@ export default function house(state = initialState, action) {
         case 'ANS_BUY_HOUSE':
             newState = { ...state };
             newState.answer = payload.answer;
+            if (payload.answer === 1) {
+                newState.owner = payload.owner
+            }
             newState.isLoading = false;
             return newState;
 
-        case 'BLOCK_HOUSE_FORM':
+        case 'BLUR_HOUSE_FORM':
             newState = { ...state };
-            newState.isBlock = payload;
+            newState.isBlur = payload;
+            return newState;
+
+        case 'ANS_ENTER_HOUSE':
+            newState = { ...state };
+            newState.answer = payload.answer;
+            newState.isLoading = false;
+            return newState;
+
+        case 'CLOSE_HOUSE':
+            newState = {};
             return newState;
     }
 

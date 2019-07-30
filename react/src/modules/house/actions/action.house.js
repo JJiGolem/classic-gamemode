@@ -3,6 +3,10 @@ export const showHouse = flag => ({
    payload: flag
 });
 
+export const closeHouse = () => ({
+   type: 'CLOSE_HOUSE'
+});
+
 export const loadHouseInfo = info => ({
     type: 'LOAD_INFO_HOUSE',
     payload: info
@@ -18,7 +22,7 @@ export const setAnswerHouse = answer => ({
     payload: answer
 });
 
-export const setHouseFormBlock = flag => ({
-   type: 'BLOCK_HOUSE_FORM',
+export const setHouseFormBlur = flag => ({
+   type: 'BLUR_HOUSE_FORM',
    payload: flag
 });

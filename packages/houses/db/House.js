@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         date: {
             type: DataTypes.DATE,
-            allowNull: false
+            allowNull: true
         },
         pickupX: {
             type: DataTypes.FLOAT,
@@ -50,10 +50,6 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         angle: {
-            type: DataTypes.INTEGER(11),
-            allowNull: false
-        },
-        interior: {
             type: DataTypes.INTEGER(11),
             allowNull: false
         },

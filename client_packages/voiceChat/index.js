@@ -159,7 +159,7 @@ mp.events.add("playerDeath", (player) => {
     }
 });
 
-setInterval(() => {
-    if (!mp.voiceChat.muted) return;
-    mp.voiceChat.cleanupAndReload(true, true, true);
-}, 1000);
+// setInterval(() => {
+//     if (!mp.voiceChat.muted) return;
+//     mp.voiceChat.cleanupAndReload(true, true, true);
+// }, 1000);
