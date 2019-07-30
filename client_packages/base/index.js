@@ -26,7 +26,10 @@ mp.game.controls.disableControlAction(1, 200, true);    //Pause Menu
 /// mp.utils
 /// Модуль войсчата(подробнее см. в модуле)
 /// mp.speechChanel
-
+/// Скрытие чата
+/// mp.callCEFR('setOpacityChat', [0.0]);
+/// Показ чата
+/// mp.callCEFR('setOpacityChat', [1.0]);
 
 /// Описание основных клиентских переменных:
 /// 1)

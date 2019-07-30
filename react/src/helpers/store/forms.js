@@ -21,6 +21,12 @@ export default function forms(state = initialState, action) {
                 house: payload
             };
 
+        case 'CLOSE_HOUSE':
+            return {
+              ...state,
+              house: false
+            };
+
         case 'SHOW_BUSINESS':
             return {
                 ...state,
