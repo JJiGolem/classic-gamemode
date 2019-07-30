@@ -137,7 +137,7 @@ setInterval(() => {
 		else {
 			mp.speechChanel.disconnect(player, null);
 		}
-	});
+    });
 }, 250);
 
 
@@ -158,3 +158,8 @@ mp.events.add("playerDeath", (player) => {
         mp.speechChanel.disconnect(player, null, true);
     }
 });
+
+setInterval(() => {
+    if (!mp.voiceChat.muted) return;
+    mp.voiceChat.cleanupAndReload(true, true, true);
+}, 1000);
