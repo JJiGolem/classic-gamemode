@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
         },
         characterId: {
             type: DataTypes.INTEGER(11),
+            allowNull: true
+        },
+        interiorId: {
+            type: DataTypes.INTEGER(11),
             allowNull: false
         },
         isClosed: {
@@ -81,6 +85,9 @@ module.exports = (sequelize, DataTypes) => {
     model.associate = (models) => {
         model.belongsTo(models.Character, {
             foreignKey: "characterId"
+        });
+        model.belongsTo(models.Interior, {
+            foreignKey: "interiorId"
         });
     };
     return model;

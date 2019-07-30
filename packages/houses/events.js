@@ -1,10 +1,10 @@
 "use strict";
 /// Модуль системы домов
-let houseService = require("./index.js");
+let housesService = require("./index.js");
 
 module.exports = {
     /// Событие инициализации сервера
     "init": () => {
-        houseService.init();
+        housesService.init();
     },
 };
