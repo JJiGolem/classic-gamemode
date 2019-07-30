@@ -177,7 +177,9 @@ let showPhone = () => {
     playHoldAnimation(true);
 }
 
-let hidePhone = () => {		
+let hidePhone = () => {
+    if (!mp.busy.includes('phone')) return;		
+    
     mp.callCEFR('phone.show', [false]); 
     mp.gui.cursor.show(false, false);
     mp.busy.remove('phone');
