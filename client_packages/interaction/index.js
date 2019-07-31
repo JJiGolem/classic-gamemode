@@ -1,4 +1,4 @@
-const INTERACTION_RANGE = 3;
+const INTERACTION_RANGE = 3.5;
 var currentInteractionEntity;
 var isOpen = false;
 
@@ -31,21 +31,24 @@ function getClosestVehicle(pos, range = INTERACTION_RANGE) {
 }
 
 mp.events.add('interaction.menu.show', () => {
+    mp.busy.add('interaction');
     isOpen = true;
     mp.gui.cursor.show(true, true);
     mp.callCEFV('interactionMenu.show = true');
 });
 
 mp.events.add('interaction.menu.close', () => {
+    mp.busy.remove('interaction');
     isOpen = false;
     mp.gui.cursor.show(false, false);
     mp.callCEFV('interactionMenu.show = false');
 });
 
 mp.keys.bind(0x45, true, function () {
+    if (isOpen) return mp.events.call('interaction.menu.close');
     if (mp.busy.includes()) return;
     if (mp.players.local.vehicle) return;
-    if (isOpen) return mp.events.call('interaction.menu.close');
+   
     currentInteractionEntity = getClosestVehicle(mp.players.local.position);
     mp.callCEFV('interactionMenu.menu = interactionMenu.menus["vehicle"]');
     mp.events.call('interaction.menu.show');

@@ -46,6 +46,7 @@ module.exports = {
         }
     },
     "vehicleDeath": (vehicle) => {
+        if (vehicle.key = "admin") return vehicle.destroy(); /// Если админская, не респавним
         vehicles.respawnVehicle(vehicle);
     },
     "playerExitVehicle": (player, vehicle) => {
@@ -126,8 +127,9 @@ module.exports = {
     "vehicles.lock": (player, vehicleId) => {
         let vehicle = mp.vehicles.at(vehicleId);
         if (!vehicle) return;
-        if (vehicle.key != 'private') return player.call('notifications.push.error', ['У вас нет ключей', 'Транспорт']);
-        if (vehicle.owner != player.character.id) return player.call('notifications.push.error', ['У вас нет ключей', 'Транспорт']);
+        // TEMP 
+        // if (vehicle.key != 'private') return player.call('notifications.push.error', ['Это не ваше т/с', 'Ошибка']);
+        // if (vehicle.owner != player.character.id) return player.call('notifications.push.error', ['Это не ваше т/с', 'Транспорт']);
 
         let state = vehicle.locked;
         if (state) {
