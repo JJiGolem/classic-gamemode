@@ -3,7 +3,7 @@
     position: absolute;
     text-transform: uppercase;
     font-family: Montserrat;
-    left: 80vh;
+    left: 80vw;
     top: 50vh;
     transform: rotateY(-10deg) rotateX(0) translateZ(0);
 }

@@ -3,7 +3,7 @@ try {
 
 const INTERACTION_RANGE = 3.5;
 const classesToIgnore = [8, 13, 14, 15, 16];
-const defaultLeft = 80;
+const defaultLeft = 50;
 const vehicleLeft = 95;
 
 let currentInteractionEntity;
