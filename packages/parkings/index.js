@@ -139,17 +139,12 @@ module.exports = {
         });
     },
     savePlayerParkingVehicles(player) {
-        if(!player.character.id) return;
+        if(!player.character) return;
         
-        console.log(player.character.id);
         mp.vehicles.forEach((current) => {
-            console.log("key" + current.key);
-            console.log("owner" + current.owner);
-            console.log(current.key == "private");
-            console.log(current.owner == player.character.id);
             if (current.key == "private" && current.owner == player.character.id) {
                 if (current.isOnParking) {
-                    console.log("нашли");
+                    console.log("Сохраняем парковочную");
                     current.db.update({
                         parkingId: this.getClosestParkingId(player),
                         parkingHours: 0
