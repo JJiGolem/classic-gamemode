@@ -55,14 +55,13 @@ mp.keys.bind(0x45, true, function () {
     if (!currentInteractionEntity) return;
 
 
-    mp.callCEFV('interactionMenu.menu = interactionMenu.menus["vehicle"]');
+    mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle"])');
 
-    // mp.chat.debug(currentInteractionEntity.getClass());
-    // let vehClass = currentInteractionEntity.getClass();
-    // if (classesToIgnore.includes(vehClass)) {
-    //     mp.callCEFV('interactionMenu.menu.items.splice(1, 2)');
-    // }
-    //mp.callCEFV('interactionMenu.menu = interactionMenu.menus["vehicle"]');
+    mp.chat.debug(currentInteractionEntity.getClass());
+    let vehClass = currentInteractionEntity.getClass();
+    if (classesToIgnore.includes(vehClass)) {
+        mp.callCEFV('interactionMenu.menu.items.splice(1, 2)');
+    }
     mp.events.call('interaction.menu.show');
     
 });
