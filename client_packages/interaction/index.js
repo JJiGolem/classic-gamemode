@@ -3,7 +3,7 @@ const classesToIgnore = [8, 13, 14, 15, 16];
 
 var currentInteractionEntity;
 var currentVehicle;
-var isOpen = false;
+let isOpen = false;
 
 mp.getCurrentInteractionEntity = () => {
     return currentInteractionEntity;

@@ -235,14 +235,14 @@ var selectMenu = new Vue({
         onEscapePressed() {
             this.menu.handler("onEscapePressed");
         },
-        open() {
-            this.menu.i = 0; // TEMP, нужно разобраться, почему i/j остаются прежними при закрытии/открытии меню
-            this.menu.j = 0;
-            this.show = true;
-        },
-        close() {
-            this.menu = null;
-        }
+        // open() {
+        //     this.menu.i = 0; // TEMP, нужно разобраться, почему i/j остаются прежними при закрытии/открытии меню
+        //     this.menu.j = 0;
+        //     this.show = true;
+        // },
+        // close() {
+        //     this.menu = null;
+        // }
     },
     computed: {
         items() {

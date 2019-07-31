@@ -1,6 +1,6 @@
-var controlsDisabled = false;
-var isOpen = false;
-var currentType;
+let controlsDisabled = false;
+let isOpen = false;
+let currentType;
 
 mp.events.add('documents.show', (type, data) => {
     if (isOpen) return;
@@ -41,6 +41,8 @@ mp.events.add('documents.close', (type, data) => {
 });
 
 mp.keys.bind(0x1B, false, function () {
+    mp.chat.debug(isOpen);
+    if (!isOpen) return;
     mp.events.call('documents.close');
 });
 

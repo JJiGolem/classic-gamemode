@@ -15,14 +15,14 @@ mp.keys.bind(0x45, true, () => {
 });
 
 mp.events.add('carmarket.sellmenu.show', () => {
-    mp.callCEFV(`selectMenu.menu = selectMenu.menus["carMarketSellMenu"]`);
-    mp.callCEFV(`selectMenu.open()`);
+    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["carMarketSellMenu"])`);
+    mp.callCEFV(`selectMenu.show = true`);
 });
 
 mp.events.add('carmarket.car.sell', () => {
     mp.callCEFV(`loader.show = true;`);
     mp.events.callRemote('carmarket.car.sell');
-    mp.callCEFV(`selectMenu.close()`);
+    mp.callCEFV(`selectMenu.menu = null`);
 });
 mp.events.add('carmarket.car.sell.ans', (ans) => {
     mp.callCEFV(`loader.show = false;`);
@@ -44,22 +44,22 @@ mp.events.add('carmarket.car.sell.ans', (ans) => {
 });
 
 mp.events.add('carmarket.sellmenu.close', () => {
-    mp.callCEFV(`selectMenu.close()`);
+    mp.callCEFV(`selectMenu.menu = null`);
 });
 
 mp.events.add('carmarket.buymenu.show', () => {
-    mp.callCEFV(`selectMenu.menu = selectMenu.menus["carMarketBuyMenu"]`);
-    mp.callCEFV(`selectMenu.open()`);
+    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["carMarketBuyMenu"])`);
+    mp.callCEFV(`selectMenu.show = true`);
 });
 
 mp.events.add('carmarket.buymenu.close', () => {
-    mp.callCEFV(`selectMenu.close()`);
+    mp.callCEFV(`selectMenu.menu = null`);
 });
 
 mp.events.add('carmarket.car.buy', () => {
     mp.callCEFV(`loader.show = true;`);
     mp.events.callRemote('carmarket.car.buy');
-    mp.callCEFV(`selectMenu.close()`);
+    mp.callCEFV(`selectMenu.menu = null`);
 });
 
 mp.events.add('carmarket.car.buy.ans', (ans, data) => {
