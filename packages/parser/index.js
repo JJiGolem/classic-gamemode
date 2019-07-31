@@ -10,7 +10,7 @@ module.exports = {
         let interiorsDB = await db.Models.Interior.findAll();
         if (interiorsDB.length == 0) {
             for (let i = 0; i < interiors.length; i++) {
-                await db.Models.Interior.create({
+                db.Models.Interior.create({
                     id: interiors[i].id + 1,
                     class: interiors[i].class,
                     numRooms: interiors[i].numRooms,
@@ -29,10 +29,11 @@ module.exports = {
         }
 
         let housesDB = await db.Models.House.findAll();
-        if (housesDB.length == 0) {
+        interiorsDB = await db.Models.Interior.findAll({raw:true});
+        if (housesDB.length == 0 && interiorsDB.length != 0) {
             for (let i = 0; i < houses.length; i++) {
-                if (interiors.findIndex( x => x.id == houses[i].interior) == -1) continue;
-                await db.Models.House.create({
+                if (interiorsDB.findIndex( x => x.id == houses[i].interior) == -1) continue;
+                db.Models.House.create({
                     characterId: null,
                     interiorId: houses[i].interior + 1,
                     isClosed: false,
