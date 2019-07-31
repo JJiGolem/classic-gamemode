@@ -60,6 +60,10 @@ var interactionMenu = new Vue({
                         mp.trigger(`interaction.ejectlist.get`);
                         mp.trigger(`interaction.menu.close`);
                     }
+                    if (item.text == 'Звук сирены') {
+                        mp.trigger(`vehicles.siren.sound`);
+                        mp.trigger(`interaction.menu.close`);
+                    }
                 }
             },
             "vehicle_ejectlist": {

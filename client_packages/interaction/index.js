@@ -4,7 +4,7 @@ try {
 const INTERACTION_RANGE = 3.5;
 const classesToIgnore = [8, 13, 14, 15, 16];
 const defaultLeft = 50;
-const vehicleLeft = 95;
+const vehicleLeft = 60;
 
 let currentInteractionEntity;
 let currentVehicle;
@@ -33,8 +33,8 @@ function getClosestVehicle(pos, range = INTERACTION_RANGE) {
             }
         }
     });
-    mp.chat.debug('MINIMAL:');
-    mp.chat.debug(closestVehicle.model);
+    // mp.chat.debug('MINIMAL:');
+    // mp.chat.debug(closestVehicle.model);
     return closestVehicle;
 }
 
@@ -69,7 +69,7 @@ mp.events.add('characterInit.done', () => { /// E
 
         mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle"])');
         mp.callCEFV(`interactionMenu.left = ${defaultLeft}`);
-        mp.chat.debug(currentInteractionEntity.getClass());
+        // mp.chat.debug(currentInteractionEntity.getClass());
         let vehClass = currentInteractionEntity.getClass();
         if (classesToIgnore.includes(vehClass)) {
             mp.callCEFV('interactionMenu.menu.items.splice(1, 2)');
@@ -91,7 +91,7 @@ mp.events.add('characterInit.done', () => { /// E
         mp.callCEFV(`interactionMenu.left = ${vehicleLeft}`);
         mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle_inside"])');
 
-        mp.chat.debug(currentInteractionEntity.getClass());
+        // mp.chat.debug(currentInteractionEntity.getClass());
         let vehClass = currentInteractionEntity.getClass();
         if (vehClass == 18) {
             mp.callCEFV(`interactionMenu.menu.items.push({
@@ -150,5 +150,5 @@ mp.events.add('interaction.eject', (index) => {
     mp.events.callRemote('vehicles.eject', JSON.stringify(playerToEject));
 });
 } catch(err) {
-    mp.chat.debug(err);
+    mp.chat.debug("error");
 }

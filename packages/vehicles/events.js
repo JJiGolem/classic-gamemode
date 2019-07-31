@@ -17,7 +17,6 @@ module.exports = {
         player.call('chat.message.push', [`!{#71a0ff} license ${vehicle.properties.license}`]);
         player.call('chat.message.push', [`!{#71a0ff} parkingHours ${vehicle.parkingHours}`]);
 
-
         // if ((vehicle.license != 0) && vehicle.license != player.license) {
         //     player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);
         //     player.removeFromVehicle();
@@ -158,10 +157,10 @@ module.exports = {
         occupants.forEach((current) => {
             console.log(current.name);
             //if ((current.id != player.id) && (current.seat != -1)) {
-                ejectList.push({
-                    id: current.id,
-                    name: current.name
-                });
+            ejectList.push({
+                id: current.id,
+                name: current.name
+            });
             //}
         });
         console.log(ejectList);
@@ -176,7 +175,7 @@ module.exports = {
         if (!target) return;
         if (!target.vehicle) return;
         if (target.name != playerToEject.name) return;
-        
+
         console.log(`выкидываем ${target.name} с id ${target.id}`);
         try {
             target.removeFromVehicle();
@@ -184,5 +183,21 @@ module.exports = {
         } catch (err) {
             console.log(err);
         }
+    },
+    "vehicles.siren.sound": (player, vehicleId) => {
+        if (!player.vehicle) return;
+        let vehicle = mp.vehicles.at(vehicleId);
+        if (!vehicle) return;
+
+        var sirenSound = vehicle.getVariable("sirenSound");
+        vehicle.setVariable("sirenSound", !sirenSound);
+    },
+    "vehicles.siren.lights": (player) => {
+        if (!player.vehicle) return;
+        
+        var sirenLights = player.vehicle.getVariable("sirenLights");
+        if (sirenLights == player.vehicle.siren) return;
+        console.log(` ставим сирену ${player.vehicle.siren}`);
+        player.vehicle.setVariable("sirenLights", player.vehicle.siren);
     }
 }
