@@ -7,6 +7,9 @@ export default function house(state = initialState, action) {
     var newState;
 
     switch (type) {
+        case 'SHOW_HOUSE':
+            return {};
+
         case 'LOAD_INFO_HOUSE':
             return payload;
 
@@ -17,7 +20,7 @@ export default function house(state = initialState, action) {
 
         case 'ANS_BUY_HOUSE':
             newState = { ...state };
-            newState.answer = payload.answer;
+            newState.answerBuy = payload.answer;
             if (payload.answer === 1) {
                 newState.owner = payload.owner
             }
@@ -31,13 +34,19 @@ export default function house(state = initialState, action) {
 
         case 'ANS_ENTER_HOUSE':
             newState = { ...state };
-            newState.answer = payload.answer;
+            newState.answerEnter = payload.answer;
             newState.isLoading = false;
             return newState;
 
-        case 'CLOSE_HOUSE':
-            newState = {};
+        case 'CLOSE_ENTER_MENU_HOUSE':
+            newState = { ...state };
+            if (newState.isBlur) {
+                newState.isBlur = false;
+            }
             return newState;
+
+        case 'CLOSE_HOUSE':
+            return {};
     }
 
     return state;
