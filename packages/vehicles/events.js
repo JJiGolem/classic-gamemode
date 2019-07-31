@@ -142,13 +142,47 @@ module.exports = {
     "vehicles.explode": (player, vehicleId) => {
         let vehicle = mp.vehicles.at(vehicleId);
         if (!vehicle) return;
-        // TEMP 
-        // if (vehicle.key != 'private') return player.call('notifications.push.error', ['Это не ваше т/с', 'Ошибка']);
-        // if (vehicle.owner != player.character.id) return player.call('notifications.push.error', ['Это не ваше т/с', 'Транспорт']);
-        setTimeout(()=> {
+        setTimeout(() => {
             vehicle.explode();
             vehicle.destroy();
         }, 2000);
-       
+    },
+    "vehicles.ejectlist.get": (player, vehicleId) => {
+        let vehicle = mp.vehicles.at(vehicleId);
+        if (!vehicle) return;
+        let occupants = vehicle.getOccupants();
+        if (occupants.length == 0) return;
+
+        let ejectList = [];
+
+        occupants.forEach((current) => {
+            console.log(current.name);
+            //if ((current.id != player.id) && (current.seat != -1)) {
+                ejectList.push({
+                    id: current.id,
+                    name: current.name
+                });
+            //}
+        });
+        console.log(ejectList);
+        if (ejectList.length == 0) return player.call('notifications.push.error', ['В т/с нет пассажиров', 'Транспорт']);;
+        player.call('interaction.ejectlist.show', [ejectList]);
+    },
+    "vehicles.eject": (player, playerToEject) => {
+        if (!playerToEject) return;
+        playerToEject = JSON.parse(playerToEject);
+
+        let target = mp.players.at(playerToEject.id);
+        if (!target) return;
+        if (!target.vehicle) return;
+        if (target.name != playerToEject.name) return;
+        
+        console.log(`выкидываем ${target.name} с id ${target.id}`);
+        try {
+            target.removeFromVehicle();
+            player.call('notifications.push.success', ['Вы вытолкнули пассажира', 'Транспорт']);
+        } catch (err) {
+            console.log(err);
+        }
     }
 }

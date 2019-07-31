@@ -1,9 +1,9 @@
-mp.events.add('playerEnterVehicle', (vehicle, seat) => { ///Убираем автозаведение автомобиля персонажем
-    if (mp.players.local.getSeatIsTryingToEnter() !== -1 || vehicle.getIsEngineRunning()) {
-        return;
-    }
-    vehicle.setEngineOn(false, true, true);
-});
+// mp.events.add('playerEnterVehicle', (vehicle, seat) => { ///Убираем автозаведение автомобиля персонажем
+//     if (mp.players.local.getSeatIsTryingToEnter() !== -1 || vehicle.getIsEngineRunning()) {
+//         return;
+//     }
+//     vehicle.setEngineOn(false, true, true);
+// });
 
 
 mp.events.add("playerLeaveVehicle", () => {
@@ -22,7 +22,7 @@ mp.events.addDataHandler("engine", (entity) => {
 setInterval(() => { /// Синхронизация двигателя
     var player = mp.players.local;
     if (player.vehicle && mp.vehicles.exists(player.vehicle)) {
-        var engine = player.vehicle.getVariable('engine');
+        var engine = player.vehicle.getVariable('engine') || false;
 
         player.vehicle.setUndriveable(!engine);
         player.vehicle.setEngineOn(engine, true, true);
@@ -271,13 +271,13 @@ mp.events.addDataHandler("trunk", (entity) => {
 
 mp.events.add('entityStreamIn', (entity) => {
     if (entity.type == 'vehicle') {
-        var left = entity.getVariable("leftTurnSignal");
-        var right = entity.getVariable("rightTurnSignal");
+        var left = entity.getVariable("leftTurnSignal") || false;
+        var right = entity.getVariable("rightTurnSignal") || false;
         entity.setIndicatorLights(1, left);
         entity.setIndicatorLights(0, right);
 
-        var hood = entity.getVariable("hood");
-        var trunk = entity.getVariable("trunk");
+        var hood = entity.getVariable("hood") || false;
+        var trunk = entity.getVariable("trunk") || false;
 
         if (hood) {
             entity.setDoorOpen(4, false, false);

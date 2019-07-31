@@ -44,6 +44,10 @@ var interactionMenu = new Vue({
                     {
                         text: "Двери",
                         icon: "key.png"
+                    },
+                    {
+                        text: "Вытолкнуть",
+                        icon: "eject.png"
                     }
                 ],
                 handler(index) {
@@ -52,6 +56,24 @@ var interactionMenu = new Vue({
                         mp.trigger(`vehicles.lock`);
                         mp.trigger(`interaction.menu.close`);
                     }
+                    if (item.text == 'Вытолкнуть') {
+                        mp.trigger(`interaction.ejectlist.get`);
+                        mp.trigger(`interaction.menu.close`);
+                    }
+                }
+            },
+            "vehicle_ejectlist": {
+                name: "vehicle_ejectlist", 
+                items: [
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    // if (item.text == 'Двери') {
+                    //     mp.trigger(`vehicles.lock`);
+                    //     mp.trigger(`interaction.menu.close`);
+                    // }
+                    mp.trigger(`interaction.eject`, index);
+                    mp.trigger(`interaction.menu.close`);
                 }
             }
         }

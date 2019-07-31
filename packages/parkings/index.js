@@ -149,6 +149,8 @@ module.exports = {
                         parkingId: this.getClosestParkingId(player),
                         parkingHours: 0
                     });
+                    clearInterval(current.fuelTimer);
+                    current.destroy();
                 }
             }
         });

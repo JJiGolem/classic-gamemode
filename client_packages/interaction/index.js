@@ -1,11 +1,16 @@
+try {
+
+
 const INTERACTION_RANGE = 3.5;
 const classesToIgnore = [8, 13, 14, 15, 16];
 const defaultLeft = 80;
 const vehicleLeft = 95;
 
-var currentInteractionEntity;
-var currentVehicle;
+let currentInteractionEntity;
+let currentVehicle;
 let isOpen = false;
+
+let occupantsToEject = [];
 
 mp.getCurrentInteractionEntity = () => {
     return currentInteractionEntity;
@@ -50,18 +55,18 @@ mp.events.add('interaction.menu.close', () => {
 mp.events.add('playerLeaveVehicle', () => {
     currentInteractionEntity = null;
 });
-mp.events.add('characterInit.done', ()=> {
+mp.events.add('characterInit.done', () => { /// E
     mp.keys.bind(0x45, true, function () {
         if (isOpen) mp.busy.remove('interaction');
         if (mp.busy.includes()) return;
         if (isOpen) return mp.events.call('interaction.menu.close');;
-    
+
         if (mp.players.local.vehicle) return;
-       
+
         currentInteractionEntity = getClosestVehicle(mp.players.local.position);
         if (!currentInteractionEntity) return;
-    
-    
+
+
         mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle"])');
         mp.callCEFV(`interactionMenu.left = ${defaultLeft}`);
         mp.chat.debug(currentInteractionEntity.getClass());
@@ -70,29 +75,33 @@ mp.events.add('characterInit.done', ()=> {
             mp.callCEFV('interactionMenu.menu.items.splice(1, 2)');
         }
         mp.events.call('interaction.menu.show');
-        
+
     });
 
-    mp.keys.bind(0x4C, true, function () {
-        // if (isOpen) mp.busy.remove('interaction');
-        // if (mp.busy.includes()) return;
+    mp.keys.bind(0x4C, true, function () { /// L
+        if (isOpen) mp.busy.remove('interaction');
+        if (mp.busy.includes()) return;
         if (isOpen) return mp.events.call('interaction.menu.close');;
-    
+
         if (!mp.players.local.vehicle) return;
-       
+
         currentInteractionEntity = mp.players.local.vehicle;
         if (!currentInteractionEntity) return;
-    
+
         mp.callCEFV(`interactionMenu.left = ${vehicleLeft}`);
         mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle_inside"])');
-    
-        // mp.chat.debug(currentInteractionEntity.getClass());
-        // let vehClass = currentInteractionEntity.getClass();
-        // if (classesToIgnore.includes(vehClass)) {
-        //     mp.callCEFV('interactionMenu.menu.items.splice(1, 2)');
-        // }
+
+        mp.chat.debug(currentInteractionEntity.getClass());
+        let vehClass = currentInteractionEntity.getClass();
+        if (vehClass == 18) {
+            mp.callCEFV(`interactionMenu.menu.items.push({
+                text: "Звук сирены",
+                icon: "siren.png"
+            });`);
+        }
+
         mp.events.call('interaction.menu.show');
-        
+
     });
 });
 
@@ -110,3 +119,36 @@ mp.events.add('render', () => {
         currentInteractionEntity = null;
     }
 });
+
+mp.events.add('interaction.ejectlist.get', () => {
+    mp.events.callRemote('vehicles.ejectlist.get', currentInteractionEntity.remoteId);
+});
+
+mp.events.add('interaction.ejectlist.show', (list) => {
+    occupantsToEject = list;
+
+
+    mp.callCEFV(`interactionMenu.left = ${vehicleLeft}`);
+    mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle_ejectlist"])');
+    occupantsToEject.forEach((current) => {
+        mp.chat.debug(`${current.id} ${current.name}`);
+        mp.callCEFV(`interactionMenu.menu.items.push({
+            text: "ID: ${current.id}",
+            icon: "person.png"
+        });`);
+    });
+    mp.events.call('interaction.menu.show');
+
+});
+
+mp.events.add('interaction.eject', (index) => {
+    if (!currentInteractionEntity) return;
+    if (currentInteractionEntity.type != 'vehicle') return;
+    let playerToEject = occupantsToEject[index];
+    mp.chat.debug(`${index}`);
+    mp.chat.debug(`${occupantsToEject[index].name}`);
+    mp.events.callRemote('vehicles.eject', JSON.stringify(playerToEject));
+});
+} catch(err) {
+    mp.chat.debug(err);
+}

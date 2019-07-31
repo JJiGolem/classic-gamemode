@@ -6,6 +6,8 @@ mp.events.add('carmarket.colshape.enter', () => {
 
 mp.events.add('carmarket.colshape.leave', () => {
     isInCarMarketColshape = false;
+    mp.events.call('carmarket.sellmenu.close');
+
 });
 
 mp.keys.bind(0x45, true, () => {
