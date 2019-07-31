@@ -324,3 +324,10 @@ mp.events.add('vehicles.trunk', () => {
         mp.events.callRemote('vehicles.trunk', veh.remoteId, true);
     }
 });
+
+mp.events.add('vehicles.explode', () => {
+    let veh = mp.getCurrentInteractionEntity();
+    if (!veh) return;
+    if (veh.type != 'vehicle') return;
+    mp.events.callRemote('vehicles.explode', veh.remoteId);
+});

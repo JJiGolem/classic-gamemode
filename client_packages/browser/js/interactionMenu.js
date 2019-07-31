@@ -36,6 +36,22 @@ var interactionMenu = new Vue({
                         mp.trigger(`interaction.menu.close`);
                     }
                 }
+            },
+            "vehicle_inside": {
+                name: "vehicle_inside", // название меню
+                items: [
+                    {
+                        text: "Двери",
+                        icon: "key.png"
+                    }
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    if (item.text == 'Двери') {
+                        mp.trigger(`vehicles.lock`);
+                        mp.trigger(`interaction.menu.close`);
+                    }
+                }
             }
         }
     },

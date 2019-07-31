@@ -138,5 +138,17 @@ module.exports = {
             vehicle.locked = true;
             player.call('notifications.push.success', ['Вы закрыли т/с', 'Транспорт']);
         }
+    },
+    "vehicles.explode": (player, vehicleId) => {
+        let vehicle = mp.vehicles.at(vehicleId);
+        if (!vehicle) return;
+        // TEMP 
+        // if (vehicle.key != 'private') return player.call('notifications.push.error', ['Это не ваше т/с', 'Ошибка']);
+        // if (vehicle.owner != player.character.id) return player.call('notifications.push.error', ['Это не ваше т/с', 'Транспорт']);
+        setTimeout(()=> {
+            vehicle.explode();
+            vehicle.destroy();
+        }, 2000);
+       
     }
 }
