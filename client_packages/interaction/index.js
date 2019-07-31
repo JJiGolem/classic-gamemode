@@ -1,4 +1,6 @@
 const INTERACTION_RANGE = 3.5;
+const classesToIgnore = [8, 13, 14, 15, 16];
+
 var currentInteractionEntity;
 var isOpen = false;
 
@@ -50,9 +52,19 @@ mp.keys.bind(0x45, true, function () {
     if (mp.players.local.vehicle) return;
    
     currentInteractionEntity = getClosestVehicle(mp.players.local.position);
+    if (!currentInteractionEntity) return;
+
+
     mp.callCEFV('interactionMenu.menu = interactionMenu.menus["vehicle"]');
+
+    // mp.chat.debug(currentInteractionEntity.getClass());
+    // let vehClass = currentInteractionEntity.getClass();
+    // if (classesToIgnore.includes(vehClass)) {
+    //     mp.callCEFV('interactionMenu.menu.items.splice(1, 2)');
+    // }
+    //mp.callCEFV('interactionMenu.menu = interactionMenu.menus["vehicle"]');
     mp.events.call('interaction.menu.show');
-    if (!veh) return;
+    
 });
 
 mp.events.add('render', () => {
