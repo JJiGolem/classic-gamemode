@@ -1,5 +1,7 @@
 const INTERACTION_RANGE = 3.5;
 const classesToIgnore = [8, 13, 14, 15, 16];
+const defaultLeft = 80;
+const vehicleLeft = 95;
 
 var currentInteractionEntity;
 var currentVehicle;
@@ -61,7 +63,7 @@ mp.events.add('characterInit.done', ()=> {
     
     
         mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle"])');
-    
+        mp.callCEFV(`interactionMenu.left = ${defaultLeft}`);
         mp.chat.debug(currentInteractionEntity.getClass());
         let vehClass = currentInteractionEntity.getClass();
         if (classesToIgnore.includes(vehClass)) {
@@ -81,7 +83,7 @@ mp.events.add('characterInit.done', ()=> {
         currentInteractionEntity = mp.players.local.vehicle;
         if (!currentInteractionEntity) return;
     
-    
+        mp.callCEFV(`interactionMenu.left = ${vehicleLeft}`);
         mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle_inside"])');
     
         // mp.chat.debug(currentInteractionEntity.getClass());

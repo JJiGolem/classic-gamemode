@@ -2,6 +2,7 @@ var interactionMenu = new Vue({
     el: "#interactionMenu",
     data: {
         show: false,
+        left: 80, /// сдвиг от левой части экрана
         // Текущее меню
         menu: null,
         menus: {

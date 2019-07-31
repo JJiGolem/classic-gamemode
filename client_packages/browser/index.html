@@ -426,7 +426,7 @@
         </div>
     </div>
 
-    <div v-cloak id="interactionMenu" v-if="show">
+    <div v-cloak id="interactionMenu" v-if="show" v-bind:style="{left: left + 'vh'}">
         <div class="interaction_item" v-for="(item, index) in menu.items" @click="onClick(index)">
             <div class="icon"><img :src="imgSrc(index)" />
             </div>
