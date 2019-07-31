@@ -46,7 +46,6 @@ module.exports = {
         }
     },
     "vehicleDeath": (vehicle) => {
-        if (vehicle.key = "admin") return vehicle.destroy(); /// Если админская, не респавним
         vehicles.respawnVehicle(vehicle);
     },
     "playerExitVehicle": (player, vehicle) => {

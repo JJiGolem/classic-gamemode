@@ -82,6 +82,8 @@ module.exports = {
     respawnVehicle(veh) {
         clearInterval(veh.fuelTimer);
 
+        if (veh.key == "admin") return veh.destroy(); /// Если админская, не респавним
+
         if (veh.key == "private") {
             mp.events.call('parkings.vehicle.add', veh);
             veh.destroy();
