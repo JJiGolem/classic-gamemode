@@ -67,6 +67,7 @@ module.exports = {
                 owner: player.character.id,
                 isOnParking: 1 /// если нет дома
             });
+            player.vehicle.isOnParking = 1;
             carmarket.setMarketSpotFree(player.vehicle.marketSpot);
             player.call('carmarket.car.buy.ans', [2, carInfo]);
             mp.events.call('vehicles.engine.toggle', player);

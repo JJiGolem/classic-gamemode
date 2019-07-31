@@ -6,13 +6,14 @@ let houses = new Array();
 
 module.exports = {
     async init() {
+        console.log("[HOUSES] load houses from DB");
         let infoHouses = await db.Models.House.findAll({
-            includes: [db.Models.Interior]
+            include: [db.Models.Interior]
         });
         for (let i = 0; i < infoHouses.length; i++) {
-            this.addHouse(infoHouses);
+            this.addHouse(infoHouses[i]);
         }
-
+        console.log("[HOUSES] loaded");
     },
     addHouse(houseInfo) {
         let dimension = houseInfo.id;

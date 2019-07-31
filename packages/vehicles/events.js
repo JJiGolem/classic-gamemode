@@ -17,7 +17,6 @@ module.exports = {
         player.call('chat.message.push', [`!{#71a0ff} license ${vehicle.properties.license}`]);
         player.call('chat.message.push', [`!{#71a0ff} parkingHours ${vehicle.parkingHours}`]);
 
-
         // if ((vehicle.license != 0) && vehicle.license != player.license) {
         //     player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);
         //     player.removeFromVehicle();
@@ -86,6 +85,8 @@ module.exports = {
         if (entity.type == "vehicle") {
             entity.setVariable("leftTurnSignal", false);
             entity.setVariable("rightTurnSignal", false);
+            entity.setVariable("hood", false);
+            entity.setVariable("trunk", false);
         }
     },
     "vehicles.signals.left": (player, state) => {
@@ -103,10 +104,100 @@ module.exports = {
         player.vehicle.setVariable("rightTurnSignal", state);
         player.vehicle.setVariable("leftTurnSignal", state);
     },
+    "vehicles.hood": (player, vehicleId, state) => {
+        let vehicle = mp.vehicles.at(vehicleId);
+        if (!vehicle) return;
+
+        vehicle.setVariable("hood", state);
+    },
+    "vehicles.trunk": (player, vehicleId, state) => {
+        let vehicle = mp.vehicles.at(vehicleId);
+        if (!vehicle) return;
+
+        vehicle.setVariable("trunk", state);
+    },
     "characterInit.done": (player) => {
         mp.events.call('vehicles.private.load', player);
     },
     "vehicles.private.load": (player) => {
         vehicles.loadPrivateVehicles(player);
+    },
+    "vehicles.lock": (player, vehicleId) => {
+        let vehicle = mp.vehicles.at(vehicleId);
+        if (!vehicle) return;
+        // TEMP 
+        // if (vehicle.key != 'private') return player.call('notifications.push.error', ['Это не ваше т/с', 'Ошибка']);
+        // if (vehicle.owner != player.character.id) return player.call('notifications.push.error', ['Это не ваше т/с', 'Транспорт']);
+
+        let state = vehicle.locked;
+        if (state) {
+            vehicle.locked = false;
+            player.call('notifications.push.success', ['Вы открыли т/с', 'Транспорт']);
+        } else {
+            vehicle.locked = true;
+            player.call('notifications.push.success', ['Вы закрыли т/с', 'Транспорт']);
+        }
+    },
+    "vehicles.explode": (player, vehicleId) => {
+        let vehicle = mp.vehicles.at(vehicleId);
+        if (!vehicle) return;
+        setTimeout(() => {
+            vehicle.explode();
+            vehicle.destroy();
+        }, 2000);
+    },
+    "vehicles.ejectlist.get": (player, vehicleId) => {
+        let vehicle = mp.vehicles.at(vehicleId);
+        if (!vehicle) return;
+        let occupants = vehicle.getOccupants();
+        if (occupants.length == 0) return;
+
+        let ejectList = [];
+
+        occupants.forEach((current) => {
+            console.log(current.name);
+            //if ((current.id != player.id) && (current.seat != -1)) {
+            ejectList.push({
+                id: current.id,
+                name: current.name
+            });
+            //}
+        });
+        console.log(ejectList);
+        if (ejectList.length == 0) return player.call('notifications.push.error', ['В т/с нет пассажиров', 'Транспорт']);;
+        player.call('interaction.ejectlist.show', [ejectList]);
+    },
+    "vehicles.eject": (player, playerToEject) => {
+        if (!playerToEject) return;
+        playerToEject = JSON.parse(playerToEject);
+
+        let target = mp.players.at(playerToEject.id);
+        if (!target) return;
+        if (!target.vehicle) return;
+        if (target.name != playerToEject.name) return;
+
+        console.log(`выкидываем ${target.name} с id ${target.id}`);
+        try {
+            target.removeFromVehicle();
+            player.call('notifications.push.success', ['Вы вытолкнули пассажира', 'Транспорт']);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    "vehicles.siren.sound": (player, vehicleId) => {
+        if (!player.vehicle) return;
+        let vehicle = mp.vehicles.at(vehicleId);
+        if (!vehicle) return;
+
+        var sirenSound = vehicle.getVariable("sirenSound");
+        vehicle.setVariable("sirenSound", !sirenSound);
+    },
+    "vehicles.siren.lights": (player) => {
+        if (!player.vehicle) return;
+        
+        var sirenLights = player.vehicle.getVariable("sirenLights");
+        if (sirenLights == player.vehicle.siren) return;
+        console.log(` ставим сирену ${player.vehicle.siren}`);
+        player.vehicle.setVariable("sirenLights", player.vehicle.siren);
     }
 }

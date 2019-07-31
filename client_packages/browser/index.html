@@ -317,16 +317,16 @@
     </div>
 
     <div v-cloak="v-cloak" id="carPass" v-if="show">
-        <span class="close" @click="show = false">x</span>
+        <span class="close" @click="close()">x</span>
         <div class="header">{{ header }}</div>
         <div class="content">
             <div class="infoA">
                 <div class="label">Идентификатор</div>
                 <div class="value">{{ prettyId }}</div>
-                <div class="label">Марка</div>
-                <div class="value">{{ mark }}</div>
                 <div class="label">Название</div>
                 <div class="value">{{ name }}</div>
+                <div class="label">Тип Т/С</div>
+                <div class="value">{{ vehType }}</div>
                 <div class="label">Дата регистрации</div>
                 <div class="value">{{ regDate }}</div>
                 <div class="label">Гос. стоимость</div>
@@ -335,7 +335,7 @@
             <div class="infoB">
                 <div class="label">Владельцев</div>
                 <div class="value">{{ owners }}</div>
-                <div class="label">Номер авто</div>
+                <div class="label">Рег. номер</div>
                 <div class="value">{{ number }}</div>
             </div>
         </div>
@@ -426,7 +426,7 @@
         </div>
     </div>
 
-    <div v-cloak id="interactionMenu" v-if="show">
+    <div v-cloak id="interactionMenu" v-if="show" v-bind:style="{left: left + 'vw'}">
         <div class="interaction_item" v-for="(item, index) in menu.items" @click="onClick(index)">
             <div class="icon"><img :src="imgSrc(index)" />
             </div>
