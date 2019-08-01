@@ -1,5 +1,8 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
+import {addBankPage, setBankPage} from "../actions/action.bankPages";
+import BankPush from "./BankPush";
+import BankPop from "./BankPop";
 
 class BankMenu extends Component {
     constructor(props) {
@@ -8,10 +11,12 @@ class BankMenu extends Component {
     }
 
     render() {
+        const { addPage } = this.props;
+
         return (
             <Fragment>
                 <div className='buttons_menu-bank-react'>
-                    <div className='button_menu-bank-react'>
+                    <div className='button_menu-bank-react' onClick={() => addPage(<BankPush />)}>
                         <svg id='push' xmlns="http://www.w3.org/2000/svg" width="75%" height="75%" viewBox="0 0 83.575 81.905">
                             <g id="push" data-name="Group 47" transform="translate(0 0)">
                                 <path id="push" data-name="Path 66" d="M208.57,60.356V56c1.5.107,2.059.793,2.573.793.643,0,.944-.815.944-1.222,0-1.051-2.059-1.5-3.517-1.544v-.579c0-.257-.322-.493-.643-.493a.566.566,0,0,0-.622.493v.622c-2.037.215-4.074,1.287-4.074,3.988,0,2.745,2.144,3.517,4.074,4.2V67.3c-2.187-.172-2.766-1.672-3.474-1.672-.536,0-.986.708-.986,1.222,0,1.051,1.8,2.487,4.46,2.53h0v.665a.566.566,0,0,0,.622.493c.322,0,.643-.236.643-.493v-.729a4.154,4.154,0,0,0,3.9-4.417C212.472,61.986,210.435,61.042,208.57,60.356Zm-1.137-.407c-1.136-.429-2.058-.879-2.058-2.1,0-1.115.858-1.651,2.058-1.8Zm1.008,7.311V62.736a2.507,2.507,0,0,1,1.887,2.4A2.039,2.039,0,0,1,208.441,67.26Z" transform="translate(-169.734 -45.149)"/>
@@ -38,7 +43,7 @@ class BankMenu extends Component {
                         </svg>
                         Оплата налогов
                     </div>
-                    <div className='button_menu-bank-react'>
+                    <div className='button_menu-bank-react' onClick={() => addPage(<BankPop />)}>
                         <svg id='pop' xmlns="http://www.w3.org/2000/svg" width="76%" height="76%" viewBox="0 0 75.858 76.627">
                             <path id="pop" data-name="Path 89" d="M77.539,35.7H73.862V18.784a7.361,7.361,0,0,0-7.353-7.353H61.53l-5.1-9.162a4.412,4.412,0,0,0-6-1.713L30.878,11.431H9.034a7.361,7.361,0,0,0-7.353,7.353v50.49a7.361,7.361,0,0,0,7.353,7.353H66.509a7.361,7.361,0,0,0,7.353-7.353V54.446h3.676V35.7ZM66.509,14.372a4.4,4.4,0,0,1,4.363,3.922H65.346l-2.18-3.922ZM51.865,3.126a1.5,1.5,0,0,1,2,.571l8.118,14.6H24.59ZM70.921,69.274a4.417,4.417,0,0,1-4.412,4.412H9.034a4.417,4.417,0,0,1-4.412-4.412V18.784a4.417,4.417,0,0,1,4.412-4.412H25.59l-7.053,3.922H9.953a1.471,1.471,0,1,0,0,2.941H70.921V35.7H60.167a9.07,9.07,0,0,0-9.059,9.059v.632a9.07,9.07,0,0,0,9.059,9.059H70.921V69.274ZM74.6,51.5H60.167a6.124,6.124,0,0,1-6.118-6.118v-.632a6.124,6.124,0,0,1,6.118-6.118H74.6Zm-9.927-6.313a3.247,3.247,0,1,1-3.247-3.247A3.246,3.246,0,0,1,64.671,45.192Z" transform="translate(-1.681)"/>
                         </svg>
@@ -76,8 +81,14 @@ class BankMenu extends Component {
     }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+    bank: state.bank,
+    pages: state.bankPages
+});
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+    addPage: page => dispatch(addBankPage(page)),
+    setPage: page => dispatch(setBankPage(page))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(BankMenu);

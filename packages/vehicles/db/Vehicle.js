@@ -58,6 +58,26 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.INTEGER(11),
 			defaultValue: 1000,
 			allowNull: false
+		},
+		engineState: {
+			type: DataTypes.INTEGER(11),
+			defaultValue: 0,
+			allowNull: false
+		},
+		steeringState: {
+			type: DataTypes.INTEGER(11),
+			defaultValue: 0,
+			allowNull: false
+		},
+		fuelState: {
+			type: DataTypes.INTEGER(11),
+			defaultValue: 0,
+			allowNull: false
+		},
+		brakeState: {
+			type: DataTypes.INTEGER(11),
+			defaultValue: 0,
+			allowNull: false
         },
 		consumption: {
 			type: DataTypes.INTEGER(11),
