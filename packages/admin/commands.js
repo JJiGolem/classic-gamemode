@@ -134,7 +134,8 @@ module.exports = {
                     owner: 0,
                     fuel: 50,
                     mileage: 0,
-                    plate: vehicles.generateVehiclePlate()
+                    plate: vehicles.generateVehiclePlate(),
+                    //multiplier: 1
                 }
                 veh = vehicles.spawnVehicle(veh);
                 //player.putIntoVehicle(veh, -1);

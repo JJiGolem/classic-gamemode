@@ -59,6 +59,11 @@ module.exports = (sequelize, DataTypes) => {
 			defaultValue: 1000,
 			allowNull: false
 		},
+		destroys: {
+			type: DataTypes.INTEGER(11),
+			defaultValue: 0,
+			allowNull: false
+		},
 		engineState: {
 			type: DataTypes.INTEGER(11),
 			defaultValue: 0,

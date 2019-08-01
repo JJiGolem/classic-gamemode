@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 50,
 			allowNull: false
         },
-        defaultConsumption: {
+        consumption: {
             type: DataTypes.INTEGER(11),
             defaultValue: 1,
 			allowNull: false
