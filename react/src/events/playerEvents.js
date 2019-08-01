@@ -169,11 +169,11 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
-    myEventEmmiter.on('house.enter.ans', (ans) => {
+    myEventEmmiter.on('house.enter.ans.err', () => {
         dispatch({
             type: 'ANS_ENTER_HOUSE',
             payload: {
-                answer: ans,
+                answer: 'error',
             }
         });
     });

@@ -1,8 +1,9 @@
 .main-form-bank {
     position: absolute;
     font-family: bank-font;
-    width: 50vw;
-    height: 30vw;
+    font-size: 100%;
+    width: 80vh;
+    height: 45vh;
     background: white;
     border-radius: 15px;
     left: 0;
@@ -10,8 +11,110 @@
     bottom: 0;
     right: 0;
     margin: auto;
-    max-width: 1500px;
+    max-width: 1800px;
     max-height: 1000px;
     min-width: 300px;
     min-height: 150px;
+    animation: show-react .1s ease-in-out;
+}
+
+.info_panel-bank-react {
+    width: 25%;
+    background: #00932B;
+    display: inline-block;
+    height: 100%;
+    border-radius: 15px 0 0 15px;
+    padding: 2%;
+    box-sizing: border-box;
+    color: white;
+}
+
+.account_name-bank-react {
+    width: 96%;
+}
+
+.account_name-bank-react div {
+    position: absolute;
+    margin-left: 2%;
+    display: inline-block;
+    overflow-wrap: break-word;
+    width: 14%;
+    font-size: 120%;
+}
+
+.info_panel_fields-bank-react {
+    margin-top: 20%;
+}
+
+.info_panel_field-bank-react {
+    width: 90%;
+    background: transparent;
+    border-radius: 10px;
+    border: 2px solid white;
+    margin-bottom: 5%;
+    padding: 8% 5% 2% 5%;
+    text-align: center;
+    font-size: 150%;
+}
+
+.info_panel_field-bank-react div {
+    font-size: .65em;
+    text-align: right;
+    margin-top: 5%;
+}
+
+.info_panel_field-bank-react svg {
+    margin-left: 5%;
+    float: right;
+}
+
+.logo-bank-react {
+    width: 75%;
+    position: absolute;
+    margin-top: 3%;
+    text-align: center;
+    display: inline-block;
+}
+
+.logo-bank-react img {
+    object-fit: cover;
+    width: 45%;
+}
+
+.page-bank-react {
+    margin-top: 15%;
+    height: 70%;
+    width: 75%;
+    position: absolute;
+    display: inline-block;
+}
+
+.buttons_menu-bank-react {
+    width: 80%;
+    margin-left: 10%;
+    text-align: center;
+}
+
+.button_menu-bank-react {
+    width: 20%;
+    text-align: center;
+    padding: 3%;
+    border-radius: 10px;
+    border: 1px solid rgb(182, 182, 182);
+    display: inline-block;
+    margin: 3%;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.15);
+    transition: .1s ease-in-out;
+}
+
+.button_menu-bank-react svg {
+    margin-bottom: 3%;
+}
+
+.button_menu-bank-react:hover {
+    background: #00932B;
+    fill: white;
+    color: white;
+    border-color: #00932B;
+    transform: scale(1.05);
 }
