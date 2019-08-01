@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {addAppDisplay, closeAppDisplay} from "../../actions/action.apps";
 import AnsSell from "./AnsSell";
 import {setSell, setSellStatus} from "../../actions/action.info";
+import HeaderHouseApp from "./HeaderHouseApp";
 
 class SellState extends Component {
     constructor(props) {
@@ -38,10 +39,7 @@ class SellState extends Component {
         return (
             <Fragment>
                 <div className='back_page-phone-react' style={{ textAlign: 'center' }}>
-                    <div className='head_app-phone-react' style={{ height: '15%', textAlign: 'center' }}>
-                        <div style={{ marginTop: '5%' }}>Дом { house.name }</div>
-                        <div style={{ color: '#e1c631' }}>{ house.area }</div>
-                    </div>
+                    <HeaderHouseApp house={house}/>
 
                     <div style={{ textAlign: 'center', marginTop: '26%' }}>Продажа государству</div>
                     <div style={{ marginTop: '10%' }}>

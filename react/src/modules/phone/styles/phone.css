@@ -599,6 +599,10 @@
     box-shadow: 0px 2px 4px rgba(0,0,0,0.3);
 }
 
+.table_info-phone-react div {
+    margin-bottom: 3%;
+}
+
 .house_buttons-phone-react {
     margin-top: 10%;
     width: 90%;

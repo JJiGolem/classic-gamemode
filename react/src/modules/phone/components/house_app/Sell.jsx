@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {addAppDisplay, closeAppDisplay, setAppDisplay} from "../../actions/action.apps";
 import {setSell, setSellInfo, setSellStatus} from "../../actions/action.info";
 import ConfirmSell from "./ConfirmSell";
+import HeaderHouseApp from "./HeaderHouseApp";
 
 class Sell extends Component {
     constructor(props) {
@@ -148,15 +149,6 @@ class Sell extends Component {
         )
     }
 
-    getHeader(house) {
-        return (
-            <div className='head_app-phone-react' style={{ height: '15%', textAlign: 'center' }}>
-                <div style={{ marginTop: '5%' }}>Дом { house.name }</div>
-                <div style={{ color: '#e1c631' }}>{ house.area }</div>
-            </div>
-        )
-    }
-
     render() {
 
         const { house } = this.props;
@@ -164,7 +156,8 @@ class Sell extends Component {
         return (
             <Fragment>
                 <div className='back_page-phone-react'>
-                    { this.getHeader(house) }
+                    <HeaderHouseApp house={house}/>
+
                     {
                         this.getContent(house)
                     }

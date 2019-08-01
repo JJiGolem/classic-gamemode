@@ -85,21 +85,21 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
-    myEventEmmiter.on('govSellHouseAns', (ans) => {
+    myEventEmmiter.on('house.sell.toGov.ans', (ans) => {
         dispatch({
             type: 'SET_SELL_STATUS',
             payload: ans
         });
     });
 
-    myEventEmmiter.on('sellHouseAns', (ans) => {
+    myEventEmmiter.on('house.sell.ans', (ans) => {
         dispatch({
             type: 'SET_SELL_STATUS',
             payload: ans
         });
     });
 
-    myEventEmmiter.on('sellHouseInfo', (nick, price) => {
+    myEventEmmiter.on('house.sell.check.ans', (nick, price) => {
         dispatch({
             type: 'SET_SELL_INFO',
             payload: { nick, price }

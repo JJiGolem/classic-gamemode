@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {closeAppDisplay, setAppDisplay} from "../../actions/action.apps";
 import {sellHouse, setSell, setSellInfo, setSellStatus} from "../../actions/action.info";
 import MainDisplay from "../MainDisplay";
+import HeaderHouseApp from "./HeaderHouseApp";
 
 class Success extends Component {
     constructor(props) {
@@ -27,10 +28,7 @@ class Success extends Component {
             <Fragment>
                 <div className='back_page-phone-react'>
 
-                    <div className='head_app-phone-react' style={{ height: '15%', textAlign: 'center' }}>
-                        <div style={{ marginTop: '5%' }}>Дом { house.name }</div>
-                        <div style={{ color: '#e1c631' }}>{ house.area }</div>
-                    </div>
+                    <HeaderHouseApp house={house}/>
 
                     <div style={{textAlign: 'center', marginTop: '50%'}}>
                         <svg id="Group_104" data-name="Group 104" xmlns="http://www.w3.org/2000/svg" width="40%" height="40%" viewBox="0 0 100.956 100.956">
