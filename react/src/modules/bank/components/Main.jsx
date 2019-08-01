@@ -95,15 +95,19 @@ class Main extends Component {
     }
 
     getForm() {
+        const { pages } = this.props;
+
         return (
             <Fragment>
                 { this.getInfoPanel() }
                 <div className='logo-bank-react'>
                     <img src={require('../../../imgs/bank/logo.png')}/>
                 </div>
-                <div className='page-bank-react'>
-                    <BankMenu />
-                </div>
+                { pages.map(page => (
+                    <div className='page-bank-react'>
+                        { page }
+                    </div>
+                )) }
             </Fragment>
         )
     }
@@ -120,7 +124,8 @@ class Main extends Component {
 }
 
 const mapStateToProps = state => ({
-    bank: state.bank
+    bank: state.bank,
+    pages: state.bankPages
 });
 
 const mapDispatchToProps = dispatch => ({

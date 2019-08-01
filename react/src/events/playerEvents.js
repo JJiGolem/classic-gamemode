@@ -159,12 +159,12 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
-    myEventEmmiter.on('house.buy.ans', (ans, houseInfo) => {
+    myEventEmmiter.on('house.buy.ans', (ans, owner) => {
         dispatch({
             type: 'ANS_BUY_HOUSE',
             payload: {
                 answer: ans,
-                owner: houseInfo.owner
+                owner
             }
         });
     });

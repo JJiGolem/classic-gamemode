@@ -17,12 +17,15 @@ class EnterMenu extends Component {
     }
 
     exit() {
-        const { closeMenu, house } = this.props;
+        const { closeMenu, house, forms } = this.props;
 
         if (!house.isLoading) {
             closeMenu();
-            // eslint-disable-next-line no-undef
-            mp.trigger('house.menu.enter.close')
+
+            if (!forms.house) {
+                // eslint-disable-next-line no-undef
+                mp.trigger('house.menu.enter.close')
+            }
         }
     }
 
@@ -152,7 +155,7 @@ class EnterMenu extends Component {
     }
 
     getAnswer() {
-        const { setAnswer } = this.props;
+        const { setAnswer, house } = this.props;
 
         return (
             <div onClick={() => {
@@ -189,7 +192,8 @@ class EnterMenu extends Component {
 
 const mapStateToProps = state => ({
     house: state.house,
-    enterMenu: state.enterMenu
+    enterMenu: state.enterMenu,
+    forms: state.forms
 });
 
 const mapDispatchToProps = dispatch => ({
