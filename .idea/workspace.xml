@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="3b4f40e7-2b00-4af6-93b4-f955a86f8251" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/react/src/modules/house/components/EnterMenu.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/house/components/EnterMenu.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/house/components/House.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/house/components/House.jsx" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -27,11 +28,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/react/src/modules/house/components/House.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3841">
-              <caret line="33" column="41" selection-start-line="33" selection-start-column="41" selection-end-line="33" selection-end-column="41" />
+            <state relative-caret-position="-1485">
+              <caret line="85" column="5" selection-start-line="85" selection-start-column="5" selection-end-line="85" selection-end-column="5" />
               <folding>
                 <element signature="e#0#49#0" expanded="true" />
               </folding>
@@ -78,11 +79,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/react/src/modules/house/components/EnterMenu.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1465">
-              <caret line="188" column="10" lean-forward="true" selection-start-line="188" selection-start-column="10" selection-end-line="188" selection-end-column="10" />
+            <state relative-caret-position="610">
+              <caret line="131" selection-start-line="131" selection-end-line="131" />
               <folding>
                 <element signature="e#0#49#0" expanded="true" />
               </folding>
@@ -189,12 +190,12 @@
         <option value="$PROJECT_DIR$/react/src/modules/bank/components/BankMenu.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/bank/styles/bank.css" />
         <option value="$PROJECT_DIR$/react/src/events/playerEvents.js" />
-        <option value="$PROJECT_DIR$/react/src/modules/house/components/House.jsx" />
         <option value="$PROJECT_DIR$/react/src/index.js" />
         <option value="$PROJECT_DIR$/react/src/helpers/store/forms.js" />
         <option value="$PROJECT_DIR$/react/src/styles/main.css" />
         <option value="$PROJECT_DIR$/react/src/modules/house/reducers/reducer.house.js" />
         <option value="$PROJECT_DIR$/react/src/modules/house/components/EnterMenu.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/house/components/House.jsx" />
       </list>
     </option>
   </component>
@@ -368,16 +369,15 @@
       <workItem from="1564428798474" duration="7515000" />
       <workItem from="1564492491813" duration="6025000" />
       <workItem from="1564574087429" duration="21600000" />
-      <workItem from="1564647605354" duration="1465000" />
+      <workItem from="1564647605354" duration="1830000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="143769000" />
+    <option name="totallyTimeSpent" value="144134000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1296" height="1000" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24960254" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -768,16 +768,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/house/components/House.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3841">
-          <caret line="33" column="41" selection-start-line="33" selection-start-column="41" selection-end-line="33" selection-end-column="41" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/react/src/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="266">
@@ -811,8 +801,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/react/src/modules/house/components/EnterMenu.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1465">
-          <caret line="188" column="10" lean-forward="true" selection-start-line="188" selection-start-column="10" selection-end-line="188" selection-end-column="10" />
+        <state relative-caret-position="610">
+          <caret line="131" selection-start-line="131" selection-end-line="131" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/house/components/House.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1485">
+          <caret line="85" column="5" selection-start-line="85" selection-start-column="5" selection-end-line="85" selection-end-column="5" />
           <folding>
             <element signature="e#0#49#0" expanded="true" />
           </folding>
