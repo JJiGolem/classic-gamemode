@@ -126,6 +126,28 @@ export default function info(state = initialState, action) {
             }
 
             return newState;
+
+        case 'ADD_APP_TO_PHONE':
+            if(payload.appName === 'house') {
+                const newState = {...state};
+                newState.houses.push(payload.info);
+                return newState;
+            } else if(payload.appName === 'biz') {
+                const newState = {...state};
+                newState.biz.push(payload.info);
+                return newState;
+            }
+
+        case 'DELETE_APP_TO_PHONE':
+            if(payload === 'house') {
+                const newState = {...state};
+                newState.houses.length = 0;
+                return newState;
+            } else if(payload === 'biz') {
+                const newState = {...state};
+                newState.biz.length = 0;
+                return newState;
+            }
     }
 
     return state;

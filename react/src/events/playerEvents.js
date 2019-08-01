@@ -177,6 +177,20 @@ export const PlayerEvents = (dispatch, getState) => {
             }
         });
     });
+
+    myEventEmmiter.on('phone.app.add', (appName, info) => {
+        dispatch({
+            type: 'ADD_APP_TO_PHONE',
+            payload: { appName, info }
+        });
+    });
+
+    myEventEmmiter.on('phone.app.remove', (appName) => {
+        dispatch({
+            type: 'DELETE_APP_TO_PHONE',
+            payload: appName
+        });
+    });
 };
 
 

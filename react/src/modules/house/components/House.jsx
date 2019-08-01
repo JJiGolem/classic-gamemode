@@ -329,7 +329,6 @@ class House extends Component {
                 <div className='message_back-house-react' onClick={this.closeMenu}>
                     <div className='exitEnterHouse' name='exit' ></div>
                     Дом успешно куплен<br/>
-                    answer: { answer }, owner: { house.owner }
                     <div>
                         <svg style={{ display: 'block', margin: '5% 45%' }} xmlns="http://www.w3.org/2000/svg" width="10%" height="10%" viewBox="0 0 52 52">
                             <g id="Group_11" data-name="Group 11" transform="translate(-469 -736.982)">
