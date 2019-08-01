@@ -13,6 +13,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: true
         },
+        price: {
+            type: DataTypes.INTEGER(11),
+            allowNull: false
+        },
+        characterNick: {
+            type: DataTypes.STRING(50),
+            allowNull: true
+        },
         interiorId: {
             type: DataTypes.INTEGER(11),
             allowNull: false
@@ -50,10 +58,6 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         angle: {
-            type: DataTypes.INTEGER(11),
-            allowNull: false
-        },
-        price: {
             type: DataTypes.INTEGER(11),
             allowNull: false
         },
