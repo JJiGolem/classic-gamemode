@@ -32,7 +32,7 @@ module.exports = {
         interiorsDB = await db.Models.Interior.findAll({raw:true});
         if (housesDB.length == 0 && interiorsDB.length != 0) {
             for (let i = 0; i < houses.length; i++) {
-                if (interiorsDB.findIndex( x => x.id == houses[i].interior) == -1) continue;
+                if (interiorsDB.findIndex( x => x.id == houses[i].interior + 1) == -1) continue;
                 db.Models.House.create({
                     characterId: null,
                     interiorId: houses[i].interior + 1,

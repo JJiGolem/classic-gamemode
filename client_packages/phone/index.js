@@ -15,13 +15,13 @@ mp.events.add('phone.load', function (phoneInfo, phoneDialogs) {
 /// Добавление приложения
 /// house
 /// biz
-mp.events.add('addApp.client', function (appName, info) {
-    mp.callCEFR('addApp', [appName, info]);
+mp.events.add('phone.app.add', function (appName, info) {
+    mp.callCEFR('phone.app.add', [appName, info]);
 });
 /// Удаление приложения
-mp.events.add('removeApp.client', function (appName, index) {
+mp.events.add('phone.app.remove', function (appName, index) {
     /// index - номер дропнутого дома(для возможности иметь несколько домов)
-    mp.callCEFR('removeApp', [appName]);
+    mp.callCEFR('phone.app.remove', [appName]);
 });
 
 mp.events.add('characterInit.done', function () {

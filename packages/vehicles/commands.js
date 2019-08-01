@@ -123,5 +123,12 @@ module.exports = {
                     break;
             }
         }
-    }
+    },
+    "/fuelstate": {
+        handler: (player, args) => {
+            if (!player.vehicle) return;
+            player.vehicle.fuelState = parseInt(args[0]);
+            player.call('chat.message.push', [`!{#ffffff} установили топливную поломку ${args[0]}`]);
+        }
+    },
 }

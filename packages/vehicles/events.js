@@ -5,6 +5,10 @@ module.exports = {
         vehicles.init();
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
+        console.log('ENGINE '+vehicle.engineState);
+        console.log('STEERING '+vehicle.steeringState);
+        console.log('FUEL '+vehicle.fuelState);
+        console.log('BRAKE '+vehicle.brakeState);
         player.call('chat.message.push', [`!{#70a7ff} Модель ${vehicle.model}`]);
         player.call('chat.message.push', [`!{#70a7ff} Имя модели ${vehicle.modelName}`]);
         player.call('chat.message.push', [`!{#70a7ff} Ключ ${vehicle.key}`]);
@@ -71,6 +75,22 @@ module.exports = {
             player.call('vehicles.engine.toggle', [true]);
             player.vehicle.setVariable("engine", true);
             player.call('prompt.hide');
+            mp.events.call('vehicles.breakdowns.init', player);
+        }
+    },
+    'vehicles.breakdowns.init': (player) => { 
+        if (!player.vehicle) return;
+        let vehicle = player.vehicle;
+        try {
+            let data = {
+                engineState: vehicle.engineState,
+                steeringState: vehicle.steeringState,
+                fuelState: vehicle.fuelState,
+                brakeState: vehicle.brakeState
+            }
+            player.call('vehicles.breakdowns.init', [data]);
+        } catch (err) {
+            console.log(err);
         }
     },
     "vehicles.mileage.add": (player, value) => {
