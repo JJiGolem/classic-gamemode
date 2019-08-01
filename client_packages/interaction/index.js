@@ -1,6 +1,3 @@
-try {
-
-
 const INTERACTION_RANGE = 3.5;
 const classesToIgnore = [8, 13, 14, 15, 16];
 const defaultLeft = 50;
@@ -61,6 +58,11 @@ mp.events.add('characterInit.done', () => { /// E
         if (mp.busy.includes()) return;
         if (isOpen) return mp.events.call('interaction.menu.close');;
 
+
+        let veh = mp.players.local.getVehicleIsTryingToEnter();
+        if (veh) return;
+
+
         if (mp.players.local.vehicle) return;
 
         currentInteractionEntity = getClosestVehicle(mp.players.local.position);
@@ -91,7 +93,6 @@ mp.events.add('characterInit.done', () => { /// E
         mp.callCEFV(`interactionMenu.left = ${vehicleLeft}`);
         mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle_inside"])');
 
-        // mp.chat.debug(currentInteractionEntity.getClass());
         let vehClass = currentInteractionEntity.getClass();
         if (vehClass == 18) {
             mp.callCEFV(`interactionMenu.menu.items.push({
@@ -149,6 +150,3 @@ mp.events.add('interaction.eject', (index) => {
     mp.chat.debug(`${occupantsToEject[index].name}`);
     mp.events.callRemote('vehicles.eject', JSON.stringify(playerToEject));
 });
-} catch(err) {
-    mp.chat.debug("error");
-}
