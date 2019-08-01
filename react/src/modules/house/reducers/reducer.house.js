@@ -21,7 +21,7 @@ export default function house(state = initialState, action) {
         case 'ANS_BUY_HOUSE':
             const newStateBuy = { ...state };
             newStateBuy.answerBuy = payload.answer;
-            if (payload.answer === 1) {
+            if (payload.answer == 1) {
                 newStateBuy.owner = payload.owner
             }
             newStateBuy.isLoading = false;

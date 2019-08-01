@@ -164,7 +164,7 @@ export const PlayerEvents = (dispatch, getState) => {
             type: 'ANS_BUY_HOUSE',
             payload: {
                 answer: ans,
-                owner
+                owner: owner
             }
         });
     });

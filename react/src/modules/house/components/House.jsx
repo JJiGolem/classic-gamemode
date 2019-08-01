@@ -27,6 +27,7 @@ class House extends Component {
         };
 
         this.getForm = this.getForm.bind(this);
+        this.getMessage = this.getMessage.bind(this);
         this.getButtons = this.getButtons.bind(this);
         this.startBuy = this.startBuy.bind(this);
         this.lookHouse = this.lookHouse.bind(this);
@@ -305,11 +306,13 @@ class House extends Component {
     }
 
     getMessage(answer) {
-        if (answer === 0) {
+        const { house } = this.props;
+
+        if (answer === 0 || answer === 2) {
             return (
                 <div className='message_back-house-react' onClick={this.closeMenu}>
                     <div className='exitEnterHouse' name='exit'></div>
-                    У Вас недостаточно денег для покупки<br/>
+                    {answer === 0 ? 'У Вас недостаточно денег для покупки' : 'У Вас уже есть дом'}<br/>
                     <div>
                         <svg style={{ display: 'block', margin: '5% 45%' }} id="Group_10" data-name="Group 10" xmlns="http://www.w3.org/2000/svg" width="10%" height="10%" viewBox="0 0 233.069 233.069">
                             <path id="Path_26" data-name="Path 26" d="M116.535,0A116.535,116.535,0,1,0,233.069,116.535,116.666,116.666,0,0,0,116.535,0Zm0,224.1A107.57,107.57,0,1,1,224.1,116.535,107.7,107.7,0,0,1,116.535,224.1Z" fill="#e1c631"/>
@@ -326,6 +329,7 @@ class House extends Component {
                 <div className='message_back-house-react' onClick={this.closeMenu}>
                     <div className='exitEnterHouse' name='exit' ></div>
                     Дом успешно куплен<br/>
+                    answer: { answer }, owner: { house.owner }
                     <div>
                         <svg style={{ display: 'block', margin: '5% 45%' }} xmlns="http://www.w3.org/2000/svg" width="10%" height="10%" viewBox="0 0 52 52">
                             <g id="Group_11" data-name="Group 11" transform="translate(-469 -736.982)">
