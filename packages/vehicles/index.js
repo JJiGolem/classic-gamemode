@@ -36,7 +36,10 @@ module.exports = {
         vehicle.lastMileage = veh.mileage; /// Последний сохраненный пробег
         vehicle.marketSpot = veh.marketSpot;
         vehicle.plate = veh.plate;
-
+        vehicle.engineState = veh.engineState;
+        vehicle.steeringState = veh.steeringState;
+        vehicle.fuelState = veh.fuelState;
+        vehicle.brakeState = veh.brakeState;
         vehicle.numberPlate = veh.plate; /// устанавливаем номер
 
         vehicle.setVariable("engine", false);
@@ -58,7 +61,16 @@ module.exports = {
         vehicle.fuelTimer = setInterval(() => {
             try {
                 if (vehicle.engine) {
-                    vehicle.fuel = vehicle.fuel - vehicle.properties.defaultConsumption;
+                    let multiplier = 1;
+                    if (vehicle.fuelState) {
+                        if (vehicle.fuelState == 1) {
+                            multiplier=2;
+                        }
+                        if (vehicle.fuelState == 2) {
+                            multiplier*=4;
+                        }
+                    }
+                    vehicle.fuel = vehicle.fuel - vehicle.properties.defaultConsumption*multiplier;
                     if (vehicle.fuel <= 0) {
                         vehicle.engine = false;
                         vehicle.setVariable("engine", false);
@@ -95,7 +107,9 @@ module.exports = {
     async loadVehiclesFromDB() { /// Загрузка автомобилей фракций/работ из БД 
         var dbVehicles = await db.Models.Vehicle.findAll({
             where: {
-                key: { [Op.ne]: "private" }
+                key: { 
+                    [Op.or]: ["newbie", "faction", "job"] 
+                }
             }
         });
         for (var i = 0; i < dbVehicles.length; i++) {

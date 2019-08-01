@@ -85,7 +85,7 @@ mp.events.add('characterInit.done', () => { /// E
         if (mp.busy.includes()) return;
         if (isOpen) return mp.events.call('interaction.menu.close');;
 
-        if (!mp.players.local.vehicle) return;
+        if (!mp.players.local.vehicle) return;        
 
         currentInteractionEntity = mp.players.local.vehicle;
         if (!currentInteractionEntity) return;
