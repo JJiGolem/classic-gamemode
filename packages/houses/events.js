@@ -94,6 +94,7 @@ module.exports = {
         let info = housesService.getHouse(player.house.index).info;
         if (info.characterId != null) return player.call('house.buy.ans', [0, ""]);
         if (player.character.cash < info.price) return player.call('house.buy.ans', [0, ""]);
+        if (housesService.isHaveHouse(player.character.id)) return player.call('house.buy.ans', [2, ""]);
 
         money.removeCash(player, info.price, async function(result) {
             if (!result) return player.call('house.buy.ans', [0, ""]);
@@ -101,7 +102,7 @@ module.exports = {
             info.characterNick = player.character.name;
             info.date = housesService.getRandomDate(1);
             await info.save();
-            player.call('house.buy.ans', [1, info.characterNick]);
+            player.call('house.buy.ans', [1, player.character.name]);
             housesService.updateHouse(player.house.index);
         });
     },

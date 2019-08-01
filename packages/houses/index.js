@@ -110,5 +110,8 @@ module.exports = {
     },
     getHouse(i) {
         return houses[i];
+    },
+    isHaveHouse(id) {
+        return houses.findIndex( x => x.info.characterId == id) != -1;
     }
 };
