@@ -74,9 +74,12 @@ class House extends Component {
     }
 
     lookHouse() {
-        const { showEnterMenu, blurForm, house } = this.props;
+        const { showEnterMenu, blurForm, house, setLoading } = this.props;
 
         if (!house.garage) {
+            blurForm(true);
+            setLoading(true);
+
             // eslint-disable-next-line no-undef
             mp.trigger('house.enter', 1);
         } else {

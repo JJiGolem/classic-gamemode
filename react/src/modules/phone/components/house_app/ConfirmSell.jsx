@@ -34,6 +34,8 @@ class ConfirmSell extends Component {
     cancel() {
         const { closeApp } = this.props;
 
+        // eslint-disable-next-line no-undef
+        mp.trigger('house.sell.stop');
         closeApp();
     }
 

@@ -30,26 +30,26 @@ class Sell extends Component {
     }
 
     sellHouse() {
-        const { setSell, setSellStatus, setSellInfo, addApp } = this.props;
+        const { setSell, setSellStatus, setSellInfo, addApp, house } = this.props;
+        const { userId, price } = this.state;
 
         if (this.validateForm()) {
             setSell(true);
             addApp({name: 'ConfirmSell', form: <ConfirmSell />});
-            setTimeout(() => {
-                setSellInfo({nick: 'Dunhill', price: this.state.sellPrice})
-            }, 1000)
+
+            // eslint-disable-next-line no-undef
+            mp.trigger('house.sell.check', house.name, userId, parseInt(price));
+
+            // setTimeout(() => {
+            //     setSellInfo({nick: 'Dunhill', price: this.state.sellPrice})
+            // }, 1000)
         }
     }
 
     validateUser(user) {
         if (user) {
-            if (!isNaN(user)) {
-                this.setState({ errorUser: '' });
-                return true;
-            } else {
-                this.setState({ errorUser: 'Неверный формат ID' });
-                return false;
-            }
+            this.setState({ errorUser: '' });
+            return true;
         } else {
             this.setState({ errorUser: 'Поле не заполнено' });
             return false;

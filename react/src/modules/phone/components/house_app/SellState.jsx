@@ -17,15 +17,18 @@ class SellState extends Component {
     }
 
     sellHouse() {
-        const { addApp, setSell, setSellStatus } = this.props;
+        const { addApp, setSell, setSellStatus, house } = this.props;
 
         // closeApp();
         setSell(true);
         addApp({ name: 'AnsSell', form: <AnsSell /> });
 
-        setTimeout(() => {
+        // eslint-disable-next-line no-undef
+        mp.trigger('house.sell.toGov', house.name);
+
+        /*setTimeout(() => {
             setSellStatus(0);
-        }, 1000);
+        }, 1000);*/
     }
 
     render() {

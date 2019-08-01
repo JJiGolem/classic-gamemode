@@ -19,13 +19,13 @@ export default function house(state = initialState, action) {
             return newState;
 
         case 'ANS_BUY_HOUSE':
-            newState = { ...state };
-            newState.answerBuy = payload.answer;
+            const newStateBuy = { ...state };
+            newStateBuy.answerBuy = payload.answer;
             if (payload.answer === 1) {
-                newState.owner = payload.owner
+                newStateBuy.owner = payload.owner
             }
-            newState.isLoading = false;
-            return newState;
+            newStateBuy.isLoading = false;
+            return newStateBuy;
 
         case 'BLUR_HOUSE_FORM':
             newState = { ...state };

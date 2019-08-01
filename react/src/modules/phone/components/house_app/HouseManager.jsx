@@ -21,12 +21,16 @@ class HouseManager extends Component {
     }
 
     setStateHouse(e) {
-        const { changeStateHouse } = this.props;
+        const { changeStateHouse, house } = this.props;
+
+        // eslint-disable-next-line no-undef
+        mp.trigger('house.lock', house.name, !house.isOpened);
+
         changeStateHouse();
     }
 
     render() {
-        const { house, changeStateHouse, setApp, addApp } = this.props;
+        const { house, setApp, addApp } = this.props;
 
         return (
             <Fragment>
