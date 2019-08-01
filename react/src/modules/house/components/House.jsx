@@ -81,7 +81,7 @@ class House extends Component {
             mp.trigger('house.enter', 1);
         } else {
             blurForm(true);
-            showEnterMenu(1);
+            showEnterMenu(0);
         }
     }
 
@@ -241,7 +241,7 @@ class House extends Component {
             //showHouse(false);
             closeHouse();
             // eslint-disable-next-line no-undef
-            //mp.trigger('house.menu.close')
+            mp.trigger('house.menu.close')
         }
     }
 
