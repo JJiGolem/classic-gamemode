@@ -2,18 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3b4f40e7-2b00-4af6-93b4-f955a86f8251" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/react/src/modules/bank/actions/action.bankPages.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react/src/modules/bank/components/BankPop.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react/src/modules/bank/components/BankPush.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/react/src/modules/bank/reducers/reducer.bankPages.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/HeaderHouseApp.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react/src/events/playerEvents.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/events/playerEvents.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react/src/helpers/store/forms.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/helpers/store/forms.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/helpers/store/rootReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/helpers/store/rootReducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/modules/bank/components/BankMenu.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/bank/components/BankMenu.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/modules/bank/components/Main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/bank/components/Main.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/modules/bank/styles/bank.css" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/bank/styles/bank.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/modules/house/components/EnterMenu.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/house/components/EnterMenu.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/house/components/House.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/house/components/House.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/house/styles/house.css" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/house/styles/house.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/AnsSell.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/AnsSell.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/ConfirmSell.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/ConfirmSell.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/Error.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/Error.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/HouseApp.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/HouseApp.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/HouseManager.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/HouseManager.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/Sell.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/Sell.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/SellState.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/SellState.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/Success.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/Success.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/styles/phone.css" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/styles/phone.css" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -27,10 +30,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/bank/components/Main.jsx">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/Sell.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="439">
-              <caret line="109" column="20" selection-start-line="109" selection-start-column="20" selection-end-line="109" selection-end-column="20" />
+            <state relative-caret-position="133">
+              <caret line="29" column="9" lean-forward="true" selection-start-line="29" selection-start-column="9" selection-end-line="29" selection-end-column="9" />
               <folding>
                 <element signature="e#0#49#0" expanded="true" />
               </folding>
@@ -39,33 +42,44 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/bank/styles/bank.css">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/Success.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="206">
-              <caret line="145" column="18" selection-start-line="145" selection-start-column="18" selection-end-line="145" selection-end-column="18" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/events/playerEvents.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="168" column="11" lean-forward="true" selection-start-line="168" selection-start-column="11" selection-end-line="168" selection-end-column="11" />
+            <state relative-caret-position="344">
+              <caret line="30" column="51" selection-start-line="30" selection-start-column="51" selection-end-line="30" selection-end-column="51" />
               <folding>
-                <element signature="e#0#26#0" expanded="true" />
+                <element signature="e#0#49#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/styles/main.css">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/Error.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="19">
-              <caret line="1" selection-start-line="1" selection-end-line="11" />
+            <state relative-caret-position="361">
+              <caret line="29" column="51" selection-start-line="29" selection-start-column="51" selection-end-line="29" selection-end-column="51" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
             </state>
           </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/AnsSell.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="817">
+              <caret line="49" column="35" lean-forward="true" selection-start-line="49" selection-start-column="35" selection-end-line="49" selection-end-column="35" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/index.js">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -80,47 +94,41 @@
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/react/src/styles/main.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="19">
+              <caret line="1" selection-start-line="1" selection-start-column="2" selection-end-line="10" selection-end-column="3" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/react/src/helpers/store/forms.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="19">
-              <caret line="1" column="4" lean-forward="true" selection-start-line="1" selection-start-column="7" selection-end-line="4" selection-end-column="17" />
+              <caret line="1" column="4" selection-start-line="1" selection-start-column="7" selection-end-line="4" selection-end-column="18" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/bank/components/BankMenu.jsx">
+        <entry file="file://$PROJECT_DIR$/react/src/events/playerEvents.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="45" column="96" selection-start-line="45" selection-start-column="96" selection-end-line="45" selection-end-column="96" />
+            <state relative-caret-position="438">
+              <caret line="93" lean-forward="true" selection-start-line="93" selection-end-line="93" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/bank/reducers/reducer.bankPages.js">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/ConfirmSell.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="25" lean-forward="true" selection-start-column="25" selection-end-column="25" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/bank/components/BankPush.jsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="472">
-              <caret line="40" column="46" lean-forward="true" selection-start-line="40" selection-start-column="4" selection-end-line="40" selection-end-column="46" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/bank/components/BankPop.jsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="11" column="41" selection-start-line="11" selection-start-column="41" selection-end-line="11" selection-end-column="41" />
+            <state relative-caret-position="380">
+              <caret line="32" column="31" selection-start-line="32" selection-start-column="31" selection-end-line="32" selection-end-column="31" />
               <folding>
                 <element signature="e#0#49#0" expanded="true" />
               </folding>
@@ -134,11 +142,11 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="HTML File" />
-        <option value="React" />
         <option value="CSS File" />
         <option value="react-redux-reducer" />
         <option value="JavaScript File" />
         <option value="React-Redux" />
+        <option value="React" />
       </list>
     </option>
   </component>
@@ -175,17 +183,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/client_packages/browser/build/js/build.js" />
-        <option value="$PROJECT_DIR$/react/config/paths.js" />
-        <option value="$PROJECT_DIR$/react/package.json" />
-        <option value="$PROJECT_DIR$/react/config/webpack.config.prod.js" />
-        <option value="$PROJECT_DIR$/react/README.md" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/components/HeadAppPhone.jsx" />
-        <option value="$PROJECT_DIR$/react/src/modules/chat/components/Chat.jsx" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/components/MainDisplay.jsx" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/actions/action.dialogs.js" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/styles/phone.css" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/components/CreateDialogPage.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.dialogs.js" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/Dialogs.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/ActiveCall.jsx" />
@@ -202,7 +199,6 @@
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/IncomingCall.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.apps.js" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/actions/action.info.js" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.info.js" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/Contacts.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/CreateContactPage.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx" />
@@ -210,9 +206,6 @@
         <option value="$PROJECT_DIR$/react/src/MainContainer.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/house/actions/action.house.js" />
         <option value="$PROJECT_DIR$/react/src/modules/house/reducers/reducer.enterMenu.js" />
-        <option value="$PROJECT_DIR$/react/src/modules/house/styles/house.css" />
-        <option value="$PROJECT_DIR$/react/src/modules/house/reducers/reducer.house.js" />
-        <option value="$PROJECT_DIR$/react/src/modules/house/components/House.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/house/components/EnterMenu.jsx" />
         <option value="$PROJECT_DIR$/react/src/helpers/store/rootReducer.js" />
         <option value="$PROJECT_DIR$/react/src/modules/bank/actions/action.bankPages.js" />
@@ -222,14 +215,29 @@
         <option value="$PROJECT_DIR$/react/src/modules/bank/components/BankPush.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/bank/components/BankPop.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/bank/components/BankMenu.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/house/reducers/reducer.house.js" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.info.js" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/actions/action.apps.js" />
+        <option value="$PROJECT_DIR$/react/src/modules/house/components/House.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/house/styles/house.css" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/styles/phone.css" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/house_app/HouseApp.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/house_app/HeaderHouseApp.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/house_app/Error.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/house_app/Sell.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/house_app/SellState.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/house_app/Success.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/house_app/HouseManager.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/house_app/ConfirmSell.jsx" />
         <option value="$PROJECT_DIR$/react/src/events/playerEvents.js" />
-        <option value="$PROJECT_DIR$/react/src/styles/main.css" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/house_app/AnsSell.jsx" />
         <option value="$PROJECT_DIR$/react/src/index.js" />
+        <option value="$PROJECT_DIR$/react/src/styles/main.css" />
         <option value="$PROJECT_DIR$/react/src/helpers/store/forms.js" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="10" />
     <option name="y" value="20" />
     <option name="width" value="1260" />
@@ -300,6 +308,22 @@
               <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
               <item name="react" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="imgs" type="462c0819:PsiDirectoryNode" />
+              <item name="bank" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
+              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
+              <item name="react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="imgs" type="462c0819:PsiDirectoryNode" />
+              <item name="phone" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
+              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
+              <item name="react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="modules" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -344,6 +368,60 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="modules" type="462c0819:PsiDirectoryNode" />
               <item name="bank" type="462c0819:PsiDirectoryNode" />
+              <item name="styles" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
+              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
+              <item name="react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+              <item name="phone" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
+              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
+              <item name="react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+              <item name="phone" type="462c0819:PsiDirectoryNode" />
+              <item name="actions" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
+              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
+              <item name="react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+              <item name="phone" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
+              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
+              <item name="react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+              <item name="phone" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="house_app" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
+              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
+              <item name="react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+              <item name="phone" type="462c0819:PsiDirectoryNode" />
+              <item name="reducers" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
+              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
+              <item name="react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+              <item name="phone" type="462c0819:PsiDirectoryNode" />
               <item name="styles" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -415,12 +493,12 @@
       <workItem from="1564428798474" duration="7515000" />
       <workItem from="1564492491813" duration="6025000" />
       <workItem from="1564574087429" duration="21600000" />
-      <workItem from="1564647605354" duration="9615000" />
+      <workItem from="1564647605354" duration="22088000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="151919000" />
+    <option name="totallyTimeSpent" value="164392000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1296" height="1000" extended-state="6" />
@@ -470,77 +548,6 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/react/src/modules/business/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" column="24" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/business/actions/action.business.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="20" column="46" selection-start-line="20" selection-start-column="46" selection-end-line="20" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/business/components/Business.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4332">
-          <caret line="233" column="41" selection-start-line="233" selection-start-column="41" selection-end-line="233" selection-end-column="41" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/business/reducers/reducer.business.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="494">
-          <caret line="26" column="45" selection-start-line="26" selection-start-column="45" selection-end-line="26" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/bank/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" column="20" selection-start-line="2" selection-start-column="20" selection-end-line="2" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/bank/actions/action.bank.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/package.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/helpers/events.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client_packages/browser/build/css/styles.css">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/house/styles/fade.css" />
-    <entry file="file://$PROJECT_DIR$/react/src/modules/house/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="17" selection-start-column="17" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/Phone.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/react/public/index.html">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -625,19 +632,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.apps.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="532">
-          <caret line="28" column="56" selection-start-line="28" selection-start-column="56" selection-end-line="28" selection-end-column="56" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/ContactPage.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="988">
@@ -655,20 +649,6 @@
           <folding>
             <element signature="e#0#49#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/actions/action.info.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="11" column="22" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.info.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1596">
-          <caret line="84" column="31" selection-start-line="84" selection-start-column="31" selection-end-line="84" selection-end-column="31" />
         </state>
       </provider>
     </entry>
@@ -729,13 +709,6 @@
     <entry file="file://$PROJECT_DIR$/react/src/styles/animations.css">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/house/styles/house.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="16" column="42" lean-forward="true" selection-start-line="1" selection-start-column="4" selection-end-line="16" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/react/src/modules/bank/reducers/reducer.bank.js">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -747,23 +720,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="475">
           <caret line="25" column="28" selection-start-line="25" selection-start-column="28" selection-end-line="25" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/house/reducers/reducer.house.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-269">
-          <caret line="10" column="25" selection-start-line="10" selection-start-column="25" selection-end-line="10" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/house/components/House.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="111">
-          <caret line="169" column="33" selection-start-line="169" selection-start-column="33" selection-end-line="169" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -814,7 +770,7 @@
     <entry file="file://$PROJECT_DIR$/react/src/modules/bank/reducers/reducer.bankPages.js">
       <provider selected="true" editor-type-id="text-editor">
         <state>
-          <caret column="25" lean-forward="true" selection-start-column="25" selection-end-column="25" />
+          <caret column="25" selection-start-column="25" selection-end-column="25" />
         </state>
       </provider>
     </entry>
@@ -831,33 +787,187 @@
     <entry file="file://$PROJECT_DIR$/react/src/modules/bank/components/BankPush.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="472">
-          <caret line="40" column="46" lean-forward="true" selection-start-line="40" selection-start-column="4" selection-end-line="40" selection-end-column="46" />
+          <caret line="40" column="46" selection-start-line="40" selection-start-column="4" selection-end-line="40" selection-end-column="46" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/react/src/modules/bank/components/BankMenu.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="45" column="96" selection-start-line="45" selection-start-column="96" selection-end-line="45" selection-end-column="96" />
+        <state>
+          <caret line="28" column="50" selection-start-line="28" selection-start-column="50" selection-end-line="28" selection-end-column="50" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/events/playerEvents.js">
+    <entry file="file://$PROJECT_DIR$/react/src/modules/house/reducers/reducer.house.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="168" column="11" lean-forward="true" selection-start-line="168" selection-start-column="11" selection-end-line="168" selection-end-column="11" />
+        <state relative-caret-position="-22">
+          <caret line="23" column="32" selection-start-line="23" selection-start-column="32" selection-end-line="23" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.apps.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="415">
+          <caret line="28" column="56" selection-start-line="28" selection-start-column="56" selection-end-line="28" selection-end-column="56" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/styles/main.css">
+    <entry file="file://$PROJECT_DIR$/react/src/modules/house/styles/house.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" selection-start-line="1" selection-end-line="11" />
+        <state relative-caret-position="434">
+          <caret line="185" column="20" lean-forward="true" selection-start-line="185" selection-start-column="20" selection-end-line="185" selection-end-column="20" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/house/components/House.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="89" column="12" selection-start-line="89" selection-start-column="12" selection-end-line="89" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/actions/action.apps.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="15" column="30" selection-start-line="15" selection-start-column="11" selection-end-line="15" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.info.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="339">
+          <caret line="140" column="33" selection-start-line="140" selection-start-column="33" selection-end-line="140" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/actions/action.info.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-323">
+          <caret line="11" column="22" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/styles/phone.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="11039">
+          <caret line="602" column="20" selection-start-line="602" selection-start-column="20" selection-end-line="602" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/HeaderHouseApp.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="9" column="8" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/HouseApp.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="19" column="20" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="51" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/Improvements.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/HouseManager.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="98" column="123" selection-start-line="98" selection-start-column="123" selection-end-line="98" selection-end-column="123" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/SellState.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="230">
+          <caret line="26" column="8" selection-start-line="26" selection-start-column="8" selection-end-line="27" selection-end-column="51" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/Sell.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="29" column="9" lean-forward="true" selection-start-line="29" selection-start-column="9" selection-end-line="29" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/ConfirmSell.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="380">
+          <caret line="32" column="31" selection-start-line="32" selection-start-column="31" selection-end-line="32" selection-end-column="31" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/events/playerEvents.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="438">
+          <caret line="93" lean-forward="true" selection-start-line="93" selection-end-line="93" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/Error.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="29" column="51" selection-start-line="29" selection-start-column="51" selection-end-line="29" selection-end-column="51" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/Success.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="344">
+          <caret line="30" column="51" selection-start-line="30" selection-start-column="51" selection-end-line="30" selection-end-column="51" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/AnsSell.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="817">
+          <caret line="49" column="35" lean-forward="true" selection-start-line="49" selection-start-column="35" selection-end-line="49" selection-end-column="35" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/index.js">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/react/src/index.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -869,10 +979,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/styles/main.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="1" selection-start-line="1" selection-start-column="2" selection-end-line="10" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/react/src/helpers/store/forms.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="19">
-          <caret line="1" column="4" lean-forward="true" selection-start-line="1" selection-start-column="7" selection-end-line="4" selection-end-column="17" />
+          <caret line="1" column="4" selection-start-line="1" selection-start-column="7" selection-end-line="4" selection-end-column="18" />
         </state>
       </provider>
     </entry>

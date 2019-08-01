@@ -23,18 +23,21 @@ class House extends Component {
             colorEnter: '#e1c631',
             colorActions: '#e1c631',
             isEnterMenu: false,
-            isActionsMenu: false
+            isActionsMenu: false,
+            isConfirm: false
         };
 
         this.getForm = this.getForm.bind(this);
+        this.getMessage = this.getMessage.bind(this);
         this.getButtons = this.getButtons.bind(this);
         this.startBuy = this.startBuy.bind(this);
         this.lookHouse = this.lookHouse.bind(this);
         this.closeMenu = this.closeMenu.bind(this);
         this.enterHouse = this.enterHouse.bind(this);
+        this.showConfirmBuy = this.showConfirmBuy.bind(this);
     }
 
-    /*componentWillMount() {
+    componentWillMount() {
         const houseInfo = {
             name: 228,
             area: 'Санта-Моника',
@@ -47,7 +50,7 @@ class House extends Component {
         };
 
         this.props.loadInfo(houseInfo);
-    }*/
+    }
 
     getLoader() {
         return (
@@ -57,10 +60,29 @@ class House extends Component {
         )
     }
 
+    showConfirmBuy() {
+        const { blurForm } = this.props;
+
+        return (
+            <div className='message_back-house-react'>
+                Вы действительно хотите приобрести дом?
+                <div>
+                    <button onClick={this.startBuy}>Да</button>
+                    <button onClick={() => {
+                        this.setState({ isConfirm: false });
+                        blurForm(false);
+                    }}>Нет</button>
+                </div>
+            </div>
+        )
+    }
+
     startBuy() {
         const { house, setLoading, setAnswer, blurForm } = this.props;
 
         if (!house.isLoading) {
+            this.setState({ isConfirm: false });
+
             setLoading(true);
             blurForm(true);
 
@@ -74,14 +96,19 @@ class House extends Component {
     }
 
     lookHouse() {
-        const { showEnterMenu, blurForm, house } = this.props;
+        const { showEnterMenu, blurForm, house, setLoading } = this.props;
 
-        if (!house.garage) {
-            // eslint-disable-next-line no-undef
-            mp.trigger('house.enter', 1);
-        } else {
-            blurForm(true);
-            showEnterMenu(0);
+        if (!house.isBlur) {
+            if (!house.garage) {
+                blurForm(true);
+                setLoading(true);
+
+                // eslint-disable-next-line no-undef
+                mp.trigger('house.enter', 1);
+            } else {
+                blurForm(true);
+                showEnterMenu(0);
+            }
         }
     }
 
@@ -132,7 +159,10 @@ class House extends Component {
             case 'buy':
                 return (
                     <div className='button-house-react'
-                         onClick={this.startBuy}
+                         onClick={() => {
+                             this.setState({ isConfirm: true });
+                             blurForm(true);
+                         }}
                          onMouseOver={() => this.setState({ colorBuy: 'black' })}
                          onMouseOut={() => this.setState({ colorBuy: '#e1c631' })}
                     >
@@ -302,11 +332,13 @@ class House extends Component {
     }
 
     getMessage(answer) {
-        if (answer === 0) {
+        const { house } = this.props;
+
+        if (answer === 0 || answer === 2) {
             return (
                 <div className='message_back-house-react' onClick={this.closeMenu}>
                     <div className='exitEnterHouse' name='exit'></div>
-                    У Вас недостаточно денег для покупки<br/>
+                    {answer === 0 ? 'У Вас недостаточно денег для покупки' : 'У Вас уже есть дом'}<br/>
                     <div>
                         <svg style={{ display: 'block', margin: '5% 45%' }} id="Group_10" data-name="Group 10" xmlns="http://www.w3.org/2000/svg" width="10%" height="10%" viewBox="0 0 233.069 233.069">
                             <path id="Path_26" data-name="Path 26" d="M116.535,0A116.535,116.535,0,1,0,233.069,116.535,116.666,116.666,0,0,0,116.535,0Zm0,224.1A107.57,107.57,0,1,1,224.1,116.535,107.7,107.7,0,0,1,116.535,224.1Z" fill="#e1c631"/>
@@ -339,7 +371,7 @@ class House extends Component {
 
     render() {
         const { house, enterMenu } = this.props;
-        const { isActionsMenu } = this.state;
+        const { isActionsMenu, isConfirm } = this.state;
 
         return (
             <Fragment>
@@ -348,6 +380,7 @@ class House extends Component {
                         { Object.keys(house).length > 0 ? this.getForm() : this.getLoader() }
                         { house.answerBuy !== null && this.getMessage(house.answerBuy) }
                         { house.answerBuy === null && !enterMenu.isShow && isActionsMenu && this.showActionsMenu(house) }
+                        { isConfirm && this.showConfirmBuy() }
                     </div>
                 }
                 { house.isLoading && this.getLoader() }

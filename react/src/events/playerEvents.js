@@ -85,21 +85,21 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
-    myEventEmmiter.on('govSellHouseAns', (ans) => {
+    myEventEmmiter.on('house.sell.toGov.ans', (ans) => {
         dispatch({
             type: 'SET_SELL_STATUS',
             payload: ans
         });
     });
 
-    myEventEmmiter.on('sellHouseAns', (ans) => {
+    myEventEmmiter.on('house.sell.ans', (ans) => {
         dispatch({
             type: 'SET_SELL_STATUS',
             payload: ans
         });
     });
 
-    myEventEmmiter.on('sellHouseInfo', (nick, price) => {
+    myEventEmmiter.on('house.sell.check.ans', (nick, price) => {
         dispatch({
             type: 'SET_SELL_INFO',
             payload: { nick, price }
@@ -164,7 +164,7 @@ export const PlayerEvents = (dispatch, getState) => {
             type: 'ANS_BUY_HOUSE',
             payload: {
                 answer: ans,
-                owner
+                owner: owner
             }
         });
     });
@@ -175,6 +175,20 @@ export const PlayerEvents = (dispatch, getState) => {
             payload: {
                 answer: 'error',
             }
+        });
+    });
+
+    myEventEmmiter.on('phone.app.add', (appName, info) => {
+        dispatch({
+            type: 'ADD_APP_TO_PHONE',
+            payload: { appName, info }
+        });
+    });
+
+    myEventEmmiter.on('phone.app.remove', (appName) => {
+        dispatch({
+            type: 'DELETE_APP_TO_PHONE',
+            payload: appName
         });
     });
 };

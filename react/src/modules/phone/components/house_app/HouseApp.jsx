@@ -2,6 +2,7 @@ import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {addAppDisplay, closeAppDisplay} from "../../actions/action.apps";
 import HouseManager from "./HouseManager";
+import HeaderHouseApp from "./HeaderHouseApp";
 
 class HouseApp extends Component {
     constructor(props) {
@@ -16,10 +17,7 @@ class HouseApp extends Component {
         return (
             <Fragment>
                 <div className="back_page-phone-react">
-                    <div className='head_app-phone-react' style={{ height: '15%', textAlign: 'center' }}>
-                        <div style={{ marginTop: '5%' }}>Дом { house.name }</div>
-                        <div style={{ color: '#e1c631' }}>{ house.area }</div>
-                    </div>
+                    <HeaderHouseApp house={house}/>
 
                     <div className="house_info-phone-react">
                         <div style={{ marginLeft: '5%' }}>Информация</div>

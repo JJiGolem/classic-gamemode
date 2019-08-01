@@ -1,9 +1,8 @@
 "use strict";
-/// Функции модуля системы домов
-
 /// Массив всех домов на сервере
 let houses = new Array();
 
+/// Функции модуля системы домов
 module.exports = {
     async init() {
         console.log("[HOUSES] load houses from DB");
@@ -12,8 +11,9 @@ module.exports = {
         });
         for (let i = 0; i < infoHouses.length; i++) {
             this.addHouse(infoHouses[i]);
+            this.setTimer(i);
         }
-        console.log("[HOUSES] loaded");
+        console.log("[HOUSES] " + infoHouses.length + " loaded");
     },
     addHouse(houseInfo) {
         let dimension = houseInfo.id;
@@ -46,6 +46,10 @@ module.exports = {
         exitColshape.marker = exitMarker;
         enterColshape.index = houses.length;
         exitColshape.index = houses.length;
+        enterColshape.isHouse = true;
+        exitColshape.isHouse = true;
+        enterColshape.place = 0;
+        exitColshape.place = 1;
 
         houses.push({
                 enter: enterColshape,
@@ -55,20 +59,59 @@ module.exports = {
             }
         );
     },
-    dropHouse(index) {
-        // if (houses[index].owner == null) return;
-        // let ownerId = houses[index].owner.id;
-        // houses[index].owner = null;
-        // updateHouse(index, function() {
-        //     for (let i = 0; i < mp.players.length; i++) {
-        //         if (ownerId == mp.players.at(i).info.personId) {
-        //             mp.players.at(i).call('removeApp.client', ["house", index]);
-        //             i = mp.players.length;
-        //         }
-        //     }
-    
-        //     console.log("[info] House dropped " + index);
-        // });
-        // changeBlip(index);
+    updateHouse(i) {
+        this.changeBlip(i);
+        this.setTimer(i);
     },
+    getRandomDate(daysNumber) {
+        let date = new Date();
+        date.setHours(0);
+        date.setDate(date.getDate() + daysNumber);
+        date.setHours(call('utils').randomInteger(0, 24));
+        date.setMinutes(0);
+        date.setSeconds(0);
+        return date;
+    },
+    setTimer(i) {
+        if (houses[i].info.characterId == null) return;
+        if (houses[i].info.date == null) return this.dropHouse(i);
+        if (houses[i].info.date.getTime() - new Date().getTime() <= 10000) return this.dropHouse(i);
+        houses[i].timer && clearTimeout(houses[i].timer);
+        houses[i].timer = setTimeout(this.dropHouse, houses[i].info.date.getTime() - new Date().getTime(), i);
+    },  
+    dropHouse(i) {
+        if (houses[i].info.characterId == null) return this.changeBlip(i);
+        let characterId = houses[i].info.characterId;
+        houses[i].info.characterId = null;
+        houses[i].info.characterNick = null;
+        houses[i].info.date = null;
+
+        houses[i].info.save().then(() => {
+            for (let j = 0; j < mp.players.length; j++) {
+                if (mp.players.at(j).character == null) return;
+                if (characterId == mp.players.at(j).character.id) {
+                    mp.players.at(j).call('phone.app.remove', ["house", i]);
+                    j = mp.players.length;
+                }
+            }
+    
+            console.log("[HOUSES] House dropped " + i);
+        });
+        this.changeBlip(i);
+    },
+    changeBlip(i) {
+        if (houses[i].blip == null) return;
+        if (houses[i].info.characterId != null) {
+            houses[i].blip.color = 1;
+        }
+        else {
+            houses[i].blip.color = 2;
+        }
+    },
+    getHouse(i) {
+        return houses[i];
+    },
+    isHaveHouse(id) {
+        return houses.findIndex( x => x.info.characterId == id) != -1;
+    }
 };

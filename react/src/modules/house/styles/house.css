@@ -172,3 +172,22 @@
     border-radius: 10px;
     animation: show-react .1s ease-in-out;
 }
+
+.message_back-house-react button {
+    background: transparent;
+    padding: 5%;
+    width: 30%;
+    color: white;
+    border: 1px solid #7f7f7f;
+    border-radius: 10px;
+    margin-left: 10%;
+    margin-top: 10%;
+    transition: .1s ease-in-out;
+    font-size: 100%;
+}
+
+.message_back-house-react button:hover {
+    color: black;
+    background: #e1c631;
+    border-color: #e1c631;
+}
