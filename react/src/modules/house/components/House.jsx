@@ -31,6 +31,7 @@ class House extends Component {
         this.startBuy = this.startBuy.bind(this);
         this.lookHouse = this.lookHouse.bind(this);
         this.closeMenu = this.closeMenu.bind(this);
+        this.enterHouse = this.enterHouse.bind(this);
     }
 
     /*componentWillMount() {
@@ -73,12 +74,15 @@ class House extends Component {
     }
 
     lookHouse() {
-        const { showEnterMenu, blurForm } = this.props;
-        // eslint-disable-next-line no-undef
-        mp.trigger('house.enter', 1);
+        const { showEnterMenu, blurForm, house } = this.props;
 
-        blurForm(true);
-        showEnterMenu(1);
+        if (!house.garage) {
+            // eslint-disable-next-line no-undef
+            mp.trigger('house.enter', 1);
+        } else {
+            blurForm(true);
+            showEnterMenu(1);
+        }
     }
 
     showEnterMenu(house) {
@@ -109,6 +113,16 @@ class House extends Component {
                 Нажмите на это сообщение для продолжения
             </div>
         )
+    }
+
+    enterHouse() {
+        const { blurForm, setLoading } = this.props;
+
+        blurForm(true);
+        setLoading(true);
+
+        // eslint-disable-next-line no-undef
+        mp.trigger('house.enter', 1);
     }
 
     getButton(name) {
@@ -162,7 +176,7 @@ class House extends Component {
             case 'enter':
                 return (
                     <div className='button-house-react' onClick={() => {
-                        showEnterMenu(0);
+                        house.garage ? showEnterMenu(0) : this.enterHouse();
                         blurForm(true);
                     }}
                          onMouseOver={() => this.setState({ colorEnter: 'black' })}

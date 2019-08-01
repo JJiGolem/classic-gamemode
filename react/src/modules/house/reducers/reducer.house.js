@@ -7,8 +7,8 @@ export default function house(state = initialState, action) {
     var newState;
 
     switch (type) {
-        case 'SHOW_HOUSE':
-            return {};
+        // case 'SHOW_HOUSE':
+        //     return {};
 
         case 'LOAD_INFO_HOUSE':
             return payload;
