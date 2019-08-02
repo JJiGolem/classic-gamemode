@@ -2,6 +2,7 @@
 
 let phoneNumbers = new Array();
 let utils = call('utils');
+let houseServise = call('houses');
 
 module.exports = {
     async init() {
@@ -28,10 +29,18 @@ module.exports = {
     loadPhoneOnClient(player) {
         let jsonPhone;
         if (player.phone != null) jsonPhone = player.phone.toJSON();
+
+        let houses = [];
+        if (houseServise) {
+            let houseId = houseServise.getHouseIndexByCharId(player.character.id);
+            houses = houseId != -1 ? [houseServise.getHouseInfoForApp(houseId)] : [];
+        }
+        
+
         player.call('phone.load', [{
                 isHave: player.phone != null,
                 name: player.character.name,
-                houses: [],//housesInfo,
+                houses: houses,
                 biz: [],//bizInfo,
                 contacts: player.phone != null ? (player.phone.PhoneContacts != null ? jsonPhone['PhoneContacts'] : []) : []
             },
