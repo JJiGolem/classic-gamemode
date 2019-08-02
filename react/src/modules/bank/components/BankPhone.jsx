@@ -1,31 +1,31 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {closeBankPage} from "../actions/action.bankPages";
-import {popBank} from "../actions/action.bank";
+import {pushPhoneBank} from "../actions/action.bank";
 
-class BankPop extends Component {
+class BankPhone extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            popMoney: '',
+            pushPhoneMoney: '',
             error: ''
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.popMoney = this.popMoney.bind(this);
+        this.pushPhoneMoney = this.pushPhoneMoney.bind(this);
     }
 
     handleChange(e) {
-        this.setState({ popMoney: e.target.value });
+        this.setState({ pushPhoneMoney: e.target.value });
     }
 
     validateForm() {
-        const { popMoney } = this.state;
+        const { pushPhoneMoney } = this.state;
         const { bank } = this.props;
 
-        if (popMoney) {
-            if (!isNaN(popMoney) && parseInt(popMoney) > 0) {
-                if (bank.money >= parseInt(popMoney)) {
+        if (pushPhoneMoney) {
+            if (!isNaN(pushPhoneMoney) && parseInt(pushPhoneMoney) > 0) {
+                if (bank.money >= parseInt(pushPhoneMoney)) {
                     this.setState({ error: '' });
                     return true;
                 } else {
@@ -42,36 +42,41 @@ class BankPop extends Component {
         }
     }
 
-    popMoney() {
-        const { popMoney } = this.state;
-        const { popBank, closePage } = this.props;
+    pushPhoneMoney() {
+        const { pushPhoneMoney } = this.state;
+        const { pushPhoneBank, closePage } = this.props;
 
         if (this.validateForm()) {
-            popBank(parseInt(popMoney));
-            closePage();
+            pushPhoneBank(parseInt(pushPhoneMoney));
+            this.setState({ pushPhoneMoney: '' })
+            //closePage();
         }
     }
 
     render() {
-        const { closePage } = this.props;
-        const { popMoney, error } = this.state;
+        const { closePage, bank } = this.props;
+        const { pushPhoneMoney, error } = this.state;
 
         return (
             <Fragment>
                 <div className='page_title-bank-react'>
-                    Снятие средств со счета
+                    Ппоплонение счета телефона
                 </div>
 
                 <div className='push_block-bank-react'>
-                    <div>Введите сумму снятия</div>
+                    <div>Введите сумму пополнения</div>
                     <div>
                         <input
                             className='input-bank-react'
-                            value={popMoney}
+                            value={pushPhoneMoney}
                             style={{ borderColor: error && 'red' }}
                             onChange={this.handleChange}
                         />
-                        <div className='button_input-bank-react' onClick={this.popMoney}>OK</div>
+                        <div className='button_input-bank-react' onClick={this.pushPhoneMoney}>OK</div>
+                    </div>
+
+                    <div style={{ fontSize: '130%' }}>Текущий баланс:
+                        <span style={{ color: 'green', marginLeft: '2%' }}>${ bank.phoneMoney }</span>
                     </div>
 
                     <div className='buttons_panel-bank-react'>
@@ -93,7 +98,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     closePage: () => dispatch(closeBankPage()),
-    popBank: money => dispatch(popBank(money))
+    pushPhoneBank: money => dispatch(pushPhoneBank(money))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(BankPop);
+export default connect(mapStateToProps, mapDispatchToProps)(BankPhone);

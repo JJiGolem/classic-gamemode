@@ -36,7 +36,7 @@ module.exports = {
                 db.Models.House.create({
                     characterId: null,
                     interiorId: houses[i].interior + 1,
-                    isClosed: false,
+                    isOpened: true,
                     date: null,
                     pickupX: houses[i].pickup[0],
                     pickupY: houses[i].pickup[1],

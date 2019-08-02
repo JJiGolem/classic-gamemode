@@ -13,6 +13,11 @@ export const pushBank = money => ({
     payload: money
 });
 
+export const pushPhoneBank = money => ({
+    type: 'PUSH_PHONE_BANK',
+    payload: money
+});
+
 export const popBank = money => ({
     type: 'POP_BANK',
     payload: money

@@ -1,6 +1,6 @@
 const initialState = {
-    // phone: true,
-    // house: false,
+    // phone: false,
+    // house: true,
     // business: false,
     // bank: false
 };

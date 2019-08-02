@@ -65,7 +65,7 @@ module.exports = {
     "house.enter": (player, place) => {
         if (player.house.index == -1 || player.house.index == null) return player.call('house.enter.ans', []);
         let info = housesService.getHouse(player.house.index).info;
-        if (info.characterId != null && info.characterId != player.character.id && info.isClosed) return player.call('house.enter.ans', []);
+        if (info.characterId != null && info.characterId != player.character.id && !info.isOpened) return player.call('house.enter.ans', []);
 
         let pos;
         let rot;
@@ -104,6 +104,28 @@ module.exports = {
             await info.save();
             player.call('house.buy.ans', [1, player.character.name]);
             housesService.updateHouse(player.house.index);
+            
+            player.call('phone.app.add', ["house", housesService.getHouseInfoForApp(player.house.index)]);
         });
+    },
+    /// Phone app events
+    "house.lock": (player, id, isOpened) => {
+        if (player == null) return;
+        id = parseInt(id);
+        if (isNaN(id)) return;
+        let info = housesService.getHouseById(id).info;
+        info.isOpened = isOpened;
+        info.save();
+    },
+    "house.sell.toGov": (player, id) => {
+        if (money == null) return player.call('house.sell.toGov.ans', [0]);
+        if (player == null) return player.call('house.sell.toGov.ans', [0]);
+        id = parseInt(id);
+        if (isNaN(id)) return player.call('house.sell.toGov.ans', [0]);
+        let index = housesService.getHouseIndexById(id);
+        if (index == -1) return player.call('house.sell.toGov.ans', [0]);
+        let info = housesService.getHouse(index).info;
+        if (info.characterId != player.character.id) return player.call('house.sell.toGov.ans', [0]);
+        housesService.dropHouse(index, true);
     },
 };

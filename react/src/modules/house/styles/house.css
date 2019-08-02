@@ -3,7 +3,7 @@
     font-family: main-font;
     width: 60vh;
     height: 35vh;
-    background: rgba(58, 58, 57, 0.63);
+    background: rgba(0, 0, 0, 0.51);
     border-radius: 15px;
     left: 0;
     top: 0;
@@ -22,7 +22,7 @@
     font-family: main-font;
     width: 30vh;
     height: 15vh;
-    background: rgba(58, 58, 57, 0.63);
+    background: rgba(21, 21, 21, 0.68);
     border-radius: 15px;
     left: 0;
     top: 0;
@@ -165,7 +165,7 @@
     margin: auto;
     width: 50%;
     height: 30%;
-    background: rgba(52, 52, 51, 0.82);
+    background: rgba(21, 21, 21, 0.68);
     color: white;
     text-align: center;
     padding: 5%;

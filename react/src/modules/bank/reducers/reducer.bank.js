@@ -2,7 +2,7 @@ const initialState = {};
 
 export default function bank(state = initialState, action) {
     const { type, payload } = action;
-    const { cash, money } = state;
+    const { cash, money, phoneMoney } = state;
 
     switch (type) {
         case 'LOAD_BANK_INFO':
@@ -13,6 +13,13 @@ export default function bank(state = initialState, action) {
                 ...state,
                 cash: cash - payload,
                 money: money + payload
+            };
+
+        case 'PUSH_PHONE_BANK':
+            return {
+                ...state,
+                money: money - payload,
+                phoneMoney: phoneMoney + payload
             };
 
         case 'POP_BANK':
