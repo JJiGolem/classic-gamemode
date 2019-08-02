@@ -9,6 +9,7 @@ module.exports = {
         console.log('STEERING '+vehicle.steeringState);
         console.log('FUEL '+vehicle.fuelState);
         console.log('BRAKE '+vehicle.brakeState);
+        console.log(`multiplier ${vehicle.multiplier}`);
         player.call('chat.message.push', [`!{#70a7ff} Модель ${vehicle.model}`]);
         player.call('chat.message.push', [`!{#70a7ff} Имя модели ${vehicle.modelName}`]);
         player.call('chat.message.push', [`!{#70a7ff} Ключ ${vehicle.key}`]);
@@ -17,7 +18,7 @@ module.exports = {
         player.call('chat.message.push', [`!{#70a7ff} fuel ${vehicle.fuel}`]);
         player.call('chat.message.push', [`!{#71a0ff} maxfuel ${vehicle.properties.maxFuel}`]);
         player.call('chat.message.push', [`!{#71a0ff} name ${vehicle.properties.name}`]);
-        player.call('chat.message.push', [`!{#71a0ff} defaultCons ${vehicle.properties.defaultConsumption}`]);
+        player.call('chat.message.push', [`!{#71a0ff} def consumption ${vehicle.properties.consumption}`]);
         player.call('chat.message.push', [`!{#71a0ff} license ${vehicle.properties.license}`]);
         player.call('chat.message.push', [`!{#71a0ff} parkingHours ${vehicle.parkingHours}`]);
 
@@ -35,7 +36,7 @@ module.exports = {
             player.call('vehicles.speedometer.sync');
             player.indicatorsUpdateTimer = setInterval(() => {
                 try {
-                    player.call('vehicles.speedometer.fuel.update', [vehicle.fuel]);
+                    player.call('vehicles.speedometer.fuel.update', [Math.ceil(vehicle.fuel)]);
                 } catch (err) {
                     console.log(err);
                 }
@@ -75,6 +76,9 @@ module.exports = {
             player.call('vehicles.engine.toggle', [true]);
             player.vehicle.setVariable("engine", true);
             player.call('prompt.hide');
+            //if (player.vehicle.key != "job" && player.vehicle.key != "newbie" && player.vehicle.key != "admin") {
+                vehicles.generateBreakdowns(player.vehicle);
+            //}
             mp.events.call('vehicles.breakdowns.init', player);
         }
     },
@@ -199,6 +203,7 @@ module.exports = {
         console.log(`выкидываем ${target.name} с id ${target.id}`);
         try {
             target.removeFromVehicle();
+            target.call('notifications.push.warning', ['Вас вытолкнули из т/с', 'Транспорт']);
             player.call('notifications.push.success', ['Вы вытолкнули пассажира', 'Транспорт']);
         } catch (err) {
             console.log(err);
@@ -217,7 +222,6 @@ module.exports = {
         
         var sirenLights = player.vehicle.getVariable("sirenLights");
         if (sirenLights == player.vehicle.siren) return;
-        console.log(` ставим сирену ${player.vehicle.siren}`);
         player.vehicle.setVariable("sirenLights", player.vehicle.siren);
     }
 }

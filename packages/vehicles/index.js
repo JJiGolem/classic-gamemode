@@ -4,6 +4,14 @@ var dbVehicleProperties;
 var plates = [];
 let utils = call('utils');
 
+const MAX_BREAK_LEVEL = 2;
+let breakdownConfig = {
+    engineState: 0.004,
+    fuelState: 0.004,
+    steeringState: 0.004,
+    brakeState: 0.004
+};
+
 module.exports = {
     async init() {
         await this.loadVehiclePropertiesFromDB();
@@ -40,9 +48,12 @@ module.exports = {
         vehicle.steeringState = veh.steeringState;
         vehicle.fuelState = veh.fuelState;
         vehicle.brakeState = veh.brakeState;
-        vehicle.numberPlate = veh.plate; /// устанавливаем номер
+        vehicle.destroys = veh.destroys;
 
+        vehicle.multiplier = this.initMultiplier(veh);
         vehicle.setVariable("engine", false);
+
+        vehicle.numberPlate = veh.plate; /// устанавливаем номер
 
         if (source == 0) { /// Если авто спавнится из БД
             vehicle.sqlId = veh.id;
@@ -61,16 +72,16 @@ module.exports = {
         vehicle.fuelTimer = setInterval(() => {
             try {
                 if (vehicle.engine) {
-                    let multiplier = 1;
+                    let multiplier = vehicle.multiplier;
                     if (vehicle.fuelState) {
                         if (vehicle.fuelState == 1) {
-                            multiplier=2;
+                            multiplier = multiplier*2;
                         }
                         if (vehicle.fuelState == 2) {
-                            multiplier*=4;
+                            multiplier = multiplier*4;
                         }
                     }
-                    vehicle.fuel = vehicle.fuel - vehicle.properties.defaultConsumption*multiplier;
+                    vehicle.fuel = vehicle.fuel - vehicle.properties.consumption * multiplier;
                     if (vehicle.fuel <= 0) {
                         vehicle.engine = false;
                         vehicle.setVariable("engine", false);
@@ -107,8 +118,8 @@ module.exports = {
     async loadVehiclesFromDB() { /// Загрузка автомобилей фракций/работ из БД 
         var dbVehicles = await db.Models.Vehicle.findAll({
             where: {
-                key: { 
-                    [Op.or]: ["newbie", "faction", "job"] 
+                key: {
+                    [Op.or]: ["newbie", "faction", "job"]
                 }
             }
         });
@@ -132,7 +143,7 @@ module.exports = {
                 var properties = {
                     name: dbVehicleProperties[i].name,
                     maxFuel: dbVehicleProperties[i].maxFuel,
-                    defaultConsumption: dbVehicleProperties[i].defaultConsumption,
+                    consumption: dbVehicleProperties[i].consumption,
                     license: dbVehicleProperties[i].license
                 }
                 if (properties.name == null) properties.name = modelName;
@@ -143,7 +154,7 @@ module.exports = {
         var properties = {
             name: modelName,
             maxFuel: 50,
-            defaultConsumption: 2,
+            consumption: 2,
             license: 1
         }
 
@@ -159,9 +170,10 @@ module.exports = {
                 if ((veh.lastMileage - value) == 0) return;
                 veh.lastMileage = value;
                 await veh.db.update({
-                    mileage: value
+                    mileage: value,
+                    fuel: Math.ceil(veh.fuel)
                 });
-                console.log(`[DEBUG] Обновили пробег для ${veh.properties.name}. Текущий пробег: ${veh.mileage}. К занесению: ${value}`);
+                console.log(`[DEBUG] Обновили пробег для ${veh.properties.name}. Текущий пробег: ${veh.mileage}. К занесению: ${value} км и ${Math.ceil(veh.fuel)} л`);
             } catch (err) {
                 console.log(err);
             }
@@ -207,5 +219,51 @@ module.exports = {
         console.log(`Сгенерировали номер ${plate}`);
         plates.push(plate);
         return plate;
+    },
+    initMultiplier(veh) {
+        if (veh.key == 'admin') return 1;
+        let multiplier = 1;
+        let mileage = veh.mileage;
+        let destroys = veh.destroys;
+
+        if (mileage < 10) multiplier += 0.01;
+        if (mileage > 10 && mileage < 100) multiplier += 0.05;
+        if (mileage > 100 && mileage < 300) multiplier += 0.1;
+        if (mileage > 300 && mileage < 500) multiplier += 0.2;
+        if (mileage > 500 && mileage < 1000) multiplier += 0.4;
+        if (mileage > 1000 && mileage < 2000) multiplier += 0.5;
+        if (mileage > 2000 && mileage < 4000) multiplier += 0.7;
+        if (mileage > 4000 && mileage < 10000) multiplier += 1;
+        if (mileage > 10000) multiplier += 1.2;
+
+        multiplier += 0.01 * destroys;
+        return multiplier;
+    },
+    generateBreakdowns(veh) {
+        if (!veh) return;
+        let multiplier = veh.multiplier;
+        //let multiplier = 10;
+        let toUpdate = false;
+        for (let key in breakdownConfig) {
+            if (veh[key] < MAX_BREAK_LEVEL) {
+                console.log(`Пытаемся сломать ${key} у ${veh.properties.name}`);
+                let random = Math.random();
+                console.log(random);
+                if (random < breakdownConfig[key] * multiplier) {
+                    veh[key]++;
+                    toUpdate = true;
+                    console.log(`сломали ${key}`);
+                }
+            }
+        }
+        if (toUpdate) {
+            console.log('обновляем поломки в бд');
+            veh.db.update({
+                engineState: veh.engineState,
+                fuelState: veh.fuelState,
+                steeringState: veh.steeringState,
+                brakeState: veh.brakeState
+            });
+        }
     }
 }

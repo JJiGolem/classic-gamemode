@@ -1,6 +1,6 @@
 let breakdowns = {
-    engineState: 2,
-    steeringState: 2,
+    engineState: 0,
+    steeringState: 0,
     fuelState: 0,
     brakeState: 2
 }
@@ -12,11 +12,11 @@ let brakeState;
 
 mp.keys.bind(0x72, true, function () {
     mp.events.call('vehicles.breakdowns.init', breakdowns);
-    //mp.players.local.vehicle.setSteerBias(1.0);
 });
 
 mp.events.add('playerLeaveVehicle', () => {
     stopBrakeTimer();
+    stopSteeringTimer();
 });
 
 mp.events.add('vehicles.breakdowns.init', (data) => {
@@ -24,6 +24,7 @@ mp.events.add('vehicles.breakdowns.init', (data) => {
     if (!data.engineState && !data.steeringState && !data.fuelState && !data.brakeState) {
         return mp.callCEFV('speedometer.danger = 0');
     }
+    mp.events.call('notifications.push.warning', 'Обратитесь к механикам', 'Т/с неисправно');
     mp.chat.debug(`engineState ${data.engineState}`);
     mp.chat.debug(`steeringState ${data.steeringState}`);
     mp.chat.debug(`fuelState ${data.fuelState}`);
@@ -80,13 +81,14 @@ mp.events.add('vehicles.breakdowns.brake', () => {
 let brakeTimer, toBrake;
 
 function startBrakeTimer() {
+    stopBrakeTimer();
     let breakChance;
     switch (brakeState) {
         case 1:
-            breakChance = 0.2;
+            breakChance = 0.3;
             break;
         case 2:
-            breakChance = 0.5;
+            breakChance = 0.7;
             break;
     }
 
@@ -95,7 +97,6 @@ function startBrakeTimer() {
 
         try {
             let random = Math.random();
-            mp.chat.debug(`random ${random}`);
             if (random <= breakChance) {
                 mp.players.local.vehicle.setHandbrake(true);
                 toBrake = setTimeout(() => {
@@ -105,16 +106,14 @@ function startBrakeTimer() {
                     } catch (err) {
                         mp.chat.debug('err');
                         stopBrakeTimer();
-                        //clearInterval(toBrake);
                     }
                 }, 2000);
             }
         } catch (err) {
             mp.chat.debug('err');
-            //clearInterval(brakeTimer);
             stopBrakeTimer();
         }
-    }, 10000);
+    }, 5000);
 }
 
 function stopBrakeTimer() {
@@ -125,6 +124,7 @@ function stopBrakeTimer() {
 let steeringTimer;
 
 function startSteeringTimer() {
+    stopSteeringTimer();
     let breakChance;
     switch (steeringState) {
         case 1:
@@ -138,11 +138,9 @@ function startSteeringTimer() {
     steeringTimer = setInterval(() => {
         if (!mp.players.local.vehicle) return stopBrakeTimer();
         let breakRandom = Math.random();
-        mp.chat.debug(`breakrand ${breakRandom}`);
         if (breakRandom > breakChance) return;
         try {
             let random = Math.random();
-            mp.chat.debug(`leftright ${random}`);
             if (random > 0.5) {
                 bias = -1.0;
             } else {
