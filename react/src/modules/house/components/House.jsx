@@ -37,7 +37,7 @@ class House extends Component {
         this.showConfirmBuy = this.showConfirmBuy.bind(this);
     }
 
-    componentWillMount() {
+    /*componentWillMount() {
         const houseInfo = {
             name: 228,
             area: 'Санта-Моника',
@@ -50,7 +50,7 @@ class House extends Component {
         };
 
         this.props.loadInfo(houseInfo);
-    }
+    }*/
 
     getLoader() {
         return (
@@ -89,7 +89,7 @@ class House extends Component {
             // eslint-disable-next-line no-undef
             mp.trigger('house.buy');
 
-            /*setTimeout(() => {
+           /* setTimeout(() => {
                 setAnswer({answer: 1, owner: 'Dun Hill'});
             }, 1000)*/
         }
@@ -292,7 +292,7 @@ class House extends Component {
                             !house.owner &&
                             <div className='block_price-house-react'>
                                 <span>Цена: </span>
-                                <span style={{ color: 'green', marginLeft: '5%' }}>${ house.price }</span>
+                                <span style={{ color: '#32c304', marginLeft: '5%' }}>${ house.price }</span>
                             </div>
                         }
 
@@ -301,12 +301,12 @@ class House extends Component {
                             <div>Класс: <span>{ house.class }</span></div>
                             <div>Количество комнат: <span>{ house.numRooms }</span></div>
                             <div>Гараж: { house.garage
-                                ? <span style={{ color: 'green' }}>есть</span>
+                                ? <span style={{ color: '#32c304' }}>есть</span>
                                 : <span style={{ color: 'red' }}>нет</span> }
                             </div>
                             <div>Парковочных мест: <span>{ house.carPlaces }</span></div>
                             <div>Квартплата:
-                                <span style={{ color: 'green' }}> ${ house.rent }</span>
+                                <span style={{ color: '#32c304' }}> ${ house.rent }</span>
                                 <span> в сутки</span>
                             </div>
                             {
