@@ -20,6 +20,7 @@ class Main extends Component {
             cash: 150471,
             money: 2300,
             number: 23,
+            phoneMoney: 45,
             name: 'Dun Hill'
         };
 
@@ -103,8 +104,10 @@ class Main extends Component {
                 <div className='logo-bank-react'>
                     <img src={require('../../../imgs/bank/logo.png')}/>
                 </div>
+                <div className='exitHouse' name='exit'></div>
+
                 { pages.map(page => (
-                    <div className='page-bank-react'>
+                    <div className='page-bank-react' style={{  }}>
                         { page }
                     </div>
                 )) }
@@ -116,7 +119,7 @@ class Main extends Component {
         const { bank } = this.props;
 
         return (
-            <div className='main-form-bank'>
+            <div className='main-form-bank' style={{  }}>
                 { Object.keys(bank).length > 0 ? this.getForm() : this.getLoader() }
             </div>
         );

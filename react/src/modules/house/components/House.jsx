@@ -305,7 +305,7 @@ class House extends Component {
                                 : <span style={{ color: 'red' }}>нет</span> }
                             </div>
                             <div>Парковочных мест: <span>{ house.carPlaces }</span></div>
-                            <div>Аренда:
+                            <div>Квартплата:
                                 <span style={{ color: 'green' }}> ${ house.rent }</span>
                                 <span> в сутки</span>
                             </div>

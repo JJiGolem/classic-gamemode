@@ -30,6 +30,12 @@ class AnsSell extends Component {
             closeApp();
             addApp({ name: 'Error', form: <Error status='Покупатель не принял условия сделки'/> });
         }
+
+        else if (status === 3) {
+            closeApp();
+            closeApp();
+            addApp({ name: 'Error', form: <Error status='Вы находитесь не рядом с домом'/> });
+        }
     }
 
     render() {
