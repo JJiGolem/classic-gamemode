@@ -59,10 +59,10 @@ class BankPush extends Component {
         return (
             <Fragment>
                 <div className='page_title-bank-react'>
-                    Ппоплонение банковского счета
+                    Пополнение банковского счета
                 </div>
 
-                <div className='push_block-bank-react'>
+                <div className='push_block-bank-react' style={{ marginTop: '10%' }}>
                     <div>Введите сумму пополнения</div>
                     <div>
                         <input

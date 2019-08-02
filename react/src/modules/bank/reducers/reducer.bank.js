@@ -34,6 +34,13 @@ export default function bank(state = initialState, action) {
                 ...state,
                 money: money - payload
             };
+
+        case 'PAY_HOUSE_BANK':
+        case 'PAY_BUSINESS_BANK':
+            return {
+                ...state,
+                money: money - payload.money
+            };
     }
 
     return state;

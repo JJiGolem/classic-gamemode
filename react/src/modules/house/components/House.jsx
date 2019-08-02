@@ -292,7 +292,7 @@ class House extends Component {
                             !house.owner &&
                             <div className='block_price-house-react'>
                                 <span>Цена: </span>
-                                <span style={{ color: '#32c304', marginLeft: '5%' }}>${ house.price }</span>
+                                <span style={{ color: '#a2dd03 ', marginLeft: '5%' }}>${ house.price }</span>
                             </div>
                         }
 
@@ -301,18 +301,15 @@ class House extends Component {
                             <div>Класс: <span>{ house.class }</span></div>
                             <div>Количество комнат: <span>{ house.numRooms }</span></div>
                             <div>Гараж: { house.garage
-                                ? <span style={{ color: '#32c304' }}>есть</span>
+                                ? <span style={{ color: '#a2dd03 ' }}>есть</span>
                                 : <span style={{ color: 'red' }}>нет</span> }
                             </div>
                             <div>Парковочных мест: <span>{ house.carPlaces }</span></div>
                             <div>Квартплата:
-                                <span style={{ color: '#32c304' }}> ${ house.rent }</span>
+                                <span style={{ color: '#a2dd03 ' }}> ${ house.rent }</span>
                                 <span> в сутки</span>
                             </div>
-                            {
-                                house.owner &&
-                                <div>Владелец: <span>{ house.owner }</span></div>
-                            }
+                            <div>Владелец: <span>{ house.owner ? house.owner : 'нет' }</span></div>
                         </div>
 
                         <div className='buttons-house-react'>

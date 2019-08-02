@@ -21,7 +21,16 @@ class Main extends Component {
             money: 2300,
             number: 23,
             phoneMoney: 45,
-            name: 'Dun Hill'
+            name: 'Dun Hill',
+            /*houses: [
+                {
+                    name: 228,
+                    class: 'Люкс',
+                    rent: 350,
+                    days: 4
+                }
+            ],
+            biz: [],*/
         };
 
         loadInfo(info);

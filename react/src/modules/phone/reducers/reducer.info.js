@@ -44,7 +44,8 @@ const initialState = {
                 }
             ]
         }
-    ]
+    ],
+    biz: []
 };
 
 export default function info(state = initialState, action) {
@@ -148,6 +149,16 @@ export default function info(state = initialState, action) {
                 newState.biz.length = 0;
                 return newState;
             }
+
+        case 'PAY_HOUSE_BANK':
+            newState = { ...state };
+            let indPayHouse = newState.houses.findIndex(house => house.name === payload.name);
+
+            if (indPayHouse !== -1) {
+                newState.houses[indPayHouse].days += payload.days;
+            }
+
+            return newState;
     }
 
     return state;

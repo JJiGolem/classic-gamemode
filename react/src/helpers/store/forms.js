@@ -1,8 +1,8 @@
 const initialState = {
     // phone: false,
-    // house: true,
+    // house: false,
     // business: false,
-    // bank: false
+    // bank: true
 };
 
 export default function forms(state = initialState, action) {

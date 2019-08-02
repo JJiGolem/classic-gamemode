@@ -29,7 +29,7 @@ class BankPop extends Component {
                     this.setState({ error: '' });
                     return true;
                 } else {
-                    this.setState({ error: 'Недостаточно денег на счете' });
+                    this.setState({ error: 'Недостаточно средств на счете' });
                     return false;
                 }
             } else {
@@ -62,7 +62,7 @@ class BankPop extends Component {
                     Снятие средств со счета
                 </div>
 
-                <div className='push_block-bank-react'>
+                <div className='push_block-bank-react' style={{ marginTop: '10%' }}>
                     <div>Введите сумму снятия</div>
                     <div>
                         <input
