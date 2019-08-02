@@ -1,5 +1,9 @@
 "use strict";
 
+let name = null;
+let cost = null;
+
+
 mp.events.add('house.menu', (houseInfo) => {
     mp.gui.cursor.show(true, true);
     houseInfo.area =  mp.game.ui.getLabelText(mp.game.zone.getNameOfZone(houseInfo.pos[0], houseInfo.pos[1], houseInfo.pos[2]));
@@ -45,4 +49,37 @@ mp.events.add('house.buy', () => {
 
 mp.events.add('house.buy.ans', (ans, ownerName) => {
     mp.callCEFR('house.buy.ans', [ans, ownerName]);
+});
+
+
+///Phone app events
+mp.events.add('house.lock', (id, isOpened) => {
+    mp.events.callRemote('house.lock', id, isOpened);
+});
+
+mp.events.add('house.sell.toGov', (id) => {
+    mp.events.callRemote('house.sell.toGov', id);
+});
+mp.events.add('house.sell.toGov.ans', (ans) => {
+    mp.callCEFR('house.sell.toGov.ans', [ans]);
+});
+
+mp.events.add('house.sell.check', (nameT, idOrNick, costT) => {
+    name = nameT;
+    cost = costT;
+    mp.events.callRemote('house.sell.check', idOrNick);
+});
+mp.events.add('house.sell.check.ans', (nick) => {
+    mp.callCEFR('house.sell.check.ans', [nick, cost]);
+});
+
+mp.events.add('house.sell', () => {
+    mp.events.callRemote('house.sell', name, cost);
+});
+mp.events.add('house.sell.ans', (ans) => {
+    mp.callCEFR('house.sell.ans', [ans]);
+});
+
+mp.events.add('house.sell.stop', () => {
+    mp.events.callRemote('house.sell.stop');
 });

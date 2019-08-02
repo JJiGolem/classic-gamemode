@@ -1,6 +1,7 @@
 "use strict";
 /// Массив всех домов на сервере
 let houses = new Array();
+let money = call('money');
 
 /// Функции модуля системы домов
 module.exports = {
@@ -79,23 +80,32 @@ module.exports = {
         houses[i].timer && clearTimeout(houses[i].timer);
         houses[i].timer = setTimeout(this.dropHouse, houses[i].info.date.getTime() - new Date().getTime(), i);
     },  
-    dropHouse(i) {
+    dropHouse(i, fullPrice) {
         if (houses[i].info.characterId == null) return this.changeBlip(i);
         let characterId = houses[i].info.characterId;
         houses[i].info.characterId = null;
         houses[i].info.characterNick = null;
         houses[i].info.date = null;
+        houses[i].info.isOpened = true;
 
         houses[i].info.save().then(() => {
-            for (let j = 0; j < mp.players.length; j++) {
-                if (mp.players.at(j).character == null) return;
-                if (characterId == mp.players.at(j).character.id) {
-                    mp.players.at(j).call('phone.app.remove', ["house", i]);
-                    j = mp.players.length;
+            if (money == null) return console.log("[HOUSES] House dropped " + i + ". But player didn't getmoney");
+            money.addMoneyById(characterId, fullPrice ? houses[i].info.price : houses[i].info.price * 0.6, function(result) {
+                if (result) {
+                    for (let j = 0; j < mp.players.length; j++) {
+                        if (mp.players.at(j).character == null) return;
+                        if (characterId == mp.players.at(j).character.id) {
+                            if (fullPrice)  mp.players.at(j).call('house.sell.toGov.ans', [1]);
+                            mp.players.at(j).call('phone.app.remove', ["house", i]);
+                            j = mp.players.length;
+                        }
+                    }
+                    console.log("[HOUSES] House dropped " + i);
                 }
-            }
-    
-            console.log("[HOUSES] House dropped " + i);
+                else {
+                    console.log("[HOUSES] House dropped " + i + ". But player didn't getmoney");
+                }
+            });        
         });
         this.changeBlip(i);
     },
@@ -111,7 +121,32 @@ module.exports = {
     getHouse(i) {
         return houses[i];
     },
+    getHouseById(id) {
+        return houses.find( x => x.info.id == id);
+    },
+    getHouseIndexByCharId(id) {
+        return houses.findIndex( x => x.info.characterId == id);
+    },
+    getHouseIndexById(id) {
+        return houses.findIndex( x => x.info.id == id);
+    },
     isHaveHouse(id) {
         return houses.findIndex( x => x.info.characterId == id) != -1;
-    }
+    },
+    getHouseInfoForApp(i) {
+        let info = this.getHouse(i).info;
+        return {
+            name: info.id,
+            class: info.Interior.class,
+            numRooms:  info.Interior.numRooms,
+            garage:  info.Interior.garage,
+            carPlaces:  info.Interior.carPlaces,
+            rent: 10, //todo with economic system
+            isOpened: info.isOpened,
+            improvements: new Array(),
+            price: info.price,
+            days: parseInt((info.date.getTime() - new Date().getTime()) / (24 * 60 * 60 * 1000)),
+            pos: [info.pickupX, info.pickupY, info.pickupZ]
+        };
+    },
 };

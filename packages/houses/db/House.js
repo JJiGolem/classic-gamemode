@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: false
         },
-        isClosed: {
+        isOpened: {
             type: DataTypes.INTEGER(1),
             allowNull: false
         },
