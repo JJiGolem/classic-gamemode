@@ -49,6 +49,8 @@ module.exports = {
         vehicle.fuelState = veh.fuelState;
         vehicle.brakeState = veh.brakeState;
         vehicle.destroys = veh.destroys;
+        vehicle.regDate = veh.regDate;
+        vehicle.owners = veh.owners;
 
         vehicle.multiplier = this.initMultiplier(veh);
         vehicle.setVariable("engine", false);
@@ -75,10 +77,10 @@ module.exports = {
                     let multiplier = vehicle.multiplier;
                     if (vehicle.fuelState) {
                         if (vehicle.fuelState == 1) {
-                            multiplier = multiplier*2;
+                            multiplier = multiplier * 2;
                         }
                         if (vehicle.fuelState == 2) {
-                            multiplier = multiplier*4;
+                            multiplier = multiplier * 4;
                         }
                     }
                     vehicle.fuel = vehicle.fuel - vehicle.properties.consumption * multiplier;
@@ -144,7 +146,9 @@ module.exports = {
                     name: dbVehicleProperties[i].name,
                     maxFuel: dbVehicleProperties[i].maxFuel,
                     consumption: dbVehicleProperties[i].consumption,
-                    license: dbVehicleProperties[i].license
+                    license: dbVehicleProperties[i].license,
+                    price: dbVehicleProperties[i].price,
+                    vehType: dbVehicleProperties[i].vehType
                 }
                 if (properties.name == null) properties.name = modelName;
                 return properties;
@@ -155,7 +159,9 @@ module.exports = {
             name: modelName,
             maxFuel: 50,
             consumption: 2,
-            license: 1
+            license: 1,
+            price: 100000,
+            vehType: 0
         }
 
         return properties;
@@ -186,6 +192,23 @@ module.exports = {
                 owner: player.character.id
             }
         });
+        player.vehicleList = [];
+        let temp = 0;
+        dbPrivate.forEach((current) => {
+            if (temp > 3) return; // TEMP!!!
+            let props = this.setVehiclePropertiesByModel(current.modelName);
+            player.vehicleList.push({
+                id: current.id,
+                name: props.name,
+                plate: current.plate,
+                regDate: current.regDate,
+                owners: current.owners,
+                vehType: props.vehType,
+                price: props.price
+            });
+            temp++;
+        });
+        console.log(player.vehicleList);
         // if (player.home) spawnHomeVehicles()
         // проверка на отсутствие дома todo
         if (dbPrivate.length > 0) {
@@ -265,5 +288,16 @@ module.exports = {
                 brakeState: veh.brakeState
             });
         }
+    },
+    getVehicleBySqlId() {
+        if (!sqlId) return null;
+        var result;
+        mp.vehicles.forEach((veh) => {
+            if (veh.sqlId == sqlId) {
+                result = veh;
+                return;
+            }
+        });
+        return result;
     }
 }

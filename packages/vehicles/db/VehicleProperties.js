@@ -9,6 +9,16 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING(128),
 			allowNull: true
         },
+        vehType: {
+			type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+			allowNull: false
+        },
+        price: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 100000,
+			allowNull: false
+        },
         maxFuel: {
             type: DataTypes.INTEGER(11),
             defaultValue: 50,

@@ -131,4 +131,13 @@ module.exports = {
             player.call('chat.message.push', [`!{#ffffff} установили топливную поломку ${args[0]}`]);
         }
     },
+    "/date": {
+        handler: (player, args) => {
+            if (!player.vehicle) return;
+            let now = new Date();
+            player.vehicle.db.update({
+                regDate: now
+            });
+        }
+    }
 }
