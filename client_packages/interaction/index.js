@@ -13,6 +13,10 @@ mp.getCurrentInteractionEntity = () => {
     return currentInteractionEntity;
 }
 
+mp.getDefaultInteractionLeft = () => {
+    return defaultLeft;
+}
+
 function vdist(posA, posB) {
     if (!posA || !posB) return Number.MAX_VALUE;
     return mp.game.system.vdist(posA.x, posA.y, posA.z, posB.x, posB.y, posB.z);
@@ -30,12 +34,51 @@ function getClosestVehicle(pos, range = INTERACTION_RANGE) {
             }
         }
     });
-    // mp.chat.debug('MINIMAL:');
-    // mp.chat.debug(closestVehicle.model);
     return closestVehicle;
 }
 
+function getClosestPlayer(pos, range = INTERACTION_RANGE) {
+    var closestPlayer;
+    var minDist = 99999;
+    mp.players.forEachInStreamRange((current) => {
+        if (current == mp.players.local) return;
+        var distToPlayer = vdist(pos, current.position);
+        if (distToPlayer < range) {
+            if (distToPlayer < minDist) {
+                closestPlayer = current;
+                minDist = distToPlayer;
+            }
+        }
+    });
+    return closestPlayer;
+}
+
+
+function getClosestPlayerOrVehicle(pos) {
+    mp.chat.debug('ищем');
+    var closestPlayer = getClosestPlayer(pos);
+    var closestVehicle = getClosestVehicle(pos);
+    if (!closestPlayer) {
+        mp.chat.debug('возвращаем тс')
+        return closestVehicle;
+    };
+    if (!closestVehicle) {
+        mp.chat.debug('возвращаем игрока')
+        return closestPlayer;
+    }
+    var distToPlayer = vdist(pos, closestPlayer.position);
+    mp.chat.debug(`player ${distToPlayer}`);
+
+    var distToVehicle = vdist(pos, closestVehicle.position);
+    mp.chat.debug(`vehicle ${distToVehicle}`);
+    if (distToPlayer <= distToVehicle) {
+        mp.chat.debug('возвращаем игрока')
+        return closestPlayer;
+    } else return closestVehicle;
+}
+
 mp.events.add('interaction.menu.show', () => {
+    mp.chat.debug('show');
     mp.busy.add('interaction');
     isOpen = true;
     mp.gui.cursor.show(true, true);
@@ -64,19 +107,25 @@ mp.events.add('characterInit.done', () => { /// E
 
 
         if (mp.players.local.vehicle) return;
-
-        currentInteractionEntity = getClosestVehicle(mp.players.local.position);
+        //getClosestPlayer(mp.players.local.position);
+        //currentInteractionEntity = getClosestVehicle(mp.players.local.position);
+        currentInteractionEntity = getClosestPlayerOrVehicle(mp.players.local.position);
         if (!currentInteractionEntity) return;
 
+        if (currentInteractionEntity.type == 'vehicle') {
+            mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle"])');
+            mp.callCEFV(`interactionMenu.left = ${defaultLeft}`);
 
-        mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle"])');
-        mp.callCEFV(`interactionMenu.left = ${defaultLeft}`);
-        // mp.chat.debug(currentInteractionEntity.getClass());
-        let vehClass = currentInteractionEntity.getClass();
-        if (classesToIgnore.includes(vehClass)) {
-            mp.callCEFV('interactionMenu.menu.items.splice(1, 2)');
+            let vehClass = currentInteractionEntity.getClass();
+            if (classesToIgnore.includes(vehClass)) {
+                mp.callCEFV('interactionMenu.menu.items.splice(1, 2)');
+            }
+            mp.events.call('interaction.menu.show');
+        } else if (currentInteractionEntity.type == 'player') {
+            mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["player_interaction"])');
+            mp.callCEFV(`interactionMenu.left = ${defaultLeft}`);
+            mp.events.call('interaction.menu.show');
         }
-        mp.events.call('interaction.menu.show');
 
     });
 
@@ -85,24 +134,27 @@ mp.events.add('characterInit.done', () => { /// E
         if (mp.busy.includes()) return;
         if (isOpen) return mp.events.call('interaction.menu.close');;
 
-        if (!mp.players.local.vehicle) return;        
+        if (!mp.players.local.vehicle) {
+            currentInteractionEntity = mp.players.local;
+            mp.callCEFV(`interactionMenu.left = ${defaultLeft}`);
+            mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["player_ownmenu"])');
+            mp.events.call('interaction.menu.show');
+        } else if (mp.players.local.vehicle.getPedInSeat(-1) == mp.players.local.handle) {
+            currentInteractionEntity = mp.players.local.vehicle;
+            if (!currentInteractionEntity) return;
 
-        currentInteractionEntity = mp.players.local.vehicle;
-        if (!currentInteractionEntity) return;
+            mp.callCEFV(`interactionMenu.left = ${vehicleLeft}`);
+            mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle_inside"])');
 
-        mp.callCEFV(`interactionMenu.left = ${vehicleLeft}`);
-        mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle_inside"])');
-
-        let vehClass = currentInteractionEntity.getClass();
-        if (vehClass == 18) {
-            mp.callCEFV(`interactionMenu.menu.items.push({
-                text: "Звук сирены",
-                icon: "siren.png"
-            });`);
+            let vehClass = currentInteractionEntity.getClass();
+            if (vehClass == 18) {
+                mp.callCEFV(`interactionMenu.menu.items.push({
+                    text: "Звук сирены",
+                    icon: "siren.png"
+                });`);
+            }
+            mp.events.call('interaction.menu.show');
         }
-
-        mp.events.call('interaction.menu.show');
-
     });
 });
 

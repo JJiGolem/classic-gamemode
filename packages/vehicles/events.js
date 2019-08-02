@@ -3,13 +3,15 @@ var vehicles = require('./index.js')
 module.exports = {
     "init": () => {
         vehicles.init();
+        // let now = new Date();
+        // console.log(now);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
-        console.log('ENGINE '+vehicle.engineState);
-        console.log('STEERING '+vehicle.steeringState);
-        console.log('FUEL '+vehicle.fuelState);
-        console.log('BRAKE '+vehicle.brakeState);
-        console.log(`multiplier ${vehicle.multiplier}`);
+        // console.log('ENGINE ' + vehicle.engineState);
+        // console.log('STEERING ' + vehicle.steeringState);
+        // console.log('FUEL ' + vehicle.fuelState);
+        // console.log('BRAKE ' + vehicle.brakeState);
+        // console.log(`multiplier ${vehicle.multiplier}`);
         player.call('chat.message.push', [`!{#70a7ff} Модель ${vehicle.model}`]);
         player.call('chat.message.push', [`!{#70a7ff} Имя модели ${vehicle.modelName}`]);
         player.call('chat.message.push', [`!{#70a7ff} Ключ ${vehicle.key}`]);
@@ -77,12 +79,12 @@ module.exports = {
             player.vehicle.setVariable("engine", true);
             player.call('prompt.hide');
             //if (player.vehicle.key != "job" && player.vehicle.key != "newbie" && player.vehicle.key != "admin") {
-                vehicles.generateBreakdowns(player.vehicle);
+            vehicles.generateBreakdowns(player.vehicle);
             //}
             mp.events.call('vehicles.breakdowns.init', player);
         }
     },
-    'vehicles.breakdowns.init': (player) => { 
+    'vehicles.breakdowns.init': (player) => {
         if (!player.vehicle) return;
         let vehicle = player.vehicle;
         try {
@@ -180,12 +182,12 @@ module.exports = {
 
         occupants.forEach((current) => {
             console.log(current.name);
-            //if ((current.id != player.id) && (current.seat != -1)) {
-            ejectList.push({
-                id: current.id,
-                name: current.name
-            });
-            //}
+            if ((current.id != player.id) && (current.seat != -1)) {
+                ejectList.push({
+                    id: current.id,
+                    name: current.name
+                });
+            }
         });
         console.log(ejectList);
         if (ejectList.length == 0) return player.call('notifications.push.error', ['В т/с нет пассажиров', 'Транспорт']);;
@@ -219,7 +221,7 @@ module.exports = {
     },
     "vehicles.siren.lights": (player) => {
         if (!player.vehicle) return;
-        
+
         var sirenLights = player.vehicle.getVariable("sirenLights");
         if (sirenLights == player.vehicle.siren) return;
         player.vehicle.setVariable("sirenLights", player.vehicle.siren);

@@ -23,6 +23,15 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING(128),
 			allowNull: false
 		},
+		regDate: {
+            type: DataTypes.DATE,
+            allowNull: true
+		},
+		owners: {
+			type: DataTypes.INTEGER,
+			defaultValue: 1,
+            allowNull: false
+        },
 		color1: {
 			type: DataTypes.INTEGER(11),
 			defaultValue: 0,

@@ -107,7 +107,7 @@ function startBrakeTimer() {
                         mp.chat.debug('err');
                         stopBrakeTimer();
                     }
-                }, 2000);
+                }, 1000);
             }
         } catch (err) {
             mp.chat.debug('err');
