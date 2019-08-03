@@ -39,6 +39,19 @@ mp.events.add('documents.show', (type, data) => {
         }
         mp.callCEFV('characterPass.show = true');
     }
+    if (type == 'driverLicense') {
+        mp.chat.debug(data.categories);
+        for (var key in data) {
+            if (typeof data[key] == 'string') data[key] = `'${data[key]}'`;
+            mp.callCEFV(`driverLicense.${key} = ${data[key]}`);
+        }
+        // for (let i = 0; i < data.categories.length; i++) {
+        //     mp.callCEFV(`carPass.categories[${i}] = ${data.categories[i]}`);
+        // }
+
+        mp.callCEFV(`driverLicense.categories = [${data.categories[0]}, ${data.categories[1]}, ${data.categories[2]}, ${data.categories[3]}, ${data.categories[4]}, ${data.categories[5]}]`);
+        mp.callCEFV('driverLicense.show = true');
+    }
 });
 
 mp.events.add('documents.close', (type, data) => {
@@ -53,6 +66,9 @@ mp.events.add('documents.close', (type, data) => {
             break;
         case 'characterPass':
             mp.callCEFV('characterPass.show = false');
+            break;
+        case 'driverLicense':
+            mp.callCEFV('driverLicense.show = false');
             break;
     }
 
@@ -97,7 +113,9 @@ mp.events.add('documents.showTo', (type) => {
             break;
         case "characterPass":
             mp.events.call('documents.offer', "characterPass", target.remoteId);
-            //mp.events.call('documents.carPass.list');
+            break;
+        case "driverLicense":
+            mp.events.call('documents.offer', "driverLicense", target.remoteId);
             break;
     }
 });

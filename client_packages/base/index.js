@@ -70,3 +70,8 @@ mp.busy.remove = function(name) {
 }
 /// 2)
 /// ...
+
+/// Событие для вызова серверного события из браузера 
+mp.events.add("callRemote", (name, values) => {
+    mp.events.callRemote(name, values);
+})

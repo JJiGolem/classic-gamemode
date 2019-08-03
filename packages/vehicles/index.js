@@ -71,10 +71,7 @@ module.exports = {
             vehicle.properties = veh.properties;
         }
 
-        vehicle.fuelTimer = setInterval(() => {
-            try {
-                if (vehicle.engine) {
-                    let multiplier = vehicle.multiplier;
+        let multiplier = vehicle.multiplier;
                     if (vehicle.fuelState) {
                         if (vehicle.fuelState == 1) {
                             multiplier = multiplier * 2;
@@ -83,7 +80,14 @@ module.exports = {
                             multiplier = multiplier * 4;
                         }
                     }
-                    vehicle.fuel = vehicle.fuel - vehicle.properties.consumption * multiplier;
+
+        vehicle.consumption = vehicle.properties.consumption * multiplier;
+
+        vehicle.fuelTimer = setInterval(() => {
+            try {
+                if (vehicle.engine) {
+                    
+                    vehicle.fuel = vehicle.fuel - vehicle.consumption;
                     if (vehicle.fuel <= 0) {
                         vehicle.engine = false;
                         vehicle.setVariable("engine", false);
@@ -94,7 +98,7 @@ module.exports = {
             } catch (err) {
                 console.log(err);
             }
-        }, 60000);
+        }, 10000);
         return vehicle;
     },
     getDriver(vehicle) {

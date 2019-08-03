@@ -138,6 +138,8 @@ var interactionMenu = new Vue({
                         mp.trigger(`interaction.menu.close`);
                     }
                     if (item.text == 'Лицензии на т/с') {
+                        mp.trigger(`documents.showTo`, "driverLicense");
+                        mp.trigger(`interaction.menu.close`);
                     }
                     if (item.text == 'Паспорт т/с') {
                         mp.trigger(`documents.showTo`, "carPass");

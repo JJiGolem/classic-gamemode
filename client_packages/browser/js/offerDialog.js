@@ -2,7 +2,20 @@ var offerDialog = new Vue({
     el: "#offerDialog",
     data: {
         showTime: 10000,
-        dialogs: {},
+        dialogs: {
+            "documents": {
+                text: "Carter Slade хочет показать вам паспорт",
+                on(values) {
+                    this.text = `${values.name} хочет показать Вам ${values.doc}`;
+                },
+                yes() {
+                    mp.trigger("callRemote", "documents.offer.accept", 1);
+                },
+                no() {
+                    mp.trigger("callRemote", "documents.offer.accept", 0);
+                },
+            },
+        },
         dialog: null,
         timeout: null,
     },
@@ -27,7 +40,7 @@ var offerDialog = new Vue({
     },
     mounted() {
         let self = this;
-        window.addEventListener('keyup', function(e) {
+        window.addEventListener('keyup', function (e) {
             if (!self.dialog) return;
             if (e.code == "KeyY") {
                 self.dialog.yes();
