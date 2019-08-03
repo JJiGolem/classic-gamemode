@@ -2,14 +2,33 @@
 var vehicles = call("vehicles");
 
 module.exports = {
+
+    "/a": {
+        access: 1,
+        description: "Сообщение в админский чат",
+        args: "[сообщение]",
+        handler: (player, args) => {
+            mp.events.call('admin.notify.all', `!{#b5e865}[A] ${player.name}[${player.id}]: ${args.join(' ')}`);
+        }
+    },
+    "/ans": {
+        access: 1,
+        description: "Ответ игроку",
+        args: "[id] [сообщение]",
+        handler: (player, args) => {
+            let target = mp.players.at(parseInt(args[0]));
+            if (!target) return player.call('notifications.push.error', ['Игрок не найден', 'Ошибка']);
+            args.shift();
+            mp.events.call('admin.notify.all', `!{#f29f53}[A] ${player.name}[${player.id}] > ${target.name}[${target.id}]: ${args.join(' ')}`);
+            target.call('chat.message.push', [`!{#f29f53}Ответ от ${player.name}[${player.id}]: ${args.join(' ')}`]);
+        }
+    },
     "/msg": {
         access: 4,
         description: "Сообщение в общий чат",
         args: "[сообщение]",
         handler: (player, args) => {
-            mp.players.forEach((target) => {
-                target.call('chat.message.push', [`!{#ebc71b}${player.name}[${player.id}]: ${args.join(' ')}`]);
-            });
+            mp.events.call('admin.notify.players', `!{#ebc71b}${player.name}[${player.id}]: ${args.join(' ')}`);
         }
     },
     "/goto": {
@@ -27,9 +46,7 @@ module.exports = {
             }
             try {
                 player.position = new mp.Vector3(target.position.x + 2, target.position.y, target.position.z);
-                mp.players.forEach((current) => { //TODO проверка на адм, сделать функцию для уведомления всех админов
-                    current.call('chat.message.push', [`!{#edffc2}[A] ${player.name} телепортировался к ${target.name}`]);
-                });
+                mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} телепортировался к ${target.name}`);
             }
             catch (err) {
                 player.call('chat.message.push', [`!{#ffffff}Игрок отключился`]);
@@ -51,9 +68,7 @@ module.exports = {
             }
             try {
                 target.position = new mp.Vector3(player.position.x + 2, player.position.y, player.position.z);
-                mp.players.forEach((current) => { //TODO проверка на адм
-                    current.call('chat.message.push', [`!{#edffc2}[A] ${player.name} телепортировал к себе ${target.name}`]);
-                });
+                mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} телепортировал к себе ${target.name}`);
                 target.call('chat.message.push', [`!{#ffffff}${player.name} телепортировал вас к себе`]);
             }
             catch (err) {
@@ -76,9 +91,7 @@ module.exports = {
             }
             try {
                 target.health = parseInt(args[1], 10);
-                mp.players.forEach((current) => { //TODO проверка на адм
-                    current.call('chat.message.push', [`!{#edffc2}[A] ${player.name} изменил здоровье игроку ${target.name}`]);
-                });
+                mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} изменил здоровье игроку ${target.name}`);
             }
             catch (err) {
                 player.call('chat.message.push', [`!{#ffffff}Игрок отключился`]);
@@ -132,13 +145,13 @@ module.exports = {
                     license: 0,
                     key: "admin",
                     owner: 0,
-                    fuel: 50,
+                    fuel: 40,
                     mileage: 0,
                     plate: vehicles.generateVehiclePlate(),
                     //multiplier: 1
                 }
                 veh = vehicles.spawnVehicle(veh);
-                //player.putIntoVehicle(veh, -1);
+                mp.events.call("admin.notify.all", `!{#e0bc43}[A] ${player.name} создал транспорт ${veh.modelName}`);
             }
         }
     },
@@ -160,26 +173,31 @@ module.exports = {
         }
     },
     "/kick": {
+        access: 6,
         handler: (player, args) => {
             mp.players.at(args[0]).kick("q");
         }
     },
     "/nick": {
+        access: 6,
         handler: (player, args) => {
             player.setVariable('nick', `${args[0]} ${args[1]}`);
         }
     },
     "/clothes": {
+        access: 6,
         handler: (player, args) => {
             player.setClothes(parseInt(args[0]), parseInt(args[1]), parseInt(args[2]), 0);
         }
     },
     "/over": {
+        access: 6,
         handler: (player, args) => {
             player.setHeadOverlay(parseInt(args[0]), [parseInt(args[1]), parseInt(args[2]), parseInt(args[3]), parseInt(args[4])]);
         }
     },
     "/tempwear": {
+        access: 6,
         handler: (player, args) => {
             if (args[0] == 0) {
                 player.setHeadOverlay(1, [9, 0, 0, 0]);
@@ -204,6 +222,7 @@ module.exports = {
         }
     },
     "/rot": {
+        access: 6,
         handler: (player, args) => {
             player.call('chat.message.push', [`!{#ffffff} ${player.heading}`]);
             console.log(`${player.heading}`);

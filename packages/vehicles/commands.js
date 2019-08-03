@@ -1,11 +1,13 @@
 var vehicles = require('./index.js');
 module.exports = {
+    access: 6,
     "/setlic": { // temp
         handler: (player, args) => {
             player.license = args[0];
         }
     },
     "/resp": { // temp
+        access: 6,
         handler: (player, args) => {
             if (player.vehicle) {
                 player.removeFromVehicle();
@@ -14,6 +16,7 @@ module.exports = {
         }
     },
     "/fuel": { // temp 
+        access: 6,
         handler: (player, args) => {
             player.call('chat.message.push', [`!{#ffffff} ${player.vehicle.fuel}`]);
         }
@@ -28,12 +31,14 @@ module.exports = {
         }
     },
     "/ex": {
+        access: 6,
         handler: (player, args) => {
             if (!player.vehicle) return;
             player.vehicle.explode();
         }
     },
     "/carpass": {
+        access: 6,
         handler: (player, args) => {
             if (!player.vehicle) return;
             let vehicle = player.vehicle;
@@ -127,6 +132,7 @@ module.exports = {
         }
     },
     "/fuelstate": {
+        access: 6,
         handler: (player, args) => {
             if (!player.vehicle) return;
             player.vehicle.fuelState = parseInt(args[0]);
@@ -134,6 +140,7 @@ module.exports = {
         }
     },
     "/date": {
+        access: 6,
         handler: (player, args) => {
             if (!player.vehicle) return;
             let now = new Date();
