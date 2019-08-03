@@ -68,6 +68,13 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             allowNull: false
         },
+        dateCreate: {
+            type: DataTypes.DATE,
+            defaultValue: Sequelize.NOW,
+            allowNull: false
+        },
+        /// Лицензии
+
         /// Внешность
         gender: {
             type: DataTypes.INTEGER(11),

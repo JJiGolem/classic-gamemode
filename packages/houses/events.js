@@ -101,6 +101,7 @@ module.exports = {
             info.characterId = player.character.id;
             info.characterNick = player.character.name;
             info.date = housesService.getRandomDate(1);
+            console.log(info);
             await info.save();
             player.call('house.buy.ans', [1, player.character.name]);
             housesService.updateHouse(player.house.index);
@@ -128,4 +129,5 @@ module.exports = {
         if (info.characterId != player.character.id) return player.call('house.sell.toGov.ans', [0]);
         housesService.dropHouse(index, true);
     },
+    
 };

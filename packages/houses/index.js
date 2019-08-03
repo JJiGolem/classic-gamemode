@@ -65,49 +65,55 @@ module.exports = {
         this.setTimer(i);
     },
     getRandomDate(daysNumber) {
-        let date = new Date();
-        date.setHours(0);
-        date.setDate(date.getDate() + daysNumber);
-        date.setHours(call('utils').randomInteger(0, 24));
-        date.setMinutes(0);
-        date.setSeconds(0);
-        return date;
+        return new Date(Date.now() + 20000/*(daysNumber * 1000 * 60 * 60 * 24)*/);
     },
     setTimer(i) {
         if (houses[i].info.characterId == null) return;
         if (houses[i].info.date == null) return this.dropHouse(i);
         if (houses[i].info.date.getTime() - new Date().getTime() <= 10000) return this.dropHouse(i);
-        houses[i].timer && clearTimeout(houses[i].timer);
+        houses[i].timer != null && clearTimeout(houses[i].timer);
+        console.log("TIMER CREATED");
         houses[i].timer = setTimeout(this.dropHouse, houses[i].info.date.getTime() - new Date().getTime(), i);
     },  
-    dropHouse(i, fullPrice) {
-        if (houses[i].info.characterId == null) return this.changeBlip(i);
-        let characterId = houses[i].info.characterId;
-        houses[i].info.characterId = null;
-        houses[i].info.characterNick = null;
-        houses[i].info.date = null;
-        houses[i].info.isOpened = true;
-
-        houses[i].info.save().then(() => {
-            if (money == null) return console.log("[HOUSES] House dropped " + i + ". But player didn't getmoney");
-            money.addMoneyById(characterId, fullPrice ? houses[i].info.price : houses[i].info.price * 0.6, function(result) {
-                if (result) {
-                    for (let j = 0; j < mp.players.length; j++) {
-                        if (mp.players.at(j).character == null) return;
-                        if (characterId == mp.players.at(j).character.id) {
-                            if (fullPrice)  mp.players.at(j).call('house.sell.toGov.ans', [1]);
-                            mp.players.at(j).call('phone.app.remove', ["house", i]);
-                            j = mp.players.length;
+    dropHouse(i, sellToGov) {
+        try {
+            if (houses[i].info.characterId == null) return changeBlip(i);
+            let characterId = houses[i].info.characterId;
+            houses[i].info.characterId = null;
+            houses[i].info.characterNick = null;
+            houses[i].info.date = null;
+            houses[i].info.isOpened = true;
+            changeBlip(i);
+            console.log("INFO DROPPED");
+            console.log(houses[i].info);
+            houses[i].info.save().then(() => {
+                console.log("HOUSE SAVED");
+                if (money == null) return console.log("[HOUSES] House dropped " + i + ". But player didn't getmoney");
+                money.addMoneyById(characterId, houses[i].info.price * 0.6, function(result) {
+                    console.log("MONEY SAVED");
+                    if (result) {
+                        for (let j = 0; j < mp.players.length; j++) {
+                            if (mp.players.at(j).character == null) continue;
+                            if (characterId == mp.players.at(j).character.id) {
+                                if (sellToGov) {
+                                    mp.players.at(j).call('house.sell.toGov.ans', [1]);
+                                }
+                                else {
+                                    mp.players.at(j).call('phone.app.remove', ["house", i]);
+                                }
+                                j = mp.players.length;
+                            }
                         }
+                        console.log("[HOUSES] House dropped " + i);
                     }
-                    console.log("[HOUSES] House dropped " + i);
-                }
-                else {
-                    console.log("[HOUSES] House dropped " + i + ". But player didn't getmoney");
-                }
-            });        
-        });
-        this.changeBlip(i);
+                    else {
+                        console.log("[HOUSES] House dropped " + i + ". But player didn't getmoney");
+                    }
+                });        
+            }); 
+        } catch (error) {
+            console.log("[ERROR] " + error);
+        }
     },
     changeBlip(i) {
         if (houses[i].blip == null) return;
