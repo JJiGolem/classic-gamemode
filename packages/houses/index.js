@@ -4,6 +4,52 @@ let houses = new Array();
 let money = call('money');
 
 /// Функции модуля системы домов
+let changeBlip = function(i) {
+    if (houses[i].blip == null) return;
+    if (houses[i].info.characterId != null) {
+        houses[i].blip.color = 1;
+    }
+    else {
+        houses[i].blip.color = 2;
+    }
+};
+let dropHouse = function(i, sellToGov) {
+    try {
+        if (houses[i].info.characterId == null) return changeBlip(i);
+        let characterId = houses[i].info.characterId;
+        houses[i].info.characterId = null;
+        houses[i].info.characterNick = null;
+        houses[i].info.date = null;
+        houses[i].info.isOpened = true;
+        changeBlip(i);
+        houses[i].info.save().then(() => {
+            if (money == null) return console.log("[HOUSES] House dropped " + i + ". But player didn't getmoney");
+            money.addMoneyById(characterId, houses[i].info.price * 0.6, function(result) {
+                if (result) {
+                    for (let j = 0; j < mp.players.length; j++) {
+                        if (mp.players.at(j).character == null) continue;
+                        if (characterId == mp.players.at(j).character.id) {
+                            if (sellToGov) {
+                                mp.players.at(j).call('house.sell.toGov.ans', [1]);
+                            }
+                            else {
+                                mp.players.at(j).call('phone.app.remove', ["house", i]);
+                            }
+                            j = mp.players.length;
+                        }
+                    }
+                    console.log("[HOUSES] House dropped " + i);
+                }
+                else {
+                    console.log("[HOUSES] House dropped " + i + ". But player didn't getmoney");
+                }
+            });        
+        }); 
+    } catch (error) {
+        console.log("[ERROR] " + error);
+    }
+};
+
 module.exports = {
     async init() {
         console.log("[HOUSES] load houses from DB");
@@ -61,7 +107,7 @@ module.exports = {
         );
     },
     updateHouse(i) {
-        this.changeBlip(i);
+        changeBlip(i);
         this.setTimer(i);
     },
     getRandomDate(daysNumber) {
@@ -69,61 +115,16 @@ module.exports = {
     },
     setTimer(i) {
         if (houses[i].info.characterId == null) return;
-        if (houses[i].info.date == null) return this.dropHouse(i);
-        if (houses[i].info.date.getTime() - new Date().getTime() <= 10000) return this.dropHouse(i);
+        if (houses[i].info.date == null) return dropHouse(i);
+        if (houses[i].info.date.getTime() - new Date().getTime() <= 10000) return dropHouse(i);
         houses[i].timer != null && clearTimeout(houses[i].timer);
-        console.log("TIMER CREATED");
-        houses[i].timer = setTimeout(this.dropHouse, houses[i].info.date.getTime() - new Date().getTime(), i);
+        console.log(houses[i].info.date);
+        console.log(houses[i].info.date.getTime());
+        console.log(new Date().getTime());
+        houses[i].timer = setTimeout(dropHouse, houses[i].info.date.getTime() - new Date().getTime(), i);
     },  
-    dropHouse(i, sellToGov) {
-        try {
-            if (houses[i].info.characterId == null) return changeBlip(i);
-            let characterId = houses[i].info.characterId;
-            houses[i].info.characterId = null;
-            houses[i].info.characterNick = null;
-            houses[i].info.date = null;
-            houses[i].info.isOpened = true;
-            changeBlip(i);
-            console.log("INFO DROPPED");
-            console.log(houses[i].info);
-            houses[i].info.save().then(() => {
-                console.log("HOUSE SAVED");
-                if (money == null) return console.log("[HOUSES] House dropped " + i + ". But player didn't getmoney");
-                money.addMoneyById(characterId, houses[i].info.price * 0.6, function(result) {
-                    console.log("MONEY SAVED");
-                    if (result) {
-                        for (let j = 0; j < mp.players.length; j++) {
-                            if (mp.players.at(j).character == null) continue;
-                            if (characterId == mp.players.at(j).character.id) {
-                                if (sellToGov) {
-                                    mp.players.at(j).call('house.sell.toGov.ans', [1]);
-                                }
-                                else {
-                                    mp.players.at(j).call('phone.app.remove', ["house", i]);
-                                }
-                                j = mp.players.length;
-                            }
-                        }
-                        console.log("[HOUSES] House dropped " + i);
-                    }
-                    else {
-                        console.log("[HOUSES] House dropped " + i + ". But player didn't getmoney");
-                    }
-                });        
-            }); 
-        } catch (error) {
-            console.log("[ERROR] " + error);
-        }
-    },
-    changeBlip(i) {
-        if (houses[i].blip == null) return;
-        if (houses[i].info.characterId != null) {
-            houses[i].blip.color = 1;
-        }
-        else {
-            houses[i].blip.color = 2;
-        }
-    },
+    dropHouse: dropHouse,
+    changeBlip: changeBlip,
     getHouse(i) {
         return houses[i];
     },
