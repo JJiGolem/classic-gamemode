@@ -36,6 +36,7 @@ module.exports = {
             player.call('vehicles.speedometer.show', [true]);
             player.call('vehicles.speedometer.max.update', [vehicle.properties.maxFuel]);
             player.call('vehicles.speedometer.sync');
+            clearInterval(player.indicatorsUpdateTimer);
             player.indicatorsUpdateTimer = setInterval(() => {
                 try {
                     player.call('vehicles.speedometer.fuel.update', [Math.ceil(vehicle.fuel)]);

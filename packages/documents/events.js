@@ -10,13 +10,65 @@ module.exports = {
     //     /// todo with offer
     // },
     "documents.offer": (player, type, targetId, data) => {
+        if (player.id == targetId) return mp.events.call("documents.show", player.id, type, targetId, data);
+
         let target = mp.players.at(targetId);
+
+        target.documentsOffer = {
+            playerId: player.id,
+            docType: type,
+            docData: data
+        };
+
+        player.senderDocumentsOffer = {
+            targetPlayer: target
+        };
+
+        let docName;
+        switch (type) {
+            case 'characterPass':
+                docName = 'паспорт';
+                break;
+            case 'carPass':
+                docName = 'паспорт Т/С';
+                break;
+            case 'driverLicense':
+                docName = 'лицензии на Т/С'
+                break;
+        }
+        target.call('offerDialog.show', ["documents", {
+            name: player.character.name,
+            doc: docName
+        }]);
+    },
+    "documents.offer.accept": (player, accept) => {
+        let targetId = player.id;
+        let offer = player.documentsOffer;
+        let sender = mp.players.at(offer.playerId);
+        if (!sender) return;
+        if (sender.senderDocumentsOffer.targetPlayer != player) return;
+
+        if (accept) {
+            console.log('accept');
+            mp.events.call('documents.show', offer.playerId, offer.docType, targetId, offer.docData);
+            console.log(player.documentsOffer);
+            console.log(sender.senderDocumentsOffer);
+            delete player.documentsOffer;
+            delete sender.senderDocumentsOffer;
+        } else {
+            console.log(player.documentsOffer);
+            console.log(sender.senderDocumentsOffer);
+            delete player.documentsOffer;
+            delete sender.senderDocumentsOffer;
+        }
+    },
+    "documents.show": (playerId, type, targetId, data) => {
+        let target = mp.players.at(targetId);
+        let player = mp.players.at(playerId);
         if (data) {
             data = JSON.parse(data);
             console.log(data);
         }
-
-
         if (!target) return;
         switch (type) {
             case 'carPass':
@@ -24,6 +76,9 @@ module.exports = {
                 break;
             case 'characterPass':
                 mp.events.call('documents.characterPass.show', player, targetId);
+                break;
+            case 'driverLicense':
+                mp.events.call('documents.driverLicense.show', player, targetId);
                 break;
         }
     },
@@ -35,8 +90,7 @@ module.exports = {
         for (let i = 0; i < player.vehicleList.length; i++) {
             if (player.vehicleList[i].id == sqlId) {
                 vehData = {
-                    // id: 3940123342,
-                    id: 1703190000 + player.vehicleList[i].id,
+                    id: documents.getCarPassIdentificator() + player.vehicleList[i].id,
                     vehType: player.vehicleList[i].vehType,
                     name: player.vehicleList[i].name,
                     regDate: player.vehicleList[i].regDate,
@@ -47,6 +101,11 @@ module.exports = {
             }
         }
         if (!vehData) return;
+        if (player.id == target.id) {
+            mp.events.call('/me', player, `смотрит паспорт Т/С "${vehData.name}"`);
+        } else {
+            mp.events.call('/me', player, `показал${player.character.gender ? 'а': ''} паспорт Т/С "${vehData.name}" ${target.character.name}[${target.id}]`);
+        }
         target.call('documents.show', ['carPass', vehData]);
     },
     "documents.carPass.list": (player) => {
@@ -67,11 +126,32 @@ module.exports = {
         let data = {
             name: player.character.name,
             sex: player.character.gender,
-            number: 2608180000 + player.character.id
+            number: documents.getPassIdentificator() + player.character.id
         }
-
-
         if (!data) return;
+        if (player.id == target.id) {
+            mp.events.call('/me', player, `смотрит свой паспорт`);
+        } else {
+            mp.events.call('/me', player, `показал${player.character.gender ? 'а': ''} свой паспорт ${target.character.name}[${target.id}]`);
+        }
         target.call('documents.show', ['characterPass', data]);
+    },
+    "documents.driverLicense.show": (player, targetId) => {
+        let target = mp.players.at(targetId);
+        if (!target) return;
+        let data = {
+            name: player.character.name,
+            categories: [player.character.carLicense, player.character.passengerLicense, player.character.bikeLicense, player.character.truckLicense, player.character.airLicense, player.character.boatLicense],
+            sex: player.character.gender,
+            number: documents.getLicIdentificator() + player.character.id
+        }
+        console.log(data.categories);
+        if (!data) return;
+        if (player.id == target.id) {
+            mp.events.call('/me', player, `смотрит свои лицензии на Т/С`);
+        } else {
+            mp.events.call('/me', player, `показал${player.character.gender ? 'а': ''} свои лицензии на Т/С ${target.character.name}[${target.id}]`);
+        }
+        target.call('documents.show', ['driverLicense', data]);
     },
 }
