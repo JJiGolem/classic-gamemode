@@ -179,14 +179,14 @@
         </div>
     </div>
 
-    <div v-cloak="v-cloak" id="selectMenu" v-if="show && menu">
+    <div v-cloak="v-cloak" id="selectMenu" :class="{inactive: loader}" v-if="show && menu">
         <div class="header">{{ menu.header }}</div>
         <div class="content">
             <div class="arrow arr-up" :class="{active: menu.j > 0}"></div>
             <div class="items">
                 <div class="item" v-for="(item, index) in items" v-if="isItemShow(index)" :class="{selected: index == menu.i}">
                     <div class="name">{{ item.text }}</div>
-                    <div class="value" v-if="item.values && valuesType(index) == 0">{{ item.values[item.i] }}</div>
+                    <div class="value" v-if="item.values && valuesType(index) == 0 || valuesType(index) == 2">{{ item.values[item.i] }}</div>
                     <div class="value color-type" v-else-if="item.values && valuesType(index) == 1" :style="{background: item.values[item.i]}"></div>
                     <div class="value" v-else-if="item.values && valuesType(index) == 3">
                         <input type="text" v-model="item.values[0]" />
@@ -210,6 +210,14 @@
             </div>
             <div>{{ menu.items[menu.i].max }}</div>
         </div>
+        <div class="notification" v-if="notification">
+            {{ notification }}
+        </div>
+        <div v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="show">
+            <div class="lds-rolling">
+                <div></div>
+            </div>
+        </div>
     </div>
 
     <div v-cloak="v-cloak" id="auth" v-if="show">
@@ -220,7 +228,7 @@
             <div class="header">{{ header }}</div>
             <div class="authAccount" v-if="form == 0">
                 <label>Логин или Email
-                    <input type="text" v-model="loginOrEmail" v-on:keyup.enter="authAccountHandler" />
+                    <input type="text" v-model="loginOrEmail" v-on:keyup.enter="authAccountHandler" autofocus />
                     <img class="ic-login" src="img/auth/login.png" />
                 </label>
                 <label>Пароль
@@ -233,7 +241,7 @@
             </div>
             <div class="regAccount" v-if="form == 1">
                 <label>Логин
-                    <input type="text" v-model="login" v-on:keyup.enter="regAccountHandler" />
+                    <input type="text" v-model="login" v-on:keyup.enter="regAccountHandler" autofocus />
                     <img class="ic-login" src="img/auth/login.png" />
                 </label>
                 <label>Email
@@ -253,7 +261,7 @@
             </div>
             <div class="recoveryAccount" v-if="form == 2">
                 <label>Логин или Email
-                    <input type="text" v-model="loginOrEmail" v-on:keyup.enter="recoveryAccountHandler" />
+                    <input type="text" v-model="loginOrEmail" v-on:keyup.enter="recoveryAccountHandler" autofocus />
                     <img class="ic-login" src="img/auth/login.png" />
                 </label>
                 <label style="display: none">Код подтверждения
@@ -273,7 +281,7 @@
             </div>
             <div class="confirmEmail" v-if="form == 3">
                 <label>Код подтверждения
-                    <input type="text" v-model="code" />
+                    <input type="text" v-model="code" autofocus />
                     <img class="ic-password" src="img/auth/password.png" />
                 </label>
                 <a class="confirmEmailBtn" onclick="regAccountHandler()">Пропустить</a>
