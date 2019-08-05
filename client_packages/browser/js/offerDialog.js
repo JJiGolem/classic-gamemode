@@ -42,11 +42,11 @@ var offerDialog = new Vue({
         let self = this;
         window.addEventListener('keyup', function (e) {
             if (!self.dialog) return;
-            if (e.code == "KeyY") {
+            if (e.keyCode == 89) { // Y
                 self.dialog.yes();
                 self.hide();
             }
-            else if (e.code == "KeyN") {
+            else if (e.keyCode == 78) { // N
                 self.dialog.no();
                 self.hide();
             }
