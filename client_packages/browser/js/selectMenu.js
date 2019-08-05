@@ -11,6 +11,7 @@ var selectMenu = new Vue({
         maxItems: 5,
         // Макс. количество цветов в селекторе
         maxColorValues: 11,
+        // Доступные структуры меню для использования
         menus: {
             "characterCreateMainMenu": {
                 name: "charactercreatemain",
@@ -500,7 +501,11 @@ var selectMenu = new Vue({
                     }
                 }
             },
-        }
+        },
+        // Уведомление
+        notification: null,
+        // Время показа уведомления
+        showNotifTime: 10000
     },
     methods: {
         onKeyUp(e) {
@@ -607,6 +612,16 @@ var selectMenu = new Vue({
             return curValue / maxValue * 100 - offset + '%';
         }
     },
+    watch: {
+        notification(val, oldVal) {
+            if (oldVal || !val) return;
+
+            var self = this;
+            setTimeout(function() {
+                self.notification = null;
+            }, self.showNotifTime);
+        },
+    },
     mounted() {
         let self = this;
         window.addEventListener('keyup', function (e) {
@@ -699,4 +714,5 @@ var selectMenu = new Vue({
 // Далее, присвоить эту структуру модулю selectMenu:
 selectMenu.menu = testMenu;
 // Показываем меню:
-selectMenu.show = true;*/
+selectMenu.show = true;
+selectMenu.notification = "Здесь короче тестовое уведомление. У Вас неправильный ник или город прописки!";*/

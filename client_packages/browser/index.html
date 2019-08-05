@@ -210,6 +210,9 @@
             </div>
             <div>{{ menu.items[menu.i].max }}</div>
         </div>
+        <div class="notification" v-if="notification">
+            {{ notification }}
+        </div>
     </div>
 
     <div v-cloak="v-cloak" id="auth" v-if="show">

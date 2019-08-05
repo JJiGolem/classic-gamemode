@@ -6,6 +6,7 @@
     position: absolute;
     right: 2vh;
     top: 30%;
+    width: 40vh;
 }
 
 #selectMenu input {
@@ -95,6 +96,17 @@
     text-align: center;
 }
 
+#selectMenu .notification {
+    align-items: center;
+    background: rgb(0, 0, 0, 0.6);
+    border-radius: 1vh;
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5vh;
+    padding: 1vh;
+    text-align: center;
+}
+
 #selectMenu .selector {
     align-items: center;
     background: rgb(0, 0, 0, 0.6);
@@ -106,7 +118,7 @@
 }
 
 #selectMenu .selector.select-color > div {
-    /* border: 1px solid #0000; */
+    border: 1px solid #0000;
     height: 2vh;
     margin: 0 0.4vh;
     opacity: 0.3;
@@ -114,7 +126,7 @@
 }
 
 #selectMenu .selector.select-color > div.active:not(.arrow) {
-    /* border: 1px solid #f1d941; */
+    border: 1px solid #f1d941;
     opacity: 1;
 }
 
