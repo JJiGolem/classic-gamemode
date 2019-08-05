@@ -55,7 +55,7 @@ var offerDialog = new Vue({
 });
 
 // for tests
-// offerDialog.show("accept_sell_biz", {owner: "Carter Slade", type: "Закусочная"});
+// offerDialog.show("documents", {name: "Carter Slade", doc: "Паспорт"});
 
 
 /// EXAMPLES
