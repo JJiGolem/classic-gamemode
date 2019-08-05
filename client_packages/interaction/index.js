@@ -78,7 +78,7 @@ function getClosestPlayerOrVehicle(pos) {
 }
 
 mp.events.add('interaction.menu.show', () => {
-    mp.chat.debug('show');
+    //mp.chat.debug('show');
     mp.busy.add('interaction');
     isOpen = true;
     mp.gui.cursor.show(true, true);

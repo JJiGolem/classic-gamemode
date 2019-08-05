@@ -63,7 +63,7 @@ var selectMenu = new Vue({
                 {
                     text: "Купить"
                 }
-            ],
+                ],
                 i: 0, // индекс выбранного пункта
                 j: 0, // индекс первого видимого пункта
                 handler(eventName) { // обработчик взаимодействия с меню
@@ -94,7 +94,7 @@ var selectMenu = new Vue({
                         }
                     }
                     if (eventName == 'onEscapePressed') {
-                            mp.trigger(`carshow.list.close`);
+                        mp.trigger(`carshow.list.close`);
                     }
                 }
             },
@@ -109,7 +109,7 @@ var selectMenu = new Vue({
                     text: "Отмена",
                     i: 0,
                 }
-            ],
+                ],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -127,7 +127,7 @@ var selectMenu = new Vue({
                         }
                         if (e.itemName == 'Отмена') {
                             mp.trigger(`carmarket.sellmenu.close`);
-                    }
+                        }
                     }
                 }
             },
@@ -142,7 +142,7 @@ var selectMenu = new Vue({
                     text: "Отмена",
                     i: 0,
                 }
-            ],
+                ],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -160,7 +160,40 @@ var selectMenu = new Vue({
                         }
                         if (e.itemName == 'Отмена') {
                             mp.trigger(`carmarket.buymenu.close`);
+                        }
                     }
+                }
+            },
+            "carServiceJobMenu": {
+                name: "carservicejob",
+                header: "Начальник СТО",
+                items: [{
+                    text: "Устроиться на работу",
+                    i: 0,
+                },
+                {
+                    text: "Помощь",
+                    i: 0,
+                }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        // if (e.itemName == 'Купить транспорт') {
+                        //     mp.trigger(`carmarket.car.buy`);
+                        // }
+                        // if (e.itemName == 'Отмена') {
+                        //     mp.trigger(`carmarket.buymenu.close`);
+                        // }
                     }
                 }
             },
