@@ -1,3 +1,6 @@
+/// Global variables for modules
+let characterInitSex = 0;
+
 var selectMenu = new Vue({
     el: "#selectMenu",
     data: {
@@ -8,7 +11,341 @@ var selectMenu = new Vue({
         maxItems: 5,
         // Макс. количество цветов в селекторе
         maxColorValues: 11,
+        // Доступные структуры меню для использования
         menus: {
+            "characterCreateMainMenu": {
+                name: "charactercreatemain",
+                header: "Главное меню", // заголовок меню, видимый на экране
+                items: [{
+                        text: "Пол",
+                        values: ["Мужской", "Женский"],
+                        i: 0
+                    },
+                    {
+                        text: "Наследственность",
+                    },
+                    {
+                        text: "Внешность",
+                    },
+                    {
+                        text: "Сохранить и продолжить",
+                    },
+                    {
+                        text: "Сбросить все изменения",
+                    },
+                    {
+                        text: "Выйти без сохранения",
+                    }
+                ],
+                i: 0, // индекс выбранного пункта
+                j: 0, // индекс первого видимого пункта
+                handler(eventName) { // обработчик взаимодействия с меню
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name, // название меню
+                        itemName: item.text, // текст пункта меню
+                        itemIndex: this.i, // индекс пункта меню
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
+                        valueIndex: item.i, // индекс значения пункта меню
+                    };
+                    if (eventName == "onItemValueChanged" && e.itemName == "Пол") {
+                        characterInitSex = e.valueIndex;
+                        mp.trigger('characterInit.create.setGender', e.valueIndex);
+                    }
+                    if (eventName == "onItemSelected") {
+                        switch(e.itemName) {
+                            case "Наследственность":
+                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateParentsMenu"]);
+                                break;
+                            case "Внешность":
+                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateViewMenu"]);
+                                break;
+                            case "Сохранить и продолжить":
+                                mp.trigger('characterInit.create.continue');
+                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateNameMenu"]);
+                                break;
+                            case "Сбросить все изменения":
+                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateResetMenu"]);
+                                break;
+                            case "Выйти без сохранения":
+                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateExitMenu"]);
+                                break;
+                        }
+                    }
+                }
+            },
+            "characterCreateParentsMenu": {
+                name: "charactercreateparents",
+                header: "Наследственность", // заголовок меню, видимый на экране
+                items: [{
+                        text: "Мать",
+                        values: ["Ханна", "Обри", "Жасмин", "Жизель", "Амелия", "Изабелла", "Зоуи", "Ава", "Камила", "Вайолет", "София", "Эвелин", "Николь", "Эшли", "Грейси", "Брианна", "Натали", "Оливия", "Элизабет", "Шарлотта", "Эмма", "Мисти"],
+                        i: 0
+                    },
+                    {
+                        text: "Отец",
+                        values: ["Бенджамин", "Дэниэл", "Джошуа", "Ной", "Эндрю", "Хуан", "Алекс", "Айзек", "Эван", "Итан", "Винсент", "Энджел", "Диего", "Адриан", "Габриэль", "Майкл", "Сантьяго", "Кевин", "Луи", "Сэмюэль", "Энтони", "Клод", "Нико", "Джон"],
+                        i: 0
+                    },
+                    {
+                        text: "Сходство",
+                        values: ["100% с папой", "75% с папой", "50%", "75% с мамой", "100% с мамой"],
+                        i: 0
+                    },
+                    {
+                        text: "Цвет кожи",
+                        values: ['#e0c2aa', '#804e40', '#a1765a', '#ebad69', '#cb7d50', '#c47f5b'],
+                        i: 0
+                    },
+                    {
+                        text: "Назад",
+                    },
+                ],
+                i: 0, // индекс выбранного пункта
+                j: 0, // индекс первого видимого пункта
+                handler(eventName) { // обработчик взаимодействия с меню
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name, // название меню
+                        itemName: item.text, // текст пункта меню
+                        itemIndex: this.i, // индекс пункта меню
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
+                        valueIndex: item.i, // индекс значения пункта меню
+                    };
+                    if (eventName == "onItemValueChanged") {
+                        switch(e.itemName) {
+                            case "Мать":
+                                mp.trigger('characterInit.create.setMother', e.valueIndex);
+                                break;
+                            case "Отец":
+                                mp.trigger('characterInit.create.setFather', e.valueIndex);
+                                break;
+                            case "Сходство":
+                                let sim = [0, 25, 50, 75, 100];
+                                mp.trigger('characterInit.create.setSimilarity', sim[e.valueIndex]);
+                                break;
+                            case "Цвет кожи":
+                                let col = [0, 2, 4, 6, 8, 10];
+                                mp.trigger('characterInit.create.setSkin', col[e.valueIndex]);
+                                break;
+                        }
+                    }
+                    if (eventName == "onItemSelected") {
+                        switch(e.itemName) {
+                            case "Назад":
+                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateMainMenu"]);
+                                break;
+                        }
+                    }
+                }
+            },
+            "characterCreateViewMenu": {
+                name: "charactercreateview",
+                header: "Внешность", // заголовок меню, видимый на экране
+                items: [{
+                        text: "Прическа",
+                        values: characterInitSex == 0 ? [
+                            "Под ноль", "Коротко", "Ястреб", "Хипстер", "Челка набок", "Коротко", "Байкер", "Хвост", "Косички", "Прилиза",
+                            "Коротко", "Шипы", "Цезарь", "Чоппи", "Дреды", "Длинные", "Лохматый", "Серфингист", "Набок",
+                            "Зализ", "Длинные", "Юный хипстер", "Муллет", "Косички", "Пальма", "Молния", "Уиппед", "Зиг-заг", "Снейл", "Хайтоп", "Откинутые",
+                            "Андеркат", "Боковой андер", "Колючий ирокез", "Мод", "Слоями", "Флэттоп", "Армеец"
+                        ] : [
+                            "Под ноль", "Коротко", "Слои", "Косички", "Хвост", "Ирокез", "Косички", "Боб", "Ястреб", "Ракушка",
+                            "Лонг боб", "Свободно", "Пикси", "Бритые виски", "Узел", "Волнистый боб", "Красотка", "Пучок", "Тугой узел",
+                            "Твистед боб", "Флэппер боб", "Биг бэнгс", "Плетеные", "Муллет", "Косички", "Листья", "Зиг-заг",
+                            "Пигтейл бэнгс", "Волнистые", "Катушка", "Завеса", "Откинутые", "Андеркат",
+                            "Боковой андер", "Колючий ирокез", "Бандана", "Слоями", "Скинберд", "Аккуратные", "Шорт боб"
+                        ],
+                        i: 0
+                    },
+                    {
+                        text: "Цвет волос",
+                        values: ["#211f1c", "#55362f", "#4b382e", "#4d291b",
+                        "#70351e", "#904422", "#a55c36", "#a56944",
+                        "#ac744f", "#ae7d57", "#be9161", "#cda670",
+                        "#c8a370", "#d5a861", "#e0b775", "#e8c487",
+                        "#b78457", "#a85d3d", "#963523", "#7c1411",
+                        "#921812", "#a81c14", "#cb371e", "#de411b",
+                        "#be532f", "#d34d21", "#907867", "#a78e7a",
+                        "#d4bda9", "#e4cfbe"],
+                        i: 0
+                    },
+                    {
+                        text: "Дополнительный цвет волос",
+                        values: ["#211f1c", "#55362f", "#4b382e", "#4d291b",
+                        "#70351e", "#904422", "#a55c36", "#a56944",
+                        "#ac744f", "#ae7d57", "#be9161", "#cda670",
+                        "#c8a370", "#d5a861", "#e0b775", "#e8c487",
+                        "#b78457", "#a85d3d", "#963523", "#7c1411",
+                        "#921812", "#a81c14", "#cb371e", "#de411b",
+                        "#be532f", "#d34d21", "#907867", "#a78e7a",
+                        "#d4bda9", "#e4cfbe"],
+                        i: 0
+                    },
+                    {
+                        text: "Волосы на лице",
+                        values: ['#e0c2aa', '#804e40', '#a1765a', '#ebad69', '#cb7d50', '#c47f5b'],
+                        i: 0
+                    },
+                    {
+                        text: "Цвет волос на лице",
+                        values: ['#e0c2aa', '#804e40', '#a1765a', '#ebad69', '#cb7d50', '#c47f5b'],
+                        i: 0
+                    },
+                    {
+                        text: "Назад",
+                    },
+                ],
+                i: 0, // индекс выбранного пункта
+                j: 0, // индекс первого видимого пункта
+                handler(eventName) { // обработчик взаимодействия с меню
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name, // название меню
+                        itemName: item.text, // текст пункта меню
+                        itemIndex: this.i, // индекс пункта меню
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
+                        valueIndex: item.i, // индекс значения пункта меню
+                    };
+                    if (eventName == "onItemValueChanged") {
+                        switch(e.itemName) {
+                            case "Прическа":
+
+                                break;
+                            case "Цвет волос":
+
+                                break;
+                            case "Дополнительный цвет волос":
+
+                                break;
+                            case "Волосы на лице":
+
+                                break;
+                        }
+                    }
+                    if (eventName == "onItemSelected") {
+                        switch(e.itemName) {
+                            case "Назад":
+                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateMainMenu"]);
+                                break;
+                        }
+                    }
+                }
+            },
+            "characterCreateNameMenu": {
+                name: "charactercreatename",
+                header: "Имя персоонажа", // заголовок меню, видимый на экране
+                items: [{
+                        text: "",
+                        values: ["Имя"],
+                        i: 0,
+                        type: "editable" // возможность редактирования значения пункта меню
+                    },
+                    {
+                        text: "",
+                        values: ["Фамилия"],
+                        i: 0,
+                        type: "editable" // возможность редактирования значения пункта меню
+                    },
+                    {
+                        text: "Принять",
+                    },
+                    {
+                        text: "Назад",
+                    },
+                ],
+                i: 0, // индекс выбранного пункта
+                j: 0, // индекс первого видимого пункта
+                handler(eventName) { // обработчик взаимодействия с меню
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name, // название меню
+                        itemName: item.text, // текст пункта меню
+                        itemIndex: this.i, // индекс пункта меню
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
+                        valueIndex: item.i, // индекс значения пункта меню
+                    };
+                    if (eventName == "onItemSelected") {
+                        switch(e.itemName) {
+                            case "Принять":
+                                mp.trigger('characterInit.create.check', this.items[0].values[0], this.items[1].values[0]);
+                                break;
+                            case "Назад":
+                                mp.trigger('characterInit.create.back');
+                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateMainMenu"]);
+                                break;
+                        }
+                    }
+                }
+            },
+            "characterCreateResetMenu": {
+                name: "charactercreatereset",
+                header: "Сбросить все изменения?", // заголовок меню, видимый на экране
+                items: [{
+                        text: "Да",
+                    },
+                    {
+                        text: "Нет",
+                    },
+                ],
+                i: 0, // индекс выбранного пункта
+                j: 0, // индекс первого видимого пункта
+                handler(eventName) { // обработчик взаимодействия с меню
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name, // название меню
+                        itemName: item.text, // текст пункта меню
+                        itemIndex: this.i, // индекс пункта меню
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
+                        valueIndex: item.i, // индекс значения пункта меню
+                    };
+                    if (eventName == "onItemSelected") {
+                        switch(e.itemName) {
+                            case "Да":
+                                mp.trigger('characterInit.create.reset');
+                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateMainMenu"]);
+                                break;
+                            case "Нет":
+                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateMainMenu"]);
+                                break;
+                        }
+                    }
+                }
+            },
+            "characterCreateExitMenu": {
+                name: "charactercreateexit",
+                header: "Хотите выйти?", // заголовок меню, видимый на экране
+                items: [{
+                        text: "Да",
+                    },
+                    {
+                        text: "Нет",
+                    },
+                ],
+                i: 0, // индекс выбранного пункта
+                j: 0, // индекс первого видимого пункта
+                handler(eventName) { // обработчик взаимодействия с меню
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name, // название меню
+                        itemName: item.text, // текст пункта меню
+                        itemIndex: this.i, // индекс пункта меню
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
+                        valueIndex: item.i, // индекс значения пункта меню
+                    };
+                    if (eventName == "onItemSelected") {
+                        switch(e.itemName) {
+                            case "Да":
+                                mp.trigger('charCreator.client', false);
+                                this.show = false;
+                                break;
+                            case "Нет":
+                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateMainMenu"]);
+                                break;
+                        }
+                    }
+                }
+            },
             "parkingMenu": {
                 name: "parking",
                 header: "Парковка", // заголовок меню, видимый на экране
@@ -197,10 +534,17 @@ var selectMenu = new Vue({
                     }
                 }
             },
-        }
+        },
+        // Уведомление
+        notification: null,
+        // Время показа уведомления
+        showNotifTime: 10000,
+        // Показ колесика загрузка
+        loader: true,
     },
     methods: {
         onKeyUp(e) {
+            if (!this.show || this.loader) return;
             if (e.keyCode == 38) { // UP
                 if (this.menu.i == 0) return;
                 this.menu.i = Math.clamp(this.menu.i - 1, 0, this.menu.items.length - 1);
@@ -303,6 +647,16 @@ var selectMenu = new Vue({
             return curValue / maxValue * 100 - offset + '%';
         }
     },
+    watch: {
+        notification(val, oldVal) {
+            if (oldVal || !val) return;
+
+            var self = this;
+            setTimeout(function() {
+                self.notification = null;
+            }, self.showNotifTime);
+        },
+    },
     mounted() {
         let self = this;
         window.addEventListener('keyup', function (e) {
@@ -395,4 +749,5 @@ var selectMenu = new Vue({
 // Далее, присвоить эту структуру модулю selectMenu:
 selectMenu.menu = testMenu;
 // Показываем меню:
-selectMenu.show = true;*/
+selectMenu.show = true;
+selectMenu.notification = "Здесь короче тестовое уведомление. У Вас неправильный ник или город прописки!";*/

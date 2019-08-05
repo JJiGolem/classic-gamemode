@@ -4,12 +4,12 @@
     flex-direction: column;
     font-family: Montserrat;
     justify-content: flex-end;
-    height: 39%;
+    height: 60%;
     left: 2.5vh;
     max-width: 30vh;
     min-width: 15vh;
     position: absolute;
-    top: 40%;
+    top: 15%;
 }
 
 #notifications > div {

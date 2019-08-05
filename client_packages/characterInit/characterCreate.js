@@ -170,6 +170,8 @@ mp.events.add('characterInit.create.check', (name, surname) => {
 });
 
 mp.events.add('characterInit.create.check.ans', (ans) => {
+    //todo вывод результата на форму
+    mp.callCEFV(`selectMenu.show = false`);
     //mp.callCEFR('checkCustom', [ans]);
     if (ans == 1) {
         mp.chat.debug("Персоонаж создан и ник одобрен");
@@ -186,7 +188,8 @@ mp.events.add("characterInit.create", (active, rawCharData) => {
         camInit();
         applyTorsoCamera();
         
-        //mp.callCEFR('showCustomization', []);
+        mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["characterCreateMainMenu"])`);
+        mp.callCEFV(`selectMenu.show = true`);
     } else {
         mp.gui.cursor.show(false, false);
         mp.events.callRemote('characterInit.create.exit');
