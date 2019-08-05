@@ -9,6 +9,27 @@
     width: 40vh;
 }
 
+#selectMenu.inactive {
+    color: #aaa;
+}
+
+#selectMenu.inactive .header {
+    color: #aaa;
+    filter: blur(2px);
+}
+
+#selectMenu.inactive .content {
+    filter: blur(2px);
+}
+
+#selectMenu.inactive .content .item.selected {
+    background: #796b10;
+}
+
+#selectMenu.inactive .selector {
+    filter: blur(2px);
+}
+
 #selectMenu input {
     background: none;
     border: none;
@@ -159,4 +180,71 @@
 #selectMenu .selector > div:nth-child(2) {
     color: #fff;
     font-weight: bold;
+}
+
+/* Колесо загрузки в меню выбора */
+#selectMenu .loader {
+    left: 45%;
+    position: absolute;
+    top: 40%;
+}
+
+#selectMenu .loader .lds-rolling {
+    position: absolute;
+    animation: login 1s ease-in-out;
+}
+
+#selectMenu .loader .lds-rolling div,
+#selectMenu .loader .lds-rolling div:after {
+    position: absolute;
+    width: 5vh;
+    height: 5vh;
+    border: 1vh solid #ffdf29;
+    border-top-color: transparent;
+    border-radius: 50%;
+}
+
+#selectMenu .loader .lds-rolling div {
+    -webkit-animation: lds-rolling 1.2s linear infinite;
+    animation: lds-rolling 1.2s linear infinite;
+    top: 45%;
+    left: 45%;
+}
+
+#selectMenu .loader .lds-rolling div:after {
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+#selectMenu .loader .lds-rolling {
+    width: 5vh !important;
+    height: 5vh !important;
+    -webkit-transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
+    transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
+}
+
+/* Анимация */
+
+@keyframes lds-rolling {
+    0% {
+        -webkit-transform: translate(-50%, -50%) rotate(0deg);
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: translate(-50%, -50%) rotate(360deg);
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@-webkit-keyframes lds-rolling {
+    0% {
+        -webkit-transform: translate(-50%, -50%) rotate(0deg);
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: translate(-50%, -50%) rotate(360deg);
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }

@@ -179,7 +179,7 @@
         </div>
     </div>
 
-    <div v-cloak="v-cloak" id="selectMenu" v-if="show && menu">
+    <div v-cloak="v-cloak" id="selectMenu" :class="{inactive: loader}" v-if="show && menu">
         <div class="header">{{ menu.header }}</div>
         <div class="content">
             <div class="arrow arr-up" :class="{active: menu.j > 0}"></div>
@@ -212,6 +212,11 @@
         </div>
         <div class="notification" v-if="notification">
             {{ notification }}
+        </div>
+        <div v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="show">
+            <div class="lds-rolling">
+                <div></div>
+            </div>
         </div>
     </div>
 

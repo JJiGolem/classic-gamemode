@@ -505,11 +505,13 @@ var selectMenu = new Vue({
         // Уведомление
         notification: null,
         // Время показа уведомления
-        showNotifTime: 10000
+        showNotifTime: 10000,
+        // Показ колесика загрузка
+        loader: true,
     },
     methods: {
         onKeyUp(e) {
-            if (!this.show) return;
+            if (!this.show || this.loader) return;
             if (e.keyCode == 38) { // UP
                 if (this.menu.i == 0) return;
                 this.menu.i = Math.clamp(this.menu.i - 1, 0, this.menu.items.length - 1);
