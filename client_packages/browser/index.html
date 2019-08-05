@@ -442,6 +442,21 @@
         </div>
     </div>
 
+    <link rel="stylesheet" type="text/css" href="css/carSpecifications.css" />
+    <div v-cloak="v-cloak" id="carSpecifications" v-if="show">
+        <div class="header">Характеристики</div>
+        <div class="body">
+            <div class="record" v-for="record in body">
+                <div class="left">{{ record.header }}</div>
+                <div class="right">{{ record.value }} {{ record.unit }}</div>
+                <div class="line"></div>
+            </div>
+        </div>
+        <div class="footer">${{ splitPrice }}</div>
+    </div>
+    <script src="js/carSpecifications.js"></script>
+
+
     <!-- ------------------------ REACT ------------------------------ -->
     <script async src="build/js/build.js" type="text/javascript"></script>
     <div id="root"></div>

@@ -4,9 +4,9 @@ let serviceData = [{
     z: 29.2
 },
 {
-    x: 532.5,
-    y: -181.9,
-    z: 54.2
+    x: 540.07470703125,
+    y: -177.12237548828125,
+    z: 54.481346130371094
 },
 {
     x: -228.7,
@@ -29,5 +29,9 @@ module.exports = {
                 name: "Автомастерская",
                 shortRange: true,
             });
+
+        let shape = mp.colshapes.newSphere(carService.x, carService.y, carService.z, 16);
+        shape.isCarService = true;
+        //shape.carServiceId = carService.id;
     }
 }

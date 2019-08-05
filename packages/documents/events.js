@@ -10,7 +10,7 @@ module.exports = {
     //     /// todo with offer
     // },
     "documents.offer": (player, type, targetId, data) => {
-        if (player.id == targetId) return mp.events.call("documents.show", player.id, type, targetId, data);
+        //if (player.id == targetId) return mp.events.call("documents.show", player.id, type, targetId, data);
 
         let target = mp.players.at(targetId);
 

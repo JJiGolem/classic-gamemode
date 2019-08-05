@@ -120,6 +120,13 @@ mp.events.add('characterInit.done', () => { /// E
             if (classesToIgnore.includes(vehClass)) {
                 mp.callCEFV('interactionMenu.menu.items.splice(1, 2)');
             }
+
+            if (mp.isInCarService()) {
+                mp.callCEFV(`interactionMenu.menu.items.push({
+                    text: "Диагностика",
+                    icon: "tool.png"
+                });`);
+            }
             mp.events.call('interaction.menu.show');
         } else if (currentInteractionEntity.type == 'player') {
             mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["player_interaction"])');

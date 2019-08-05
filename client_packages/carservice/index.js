@@ -1,3 +1,9 @@
+let isInCarServiceShape = false;
+
+mp.isInCarService = () => {
+    return isInCarServiceShape;
+}
+
 let peds = [{
     model: "a_m_m_hillbilly_01",
     position: {
@@ -57,11 +63,21 @@ mp.events.add('characterInit.done', () => {
     })
 });
 
-mp.events.add('carservice.shape.enter', () => {
-    mp.events.callRemote('carservice.shape.enter');
+mp.events.add('carservice.jobshape.enter', () => {
+    mp.events.callRemote('carservice.jobshape.enter');
 });
 
 mp.events.add('carservice.jobmenu.show', () => {
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["carServiceJobMenu"])`);
     mp.callCEFV(`selectMenu.show = true`);
+});
+
+mp.events.add('carservice.shape.enter', () => {
+    mp.chat.debug('enter');
+    isInCarServiceShape = true;
+});
+
+mp.events.add('carservice.shape.leave', () => {
+    mp.chat.debug('leave');
+    isInCarServiceShape = false;
 });

@@ -17,6 +17,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(50),
             allowNull: false
         },
+        /// Работа
+        job: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false
+        },
         /// Финансы
         cash: {
             type: DataTypes.INTEGER(11),

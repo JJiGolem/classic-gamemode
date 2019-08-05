@@ -54,6 +54,10 @@ mp.events.add('carshow.list.show', (inputList, inputInfo) => {
     mp.callCEFVN({"selectMenu.menu.items[2].values": colorValues});
     mp.callCEFV(`selectMenu.show = true`);
 
+
+    mp.callCEFV(`carSpecifications.show = true`);
+    
+
 }
 );
 
@@ -77,6 +81,7 @@ mp.events.add('carshow.list.close', () => {
     mp.busy.remove('carshow');
     mp.callCEFR('setOpacityChat', [1.0]);
     mp.events.callRemote('carshow.list.close', carShowInfo.sqlId);
+    mp.callCEFV(`carSpecifications.show = false`);
     currentIndex = 0;
 });
 
