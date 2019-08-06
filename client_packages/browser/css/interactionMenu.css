@@ -12,6 +12,7 @@
 #interactionMenu .icon {
     align-items: center;
     display: flex;
+    pointer-events: none;
     padding: 0.5vh;
 }
 
@@ -35,4 +36,5 @@
 
 #interactionMenu .text {
     padding: 0.7vh 1vh;
+    pointer-events: none;
 }
