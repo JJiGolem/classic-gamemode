@@ -507,7 +507,7 @@ var selectMenu = new Vue({
         // Время показа уведомления
         showNotifTime: 10000,
         // Показ колесика загрузка
-        loader: true,
+        loader: false,
     },
     methods: {
         onKeyUp(e) {
