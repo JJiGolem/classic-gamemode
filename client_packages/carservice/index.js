@@ -17,7 +17,7 @@ let peds = [{
         y: -191.85520935058594,
         z: 53.34,
         color: [255, 255, 125, 120],
-        eventName: "carservice.shape.enter"
+        eventName: "carservice.jobshape.enter"
     },
     defaultScenario: 'WORLD_HUMAN_SMOKING'
 },
@@ -34,7 +34,7 @@ let peds = [{
         y: -1318.0531005859375,
         z: 28.090497360229492,
         color: [255, 255, 125, 128],
-        eventName: "carservice.shape.enter"
+        eventName: "carservice.jobshape.enter"
     },
     defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
 },
@@ -51,7 +51,7 @@ let peds = [{
         y: -1377.6666259765625,
         z: 30.118222579956055,
         color: [255, 255, 125, 128],
-        eventName: "carservice.shape.enter"
+        eventName: "carservice.jobshape.enter"
     },
     defaultScenario: 'WORLD_HUMAN_AA_COFFEE'
 },
