@@ -7,7 +7,7 @@ var selectMenu = new Vue({
         // Макс. количество пунктов на экране
         maxItems: 5,
         // Макс. количество цветов в селекторе
-        maxColorValues: 11,
+        maxColorValues: 10,
         // Доступные структуры меню для использования
         menus: {
             "characterCreateMainMenu": {
@@ -608,11 +608,13 @@ var selectMenu = new Vue({
                 var item = this.menu.items[this.menu.i];
                 if (!item.values || item.i == 0) return;
                 item.i = Math.clamp(item.i - 1, 0, item.values.length - 1);
+                if (item.i < item.j) item.j--;
                 this.onItemValueChanged();
             } else if (e.keyCode == 39) { // RIGHT
                 var item = this.menu.items[this.menu.i];
                 if (!item.values || item.i == item.values.length - 1) return;
                 item.i = Math.clamp(item.i + 1, 0, item.values.length - 1);
+                if (item.i - item.j == this.maxColorValues) item.j++;
                 this.onItemValueChanged();
             } else if (e.keyCode == 13) { // ENTER
                 this.onItemSelected();
@@ -628,6 +630,10 @@ var selectMenu = new Vue({
         isValueShow(index) {
             var i = this.menu.items[this.menu.i].i;
             return index <= 2;
+        },
+        isColorValueShow(index) {
+            var item = this.menu.items[this.menu.i];
+            return index >= item.j && index <= item.j + this.maxColorValues - 1;
         },
         valuesType(index) {
             // 0 - обычное значение, 1 - цвет, 2 - ползунок, 3 - ввод текста, -1 - нет значений
@@ -684,9 +690,6 @@ var selectMenu = new Vue({
             var result = [values[i - 1] || "", values[i], values[i + 1] || ""];
             return result;
         },
-        colorValues() {
-            return this.menu.items[this.menu.i].values.slice(0, this.maxColorValues);
-        },
         leftNumberType() {
             var offset = 3.5; // половина от ширины шарика ползунка
             if (this.menu.items[this.menu.i].i == 0) return 0 - offset + '%';
@@ -731,7 +734,8 @@ var selectMenu = new Vue({
         {
             text: "Выбор цвета 2",
             values: ['#0bf', '#fb0', '#bf0', '#fb0', '#fb0', '#fb0', '#bf0', '#0fe', '#cd3', 'yellow', 'pink'],
-            i: 0,
+            i: 0, // индекс выбранного значения пункта меню
+            j: 0, // индекс первого видимого значения пункта меню (актуально только для цветов)
         },
         {
             text: "Ползунок 2.5",
@@ -767,7 +771,8 @@ var selectMenu = new Vue({
         {
             text: "Выбор цвета 5",
             values: ['#0bf', '#fb0', '#bf0'],
-            i: 0,
+            i: 0, // индекс выбранного значения пункта меню
+            j: 0, // индекс первого видимого значения пункта меню (актуально только для цветов)
         },
         {
             text: "Обычный тип 6"
@@ -780,7 +785,8 @@ var selectMenu = new Vue({
         {
             text: "Выбор цвета 8",
             values: ['#0bf', '#fb0', '#bf0'],
-            i: 0,
+            i: 0, // индекс выбранного значения пункта меню
+            j: 0, // индекс первого видимого значения пункта меню (актуально только для цветов)
         },
         {
             text: "Обычный тип 9",
