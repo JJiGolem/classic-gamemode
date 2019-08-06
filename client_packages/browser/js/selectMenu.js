@@ -47,12 +47,12 @@ var selectMenu = new Vue({
                     };
                     if (eventName == "onItemValueChanged" && e.itemName == "Пол") {
                         selectMenu.menus["characterCreateMainMenu"].items[0].i = e.valueIndex;
-                        selectMenu.menus["characterCreateViewMenu"].items = e.valueIndex == 0 ? selectMenu.menus["characterCreateViewMenu"].itemsMale 
-                            : selectMenu.menus["characterCreateViewMenu"].itemsFemale;
+                        selectMenu.menus["characterCreateViewMenu"].items = e.valueIndex == 0 ? selectMenu.menus["characterCreateViewMenu"].itemsMale :
+                            selectMenu.menus["characterCreateViewMenu"].itemsFemale;
                         //mp.trigger('characterInit.create.setGender', e.valueIndex);
                     }
                     if (eventName == "onItemSelected") {
-                        switch(e.itemName) {
+                        switch (e.itemName) {
                             case "Наследственность":
                                 selectMenu.menu = cloneObj(selectMenu.menus["characterCreateParentsMenu"]);
                                 break;
@@ -112,7 +112,7 @@ var selectMenu = new Vue({
                         valueIndex: item.i, // индекс значения пункта меню
                     };
                     if (eventName == "onItemValueChanged") {
-                        switch(e.itemName) {
+                        switch (e.itemName) {
                             case "Мать":
                                 mp.trigger('characterInit.create.setMother', e.valueIndex);
                                 break;
@@ -130,7 +130,7 @@ var selectMenu = new Vue({
                         }
                     }
                     if (eventName == "onItemSelected") {
-                        switch(e.itemName) {
+                        switch (e.itemName) {
                             case "Назад":
                                 selectMenu.menu = cloneObj(selectMenu.menus["characterCreateMainMenu"]);
                                 break;
@@ -154,25 +154,27 @@ var selectMenu = new Vue({
                     {
                         text: "Цвет волос",
                         values: ["#211f1c", "#55362f", "#4b382e", "#4d291b",
-                        "#70351e", "#904422", "#a55c36", "#a56944",
-                        "#ac744f", "#ae7d57", "#be9161", "#cda670",
-                        "#c8a370", "#d5a861", "#e0b775", "#e8c487",
-                        "#b78457", "#a85d3d", "#963523", "#7c1411",
-                        "#921812", "#a81c14", "#cb371e", "#de411b",
-                        "#be532f", "#d34d21", "#907867", "#a78e7a",
-                        "#d4bda9", "#e4cfbe"],
+                            "#70351e", "#904422", "#a55c36", "#a56944",
+                            "#ac744f", "#ae7d57", "#be9161", "#cda670",
+                            "#c8a370", "#d5a861", "#e0b775", "#e8c487",
+                            "#b78457", "#a85d3d", "#963523", "#7c1411",
+                            "#921812", "#a81c14", "#cb371e", "#de411b",
+                            "#be532f", "#d34d21", "#907867", "#a78e7a",
+                            "#d4bda9", "#e4cfbe"
+                        ],
                         i: 0
                     },
                     {
                         text: "Дополнительный цвет волос",
                         values: ["#211f1c", "#55362f", "#4b382e", "#4d291b",
-                        "#70351e", "#904422", "#a55c36", "#a56944",
-                        "#ac744f", "#ae7d57", "#be9161", "#cda670",
-                        "#c8a370", "#d5a861", "#e0b775", "#e8c487",
-                        "#b78457", "#a85d3d", "#963523", "#7c1411",
-                        "#921812", "#a81c14", "#cb371e", "#de411b",
-                        "#be532f", "#d34d21", "#907867", "#a78e7a",
-                        "#d4bda9", "#e4cfbe"],
+                            "#70351e", "#904422", "#a55c36", "#a56944",
+                            "#ac744f", "#ae7d57", "#be9161", "#cda670",
+                            "#c8a370", "#d5a861", "#e0b775", "#e8c487",
+                            "#b78457", "#a85d3d", "#963523", "#7c1411",
+                            "#921812", "#a81c14", "#cb371e", "#de411b",
+                            "#be532f", "#d34d21", "#907867", "#a78e7a",
+                            "#d4bda9", "#e4cfbe"
+                        ],
                         i: 0
                     },
                     {
@@ -193,35 +195,37 @@ var selectMenu = new Vue({
                         text: "Прическа",
                         values: [
                             "Под ноль", "Коротко", "Слои", "Косички", "Хвост", "Ирокез", "Косички", "Боб", "Ястреб", "Ракушка",
-                            "Лонг боб", "Свободно", "Пикси", "Бритые виски", "Узел", "Волнистый боб", "Красотка", "Пучок", "Тугой узел", 
-                            "Твистед боб", "Флэппер боб", "Биг бэнгс", "Плетеные", "Муллет", "Косички", "Листья", "Зиг-заг", 
-                            "Пигтейл бэнгс", "Волнистые", "Катушка", "Завеса", "Откинутые", "Андеркат", 
+                            "Лонг боб", "Свободно", "Пикси", "Бритые виски", "Узел", "Волнистый боб", "Красотка", "Пучок", "Тугой узел",
+                            "Твистед боб", "Флэппер боб", "Биг бэнгс", "Плетеные", "Муллет", "Косички", "Листья", "Зиг-заг",
+                            "Пигтейл бэнгс", "Волнистые", "Катушка", "Завеса", "Откинутые", "Андеркат",
                             "Боковой андер", "Колючий ирокез", "Бандана", "Слоями", "Скинберд", "Аккуратные", "Шорт боб"
                         ],
                         i: 0
                     },
                     {
                         text: "Цвет волос",
-                        values: ["#211f1c", "#55362f", "#4b382e", "#4d291b", 
-                        "#70351e", "#904422", "#a55c36", "#a56944", 
-                        "#ac744f", "#ae7d57", "#be9161", "#cda670", 
-                        "#c8a370", "#d5a861", "#e0b775", "#e8c487", 
-                        "#b78457", "#a85d3d", "#963523", "#7c1411", 
-                        "#921812", "#a81c14", "#cb371e", "#de411b", 
-                        "#be532f", "#d34d21", "#907867", "#a78e7a", 
-                        "#d4bda9", "#e4cfbe"],
+                        values: ["#211f1c", "#55362f", "#4b382e", "#4d291b",
+                            "#70351e", "#904422", "#a55c36", "#a56944",
+                            "#ac744f", "#ae7d57", "#be9161", "#cda670",
+                            "#c8a370", "#d5a861", "#e0b775", "#e8c487",
+                            "#b78457", "#a85d3d", "#963523", "#7c1411",
+                            "#921812", "#a81c14", "#cb371e", "#de411b",
+                            "#be532f", "#d34d21", "#907867", "#a78e7a",
+                            "#d4bda9", "#e4cfbe"
+                        ],
                         i: 0
                     },
                     {
                         text: "Дополнительный цвет волос",
-                        values: ["#211f1c", "#55362f", "#4b382e", "#4d291b", 
-                        "#70351e", "#904422", "#a55c36", "#a56944", 
-                        "#ac744f", "#ae7d57", "#be9161", "#cda670", 
-                        "#c8a370", "#d5a861", "#e0b775", "#e8c487", 
-                        "#b78457", "#a85d3d", "#963523", "#7c1411", 
-                        "#921812", "#a81c14", "#cb371e", "#de411b", 
-                        "#be532f", "#d34d21", "#907867", "#a78e7a", 
-                        "#d4bda9", "#e4cfbe"],
+                        values: ["#211f1c", "#55362f", "#4b382e", "#4d291b",
+                            "#70351e", "#904422", "#a55c36", "#a56944",
+                            "#ac744f", "#ae7d57", "#be9161", "#cda670",
+                            "#c8a370", "#d5a861", "#e0b775", "#e8c487",
+                            "#b78457", "#a85d3d", "#963523", "#7c1411",
+                            "#921812", "#a81c14", "#cb371e", "#de411b",
+                            "#be532f", "#d34d21", "#907867", "#a78e7a",
+                            "#d4bda9", "#e4cfbe"
+                        ],
                         i: 0
                     },
                     {
@@ -241,7 +245,7 @@ var selectMenu = new Vue({
                         valueIndex: item.i, // индекс значения пункта меню
                     };
                     if (eventName == "onItemValueChanged") {
-                        switch(e.itemName) {
+                        switch (e.itemName) {
                             case "Прическа":
 
                                 break;
@@ -257,7 +261,7 @@ var selectMenu = new Vue({
                         }
                     }
                     if (eventName == "onItemSelected") {
-                        switch(e.itemName) {
+                        switch (e.itemName) {
                             case "Назад":
                                 selectMenu.menu = cloneObj(selectMenu.menus["characterCreateMainMenu"]);
                                 break;
@@ -299,7 +303,7 @@ var selectMenu = new Vue({
                         valueIndex: item.i, // индекс значения пункта меню
                     };
                     if (eventName == "onItemSelected") {
-                        switch(e.itemName) {
+                        switch (e.itemName) {
                             case "Принять":
                                 mp.trigger('characterInit.create.check', this.items[0].values[0], this.items[1].values[0]);
                                 break;
@@ -333,7 +337,7 @@ var selectMenu = new Vue({
                         valueIndex: item.i, // индекс значения пункта меню
                     };
                     if (eventName == "onItemSelected") {
-                        switch(e.itemName) {
+                        switch (e.itemName) {
                             case "Да":
                                 mp.trigger('characterInit.create.reset');
                                 selectMenu.menu = cloneObj(selectMenu.menus["characterCreateMainMenu"]);
@@ -367,7 +371,7 @@ var selectMenu = new Vue({
                         valueIndex: item.i, // индекс значения пункта меню
                     };
                     if (eventName == "onItemSelected") {
-                        switch(e.itemName) {
+                        switch (e.itemName) {
                             case "Да":
                                 mp.trigger('charCreator.client', false);
                                 this.show = false;
@@ -383,11 +387,11 @@ var selectMenu = new Vue({
                 name: "parking",
                 header: "Парковка", // заголовок меню, видимый на экране
                 items: [{
-                    text: "Забрать автомобиль",
-                },
-                {
-                    text: "Закрыть меню",
-                }
+                        text: "Забрать автомобиль",
+                    },
+                    {
+                        text: "Закрыть меню",
+                    }
                 ],
                 i: 0, // индекс выбранного пункта
                 j: 0, // индекс первого видимого пункта
@@ -416,23 +420,23 @@ var selectMenu = new Vue({
                 name: "carshow",
                 header: "Автосалон",
                 items: [{
-                    text: "Модель",
-                    values: [],
-                    i: 0,
-                },
-                {
-                    text: "Основной цвет",
-                    values: [],
-                    i: 0,
-                },
-                {
-                    text: "Дополнительный цвет",
-                    values: [],
-                    i: 0,
-                },
-                {
-                    text: "Купить"
-                }
+                        text: "Модель",
+                        values: [],
+                        i: 0,
+                    },
+                    {
+                        text: "Основной цвет",
+                        values: [],
+                        i: 0,
+                    },
+                    {
+                        text: "Дополнительный цвет",
+                        values: [],
+                        i: 0,
+                    },
+                    {
+                        text: "Купить"
+                    }
                 ],
                 i: 0, // индекс выбранного пункта
                 j: 0, // индекс первого видимого пункта
@@ -472,13 +476,13 @@ var selectMenu = new Vue({
                 name: "carmarketsell",
                 header: "Авторынок",
                 items: [{
-                    text: "Продать транспорт",
-                    i: 0,
-                },
-                {
-                    text: "Отмена",
-                    i: 0,
-                }
+                        text: "Продать транспорт",
+                        i: 0,
+                    },
+                    {
+                        text: "Отмена",
+                        i: 0,
+                    }
                 ],
                 i: 0,
                 j: 0,
@@ -505,13 +509,13 @@ var selectMenu = new Vue({
                 name: "carmarketbuy",
                 header: "Авторынок",
                 items: [{
-                    text: "Купить транспорт",
-                    i: 0,
-                },
-                {
-                    text: "Отмена",
-                    i: 0,
-                }
+                        text: "Купить транспорт",
+                        i: 0,
+                    },
+                    {
+                        text: "Отмена",
+                        i: 0,
+                    }
                 ],
                 i: 0,
                 j: 0,
@@ -538,13 +542,13 @@ var selectMenu = new Vue({
                 name: "carservicejob",
                 header: "Начальник СТО",
                 items: [{
-                    text: "Устроиться на работу",
-                    i: 0,
-                },
-                {
-                    text: "Помощь",
-                    i: 0,
-                }
+                        text: "Устроиться на работу",
+                        i: 0,
+                    },
+                    {
+                        text: "Помощь",
+                        i: 0,
+                    }
                 ],
                 i: 0,
                 j: 0,
@@ -582,11 +586,23 @@ var selectMenu = new Vue({
                 if (this.menu.i == 0) return;
                 this.menu.i = Math.clamp(this.menu.i - 1, 0, this.menu.items.length - 1);
                 if (this.menu.i < this.menu.j) this.menu.j--;
+                setTimeout(() => {
+                    if (this.valuesType(this.menu.i) == 3) { // editable
+                        var itemText = this.menu.items[this.menu.i].text;
+                        this.$refs[itemText][0].focus();
+                    }
+                }, 100);
                 this.onItemFocusChanged();
             } else if (e.keyCode == 40) { // DOWN
                 if (this.menu.i == this.menu.items.length - 1) return;
                 this.menu.i = Math.clamp(this.menu.i + 1, 0, this.menu.items.length - 1);
                 if (this.menu.i - this.menu.j == this.maxItems) this.menu.j++;
+                setTimeout(() => {
+                    if (this.valuesType(this.menu.i) == 3) { // editable
+                        var itemText = this.menu.items[this.menu.i].text;
+                        this.$refs[itemText][0].focus();
+                    }
+                }, 100);
                 this.onItemFocusChanged();
             } else if (e.keyCode == 37) { // LEFT
                 var item = this.menu.items[this.menu.i];
@@ -692,7 +708,7 @@ var selectMenu = new Vue({
     },
     mounted() {
         let self = this;
-        window.addEventListener('keyup', function (e) {
+        window.addEventListener('keyup', function(e) {
             if (!self.menu) return;
             self.onKeyUp(e);
         });
@@ -725,8 +741,14 @@ var selectMenu = new Vue({
             max: "Максимум", // слово справа от ползунка
         },
         {
-            text: "Ввод",
-            values: ["Текст"],
+            text: "Ввод 1",
+            values: ["Текст 1"],
+            i: 0,
+            type: "editable" // возможность редактирования значения пункта меню
+        },
+        {
+            text: "Ввод 2",
+            values: ["Текст 2"],
             i: 0,
             type: "editable" // возможность редактирования значения пункта меню
         },
