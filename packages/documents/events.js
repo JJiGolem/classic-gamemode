@@ -10,7 +10,14 @@ module.exports = {
     //     /// todo with offer
     // },
     "documents.offer": (player, type, targetId, data) => {
-        //if (player.id == targetId) return mp.events.call("documents.show", player.id, type, targetId, data);
+        if (type == 'driverLicense') {
+            if (!player.character.carLicense && !player.character.passengerLicense && !player.character.bikeLicense && !player.character.truckLicense && !player.character.airLicense && !player.character.boatLicense) {
+                return player.call('notifications.push.error', ['У вас нет лицензий', 'Документы']);
+            }
+        }
+
+        if (player.id == targetId) return mp.events.call("documents.show", player.id, type, targetId, data); /// Если показывает себе, то не кидаем оффер
+
 
         let target = mp.players.at(targetId);
 
