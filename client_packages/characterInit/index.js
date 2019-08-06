@@ -7,6 +7,7 @@ let charNum;
 //let charClothes = new Array();
 let charInfos = new Array();
 
+let peds = new Array();
 let selectMarkers = new Array();
 let currentCharacter = 0;
 
@@ -33,6 +34,7 @@ let isBinding = false;
 
 
 mp.events.add('characterInit.init', (characters) => {
+    mp.gui.cursor.show(true, true);
     currentCharacter = 0;
     if (characters != null) {
         charNum = characters.length;
@@ -40,7 +42,6 @@ mp.events.add('characterInit.init', (characters) => {
             charInfos.push(characters[i].charInfo);
             //charClothes.push(characters[i].charClothes);
         }
-        
     }
     if (!isBinding){
         binding(true);
@@ -67,8 +68,12 @@ mp.events.add("characterInit.done", () => {
 
     mp.utils.cam.destroy();
 
-    for (let i = 0; i < selectMarkers.length; i++)
+    for (let i = 0; i < selectMarkers.length; i++) {
         selectMarkers[i].destroy();
+        peds[i].destroy();
+    }
+    selectMarkers = new Array();
+    peds = new Array();
 });
 
 mp.events.add('characterInit.choose', () => {
@@ -98,24 +103,28 @@ mp.events.add('characterInit.chooseLeft', () => {
 });
 
 let createPeds = function() {
+    if (peds.length != 0) return;
     for (let i = 0; i < charNum; i++) {
         setCharCustom(i);
         //setCharClothes(i);
     
-        let x = (camPos[0] + i * pedDist * sinPedRot) + camDist * sinCamRot;
-        let y = (camPos[1] + i * pedDist * cosPedRot) + camDist * cosCamRot;
-        let z = mp.game.gameplay.getGroundZFor3dCoord(x, y, camPos[2] + 1, 0.0, false) + 1;
-        let ped = mp.peds.new(mp.players.local.model, new mp.Vector3(x, y, z), pedRotation, mp.players.local.dimension);
-        mp.players.local.cloneToTarget(ped.handle);
+        setTimeout(async () => {
+            let x = (camPos[0] + i * pedDist * sinPedRot) + camDist * sinCamRot;
+            let y = (camPos[1] + i * pedDist * cosPedRot) + camDist * cosCamRot;
+            let z = mp.game.gameplay.getGroundZFor3dCoord(x, y, camPos[2] + 1, 0.0, false) + 1;
+            let ped = mp.peds.new(mp.players.local.model, new mp.Vector3(x, y, z), pedRotation, mp.players.local.dimension);
+            mp.players.local.cloneToTarget(ped.handle);
 
-        selectMarkers.push(mp.markers.new(2, new mp.Vector3(x, y, z + 1), 0.2, 
-        {
-            direction: 0,
-            rotation: new mp.Vector3(0, 180, 0),
-            color: (i == currentCharacter) ? [255, 221, 85, 255] : [255, 255, 255, 120],
-            visible: true,
-            dimension: mp.players.local.dimension
-        }));
+            selectMarkers.push(mp.markers.new(2, new mp.Vector3(x, y, z + 1), 0.2, 
+            {
+                direction: 0,
+                rotation: new mp.Vector3(0, 180, 0),
+                color: (i == currentCharacter) ? [255, 221, 85, 255] : [255, 255, 255, 120],
+                visible: true,
+                dimension: mp.players.local.dimension
+            }));
+            peds.push(ped);
+        }, 500);
     }
 };
 
@@ -153,8 +162,8 @@ let setInfo = function() {
             warns: ${charInfo.warnNumber}
         });`);
     });
+    mp.callCEFV(`characterInfo.showCreateCharacter = ${charInfos.length == 0};`);
     mp.callCEFV(`characterInfo.show = true;`);
-    //mp.callCEFV(`characterInfo.show = true;`);
 };
 
 let chooseLeft = function() { 
@@ -167,6 +176,9 @@ let chooseLeft = function() {
     
     updateMarkers();
     mp.callCEFV(`characterInfo.i = ${currentCharacter};`);
+    if (charNum != currentCharacter) {
+        mp.callCEFV(`characterInfo.showCreateCharacter = false;`);
+    }
     mp.utils.cam.moveTo(
         camPos[0] + currentCharacter * pedDist * sinPedRot,
         camPos[1] + currentCharacter * pedDist * cosPedRot, 
@@ -186,6 +198,9 @@ let chooseRight = function() {
     }
     updateMarkers();
     mp.callCEFV(`characterInfo.i = ${currentCharacter};`);
+    if (currentCharacter == charNum) {
+        mp.callCEFV(`characterInfo.showCreateCharacter = true;`);
+    }
     mp.utils.cam.moveTo(
         camPos[0] + currentCharacter * pedDist * sinPedRot,
         camPos[1] + currentCharacter * pedDist * cosPedRot, 
@@ -278,13 +293,13 @@ let colorForOverlayIdx = function(index, indexPed) {
 
 function binding(active) {
     if (active) {
-        mp.keys.bind(0x44, true, chooseRight);   // D
-        mp.keys.bind(0x41, true, chooseLeft);    // A
-        mp.keys.bind(0x0D, true, choose);        //Enter
+        mp.keys.bind(0x27, true, chooseRight);   // Right arrow
+        mp.keys.bind(0x25, true, chooseLeft);    // Left arrow
+        mp.keys.bind(0x0D, true, choose);        // Enter
     }
     else {
-        mp.keys.unbind(0x44, true, chooseRight);
-        mp.keys.unbind(0x41, true, chooseLeft);
+        mp.keys.unbind(0x27, true, chooseRight);
+        mp.keys.unbind(0x25, true, chooseLeft);
         mp.keys.unbind(0x0D, true, choose);
     }
 };

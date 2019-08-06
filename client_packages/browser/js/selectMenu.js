@@ -896,8 +896,8 @@ var selectMenu = new Vue({
                     if (eventName == "onItemSelected") {
                         switch (e.itemName) {
                             case "Да":
-                                mp.trigger('charCreator.client', false);
-                                this.show = false;
+                                mp.trigger('characterInit.create.exit');
+                                selectMenu.show = false;
                                 break;
                             case "Нет":
                                 selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];

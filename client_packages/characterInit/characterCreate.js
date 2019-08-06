@@ -208,6 +208,11 @@ mp.events.add("characterInit.create.head", (active) => {
     }
 });
 
+mp.events.add('characterInit.create.exit', () => {
+    mp.events.callRemote('characterInit.create.exit');
+    mp.events.callRemote('characterInit.start');
+});
+
 mp.events.add('characterInit.create.reset', () => {
     if (charData.gender == 0) {
         charData.similarity = 1;
