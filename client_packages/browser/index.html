@@ -199,9 +199,9 @@
             <div v-for="value in values">{{ value }}</div>
         </div>
         <div v-else-if="valuesType(menu.i) == 1" class="selector select-color">
-            <!-- <div class="arrow arr-left" :class="{active: menu.items[menu.i].i > 0}"></div> -->
-            <div class="color-type" v-for="(value, index) in colorValues" :class="{active: index == menu.items[menu.i].i}" :style="{background: value}"></div>
-            <!-- <div class="arrow arr-right" :class="{active: menu.items[menu.i].i < menu.items.length - maxColorValues}"></div> -->
+            <div class="arrow arr-left" :class="{active: menu.items[menu.i].j > 0}"></div>
+            <div class="color-type" v-for="(value, index) in items[menu.i].values" v-show="isColorValueShow(index)" :class="{active: index == menu.items[menu.i].i}" :style="{background: value}"></div>
+            <div class="arrow arr-right" :class="{active: menu.items[menu.i].j < menu.items[menu.i].values.length - maxColorValues}"></div>
         </div>
         <div v-else-if="valuesType(menu.i) == 2" class="selector select-number">
             <div>{{ menu.items[menu.i].min }}</div>
