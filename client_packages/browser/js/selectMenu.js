@@ -586,23 +586,11 @@ var selectMenu = new Vue({
                 if (this.menu.i == 0) return;
                 this.menu.i = Math.clamp(this.menu.i - 1, 0, this.menu.items.length - 1);
                 if (this.menu.i < this.menu.j) this.menu.j--;
-                setTimeout(() => {
-                    if (this.valuesType(this.menu.i) == 3) { // editable
-                        var itemText = this.menu.items[this.menu.i].text;
-                        this.$refs[itemText][0].focus();
-                    }
-                }, 100);
                 this.onItemFocusChanged();
             } else if (e.keyCode == 40) { // DOWN
                 if (this.menu.i == this.menu.items.length - 1) return;
                 this.menu.i = Math.clamp(this.menu.i + 1, 0, this.menu.items.length - 1);
                 if (this.menu.i - this.menu.j == this.maxItems) this.menu.j++;
-                setTimeout(() => {
-                    if (this.valuesType(this.menu.i) == 3) { // editable
-                        var itemText = this.menu.items[this.menu.i].text;
-                        this.$refs[itemText][0].focus();
-                    }
-                }, 100);
                 this.onItemFocusChanged();
             } else if (e.keyCode == 37) { // LEFT
                 var item = this.menu.items[this.menu.i];
@@ -708,6 +696,14 @@ var selectMenu = new Vue({
                 self.notification = null;
             }, self.showNotifTime);
         },
+        'menu.i': function(val) {
+            setTimeout(() => {
+                if (this.valuesType(val) == 3) { // editable
+                    var itemText = this.menu.items[val].text;
+                    this.$refs[itemText][0].focus();
+                }
+            }, 100);
+        },
     },
     mounted() {
         let self = this;
@@ -732,6 +728,12 @@ var selectMenu = new Vue({
             i: 0, // индекс выбранного значения пункта меню
         },
         {
+            text: "Ввод 1",
+            values: ["Текст 1"],
+            i: 0,
+            type: "editable" // возможность редактирования значения пункта меню
+        },
+        {
             text: "Выбор цвета 2",
             values: ['#0bf', '#fb0', '#bf0', '#fb0', '#fb0', '#fb0', '#bf0', '#0fe', '#cd3', 'yellow', 'pink'],
             i: 0, // индекс выбранного значения пункта меню
@@ -743,12 +745,6 @@ var selectMenu = new Vue({
             i: 0,
             min: "Минимум", // слово слева от ползунка
             max: "Максимум", // слово справа от ползунка
-        },
-        {
-            text: "Ввод 1",
-            values: ["Текст 1"],
-            i: 0,
-            type: "editable" // возможность редактирования значения пункта меню
         },
         {
             text: "Ввод 2",
