@@ -154,6 +154,7 @@ let setInfo = function() {
         });`);
     });
     mp.callCEFV(`characterInfo.show = true;`);
+    //mp.callCEFV(`characterInfo.show = true;`);
 };
 
 let chooseLeft = function() { 
