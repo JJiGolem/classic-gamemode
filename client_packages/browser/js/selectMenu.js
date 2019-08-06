@@ -198,7 +198,14 @@ var selectMenu = new Vue({
                     },
                     {
                         text: "Цвет волос на лице",
-                        values: ['#e0c2aa', '#804e40', '#a1765a', '#ebad69', '#cb7d50', '#c47f5b'],
+                        values: ["#211f1c", "#55362f", "#4b382e", "#4d291b",
+                        "#70351e", "#904422", "#a55c36", "#a56944",
+                        "#ac744f", "#ae7d57", "#be9161", "#cda670",
+                        "#c8a370", "#d5a861", "#e0b775", "#e8c487",
+                        "#b78457", "#a85d3d", "#963523", "#7c1411",
+                        "#921812", "#a81c14", "#cb371e", "#de411b",
+                        "#be532f", "#d34d21", "#907867", "#a78e7a",
+                        "#d4bda9", "#e4cfbe"],
                         i: 0,
                         j: 0
                     },
@@ -819,8 +826,8 @@ var selectMenu = new Vue({
                     if (eventName == "onItemSelected") {
                         switch (e.itemName) {
                             case "Принять":
-                                //todo
-                                //проверка фио на корректность
+                                let reg = /^[A-z]{2,15}$/;
+                                if (!reg.test(this.items[0].values[0]) || !reg.test(this.items[1].values[0])) return selectMenu.notification = "Имя и фамилия должны состоять из 2-15 латинских букв каждое.";
                                 selectMenu.loader = true;
                                 mp.trigger('characterInit.create.check', this.items[0].values[0], this.items[1].values[0]);
                                 break;
