@@ -1,9 +1,9 @@
 .house_form-react {
     position: absolute;
     font-family: main-font;
-    width: 40vw;
-    height: 23vw;
-    background: rgba(58, 58, 57, 0.63);
+    width: 60vh;
+    height: 33vh;
+    background: rgba(0, 0, 0, 0.51);
     border-radius: 15px;
     left: 0;
     top: 0;
@@ -14,7 +14,28 @@
     max-height: 1000px;
     min-width: 300px;
     min-height: 150px;
-    /*animation: show-react .1s ease-in-out;*/
+    animation: show-react .1s ease-in-out;
+}
+
+.enter_menu-house-react {
+    position: absolute;
+    font-family: main-font;
+    width: 30vh;
+    height: 15vh;
+    background: rgba(21, 21, 21, 0.68);
+    border-radius: 15px;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    max-width: 750px;
+    max-height: 500px;
+    min-width: 150px;
+    min-height: 75px;
+    padding: 1%;
+    text-align: center;
+    animation: show-react .1s ease-in-out;
 }
 
 .header-house-react {
@@ -115,7 +136,7 @@
     position: absolute;
     left: 5%;
     content: ' ';
-    height: 30%;
+    height: 20%;
     width: 100%;
     background-color: rgb(46, 44, 44);
 }
@@ -126,7 +147,7 @@
     content: ' ';
     height: 30%;
     width: 100%;
-    background-color: rgb(138, 138, 138);
+    background-color: rgb(181, 181, 181);
 }
 .exitHouse:before, .exitEnterHouse:before {
     transform: rotate(45deg);
@@ -144,10 +165,29 @@
     margin: auto;
     width: 50%;
     height: 30%;
-    background: rgba(52, 52, 51, 0.82);
+    background: rgba(21, 21, 21, 0.68);
     color: white;
     text-align: center;
     padding: 5%;
     border-radius: 10px;
     animation: show-react .1s ease-in-out;
+}
+
+.message_back-house-react button {
+    background: transparent;
+    padding: 5%;
+    width: 30%;
+    color: white;
+    border: 1px solid #7f7f7f;
+    border-radius: 10px;
+    margin-left: 10%;
+    margin-top: 10%;
+    transition: .1s ease-in-out;
+    font-size: 100%;
+}
+
+.message_back-house-react button:hover {
+    color: black;
+    background: #e1c631;
+    border-color: #e1c631;
 }

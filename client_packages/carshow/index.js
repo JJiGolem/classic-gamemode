@@ -1,21 +1,21 @@
-var data = require('carshow/data.js');
+let data = require('carshow/data.js');
 
-var colorIDs = [];
-var colorValues = [];
+let colorIDs = [];
+let colorValues = [];
 
 data.colors.forEach((current)=> {
     colorIDs.push(current.id);
     colorValues.push(current.value);
 });
 
-var current;
-var list = [];
-var carShowInfo;
-var currentIndex = 0;
-var primary = 0, secondary = 0;
-var camera;
+let current;
+let list = [];
+let carShowInfo;
+let currentIndex = 0;
+let primary = 0, secondary = 0;
+let camera;
 
-var controlsDisabled = false;
+let controlsDisabled = false;
 
 mp.events.add('carshow.list.show', (inputList, inputInfo) => {
 
@@ -43,19 +43,20 @@ mp.events.add('carshow.list.show', (inputList, inputInfo) => {
     //current.setHeading(115);
     current.setHeading(carShowInfo.toH);
     current.setColours(primary, secondary);
-    for (var j = 0; j < list.length; j++) {
-        mp.chat.debug(`${j}Модель: ${list[j].vehiclePropertyModel} Количество: ${list[j].count} ${list[j].properties.maxFuel}`);
-    }
 
     let models = []; 
     list.forEach((current)=> {
         models.push(current.properties.name);
     })
-    mp.callCEFV(`selectMenu.menu = selectMenu.menus["carShowMenu"]`);
+    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["carShowMenu"])`);
     mp.callCEFVN({"selectMenu.menu.items[0].values": models});
     mp.callCEFVN({"selectMenu.menu.items[1].values": colorValues});
     mp.callCEFVN({"selectMenu.menu.items[2].values": colorValues});
-    mp.callCEFV(`selectMenu.open()`);
+    mp.callCEFV(`selectMenu.show = true`);
+
+
+    mp.callCEFV(`carSpecifications.show = true`);
+    
 
 }
 );
@@ -75,11 +76,13 @@ mp.events.add('carshow.list.close', () => {
     mp.players.local.freezePosition(false);
     mp.events.call('hud.enable', true);
     mp.game.ui.displayRadar(true);
-    mp.callCEFV(`selectMenu.close()`);
+    mp.callCEFV(`selectMenu.menu = null`);
     controlsDisabled = false;
     mp.busy.remove('carshow');
     mp.callCEFR('setOpacityChat', [1.0]);
     mp.events.callRemote('carshow.list.close', carShowInfo.sqlId);
+    mp.callCEFV(`carSpecifications.show = false`);
+    currentIndex = 0;
 });
 
 mp.events.add('carshow.vehicle.show', (i)=> {
@@ -98,10 +101,12 @@ mp.events.add('carshow.vehicle.color', (color1, color2) => {
 });
 
 mp.events.add("carshow.car.buy", (carId) => {
+    mp.callCEFV(`loader.show = true;`);
     mp.events.callRemote('carshow.car.buy', list[currentIndex].sqlId, primary, secondary);
 });
 
 mp.events.add("carshow.car.buy.ans", (ans, carInfo) => {
+    mp.callCEFV(`loader.show = false;`);
     switch (ans) {
         case 0:
             mp.chat.debug('Автомобилей нет');

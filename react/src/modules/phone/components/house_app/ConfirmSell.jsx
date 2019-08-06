@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {addAppDisplay, closeAppDisplay} from "../../actions/action.apps";
 import {setSellStatus} from "../../actions/action.info";
 import AnsSell from "./AnsSell";
+import HeaderHouseApp from "./HeaderHouseApp";
 
 class ConfirmSell extends Component {
     constructor(props) {
@@ -10,19 +11,7 @@ class ConfirmSell extends Component {
         this.state = {};
 
         this.cancel = this.cancel.bind(this);
-    }
-
-    componentDidMount() {
-        this.props.addApp({ name: 'AnsSell', form: <AnsSell /> });
-    }
-
-    getHeader(house) {
-        return (
-            <div className='head_app-phone-react' style={{ height: '15%', textAlign: 'center' }}>
-                <div style={{ marginTop: '5%' }}>Дом { house.name }</div>
-                <div style={{ color: '#e1c631' }}>{ house.area }</div>
-            </div>
-        )
+        this.confirmSell = this.confirmSell.bind(this);
     }
 
     getLoader() {
@@ -34,7 +23,16 @@ class ConfirmSell extends Component {
     cancel() {
         const { closeApp } = this.props;
 
+        // eslint-disable-next-line no-undef
+        mp.trigger('house.sell.stop');
         closeApp();
+    }
+
+    confirmSell() {
+        // eslint-disable-next-line no-undef
+        mp.trigger('house.sell');
+
+        this.props.addApp({ name: 'AnsSell', form: <AnsSell /> });
     }
 
     getContent() {
@@ -72,7 +70,7 @@ class ConfirmSell extends Component {
         return (
             <Fragment>
                 <div className='back_page-phone-react' style={{ textAlign: 'center' }}>
-                    { this.getHeader(house) }
+                    <HeaderHouseApp house={house}/>
                     {
                         info.houses[0].ansSell && Object.keys(info.houses[0].ansSell).length > 0
                             ? this.getContent()

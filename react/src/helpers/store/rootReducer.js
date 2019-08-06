@@ -6,6 +6,10 @@ import apps from '../../modules/phone/reducers/reducer.apps';
 import info from '../../modules/phone/reducers/reducer.info';
 import dialogs from '../../modules/phone/reducers/reducer.dialogs';
 import house from '../../modules/house/reducers/reducer.house';
+import enterMenu from '../../modules/house/reducers/reducer.enterMenu';
+import business from '../../modules/business/reducers/reducer.business';
+import bank from '../../modules/bank/reducers/reducer.bank';
+import bankPages from '../../modules/bank/reducers/reducer.bankPages';
 
 export default combineReducers({
     forms,
@@ -13,5 +17,9 @@ export default combineReducers({
     apps,
     info,
     dialogs,
-    house
+    house,
+    enterMenu,
+    business,
+    bank,
+    bankPages
 });

@@ -63,6 +63,7 @@
 
 #offerDialog .content .message {
     color: #fff;
+    margin-bottom: 1vh;
     padding: 0 3vh;
 }
 

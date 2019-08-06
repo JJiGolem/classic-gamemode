@@ -16,8 +16,22 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		modelName: {
 			type: DataTypes.STRING(128),
+			defaultValue: "NOTREG",
 			allowNull: false
 		},
+		plate: {
+			type: DataTypes.STRING(128),
+			allowNull: false
+		},
+		regDate: {
+            type: DataTypes.DATE,
+            allowNull: true
+		},
+		owners: {
+			type: DataTypes.INTEGER,
+			defaultValue: 1,
+            allowNull: false
+        },
 		color1: {
 			type: DataTypes.INTEGER(11),
 			defaultValue: 0,
@@ -52,6 +66,31 @@ module.exports = (sequelize, DataTypes) => {
 		health: {
 			type: DataTypes.INTEGER(11),
 			defaultValue: 1000,
+			allowNull: false
+		},
+		destroys: {
+			type: DataTypes.INTEGER(11),
+			defaultValue: 0,
+			allowNull: false
+		},
+		engineState: {
+			type: DataTypes.INTEGER(11),
+			defaultValue: 0,
+			allowNull: false
+		},
+		steeringState: {
+			type: DataTypes.INTEGER(11),
+			defaultValue: 0,
+			allowNull: false
+		},
+		fuelState: {
+			type: DataTypes.INTEGER(11),
+			defaultValue: 0,
+			allowNull: false
+		},
+		brakeState: {
+			type: DataTypes.INTEGER(11),
+			defaultValue: 0,
 			allowNull: false
         },
 		consumption: {

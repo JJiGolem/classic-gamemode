@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {addAppDisplay, closeAppDisplay, setAppDisplay} from "../../actions/action.apps";
 import {setSell, setSellInfo, setSellStatus} from "../../actions/action.info";
 import ConfirmSell from "./ConfirmSell";
+import HeaderHouseApp from "./HeaderHouseApp";
 
 class Sell extends Component {
     constructor(props) {
@@ -30,26 +31,26 @@ class Sell extends Component {
     }
 
     sellHouse() {
-        const { setSell, setSellStatus, setSellInfo, addApp } = this.props;
+        const { setSell, setSellStatus, setSellInfo, addApp, house } = this.props;
+        const { userId, price } = this.state;
 
         if (this.validateForm()) {
             setSell(true);
             addApp({name: 'ConfirmSell', form: <ConfirmSell />});
-            setTimeout(() => {
-                setSellInfo({nick: 'Dunhill', price: this.state.sellPrice})
-            }, 1000)
+
+            // eslint-disable-next-line no-undef
+            mp.trigger('house.sell.check', house.name, userId, parseInt(price));
+
+            // setTimeout(() => {
+            //     setSellInfo({nick: 'Dunhill', price: this.state.sellPrice})
+            // }, 1000)
         }
     }
 
     validateUser(user) {
         if (user) {
-            if (!isNaN(user)) {
-                this.setState({ errorUser: '' });
-                return true;
-            } else {
-                this.setState({ errorUser: 'Неверный формат ID' });
-                return false;
-            }
+            this.setState({ errorUser: '' });
+            return true;
         } else {
             this.setState({ errorUser: 'Поле не заполнено' });
             return false;
@@ -148,15 +149,6 @@ class Sell extends Component {
         )
     }
 
-    getHeader(house) {
-        return (
-            <div className='head_app-phone-react' style={{ height: '15%', textAlign: 'center' }}>
-                <div style={{ marginTop: '5%' }}>Дом { house.name }</div>
-                <div style={{ color: '#e1c631' }}>{ house.area }</div>
-            </div>
-        )
-    }
-
     render() {
 
         const { house } = this.props;
@@ -164,7 +156,8 @@ class Sell extends Component {
         return (
             <Fragment>
                 <div className='back_page-phone-react'>
-                    { this.getHeader(house) }
+                    <HeaderHouseApp house={house}/>
+
                     {
                         this.getContent(house)
                     }

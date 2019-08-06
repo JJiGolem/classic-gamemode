@@ -2,8 +2,164 @@ var interactionMenu = new Vue({
     el: "#interactionMenu",
     data: {
         show: false,
+        left: 80, /// сдвиг от левой части экрана
         // Текущее меню
-        menu: null
+        menu: null,
+        menus: {
+            "vehicle": {
+                name: "vehicle", // название меню
+                items: [
+                    {
+                        text: "Двери",
+                        icon: "key.png"
+                    },
+                    {
+                        text: "Капот",
+                        icon: "hood.png"
+                    },
+                    {
+                        text: "Багажник",
+                        icon: "trunk.png"
+                    }
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    if (item.text == 'Двери') {
+                        mp.trigger(`vehicles.lock`);
+                        mp.trigger(`interaction.menu.close`);
+                    }
+                    if (item.text == 'Капот') {
+                        mp.trigger(`vehicles.hood`);
+                        mp.trigger(`interaction.menu.close`);
+                    }
+                    if (item.text == 'Багажник') {
+                        mp.trigger(`vehicles.trunk`);
+                        mp.trigger(`interaction.menu.close`);
+                    }
+                }
+            },
+            "vehicle_inside": {
+                name: "vehicle_inside", // название меню
+                items: [
+                    {
+                        text: "Двери",
+                        icon: "key.png"
+                    },
+                    {
+                        text: "Вытолкнуть",
+                        icon: "eject.png"
+                    }
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    if (item.text == 'Двери') {
+                        mp.trigger(`vehicles.lock`);
+                        mp.trigger(`interaction.menu.close`);
+                    }
+                    if (item.text == 'Вытолкнуть') {
+                        mp.trigger(`interaction.ejectlist.get`);
+                        //mp.trigger(`interaction.menu.close`);
+                    }
+                    if (item.text == 'Звук сирены') {
+                        mp.trigger(`vehicles.siren.sound`);
+                        mp.trigger(`interaction.menu.close`);
+                    }
+                }
+            },
+            "vehicle_ejectlist": {
+                name: "vehicle_ejectlist",
+                items: [
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    mp.trigger(`interaction.eject`, index);
+                    mp.trigger(`interaction.menu.close`);
+                }
+            },
+            "player_ownmenu": {
+                name: "player_ownmenu",
+                items: [
+                    {
+                        text: "Мои документы",
+                        icon: "doc.png"
+                    },
+                    {
+                        text: "Анимации",
+                        icon: "activity.png"
+                    }
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    if (item.text == 'Мои документы') {
+                        mp.trigger(`documents.list`);
+                        //mp.trigger(`interaction.menu.close`);
+                    }
+                }
+            },
+            "player_interaction": {
+                name: "player_interaction",
+                items: [
+                    {
+                        text: "Познакомиться",
+                        icon: "hands.png"
+                    },
+                    {
+                        text: "Документы",
+                        icon: "doc.png"
+                    }
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    if (item.text == 'Документы') {
+                        mp.trigger(`documents.list`);
+                    }
+                }
+            },
+            "player_docs": {
+                name: "player_docs",
+                items: [
+                    {
+                        text: "Паспорт",
+                        icon: "doc.png"
+                    },
+                    {
+                        text: "Лицензии на т/с",
+                        icon: "doc.png"
+                    },
+                    {
+                        text: "Паспорт т/с",
+                        icon: "doc.png"
+                    }
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    if (item.text == 'Паспорт') {
+                        mp.trigger(`documents.showTo`, "characterPass");
+                        mp.trigger(`interaction.menu.close`);
+                    }
+                    if (item.text == 'Лицензии на т/с') {
+                        mp.trigger(`documents.showTo`, "driverLicense");
+                        mp.trigger(`interaction.menu.close`);
+                    }
+                    if (item.text == 'Паспорт т/с') {
+                        mp.trigger(`documents.showTo`, "carPass");
+                        mp.trigger(`interaction.menu.close`);
+                    }
+                }
+            },
+            "carPass_list": {
+                name: "carPass_list",
+                items: [
+
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    let plate = item.text.split(' ')[1];
+                    mp.trigger('documents.carPass.list.choose', plate);
+                    mp.trigger(`interaction.menu.close`);
+                }
+            }
+        }
     },
     methods: {
         imgSrc(index) {
@@ -26,12 +182,11 @@ var interactionMenu = new Vue({
             icon: "handshake.png" // иконка пункта меню (необяз.)
         },
         {
-            text: "Обмен",
-            icon: "trade.png"
+            text: "Обмен"
         },
         {
             text: "Документы",
-            icon: "card.png"
+            icon: "doc.png"
         },
         {
             text: "Новый пункт"

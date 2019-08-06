@@ -1,18 +1,19 @@
-mp.events.add('playerEnterVehicle', (vehicle, seat) => { ///Убираем автозаведение автомобиля персонажем
-    if (mp.players.local.getSeatIsTryingToEnter() !== -1 || vehicle.getIsEngineRunning()) {
-        return;
-    }
-    vehicle.setEngineOn(false, true, true);
-    // setTimeout(()=>{
+let breakdowns = require('./vehicles/breakdowns.js');
 
-    // }, 4000);
-
-});
-
+let currentSirenState = false;
 
 mp.events.add("playerLeaveVehicle", () => {
     mp.callCEFV('speedometer.arrow = 0');
     mp.callCEFV('speedometer.emergency = false');
+    setTimeout(()=> {
+        try {
+            currentSirenState = false;
+        } catch (err) {
+            mp.chat.debug('currentSirenState = false error')
+        }
+
+    }, 2000);
+
 });
 
 mp.events.addDataHandler("engine", (entity) => {
@@ -24,47 +25,69 @@ mp.events.addDataHandler("engine", (entity) => {
 });
 
 setInterval(() => { /// Синхронизация двигателя
-    var player = mp.players.local;
-    if (player.vehicle && mp.vehicles.exists(player.vehicle)) {
-        var engine = player.vehicle.getVariable('engine');
-
-        player.vehicle.setUndriveable(!engine);
-        player.vehicle.setEngineOn(engine, true, true);
+    try {
+        var player = mp.players.local;
+        if (player.vehicle && mp.vehicles.exists(player.vehicle)) {
+            var engine = player.vehicle.getVariable('engine') || false;
+    
+            player.vehicle.setUndriveable(!engine);
+            player.vehicle.setEngineOn(engine, true, true);
+        }
+    } catch (err) {
+        mp.chat.debug('engine sync error');
     }
+
 }, 100);
+
+let lastLightState;
+let lightState = 0;
+let lastLockStatus;
 
 speedometerUpdateTimer = setInterval(() => { /// Обновление спидометра
 
-    if ((!mp.players.local.vehicle) || (mp.players.local.vehicle.getPedInSeat(-1) != mp.players.local.handle)) return;
+    try {
+        if ((!mp.players.local.vehicle) || (mp.players.local.vehicle.getPedInSeat(-1) != mp.players.local.handle)) return;
 
-    let engine = mp.players.local.vehicle.getIsEngineRunning();
-    let lastEngine;
-    if (engine != lastEngine) {
-        if (!engine) {
-            mp.callCEFV(`speedometer.isActive = false`);
-            lastEngine = false;
-        } else {
-            mp.callCEFV(`speedometer.isActive = true`);
-            lastEngine = true;
+        let engine = mp.players.local.vehicle.getIsEngineRunning();
+        let lastEngine;
+        if (engine != lastEngine) {
+            if (!engine) {
+                mp.callCEFV(`speedometer.isActive = false`);
+                lastEngine = false;
+            } else {
+                mp.callCEFV(`speedometer.isActive = true`);
+                lastEngine = true;
+            }
         }
+    
+        let speed = Math.floor(mp.players.local.vehicle.getSpeed() * 3.6);
+        mp.callCEFV(`speedometer.speed = ${speed}`);
+    
+        let lights = mp.players.local.vehicle.getLightsState(1, 1); /// Фары
+
+        let low = lights.lightsOn;
+        let high = lights.highbeamsOn;
+        if (low == 0 && high == 0) lightState = 0;
+        if (low == 0 && high == 1) lightState = 1;
+        if (low == 1 && high == 0) lightState = 2;
+        if (low == 1 && high == 1) lightState = 3;
+        if (lastLightState != lightState) {
+            mp.callCEFV(`speedometer.headlights = ${lightState}`);
+            lastLightState = lightState;
+        }
+        let lockStatus = mp.players.local.vehicle.getDoorLockStatus();
+        if (lockStatus != lastLockStatus) {
+            lastLockStatus = lockStatus;
+            if (lockStatus == 1) {
+                mp.callCEFV(`speedometer.lock = 0`);
+            } else {
+                mp.callCEFV(`speedometer.lock = 1`);
+            }
+        }
+    } catch (err) {
+        mp.chat.debug('speedometerUpdateTimer error');
     }
 
-    let speed = Math.floor(mp.players.local.vehicle.getSpeed() * 3.6);
-    mp.callCEFV(`speedometer.speed = ${speed}`);
-
-    var lights = mp.players.local.vehicle.getLightsState(1, 1); /// Фары
-    var lastLightState;
-    var lightState = 0;
-    var low = lights.lightsOn;
-    var high = lights.highbeamsOn;
-    if (low == 0 && high == 0) lightState = 0;
-    if (low == 0 && high == 1) lightState = 1;
-    if (low == 1 && high == 0) lightState = 2;
-    if (low == 1 && high == 1) lightState = 3;
-    if (lastLightState != lightState) {
-        mp.callCEFV(`speedometer.headlights = ${lightState}`);
-        lastLightState = lightState;
-    }
 
 }, 100);
 
@@ -140,28 +163,37 @@ function startMileageCounter() {
     lastPos = player.position;
     stopMileageCounter();
     mileageTimer = setInterval(() => {
-        var vehicle = player.vehicle;
-        if (!vehicle) return stopMileageCounter();
+        try {
+            var vehicle = player.vehicle;
+            if (!vehicle) return stopMileageCounter();
+    
+            var dist = (vehicle.position.x - lastPos.x) * (vehicle.position.x - lastPos.x) + (vehicle.position.y - lastPos.y) * (vehicle.position.y - lastPos.y) +
+                (vehicle.position.z - lastPos.z) * (vehicle.position.z - lastPos.z);
+            dist = Math.sqrt(dist);
+            if (dist > 200) dist = 50;
+            dist /= 1000;
+    
+            currentDist += dist;
+            lastPos = vehicle.position;
+    
+            var mileage = vehicle.mileage + currentDist;
+            mp.events.call('vehicles.speedometer.mileage.update', mileage);
+        } catch (err) {
+            mp.chat.debug('mileageTimer error');
+        }
 
-        var dist = (vehicle.position.x - lastPos.x) * (vehicle.position.x - lastPos.x) + (vehicle.position.y - lastPos.y) * (vehicle.position.y - lastPos.y) +
-            (vehicle.position.z - lastPos.z) * (vehicle.position.z - lastPos.z);
-        dist = Math.sqrt(dist);
-        if (dist > 200) dist = 50;
-        dist /= 1000;
-
-        currentDist += dist;
-        lastPos = vehicle.position;
-
-        var mileage = vehicle.mileage + currentDist;
-        mp.events.call('vehicles.speedometer.mileage.update', mileage);
     }, 1000);
     mileageUpdateTimer = setInterval(() => {
-        var vehicle = player.vehicle;
-        if (!vehicle) return stopMileageCounter();
-        if (currentDist < 0.1) return;
-        mp.events.callRemote(`vehicles.mileage.add`, currentDist);
-        vehicle.mileage += currentDist;
-        currentDist = 0;
+        try {
+            var vehicle = player.vehicle;
+            if (!vehicle) return stopMileageCounter();
+            if (currentDist < 0.1) return;
+            mp.events.callRemote(`vehicles.mileage.add`, currentDist);
+            vehicle.mileage += currentDist;
+            currentDist = 0;
+        } catch (err) {
+            mp.chat.debug('mileageUpdateTimer error');
+        }
     }, 60000);
 };
 
@@ -176,7 +208,7 @@ function stopMileageCounter() {
 };
 
 mp.keys.bind(0x25, true, function () {
-
+    if (mp.busy.includes()) return;
     var player = mp.players.local;
     var vehicle = player.vehicle;
     if (!vehicle) return;
@@ -198,7 +230,7 @@ mp.keys.bind(0x25, true, function () {
 });
 
 mp.keys.bind(0x27, true, function () {
-
+    if (mp.busy.includes()) return;
     var player = mp.players.local;
     var vehicle = player.vehicle;
     if (!vehicle) return;
@@ -220,6 +252,7 @@ mp.keys.bind(0x27, true, function () {
 
 
 mp.keys.bind(0x28, false, () => {
+    if (mp.busy.includes()) return;
     var player = mp.players.local;
     var vehicle = player.vehicle;
     if (!vehicle) return;
@@ -252,11 +285,120 @@ mp.events.addDataHandler("rightTurnSignal", (entity) => {
     entity.setIndicatorLights(0, right);
 });
 
-mp.events.add('entityStreamIn', (entity) => {
-    if (entity.type == 'vehicle') {
-        var left = entity.getVariable("leftTurnSignal");
-        var right = entity.getVariable("rightTurnSignal");
-        entity.setIndicatorLights(1, left);
-        entity.setIndicatorLights(0, right);
+mp.events.addDataHandler("hood", (entity) => {
+    var hood = entity.getVariable('hood');
+    if (hood) {
+        entity.setDoorOpen(4, false, false);
+    }
+    else {
+        entity.setDoorShut(4, false);
     }
 });
+
+
+mp.events.addDataHandler("trunk", (entity) => {
+    var trunk = entity.getVariable('trunk');
+    if (trunk) {
+        entity.setDoorOpen(5, false, false);
+    } else {
+        entity.setDoorShut(5, false);
+    }
+});
+
+mp.events.addDataHandler("sirenSound", (entity) => {
+    var sirenSound = entity.getVariable("sirenSound");
+    entity.setSirenSound(sirenSound);
+});
+
+mp.events.addDataHandler("sirenLights", (entity) => {
+    var sirenLights = entity.getVariable("sirenLights");
+    entity.setSiren(sirenLights);
+});
+
+mp.events.add('entityStreamIn', (entity) => {
+    if (entity.type == 'vehicle') {
+        let left = entity.getVariable("leftTurnSignal") || false;
+        let right = entity.getVariable("rightTurnSignal") || false;
+        entity.setIndicatorLights(1, left);
+        entity.setIndicatorLights(0, right);
+
+        let hood = entity.getVariable("hood") || false;
+        let trunk = entity.getVariable("trunk") || false;
+
+        let sirenLights = entity.getVariable("sirenLights") || false;
+        let sirenSound = entity.getVariable("sirenSound") || false;
+
+        if (hood) {
+            entity.setDoorOpen(4, false, false);
+        } else {
+            entity.setDoorShut(4, false);
+        }
+
+        if (trunk) {
+            entity.setDoorOpen(5, false, false);
+        } else {
+            entity.setDoorShut(5, false);
+        }
+
+        entity.setSiren(sirenLights);
+        entity.setSirenSound(sirenSound);
+    }
+});
+
+mp.events.add('vehicles.lock', () => {
+    let veh = mp.getCurrentInteractionEntity();
+    if (!veh) return;
+    if (veh.type != 'vehicle') return;
+    mp.chat.debug('lock');
+    mp.events.callRemote('vehicles.lock', veh.remoteId);
+})
+
+mp.events.add('vehicles.hood', () => {
+    let veh = mp.getCurrentInteractionEntity();
+    if (!veh) return;
+    if (veh.type != 'vehicle') return;
+
+    if (veh.getVariable("hood")) {
+        mp.events.callRemote('vehicles.hood', veh.remoteId, false);
+    } else {
+        mp.events.callRemote('vehicles.hood', veh.remoteId, true);
+    }
+});
+
+mp.events.add('vehicles.trunk', () => {
+    let veh = mp.getCurrentInteractionEntity();
+    if (!veh) return;
+    if (veh.type != 'vehicle') return;
+
+    if (veh.getVariable("trunk")) {
+        mp.events.callRemote('vehicles.trunk', veh.remoteId, false);
+    } else {
+        mp.events.callRemote('vehicles.trunk', veh.remoteId, true);
+    }
+});
+
+mp.events.add('vehicles.explode', () => {
+    let veh = mp.getCurrentInteractionEntity();
+    if (!veh) return;
+    if (veh.type != 'vehicle') return;
+    mp.events.callRemote('vehicles.explode', veh.remoteId);
+});
+
+mp.events.add('vehicles.siren.sound', () => {
+    let veh = mp.getCurrentInteractionEntity();
+    if (!veh) return;
+    if (veh.type != 'vehicle') return;
+    mp.events.callRemote('vehicles.siren.sound', veh.remoteId);
+});
+
+let sirenLightsUpdater = setInterval(() => {
+    try {
+        if (!mp.players.local.vehicle) return;
+        if (currentSirenState == mp.players.local.vehicle.isSirenOn()) return;
+        mp.events.callRemote('vehicles.siren.lights');
+        currentSirenState = mp.players.local.vehicle.isSirenOn();
+    } catch (err) {
+        mp.chat.debug('sirenLightsUpdater error');
+    }
+
+}, 1000);

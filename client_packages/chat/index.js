@@ -71,8 +71,9 @@ mp.events.add('chat.load', () => {
     mp.callCEFR('setTimeChat', [true]);
 
     mp.keys.bind(0x54, true, function () {
-
-        if (mp.busy.includes('carshow')) return;
+        
+        if (mp.busy.includes()) return;
+        mp.busy.add('chat');
         isOpen = true;
         mp.gui.cursor.show(true, true);
         mp.callCEFR('setFocusChat', [true]);
@@ -80,7 +81,7 @@ mp.events.add('chat.load', () => {
 
     mp.keys.bind(0x76, true, function () {
 
-        if (mp.busy.includes('carshow')) return;
+        if (mp.busy.includes()) return;
 
         if (isOpen) return;
 
@@ -103,6 +104,7 @@ mp.events.add('chat.load', () => {
 mp.events.add('chat.close', () => {
     mp.gui.cursor.show(false, false);
     isOpen = false;
+    mp.busy.remove('chat');
 });
 
 mp.events.add('chat.tags.add', (tagIDs) => {
@@ -143,13 +145,13 @@ mp.events.add('chat.message.get', (type, message) => {
 });
 
 mp.events.add('chat.action.say', (nickname, id, message) => {
-    message = `!{#ffffff}${nickname}[${id}] сказал: ${message}`;
+    message = `!{#ffffff}${nickname}[${id}]: ${message}`;
     mp.events.call('chat.message.push', message);
 });
 
 mp.events.add('chat.action.shout', (nickname, id, message) => {
     if (typeof (message) != "string") message = message.join(' ');
-    message = `!{#ffdfa8}${nickname}[${id}] крикнул: ${message}`;
+    message = `!{#ffdfa8}${nickname}[${id}] кричит: ${message}`;
     mp.events.call('chat.message.push', message);
 });
 

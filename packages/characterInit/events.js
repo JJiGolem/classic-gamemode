@@ -32,7 +32,7 @@ module.exports = {
         player.dimension = 0;
     },
     /// События создания персоонажа
-    "playerJoin": player => {
+    "player.joined": player => {
         player.usingCreator = false;
     },
     "characterInit.create.check": (player, fullname, charData) => {

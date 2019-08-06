@@ -30,19 +30,25 @@ class AnsSell extends Component {
             closeApp();
             addApp({ name: 'Error', form: <Error status='Покупатель не принял условия сделки'/> });
         }
+
+        else if (status === 3) {
+            closeApp();
+            closeApp();
+            addApp({ name: 'Error', form: <Error status='Вы находитесь не рядом с домом'/> });
+        }
     }
 
     render() {
         const { info } = this.props;
 
         return (
-            <Fragment>
+            <div className='back_page-phone-react'>
                 {
                     info.houses[0].sellStatus !== null
-                        ? <div className='back_page-phone-react'>{this.getAnsPage(info.houses[0].sellStatus)}</div>
+                        ? <Fragment>{this.getAnsPage(info.houses[0].sellStatus)}</Fragment>
                         : <div className="loader01" style={{ margin: '10% 5%' }}></div>
                 }
-            </Fragment>
+            </div>
         );
     }
 }

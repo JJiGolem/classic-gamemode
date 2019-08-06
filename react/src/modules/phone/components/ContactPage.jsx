@@ -1,12 +1,10 @@
 import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
 import {addAppDisplay, closeAppDisplay, setAppDisplay} from "../actions/action.apps";
-import {deleteContact, renameContact, startMyCall} from "../actions/action.info";
+import {deleteContact, renameContact, sortContacts, startMyCall} from "../actions/action.info";
 import ActiveCall from "./ActiveCall";
 import {addDialog, renameDialog} from "../actions/action.dialogs";
 import DialogPage from "./DialogPage";
-import Dialogs from "./Dialogs";
-import Contacts from "./Contacts";
 
 class ContactPage extends Component {
     constructor(props) {
@@ -22,6 +20,10 @@ class ContactPage extends Component {
         this.deleteContact = this.deleteContact.bind(this);
         this.callContact = this.callContact.bind(this);
         this.dialogContact = this.dialogContact.bind(this);
+    }
+
+    componentWillUnmount() {
+        this.props.sortContacts();
     }
 
     handleChangeName(e) {
@@ -87,7 +89,7 @@ class ContactPage extends Component {
         const { closeApp, addApp } = this.props;
 
         closeApp();
-        addApp({name: 'Contacts', form: <Contacts />});
+        //addApp({name: 'Contacts', form: <Contacts />});
     }
 
     render() {
@@ -108,7 +110,7 @@ class ContactPage extends Component {
                         </span>
                         <span style={{ float: 'right', opacity: (isDeleted || contact.name === 'Мой номер') ? '0' : '1' }}>
                             <svg style={{float: 'right', margin: '-7% 10% 5% 0' }} xmlns="http://www.w3.org/2000/svg" width="7%" height="7%" viewBox="0 0 33.88 38.88"
-                                 onClick={() => this.deleteContact()}
+                                 onClick={this.deleteContact}
                             >
                                 <path id="_10H" data-name="10H" d="M27,38.88H6.75a3.5,3.5,0,0,1-3.5-3.5V8.5H1.5a1.5,1.5,0,1,1,0-3H9.38v-2A3.5,3.5,0,0,1,12.88,0H20.75a3.5,3.5,0,0,1,3.5,3.5v2H32.38a1.5,1.5,0,0,1,0,3H30.5V35.38A3.5,3.5,0,0,1,27,38.88ZM6.25,8.5V35.38a.507.507,0,0,0,.5.5H27a.5.5,0,0,0,.5-.5V8.5ZM12.88,3a.507.507,0,0,0-.5.5v2h8.869v-2a.5.5,0,0,0-.5-.5Zm9.87,29.94a1.5,1.5,0,0,1-1.5-1.5v-18a1.5,1.5,0,0,1,3,0v18A1.5,1.5,0,0,1,22.75,32.94Zm-5.93,0a1.5,1.5,0,0,1-1.5-1.5v-18a1.5,1.5,0,0,1,3,0v18A1.5,1.5,0,0,1,16.82,32.94Zm-5.94,0a1.5,1.5,0,0,1-1.5-1.5v-18a1.5,1.5,0,0,1,3,0v18A1.5,1.5,0,0,1,10.88,32.94Z" transform="translate(0 0)" fill="#fff"/>
                             </svg>
@@ -179,7 +181,8 @@ const mapDispatchToProps = dispatch => ({
     deleteContact: number => dispatch(deleteContact(number)),
     addDialog: (name, number) => dispatch(addDialog(name, number)),
     closeApp: () => dispatch(closeAppDisplay()),
-    startMyCall: flag => dispatch(startMyCall(flag))
+    startMyCall: flag => dispatch(startMyCall(flag)),
+    sortContacts: () => dispatch(sortContacts())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContactPage);

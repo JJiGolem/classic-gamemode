@@ -13,6 +13,6 @@ export const closeAppDisplay = () => ({
 });
 
 export const deleteApp = appName => ({
-    type: 'DELETE_APP',
+    type: 'DELETE_APP_TO_PHONE',
     payload: appName
 });

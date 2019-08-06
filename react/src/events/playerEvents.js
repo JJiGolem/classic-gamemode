@@ -85,21 +85,21 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
-    myEventEmmiter.on('govSellHouseAns', (ans) => {
+    myEventEmmiter.on('house.sell.toGov.ans', (ans) => {
         dispatch({
             type: 'SET_SELL_STATUS',
             payload: ans
         });
     });
 
-    myEventEmmiter.on('sellHouseAns', (ans) => {
+    myEventEmmiter.on('house.sell.ans', (ans) => {
         dispatch({
             type: 'SET_SELL_STATUS',
             payload: ans
         });
     });
 
-    myEventEmmiter.on('sellHouseInfo', (nick, price) => {
+    myEventEmmiter.on('house.sell.check.ans', (nick, price) => {
         dispatch({
             type: 'SET_SELL_INFO',
             payload: { nick, price }
@@ -123,6 +123,72 @@ export const PlayerEvents = (dispatch, getState) => {
         dispatch({
             type: 'SET_CALL_STATUS',
             payload: ans
+        });
+    });
+
+    myEventEmmiter.on('house.menu', () => {
+        dispatch({
+            type: 'SHOW_HOUSE',
+            payload: true
+        });
+    });
+
+    myEventEmmiter.on('house.load', (info) => {
+        dispatch({
+            type: 'LOAD_INFO_HOUSE',
+            payload: info
+        })
+    });
+
+    myEventEmmiter.on('house.menu.close', () => {
+        dispatch({
+            type: 'CLOSE_HOUSE'
+        });
+    });
+
+    myEventEmmiter.on('house.menu.enter', (place) => {
+        dispatch({
+            type: 'SHOW_ENTER_MENU_HOUSE',
+            payload: place
+        });
+    });
+
+    myEventEmmiter.on('house.menu.enter.close', () => {
+        dispatch({
+            type: 'CLOSE_ENTER_MENU_HOUSE'
+        });
+    });
+
+    myEventEmmiter.on('house.buy.ans', (ans, owner) => {
+        dispatch({
+            type: 'ANS_BUY_HOUSE',
+            payload: {
+                answer: ans,
+                owner: owner
+            }
+        });
+    });
+
+    myEventEmmiter.on('house.enter.ans.err', () => {
+        dispatch({
+            type: 'ANS_ENTER_HOUSE',
+            payload: {
+                answer: 'error',
+            }
+        });
+    });
+
+    myEventEmmiter.on('phone.app.add', (appName, info) => {
+        dispatch({
+            type: 'ADD_APP_TO_PHONE',
+            payload: { appName, info }
+        });
+    });
+
+    myEventEmmiter.on('phone.app.remove', (appName) => {
+        dispatch({
+            type: 'DELETE_APP_TO_PHONE',
+            payload: appName
         });
     });
 };

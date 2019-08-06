@@ -44,7 +44,8 @@ const initialState = {
                 }
             ]
         }
-    ]
+    ],
+    biz: []
 };
 
 export default function info(state = initialState, action) {
@@ -76,6 +77,11 @@ export default function info(state = initialState, action) {
             let indexContact = state.contacts.findIndex(con => con.number === payload.number);
             state.contacts[indexContact].name = payload.newName;
             return state;
+
+        case 'SORT_CONTACTS':
+            newState = { ...state };
+            newState.contacts.sort((a, b) => a.name.localeCompare(b.name));
+            return newState;
 
         case 'SET_CALL_STATUS':
             newState = { ...state };
@@ -118,6 +124,38 @@ export default function info(state = initialState, action) {
 
             if (houseIndex !== -1) {
                 newState.houses.splice(houseIndex, 1);
+            }
+
+            return newState;
+
+        case 'ADD_APP_TO_PHONE':
+            if(payload.appName === 'house') {
+                const newState = {...state};
+                newState.houses.push(payload.info);
+                return newState;
+            } else if(payload.appName === 'biz') {
+                const newState = {...state};
+                newState.biz.push(payload.info);
+                return newState;
+            }
+
+        case 'DELETE_APP_TO_PHONE':
+            if(payload === 'house') {
+                const newState = {...state};
+                newState.houses.length = 0;
+                return newState;
+            } else if(payload === 'biz') {
+                const newState = {...state};
+                newState.biz.length = 0;
+                return newState;
+            }
+
+        case 'PAY_HOUSE_BANK':
+            newState = { ...state };
+            let indPayHouse = newState.houses.findIndex(house => house.name === payload.name);
+
+            if (indPayHouse !== -1) {
+                newState.houses[indPayHouse].days += payload.days;
             }
 
             return newState;

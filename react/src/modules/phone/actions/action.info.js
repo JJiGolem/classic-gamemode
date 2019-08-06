@@ -8,6 +8,10 @@ export const addContact = (contact) => ({
     payload: contact
 });
 
+export const sortContacts = () => ({
+  type: 'SORT_CONTACTS'
+});
+
 export const deleteContact = (number) => ({
     type: 'DELETE_CONTACT',
     payload: number

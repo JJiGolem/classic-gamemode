@@ -25,7 +25,9 @@ export default function apps(state = initialState, action) {
 
         case 'CLOSE_APP':
             const newState = [ ...state ];
-            newState.splice(newState.length - 1, 1);
+            if (newState.length > 1) {
+                newState.splice(newState.length - 1, 1);
+            }
             return newState;
     }
 

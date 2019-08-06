@@ -26,7 +26,12 @@ mp.game.controls.disableControlAction(1, 200, true);    //Pause Menu
 /// mp.utils
 /// Модуль войсчата(подробнее см. в модуле)
 /// mp.speechChanel
-
+/// Скрытие чата
+/// mp.callCEFR('setOpacityChat', [0.0]);
+/// Показ чата
+/// mp.callCEFR('setOpacityChat', [1.0]);
+/// Получение текущей сущности, с которой идет взаимодействие
+/// mp.getCurrentInteractionEntity()
 
 /// Описание основных клиентских переменных:
 /// 1)
@@ -39,6 +44,8 @@ mp.busy.list = new Array();
 /// voicechat
 /// chat
 /// carshow
+/// phone
+/// interaction
 /// END LIST
 /// Добавить модуль (true - операция провшла успешно, false - такой модуль уже содержится в массиве)
 mp.busy.add = function(name) {
@@ -63,3 +70,8 @@ mp.busy.remove = function(name) {
 }
 /// 2)
 /// ...
+
+/// Событие для вызова серверного события из браузера 
+mp.events.add("callRemote", (name, values) => {
+    mp.events.callRemote(name, values);
+})

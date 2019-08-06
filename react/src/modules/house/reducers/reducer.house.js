@@ -1,12 +1,5 @@
 const initialState = {
-    name: 228,
-    area: 'Санта-Моника',
-    class: 'Люкс',
-    numRooms: 4,
-    garage: false,
-    carPlaces: 2,
-    price: 45000,
-    rent: 350,
+
 };
 
 export default function house(state = initialState, action) {
@@ -14,13 +7,11 @@ export default function house(state = initialState, action) {
     var newState;
 
     switch (type) {
+        // case 'SHOW_HOUSE':
+        //     return {};
+
         case 'LOAD_INFO_HOUSE':
             return payload;
-
-        case 'SHOW_HOUSE':
-            newState = { ...state };
-            newState.isShow = payload;
-            return newState;
 
         case 'SET_LOADING_HOUSE':
             newState = { ...state };
@@ -28,24 +19,34 @@ export default function house(state = initialState, action) {
             return newState;
 
         case 'ANS_BUY_HOUSE':
-            newState = { ...state };
-            if (payload.answer == 0) {
-                newState.answer = 'У Вас недостаточно денег для покупки';
+            const newStateBuy = { ...state };
+            newStateBuy.answerBuy = payload.answer;
+            if (payload.answer == 1) {
+                newStateBuy.owner = payload.owner
             }
-            else if (payload.answer == 1) {
-                newState.answer = 'Дом успешно куплен';
-                newState.owner = payload.owner;
-            } else {
-                newState.answer = payload.answer;
-            }
+            newStateBuy.isLoading = false;
+            return newStateBuy;
 
+        case 'BLUR_HOUSE_FORM':
+            newState = { ...state };
+            newState.isBlur = payload;
+            return newState;
+
+        case 'ANS_ENTER_HOUSE':
+            newState = { ...state };
+            newState.answerEnter = payload.answer;
             newState.isLoading = false;
             return newState;
 
-        case 'BLOCK_HOUSE_FORM':
+        case 'CLOSE_ENTER_MENU_HOUSE':
             newState = { ...state };
-            newState.isBlock = payload;
+            if (newState.isBlur) {
+                newState.isBlur = false;
+            }
             return newState;
+
+        case 'CLOSE_HOUSE':
+            return {};
     }
 
     return state;

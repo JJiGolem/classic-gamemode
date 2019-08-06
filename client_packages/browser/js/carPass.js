@@ -4,12 +4,18 @@ var carPass = new Vue({
         show: false,
         header: "Паспорт Т/С",
         id: 3940123342,
-        mark: "Lampadati",
+        vehType: "Автомобиль",
         name: "Felon GT",
         regDate: "06 Дек 2012",
         price: 60000,
         owners: 1,
-        number: "GRYZ12"
+        number: "GYP228"
+    },
+    methods: {
+        close() {
+            this.show = false;
+            mp.trigger('documents.close');
+        }
     },
     computed: {
         fullname() {

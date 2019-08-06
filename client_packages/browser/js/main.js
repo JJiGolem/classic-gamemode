@@ -21,3 +21,13 @@ function prettyMoney(val) {
 function setCursor(enable) {
     mp.invoke('focus', enable);
 }
+
+function cloneObj(inObj) {
+    let outObj = JSON.parse(JSON.stringify(inObj));
+    for (let key in inObj) {
+        if (typeof (inObj[key]) == 'function') {
+            outObj[key] = inObj[key];
+        }
+    }
+    return outObj;
+}

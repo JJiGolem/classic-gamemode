@@ -2,12 +2,12 @@ var currentParkingId;
 
 mp.events.add('parkings.menu.show', (parkingId) => {
     currentParkingId = parkingId;
-    mp.callCEFV(`selectMenu.menu = selectMenu.menus["parkingMenu"]`);
-    mp.callCEFV(`selectMenu.open()`);
+    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["parkingMenu"])`);
+    mp.callCEFV(`selectMenu.show = true`);
 });
 
 mp.events.add('parkings.menu.close', () => {
-    mp.callCEFV(`selectMenu.close()`);
+    mp.callCEFV(`selectMenu.menu = null`);
 });
 
 mp.events.add('parkings.vehicle.get', () => {

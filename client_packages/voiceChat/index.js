@@ -33,6 +33,7 @@ mp.speechChanel.addChannel = (name, maxRange = 0, autoConnection = false, use3d 
 
 /// Подключить выбранного игрока к каналу связи
 mp.speechChanel.connect = (player, channel) => {
+    if (player == null) return;
     let index = listeners.findIndex( x => x.playerId == player.remoteId);
     if (index != -1) {
         if (!listeners[index].channels.includes(channel)) {
@@ -57,6 +58,7 @@ mp.speechChanel.connect = (player, channel) => {
 
 /// Отключить выбранного игрока от канала связи
 mp.speechChanel.disconnect = (player, channel, death = false) => {
+    if (player == null) return;
     let index = listeners.findIndex( x => x.playerId == player.remoteId);
     if (channel == null) {
         index != -1 && listeners.splice(index, 1);
@@ -115,6 +117,7 @@ setInterval(() => {
     /// Автоматическое отключение заданных каналов всех игроков
 	listeners.forEach(listener => {
         let player = mp.players.atRemoteId(listener.playerId);
+        if (player == null) return;
 		if(player.handle !== 0) {
             if (channels[listener.channels[listener.current]].maxRange != 0) {		
                 let dist = mp.game.system.vdist(player.position.x, player.position.y, player.position.z,  
@@ -134,7 +137,7 @@ setInterval(() => {
 		else {
 			mp.speechChanel.disconnect(player, null);
 		}
-	});
+    });
 }, 250);
 
 
@@ -155,3 +158,8 @@ mp.events.add("playerDeath", (player) => {
         mp.speechChanel.disconnect(player, null, true);
     }
 });
+
+// setInterval(() => {
+//     if (!mp.voiceChat.muted) return;
+//     mp.voiceChat.cleanupAndReload(true, true, true);
+// }, 1000);
