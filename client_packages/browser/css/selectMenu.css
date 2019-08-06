@@ -35,7 +35,7 @@
     border: none;
     color: #fff;
     font-family: Chalet-LondonNineteenSixty;
-    font-size: 1.6vh;
+    /* font-size: 1.6vh; */
     outline: none;
     text-align: right;
 }
@@ -74,14 +74,18 @@
 #selectMenu .color-type {
     /* background: blue; */
     border-radius: 0.5vh;;
-    height: 2vh;
-    width: 2vh;
+    height: 1.8vh;
+    width: 1.8vh;
 }
 
 #selectMenu .content {
     background: rgb(0, 0, 0, 0.6);
     border-radius: 0 0 1vh 1vh;
     padding: 1vh 0;
+}
+
+#selectMenu .content input {
+    /* border-bottom: 1px solid #0000; */
 }
 
 #selectMenu .content .item {
@@ -98,7 +102,7 @@
 }
 
 #selectMenu .content .item.selected input {
-    border-bottom: 1px solid #000;
+    /* border-bottom: 1px solid #000; */
     color: #000;
     text-align: center;
 }
