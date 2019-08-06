@@ -4,7 +4,10 @@ let characterInit = require("./index.js");
 let utils = call("utils");
 
 module.exports = {
-    "auth.done": async (player) => {
+    "auth.done": (player) => {
+        mp.events.call('characterInit.start', player);
+    },
+    "characterInit.start": async (player) => {
         let charInfos = await characterInit.init(player);
         player.call('characterInit.init', [charInfos]);
     },

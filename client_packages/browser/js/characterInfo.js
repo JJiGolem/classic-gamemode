@@ -16,8 +16,9 @@ var characterInfo = new Vue({
             this.characters.push(character);
         },
         onClickCreateCharacter() {
-            console.log("Кликнули на создание персонажа");
-            // TODO: Реализация...
+            if (loader.show) return;
+            loader.show = true;
+            mp.trigger("characterInit.choose");
         }
     }
 });
