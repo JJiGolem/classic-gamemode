@@ -67,7 +67,7 @@ var interactionMenu = new Vue({
                 }
             },
             "vehicle_ejectlist": {
-                name: "vehicle_ejectlist", 
+                name: "vehicle_ejectlist",
                 items: [
                 ],
                 handler(index) {
@@ -77,7 +77,7 @@ var interactionMenu = new Vue({
                 }
             },
             "player_ownmenu": {
-                name: "player_ownmenu", 
+                name: "player_ownmenu",
                 items: [
                     {
                         text: "Мои документы",
@@ -97,7 +97,7 @@ var interactionMenu = new Vue({
                 }
             },
             "player_interaction": {
-                name: "player_interaction", 
+                name: "player_interaction",
                 items: [
                     {
                         text: "Познакомиться",
@@ -116,7 +116,7 @@ var interactionMenu = new Vue({
                 }
             },
             "player_docs": {
-                name: "player_docs", 
+                name: "player_docs",
                 items: [
                     {
                         text: "Паспорт",
@@ -148,7 +148,7 @@ var interactionMenu = new Vue({
                 }
             },
             "carPass_list": {
-                name: "carPass_list", 
+                name: "carPass_list",
                 items: [
 
                 ],

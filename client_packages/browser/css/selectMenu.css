@@ -187,7 +187,7 @@
 }
 
 /* Колесо загрузки в меню выбора */
-/* #selectMenu .loader {
+#selectMenu .loader {
     left: 45%;
     position: absolute;
     top: 40%;
@@ -225,7 +225,7 @@
     height: 5vh !important;
     -webkit-transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
     transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
-} */
+}
 
 /* Анимация */
 
