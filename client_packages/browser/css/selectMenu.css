@@ -146,8 +146,11 @@
     border: 1px solid #0000;
     height: 2vh;
     margin: 0 0.4vh;
-    opacity: 0.3;
     width: 2vh;
+}
+
+#selectMenu .selector.select-color > div:not(.arrow) {
+    opacity: 0.5;
 }
 
 #selectMenu .selector.select-color > div.active:not(.arrow) {
