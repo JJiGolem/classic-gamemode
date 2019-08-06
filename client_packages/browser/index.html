@@ -185,7 +185,7 @@
             <div class="arrow arr-up" :class="{active: menu.j > 0}"></div>
             <div class="items">
                 <div class="item" v-for="(item, index) in items" v-show="isItemShow(index)" :class="{selected: index == menu.i}">
-                    <div class="name">{{ item.text }}</div>
+                    <div class="name" :class="{button: item.location}" :style="{'text-align': item.location}">{{ item.text }}</div>
                     <div class="value" v-if="item.values && valuesType(index) == 0 || valuesType(index) == 2">{{ item.values[item.i] }}</div>
                     <div class="value color-type" v-else-if="item.values && valuesType(index) == 1" :style="{background: item.values[item.i]}"></div>
                     <div class="value" v-else-if="item.values && valuesType(index) == 3">

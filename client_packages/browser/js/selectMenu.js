@@ -775,7 +775,12 @@ var selectMenu = new Vue({
             j: 0, // индекс первого видимого значения пункта меню (актуально только для цветов)
         },
         {
-            text: "Обычный тип 6"
+            text: "Центр",
+            location: "center" // расположение кнопки (left | center | right)
+        },
+        {
+            text: "Справа",
+            location: "right" // расположение кнопки (left | center | right)
         },
         {
             text: "Выборочный тип 7",

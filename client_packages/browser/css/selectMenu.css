@@ -111,6 +111,10 @@
     padding: 1vh 0;
 }
 
+#selectMenu .content .items .button {
+    width: 100%;
+}
+
 #selectMenu .header {
     color: #f1d941;
     background: rgb(0, 0, 0, 0.6);
