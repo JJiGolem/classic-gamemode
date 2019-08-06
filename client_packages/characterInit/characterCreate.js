@@ -188,7 +188,7 @@ mp.events.add("characterInit.create", (active, rawCharData) => {
         camInit();
         applyTorsoCamera();
         
-        mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["characterCreateMainMenu"])`);
+        mp.callCEFV(`selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];`);
         mp.callCEFV(`selectMenu.show = true`);
     } else {
         mp.gui.cursor.show(false, false);

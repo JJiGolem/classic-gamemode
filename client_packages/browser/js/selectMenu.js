@@ -10,6 +10,8 @@ var selectMenu = new Vue({
         maxColorValues: 11,
         // Доступные структуры меню для использования
         menus: {
+            /// characterInit
+            /// Меню для создания персоонажа
             "characterCreateMainMenu": {
                 name: "charactercreatemain",
                 header: "Главное меню", // заголовок меню, видимый на экране
@@ -47,27 +49,31 @@ var selectMenu = new Vue({
                     };
                     if (eventName == "onItemValueChanged" && e.itemName == "Пол") {
                         selectMenu.menus["characterCreateMainMenu"].items[0].i = e.valueIndex;
+                        selectMenu.menus["characterCreateParentsMenu"].items[2].i = e.valueIndex == 0 ? 0 : 4;
                         selectMenu.menus["characterCreateViewMenu"].items = e.valueIndex == 0 ? selectMenu.menus["characterCreateViewMenu"].itemsMale 
                             : selectMenu.menus["characterCreateViewMenu"].itemsFemale;
-                        //mp.trigger('characterInit.create.setGender', e.valueIndex);
+                        mp.trigger('characterInit.create.setGender', e.valueIndex);
+                    }
+                    if (eventName == "onEscapePressed") {
+                        selectMenu.menu = selectMenu.menus["characterCreateExitMenu"];
                     }
                     if (eventName == "onItemSelected") {
                         switch(e.itemName) {
                             case "Наследственность":
-                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateParentsMenu"]);
+                                selectMenu.menu = selectMenu.menus["characterCreateParentsMenu"];
                                 break;
                             case "Внешность":
-                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateViewMenu"]);
+                                selectMenu.menu = selectMenu.menus["characterCreateViewMenu"];
                                 break;
                             case "Сохранить и продолжить":
                                 mp.trigger('characterInit.create.continue');
-                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateNameMenu"]);
+                                selectMenu.menu = selectMenu.menus["characterCreateNameMenu"];
                                 break;
                             case "Сбросить все изменения":
-                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateResetMenu"]);
+                                selectMenu.menu = selectMenu.menus["characterCreateResetMenu"];
                                 break;
                             case "Выйти без сохранения":
-                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateExitMenu"]);
+                                selectMenu.menu = selectMenu.menus["characterCreateExitMenu"];
                                 break;
                         }
                     }
@@ -111,13 +117,18 @@ var selectMenu = new Vue({
                         itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
                         valueIndex: item.i, // индекс значения пункта меню
                     };
+                    if (eventName == "onEscapePressed") {
+                        selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
+                    }
                     if (eventName == "onItemValueChanged") {
                         switch(e.itemName) {
                             case "Мать":
-                                mp.trigger('characterInit.create.setMother', e.valueIndex);
+                                let mothers = [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 45];
+                                mp.trigger('characterInit.create.setMother', mothers[e.valueIndex]);
                                 break;
                             case "Отец":
-                                mp.trigger('characterInit.create.setFather', e.valueIndex);
+                                let fathers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 42, 43, 44];
+                                mp.trigger('characterInit.create.setFather', fathers[e.valueIndex]);
                                 break;
                             case "Сходство":
                                 let sim = [0, 25, 50, 75, 100];
@@ -132,7 +143,7 @@ var selectMenu = new Vue({
                     if (eventName == "onItemSelected") {
                         switch(e.itemName) {
                             case "Назад":
-                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateMainMenu"]);
+                                selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
                                 break;
                         }
                     }
@@ -177,12 +188,204 @@ var selectMenu = new Vue({
                     },
                     {
                         text: "Волосы на лице",
-                        values: ['#e0c2aa', '#804e40', '#a1765a', '#ebad69', '#cb7d50', '#c47f5b'],
+                        values: ["Нет", "Легкая щетина", "Бальбоа", "Круглая борода", "Эспаньолка", "Козлиная бородка", "Островок", "Тонкая бородка", "Неряха", "Мушкетер", "Усы", "Ухоженная борода", "Щетина", "Тонкая бородка", "Подкова", "Карандаш", "Ремень", "Бальбо и баки", "Баки", "Неряшливая борода", "Дали", "Дали и борода", "Руль", "Фауст", "Англичанин", "Голливуд", "Фу Манчу", "Островок с баками", "Широкие баки", "Ширма"],
                         i: 0
                     },
                     {
                         text: "Цвет волос на лице",
                         values: ['#e0c2aa', '#804e40', '#a1765a', '#ebad69', '#cb7d50', '#c47f5b'],
+                        i: 0
+                    },
+                    {
+                        text: "Брови",
+                        values: ["Нет", "Аккуратные", "Модные", "Клеопатра", "Ироничные", "Женственные", "Обольстительные", "Нахмуренные", "Чикса", "Триумф", "Беззаботные", "Дугой", "Мышка", "Двойная высечка", "Впалые", "Карандаш", "Выщипанные", "Прямые", "Естественные", "Пышные", "Неопрятные", "Широкие", "Обычные", "Южноевропейские", "Ухоженные", "Кустистые", "Перышки", "Колючки", "Монобровь", "Крылатые", "Тройная высечка", "Высечка дугой", "Подрезанные", "Сходящие на нет", "Высечка"],
+                        i: 0
+                    },
+                    {
+                        text: "Высота бровей",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Выше", // слово слева от ползунка
+                        max: "Ниже", // слово справа от ползунка
+                    },
+                    {
+                        text: "Глубина бровей",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Внутрь", // слово слева от ползунка
+                        max: "Наружу", // слово справа от ползунка
+                    },
+                    {
+                        text: "Цвет бровей",
+                        values: ["#211f1c", "#55362f", "#4b382e", "#4d291b",
+                        "#70351e", "#904422", "#a55c36", "#a56944",
+                        "#ac744f", "#ae7d57", "#be9161", "#cda670",
+                        "#c8a370", "#d5a861", "#e0b775", "#e8c487",
+                        "#b78457", "#a85d3d", "#963523", "#7c1411",
+                        "#921812", "#a81c14", "#cb371e", "#de411b",
+                        "#be532f", "#d34d21", "#907867", "#a78e7a",
+                        "#d4bda9", "#e4cfbe"],
+                        i: 0
+                    },
+                    {
+                        text: "Размер глаз",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Шире", // слово слева от ползунка
+                        max: "Уже", // слово справа от ползунка
+                    },
+                    {
+                        text: "Цвет глаз",
+                        values: ["#50c878", "#008000", "#add8e6", "#0077be", "#b5651d", "#654321", "#d0c383", "#a9a9a9"],
+                        i: 0
+                    },
+                    {
+                        text: "Глубина переносицы",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Округлая", // слово слева от ползунка
+                        max: "Впалая", // слово справа от ползунка
+                    },
+                    {
+                        text: "Сдвиг переносицы",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Левее", // слово слева от ползунка
+                        max: "Правее", // слово справа от ползунка
+                    },
+                    {
+                        text: "Высота расположения носа",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Выше", // слово слева от ползунка
+                        max: "Ниже", // слово справа от ползунка
+                    },
+                    {
+                        text: "Ширина носа",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Уже", // слово слева от ползунка
+                        max: "Шире", // слово справа от ползунка
+                    },
+                    {
+                        text: "Длина кончика носа",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Больше", // слово слева от ползунка
+                        max: "Меньше", // слово справа от ползунка
+                    },
+                    {
+                        text: "Высота кончика носа",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Выше", // слово слева от ползунка
+                        max: "Ниже", // слово справа от ползунка
+                    },
+                    {
+                        text: "Ширина скул",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Уже", // слово слева от ползунка
+                        max: "Шире", // слово справа от ползунка
+                    },
+                    {
+                        text: "Глубина щек",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Округлые", // слово слева от ползунка
+                        max: "Впалые", // слово справа от ползунка
+                    },
+                    {
+                        text: "Толщина губ",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Шире", // слово слева от ползунка
+                        max: "Уже", // слово справа от ползунка
+                    },
+                    {
+                        text: "Форма челюсти",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Меньше", // слово слева от ползунка
+                        max: "Больше", // слово справа от ползунка
+                    },
+                    {
+                        text: "Ширина челюсти",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Уже", // слово слева от ползунка
+                        max: "Шире", // слово справа от ползунка
+                    },
+                    {
+                        text: "Высота подбородка",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Выше", // слово слева от ползунка
+                        max: "Ниже", // слово справа от ползунка
+                    },
+                    {
+                        text: "Глубина подбородка",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Короткий", // слово слева от ползунка
+                        max: "Длинный", // слово справа от ползунка
+                    },
+                    {
+                        text: "Ширина подбородка",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Уже", // слово слева от ползунка
+                        max: "Шире", // слово справа от ползунка
+                    },
+                    {
+                        text: "Выступ подбородка",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Наружу", // слово слева от ползунка
+                        max: "Внутрь", // слово справа от ползунка
+                    },
+                    {
+                        text: "Ширина шеи",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Уже", // слово слева от ползунка
+                        max: "Шире", // слово справа от ползунка
+                    },
+                    {
+                        text: "Дефекты кожи",
+                        values: ["Нет", "Корь", "Прыщи", "Пятна", "Сыпь", "Угри", "Налет", "Пустулы", "Прыщики", "Тяжелое акне", "Акне", "Сыпь на щеках", "Сыпь на лице", "Шрамы", "Пубертат", "Язва", "Сыпь на подбородке", "Два лица", "Зона Т", "Сальный", "Крапленый", "Следы акне", "Большие   шрамы", "Герпес", "Лишай"],
+                        i: 0
+                    },
+                    {
+                        text: "Старение кожи",
+                        values: ["Нет", "Вороньи лапки", "Первые признаки", "Средний возраст", "Признаки старения", "Депрессия", "Преклонный возраст", "Старость", "Обветренная кожа", "Морщинистая кожа", "Обвислая кожа", "Тяжелая жизнь", "Винтаж", "Пенсионер", "Наркоман", "Старик"],
+                        i: 0
+                    },
+                    {
+                        text: "Повреждение кожи",
+                        values: ["Нет", "Неровная", "Наждак", "Пятнистая", "Грубая", "Жесткая", "Шероховатая", "Загрубелая", "Неровная", "Со складками", "Потрескавшаяся", "Твердая"],
+                        i: 0
+                    },
+                    {
+                        text: "Родинки и веснушки",
+                        values: ["Нет", "Ангел", "Повсюду", "Местами", "Единичные", "Переносица", "Куколка", "Фея", "Загорелая", "Родинки", "Ряд", "Модель", "Случайность", "Родинки", "Дождик", "Удвоенность", "Одна сторона", "Пары", "Бородавки"],
+                        i: 0
+                    },
+                    {
+                        text: "Волосы на теле",
+                        values: ["Нет", "Естественные", "Полоса", "Дерево", "Волосатый", "Гризли", "Горилла", "Бритая горилла", "Бикини", "Удар молнии", "Обратная молния", "Сердце", "Боль в груди", "Счастливчик", "Череп", "Улитка", "Слизень", "Волосатые руки"],
+                        i: 0
+                    },
+                    {
+                        text: "Цвет волос на теле",
+                        values: ["#211f1c", "#55362f", "#4b382e", "#4d291b",
+                        "#70351e", "#904422", "#a55c36", "#a56944",
+                        "#ac744f", "#ae7d57", "#be9161", "#cda670",
+                        "#c8a370", "#d5a861", "#e0b775", "#e8c487",
+                        "#b78457", "#a85d3d", "#963523", "#7c1411",
+                        "#921812", "#a81c14", "#cb371e", "#de411b",
+                        "#be532f", "#d34d21", "#907867", "#a78e7a",
+                        "#d4bda9", "#e4cfbe"],
                         i: 0
                     },
                     {
@@ -202,18 +405,141 @@ var selectMenu = new Vue({
                     },
                     {
                         text: "Цвет волос",
-                        values: ["#211f1c", "#55362f", "#4b382e", "#4d291b", 
-                        "#70351e", "#904422", "#a55c36", "#a56944", 
-                        "#ac744f", "#ae7d57", "#be9161", "#cda670", 
-                        "#c8a370", "#d5a861", "#e0b775", "#e8c487", 
-                        "#b78457", "#a85d3d", "#963523", "#7c1411", 
-                        "#921812", "#a81c14", "#cb371e", "#de411b", 
-                        "#be532f", "#d34d21", "#907867", "#a78e7a", 
+                        values: ["#211f1c", "#55362f", "#4b382e", "#4d291b",
+                        "#70351e", "#904422", "#a55c36", "#a56944",
+                        "#ac744f", "#ae7d57", "#be9161", "#cda670",
+                        "#c8a370", "#d5a861", "#e0b775", "#e8c487",
+                        "#b78457", "#a85d3d", "#963523", "#7c1411",
+                        "#921812", "#a81c14", "#cb371e", "#de411b",
+                        "#be532f", "#d34d21", "#907867", "#a78e7a",
                         "#d4bda9", "#e4cfbe"],
                         i: 0
                     },
                     {
                         text: "Дополнительный цвет волос",
+                        values: ["#211f1c", "#55362f", "#4b382e", "#4d291b",
+                        "#70351e", "#904422", "#a55c36", "#a56944",
+                        "#ac744f", "#ae7d57", "#be9161", "#cda670",
+                        "#c8a370", "#d5a861", "#e0b775", "#e8c487",
+                        "#b78457", "#a85d3d", "#963523", "#7c1411",
+                        "#921812", "#a81c14", "#cb371e", "#de411b",
+                        "#be532f", "#d34d21", "#907867", "#a78e7a",
+                        "#d4bda9", "#e4cfbe"],
+                        i: 0
+                    },
+                    {
+                        text: "Брови",
+                        values: ["Нет", "Аккуратные", "Модные", "Клеопатра", "Ироничные", "Женственные", "Обольстительные", "Нахмуренные", "Чикса", "Триумф", "Беззаботные", "Дугой", "Мышка", "Двойная высечка", "Впалые", "Карандаш", "Выщипанные", "Прямые", "Естественные", "Пышные", "Неопрятные", "Широкие", "Обычные", "Южноевропейские", "Ухоженные", "Кустистые", "Перышки", "Колючки", "Монобровь", "Крылатые", "Тройная высечка", "Высечка дугой", "Подрезанные", "Сходящие на нет", "Высечка"],
+                        i: 0
+                    },
+                    {
+                        text: "Высота бровей",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Выше", // слово слева от ползунка
+                        max: "Ниже", // слово справа от ползунка
+                    },
+                    {
+                        text: "Глубина бровей",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Внутрь", // слово слева от ползунка
+                        max: "Наружу", // слово справа от ползунка
+                    },
+                    {
+                        text: "Цвет бровей",
+                        values: ["#211f1c", "#55362f", "#4b382e", "#4d291b",
+                        "#70351e", "#904422", "#a55c36", "#a56944",
+                        "#ac744f", "#ae7d57", "#be9161", "#cda670",
+                        "#c8a370", "#d5a861", "#e0b775", "#e8c487",
+                        "#b78457", "#a85d3d", "#963523", "#7c1411",
+                        "#921812", "#a81c14", "#cb371e", "#de411b",
+                        "#be532f", "#d34d21", "#907867", "#a78e7a",
+                        "#d4bda9", "#e4cfbe"],
+                        i: 0
+                    },
+                    {
+                        text: "Размер глаз",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Шире", // слово слева от ползунка
+                        max: "Уже", // слово справа от ползунка
+                    },
+                    {
+                        text: "Цвет глаз",
+                        values: ["#50c878", "#008000", "#add8e6", "#0077be", "#b5651d", "#654321", "#d0c383", "#a9a9a9"],
+                        i: 0
+                    },
+                    {
+                        text: "Глубина переносицы",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Округлая", // слово слева от ползунка
+                        max: "Впалая", // слово справа от ползунка
+                    },
+                    {
+                        text: "Сдвиг переносицы",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Левее", // слово слева от ползунка
+                        max: "Правее", // слово справа от ползунка
+                    },
+                    {
+                        text: "Высота расположения носа",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Выше", // слово слева от ползунка
+                        max: "Ниже", // слово справа от ползунка
+                    },
+                    {
+                        text: "Ширина носа",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Уже", // слово слева от ползунка
+                        max: "Шире", // слово справа от ползунка
+                    },
+                    {
+                        text: "Длина кончика носа",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Больше", // слово слева от ползунка
+                        max: "Меньше", // слово справа от ползунка
+                    },
+                    {
+                        text: "Высота кончика носа",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Выше", // слово слева от ползунка
+                        max: "Ниже", // слово справа от ползунка
+                    },
+                    {
+                        text: "Ширина скул",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Уже", // слово слева от ползунка
+                        max: "Шире", // слово справа от ползунка
+                    },
+                    {
+                        text: "Глубина щек",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Округлые", // слово слева от ползунка
+                        max: "Впалые", // слово справа от ползунка
+                    },
+                    {
+                        text: "Толщина губ",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Шире", // слово слева от ползунка
+                        max: "Уже", // слово справа от ползунка
+                    },
+                    {
+                        text: "Помада",
+                        values: ["Нет", "Цветная матовая", "Цветной блеск", "Матовая линия", "Блестящая линия", "Сильная матовая", "Сильный блеск", "Голая матовая", "Голый блеск", "Нечеткая", "Гейша"],
+                        i: 0
+                    },
+                    {
+                        text: "Цвет помады",
                         values: ["#211f1c", "#55362f", "#4b382e", "#4d291b", 
                         "#70351e", "#904422", "#a55c36", "#a56944", 
                         "#ac744f", "#ae7d57", "#be9161", "#cda670", 
@@ -221,7 +547,84 @@ var selectMenu = new Vue({
                         "#b78457", "#a85d3d", "#963523", "#7c1411", 
                         "#921812", "#a81c14", "#cb371e", "#de411b", 
                         "#be532f", "#d34d21", "#907867", "#a78e7a", 
-                        "#d4bda9", "#e4cfbe"],
+                        "#d4bda9", "#e4cfbe", "#775262", "#8f5973", 
+                        "#ad4a6b", "#f845cc", "#fc5794", "#f9a1b2", 
+                        "#09a497", "#08828e", "#084e7c", "#63a15a", 
+                        "#379665", "#25705d", "#bec22f", "#9ab516", 
+                        "#61a526", "#e8bd56", "#f2c20e", "#f2980e", 
+                        "#fc8b14", "#f76415", "#fe771c", "#f1501f", 
+                        "#ef3c17", "#c81414", "#9b0a0e", "#291a14", 
+                        "#3f241c", "#502c1e", "#47271d", "#4d2c1f", 
+                        "#39251c", "#080a0e", "#ad8d67", "#c59762"],
+                        i: 0
+                    },
+                    {
+                        text: "Форма челюсти",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Меньше", // слово слева от ползунка
+                        max: "Больше", // слово справа от ползунка
+                    },
+                    {
+                        text: "Ширина челюсти",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Уже", // слово слева от ползунка
+                        max: "Шире", // слово справа от ползунка
+                    },
+                    {
+                        text: "Высота подбородка",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Выше", // слово слева от ползунка
+                        max: "Ниже", // слово справа от ползунка
+                    },
+                    {
+                        text: "Глубина подбородка",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Короткий", // слово слева от ползунка
+                        max: "Длинный", // слово справа от ползунка
+                    },
+                    {
+                        text: "Ширина подбородка",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Уже", // слово слева от ползунка
+                        max: "Шире", // слово справа от ползунка
+                    },
+                    {
+                        text: "Выступ подбородка",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Наружу", // слово слева от ползунка
+                        max: "Внутрь", // слово справа от ползунка
+                    },
+                    {
+                        text: "Ширина шеи",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+                        i: 10,
+                        min: "Уже", // слово слева от ползунка
+                        max: "Шире", // слово справа от ползунка
+                    },
+                    {
+                        text: "Дефекты кожи",
+                        values: ["Нет", "Корь", "Прыщи", "Пятна", "Сыпь", "Угри", "Налет", "Пустулы", "Прыщики", "Тяжелое акне", "Акне", "Сыпь на щеках", "Сыпь на лице", "Шрамы", "Пубертат", "Язва", "Сыпь на подбородке", "Два лица", "Зона Т", "Сальный", "Крапленый", "Следы акне", "Большие   шрамы", "Герпес", "Лишай"],
+                        i: 0
+                    },
+                    {
+                        text: "Старение кожи",
+                        values: ["Нет", "Вороньи лапки", "Первые признаки", "Средний возраст", "Признаки старения", "Депрессия", "Преклонный возраст", "Старость", "Обветренная кожа", "Морщинистая кожа", "Обвислая кожа", "Тяжелая жизнь", "Винтаж", "Пенсионер", "Наркоман", "Старик"],
+                        i: 0
+                    },
+                    {
+                        text: "Повреждение кожи",
+                        values: ["Нет", "Неровная", "Наждак", "Пятнистая", "Грубая", "Жесткая", "Шероховатая", "Загрубелая", "Неровная", "Со складками", "Потрескавшаяся", "Твердая"],
+                        i: 0
+                    },
+                    {
+                        text: "Родинки и веснушки",
+                        values: ["Нет", "Ангел", "Повсюду", "Местами", "Единичные", "Переносица", "Куколка", "Фея", "Загорелая", "Родинки", "Ряд", "Модель", "Случайность", "Родинки", "Дождик", "Удвоенность", "Одна сторона", "Пары", "Бородавки"],
                         i: 0
                     },
                     {
@@ -240,26 +643,74 @@ var selectMenu = new Vue({
                         itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
                         valueIndex: item.i, // индекс значения пункта меню
                     };
+                    if (eventName == "onEscapePressed") {
+                        selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
+                    }
                     if (eventName == "onItemValueChanged") {
                         switch(e.itemName) {
                             case "Прическа":
-
+                                mp.trigger('characterInit.create.setHairstyle', e.valueIndex);
                                 break;
                             case "Цвет волос":
-
+                                mp.trigger('characterInit.create.setHairColor', e.valueIndex);
                                 break;
                             case "Дополнительный цвет волос":
-
+                                mp.trigger('characterInit.create.setHairHighlightColor', e.valueIndex);
                                 break;
                             case "Волосы на лице":
-
+                                mp.trigger('characterInit.create.setFacialHair', e.valueIndex);
+                                break;
+                            case "Цвет волос на лице":
+                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                                break;
+                            case "Брови":
+                                mp.trigger('characterInit.create.setEyebrows', e.valueIndex);
+                                break;
+                            case "Высота бровей":
+                                mp.trigger('characterInit.create.setBrowHeight', e.valueIndex);
+                                break;
+                            case "Глубина бровей":
+                                mp.trigger('characterInit.create.setBrowDepth', e.valueIndex);
+                                break;
+                                case "Цвет волос на лице":
+                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                                break;
+                                case "Цвет волос на лице":
+                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                                break;
+                                case "Цвет волос на лице":
+                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                                break;
+                                case "Цвет волос на лице":
+                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                                break;
+                                case "Цвет волос на лице":
+                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                                break;
+                                case "Цвет волос на лице":
+                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                                break;
+                                case "Цвет волос на лице":
+                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                                break;
+                                case "Цвет волос на лице":
+                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                                break;
+                                case "Цвет волос на лице":
+                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                                break;
+                                case "Цвет волос на лице":
+                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                                break;
+                                case "Цвет волос на лице":
+                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
                                 break;
                         }
                     }
                     if (eventName == "onItemSelected") {
                         switch(e.itemName) {
                             case "Назад":
-                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateMainMenu"]);
+                                selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
                                 break;
                         }
                     }
@@ -298,6 +749,10 @@ var selectMenu = new Vue({
                         itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
                         valueIndex: item.i, // индекс значения пункта меню
                     };
+                    if (eventName == "onEscapePressed") {
+                        mp.trigger('characterInit.create.back');
+                        selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
+                    }
                     if (eventName == "onItemSelected") {
                         switch(e.itemName) {
                             case "Принять":
@@ -305,7 +760,7 @@ var selectMenu = new Vue({
                                 break;
                             case "Назад":
                                 mp.trigger('characterInit.create.back');
-                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateMainMenu"]);
+                                selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
                                 break;
                         }
                     }
@@ -332,14 +787,17 @@ var selectMenu = new Vue({
                         itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
                         valueIndex: item.i, // индекс значения пункта меню
                     };
+                    if (eventName == "onEscapePressed") {
+                        selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
+                    }
                     if (eventName == "onItemSelected") {
                         switch(e.itemName) {
                             case "Да":
                                 mp.trigger('characterInit.create.reset');
-                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateMainMenu"]);
+                                selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
                                 break;
                             case "Нет":
-                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateMainMenu"]);
+                                selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
                                 break;
                         }
                     }
@@ -366,6 +824,9 @@ var selectMenu = new Vue({
                         itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
                         valueIndex: item.i, // индекс значения пункта меню
                     };
+                    if (eventName == "onEscapePressed") {
+                        selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
+                    }
                     if (eventName == "onItemSelected") {
                         switch(e.itemName) {
                             case "Да":
@@ -373,12 +834,14 @@ var selectMenu = new Vue({
                                 this.show = false;
                                 break;
                             case "Нет":
-                                selectMenu.menu = cloneObj(selectMenu.menus["characterCreateMainMenu"]);
+                                selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
                                 break;
                         }
                     }
                 }
             },
+            /// КОНЕЦ меню для создания персоонажа
+            /// ********************************************************************************
             "parkingMenu": {
                 name: "parking",
                 header: "Парковка", // заголовок меню, видимый на экране
