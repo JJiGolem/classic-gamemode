@@ -20,16 +20,26 @@ mp.events.add("NPC.create", (data) => {
         shape.pos = new mp.Vector3(data.marker.x, data.marker.y, data.marker.z);
         shape.isNPC = true;
         shape.NPCid = ped.id;
-        shape.NPCevent = data.marker.eventName;
+        if (data.marker.enterEvent) {
+            shape.NPCenterEvent = data.marker.enterEvent;
+        }
+        if (data.marker.leaveEvent) {
+            shape.NPCleaveEvent = data.marker.leaveEvent;
+        }
     }
 });
 
 mp.events.add("playerEnterColshape", (shape) => {
-    if (shape.isNPC && shape.NPCevent) {
+    if (shape.isNPC && shape.NPCenterEvent) {
         mp.chat.debug('1');
-        mp.events.call(shape.NPCevent);
-        mp.peds.at(shape.NPCid).setComponentVariation(0, 2, 0, 0);
-        mp.peds.at(shape.NPCid).setComponentVariation(3, 2, 0, 0);
+        mp.events.call(shape.NPCenterEvent);
+    }
+});
+
+mp.events.add("playerExitColshape", (shape) => {
+    if (shape.isNPC && shape.NPCleaveEvent) {
+        mp.chat.debug('2');
+        mp.events.call(shape.NPCleaveEvent);
     }
 });
 

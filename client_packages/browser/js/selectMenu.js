@@ -1089,9 +1089,12 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-                        // if (e.itemName == 'Купить транспорт') {
-                        //     mp.trigger(`carmarket.car.buy`);
-                        // }
+                        if (e.itemName == 'Устроиться на работу') {
+                            mp.trigger(`carservice.jobshape.employment`);
+                        }
+                        if (e.itemName == 'Уволиться с работы') {
+                            mp.trigger(`carservice.jobshape.employment`);
+                        }
                         // if (e.itemName == 'Отмена') {
                         //     mp.trigger(`carmarket.buymenu.close`);
                         // }

@@ -36,6 +36,10 @@ var interactionMenu = new Vue({
                         mp.trigger(`vehicles.trunk`);
                         mp.trigger(`interaction.menu.close`);
                     }
+                    if (item.text == 'Диагностика') {
+                        mp.trigger(`carservice.diagnostics.offer`);
+                        mp.trigger(`interaction.menu.close`);
+                    }
                 }
             },
             "vehicle_inside": {
