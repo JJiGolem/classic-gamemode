@@ -100,7 +100,8 @@ var selectMenu = new Vue({
                     {
                         text: "Цвет кожи",
                         values: ['#e0c2aa', '#804e40', '#a1765a', '#ebad69', '#cb7d50', '#c47f5b'],
-                        i: 0
+                        i: 0,
+                        j: 0
                     },
                     {
                         text: "Назад",
@@ -173,7 +174,8 @@ var selectMenu = new Vue({
                             "#be532f", "#d34d21", "#907867", "#a78e7a",
                             "#d4bda9", "#e4cfbe"
                         ],
-                        i: 0
+                        i: 0,
+                        j: 0
                     },
                     {
                         text: "Дополнительный цвет волос",
@@ -186,7 +188,8 @@ var selectMenu = new Vue({
                             "#be532f", "#d34d21", "#907867", "#a78e7a",
                             "#d4bda9", "#e4cfbe"
                         ],
-                        i: 0
+                        i: 0,
+                        j: 0
                     },
                     {
                         text: "Волосы на лице",
@@ -196,7 +199,8 @@ var selectMenu = new Vue({
                     {
                         text: "Цвет волос на лице",
                         values: ['#e0c2aa', '#804e40', '#a1765a', '#ebad69', '#cb7d50', '#c47f5b'],
-                        i: 0
+                        i: 0,
+                        j: 0
                     },
                     {
                         text: "Брови",
@@ -227,7 +231,8 @@ var selectMenu = new Vue({
                         "#921812", "#a81c14", "#cb371e", "#de411b",
                         "#be532f", "#d34d21", "#907867", "#a78e7a",
                         "#d4bda9", "#e4cfbe"],
-                        i: 0
+                        i: 0,
+                        j: 0
                     },
                     {
                         text: "Размер глаз",
@@ -239,7 +244,8 @@ var selectMenu = new Vue({
                     {
                         text: "Цвет глаз",
                         values: ["#50c878", "#008000", "#add8e6", "#0077be", "#b5651d", "#654321", "#d0c383", "#a9a9a9"],
-                        i: 0
+                        i: 0,
+                        j: 0
                     },
                     {
                         text: "Глубина переносицы",
@@ -388,7 +394,8 @@ var selectMenu = new Vue({
                         "#921812", "#a81c14", "#cb371e", "#de411b",
                         "#be532f", "#d34d21", "#907867", "#a78e7a",
                         "#d4bda9", "#e4cfbe"],
-                        i: 0
+                        i: 0,
+                        j: 0
                     },
                     {
                         text: "Назад",
@@ -416,20 +423,21 @@ var selectMenu = new Vue({
                             "#be532f", "#d34d21", "#907867", "#a78e7a",
                             "#d4bda9", "#e4cfbe"
                         ],
-                        i: 0
+                        i: 0,
+                        j: 0
                     },
                     {
                         text: "Дополнительный цвет волос",
                         values: ["#211f1c", "#55362f", "#4b382e", "#4d291b",
-
-                        "#70351e", "#904422", "#a55c36", "#a56944",
-                        "#ac744f", "#ae7d57", "#be9161", "#cda670",
-                        "#c8a370", "#d5a861", "#e0b775", "#e8c487",
-                        "#b78457", "#a85d3d", "#963523", "#7c1411",
-                        "#921812", "#a81c14", "#cb371e", "#de411b",
-                        "#be532f", "#d34d21", "#907867", "#a78e7a",
-                        "#d4bda9", "#e4cfbe"],
-                        i: 0
+                            "#70351e", "#904422", "#a55c36", "#a56944",
+                            "#ac744f", "#ae7d57", "#be9161", "#cda670",
+                            "#c8a370", "#d5a861", "#e0b775", "#e8c487",
+                            "#b78457", "#a85d3d", "#963523", "#7c1411",
+                            "#921812", "#a81c14", "#cb371e", "#de411b",
+                            "#be532f", "#d34d21", "#907867", "#a78e7a",
+                            "#d4bda9", "#e4cfbe"],
+                        i: 0,
+                        j: 0
                     },
                     {
                         text: "Брови",
@@ -460,7 +468,8 @@ var selectMenu = new Vue({
                         "#921812", "#a81c14", "#cb371e", "#de411b",
                         "#be532f", "#d34d21", "#907867", "#a78e7a",
                         "#d4bda9", "#e4cfbe"],
-                        i: 0
+                        i: 0,
+                        j: 0
                     },
                     {
                         text: "Размер глаз",
@@ -472,7 +481,8 @@ var selectMenu = new Vue({
                     {
                         text: "Цвет глаз",
                         values: ["#50c878", "#008000", "#add8e6", "#0077be", "#b5651d", "#654321", "#d0c383", "#a9a9a9"],
-                        i: 0
+                        i: 0,
+                        j: 0
                     },
                     {
                         text: "Глубина переносицы",
@@ -560,7 +570,8 @@ var selectMenu = new Vue({
                         "#ef3c17", "#c81414", "#9b0a0e", "#291a14", 
                         "#3f241c", "#502c1e", "#47271d", "#4d2c1f", 
                         "#39251c", "#080a0e", "#ad8d67", "#c59762"],
-                        i: 0
+                        i: 0,
+                        j: 0
                     },
                     {
                         text: "Форма челюсти",
@@ -676,38 +687,86 @@ var selectMenu = new Vue({
                             case "Глубина бровей":
                                 mp.trigger('characterInit.create.setBrowDepth', e.valueIndex);
                                 break;
-                                case "Цвет волос на лице":
-                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                            case "Цвет бровей":
+                                mp.trigger('characterInit.create.setEyebrowColor', e.valueIndex);
                                 break;
-                                case "Цвет волос на лице":
-                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                            case "Размер глаз":
+                                mp.trigger('characterInit.create.setEyeSize', e.valueIndex);
                                 break;
-                                case "Цвет волос на лице":
-                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                            case "Цвет глаз":
+                                mp.trigger('characterInit.create.setEyeColor', e.valueIndex);
                                 break;
-                                case "Цвет волос на лице":
-                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                            case "Глубина переносицы":
+                                mp.trigger('characterInit.create.setNoseBridgeDepth', e.valueIndex);
                                 break;
-                                case "Цвет волос на лице":
-                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                            case "Сдвиг переносицы":
+                                mp.trigger('characterInit.create.setNoseBroken', e.valueIndex);
                                 break;
-                                case "Цвет волос на лице":
-                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                            case "Высота расположения носа":
+                                mp.trigger('characterInit.create.setNoseBottomHeight', e.valueIndex);
                                 break;
-                                case "Цвет волос на лице":
-                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                            case "Ширина носа":
+                                mp.trigger('characterInit.create.setNoseWidth', e.valueIndex);
                                 break;
-                                case "Цвет волос на лице":
-                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                            case "Длина кончика носа":
+                                mp.trigger('characterInit.create.setNoseTipLength', e.valueIndex);
                                 break;
-                                case "Цвет волос на лице":
-                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                            case "Высота кончика носа":
+                                mp.trigger('characterInit.create.setNoseTipHeight', e.valueIndex);
                                 break;
-                                case "Цвет волос на лице":
-                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                            case "Ширина скул":
+                                mp.trigger('characterInit.create.setCheekboneWidth', e.valueIndex);
                                 break;
-                                case "Цвет волос на лице":
-                                mp.trigger('characterInit.create.setFacialHairColor', e.valueIndex);
+                            case "Глубина щек":
+                                mp.trigger('characterInit.create.setCheekDepth', e.valueIndex);
+                                break;
+                            case "Толщина губ":
+                                mp.trigger('characterInit.create.setLipThickness', e.valueIndex);
+                                break;
+                            case "Помада":
+                                mp.trigger('characterInit.create.setLipstick', e.valueIndex);
+                                break;
+                            case "Цвет помады":
+                                mp.trigger('characterInit.create.setLipstickColor', e.valueIndex);
+                                break;
+                            case "Форма челюсти":
+                                mp.trigger('characterInit.create.setJawShape', e.valueIndex);
+                                break;
+                            case "Ширина челюсти":
+                                mp.trigger('characterInit.create.setJawWidth', e.valueIndex);
+                                break;
+                            case "Высота подбородка":
+                                mp.trigger('characterInit.create.setChinHeight', e.valueIndex);
+                                break;
+                            case "Глубина подбородка":
+                                mp.trigger('characterInit.create.setChinDepth', e.valueIndex);
+                                break;
+                            case "Ширина подбородка":
+                                mp.trigger('characterInit.create.setChinWidth', e.valueIndex);
+                                break;
+                            case "Выступ подбородка":
+                                mp.trigger('characterInit.create.setChinIndent', e.valueIndex);
+                                break;
+                            case "Ширина шеи":
+                                mp.trigger('characterInit.create.setNeckWidth', e.valueIndex);
+                                break;
+                            case "Дефекты кожи":
+                                mp.trigger('characterInit.create.setBlemishes', e.valueIndex);
+                                break;
+                            case "Старение кожи":
+                                mp.trigger('characterInit.create.setAgeing', e.valueIndex);
+                                break;
+                            case "Повреждение кожи":
+                                mp.trigger('characterInit.create.setSunDamage', e.valueIndex);
+                                break;
+                            case "Родинки и веснушки":
+                                mp.trigger('characterInit.create.setMolesFreckles', e.valueIndex);
+                                break;
+                            case "Волосы на теле":
+                                mp.trigger('characterInit.create.setChestHair', e.valueIndex);
+                                break;
+                            case "Цвет волос на теле":
+                                mp.trigger('characterInit.create.setChestHairColor', e.valueIndex);
                                 break;
                         }
                     }
@@ -1276,4 +1335,5 @@ var selectMenu = new Vue({
 selectMenu.menu = testMenu;
 // Показываем меню:
 selectMenu.show = true;
-selectMenu.notification = "Здесь короче тестовое уведомление. У Вас неправильный ник или город прописки!";*/
+selectMenu.notification = "Здесь короче тестовое уведомление. У Вас неправильный ник или город прописки!";
+selectMenu.loader = true/false - включить/выключить колесико загрузки*/
