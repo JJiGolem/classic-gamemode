@@ -428,11 +428,13 @@ var selectMenu = new Vue({
                         text: "Основной цвет",
                         values: [],
                         i: 0,
+                        j: 0
                     },
                     {
                         text: "Дополнительный цвет",
                         values: [],
                         i: 0,
+                        j: 0
                     },
                     {
                         text: "Купить"

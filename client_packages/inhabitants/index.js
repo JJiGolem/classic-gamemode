@@ -21,9 +21,9 @@ let inhabitants = [{
 {
     model: "u_m_y_militarybum",
     position: {
-        x: -2120.634033203125,
-        y: -561.5369873046875,
-        z: 1.3953653573989868
+        x: -2119.95849609375,
+        y: -560.9780883789062,
+        z: 1.6138005256652832
     },
     heading: 135.39381408691406,
     defaultScenario: 'WORLD_HUMAN_BUM_WASH'
