@@ -70,7 +70,7 @@ var characterSelector = new Vue({
             return characterInfo.i == 0;
         },
         rightArrowDisabled() {
-            return characterInfo.i == characterInfo.characters.length - 1;
+            return characterInfo.i == characterInfo.characters.length;
         }
     },
     computed: {

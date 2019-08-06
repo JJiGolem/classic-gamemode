@@ -819,6 +819,9 @@ var selectMenu = new Vue({
                     if (eventName == "onItemSelected") {
                         switch (e.itemName) {
                             case "Принять":
+                                //todo
+                                //проверка фио на корректность
+                                selectMenu.loader = true;
                                 mp.trigger('characterInit.create.check', this.items[0].values[0], this.items[1].values[0]);
                                 break;
                             case "Назад":

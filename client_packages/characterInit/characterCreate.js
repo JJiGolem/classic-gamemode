@@ -170,12 +170,14 @@ mp.events.add('characterInit.create.check', (name, surname) => {
 });
 
 mp.events.add('characterInit.create.check.ans', (ans) => {
-    //todo вывод результата на форму
-    mp.callCEFV(`selectMenu.show = false`);
-    //mp.callCEFR('checkCustom', [ans]);
     if (ans == 1) {
-        mp.chat.debug("Персоонаж создан и ник одобрен");
+        mp.callCEFV(`selectMenu.loader = false;`);
+        mp.callCEFV(`selectMenu.show = false`);
         mp.events.call('characterInit.create', false);
+    }
+    else {
+        mp.callCEFV(`selectMenu.loader = false;`);
+        mp.callCEFV(`selectMenu.notification = "Такое имя персоонажа уже занято";`);
     }
 });
 
