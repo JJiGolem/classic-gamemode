@@ -78,7 +78,7 @@ function getClosestPlayerOrVehicle(pos) {
 }
 
 mp.events.add('interaction.menu.show', () => {
-    mp.chat.debug('show');
+    //mp.chat.debug('show');
     mp.busy.add('interaction');
     isOpen = true;
     mp.gui.cursor.show(true, true);
@@ -119,6 +119,13 @@ mp.events.add('characterInit.done', () => { /// E
             let vehClass = currentInteractionEntity.getClass();
             if (classesToIgnore.includes(vehClass)) {
                 mp.callCEFV('interactionMenu.menu.items.splice(1, 2)');
+            }
+
+            if (mp.isInCarService()) {
+                mp.callCEFV(`interactionMenu.menu.items.push({
+                    text: "Диагностика",
+                    icon: "tool.png"
+                });`);
             }
             mp.events.call('interaction.menu.show');
         } else if (currentInteractionEntity.type == 'player') {

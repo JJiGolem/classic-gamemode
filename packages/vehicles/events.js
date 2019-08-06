@@ -12,17 +12,17 @@ module.exports = {
         // console.log('FUEL ' + vehicle.fuelState);
         // console.log('BRAKE ' + vehicle.brakeState);
         // console.log(`multiplier ${vehicle.multiplier}`);
-        player.call('chat.message.push', [`!{#70a7ff} Модель ${vehicle.model}`]);
-        player.call('chat.message.push', [`!{#70a7ff} Имя модели ${vehicle.modelName}`]);
-        player.call('chat.message.push', [`!{#70a7ff} Ключ ${vehicle.key}`]);
-        player.call('chat.message.push', [`!{#70a7ff} Владелец ${vehicle.owner}`]);
-        player.call('chat.message.push', [`!{#70a7ff} sqlId ${vehicle.sqlId}`]);
-        player.call('chat.message.push', [`!{#70a7ff} fuel ${vehicle.fuel}`]);
-        player.call('chat.message.push', [`!{#71a0ff} maxfuel ${vehicle.properties.maxFuel}`]);
-        player.call('chat.message.push', [`!{#71a0ff} name ${vehicle.properties.name}`]);
-        player.call('chat.message.push', [`!{#71a0ff} def consumption ${vehicle.properties.consumption}`]);
-        player.call('chat.message.push', [`!{#71a0ff} license ${vehicle.properties.license}`]);
-        player.call('chat.message.push', [`!{#71a0ff} parkingHours ${vehicle.parkingHours}`]);
+        // player.call('chat.message.push', [`!{#70a7ff} Модель ${vehicle.model}`]);
+        // player.call('chat.message.push', [`!{#70a7ff} Имя модели ${vehicle.modelName}`]);
+        // player.call('chat.message.push', [`!{#70a7ff} Ключ ${vehicle.key}`]);
+        // player.call('chat.message.push', [`!{#70a7ff} Владелец ${vehicle.owner}`]);
+        // player.call('chat.message.push', [`!{#70a7ff} sqlId ${vehicle.sqlId}`]);
+        // player.call('chat.message.push', [`!{#70a7ff} fuel ${vehicle.fuel}`]);
+        // player.call('chat.message.push', [`!{#71a0ff} maxfuel ${vehicle.properties.maxFuel}`]);
+        // player.call('chat.message.push', [`!{#71a0ff} name ${vehicle.properties.name}`]);
+        // player.call('chat.message.push', [`!{#71a0ff} def consumption ${vehicle.properties.consumption}`]);
+        // player.call('chat.message.push', [`!{#71a0ff} license ${vehicle.properties.license}`]);
+        // player.call('chat.message.push', [`!{#71a0ff} parkingHours ${vehicle.parkingHours}`]);
 
         // if ((vehicle.license != 0) && vehicle.license != player.license) {
         //     player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);
@@ -106,7 +106,7 @@ module.exports = {
         if (value < 0.1) return;
         player.vehicle.mileage += value;
         vehicles.updateMileage(player);
-        player.call('chat.message.push', [`!{#adff9e} Пробег ${player.vehicle.mileage}`]);
+        //player.call('chat.message.push', [`!{#adff9e} Пробег ${player.vehicle.mileage}`]);
     },
     "entityCreated": (entity) => {
         if (entity.type == "vehicle") {

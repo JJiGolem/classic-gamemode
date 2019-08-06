@@ -5,7 +5,7 @@ var notifications = new Vue({
         // Время показа уведомления
         showTime: 10000,
         // Макс. кол-во уведомлений на экране
-        maxCount: 10
+        maxCount: 7
     },
     methods: {
         push(type, text, header) {

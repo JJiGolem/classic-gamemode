@@ -1,6 +1,3 @@
-/// Global variables for modules
-let characterInitSex = 0;
-
 var selectMenu = new Vue({
     el: "#selectMenu",
     data: {
@@ -49,8 +46,10 @@ var selectMenu = new Vue({
                         valueIndex: item.i, // индекс значения пункта меню
                     };
                     if (eventName == "onItemValueChanged" && e.itemName == "Пол") {
-                        characterInitSex = e.valueIndex;
-                        mp.trigger('characterInit.create.setGender', e.valueIndex);
+                        selectMenu.menus["characterCreateMainMenu"].items[0].i = e.valueIndex;
+                        selectMenu.menus["characterCreateViewMenu"].items = e.valueIndex == 0 ? selectMenu.menus["characterCreateViewMenu"].itemsMale 
+                            : selectMenu.menus["characterCreateViewMenu"].itemsFemale;
+                        //mp.trigger('characterInit.create.setGender', e.valueIndex);
                     }
                     if (eventName == "onItemSelected") {
                         switch(e.itemName) {
@@ -142,19 +141,13 @@ var selectMenu = new Vue({
             "characterCreateViewMenu": {
                 name: "charactercreateview",
                 header: "Внешность", // заголовок меню, видимый на экране
-                items: [{
+                itemsMale: [{
                         text: "Прическа",
-                        values: characterInitSex == 0 ? [
+                        values: [
                             "Под ноль", "Коротко", "Ястреб", "Хипстер", "Челка набок", "Коротко", "Байкер", "Хвост", "Косички", "Прилиза",
                             "Коротко", "Шипы", "Цезарь", "Чоппи", "Дреды", "Длинные", "Лохматый", "Серфингист", "Набок",
                             "Зализ", "Длинные", "Юный хипстер", "Муллет", "Косички", "Пальма", "Молния", "Уиппед", "Зиг-заг", "Снейл", "Хайтоп", "Откинутые",
                             "Андеркат", "Боковой андер", "Колючий ирокез", "Мод", "Слоями", "Флэттоп", "Армеец"
-                        ] : [
-                            "Под ноль", "Коротко", "Слои", "Косички", "Хвост", "Ирокез", "Косички", "Боб", "Ястреб", "Ракушка",
-                            "Лонг боб", "Свободно", "Пикси", "Бритые виски", "Узел", "Волнистый боб", "Красотка", "Пучок", "Тугой узел",
-                            "Твистед боб", "Флэппер боб", "Биг бэнгс", "Плетеные", "Муллет", "Косички", "Листья", "Зиг-заг",
-                            "Пигтейл бэнгс", "Волнистые", "Катушка", "Завеса", "Откинутые", "Андеркат",
-                            "Боковой андер", "Колючий ирокез", "Бандана", "Слоями", "Скинберд", "Аккуратные", "Шорт боб"
                         ],
                         i: 0
                     },
@@ -196,6 +189,46 @@ var selectMenu = new Vue({
                         text: "Назад",
                     },
                 ],
+                itemsFemale: [{
+                        text: "Прическа",
+                        values: [
+                            "Под ноль", "Коротко", "Слои", "Косички", "Хвост", "Ирокез", "Косички", "Боб", "Ястреб", "Ракушка",
+                            "Лонг боб", "Свободно", "Пикси", "Бритые виски", "Узел", "Волнистый боб", "Красотка", "Пучок", "Тугой узел", 
+                            "Твистед боб", "Флэппер боб", "Биг бэнгс", "Плетеные", "Муллет", "Косички", "Листья", "Зиг-заг", 
+                            "Пигтейл бэнгс", "Волнистые", "Катушка", "Завеса", "Откинутые", "Андеркат", 
+                            "Боковой андер", "Колючий ирокез", "Бандана", "Слоями", "Скинберд", "Аккуратные", "Шорт боб"
+                        ],
+                        i: 0
+                    },
+                    {
+                        text: "Цвет волос",
+                        values: ["#211f1c", "#55362f", "#4b382e", "#4d291b", 
+                        "#70351e", "#904422", "#a55c36", "#a56944", 
+                        "#ac744f", "#ae7d57", "#be9161", "#cda670", 
+                        "#c8a370", "#d5a861", "#e0b775", "#e8c487", 
+                        "#b78457", "#a85d3d", "#963523", "#7c1411", 
+                        "#921812", "#a81c14", "#cb371e", "#de411b", 
+                        "#be532f", "#d34d21", "#907867", "#a78e7a", 
+                        "#d4bda9", "#e4cfbe"],
+                        i: 0
+                    },
+                    {
+                        text: "Дополнительный цвет волос",
+                        values: ["#211f1c", "#55362f", "#4b382e", "#4d291b", 
+                        "#70351e", "#904422", "#a55c36", "#a56944", 
+                        "#ac744f", "#ae7d57", "#be9161", "#cda670", 
+                        "#c8a370", "#d5a861", "#e0b775", "#e8c487", 
+                        "#b78457", "#a85d3d", "#963523", "#7c1411", 
+                        "#921812", "#a81c14", "#cb371e", "#de411b", 
+                        "#be532f", "#d34d21", "#907867", "#a78e7a", 
+                        "#d4bda9", "#e4cfbe"],
+                        i: 0
+                    },
+                    {
+                        text: "Назад",
+                    },
+                ],
+                items: this.itemsMale,
                 i: 0, // индекс выбранного пункта
                 j: 0, // индекс первого видимого пункта
                 handler(eventName) { // обработчик взаимодействия с меню
@@ -400,7 +433,7 @@ var selectMenu = new Vue({
                 {
                     text: "Купить"
                 }
-            ],
+                ],
                 i: 0, // индекс выбранного пункта
                 j: 0, // индекс первого видимого пункта
                 handler(eventName) { // обработчик взаимодействия с меню
@@ -431,7 +464,7 @@ var selectMenu = new Vue({
                         }
                     }
                     if (eventName == 'onEscapePressed') {
-                            mp.trigger(`carshow.list.close`);
+                        mp.trigger(`carshow.list.close`);
                     }
                 }
             },
@@ -446,7 +479,7 @@ var selectMenu = new Vue({
                     text: "Отмена",
                     i: 0,
                 }
-            ],
+                ],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -464,7 +497,7 @@ var selectMenu = new Vue({
                         }
                         if (e.itemName == 'Отмена') {
                             mp.trigger(`carmarket.sellmenu.close`);
-                    }
+                        }
                     }
                 }
             },
@@ -479,7 +512,7 @@ var selectMenu = new Vue({
                     text: "Отмена",
                     i: 0,
                 }
-            ],
+                ],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -497,7 +530,40 @@ var selectMenu = new Vue({
                         }
                         if (e.itemName == 'Отмена') {
                             mp.trigger(`carmarket.buymenu.close`);
+                        }
                     }
+                }
+            },
+            "carServiceJobMenu": {
+                name: "carservicejob",
+                header: "Начальник СТО",
+                items: [{
+                    text: "Устроиться на работу",
+                    i: 0,
+                },
+                {
+                    text: "Помощь",
+                    i: 0,
+                }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        // if (e.itemName == 'Купить транспорт') {
+                        //     mp.trigger(`carmarket.car.buy`);
+                        // }
+                        // if (e.itemName == 'Отмена') {
+                        //     mp.trigger(`carmarket.buymenu.close`);
+                        // }
                     }
                 }
             },
