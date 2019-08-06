@@ -34,4 +34,23 @@ module.exports = {
             player.call('carservice.shape.leave');
         }
     },
+    "carservice.diagnostics.offer": (player, targetId) => {
+        let target = mp.players.at(targetId);
+        if (!target) return;
+        let vehicle = target.vehicle;
+        if (!vehicle) return;
+
+        target.diagnosticsOffer = {
+            playerId: player.id,
+            vehicleToRepair: vehicle
+        }
+
+        player.senderDiagnosticsOffer = {
+            targetPlayer: target
+        };
+
+        target.call('offerDialog.show', ["carservice_diagnostics", {
+            name: player.character.name
+        }]);
+    }
 }

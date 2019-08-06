@@ -15,6 +15,19 @@ var offerDialog = new Vue({
                     mp.trigger("callRemote", "documents.offer.accept", 0);
                 },
             },
+            "carservice_diagnostics": {
+                text: "Dun Hill предлагает диагностику вашего транспорта",
+                price: 100,
+                on(values) {
+                    this.text = `Dun Hill предлагает Вам диагностику транспорта`;
+                },
+                yes() {
+                    mp.trigger("callRemote", "documents.offer.accept", 1);
+                },
+                no() {
+                    mp.trigger("callRemote", "documents.offer.accept", 0);
+                },
+            },
         },
         dialog: null,
         timeout: null,
