@@ -24,7 +24,7 @@
     <link rel="stylesheet" type="text/css" href="css/speedometer.css" />
     <link rel="stylesheet" type="text/css" href="css/interactionMenu.css" />
     <link rel="stylesheet" type="text/css" href="build/css/styles.css">
-
+    <link rel="stylesheet" type="text/css" href="css/carSpecifications.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -94,8 +94,8 @@
                 <div class="message">
                     {{ dialog.text }}
                 </div>
-                <div class="price" v-if="dialog.price">$
-                    {{ pretty(dialog.price) }}</div>
+                <div class="price" v-if="dialog.price">
+                    ${{ pretty(dialog.price) }}</div>
             </div>
             <div class="cancel" @click="dialog.no(); hide()">N</div>
         </div>
@@ -442,7 +442,7 @@
         </div>
     </div>
 
-    <link rel="stylesheet" type="text/css" href="css/carSpecifications.css" />
+
     <div v-cloak="v-cloak" id="carSpecifications" v-if="show">
         <div class="header">Характеристики</div>
         <div class="body">
@@ -454,7 +454,7 @@
         </div>
         <div class="footer">${{ splitPrice }}</div>
     </div>
-    <script src="js/carSpecifications.js"></script>
+    
 
 
     <!-- ------------------------ REACT ------------------------------ -->
@@ -475,6 +475,7 @@
     <script src="js/driverLicense.js"></script>
     <script src="js/speedometer.js"></script>
     <script src="js/interactionMenu.js"></script>
+    <script src="js/carSpecifications.js"></script>
 </body>
 
 </html>

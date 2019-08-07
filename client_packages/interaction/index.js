@@ -22,6 +22,11 @@ function vdist(posA, posB) {
     return mp.game.system.vdist(posA.x, posA.y, posA.z, posB.x, posB.y, posB.z);
 }
 
+mp.vdist = (posA, posB) => {
+    if (!posA || !posB) return Number.MAX_VALUE;
+    return mp.game.system.vdist(posA.x, posA.y, posA.z, posB.x, posB.y, posB.z);
+}
+
 function getClosestVehicle(pos, range = INTERACTION_RANGE) {
     var closestVehicle;
     var minDist = 99999;
@@ -42,6 +47,7 @@ function getClosestPlayer(pos, range = INTERACTION_RANGE) {
     var minDist = 99999;
     mp.players.forEachInStreamRange((current) => {
         if (current == mp.players.local) return;
+        if (current.vehicle) return;
         var distToPlayer = vdist(pos, current.position);
         if (distToPlayer < range) {
             if (distToPlayer < minDist) {
@@ -105,7 +111,6 @@ mp.events.add('characterInit.done', () => { /// E
         let veh = mp.players.local.getVehicleIsTryingToEnter();
         if (veh) return;
 
-
         if (mp.players.local.vehicle) return;
         //getClosestPlayer(mp.players.local.position);
         //currentInteractionEntity = getClosestVehicle(mp.players.local.position);
@@ -115,7 +120,18 @@ mp.events.add('characterInit.done', () => { /// E
         if (currentInteractionEntity.type == 'vehicle') {
             mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle"])');
             mp.callCEFV(`interactionMenu.left = ${defaultLeft}`);
-
+            // *** TEMP ***
+            // var hoodPos = currentInteractionEntity.getWorldPositionOfBone(currentInteractionEntity.getBoneIndexByName("engine"));
+            // var hoodDist = vdist(currentInteractionEntity.position, hoodPos);
+            // let pos = currentInteractionEntity.getOffsetFromInWorldCoords(0, 2, 0);
+            // mp.chat.debug(JSON.stringify(pos));
+            // mp.chat.debug(JSON.stringify(hoodPos));
+            // setTimeout(() => {
+            //     mp.players.local.setHeading(currentInteractionEntity.getHeading() - 180);
+            // }, 5000);
+            // mp.players.local.taskFollowNavMeshToCoord(pos.x, pos.y, pos.z, 1, -1, 1, true, 0);
+            
+            // *** TEMP ***
             let vehClass = currentInteractionEntity.getClass();
             if (classesToIgnore.includes(vehClass)) {
                 mp.callCEFV('interactionMenu.menu.items.splice(1, 2)');

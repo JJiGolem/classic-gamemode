@@ -1075,6 +1075,10 @@ var selectMenu = new Vue({
                     {
                         text: "Помощь",
                         i: 0,
+                    },
+                    {
+                        text: "Закрыть",
+                        i: 0,
                     }
                 ],
                 i: 0,
@@ -1095,9 +1099,9 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Уволиться с работы') {
                             mp.trigger(`carservice.jobshape.employment`);
                         }
-                        // if (e.itemName == 'Отмена') {
-                        //     mp.trigger(`carmarket.buymenu.close`);
-                        // }
+                        if (e.itemName == 'Закрыть') {
+                            mp.trigger(`carservice.jobmenu.close`);
+                        }
                     }
                 }
             },

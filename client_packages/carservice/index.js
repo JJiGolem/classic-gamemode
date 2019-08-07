@@ -1,4 +1,6 @@
 let isInCarServiceShape = false;
+let isPreparingForDiagnostics = false;
+let currentRepairingVehicle;
 
 mp.isInCarService = () => {
     return isInCarServiceShape;
@@ -76,7 +78,7 @@ mp.events.add('carservice.jobshape.employment', () => {
 });
 
 mp.events.add('carservice.jobshape.leave', () => {
-    mp.callCEFV(`selectMenu.show = false`);
+    mp.events.call('carservice.jobmenu.close');
 });
 
 mp.events.add('carservice.jobmenu.show', (state) => {
@@ -93,7 +95,9 @@ mp.events.add('carservice.jobmenu.show', (state) => {
     mp.callCEFV(`selectMenu.show = true`);
 });
 
-
+mp.events.add('carservice.jobmenu.close', () => {
+    mp.callCEFV(`selectMenu.show = false`);
+});
 
 mp.events.add('carservice.shape.enter', () => {
     mp.chat.debug('enter');
@@ -111,16 +115,96 @@ mp.events.add('carservice.diagnostics.offer', () => {
 
     let veh = mp.getCurrentInteractionEntity();
     mp.chat.debug(veh.type);
-    if (!veh) return;
-    if (veh.type != 'vehicle') return;
-    setTimeout(() => {
-        let driver = veh.getPedInSeat(-1);
-        mp.chat.debug(driver);
-        if (!driver) return mp.notify.error('В т/с нет водителя', 'Ошибка');
-        let targetId = mp.players.atHandle(driver).remoteId;
-        mp.chat.debug(mp.players.atHandle(driver).remoteId);
-        mp.events.callRemote('carservice.diagnostics.offer', targetId);
-    }, 5000)
+    if (!veh) return mp.chat.debug('!veh');
+    if (veh.type != 'vehicle') return mp.chat.debug(`veh.type != 'vehicle'`);
+    let timer = setTimeout(() => {
+        try {
+            mp.chat.debug('timeout')
+            let driver = veh.getPedInSeat(-1);
+            mp.chat.debug(driver);
+            if (!driver) return mp.notify.error('В т/с нет водителя', 'Ошибка');
+            let targetId = mp.players.atHandle(driver).remoteId;
+            mp.chat.debug(mp.players.atHandle(driver).remoteId);
+            mp.events.callRemote('carservice.diagnostics.offer', targetId);
+        } catch (err) {
+            mp.chat.debug(JSON.stringify(err));
+        }
+
+    }, 3000)
 
 });
 
+
+mp.events.add('carservice.diagnostics.preparation', (vehId) => {
+    mp.chat.debug('prepare');
+    let vehicle = mp.vehicles.atRemoteId(vehId);
+
+    var hoodPos = getHoodPosition(vehicle);
+    mp.chat.debug(JSON.stringify(hoodPos));
+    if (hoodPos) {
+        var hoodDist = mp.vdist(vehicle.position, hoodPos);
+        let pos = vehicle.getOffsetFromInWorldCoords(0, hoodDist + 1, 0);
+        mp.chat.debug(JSON.stringify(pos));
+        mp.chat.debug(JSON.stringify(hoodPos));
+        mp.players.local.taskFollowNavMeshToCoord(pos.x, pos.y, pos.z, 1, -1, 1, true, 0);
+
+    } else {
+        let pos = vehicle.getOffsetFromInWorldCoords(0, 2, 0);
+        mp.players.local.taskFollowNavMeshToCoord(pos.x, pos.y, pos.z, 1, -1, 1, true, 0);
+    }
+    setTimeout(() => {
+        isPreparingForDiagnostics = true;
+        currentRepairingVehicle = vehicle;
+    }, 1000);
+
+    mp.events.add('render', () => {
+        if (isPreparingForDiagnostics) {
+            mp.chat.debug(mp.players.local.isWalking());
+            if (!mp.players.local.isWalking()) {
+                isPreparingForDiagnostics = false;
+                mp.chat.debug('остановился');
+                //mp.players.local.freezePosition(true);
+                //mp.events.callRemote('carservice.diagnostics.start');
+                mp.players.local.setHeading(currentRepairingVehicle.getHeading() - 180);
+                //let newpos = mp.players.local.getOffsetFromInWorldCoords(0, 0.5, 0);
+
+                var hoodPos = getHoodPosition(currentRepairingVehicle);
+                if (hoodPos) {
+                    var hoodDist = mp.vdist(currentRepairingVehicle.position, hoodPos);
+                    let newpos = currentRepairingVehicle.getOffsetFromInWorldCoords(0, hoodDist + 1.8, 0);
+                    mp.players.local.position = newpos;
+                } else {
+                    let newpos = currentRepairingVehicle.getOffsetFromInWorldCoords(0, 1.5, 0);
+                    mp.players.local.position = newpos;
+                }
+                let animType = getRepairAnimType(currentRepairingVehicle);
+                mp.events.callRemote('carservice.diagnostics.start', animType);
+            }
+        }
+
+    });
+
+});
+
+function getHoodPosition(vehicle) {
+    mp.chat.debug('hood position')
+    if (!vehicle) return null;
+    let position = vehicle.getWorldPositionOfBone(vehicle.getBoneIndexByName("bonnet"));
+    if (!position.x && !position.y && !position.z) return null;
+    return position;
+}
+
+function getRepairAnimType(vehicle) {
+    let vehClass = vehicle.getClass();
+    mp.chat.debug(vehClass);
+    switch (vehClass) {
+        case 2, 9, 12:
+            return 1;
+        case 8:
+            return 2;
+        case 5, 6, 7:
+            return 3;
+        default:
+            return 0;
+    }
+}

@@ -19,13 +19,13 @@ var offerDialog = new Vue({
                 text: "Dun Hill предлагает диагностику вашего транспорта",
                 price: 100,
                 on(values) {
-                    this.text = `Dun Hill предлагает Вам диагностику транспорта`;
+                    this.text = `${values.name} предлагает Вам диагностику транспорта`;
                 },
                 yes() {
-                    mp.trigger("callRemote", "documents.offer.accept", 1);
+                    mp.trigger("callRemote", "carservice.diagnostics.accept", 1);
                 },
                 no() {
-                    mp.trigger("callRemote", "documents.offer.accept", 0);
+                    mp.trigger("callRemote", "carservice.diagnostics.accept", 0);
                 },
             },
         },
