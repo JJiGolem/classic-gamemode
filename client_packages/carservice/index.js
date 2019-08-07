@@ -17,9 +17,10 @@ let peds = [{
         y: -191.85520935058594,
         z: 53.34,
         color: [255, 255, 125, 120],
-        eventName: "carservice.jobshape.enter"
+        enterEvent: "carservice.jobshape.enter",
+        leaveEvent: "carservice.jobshape.leave"
     },
-    defaultScenario: 'WORLD_HUMAN_SMOKING'
+    defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
 },
 {
     model: "a_m_m_hillbilly_01",
@@ -34,9 +35,10 @@ let peds = [{
         y: -1318.0531005859375,
         z: 28.090497360229492,
         color: [255, 255, 125, 128],
-        eventName: "carservice.jobshape.enter"
+        enterEvent: "carservice.jobshape.enter",
+        leaveEvent: "carservice.jobshape.leave"
     },
-    defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
+    defaultScenario: 'WORLD_HUMAN_SMOKING'
 },
 {
     model: "a_m_m_hillbilly_01",
@@ -51,7 +53,8 @@ let peds = [{
         y: -1377.6666259765625,
         z: 30.118222579956055,
         color: [255, 255, 125, 128],
-        eventName: "carservice.jobshape.enter"
+        enterEvent: "carservice.jobshape.enter",
+        leaveEvent: "carservice.jobshape.leave"
     },
     defaultScenario: 'WORLD_HUMAN_AA_COFFEE'
 },
@@ -67,10 +70,30 @@ mp.events.add('carservice.jobshape.enter', () => {
     mp.events.callRemote('carservice.jobshape.enter');
 });
 
-mp.events.add('carservice.jobmenu.show', () => {
+mp.events.add('carservice.jobshape.employment', () => {
+    mp.callCEFV(`selectMenu.show = false`);
+    mp.events.callRemote('carservice.jobshape.employment');
+});
+
+mp.events.add('carservice.jobshape.leave', () => {
+    mp.callCEFV(`selectMenu.show = false`);
+});
+
+mp.events.add('carservice.jobmenu.show', (state) => {
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["carServiceJobMenu"])`);
+    switch (state) {
+        case 0:
+            mp.callCEFV(`selectMenu.menu.items[0].text = 'Устроиться на работу'`);
+            break;
+        case 1:
+            mp.callCEFV(`selectMenu.menu.items[0].text = 'Уволиться с работы'`);
+            mp.chat.debug('показать увольнение')
+            break;
+    }
     mp.callCEFV(`selectMenu.show = true`);
 });
+
+
 
 mp.events.add('carservice.shape.enter', () => {
     mp.chat.debug('enter');
@@ -81,3 +104,23 @@ mp.events.add('carservice.shape.leave', () => {
     mp.chat.debug('leave');
     isInCarServiceShape = false;
 });
+
+
+mp.events.add('carservice.diagnostics.offer', () => {
+    mp.chat.debug('offer');
+
+    let veh = mp.getCurrentInteractionEntity();
+    mp.chat.debug(veh.type);
+    if (!veh) return;
+    if (veh.type != 'vehicle') return;
+    setTimeout(() => {
+        let driver = veh.getPedInSeat(-1);
+        mp.chat.debug(driver);
+        if (!driver) return mp.notify.error('В т/с нет водителя', 'Ошибка');
+        let targetId = mp.players.atHandle(driver).remoteId;
+        mp.chat.debug(mp.players.atHandle(driver).remoteId);
+        mp.events.callRemote('carservice.diagnostics.offer', targetId);
+    }, 5000)
+
+});
+

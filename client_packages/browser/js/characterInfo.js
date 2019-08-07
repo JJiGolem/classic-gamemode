@@ -16,6 +16,11 @@ var characterInfo = new Vue({
             if (typeof character == 'string') character = JSON.parse(character);
             this.characters.push(character);
         },
+        onClickCreateCharacter() {
+            if (loader.show) return;
+            loader.show = true;
+            mp.trigger("characterInit.choose");
+        }
     }
 });
 
