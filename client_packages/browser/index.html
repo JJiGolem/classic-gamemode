@@ -116,7 +116,7 @@
         </div>
     </div>
 
-    <div v-cloak="v-cloak" id="characterInfo" v-if="show && characters.length">
+    <div v-cloak="v-cloak" id="characterInfo" v-if="show && i < characters.length">
         <div class="header">Статистика персонажа</div>
         <div class="content">
             <div class="name">{{ characters[i].name.split(' ')[0] }}<br />{{ characters[i].name.split(' ')[1] }}</div>
@@ -165,17 +165,20 @@
                 {{ characters[i].warns }}
             </div>
         </div>
-        <div class="createCharacter" @click="onClickCreateCharacter" v-show="showCreateCharacter">
-            <div class="plus">+</div>
-            <div class="text">Создать<br />персонажа</div>
-        </div>
     </div>
 
     <div v-cloak="v-cloak" id="characterSelector" v-if="show">
         <div>
-            <div class="arrow" @click="left" :class="{disabled: leftArrowDisabled()}">&lt;</div>
-            <button @click="enter">Выбрать</button>
-            <div class="arrow" @click="right" :class="{disabled: rightArrowDisabled()}">&gt;</div>
+            <div class="arrow" @click="left" :class="{disabled: leftArrowDisabled}">&lt;</div>
+            <button @click="enter" :class="{disabled: enterDisabled}">Выбрать</button>
+            <div class="arrow" @click="right" :class="{disabled: rightArrowDisabled}">&gt;</div>
+        </div>
+    </div>
+
+    <div v-cloak="v-cloak" id="createCharacter" @click="onClickCreateCharacter" v-if="show">
+        <div>
+            <div class="plus">+</div>
+            <div class="text">Создать<br />персонажа</div>
         </div>
     </div>
 
@@ -185,12 +188,13 @@
             <div class="arrow arr-up" :class="{active: menu.j > 0}"></div>
             <div class="items">
                 <div class="item" v-for="(item, index) in items" v-show="isItemShow(index)" :class="{selected: index == menu.i}">
-                    <div class="name">{{ item.text }}</div>
-                    <div class="value" v-if="item.values && valuesType(index) == 0 || valuesType(index) == 2">{{ item.values[item.i] }}</div>
-                    <div class="value color-type" v-else-if="item.values && valuesType(index) == 1" :style="{background: item.values[item.i]}"></div>
-                    <div class="value" v-else-if="item.values && valuesType(index) == 3">
-                        <input :ref="item.text" type="text" v-model="item.values[0]" :readonly="menu.i != index" />
+                    <div class="name" :class="{button: item.location}" :style="{'text-align': item.location}">{{ item.text }}</div>
+                    <div class="value" v-if="item.values && valuesType(index) != 1">
+                        {{ item.values[item.i] }}
+                        <img
+                        :src="(menu.i != index)? 'img/selectMenu/edit.png' : 'img/selectMenu/edit-selected.png'" v-if="valuesType(index) == 3" />
                     </div>
+                    <div class="value color-type" v-else-if="item.values && valuesType(index) == 1" :style="{background: item.values[item.i]}"></div>
                 </div>
             </div>
             <div class="arrow arr-down" :class="{active: menu.j < menu.items.length - maxItems}"></div>
@@ -212,6 +216,9 @@
         </div>
         <div class="notification" v-if="notification">
             {{ notification }}
+        </div>
+        <div class="textField" v-show="valuesType(menu.i) == 3">
+            <input :ref="menu.items[menu.i].text" type="text" v-model="menu.items[menu.i].values[0]" :placeholder="menu.items[menu.i].text" />
         </div>
         <div v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
             <div class="lds-rolling">
