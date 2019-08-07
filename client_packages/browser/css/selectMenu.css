@@ -95,6 +95,10 @@
     width: 100%;
 }
 
+#selectMenu .content .items .value img {
+    width: 1.5vh;
+}
+
 #selectMenu .header {
     color: #f1d941;
     background: rgb(0, 0, 0, 0.6);
@@ -189,7 +193,7 @@
     border-bottom: 1px solid #fff;
     color: #fff;
     font-family: Chalet-LondonNineteenSixty;
-    /* font-size: 1.6vh; */
+    font-size: 1.6vh;
     outline: none;
     width: 90%;
 }
