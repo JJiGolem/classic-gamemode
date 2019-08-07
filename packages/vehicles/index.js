@@ -255,14 +255,14 @@ module.exports = {
         let destroys = veh.destroys;
 
         if (mileage < 10) multiplier += 0.01;
-        if (mileage > 10 && mileage < 100) multiplier += 0.05;
-        if (mileage > 100 && mileage < 300) multiplier += 0.1;
-        if (mileage > 300 && mileage < 500) multiplier += 0.2;
-        if (mileage > 500 && mileage < 1000) multiplier += 0.4;
-        if (mileage > 1000 && mileage < 2000) multiplier += 0.5;
-        if (mileage > 2000 && mileage < 4000) multiplier += 0.7;
-        if (mileage > 4000 && mileage < 10000) multiplier += 1;
-        if (mileage > 10000) multiplier += 1.2;
+        if (mileage >= 10 && mileage < 100) multiplier += 0.05;
+        if (mileage >= 100 && mileage < 300) multiplier += 0.1;
+        if (mileage >= 300 && mileage < 500) multiplier += 0.2;
+        if (mileage >= 500 && mileage < 1000) multiplier += 0.4;
+        if (mileage >= 1000 && mileage < 2000) multiplier += 0.5;
+        if (mileage >= 2000 && mileage < 4000) multiplier += 0.7;
+        if (mileage >= 4000 && mileage < 10000) multiplier += 1;
+        if (mileage >= 10000) multiplier += 1.2;
 
         multiplier += 0.01 * destroys;
         return multiplier;

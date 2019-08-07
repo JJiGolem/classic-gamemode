@@ -33,5 +33,44 @@ module.exports = {
         let shape = mp.colshapes.newSphere(carService.x, carService.y, carService.z, 16);
         shape.isCarService = true;
         //shape.carServiceId = carService.id;
+    },
+    getRepairPriceMultiplier(vehicle) {
+        let price = vehicle.properties.price;
+        let multiplier;
+
+        if (price < 5000) {
+            multiplier = 1;
+        }
+        if (price >= 5000 && price < 15000) {
+            multiplier = 1.5;
+        }
+        if (price >= 5000 && price < 15000) {
+            multiplier = 2;
+        }
+        if (price >= 15000 && price < 30000) {
+            multiplier = 4;
+        }
+        if (price >= 30000 && price < 60000) {
+            multiplier = 6;
+        }
+        if (price >= 60000 && price < 120000) {
+            multiplier = 12;
+        }
+        if (price >= 120000 && price < 250000) {
+            multiplier = 25;
+        }
+        if (price >= 250000 && price < 500000) {
+            multiplier = 60;
+        }
+        if (price >= 500000 && price < 1000000) {
+            multiplier = 120;
+        }
+        if (price >= 1000000 && price < 3000000) {
+            multiplier = 250;
+        }
+        if (price >= 3000000) {
+            multiplier = 500;
+        }
+        return multiplier;
     }
 }

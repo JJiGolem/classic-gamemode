@@ -208,3 +208,63 @@ function getRepairAnimType(vehicle) {
             return 0;
     }
 }
+
+mp.keys.bind(0x73, true, function () {
+    mp.events.call('carservice.check.show', data);
+});
+
+let data = {
+    engine: {
+        state: 2,
+        price: 200
+    }
+}
+mp.events.add('carservice.check.show', (data) => {
+    mp.gui.cursor.show(true, true);
+    mp.game.graphics.transitionToBlurred(500);
+    mp.callCEFV(`check.records = []`);
+
+    if (data.body) {
+            mp.callCEFV(`check.records.push({ header: "Повреждения кузова", price: ${data.body.price} })`);
+    }
+
+    if (data.engine) {
+        if (data.engine.state == 1) {
+            mp.callCEFV(`check.records.push({ header: "Износ контактов свечей зажигания", price: ${data.engine.price} })`);
+        }
+        if (data.engine.state == 2) {
+            mp.callCEFV(`check.records.push({ header: "Износ ротора", price: ${data.engine.price} })`);
+        }
+    }
+    if (data.steering) {
+        if (data.steering.state == 1) {
+            mp.callCEFV(`check.records.push({ header: "Неисправность рулевой колонки", price: ${data.steering.price} })`);
+        }
+        if (data.steering.state == 2) {
+            mp.callCEFV(`check.records.push({ header: "Неисправность рулевой рейки", price: ${data.steering.price} })`);
+        }
+    }
+    if (data.fuel) {
+        if (data.fuel.state == 1) {
+            mp.callCEFV(`check.records.push({ header: "Неисправность топливного фильтра", price: ${data.fuel.price} })`);
+        }
+        if (data.fuel.state == 2) {
+            mp.callCEFV(`check.records.push({ header: "Износ топливной системы", price: ${data.fuel.price} })`);
+        }
+    }
+    if (data.brake) {
+        if (data.brake.state == 1) {
+            mp.callCEFV(`check.records.push({ header: "Протечка тормозной жидкости", price: ${data.brake.price} })`);
+        }
+        if (data.brake.state == 2) {
+            mp.callCEFV(`check.records.push({ header: "Износ колодок", price: ${data.brake.price} })`);
+        }
+    }
+    mp.callCEFV('check.show = true')
+});
+
+mp.events.add('carservice.check.close', (data) => {
+    mp.gui.cursor.show(false, false);
+    mp.game.graphics.transitionFromBlurred(500);
+    mp.callCEFV('check.show = false')
+});

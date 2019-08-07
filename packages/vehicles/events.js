@@ -7,6 +7,7 @@ module.exports = {
         // console.log(now);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
+        
         // console.log('ENGINE ' + vehicle.engineState);
         // console.log('STEERING ' + vehicle.steeringState);
         // console.log('FUEL ' + vehicle.fuelState);

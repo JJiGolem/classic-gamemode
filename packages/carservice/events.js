@@ -1,4 +1,12 @@
 var carservice = require('./index.js');
+
+let DEFAULT_PRICE = {
+    BODY: 1,
+    ENGINE: 120,
+    FUEL: 80,
+    STEERING: 110,
+    BRAKE: 90
+}
 module.exports = {
     "init": () => {
         carservice.init();
@@ -107,5 +115,73 @@ module.exports = {
                 mp.events.call('animations.play', player, 'mini@repair', 'fixing_a_player', 1, 49);
                 break;
         }
+        setTimeout(() => {
+            try {
+                mp.events.call('carservice.diagnostics.end', player);
+            } catch (err) {
+                console.log(err);
+            }
+
+        }, 5000)
+    },
+    "carservice.diagnostics.end": (player) => {
+        let target = player.repairTarget;
+        let vehicle = player.repairTargetVehicle;
+        //console.log(vehicle);
+        console.log(vehicle.bodyHealth);
+
+        let multiplier = carservice.getRepairPriceMultiplier(vehicle);
+        console.log(multiplier);
+        let checkData = {};
+        target.repairPrice = 0;
+        if (vehicle.engineState) {
+            let price = parseInt(DEFAULT_PRICE.ENGINE * vehicle.engineState * multiplier);
+            console.log(price);
+            target.repairPrice += price;
+            checkData.engine = {
+                state: vehicle.engineState,
+                price: price
+            }
+        }
+        if (vehicle.fuelState) {
+            let price = parseInt(DEFAULT_PRICE.FUEL * vehicle.fuelState * multiplier);
+            console.log(price);
+            target.repairPrice += price;
+            checkData.fuel = {
+                state: vehicle.fuelState,
+                price: price
+            }
+        }
+        if (vehicle.steeringState) {
+            let price = parseInt(DEFAULT_PRICE.STEERING * vehicle.steeringState * multiplier);
+            console.log(price);
+            target.repairPrice += price;
+            checkData.steering = {
+                state: vehicle.steeringState,
+                price: price
+            }
+        }
+        if (vehicle.brakeState) {
+            let price = parseInt(DEFAULT_PRICE.BRAKE * vehicle.brakeState * multiplier);
+            console.log(price);
+            target.repairPrice += price;
+            checkData.brake = {
+                state: vehicle.brakeState,
+                price: price
+            }
+        }
+
+        if (vehicle.bodyHealth < 999) {
+            let price = parseInt((1000 - vehicle.bodyHealth) * DEFAULT_PRICE.BODY * multiplier);
+            console.log(price);
+            target.repairPrice += price;
+            checkData.body = {
+                price: price
+            }
+        }
+
+        if (Object.keys(checkData).length == 0) return target.call('notifications.push.success', ['Т/с не нуждается в ремонте', 'Диагностика']);
+        target.call('carservice.check.show', [checkData])
     }
+
 }

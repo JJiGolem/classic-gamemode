@@ -25,6 +25,7 @@
     <link rel="stylesheet" type="text/css" href="css/interactionMenu.css" />
     <link rel="stylesheet" type="text/css" href="build/css/styles.css">
     <link rel="stylesheet" type="text/css" href="css/carSpecifications.css" />
+    <link rel="stylesheet" type="text/css" href="css/check.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -464,6 +465,48 @@
     
 
 
+    <div id="check" v-if="show">
+        <div class="close" @click="hide">X</div>
+        <div class="content">
+            <div class="header">
+                <div class="name">{{ checkName }}</div>
+                <div class="logo">
+                    <img :src="pathToLogo" />
+                </div>
+            </div>
+            <svg class="head-line">
+                <line x1="0" y1="0" x2="100%" y2="0"></line>
+            </svg>
+            <div class="body">
+                <div class="record" v-for="record in records">
+                    <div class="left">{{ record.header }}</div>
+                    <div class="right">{{ record.price | split }}$</div>
+                </div>
+                <svg class="total-line">
+                    <line x1="70%" y1="0" x2="100%" y2="0"></line>
+                </svg>
+                <div class="total">
+                    <span>Итого:</span> {{ totalPrice | split }}$
+                </div>
+            </div>
+            <div class="footer">
+                <div>
+                    <div class="pay" @click="pay">
+                        <div>Оплатить</div>
+                        <svg><line x1="0" y1="0" x2="100%" y2="0"></line></svg>
+                    </div>
+                </div>
+                <div>
+                    <div class="nopay" @click="refuse">
+                        <div>Отказаться</div>
+                        <svg><line x1="0" y1="0" x2="100%" y2="0"></line></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- ------------------------ REACT ------------------------------ -->
     <script async src="build/js/build.js" type="text/javascript"></script>
     <div id="root"></div>
@@ -483,6 +526,7 @@
     <script src="js/speedometer.js"></script>
     <script src="js/interactionMenu.js"></script>
     <script src="js/carSpecifications.js"></script>
+    <script src="js/check.js"></script>
 </body>
 
 </html>
