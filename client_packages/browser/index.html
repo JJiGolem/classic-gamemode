@@ -116,7 +116,7 @@
         </div>
     </div>
 
-    <div v-cloak="v-cloak" id="characterInfo" v-if="show && characters.length">
+    <div v-cloak="v-cloak" id="characterInfo" v-if="show && i < characters.length">
         <div class="header">Статистика персонажа</div>
         <div class="content">
             <div class="name">{{ characters[i].name.split(' ')[0] }}<br />{{ characters[i].name.split(' ')[1] }}</div>
@@ -165,17 +165,20 @@
                 {{ characters[i].warns }}
             </div>
         </div>
-        <div class="createCharacter" @click="onClickCreateCharacter" v-show="showCreateCharacter">
-            <div class="plus">+</div>
-            <div class="text">Создать<br />персонажа</div>
-        </div>
     </div>
 
     <div v-cloak="v-cloak" id="characterSelector" v-if="show">
         <div>
-            <div class="arrow" @click="left" :class="{disabled: leftArrowDisabled()}">&lt;</div>
-            <button @click="enter">Выбрать</button>
-            <div class="arrow" @click="right" :class="{disabled: rightArrowDisabled()}">&gt;</div>
+            <div class="arrow" @click="left" :class="{disabled: leftArrowDisabled}">&lt;</div>
+            <button @click="enter" :class="{disabled: enterDisabled}">Выбрать</button>
+            <div class="arrow" @click="right" :class="{disabled: rightArrowDisabled}">&gt;</div>
+        </div>
+    </div>
+
+    <div v-cloak="v-cloak" id="createCharacter" @click="onClickCreateCharacter" v-if="show">
+        <div>
+            <div class="plus">+</div>
+            <div class="text">Создать<br />персонажа</div>
         </div>
     </div>
 

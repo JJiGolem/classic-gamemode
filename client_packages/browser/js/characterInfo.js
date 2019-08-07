@@ -5,7 +5,8 @@ var characterInfo = new Vue({
         characters: [], // массив с данными о персонажах
         // Индекс текущего персонажа
         i: 0,
-        showCreateCharacter: false, // если true, то показаваем кнопку 'Создать персонажа'
+        // Возможность создать ещё одного персонажа
+        canNewCharacter: true
     },
     methods: {
         pretty(val) {
@@ -15,10 +16,6 @@ var characterInfo = new Vue({
             if (typeof character == 'string') character = JSON.parse(character);
             this.characters.push(character);
         },
-        onClickCreateCharacter() {
-            console.log("Кликнули на создание персонажа");
-            // TODO: Реализация...
-        }
     }
 });
 
@@ -48,34 +45,52 @@ characterInfo.addCharacter({
     warns: 0
 });
 characterInfo.show = true;*/
-// characterInfo.showCreateCharacter = true;
 
 var characterSelector = new Vue({
     el: "#characterSelector",
     methods: {
         left() {
-            if (loader.show) return;
+            if (loader.show || this.leftArrowDisabled) return;
             mp.trigger("characterInit.chooseLeft");
         },
         enter() {
-            if (loader.show) return;
+            if (loader.show || this.enterDisabled) return;
             loader.show = true;
             mp.trigger("characterInit.choose");
         },
         right() {
-            if (loader.show) return;
+            if (loader.show || this.rightArrowDisabled) return;
             mp.trigger("characterInit.chooseRight");
         },
-        leftArrowDisabled() {
-            return characterInfo.i == 0;
-        },
-        rightArrowDisabled() {
-            return characterInfo.i == characterInfo.characters.length - 1;
-        }
     },
     computed: {
         show() {
             return characterInfo.show && characterInfo.characters.length;
+        },
+        leftArrowDisabled() {
+            return characterInfo.i <= 0;
+        },
+        rightArrowDisabled() {
+            if (characterInfo.i == characterInfo.characters.length - 1 && !characterInfo.canNewCharacter) return true;
+            return characterInfo.i > characterInfo.characters.length - 1;
+        },
+        enterDisabled() {
+            return characterInfo.i > characterInfo.characters.length - 1;
+        },
+    }
+});
+
+var createCharacter = new Vue({
+    el: "#createCharacter",
+    computed: {
+        show() {
+            return characterInfo.canNewCharacter && characterInfo.characters.length && characterInfo.i >= characterInfo.characters.length;
+        }
+    },
+    methods: {
+        onClickCreateCharacter() {
+            alert("Кликнули на создание персонажа");
+            // TODO: Реализация...
         }
     }
 });
