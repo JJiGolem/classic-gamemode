@@ -189,11 +189,8 @@
             <div class="items">
                 <div class="item" v-for="(item, index) in items" v-show="isItemShow(index)" :class="{selected: index == menu.i}">
                     <div class="name" :class="{button: item.location}" :style="{'text-align': item.location}">{{ item.text }}</div>
-                    <div class="value" v-if="item.values && valuesType(index) == 0 || valuesType(index) == 2">{{ item.values[item.i] }}</div>
+                    <div class="value" v-if="item.values && valuesType(index) != 1">{{ item.values[item.i] }}</div>
                     <div class="value color-type" v-else-if="item.values && valuesType(index) == 1" :style="{background: item.values[item.i]}"></div>
-                    <div class="value" v-else-if="item.values && valuesType(index) == 3">
-                        <input :ref="item.text" type="text" v-model="item.values[0]" :readonly="menu.i != index" />
-                    </div>
                 </div>
             </div>
             <div class="arrow arr-down" :class="{active: menu.j < menu.items.length - maxItems}"></div>
@@ -215,6 +212,9 @@
         </div>
         <div class="notification" v-if="notification">
             {{ notification }}
+        </div>
+        <div class="textField" v-show="valuesType(menu.i) == 3">
+            <input :ref="menu.items[menu.i].text" type="text" v-model="menu.items[menu.i].values[0]" :placeholder="menu.items[menu.i].text" />
         </div>
         <div v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
             <div class="lds-rolling">
