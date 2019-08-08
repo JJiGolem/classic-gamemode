@@ -72,5 +72,23 @@ module.exports = {
             multiplier = 500;
         }
         return multiplier;
+    },
+    repairVehicle(vehicle) {
+        try {
+            if (vehicle.db) {
+                vehicle.db.update({
+                    engineState: 0,
+                    fuelState: 0,
+                    steeringState: 0,
+                    brakeState: 0
+                });
+            }
+            vehicle.engineState = 0;
+            vehicle.fuelState = 0;
+            vehicle.steeringState = 0;
+            vehicle.brakeState = 0;
+        } catch (err) {
+            console.log(err);
+        }
     }
 }

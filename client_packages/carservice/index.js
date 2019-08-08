@@ -159,12 +159,12 @@ mp.events.add('carservice.diagnostics.preparation', (vehId) => {
 
     mp.events.add('render', () => {
         if (isPreparingForDiagnostics) {
-            mp.chat.debug(mp.players.local.isWalking());
+            //mp.chat.debug(mp.players.local.isWalking());
             if (!mp.players.local.isWalking()) {
                 isPreparingForDiagnostics = false;
                 mp.chat.debug('остановился');
-                //mp.players.local.freezePosition(true);
-                //mp.events.callRemote('carservice.diagnostics.start');
+                
+
                 mp.players.local.setHeading(currentRepairingVehicle.getHeading() - 180);
                 //let newpos = mp.players.local.getOffsetFromInWorldCoords(0, 0.5, 0);
 
@@ -178,6 +178,13 @@ mp.events.add('carservice.diagnostics.preparation', (vehId) => {
                     mp.players.local.position = newpos;
                 }
                 let animType = getRepairAnimType(currentRepairingVehicle);
+                setTimeout(() => {
+                    try {
+                        mp.players.local.freezePosition(true);
+                    } catch (err) {
+
+                    }      
+                }, 100);
                 mp.events.callRemote('carservice.diagnostics.start', animType);
             }
         }
@@ -267,4 +274,8 @@ mp.events.add('carservice.check.close', (data) => {
     mp.gui.cursor.show(false, false);
     mp.game.graphics.transitionFromBlurred(500);
     mp.callCEFV('check.show = false')
+});
+
+mp.events.add('carservice.service.end.mechanic', () => {
+    mp.players.local.freezePosition(false);
 });

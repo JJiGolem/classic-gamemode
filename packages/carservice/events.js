@@ -1,4 +1,6 @@
-var carservice = require('./index.js');
+let carservice = require('./index.js');
+
+let money = call('money');
 
 let DEFAULT_PRICE = {
     BODY: 1,
@@ -7,6 +9,19 @@ let DEFAULT_PRICE = {
     STEERING: 110,
     BRAKE: 90
 }
+
+let DEFAULT_DIAGNOSTICS_PRICE = 50;
+
+let DEFAULT_SALARY = {
+    DIAGNOSTICS: 0.2,
+    REPAIR: 0.1
+}
+
+let DEFAULT_INCOME = {
+    DIAGNOSTICS: 0.3,
+    REPAIR: 0.1
+}
+
 module.exports = {
     "init": () => {
         carservice.init();
@@ -26,23 +41,34 @@ module.exports = {
     "carservice.jobshape.employment": (player) => {
         if (player.character.job == 1) {
             mp.events.call("jobs.leave", player);
+            player.call('carservice.shape.leave');
         } else {
             mp.events.call("jobs.set", player, 1);
-        }
-    },
-    "playerEnterColshape": (player, shape) => {
-        if (shape.isCarService) {
-            player.call('chat.message.push', [`!{#ffffff}${player.name} зашел в колшейп carService`]);
             player.call('carservice.shape.enter');
         }
     },
-    "playerExitColshape": (player, shape) => {
+    "playerEnterColshape": (player, shape) => {
+        if (!player.character) return;
+
         if (shape.isCarService) {
-            player.call('chat.message.push', [`!{#ffffff}${player.name} вышел с колшейпа carService`]);
-            player.call('carservice.shape.leave');
+            if (player.character.job == 1) {
+                player.call('chat.message.push', [`!{#ffffff}${player.name} зашел в колшейп carService`]);
+                player.call('carservice.shape.enter');
+            }
+        }
+    },
+    "playerExitColshape": (player, shape) => {
+        if (!player.character) return;
+
+        if (shape.isCarService) {
+            if (player.character.job == 1) {
+                player.call('chat.message.push', [`!{#ffffff}${player.name} вышел с колшейпа carService`]);
+                player.call('carservice.shape.leave');
+            }
         }
     },
     "carservice.diagnostics.offer": (player, targetId) => {
+        if (player.character.job != 1) return player.call('notifications.push.error', ['Вы не механик', 'Ошибка']);
         let target = mp.players.at(targetId);
         if (!target) return;
         let vehicle = target.vehicle;
@@ -66,6 +92,10 @@ module.exports = {
         let offer = target.diagnosticsOffer;
         let sender = mp.players.at(offer.playerId);
         let vehicleToRepair = target.vehicleToRepair;
+        /// Снятие и передача денег
+
+        let salary = parseInt(DEFAULT_DIAGNOSTICS_PRICE * DEFAULT_SALARY.DIAGNOSTICS);
+        sender.call('notifications.push.success', [`К вашей з/п добавлено $${salary}`, 'Автомастерская']);
         //if (target.vehicle != vehicleToRepair) return;
         if (!sender) return;
         if (sender.senderDiagnosticsOffer.targetPlayer != target) return;
@@ -86,6 +116,15 @@ module.exports = {
         //if (!target.vehicle) return;
         let vehId = target.vehicle.id;
         player.repairTargetVehicle = target.vehicle;
+        target.repairVehicle = target.vehicle;
+        if (target.vehicle.engine == true) {
+            target.vehicle.engine = false;
+            target.call('vehicles.engine.toggle', [false]);
+            target.vehicle.setVariable("engine", false);
+        }
+
+        target.vehicle.isBeingRepaired = true;
+
         setTimeout(() => {
             console.log('отправляем preparation')
             player.call('carservice.diagnostics.preparation', [vehId]);
@@ -101,6 +140,9 @@ module.exports = {
         //vehicle.setVariable('hood', true);
         vehicle.setVariable("hood", true);
         //player.heading = vehicle.heading - 180;
+
+        player.lastRepairAnim = animType;
+
         switch (animType) {
             case 0:
                 mp.events.call('animations.play', player, 'mini@repair', 'fixing_a_ped', 1, 49);
@@ -127,6 +169,8 @@ module.exports = {
     "carservice.diagnostics.end": (player) => {
         let target = player.repairTarget;
         let vehicle = player.repairTargetVehicle;
+
+        target.currentMechanic = player;
         //console.log(vehicle);
         console.log(vehicle.bodyHealth);
 
@@ -179,9 +223,125 @@ module.exports = {
                 price: price
             }
         }
-
-        if (Object.keys(checkData).length == 0) return target.call('notifications.push.success', ['Т/с не нуждается в ремонте', 'Диагностика']);
+        console.log(target.repairPrice);
+        mp.events.call('animations.stop', player);
+        if (Object.keys(checkData).length == 0) {
+            target.call('notifications.push.success', ['Т/с не нуждается в ремонте', 'Диагностика']);
+            mp.events.call('carservice.service.end.mechanic', player, 1);
+            mp.events.call('carservice.service.end.target', target, 1);
+            return;
+        }
         target.call('carservice.check.show', [checkData])
-    }
+    },
+    "carservice.check.accept": (player, state) => {
+        console.log(`check accept: ${state}`);
+        let target = player;
+        let mechanic = player.currentMechanic;
+        let vehicle = mechanic.repairTargetVehicle;
+        if (!target) return;
+        if (!mechanic) return;
+        if (!vehicle) return;
 
+        if (state) {
+            /// Снять деньги
+            if (target.character.money < target.repairPrice) {
+                target.call('notifications.push.error', [`Недостаточно денег`, `Автомастерская`]);
+                mechanic.call('notifications.push.error', [`Клиент отказался`, `Автомастерская`]);
+                mp.events.call('carservice.service.end.mechanic', mechanic, 1);
+                mp.events.call('carservice.service.end.target', target, 1);
+                return;
+            }
+            money.removeCash(target, target.repairPrice, function (result) {
+                if (result) {
+                    target.call('notifications.push.success', [`Вы заплатили ${target.repairPrice}`, `Автомастерская`]);
+                    mechanic.call('notifications.push.success', [`Клиент оплатил ремонт`, `Автомастерская`]);
+
+                    console.log(target.repairPrice);
+                    carservice.repairVehicle(vehicle);
+                    let salary = parseInt(target.repairPrice * DEFAULT_SALARY.REPAIR);
+                    mechanic.call('notifications.push.success', [`К вашей з/п добавлено $${salary}`, 'Автомастерская']);
+                    switch (mechanic.lastRepairAnim) {
+                        case 0:
+                            mp.events.call('animations.play', mechanic, 'mini@repair', 'fixing_a_ped', 1, 49);
+                            break;
+                        case 1:
+                            mp.events.call('animations.play', mechanic, 'anim@amb@clubhouse@tutorial@bkr_tut_ig3@', 'machinic_loop_mechandplayer', 1, 49);
+                            break;
+                        case 2:
+                            mp.events.call('animations.play', mechanic, 'misscarsteal2fixer', 'confused_a', 1, 49);
+                            break;
+                        case 3:
+                            mp.events.call('animations.play', mechanic, 'mini@repair', 'fixing_a_player', 1, 49);
+                            break;
+                    }
+
+                    setTimeout(() => {
+                        try {
+                            mp.events.call('carservice.service.end.mechanic', mechanic, 0);
+                            mp.events.call('carservice.service.end.target', target, 0);
+                        } catch (err) {
+                            console.log(err);
+                        }
+                    }, 5000);
+                } else {
+                    target.call('notifications.push.error', [`Ошибка оплаты`, `Автомастерская`]);
+                    mechanic.call('notifications.push.error', [`Ошибка оплаты`, `Автомастерская`]);
+                    mp.events.call('carservice.service.end.mechanic', mechanic, 1);
+                    mp.events.call('carservice.service.end.target', target, 1);
+                    return;
+                }
+            });
+
+        } else {
+            mechanic.call('notifications.push.warning', ['Клиент отказался от ремонта', 'Автомастерская'])
+            target.call('notifications.push.warning', ['Вы отказались от ремонта', 'Автомастерская'])
+            mp.events.call('carservice.service.end.mechanic', mechanic, 1);
+            mp.events.call('carservice.service.end.target', target, 1);
+
+        }
+
+    },
+
+    "carservice.service.end.mechanic": (player, result) => {
+        switch (result) {
+            /// Ремонт завершен удачно
+            case 0:
+                player.call('notifications.push.success', [`Ремонт окончен`, 'Автомастерская']);
+                break;
+            /// Прерывание ремонта без дополнительных уведомлений
+            case 1:
+                break;
+            /// Прерывание ремонта с уведомлением об окончании
+            default:
+                player.call('notifications.push.warning', [`Ремонт прерван`, 'Автомастерская']);
+                break;
+        }
+
+        mp.events.call('animations.stop', player);
+        player.call('carservice.service.end.mechanic');
+    },
+    "carservice.service.end.target": (player, result) => {
+        let vehicle = player.repairVehicle;
+        if (!vehicle) return;
+        switch (result) {
+            /// Ремонт завершен удачно
+            case 0:
+                player.call('notifications.push.success', [`Ремонт окончен`, 'Автомастерская']);
+                vehicle.repair();
+                vehicle.isBeingRepaired = false;
+                vehicle.setVariable('hood', false);
+                break;
+            /// Прерывание ремонта без дополнительных уведомлений
+            case 1:
+                vehicle.isBeingRepaired = false;
+                vehicle.setVariable('hood', false);
+                break;
+            /// Прерывание ремонта с уведомлением об окончании
+            default:
+                player.call('notifications.push.warning', [`Ремонт прерван`, 'Автомастерская']);
+                vehicle.isBeingRepaired = false;
+                vehicle.setVariable('hood', false);
+                break;
+        }
+    }
 }

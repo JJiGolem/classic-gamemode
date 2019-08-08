@@ -30,7 +30,7 @@ module.exports = {
     /// обработка команды ahelp
     "admin.command.help": (player, args) => {
         if (!args[0] || isNaN(parseInt(args[0]))) return player.call('chat.message.push', [`!{#ffffff} Используйте /ahelp [уровень администрирования]`]);
-        //TODO: Проверка на уровень админки
+            
         if (args[0] < 1 || args[0] > player.character.admin) return player.call('chat.message.push', [`!{#ffffff} Нет доступа`]);
 
         player.call('chat.message.push', [`!{#c1f051}Команды ${args[0]} уровня администрирования:`]);

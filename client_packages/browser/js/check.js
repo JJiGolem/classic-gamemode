@@ -25,13 +25,17 @@ var check = new Vue({
     methods: {
         hide () {
             this.show = false;
+            mp.trigger("callRemote", "carservice.check.accept", 0);
             mp.trigger('carservice.check.close');
         },
         pay () {
-            console.log("Оплатить");
+            mp.trigger('chat.message.push', '!{#ffffff} pay')
+            mp.trigger("callRemote", "carservice.check.accept", 1);
+            mp.trigger('carservice.check.close');
         },
         refuse () {
-            console.log("Отказаться");
+            mp.trigger("callRemote", "carservice.check.accept", 0);
+            mp.trigger('carservice.check.close');
         },
     },
     filters: {
@@ -44,7 +48,7 @@ var check = new Vue({
 
 //for tests
 check.records.push({ header: "Ремонт ротора", price: 2500 });
-check.records.push({ header: "Ремонт рулевой колонки", price: 2500 });
-check.records.push({ header: "Ремонт контактов свечей зажигания", price: 2500 });
-check.records.push({ header: "Ремонт ротора", price: 2500 });
-check.records.push({ header: "Ремонт рулевой колонки", price: 2500 });
+// check.records.push({ header: "Ремонт рулевой колонки", price: 2500 });
+// check.records.push({ header: "Ремонт контактов свечей зажигания", price: 2500 });
+// check.records.push({ header: "Ремонт ротора", price: 2500 });
+// check.records.push({ header: "Ремонт рулевой колонки", price: 2500 });

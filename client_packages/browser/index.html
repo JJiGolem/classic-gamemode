@@ -464,8 +464,7 @@
     </div>
     
 
-
-    <div id="check" v-if="show">
+    <div v-cloak="v-cloak" id="check" v-if="show">
         <div class="close" @click="hide">X</div>
         <div class="content">
             <div class="header">
@@ -491,15 +490,15 @@
             </div>
             <div class="footer">
                 <div>
-                    <div class="pay" @click="pay">
-                        <div>Оплатить</div>
-                        <svg><line x1="0" y1="0" x2="100%" y2="0"></line></svg>
+                    <div class="pay" @click="pay($event)">
+                        <div class="noevent">Оплатить</div>
+                        <svg class="noevent"><line x1="0" y1="0" x2="100%" y2="0"></line></svg>
                     </div>
                 </div>
                 <div>
                     <div class="nopay" @click="refuse">
-                        <div>Отказаться</div>
-                        <svg><line x1="0" y1="0" x2="100%" y2="0"></line></svg>
+                        <div class="noevent">Отказаться</div>
+                        <svg class="noevent"><line x1="0" y1="0" x2="100%" y2="0"></line></svg>
                     </div>
                 </div>
             </div>
