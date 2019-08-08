@@ -15,7 +15,16 @@ module.exports = {
 
         // TODO: проверка на access
         if (player.character.admin >= cmd.access) {
+            if (cmd.args) {
+                let requiredArgs = cmd.args.split('] ').length;
+
+                if (args.length < requiredArgs) {
+                    return player.call('chat.message.push', [`!{#ffffff} Используйте: ${command} ${cmd.args}`]);
+                }
+            }
             cmd.handler(player, args);
+            // console.log(requiredArgs);
+
         }
     },
     /// обработка команды ahelp
