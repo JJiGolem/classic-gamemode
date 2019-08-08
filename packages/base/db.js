@@ -10,7 +10,7 @@ module.exports = {
     /// Подключение к БД
     connect: function(callback) {
         console.log("[DATABASE] db connect...")
-        this.sequelize = new Sequelize('classic_db', 'root', '', {
+        this.sequelize = new Sequelize('classic_db', 'root', '4FKqZNvgMQ1nuyf', {
             host: 'localhost',
             dialect: 'mysql',
             logging: false,
