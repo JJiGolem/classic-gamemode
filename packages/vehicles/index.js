@@ -286,12 +286,14 @@ module.exports = {
         }
         if (toUpdate) {
             console.log('обновляем поломки в бд');
-            veh.db.update({
-                engineState: veh.engineState,
-                fuelState: veh.fuelState,
-                steeringState: veh.steeringState,
-                brakeState: veh.brakeState
-            });
+            if (veh.db) {
+                veh.db.update({
+                    engineState: veh.engineState,
+                    fuelState: veh.fuelState,
+                    steeringState: veh.steeringState,
+                    brakeState: veh.brakeState
+                });
+            }
         }
     },
     getVehicleBySqlId() {

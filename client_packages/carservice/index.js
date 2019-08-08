@@ -117,8 +117,8 @@ mp.events.add('carservice.diagnostics.offer', () => {
     mp.chat.debug(veh.type);
     if (!veh) return mp.chat.debug('!veh');
     if (veh.type != 'vehicle') return mp.chat.debug(`veh.type != 'vehicle'`);
-    let timer = setTimeout(() => {
-        try {
+    // let timer = setTimeout(() => {
+        // try {
             mp.chat.debug('timeout')
             let driver = veh.getPedInSeat(-1);
             mp.chat.debug(driver);
@@ -126,11 +126,12 @@ mp.events.add('carservice.diagnostics.offer', () => {
             let targetId = mp.players.atHandle(driver).remoteId;
             mp.chat.debug(mp.players.atHandle(driver).remoteId);
             mp.events.callRemote('carservice.diagnostics.offer', targetId);
-        } catch (err) {
-            mp.chat.debug(JSON.stringify(err));
-        }
+            mp.notify.success('Вы предложили диагностику', 'Автомастерская');
+        // } catch (err) {
+        //     mp.chat.debug(JSON.stringify(err));
+        // }
 
-    }, 3000)
+   // }, 3000)
 
 });
 

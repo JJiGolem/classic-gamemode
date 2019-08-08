@@ -161,10 +161,10 @@ module.exports = {
         let state = vehicle.locked;
         if (state) {
             vehicle.locked = false;
-            player.call('notifications.push.success', ['Вы открыли т/с', 'Транспорт']);
+            player.call('notifications.push.success', ['Вы открыли транспорт', 'Успешно']);
         } else {
             vehicle.locked = true;
-            player.call('notifications.push.success', ['Вы закрыли т/с', 'Транспорт']);
+            player.call('notifications.push.success', ['Вы закрыли транспорт', 'Успешно']);
         }
     },
     "vehicles.explode": (player, vehicleId) => {

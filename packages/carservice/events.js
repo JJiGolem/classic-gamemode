@@ -164,7 +164,7 @@ module.exports = {
                 console.log(err);
             }
 
-        }, 5000)
+        }, 10000)
     },
     "carservice.diagnostics.end": (player) => {
         let target = player.repairTarget;
@@ -282,7 +282,7 @@ module.exports = {
                         } catch (err) {
                             console.log(err);
                         }
-                    }, 5000);
+                    }, 10000);
                 } else {
                     target.call('notifications.push.error', [`Ошибка оплаты`, `Автомастерская`]);
                     mechanic.call('notifications.push.error', [`Ошибка оплаты`, `Автомастерская`]);
