@@ -14,6 +14,10 @@ mp.inventory = {
     initItems(items) {
         if (typeof items == 'object') items = JSON.stringify(items);
         mp.callCEFV(`inventory.initItems('${items}')`);
+    },
+    setItemsInfo(itemsInfo) {
+        if (typeof itemsInfo == 'object') itemsInfo = JSON.stringify(itemsInfo);
+        mp.callCEFV(`inventory.setItemsInfo('${itemsInfo}')`);
     }
 };
 
@@ -23,4 +27,8 @@ mp.events.add("characterInit.done", () => {
 
 mp.events.add("inventory.initItems", (items) => {
     mp.inventory.initItems(items);
+});
+
+mp.events.add("inventory.setItemsInfo", (itemsInfo) => {
+    mp.inventory.setItemsInfo(itemsInfo);
 });

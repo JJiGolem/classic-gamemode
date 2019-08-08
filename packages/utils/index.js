@@ -1,9 +1,11 @@
 "use strict";
+let util = require('util');
 /// Утилиты и функции использующиеся в нескольких модулях
 module.exports = {
     /// Инициализатор функций
     init() {
-        
+        // для удобства использования
+        console.logObject = this.logObject;
     },
     /// Отправка писем на почту
     sendMail(to, subject, message) {
@@ -31,5 +33,12 @@ module.exports = {
         var rand = min - 0.5 + Math.random() * (max - min + 1);
         rand = Math.round(rand);
         return rand;
+    },
+    // Глубокое логирование JS-объекта без свёрток [Object], [Array] и пр.
+    logObject(obj) {
+        console.log(util.inspect(obj, {
+            showHidden: false,
+            depth: null
+        }));
     },
 };

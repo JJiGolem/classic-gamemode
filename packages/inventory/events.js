@@ -1,9 +1,10 @@
-var inventory = require('./index.js');
+let inventory = require('./index.js');
 module.exports = {
     "init": () => {
-        inventory.loadInventoryItemsFromDB();
+        inventory.init();
     },
     "characterInit.done": (player) => {
+        inventory.initPlayerItemsInfo(player);
         inventory.initPlayerInventory(player);
     }
 };

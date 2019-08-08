@@ -357,6 +357,7 @@ var inventory = new Vue({
 
         // ******************  [ Inventory Config ] ******************
         setItemsInfo(itemsInfo) {
+            if (typeof itemsInfo == 'string') itemsInfo = JSON.parse(itemsInfo);
             for (var itemId in itemsInfo) {
                 Vue.set(this.itemsInfo, itemId, itemsInfo[itemId]);
             }
