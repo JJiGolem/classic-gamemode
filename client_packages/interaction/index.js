@@ -130,7 +130,7 @@ mp.events.add('characterInit.done', () => { /// E
             //     mp.players.local.setHeading(currentInteractionEntity.getHeading() - 180);
             // }, 5000);
             // mp.players.local.taskFollowNavMeshToCoord(pos.x, pos.y, pos.z, 1, -1, 1, true, 0);
-            
+
             // *** TEMP ***
             let vehClass = currentInteractionEntity.getClass();
             if (classesToIgnore.includes(vehClass)) {
@@ -197,7 +197,11 @@ mp.events.add('render', () => {
 });
 
 mp.events.add('interaction.ejectlist.get', () => {
-    mp.events.callRemote('vehicles.ejectlist.get', currentInteractionEntity.remoteId);
+    if (!currentInteractionEntity) return;
+    try {
+        mp.events.callRemote('vehicles.ejectlist.get', currentInteractionEntity.remoteId);
+    } catch (err) {
+    }
 });
 
 mp.events.add('interaction.ejectlist.show', (list) => {
