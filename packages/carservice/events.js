@@ -125,10 +125,10 @@ module.exports = {
 
         target.vehicle.isBeingRepaired = true;
 
-        setTimeout(() => {
+        //setTimeout(() => {
             console.log('отправляем preparation')
             player.call('carservice.diagnostics.preparation', [vehId]);
-        }, 6000);
+        //}, 6000);
 
         player.repairTarget = target;
     },
