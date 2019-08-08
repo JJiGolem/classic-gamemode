@@ -244,7 +244,7 @@ module.exports = {
 
         if (state) {
             /// Снять деньги
-            if (target.character.money < target.repairPrice) {
+            if (target.character.cash < target.repairPrice) {
                 target.call('notifications.push.error', [`Недостаточно денег`, `Автомастерская`]);
                 mechanic.call('notifications.push.error', [`Клиент отказался`, `Автомастерская`]);
                 mp.events.call('carservice.service.end.mechanic', mechanic, 1);

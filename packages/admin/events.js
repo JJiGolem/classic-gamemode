@@ -30,7 +30,7 @@ module.exports = {
     /// обработка команды ahelp
     "admin.command.help": (player, args) => {
         if (!args[0] || isNaN(parseInt(args[0]))) return player.call('chat.message.push', [`!{#ffffff} Используйте /ahelp [уровень администрирования]`]);
-            
+
         if (args[0] < 1 || args[0] > player.character.admin) return player.call('chat.message.push', [`!{#ffffff} Нет доступа`]);
 
         player.call('chat.message.push', [`!{#c1f051}Команды ${args[0]} уровня администрирования:`]);
@@ -43,11 +43,13 @@ module.exports = {
     /// Отправить сообщение всем админам
     "admin.notify.all": (message) => {
         mp.players.forEach((current) => {
-            if (current.character.admin > 0) {
-                try {
-                    current.call('chat.message.push', [message]);
-                } catch (err) {
-                    console.log(err);
+            if (current.character) {
+                if (current.character.admin > 0) {
+                    try {
+                        current.call('chat.message.push', [message]);
+                    } catch (err) {
+                        console.log(err);
+                    }
                 }
             }
         });
@@ -55,11 +57,11 @@ module.exports = {
     /// Отправить сообщение всем игрокам
     "admin.notify.players": (message) => {
         mp.players.forEach((current) => {
-                try {
-                    current.call('chat.message.push', [message]);
-                } catch (err) {
-                    console.log(err);
-                }
+            try {
+                current.call('chat.message.push', [message]);
+            } catch (err) {
+                console.log(err);
+            }
         });
     }
 }
