@@ -5,7 +5,7 @@ var hud = new Vue({
         maxPlayers: 1000,
         cash: 0,
         bank: 0,
-        time: new Date().setHours(17).toTimeString().replace(/(\d{2}:\d{2}).*/, '$1'),
+        time: new Date().toTimeString().replace(/(\d{2}:\d{2}).*/, '$1'),
         region: "Округ Блейн",
         street: "Атли-стрит",
         temperature: 17,
@@ -18,7 +18,8 @@ var hud = new Vue({
     },
     methods: {
         updateTime() {
-            this.time = new Date().toTimeString().replace(/(\d{2}:\d{2}).*/, '$1');
+            let newTime = new Date().setHours(17);
+            this.time = newTime.toTimeString().replace(/(\d{2}:\d{2}).*/, '$1');
         },
         pretty(val) {
             return prettyMoney(val);
