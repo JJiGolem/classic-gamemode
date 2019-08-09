@@ -162,7 +162,6 @@ let setInfo = function() {
             warns: ${charInfo.warnNumber}
         });`);
     });
-    mp.callCEFV(`characterInfo.showCreateCharacter = ${charInfos.length == 0};`);
     mp.callCEFV(`characterInfo.show = true;`);
 };
 
@@ -176,9 +175,6 @@ let chooseLeft = function() {
     
     updateMarkers();
     mp.callCEFV(`characterInfo.i = ${currentCharacter};`);
-    if (charNum != currentCharacter) {
-        mp.callCEFV(`characterInfo.showCreateCharacter = false;`);
-    }
     mp.utils.cam.moveTo(
         camPos[0] + currentCharacter * pedDist * sinPedRot,
         camPos[1] + currentCharacter * pedDist * cosPedRot, 
@@ -198,9 +194,6 @@ let chooseRight = function() {
     }
     updateMarkers();
     mp.callCEFV(`characterInfo.i = ${currentCharacter};`);
-    if (currentCharacter == charNum) {
-        mp.callCEFV(`characterInfo.showCreateCharacter = true;`);
-    }
     mp.utils.cam.moveTo(
         camPos[0] + currentCharacter * pedDist * sinPedRot,
         camPos[1] + currentCharacter * pedDist * cosPedRot, 

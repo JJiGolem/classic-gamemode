@@ -224,6 +224,39 @@ module.exports = {
             this.addCash(player, number, callback);
         }
     },
+    /// Для ироков, которые онлайн
+    moveCash(playerFrom, playerTo, number, callback) {
+        if (callback == null) return;
+        number = parseInt(number);
+        if (isNaN(number)) callback(false);
+        if (number < 0 || number > 1000000000) callback(false);
+        if (playerFrom == null || playerTo == null) callback(false);
+        if (playerFrom.character == null || playerTo.character == null) callback(false);
+
+        let cashFrom = playerFrom.character.cash;
+        let cashTo = playerTo.character.cash;
+        db.sequelize.transaction(t => {
+            if (playerFrom.character.cash < number) throw new Error();
+            playerFrom.character.cash = playerFrom.character.cash - number;
+            playerTo.character.cash = playerTo.character.cash + number;
+            return Promise.all([
+                playerTo.character.save({transaction: t}),
+                playerFrom.character.save({transaction: t})
+            ]);
+        }).then(result => {
+            this.changing(playerFrom);
+            this.changing(playerTo);
+            callback(true);
+        }).catch(err => {
+            if (cashFrom != null) {
+                playerFrom.character.cash = cashFrom;
+            }
+            if (cashTo != null) {
+                playerTo.character.cash = cashTo;
+            }
+            callback(false);
+        });
+    },
     changing(player) {
         player.call("money.change", [player.character.cash, player.character.bank]);
     }

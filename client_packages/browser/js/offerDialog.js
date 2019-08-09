@@ -28,6 +28,19 @@ var offerDialog = new Vue({
                     mp.trigger("callRemote", "carservice.diagnostics.accept", 0);
                 },
             },
+            "house_sell": {
+                text: "Swifty Swift предлагает купить его дом",
+                price: 100,
+                on(values) {
+                    this.text = `${values.name} предлагает Вам диагностику транспорта`;
+                },
+                yes() {
+                    mp.trigger("callRemote", "carservice.diagnostics.accept", 1);
+                },
+                no() {
+                    mp.trigger("callRemote", "carservice.diagnostics.accept", 0);
+                },
+            },
         },
         dialog: null,
         timeout: null,
