@@ -59,6 +59,10 @@
     bottom: 2vh;
 }
 
+#hud .voice img {
+    height: 7vh;
+}
+
 #hud .weather {
     background: linear-gradient(to left, #0000, rgb(0, 0, 0, 0.6));
     bottom: 2vh;

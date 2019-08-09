@@ -144,16 +144,16 @@ mp.events.add('carservice.diagnostics.offer', () => {
 mp.events.add('carservice.diagnostics.preparation', (vehId) => {
     mp.busy.add('carservice.mechanicProcess');
     carServiceControlsToDisable = true;
-    mp.chat.debug('prepare');
+    //mp.chat.debug('prepare');
     let vehicle = mp.vehicles.atRemoteId(vehId);
 
     var hoodPos = getHoodPosition(vehicle);
-    mp.chat.debug(JSON.stringify(hoodPos));
+    //mp.chat.debug(JSON.stringify(hoodPos));
     if (hoodPos) {
         var hoodDist = mp.vdist(vehicle.position, hoodPos);
         let pos = vehicle.getOffsetFromInWorldCoords(0, hoodDist + 1, 0);
-        mp.chat.debug(JSON.stringify(pos));
-        mp.chat.debug(JSON.stringify(hoodPos));
+        // mp.chat.debug(JSON.stringify(pos));
+        // mp.chat.debug(JSON.stringify(hoodPos));
         mp.players.local.taskFollowNavMeshToCoord(pos.x, pos.y, pos.z, 1, -1, 1, true, 0);
 
     } else {
@@ -167,14 +167,11 @@ mp.events.add('carservice.diagnostics.preparation', (vehId) => {
 
     mp.events.add('render', () => {
         if (isPreparingForDiagnostics) {
-            //mp.chat.debug(mp.players.local.isWalking());
             if (!mp.players.local.isWalking()) {
                 isPreparingForDiagnostics = false;
                 mp.chat.debug('остановился');
                 
-
                 mp.players.local.setHeading(currentRepairingVehicle.getHeading() - 180);
-                //let newpos = mp.players.local.getOffsetFromInWorldCoords(0, 0.5, 0);
 
                 var hoodPos = getHoodPosition(currentRepairingVehicle);
                 if (hoodPos) {

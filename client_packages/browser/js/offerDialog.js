@@ -13,6 +13,7 @@ var offerDialog = new Vue({
                 },
                 no() {
                     mp.trigger("callRemote", "documents.offer.accept", 0);
+                    mp.trigger("offerDialog.close");
                 },
                 ignore() {
                     alert("Диалог предложения был проигнорирован!");
@@ -26,9 +27,11 @@ var offerDialog = new Vue({
                 },
                 yes() {
                     mp.trigger("callRemote", "carservice.diagnostics.accept", 1);
+                    mp.trigger("offerDialog.close");
                 },
                 no() {
                     mp.trigger("callRemote", "carservice.diagnostics.accept", 0);
+                    mp.trigger("offerDialog.close");
                 },
                 ignore() {
                     alert("Диалог предложения был проигнорирован!");
