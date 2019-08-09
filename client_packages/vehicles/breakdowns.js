@@ -22,6 +22,9 @@ mp.events.add('playerLeaveVehicle', () => {
 mp.events.add('vehicles.breakdowns.init', (data) => {
     if (!mp.players.local.vehicle) return;
     if (!data.engineState && !data.steeringState && !data.fuelState && !data.brakeState) {
+        stopBrakeTimer();
+        stopSteeringTimer();
+        mp.players.local.vehicle.setEnginePowerMultiplier(1);
         return mp.callCEFV('speedometer.danger = 0');
     }
     mp.events.call('notifications.push.warning', 'Обратитесь к механикам', 'Т/с неисправно');
