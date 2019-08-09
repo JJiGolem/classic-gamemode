@@ -89,7 +89,9 @@ var createCharacter = new Vue({
     el: "#createCharacter",
     computed: {
         show() {
-            return characterInfo.canNewCharacter && characterInfo.characters.length && characterInfo.i >= characterInfo.characters.length;
+            return characterInfo.canNewCharacter && characterInfo.show &&
+                (characterInfo.i >= characterInfo.characters.length ||
+                !characterInfo.characters.length);
         }
     },
     methods: {

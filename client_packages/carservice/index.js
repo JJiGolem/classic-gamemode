@@ -2,6 +2,8 @@ let isInCarServiceShape = false;
 let isPreparingForDiagnostics = false;
 let currentRepairingVehicle;
 
+let carServiceControlsToDisable = false;
+
 mp.isInCarService = () => {
     return isInCarServiceShape;
 }
@@ -69,6 +71,8 @@ mp.events.add('characterInit.done', () => {
 });
 
 mp.events.add('carservice.jobshape.enter', () => {
+    if (mp.busy.includes()) return;
+    mp.busy.add('carservice.jobshape');
     mp.events.callRemote('carservice.jobshape.enter');
 });
 
@@ -96,6 +100,7 @@ mp.events.add('carservice.jobmenu.show', (state) => {
 });
 
 mp.events.add('carservice.jobmenu.close', () => {
+    mp.busy.remove('carservice.jobshape');
     mp.callCEFV(`selectMenu.show = false`);
 });
 
@@ -137,6 +142,8 @@ mp.events.add('carservice.diagnostics.offer', () => {
 
 
 mp.events.add('carservice.diagnostics.preparation', (vehId) => {
+    mp.busy.add('carservice.mechanicProcess');
+    carServiceControlsToDisable = true;
     mp.chat.debug('prepare');
     let vehicle = mp.vehicles.atRemoteId(vehId);
 
@@ -217,17 +224,36 @@ function getRepairAnimType(vehicle) {
     }
 }
 
+
+
+let data = {
+    engine: {
+        state: 1,
+        price: 200
+    },
+    steering: {
+        state: 1,
+        price: 350
+    },
+    fuel: {
+        state: 1,
+        price: 350
+    },
+    brake: {
+        state: 1,
+        price: 350
+    },
+    body: {
+        price: 150
+    }
+}
+
 mp.keys.bind(0x73, true, function () {
     mp.events.call('carservice.check.show', data);
 });
 
-let data = {
-    engine: {
-        state: 2,
-        price: 200
-    }
-}
 mp.events.add('carservice.check.show', (data) => {
+    mp.busy.add('carservice.check');
     mp.gui.cursor.show(true, true);
     mp.game.graphics.transitionToBlurred(500);
     mp.callCEFV(`check.records = []`);
@@ -238,45 +264,60 @@ mp.events.add('carservice.check.show', (data) => {
 
     if (data.engine) {
         if (data.engine.state == 1) {
-            mp.callCEFV(`check.records.push({ header: "Износ контактов свечей зажигания", price: ${data.engine.price} })`);
+            mp.callCEFV(`check.records.push({ header: "Неисправность системы охлаждения", price: ${data.engine.price} })`);
         }
         if (data.engine.state == 2) {
-            mp.callCEFV(`check.records.push({ header: "Износ ротора", price: ${data.engine.price} })`);
+            mp.callCEFV(`check.records.push({ header: "Износ поршневых колец", price: ${data.engine.price} })`);
         }
     }
     if (data.steering) {
         if (data.steering.state == 1) {
-            mp.callCEFV(`check.records.push({ header: "Неисправность рулевой колонки", price: ${data.steering.price} })`);
+            mp.callCEFV(`check.records.push({ header: "Неисправность рулевой тяги", price: ${data.steering.price} })`);
         }
         if (data.steering.state == 2) {
-            mp.callCEFV(`check.records.push({ header: "Неисправность рулевой рейки", price: ${data.steering.price} })`);
+            mp.callCEFV(`check.records.push({ header: "Неисправность рулевой колонки", price: ${data.steering.price} })`);
         }
     }
     if (data.fuel) {
         if (data.fuel.state == 1) {
-            mp.callCEFV(`check.records.push({ header: "Неисправность топливного фильтра", price: ${data.fuel.price} })`);
+            mp.callCEFV(`check.records.push({ header: "Неисправность впускного коллектора", price: ${data.fuel.price} })`);
         }
         if (data.fuel.state == 2) {
-            mp.callCEFV(`check.records.push({ header: "Износ топливной системы", price: ${data.fuel.price} })`);
+            mp.callCEFV(`check.records.push({ header: "Неисправность воздушного фильтра", price: ${data.fuel.price} })`);
         }
     }
     if (data.brake) {
         if (data.brake.state == 1) {
-            mp.callCEFV(`check.records.push({ header: "Протечка тормозной жидкости", price: ${data.brake.price} })`);
+            mp.callCEFV(`check.records.push({ header: "Неисправность тормозных цилиндров", price: ${data.brake.price} })`);
         }
         if (data.brake.state == 2) {
-            mp.callCEFV(`check.records.push({ header: "Износ колодок", price: ${data.brake.price} })`);
+            mp.callCEFV(`check.records.push({ header: "Износ тормозных колодок", price: ${data.brake.price} })`);
         }
     }
     mp.callCEFV('check.show = true')
 });
 
 mp.events.add('carservice.check.close', (data) => {
+    mp.busy.remove('carservice.check');
     mp.gui.cursor.show(false, false);
     mp.game.graphics.transitionFromBlurred(500);
     mp.callCEFV('check.show = false')
 });
 
 mp.events.add('carservice.service.end.mechanic', () => {
+    carServiceControlsToDisable = false;
+    mp.busy.remove('carservice.mechanicProcess');
     mp.players.local.freezePosition(false);
 });
+
+
+mp.events.add('render', () => {
+    if (carServiceControlsToDisable) {
+        mp.game.controls.disableControlAction(0, 21, true); /// бег
+        mp.game.controls.disableControlAction(0, 22, true); /// прыжок
+        mp.game.controls.disableControlAction(0, 31, true); /// вперед назад
+        mp.game.controls.disableControlAction(0, 30, true); /// влево вправо
+        mp.game.controls.disableControlAction(0, 24, true); /// удары
+    }
+});
+
