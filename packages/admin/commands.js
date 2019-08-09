@@ -222,7 +222,7 @@ module.exports = {
                 player.setClothes(8, 15, 0, 0);
                 player.setClothes(11, 229, 0, 0);
                 player.setClothes(4, 7, 0, 0);
-                player.setClothes(6, 10, 0, 0);
+                player.setClothes(6, 27, 0, 0);
             }
             // if (args[0] == 2) {
             //     player.setClothes(3, 6, 0, 0);
