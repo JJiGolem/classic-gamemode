@@ -14,6 +14,9 @@ var offerDialog = new Vue({
                 no() {
                     mp.trigger("callRemote", "documents.offer.accept", 0);
                 },
+                ignore() {
+                    alert("Диалог предложения был проигнорирован!");
+                },
             },
             "carservice_diagnostics": {
                 text: "Dun Hill предлагает диагностику вашего транспорта",
@@ -26,6 +29,9 @@ var offerDialog = new Vue({
                 },
                 no() {
                     mp.trigger("callRemote", "carservice.diagnostics.accept", 0);
+                },
+                ignore() {
+                    alert("Диалог предложения был проигнорирован!");
                 },
             },
         },
@@ -40,6 +46,7 @@ var offerDialog = new Vue({
             var self = this;
             clearTimeout(self.timeout);
             self.timeout = setTimeout(() => {
+                self.dialog.ignore();
                 self.hide();
             }, self.showTime);
         },
