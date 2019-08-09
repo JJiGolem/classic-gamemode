@@ -18,9 +18,7 @@ var hud = new Vue({
     },
     methods: {
         updateTime() {
-            let newTime = new Date();
-            newTime.setHours(17);
-            this.time = newTime.toTimeString().replace(/(\d{2}:\d{2}).*/, '$1');
+            this.time = new Date().toTimeString().replace(/(\d{2}:\d{2}).*/, '$1');
         },
         pretty(val) {
             return prettyMoney(val);
