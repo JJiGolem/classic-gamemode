@@ -94,17 +94,44 @@ module.exports = {
         let vehicleToRepair = target.vehicleToRepair;
         /// Снятие и передача денег
 
-        let salary = parseInt(DEFAULT_DIAGNOSTICS_PRICE * DEFAULT_SALARY.DIAGNOSTICS);
-        sender.call('notifications.push.success', [`К вашей з/п добавлено $${salary}`, 'Автомастерская']);
+
         //if (target.vehicle != vehicleToRepair) return;
         if (!sender) return;
         if (sender.senderDiagnosticsOffer.targetPlayer != target) return;
 
         if (accept) {
-            console.log('accept');
-            mp.events.call('carservice.diagnostics.preparation', sender, target);
-            delete target.diagnosticsOffer;
-            delete sender.senderDiagnosticsOffer;
+            let salary = parseInt(DEFAULT_DIAGNOSTICS_PRICE * DEFAULT_SALARY.DIAGNOSTICS);
+
+            if (target.character.cash < DEFAULT_DIAGNOSTICS_PRICE) {
+                target.call('notifications.push.error', [`Недостаточно денег`, `Автомастерская`]);
+                sender.call('notifications.push.error', [`У клиента нет денег`, `Автомастерская`]);
+                delete target.diagnosticsOffer;
+                delete sender.senderDiagnosticsOffer;
+                return;
+            }
+
+            money.removeCash(target, DEFAULT_DIAGNOSTICS_PRICE, function (result) {
+                if (result) {
+                    //sender.call('notifications.push.success', [`К зарплате добавлено $${salary}`, 'Автомастерская']);
+                    console.log('accept');
+                    mp.events.call('carservice.diagnostics.preparation', sender, target);
+                    money.addMoney(sender, salary, function (result) {
+                        if (result) {
+                            sender.call('notifications.push.success', [`К зарплате добавлено $${salary}`, 'Автомастерская']);
+                        } else {
+                            sender.call('notifications.push.error', [`Ошибка выдачи зарплаты`, 'Автомастерская']);
+                            console.log(`Ошибка начисления денег за диагностику игроку ${sender.name}`);
+                        }
+                    });
+                    delete target.diagnosticsOffer;
+                    delete sender.senderDiagnosticsOffer;
+                } else {
+                    target.call('notifications.push.error', [`Ошибка оплаты`, `Автомастерская`]);
+                    sender.call('notifications.push.error', [`Ошибка оплаты`, `Автомастерская`]);
+                    delete target.diagnosticsOffer;
+                    delete sender.senderDiagnosticsOffer;
+                }
+            });
         } else {
             delete target.diagnosticsOffer;
             delete sender.senderDiagnosticsOffer;
@@ -125,10 +152,7 @@ module.exports = {
 
         target.vehicle.isBeingRepaired = true;
 
-        //setTimeout(() => {
-            console.log('отправляем preparation')
-            player.call('carservice.diagnostics.preparation', [vehId]);
-        //}, 6000);
+        player.call('carservice.diagnostics.preparation', [vehId]);
 
         player.repairTarget = target;
     },
@@ -142,7 +166,7 @@ module.exports = {
         //player.heading = vehicle.heading - 180;
 
         player.lastRepairAnim = animType;
-
+        player.call('notifications.push.success', [`Вы начали диагностику`, 'Автомастерская']);
         switch (animType) {
             case 0:
                 mp.events.call('animations.play', player, 'mini@repair', 'fixing_a_ped', 1, 49);
@@ -164,7 +188,7 @@ module.exports = {
                 console.log(err);
             }
 
-        }, 10000)
+        }, 12000)
     },
     "carservice.diagnostics.end": (player) => {
         let target = player.repairTarget;
@@ -231,6 +255,7 @@ module.exports = {
             mp.events.call('carservice.service.end.target', target, 1);
             return;
         }
+        player.call('notifications.push.success', [`Выставлен счет в $${target.repairPrice}`, 'Автомастерская']);
         target.call('carservice.check.show', [checkData])
     },
     "carservice.check.accept": (player, state) => {
@@ -253,13 +278,22 @@ module.exports = {
             }
             money.removeCash(target, target.repairPrice, function (result) {
                 if (result) {
-                    target.call('notifications.push.success', [`Вы заплатили ${target.repairPrice}`, `Автомастерская`]);
+                    target.call('notifications.push.success', [`Вы заплатили $${target.repairPrice}`, `Автомастерская`]);
                     mechanic.call('notifications.push.success', [`Клиент оплатил ремонт`, `Автомастерская`]);
 
                     console.log(target.repairPrice);
                     carservice.repairVehicle(vehicle);
                     let salary = parseInt(target.repairPrice * DEFAULT_SALARY.REPAIR);
-                    mechanic.call('notifications.push.success', [`К вашей з/п добавлено $${salary}`, 'Автомастерская']);
+
+                    money.addMoney(mechanic, salary, function (result) {
+                        if (result) {
+                            mechanic.call('notifications.push.success', [`К зарплате добавлено $${salary}`, 'Автомастерская']);
+                        } else {
+                            mechanic.call('notifications.push.error', [`Ошибка выдачи зарплаты`, 'Автомастерская']);
+                            console.log(`Ошибка выдачи зарплаты за починку ${mechanic.name}`);
+                        }
+                    });
+
                     switch (mechanic.lastRepairAnim) {
                         case 0:
                             mp.events.call('animations.play', mechanic, 'mini@repair', 'fixing_a_ped', 1, 49);
@@ -282,7 +316,7 @@ module.exports = {
                         } catch (err) {
                             console.log(err);
                         }
-                    }, 10000);
+                    }, 12000);
                 } else {
                     target.call('notifications.push.error', [`Ошибка оплаты`, `Автомастерская`]);
                     mechanic.call('notifications.push.error', [`Ошибка оплаты`, `Автомастерская`]);

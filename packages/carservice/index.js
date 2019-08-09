@@ -14,14 +14,23 @@ let serviceData = [{
     z: 31.2
 }];
 
+let dbCarServices;
+
 module.exports = {
     async init() {
         this.loadCarServicesFromDB();
     },
-    loadCarServicesFromDB() {
-        serviceData.forEach((service) => {
-            this.createCarService(service);
-        });
+    async loadCarServicesFromDB() {
+        dbCarServices = await db.Models.CarService.findAll();
+
+        for (var i = 0; i < dbCarServices.length; i++) {
+            this.createCarService(dbCarServices[i]);
+        }
+        console.log(`[CARSERVICE] Загружено автомастерских: ${i}`);
+
+        // serviceData.forEach((service) => {
+        //     this.createCarService(service);
+        // });
     },
     createCarService(carService) {
         mp.blips.new(402, new mp.Vector3(carService.x, carService.y, carService.z),
@@ -30,9 +39,9 @@ module.exports = {
                 shortRange: true,
             });
 
-        let shape = mp.colshapes.newSphere(carService.x, carService.y, carService.z, 16);
+        let shape = mp.colshapes.newSphere(carService.x, carService.y, carService.z, carService.radius);
         shape.isCarService = true;
-        //shape.carServiceId = carService.id;
+        shape.carServiceId = carService.id;
     },
     getRepairPriceMultiplier(vehicle) {
         let price = vehicle.properties.price;

@@ -39,3 +39,7 @@ mp.events.add("offerDialog.hide", () => {
     mp.callCEFV(`offerDialog.hide()`);
     mp.gui.cursor.show(false, false);
 });
+
+mp.events.add("offerDialog.close", () => {
+    mp.gui.cursor.show(false, false);
+});
