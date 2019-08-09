@@ -8,5 +8,5 @@ setInterval(()=>{
     // mp.world.time.minute = date.getMinutes();
     // mp.world.time.second = date.getSeconds();
 
-    mp.world.time.hour = 19;
+    mp.world.time.hour = 17;
 }, 1000);
