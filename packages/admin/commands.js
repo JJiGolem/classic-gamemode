@@ -200,24 +200,50 @@ module.exports = {
         access: 6,
         handler: (player, args) => {
             if (args[0] == 0) {
-                player.setHeadOverlay(1, [9, 0, 0, 0]);
-                player.setHeadOverlay(2, [1, 1, 0, 0]);
+                // player.setHeadOverlay(1, [9, 0, 0, 0]);
+                // player.setHeadOverlay(2, [1, 1, 0, 0]);
                 player.setClothes(3, 6, 0, 0);
                 player.setClothes(8, 15, 0, 0);
                 player.setClothes(11, 141, 5, 0);
                 player.setClothes(4, 64, 10, 0);
                 player.setClothes(6, 31, 0, 0);
-                player.setClothes(2, 12, 0, 0);
             }
             if (args[0] == 1) {
-                player.setHeadOverlay(1, [9, 1, 0, 0]);
-                player.setHeadOverlay(2, [1, 1, 0, 0]);
+                // player.setHeadOverlay(1, [9, 1, 0, 0]);
+                // player.setHeadOverlay(2, [1, 1, 0, 0]);
                 player.setClothes(3, 6, 0, 0);
                 player.setClothes(8, 4, 0, 0);
                 player.setClothes(11, 72, 0, 0);
                 player.setClothes(4, 35, 0, 0);
                 player.setClothes(6, 10, 0, 0);
-                player.setClothes(2, 16, 0, 0);
+            }
+            if (args[0] == 2) {
+                player.setClothes(3, 6, 0, 0);
+                player.setClothes(8, 4, 0, 0);
+                player.setClothes(11, 229, 1, 0);
+                player.setClothes(4, 7, 0, 0);
+                player.setClothes(6, 10, 0, 0);
+            }
+            if (args[0] == 2) {
+                player.setClothes(3, 6, 0, 0);
+                player.setClothes(8, 4, 0, 0);
+                player.setClothes(11, 229, 1, 0);
+                player.setClothes(4, 7, 0, 0);
+                player.setClothes(6, 27, 0, 0);
+            }
+            if (args[0] == 3) {
+                player.setClothes(3, 6, 0, 0);
+                player.setClothes(8, 4, 0, 0);
+                player.setClothes(11, 229, 1, 0);
+                player.setClothes(4, 7, 0, 0);
+                player.setClothes(6, 27, 0, 0);
+            }
+            if (args[0] == 4) {
+                player.setClothes(3, 6, 0, 0);
+                player.setClothes(8, 4, 0, 0);
+                player.setClothes(11, 77, 0, 0);
+                player.setClothes(4, 35, 0, 0);
+                player.setClothes(6, 10, 0, 0);
             }
         }
     },
@@ -229,6 +255,15 @@ module.exports = {
             if (player.vehicle) {
                 player.call('chat.message.push', [`!{#ffffff} ${player.vehicle.heading}`]);
                 console.log(`veh= ${player.vehicle.heading}`);
+            }
+        }
+    },
+    "/hair": {
+        access: 6,
+        handler: (player, args) => {
+            if (args[0] == 0) {
+                player.setHeadOverlay(2, [1, 1, 0, 0]);
+                player.setClothes(2, 4, 0, 0);
             }
         }
     }
