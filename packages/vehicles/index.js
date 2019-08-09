@@ -306,5 +306,8 @@ module.exports = {
             }
         });
         return result;
+    },
+    spawnHomeVehicles(player, vehicles) {
+        
     }
 }
