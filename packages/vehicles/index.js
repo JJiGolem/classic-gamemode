@@ -308,6 +308,33 @@ module.exports = {
         return result;
     },
     spawnHomeVehicles(player, vehicles) {
-        
+
+    },
+    updateConsumption(vehicle) {
+        if (!vehicle) return;
+        try {
+            clearInterval(vehicle.fuelTimer);
+            vehicle.consumption = vehicle.properties.consumption * multiplier;
+            vehicle.fuelTick = 60000/vehicle.consumption;
+    
+            vehicle.fuelTimer = setInterval(() => {
+                try {
+                    if (vehicle.engine) {
+    
+                        vehicle.fuel = vehicle.fuel - 1;
+                        if (vehicle.fuel <= 0) {
+                            vehicle.engine = false;
+                            vehicle.setVariable("engine", false);
+                            vehicle.fuel = 0;
+                            return;
+                        }
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            }, vehicle.fuelTick);
+        } catch (err) {
+            console.log(err);
+        }
     }
 }
