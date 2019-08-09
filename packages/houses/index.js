@@ -111,16 +111,13 @@ module.exports = {
         this.setTimer(i);
     },
     getRandomDate(daysNumber) {
-        return new Date(Date.now() + 20000/*(daysNumber * 1000 * 60 * 60 * 24)*/);
+        return new Date(Date.now() + (daysNumber * 1000 * 60 * 60 * 24));
     },
     setTimer(i) {
         if (houses[i].info.characterId == null) return;
         if (houses[i].info.date == null) return dropHouse(i);
         if (houses[i].info.date.getTime() - new Date().getTime() <= 10000) return dropHouse(i);
         houses[i].timer != null && clearTimeout(houses[i].timer);
-        console.log(houses[i].info.date);
-        console.log(houses[i].info.date.getTime());
-        console.log(new Date().getTime());
         houses[i].timer = setTimeout(dropHouse, houses[i].info.date.getTime() - new Date().getTime(), i);
     },  
     dropHouse: dropHouse,

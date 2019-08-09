@@ -76,6 +76,9 @@ mp.events.add('house.sell.check.ans', (nick) => {
 mp.events.add('house.sell', () => {
     mp.events.callRemote('house.sell', name, cost);
 });
+mp.events.add('house.sell.in', (name, houseId, costT) => {
+    
+});
 mp.events.add('house.sell.ans', (ans) => {
     mp.callCEFR('house.sell.ans', [ans]);
 });
