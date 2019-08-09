@@ -22,7 +22,7 @@ var offerDialog = new Vue({
                 text: "Dun Hill предлагает диагностику вашего транспорта",
                 price: 100,
                 on(values) {
-                    this.text = `${values.name} предлагает Вам диагностику транспорта`;
+                    this.text = `${values.name} предлагает вам диагностику транспорта`;
                 },
                 yes() {
                     mp.trigger("callRemote", "carservice.diagnostics.accept", 1);
@@ -35,16 +35,20 @@ var offerDialog = new Vue({
                 },
             },
             "house_sell": {
-                text: "Swifty Swift предлагает купить его дом",
+                text: "Swifty Swift предлагает вам купить его дом",
                 price: 100,
                 on(values) {
-                    this.text = `${values.name} предлагает Вам диагностику транспорта`;
+                    this.price = values.price;
+                    this.text = `${values.name} предлагает вам купить его дом`;
                 },
                 yes() {
-                    mp.trigger("callRemote", "carservice.diagnostics.accept", 1);
+                    mp.trigger("callRemote", "house.sell.ans", 1);
                 },
                 no() {
-                    mp.trigger("callRemote", "carservice.diagnostics.accept", 0);
+                    mp.trigger("callRemote", "house.sell.ans", 2);
+                },
+                ignore() {
+                    mp.trigger("callRemote", "house.sell.ans", 2);
                 },
             },
         },

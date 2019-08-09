@@ -96,8 +96,9 @@ var createCharacter = new Vue({
     },
     methods: {
         onClickCreateCharacter() {
-            alert("Кликнули на создание персонажа");
-            // TODO: Реализация...
+            if (loader.show) return;
+            loader.show = true;
+            mp.trigger("characterInit.choose");
         }
     }
 });
