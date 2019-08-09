@@ -314,6 +314,8 @@ module.exports = {
         if (!vehicle) return;
         try {
             clearInterval(vehicle.fuelTimer);
+            
+            let multiplier = vehicle.multiplier;
             vehicle.consumption = vehicle.properties.consumption * multiplier;
             vehicle.fuelTick = 60000/vehicle.consumption;
     
