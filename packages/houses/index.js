@@ -153,4 +153,33 @@ module.exports = {
             pos: [info.pickupX, info.pickupY, info.pickupZ]
         };
     },
+    sellHouse(i, cost, seller, buyer, callback) {
+        houses[i].info.characterId = buyer.character.id;
+        houses[i].info.characterNick = buyer.character.name;
+        houses[i].info.save().then(() => {
+            if (money == null) return;
+            money.moveCash(buyer, seller, cost, function(result) {
+                if (result) {
+                    callback(true);
+                    seller.call('phone.app.remove', ["house", i]);
+                    buyer.call('phone.app.add', ["house", {
+                        name: houses[i].info.id,
+                        class: houses[i].info.Interior.class,
+                        numRooms:  houses[i].info.Interior.numRooms,
+                        garage:  houses[i].info.Interior.garage,
+                        carPlaces:  houses[i].info.Interior.carPlaces,
+                        rent: 10, //todo with economic system
+                        isOpened: houses[i].info.isOpened,
+                        improvements: new Array(),
+                        price: houses[i].info.price,
+                        days: parseInt((houses[i].info.date.getTime() - new Date().getTime()) / (24 * 60 * 60 * 1000)),
+                        pos: [houses[i].info.pickupX, houses[i].info.pickupY, houses[i].info.pickupZ]
+                    }]);
+                }
+                else {
+                    callback(false);
+                }
+            });        
+        }); 
+    }
 };
