@@ -53,13 +53,6 @@ var inventory = new Vue({
                 height: 6,
                 width: 8,
                 weight: 2,
-                menu: {
-                    'Включить': {
-                        handler(item) {
-                            console.log(`Включить ${item}`)
-                        }
-                    }
-                }
             },
             24: {
                 name: 'Аптечка',
@@ -67,13 +60,6 @@ var inventory = new Vue({
                 height: 6,
                 width: 8,
                 weight: 0.1,
-                menu: {
-                    'Лечить': {
-                        handler(item) {
-                            console.log(`лечить ${item}`)
-                        }
-                    }
-                }
             },
             37: {
                 name: 'Патрон',
@@ -81,47 +67,65 @@ var inventory = new Vue({
                 height: 4,
                 width: 4,
                 weight: 0.02,
-                menu: {
-                    'Разрядить': {
-                        handler(item) {
-                            console.log(`разрядить: ${item}`)
-                        }
-                    },
-                    'Сломать': {
-                        handler(item) {
-                            console.log(`сломать ${item}`);
-                        }
-                    },
-                    'Разобрать': {
-                        items: {
-                            'Полностью': {
-                                handler(item) {
-                                    console.log(`Полностью ${item}`)
-                                }
-                            },
-                            'Для переноски': {
-                                handler(item) {
-                                    console.log(`для переноски ${item}`)
-                                }
-                            },
-                        }
-                    },
-                    'Присоединить': {
-                        handler(item) {
-                            console.log(`Присоединить ${item}`);
-                        }
-                    },
-                    'Отсоединить': {
-                        handler(item) {
-                            console.log(`Отсоединить ${item}`);
-                        }
-                    },
-
+            },
+        },
+        // Меню предмета по ПКМ
+        itemsMenu: {
+            // itemId: struct menu
+            18: {
+                'Включить': {
+                    handler(item) {
+                        console.log(`Включить ${item}`)
+                    }
                 }
+            },
+            24: {
+                'Лечить': {
+                    handler(item) {
+                        console.log(`лечить ${item}`)
+                    }
+                }
+            },
+            37: {
+                'Разрядить': {
+                    handler(item) {
+                        console.log(`разрядить: ${item}`)
+                    }
+                },
+                'Сломать': {
+                    handler(item) {
+                        console.log(`сломать ${item}`);
+                    }
+                },
+                'Разобрать': {
+                    items: {
+                        'Полностью': {
+                            handler(item) {
+                                console.log(`Полностью ${item}`)
+                            }
+                        },
+                        'Для переноски': {
+                            handler(item) {
+                                console.log(`для переноски ${item}`)
+                            }
+                        },
+                    }
+                },
+                'Присоединить': {
+                    handler(item) {
+                        console.log(`Присоединить ${item}`);
+                    }
+                },
+                'Отсоединить': {
+                    handler(item) {
+                        console.log(`Отсоединить ${item}`);
+                    }
+                },
             },
         },
         // Вайт-лист предметов, которые можно надеть
         bodyList: {
+            // columnIndex: [itemId, ...]
             0: [],
             1: [],
             2: [],
@@ -521,10 +525,18 @@ var inventory = new Vue({
         bindHotkey(item, key) {
             if (typeof item == 'number') item = this.getItem(item);
             if (!item) return this.notify(`bindHotkey: Предмет ${item} не опреден`);
+            this.clearHotkeys(item);
             Vue.set(this.hotkeys, key, item);
         },
         unbindHotkey(key) {
             Vue.delete(this.hotkeys, key);
+        },
+        clearHotkeys(item) {
+            if (typeof item == 'number') item = this.getItem(item);
+            for (var key in this.hotkeys) {
+                var it = this.hotkeys[key];
+                if (it.sqlId == item.sqlId) this.unbindHotkey(key);
+            }
         },
 
         // ******************  [ Hands ] ******************
