@@ -140,6 +140,14 @@ var inventory = new Vue({
             11: [],
             12: [],
         },
+        // Вайт-лист предметов, которые можно использовать в горячих клавишах
+        hotkeysList: {
+            24: {
+                handler(item) {
+                    console.log("Обработчик горячей клавиши. Предмет: " + item.sqlId);
+                }
+            }
+        },
         // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
         environment: [],
         // Предметы на игроке (экипировка)
@@ -183,6 +191,7 @@ var inventory = new Vue({
                 deny: false,
                 columns: {},
                 bodyFocus: null,
+                hotkeyFocus: null,
             },
             x: 0,
             y: 0
@@ -279,6 +288,20 @@ var inventory = new Vue({
         onBodyItemLeave(index) {
             var columns = this.itemDrag.accessColumns;
             columns.bodyFocus = null;
+        },
+        onHotkeyItemEnter(key) {
+            // console.log("onHotkeyItemEnter")
+            if (!this.itemDrag.item) return;
+            var item = this.hotkeys[key];
+            if (item) return;
+            if (!this.hotkeysList[this.itemDrag.item.itemId]) return;
+            var columns = this.itemDrag.accessColumns;
+            columns.hotkeyFocus = key;
+        },
+        onHotkeyItemLeave(key) {
+            // console.log("onHotkeyItemLeave")
+            var columns = this.itemDrag.accessColumns;
+            columns.hotkeyFocus = null;
         },
         itemMouseHandler(item, e) {
             var handlers = {
@@ -522,9 +545,9 @@ var inventory = new Vue({
         },
 
         // ******************  [ Hotkeys ] ******************
-        bindHotkey(item, key) {
-            if (typeof item == 'number') item = this.getItem(item);
-            if (!item) return this.notify(`bindHotkey: Предмет ${item} не опреден`);
+        bindHotkey(itemSqlId, key) {
+            var item = this.getItem(itemSqlId);
+            if (!item) return this.notify(`Предмет должен находиться в инвентаре`);
             this.clearHotkeys(item);
             Vue.set(this.hotkeys, key, item);
         },
@@ -649,6 +672,8 @@ var inventory = new Vue({
             var columns = self.itemDrag.accessColumns;
             if (columns.bodyFocus) {
                 self.addItem(self.itemDrag.item, null, columns.bodyFocus);
+            } else if (columns.hotkeyFocus) {
+                self.bindHotkey(self.itemDrag.item.sqlId, columns.hotkeyFocus);
             } else {
                 var index = Object.keys(columns.columns)[0];
                 if (!columns.deny && columns.placeSqlId != null &&
@@ -670,7 +695,7 @@ var inventory = new Vue({
 });
 
 // for tests
-/*inventory.initItems({
+inventory.initItems({
     0: {
         sqlId: 100,
         itemId: 1,
@@ -850,4 +875,4 @@ inventory.addEnvironmentPlace({
     }]
 });
 inventory.show = true;
-inventory.enable = true;*/
+inventory.enable = true;

@@ -322,6 +322,12 @@
     font-size: 1.7vh;
     font-weight: bold;
     justify-content: center;
+    transition: background-size 0.3s;
+}
+
+#inventory .hotkeys>.key.focus {
+    background-color: #222;
+    background-size: 70%;
 }
 
 #inventory .hotkeys>.key:not(:empty) {

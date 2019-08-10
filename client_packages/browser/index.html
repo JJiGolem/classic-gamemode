@@ -536,7 +536,7 @@
             </div>
         </div>
         <div class="hotkeys">
-            <div class="key" v-for="n in 10">
+            <div class="key" :class="{focus: itemDrag.item && itemDrag.accessColumns.hotkeyFocus == n}" v-for="n in 10" @mouseenter="onHotkeyItemEnter(n)" @mouseleave="onHotkeyItemLeave(n)">
                 <div class="item" v-if="hotkeys[n] && getItem(hotkeys[n].sqlId)" v-bind:style="{backgroundImage: 'url('+urlItemImg(hotkeys[n].itemId)+')'}">
                     <span class="hotkey">{{ (n == 10)? 0 : n }}</span>
 
@@ -582,15 +582,17 @@
             </div>
         </div>
         <div class="item-menu" v-if="itemMenu.item && !itemDrag.item" :style="{left: itemMenu.x + 'px', top: itemMenu.y + 'px'}">
-            <div class="menu-item" v-for="(value, key) in itemsInfo[itemMenu.item.itemId].menu">
+            <div class="menu-item" v-for="(value, key) in itemsMenu[itemMenu.item.itemId]" @click="value.handler(itemMenu.item)">
                 {{ key }}
                 <div class="arrow" v-if="value.items">></div>
             </div>
         </div>
-        <!-- <div class="item-menu" style="left: 230px; top: 353px">
-           <div class="menu-item">Полностью</div>
-           <div class="menu-item">Для переноски</div>
-       </div> -->
+        <div class="item-menu" v-if="itemMenu.item && !itemDrag.item" :style="{left: itemMenu.x + 'px', top: itemMenu.y + 'px'}">
+            <div class="menu-item" v-for="(value, key) in itemsMenu[itemMenu.item.itemId]" @click="value.handler(itemMenu.item)">
+                {{ key }}
+                <div class="arrow" v-if="value.items">></div>
+            </div>
+        </div>
         <div class="item-drag" v-if="itemDrag.item" :style="{left: itemDrag.x + 'px', top: itemDrag.y + 'px'}">
             <div class="item" v-if="itemDrag.item" :style="itemStyle(itemDrag.item.itemId)">
                 <!-- <div class="count" v-if="itemDrag.item.params.count">{{ itemDrag.item.params.count }}</div>
