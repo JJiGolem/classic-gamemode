@@ -475,7 +475,8 @@
                 <div>Жажда <span class="thirst">{{ thirst }}</span>%</div>
             </div>
             <div class="body-items">
-                <div class="column" v-for="n in 13">
+                <div class="column"
+                    :class="{focus: itemDrag.item && itemDrag.accessColumns.bodyFocus == n-1}" v-for="n in 13" @mouseenter="onBodyItemEnter(n-1)" @mouseleave="onBodyItemLeave(n-1)">
                     <!-- <div class="item" v-if="equipment[n-1]" v-bind:style="{backgroundImage: 'url(' + urlItemImg(equipment[n-1].itemId) + ')'}">
                        <div class="count" v-if="equipment[n-1].params.count">{{ equipment[n-1].params.count }}</div>
                        <div class="health" v-if="equipment[n-1].params.health" v-bind:style="{top: 100 - equipment[n-1].params.health + '%'}"></div>

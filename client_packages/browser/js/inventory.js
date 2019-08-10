@@ -120,6 +120,22 @@ var inventory = new Vue({
                 }
             },
         },
+        // Вайт-лист предметов, которые можно надеть
+        bodyList: {
+            0: [],
+            1: [],
+            2: [],
+            3: [],
+            4: [],
+            5: [7],
+            6: [],
+            7: [],
+            8: [],
+            9: [],
+            10: [13],
+            11: [],
+            12: [],
+        },
         // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
         environment: [],
         // Предметы на игроке (экипировка)
@@ -162,6 +178,7 @@ var inventory = new Vue({
                 pocketI: null,
                 deny: false,
                 columns: {},
+                bodyFocus: null,
             },
             x: 0,
             y: 0
@@ -247,6 +264,18 @@ var inventory = new Vue({
             };
             return style;
         },
+        onBodyItemEnter(index) {
+            if (!this.itemDrag.item) return;
+            var item = this.equipment[index];
+            if (item) return;
+            if (!this.bodyList[index].includes(this.itemDrag.item.itemId)) return;
+            var columns = this.itemDrag.accessColumns;
+            columns.bodyFocus = index;
+        },
+        onBodyItemLeave(index) {
+            var columns = this.itemDrag.accessColumns;
+            columns.bodyFocus = null;
+        },
         itemMouseHandler(item, e) {
             var handlers = {
                 'mouseenter': (e) => {
@@ -272,8 +301,8 @@ var inventory = new Vue({
                     if (e.which == 1) { // Left Mouse Button
                         this.itemDrag.item = item;
                         this.itemDrag.div = e.target;
-                        this.itemDrag.x = e.pageX - e.target.offsetWidth / 2;
-                        this.itemDrag.y = e.pageY - e.target.offsetHeight / 2;
+                        this.itemDrag.x = e.pageX;
+                        this.itemDrag.y = e.pageY;
                     }
                 },
             };
@@ -294,6 +323,7 @@ var inventory = new Vue({
                     // console.log('mouseenter')
                     columns.placeSqlId = place.sqlId;
                     columns.pocketI = pocketI;
+                    columns.deny = place.sqlId == this.itemDrag.item.sqlId;
                     for (var x = 0; x < w; x++) {
                         for (var y = 0; y < h; y++) {
                             var i = this.xyToIndex(pocket.rows, pocket.cols, {
@@ -316,7 +346,7 @@ var inventory = new Vue({
             handlers[e.type](e);
         },
         isColumnBusy(place, pocketI, index, item) {
-            var cols = (place.sqlId > 0)? this.equipmentBusyColumns : this.environmentBusyColumns;
+            var cols = (place.sqlId > 0) ? this.equipmentBusyColumns : this.environmentBusyColumns;
             if (!cols[place.sqlId][pocketI]) return false;
             if (!cols[place.sqlId][pocketI][index]) return false;
             return cols[place.sqlId][pocketI][index] != item.sqlId;
@@ -605,12 +635,16 @@ var inventory = new Vue({
         window.addEventListener('mouseup', function(e) {
             // console.log(JSON.stringify(self.itemDrag))
             var columns = self.itemDrag.accessColumns;
-            var index = Object.keys(columns.columns)[0];
-            if (!columns.deny && columns.placeSqlId != null &&
-                columns.pocketI != null &&
-                index != null) {
-                if (columns.placeSqlId > 0) self.addItem(self.itemDrag.item, columns.pocketI, index, columns.placeSqlId)
-                else self.addEnvironmentItem(self.itemDrag.item, columns.pocketI, index, columns.placeSqlId)
+            if (columns.bodyFocus) {
+                self.addItem(self.itemDrag.item, null, columns.bodyFocus);
+            } else {
+                var index = Object.keys(columns.columns)[0];
+                if (!columns.deny && columns.placeSqlId != null &&
+                    columns.pocketI != null &&
+                    index != null) {
+                    if (columns.placeSqlId > 0) self.addItem(self.itemDrag.item, columns.pocketI, index, columns.placeSqlId)
+                    else self.addEnvironmentItem(self.itemDrag.item, columns.pocketI, index, columns.placeSqlId)
+                }
             }
 
             self.itemDrag.item = null;
@@ -618,6 +652,7 @@ var inventory = new Vue({
             columns.placeSqlId = null;
             columns.pocketI = null;
             columns.columns = {};
+            columns.bodyFocus = null;
         });
     }
 });
@@ -707,12 +742,28 @@ inventory.addEnvironmentPlace({
                                 sqlId: 600,
                                 itemId: 7,
                                 pockets: [{
-                                    rows: 5,
-                                    cols: 5,
+                                    rows: 10,
+                                    cols: 10,
                                     items: {
                                         0: {
                                             sqlId: 427,
                                             itemId: 13,
+                                            pockets: [{
+                                                    cols: 5,
+                                                    rows: 3,
+                                                    items: {}
+                                                },
+                                                {
+                                                    cols: 5,
+                                                    rows: 3,
+                                                    items: {}
+                                                },
+                                                {
+                                                    cols: 5,
+                                                    rows: 3,
+                                                    items: {}
+                                                },
+                                            ],
                                             params: {}
                                         }
                                     }

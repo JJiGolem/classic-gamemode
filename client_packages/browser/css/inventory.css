@@ -33,7 +33,11 @@
     background-repeat: no-repeat;
     background-size: 60%;
     display: flex;
-    transition: border 1s, background 1s;
+    /* transition: border 1s, background 1s; */
+}
+
+#inventory .body-items .column.focus {
+    border-color: #046f04;
 }
 
 #inventory .body-items .column:not(:empty) {
@@ -68,6 +72,7 @@
 }
 
 #inventory .body-items .column:nth-child(3) {
+    background-image: url('../img/inventory/body/14-off.png');
     grid-column-end: span 5;
     grid-row-end: span 4;
 }
@@ -152,8 +157,15 @@
 }
 
 #inventory .body-items .column:nth-child(10) {
+    background-image: url('../img/inventory/body/rifle.png');
     grid-column-end: span 5;
     grid-row-end: span 12;
+}
+
+#inventory .body-items .column:nth-child(10) .item {
+    background-image: url('../img/inventory/items/105.png');
+    height: 12vh;
+    width: 12vh;
 }
 
 #inventory .body-items .column:nth-child(11) {
