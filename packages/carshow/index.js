@@ -49,7 +49,7 @@ module.exports = {
                 color: carShow.blipColor,
                 shortRange: true,
             });
-        mp.markers.new(1, new mp.Vector3(carShow.x, carShow.y, carShow.z), 2,
+        mp.markers.new(1, new mp.Vector3(carShow.x, carShow.y, carShow.z), 1.6,
             {
                 direction: new mp.Vector3(carShow.x, carShow.y, carShow.z),
                 rotation: 0,
@@ -57,12 +57,12 @@ module.exports = {
                 visible: true,
                 dimension: 0
             });
-        let shape = mp.colshapes.newSphere(carShow.x, carShow.y, carShow.z, 2);
+        let shape = mp.colshapes.newSphere(carShow.x, carShow.y, carShow.z + 0.5, 2);
         shape.isCarShow = true;
         shape.carShowId = carShow.id;
         
         let shortName = carShow.name.split(' ')[0];
-        let label = mp.labels.new(`${shortName}`, new mp.Vector3(carShow.x, carShow.y, carShow.z + 1.5),
+        let label = mp.labels.new(`${shortName}`, new mp.Vector3(carShow.x, carShow.y, carShow.z + 1.7),
         {
             los: false,
             font: 0,
