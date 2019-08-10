@@ -142,12 +142,17 @@ var inventory = new Vue({
         },
         // Вайт-лист предметов, которые можно использовать в горячих клавишах
         hotkeysList: {
+            // itemId: {...}
             24: {
                 handler(item) {
                     console.log("Обработчик горячей клавиши. Предмет: " + item.sqlId);
                     item.params.count--;
                 }
             }
+        },
+        // Блек-лист предметов, которые не могу храниться в других предметах
+        blackList: {
+            7: [13],
         },
         // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
         environment: [],
@@ -351,7 +356,9 @@ var inventory = new Vue({
                     // console.log('mouseenter')
                     columns.placeSqlId = place.sqlId;
                     columns.pocketI = pocketI;
-                    columns.deny = place.sqlId == this.itemDrag.item.sqlId;
+                    columns.deny = place.sqlId == this.itemDrag.item.sqlId ||
+                        place.itemId == this.itemDrag.item.itemId ||
+                        (this.blackList[place.itemId] && this.blackList[place.itemId].includes(this.itemDrag.item.itemId));
                     for (var x = 0; x < w; x++) {
                         for (var y = 0; y < h; y++) {
                             var i = this.xyToIndex(pocket.rows, pocket.cols, {
