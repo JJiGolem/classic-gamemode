@@ -3,6 +3,10 @@ export const showBusiness = flag => ({
     payload: flag
 });
 
+export const closeBusiness = () => ({
+    type: 'CLOSE_BUSINESS'
+});
+
 export const loadBusinessInfo = info => ({
     type: 'LOAD_INFO_BUSINESS',
     payload: info
@@ -13,12 +17,13 @@ export const setLoadingBusiness = flag => ({
     payload: flag
 });
 
-export const setAnswerBusiness = answer => ({
+export const setAnswerBuyBusiness = answer => ({
     type: 'ANS_BUY_BUSINESS',
     payload: answer
 });
 
-export const setBusinessFormBlock = flag => ({
-    type: 'BLOCK_BUSINESS_FORM',
+export const setBusinessFormBlur = flag => ({
+    type: 'BLUR_BUSINESS_FORM',
     payload: flag
 });
+

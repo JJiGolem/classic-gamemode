@@ -1,0 +1,54 @@
+.business_form-react {
+    position: absolute;
+    font-family: main-font;
+    width: 60vh;
+    height: 30vh;
+    background: rgba(0, 0, 0, 0.51);
+    border-radius: 15px;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    max-width: 1500px;
+    max-height: 1000px;
+    min-width: 300px;
+    min-height: 150px;
+    animation: show-react .1s ease-in-out;
+}
+
+.exitBusiness, .exitEnterBusiness {
+    position: absolute;
+    right: 2%;
+    top: 9%;
+    width: 5%;
+    height: 5%;
+    opacity: 0.5;
+}
+.exitBusiness:hover, .exitEnterBusiness:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+.exitBusiness:before, .exitBusiness:after {
+    position: absolute;
+    left: 5%;
+    content: ' ';
+    height: 20%;
+    width: 100%;
+    background-color: rgb(46, 44, 44);
+}
+
+.exitEnterBusiness:before, .exitEnterBusiness:after {
+    position: absolute;
+    left: 5%;
+    content: ' ';
+    height: 30%;
+    width: 100%;
+    background-color: rgb(181, 181, 181);
+}
+.exitBusiness:before, .exitEnterBusiness:before {
+    transform: rotate(45deg);
+}
+.exitBusiness:after, .exitEnterBusiness:after {
+    transform: rotate(-45deg);
+}

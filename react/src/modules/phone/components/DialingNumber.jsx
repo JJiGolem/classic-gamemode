@@ -106,8 +106,13 @@ class DialingNumber extends Component {
                     </div>
                     {
                         inputNumber &&
-                        <div style={{ width: '20px', display: 'inline-block' }} onClick={() => this.deleteDigitNumber()}>
-                            {'<'}
+                        <div className='backspace-phone-react' onClick={() => this.deleteDigitNumber()}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 51.324 33.13" fill='#343c47'>
+                                <g id="backspace" transform="translate(0 -5.09)">
+                                    <path id="Path_23" data-name="Path 23" d="M12.343,5.09,0,21.655,12.343,38.22H51.324V5.09ZM49,36.271H13.632L2.74,21.655,13.632,7.039H49Z" transform="translate(0 0)"/>
+                                    <path id="Path_24" data-name="Path 24" d="M18.887,29.927,26.18,23l7.293,6.929,1.414-1.343-7.293-6.929,7.293-6.929-1.414-1.343L26.18,20.312l-7.293-6.929-1.414,1.343,7.293,6.929-7.293,6.929Z" transform="translate(4.664)"/>
+                                </g>
+                            </svg>
                         </div>
                     }
                     <div className='panel_call_mess_contact-phone-react' style={{ marginTop: '-5%' }}>

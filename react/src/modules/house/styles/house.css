@@ -54,7 +54,7 @@
 .label-house-react {
     color: white;
     font-size: 160%;
-    margin-top: 2%;
+    margin-top: 1.5%;
     display: inline-block;
     position: absolute;
 }
@@ -88,10 +88,11 @@
 
 .buttons-house-react {
     position: absolute;
-    top: 32%;
+    top: 30%;
     right: 3%;
     width: 50%;
     height: 50%;
+    text-align: center;
     /*background: #343c47;*/
 }
 
@@ -175,6 +176,7 @@
 
 .message_back-house-react button {
     background: transparent;
+    outline: none;
     padding: 5%;
     width: 30%;
     color: white;

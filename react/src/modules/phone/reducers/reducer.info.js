@@ -45,7 +45,147 @@ const initialState = {
             ]
         }
     ],
-    biz: []
+    biz: [
+        {
+            id: 3,
+            name: 'Ponsonbys',
+            type: 'Магазин одежды',
+            cashBox: 732101,
+            area: 'Палето Бэй',
+            days: 5,
+            rent: 50,
+            resourcesMax: 2000,
+            resources: 228,
+            price: 112000,
+            statistics: [
+                // {
+                //     date: new Date(2019, 6, 10),
+                //     money: 339
+                // },
+                // {
+                //     date: new Date(2019, 6, 11),
+                //     money: 333
+                // },
+                // {
+                //     date: new Date(2019, 6, 12),
+                //     money: 111
+                // },
+                // {
+                //     date: new Date(2019, 6, 13),
+                //     money: 234
+                // },
+                // {
+                //     date: new Date(2019, 6, 14),
+                //     money: 6756
+                // },
+                // {
+                //     date: new Date(2019, 6, 15),
+                //     money: 32
+                // },
+                // {
+                //     date: new Date(2019, 6, 16),
+                //     money: 12
+                // },
+                // {
+                //     date: new Date(2019, 6, 17),
+                //     money: 445
+                // },
+                // {
+                //     date: new Date(2019, 6, 18),
+                //     money: 7876
+                // },
+                // {
+                //     date: new Date(2019, 6, 19),
+                //     money: 435567
+                // },
+                // {
+                //     date: new Date(2019, 6, 20),
+                //     money: 13324
+                // },
+                // {
+                //     date: new Date(2019, 6, 21),
+                //     money: 54
+                // },
+                // {
+                //     date: new Date(2019, 6, 22),
+                //     money: 339
+                // },
+                // {
+                //     date: new Date(2019, 6, 23),
+                //     money: 989
+                // },
+                // {
+                //     date: new Date(2019, 6, 24),
+                //     money: 31239
+                // },
+                // {
+                //     date: new Date(2019, 6, 25),
+                //     money: 339
+                // },
+                // {
+                //     date: new Date(2019, 6, 26),
+                //     money: 3329
+                // },
+                // {
+                //     date: new Date(2019, 6, 27),
+                //     money: 3339
+                // },
+                // {
+                //     date: new Date(2019, 6, 28),
+                //     money: 34339
+                // },
+                // {
+                //     date: new Date(2019, 6, 29),
+                //     money: 12
+                // },
+                // {
+                //     date: new Date(2019, 6, 30),
+                //     money: 6456
+                // },
+                // {
+                //     date: new Date(2019, 6, 31),
+                //     money: 23
+                // },
+                // {
+                //     date: new Date(2019, 7, 1),
+                //     money: 12
+                // },
+                // {
+                //     date: new Date(2019, 7, 2),
+                //     money: 453
+                // },
+                // {
+                //     date: new Date(2019, 7, 3),
+                //     money: 546
+                // },
+                // {
+                //     date: new Date(2019, 7, 4),
+                //     money: 12
+                // },
+                // {
+                //     date: new Date(2019, 7, 5),
+                //     money: 43645
+                // },
+                // {
+                //     date: new Date(2019, 7, 6),
+                //     money: 77
+                // },
+                // {
+                //     date: new Date(2019, 7, 7),
+                //     money: 122
+                // },
+                // {
+                //     date: new Date(2019, 7, 8),
+                //     money: 4343
+                // },
+
+            ]
+            // order: {
+            //     productCount,
+            //     productPrice
+            // }
+        }
+    ]
 };
 
 export default function info(state = initialState, action) {
@@ -103,17 +243,17 @@ export default function info(state = initialState, action) {
             newState.houses[0].isOpened = !newState.houses[0].isOpened;
             return newState;
 
-        case 'SET_SELL':
+        case 'SET_SELL_HOUSE':
             newState = {  ...state };
             newState.houses[0].isSell = payload;
             return  newState;
 
-        case 'SET_SELL_STATUS':
+        case 'SET_SELL_STATUS_HOUSE':
             newState = { ...state };
             newState.houses[0].sellStatus = payload;
             return newState;
 
-        case 'SET_SELL_INFO':
+        case 'SET_SELL_INFO_HOUSE':
             newState = { ...state };
             newState.houses[0].ansSell = payload;
             return newState;
@@ -124,6 +264,55 @@ export default function info(state = initialState, action) {
 
             if (houseIndex !== -1) {
                 newState.houses.splice(houseIndex, 1);
+            }
+
+            return newState;
+
+        case 'SET_SELL_BUSINESS':
+            newState = {  ...state };
+            newState.biz[0].isSell = payload;
+            return  newState;
+
+        case 'SET_SELL_STATUS_BUSINESS':
+            newState = { ...state };
+            newState.biz[0].sellStatus = payload;
+            return newState;
+
+        case 'SET_SELL_INFO_BUSINESS':
+            newState = { ...state };
+            newState.biz[0].ansSell = payload;
+            return newState;
+
+        case 'CREATE_ORDER_BUSINESS':
+            newState = { ...state };
+            newState.biz[0].order = payload;
+            newState.biz[0].orderStatus = null;
+            return newState;
+
+        case 'CANCEL_ORDER_BUSINESS':
+            newState = { ...state };
+            if (newState.biz[0].order !== null) {
+                newState.biz[0].order = null;
+            }
+            return newState;
+
+        case 'SET_ORDER_STATUS_BUSINESS':
+            newState = { ...state };
+            newState.biz[0].orderStatus = payload;
+            return newState;
+
+        case 'ORDER_COMPLETE_BUSINESS':
+            newState = { ...state };
+            newState.biz[0].resources += payload;
+            newState.biz[0].order = null;
+            return newState;
+
+        case 'SELL_BUSINESS':
+            newState = { ...state };
+            let bizIndex = newState.biz.findIndex(biz => biz.id === payload);
+
+            if (bizIndex !== -1) {
+                newState.biz.splice(bizIndex, 1);
             }
 
             return newState;
@@ -156,6 +345,36 @@ export default function info(state = initialState, action) {
 
             if (indPayHouse !== -1) {
                 newState.houses[indPayHouse].days += payload.days;
+            }
+
+            return newState;
+
+        case 'PAY_BUSINESS_BANK':
+            newState = { ...state };
+            let indPayBusiness = newState.biz.findIndex(biz => biz.id === payload.id);
+
+            if (indPayBusiness !== -1) {
+                newState.biz[indPayBusiness].days += payload.days;
+            }
+
+            return newState;
+
+        case 'PUSH_CASHBOX_BANK':
+            newState = { ...state };
+            let indPushCash = newState.biz.findIndex(biz => biz.id === payload.id);
+
+            if (indPushCash !== -1) {
+                newState.biz[indPushCash].cashBox += payload.money;
+            }
+
+            return newState;
+
+        case 'POP_CASHBOX_BANK':
+            newState = { ...state };
+            let indPopCash = newState.biz.findIndex(biz => biz.id === payload.id);
+
+            if (indPopCash !== -1) {
+                newState.biz[indPopCash].cashBox -= payload.money;
             }
 
             return newState;

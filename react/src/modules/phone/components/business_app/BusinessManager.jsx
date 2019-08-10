@@ -1,14 +1,14 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
+import Header from "./Header";
 import {addAppDisplay, closeAppDisplay, setAppDisplay} from "../../actions/action.apps";
-import HouseApp from "./HouseApp";
 import MainDisplay from "../MainDisplay";
-import {changeStateHouse} from "../../actions/action.info";
 import Sell from "./Sell";
 import SellState from "./SellState";
-import HeaderHouseApp from "./HeaderHouseApp";
+import BusinessApp from "./BusinessApp";
+import StockManager from "./StockManager";
 
-class HouseManager extends Component {
+class BusinessManager extends Component {
     constructor(props) {
         super(props);
         this.state = {};
@@ -18,43 +18,39 @@ class HouseManager extends Component {
         const { addApp, closeApp } = this.props;
 
         closeApp();
-        addApp({name: 'HouseApp', form: <HouseApp />});
-    }
-
-    setStateHouse(e) {
-        const { changeStateHouse, house } = this.props;
-
-        // eslint-disable-next-line no-undef
-        mp.trigger('house.lock', house.name, !house.isOpened);
-
-        changeStateHouse();
+        addApp({name: 'BusinessApp', form: <BusinessApp />});
     }
 
     render() {
-        const { house, setApp, addApp } = this.props;
+        const { business, addApp, setApp } = this.props;
 
         return (
             <Fragment>
                 <div className='back_page-phone-react'>
-                    <HeaderHouseApp house={house}/>
-
-                    <div style={{ textAlign: 'center', marginTop: '26%' }}>Управление домом</div>
+                    <Header business={business} />
+                    <div style={{ textAlign: 'center', marginTop: '26%' }}>Управление бизнесом</div>
 
                     <div className='manager_buttons-phone-react'>
-                        <div className='manager_button-phone-react' onClick={this.setStateHouse.bind(this)}>
+                        <div className='manager_button-phone-react' onClick={() => addApp({name: 'StockManager', form: <StockManager />})}>
                             <div>
-                                <svg xmlns="http://www.w3.org/2000/svg" id="open" width="60%" height="60%" viewBox="0 0 42.449 42.449">
-                                    <g id="open" data-name="Group 57" transform="translate(0)">
-                                        <path id="open" data-name="Path 126" d="M348.967,57.375a4.717,4.717,0,1,0,4.717,4.717A4.632,4.632,0,0,0,348.967,57.375Zm0,7.861a3.144,3.144,0,1,1,3.144-3.144A3.154,3.154,0,0,1,348.967,65.236Z" transform="translate(-315.95 -52.658)"/>
-                                        <path id="open" data-name="Path 127" d="M29.086,0A13.352,13.352,0,0,0,15.722,13.364a16.468,16.468,0,0,0,.786,4.717L0,34.588v7.861H7.861V37.733h4.717V33.016h4.717l7.075-7.075a14.822,14.822,0,0,0,4.717.786A13.364,13.364,0,0,0,29.086,0ZM16.508,31.444h-5.5v4.717H6.289v4.717H1.572v-5.5L17.294,19.652a13.262,13.262,0,0,0,5.5,5.5Zm12.578-6.289A11.877,11.877,0,0,1,17.294,13.364a11.792,11.792,0,0,1,23.583,0A11.877,11.877,0,0,1,29.086,25.155Z"/>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="60%" height="60%" viewBox="0 0 285.546 285.544">
+                                    <g id="Group_1" data-name="Group 1" transform="translate(0 -0.002)">
+                                        <path id="Path_8" data-name="Path 8" d="M257.151,119.464H209.56a4.761,4.761,0,0,0-4.759,4.759v19.036a4.761,4.761,0,0,0,4.759,4.759h47.591a4.758,4.758,0,0,0,4.759-4.759V124.223A4.758,4.758,0,0,0,257.151,119.464ZM252.391,138.5H214.318v-9.518h38.073Z" transform="translate(-90.582 -52.837)"/>
+                                        <rect id="Rectangle_2" data-name="Rectangle 2" width="228.437" height="9.518" transform="translate(28.555 123.736)"/>
+                                        <rect id="Rectangle_3" data-name="Rectangle 3" width="228.437" height="9.518" transform="translate(28.555 142.773)"/>
+                                        <path id="Path_9" data-name="Path 9" d="M368.9,298.664v14.277h-9.518V298.664h-9.518V317.7a4.754,4.754,0,0,0,4.759,4.759h19.036a4.754,4.754,0,0,0,4.759-4.759V298.664Z" transform="translate(-154.743 -132.096)"/>
+                                        <path id="Path_10" data-name="Path 10" d="M377.6,290.131H320.493a4.754,4.754,0,0,0-4.759,4.759V352a4.754,4.754,0,0,0,4.759,4.759H377.6A4.754,4.754,0,0,0,382.361,352V294.89A4.754,4.754,0,0,0,377.6,290.131Zm-4.759,57.109H325.252V299.649h47.591Z" transform="translate(-139.647 -128.322)"/>
+                                        <path id="Path_11" data-name="Path 11" d="M266.5,401.064v14.277h-9.518V401.064h-9.518V420.1a4.758,4.758,0,0,0,4.759,4.759h19.036a4.754,4.754,0,0,0,4.759-4.759V401.064Z" transform="translate(-109.452 -177.387)"/>
+                                        <path id="Path_12" data-name="Path 12" d="M275.2,392.531H218.093a4.758,4.758,0,0,0-4.759,4.759V454.4a4.758,4.758,0,0,0,4.759,4.759H275.2a4.754,4.754,0,0,0,4.759-4.759V397.29A4.754,4.754,0,0,0,275.2,392.531Zm-4.759,57.109H222.852V402.049h47.591Z" transform="translate(-94.356 -173.613)"/>
+                                        <path id="Path_13" data-name="Path 13" d="M368.9,401.064v14.277h-9.518V401.064h-9.518V420.1a4.754,4.754,0,0,0,4.759,4.759h19.036a4.754,4.754,0,0,0,4.759-4.759V401.064Z" transform="translate(-154.743 -177.387)"/>
+                                        <path id="Path_14" data-name="Path 14" d="M377.6,392.531H320.493a4.754,4.754,0,0,0-4.759,4.759V454.4a4.754,4.754,0,0,0,4.759,4.759H377.6a4.754,4.754,0,0,0,4.759-4.759V397.29A4.754,4.754,0,0,0,377.6,392.531Zm-4.759,57.109H325.252V402.049h47.591Z" transform="translate(-139.647 -173.613)"/>
+                                        <path id="Path_15" data-name="Path 15" d="M283.2,81.561,145.181.656a4.758,4.758,0,0,0-4.706-.062L2.461,76.74A4.75,4.75,0,0,0,0,80.9V280.786a4.758,4.758,0,0,0,4.759,4.759h23.8a4.758,4.758,0,0,0,4.759-4.759V114.218H252.232V280.787a4.754,4.754,0,0,0,4.759,4.759h23.8a4.754,4.754,0,0,0,4.759-4.759V85.664A4.749,4.749,0,0,0,283.2,81.561Zm-7.168,194.466H261.75V109.459a4.758,4.758,0,0,0-4.759-4.759H28.555a4.761,4.761,0,0,0-4.759,4.759V276.027H9.518V83.712L142.7,10.231,276.028,88.39V276.027Z"/>
                                     </g>
                                 </svg>
+
                             </div>
                             <div>
-                                { house.isOpened
-                                    ? <div style={{ color: '#F90040' }}>Закрыть</div>
-                                    : <div style={{ color: '#74A607' }}>Открыть</div>
-                                }
+                                Склад
                             </div>
                         </div>
                         <div className='manager_button-phone-react' style={{ paddingTop: '2.9%' }}>
@@ -111,6 +107,7 @@ class HouseManager extends Component {
                             <div className='text_button_house-phone-react'>Закрыть меню</div>
                         </div>
                     </div>
+
                 </div>
             </Fragment>
         );
@@ -118,15 +115,13 @@ class HouseManager extends Component {
 }
 
 const mapStateToProps = state => ({
-    house: state.info.houses[0],
-    info: state.info
+    business: state.info.biz[0]
 });
 
 const mapDispatchToProps = dispatch => ({
     closeApp: () => dispatch(closeAppDisplay()),
-    changeStateHouse: () => dispatch(changeStateHouse()),
     addApp: app => dispatch(addAppDisplay(app)),
     setApp: app => dispatch(setAppDisplay(app)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(HouseManager);
+export default connect(mapStateToProps, mapDispatchToProps)(BusinessManager);

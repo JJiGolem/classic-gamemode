@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {closeAppDisplay, setAppDisplay} from "../../actions/action.apps";
-import {sellHouse, setSell, setSellInfo, setSellStatus} from "../../actions/action.info";
+import {sellHouse, setSellHouse, setSellInfoHouse, setSellStatusHouse} from "../../actions/action.info";
 import MainDisplay from "../MainDisplay";
 import HeaderHouseApp from "./HeaderHouseApp";
 
@@ -48,7 +48,7 @@ class Success extends Component {
                                     </g>
                                 </svg>
                             </span>
-                            В главное меню
+                            <div className='text_button_house-phone-react'>В главное меню</div>
                         </div>
                     </div>
                 </div>
@@ -64,9 +64,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setApp: app => dispatch(setAppDisplay(app)),
-    setSell: flag => dispatch(setSell(flag)),
-    setSellStatus: status => dispatch(setSellStatus(status)),
-    setSellInfo: info => dispatch(setSellInfo(info)),
+    setSell: flag => dispatch(setSellHouse(flag)),
+    setSellStatus: status => dispatch(setSellStatusHouse(status)),
+    setSellInfo: info => dispatch(setSellInfoHouse(info)),
     sellHouse: name => dispatch(sellHouse(name))
 });
 

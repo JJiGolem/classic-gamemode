@@ -1,9 +1,9 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {addAppDisplay, closeAppDisplay, setAppDisplay} from "../../actions/action.apps";
-import {setSellHouse, setSellInfoHouse, setSellStatusHouse} from "../../actions/action.info";
+import {setSellBusiness, setSellInfoBusiness, setSellStatusBusiness} from "../../actions/action.info";
 import ConfirmSell from "./ConfirmSell";
-import HeaderHouseApp from "./HeaderHouseApp";
+import Header from "./Header";
 
 class Sell extends Component {
     constructor(props) {
@@ -17,7 +17,7 @@ class Sell extends Component {
 
         this.getContent = this.getContent.bind(this);
         this.handleChangeInput = this.handleChangeInput.bind(this);
-        this.sellHouse = this.sellHouse.bind(this);
+        this.sellBusiness = this.sellBusiness.bind(this);
     }
 
     handleChangeInput(e) {
@@ -30,19 +30,19 @@ class Sell extends Component {
         )
     }
 
-    sellHouse() {
-        const { setSell, setSellStatus, setSellInfo, addApp, house } = this.props;
-        const { userId, sellPrice } = this.state;
+    sellBusiness() {
+        const { setSell, setSellStatus, setSellInfo, addApp, business } = this.props;
+        const { userId, price } = this.state;
 
         if (this.validateForm()) {
             setSell(true);
             addApp({name: 'ConfirmSell', form: <ConfirmSell />});
 
             // eslint-disable-next-line no-undef
-            mp.trigger('house.sell.check', house.name, userId, parseInt(sellPrice));
+            mp.trigger('biz.sell.check', business.id, userId, parseInt(price));
 
             // setTimeout(() => {
-            //     setSellInfo({nick: 'Dun', price: this.state.sellPrice})
+            //     setSellInfo({nick: 'Dunhill', price: this.state.sellPrice})
             // }, 1000)
         }
     }
@@ -58,15 +58,15 @@ class Sell extends Component {
     }
 
     validatePrice(price) {
-        const { house } = this.props;
+        const { business } = this.props;
 
         if (price) {
             if (!isNaN(price)) {
-                if (house.price <= price) {
+                if (business.price <= price) {
                     this.setState({ errorPrice: '' });
                     return true;
                 } else {
-                    this.setState({ errorPrice: `Цена должна быть не ниже государственной ($${house.price})` });
+                    this.setState({ errorPrice: `Цена должна быть не ниже государственной ($${business.price})` });
                     return false;
                 }
             } else {
@@ -96,7 +96,7 @@ class Sell extends Component {
     }
 
     getContent() {
-        const { house, closeApp, addApp } = this.props;
+        const { business, closeApp, addApp } = this.props;
         const { errorUser, errorPrice } = this.state;
 
         return (
@@ -128,7 +128,7 @@ class Sell extends Component {
                 </div>
 
                 <div className='house_buttons-phone-react' style={{ bottom: '6%', position: 'absolute' }}>
-                    <div className='house_button-phone-react' onClick={() => this.sellHouse()}>
+                    <div className='house_button-phone-react' onClick={() => this.sellBusiness()}>
                         <span className='ico_button_house-phone-react'>
                             <svg xmlns="http://www.w3.org/2000/svg" width="80%" height="80%" viewBox="0 0 16.729 12.286" style={{marginLeft: '5px'}}>
                                 <path id="Path_176" data-name="Path 176" d="M16.484,68.243a.836.836,0,0,0-1.183,0L5.28,78.264,1.427,74.412A.836.836,0,0,0,.245,75.595l4.444,4.444a.837.837,0,0,0,1.183,0L16.484,69.425A.836.836,0,0,0,16.484,68.243Z" transform="translate(0 -67.997)" fill="#74a607"/>
@@ -151,15 +151,15 @@ class Sell extends Component {
 
     render() {
 
-        const { house } = this.props;
+        const { business } = this.props;
 
         return (
             <Fragment>
                 <div className='back_page-phone-react'>
-                    <HeaderHouseApp house={house}/>
+                    <Header business={business}/>
 
                     {
-                        this.getContent(house)
+                        this.getContent(business)
                     }
                 </div>
             </Fragment>
@@ -169,16 +169,16 @@ class Sell extends Component {
 
 const mapStateToProps = state => ({
     info: state.info,
-    house: state.info.houses[0]
+    business: state.info.biz[0]
 });
 
 const mapDispatchToProps = dispatch => ({
     closeApp: () => dispatch(closeAppDisplay()),
     addApp: app => dispatch(addAppDisplay(app)),
     setApp: app => dispatch(setAppDisplay(app)),
-    setSell: flag => dispatch(setSellHouse(flag)),
-    setSellStatus: status => dispatch(setSellStatusHouse(status)),
-    setSellInfo: info => dispatch(setSellInfoHouse(info)),
+    setSell: flag => dispatch(setSellBusiness(flag)),
+    setSellStatus: status => dispatch(setSellStatusBusiness(status)),
+    setSellInfo: info => dispatch(setSellInfoBusiness(info)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sell);

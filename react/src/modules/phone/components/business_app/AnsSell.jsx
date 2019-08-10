@@ -23,7 +23,7 @@ class AnsSell extends Component {
         else if (status === 1) {
             closeApp();
             closeApp();
-            addApp({ name: 'Success', form: <Success /> });
+            addApp({ name: 'Success', form: <Success status='Бизнес успешно продан'/> });
         }
         else if (status === 2) {
             closeApp();
@@ -34,7 +34,7 @@ class AnsSell extends Component {
         else if (status === 3) {
             closeApp();
             closeApp();
-            addApp({ name: 'Error', form: <Error status='Вы находитесь не рядом с домом'/> });
+            addApp({ name: 'Error', form: <Error status='Вы находитесь не рядом с бизнесом'/> });
         }
     }
 
@@ -44,8 +44,8 @@ class AnsSell extends Component {
         return (
             <div className='back_page-phone-react'>
                 {
-                    info.houses[0].sellStatus != null
-                        ? <Fragment>{this.getAnsPage(info.houses[0].sellStatus)}</Fragment>
+                    info.biz[0].sellStatus !== null
+                        ? <Fragment>{this.getAnsPage(info.biz[0].sellStatus)}</Fragment>
                         : <div className="loader01" style={{ margin: '10% 5%' }}></div>
                 }
             </div>

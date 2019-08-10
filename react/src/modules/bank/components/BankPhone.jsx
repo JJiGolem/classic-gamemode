@@ -64,21 +64,31 @@ class BankPhone extends Component {
                 </div>
 
                 <div className='push_block-bank-react'>
-                    <div>Введите сумму пополнения</div>
-                    <div>
-                        <input
-                            className='input-bank-react'
-                            value={pushPhoneMoney}
-                            style={{ borderColor: error && 'red' }}
-                            onChange={this.handleChange}
-                        />
-                        <div className='button_input-bank-react' onClick={this.pushPhoneMoney}>OK</div>
-                    </div>
+                    {
+                        bank.phoneMoney !== null
+                        ? <Fragment>
+                                <div>Введите сумму пополнения</div>
+                                <div>
+                                    <input
+                                        className='input-bank-react'
+                                        value={pushPhoneMoney}
+                                        style={{ borderColor: error && 'red' }}
+                                        onChange={this.handleChange}
+                                    />
+                                    <div className='button_input-bank-react' onClick={this.pushPhoneMoney}>OK</div>
+                                </div>
 
-                    <div style={{ fontSize: '130%' }}>Текущий баланс:
-                        <span style={{ color: 'green', marginLeft: '2%' }}>${ bank.phoneMoney }</span>
-                    </div>
-
+                                <div style={{ fontSize: '130%' }}>Текущий баланс:
+                                    <span style={{ color: 'green', marginLeft: '2%' }}>${ bank.phoneMoney }</span>
+                                </div>
+                            </Fragment>
+                        : <Fragment>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40%" height="40%" viewBox="0 0 57.685 99.3">
+                                    <path id="Path_103" data-name="Path 103" d="M58.312,0H14.041A6.726,6.726,0,0,0,7.334,6.707V92.59a6.728,6.728,0,0,0,6.707,6.71H58.312a6.724,6.724,0,0,0,6.707-6.707V6.707A6.726,6.726,0,0,0,58.312,0ZM29.095,4.834H43.258a.813.813,0,0,1,0,1.626H29.095a.813.813,0,0,1,0-1.626Zm7.082,91.112A3.355,3.355,0,1,1,39.53,92.59,3.353,3.353,0,0,1,36.176,95.947Zm24.175-9.059H12V10.636H60.352Z" transform="translate(-7.334)"/>
+                                </svg>
+                                <div style={{ marginTop: '5%' }}>У Вас нет телефона</div>
+                            </Fragment>
+                    }
                     <div className='buttons_panel-bank-react'>
                         <button className='button_panel-bank-react' onClick={closePage}>
                             Назад

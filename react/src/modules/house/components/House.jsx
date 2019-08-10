@@ -37,20 +37,20 @@ class House extends Component {
         this.showConfirmBuy = this.showConfirmBuy.bind(this);
     }
 
-    /*componentWillMount() {
-        const houseInfo = {
-            name: 228,
-            area: 'Санта-Моника',
-            class: 'Люкс',
-            numRooms: 4,
-            garage: true,
-            carPlaces: 2,
-            price: 45000,
-            rent: 350,
-        };
-
-        this.props.loadInfo(houseInfo);
-    }*/
+    // componentWillMount() {
+    //     const houseInfo = {
+    //         name: 228,
+    //         area: 'Санта-Моника',
+    //         class: 'Люкс',
+    //         numRooms: 4,
+    //         garage: true,
+    //         carPlaces: 2,
+    //         price: 45000,
+    //         rent: 350,
+    //     };
+    //
+    //     this.props.loadInfo(houseInfo);
+    // }
 
     getLoader() {
         return (
@@ -301,7 +301,7 @@ class House extends Component {
                             <div>Класс: <span>{ house.class }</span></div>
                             <div>Количество комнат: <span>{ house.numRooms }</span></div>
                             <div>Гараж: { house.garage
-                                ? <span style={{ color: '#a2dd03 ' }}>есть</span>
+                                ? <span style={{ color: '#a2dd03' }}>есть</span>
                                 : <span style={{ color: 'red' }}>нет</span> }
                             </div>
                             <div>Парковочных мест: <span>{ house.carPlaces }</span></div>
