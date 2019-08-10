@@ -145,6 +145,7 @@ var inventory = new Vue({
             24: {
                 handler(item) {
                     console.log("Обработчик горячей клавиши. Предмет: " + item.sqlId);
+                    item.params.count--;
                 }
             }
         },
@@ -554,6 +555,12 @@ var inventory = new Vue({
         unbindHotkey(key) {
             Vue.delete(this.hotkeys, key);
         },
+        onUseHotkey(key) {
+            if (!key) key = 10; // для клавиши '0'
+            var item = this.hotkeys[key];
+            if (!item) return;
+            this.hotkeysList[item.itemId].handler(item);
+        },
         clearHotkeys(item) {
             if (typeof item == 'number') item = this.getItem(item);
             for (var key in this.hotkeys) {
@@ -656,6 +663,10 @@ var inventory = new Vue({
         let self = this;
         window.addEventListener('keyup', function(e) {
             if (e.keyCode == 73 && self.enable) self.show = !self.show;
+            if (e.keyCode > 47 && e.keyCode < 58) {
+                var num = e.keyCode - 48;
+                self.onUseHotkey(num);
+            }
         });
         window.addEventListener('click', function(e) {
             self.itemMenu.item = null;
