@@ -31,10 +31,15 @@ mp.events.add("offerDialog.show", (name, values) => {
     //     }
     // }
     // TODO: Прикрутить сис-му знакомств, чтобы не было видно ника незнакомца. ^^^
-
-    menu.execute(`offerDialog.show('${name}', '${JSON.stringify(values)}')`);
+    mp.gui.cursor.show(true, true);
+    mp.callCEFV(`offerDialog.show('${name}', '${JSON.stringify(values)}')`);
 });
 
 mp.events.add("offerDialog.hide", () => {
-    menu.execute(`offerDialog.hide()`);
+    mp.callCEFV(`offerDialog.hide()`);
+    mp.gui.cursor.show(false, false);
+});
+
+mp.events.add("offerDialog.close", () => {
+    mp.gui.cursor.show(false, false);
 });

@@ -7,15 +7,18 @@ const creatorPlayerHeading = -185.0;
 /// Функции модуля выбора и создания персоонажа
 module.exports = {
     async init(player) {
-        player.characters = await db.Models.Character.findAll({
-            where: {
-                accountId: player.account.id
-            },
-            include: [
-                db.Models.Feature, 
-                db.Models.Appearance
-            ]
-        });
+        if (player.character != null) delete player.character;
+        if (player.characters == null) {
+            player.characters = await db.Models.Character.findAll({
+                where: {
+                    accountId: player.account.id
+                },
+                include: [
+                    db.Models.Feature, 
+                    db.Models.Appearance
+                ]
+            });
+        }
         let charInfos = new Array();
         for(let i = 0; i < player.characters.length; i++) {
             charInfos.push({charInfo: player.characters[i], charClothes: null});

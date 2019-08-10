@@ -4,7 +4,7 @@ module.exports = {
     "/addcash": {
         access: 6,
         description: "Дать наличности",
-        args: "[id] [Кол-во]",
+        args: "[id]:n [Кол-во]:n",
         handler: (player, args) => {
             let id = parseInt(args[0]);
             let number = parseInt(args[1]);
@@ -20,7 +20,7 @@ module.exports = {
     "/addmoney": {
         access: 6,
         description: "Пополнить банковский счет",
-        args: "[id] [Кол-во]",
+        args: "[id]:n [Кол-во]:n",
         handler: (player, args) => {
             let id = parseInt(args[0]);
             let number = parseInt(args[1]);
@@ -36,7 +36,7 @@ module.exports = {
     "/removecash": {
         access: 6,
         description: "Отобрать наличность",
-        args: "[id] [Кол-во]",
+        args: "[id]:n [Кол-во]:n",
         handler: (player, args) => {
             let id = parseInt(args[0]);
             let number = parseInt(args[1]);
@@ -52,7 +52,7 @@ module.exports = {
     "/removemoney": {
         access: 6,
         description: "Снять с банковского счета",
-        args: "[id] [Кол-во]",
+        args: "[id]:n [Кол-во]:n",
         handler: (player, args) => {
             let id = parseInt(args[0]);
             let number = parseInt(args[1]);

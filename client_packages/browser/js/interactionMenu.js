@@ -36,6 +36,10 @@ var interactionMenu = new Vue({
                         mp.trigger(`vehicles.trunk`);
                         mp.trigger(`interaction.menu.close`);
                     }
+                    if (item.text == 'Диагностика') {
+                        mp.trigger(`carservice.diagnostics.offer`);
+                        mp.trigger(`interaction.menu.close`);
+                    }
                 }
             },
             "vehicle_inside": {
@@ -67,7 +71,7 @@ var interactionMenu = new Vue({
                 }
             },
             "vehicle_ejectlist": {
-                name: "vehicle_ejectlist", 
+                name: "vehicle_ejectlist",
                 items: [
                 ],
                 handler(index) {
@@ -77,7 +81,7 @@ var interactionMenu = new Vue({
                 }
             },
             "player_ownmenu": {
-                name: "player_ownmenu", 
+                name: "player_ownmenu",
                 items: [
                     {
                         text: "Мои документы",
@@ -97,7 +101,7 @@ var interactionMenu = new Vue({
                 }
             },
             "player_interaction": {
-                name: "player_interaction", 
+                name: "player_interaction",
                 items: [
                     {
                         text: "Познакомиться",
@@ -116,7 +120,7 @@ var interactionMenu = new Vue({
                 }
             },
             "player_docs": {
-                name: "player_docs", 
+                name: "player_docs",
                 items: [
                     {
                         text: "Паспорт",
@@ -138,6 +142,8 @@ var interactionMenu = new Vue({
                         mp.trigger(`interaction.menu.close`);
                     }
                     if (item.text == 'Лицензии на т/с') {
+                        mp.trigger(`documents.showTo`, "driverLicense");
+                        mp.trigger(`interaction.menu.close`);
                     }
                     if (item.text == 'Паспорт т/с') {
                         mp.trigger(`documents.showTo`, "carPass");
@@ -146,7 +152,7 @@ var interactionMenu = new Vue({
                 }
             },
             "carPass_list": {
-                name: "carPass_list", 
+                name: "carPass_list",
                 items: [
 
                 ],

@@ -145,13 +145,13 @@ mp.events.add('chat.message.get', (type, message) => {
 });
 
 mp.events.add('chat.action.say', (nickname, id, message) => {
-    message = `!{#ffffff}${nickname}[${id}] сказал: ${message}`;
+    message = `!{#ffffff}${nickname}[${id}]: ${message}`;
     mp.events.call('chat.message.push', message);
 });
 
 mp.events.add('chat.action.shout', (nickname, id, message) => {
     if (typeof (message) != "string") message = message.join(' ');
-    message = `!{#ffdfa8}${nickname}[${id}] крикнул: ${message}`;
+    message = `!{#ffdfa8}${nickname}[${id}] кричит: ${message}`;
     mp.events.call('chat.message.push', message);
 });
 

@@ -79,7 +79,6 @@ mp.events.add('house.sell', () => {
 mp.events.add('house.sell.ans', (ans) => {
     mp.callCEFR('house.sell.ans', [ans]);
 });
-
 mp.events.add('house.sell.stop', () => {
     mp.events.callRemote('house.sell.stop');
 });

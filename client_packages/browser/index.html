@@ -24,7 +24,8 @@
     <link rel="stylesheet" type="text/css" href="css/speedometer.css" />
     <link rel="stylesheet" type="text/css" href="css/interactionMenu.css" />
     <link rel="stylesheet" type="text/css" href="build/css/styles.css">
-
+    <link rel="stylesheet" type="text/css" href="css/carSpecifications.css" />
+    <link rel="stylesheet" type="text/css" href="css/check.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -94,8 +95,8 @@
                 <div class="message">
                     {{ dialog.text }}
                 </div>
-                <div class="price" v-if="dialog.price">$
-                    {{ pretty(dialog.price) }}</div>
+                <div class="price" v-if="dialog.price">
+                    ${{ pretty(dialog.price) }}</div>
             </div>
             <div class="cancel" @click="dialog.no(); hide()">N</div>
         </div>
@@ -116,7 +117,7 @@
         </div>
     </div>
 
-    <div v-cloak="v-cloak" id="characterInfo" v-if="show && characters.length">
+    <div v-cloak="v-cloak" id="characterInfo" v-if="show && i < characters.length">
         <div class="header">Статистика персонажа</div>
         <div class="content">
             <div class="name">{{ characters[i].name.split(' ')[0] }}<br />{{ characters[i].name.split(' ')[1] }}</div>
@@ -165,32 +166,36 @@
                 {{ characters[i].warns }}
             </div>
         </div>
-        <div class="createCharacter" @click="onClickCreateCharacter" v-show="showCreateCharacter">
+    </div>
+
+    <div v-cloak="v-cloak" id="characterSelector" v-if="show">
+        <div>
+            <div class="arrow" @click="left" :class="{disabled: leftArrowDisabled}">&lt;</div>
+            <button @click="enter" :class="{disabled: enterDisabled}">Выбрать</button>
+            <div class="arrow" @click="right" :class="{disabled: rightArrowDisabled}">&gt;</div>
+        </div>
+    </div>
+
+    <div v-cloak="v-cloak" id="createCharacter" @click="onClickCreateCharacter" v-if="show">
+        <div>
             <div class="plus">+</div>
             <div class="text">Создать<br />персонажа</div>
         </div>
     </div>
 
-    <div v-cloak="v-cloak" id="characterSelector" v-if="show">
-        <div>
-            <div class="arrow" @click="left" :class="{disabled: leftArrowDisabled()}">&lt;</div>
-            <button @click="enter">Выбрать</button>
-            <div class="arrow" @click="right" :class="{disabled: rightArrowDisabled()}">&gt;</div>
-        </div>
-    </div>
-
-    <div v-cloak="v-cloak" id="selectMenu" v-if="show && menu">
+    <div v-cloak="v-cloak" id="selectMenu" :class="{inactive: loader}" v-if="show && menu">
         <div class="header">{{ menu.header }}</div>
         <div class="content">
             <div class="arrow arr-up" :class="{active: menu.j > 0}"></div>
             <div class="items">
-                <div class="item" v-for="(item, index) in items" v-if="isItemShow(index)" :class="{selected: index == menu.i}">
-                    <div class="name">{{ item.text }}</div>
-                    <div class="value" v-if="item.values && valuesType(index) == 0">{{ item.values[item.i] }}</div>
-                    <div class="value color-type" v-else-if="item.values && valuesType(index) == 1" :style="{background: item.values[item.i]}"></div>
-                    <div class="value" v-else-if="item.values && valuesType(index) == 3">
-                        <input type="text" v-model="item.values[0]" />
+                <div class="item" v-for="(item, index) in items" v-show="isItemShow(index)" :class="{selected: index == menu.i}">
+                    <div class="name" :class="{button: item.location}" :style="{'text-align': item.location}">{{ item.text }}</div>
+                    <div class="value" v-if="item.values && valuesType(index) != 1">
+                        {{ item.values[item.i] }}
+                        <img
+                        :src="(menu.i != index)? 'img/selectMenu/edit.png' : 'img/selectMenu/edit-selected.png'" v-if="valuesType(index) == 3" />
                     </div>
+                    <div class="value color-type" v-else-if="item.values && valuesType(index) == 1" :style="{background: item.values[item.i]}"></div>
                 </div>
             </div>
             <div class="arrow arr-down" :class="{active: menu.j < menu.items.length - maxItems}"></div>
@@ -199,9 +204,9 @@
             <div v-for="value in values">{{ value }}</div>
         </div>
         <div v-else-if="valuesType(menu.i) == 1" class="selector select-color">
-            <!-- <div class="arrow arr-left" :class="{active: menu.items[menu.i].i > 0}"></div> -->
-            <div class="color-type" v-for="(value, index) in colorValues" :class="{active: index == menu.items[menu.i].i}" :style="{background: value}"></div>
-            <!-- <div class="arrow arr-right" :class="{active: menu.items[menu.i].i < menu.items.length - maxColorValues}"></div> -->
+            <div class="arrow arr-left" :class="{active: menu.items[menu.i].j > 0}"></div>
+            <div class="color-type" v-for="(value, index) in items[menu.i].values" v-show="isColorValueShow(index)" :class="{active: index == menu.items[menu.i].i}" :style="{background: value}"></div>
+            <div class="arrow arr-right" :class="{active: menu.items[menu.i].j < menu.items[menu.i].values.length - maxColorValues}"></div>
         </div>
         <div v-else-if="valuesType(menu.i) == 2" class="selector select-number">
             <div>{{ menu.items[menu.i].min }}</div>
@@ -209,6 +214,17 @@
                 <div class="fill" :style="{left: leftNumberType}"></div>
             </div>
             <div>{{ menu.items[menu.i].max }}</div>
+        </div>
+        <div class="notification" v-if="notification">
+            {{ notification }}
+        </div>
+        <div class="textField" v-show="valuesType(menu.i) == 3">
+            <input :ref="menu.items[menu.i].text" type="text" v-model="menu.items[menu.i].values[0]" :placeholder="menu.items[menu.i].text" />
+        </div>
+        <div v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
+            <div class="lds-rolling">
+                <div></div>
+            </div>
         </div>
     </div>
 
@@ -220,7 +236,7 @@
             <div class="header">{{ header }}</div>
             <div class="authAccount" v-if="form == 0">
                 <label>Логин или Email
-                    <input type="text" v-model="loginOrEmail" v-on:keyup.enter="authAccountHandler" />
+                    <input type="text" v-model="loginOrEmail" v-on:keyup.enter="authAccountHandler" autofocus />
                     <img class="ic-login" src="img/auth/login.png" />
                 </label>
                 <label>Пароль
@@ -233,7 +249,7 @@
             </div>
             <div class="regAccount" v-if="form == 1">
                 <label>Логин
-                    <input type="text" v-model="login" v-on:keyup.enter="regAccountHandler" />
+                    <input type="text" v-model="login" v-on:keyup.enter="regAccountHandler" autofocus />
                     <img class="ic-login" src="img/auth/login.png" />
                 </label>
                 <label>Email
@@ -253,7 +269,7 @@
             </div>
             <div class="recoveryAccount" v-if="form == 2">
                 <label>Логин или Email
-                    <input type="text" v-model="loginOrEmail" v-on:keyup.enter="recoveryAccountHandler" />
+                    <input type="text" v-model="loginOrEmail" v-on:keyup.enter="recoveryAccountHandler" autofocus />
                     <img class="ic-login" src="img/auth/login.png" />
                 </label>
                 <label style="display: none">Код подтверждения
@@ -273,7 +289,7 @@
             </div>
             <div class="confirmEmail" v-if="form == 3">
                 <label>Код подтверждения
-                    <input type="text" v-model="code" />
+                    <input type="text" v-model="code" autofocus />
                     <img class="ic-password" src="img/auth/password.png" />
                 </label>
                 <a class="confirmEmailBtn" onclick="regAccountHandler()">Пропустить</a>
@@ -343,7 +359,7 @@
     </div>
 
     <div v-cloak="v-cloak" id="driverLicense" v-if="show">
-        <span class="close" @click="show = false">x</span>
+        <span class="close" @click="close()">x</span>
         <div class="header">{{ header }}</div>
         <div class="content">
             <div class="infoA">
@@ -434,6 +450,62 @@
         </div>
     </div>
 
+
+    <div v-cloak="v-cloak" id="carSpecifications" v-if="show">
+        <div class="header">Характеристики</div>
+        <div class="body">
+            <div class="record" v-for="record in body">
+                <div class="left">{{ record.header }}</div>
+                <div class="right">{{ record.value }} {{ record.unit }}</div>
+                <div class="line"></div>
+            </div>
+        </div>
+        <div class="footer">${{ splitPrice }}</div>
+    </div>
+    
+
+    <div v-cloak="v-cloak" id="check" v-if="show">
+        <div class="close" @click="hide">X</div>
+        <div class="content">
+            <div class="header">
+                <div class="name">{{ checkName }}</div>
+                <div class="logo">
+                    <img :src="pathToLogo" />
+                </div>
+            </div>
+            <svg class="head-line">
+                <line x1="0" y1="0" x2="100%" y2="0"></line>
+            </svg>
+            <div class="body">
+                <div class="record" v-for="record in records">
+                    <div class="left">{{ record.header }}</div>
+                    <div class="right">{{ record.price | split }}$</div>
+                </div>
+                <svg class="total-line">
+                    <line x1="70%" y1="0" x2="100%" y2="0"></line>
+                </svg>
+                <div class="total">
+                    <span>Итого:</span> {{ totalPrice | split }}$
+                </div>
+            </div>
+            <div class="footer">
+                <div>
+                    <div class="pay" @click="pay($event)">
+                        <div class="noevent">Оплатить</div>
+                        <svg class="noevent"><line x1="0" y1="0" x2="100%" y2="0"></line></svg>
+                    </div>
+                </div>
+                <div>
+                    <div class="nopay" @click="refuse">
+                        <div class="noevent">Отказаться</div>
+                        <svg class="noevent"><line x1="0" y1="0" x2="100%" y2="0"></line></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- ------------------------ REACT ------------------------------ -->
     <script async src="build/js/build.js" type="text/javascript"></script>
     <div id="root"></div>
@@ -452,6 +524,8 @@
     <script src="js/driverLicense.js"></script>
     <script src="js/speedometer.js"></script>
     <script src="js/interactionMenu.js"></script>
+    <script src="js/carSpecifications.js"></script>
+    <script src="js/check.js"></script>
 </body>
 
 </html>

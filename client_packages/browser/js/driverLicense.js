@@ -14,7 +14,7 @@ var driverLicense = new Vue({
             return this.fName + " " + this.sName;
         },
         prettySex() {
-            return (this.sex) ? "М" : "Ж";
+            return (this.sex) ? "Ж" : "М";
         },
         prettyNumber() {
             return getPaddingNumber(this.number, 10);
@@ -29,6 +29,10 @@ var driverLicense = new Vue({
             src += ".svg";
             return src;
         },
+        close() {
+            this.show = false;
+            mp.trigger('documents.close');
+        }
     }
 });
 

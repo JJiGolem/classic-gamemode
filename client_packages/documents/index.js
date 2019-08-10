@@ -22,6 +22,7 @@ mp.events.add('documents.show', (type, data) => {
                 data.vehType = 'Автомобиль'
                 break;
         }
+        data.regDate = dateFormatter(data.regDate);
         for (var key in data) {
             if (typeof data[key] == 'string') data[key] = `'${data[key]}'`;
             mp.callCEFV(`carPass.${key} = ${data[key]}`);
@@ -39,6 +40,19 @@ mp.events.add('documents.show', (type, data) => {
         }
         mp.callCEFV('characterPass.show = true');
     }
+    if (type == 'driverLicense') {
+        //mp.chat.debug(data.categories);
+        for (var key in data) {
+            if (typeof data[key] == 'string') data[key] = `'${data[key]}'`;
+            mp.callCEFV(`driverLicense.${key} = ${data[key]}`);
+        }
+        // for (let i = 0; i < data.categories.length; i++) {
+        //     mp.callCEFV(`carPass.categories[${i}] = ${data.categories[i]}`);
+        // }
+
+        mp.callCEFV(`driverLicense.categories = [${data.categories[0]}, ${data.categories[1]}, ${data.categories[2]}, ${data.categories[3]}, ${data.categories[4]}, ${data.categories[5]}]`);
+        mp.callCEFV('driverLicense.show = true');
+    }
 });
 
 mp.events.add('documents.close', (type, data) => {
@@ -54,6 +68,9 @@ mp.events.add('documents.close', (type, data) => {
         case 'characterPass':
             mp.callCEFV('characterPass.show = false');
             break;
+        case 'driverLicense':
+            mp.callCEFV('driverLicense.show = false');
+            break;
     }
 
     mp.game.graphics.transitionFromBlurred(500);
@@ -63,7 +80,7 @@ mp.events.add('documents.close', (type, data) => {
 });
 
 mp.keys.bind(0x1B, false, function () {
-    mp.chat.debug(isOpen);
+    //mp.chat.debug(isOpen);
     if (!isOpen) return;
     mp.events.call('documents.close');
 });
@@ -79,7 +96,7 @@ mp.events.add('documents.list', () => {
     mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["player_docs"])');
 
     let left = mp.getDefaultInteractionLeft();
-    mp.chat.debug(left);
+    //mp.chat.debug(left);
     mp.callCEFV(`interactionMenu.left = ${left}`);
     mp.events.call('interaction.menu.show');
 
@@ -97,7 +114,9 @@ mp.events.add('documents.showTo', (type) => {
             break;
         case "characterPass":
             mp.events.call('documents.offer', "characterPass", target.remoteId);
-            //mp.events.call('documents.carPass.list');
+            break;
+        case "driverLicense":
+            mp.events.call('documents.offer', "driverLicense", target.remoteId);
             break;
     }
 });
@@ -118,7 +137,7 @@ mp.events.add('documents.carPass.list.show', (list) => {
     mp.callCEFV(`interactionMenu.left = ${left}`);
     mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["carPass_list"])');
     carPassList.forEach((current) => {
-        mp.chat.debug(`${current.id} ${current.plate}`);
+        //mp.chat.debug(`${current.id} ${current.plate}`);
         mp.callCEFV(`interactionMenu.menu.items.push({
             text: "Т/С: ${current.plate}",
             icon: "car.png"
@@ -128,10 +147,20 @@ mp.events.add('documents.carPass.list.show', (list) => {
 });
 
 mp.events.add('documents.carPass.list.choose', (plate) => {
-    mp.chat.debug(plate);
+    //mp.chat.debug(plate);
     for (let i = 0; i < carPassList.length; i++) {
         if (carPassList[i].plate == plate) {
             mp.events.callRemote('documents.offer', "carPass", mp.players.local.remoteId, JSON.stringify(carPassList[i]));
         }
     }
 });
+
+function dateFormatter(date) {
+    if (!date) return '11/09/2001';
+    //mp.chat.debug(date);
+    date = date.split('-');
+    //mp.chat.debug(date);
+    let newDate = `${date[2]}/${date[1]}/${date[0]}`;
+
+    return newDate;
+}

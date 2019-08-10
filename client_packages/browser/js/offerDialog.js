@@ -2,7 +2,59 @@ var offerDialog = new Vue({
     el: "#offerDialog",
     data: {
         showTime: 10000,
-        dialogs: {},
+        dialogs: {
+            "documents": {
+                text: "Carter Slade хочет показать вам паспорт",
+                on(values) {
+                    this.text = `${values.name} хочет показать Вам ${values.doc}`;
+                },
+                yes() {
+                    mp.trigger("callRemote", "documents.offer.accept", 1);
+                },
+                no() {
+                    mp.trigger("callRemote", "documents.offer.accept", 0);
+                    mp.trigger("offerDialog.close");
+                },
+                ignore() {
+                    alert("Диалог предложения был проигнорирован!");
+                },
+            },
+            "carservice_diagnostics": {
+                text: "Dun Hill предлагает диагностику вашего транспорта",
+                price: 100,
+                on(values) {
+                    this.text = `${values.name} предлагает вам диагностику транспорта`;
+                },
+                yes() {
+                    mp.trigger("callRemote", "carservice.diagnostics.accept", 1);
+                    mp.trigger("offerDialog.close");
+                },
+                no() {
+                    mp.trigger("callRemote", "carservice.diagnostics.accept", 0);
+                    mp.trigger("offerDialog.close");
+                },
+                ignore() {
+                    alert("Диалог предложения был проигнорирован!");
+                },
+            },
+            "house_sell": {
+                text: "Swifty Swift предлагает вам купить его дом",
+                price: 100,
+                on(values) {
+                    this.price = values.price;
+                    this.text = `${values.name} предлагает вам купить его дом`;
+                },
+                yes() {
+                    mp.trigger("callRemote", "house.sell.ans", 1);
+                },
+                no() {
+                    mp.trigger("callRemote", "house.sell.ans", 2);
+                },
+                ignore() {
+                    mp.trigger("callRemote", "house.sell.ans", 2);
+                },
+            },
+        },
         dialog: null,
         timeout: null,
     },
@@ -14,6 +66,7 @@ var offerDialog = new Vue({
             var self = this;
             clearTimeout(self.timeout);
             self.timeout = setTimeout(() => {
+                self.dialog.ignore();
                 self.hide();
             }, self.showTime);
         },
@@ -27,13 +80,13 @@ var offerDialog = new Vue({
     },
     mounted() {
         let self = this;
-        window.addEventListener('keyup', function(e) {
+        window.addEventListener('keyup', function (e) {
             if (!self.dialog) return;
-            if (e.code == "KeyY") {
+            if (e.keyCode == 89) { // Y
                 self.dialog.yes();
                 self.hide();
             }
-            else if (e.code == "KeyN") {
+            else if (e.keyCode == 78) { // N
                 self.dialog.no();
                 self.hide();
             }
@@ -42,7 +95,7 @@ var offerDialog = new Vue({
 });
 
 // for tests
-// offerDialog.show("accept_sell_biz", {owner: "Carter Slade", type: "Закусочная"});
+// offerDialog.show("documents", {name: "Carter Slade", doc: "Паспорт"});
 
 
 /// EXAMPLES

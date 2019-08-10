@@ -1,11 +1,13 @@
 var vehicles = require('./index.js');
 module.exports = {
+    access: 6,
     "/setlic": { // temp
         handler: (player, args) => {
             player.license = args[0];
         }
     },
     "/resp": { // temp
+        access: 6,
         handler: (player, args) => {
             if (player.vehicle) {
                 player.removeFromVehicle();
@@ -14,6 +16,7 @@ module.exports = {
         }
     },
     "/fuel": { // temp 
+        access: 6,
         handler: (player, args) => {
             player.call('chat.message.push', [`!{#ffffff} ${player.vehicle.fuel}`]);
         }
@@ -28,12 +31,14 @@ module.exports = {
         }
     },
     "/ex": {
+        access: 6,
         handler: (player, args) => {
             if (!player.vehicle) return;
             player.vehicle.explode();
         }
     },
     "/carpass": {
+        access: 6,
         handler: (player, args) => {
             if (!player.vehicle) return;
             let vehicle = player.vehicle;
@@ -79,7 +84,8 @@ module.exports = {
                     y: veh.position.y,
                     z: veh.position.z,
                     h: veh.heading,
-                    plate: veh.plate
+                    plate: veh.plate,
+                    fuel: veh.properties.maxFuel*0.7
                 });
             } else {
                 var data = await db.Models.Vehicle.create({ /// Если автомобиля нет в БД, то создаем запись в БД 
@@ -93,7 +99,8 @@ module.exports = {
                     z: veh.position.z,
                     h: veh.heading,
                     license: veh.license,
-                    plate: veh.plate
+                    plate: veh.plate,
+                    fuel: veh.properties.maxFuel*0.7
                 });
                 veh.sqlId = data.id;
                 veh.db = data;
@@ -125,6 +132,7 @@ module.exports = {
         }
     },
     "/fuelstate": {
+        access: 6,
         handler: (player, args) => {
             if (!player.vehicle) return;
             player.vehicle.fuelState = parseInt(args[0]);
@@ -132,6 +140,7 @@ module.exports = {
         }
     },
     "/date": {
+        access: 6,
         handler: (player, args) => {
             if (!player.vehicle) return;
             let now = new Date();

@@ -17,6 +17,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(50),
             allowNull: false
         },
+        /// Работа
+        job: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false
+        },
         /// Финансы
         cash: {
             type: DataTypes.INTEGER(11),
@@ -68,6 +74,42 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             allowNull: false
         },
+        creationDate: {
+            type: DataTypes.DATE,
+            defaultValue: Sequelize.NOW,
+            allowNull: false
+        },
+        /// Лицензии
+        carLicense: {
+			type: DataTypes.TINYINT(1),
+			defaultValue: 0,
+			allowNull: false
+        },
+        passengerLicense: {
+			type: DataTypes.TINYINT(1),
+			defaultValue: 0,
+			allowNull: false
+        },
+        bikeLicense: {
+			type: DataTypes.TINYINT(1),
+			defaultValue: 0,
+			allowNull: false
+        },
+        truckLicense: {
+			type: DataTypes.TINYINT(1),
+			defaultValue: 0,
+			allowNull: false
+        },
+        airLicense: {
+			type: DataTypes.TINYINT(1),
+			defaultValue: 0,
+			allowNull: false
+        },
+        boatLicense: {
+			type: DataTypes.TINYINT(1),
+			defaultValue: 0,
+			allowNull: false
+		},
         /// Внешность
         gender: {
             type: DataTypes.INTEGER(11),

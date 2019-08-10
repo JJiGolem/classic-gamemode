@@ -170,10 +170,14 @@ mp.events.add('characterInit.create.check', (name, surname) => {
 });
 
 mp.events.add('characterInit.create.check.ans', (ans) => {
-    //mp.callCEFR('checkCustom', [ans]);
     if (ans == 1) {
-        mp.chat.debug("Персоонаж создан и ник одобрен");
+        mp.callCEFV(`selectMenu.loader = false;`);
+        mp.callCEFV(`selectMenu.show = false`);
         mp.events.call('characterInit.create', false);
+    }
+    else {
+        mp.callCEFV(`selectMenu.loader = false;`);
+        mp.callCEFV(`selectMenu.notification = "Такое имя персоонажа уже занято";`);
     }
 });
 
@@ -186,7 +190,8 @@ mp.events.add("characterInit.create", (active, rawCharData) => {
         camInit();
         applyTorsoCamera();
         
-        //mp.callCEFR('showCustomization', []);
+        mp.callCEFV(`selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];`);
+        mp.callCEFV(`selectMenu.show = true`);
     } else {
         mp.gui.cursor.show(false, false);
         mp.events.callRemote('characterInit.create.exit');
@@ -201,6 +206,11 @@ mp.events.add("characterInit.create.head", (active) => {
     else {
         applyTorsoCamera();
     }
+});
+
+mp.events.add('characterInit.create.exit', () => {
+    mp.events.callRemote('characterInit.create.exit');
+    mp.events.callRemote('characterInit.start');
 });
 
 mp.events.add('characterInit.create.reset', () => {

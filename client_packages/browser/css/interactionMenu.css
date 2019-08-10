@@ -6,11 +6,13 @@
     left: 80vw;
     top: 50vh;
     transform: rotateY(-10deg) rotateX(0) translateZ(0);
+    z-index: 100;
 }
 
 #interactionMenu .icon {
     align-items: center;
     display: flex;
+    pointer-events: none;
     padding: 0.5vh;
 }
 
@@ -34,4 +36,5 @@
 
 #interactionMenu .text {
     padding: 0.7vh 1vh;
+    pointer-events: none;
 }

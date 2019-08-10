@@ -71,19 +71,24 @@ module.exports = {
             vehicle.properties = veh.properties;
         }
 
+        let multiplier = vehicle.multiplier;
+        if (vehicle.fuelState) {
+            if (vehicle.fuelState == 1) {
+                multiplier = multiplier * 2;
+            }
+            if (vehicle.fuelState == 2) {
+                multiplier = multiplier * 4;
+            }
+        }
+
+        vehicle.consumption = vehicle.properties.consumption * multiplier;
+        vehicle.fuelTick = 60000/vehicle.consumption;
+
         vehicle.fuelTimer = setInterval(() => {
             try {
                 if (vehicle.engine) {
-                    let multiplier = vehicle.multiplier;
-                    if (vehicle.fuelState) {
-                        if (vehicle.fuelState == 1) {
-                            multiplier = multiplier * 2;
-                        }
-                        if (vehicle.fuelState == 2) {
-                            multiplier = multiplier * 4;
-                        }
-                    }
-                    vehicle.fuel = vehicle.fuel - vehicle.properties.consumption * multiplier;
+
+                    vehicle.fuel = vehicle.fuel - 1;
                     if (vehicle.fuel <= 0) {
                         vehicle.engine = false;
                         vehicle.setVariable("engine", false);
@@ -94,7 +99,7 @@ module.exports = {
             } catch (err) {
                 console.log(err);
             }
-        }, 60000);
+        }, vehicle.fuelTick);
         return vehicle;
     },
     getDriver(vehicle) {
@@ -250,14 +255,14 @@ module.exports = {
         let destroys = veh.destroys;
 
         if (mileage < 10) multiplier += 0.01;
-        if (mileage > 10 && mileage < 100) multiplier += 0.05;
-        if (mileage > 100 && mileage < 300) multiplier += 0.1;
-        if (mileage > 300 && mileage < 500) multiplier += 0.2;
-        if (mileage > 500 && mileage < 1000) multiplier += 0.4;
-        if (mileage > 1000 && mileage < 2000) multiplier += 0.5;
-        if (mileage > 2000 && mileage < 4000) multiplier += 0.7;
-        if (mileage > 4000 && mileage < 10000) multiplier += 1;
-        if (mileage > 10000) multiplier += 1.2;
+        if (mileage >= 10 && mileage < 100) multiplier += 0.05;
+        if (mileage >= 100 && mileage < 300) multiplier += 0.1;
+        if (mileage >= 300 && mileage < 500) multiplier += 0.2;
+        if (mileage >= 500 && mileage < 1000) multiplier += 0.4;
+        if (mileage >= 1000 && mileage < 2000) multiplier += 0.5;
+        if (mileage >= 2000 && mileage < 4000) multiplier += 0.7;
+        if (mileage >= 4000 && mileage < 10000) multiplier += 1;
+        if (mileage >= 10000) multiplier += 1.2;
 
         multiplier += 0.01 * destroys;
         return multiplier;
@@ -281,12 +286,14 @@ module.exports = {
         }
         if (toUpdate) {
             console.log('обновляем поломки в бд');
-            veh.db.update({
-                engineState: veh.engineState,
-                fuelState: veh.fuelState,
-                steeringState: veh.steeringState,
-                brakeState: veh.brakeState
-            });
+            if (veh.db) {
+                veh.db.update({
+                    engineState: veh.engineState,
+                    fuelState: veh.fuelState,
+                    steeringState: veh.steeringState,
+                    brakeState: veh.brakeState
+                });
+            }
         }
     },
     getVehicleBySqlId() {
@@ -299,5 +306,37 @@ module.exports = {
             }
         });
         return result;
+    },
+    spawnHomeVehicles(player, vehicles) {
+
+    },
+    updateConsumption(vehicle) {
+        if (!vehicle) return;
+        try {
+            clearInterval(vehicle.fuelTimer);
+            
+            let multiplier = vehicle.multiplier;
+            vehicle.consumption = vehicle.properties.consumption * multiplier;
+            vehicle.fuelTick = 60000/vehicle.consumption;
+    
+            vehicle.fuelTimer = setInterval(() => {
+                try {
+                    if (vehicle.engine) {
+    
+                        vehicle.fuel = vehicle.fuel - 1;
+                        if (vehicle.fuel <= 0) {
+                            vehicle.engine = false;
+                            vehicle.setVariable("engine", false);
+                            vehicle.fuel = 0;
+                            return;
+                        }
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            }, vehicle.fuelTick);
+        } catch (err) {
+            console.log(err);
+        }
     }
 }

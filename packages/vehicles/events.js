@@ -7,22 +7,23 @@ module.exports = {
         // console.log(now);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
+        
         // console.log('ENGINE ' + vehicle.engineState);
         // console.log('STEERING ' + vehicle.steeringState);
         // console.log('FUEL ' + vehicle.fuelState);
         // console.log('BRAKE ' + vehicle.brakeState);
         // console.log(`multiplier ${vehicle.multiplier}`);
-        player.call('chat.message.push', [`!{#70a7ff} Модель ${vehicle.model}`]);
-        player.call('chat.message.push', [`!{#70a7ff} Имя модели ${vehicle.modelName}`]);
-        player.call('chat.message.push', [`!{#70a7ff} Ключ ${vehicle.key}`]);
-        player.call('chat.message.push', [`!{#70a7ff} Владелец ${vehicle.owner}`]);
-        player.call('chat.message.push', [`!{#70a7ff} sqlId ${vehicle.sqlId}`]);
-        player.call('chat.message.push', [`!{#70a7ff} fuel ${vehicle.fuel}`]);
-        player.call('chat.message.push', [`!{#71a0ff} maxfuel ${vehicle.properties.maxFuel}`]);
-        player.call('chat.message.push', [`!{#71a0ff} name ${vehicle.properties.name}`]);
-        player.call('chat.message.push', [`!{#71a0ff} def consumption ${vehicle.properties.consumption}`]);
-        player.call('chat.message.push', [`!{#71a0ff} license ${vehicle.properties.license}`]);
-        player.call('chat.message.push', [`!{#71a0ff} parkingHours ${vehicle.parkingHours}`]);
+        // player.call('chat.message.push', [`!{#70a7ff} Модель ${vehicle.model}`]);
+        // player.call('chat.message.push', [`!{#70a7ff} Имя модели ${vehicle.modelName}`]);
+        // player.call('chat.message.push', [`!{#70a7ff} Ключ ${vehicle.key}`]);
+        // player.call('chat.message.push', [`!{#70a7ff} Владелец ${vehicle.owner}`]);
+        // player.call('chat.message.push', [`!{#70a7ff} sqlId ${vehicle.sqlId}`]);
+        // player.call('chat.message.push', [`!{#70a7ff} fuel ${vehicle.fuel}`]);
+        // player.call('chat.message.push', [`!{#71a0ff} maxfuel ${vehicle.properties.maxFuel}`]);
+        // player.call('chat.message.push', [`!{#71a0ff} name ${vehicle.properties.name}`]);
+        // player.call('chat.message.push', [`!{#71a0ff} def consumption ${vehicle.properties.consumption}`]);
+        // player.call('chat.message.push', [`!{#71a0ff} license ${vehicle.properties.license}`]);
+        // player.call('chat.message.push', [`!{#71a0ff} parkingHours ${vehicle.parkingHours}`]);
 
         // if ((vehicle.license != 0) && vehicle.license != player.license) {
         //     player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);
@@ -36,6 +37,7 @@ module.exports = {
             player.call('vehicles.speedometer.show', [true]);
             player.call('vehicles.speedometer.max.update', [vehicle.properties.maxFuel]);
             player.call('vehicles.speedometer.sync');
+            clearInterval(player.indicatorsUpdateTimer);
             player.indicatorsUpdateTimer = setInterval(() => {
                 try {
                     player.call('vehicles.speedometer.fuel.update', [Math.ceil(vehicle.fuel)]);
@@ -68,6 +70,7 @@ module.exports = {
     "vehicles.engine.toggle": (player) => { /// Включение/выключение двигателя
         if (!player.vehicle) return;
         if (player.vehicle.key == "market") return;
+        if (player.vehicle.isBeingRepaired) return player.call('notifications.push.warning', ['Двигатель завести нельзя', 'Ремонт']);
         if (player.vehicle.fuel <= 0) return player.call('notifications.push.error', ['Нет топлива', 'Транспорт']);
         if (player.vehicle.engine == true) {
             player.vehicle.engine = false;
@@ -105,7 +108,7 @@ module.exports = {
         if (value < 0.1) return;
         player.vehicle.mileage += value;
         vehicles.updateMileage(player);
-        player.call('chat.message.push', [`!{#adff9e} Пробег ${player.vehicle.mileage}`]);
+        //player.call('chat.message.push', [`!{#adff9e} Пробег ${player.vehicle.mileage}`]);
     },
     "entityCreated": (entity) => {
         if (entity.type == "vehicle") {
@@ -158,10 +161,10 @@ module.exports = {
         let state = vehicle.locked;
         if (state) {
             vehicle.locked = false;
-            player.call('notifications.push.success', ['Вы открыли т/с', 'Транспорт']);
+            player.call('notifications.push.success', ['Вы открыли транспорт', 'Успешно']);
         } else {
             vehicle.locked = true;
-            player.call('notifications.push.success', ['Вы закрыли т/с', 'Транспорт']);
+            player.call('notifications.push.success', ['Вы закрыли транспорт', 'Успешно']);
         }
     },
     "vehicles.explode": (player, vehicleId) => {

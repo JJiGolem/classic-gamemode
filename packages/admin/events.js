@@ -14,13 +14,24 @@ module.exports = {
         if (!cmd) return;
 
         // TODO: проверка на access
+        if (player.character.admin >= cmd.access) {
+            if (cmd.args) {
+                let requiredArgs = cmd.args.split('] ').length;
 
-        cmd.handler(player, args);
+                if (args.length < requiredArgs) {
+                    return player.call('chat.message.push', [`!{#ffffff} Используйте: ${command} ${cmd.args}`]);
+                }
+            }
+            cmd.handler(player, args);
+            // console.log(requiredArgs);
+
+        }
     },
     /// обработка команды ahelp
     "admin.command.help": (player, args) => {
         if (!args[0] || isNaN(parseInt(args[0]))) return player.call('chat.message.push', [`!{#ffffff} Используйте /ahelp [уровень администрирования]`]);
-        //TODO: Проверка на уровень админки
+
+        if (args[0] < 1 || args[0] > player.character.admin) return player.call('chat.message.push', [`!{#ffffff} Нет доступа`]);
 
         player.call('chat.message.push', [`!{#c1f051}Команды ${args[0]} уровня администрирования:`]);
         for (let cmd in commands) {
@@ -28,5 +39,29 @@ module.exports = {
                 player.call('chat.message.push', [`!{#ffffff} ${commands[cmd].description}: ${cmd} ${commands[cmd].args}`]);
             }
         }
+    },
+    /// Отправить сообщение всем админам
+    "admin.notify.all": (message) => {
+        mp.players.forEach((current) => {
+            if (current.character) {
+                if (current.character.admin > 0) {
+                    try {
+                        current.call('chat.message.push', [message]);
+                    } catch (err) {
+                        console.log(err);
+                    }
+                }
+            }
+        });
+    },
+    /// Отправить сообщение всем игрокам
+    "admin.notify.players": (message) => {
+        mp.players.forEach((current) => {
+            try {
+                current.call('chat.message.push', [message]);
+            } catch (err) {
+                console.log(err);
+            }
+        });
     }
 }
