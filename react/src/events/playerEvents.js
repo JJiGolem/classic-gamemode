@@ -87,24 +87,60 @@ export const PlayerEvents = (dispatch, getState) => {
 
     myEventEmmiter.on('house.sell.toGov.ans', (ans) => {
         dispatch({
-            type: 'SET_SELL_STATUS',
+            type: 'SET_SELL_STATUS_HOUSE',
             payload: ans
         });
     });
 
     myEventEmmiter.on('house.sell.ans', (ans) => {
         dispatch({
-            type: 'SET_SELL_STATUS',
+            type: 'SET_SELL_STATUS_HOUSE',
             payload: ans
         });
     });
 
     myEventEmmiter.on('house.sell.check.ans', (nick, price) => {
         dispatch({
-            type: 'SET_SELL_INFO',
+            type: 'SET_SELL_INFO_HOUSE',
             payload: { nick, price }
         });
     });
+
+    myEventEmmiter.on('biz.sell.toGov.ans', (ans) => {
+        dispatch({
+            type: 'SET_SELL_STATUS_BUSINESS',
+            payload: ans
+        });
+    });
+
+    myEventEmmiter.on('biz.sell.ans', (ans) => {
+        dispatch({
+            type: 'SET_SELL_STATUS_BUSINESS',
+            payload: ans
+        });
+    });
+
+    myEventEmmiter.on('biz.sell.check.ans', (nick, price) => {
+        dispatch({
+            type: 'SET_SELL_INFO_BUSINESS',
+            payload: { nick, price }
+        });
+    });
+
+    myEventEmmiter.on('biz.order.ans', (ans) => {
+        dispatch({
+            type: 'SET_ORDER_STATUS_BUSINESS',
+            payload: ans
+        });
+    });
+
+    myEventEmmiter.on('biz.order.complete', (resources) => {
+        dispatch({
+            type: 'ORDER_COMPLETE_BUSINESS',
+            payload: resources
+        });
+    });
+
     myEventEmmiter.on('phone.call.in', (number) => {
         dispatch({
             type: 'ADD_APP',
@@ -174,6 +210,36 @@ export const PlayerEvents = (dispatch, getState) => {
             type: 'ANS_ENTER_HOUSE',
             payload: {
                 answer: 'error',
+            }
+        });
+    });
+
+    myEventEmmiter.on('biz.menu', () => {
+        dispatch({
+            type: 'SHOW_BUSINESS',
+            payload: true
+        });
+    });
+
+    myEventEmmiter.on('biz.load', (info) => {
+        dispatch({
+            type: 'LOAD_INFO_BUSINESS',
+            payload: info
+        })
+    });
+
+    myEventEmmiter.on('biz.menu.close', () => {
+        dispatch({
+            type: 'CLOSE_BUSINESS'
+        });
+    });
+
+    myEventEmmiter.on('biz.buy.ans', (ans, owner) => {
+        dispatch({
+            type: 'ANS_BUY_BUSINESS',
+            payload: {
+                answer: ans,
+                owner: owner
             }
         });
     });

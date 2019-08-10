@@ -2,8 +2,9 @@ import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 
 import '../styles/bank.css';
-import {loadBankInfo} from "../actions/action.bank";
+import {loadBankInfo, showBank} from "../actions/action.bank";
 import BankMenu from "./BankMenu";
+import AnsOperationBank from "./AnsOperationBank";
 
 class Main extends Component {
     constructor(props) {
@@ -20,7 +21,7 @@ class Main extends Component {
             cash: 150471,
             money: 2300,
             number: 23,
-            phoneMoney: 45,
+            phoneMoney: null,
             name: 'Dun Hill',
             /*houses: [
                 {
@@ -36,9 +37,17 @@ class Main extends Component {
         loadInfo(info);
     }
 
-    getLoader() {
+    exitBank() {
+        const { showBank, bank } = this.props;
+
+        if (!bank.isLoading) {
+            showBank(false);
+        }
+    }
+
+    getLoader(percent) {
         return (
-            <div className='block_loader-house-react'>
+            <div className='block_loader-house-react' style={{ marginLeft: `${percent}%` }}>
                 <div className='loader-house' style={{ borderColor: 'green', borderRightColor: 'transparent' }}></div>
             </div>
         )
@@ -104,8 +113,20 @@ class Main extends Component {
         )
     }
 
-    getForm() {
+    getPages() {
         const { pages } = this.props;
+
+        return (
+            pages.map(page => (
+                <div className='page-bank-react'>
+                    { page }
+                </div>
+            ))
+        )
+    }
+
+    getForm() {
+        const { pages, bank } = this.props;
 
         return (
             <Fragment>
@@ -113,13 +134,9 @@ class Main extends Component {
                 <div className='logo-bank-react'>
                     <img src={require('../../../imgs/bank/logo.png')}/>
                 </div>
-                <div className='exitHouse' name='exit'></div>
+                <div className='exitHouse' name='exit' onClick={this.exitBank.bind(this)}></div>
 
-                { pages.map(page => (
-                    <div className='page-bank-react' style={{  }}>
-                        { page }
-                    </div>
-                )) }
+                { bank.isLoading ? this.getLoader(58) : this.getPages() }
             </Fragment>
         )
     }
@@ -128,8 +145,9 @@ class Main extends Component {
         const { bank } = this.props;
 
         return (
-            <div className='main-form-bank' style={{  }}>
-                { Object.keys(bank).length > 0 ? this.getForm() : this.getLoader() }
+            <div className='main-form-bank'>
+                { Object.keys(bank).length > 1 ? this.getForm() : this.getLoader() }
+                { bank.answer !== null && <AnsOperationBank /> }
             </div>
         );
     }
@@ -141,7 +159,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    loadInfo: info => dispatch(loadBankInfo(info))
+    loadInfo: info => dispatch(loadBankInfo(info)),
+    showBank: flag => dispatch(showBank(flag))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

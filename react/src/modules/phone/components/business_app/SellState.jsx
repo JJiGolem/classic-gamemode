@@ -1,45 +1,42 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {addAppDisplay, closeAppDisplay} from "../../actions/action.apps";
+import Header from "./Header";
 import AnsSell from "./AnsSell";
-import {setSellHouse, setSellStatusHouse} from "../../actions/action.info";
-import HeaderHouseApp from "./HeaderHouseApp";
+import {setSellBusiness, setSellStatusBusiness} from "../../actions/action.info";
 
 class SellState extends Component {
     constructor(props) {
         super(props);
         this.state = {};
-
-        this.sellHouse = this.sellHouse.bind(this);
     }
 
     componentDidMount() {
         this.props.setSellStatus(null);
     }
 
-    sellHouse() {
-        const { addApp, setSell, setSellStatus, house } = this.props;
+    sellBusiness() {
+        const { addApp, setSell, setSellStatus, business } = this.props;
 
         // closeApp();
         setSell(true);
         addApp({ name: 'AnsSell', form: <AnsSell /> });
 
         // eslint-disable-next-line no-undef
-        mp.trigger('house.sell.toGov', house.name);
+        mp.trigger('business.sell.toGov', business.id);
 
-        /*setTimeout(() => {
-            setSellStatus(0);
-        }, 1000);*/
+        // setTimeout(() => {
+        //     setSellStatus(1);
+        // }, 1000);
     }
 
     render() {
-
-        const { house, info, closeApp } = this.props;
+        const { business, info, closeApp } = this.props;
 
         return (
             <Fragment>
                 <div className='back_page-phone-react' style={{ textAlign: 'center' }}>
-                    <HeaderHouseApp house={house}/>
+                    <Header business={business}/>
 
                     <div style={{ textAlign: 'center', marginTop: '26%' }}>Продажа государству</div>
                     <div style={{ marginTop: '10%' }}>
@@ -50,27 +47,27 @@ class SellState extends Component {
                             </g>
                         </svg>
                         <div style={{ fontSize: '1.15em', fontWeight: 'bold', marginTop: '10%' }}>Будет начислено</div>
-                        <div style={{ color: '#30af25' }}>${ info.houses[0].price * 0.6 }</div>
+                        <div style={{ color: '#30af25' }}>${ business.price * 0.6 }</div>
                         <div>(60% от гос. стоимости)</div>
                     </div>
 
                     {
-                        !house.isSell &&
+                        !business.isSell &&
                         <div className='house_buttons-phone-react' style={{ bottom: '6%', position: 'absolute' }}>
-                            <div className='house_button-phone-react' onClick={() => this.sellHouse()}>
-                        <span className='ico_button_house-phone-react'>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="80%" height="80%" viewBox="0 0 16.729 12.286" style={{marginLeft: '5px'}}>
-                                <path id="Path_176" data-name="Path 176" d="M16.484,68.243a.836.836,0,0,0-1.183,0L5.28,78.264,1.427,74.412A.836.836,0,0,0,.245,75.595l4.444,4.444a.837.837,0,0,0,1.183,0L16.484,69.425A.836.836,0,0,0,16.484,68.243Z" transform="translate(0 -67.997)" fill="#74a607"/>
-                            </svg>
-                        </span>
+                            <div className='house_button-phone-react' onClick={() => this.sellBusiness()}>
+                                <span className='ico_button_house-phone-react'>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="80%" height="80%" viewBox="0 0 16.729 12.286" style={{marginLeft: '5px'}}>
+                                        <path id="Path_176" data-name="Path 176" d="M16.484,68.243a.836.836,0,0,0-1.183,0L5.28,78.264,1.427,74.412A.836.836,0,0,0,.245,75.595l4.444,4.444a.837.837,0,0,0,1.183,0L16.484,69.425A.836.836,0,0,0,16.484,68.243Z" transform="translate(0 -67.997)" fill="#74a607"/>
+                                    </svg>
+                                </span>
                                 <div className='text_button_house-phone-react'>Подтвердить</div>
                             </div>
                             <div className='house_button-phone-react' onClick={() => closeApp()}>
-                        <span className='ico_button_house-phone-react'>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="80%" height="80%" viewBox="0 0 16.37 16.369" style={{marginTop: '5%'}}>
-                                <path id="Path_172" data-name="Path 172" d="M9.632,8.186,16.07,1.748A1.024,1.024,0,1,0,14.622.3L8.185,6.738,1.747.3A1.024,1.024,0,1,0,.3,1.748L6.737,8.186.3,14.623A1.023,1.023,0,1,0,1.747,16.07L8.185,9.633l6.437,6.437a1.024,1.024,0,0,0,1.448-1.448Z" transform="translate(0 -0.001)" fill="#f90040"/>
-                            </svg>
-                        </span>
+                                <span className='ico_button_house-phone-react'>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="80%" height="80%" viewBox="0 0 16.37 16.369" style={{marginTop: '5%'}}>
+                                        <path id="Path_172" data-name="Path 172" d="M9.632,8.186,16.07,1.748A1.024,1.024,0,1,0,14.622.3L8.185,6.738,1.747.3A1.024,1.024,0,1,0,.3,1.748L6.737,8.186.3,14.623A1.023,1.023,0,1,0,1.747,16.07L8.185,9.633l6.437,6.437a1.024,1.024,0,0,0,1.448-1.448Z" transform="translate(0 -0.001)" fill="#f90040"/>
+                                    </svg>
+                                </span>
                                 <div className='text_button_house-phone-react'>Отменить</div>
                             </div>
                         </div>
@@ -82,15 +79,15 @@ class SellState extends Component {
 }
 
 const mapStateToProps = state => ({
-    info: state.info,
-    house: state.info.houses[0]
+    business: state.info.biz[0],
+    info: state.info
 });
 
 const mapDispatchToProps = dispatch => ({
     closeApp: () => dispatch(closeAppDisplay()),
     addApp: app => dispatch(addAppDisplay(app)),
-    setSell: flag => dispatch(setSellHouse(flag)),
-    setSellStatus: status => dispatch(setSellStatusHouse(status)),
+    setSell: flag => dispatch(setSellBusiness(flag)),
+    setSellStatus: status => dispatch(setSellStatusBusiness(status)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SellState);

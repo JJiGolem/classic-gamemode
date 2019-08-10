@@ -1,7 +1,8 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
-import {closeBankPage} from "../actions/action.bankPages";
-import {transferBank} from "../actions/action.bank";
+import {addBankPage, closeBankPage} from "../actions/action.bankPages";
+import {setAskAnswerBank, setLoadingBank, transferBank} from "../actions/action.bank";
+import BankConfirmTransfer from "./BankConfirmTransfer";
 
 const inputStyle = {
     border: '1px solid #838383',
@@ -69,11 +70,14 @@ class BankTransfer extends Component {
 
     transferMoney() {
         const { transferMoney } = this.state;
-        const { transferBank, closePage } = this.props;
+        const { setLoading, addPage } = this.props;
 
         if (this.validateForm()) {
-            transferBank(parseInt(transferMoney));
-            closePage();
+            addPage(<BankConfirmTransfer />);
+            setLoading(true);
+            setTimeout(() => {
+                this.props.setAskAnswer({ nick: 'Dun Hill', number: 2662, money: 2600 });
+            }, 1000)
         }
     }
 
@@ -128,7 +132,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     transferBank: money => dispatch(transferBank(money)),
-    closePage: () => dispatch(closeBankPage())
+    closePage: () => dispatch(closeBankPage()),
+    addPage: page => dispatch(addBankPage(page)),
+    setLoading: flag => dispatch(setLoadingBank(flag)),
+    setAskAnswer: askAnswer => dispatch(setAskAnswerBank(askAnswer))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BankTransfer);

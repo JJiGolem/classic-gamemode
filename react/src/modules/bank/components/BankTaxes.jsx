@@ -6,11 +6,74 @@ import {payBusinessBank, payHouseBank} from "../actions/action.bank";
 class BankTaxes extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            houseDays: 0,
+            bizDays: 0
+        };
+
+        this.incrementHouseDays = this.incrementHouseDays.bind(this);
+        this.decrementHouseDays = this.decrementHouseDays.bind(this);
+        this.payHouse = this.payHouse.bind(this);
+        this.incrementBizDays = this.incrementBizDays.bind(this);
+        this.decrementBizDays = this.decrementBizDays.bind(this);
+        this.payBiz = this.payBiz.bind(this);
+    }
+
+    incrementHouseDays() {
+        const { houseDays } = this.state;
+        const { bank, info } = this.props;
+
+        if ((houseDays < 30 - info.houses[0].days) && ((houseDays + 1)*info.houses[0].rent <= bank.money)) {
+            this.setState({ houseDays: houseDays + 1 });
+        }
+    }
+
+    decrementHouseDays() {
+        const { houseDays } = this.state;
+        const { bank, info } = this.props;
+
+        if ((houseDays > 0) && ((houseDays - 1)*info.houses[0].rent <= bank.money)) {
+            this.setState({ houseDays: houseDays - 1 });
+        }
+    }
+
+    payHouse() {
+        const { houseDays } = this.state;
+        const { bank, info, payHouse } = this.props;
+
+        payHouse(info.houses[0].name, houseDays, houseDays*info.houses[0].rent);
+        this.setState({ houseDays: 0 })
+    }
+
+    incrementBizDays() {
+        const { bizDays } = this.state;
+        const { bank, info } = this.props;
+
+        if ((bizDays < 30 - info.biz[0].days) && ((bizDays + 1)*info.biz[0].rent <= bank.money)) {
+            this.setState({ bizDays: bizDays + 1 });
+        }
+    }
+
+    decrementBizDays() {
+        const { bizDays } = this.state;
+        const { bank, info } = this.props;
+
+        if ((bizDays > 0) && ((bizDays - 1)*info.iz[0].rent <= bank.money)) {
+            this.setState({ bizDays: bizDays - 1 });
+        }
+    }
+
+    payBiz() {
+        const { bizDays } = this.state;
+        const { bank, info, payHouse } = this.props;
+
+        payHouse(info.biz[0].id, bizDays, bizDays*info.biz[0].rent);
+        this.setState({ bizDays: 0 })
     }
 
     getPayHouseForm() {
         const { bank, info } = this.props;
+        const { houseDays } = this.state;
 
         if (info.houses.length > 0) {
             return (
@@ -21,10 +84,13 @@ class BankTaxes extends Component {
                         <div>Квартплата: ${ info.houses[0].rent }/день</div>
                         <div>Оплачено: { info.houses[0].days }/30</div>
                         <div style={{ marginTop: '5%' }}>Выберете количество дней для оплаты:</div>
-                        <div style={{ textAlign: 'center' }}>
-                            <span className='button_taxes-bank-react'>-</span>
-                            <span>3</span>
-                            <span className='button_taxes-bank-react'>+</span>
+                        <div style={{ textAlign: 'center', marginTop: '5%' }}>
+                            <span className='button_taxes-bank-react' onClick={this.decrementHouseDays} style={{ padding: '1% 5.5% 3% 5.5%' }}>-</span>
+                            <span>{ houseDays }</span>
+                            <span className='button_taxes-bank-react' onClick={this.incrementHouseDays}>+</span>
+                        </div>
+                        <div style={{ textAlign: 'center', marginTop: '7%' }}>
+                            <button className='button_pay_taxes-bank-react' onClick={this.payHouse}>Оплатить</button>
                         </div>
                     </div>
                 </div>
@@ -48,12 +114,27 @@ class BankTaxes extends Component {
 
     getPayBusinessForm() {
         const { bank, info } = this.props;
+        const { bizDays } = this.state;
 
         if (info.biz.length > 0) {
             return (
-                <Fragment>
-
-                </Fragment>
+                <div style={{ textAlign: 'left' }}>
+                    <div className='taxes_info-bank-react'>
+                        <div>Название: { info.biz[0].name }</div>
+                        <div>Тип: { info.biz[0].type }</div>
+                        <div>Налог: ${ info.biz[0].rent }/день</div>
+                        <div>Оплачено: { info.biz[0].days }/30</div>
+                        <div style={{ marginTop: '5%' }}>Выберете количество дней для оплаты:</div>
+                        <div style={{ textAlign: 'center', marginTop: '5%' }}>
+                            <span className='button_taxes-bank-react' onClick={this.decrementBizDays} style={{ padding: '1% 5.5% 3% 5.5%' }}>-</span>
+                            <span>{ bizDays }</span>
+                            <span className='button_taxes-bank-react' onClick={this.incrementBizDays}>+</span>
+                        </div>
+                        <div style={{ textAlign: 'center', marginTop: '7%' }}>
+                            <button className='button_pay_taxes-bank-react' onClick={this.payBiz}>Оплатить</button>
+                        </div>
+                    </div>
+                </div>
             )
         } else {
             return (
@@ -110,7 +191,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     closePage: () => dispatch(closeBankPage()),
     payHouse: (name, days, money) => dispatch(payHouseBank(name, days, money)),
-    payBusiness: (name, days, money) => dispatch(payBusinessBank(name, days, money)),
+    payBusiness: (id, days, money) => dispatch(payBusinessBank(id, days, money)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BankTaxes);

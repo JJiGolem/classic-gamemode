@@ -56,6 +56,7 @@
     position: absolute;
     /*background: #2e2e2e;*/
     font-size: 100%;
+    /*overflow-x: hidden;*/
 }
 .menu_panel-display-react {
     width: 92%;
@@ -81,6 +82,13 @@
     width: 20%;
     margin: 3% 5% 2% 5%;
     display: inline-block;
+    text-align: center;
+}
+
+.menu_panel_app-phone-react div {
+    text-align: center;
+    color: white;
+    width: 110%;
 }
 
 .menu_panel_app-phone-react:active {
@@ -95,7 +103,7 @@
     width: 92%;
     position: absolute;
     left: 8%;
-    bottom: 35%;
+    bottom: 20%;
 }
 
 .back_page-phone-react {
@@ -106,7 +114,9 @@
 }
 
 .head_app-phone-react {
-    width: 100%;
+    width: 101%;
+    margin-top: -1%;
+    margin-left: -.5%;
     height: 12%;
     position: absolute;
     background: #343c47;
@@ -566,6 +576,18 @@
     font-size: 100%;
 }
 
+.backspace-phone-react {
+    position: absolute;
+    width: 12%;
+    bottom: 20%;
+    right: 15%;
+    animation: .1s show-react;
+}
+
+.backspace-phone-react:active {
+    opacity: .7;
+}
+
 .incoming_call-phone-react {
     background: linear-gradient(77deg, rgb(33, 73, 85) 0%, rgb(52, 60, 71) 100%);
     /*background: #3a3a39;*/
@@ -618,7 +640,8 @@
     margin-bottom: 5%;
     border-radius: 5px;
     transition: ease-in-out .1s;
-    font-size: 90%;
+    font-size: 100%;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.3);
 }
 
 .house_button-phone-react:hover {
@@ -631,6 +654,12 @@
     left: 8%;
     margin-top: -1%;
     width: 10%;
+}
+
+.text_button_house-phone-react {
+    width: 90%;
+    margin-left: 10%;
+    text-align: center;
 }
 
 .manager_buttons-phone-react {
@@ -697,4 +726,76 @@
     outline: none;
     padding: 3%;
     font-size: 100%;
+    margin-top: 2%;
+}
+
+.input_sell-phone-react::placeholder {
+    color: rgba(237, 0, 0, 0.59);
+    font-size: 90%;
+}
+
+.button_create_order-phone-react {
+    width: 60%;
+    margin-left: 20%;
+    margin-top: 10%;
+    padding: 8% 4% 5% 4%;
+    box-sizing: border-box;
+    border: 1px solid #858585;
+    border-radius: 5px;
+}
+
+.button_create_order-phone-react div {
+    margin-top: 5%;
+}
+
+.button_create_order-phone-react:hover {
+    color: white;
+    fill: white;
+    border-color: #858585;
+    background: #343c47;
+    transition: .1s ease-in-out;
+}
+
+.table_statistics-phone-react {
+    border: 1px solid rgba(0, 0, 0, 0.56);
+    border-collapse: collapse;
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 3%;
+    border-radius: 5px;
+    table-layout: fixed;
+}
+
+.table_statistics-phone-react th {
+    padding: 3%;
+    border: 1px solid rgba(0, 0, 0, 0.56);
+}
+
+.table_statistics-phone-react td {
+    border: 1px solid rgba(0, 0, 0, 0.56);
+}
+
+/*table tr:last-child td:first-child {*/
+/*    border-bottom-left-radius: 5px;*/
+/*}*/
+
+/*table tr:last-child td:last-child {*/
+/*    border-bottom-right-radius: 5px;*/
+/*}*/
+
+.navigate_panel_stat-phone-react {
+    text-align: center;
+    position: absolute;
+    bottom: 20%;
+    left: 5%;
+    width: 90%;
+    height: 5%;
+    float: bottom;
+}
+
+.navigate_panel_stat-phone-react div {
+    margin-left: 2%;
+    margin-right: 2%;
+    display: inline-block;
+    /*width: 10%;*/
 }

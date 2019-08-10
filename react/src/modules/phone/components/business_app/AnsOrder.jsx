@@ -4,7 +4,7 @@ import {addAppDisplay, closeAppDisplay} from "../../actions/action.apps";
 import Success from "./Success";
 import Error from "./Error";
 
-class AnsSell extends Component {
+class AnsOrder extends Component {
     constructor(props) {
         super(props);
         this.state = {};
@@ -13,28 +13,25 @@ class AnsSell extends Component {
     }
 
     getAnsPage(status) {
-        const { addApp, closeApp } = this.props;
+        const { addApp, closeApp, productCount, productPrice } = this.props;
 
         if (status === 0) {
-            closeApp();
             closeApp();
             addApp({ name: 'Error', form: <Error status='Ошибка'/> });
         }
         else if (status === 1) {
             closeApp();
             closeApp();
-            addApp({ name: 'Success', form: <Success /> });
+            addApp({ name: 'Success', form: <Success status='Заказ успешно сделан' productCount={productCount} productPrice={productPrice}/> });
         }
         else if (status === 2) {
             closeApp();
-            closeApp();
-            addApp({ name: 'Error', form: <Error status='Покупатель не принял условия сделки'/> });
+            addApp({ name: 'Error', form: <Error status='Недостаточно денег'/> });
         }
 
         else if (status === 3) {
             closeApp();
-            closeApp();
-            addApp({ name: 'Error', form: <Error status='Вы находитесь не рядом с домом'/> });
+            addApp({ name: 'Error', form: <Error status='Недостаточно места на складе'/> });
         }
     }
 
@@ -44,8 +41,8 @@ class AnsSell extends Component {
         return (
             <div className='back_page-phone-react'>
                 {
-                    info.houses[0].sellStatus != null
-                        ? <Fragment>{this.getAnsPage(info.houses[0].sellStatus)}</Fragment>
+                    info.biz[0].orderStatus != null
+                        ? <Fragment>{this.getAnsPage(info.biz[0].orderStatus)}</Fragment>
                         : <div className="loader01" style={{ margin: '10% 5%' }}></div>
                 }
             </div>
@@ -62,4 +59,4 @@ const mapDispatchToProps = dispatch => ({
     closeApp: () => dispatch(closeAppDisplay()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AnsSell);
+export default connect(mapStateToProps, mapDispatchToProps)(AnsOrder);

@@ -9,6 +9,7 @@ import Dialogs from "./Dialogs";
 import DialingNumber from "./DialingNumber";
 import IncomingCall from "./IncomingCall";
 import HouseApp from "./house_app/HouseApp";
+import BusinessApp from "./business_app/BusinessApp";
 
 const days = [
     'Воскресенье',
@@ -81,17 +82,35 @@ class MainDisplay extends Component {
                     {
                         info.houses.length > 0 &&
                         <div className="menu_panel_app-phone-react" onClick={() => addApp({name: 'HouseApp', form: <HouseApp />})}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 57 52">
-                                <g id="Group_7" data-name="Group 7" transform="translate(-714 -1908)">
-                                    <rect id="Rectangle_4" data-name="Rectangle 4" width="57" height="52" rx="14" transform="translate(714 1908)" fill="#fff"/>
-                                    <g id="Group_6" data-name="Group 6" transform="translate(1 1)">
-                                        <path id="Path_2" data-name="Path 2" d="M716.119,1895.075l18.9-17.369,17.933,17.369v25.912H716.119Z" transform="translate(7.266 33.284)" fill="none" stroke="#e2b627" stroke-width="1"/>
-                                        <path id="Path_3" data-name="Path 3" d="M723.993,1932.327h0Z" transform="translate(-0.608 -3.697)" fill="none" stroke="#e2b627" stroke-width="1"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="110%" height="110%" viewBox="0 0 88.775 81.925">
+                                <g id="house" transform="translate(-1604 -378)">
+                                    <rect id="Rectangle_4" data-name="Rectangle 4" width="88.775" height="81.925" rx="20" transform="translate(1604 378)" fill="#29410f"/>
+                                    <g id="Group_5" data-name="Group 5" transform="translate(1619.71 373.351)">
+                                        <path id="Path_21" data-name="Path 21" d="M123.717,300.251a1.63,1.63,0,0,0-1.655,1.656v22.619H110.328V315.29a1.635,1.635,0,0,0-1.6-1.624h-8.484a1.673,1.673,0,0,0-1.685,1.624v9.236H86.86V302.658a1.625,1.625,0,0,0-3.249,0v23.524a1.608,1.608,0,0,0,1.594,1.6h15.044a1.608,1.608,0,0,0,1.594-1.6v-9.236h5.235v9.236a1.622,1.622,0,0,0,1.655,1.6h14.983a1.608,1.608,0,0,0,1.594-1.6V301.907A1.617,1.617,0,0,0,123.717,300.251Z" transform="translate(-75.767 -255.5)" fill="#fff"/>
+                                        <path id="Path_22" data-name="Path 22" d="M56.945,46.041,43.888,32.928V23.987a1.654,1.654,0,0,0-1.685-1.65,1.616,1.616,0,0,0-1.595,1.65v5.661L29.837,18.814a1.582,1.582,0,0,0-1.113-.514,1.635,1.635,0,0,0-1.173.514L.5,45.861a1.549,1.549,0,0,0,0,2.285,1.55,1.55,0,0,0,2.286,0L28.724,22.273,54.6,48.39a1.6,1.6,0,0,0,1.173.424,1.817,1.817,0,0,0,1.173-.424A1.707,1.707,0,0,0,56.945,46.041Z" transform="translate(0)" fill="#fff"/>
                                     </g>
                                 </g>
                             </svg>
+
+                            <div>Дом</div>
                         </div>
                     }
+
+                    {
+                        info.biz.length > 0 &&
+                        <div className="menu_panel_app-phone-react"
+                             onClick={() => addApp({name: 'BusinessApp', form: <BusinessApp/>})}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="110%" height="110%" viewBox="0 0 88.775 81.925">
+                                <g id="biz" transform="translate(-1604 -378)">
+                                    <rect id="Rectangle_4" data-name="Rectangle 4" width="88.775" height="81.925" rx="20" transform="translate(1604 378)" fill="#0f2641"/>
+                                    <path id="portfolio" d="M48.843,6.258H35.471V4.693A4.569,4.569,0,0,0,31.049,0H19.258a4.569,4.569,0,0,0-4.422,4.693V6.258H1.474A1.525,1.525,0,0,0,0,7.822V42.241a4.569,4.569,0,0,0,4.422,4.693H45.886a4.569,4.569,0,0,0,4.422-4.693V7.849a1.477,1.477,0,0,0-1.465-1.591ZM17.785,4.693a1.523,1.523,0,0,1,1.474-1.564H31.049a1.523,1.523,0,0,1,1.474,1.564V6.258H17.785Zm29,4.693L42.212,23.962a1.482,1.482,0,0,1-1.4,1.07H32.523V23.467A1.521,1.521,0,0,0,31.049,21.9H19.258a1.521,1.521,0,0,0-1.474,1.564v1.564H9.494a1.482,1.482,0,0,1-1.4-1.07L3.519,9.387ZM29.575,25.032v3.129H20.732V25.032ZM47.36,42.241a1.523,1.523,0,0,1-1.474,1.564H4.422a1.523,1.523,0,0,1-1.474-1.564V17.463L5.3,24.952a4.446,4.446,0,0,0,4.194,3.209h8.291v1.564a1.521,1.521,0,0,0,1.474,1.564H31.049a1.521,1.521,0,0,0,1.474-1.564V28.161h8.291a4.446,4.446,0,0,0,4.194-3.209l2.352-7.488Zm0,0" transform="translate(1622.817 395.548)" fill="#e7b900"/>
+                                </g>
+                            </svg>
+                            <div>Бизнес</div>
+                        </div>
+                    }
+
+
                     <div className="menu_panel_app-phone-react">
 
                     </div>

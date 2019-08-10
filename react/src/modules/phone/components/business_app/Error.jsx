@@ -1,8 +1,8 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {closeAppDisplay} from "../../actions/action.apps";
-import {setSellHouse, setSellInfoHouse, setSellStatusHouse} from "../../actions/action.info";
-import HeaderHouseApp from "./HeaderHouseApp";
+import {setSellBusiness, setSellInfoBusiness, setSellStatusBusiness} from "../../actions/action.info";
+import Header from "./Header";
 
 class Error extends Component {
     constructor(props) {
@@ -22,12 +22,12 @@ class Error extends Component {
     }
 
     render() {
-        const { house, status, closeApp } = this.props;
+        const { business, status, closeApp } = this.props;
 
         return (
             <Fragment>
                 <div className='back_page-phone-react'>
-                    <HeaderHouseApp house={house}/>
+                    <Header business={business}/>
 
                     <div style={{textAlign: 'center', marginTop: '50%'}}>
                         <svg id="Group_105" data-name="Group 105" xmlns="http://www.w3.org/2000/svg" width="40%" height="40%" viewBox="0 0 100.956 100.956" fill="#313539">
@@ -55,14 +55,14 @@ class Error extends Component {
 
 const mapStateToProps = state => ({
     ...state,
-    house: state.info.houses[0]
+    business: state.info.biz[0]
 });
 
 const mapDispatchToProps = dispatch => ({
     closeApp: () => dispatch(closeAppDisplay()),
-    setSell: flag => dispatch(setSellHouse(flag)),
-    setSellStatus: status => dispatch(setSellStatusHouse(status)),
-    setSellInfo: info => dispatch(setSellInfoHouse(info)),
+    setSell: flag => dispatch(setSellBusiness(flag)),
+    setSellStatus: status => dispatch(setSellStatusBusiness(status)),
+    setSellInfo: info => dispatch(setSellInfoBusiness(info)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Error);
