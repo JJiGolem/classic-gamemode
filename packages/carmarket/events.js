@@ -42,7 +42,15 @@ module.exports = {
             player.call('chat.message.push', [`!{#f494ff} Пробег ${vehicle.mileage}`]);
             player.call('chat.message.push', [`!{#f494ff} Название ${vehicle.properties.name}`]);
             player.call('chat.message.push', [`!{#f494ff} spot ${vehicle.marketSpot}`]);
-            player.call('carmarket.buymenu.show');
+
+            let data = {
+                name: vehicle.properties.name,
+                price: vehicle.properties.price,
+                mileage: vehicle.mileage,
+                owners: vehicle.owners,
+                regDate: vehicle.regDate
+            }
+            player.call('carmarket.buymenu.show', [data]);
         }
     },
     "playerExitVehicle": (player, vehicle) => {

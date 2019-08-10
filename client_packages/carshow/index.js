@@ -55,6 +55,16 @@ mp.events.add('carshow.list.show', (inputList, inputInfo) => {
     mp.callCEFVN({ "selectMenu.menu.items[2].values": colorValues });
     mp.callCEFV(`selectMenu.show = true`);
 
+
+    mp.callCEFV(`carSpecifications.body = {
+        name: { header: 'Название', value: '0', unit: '' },
+        class: { header: 'Класс', value: '0', unit: '' },
+        volume: { header: 'Объём бака', value: '0', unit: 'л' },
+        consumption: { header: 'Расход топлива', value: '0', unit: 'л' },
+        maxSpeed: { header: 'Макс. скорость', value: '0', unit: 'км/ч' },
+        count: { header: 'В наличии', value: '0', unit: '' },
+    }`);
+
     updateSpecifications(currentIndex);
 }
 );

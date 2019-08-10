@@ -16,7 +16,7 @@ module.exports = {
             }
         }
 
-        //if (player.id == targetId) return mp.events.call("documents.show", player.id, type, targetId, data); /// Если показывает себе, то не кидаем оффер
+        if (player.id == targetId) return mp.events.call("documents.show", player.id, type, targetId, data); /// Если показывает себе, то не кидаем оффер
 
 
         let target = mp.players.at(targetId);
