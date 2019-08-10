@@ -502,7 +502,7 @@
                 </div>
                 <div class="pockets" v-show="item.showPockets">
                     <div class="items" v-for="pocket in item.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
-                        <div class="column" v-for="n in pocket.cols * pocket.rows" :key="n-1" :class="columnClass(n, pocket, item)" @mouseenter="columnMouseHandler(item, pocket, n-1, $event)" @mouseleave="columnMouseHandler(item, pocket, n-1, $event)">
+                        <div class="column" v-for="n in pocket.cols * pocket.rows" :key="n-1" :class="columnClass(n-1, pocket, item)" @mouseenter="columnMouseHandler(item, pocket, n-1, $event)" @mouseleave="columnMouseHandler(item, pocket, n-1, $event)">
                             <div class="item" v-if="pocket.items[n-1]" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
                                 @contextmenu="itemMouseHandler(pocket.items[n-1], $event)" @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1].itemId)" :class="{dragging: pocket.items[n-1] == itemDrag.item}">
                                 <div class="count" v-if="pocket.items[n-1].params.count">{{ pocket.items[n-1].params.count }}</div>

@@ -22,8 +22,8 @@ var inventory = new Vue({
             7: {
                 name: 'Рубашка',
                 description: 'Описание рубашки.',
-                height: 3,
-                width: 3,
+                height: 5,
+                width: 4,
                 weight: 0.1
             },
             8: {
@@ -169,10 +169,68 @@ var inventory = new Vue({
     },
     computed: {
         // Тяжесть игрока (в %)
-        playerWeight: function() {
+        playerWeight() {
             var weight = this.getItemWeight(Object.values(this.equipment));
             return weight / this.maxPlayerWeight * 100;
-        }
+        },
+        equipmentBusyColumns() {
+            var cols = {};
+            for (var i in this.equipment) {
+                var equip = this.equipment[i];
+                if (!equip.pockets) continue;
+                cols[equip.sqlId] = {};
+                for (var j in equip.pockets) {
+                    var pocket = equip.pockets[j];
+                    if (!Object.keys(pocket.items).length) continue;
+                    cols[equip.sqlId][j] = {};
+                    for (var index in pocket.items) {
+                        var item = pocket.items[index];
+                        var w = this.itemsInfo[item.itemId].width;
+                        var h = this.itemsInfo[item.itemId].height;
+                        var coord = this.indexToXY(pocket.rows, pocket.cols, index);
+                        for (var x = 0; x < w; x++) {
+                            for (var y = 0; y < h; y++) {
+                                var i = this.xyToIndex(pocket.rows, pocket.cols, {
+                                    x: coord.x + x,
+                                    y: coord.y + y
+                                });
+                                cols[equip.sqlId][j][i] = item.sqlId;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return cols;
+        },
+        environmentBusyColumns() {
+            var cols = {};
+            for (var i in this.environment) {
+                var env = this.environment[i];
+                cols[env.sqlId] = {};
+                for (var j in env.pockets) {
+                    var pocket = env.pockets[j];
+                    cols[env.sqlId][j] = {};
+                    for (var index in pocket.items) {
+                        var item = pocket.items[index];
+                        var w = this.itemsInfo[item.itemId].width;
+                        var h = this.itemsInfo[item.itemId].height;
+                        var coord = this.indexToXY(pocket.rows, pocket.cols, index);
+                        for (var x = 0; x < w; x++) {
+                            for (var y = 0; y < h; y++) {
+                                var i = this.xyToIndex(pocket.rows, pocket.cols, {
+                                    x: coord.x + x,
+                                    y: coord.y + y
+                                });
+                                cols[env.sqlId][j][i] = item.sqlId;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return cols;
+        },
     },
     methods: {
         // ******************  [ Private ] ******************
@@ -233,6 +291,7 @@ var inventory = new Vue({
             coord.y = Math.clamp(coord.y - parseInt(h / 2), 0, pocket.rows - h);
             var handlers = {
                 'mouseenter': (e) => {
+                    // console.log('mouseenter')
                     columns.placeSqlId = place.sqlId;
                     columns.pocketI = pocketI;
                     for (var x = 0; x < w; x++) {
@@ -242,7 +301,7 @@ var inventory = new Vue({
                                 y: coord.y + y
                             });
                             columns.columns[i] = true;
-                            if (this.isColumnBusy(pocket, i, this.itemDrag.item)) columns.deny = true;
+                            if (!columns.deny) columns.deny = this.isColumnBusy(place, pocketI, i, this.itemDrag.item);
                         }
                     }
                 },
@@ -255,6 +314,12 @@ var inventory = new Vue({
                 },
             }
             handlers[e.type](e);
+        },
+        isColumnBusy(place, pocketI, index, item) {
+            var cols = (place.sqlId > 0)? this.equipmentBusyColumns : this.environmentBusyColumns;
+            if (!cols[place.sqlId][pocketI]) return false;
+            if (!cols[place.sqlId][pocketI][index]) return false;
+            return cols[place.sqlId][pocketI][index] != item.sqlId;
         },
         columnClass(index, pocket, place) {
             var classes = {
@@ -274,16 +339,6 @@ var inventory = new Vue({
                 }
             });
             return count;
-        },
-        setBusyColumn(pocket, index, item) {
-            for (var i in pocket.busyColumns) {
-                if (pocket.busyColumns[i] == item.sqlId) delete pocket.busyColumns[i];
-            }
-            console.log(pocket)
-            pocket.busyColumns[index] = item.sqlId;
-        },
-        isColumnBusy(pocket, index, ignoreItem) {
-            return pocket.busyColumns[index] && pocket.busyColumns[index] != ignoreItem.sqlId;
         },
         isColumnAccess(index, pocket, place) {
             if (!this.itemDrag.item) return false;
@@ -373,14 +428,11 @@ var inventory = new Vue({
 
             this.deleteItem(item.sqlId);
             this.deleteEnvironmentItem(item.sqlId);
-
             if (item.pockets) {
                 item.showPockets = true;
-                item.pockets.forEach(pocket => pocket.busyColumns = {});
             }
             if (parent) {
-                this.setBusyColumn(parent.pockets[pocket], index, item);
-                parent.pockets[pocket].items[index] = item;
+                Vue.set(parent.pockets[pocket].items, index, item);
             } else Vue.set(this.equipment, index, item);
         },
         initItems(items) {
@@ -459,7 +511,6 @@ var inventory = new Vue({
         // ******************  [ Environment ] ******************
         addEnvironmentPlace(place) {
             place.showPockets = true;
-            place.pockets.forEach(pocket => pocket.busyColumns = {});
             this.environment.unshift(place);
         },
         deleteEnvironmentPlace(sqlId) {
@@ -552,6 +603,7 @@ var inventory = new Vue({
             }
         });
         window.addEventListener('mouseup', function(e) {
+            // console.log(JSON.stringify(self.itemDrag))
             var columns = self.itemDrag.accessColumns;
             var index = Object.keys(columns.columns)[0];
             if (!columns.deny && columns.placeSqlId != null &&
@@ -625,9 +677,20 @@ inventory.addEnvironmentPlace({
     sqlId: -100,
     header: "Шкаф",
     pockets: [{
-            cols: 9,
+            cols: 10,
             rows: 8,
-            items: {},
+            items: {
+                0: {
+                    sqlId: 595,
+                    itemId: 7,
+                    pockets: [{
+                        cols: 5,
+                        rows: 5,
+                        items: {},
+                    }],
+                    params: {}
+                }
+            },
         },
         {
             cols: 9,
