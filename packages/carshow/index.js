@@ -1,5 +1,6 @@
 var vehicles = call('vehicles');
 var parkings = call('parkings');
+var money = call('money');
 var dbCarList;
 var dbCarShow;
 var carShow = [];
@@ -60,14 +61,14 @@ module.exports = {
         let shape = mp.colshapes.newSphere(carShow.x, carShow.y, carShow.z + 0.5, 2);
         shape.isCarShow = true;
         shape.carShowId = carShow.id;
-        
+
         let shortName = carShow.name.split(' ')[0];
         let label = mp.labels.new(`${shortName}`, new mp.Vector3(carShow.x, carShow.y, carShow.z + 1.7),
-        {
-            los: false,
-            font: 0,
-            drawDistance: 10,
-        });
+            {
+                los: false,
+                font: 0,
+                drawDistance: 10,
+            });
         label.isCarShow = true;
         label.carShowId = carShow.id;
     },
@@ -151,58 +152,68 @@ module.exports = {
                 // проверки на деньги и т д
                 if (player.character.cash < carList[i].properties.price) return player.call('carshow.car.buy.ans', [2]);
                 if (carList[i].count < 1) return player.call('carshow.car.buy.ans', [0]);
-                try {
-                    var carPlate = vehicles.generateVehiclePlate();
-                    let parking = parkings.getClosestParkingId(player);
-                    let parkingInfo = parkings.getParkingInfoById(parking);
-                    console.log(parkingInfo);
-                    var data = await db.Models.Vehicle.create({
-                        key: "private",
-                        owner: player.character.id,
-                        modelName: carList[i].vehiclePropertyModel,
-                        color1: primaryColor,
-                        color2: secondaryColor,
-                        x: 0,
-                        y: 0,
-                        z: 0,
-                        h: 0,
-                        parkingId: parking,
-                        plate: carPlate
-                    });
-                    var veh = {
-                        key: "private",
-                        owner: player.character.id,
-                        modelName: carList[i].vehiclePropertyModel,
-                        color1: 0,
-                        color2: 0,
-                        x: 0,
-                        y: 0,
-                        z: 0,
-                        h: 0,
-                        parkingId: parking,
-                        fuel: 50,
-                        mileage: 0,
-                        plate: carPlate,
-                        engineState: 0,
-                        fuelState: 0,
-                        steeringState: 0,
-                        brakeState: 0,
-                        destroys: 0,
-                        parkingHours: 0
-                    }
-                    veh.sqlId = data.id;
-                    veh.db = data;
-                    mp.events.call('parkings.vehicle.add', veh);
+                let carToBuy = carList[i];
+                money.removeCash(player, carList[i].properties.price, async function (result) {
+                    if (result) {
+                        try {
+                            var carPlate = vehicles.generateVehiclePlate();
+                            let parking = parkings.getClosestParkingId(player);
+                            let parkingInfo = parkings.getParkingInfoById(parking);
+                            console.log(parkingInfo);
+                            var data = await db.Models.Vehicle.create({
+                                key: "private",
+                                owner: player.character.id,
+                                modelName: carToBuy.vehiclePropertyModel,
+                                color1: primaryColor,
+                                color2: secondaryColor,
+                                x: 0,
+                                y: 0,
+                                z: 0,
+                                h: 0,
+                                parkingId: parking,
+                                plate: carPlate
+                            });
+                            var veh = {
+                                key: "private",
+                                owner: player.character.id,
+                                modelName: carToBuy.vehiclePropertyModel,
+                                color1: 0,
+                                color2: 0,
+                                x: 0,
+                                y: 0,
+                                z: 0,
+                                h: 0,
+                                parkingId: parking,
+                                fuel: 50,
+                                mileage: 0,
+                                plate: carPlate,
+                                engineState: 0,
+                                fuelState: 0,
+                                steeringState: 0,
+                                brakeState: 0,
+                                destroys: 0,
+                                parkingHours: 0
+                            }
+                            veh.sqlId = data.id;
+                            veh.db = data;
+                            mp.events.call('parkings.vehicle.add', veh);
 
-                    carList[i].db.update({
-                        count: carList[i].count - 1
-                    });
-                    carList[i].count = carList[i].count - 1;
-                    player.call('carshow.car.buy.ans', [1, carList[i], parkingInfo]);
-                } catch (err) {
-                    console.log(err);
-                    player.call('carshow.car.buy.ans', [2]);
-                }
+                            carToBuy.db.update({
+                                count: carToBuy.count - 1
+                            });
+                            carToBuy.count = carToBuy.count - 1;
+                            player.call('carshow.car.buy.ans', [1, carToBuy, parkingInfo]);
+                        } catch (err) {
+                            console.log(err);
+                            player.call('carshow.car.buy.ans', [2]);
+                        }
+                    } else {
+
+                        player.call('carshow.car.buy.ans', [3]);
+
+                    }
+                });
+
             }
         }
     },
