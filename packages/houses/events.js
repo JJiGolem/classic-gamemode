@@ -179,6 +179,7 @@ module.exports = {
         }]);
     },
     "house.sell.ans": (player, result) => {
+        console.log(result);
         if (player.house.sellerIndex) return;
         if (mp.players.at(player.house.sellerIndex) == null) return;
         if (mp.players.at(player.house.sellerIndex).house == null) return;
