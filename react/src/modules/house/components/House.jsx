@@ -37,20 +37,20 @@ class House extends Component {
         this.showConfirmBuy = this.showConfirmBuy.bind(this);
     }
 
-    componentWillMount() {
-        const houseInfo = {
-            name: 228,
-            area: 'Санта-Моника',
-            class: 'Люкс',
-            numRooms: 4,
-            garage: true,
-            carPlaces: 2,
-            price: 45000,
-            rent: 350,
-        };
-
-        this.props.loadInfo(houseInfo);
-    }
+    // componentWillMount() {
+    //     const houseInfo = {
+    //         name: 228,
+    //         area: 'Санта-Моника',
+    //         class: 'Люкс',
+    //         numRooms: 4,
+    //         garage: true,
+    //         carPlaces: 2,
+    //         price: 45000,
+    //         rent: 350,
+    //     };
+    //
+    //     this.props.loadInfo(houseInfo);
+    // }
 
     getLoader() {
         return (
@@ -87,11 +87,11 @@ class House extends Component {
             blurForm(true);
 
             // eslint-disable-next-line no-undef
-            //mp.trigger('house.buy');
+            mp.trigger('house.buy');
 
-            setTimeout(() => {
-                setAnswer({answer: 1, owner: 'Dun Hill'});
-            }, 1000)
+            // setTimeout(() => {
+            //     setAnswer({answer: 1, owner: 'Dun Hill'});
+            // }, 1000)
         }
     }
 
