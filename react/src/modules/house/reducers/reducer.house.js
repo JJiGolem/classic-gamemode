@@ -44,6 +44,7 @@ export default function house(state = initialState, action) {
                 newState.isBlur = false;
             }
             newState.answerEnter = null;
+            newState.isLoading = false;
             return newState;
 
         case 'CLOSE_HOUSE':
