@@ -14,6 +14,7 @@ module.exports = {
                     id: interiors[i].id + 1,
                     class: interiors[i].class,
                     numRooms: interiors[i].numRooms,
+                    rent: 0.1,
                     garage: interiors[i].garage,
                     carPlaces: interiors[i].carPlaces,
                     x: interiors[i].x,  

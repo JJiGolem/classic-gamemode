@@ -136,6 +136,14 @@ mp.events.add("carshow.car.buy.ans", (ans, carInfo, parkingInfo) => {
             mp.chat.debug('Нет денег');
             mp.notify.error('Недостаточно денег', 'Ошибка');
             break;
+        case 3:
+            mp.chat.debug('операция не прошла');
+            mp.notify.error('Операция не прошла', 'Ошибка');
+            break;
+        case 4:
+            mp.chat.debug('неизвестная ошибка');
+            mp.notify.error('Неизвестная ошибка', 'Ошибка');
+            break;
     }
 });
 

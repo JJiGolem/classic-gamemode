@@ -145,7 +145,7 @@ module.exports = {
             numRooms:  info.Interior.numRooms,
             garage:  info.Interior.garage,
             carPlaces:  info.Interior.carPlaces,
-            rent: 10, //todo with economic system
+            rent: info.price * info.Interior.rent,
             isOpened: info.isOpened,
             improvements: new Array(),
             price: info.price,
@@ -168,7 +168,7 @@ module.exports = {
                         numRooms:  houses[i].info.Interior.numRooms,
                         garage:  houses[i].info.Interior.garage,
                         carPlaces:  houses[i].info.Interior.carPlaces,
-                        rent: 10, //todo with economic system
+                        rent:  houses[i].info.price * houses[i].info.Interior.rent,
                         isOpened: houses[i].info.isOpened,
                         improvements: new Array(),
                         price: houses[i].info.price,

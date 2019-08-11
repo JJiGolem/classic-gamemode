@@ -28,7 +28,7 @@ module.exports = {
                     numRooms: info.Interior.numRooms,
                     garage: info.Interior.garage,
                     carPlaces: info.Interior.carPlaces,
-                    rent: 10,   //todo with economy system
+                    rent: info.price * info.Interior.rent,
                     price: info.price,
                     pos: [info.pickupX, info.pickupY, info.pickupZ]
                 };
@@ -40,7 +40,7 @@ module.exports = {
                     numRooms: info.Interior.numRooms,
                     garage: info.Interior.garage,
                     carPlaces: info.Interior.carPlaces,
-                    rent: 10,   //todo with economy system
+                    rent: info.price * info.Interior.rent,
                     owner: info.characterNick,
                     pos: [info.pickupX, info.pickupY, info.pickupZ]
                 };
@@ -93,7 +93,7 @@ module.exports = {
         if (player.house.index == -1 || player.house.index == null) return player.call('house.buy.ans', [0, ""]);
         let info = housesService.getHouse(player.house.index).info;
         if (info.characterId != null) return player.call('house.buy.ans', [0, ""]);
-        if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 7.5) return player.call('house.buy.ans', [0, ""]);
+        if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return player.call('house.buy.ans', [0, ""]);
         if (player.character.cash < info.price) return player.call('house.buy.ans', [0, ""]);
         if (housesService.isHaveHouse(player.character.id)) return player.call('house.buy.ans', [2, ""]);
 
@@ -126,7 +126,7 @@ module.exports = {
         let index = housesService.getHouseIndexById(id);
         if (index == -1) return player.call('house.sell.toGov.ans', [0]);
         let info = housesService.getHouse(index).info;
-        if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 7.5) return player.call('house.sell.toGov.ans', [3]);
+        if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return player.call('house.sell.toGov.ans', [3]);
         if (info.characterId != player.character.id) return player.call('house.sell.toGov.ans', [0]);
         housesService.dropHouse(index, true);
     },
@@ -148,6 +148,7 @@ module.exports = {
         else {
             if (id > 1000000) return player.call("house.sell.check.ans", [null]);
             if (mp.players.at(id).character != null) {
+                player.house.buyerIndex = id;
                 player.call("house.sell.check.ans", [mp.players.at(id).character.name]);
             }
             else {
@@ -166,8 +167,8 @@ module.exports = {
         let index = housesService.getHouseIndexById(name);
         if (index == -1) return player.call("house.sell.ans", [0]);
         let info = housesService.getHouse(index).info;
-        if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 7.5 || 
-            mp.players.at(player.house.buyerIndex).dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 7.5) return player.call("house.sell.ans", [3]);
+        if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10 || 
+            mp.players.at(player.house.buyerIndex).dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return player.call("house.sell.ans", [3]);
         if (cost < info.price || cost > 1000000000) return player.call("house.sell.ans", [4]);
         mp.players.at(player.house.buyerIndex).house.sellerIndex = player.id;
         player.house.sellingHouseIndex = index;
@@ -178,19 +179,17 @@ module.exports = {
         }]);
     },
     "house.sell.ans": (player, result) => {
-        if (player.house.sellerIndex) return;
+        if (player.house.sellerIndex == null) return;
         if (mp.players.at(player.house.sellerIndex) == null) return;
         if (mp.players.at(player.house.sellerIndex).house == null) return;
         if (mp.players.at(player.house.sellerIndex).house.buyerIndex == null) return;
-
         let info = housesService.getHouse(mp.players.at(player.house.sellerIndex).house.sellingHouseIndex).info;
-        if (info.characterId != null) return mp.players.at(player.house.sellerIndex).call("house.sell.ans", [0]);
-        if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 7.5 || 
-            mp.players.at(player.house.sellerIndex).dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 7.5) return mp.players.at(player.house.sellerIndex).call("house.sell.ans", [3]);
+        if (info.characterId != mp.players.at(player.house.sellerIndex).character.id) return mp.players.at(player.house.sellerIndex).call("house.sell.ans", [0]);
+        if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10 || 
+            mp.players.at(player.house.sellerIndex).dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return mp.players.at(player.house.sellerIndex).call("house.sell.ans", [3]);
         if (player.character.cash < info.price) return mp.players.at(player.house.sellerIndex).call("house.sell.ans", [2]);
         if (housesService.isHaveHouse(player.character.id)) return mp.players.at(player.house.sellerIndex).call("house.sell.ans", [2]);
         if (result == 2) return  mp.players.at(player.house.sellerIndex).call("house.sell.ans", [2]);
-        
 
         housesService.sellHouse(mp.players.at(player.house.sellerIndex).house.sellingHouseIndex, mp.players.at(player.house.sellerIndex).house.sellingHouseCost,
             mp.players.at(player.house.sellerIndex), player, function(ans) {

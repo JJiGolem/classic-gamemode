@@ -7,6 +7,7 @@ let cost = null;
 mp.events.add('house.menu', (houseInfo) => {
     mp.gui.cursor.show(true, true);
     houseInfo.area =  mp.game.ui.getLabelText(mp.game.zone.getNameOfZone(houseInfo.pos[0], houseInfo.pos[1], houseInfo.pos[2]));
+    mp.console(JSON.stringify(houseInfo));
     mp.callCEFR('house.menu', []);
     mp.callCEFR('house.load', [houseInfo]);
 });

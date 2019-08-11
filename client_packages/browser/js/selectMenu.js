@@ -64,6 +64,7 @@ var selectMenu = new Vue({
                                 break;
                             case "Внешность":
                                 selectMenu.menu = selectMenu.menus["characterCreateViewMenu"];
+                                selectMenu.menu.items = selectMenu.menu.itemsMale;
                                 break;
                             case "Сохранить и продолжить":
                                 mp.trigger('characterInit.create.continue');
@@ -659,7 +660,7 @@ var selectMenu = new Vue({
                         text: "Назад",
                     },
                 ],
-                items: this.itemsMale,
+                items: null,
                 i: 0, // индекс выбранного пункта
                 j: 0, // индекс первого видимого пункта
                 handler(eventName) { // обработчик взаимодействия с меню
