@@ -180,7 +180,7 @@ module.exports = {
     },
     "house.sell.ans": (player, result) => {
         console.log(result);
-        if (player.house.sellerIndex) return;
+        if (player.house.sellerIndex == null) return;
         console.log("OK 1");
         if (mp.players.at(player.house.sellerIndex) == null) return;
         console.log("OK 2");
@@ -190,16 +190,16 @@ module.exports = {
         console.log("OK 4");
         let info = housesService.getHouse(mp.players.at(player.house.sellerIndex).house.sellingHouseIndex).info;
         if (info.characterId != mp.players.at(player.house.sellerIndex).character.id) return mp.players.at(player.house.sellerIndex).call("house.sell.ans", [0]);
-        console.log("OK 4");
+        console.log("OK 5");
         if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10 || 
             mp.players.at(player.house.sellerIndex).dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return mp.players.at(player.house.sellerIndex).call("house.sell.ans", [3]);
-        console.log("OK 5");
-        if (player.character.cash < info.price) return mp.players.at(player.house.sellerIndex).call("house.sell.ans", [2]);
         console.log("OK 6");
-        if (housesService.isHaveHouse(player.character.id)) return mp.players.at(player.house.sellerIndex).call("house.sell.ans", [2]);
+        if (player.character.cash < info.price) return mp.players.at(player.house.sellerIndex).call("house.sell.ans", [2]);
         console.log("OK 7");
-        if (result == 2) return  mp.players.at(player.house.sellerIndex).call("house.sell.ans", [2]);
+        if (housesService.isHaveHouse(player.character.id)) return mp.players.at(player.house.sellerIndex).call("house.sell.ans", [2]);
         console.log("OK 8");
+        if (result == 2) return  mp.players.at(player.house.sellerIndex).call("house.sell.ans", [2]);
+        console.log("OK 9");
 
         housesService.sellHouse(mp.players.at(player.house.sellerIndex).house.sellingHouseIndex, mp.players.at(player.house.sellerIndex).house.sellingHouseCost,
             mp.players.at(player.house.sellerIndex), player, function(ans) {
