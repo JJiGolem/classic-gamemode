@@ -200,7 +200,7 @@ module.exports = {
         player.vehicleList = [];
         let temp = 0;
         dbPrivate.forEach((current) => {
-            if (temp > 3) return; // TEMP!!!
+            //if (temp > 3) return; // TEMP!!!
             let props = this.setVehiclePropertiesByModel(current.modelName);
             player.vehicleList.push({
                 id: current.id,
@@ -221,6 +221,7 @@ module.exports = {
                 mp.events.call('parkings.vehicle.add', dbPrivate[0]);
             }
         }
+        //player.vehiclesCount = dbPrivate.length;
         console.log(`Для игрока ${player.character.name} загружено ${dbPrivate.length} авто`)
     },
     async loadCarPlates() {
@@ -347,5 +348,15 @@ module.exports = {
             h: vehicle.heading
         }
         return data;
+    },
+    removeVehicleFromPlayerVehicleList(player, vehId) {
+        if (!player) return;
+
+        for (let i = 0; i < player.vehicleList.length; i++) {
+            if (player.vehicleList[i].id == vehId) {
+                player.vehicleList.splice(i, 1);
+                return;
+            }
+        }
     }
 }

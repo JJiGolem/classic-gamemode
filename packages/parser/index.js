@@ -2,21 +2,39 @@
 
 let houses = require('./files/houses.json');
 let interiors = require('./files/interiors.json');
+let garages = require('./files/garages.json');
 
 /// Функции модуля парсера JSON в БД
 module.exports = {
     async init() {
         console.log("[PARSE] start");
+        let garagesDB = await db.Models.Garage.findAll();
+        if (garagesDB.length == 0) {
+            for (let i = 0; i < garages.length; i++) {
+                await db.Models.Garage.create({
+                    id: garages[i].id,
+                    carPlaces: garages[i].carPlaces,
+                    x: garages[i].x,  
+                    y: garages[i].y,
+                    z: garages[i].z,
+                    rotation: garages[i].rotation,
+                    exitX: garages[i].exitX,  
+                    exitY: garages[i].exitY,
+                    exitZ: garages[i].exitZ
+                }, {});
+            }
+            console.log("[PARSE] garages loaded");
+        }
+
         let interiorsDB = await db.Models.Interior.findAll();
         if (interiorsDB.length == 0) {
             for (let i = 0; i < interiors.length; i++) {
-                db.Models.Interior.create({
+                await db.Models.Interior.create({
                     id: interiors[i].id + 1,
+                    garageId: interiors[i].garageId,
                     class: interiors[i].class,
                     numRooms: interiors[i].numRooms,
                     rent: 0.1,
-                    garage: interiors[i].garage,
-                    carPlaces: interiors[i].carPlaces,
                     x: interiors[i].x,  
                     y: interiors[i].y,
                     z: interiors[i].z,
