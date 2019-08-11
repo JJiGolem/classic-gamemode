@@ -1,6 +1,7 @@
 var vehicles = call('vehicles');
 var parkings = call('parkings');
 var money = call('money');
+var houses = call('houses');
 var dbCarList;
 var dbCarShow;
 var carShow = [];
@@ -152,6 +153,10 @@ module.exports = {
                 // проверки на деньги и т д
                 if (player.character.cash < carList[i].properties.price) return player.call('carshow.car.buy.ans', [2]);
                 if (carList[i].count < 1) return player.call('carshow.car.buy.ans', [0]);
+                let house = houses.isHaveHouse(player.character.id);
+                if (!house) {
+                    if ( player.vehicleList.length > 1) return player.call('carshow.car.buy.ans', [5]);
+                }
                 let carToBuy = carList[i];
                 money.removeCash(player, carList[i].properties.price, async function (result) {
                     if (result) {
@@ -171,14 +176,15 @@ module.exports = {
                                 z: 0,
                                 h: 0,
                                 parkingId: parking,
-                                plate: carPlate
+                                plate: carPlate,
+                                owners: 1
                             });
                             var veh = {
                                 key: "private",
                                 owner: player.character.id,
                                 modelName: carToBuy.vehiclePropertyModel,
-                                color1: 0,
-                                color2: 0,
+                                color1: primaryColor,
+                                color2: secondaryColor,
                                 x: 0,
                                 y: 0,
                                 z: 0,
@@ -192,7 +198,8 @@ module.exports = {
                                 steeringState: 0,
                                 brakeState: 0,
                                 destroys: 0,
-                                parkingHours: 0
+                                parkingHours: 0,
+                                owners: 1
                             }
                             veh.sqlId = data.id;
                             veh.db = data;
@@ -202,6 +209,18 @@ module.exports = {
                                 count: carToBuy.count - 1
                             });
                             carToBuy.count = carToBuy.count - 1;
+                            //player.vehiclesCount = player.vehiclesCount + 1;
+                            //console.log(player.vehiclesCount);
+                            let props = vehicles.setVehiclePropertiesByModel(data.modelName);
+                            player.vehicleList.push({
+                                id: data.id,
+                                name: props.name,
+                                plate: data.plate,
+                                regDate: data.regDate,
+                                owners: data.owners,
+                                vehType: props.vehType,
+                                price: props.price
+                            });
                             player.call('carshow.car.buy.ans', [1, carToBuy, parkingInfo]);
                         } catch (err) {
                             console.log(err);

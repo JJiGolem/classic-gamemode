@@ -144,6 +144,10 @@ mp.events.add("carshow.car.buy.ans", (ans, carInfo, parkingInfo) => {
             mp.chat.debug('неизвестная ошибка');
             mp.notify.error('Неизвестная ошибка', 'Ошибка');
             break;
+        case 5:
+            mp.chat.debug('неизвестная ошибка');
+            mp.notify.error('Достигнут лимит на т/с', 'Ошибка');
+            break;
     }
 });
 
