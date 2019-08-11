@@ -12,6 +12,11 @@ module.exports = (sequelize, DataTypes) => {
         value: {
             type: DataTypes.STRING,
             allowNull: false,
+            get() {
+                var value = this.getDataValue('value');
+                if (!isNaN(value)) value = parseFloat(value);
+                return value;
+            }
         },
         itemId: {
             type: DataTypes.INTEGER(11),

@@ -135,7 +135,7 @@ var inventory = new Vue({
             6: [11],
             7: [10],
             8: [12],
-            9: [21,22,23,48,49,50,51,52,53,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100], // автоматы
+            9: [21, 22, 23, 48, 49, 50, 51, 52, 53, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], // автоматы
             10: [13],
             11: [8],
             12: [9],
@@ -479,6 +479,12 @@ var inventory = new Vue({
         notify(message) {
             alert("[Inventory] " + message);
         },
+        callRemote(eventName, values) {
+            // console.log(`callRemote: ${eventName}`);
+            // console.log(values)
+
+            mp.trigger("callRemote", eventName, JSON.stringify(values));
+        },
 
         // ******************  [ Inventory Config ] ******************
         setItemsInfo(itemsInfo) {
@@ -695,6 +701,12 @@ var inventory = new Vue({
             var columns = self.itemDrag.accessColumns;
             if (columns.bodyFocus != null) {
                 self.addItem(self.itemDrag.item, null, columns.bodyFocus);
+                self.callRemote("item.add", {
+                    sqlId: self.itemDrag.item.sqlId,
+                    pocketI: null,
+                    index: columns.bodyFocus,
+                    placeSqlId: null
+                });
             } else if (columns.hotkeyFocus) {
                 self.bindHotkey(self.itemDrag.item.sqlId, columns.hotkeyFocus);
             } else {
@@ -704,6 +716,12 @@ var inventory = new Vue({
                     index != null) {
                     if (columns.placeSqlId > 0) self.addItem(self.itemDrag.item, columns.pocketI, index, columns.placeSqlId)
                     else self.addEnvironmentItem(self.itemDrag.item, columns.pocketI, index, columns.placeSqlId)
+                    self.callRemote("item.add", {
+                        sqlId: self.itemDrag.item.sqlId,
+                        pocketI: columns.pocketI,
+                        index: index,
+                        placeSqlId: columns.placeSqlId
+                    });
                 }
             }
 
