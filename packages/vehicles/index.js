@@ -338,5 +338,14 @@ module.exports = {
         } catch (err) {
             console.log(err);
         }
+    },
+    getVehiclePosition(vehicle) {
+        let data = {
+            x: vehicle.position.x,
+            y: vehicle.position.y,
+            z: vehicle.position.z,
+            h: vehicle.heading
+        }
+        return data;
     }
 }
