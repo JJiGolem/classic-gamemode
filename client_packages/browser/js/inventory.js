@@ -126,19 +126,19 @@ var inventory = new Vue({
         // Вайт-лист предметов, которые можно надеть
         bodyList: {
             // columnIndex: [itemId, ...]
-            0: [],
-            1: [],
-            2: [],
-            3: [],
-            4: [],
+            0: [1],
+            1: [6],
+            2: [14],
+            3: [2],
+            4: [3],
             5: [7],
-            6: [],
-            7: [],
-            8: [],
-            9: [],
+            6: [11],
+            7: [10],
+            8: [12],
+            9: [21,22,23,48,49,50,51,52,53,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100], // автоматы
             10: [13],
-            11: [],
-            12: [],
+            11: [8],
+            12: [9],
         },
         // Вайт-лист предметов, которые можно использовать в горячих клавишах
         hotkeysList: {
@@ -282,6 +282,11 @@ var inventory = new Vue({
                 pointerEvents: (this.itemDrag.item) ? 'none' : '',
             };
             return style;
+        },
+        valueColor(value) {
+            if (value > 50) return "#bf0";
+            if (value > 15) return "#fb0";
+            return "#b44";
         },
         onBodyItemEnter(index) {
             if (!this.itemDrag.item) return;
@@ -688,7 +693,7 @@ var inventory = new Vue({
         window.addEventListener('mouseup', function(e) {
             // console.log(JSON.stringify(self.itemDrag))
             var columns = self.itemDrag.accessColumns;
-            if (columns.bodyFocus) {
+            if (columns.bodyFocus != null) {
                 self.addItem(self.itemDrag.item, null, columns.bodyFocus);
             } else if (columns.hotkeyFocus) {
                 self.bindHotkey(self.itemDrag.item.sqlId, columns.hotkeyFocus);
@@ -713,7 +718,7 @@ var inventory = new Vue({
 });
 
 // for tests
-inventory.initItems({
+/*inventory.initItems({
     0: {
         sqlId: 100,
         itemId: 1,
@@ -893,4 +898,4 @@ inventory.addEnvironmentPlace({
     }]
 });
 inventory.show = true;
-inventory.enable = true;
+inventory.enable = true;*/

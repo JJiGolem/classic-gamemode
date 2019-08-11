@@ -289,13 +289,13 @@
 }
 
 #inventory .header img {
-    height: 2.5vh;
+    height: 2vh;
     opacity: 0.8;
-    padding-left: 1vh;
+    padding-left: 2vh;
 }
 
 #inventory .header span {
-    color: #bf0;
+    margin-top: 0.2vh;
 }
 
 #inventory .hotkeys {
