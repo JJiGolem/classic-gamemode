@@ -33,19 +33,19 @@ export default function house(state = initialState, action) {
             return newState;
 
         case 'ANS_ENTER_HOUSE':
-            newState = { ...state };
-            newState.answerEnter = payload.answer;
-            newState.isLoading = false;
-            return newState;
+            const newStateEnter = { ...state };
+            newStateEnter.answerEnter = payload.answer;
+            newStateEnter.isLoading = false;
+            return newStateEnter;
 
         case 'CLOSE_ENTER_MENU_HOUSE':
-            newState = { ...state };
-            if (newState.isBlur) {
-                newState.isBlur = false;
+            const newStateCloseEnter = { ...state };
+            if (newStateCloseEnter.isBlur) {
+                newStateCloseEnter.isBlur = false;
             }
-            newState.answerEnter = null;
-            newState.isLoading = false;
-            return newState;
+            newStateCloseEnter.answerEnter = null;
+            newStateCloseEnter.isLoading = false;
+            return newStateCloseEnter;
 
         case 'CLOSE_HOUSE':
             return {};
