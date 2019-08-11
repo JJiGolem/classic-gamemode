@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {closeBankPage} from "../actions/action.bankPages";
-import {pushBank} from "../actions/action.bank";
+import {pushBank, setAnswerBank, setArgsBank, setFuncBank, setLoadingBank} from "../actions/action.bank";
 
 class BankPush extends Component {
     constructor(props) {
@@ -44,11 +44,14 @@ class BankPush extends Component {
 
     pushMoney() {
         const { pushMoney } = this.state;
-        const { pushBank, closePage } = this.props;
+        const { setArgs, setAnswer, setLoading } = this.props;
 
         if (this.validateForm()) {
-            pushBank(parseInt(pushMoney));
-            closePage();
+            setLoading(true);
+            setArgs({ money: parseInt(pushMoney) });
+            // setTimeout(() => {
+            //     setAnswer({ answer: 1, type: 'push' });
+            // }, 1000)
         }
     }
 
@@ -93,7 +96,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     closePage: () => dispatch(closeBankPage()),
-    pushBank: money => dispatch(pushBank(money))
+    pushBank: money => dispatch(pushBank(money)),
+    setLoading: flag => dispatch(setLoadingBank(flag)),
+    setAnswer: answer => dispatch(setAnswerBank(answer)),
+    setArgs: args => dispatch(setArgsBank(args))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BankPush);

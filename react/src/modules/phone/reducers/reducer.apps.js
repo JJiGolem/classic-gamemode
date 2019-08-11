@@ -29,6 +29,40 @@ export default function apps(state = initialState, action) {
                 newState.splice(newState.length - 1, 1);
             }
             return newState;
+
+        case 'DELETE_APP_TO_PHONE':
+            const newStateDel = [ ...state ];
+
+            let appName;
+
+            if (payload === 'house') {
+                appName = 'HouseApp'
+            }
+
+            if (payload === 'biz') {
+                appName = 'BusinessApp'
+            }
+
+            let indDel = newState.findIndex(app => app.name === appName);
+            if (indDel !== -1) {
+                return [ {
+                    name: 'MainDisplay',
+                    form: <MainDisplay />
+                } ]
+            } else {
+                return  newStateDel;
+            }
+
+        case 'ORDER_COMPLETE_BUSINESS':
+            const newStateOrder = [ ...state ];
+
+            let orderIndex = newStateOrder.findIndex(app => app.name === 'OrderCancel');
+
+            if (orderIndex !== -1) {
+                newStateOrder.splice(orderIndex, 1);
+            }
+
+            return newStateOrder;
     }
 
     return state;

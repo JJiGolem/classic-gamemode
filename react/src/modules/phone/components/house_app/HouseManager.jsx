@@ -57,7 +57,7 @@ class HouseManager extends Component {
                                 }
                             </div>
                         </div>
-                        <div className='manager_button-phone-react'>
+                        <div className='manager_button-phone-react' style={{ paddingTop: '2.9%' }}>
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="48%" height="48%" id="imp" viewBox="0 0 33.238 42.685">
                                     <g id="imp" data-name="Group 67" transform="translate(0 0)">
@@ -100,7 +100,7 @@ class HouseManager extends Component {
                                     <path id="Path_175" data-name="Path 175" d="M33.027,0a1.6,1.6,0,0,1,1.722,1.678,2.254,2.254,0,0,1-2.3,2.152,1.537,1.537,0,0,1-1.692-1.705A2.2,2.2,0,0,1,33.027,0ZM29.493,17.142c-.906,0-1.571-.559-.936-3.02L29.6,9.759c.181-.7.211-.978,0-.978a6.847,6.847,0,0,0-2.144.958L27,8.983c2.2-1.873,4.742-2.971,5.829-2.971.906,0,1.057,1.09.6,2.768l-1.191,4.587c-.212.811-.121,1.09.09,1.09a4.669,4.669,0,0,0,2.039-1.036l.514.7A9.427,9.427,0,0,1,29.493,17.142Z" transform="translate(-27)" fill="#ffe000"/>
                                 </svg>
                             </span>
-                            Информация
+                            <div className='text_button_house-phone-react'>Информация</div>
                         </div>
                         <div className='house_button-phone-react' onClick={() => setApp({name: 'MainDisplay', form: <MainDisplay />})}>
                             <span className='ico_button_house-phone-react'>
@@ -108,7 +108,7 @@ class HouseManager extends Component {
                                     <path id="Path_172" data-name="Path 172" d="M9.632,8.186,16.07,1.748A1.024,1.024,0,1,0,14.622.3L8.185,6.738,1.747.3A1.024,1.024,0,1,0,.3,1.748L6.737,8.186.3,14.623A1.023,1.023,0,1,0,1.747,16.07L8.185,9.633l6.437,6.437a1.024,1.024,0,0,0,1.448-1.448Z" transform="translate(0 -0.001)" fill="#f90040"/>
                                 </svg>
                             </span>
-                            Закрыть меню
+                            <div className='text_button_house-phone-react'>Закрыть меню</div>
                         </div>
                     </div>
                 </div>

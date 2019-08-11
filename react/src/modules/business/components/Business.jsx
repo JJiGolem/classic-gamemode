@@ -1,24 +1,34 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 
+import '../../house/styles/house.css';
 import '../styles/business.css';
 
-import {setAnswerBusiness, setBusinessFormBlock, setLoadingBusiness, showBusiness} from "../actions/action.business";
+import {
+    closeBusiness,
+    loadBusinessInfo,
+    setAnswerBuyBusiness,
+    setBusinessFormBlur,
+    setLoadingBusiness,
+    showBusiness
+} from "../actions/action.business";
 
 class Business extends Component {
     constructor(props) {
         super(props);
         this.state = {
             colorBuy: '#e1c631',
-            colorLook: '#e1c631',
-            isEnterMenu: false,
-            isActionsMenu: false
+            colorActions: '#e1c631',
+            isActionsMenu: false,
+            isConfirm: false
         };
 
         this.getForm = this.getForm.bind(this);
+        this.getMessage = this.getMessage.bind(this);
         this.getButtons = this.getButtons.bind(this);
         this.startBuy = this.startBuy.bind(this);
-        this.lookBusiness = this.lookBusiness.bind(this);
+        this.closeMenu = this.closeMenu.bind(this);
+        this.showConfirmBuy = this.showConfirmBuy.bind(this);
     }
 
     getLoader() {
@@ -29,41 +39,71 @@ class Business extends Component {
         )
     }
 
-    startBuy() {
-        const { business, setLoading, setAnswer } = this.props;
+    showConfirmBuy() {
+        const { blurForm } = this.props;
 
-        if (!business.isLoading) {
-            setLoading(true);
-            //blockForm(true);
-            setTimeout(() => {
-                setAnswer({answer: 1, owner: 'Dun Hill'});
-            }, 1000)
-        }
-    }
-
-    lookBusiness() {
-
-    }
-
-    showEnterMenu(business) {
         return (
             <div className='message_back-house-react'>
-                { this.getButton('enterBusiness') }
-                { business.garage && this.getButton('enterGarage') }
+                Вы действительно хотите приобрести бизнес?
+                <div>
+                    <button onClick={this.startBuy}>Да</button>
+                    <button onClick={() => {
+                        this.setState({ isConfirm: false });
+                        blurForm(false);
+                    }}>Нет</button>
+                </div>
             </div>
         )
     }
 
-    showActionsMenu(business) {
+    startBuy() {
+        const { business, setLoading, setAnswer, blurForm } = this.props;
 
+        if (!business.isLoading) {
+            this.setState({ isConfirm: false });
+
+            setLoading(true);
+            blurForm(true);
+
+            // eslint-disable-next-line no-undef
+            mp.trigger('biz.buy');
+
+             /*setTimeout(() => {
+                 setAnswer({answer: 1, owner: 'Dun Hill'});
+             }, 1000)*/
+        }
+    }
+
+    showActionsMenu(house) {
+        return (
+            <div className='message_back-house-react' onClick={() => {
+                this.setState({ isActionsMenu: false });
+                this.props.blurForm(false);
+            }}>
+                <div className='exitEnterBusiness' name='exit'></div>
+                Список действий пуст<br/>
+                <div>
+                    <svg style={{ display: 'block', margin: '5% 45%' }} id="Group_10" data-name="Group 10" xmlns="http://www.w3.org/2000/svg" width="10%" height="10%" viewBox="0 0 233.069 233.069">
+                        <path id="Path_26" data-name="Path 26" d="M116.535,0A116.535,116.535,0,1,0,233.069,116.535,116.666,116.666,0,0,0,116.535,0Zm0,224.1A107.57,107.57,0,1,1,224.1,116.535,107.7,107.7,0,0,1,116.535,224.1Z" fill="#e1c631"/>
+                        <path id="Path_27" data-name="Path 27" d="M104.33,17.314a4.477,4.477,0,0,0-6.338,0l-37.17,37.17-37.17-37.17a4.481,4.481,0,1,0-6.338,6.338l37.17,37.17-37.17,37.17a4.481,4.481,0,1,0,6.338,6.338l37.17-37.17,37.17,37.17a4.481,4.481,0,0,0,6.338-6.338L67.16,60.822l37.17-37.17A4.477,4.477,0,0,0,104.33,17.314Z" transform="translate(55.713 55.713)" fill="#e1c631"/>
+                    </svg>
+                </div>
+                Нажмите на это сообщение для продолжения
+            </div>
+        )
     }
 
     getButton(name) {
+        const { blurForm, business } = this.props;
+
         switch (name) {
             case 'buy':
                 return (
                     <div className='button-house-react'
-                         onClick={this.startBuy}
+                         onClick={() => {
+                             this.setState({ isConfirm: true });
+                             blurForm(true);
+                         }}
                          onMouseOver={() => this.setState({ colorBuy: 'black' })}
                          onMouseOut={() => this.setState({ colorBuy: '#e1c631' })}
                     >
@@ -83,58 +123,25 @@ class Business extends Component {
                         </div>
                         Купить
                     </div>
-                )
-
-            case 'look':
-                return (
-                    <div className='button-house-react'
-                         onClick={this.lookBusiness}
-                         onMouseOver={() => this.setState({ colorLook: 'black' })}
-                         onMouseOut={() => this.setState({ colorLook: '#e1c631' })}
-                    >
-                        <div>
-                            <svg id="Group_9" data-name="Group 9" xmlns="http://www.w3.org/2000/svg" width="40%" height="40%" viewBox="0 0 512 512" fill={this.state.colorLook}>
-                                <path id="Path_22" data-name="Path 22" d="M312.065,157.073A120.189,120.189,0,0,0,200,80a10,10,0,0,0,0,20,100.683,100.683,0,0,1,93.4,64.247,10,10,0,1,0,18.669-7.174Z"/>
-                                <path id="Path_23" data-name="Path 23" d="M200,40C111.775,40,40,111.775,40,200s71.775,160,160,160,160-71.775,160-160S288.225,40,200,40Zm0,300c-77.2,0-140-62.8-140-140S122.8,60,200,60s140,62.8,140,140S277.2,340,200,340Z"/>
-                                <path id="Path_24" data-name="Path 24" d="M500.281,443.719,366.8,310.239A198.2,198.2,0,0,0,400,200C400,89.72,310.28,0,200,0S0,89.72,0,200,89.72,400,200,400a198.214,198.214,0,0,0,110.239-33.2L347.134,403.7l.016.016,96.568,96.568a40,40,0,1,0,56.563-56.562ZM305.536,345.727s0,0,0,0A178.459,178.459,0,0,1,200,380c-99.252,0-180-80.748-180-180S100.748,20,200,20s180,80.748,180,180a178.458,178.458,0,0,1-34.272,105.535A180.872,180.872,0,0,1,305.536,345.727Zm20.98,9.066a200.675,200.675,0,0,0,28.277-28.277l28.371,28.371a242.731,242.731,0,0,1-28.277,28.277ZM486.139,486.139a19.985,19.985,0,0,1-28.278,0l-88.8-88.8a262.774,262.774,0,0,0,28.277-28.277l88.8,88.8a19.982,19.982,0,0,1,0,28.274Z"/>
-                                <path id="Path_25" data-name="Path 25" d="M310,190a10,10,0,1,0,10,10A10,10,0,0,0,310,190Z"/>
-                            </svg>
-                        </div>
-                        Осмотреть
-                    </div>
-                )
-
-            case 'enter':
-                return (
-                    <div className='button-house-react' onClick={() => this.setState({ isEnterMenu: true })}>
-
-                        Войти
-                    </div>
-                )
+                );
 
             case 'actions':
                 return (
-                    <div className='button-house-react' onClick={() => this.setState({ isActionsMenu: true })}>
-
+                    <div className='button-house-react' onClick={() => {
+                        business.answerBuy === null && this.setState({ isActionsMenu: true });
+                        blurForm(true)
+                    }}
+                         onMouseOver={() => this.setState({ colorActions: 'black' })}
+                         onMouseOut={() => this.setState({ colorActions: '#e1c631' })}
+                    >
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40%" height="40%" viewBox="0 0 217.794 216.8" fill={this.state.colorActions}>
+                                <path id="two-settings-cogwheels" d="M113.6,133.642l-5.932-13.169a57.493,57.493,0,0,0,14.307-15.209l13.507,5.118a5,5,0,0,0,6.447-2.9l4.964-13.1a5,5,0,0,0-2.9-6.447L130.476,82.81a57.471,57.471,0,0,0-.637-20.871l13.169-5.932a5,5,0,0,0,2.5-6.613l-5.755-12.775a5,5,0,0,0-6.612-2.505l-13.169,5.932a57.493,57.493,0,0,0-15.209-14.307l5.118-13.507a5,5,0,0,0-2.9-6.447L93.88.82a5,5,0,0,0-6.447,2.905L82.316,17.231a57.327,57.327,0,0,0-20.872.636L55.513,4.7a5,5,0,0,0-6.613-2.5L36.124,7.949a5,5,0,0,0-2.505,6.612L39.551,27.73A57.493,57.493,0,0,0,25.244,42.939L11.737,37.821a5,5,0,0,0-6.447,2.9L.326,53.828a5,5,0,0,0,2.9,6.447l13.507,5.118a57.471,57.471,0,0,0,.637,20.871L4.2,92.2a5,5,0,0,0-2.5,6.613l5.755,12.775a5,5,0,0,0,6.612,2.505l13.169-5.932a57.462,57.462,0,0,0,15.209,14.307l-5.118,13.507a5,5,0,0,0,2.9,6.447l13.1,4.964a5,5,0,0,0,6.447-2.9L64.9,130.971a57.348,57.348,0,0,0,20.872-.636L91.7,143.5a5,5,0,0,0,6.613,2.5l12.775-5.754A5,5,0,0,0,113.6,133.642Zm-8.286-47.529A33.864,33.864,0,0,1,61.595,105.8,33.9,33.9,0,0,1,41.9,62.09,33.864,33.864,0,0,1,85.618,42.4a33.9,33.9,0,0,1,19.691,43.714Zm111.169,68.276a5,5,0,0,0-3.469-1.615l-9.418-.4a43.2,43.2,0,0,0-4.633-12.7L205.9,133.3a5,5,0,0,0,.3-7.064l-6.9-7.514a5,5,0,0,0-7.065-.3l-6.944,6.374a43.211,43.211,0,0,0-12.254-5.7l.4-9.418a5,5,0,0,0-4.782-5.209l-10.189-.437a5.018,5.018,0,0,0-5.209,4.781l-.4,9.418a43.251,43.251,0,0,0-12.7,4.632l-6.374-6.945a5,5,0,0,0-7.064-.3l-7.514,6.9a5,5,0,0,0-.3,7.064l6.374,6.945a43.2,43.2,0,0,0-5.7,12.254l-9.417-.4a5.012,5.012,0,0,0-5.21,4.781l-.437,10.189a5,5,0,0,0,4.782,5.21l9.417.4a43.247,43.247,0,0,0,4.632,12.7l-6.944,6.374a5,5,0,0,0-.3,7.064L123,202.6a5,5,0,0,0,7.065.3l6.944-6.374a43.211,43.211,0,0,0,12.254,5.7l-.4,9.418a5,5,0,0,0,4.781,5.209l10.189.437c.072,0,.143,0,.214,0a5,5,0,0,0,5-4.785l.4-9.418a43.251,43.251,0,0,0,12.7-4.632l6.374,6.945a5,5,0,0,0,7.064.3l7.514-6.9a5,5,0,0,0,.3-7.064l-6.374-6.945a43.2,43.2,0,0,0,5.7-12.254l9.417.4a5.011,5.011,0,0,0,5.21-4.781l.437-10.189A5,5,0,0,0,216.478,154.389Zm-56.321,29.564a23.315,23.315,0,0,1,.978-46.609q.507,0,1.019.022a23.315,23.315,0,1,1-2,46.587Z" transform="translate(0 -0.496)"/>
+                            </svg>
+                        </div>
                         Действия
                     </div>
-                )
-
-            case 'enterBusiness':
-                return (
-                    <div className='button-house-react' onClick={() => this.setState({ isEnterMenu: false })}>
-
-                        Войти в дом
-                    </div>
-                )
-
-            case 'enterGarage':
-                return (
-                    <div className='button-house-react' onClick={() => this.setState({ isEnterMenu: true })}>
-
-                        Войти в гараж
-                    </div>
-                )
+                );
         }
     }
 
@@ -144,7 +151,6 @@ class Business extends Component {
         if (business.owner) {
             return (
                 <Fragment>
-                    { this.getButton('enter') }
                     { this.getButton('actions') }
                 </Fragment>
             )
@@ -152,29 +158,31 @@ class Business extends Component {
             return (
                 <Fragment>
                     { this.getButton('buy') }
-                    { this.getButton('look') }
                 </Fragment>
             )
         }
     }
 
     exit() {
-        const { showBusiness, business } = this.props;
+        const { business, closeBusiness } = this.props;
 
         if (!business.isLoading) {
-            showBusiness(false);
+            //showBusiness(false);
+            closeBusiness();
+            // eslint-disable-next-line no-undef
+            mp.trigger('biz.menu.close')
         }
     }
 
     getForm() {
-        const { business, setLoading } = this.props;
+        const { business } = this.props;
 
         return (
             <Fragment>
-                <div style={{ filter: business.isLoading || business.answer ? 'blur(2px)' : 'blur(0px)' }}>
+                <div style={{ filter: business.isBlur ? 'blur(2px)' : 'blur(0px)' }}>
                     <div className='header-house-react'>
-                        <span>{ business.name }</span>
-                        <div className='exitHouse' name='exit' onClick={this.exit.bind(this)}></div>
+                        <span>Бизнес "{ business.name }"</span>
+                        <div className='exitBusiness' name='exit' onClick={this.exit.bind(this)}></div>
                     </div>
 
                     <div className='main_page-house-react'>
@@ -183,30 +191,21 @@ class Business extends Component {
                             !business.owner &&
                             <div className='block_price-house-react'>
                                 <span>Цена: </span>
-                                <span style={{ color: 'green', marginLeft: '5%' }}>${ business.price }</span>
+                                <span style={{ color: '#a2dd03 ', marginLeft: '5%' }}>${ business.price }</span>
                             </div>
                         }
 
                         <div className='info-house-react'>
                             <div>Район: <span>{ business.area }</span></div>
-                            <div>Класс: <span>{ business.class }</span></div>
-                            <div>Количество комнат: <span>{ business.numRooms }</span></div>
-                            <div>Гараж: { business.garage
-                                ? <span style={{ color: 'green' }}>есть</span>
-                                : <span style={{ color: 'red' }}>нет</span> }
-                            </div>
-                            <div>Парковочных мест: <span>{ business.carPlaces }</span></div>
-                            <div>Аренда:
-                                <span style={{ color: 'green' }}> ${ business.rent }</span>
+                            <div>Тип: <span>{ business.type }</span></div>
+                            <div>Налог:
+                                <span style={{ color: '#a2dd03 ' }}> ${ business.rent }</span>
                                 <span> в сутки</span>
                             </div>
-                            {
-                                business.owner &&
-                                <div>Владелец: <span>{ business.owner }</span></div>
-                            }
+                            <div>Владелец: <span>{ business.owner ? business.owner : 'нет' }</span></div>
                         </div>
 
-                        <div className='buttons-house-react'>
+                        <div className='buttons-house-react' style={{ top: '40%' }}>
                             { this.getButtons() }
                         </div>
                     </div>
@@ -215,23 +214,44 @@ class Business extends Component {
         )
     }
 
-    getMessage(answer) {
-        const { setAnswer } = this.props;
+    closeMenu() {
+        const { setAnswer, blurForm } = this.props;
 
-        if (answer === 0) {
+        setAnswer({ answer: null });
+        blurForm(false);
+    }
+
+    getMessage(answer) {
+        if (answer === 0 || answer === 2) {
             return (
-                <div className='message_back-house-react' onClick={() => setAnswer({ answer: null })}>
-                    <div className='exitEnterHouse' name='exit'></div>
-                    У Вас недостаточно денег для покупки
+                <div className='message_back-house-react' onClick={this.closeMenu}>
+                    <div className='exitEnterBusiness' name='exit'></div>
+                    {answer === 0 ? 'У Вас недостаточно денег для покупки' : 'У Вас уже есть бизнес'}<br/>
+                    <div>
+                        <svg style={{ display: 'block', margin: '5% 45%' }} id="Group_10" data-name="Group 10" xmlns="http://www.w3.org/2000/svg" width="10%" height="10%" viewBox="0 0 233.069 233.069">
+                            <path id="Path_26" data-name="Path 26" d="M116.535,0A116.535,116.535,0,1,0,233.069,116.535,116.666,116.666,0,0,0,116.535,0Zm0,224.1A107.57,107.57,0,1,1,224.1,116.535,107.7,107.7,0,0,1,116.535,224.1Z" fill="#e1c631"/>
+                            <path id="Path_27" data-name="Path 27" d="M104.33,17.314a4.477,4.477,0,0,0-6.338,0l-37.17,37.17-37.17-37.17a4.481,4.481,0,1,0-6.338,6.338l37.17,37.17-37.17,37.17a4.481,4.481,0,1,0,6.338,6.338l37.17-37.17,37.17,37.17a4.481,4.481,0,0,0,6.338-6.338L67.16,60.822l37.17-37.17A4.477,4.477,0,0,0,104.33,17.314Z" transform="translate(55.713 55.713)" fill="#e1c631"/>
+                        </svg>
+                    </div>
+                    Нажмите на это сообщение для продолжения
                 </div>
             )
         }
 
         if (answer === 1) {
             return (
-                <div className='message_back-house-react' onClick={() => setAnswer({ answer: null })}>
-                    <div className='exitEnterHouse' name='exit' ></div>
-                    Бизнес успешно куплен
+                <div className='message_back-house-react' onClick={this.closeMenu}>
+                    <div className='exitEnterBusiness' name='exit' ></div>
+                    Бизнес успешно куплен<br/>
+                    <div>
+                        <svg style={{ display: 'block', margin: '5% 45%' }} xmlns="http://www.w3.org/2000/svg" width="10%" height="10%" viewBox="0 0 52 52">
+                            <g id="Group_11" data-name="Group 11" transform="translate(-469 -736.982)">
+                                <path id="Path_28" data-name="Path 28" d="M26,0A26,26,0,1,0,52,26,26.029,26.029,0,0,0,26,0Zm0,50A24,24,0,1,1,50,26,24.028,24.028,0,0,1,26,50Z" transform="translate(469 736.982)" fill="#e1c631"/>
+                                <path id="Path_29" data-name="Path 29" d="M38.252,15.336,22.883,32.626l-9.259-7.407a1,1,0,0,0-1.249,1.562l10,8a1,1,0,0,0,1.373-.117l16-18a1,1,0,0,0-1.5-1.328Z" transform="translate(469 736.982)" fill="#e1c631"/>
+                            </g>
+                        </svg>
+                    </div>
+                    Нажмите на это сообщение для продолжения
                 </div>
             )
         }
@@ -239,16 +259,18 @@ class Business extends Component {
 
     render() {
         const { business } = this.props;
-        const { isEnterMenu, isActionsMenu } = this.state;
+        const { isActionsMenu, isConfirm } = this.state;
 
         return (
             <Fragment>
-                <div className='house_form-react'>
-                    { this.getForm() }
-                    { business.answer && this.getMessage(business.answer) }
-                    { isEnterMenu && this.showEnterMenu(business) }
-                    { isActionsMenu && this.showActionsMenu(business) }
-                </div>
+                {
+                    <div className='business_form-react'>
+                        { Object.keys(business).length > 0 ? this.getForm() : this.getLoader() }
+                        { business.answerBuy !== null && this.getMessage(business.answerBuy) }
+                        { business.answerBuy === null && isActionsMenu && this.showActionsMenu() }
+                        { isConfirm && this.showConfirmBuy() }
+                    </div>
+                }
                 { business.isLoading && this.getLoader() }
             </Fragment>
         );
@@ -256,14 +278,16 @@ class Business extends Component {
 }
 
 const mapStateToProps = state => ({
-    business: state.business
+    business: state.business,
 });
 
 const mapDispatchToProps = dispatch => ({
+    loadInfo: info => dispatch(loadBusinessInfo(info)),
     setLoading: flag => dispatch(setLoadingBusiness(flag)),
     showBusiness: flag => dispatch(showBusiness(flag)),
-    setAnswer: answer => dispatch(setAnswerBusiness(answer)),
-    blockForm: flag => dispatch(setBusinessFormBlock(flag))
+    setAnswer: answer => dispatch(setAnswerBuyBusiness(answer)),
+    blurForm: flag => dispatch(setBusinessFormBlur(flag)),
+    closeBusiness: () => dispatch(closeBusiness()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Business);

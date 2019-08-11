@@ -1,7 +1,7 @@
 const initialState = {
-    // phone: false,
-    // house: false,
-    // business: false,
+    // phone: true,
+    // house: true,
+    // business: true,
     // bank: true
 };
 
@@ -31,6 +31,12 @@ export default function forms(state = initialState, action) {
             return {
                 ...state,
                 business: payload
+            };
+
+        case 'CLOSE_BUSINESS':
+            return {
+                ...state,
+                business: false
             };
 
         case 'SHOW_BANK':

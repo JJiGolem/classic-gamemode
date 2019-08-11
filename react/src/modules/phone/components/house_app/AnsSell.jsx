@@ -44,7 +44,7 @@ class AnsSell extends Component {
         return (
             <div className='back_page-phone-react'>
                 {
-                    info.houses[0].sellStatus !== null
+                    info.houses[0].sellStatus != null
                         ? <Fragment>{this.getAnsPage(info.houses[0].sellStatus)}</Fragment>
                         : <div className="loader01" style={{ margin: '10% 5%' }}></div>
                 }

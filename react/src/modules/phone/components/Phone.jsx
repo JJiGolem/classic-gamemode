@@ -26,6 +26,12 @@ class Phone extends Component {
             }
         }
 
+        if (info.biz.length > 0) {
+            if (info.biz.some(biz => biz.isSell === true)) {
+                return true;
+            }
+        }
+
         return false;
     }
 

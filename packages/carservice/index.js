@@ -1,3 +1,5 @@
+let vehicles = call('vehicles');
+
 let serviceData = [{
     x: 484.9,
     y: -1315.5,
@@ -96,6 +98,7 @@ module.exports = {
             vehicle.fuelState = 0;
             vehicle.steeringState = 0;
             vehicle.brakeState = 0;
+            vehicles.updateConsumption(vehicle);
         } catch (err) {
             console.log(err);
         }

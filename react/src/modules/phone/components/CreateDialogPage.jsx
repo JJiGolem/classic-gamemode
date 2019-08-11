@@ -37,12 +37,18 @@ class CreateDialogPage extends Component {
         let dialogIndex = dialogs.findIndex(d => d.number === number);
         let contact = info.contacts.find(c => c.number === number);
 
-        if (dialogIndex === -1) {
-            let dialog = { name: contact.name, number: number };
-            addDialog(contact.name, number);
-            addApp({ name: 'DialogPage', form: <DialogPage dialog={dialog} /> });
+        if (contact) {
+            if (dialogIndex === -1) {
+                let dialog = { name: contact.name, number: number };
+                addDialog(contact.name, number);
+                addApp({ name: 'DialogPage', form: <DialogPage dialog={dialog} /> });
+            } else {
+                let dialog = dialogs[dialogIndex];
+                addApp({ name: 'DialogPage', form: <DialogPage dialog={dialog} /> });
+            }
         } else {
-            let dialog = dialogs[dialogIndex];
+            let dialog = { name: null, number: number };
+            addDialog(null, number);
             addApp({ name: 'DialogPage', form: <DialogPage dialog={dialog} /> });
         }
     }

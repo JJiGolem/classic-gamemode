@@ -1,12 +1,11 @@
 const initialState = {
-    name: 228,
-    area: 'Санта-Моника',
-    class: 'Люкс',
-    numRooms: 4,
-    garage: false,
-    carPlaces: 2,
-    price: 45000,
-    rent: 350,
+    // id: 3,
+    // name: 'Ponsonbys',
+    // type: 'Магазин одежды',
+    // cashBox: 732101,
+    // area: 'Палето Бэй',
+    // rent: 50,
+    // price: 112000,
 };
 
 export default function business(state = initialState, action) {
@@ -23,18 +22,21 @@ export default function business(state = initialState, action) {
             return newState;
 
         case 'ANS_BUY_BUSINESS':
-            newState = { ...state };
-            newState.answer = payload.answer;
-            if (payload.answer === 1) {
-                newState.owner = payload.owner;
+            const newStateBuy = { ...state };
+            newStateBuy.answerBuy = payload.answer;
+            if (payload.answer == 1) {
+                newStateBuy.owner = payload.owner
             }
-            newState.isLoading = false;
+            newStateBuy.isLoading = false;
+            return newStateBuy;
+
+        case 'BLUR_BUSINESS_FORM':
+            newState = { ...state };
+            newState.isBlur = payload;
             return newState;
 
-        case 'BLOCK_BUSINESS_FORM':
-            newState = { ...state };
-            newState.isBlock = payload;
-            return newState;
+        case 'CLOSE_BUSINESS':
+            return {};
     }
 
     return state;

@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {closeAppDisplay} from "../../actions/action.apps";
-import {setSell, setSellInfo, setSellStatus} from "../../actions/action.info";
+import {setSellHouse, setSellInfoHouse, setSellStatusHouse} from "../../actions/action.info";
 import HeaderHouseApp from "./HeaderHouseApp";
 
 class Error extends Component {
@@ -44,7 +44,7 @@ class Error extends Component {
                                 <path id="Path_172" data-name="Path 172" d="M9.632,8.186,16.07,1.748A1.024,1.024,0,1,0,14.622.3L8.185,6.738,1.747.3A1.024,1.024,0,1,0,.3,1.748L6.737,8.186.3,14.623A1.023,1.023,0,1,0,1.747,16.07L8.185,9.633l6.437,6.437a1.024,1.024,0,0,0,1.448-1.448Z" transform="translate(0 -0.001)" fill="#f90040"/>
                             </svg>
                         </span>
-                            Закрыть окно
+                            <div className='text_button_house-phone-react'>Закрыть окно</div>
                         </div>
                     </div>
                 </div>
@@ -60,9 +60,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     closeApp: () => dispatch(closeAppDisplay()),
-    setSell: flag => dispatch(setSell(flag)),
-    setSellStatus: status => dispatch(setSellStatus(status)),
-    setSellInfo: info => dispatch(setSellInfo(info)),
+    setSell: flag => dispatch(setSellHouse(flag)),
+    setSellStatus: status => dispatch(setSellStatusHouse(status)),
+    setSellInfo: info => dispatch(setSellInfoHouse(info)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Error);
