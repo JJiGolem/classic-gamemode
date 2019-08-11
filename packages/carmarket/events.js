@@ -1,4 +1,12 @@
 var carmarket = require('./index.js');
+var money = call('money');
+var vehicles = call('vehicles');
+
+const PRICE_CONFIG = {
+    BUY: 0.8,
+    SELL: 0.7
+}
+
 module.exports = {
     "init": () => {
         carmarket.init();
@@ -28,13 +36,22 @@ module.exports = {
         if (!player.vehicle) return player.call('carmarket.car.sell.ans, [0]');
         if (!carmarket.isPlayerInCarMarketColshape(player)) return player.call('carmarket.car.sell.ans', [1]);;
         if (player.vehicle.key != 'private' || player.vehicle.owner != player.character.id) return player.call('carmarket.car.sell.ans', [0]);
-        try {
-            carmarket.sellCar(player.vehicle);
-            player.call('carmarket.car.sell.ans', [3]);
-        } catch (err) {
-            console.log(err);
-            player.call('carmarket.car.sell.ans', [2]);
-        }
+
+        let price = (player.vehicle.properties.price*PRICE_CONFIG.SELL).toFixed();
+        console.log(price);
+        money.addCash(player, price, function (result) {
+            if (result) {
+                vehicles.removeVehicleFromPlayerVehicleList(player, player.vehicle.sqlId);
+                carmarket.sellCar(player.vehicle);
+                // player.vehiclesCount = player.vehiclesCount - 1;
+                // console.log(player.vehiclesCount);
+                player.call('carmarket.car.sell.ans', [3, price]);
+                
+            } else {
+                console.log(`${player.name} не смог продать авто на рынке (addcash error)`)
+                player.call('carmarket.car.sell.ans', [2]);
+            }
+        });
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (vehicle.key == 'market' && seat == -1) {
@@ -45,7 +62,7 @@ module.exports = {
 
             let data = {
                 name: vehicle.properties.name,
-                price: vehicle.properties.price,
+                price: vehicle.properties.price * PRICE_CONFIG.BUY,
                 mileage: vehicle.mileage,
                 owners: vehicle.owners,
                 regDate: vehicle.regDate
@@ -62,26 +79,35 @@ module.exports = {
 
         if (!player.vehicle || player.vehicle.key != 'market' || player.seat != -1) return player.call('carmarket.car.buy.ans', [0]);
 
-        // TODO проверки на деньги
-        var carInfo = {
-            name: player.vehicle.properties.name
-        }
-        try {
-            player.vehicle.key = 'private';
-            player.vehicle.owner = player.character.id;
 
-            player.vehicle.db.update({
-                key: 'private',
-                owner: player.character.id,
-                isOnParking: 1 /// если нет дома
-            });
-            player.vehicle.isOnParking = 1;
-            carmarket.setMarketSpotFree(player.vehicle.marketSpot);
-            player.call('carmarket.car.buy.ans', [2, carInfo]);
-            mp.events.call('vehicles.engine.toggle', player);
-        } catch (err) {
-            console.log(err);
-            player.call('carmarket.car.buy.ans', [1]);
-        }
+        let price = (player.vehicle.properties.price * PRICE_CONFIG.BUY).toFixed();
+
+        if (player.character.cash < price) return player.call('carmarket.car.buy.ans', [3]);
+        money.removeCash(player, price, function(result) {
+            if (result) {
+
+                let carInfo = {
+                    name: player.vehicle.properties.name,
+                    price: price
+                }
+
+                player.vehicle.key = 'private';
+                player.vehicle.owner = player.character.id;
+    
+                player.vehicle.db.update({
+                    key: 'private',
+                    owner: player.character.id,
+                    isOnParking: 1 /// если нет дома
+                });
+                player.vehicle.isOnParking = 1;
+                carmarket.setMarketSpotFree(player.vehicle.marketSpot);
+                // player.vehiclesCount = player.vehiclesCount + 1;
+                // console.log(player.vehiclesCount); // TODO добавление в vehicleList
+                player.call('carmarket.car.buy.ans', [2, carInfo]);
+                mp.events.call('vehicles.engine.toggle', player);
+            } else {
+                player.call('carmarket.car.buy.ans', [1]);
+            }
+        });
     }
 }

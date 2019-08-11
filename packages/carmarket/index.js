@@ -148,6 +148,7 @@ module.exports = {
     destroyMarketVehicleById(id) {
         mp.vehicles.forEach((current) => {
             if (current.sqlId == id) {
+                clearInterval(current.fuelTimer);
                 current.destroy();
             }
         });
