@@ -116,7 +116,7 @@ mp.events.add("carshow.car.buy", (carId) => {
     mp.events.callRemote('carshow.car.buy', list[currentIndex].sqlId, primary, secondary);
 });
 
-mp.events.add("carshow.car.buy.ans", (ans, carInfo) => {
+mp.events.add("carshow.car.buy.ans", (ans, carInfo, parkingInfo) => {
     mp.callCEFV(`loader.show = false;`);
     switch (ans) {
         case 0:
@@ -127,9 +127,14 @@ mp.events.add("carshow.car.buy.ans", (ans, carInfo) => {
             mp.chat.debug('Успешно куплен');
             mp.notify.success('Вы приобрели транспорт', 'Успех');
             mp.events.call('chat.message.push', `!{#80c102}Вы успешно приобрели транспортное средство !{#009eec}${carInfo.properties.name}`);
-            mp.events.call('chat.message.push', '!{#f3c800}Транспорт доставлен на подземную парковку !{#009eec}Ричман-Глен');
+            mp.events.call('chat.message.push', `!{#f3c800}Транспорт доставлен на подземную парковку !{#009eec}${parkingInfo.name}`);
             mp.events.call('chat.message.push', '!{#f3c800}Местоположение парковки отмечено на карте');
+            mp.game.ui.setNewWaypoint(parkingInfo.x, parkingInfo.y);
             mp.events.call('carshow.list.close');
+            break;
+        case 2:
+            mp.chat.debug('Нет денег');
+            mp.notify.error('Недостаточно денег', 'Ошибка');
             break;
     }
 });

@@ -165,5 +165,12 @@ module.exports = {
                 });
             }
         });
+    },
+    getParkingInfoById(id) {
+        for (let i = 0; i < parkings.length; i++) {
+            if (parkings[i].sqlId == id) {
+                return parkings[i];
+            }
+        }
     }
 }
