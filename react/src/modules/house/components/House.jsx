@@ -89,9 +89,9 @@ class House extends Component {
             // eslint-disable-next-line no-undef
             mp.trigger('house.buy');
 
-           /* setTimeout(() => {
-                setAnswer({answer: 1, owner: 'Dun Hill'});
-            }, 1000)*/
+            // setTimeout(() => {
+            //     setAnswer({answer: 1, owner: 'Dun Hill'});
+            // }, 1000)
         }
     }
 

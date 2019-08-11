@@ -43,6 +43,7 @@ export default function house(state = initialState, action) {
             if (newState.isBlur) {
                 newState.isBlur = false;
             }
+            newState.answerEnter = null;
             return newState;
 
         case 'CLOSE_HOUSE':
