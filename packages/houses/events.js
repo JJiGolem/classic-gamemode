@@ -16,9 +16,9 @@ module.exports = {
     "playerEnterColshape": (player, shape) => {
         if (!shape.isHouse) return;
         player.house.place = shape.place;
+        let info = housesService.getHouse(shape.index).info;
         /// На улице
         if (shape.place == 0) {
-            let info = housesService.getHouse(shape.index).info;
             let houseInfo = {};
     
             if (info.characterId == null) {
@@ -26,8 +26,8 @@ module.exports = {
                     name: info.id,
                     class: info.Interior.class,
                     numRooms: info.Interior.numRooms,
-                    garage: info.Interior.garage,
-                    carPlaces: info.Interior.carPlaces,
+                    garage: info.Interior.Garage != null,
+                    carPlaces: info.Interior.Garage.carPlaces,
                     rent: info.price * info.Interior.rent,
                     price: info.price,
                     pos: [info.pickupX, info.pickupY, info.pickupZ]
@@ -38,8 +38,8 @@ module.exports = {
                     name: info.id,
                     class: info.Interior.class,
                     numRooms: info.Interior.numRooms,
-                    garage: info.Interior.garage,
-                    carPlaces: info.Interior.carPlaces,
+                    garage: info.Interior.Garage != null,
+                    carPlaces: info.Interior.Garage.carPlaces,
                     rent: info.price * info.Interior.rent,
                     owner: info.characterNick,
                     pos: [info.pickupX, info.pickupY, info.pickupZ]
@@ -50,7 +50,7 @@ module.exports = {
         }
         /// В доме / в гараже
         else {
-            player.call('house.menu.enter',[shape.place]);
+            player.call('house.menu.enter',[shape.place, info.Interior.Garage != null]);
         }
     },
     "playerExitColshape": (player, shape) => {
@@ -63,6 +63,7 @@ module.exports = {
         }
     },
     "house.enter": (player, place) => {
+        console.log(place);
         if (player.house.index == -1 || player.house.index == null) return player.call('house.enter.ans', []);
         let info = housesService.getHouse(player.house.index).info;
         if (info.characterId != null && info.characterId != player.character.id && !info.isOpened) return player.call('house.enter.ans', []);
@@ -76,14 +77,16 @@ module.exports = {
             rot = info.angle;
         }   
         else if (place == 1) {
-            if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 2) return player.call('house.enter.ans', []);
             player.dimension = info.id;
             pos = new mp.Vector3(info.Interior.x, info.Interior.y, info.Interior.z);
             rot = info.Interior.rotation;
             
         }
         else if (place == 2) {
-            return player.call('house.enter.ans', []);
+            if (info.Interior.Garage == null) return player.call('house.enter.ans', []);
+            player.dimension = info.id;
+            pos = new mp.Vector3(info.Interior.Garage.x, info.Interior.Garage.y, info.Interior.Garage.z);
+            rot = info.Interior.Garage.rotation;
         }
         player.call('house.enter.ans', [player.house.place == 0, pos, rot]);
         player.house.place = place;

@@ -1,28 +1,16 @@
 "use strict";
 const Sequelize = require('sequelize');
 
-/// Модель интерьера в доме
+/// Модель гаража в доме
 module.exports = (sequelize, DataTypes) => {
-    const model = sequelize.define("Interior", {
+    const model = sequelize.define("Garage", {
         id: {
             type: DataTypes.INTEGER(11),
             primaryKey: true,
             autoIncrement: true
         },
-        garageId: {
+        carPlaces: {
             type: DataTypes.INTEGER(11),
-            allowNull: true
-        },
-        class: {
-            type: DataTypes.STRING(50),
-            allowNull: false
-        },
-        numRooms: {
-            type: DataTypes.INTEGER(11),
-            allowNull: false
-        },
-        rent: {
-            type: DataTypes.FLOAT,
             allowNull: false
         },
         x: {
@@ -57,11 +45,5 @@ module.exports = (sequelize, DataTypes) => {
     {
         timestamps: false
     });
-
-    model.associate = (models) => {
-        model.belongsTo(models.Garage, {
-            foreignKey: "garageId"
-        });
-    };
     return model;
 };

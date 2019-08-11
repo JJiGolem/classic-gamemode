@@ -7,7 +7,6 @@ let cost = null;
 mp.events.add('house.menu', (houseInfo) => {
     mp.gui.cursor.show(true, true);
     houseInfo.area =  mp.game.ui.getLabelText(mp.game.zone.getNameOfZone(houseInfo.pos[0], houseInfo.pos[1], houseInfo.pos[2]));
-    mp.console(JSON.stringify(houseInfo));
     mp.callCEFR('house.menu', []);
     mp.callCEFR('house.load', [houseInfo]);
 });
@@ -17,9 +16,14 @@ mp.events.add('house.menu.close', (isServer) => {
     mp.gui.cursor.show(false, false);
 });
 
-mp.events.add('house.menu.enter', (place) => {
-    mp.gui.cursor.show(true, true);
-    mp.callCEFR('house.menu.enter', [place]);
+mp.events.add('house.menu.enter', (place, isHaveGarage) => {
+    if (isHaveGarage) {
+        mp.gui.cursor.show(true, true);
+        mp.callCEFR('house.menu.enter', [place]);
+    }
+    else {
+        mp.events.callRemote('house.enter', place == 1 ? 0 : 1);
+    }
 });
 
 mp.events.add('house.menu.enter.close', (isServer) => {
@@ -32,6 +36,7 @@ mp.events.add('house.enter', (place) => {
 });
 
 mp.events.add('house.enter.ans', (isInfoPanel, pos, rot) => {
+    mp.console(JSON.stringify({isInfoPanel, pos, rot}));
     if (pos) {
         mp.players.local.setHeading(rot);
         mp.players.local.position = pos;

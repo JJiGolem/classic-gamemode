@@ -54,7 +54,10 @@ module.exports = {
     async init() {
         console.log("[HOUSES] load houses from DB");
         let infoHouses = await db.Models.House.findAll({
-            include: [db.Models.Interior]
+            include: [{ model: db.Models.Interior,
+                    include: [db.Models.Garage]
+                }
+            ]
         });
         for (let i = 0; i < infoHouses.length; i++) {
             this.addHouse(infoHouses[i]);
@@ -80,8 +83,20 @@ module.exports = {
             rotation: new mp.Vector3(0, 180, 0),
             dimension: dimension
         });
+        let exitGarageMarker = null;
+        if (houseInfo.Interior.Garage != null) {
+            exitGarageMarker = mp.markers.new(2, new mp.Vector3(houseInfo.Interior.Garage.exitX, houseInfo.Interior.Garage.exitY, houseInfo.Interior.Garage.exitZ), 0.75, {
+                rotation: new mp.Vector3(0, 180, 0),
+                dimension: dimension
+            });
+        }
+        
         let enterColshape = mp.colshapes.newTube(houseInfo.pickupX, houseInfo.pickupY, houseInfo.pickupZ, 2.0, 1.0, 0);
         let exitColshape = mp.colshapes.newSphere(houseInfo.Interior.exitX, houseInfo.Interior.exitY, houseInfo.Interior.exitZ, 1.0, dimension);
+        let exitGarageColshape = null;
+        if (houseInfo.Interior.Garage != null) {
+            exitGarageColshape = mp.colshapes.newSphere(houseInfo.Interior.Garage.exitX, houseInfo.Interior.Garage.exitY, houseInfo.Interior.Garage.exitZ, 1.0, dimension);
+        }
         let blip = mp.blips.new(40, new mp.Vector3(houseInfo.pickupX, houseInfo.pickupY, houseInfo.pickupZ),
         {
             shortRange: true,
@@ -91,16 +106,21 @@ module.exports = {
 
         enterColshape.marker = enterMarker;
         exitColshape.marker = exitMarker;
+        if (exitGarageColshape != null) exitGarageColshape.marker = exitGarageMarker;
         enterColshape.index = houses.length;
         exitColshape.index = houses.length;
+        if (exitGarageColshape != null) exitGarageColshape.index = houses.length;
         enterColshape.isHouse = true;
         exitColshape.isHouse = true;
+        if (exitGarageColshape != null) exitGarageColshape.isHouse = true;
         enterColshape.place = 0;
         exitColshape.place = 1;
+        if (exitGarageColshape != null) exitGarageColshape.place = 2;
 
         houses.push({
                 enter: enterColshape,
                 exit: exitColshape,
+                exitGarage: exitGarageColshape,
                 blip: blip,
                 info: houseInfo
             }
@@ -143,8 +163,8 @@ module.exports = {
             name: info.id,
             class: info.Interior.class,
             numRooms:  info.Interior.numRooms,
-            garage:  info.Interior.garage,
-            carPlaces:  info.Interior.carPlaces,
+            garage:  info.Interior.Garage != null,
+            carPlaces:  info.Interior.Garage.carPlaces,
             rent: info.price * info.Interior.rent,
             isOpened: info.isOpened,
             improvements: new Array(),
@@ -165,9 +185,9 @@ module.exports = {
                     buyer.call('phone.app.add', ["house", {
                         name: houses[i].info.id,
                         class: houses[i].info.Interior.class,
-                        numRooms:  houses[i].info.Interior.numRooms,
-                        garage:  houses[i].info.Interior.garage,
-                        carPlaces:  houses[i].info.Interior.carPlaces,
+                        numRooms: houses[i].info.Interior.numRooms,
+                        garage: houses[i].info.Interior.Garage != null,
+                        carPlaces: houses[i].info.Interior.Garage.carPlaces,
                         rent:  houses[i].info.price * houses[i].info.Interior.rent,
                         isOpened: houses[i].info.isOpened,
                         improvements: new Array(),
