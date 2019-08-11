@@ -989,8 +989,6 @@ var selectMenu = new Vue({
                         itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
                         valueIndex: item.i, // индекс значения пункта меню
                     };
-                    mp.trigger(`chat.message.push`, `!{#ffffff} Событие: ${eventName}`);
-                    mp.trigger(`chat.message.push`, `!{#ffffff} ${JSON.stringify(e)}`);
                     if (eventName == 'onItemValueChanged') {
                         if (e.itemName == 'Модель') {
                             mp.trigger(`carshow.vehicle.show`, e.valueIndex);

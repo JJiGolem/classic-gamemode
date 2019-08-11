@@ -49,12 +49,26 @@ mp.events.add('carmarket.sellmenu.close', () => {
     mp.callCEFV(`selectMenu.menu = null`);
 });
 
-mp.events.add('carmarket.buymenu.show', () => {
+mp.events.add('carmarket.buymenu.show', (data) => {
+    if (!data) return;
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["carMarketBuyMenu"])`);
+
+    mp.callCEFV(`carSpecifications.body = {
+        name: { header: 'Название', value: '${data.name}', unit: '' },
+        regDate: { header: 'Дата регистрации', value: '${dateFormatter(data.regDate)}', unit: '' },
+        owners: { header: 'Владельцев', value: '${data.owners}', unit: '' },
+        mileage: { header: 'Пробег', value: '${data.mileage}', unit: 'км' },
+    };
+    carSpecifications.price = '${data.price}'
+    `);
+
+
+    mp.callCEFV(`carSpecifications.show = true`);
     mp.callCEFV(`selectMenu.show = true`);
 });
 
 mp.events.add('carmarket.buymenu.close', () => {
+    mp.callCEFV(`carSpecifications.show = false`);
     mp.callCEFV(`selectMenu.menu = null`);
 });
 
@@ -80,3 +94,14 @@ mp.events.add('carmarket.car.buy.ans', (ans, data) => {
             break;
     }
 });
+
+
+function dateFormatter(date) {
+    if (!date) return '11-09-2001';
+    //mp.chat.debug(date);
+    date = date.split('-');
+    //mp.chat.debug(date);
+    let newDate = `${date[2]}-${date[1]}-${date[0]}`;
+
+    return newDate;
+}

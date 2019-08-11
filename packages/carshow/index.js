@@ -49,7 +49,7 @@ module.exports = {
                 color: carShow.blipColor,
                 shortRange: true,
             });
-        mp.markers.new(1, new mp.Vector3(carShow.x, carShow.y, carShow.z), 2,
+        mp.markers.new(1, new mp.Vector3(carShow.x, carShow.y, carShow.z), 1.6,
             {
                 direction: new mp.Vector3(carShow.x, carShow.y, carShow.z),
                 rotation: 0,
@@ -57,12 +57,12 @@ module.exports = {
                 visible: true,
                 dimension: 0
             });
-        let shape = mp.colshapes.newSphere(carShow.x, carShow.y, carShow.z, 2);
+        let shape = mp.colshapes.newSphere(carShow.x, carShow.y, carShow.z + 0.5, 2);
         shape.isCarShow = true;
         shape.carShowId = carShow.id;
         
         let shortName = carShow.name.split(' ')[0];
-        let label = mp.labels.new(`${shortName}`, new mp.Vector3(carShow.x, carShow.y, carShow.z + 1.5),
+        let label = mp.labels.new(`${shortName}`, new mp.Vector3(carShow.x, carShow.y, carShow.z + 1.7),
         {
             los: false,
             font: 0,
@@ -149,10 +149,13 @@ module.exports = {
         for (var i = 0; i < carList.length; i++) {
             if (carList[i].sqlId == carId) {
                 // проверки на деньги и т д
+                if (player.character.cash < carList[i].properties.price) return player.call('carshow.car.buy.ans', [2]);
                 if (carList[i].count < 1) return player.call('carshow.car.buy.ans', [0]);
                 try {
                     var carPlate = vehicles.generateVehiclePlate();
-
+                    let parking = parkings.getClosestParkingId(player);
+                    let parkingInfo = parkings.getParkingInfoById(parking);
+                    console.log(parkingInfo);
                     var data = await db.Models.Vehicle.create({
                         key: "private",
                         owner: player.character.id,
@@ -163,7 +166,7 @@ module.exports = {
                         y: 0,
                         z: 0,
                         h: 0,
-                        parkingId: parkings.getClosestParkingId(player),
+                        parkingId: parking,
                         plate: carPlate
                     });
                     var veh = {
@@ -176,10 +179,16 @@ module.exports = {
                         y: 0,
                         z: 0,
                         h: 0,
-                        parkingId: parkings.getClosestParkingId(player),
+                        parkingId: parking,
                         fuel: 50,
                         mileage: 0,
-                        plate: carPlate
+                        plate: carPlate,
+                        engineState: 0,
+                        fuelState: 0,
+                        steeringState: 0,
+                        brakeState: 0,
+                        destroys: 0,
+                        parkingHours: 0
                     }
                     veh.sqlId = data.id;
                     veh.db = data;
@@ -189,7 +198,7 @@ module.exports = {
                         count: carList[i].count - 1
                     });
                     carList[i].count = carList[i].count - 1;
-                    player.call('carshow.car.buy.ans', [1, carList[i]]);
+                    player.call('carshow.car.buy.ans', [1, carList[i], parkingInfo]);
                 } catch (err) {
                     console.log(err);
                     player.call('carshow.car.buy.ans', [2]);
