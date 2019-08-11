@@ -203,6 +203,8 @@ module.exports = {
 
         housesService.sellHouse(mp.players.at(player.house.sellerIndex).house.sellingHouseIndex, mp.players.at(player.house.sellerIndex).house.sellingHouseCost,
             mp.players.at(player.house.sellerIndex), player, function(ans) {
+                console.log("OK 10");
+                console.log(ans);
                 if (ans) {
                     mp.players.at(player.house.sellerIndex).call("house.sell.ans", [1]);
                 }
