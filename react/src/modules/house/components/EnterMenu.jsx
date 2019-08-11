@@ -155,7 +155,7 @@ class EnterMenu extends Component {
     }
 
     getAnswer() {
-        const { setAnswer, house } = this.props;
+        const { setAnswer } = this.props;
 
         return (
             <div onClick={() => {
