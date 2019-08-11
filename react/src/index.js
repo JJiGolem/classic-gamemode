@@ -11,7 +11,7 @@ import './styles/animations.css';
 import myEventEmmiter from './helpers/events.js';
 
 // eslint-disable-next-line no-undef
-mp.events = myEventEmmiter;
+// mp.events = myEventEmmiter;
 
 ReactDOM.render(
     <Provider store={store}>
