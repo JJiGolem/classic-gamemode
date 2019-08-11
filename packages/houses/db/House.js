@@ -1,7 +1,7 @@
 "use strict";
 const Sequelize = require('sequelize');
 
-/// Модель телефона персоонажа
+/// Модель информации о доме
 module.exports = (sequelize, DataTypes) => {
     const model = sequelize.define("House", {
         id: {
@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: true
         },
+        interiorId: {
+            type: DataTypes.INTEGER(11),
+            allowNull: false
+        },
         price: {
             type: DataTypes.INTEGER(11),
             allowNull: false
@@ -20,10 +24,6 @@ module.exports = (sequelize, DataTypes) => {
         characterNick: {
             type: DataTypes.STRING(50),
             allowNull: true
-        },
-        interiorId: {
-            type: DataTypes.INTEGER(11),
-            allowNull: false
         },
         isOpened: {
             type: DataTypes.INTEGER(1),

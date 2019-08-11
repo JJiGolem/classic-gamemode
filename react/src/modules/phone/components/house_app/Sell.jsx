@@ -41,9 +41,9 @@ class Sell extends Component {
             // eslint-disable-next-line no-undef
             mp.trigger('house.sell.check', house.name, userId, parseInt(sellPrice));
 
-            // setTimeout(() => {
-            //     setSellInfo({nick: 'Dun', price: this.state.sellPrice})
-            // }, 1000)
+            /*setTimeout(() => {
+                setSellInfo({nick: 'Dun', price: this.state.sellPrice})
+            }, 1000)*/
         }
     }
 
