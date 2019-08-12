@@ -198,6 +198,8 @@ module.exports = {
     },
     "/tempwear": {
         access: 6,
+        description: "Выдача временного набора одежды",
+        args: "[ID набора]",
         handler: (player, args) => {
             if (args[0] == 0) {
                 // player.setHeadOverlay(1, [9, 0, 0, 0]);
@@ -257,6 +259,14 @@ module.exports = {
             if (args[0] == 0) {
                 player.setHeadOverlay(2, [1, 1, 0, 0]);
                 player.setClothes(2, 4, 0, 0);
+            }
+            if (args[0] == 1) {
+                player.setHeadOverlay(2, [1, 1, 0, 0]);
+                player.setClothes(2, 12, 0, 0);
+            }
+            if (args[0] == 2) {
+                player.setHeadOverlay(2, [1, 1, 0, 0]);
+                player.setClothes(2, 0, 0, 0);
             }
         }
     }

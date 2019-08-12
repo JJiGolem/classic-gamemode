@@ -23,7 +23,7 @@ var bindASCIIKeys = {
   LCtrl: 17,
   Shift: 16
 };
-mp.game.graphics.notify('~r~NoClip ~w~by ~b~Morbo');
+//mp.game.graphics.notify('~r~NoClip ~w~by ~b~Morbo');
 var isNoClip = false;
 var noClipCamera;
 var shiftModifier = false;
