@@ -921,7 +921,7 @@ var selectMenu = new Vue({
                 }
             },
             /// КОНЕЦ меню для создания персоонажа
-            /// ********************************************************************************
+            /// ****************************************************************************************************************************************************************
             "parkingMenu": {
                 name: "parking",
                 header: "Парковка", // заголовок меню, видимый на экране
@@ -1114,6 +1114,42 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Закрыть') {
                             mp.trigger(`carservice.jobmenu.close`);
                         }
+                    }
+                }
+            },
+            "houseAddMenu": {
+                name: "houseadd",
+                header: "Добавление дома",
+                items: [{
+                        text: "Поставить вход в дом",
+                        i: 0,
+                    },
+                    {
+                        text: "Поставить выход из дома",
+                        i: 0,
+                    },
+                    {
+                        text: "Создать место для парковки автомобиля",
+                        i: 0,
+                    },
+                    {
+                        text: "Закрыть",
+                        i: 0,
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        
                     }
                 }
             },

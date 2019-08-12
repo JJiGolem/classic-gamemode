@@ -1,9 +1,9 @@
 "use strict";
 const Sequelize = require('sequelize');
 
-/// Модель интерьера в доме
+/// Модель мест в гараже
 module.exports = (sequelize, DataTypes) => {
-    const model = sequelize.define("Interior", {
+    const model = sequelize.define("GaragePlace", {
         id: {
             type: DataTypes.INTEGER(11),
             primaryKey: true,
@@ -11,18 +11,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         garageId: {
             type: DataTypes.INTEGER(11),
-            allowNull: true
-        },
-        class: {
-            type: DataTypes.STRING(50),
-            allowNull: false
-        },
-        numRooms: {
-            type: DataTypes.INTEGER(11),
-            allowNull: false
-        },
-        rent: {
-            type: DataTypes.FLOAT,
             allowNull: false
         },
         x: {
@@ -37,20 +25,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.FLOAT,
             allowNull: false
         },
-        rotation: {
+        angle: {
             type: DataTypes.INTEGER(11),
             allowNull: false
         },
-        exitX: {
-            type: DataTypes.FLOAT,
-            allowNull: false
-        },
-        exitY: {
-            type: DataTypes.FLOAT,
-            allowNull: false
-        },
-        exitZ: {
-            type: DataTypes.FLOAT,
+        dimension: {
+            type: DataTypes.INTEGER(11),
             allowNull: false
         },
     }, 

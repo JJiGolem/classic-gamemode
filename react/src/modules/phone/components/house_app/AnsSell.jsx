@@ -15,23 +15,23 @@ class AnsSell extends Component {
     getAnsPage(status) {
         const { addApp, closeApp } = this.props;
 
-        if (status === 0) {
+        if (status == 0) {
             closeApp();
             closeApp();
             addApp({ name: 'Error', form: <Error status='Ошибка'/> });
         }
-        else if (status === 1) {
+        else if (status == 1) {
             closeApp();
             closeApp();
             addApp({ name: 'Success', form: <Success /> });
         }
-        else if (status === 2) {
+        else if (status == 2) {
             closeApp();
             closeApp();
             addApp({ name: 'Error', form: <Error status='Покупатель не принял условия сделки'/> });
         }
 
-        else if (status === 3) {
+        else if (status == 3) {
             closeApp();
             closeApp();
             addApp({ name: 'Error', form: <Error status='Вы находитесь не рядом с домом'/> });
@@ -42,13 +42,12 @@ class AnsSell extends Component {
         const { info } = this.props;
 
         return (
-            <div className='back_page-phone-react'>
+            <Fragment>
                 {
                     info.houses[0].sellStatus != null
-                        ? <Fragment>{this.getAnsPage(info.houses[0].sellStatus)}</Fragment>
-                        : <div className="loader01" style={{ margin: '10% 5%' }}></div>
+                    && <Fragment>{this.getAnsPage(info.houses[0].sellStatus)}</Fragment>
                 }
-            </div>
+            </Fragment>
         );
     }
 }

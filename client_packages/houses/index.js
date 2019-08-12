@@ -16,9 +16,14 @@ mp.events.add('house.menu.close', (isServer) => {
     mp.gui.cursor.show(false, false);
 });
 
-mp.events.add('house.menu.enter', (place) => {
-    mp.gui.cursor.show(true, true);
-    mp.callCEFR('house.menu.enter', [place]);
+mp.events.add('house.menu.enter', (place, isHaveGarage) => {
+    if (isHaveGarage) {
+        mp.gui.cursor.show(true, true);
+        mp.callCEFR('house.menu.enter', [place]);
+    }
+    else {
+        mp.events.callRemote('house.enter', place == 1 ? 0 : 1);
+    }
 });
 
 mp.events.add('house.menu.enter.close', (isServer) => {
@@ -31,6 +36,7 @@ mp.events.add('house.enter', (place) => {
 });
 
 mp.events.add('house.enter.ans', (isInfoPanel, pos, rot) => {
+    mp.console(JSON.stringify({isInfoPanel, pos, rot}));
     if (pos) {
         mp.players.local.setHeading(rot);
         mp.players.local.position = pos;
