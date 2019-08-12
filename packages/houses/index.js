@@ -1,6 +1,7 @@
 "use strict";
 /// Массив всех домов на сервере
 let houses = new Array();
+let interiors = new Array();
 let money = call('money');
 
 /// Функции модуля системы домов
@@ -63,7 +64,13 @@ module.exports = {
             this.addHouse(infoHouses[i]);
             this.setTimer(i);
         }
-        console.log("[HOUSES] " + infoHouses.length + " loaded");
+        console.log("[HOUSES] " + infoHouses.length + " houses loaded");
+        console.log("[HOUSES] load interiors from DB");
+        interiors = await db.Models.Interior.findAll();
+        console.log("[HOUSES] " + interiors.length + " interiors loaded");
+    },
+    getInteriors() {
+        return interiors;
     },
     addHouse(houseInfo) {
         let dimension = houseInfo.id;
