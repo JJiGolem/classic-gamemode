@@ -168,6 +168,13 @@ module.exports = {
         }
         return clientItem;
     },
+    addItem() {
+
+    },
+    deleteItem(player, sqlId) {
+        console.log("deleteItem")
+        console.log(sqlId)
+    },
     getItem(player, sqlId) {
         for (var i = 0; i < player.inventory.items.length; i++) {
             var item = player.inventory.items[i];
