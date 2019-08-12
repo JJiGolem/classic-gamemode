@@ -18,6 +18,10 @@ function prettyMoney(val) {
     return val.replace(/(\d)(?=(\d{3})+(\D|$))/g, '$1 ');
 }
 
+function setCursor(enable) {
+    mp.invoke('focus', enable);
+}
+
 function cloneObj(inObj) {
     let outObj = JSON.parse(JSON.stringify(inObj));
     for (let key in inObj) {

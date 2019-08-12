@@ -46,11 +46,11 @@ mp.console = function(object) {
 /// Управление камерой
 mp.utils.cam = require('utils/camera.js');
 
-/// Convert the object to a string 
+/// Convert the object to a string
 mp.utils.objToString = (obj) => {
     var rs = '';
     var not_first = false;
-    
+
     for(var k in obj){
         if(not_first) rs += ',';
         if(typeof obj[k] === 'object'){
@@ -66,3 +66,14 @@ mp.utils.objToString = (obj) => {
     }
     return rs;
 }
+
+// Вкл/выкл блюр на экране
+mp.events.add("blur", (enable, time = 1000) => {
+    if (enable) mp.game.graphics.transitionToBlurred(time);
+    else mp.game.graphics.transitionFromBlurred(time);
+});
+
+// Вкл визуальный эффект
+mp.events.add('effect', (effect, duration) => {
+    mp.game.graphics.startScreenEffect(effect, duration, false);
+});
