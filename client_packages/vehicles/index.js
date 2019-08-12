@@ -402,3 +402,14 @@ let sirenLightsUpdater = setInterval(() => {
     }
 
 }, 1000);
+
+
+mp.vehicles.getVehiclePosition = (vehicle) => {
+    let data = {
+        x: vehicle.position.x,
+        y: vehicle.position.y,
+        z: vehicle.position.z,
+        h: vehicle.getHeading()
+    }
+    return data;
+}
