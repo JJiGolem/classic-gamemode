@@ -6,6 +6,7 @@ module.exports = {
     init() {
         // для удобства использования
         console.logObject = this.logObject;
+        Math.clamp = this.clamp;
     },
     /// Отправка писем на почту
     sendMail(to, subject, message) {
@@ -41,4 +42,7 @@ module.exports = {
             depth: null
         }));
     },
+    clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+    }
 };

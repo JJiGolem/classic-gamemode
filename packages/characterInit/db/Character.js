@@ -81,35 +81,35 @@ module.exports = (sequelize, DataTypes) => {
         },
         /// Лицензии
         carLicense: {
-			type: DataTypes.TINYINT(1),
-			defaultValue: 0,
-			allowNull: false
+            type: DataTypes.TINYINT(1),
+            defaultValue: 0,
+            allowNull: false
         },
         passengerLicense: {
-			type: DataTypes.TINYINT(1),
-			defaultValue: 0,
-			allowNull: false
+            type: DataTypes.TINYINT(1),
+            defaultValue: 0,
+            allowNull: false
         },
         bikeLicense: {
-			type: DataTypes.TINYINT(1),
-			defaultValue: 0,
-			allowNull: false
+            type: DataTypes.TINYINT(1),
+            defaultValue: 0,
+            allowNull: false
         },
         truckLicense: {
-			type: DataTypes.TINYINT(1),
-			defaultValue: 0,
-			allowNull: false
+            type: DataTypes.TINYINT(1),
+            defaultValue: 0,
+            allowNull: false
         },
         airLicense: {
-			type: DataTypes.TINYINT(1),
-			defaultValue: 0,
-			allowNull: false
+            type: DataTypes.TINYINT(1),
+            defaultValue: 0,
+            allowNull: false
         },
         boatLicense: {
-			type: DataTypes.TINYINT(1),
-			defaultValue: 0,
-			allowNull: false
-		},
+            type: DataTypes.TINYINT(1),
+            defaultValue: 0,
+            allowNull: false
+        },
         /// Внешность
         gender: {
             type: DataTypes.INTEGER(11),
@@ -167,8 +167,34 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: false
         },
-    }, 
-    {
+        health: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 100,
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, 100);
+                this.setDataValue('health', val);
+            },
+        },
+        satiety: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 100,
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, 100);
+                this.setDataValue('satiety', val);
+            },
+        },
+        thirst: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 100,
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, 100);
+                this.setDataValue('thirst', val);
+            },
+        }
+    }, {
         timestamps: false
     });
 

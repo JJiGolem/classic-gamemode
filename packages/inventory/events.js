@@ -4,6 +4,8 @@ module.exports = {
         inventory.init();
     },
     "characterInit.done": (player) => {
+        player.call("inventory.setSatiety", [player.character.satiety])
+        player.call("inventory.setThirst", [player.character.thirst]);
         inventory.initPlayerItemsInfo(player);
         inventory.initPlayerInventory(player);
     },
