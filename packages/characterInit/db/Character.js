@@ -167,6 +167,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: false
         },
+        // Здоровье, сытость, голод
         health: {
             type: DataTypes.INTEGER(11),
             defaultValue: 100,
