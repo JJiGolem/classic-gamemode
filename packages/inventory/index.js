@@ -172,8 +172,12 @@ module.exports = {
 
     },
     deleteItem(player, sqlId) {
-        console.log("deleteItem")
-        console.log(sqlId)
+        var item = this.getItem(player, sqlId);
+        if (!item) return console.log(`[inventory.deleteItem] Предмет #${sqlId} у ${player.name} не найден`);
+
+        if (!item.parentId) this.clearView(player, item.itemId);
+        item.destroy();
+        player.call("inventory.deleteItem", [sqlId]);
     },
     getItem(player, sqlId) {
         for (var i = 0; i < player.inventory.items.length; i++) {

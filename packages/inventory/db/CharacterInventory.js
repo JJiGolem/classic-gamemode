@@ -34,7 +34,8 @@ module.exports = (sequelize, DataTypes) => {
     model.associate = (models) => {
         model.hasMany(models.CharacterInventory, {
             as: "children",
-            foreignKey: "parentId"
+            foreignKey: "parentId",
+            onDelete: "cascade"
         });
 
         model.hasMany(models.CharacterInventoryParam, {
@@ -49,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
 
         model.belongsTo(models.Character, {
             as: "character",
-            foreignKey: "playerId"
+            foreignKey: "playerId",
         });
 
         model.belongsTo(models.InventoryItem, {

@@ -18,17 +18,18 @@ mp.inventory = {
     setItemsInfo(itemsInfo) {
         if (typeof itemsInfo == 'object') itemsInfo = JSON.stringify(itemsInfo);
         mp.callCEFV(`inventory.setItemsInfo('${itemsInfo}')`);
-    }
+    },
+    deleteItem(sqlId) {
+        mp.callCEFV(`inventory.deleteItem(${sqlId})`);
+    },
 };
 
 mp.events.add("characterInit.done", () => {
     mp.inventory.enable(true);
 });
 
-mp.events.add("inventory.initItems", (items) => {
-    mp.inventory.initItems(items);
-});
+mp.events.add("inventory.initItems", mp.inventory.initItems);
 
-mp.events.add("inventory.setItemsInfo", (itemsInfo) => {
-    mp.inventory.setItemsInfo(itemsInfo);
-});
+mp.events.add("inventory.setItemsInfo", mp.inventory.setItemsInfo);
+
+mp.events.add("inventory.deleteItem", mp.inventory.deleteItem);
