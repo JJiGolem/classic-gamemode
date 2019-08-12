@@ -16,14 +16,15 @@ module.exports = {
         if (data.placeSqlId > 0 || data.placeSqlId == null) { // переместил в свой карман или на себя
             var item = inventory.getItem(player, data.sqlId);
             if (item) { // предмет уже есть у игрока
+                if (item.parentId == null && data.placeSqlId) { // снял вещь
+                    inventory.clearView(player, item.itemId);
+                } else if (item.parentId && data.placeSqlId == null) { // надел вещь
+                    inventory.updateView(player, item);
+                }
                 item.pocketIndex = data.pocketI;
                 item.index = data.index,
                 item.parentId = data.placeSqlId;
-                console.log(item)
                 item.save();
-                if (item.parentId == null) { // надел вещь
-                    inventory.updateView(player, item);
-                }
             } else { // игрок взял предмет из окруж. среды
 
 
