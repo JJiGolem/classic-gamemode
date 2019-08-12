@@ -1,9 +1,29 @@
 "use strict";
 
 module.exports = {
+    // Общая информация о предметах
     inventoryItems: [],
-    clientInventoryItems: {}, // объект, подготовленный для отправки на клиент игрока
+    // Объект, подготовленный для отправки на клиент игрока
+    clientInventoryItems: {},
+    // Маски, при надевании которых, нужно скрывать волосы
     masksWithHideHairs: [114],
+    // Вайт-лист предметов, которые можно надеть
+    bodyList: {
+        // columnIndex: [itemId, ...]
+        0: [1],
+        1: [6],
+        2: [14],
+        3: [2],
+        4: [3],
+        5: [7],
+        6: [11],
+        7: [10],
+        8: [12],
+        9: [], // автоматы
+        10: [13],
+        11: [8],
+        12: [9],
+    },
 
     init() {
         this.loadInventoryItemsFromDB();
@@ -36,6 +56,7 @@ module.exports = {
         console.log(`[INVENTORY] Для игрока ${player.character.name} загружена общая информация о предметах`);
     },
     async initPlayerInventory(player) {
+        this.clearAllView(player);
         // TODO: include in include in include... WTF??? (08.08.19 Carter Slade)
         var dbItems = await db.Models.CharacterInventory.findAll({
             where: {
@@ -102,6 +123,7 @@ module.exports = {
             denyUpdateView: false, // запрещено ли обновлять внешний вид игрока
             items: dbItems, // предметы игрока
         };
+        this.updateAllView(player);
         player.call(`inventory.initItems`, [this.convertServerToClientPlayerItems(dbItems)]);
         console.log(`[INVENTORY] Для игрока ${player.character.name} загружены предметы (${dbItems.length} шт.)`);
     },
@@ -174,7 +196,7 @@ module.exports = {
         };
         var otherItems = {
             "3": () => {
-                player.armour = parseInt(params.armour);
+                player.armour = parseInt(params.health);
                 player.setClothes(9, params.variation, params.texture, 0);
             },
             "7": () => {
@@ -213,11 +235,12 @@ module.exports = {
         };
         var otherItems = {
             "3": () => {
-                for (var key in player.inventory.items) {
-                    var item = player.inventory.items[key];
-                    if (item.itemId == itemId) {
-                        item.params.armour = parseInt(player.armour);
-                        player.inventory.updateParams(key, item);
+                if (player.inventory) {
+                    for (var i = 0; i < player.inventory.items.length; i++) {
+                        var item = player.inventory.items[i];
+                        if (!item.parentId && item.itemId == itemId) {
+                            this.updateParam(item, "health", parseInt(player.armour));
+                        }
                     }
                 }
                 player.armour = 0;
@@ -252,6 +275,21 @@ module.exports = {
             otherItems[itemId]();
         } else return console.log("Неподходящий тип предмета для тела!");
     },
+    updateAllView(player) {
+        for (var i = 0; i < player.inventory.items.length; i++) {
+            var item = player.inventory.items[i];
+            if (item.parentId) continue;
+            this.updateView(player, item);
+        }
+    },
+    clearAllView(player) {
+        for (var index in this.bodyList) {
+            var itemIds = this.bodyList[index];
+            itemIds.forEach((itemId) => {
+                this.clearView(player, itemId);
+            });
+        }
+    },
     getParam(item, key) {
         for (var i = 0; i < item.params.length; i++) {
             var param = item.params[i];
@@ -266,5 +304,11 @@ module.exports = {
             params[param.key] = param.value;
         }
         return params;
+    },
+    updateParam(item, key, value) {
+        var param = this.getParam(item, key);
+        if (!param) return;
+        param.value = value;
+        param.save();
     },
 };
