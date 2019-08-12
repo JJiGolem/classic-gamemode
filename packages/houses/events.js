@@ -27,7 +27,7 @@ module.exports = {
                     class: info.Interior.class,
                     numRooms: info.Interior.numRooms,
                     garage: info.Interior.Garage != null,
-                    carPlaces: info.Interior.Garage.carPlaces,
+                    carPlaces: info.Interior.Garage != null ? info.Interior.Garage.carPlaces : 1,
                     rent: info.price * info.Interior.rent,
                     price: info.price,
                     pos: [info.pickupX, info.pickupY, info.pickupZ]
@@ -39,7 +39,7 @@ module.exports = {
                     class: info.Interior.class,
                     numRooms: info.Interior.numRooms,
                     garage: info.Interior.Garage != null,
-                    carPlaces: info.Interior.Garage.carPlaces,
+                    carPlaces: info.Interior.Garage != null ? info.Interior.Garage.carPlaces : 1,
                     rent: info.price * info.Interior.rent,
                     owner: info.characterNick,
                     pos: [info.pickupX, info.pickupY, info.pickupZ]
