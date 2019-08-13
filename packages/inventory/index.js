@@ -139,9 +139,11 @@ module.exports = {
     convertServerToClientItem(dbItem) {
         // console.log(`convertServerToClientItem`);
         var params = {};
-        for (var i = 0; i < dbItem.params.length; i++) {
-            var param = dbItem.params[i];
-            params[param.key] = param.value;
+        if (dbItem.params) {
+            for (var i = 0; i < dbItem.params.length; i++) {
+                var param = dbItem.params[i];
+                params[param.key] = param.value;
+            }
         }
         var clientItem = {
             sqlId: dbItem.id,
@@ -168,16 +170,45 @@ module.exports = {
         }
         return clientItem;
     },
-    addItem() {
+    async addItem(player, itemId, pocketIndex, index, parentId, params) {
+        var struct = [];
+        for (var key in params) {
+            struct.push({
+                key: key,
+                value: params[key]
+            });
+        }
+        var item = await db.Models.CharacterInventory.create({
+            playerId: player.character.id,
+            itemId: itemId,
+            pocketIndex: pocketIndex,
+            index: index,
+            parentId: parentId,
+            params: struct,
+            children: [],
+        }, {
+            include: [{
+                    model: db.Models.CharacterInventoryParam,
+                    as: "params",
+                },
+                {
+                    model: db.Models.CharacterInventory,
+                    as: "children"
+                }
+            ]
+        });
 
+        player.inventory.items.push(item);
+        if (!item.parentId) this.updateView(player, item);
+        player.call("inventory.addItem", [this.convertServerToClientItem(item), pocketIndex, index, parentId]);
     },
-    deleteItem(player, sqlId) {
-        var item = this.getItem(player, sqlId);
-        if (!item) return console.log(`[inventory.deleteItem] Предмет #${sqlId} у ${player.name} не найден`);
+    deleteItem(player, item) {
+        if (typeof item == 'number') item = this.getItem(player, item);
+        if (!item) return console.log(`[inventory.deleteItem] Предмет #${item} у ${player.name} не найден`);
 
         if (!item.parentId) this.clearView(player, item.itemId);
         item.destroy();
-        player.call("inventory.deleteItem", [sqlId]);
+        player.call("inventory.deleteItem", [item.id]);
     },
     getItem(player, sqlId) {
         for (var i = 0; i < player.inventory.items.length; i++) {

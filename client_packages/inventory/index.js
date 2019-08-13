@@ -19,6 +19,10 @@ mp.inventory = {
         if (typeof itemsInfo == 'object') itemsInfo = JSON.stringify(itemsInfo);
         mp.callCEFV(`inventory.setItemsInfo('${itemsInfo}')`);
     },
+    addItem(item, pocket, index, parent) {
+        if (typeof item == 'object') item = JSON.stringify(item);
+        mp.callCEFV(`inventory.addItem('${item}', ${pocket}, ${index}, ${parent})`);
+    },
     deleteItem(sqlId) {
         mp.callCEFV(`inventory.deleteItem(${sqlId})`);
     },
@@ -39,6 +43,8 @@ mp.events.add("inventory.initItems", mp.inventory.initItems);
 mp.events.add("inventory.setItemsInfo", mp.inventory.setItemsInfo);
 
 mp.events.add("inventory.deleteItem", mp.inventory.deleteItem);
+
+mp.events.add("inventory.addItem", mp.inventory.addItem);
 
 mp.events.add("inventory.setSatiety", mp.inventory.setSatiety);
 

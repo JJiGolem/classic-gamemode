@@ -152,7 +152,10 @@ var inventory = new Vue({
         },
         // Блек-лист предметов, которые не могу храниться в других предметах
         blackList: {
+            // parentItemId: [cildItemId, ...]
+            3: [13],
             7: [13],
+            8: [13],
         },
         // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
         environment: [],
@@ -501,6 +504,8 @@ var inventory = new Vue({
         addItem(item, pocket, index, parent) {
             if (typeof item == 'number') item = this.getItem(item);
             if (typeof parent == 'number') parent = this.getItem(parent);
+            if (typeof item == 'string') item = JSON.parse(item);
+            if (typeof parent == 'string') parent = JSON.parse(parent);
 
             this.deleteItem(item.sqlId);
             this.deleteEnvironmentItem(item.sqlId);
