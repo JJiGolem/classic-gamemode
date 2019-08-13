@@ -2,6 +2,7 @@
 /// Массив всех домов на сервере
 let houses = new Array();
 let interiors = new Array();
+let garages = new Array();
 let money = call('money');
 
 /// Функции модуля системы домов
@@ -70,9 +71,14 @@ module.exports = {
         console.log("[HOUSES] load interiors from DB");
         interiors = await db.Models.Interior.findAll();
         console.log("[HOUSES] " + interiors.length + " interiors loaded");
+        garages = await db.Models.Garage.findAll();
+        console.log("[HOUSES] " + garages.length + " garages loaded");
     },
     getInteriors() {
         return interiors;
+    },
+    getGarages() {
+        return garages;
     },
     async createHouse(houseInfo) {
         let house = await db.Models.House.create({
@@ -112,6 +118,32 @@ module.exports = {
         this.addHouse(house);
         this.setTimer(houses.length - 1);
         console.log("[HOUSES] added new house");
+    },
+    async createInterior(interiorInfo) {
+        let interior = await db.Models.Interior.create({
+            garageId: interiorInfo.garageId,
+            class: interiorInfo.class,
+            numRooms: interiorInfo.numRooms,
+            rent: interiorInfo.rent,
+            exitX: interiorInfo.exitX,
+            exitY: interiorInfo.exitY,
+            exitZ: interiorInfo.exitZ,
+            x: interiorInfo.x,
+            y: interiorInfo.y,
+            z: interiorInfo.z,
+            rotation: interiorInfo.rotation,
+        });
+        interiors.push(interior);
+        console.log("[HOUSES] added new interior");
+    },
+    async createGarage(garageInfo) {
+        let garage = await db.Models.Garage.create({
+
+        }, {
+            include: [db.Models.GaragePlace]
+        });
+        garages.push(garage);
+        console.log("[HOUSES] added new garage");
     },
     addHouse(houseInfo) {
         let dimension = houseInfo.id;

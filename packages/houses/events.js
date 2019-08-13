@@ -17,12 +17,20 @@ module.exports = {
     },
     "characterInit.done": (player) => {
         if (player.character.admin < 5) return;
+
         let interiors = housesService.getInteriors();
         let interiorsClasses = new Array();
         for (let i = 0; i < interiors.length; i++) {
             interiorsClasses.push({id: interiors[i].id, class: interiors[i].class});
         }
-        player.call('house.add.init', [interiorsClasses]);
+
+        let garages = housesService.getGarages();
+        let garagesIdCarPlaces = new Array();
+        for (let i = 0; i < garages.length; i++) {
+            garagesIdCarPlaces.push({id: garages[i].id, carPlaces: garages[i].carPlaces});
+        }
+
+        player.call('house.add.init', [interiorsClasses, garagesIdCarPlaces]);
     },
     "playerEnterColshape": (player, shape) => {
         if (!shape.isHouse) return;
@@ -230,8 +238,7 @@ module.exports = {
 
     },
     "house.add": (player, houseInfo) => {
-        houseInfo = JSON.parse(houseInfo);
-        housesService.createHouse(houseInfo);
+        housesService.createHouse(JSON.parse(houseInfo));
     },
     "house.add.carSpawn": (player) => {
         let vehicles = call("vehicles");
@@ -265,8 +272,12 @@ module.exports = {
         player.removeFromVehicle();
     },
     "house.add.carDrop": (player) => {
+        if (carPlaceVehicle == null) return;
         clearInterval(carPlaceVehicle.fuelTimer);
         carPlaceVehicle.destroy();
         carPlaceVehicle = null;
-    }
+    },
+    "house.add.interior": (player, interiorInfo) => {
+        housesService.createInterior(JSON.parse(interiorInfo));
+    },
 };
