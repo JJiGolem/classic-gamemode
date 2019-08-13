@@ -1121,6 +1121,15 @@ var selectMenu = new Vue({
                 name: "houseadd",
                 header: "Добавление дома",
                 items: [{
+                        text: "Выберите интерьер",
+                        values: [''],
+                        i: 0,
+                    },
+                    {
+                        text: "Введите стоимость",
+                        values: [""],
+                        type: "editable" // возможность редактирования значения пункта меню
+                    },{
                         text: "Поставить вход в дом",
                         values: ['No'],
                         i: 0,
@@ -1137,16 +1146,6 @@ var selectMenu = new Vue({
                         text: "Создать место для парковки автомобиля",
                         values: ['No'],
                         i: 0,
-                    },
-                    {
-                        text: "Выберите интерьер",
-                        values: [''],
-                        i: 0,
-                    },
-                    {
-                        text: "Введите стоимость",
-                        values: [""],
-                        type: "editable" // возможность редактирования значения пункта меню
                     },
                     {
                         text: "Создать",
@@ -1175,13 +1174,13 @@ var selectMenu = new Vue({
                                 mp.trigger("house.add.spawn");
                                 break;
                             case "Создать авто":
-                                
+                                mp.trigger("house.add.carSpawn");
                                 break;
                             case "Создать место для парковки автомобиля":
                                 mp.trigger("house.add.carPlace");
                                 break;
                             case "Создать":
-                                mp.trigger("house.add.create", this.items[4].i, this.items[5].values[0]);
+                                mp.trigger("house.add.create", this.items[0].i, this.items[1].values[0]);
                                 break;
                             case "Закрыть":
                                 mp.trigger("house.add.close");

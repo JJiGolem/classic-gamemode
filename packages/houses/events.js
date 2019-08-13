@@ -3,6 +3,8 @@
 let housesService = require("./index.js");
 let money = call('money');
 
+let carPlaceVehicle;
+
 module.exports = {
     /// Событие инициализации сервера
     "init": () => {
@@ -227,4 +229,44 @@ module.exports = {
         player.house.sellingHouseCost = null;
 
     },
+    "house.add": (player, houseInfo) => {
+        houseInfo = JSON.parse(houseInfo);
+        housesService.createHouse(houseInfo);
+    },
+    "house.add.carSpawn": (player) => {
+        let vehicles = call("vehicles");
+        if (vehicles == null) return;
+        if (carPlaceVehicle != null) {
+            clearInterval(carPlaceVehicle.fuelTimer);
+            carPlaceVehicle.destroy();
+            carPlaceVehicle = null;
+        }
+
+        let veh = {
+            modelName: "turismor",
+            x: player.position.x,
+            y: player.position.y,
+            z: player.position.z,
+            spawnHeading: player.heading,
+            color1: 54,
+            color2: 54,
+            license: 0,
+            key: "admin",
+            owner: 0,
+            fuel: 40,
+            mileage: 0,
+            plate: vehicles.generateVehiclePlate(),
+            //multiplier: 1
+        }
+        carPlaceVehicle = vehicles.spawnVehicle(veh);
+        player.putIntoVehicle(carPlaceVehicle, -1);
+    },
+    "house.add.removeFromVehicle": (player) => {
+        player.removeFromVehicle();
+    },
+    "house.add.carDrop": (player) => {
+        clearInterval(carPlaceVehicle.fuelTimer);
+        carPlaceVehicle.destroy();
+        carPlaceVehicle = null;
+    }
 };

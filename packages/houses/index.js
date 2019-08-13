@@ -56,7 +56,9 @@ module.exports = {
         console.log("[HOUSES] load houses from DB");
         let infoHouses = await db.Models.House.findAll({
             include: [{ model: db.Models.Interior,
-                    include: [db.Models.Garage]
+                    include: [{ model: db.Models.Garage,
+                        include: [db.Models.GaragePlace]
+                    }]
                 }
             ]
         });
@@ -71,6 +73,45 @@ module.exports = {
     },
     getInteriors() {
         return interiors;
+    },
+    async createHouse(houseInfo) {
+        let house = await db.Models.House.create({
+            interiorId: houseInfo.interiorId,
+            price: houseInfo.price,
+            isOpened: true,
+            pickupX: houseInfo.pickupX,
+            pickupY: houseInfo.pickupY,
+            pickupZ: houseInfo.pickupZ,
+            spawnX: houseInfo.spawnX,
+            spawnY: houseInfo.spawnY,
+            spawnZ: houseInfo.spawnZ,
+            angle: houseInfo.angle,
+            carX: houseInfo.carX,
+            carY: houseInfo.carY,
+            carZ: houseInfo.carZ,
+            carAngle: houseInfo.carAngle,
+        }, {
+            include: [{ model: db.Models.Interior,
+                    include: [{ model: db.Models.Garage,
+                        include: [db.Models.GaragePlace]
+                    }]
+                }
+            ]
+        });
+        house = await db.Models.House.findOne({
+            where: {
+                id: house.id
+            },
+            include: [{ model: db.Models.Interior,
+                    include: [{ model: db.Models.Garage,
+                        include: [db.Models.GaragePlace]
+                    }]
+                }
+            ]
+        });
+        this.addHouse(house);
+        this.setTimer(houses.length - 1);
+        console.log("[HOUSES] added new house");
     },
     addHouse(houseInfo) {
         let dimension = houseInfo.id;
