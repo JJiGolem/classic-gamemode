@@ -1,0 +1,67 @@
+
+#input-window {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 50vh;
+    background: rgb(0, 0, 0, 0.6);
+    border-radius: 2vh;
+    box-shadow: 0px 5px 10px #0008;
+    font-family: Montserrat;
+    color: white;
+}
+
+#input-window .header {
+    color: #f1d941;
+    font-weight: bold;
+    text-align: center;
+    font-size: 2.2vh;
+    margin: 1.8vh 0;
+}
+
+#input-window .body .hint {
+    text-align: center;
+    font-size: 1.6vh;
+}
+
+#input-window .body input {
+    width: 25vh;
+    height: 3.6vh;
+    margin: 1.5vh 0 3vh 50%;
+    transform: translate(-50%);
+    border-radius: 1vh;
+    border: none;
+    outline: none;
+    font-size: 1.6vh;
+    padding: 0 1.5vh;
+    color: #797979;
+}
+
+#input-window .footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    text-align: center;
+    height: 4.5vh;
+    line-height: 4.5vh;
+    font-size: 2vh;
+}
+
+#input-window .left {
+    background-color: rgba(37, 216, 76, 0.5);
+    border-radius: 0 0 0 2vh;
+}
+
+#input-window .left:hover {
+    background-color: rgba(37, 216, 76, 0.6);
+    /*box-shadow: 0px 1px 5px rgba(37, 216, 76, 0.6);*/
+}
+
+#input-window .right {
+    background-color: rgba(216, 37, 37, 0.5);
+    border-radius: 0 0 2vh 0;
+}
+
+#input-window .right:hover {
+    background-color: rgba(216, 37, 37, 0.6);
+}

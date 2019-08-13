@@ -242,5 +242,25 @@ module.exports = {
                 return carShow[i];
             }
         }
+    },
+    parseProps() {
+        for (let key in carshowdata) {
+            db.Models.VehicleProperties.create({
+                model: key,
+                name: carshowdata[key].name,
+                vehType: 0,
+                price: carshowdata[key].price,
+                maxFuel: 50,
+                consumption: 2
+            });
+        }
+    },
+    parseCarList() {
+        for (let key in carshowdata) {
+            db.Models.CarList.create({
+                carShowId: 1,
+                vehiclePropertyModel: key
+            });
+        }
     }
 }

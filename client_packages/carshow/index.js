@@ -95,10 +95,12 @@ mp.events.add('carshow.list.close', () => {
 mp.events.add('carshow.vehicle.show', (i) => {
     currentIndex = i;
     current.destroy();
-    current = mp.vehicles.new(mp.game.joaat(list[i].vehiclePropertyModel), new mp.Vector3(carShowInfo.toX, carShowInfo.toY, carShowInfo.toZ));
-    current.setHeading(carShowInfo.toH);
-    current.setColours(primary, secondary);
-    updateSpecifications(currentIndex);
+    if (current) {
+        current = mp.vehicles.new(mp.game.joaat(list[i].vehiclePropertyModel), new mp.Vector3(carShowInfo.toX, carShowInfo.toY, carShowInfo.toZ));
+        current.setHeading(carShowInfo.toH);
+        current.setColours(primary, secondary);
+        updateSpecifications(currentIndex);
+    }
 });
 
 mp.events.add('carshow.vehicle.color', (color1, color2) => {

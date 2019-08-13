@@ -27,6 +27,7 @@
     <link rel="stylesheet" type="text/css" href="css/inventory.css" />
     <link rel="stylesheet" type="text/css" href="css/carSpecifications.css" />
     <link rel="stylesheet" type="text/css" href="css/check.css" />
+    <link rel="stylesheet" type="text/css" href="css/inputWindow.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -662,6 +663,20 @@
         </div>
     </div>
 
+    
+    <div v-cloak="v-cloak" id="input-window" v-if="show">
+        <div class="header">{{ header }}</div>
+        <div class="body">
+            <div class="hint">{{ hint }}</div>
+            <input :placeholder="inputHint" v-model="value" />
+        </div>
+        <div class="footer">
+            <div class="left" @click="accept">{{ leftWord }}</div>
+            <div class="right" @click="decline">{{ rightWord }}</div>
+        </div>
+    </div>
+    
+
 
     <!-- ------------------------ REACT ------------------------------ -->
     <script async src="build/js/build.js" type="text/javascript"></script>
@@ -684,6 +699,7 @@
     <script src="js/inventory.js"></script>
     <script src="js/carSpecifications.js"></script>
     <script src="js/check.js"></script>
+    <script src="js/inputWindow.js"></script>
 </body>
 
 </html>
