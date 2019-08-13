@@ -13,6 +13,15 @@ module.exports = {
         player.house.index = -1;
         player.house.place = 0;
     },
+    "characterInit.done": (player) => {
+        if (player.character.admin < 5) return;
+        let interiors = housesService.getInteriors();
+        let interiorsClasses = new Array();
+        for (let i = 0; i < interiors.length; i++) {
+            interiorsClasses.push({id: interiors[i].id, class: interiors[i].class});
+        }
+        player.call('house.add.init', [interiorsClasses]);
+    },
     "playerEnterColshape": (player, shape) => {
         if (!shape.isHouse) return;
         player.house.place = shape.place;

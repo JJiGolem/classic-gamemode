@@ -1122,19 +1122,37 @@ var selectMenu = new Vue({
                 header: "Добавление дома",
                 items: [{
                         text: "Поставить вход в дом",
+                        values: ['No'],
                         i: 0,
                     },
                     {
                         text: "Поставить выход из дома",
+                        values: ['No'],
                         i: 0,
+                    },
+                    {
+                        text: "Создать авто",
                     },
                     {
                         text: "Создать место для парковки автомобиля",
+                        values: ['No'],
                         i: 0,
                     },
                     {
-                        text: "Закрыть",
+                        text: "Выберите интерьер",
+                        values: [''],
                         i: 0,
+                    },
+                    {
+                        text: "Введите стоимость",
+                        values: [""],
+                        type: "editable" // возможность редактирования значения пункта меню
+                    },
+                    {
+                        text: "Создать",
+                    },
+                    {
+                        text: "Закрыть",
                     }
                 ],
                 i: 0,
@@ -1149,7 +1167,26 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-                        
+                        switch(e.itemName) {
+                            case "Поставить вход в дом":
+                                mp.trigger("house.add.enter");
+                                break;
+                            case "Поставить выход из дома":
+                                mp.trigger("house.add.spawn");
+                                break;
+                            case "Создать авто":
+                                
+                                break;
+                            case "Создать место для парковки автомобиля":
+                                mp.trigger("house.add.carPlace");
+                                break;
+                            case "Создать":
+                                mp.trigger("house.add.create", this.items[4].i, this.items[5].values[0]);
+                                break;
+                            case "Закрыть":
+                                mp.trigger("house.add.close");
+                                break;
+                        }
                     }
                 }
             },
