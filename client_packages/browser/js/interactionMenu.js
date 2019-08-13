@@ -110,12 +110,20 @@ var interactionMenu = new Vue({
                     {
                         text: "Документы",
                         icon: "doc.png"
+                    },
+                    {
+                        text: "Деньги",
+                        icon: "wallet.png"
                     }
                 ],
                 handler(index) {
                     var item = this.items[index];
                     if (item.text == 'Документы') {
                         mp.trigger(`documents.list`);
+                    }
+                    if (item.text == 'Деньги') {
+                        mp.trigger(`interaction.menu.close`);
+                        mp.trigger(`interaction.money.show`);
                     }
                 }
             },

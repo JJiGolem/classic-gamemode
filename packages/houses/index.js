@@ -1,6 +1,8 @@
 "use strict";
 /// Массив всех домов на сервере
 let houses = new Array();
+let interiors = new Array();
+let garages = new Array();
 let money = call('money');
 
 /// Функции модуля системы домов
@@ -55,7 +57,9 @@ module.exports = {
         console.log("[HOUSES] load houses from DB");
         let infoHouses = await db.Models.House.findAll({
             include: [{ model: db.Models.Interior,
-                    include: [db.Models.Garage]
+                    include: [{ model: db.Models.Garage,
+                        include: [db.Models.GaragePlace]
+                    }]
                 }
             ]
         });
@@ -63,7 +67,83 @@ module.exports = {
             this.addHouse(infoHouses[i]);
             this.setTimer(i);
         }
-        console.log("[HOUSES] " + infoHouses.length + " loaded");
+        console.log("[HOUSES] " + infoHouses.length + " houses loaded");
+        console.log("[HOUSES] load interiors from DB");
+        interiors = await db.Models.Interior.findAll();
+        console.log("[HOUSES] " + interiors.length + " interiors loaded");
+        garages = await db.Models.Garage.findAll();
+        console.log("[HOUSES] " + garages.length + " garages loaded");
+    },
+    getInteriors() {
+        return interiors;
+    },
+    getGarages() {
+        return garages;
+    },
+    async createHouse(houseInfo) {
+        let house = await db.Models.House.create({
+            interiorId: houseInfo.interiorId,
+            price: houseInfo.price,
+            isOpened: true,
+            pickupX: houseInfo.pickupX,
+            pickupY: houseInfo.pickupY,
+            pickupZ: houseInfo.pickupZ,
+            spawnX: houseInfo.spawnX,
+            spawnY: houseInfo.spawnY,
+            spawnZ: houseInfo.spawnZ,
+            angle: houseInfo.angle,
+            carX: houseInfo.carX,
+            carY: houseInfo.carY,
+            carZ: houseInfo.carZ,
+            carAngle: houseInfo.carAngle,
+        }, {
+            include: [{ model: db.Models.Interior,
+                    include: [{ model: db.Models.Garage,
+                        include: [db.Models.GaragePlace]
+                    }]
+                }
+            ]
+        });
+        house = await db.Models.House.findOne({
+            where: {
+                id: house.id
+            },
+            include: [{ model: db.Models.Interior,
+                    include: [{ model: db.Models.Garage,
+                        include: [db.Models.GaragePlace]
+                    }]
+                }
+            ]
+        });
+        this.addHouse(house);
+        this.setTimer(houses.length - 1);
+        console.log("[HOUSES] added new house");
+    },
+    async createInterior(interiorInfo) {
+        let interior = await db.Models.Interior.create({
+            garageId: interiorInfo.garageId,
+            class: interiorInfo.class,
+            numRooms: interiorInfo.numRooms,
+            rent: interiorInfo.rent,
+            exitX: interiorInfo.exitX,
+            exitY: interiorInfo.exitY,
+            exitZ: interiorInfo.exitZ,
+            x: interiorInfo.x,
+            y: interiorInfo.y,
+            z: interiorInfo.z,
+            rotation: interiorInfo.rotation,
+        });
+        interiors.push(interior);
+        console.log("[HOUSES] added new interior");
+    },
+    async createGarage(garageInfo) {
+        let garage = await db.Models.Garage.create({
+
+        }, {
+            include: [db.Models.GaragePlace]
+        });
+        garages.push(garage);
+        console.log("[HOUSES] added new garage");
     },
     addHouse(houseInfo) {
         let dimension = houseInfo.id;

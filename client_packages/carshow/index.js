@@ -30,18 +30,12 @@ mp.events.add('carshow.list.show', (inputList, inputInfo) => {
 
     list = inputList;
     carShowInfo = inputInfo;
-    //let camera = mp.cameras.new('default', new mp.Vector3(-44 - 4, -1098 - 4, 25 + 2.5), new mp.Vector3(0, 0, 0), 70);
     camera = mp.cameras.new('default', new mp.Vector3(carShowInfo.cameraX, carShowInfo.cameraY, carShowInfo.cameraZ), new mp.Vector3(0, 0, 0), 70);
-    //31.673555374145508
-    //126.1431884765625
-    //camera.pointAtCoord(-44, -1098, 25);
     camera.pointAtCoord(carShowInfo.toX, carShowInfo.toY, carShowInfo.toZ);
     camera.setActive(true);
     mp.game.cam.renderScriptCams(true, false, 0, true, false);
 
-    //current = mp.vehicles.new(mp.game.joaat(list[i].vehiclePropertyModel), new mp.Vector3(-44.08749008178711, -1098.660400390625, 25.74812889099121));
     current = mp.vehicles.new(mp.game.joaat(list[currentIndex].vehiclePropertyModel), new mp.Vector3(carShowInfo.toX, carShowInfo.toY, carShowInfo.toZ));
-    //current.setHeading(115);
     current.setHeading(carShowInfo.toH);
     current.setColours(primary, secondary);
 
@@ -49,7 +43,10 @@ mp.events.add('carshow.list.show', (inputList, inputInfo) => {
     list.forEach((current) => {
         models.push(current.properties.name);
     })
+
+    let name = carShowInfo.name.split(' ')[0];
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["carShowMenu"])`);
+    mp.callCEFVN({ "selectMenu.menu.header": name });
     mp.callCEFVN({ "selectMenu.menu.items[0].values": models });
     mp.callCEFVN({ "selectMenu.menu.items[1].values": colorValues });
     mp.callCEFVN({ "selectMenu.menu.items[2].values": colorValues });
@@ -60,7 +57,7 @@ mp.events.add('carshow.list.show', (inputList, inputInfo) => {
         name: { header: 'Название', value: '0', unit: '' },
         class: { header: 'Класс', value: '0', unit: '' },
         volume: { header: 'Объём бака', value: '0', unit: 'л' },
-        consumption: { header: 'Расход топлива', value: '0', unit: 'л' },
+        // consumption: { header: 'Расход топлива', value: '0', unit: 'л' },
         maxSpeed: { header: 'Макс. скорость', value: '0', unit: 'км/ч' },
         count: { header: 'В наличии', value: '0', unit: '' },
     }`);
@@ -98,11 +95,12 @@ mp.events.add('carshow.list.close', () => {
 mp.events.add('carshow.vehicle.show', (i) => {
     currentIndex = i;
     current.destroy();
-    current = mp.vehicles.new(mp.game.joaat(list[i].vehiclePropertyModel), new mp.Vector3(carShowInfo.toX, carShowInfo.toY, carShowInfo.toZ));
-    //current.setHeading(115);
-    current.setHeading(carShowInfo.toH);
-    current.setColours(primary, secondary);
-    updateSpecifications(currentIndex);
+    if (current) {
+        current = mp.vehicles.new(mp.game.joaat(list[i].vehiclePropertyModel), new mp.Vector3(carShowInfo.toX, carShowInfo.toY, carShowInfo.toZ));
+        current.setHeading(carShowInfo.toH);
+        current.setColours(primary, secondary);
+        updateSpecifications(currentIndex);
+    }
 });
 
 mp.events.add('carshow.vehicle.color', (color1, color2) => {
@@ -200,7 +198,7 @@ function updateSpecifications(i) {
     mp.callCEFV(`carSpecifications.body.maxSpeed.value = '${maxSpeed}'`);
     mp.callCEFV(`carSpecifications.body.name.value = '${list[i].properties.name}'`);
     mp.callCEFV(`carSpecifications.body.volume.value = '${list[i].properties.maxFuel}'`);
-    mp.callCEFV(`carSpecifications.body.consumption.value = '${list[i].properties.consumption}'`);
+    //mp.callCEFV(`carSpecifications.body.consumption.value = '${list[i].properties.consumption}'`);
     if (className == 'Велосипед') {
         mp.callCEFV(`carSpecifications.body.volume.value = '—'`);
         mp.callCEFV(`carSpecifications.body.consumption.value = '—'`);

@@ -3,6 +3,8 @@
 let housesService = require("./index.js");
 let money = call('money');
 
+let carPlaceVehicle;
+
 module.exports = {
     /// Событие инициализации сервера
     "init": () => {
@@ -12,6 +14,23 @@ module.exports = {
         player.house = {};
         player.house.index = -1;
         player.house.place = 0;
+    },
+    "characterInit.done": (player) => {
+        if (player.character.admin < 5) return;
+
+        let interiors = housesService.getInteriors();
+        let interiorsClasses = new Array();
+        for (let i = 0; i < interiors.length; i++) {
+            interiorsClasses.push({id: interiors[i].id, class: interiors[i].class});
+        }
+
+        let garages = housesService.getGarages();
+        let garagesIdCarPlaces = new Array();
+        for (let i = 0; i < garages.length; i++) {
+            garagesIdCarPlaces.push({id: garages[i].id, carPlaces: garages[i].carPlaces});
+        }
+
+        player.call('house.add.init', [interiorsClasses, garagesIdCarPlaces]);
     },
     "playerEnterColshape": (player, shape) => {
         if (!shape.isHouse) return;
@@ -217,5 +236,48 @@ module.exports = {
         player.house.sellingHouseIndex = null;
         player.house.sellingHouseCost = null;
 
+    },
+    "house.add": (player, houseInfo) => {
+        housesService.createHouse(JSON.parse(houseInfo));
+    },
+    "house.add.carSpawn": (player) => {
+        let vehicles = call("vehicles");
+        if (vehicles == null) return;
+        if (carPlaceVehicle != null) {
+            clearInterval(carPlaceVehicle.fuelTimer);
+            carPlaceVehicle.destroy();
+            carPlaceVehicle = null;
+        }
+
+        let veh = {
+            modelName: "turismor",
+            x: player.position.x,
+            y: player.position.y,
+            z: player.position.z,
+            spawnHeading: player.heading,
+            color1: 54,
+            color2: 54,
+            license: 0,
+            key: "admin",
+            owner: 0,
+            fuel: 40,
+            mileage: 0,
+            plate: vehicles.generateVehiclePlate(),
+            //multiplier: 1
+        }
+        carPlaceVehicle = vehicles.spawnVehicle(veh);
+        player.putIntoVehicle(carPlaceVehicle, -1);
+    },
+    "house.add.removeFromVehicle": (player) => {
+        player.removeFromVehicle();
+    },
+    "house.add.carDrop": (player) => {
+        if (carPlaceVehicle == null) return;
+        clearInterval(carPlaceVehicle.fuelTimer);
+        carPlaceVehicle.destroy();
+        carPlaceVehicle = null;
+    },
+    "house.add.interior": (player, interiorInfo) => {
+        housesService.createInterior(JSON.parse(interiorInfo));
     },
 };

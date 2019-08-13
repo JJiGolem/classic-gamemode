@@ -34,6 +34,9 @@ mp.events.add('documents.show', (type, data) => {
         data.fName = data.name[0];
         data.sName = data.name[1];
         delete data.name;
+
+        let newDate = data.regDate.slice(0, 10);
+        data.regDate = dateFormatter(newDate);
         for (var key in data) {
             if (typeof data[key] == 'string') data[key] = `'${data[key]}'`;
             mp.callCEFV(`characterPass.${key} = ${data[key]}`);

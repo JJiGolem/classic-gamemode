@@ -120,18 +120,7 @@ mp.events.add('characterInit.done', () => { /// E
         if (currentInteractionEntity.type == 'vehicle') {
             mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle"])');
             mp.callCEFV(`interactionMenu.left = ${defaultLeft}`);
-            // *** TEMP ***
-            // var hoodPos = currentInteractionEntity.getWorldPositionOfBone(currentInteractionEntity.getBoneIndexByName("engine"));
-            // var hoodDist = vdist(currentInteractionEntity.position, hoodPos);
-            // let pos = currentInteractionEntity.getOffsetFromInWorldCoords(0, 2, 0);
-            // mp.chat.debug(JSON.stringify(pos));
-            // mp.chat.debug(JSON.stringify(hoodPos));
-            // setTimeout(() => {
-            //     mp.players.local.setHeading(currentInteractionEntity.getHeading() - 180);
-            // }, 5000);
-            // mp.players.local.taskFollowNavMeshToCoord(pos.x, pos.y, pos.z, 1, -1, 1, true, 0);
 
-            // *** TEMP ***
             let vehClass = currentInteractionEntity.getClass();
             if (classesToIgnore.includes(vehClass)) {
                 mp.callCEFV('interactionMenu.menu.items.splice(1, 2)');
@@ -189,6 +178,7 @@ mp.events.add('render', () => {
         if (dist > INTERACTION_RANGE) {
             currentInteractionEntity = null;
             mp.events.call('interaction.menu.close');
+            mp.events.call('interaction.money.close'); // to be tested
         }
     } catch (err) {
         mp.chat.debug('Entity уничтожена');
@@ -228,4 +218,77 @@ mp.events.add('interaction.eject', (index) => {
     mp.chat.debug(`${index}`);
     mp.chat.debug(`${occupantsToEject[index].name}`);
     mp.events.callRemote('vehicles.eject', JSON.stringify(playerToEject));
+});
+
+mp.events.add('interaction.money.show', () => {
+    if (!currentInteractionEntity) return;
+    if (currentInteractionEntity.type != 'player') return;
+
+    let playerName = currentInteractionEntity.getVariable('nick');
+    if (!playerName) return;
+    mp.busy.add('money_giving');
+    mp.gui.cursor.show(true, true);
+    mp.callCEFV(`inputWindow.name = 'money_giving';
+inputWindow.header = "Передача денег ${playerName}";
+inputWindow.hint = "Введите сумму от $1 до $500";
+inputWindow.inputHint = "Сумма...";
+inputWindow.value = "";
+inputWindow.show = true;
+`);
+
+});
+mp.events.add('interaction.money.close', () => {
+    mp.callCEFV(`inputWindow.show = false`);
+    mp.gui.cursor.show(false, false);
+    mp.busy.remove('money_giving');
+});
+
+mp.events.add('interaction.money.accept', (value) => {
+    mp.chat.debug('accept');
+    mp.chat.debug(value);
+
+    if (!value) return mp.notify.error('Введите сумму', 'Ошибка');
+
+    let sum = parseInt(value);
+    if (isNaN(sum)) return mp.notify.error('Некорректная сумма', 'Ошибка');
+
+    if (sum < 1) return mp.notify.error('Слишком малая сумма', 'Ошибка');
+
+    if (sum > 500) return mp.notify.error('Слишком большая сумма', 'Ошибка');
+
+    let targetId = currentInteractionEntity.remoteId;
+    if (targetId) return mp.notify.error('Игрок не найден', 'Ошибка');
+    mp.events.callRemote('interaction.money.give', targetId, sum);
+    mp.callCEFV('loader.show = true');
+    mp.events.call('interaction.money.close');
+
+});
+
+mp.events.add('interaction.money.ans', (ans) => {
+    mp.callCEFV('loader.show = false');
+    switch (ans) {
+        case 0:
+            mp.notify.error('Игрок не найден', 'Ошибка');
+            break;
+        case 1:
+            mp.notify.error('Некорректная сумма', 'Ошибка');
+            break;
+        case 2:
+            mp.notify.error('Недостаточно денег', 'Ошибка');
+            break;
+        case 3:
+            mp.notify.error('Не удалось передать деньги', 'Ошибка');
+            break;
+        case 4:
+            mp.notify.success('Вы передали деньги', 'Успех');
+            break;
+        case 5:
+            mp.notify.error('Нельзя передать деньги себе', 'Ошибка');
+            break;
+    }
+});
+
+mp.events.add('interaction.money.decline', () => {
+    mp.chat.debug('decline');
+    mp.events.call('interaction.money.close');
 });

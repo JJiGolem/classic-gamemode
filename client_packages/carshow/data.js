@@ -193,151 +193,151 @@ const colors = [
     },
     {
         "id": 48,
-        "value": "#ffffff"
+        "value": "#361c25"
     },
     {
         "id": 49,
-        "value": "#ffffff"
+        "value": "#182931"
     },
     {
         "id": 50,
-        "value": "#ffffff"
+        "value": "#122f2b"
     },
     {
         "id": 51,
-        "value": "#ffffff"
+        "value": "#1c414a"
     },
     {
         "id": 52,
-        "value": "#ffffff"
+        "value": "#303e3f"
     },
     {
         "id": 53,
-        "value": "#ffffff"
+        "value": "#175a31"
     },
     {
         "id": 54,
-        "value": "#ffffff"
+        "value": "#1a676d"
     },
     {
         "id": 55,
-        "value": "#ffffff"
+        "value": "#5db11e"
     },
     {
         "id": 56,
-        "value": "#ffffff"
+        "value": "#22393f"
     },
     {
         "id": 57,
-        "value": "#ffffff"
+        "value": "#1f5940"
     },
     {
         "id": 58,
-        "value": "#ffffff"
+        "value": "#2c403f"
     },
     {
         "id": 59,
-        "value": "#ffffff"
+        "value": "#42564a"
     },
     {
         "id": 60,
-        "value": "#ffffff"
+        "value": "#62827d"
     },
     {
         "id": 61,
-        "value": "#ffffff"
+        "value": "#253149"
     },
     {
         "id": 62,
-        "value": "#ffffff"
+        "value": "#243458"
     },
     {
         "id": 63,
-        "value": "#ffffff"
+        "value": "#3b537f"
     },
     {
         "id": 64,
-        "value": "#ffffff"
+        "value": "#576594"
     },
     {
         "id": 65,
-        "value": "#ffffff"
+        "value": "#6f87ad"
     },
     {
         "id": 66,
-        "value": "#ffffff"
+        "value": "#6b7581"
     },
     {
         "id": 67,
-        "value": "#ffffff"
+        "value": "#d4e5ef"
     },
     {
         "id": 68,
-        "value": "#ffffff"
+        "value": "#72aabb"
     },
     {
         "id": 69,
-        "value": "#ffffff"
+        "value": "#315a6e"
     },
     {
         "id": 70,
-        "value": "#ffffff"
+        "value": "#0c94ec"
     },
     {
         "id": 71,
-        "value": "#ffffff"
+        "value": "#2f2d52"
     },
     {
         "id": 72,
-        "value": "#ffffff"
+        "value": "#2a2d4e"
     },
     {
         "id": 73,
-        "value": "#ffffff"
+        "value": "#26549f"
     },
     {
         "id": 74,
-        "value": "#ffffff"
+        "value": "#6ea3c5"
     },
     {
         "id": 75,
-        "value": "#ffffff"
+        "value": "#112351"
     },
     {
         "id": 76,
-        "value": "#ffffff"
+        "value": "#1b1f3c"
     },
     {
         "id": 77,
-        "value": "#ffffff"
+        "value": "#264f8d"
     },
     {
         "id": 78,
-        "value": "#ffffff"
+        "value": "#5b7f8d"
     },
     {
         "id": 79,
-        "value": "#ffffff"
+        "value": "#2341a1"
     },
     {
         "id": 80,
-        "value": "#ffffff"
+        "value": "#3d6ddc"
     },
     {
         "id": 81,
-        "value": "#ffffff"
+        "value": "#3637dd"
     },
     {
         "id": 82,
-        "value": "#ffffff"
+        "value": "#17224f"
     },
     {
         "id": 83,
-        "value": "#ffffff"
+        "value": "#2236a6"
     },
     {
         "id": 84,
-        "value": "#ffffff"
+        "value": "#152e4d"
     },
     {
         "id": 85,
@@ -345,295 +345,299 @@ const colors = [
     },
     {
         "id": 86,
-        "value": "#ffffff"
+        "value": "#495f88"
     },
     {
         "id": 87,
-        "value": "#ffffff"
+        "value": "#69add0"
     },
     {
         "id": 88,
-        "value": "#ffffff"
+        "value": "#fecd19"
     },
     {
         "id": 89,
-        "value": "#ffffff"
+        "value": "#f6db1a"
     },
     {
         "id": 90,
-        "value": "#ffffff"
+        "value": "#8a5f34"
     },
     {
         "id": 91,
-        "value": "#ffffff"
+        "value": "#dadb41"
     },
     {
         "id": 92,
-        "value": "#ffffff"
+        "value": "#96d11f"
     },
     {
         "id": 93,
-        "value": "#ffffff"
+        "value": "#958877"
     },
     {
         "id": 94,
-        "value": "#ffffff"
+        "value": "#4b301b"
     },
     {
         "id": 95,
-        "value": "#ffffff"
+        "value": "#463d2e"
     },
     {
         "id": 96,
-        "value": "#ffffff"
+        "value": "#201c1b"
     },
     {
         "id": 97,
-        "value": "#ffffff"
+        "value": "#603d27"
     },
     {
         "id": 98,
-        "value": "#ffffff"
+        "value": "#74593e"
     },
     {
         "id": 99,
-        "value": "#ffffff"
+        "value": "#a99773"
     },
     {
         "id": 100,
-        "value": "#ffffff"
+        "value": "#68694a"
     },
     {
         "id": 101,
-        "value": "#ffffff"
+        "value": "#412f2d"
     },
     {
         "id": 102,
-        "value": "#ffffff"
+        "value": "#9f925d"
     },
     {
         "id": 103,
-        "value": "#ffffff"
+        "value": "#44231a"
     },
     {
         "id": 104,
-        "value": "#ffffff"
+        "value": "#71291a"
     },
     {
         "id": 105,
-        "value": "#ffffff"
+        "value": "#baa876"
     },
     {
         "id": 106,
-        "value": "#ffffff"
+        "value": "#dfd2af"
     },
     {
         "id": 107,
-        "value": "#ffffff"
+        "value": "#f7edd4"
     },
     {
         "id": 108,
-        "value": "#ffffff"
+        "value": "#3a2a1b"
     },
     {
         "id": 109,
-        "value": "#ffffff"
+        "value": "#765a33"
     },
     {
         "id": 110,
-        "value": "#ffffff"
+        "value": "#b6a07b"
     },
     {
         "id": 111,
-        "value": "#ffffff"
+        "value": "#fefbf4"
     },
     {
         "id": 112,
-        "value": "#ffffff"
+        "value": "#e3e5e4"
     },
     {
         "id": 113,
-        "value": "#ffffff"
+        "value": "#ada78f"
     },
     {
         "id": 114,
-        "value": "#ffffff"
+        "value": "#3f3631"
     },
     {
         "id": 115,
-        "value": "#ffffff"
+        "value": "#272528"
     },
     {
         "id": 116,
-        "value": "#ffffff"
+        "value": "#6e6651"
     },
     {
         "id": 117,
-        "value": "#ffffff"
+        "value": "#677381"
     },
     {
         "id": 118,
-        "value": "#ffffff"
+        "value": "#36465f"
     },
     {
         "id": 119,
-        "value": "#ffffff"
+        "value": "#99a0a6"
     },
     {
         "id": 120,
-        "value": "#ffffff"
+        "value": "#6988b7"
     },
     {
         "id": 121,
-        "value": "#ffffff"
+        "value": "#eae7de"
     },
     {
         "id": 122,
-        "value": "#ffffff"
+        "value": "#dbd9cd"
     },
     {
         "id": 123,
-        "value": "#ffffff"
+        "value": "#eea82c"
     },
     {
         "id": 124,
-        "value": "#ffffff"
+        "value": "#f29a52"
     },
     {
         "id": 125,
-        "value": "#ffffff"
+        "value": "#81c163"
     },
     {
         "id": 126,
-        "value": "#ffffff"
+        "value": "#eec73c"
     },
     {
         "id": 127,
-        "value": "#ffffff"
+        "value": "#4bbfd8"
     },
     {
         "id": 128,
-        "value": "#ffffff"
+        "value": "#465a3e"
     },
     {
         "id": 129,
-        "value": "#ffffff"
+        "value": "#f7b555"
     },
     {
         "id": 130,
-        "value": "#ffffff"
+        "value": "#f6b454"
     },
     {
         "id": 131,
-        "value": "#ffffff"
+        "value": "#f8f5ee"
     },
     {
         "id": 132,
-        "value": "#ffffff"
+        "value": "#fcf9f2"
     },
     {
         "id": 133,
-        "value": "#ffffff"
+        "value": "#7a7d48"
     },
     {
         "id": 134,
-        "value": "#ffffff"
+        "value": "#fffffb"
     },
     {
         "id": 135,
-        "value": "#ffffff"
+        "value": "#f01f96"
     },
     {
         "id": 136,
-        "value": "#ffffff"
+        "value": "#fed2c9"
     },
     {
         "id": 137,
-        "value": "#ffffff"
+        "value": "#dd5891"
     },
     {
         "id": 138,
-        "value": "#ffffff"
+        "value": "#f4ab20"
     },
     {
         "id": 139,
-        "value": "#ffffff"
+        "value": "#aced6d"
     },
     {
         "id": 140,
-        "value": "#ffffff"
+        "value": "#0ce3f8"
     },
     {
         "id": 141,
-        "value": "#ffffff"
+        "value": "#0d1321"
     },
     {
         "id": 142,
-        "value": "#ffffff"
+        "value": "#0f131f"
     },
     {
         "id": 143,
-        "value": "#ffffff"
+        "value": "#0f0f17"
     },
     {
         "id": 144,
-        "value": "#ffffff"
+        "value": "#9a9987"
     },
     {
         "id": 145,
-        "value": "#ffffff"
+        "value": "#5f1375"
     },
     {
         "id": 146,
-        "value": "#ffffff"
+        "value": "#0c1421"
     },
     {
         "id": 147,
-        "value": "#ffffff"
+        "value": "#131722"
     },
     {
         "id": 148,
-        "value": "#ffffff"
+        "value": "#5f1574"
     },
     {
         "id": 149,
-        "value": "#ffffff"
+        "value": "#13131b"
     },
     {
         "id": 150,
-        "value": "#ffffff"
+        "value": "#bb1819"
     },
     {
         "id": 151,
-        "value": "#ffffff"
+        "value": "#333436"
     },
     {
         "id": 152,
-        "value": "#ffffff"
+        "value": "#656445"
     },
     {
         "id": 153,
-        "value": "#ffffff"
+        "value": "#766752"
     },
     {
         "id": 154,
-        "value": "#ffffff"
+        "value": "#c0b190"
     },
     {
         "id": 155,
-        "value": "#ffffff"
+        "value": "#565c4e"
     },
     {
         "id": 156,
-        "value": "#ffffff"
+        "value": "#7a7c79"
     },
     {
         "id": 157,
-        "value": "#ffffff"
+        "value": "#acd3e4"
     },
     {
         "id": 158,
-        "value": "#ffffff"
+        "value": "#776444"
+    },
+    {
+        "id": 159,
+        "value": "#7f6849"
     }
 ];
 
