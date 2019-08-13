@@ -133,7 +133,8 @@ module.exports = {
         let data = {
             name: player.character.name,
             sex: player.character.gender,
-            number: documents.getPassIdentificator() + player.character.id
+            number: documents.getPassIdentificator() + player.character.id,
+            regDate: player.character.creationDate
         }
         if (!data) return;
         if (player.id == target.id) {

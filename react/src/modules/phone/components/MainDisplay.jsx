@@ -10,6 +10,7 @@ import DialingNumber from "./DialingNumber";
 import IncomingCall from "./IncomingCall";
 import HouseApp from "./house_app/HouseApp";
 import BusinessApp from "./business_app/BusinessApp";
+import TaxiClient from "./taxi_app/taxi_client/TaxiClient";
 
 const days = [
     'Воскресенье',
@@ -79,6 +80,16 @@ class MainDisplay extends Component {
                 </div>
 
                 <div className="list_apps-phone-react">
+                    <div className="menu_panel_app-phone-react" onClick={() => addApp({name: 'TaxiClient', form: <TaxiClient />})}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="110%" height="110%" viewBox="0 0 88.775 81.925">
+                            <g id="house" transform="translate(-1604 -378)">
+                                <rect id="Rectangle_4" data-name="Rectangle 4" width="88.775" height="81.925" rx="20" transform="translate(1604 378)" fill="#FBD825"/>
+                            </g>
+                        </svg>
+
+                        <div>Такси</div>
+                    </div>
+
                     {
                         info.houses.length > 0 &&
                         <div className="menu_panel_app-phone-react" onClick={() => addApp({name: 'HouseApp', form: <HouseApp />})}>

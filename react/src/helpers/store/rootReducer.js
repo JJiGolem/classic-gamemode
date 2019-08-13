@@ -10,6 +10,7 @@ import enterMenu from '../../modules/house/reducers/reducer.enterMenu';
 import business from '../../modules/business/reducers/reducer.business';
 import bank from '../../modules/bank/reducers/reducer.bank';
 import bankPages from '../../modules/bank/reducers/reducer.bankPages';
+import taxiClient from '../../modules/phone/reducers/reducer.taxi.cleint';
 
 export default combineReducers({
     forms,
@@ -21,5 +22,6 @@ export default combineReducers({
     enterMenu,
     business,
     bank,
-    bankPages
+    bankPages,
+    taxiClient
 });
