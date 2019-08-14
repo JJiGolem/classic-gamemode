@@ -40,20 +40,30 @@ module.exports = {
         var client = {};
         for (var i = 0; i < dbItems.length; i++) {
             var item = dbItems[i];
-            client[item.id] = {
-                name: item.name,
-                description: item.description,
-                height: item.height,
-                width: item.width,
-                weight: item.weight
-            };
+            client[item.id] = this.convertServerInventoryItemToClient(item);
         }
         return client;
+    },
+    convertServerInventoryItemToClient(item) {
+        return {
+            name: item.name,
+            description: item.description,
+            height: item.height,
+            width: item.width,
+            weight: item.weight
+        };
     },
     // Отправка общей информации о предметах игроку
     initPlayerItemsInfo(player) {
         player.call(`inventory.setItemsInfo`, [this.clientInventoryItems]);
         console.log(`[INVENTORY] Для игрока ${player.character.name} загружена общая информация о предметах`);
+    },
+    // Отправка общей информации о предмете
+    updateItemInfo(item) {
+        this.clientInventoryItems[item.id] = this.convertServerInventoryItemToClient(item);
+        mp.players.forEach((rec) => {
+            if (rec.character) rec.call(`inventory.setItemInfo`, [item.id, this.clientInventoryItems[item.id]]);
+        });
     },
     async initPlayerInventory(player) {
         this.clearAllView(player);

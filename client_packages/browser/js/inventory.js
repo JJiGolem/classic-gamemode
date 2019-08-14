@@ -496,6 +496,10 @@ var inventory = new Vue({
                 Vue.set(this.itemsInfo, itemId, itemsInfo[itemId]);
             }
         },
+        setItemInfo(itemId, info) {
+            if (typeof info == 'string') info = JSON.parse(info);
+            Vue.set(this.itemsInfo, itemId, info);
+        },
         // ******************  [ Player Inventory ] ******************
         getItem(sqlId) {
             var item = this.getItemBySqlId(sqlId, this.equipment);

@@ -127,6 +127,7 @@ module.exports = {
             out.info(`${player.name} изменил название предмета #${item.id} (${item.name} => ${name})`);
             item.name = name;
             item.save();
+            inventory.updateItemInfo(item);
         }
     },
     "/invsetitemdesc": {
@@ -143,6 +144,7 @@ module.exports = {
 
             item.description = desc;
             item.save();
+            inventory.updateItemInfo(item);
         }
     },
     "/invsetitemweight": {
@@ -156,6 +158,7 @@ module.exports = {
             out.info(`${player.name} изменил вес предмета #${item.id} (${item.weight} => ${args[1]})`);
             item.weight = args[1];
             item.save();
+            inventory.updateItemInfo(item);
         }
     },
     "/invsetitemsize": {
@@ -170,6 +173,7 @@ module.exports = {
             item.height = args[1];
             item.width = args[2];
             item.save();
+            inventory.updateItemInfo(item);
         }
     },
     "/invsetitemmodel": {
@@ -184,6 +188,7 @@ module.exports = {
             out.info(`${player.name} изменил модель предмета #${args[0]} (${item.model} => ${model})`);
             item.model = model;
             item.save();
+            inventory.updateItemInfo(item);
         }
     },
     "/invsetitemdeltaz": {
@@ -197,6 +202,7 @@ module.exports = {
             out.info(`${player.name} изменил deltaZ предмета #${args[0]} (${item.deltaZ} => ${args[1]})`);
             item.deltaZ = args[1];
             item.save();
+            inventory.updateItemInfo(item);
         }
     },
     "/invsetitemrot": {
@@ -211,6 +217,7 @@ module.exports = {
             item.rX = args[1];
             item.rY = args[2];
             item.save();
+            inventory.updateItemInfo(item);
         }
     },
 }
