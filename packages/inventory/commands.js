@@ -101,7 +101,7 @@ module.exports = {
         }
     },
     "/invlist": {
-        description: "Посмотреть общую информация о предметах инвентаря. Обновление на вашем клиенте произойдет после релога!",
+        description: "Посмотреть общую информация о предметах инвентаря.",
         access: 6,
         args: "",
         handler: (player, args, out) => {
@@ -111,6 +111,65 @@ module.exports = {
                 text += `${item.id}) ${item.name} (${item.description}) [${item.weight} кг] [${item.height}x${item.width}] | ${item.model} | ${item.deltaZ} | ${item.rX} | ${item.rY}<br/>`;
             }
             out.log(text, player);
+        }
+    },
+    "/invsetitemname": {
+        description: "Изменить название предмета инвентаря. (см. /invlist)",
+        access: 6,
+        args: "[ид_предмета] [название]",
+        handler: (player, args, out) => {
+            console.log(args[0] - 1)
+            var item = inventory.inventoryItems[args[0] - 1];
+            if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
+
+            args.splice(0, 1);
+            var name = args.join(" ").trim();
+            out.info(`${player.name} изменил название предмета #${item.id} (${item.name} => ${name})`);
+            item.name = name;
+            item.save();
+        }
+    },
+    "/invsetitemdesc": {
+        description: "Изменить описание предмета инвентаря. (см. /invlist)",
+        access: 6,
+        args: "[ид_предмета] [описание]",
+        handler: (player, args, out) => {
+            var item = inventory.inventoryItems[args[0] - 1];
+            if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
+
+            args.splice(0, 1);
+            var desc = args.join(" ").trim();
+            out.info(`${player.name} изменил описание предмета #${item.id} (${item.description} => ${desc})`);
+
+            item.description = desc;
+            item.save();
+        }
+    },
+    "/invsetitemweight": {
+        description: "Изменить вес предмета инвентаря. (см. /invlist)",
+        access: 6,
+        args: "[ид_предмета] [вес]",
+        handler: (player, args, out) => {
+            var item = inventory.inventoryItems[args[0] - 1];
+            if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
+
+            out.info(`${player.name} изменил вес предмета #${item.id} (${item.weight} => ${args[1]})`);
+            item.weight = args[1];
+            item.save();
+        }
+    },
+    "/invsetitemsize": {
+        description: "Изменить размер предмета инвентаря. (см. /invitems)",
+        access: 6,
+        args: "[ид_предмета] [высота] [ширина]",
+        handler: (player, args, out) => {
+            var item = inventory.inventoryItems[args[0] - 1];
+            if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
+
+            out.info(`${player.name} изменил размер предмета #${args[0]} (${item.height}x${item.width} => ${args[1]}x${args[2]})`);
+            item.height = args[1];
+            item.width = args[2];
+            item.save();
         }
     },
 }
