@@ -5,7 +5,8 @@ let commands = {};
 module.exports = {
     "init": () => {
         /// Список всех команд на сервере
-        commands = admin.init();
+        admin.init();
+        commands = admin.getCommands();
     },
     /// обработка админ команд
     "admin.command.handle": (player, command, args) => {
