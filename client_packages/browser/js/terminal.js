@@ -15,6 +15,19 @@ var terminal = new Vue({
         savedCmdI: -1,
         // Текст в поле ввода
         inputText: "",
+        // Позиция окна на экране
+        pos: {
+            x: window.innerWidth / 2,
+            y: window.innerHeight / 2
+        },
+        dragging: {
+            // Перемещается ли сейчас окно за мышкой
+            active: false,
+            offset: {
+                x: 0,
+                y: 0
+            }
+        },
     },
     methods: {
         push(type, text) {
@@ -23,6 +36,11 @@ var terminal = new Vue({
                 text: text
             });
             if (this.messages.length > this.maxCount) this.messages.shift();
+        },
+        onHeaderMouseDown(e) {
+            this.dragging.active = true;
+            this.dragging.offset.x = e.pageX - this.pos.x;
+            this.dragging.offset.y = e.pageY - this.pos.y;
         },
         onInputEnter() {
             if (!this.inputText) this.show = false;
@@ -74,6 +92,17 @@ var terminal = new Vue({
         let self = this;
         window.addEventListener('keyup', function(e) {
             if ((e.keyCode == 192 || e.keyCode == 1040) && self.enable) self.show = !self.show;
+        });
+        window.addEventListener('mousemove', function(e) {
+            if (self.dragging.active) {
+                self.pos.x = e.pageX - self.dragging.offset.x;
+                self.pos.y = e.pageY - self.dragging.offset.y;
+            }
+        });
+        window.addEventListener('mouseup', function(e) {
+            self.dragging.active = false;
+            self.dragging.offset.x = 0;
+            self.dragging.offset.y = 0;
         });
     }
 });

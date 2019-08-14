@@ -677,8 +677,8 @@
         </div>
     </div>
 
-    <div id="terminal" v-if="show">
-        <div class="header">
+    <div id="terminal" v-if="show" :style="{left: pos.x + 'px', top: pos.y + 'px'}">
+        <div class="header" @mousedown="onHeaderMouseDown($event)">
             <div>Консоль разработчика</div>
             <div class="close" @click="show = false">x</div>
         </div>
