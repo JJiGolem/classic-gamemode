@@ -158,6 +158,12 @@ mp.events.add('characterInit.done', () => { /// E
             mp.callCEFV(`interactionMenu.left = ${vehicleLeft}`);
             mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle_inside"])');
 
+            if (mp.vehicles.isInPrivateVehicle()) {
+                mp.callCEFV(`interactionMenu.menu.items.push({
+                    text: "Продать Т/С",
+                    icon: "default.png"
+                });`);
+            }
             let vehClass = currentInteractionEntity.getClass();
             if (vehClass == 18) {
                 mp.callCEFV(`interactionMenu.menu.items.push({

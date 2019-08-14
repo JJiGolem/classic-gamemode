@@ -18,11 +18,20 @@ var inputWindow = new Vue({
             if (this.name == 'money_giving') {
                 mp.trigger('interaction.money.accept', this.value);
             }
+            if (this.name == 'carsell_id') {
+                mp.trigger('vehicles.sell.id', this.value);
+            }
+            if (this.name == 'carsell_price') {
+                mp.trigger('vehicles.sell.price', this.value);
+            }
         },
         decline() {
             if (this.name == 'money_giving') {
                 mp.trigger('interaction.money.decline');
             }
+            if (this.name == 'carsell_id') {
+                mp.trigger('vehicles.sell.close');
+             }
         },
     }
 });

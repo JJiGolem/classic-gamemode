@@ -175,6 +175,7 @@ module.exports = {
                                 y: 0,
                                 z: 0,
                                 h: 0,
+                                isOnParking: 1,
                                 parkingId: parking,
                                 plate: carPlate,
                                 owners: 1
@@ -190,6 +191,7 @@ module.exports = {
                                 z: 0,
                                 h: 0,
                                 parkingId: parking,
+                                isOnParking: 1,
                                 fuel: 50,
                                 mileage: 0,
                                 plate: carPlate,

@@ -28,6 +28,12 @@ module.exports = {
         //     player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);
         //     player.removeFromVehicle();
         // }
+        let isPrivate = false;
+        if (vehicle.key == 'private' && vehicle.owner == player.character.id) {
+            isPrivate = true;
+            console.log('private veh')
+        }
+        player.call('vehicles.enter.private', [isPrivate]);
 
         if (!vehicle.engine && seat == -1) {
             player.call('prompt.showByName', ['vehicle_engine']);
@@ -227,5 +233,89 @@ module.exports = {
         var sirenLights = player.vehicle.getVariable("sirenLights");
         if (sirenLights == player.vehicle.siren) return;
         player.vehicle.setVariable("sirenLights", player.vehicle.siren);
+    },
+    "vehicles.sell.send": (player, data) => {
+        data = JSON.parse(data);
+        if (!player.vehicle) return player.call('vehicles.sell.send.ans', [0]);
+
+        if (player.vehicle.key != 'private' || player.vehicle.owner != player.character.id) return player.call('vehicles.sell.send.ans', [1]);
+
+        let price = parseInt(data.price);
+        if (isNaN(price) || price < 1) return player.call('vehicles.sell.send.ans', [2]);
+
+        let target = mp.players.at(data.id);
+        if (!target) return player.call('vehicles.sell.send.ans', [3]);
+
+        if (player.dist(target.position) > 10) return player.call('vehicles.sell.send.ans', [4]);
+
+        let vehicle = player.vehicle;
+
+        let carSellData = {
+            targetName: target.name,
+            vehicleName: vehicle.properties.name,
+            price: price
+        }
+        player.call('vehicles.sell.send.ans', [5, carSellData]);
+    },
+    "vehicles.sell.seller.accept": (player, data) => {
+        data = JSON.parse(data);
+
+        let price = parseInt(data.price);
+        if (isNaN(price) || price < 1) return player.call('notifications.push.error', ['Неверная цена', 'Ошибка']);
+
+        let target = mp.players.at(data.id);
+        if (!target) return player.call('notifications.push.error', ['Нет игрока', 'Ошибка']);
+
+        if (player.dist(target.position) > 10) return player.call('notifications.push.error', ['Игрок далеко', 'Ошибка']);
+
+        let vehicle = player.vehicle;
+        if (!vehicle) return player.call('notifications.push.error', ['Вы не в транспорте', 'Ошибка']);
+        if (player.vehicle.key != 'private' || player.vehicle.owner != player.character.id) return player.call('notifications.push.error', ['Это не ваш транспорт', 'Ошибка']);
+        let vehId = vehicle.sqlId;
+
+        target.sellCarTargetOffer = {
+            seller: player,
+            vehicle: vehicle,
+            price: price,
+            vehId: vehId
+        }
+        player.sellCarSenderOffer = {
+            vehId: vehId
+        }
+
+        target.call('offerDialog.show', ["vehicles_sell", {
+            name: player.character.name,
+            model: vehicle.modelName,
+            price: price,
+            plate: vehicle.plate
+        }]);
+    },
+    "vehicles.sell.offer.accept": (player, accept) => {
+        console.log('test');
+        if (!player.sellCarTargetOffer) return;
+        let target = player;
+        let seller = target.sellCarTargetOffer.seller;
+
+        if (accept) {
+            console.log('accept');
+            let vehicle = seller.vehicle;
+            if (!vehicle || vehicle.sqlId != target.sellCarTargetOffer.vehId) {
+                delete target.sellCarTargetOffer;
+                delete seller.sellCarSenderOffer;
+                return;
+            }
+            if (target.character.cash < target.sellCarTargetOffer.price) {
+                target.call('notifications.push.error', ['Недостаточно денег', 'Ошибка']);
+                delete target.sellCarTargetOffer;
+                delete seller.sellCarSenderOffer;
+                return;
+            }
+            // todo remove cash
+        } else {
+            delete target.sellCarTargetOffer;
+            delete seller.sellCarSenderOffer;
+        }
+
+
     }
 }
