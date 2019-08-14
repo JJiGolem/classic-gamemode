@@ -159,7 +159,7 @@ module.exports = {
         }
     },
     "/invsetitemsize": {
-        description: "Изменить размер предмета инвентаря. (см. /invitems)",
+        description: "Изменить размер предмета инвентаря. (см. /invlist)",
         access: 6,
         args: "[ид_предмета] [высота] [ширина]",
         handler: (player, args, out) => {
@@ -169,6 +169,47 @@ module.exports = {
             out.info(`${player.name} изменил размер предмета #${args[0]} (${item.height}x${item.width} => ${args[1]}x${args[2]})`);
             item.height = args[1];
             item.width = args[2];
+            item.save();
+        }
+    },
+    "/invsetitemmodel": {
+        description: "Изменить модель предмета инвентаря. Эта модель используется, когда игрок выкидывает предмет. (см. /invlist)",
+        access: 6,
+        args: "[ид_предмета] [модель]",
+        handler: (player, args, out) => {
+            var item = inventory.inventoryItems[args[0] - 1];
+            if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
+
+            var model = args[1].trim();
+            out.info(`${player.name} изменил модель предмета #${args[0]} (${item.model} => ${model})`);
+            item.model = model;
+            item.save();
+        }
+    },
+    "/invsetitemdeltaz": {
+        description: "Изменить deltaZ предмета инвентаря. Смещение модели по высоте, когда игрок выкидывает предмет. (см. /invlist)",
+        access: 6,
+        args: "[ид_предмета] [deltaZ]",
+        handler: (player, args, out) => {
+            var item = inventory.inventoryItems[args[0] - 1];
+            if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
+
+            out.info(`${player.name} изменил deltaZ предмета #${args[0]} (${item.deltaZ} => ${args[1]})`);
+            item.deltaZ = args[1];
+            item.save();
+        }
+    },
+    "/invsetitemrot": {
+        description: "Изменить rotation предмета инвентаря. Поворот модели, когда игрок выкидывает предмет. (см. /invlist)",
+        access: 6,
+        args: "[ид_предмета] [x] [y]",
+        handler: (player, args, out) => {
+            var item = inventory.inventoryItems[args[0] - 1];
+            if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
+
+            out.info(`${player.name} изменил rotation предмета #${args[0]} (${item.rX}x${item.rY} => ${args[1]}x${args[2]})`);
+            item.rX = args[1];
+            item.rY = args[2];
             item.save();
         }
     },
