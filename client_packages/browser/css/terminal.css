@@ -32,6 +32,7 @@
 }
 
 #terminal .content {
+    font-size: 1.1vh;
     height: 86%;
     overflow-x: hidden;
     overflow-y: auto;

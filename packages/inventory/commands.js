@@ -1,25 +1,23 @@
 let inventory = require('./index');
-let notifs = require('../notifications');
-let chat = require('../chat');
 
 module.exports = {
     "/invdelete": {
         access: 6,
         description: "Удалить предмет из инвентаря игрока",
         args: "[ид_игрока] [ид_предмета]",
-        handler: (player, args) => {
+        handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            if (!rec) return notifs.error(player, `Игрок #${args[0]} не найден`);
-            inventory.deleteItem(rec, args[1]);
+            if (!rec) return out.error(player, `Игрок #${args[0]} не найден`);
+            inventory.deleteItem(rec, args[1], out);
         }
     },
     "/invadditems": {
         access: 6,
         description: "Добавить тестовые предметы в инвентарь игрока",
         args: "[ид_игрока]",
-        handler: (player, args) => {
+        handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            if (!rec) return notifs.error(player, `Игрок #${args[0]} не найден`);
+            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
             inventory.addItem(rec, 1, null, 0, null, {
                 variation: 1,
                 texture: 0,
@@ -86,31 +84,33 @@ module.exports = {
                 sex: 1
             });
 
-
+            out.info(`Тестовые предметы добавлены`, player);
         }
     },
     "/invclearitems": {
         access: 6,
         description: "Очистить инвентарь игрока",
         args: "[ид_игрока]",
-        handler: (player, args) => {
+        handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            if (!rec) return notifs.error(player, `Игрок #${args[0]} не найден`);
+            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
             rec.inventory.items.forEach((item) => {
                 if (!item.parentId) inventory.deleteItem(rec, item);
             });
+            out.info(`Инвентарь ${rec.name} очищен`, player);
         }
     },
     "/invlist": {
         description: "Посмотреть общую информация о предметах инвентаря. Обновление на вашем клиенте произойдет после релога!",
         access: 6,
         args: "",
-        handler: (player) => {
-            chat.push(player, "ID) Имя (Описание) [вес] [высота X ширина] | модель | DeltaZ | rX | rY <br/>");
+        handler: (player, args, out) => {
+            var text = "ID) Имя (Описание) [вес] [высота X ширина] | модель | DeltaZ | rX | rY<br/>";
             for (var i = 0; i < inventory.inventoryItems.length; i++) {
                 var item = inventory.inventoryItems[i];
-                chat.push(player, `${item.id}) ${item.name} (${item.description}) [${item.weight} кг] [${item.height}x${item.width}] | ${item.model} | ${item.deltaZ} | ${item.rX} | ${item.rY}`);
+                text += `${item.id}) ${item.name} (${item.description}) [${item.weight} кг] [${item.height}x${item.width}] | ${item.model} | ${item.deltaZ} | ${item.rX} | ${item.rY}<br/>`;
             }
+            out.log(text, player);
         }
     },
 }

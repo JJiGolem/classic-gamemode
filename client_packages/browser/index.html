@@ -683,7 +683,7 @@
             <div class="close" @click="show = false">x</div>
         </div>
         <div class="content scroll">
-            <div v-for="mess in messages" v-bind:class="[mess.type]"><p>{{ mess.text }}</p></div>
+            <div v-for="mess in messages" v-bind:class="[mess.type]"><p v-html="mess.text"></p></div>
         </div>
         <div class="footer">
             <input type="text" v-model="inputText" v-on:keyup.enter="onInputEnter" v-on:keyup.up="onInputUp" v-on:keyup.down="onInputDown" :ref="'input'" placeholder="classic command..." autofocus />
