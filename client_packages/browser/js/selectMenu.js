@@ -1259,6 +1259,46 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "fuelStationMenu": {
+                name: "fuelstation",
+                header: "АЗС",
+                items: [{
+                        text: "Выбрать количество литров",
+                        i: 0,
+                    },
+                    {
+                        text: "Заправить полный бак",
+                        i: 0,
+                    },
+                    {
+                        text: "Отмена",
+                        i: 0,
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Выбрать количество литров') {
+                            mp.trigger(`fuelstations.fill.litres.show`);
+                        }
+                        if (e.itemName == 'Заправить полный бак') {
+                            mp.trigger(`fuelstations.fill.fulltank`);
+                        }
+                        if (e.itemName == 'Отмена') {
+                            mp.trigger(`fuelstations.menu.close`);
+                        }
+                    }
+                }
+            },
         },
         // Уведомление
         notification: null,
