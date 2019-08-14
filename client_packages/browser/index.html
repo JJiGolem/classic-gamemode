@@ -28,7 +28,11 @@
     <link rel="stylesheet" type="text/css" href="css/carSpecifications.css" />
     <link rel="stylesheet" type="text/css" href="css/check.css" />
     <link rel="stylesheet" type="text/css" href="css/inputWindow.css" />
+<<<<<<< HEAD
     <link rel="stylesheet" type="text/css" href="css/acceptWindow.css" />
+=======
+    <link rel="stylesheet" type="text/css" href="css/terminal.css" />
+>>>>>>> e0f35f2683121dd18a8b0c4ac7f5d9ed90b3bc90
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -664,7 +668,7 @@
         </div>
     </div>
 
-    
+
     <div v-cloak="v-cloak" id="input-window" v-if="show">
         <div class="header">{{ header }}</div>
         <div class="body">
@@ -677,18 +681,30 @@
         </div>
     </div>
 
+
     <div v-cloak="v-cloak" id="accept-window" v-if="show">
         <div class="header">{{ header }}</div>
-        <!-- <div class="body">
-            <div class="hint">{{ hint }}</div>
-            <input :placeholder="inputHint" v-model="value" />
-        </div> -->
         <div class="footer">
             <div class="left" @click="accept">{{ leftWord }}</div>
             <div class="right" @click="decline">{{ rightWord }}</div>
         </div>
     </div>
     
+
+    <div id="terminal" v-if="show" :style="{left: pos.x + 'px', top: pos.y + 'px'}">
+        <div class="header" @mousedown="onHeaderMouseDown($event)">
+            <div>Консоль разработчика</div>
+            <div class="close" @click="show = false">x</div>
+        </div>
+        <div class="content scroll">
+            <div v-for="mess in messages" v-bind:class="[mess.type]"><p v-html="mess.text"></p></div>
+        </div>
+        <div class="footer">
+            <input type="text" v-model="inputText" v-on:keyup.enter="onInputEnter" v-on:keyup.up="onInputUp" v-on:keyup.down="onInputDown" :ref="'input'" placeholder="classic command..." autofocus />
+        </div>
+    </div>
+
+
 
 
     <!-- ------------------------ REACT ------------------------------ -->
@@ -713,7 +729,11 @@
     <script src="js/carSpecifications.js"></script>
     <script src="js/check.js"></script>
     <script src="js/inputWindow.js"></script>
+<<<<<<< HEAD
     <script src="js/acceptWindow.js"></script>
+=======
+    <script src="js/terminal.js"></script>
+>>>>>>> e0f35f2683121dd18a8b0c4ac7f5d9ed90b3bc90
 </body>
 
 </html>

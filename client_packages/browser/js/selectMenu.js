@@ -1121,6 +1121,16 @@ var selectMenu = new Vue({
                 name: "houseadd",
                 header: "Добавление дома",
                 items: [{
+                        text: "Выберите интерьер",
+                        values: [''],
+                        i: 0,
+                    },
+                    {
+                        text: "Введите стоимость",
+                        values: [""],
+                        type: "editable" // возможность редактирования значения пункта меню
+                    },
+                    {
                         text: "Поставить вход в дом",
                         values: ['No'],
                         i: 0,
@@ -1137,16 +1147,6 @@ var selectMenu = new Vue({
                         text: "Создать место для парковки автомобиля",
                         values: ['No'],
                         i: 0,
-                    },
-                    {
-                        text: "Выберите интерьер",
-                        values: [''],
-                        i: 0,
-                    },
-                    {
-                        text: "Введите стоимость",
-                        values: [""],
-                        type: "editable" // возможность редактирования значения пункта меню
                     },
                     {
                         text: "Создать",
@@ -1175,16 +1175,85 @@ var selectMenu = new Vue({
                                 mp.trigger("house.add.spawn");
                                 break;
                             case "Создать авто":
-                                
+                                mp.trigger("house.add.carSpawn");
                                 break;
                             case "Создать место для парковки автомобиля":
                                 mp.trigger("house.add.carPlace");
                                 break;
                             case "Создать":
-                                mp.trigger("house.add.create", this.items[4].i, this.items[5].values[0]);
+                                mp.trigger("house.add.create", this.items[0].i, this.items[1].values[0]);
                                 break;
                             case "Закрыть":
                                 mp.trigger("house.add.close");
+                                break;
+                        }
+                    }
+                }
+            },
+            "houseAddInteriorMenu": {
+                name: "houseaddinterior",
+                header: "Добавление интерьера",
+                items: [{
+                        text: "Выберите гараж",
+                        values: [''],
+                        i: 0,
+                    },
+                    {
+                        text: "Введите класс",
+                        values: [""],
+                        type: "editable" // возможность редактирования значения пункта меню
+                    },
+                    {
+                        text: "Введите кол-во комнат",
+                        values: [""],
+                        type: "editable" // возможность редактирования значения пункта меню
+                    },
+                    {
+                        text: "Введите коэффициент аренды",
+                        values: [""],
+                        type: "editable" // возможность редактирования значения пункта меню
+                    },
+                    {
+                        text: "Поставить спавн в интерьере",
+                        values: ['No'],
+                        i: 0,
+                    },
+                    {
+                        text: "Поставить выход из интерьера",
+                        values: ['No'],
+                        i: 0,
+                    },
+                    {
+                        text: "Создать",
+                    },
+                    {
+                        text: "Закрыть",
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        switch(e.itemName) {
+                            case "Поставить спавн в интерьере":
+                                mp.trigger("house.add.interior.enter");
+                                break;
+                            case "Поставить выход из интерьера":
+                                mp.trigger("house.add.interior.exit");
+                                break;
+                            case "Создать":
+                                mp.trigger("house.add.interior.create", this.items[0].i, this.items[1].values[0], this.items[2].values[0], this.items[3].values[0]);
+                                break;
+                            case "Закрыть":
+                                mp.trigger("house.add.interior.close");
                                 break;
                         }
                     }
@@ -1320,7 +1389,7 @@ var selectMenu = new Vue({
                 if (this.valuesType(val) == 3) { // editable
                     var itemText = this.menu.items[val].text;
                     this.$refs[itemText].focus();
-                    console.log("focused")
+                    // console.log("focused")
                 }
             }, 100);
         },

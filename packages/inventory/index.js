@@ -40,20 +40,30 @@ module.exports = {
         var client = {};
         for (var i = 0; i < dbItems.length; i++) {
             var item = dbItems[i];
-            client[item.id] = {
-                name: item.name,
-                description: item.description,
-                height: item.height,
-                width: item.width,
-                weight: item.weight
-            };
+            client[item.id] = this.convertServerInventoryItemToClient(item);
         }
         return client;
+    },
+    convertServerInventoryItemToClient(item) {
+        return {
+            name: item.name,
+            description: item.description,
+            height: item.height,
+            width: item.width,
+            weight: item.weight
+        };
     },
     // Отправка общей информации о предметах игроку
     initPlayerItemsInfo(player) {
         player.call(`inventory.setItemsInfo`, [this.clientInventoryItems]);
         console.log(`[INVENTORY] Для игрока ${player.character.name} загружена общая информация о предметах`);
+    },
+    // Отправка общей информации о предмете
+    updateItemInfo(item) {
+        this.clientInventoryItems[item.id] = this.convertServerInventoryItemToClient(item);
+        mp.players.forEach((rec) => {
+            if (rec.character) rec.call(`inventory.setItemInfo`, [item.id, this.clientInventoryItems[item.id]]);
+        });
     },
     async initPlayerInventory(player) {
         this.clearAllView(player);
@@ -139,9 +149,11 @@ module.exports = {
     convertServerToClientItem(dbItem) {
         // console.log(`convertServerToClientItem`);
         var params = {};
-        for (var i = 0; i < dbItem.params.length; i++) {
-            var param = dbItem.params[i];
-            params[param.key] = param.value;
+        if (dbItem.params) {
+            for (var i = 0; i < dbItem.params.length; i++) {
+                var param = dbItem.params[i];
+                params[param.key] = param.value;
+            }
         }
         var clientItem = {
             sqlId: dbItem.id,
@@ -168,16 +180,45 @@ module.exports = {
         }
         return clientItem;
     },
-    addItem() {
+    async addItem(player, itemId, pocketIndex, index, parentId, params) {
+        var struct = [];
+        for (var key in params) {
+            struct.push({
+                key: key,
+                value: params[key]
+            });
+        }
+        var item = await db.Models.CharacterInventory.create({
+            playerId: player.character.id,
+            itemId: itemId,
+            pocketIndex: pocketIndex,
+            index: index,
+            parentId: parentId,
+            params: struct,
+            children: [],
+        }, {
+            include: [{
+                    model: db.Models.CharacterInventoryParam,
+                    as: "params",
+                },
+                {
+                    model: db.Models.CharacterInventory,
+                    as: "children"
+                }
+            ]
+        });
 
+        player.inventory.items.push(item);
+        if (!item.parentId) this.updateView(player, item);
+        player.call("inventory.addItem", [this.convertServerToClientItem(item), pocketIndex, index, parentId]);
     },
-    deleteItem(player, sqlId) {
-        var item = this.getItem(player, sqlId);
-        if (!item) return console.log(`[inventory.deleteItem] Предмет #${sqlId} у ${player.name} не найден`);
+    deleteItem(player, item) {
+        if (typeof item == 'number') item = this.getItem(player, item);
+        if (!item) return console.log(`[inventory.deleteItem] Предмет #${item} у ${player.name} не найден`);
 
         if (!item.parentId) this.clearView(player, item.itemId);
         item.destroy();
-        player.call("inventory.deleteItem", [sqlId]);
+        player.call("inventory.deleteItem", [item.id]);
     },
     getItem(player, sqlId) {
         for (var i = 0; i < player.inventory.items.length; i++) {

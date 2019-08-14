@@ -45,5 +45,12 @@ module.exports = (sequelize, DataTypes) => {
     {
         timestamps: false
     });
+
+    model.associate = (models) => {
+        model.hasMany(models.GaragePlace, {
+            foreignKey: "garageId"
+        });
+    };
+
     return model;
 };

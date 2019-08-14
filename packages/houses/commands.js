@@ -12,4 +12,10 @@ module.exports = {
             player.call("house.add.open", []);
         }
     },
+    "/interioradd": {
+        access: 5,
+        handler: (player, args) => {
+            player.call("house.add.interior.open", []);
+        }
+    },
 }
