@@ -1389,7 +1389,7 @@ var selectMenu = new Vue({
                 if (this.valuesType(val) == 3) { // editable
                     var itemText = this.menu.items[val].text;
                     this.$refs[itemText].focus();
-                    console.log("focused")
+                    // console.log("focused")
                 }
             }, 100);
         },

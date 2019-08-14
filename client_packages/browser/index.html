@@ -28,6 +28,7 @@
     <link rel="stylesheet" type="text/css" href="css/carSpecifications.css" />
     <link rel="stylesheet" type="text/css" href="css/check.css" />
     <link rel="stylesheet" type="text/css" href="css/inputWindow.css" />
+    <link rel="stylesheet" type="text/css" href="css/terminal.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -663,7 +664,7 @@
         </div>
     </div>
 
-    
+
     <div v-cloak="v-cloak" id="input-window" v-if="show">
         <div class="header">{{ header }}</div>
         <div class="body">
@@ -675,7 +676,20 @@
             <div class="right" @click="decline">{{ rightWord }}</div>
         </div>
     </div>
-    
+
+    <div id="terminal" v-if="show">
+        <div class="header">
+            <div>Консоль разработчика</div>
+            <div class="close" @click="show = false">x</div>
+        </div>
+        <div class="content scroll">
+            <div v-for="mess in messages" v-bind:class="[mess.type]"><p>{{ mess.text }}</p></div>
+        </div>
+        <div class="footer">
+            <input type="text" v-model="inputText" v-on:keyup.enter="onInputEnter" v-on:keyup.up="onInputUp" v-on:keyup.down="onInputDown" :ref="'input'" placeholder="classic command..." autofocus />
+        </div>
+    </div>
+
 
 
     <!-- ------------------------ REACT ------------------------------ -->
@@ -700,6 +714,7 @@
     <script src="js/carSpecifications.js"></script>
     <script src="js/check.js"></script>
     <script src="js/inputWindow.js"></script>
+    <script src="js/terminal.js"></script>
 </body>
 
 </html>
