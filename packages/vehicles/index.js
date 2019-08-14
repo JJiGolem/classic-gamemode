@@ -297,7 +297,7 @@ module.exports = {
             }
         }
     },
-    getVehicleBySqlId() {
+    getVehicleBySqlId(sqlId) {
         if (!sqlId) return null;
         var result;
         mp.vehicles.forEach((veh) => {
