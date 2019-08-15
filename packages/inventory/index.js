@@ -180,7 +180,7 @@ module.exports = {
         }
         return clientItem;
     },
-    async addItem(player, itemId, pocketIndex, index, parentId, params) {
+    async addItem(player, itemId, slot, params) {
         var struct = [];
         for (var key in params) {
             struct.push({
@@ -191,9 +191,9 @@ module.exports = {
         var item = await db.Models.CharacterInventory.create({
             playerId: player.character.id,
             itemId: itemId,
-            pocketIndex: pocketIndex,
-            index: index,
-            parentId: parentId,
+            pocketIndex: slot.pocketIndex,
+            index: slot.index,
+            parentId: slot.parentId,
             params: struct,
             children: [],
         }, {
@@ -210,7 +210,7 @@ module.exports = {
 
         player.inventory.items.push(item);
         if (!item.parentId) this.updateView(player, item);
-        player.call("inventory.addItem", [this.convertServerToClientItem(item), pocketIndex, index, parentId]);
+        player.call("inventory.addItem", [this.convertServerToClientItem(item), item.pocketIndex, item.index, item.parentId]);
     },
     deleteItem(player, item) {
         if (typeof item == 'number') item = this.getItem(player, item);
@@ -219,6 +219,28 @@ module.exports = {
         if (!item.parentId) this.clearView(player, item.itemId);
         item.destroy();
         player.call("inventory.deleteItem", [item.id]);
+
+        this.clearArrayItems(player, item);
+    },
+    clearItems(player) {
+        var items = player.inventory.items;
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            if (!item.parentId) {
+                this.deleteItem(player, item);
+                i--;
+            }
+        }
+    },
+    clearArrayItems(player, item) {
+        var items = player.inventory.items;
+        var children = this.getChildren(player, item);
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i];
+            this.clearArrayItems(player, child);
+        }
+        var index = items.indexOf(item);
+        items.splice(index, 1);
     },
     getItem(player, sqlId) {
         for (var i = 0; i < player.inventory.items.length; i++) {
@@ -226,6 +248,15 @@ module.exports = {
             if (item.id == sqlId) return item;
         }
         return null;
+    },
+    getChildren(player, item) {
+        var items = player.inventory.items;
+        var children = [];
+        for (var i = 0; i < items.length; i++) {
+            var child = items[i];
+            if (child.parentId == item.id) children.push(child);
+        }
+        return children;
     },
     updateView(player, item) {
         if (player.inventory.denyUpdateView) return;
@@ -362,5 +393,28 @@ module.exports = {
         if (!param) return;
         param.value = value;
         param.save();
+    },
+    findFreeSlot(player, itemId) {
+        var items = player.inventory.items;
+        for (var bodyIndex in this.bodyList) {
+            var list = this.bodyList[bodyIndex];
+            if (list.includes(itemId)) { // предмет, можно надеть
+                for (var i = 0; i < items.length; i++) {
+                    var item = items[i];
+                    if (!item.parentId && item.index == bodyIndex) break; // другой предмет на тело уже надет
+                }
+                var isFind = !items.length || (i && i == items.length);
+                if (isFind) return {
+                    pocketIndex: null,
+                    index: bodyIndex,
+                    parentId: null
+                };
+            }
+        }
+        // return {
+        //     pocketIndex: null,
+        //     index: 0,
+        //     parentId: null
+        // };
     },
 };
