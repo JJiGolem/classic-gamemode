@@ -221,34 +221,6 @@ function getRepairAnimType(vehicle) {
     }
 }
 
-
-
-let data = {
-    engine: {
-        state: 1,
-        price: 200
-    },
-    steering: {
-        state: 1,
-        price: 350
-    },
-    fuel: {
-        state: 1,
-        price: 350
-    },
-    brake: {
-        state: 1,
-        price: 350
-    },
-    body: {
-        price: 150
-    }
-}
-
-mp.keys.bind(0x73, true, function () {
-    mp.events.call('carservice.check.show', data);
-});
-
 mp.events.add('carservice.check.show', (data) => {
     mp.busy.add('carservice.check');
     mp.gui.cursor.show(true, true);

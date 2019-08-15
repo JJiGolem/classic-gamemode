@@ -1,4 +1,5 @@
 let breakdowns = require('./vehicles/breakdowns.js');
+let sell = require('./vehicles/sell.js');
 
 let currentSirenState = false;
 

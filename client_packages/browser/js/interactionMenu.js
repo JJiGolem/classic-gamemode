@@ -68,6 +68,10 @@ var interactionMenu = new Vue({
                         mp.trigger(`vehicles.siren.sound`);
                         mp.trigger(`interaction.menu.close`);
                     }
+                    if (item.text == 'Продать Т/С') {
+                        mp.trigger(`interaction.menu.close`);
+                        mp.trigger(`vehicles.sell.show`);
+                    }
                 }
             },
             "vehicle_ejectlist": {

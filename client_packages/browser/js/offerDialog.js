@@ -54,6 +54,24 @@ var offerDialog = new Vue({
                     mp.trigger("callRemote", "house.sell.ans", 2);
                 },
             },
+            "vehicles_sell": {
+                text: `Carter Slade предлагает вам купить т/с "Glendale" (AYE741)`,
+                price: 228,
+                on(values) {
+                    this.price = values.price;
+                    this.text = `${values.name} предлагает вам купить т/с ${values.model} (${values.plate})`;
+                },
+                yes() {
+                    mp.trigger("callRemote", "vehicles.sell.offer.accept", 1);
+                },
+                no() {
+                    mp.trigger("callRemote", "vehicles.sell.offer.accept", 0);
+                    //mp.trigger("offerDialog.close");
+                },
+                ignore() {
+                    alert("Диалог предложения был проигнорирован!");
+                },
+            },
         },
         dialog: null,
         timeout: null,
