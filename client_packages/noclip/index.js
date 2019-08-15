@@ -1,3 +1,4 @@
+/// credits to Morbo
 var getNormalizedVector = function(vector) {
   var mag = Math.sqrt(
     vector.x * vector.x + vector.y * vector.y + vector.z * vector.z
@@ -39,7 +40,8 @@ mp.keys.bind(bindVirtualKeys.F2, true, function() {
   }
 });
 function startNoClip() {
-  mp.game.graphics.notify('NoClip ~g~activated');
+  //mp.game.graphics.notify('NoClip ~g~activated');
+  mp.notify.success('Режим полета включен', 'Fly mode');
   var camPos = new mp.Vector3(
     localPlayer.position.x,
     localPlayer.position.y,
@@ -55,7 +57,8 @@ function startNoClip() {
   localPlayer.setCollision(false, false);
 }
 function stopNoClip() {
-  mp.game.graphics.notify('NoClip ~r~disabled');
+  //mp.game.graphics.notify('NoClip ~r~disabled');
+  mp.notify.success('Режим полета отключен', 'Fly mode');
   if (noClipCamera) {
     localPlayer.position = noClipCamera.getCoord();
     localPlayer.setHeading(noClipCamera.getRot(2).z);
