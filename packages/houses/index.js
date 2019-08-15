@@ -251,11 +251,14 @@ module.exports = {
     getHouseById(id) {
         return houses.find( x => x.info.id == id);
     },
-    getHouseIndexByCharId(id) {
-        return houses.findIndex( x => x.info.characterId == id);
-    },
     getHouseIndexById(id) {
         return houses.findIndex( x => x.info.id == id);
+    },
+    getHouseByCharId(id) {
+        return houses.find( x => x.info.characterId == id);
+    },
+    getHouseIndexByCharId(id) {
+        return houses.findIndex( x => x.info.characterId == id);
     },
     isHaveHouse(id) {
         return houses.findIndex( x => x.info.characterId == id) != -1;
@@ -304,5 +307,31 @@ module.exports = {
                 }
             });        
         }); 
+    },
+    getHouseCarPlaces(id) {
+        let house = getHouseByCharId(id);
+        if (house == null) return null;
+
+        let garagePlaces = [{
+            x: house.carX,
+            y: house.carY,
+            z: house.carZ,
+            h: house.carAngle,
+            d: 0
+        }];
+
+        let garage = house.Interior.Garage;
+        if (garage == null) return garagePlaces;
+        
+        house.Interior.Garage.GaragePlaces.forEach(place => {
+            garagePlaces.push({
+                x: place.x,
+                y: place.y,
+                z: place.z,
+                h: place.angle,
+                d: house.id
+            });
+        });
+        return garagePlaces;
     }
 };
