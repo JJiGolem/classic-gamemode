@@ -1259,6 +1259,73 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "houseAddGarageMenu": {
+                name: "houseaddgarage",
+                header: "Добавление гаража",
+                items: [{
+                        text: "Создать авто",
+                    },  
+                    {
+                        text: "Добавить парковочное место",
+                    },
+                    {
+                        text: "Удалить парковочное место",
+                    },
+                    {
+                        text: "Поставить спавн в гараже",
+                        values: ['No'],
+                        i: 0,
+                    },
+                    {
+                        text: "Поставить выход из гаража",
+                        values: ['No'],
+                        i: 0,
+                    },
+                    {
+                        text: "Создать",
+                    },
+                    {
+                        text: "Закрыть",
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        switch(e.itemName) {
+                            case "Создать авто":
+                                mp.trigger("house.add.garage.carSpawn");
+                                break;
+                            case "Добавить парковочное место":
+                                mp.trigger("house.add.garage.addPlace");
+                                break;
+                            case "Удалить парковочное место":
+                                mp.trigger("house.add.garage.removePlace");
+                                break;
+                            case "Поставить спавн в гараже":
+                                mp.trigger("house.add.garage.enter");
+                                break;
+                            case "Поставить выход из гаража":
+                                mp.trigger("house.add.garage.exit");
+                                break;
+                            case "Создать":
+                                mp.trigger("house.add.garage.create");
+                                break;
+                            case "Закрыть":
+                                mp.trigger("house.add.garage.close");
+                                break;
+                        }
+                    }
+                }
+            },
             "fuelStationMenu": {
                 name: "fuelstation",
                 header: "АЗС",

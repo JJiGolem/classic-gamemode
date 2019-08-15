@@ -29,10 +29,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: false
         },
-        dimension: {
-            type: DataTypes.INTEGER(11),
-            allowNull: false
-        },
     }, 
     {
         timestamps: false

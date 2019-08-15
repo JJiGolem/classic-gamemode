@@ -80,6 +80,19 @@ module.exports = {
     getGarages() {
         return garages;
     },
+    initHouseAdding(player) {
+        let interiorsClasses = new Array();
+        for (let i = 0; i < interiors.length; i++) {
+            interiorsClasses.push({id: interiors[i].id, class: interiors[i].class});
+        }
+
+        let garagesIdCarPlaces = new Array();
+        for (let i = 0; i < garages.length; i++) {
+            garagesIdCarPlaces.push({id: garages[i].id, carPlaces: garages[i].carPlaces});
+        }
+
+        player.call('house.add.init', [interiorsClasses, garagesIdCarPlaces]);
+    },
     async createHouse(houseInfo) {
         let house = await db.Models.House.create({
             interiorId: houseInfo.interiorId,
@@ -119,7 +132,7 @@ module.exports = {
         this.setTimer(houses.length - 1);
         console.log("[HOUSES] added new house");
     },
-    async createInterior(interiorInfo) {
+    async createInterior(player, interiorInfo) {
         let interior = await db.Models.Interior.create({
             garageId: interiorInfo.garageId,
             class: interiorInfo.class,
@@ -134,15 +147,25 @@ module.exports = {
             rotation: interiorInfo.rotation,
         });
         interiors.push(interior);
+        this.initHouseAdding(player);
         console.log("[HOUSES] added new interior");
     },
-    async createGarage(garageInfo) {
+    async createGarage(player, garageInfo) {
         let garage = await db.Models.Garage.create({
-
+            carPlaces: garageInfo.carPlaces,
+            x: garageInfo.x,
+            y: garageInfo.y,
+            z: garageInfo.z,
+            rotation: garageInfo.rotation,
+            exitX: garageInfo.exitX,
+            exitY: garageInfo.exitY,
+            exitZ: garageInfo.exitZ,
+            GaragePlaces: garageInfo.GaragePlaces,
         }, {
             include: [db.Models.GaragePlace]
         });
         garages.push(garage);
+        this.initHouseAdding(player);
         console.log("[HOUSES] added new garage");
     },
     addHouse(houseInfo) {

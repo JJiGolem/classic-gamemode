@@ -18,4 +18,10 @@ module.exports = {
             player.call("house.add.interior.open", []);
         }
     },
+    "/garageadd": {
+        access: 5,
+        handler: (player, args) => {
+            player.call("house.add.garage.open", []);
+        }
+    },
 }
