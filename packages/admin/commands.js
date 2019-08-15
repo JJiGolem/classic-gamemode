@@ -269,5 +269,14 @@ module.exports = {
                 player.setClothes(2, 0, 0, 0);
             }
         }
-    }
+    },
+    "/pinfo": {
+        access: 6,
+        description: "Логировать игрока в консоль",
+        args: "",
+        handler: (player) => {
+            console.log(player)
+        }
+    },
+
 }

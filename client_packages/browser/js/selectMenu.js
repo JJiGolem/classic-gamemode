@@ -1366,6 +1366,46 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "taxiJobMenu": {
+                name: "taxijob",
+                header: "Управляющий таксопарком",
+                items: [{
+                        text: "Устроиться на работу",
+                        i: 0,
+                    },
+                    {
+                        text: "Помощь",
+                        i: 0,
+                    },
+                    {
+                        text: "Закрыть",
+                        i: 0,
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Устроиться на работу') {
+                            mp.trigger(`taxi.jobmenu.employment`);
+                        }
+                        if (e.itemName == 'Уволиться с работы') {
+                            mp.trigger(`taxi.jobmenu.employment`);
+                        }
+                        if (e.itemName == 'Закрыть') {
+                            mp.trigger(`taxi.jobmenu.close`);
+                        }
+                    }
+                }
+            },
         },
         // Уведомление
         notification: null,

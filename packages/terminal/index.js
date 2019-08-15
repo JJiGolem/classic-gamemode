@@ -22,12 +22,21 @@ module.exports = {
             for (var i = 0; i < syntax.length; i++) {
                 var argType = syntax[i].split(":")[1];
                 if (!argType) continue;
-                if (!isValidArg(argType, cmdArgs[i])) return this.error(`Неверное значение "${cmdArgs[i]}" для параметра ${syntax[i]}!`, player);
-                else cmdArgs[i] = toValidArg(argType, cmdArgs[i]);
+                if (!this.isValidArg(argType, cmdArgs[i])) return this.error(`Неверное значение "${cmdArgs[i]}" для параметра ${syntax[i]}!`, player);
+                else cmdArgs[i] = this.toValidArg(argType, cmdArgs[i]);
             }
         }
         if (player.character.admin < cmd.access) return this.warning(`Вам недоступна эта команда. Введите "help [name]" для ознакомления`, player);
         cmd.handler(player, cmdArgs, this);
+    },
+    isValidArg(type, arg) {
+        if (type == "n") return !isNaN(arg) && arg.length > 0;
+        if (type == "s") return arg && arg.length > 0;
+        return false;
+    },
+    toValidArg(type, arg) {
+        if (type == "n") return parseFloat(arg);
+        return arg;
     },
     log(text, player) {
         this.push('log', text, player);
