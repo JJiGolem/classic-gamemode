@@ -14,7 +14,7 @@ module.exports = {
     "/invadditems": {
         access: 6,
         description: "Добавить тестовые предметы в инвентарь игрока",
-        args: "[ид_игрока]",
+        args: "[ид_игрока]:n",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
             if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
@@ -103,7 +103,7 @@ module.exports = {
     "/invclearitems": {
         access: 6,
         description: "Очистить инвентарь игрока",
-        args: "[ид_игрока]",
+        args: "[ид_игрока]:n",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
             if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
@@ -127,7 +127,7 @@ module.exports = {
     "/invsetitemname": {
         description: "Изменить название предмета инвентаря. (см. /invlist)",
         access: 6,
-        args: "[ид_предмета] [название]",
+        args: "[ид_предмета]:n [название]",
         handler: (player, args, out) => {
             console.log(args[0] - 1)
             var item = inventory.inventoryItems[args[0] - 1];
@@ -144,7 +144,7 @@ module.exports = {
     "/invsetitemdesc": {
         description: "Изменить описание предмета инвентаря. (см. /invlist)",
         access: 6,
-        args: "[ид_предмета] [описание]",
+        args: "[ид_предмета]:n [описание]",
         handler: (player, args, out) => {
             var item = inventory.inventoryItems[args[0] - 1];
             if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
@@ -161,7 +161,7 @@ module.exports = {
     "/invsetitemweight": {
         description: "Изменить вес предмета инвентаря. (см. /invlist)",
         access: 6,
-        args: "[ид_предмета] [вес]",
+        args: "[ид_предмета]:n [вес]:n",
         handler: (player, args, out) => {
             var item = inventory.inventoryItems[args[0] - 1];
             if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
@@ -175,7 +175,7 @@ module.exports = {
     "/invsetitemsize": {
         description: "Изменить размер предмета инвентаря. (см. /invlist)",
         access: 6,
-        args: "[ид_предмета] [высота] [ширина]",
+        args: "[ид_предмета]:n [высота]:n [ширина]:n",
         handler: (player, args, out) => {
             var item = inventory.inventoryItems[args[0] - 1];
             if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
@@ -190,7 +190,7 @@ module.exports = {
     "/invsetitemmodel": {
         description: "Изменить модель предмета инвентаря. Эта модель используется, когда игрок выкидывает предмет. (см. /invlist)",
         access: 6,
-        args: "[ид_предмета] [модель]",
+        args: "[ид_предмета]:n [модель]",
         handler: (player, args, out) => {
             var item = inventory.inventoryItems[args[0] - 1];
             if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
@@ -205,7 +205,7 @@ module.exports = {
     "/invsetitemdeltaz": {
         description: "Изменить deltaZ предмета инвентаря. Смещение модели по высоте, когда игрок выкидывает предмет. (см. /invlist)",
         access: 6,
-        args: "[ид_предмета] [deltaZ]",
+        args: "[ид_предмета]:n [deltaZ]:n",
         handler: (player, args, out) => {
             var item = inventory.inventoryItems[args[0] - 1];
             if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
@@ -219,7 +219,7 @@ module.exports = {
     "/invsetitemrot": {
         description: "Изменить rotation предмета инвентаря. Поворот модели, когда игрок выкидывает предмет. (см. /invlist)",
         access: 6,
-        args: "[ид_предмета] [x] [y]",
+        args: "[ид_предмета]:n [x]:n [y]:n",
         handler: (player, args, out) => {
             var item = inventory.inventoryItems[args[0] - 1];
             if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
