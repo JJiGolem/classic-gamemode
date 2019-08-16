@@ -4,12 +4,7 @@ import IncomingCall from "../modules/phone/components/IncomingCall";
 
 export const PlayerEvents = (dispatch, getState) => {
 
-    myEventEmmiter.on('closeForm', () => {
-        dispatch({
-            type: 'CLOSE_FORM'
-        })
-    });
-
+    // ------------ ЧАТ --------------------
     myEventEmmiter.on('pushChatMessage', (message) => {
         dispatch({
             type: 'ADD_MESSAGE_TO_CHAT',
@@ -52,6 +47,10 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
+    // ------------ ЧАТ - КОНЕЦ --------------------
+
+    // ------------ ТЕЛЕФОН (ОБЩЕЕ) -----------------
+
     myEventEmmiter.on('phone.show', (flag) => {
         dispatch({
             type: 'SHOW_PHONE',
@@ -85,6 +84,45 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
+    myEventEmmiter.on('phone.call.in', (number) => {
+        dispatch({
+            type: 'ADD_APP',
+            payload: { name: 'IncomingCall', form: <IncomingCall number={number} /> }
+        });
+    });
+
+    myEventEmmiter.on('phone.call.end', () => {
+        dispatch({
+            type: 'SET_CALL_STATUS',
+            payload: 5
+        });
+    });
+
+    myEventEmmiter.on('phone.call.ans', (ans) => {
+        dispatch({
+            type: 'SET_CALL_STATUS',
+            payload: ans
+        });
+    });
+
+    myEventEmmiter.on('phone.app.add', (appName, info) => {
+        dispatch({
+            type: 'ADD_APP_TO_PHONE',
+            payload: { appName, info }
+        });
+    });
+
+    myEventEmmiter.on('phone.app.remove', (appName) => {
+        dispatch({
+            type: 'DELETE_APP_TO_PHONE',
+            payload: appName
+        });
+    });
+
+    // ------------ ТЕЛЕФОН (ОБЩЕЕ) - КОНЕЦ -----------------
+
+    // ------------ ТЕЛЕФОН (ДОМ) -----------------
+
     myEventEmmiter.on('house.sell.toGov.ans', (ans) => {
         dispatch({
             type: 'SET_SELL_STATUS_HOUSE',
@@ -105,6 +143,10 @@ export const PlayerEvents = (dispatch, getState) => {
             payload: { nick, price }
         });
     });
+
+    // ------------ ТЕЛЕФОН (ДОМ) - КОНЕЦ -----------------
+
+    // ------------ ТЕЛЕФОН (БИЗНЕС) -----------------
 
     myEventEmmiter.on('biz.sell.toGov.ans', (ans) => {
         dispatch({
@@ -141,27 +183,48 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
-    myEventEmmiter.on('phone.call.in', (number) => {
+    // ------------ ТЕЛЕФОН (БИЗНЕС) - КОНЕЦ -----------------
+
+    // ------------ ТЕЛЕФОН (ТАКСИ) -----------------
+
+    myEventEmmiter.on('taxi.client.location', (area, street) => {
         dispatch({
-            type: 'ADD_APP',
-            payload: { name: 'IncomingCall', form: <IncomingCall number={number} /> }
+            type: 'LOAD_LOCATION_TAXI_CLIENT',
+            payload: { area, street }
         });
     });
 
-    myEventEmmiter.on('phone.call.end', () => {
+    myEventEmmiter.on('taxi.client.order.ans', (answer) => {
         dispatch({
-            type: 'SET_CALL_STATUS',
-            payload: 5
+            type: 'ANS_TAXI_CLIENT',
+            payload: answer
         });
     });
 
-    myEventEmmiter.on('phone.call.ans', (ans) => {
+    myEventEmmiter.on('taxi.driver.load', (info) => {
         dispatch({
-            type: 'SET_CALL_STATUS',
-            payload: ans
+            type: 'LOAD_INFO_TAXI_DRIVER',
+            payload: info
         });
     });
 
+    myEventEmmiter.on('taxi.driver.order.add', (order) => {
+        dispatch({
+            type: 'ADD_ORDER_TAXI_DRIVER',
+            payload: order
+        });
+    });
+
+    myEventEmmiter.on('taxi.driver.order.delete', (orderId) => {
+        dispatch({
+            type: 'DELETE_ORDER_TAXI_DRIVER',
+            payload: orderId
+        });
+    });
+
+    // ------------ ТЕЛЕФОН (ТАКСИ) - КОНЕЦ -----------------
+
+    // ------------ ДОМА -----------------
     myEventEmmiter.on('house.menu', () => {
         dispatch({
             type: 'SHOW_HOUSE',
@@ -214,6 +277,10 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
+    // ------------ ДОМА - КОНЕЦ -----------------
+
+    // ------------ БИЗНЕСЫ -----------------
+
     myEventEmmiter.on('biz.menu', () => {
         dispatch({
             type: 'SHOW_BUSINESS',
@@ -244,19 +311,7 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
-    myEventEmmiter.on('phone.app.add', (appName, info) => {
-        dispatch({
-            type: 'ADD_APP_TO_PHONE',
-            payload: { appName, info }
-        });
-    });
-
-    myEventEmmiter.on('phone.app.remove', (appName) => {
-        dispatch({
-            type: 'DELETE_APP_TO_PHONE',
-            payload: appName
-        });
-    });
+    // ------------ БИЗНЕСЫ - КОНЕЦ -----------------
 };
 
 

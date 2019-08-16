@@ -30,10 +30,15 @@ module.exports = {
         //     player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);
         //     player.removeFromVehicle();
         // }
+
+        if (vehicle.key == 'job' && vehicle.owner != player.character.job && seat == -1) {
+            player.removeFromVehicle();
+            player.call('notifications.push.error', ["Это рабочий транспорт", "Нет доступа"]);
+        }
+
         let isPrivate = false;
         if (vehicle.key == 'private' && vehicle.owner == player.character.id) {
             isPrivate = true;
-            console.log('private veh')
         }
         player.call('vehicles.enter.private', [isPrivate]);
 

@@ -10,6 +10,12 @@ export default function taxiClient(state = initialState, action) {
               location: payload
             };
 
+        case 'CLEAR_LOCATION_TAXI_CLIENT':
+            return {
+                ...state,
+                location: null
+            };
+
         case 'ANS_TAXI_CLIENT':
             const newState = { ...state };
             newState.isSearch = false;

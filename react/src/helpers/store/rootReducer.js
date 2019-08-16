@@ -11,6 +11,7 @@ import business from '../../modules/business/reducers/reducer.business';
 import bank from '../../modules/bank/reducers/reducer.bank';
 import bankPages from '../../modules/bank/reducers/reducer.bankPages';
 import taxiClient from '../../modules/phone/reducers/reducer.taxi.cleint';
+import taxiDriver from '../../modules/phone/reducers/reducer.taxi.driver';
 
 export default combineReducers({
     forms,
@@ -23,5 +24,6 @@ export default combineReducers({
     business,
     bank,
     bankPages,
-    taxiClient
+    taxiClient,
+    taxiDriver
 });

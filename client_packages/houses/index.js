@@ -135,7 +135,7 @@ mp.events.add('house.add.close', () => {
     if (spawnMarker != null) spawnMarker.destroy();
     if (spawnMarkerAngle != null) spawnMarkerAngle.destroy();
     if (carPlaceMarker != null) carPlaceMarker.destroy();
-    mp.events.callRemote("house.add.carDrop");
+    mp.events.callRemote("house.add.carDrop", 0);
 });
 mp.events.add('house.add.enter', () => {
     if (mp.players.local.vehicle) return mp.notify.error("Покиньте авто", "Ошибка");
@@ -183,7 +183,7 @@ mp.events.add('house.add.spawn', () => {
 });
 mp.events.add('house.add.carSpawn', () => {
     if (mp.players.local.vehicle) return mp.notify.error("Покиньте авто", "Ошибка");
-    mp.events.callRemote("house.add.carSpawn");
+    mp.events.callRemote("house.add.carSpawn", 0);
 });
 mp.events.add('house.add.carPlace', () => {
     if (!mp.players.local.vehicle) return mp.notify.error("Сядьте в авто", "Ошибка");
@@ -229,11 +229,29 @@ mp.events.add('house.add.create', (interiorIndex, price) => {
     carPlaceMarker.destroy();
     carPlaceMarker = null;
 
-    mp.events.callRemote("house.add.carDrop");
+    mp.events.callRemote("house.add.carDrop", 0);
 
     mp.busy.remove('house.add');
     mp.callCEFV(`selectMenu.show = false`);
     mp.events.callRemote("house.add", JSON.stringify(addHouseInfo));
+    addHouseInfo = {
+        interiorId: null,
+        price: null,
+        /// Enter
+        pickupX: null,
+        pickupY: null,
+        pickupZ: null,
+        /// Spawn
+        spawnX: null,
+        spawnY: null,
+        spawnZ: null,
+        angle: null,
+        /// Car place
+        carX: null,
+        carY: null,
+        carZ: null,
+        carAngle: null
+    };
 });
 
 
@@ -355,6 +373,21 @@ mp.events.add('house.add.interior.create', (garageIndex, className, numRooms, re
     mp.busy.remove('house.add');
     mp.callCEFV(`selectMenu.show = false`);
     mp.events.callRemote("house.add.interior", JSON.stringify(addInteriorInfo));
+    addInteriorInfo = {
+        garageId: null,
+        class: null,
+        numRooms: null,
+        rent: null,
+        /// Exit
+        exitX: null,
+        exitY: null,
+        exitZ: null,
+        /// Enter
+        x: null,
+        y: null,
+        z: null,
+        rotation: null,
+    };
 });
 
 
@@ -363,3 +396,159 @@ mp.events.add('house.add.interior.create', (garageIndex, className, numRooms, re
 
 
 /// Add Garage
+let addGarageInfo = {
+    carPlaces: 0,
+    GaragePlaces: [],
+    /// Exit
+    exitX: null,
+    exitY: null,
+    exitZ: null,
+    /// Enter
+    x: null,
+    y: null,
+    z: null,
+    rotation: null,
+};
+exitMarker = null;
+enterMarker = null;
+enterMarkerAngle = null;
+let id = 0;
+mp.events.add('house.add.garage.open', () => {
+    if (mp.busy.includes()) return;
+    if (!mp.busy.add('house.add')) return;
+    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["houseAddGarageMenu"]);`);
+    mp.callCEFV(`selectMenu.show = true`);
+});
+mp.events.add('house.add.garage.close', () => {
+    mp.busy.remove('house.add');
+    mp.callCEFV(`selectMenu.show = false`);
+    if (exitMarker != null) exitMarker.destroy();
+    if (enterMarker != null) enterMarker.destroy();
+    if (enterMarkerAngle != null) enterMarkerAngle.destroy();
+});
+mp.events.add('house.add.garage.exit', () => {
+    if (mp.players.local.vehicle) return mp.notify.error("Покиньте авто", "Ошибка");
+    addGarageInfo.exitX = mp.players.local.position.x;
+    addGarageInfo.exitY = mp.players.local.position.y;
+    addGarageInfo.exitZ = mp.players.local.position.z;
+
+    if (exitMarker != null) exitMarker.destroy();
+    exitMarker = mp.markers.new(0, new mp.Vector3(addGarageInfo.exitX, addGarageInfo.exitY, addGarageInfo.exitZ), 1,
+        {
+            direction: new mp.Vector3(0, 0, 0),
+            rotation: new mp.Vector3(0, 0, 0),
+            color: [0, 255, 0, 255],
+            visible: true,
+            dimension: 0
+        });
+    mp.callCEFV(`selectMenu.menu.items[4].values = ["GREEN"];`);
+});
+mp.events.add('house.add.garage.enter', () => {
+    if (mp.players.local.vehicle) return mp.notify.error("Покиньте авто", "Ошибка");
+    addGarageInfo.x = mp.players.local.position.x;
+    addGarageInfo.y = mp.players.local.position.y;
+    addGarageInfo.z = mp.players.local.position.z;
+    addGarageInfo.rotation = mp.players.local.getHeading();
+
+    if (enterMarker != null) enterMarker.destroy();
+    if (enterMarkerAngle != null) enterMarkerAngle.destroy();
+    enterMarker = mp.markers.new(0, new mp.Vector3(addGarageInfo.x, addGarageInfo.y, addGarageInfo.z), 1,
+        {
+            direction: new mp.Vector3(0, 0, 0),
+            rotation: new mp.Vector3(0, 0, 0),
+            color: [255, 0, 0, 255],
+            visible: true,
+            dimension: 0
+        });
+    enterMarkerAngle = mp.markers.new(0, new mp.Vector3(addGarageInfo.x + Math.sin((360 - addGarageInfo.rotation) * Math.PI/180) * 0.5, addGarageInfo.y + Math.cos((360 - addGarageInfo.rotation) * Math.PI/180) * 0.5, addGarageInfo.z - 1), 0.25,
+    {
+        direction: new mp.Vector3(0, 0, 0),
+        rotation: new mp.Vector3(0, 0, 0),
+        color: [255, 0, 0, 255],
+        visible: true,
+        dimension: 0
+    });
+    mp.callCEFV(`selectMenu.menu.items[3].values = ["RED"];`);
+});
+mp.events.add('house.add.garage.carSpawn', () => {
+    if (mp.players.local.vehicle) return mp.notify.error("Покиньте авто", "Ошибка");
+    id++;
+    mp.events.callRemote("house.add.carSpawn", id, true);
+});
+mp.events.add('house.add.carSpawn.ans', (id) => {
+    mp.players.local.vehicle.idCar = id;
+});
+mp.events.add('house.add.garage.addPlace', () => {
+    if (!mp.players.local.vehicle) return mp.notify.error("Сядьте в авто", "Ошибка");
+    let pos = mp.vehicles.getVehiclePosition(mp.players.local.vehicle);
+
+    let marker = mp.markers.new(0, new mp.Vector3(pos.x, pos.y, pos.z + 0.5), 1,
+        {
+            direction: new mp.Vector3(0, 0, 0),
+            rotation: new mp.Vector3(0, 0, 0),
+            color: [0, 0, 255, 255],
+            visible: true,
+            dimension: 0
+        });
+
+    addGarageInfo.GaragePlaces.push({
+        id: mp.players.local.vehicle.idCar,
+        marker: marker,
+        x: pos.x,
+        y: pos.y,
+        z: pos.z,
+        angle: pos.h,
+    });
+    addGarageInfo.carPlaces++;
+    mp.events.callRemote("house.add.removeFromVehicle");
+});
+mp.events.add('house.add.garage.removePlace', () => {
+    if (!mp.players.local.vehicle) return mp.notify.error("Сядьте в авто", "Ошибка");
+    let index = addGarageInfo.GaragePlaces.findIndex(x => x.id = mp.players.local.vehicle.idCar);
+    let idCar = mp.players.local.vehicle.idCar;
+    if (index == -1) return mp.notify.error("Авто не найдено в списке парковочных мест", "Ошибка");
+    addGarageInfo.GaragePlaces[index].marker.destroy();
+    addGarageInfo.GaragePlaces[index].marker = null;
+    mp.players.local.vehicle.idCar = null;
+    addGarageInfo.GaragePlaces.splice(index, 1);
+    mp.events.callRemote("house.add.removeFromVehicle");
+    mp.events.callRemote("house.add.carDrop", idCar);
+    addGarageInfo.carPlaces--;
+});
+mp.events.add('house.add.garage.create', () => {
+    if (addGarageInfo.carPlaces == 0) return mp.notify.error("Добавьте парковочные места", "Ошибка");
+    if (exitMarker == null) return mp.notify.error("Создайте выход из интерьера", "Ошибка");
+    if (enterMarker == null) return mp.notify.error("Создайте вход в интерьер", "Ошибка");
+    addGarageInfo.GaragePlaces.forEach(place => {
+        mp.events.callRemote("house.add.carDrop", place.id);
+        place.marker.destroy();
+        delete place.marker;
+        delete place.id;
+    });
+
+    exitMarker.destroy();
+    exitMarker = null;
+
+    enterMarker.destroy();
+    enterMarker = null;
+
+    enterMarkerAngle.destroy();
+    enterMarkerAngle = null;
+
+    mp.busy.remove('house.add');
+    mp.callCEFV(`selectMenu.show = false`);
+    mp.events.callRemote("house.add.garage", JSON.stringify(addGarageInfo));
+    addGarageInfo = {
+        carPlaces: 0,
+        GaragePlaces: [],
+        /// Exit
+        exitX: null,
+        exitY: null,
+        exitZ: null,
+        /// Enter
+        x: null,
+        y: null,
+        z: null,
+        rotation: null,
+    }
+});
