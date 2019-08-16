@@ -7,10 +7,10 @@ module.exports = {
         access: 6,
         args: "",
         handler: (player, args, out) => {
-            var text = "ID) Имя [товар] [макс. товара] | блип | цвет_блипа<br/>";
+            var text = "ID) Имя [бп] [макс. бп] [мед] [макс. мед] | блип | цвет_блипа<br/>";
             for (var i = 0; i < factions.factions.length; i++) {
                 var faction = factions.factions[i];
-                text += `${faction.id}) ${faction.name} [${faction.products}] [${faction.maxProducts}] | ${faction.blip} | ${faction.blipColor}<br/>`;
+                text += `${faction.id}) ${faction.name} [${faction.ammo}] [${faction.maxAmmo}] [${faction.medicines}] [${faction.maxMedicines}] | ${faction.blip} | ${faction.blipColor}<br/>`;
             }
             out.log(text, player);
         }
@@ -101,29 +101,55 @@ module.exports = {
             factions.setRank(rec.character, rank);
         }
     },
-    "/fsetproducts": {
-        description: "Изменить количество товара на складе организации.",
+    "/fsetammo": {
+        description: "Изменить количество боеприпасов на складе организации.",
         access: 6,
-        args: "[ид_организации]:n [товар]:n",
+        args: "[ид_организации]:n [боеприпасы]:n",
         handler: (player, args, out) => {
             var faction = factions.getFaction(args[0]);
             if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
 
-            out.info(`${player.name} изменил количество товара у организации #${args[0]} (${faction.products} => ${args[1]})`);
-            faction.products = args[1];
+            out.info(`${player.name} изменил количество боеприпасов у организации #${args[0]} (${faction.ammo} => ${args[1]})`);
+            faction.ammo = args[1];
             faction.save();
         }
     },
-    "/fsetmaxproducts": {
-        description: "Изменить вместимость товара на складе организации.",
+    "/fsetmaxammo": {
+        description: "Изменить вместимость боеприпасов на складе организации.",
         access: 6,
         args: "[ид_организации]:n [вместимость]:n",
         handler: (player, args, out) => {
             var faction = factions.getFaction(args[0]);
             if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
 
-            out.info(`${player.name} изменил вместимость товара на складе у организации #${args[0]} (${faction.maxProducts} => ${args[1]})`);
-            faction.maxProducts = args[1];
+            out.info(`${player.name} изменил вместимость боеприпасов на складе у организации #${args[0]} (${faction.maxAmmo} => ${args[1]})`);
+            faction.maxAmmo = args[1];
+            faction.save();
+        }
+    },
+    "/fsetmeds": {
+        description: "Изменить количество медикаментов на складе организации.",
+        access: 6,
+        args: "[ид_организации]:n [медикаменты]:n",
+        handler: (player, args, out) => {
+            var faction = factions.getFaction(args[0]);
+            if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
+
+            out.info(`${player.name} изменил количество медикаментов у организации #${args[0]} (${faction.medicines} => ${args[1]})`);
+            faction.medicines = args[1];
+            faction.save();
+        }
+    },
+    "/fsetmaxmeds": {
+        description: "Изменить вместимость медикаментов на складе организации.",
+        access: 6,
+        args: "[ид_организации]:n [вместимость]:n",
+        handler: (player, args, out) => {
+            var faction = factions.getFaction(args[0]);
+            if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
+
+            out.info(`${player.name} изменил вместимость медикаментов на складе у организации #${args[0]} (${faction.maxMedicines} => ${args[1]})`);
+            faction.maxMedicines = args[1];
             faction.save();
         }
     },

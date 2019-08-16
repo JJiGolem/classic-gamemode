@@ -9,17 +9,32 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(128),
             allowNull: false
         },
-        products: {
+        ammo: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
             allowNull: false,
             set(val) {
-                var max = this.getDataValue('maxProducts');
+                var max = this.getDataValue('maxAmmo');
                 val = Math.clamp(val, 0, max);
-                this.setDataValue('products', val);
+                this.setDataValue('ammo', val);
             }
         },
-        maxProducts: {
+        maxAmmo: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 1000,
+            allowNull: false
+        },
+        medicines: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false,
+            set(val) {
+                var max = this.getDataValue('maxMedicines');
+                val = Math.clamp(val, 0, max);
+                this.setDataValue('medicines', val);
+            }
+        },
+        maxMedicines: {
             type: DataTypes.INTEGER(11),
             defaultValue: 1000,
             allowNull: false
