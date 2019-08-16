@@ -15,3 +15,7 @@ export const ansTaxiClient = answer => ({
    type: 'ANS_TAXI_CLIENT',
    payload: answer
 });
+
+export const clearLocationTaxiClient = () => ({
+    type: 'CLEAR_LOCATION_TAXI_CLIENT'
+});

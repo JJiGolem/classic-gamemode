@@ -227,7 +227,7 @@ class House extends Component {
             case 'actions':
                 return (
                     <div className='button-house-react' onClick={() => {
-                        house.answerBuy === null && !enterMenu.isShow && this.setState({ isActionsMenu: true });
+                        !house.isBlur && this.setState({ isActionsMenu: true });
                         blurForm(true)
                     }}
                          onMouseOver={() => this.setState({ colorActions: 'black' })}

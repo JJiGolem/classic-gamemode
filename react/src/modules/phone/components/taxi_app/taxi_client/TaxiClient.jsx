@@ -2,7 +2,7 @@ import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {
     ansTaxiClient,
-    cancelOrderTaxiClient,
+    cancelOrderTaxiClient, clearLocationTaxiClient,
     createOrderTaxiClient,
     loadLocationTaxiClient
 } from "../../../actions/action.taxi.client";
@@ -20,25 +20,38 @@ class TaxiClient extends Component {
     }
 
     componentDidMount() {
-        setTimeout(() => {
-            this.props.loadLocation('Бертон', 'Карсон-Авеню')
-        }, 1000)
+        // setTimeout(() => {
+        //     this.props.loadLocation('Бертон', 'Карсон-Авеню')
+        // }, 1000)
+
+        // eslint-disable-next-line no-undef
+        mp.trigger('taxi.client.app.open');
+    }
+
+    componentWillUnmount() {
+        this.props.clearLocation();
     }
 
     createOrder() {
         this.props.createOrderTaxi();
 
-        setTimeout(() => {
-            this.props.ansTaxi({
-                name: 'Dun Hill',
-                model: 'Blista',
-                number: 'ZBT228'
-            })
-        }, 1000);
+        // setTimeout(() => {
+        //     this.props.ansTaxi({
+        //         name: 'Dun Hill',
+        //         model: 'Blista',
+        //         number: 'ZBT228'
+        //     })
+        // }, 1000);
+
+        // eslint-disable-next-line no-undef
+        mp.trigger('taxi.client.app.search');
     }
 
     cancelOrder() {
         this.props.cancelOrderTaxi();
+
+        // eslint-disable-next-line no-undef
+        mp.trigger('taxi.client.app.cancel');
     }
 
     getSearchButton() {
@@ -186,7 +199,8 @@ const mapDispatchToProps = dispatch => ({
     createOrderTaxi: () => dispatch(createOrderTaxiClient()),
     cancelOrderTaxi: () => dispatch(cancelOrderTaxiClient()),
     ansTaxi: answer => dispatch(ansTaxiClient(answer)),
-    closeApp: () => dispatch(closeAppDisplay())
+    closeApp: () => dispatch(closeAppDisplay()),
+    clearLocation: () => dispatch(clearLocationTaxiClient())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaxiClient);
