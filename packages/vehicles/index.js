@@ -221,7 +221,7 @@ module.exports = {
         });
         console.log(player.vehicleList);
         // if (player.home) spawnHomeVehicles()
-        //if (houses.isHaveHouse(player.character.id)) console.log(houses.getHouseCarPlaces(player.character.id));
+        if (houses.isHaveHouse(player.character.id)) console.log(houses.getHouseCarPlaces(player.character.id));
         // проверка на отсутствие дома todo
         if (dbPrivate.length > 0) {
             if (dbPrivate[0].isOnParking == 1) {
