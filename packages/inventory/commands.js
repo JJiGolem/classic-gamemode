@@ -3,7 +3,7 @@ let inventory = require('./index');
 module.exports = {
     "/invdelete": {
         access: 6,
-        description: "Удалить предмет из инвентаря игрока",
+        description: "Удалить предмет из инвентаря игрока.",
         args: "[ид_игрока]:n [ид_предмета]:n",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
@@ -13,7 +13,7 @@ module.exports = {
     },
     "/invadditems": {
         access: 6,
-        description: "Добавить тестовые предметы в инвентарь игрока",
+        description: "Добавить тестовые предметы в инвентарь игрока.",
         args: "[ид_игрока]:n",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
@@ -102,7 +102,7 @@ module.exports = {
     },
     "/invclearitems": {
         access: 6,
-        description: "Очистить инвентарь игрока",
+        description: "Очистить инвентарь игрока.",
         args: "[ид_игрока]:n",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
@@ -233,7 +233,7 @@ module.exports = {
     },
     "/pitems": {
         access: 6,
-        description: "Логировать предметы игрока в консоль",
+        description: "Логировать предметы игрока в консоль.",
         args: "",
         handler: (player) => {
             console.log(player.inventory.items)

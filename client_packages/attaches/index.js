@@ -1,118 +1,123 @@
-mp.attachmentMngr =
-    {
-        attachments: {},
+mp.attachmentMngr = {
+    attachments: {},
 
-        addFor: function (entity, id) {
-            if (this.attachments.hasOwnProperty(id)) {
-                if (!entity.__attachmentObjects.hasOwnProperty(id)) {
-                    let attInfo = this.attachments[id];
+    addFor: function(entity, id) {
+        if (this.attachments.hasOwnProperty(id)) {
+            if (entity && !entity.__attachmentObjects.hasOwnProperty(id)) {
+                let attInfo = this.attachments[id];
+                let object = mp.objects.new(attInfo.model, entity.position);
 
-                    let object = mp.objects.new(attInfo.model, entity.position);
+                object.attachTo(entity.handle,
+                    (typeof(attInfo.boneName) === 'string') ? entity.getBoneIndexByName(attInfo.boneName) : entity.getBoneIndex(attInfo.boneName),
+                    attInfo.offset.x, attInfo.offset.y, attInfo.offset.z,
+                    attInfo.rotation.x, attInfo.rotation.y, attInfo.rotation.z,
+                    false, false, false, false, 2, true);
 
-                    object.attachTo(entity.handle,
-                        (typeof (attInfo.boneName) === 'string') ? entity.getBoneIndexByName(attInfo.boneName) : entity.getBoneIndex(attInfo.boneName),
-                        attInfo.offset.x, attInfo.offset.y, attInfo.offset.z,
-                        attInfo.rotation.x, attInfo.rotation.y, attInfo.rotation.z,
-                        false, false, false, false, 2, true);
+                entity.__attachmentObjects[id] = object;
 
-                    entity.__attachmentObjects[id] = object;
+                var a = attInfo.anim;
+                if (a) {
+                    mp.callCEFV(`terminal.push('debug', '${JSON.stringify(a)}')`);
+                    entity.clearTasksImmediately();
+                    mp.utils.requestAnimDict(a.dict, () => {
+                        entity.taskPlayAnim(a.dict, a.name, a.speed, 0, -1, a.flag, 0, false, false, false);
+                    });
                 }
             }
-            else {
-                mp.game.graphics.notify(`Static Attachments Error: ~r~Unknown Attachment Used: ~w~0x${id.toString(16)}`);
-            }
-        },
-
-        removeFor: function (entity, id) {
-            if (entity.__attachmentObjects.hasOwnProperty(id)) {
-                let obj = entity.__attachmentObjects[id];
-                delete entity.__attachmentObjects[id];
-
-                if (mp.objects.exists(obj)) {
-                    obj.destroy();
-                }
-            }
-        },
-
-        initFor: function (entity) {
-            for (let attachment of entity.__attachments) {
-                mp.attachmentMngr.addFor(entity, attachment);
-            }
-        },
-
-        shutdownFor: function (entity) {
-            for (let attachment in entity.__attachmentObjects) {
-                mp.attachmentMngr.removeFor(entity, attachment);
-            }
-        },
-
-        register: function (id, model, boneName, offset, rotation) {
-            if (typeof (id) === 'string') {
-                id = mp.game.joaat(id);
-            }
-
-            if (typeof (model) === 'string') {
-                model = mp.game.joaat(model);
-            }
-
-            if (!this.attachments.hasOwnProperty(id)) {
-                if (mp.game.streaming.isModelInCdimage(model)) {
-                    this.attachments[id] =
-                        {
-                            id: id,
-                            model: model,
-                            offset: offset,
-                            rotation: rotation,
-                            boneName: boneName
-                        };
-                }
-                else {
-                    mp.game.graphics.notify(`Static Attachments Error: ~r~Invalid Model (0x${model.toString(16)})`);
-                }
-            }
-            else {
-                mp.game.graphics.notify("Static Attachments Error: ~r~Duplicate Entry");
-            }
-        },
-
-        unregister: function (id) {
-            if (typeof (id) === 'string') {
-                id = mp.game.joaat(id);
-            }
-
-            if (this.attachments.hasOwnProperty(id)) {
-                this.attachments[id] = undefined;
-            }
-        },
-
-        addLocal: function (attachmentName) {
-            if (typeof (attachmentName) === 'string') {
-                attachmentName = mp.game.joaat(attachmentName);
-            }
-
-            let entity = mp.players.local;
-
-            if (!entity.__attachments || entity.__attachments.indexOf(attachmentName) === -1) {
-                mp.events.callRemote("staticAttachments.Add", attachmentName.toString(36));
-            }
-        },
-
-        removeLocal: function (attachmentName) {
-            if (typeof (attachmentName) === 'string') {
-                attachmentName = mp.game.joaat(attachmentName);
-            }
-
-            let entity = mp.players.local;
-
-            if (entity.__attachments && entity.__attachments.indexOf(attachmentName) !== -1) {
-                mp.events.callRemote("staticAttachments.Remove", attachmentName.toString(36));
-            }
-        },
-
-        getAttachments: function () {
-            return Object.assign({}, this.attachments);
+        } else {
+            mp.game.graphics.notify(`Static Attachments Error: ~r~Unknown Attachment Used: ~w~0x${id.toString(16)}`);
         }
-    };
+    },
+
+    removeFor: function(entity, id) {
+        if (entity.__attachmentObjects.hasOwnProperty(id)) {
+            let obj = entity.__attachmentObjects[id];
+            delete entity.__attachmentObjects[id];
+
+            if (mp.objects.exists(obj)) {
+                obj.destroy();
+            }
+            entity.clearTasksImmediately();
+        }
+    },
+
+    initFor: function(entity) {
+        for (let attachment of entity.__attachments) {
+            mp.attachmentMngr.addFor(entity, attachment);
+        }
+    },
+
+    shutdownFor: function(entity) {
+        for (let attachment in entity.__attachmentObjects) {
+            mp.attachmentMngr.removeFor(entity, attachment);
+        }
+    },
+
+    register: function(id, model, boneName, offset, rotation, anim) {
+        if (typeof(id) === 'string') {
+            id = mp.game.joaat(id);
+        }
+
+        if (typeof(model) === 'string') {
+            model = mp.game.joaat(model);
+        }
+
+        if (!this.attachments.hasOwnProperty(id)) {
+            if (mp.game.streaming.isModelInCdimage(model)) {
+                this.attachments[id] = {
+                    id: id,
+                    model: model,
+                    offset: offset,
+                    rotation: rotation,
+                    boneName: boneName,
+                    anim: anim,
+                };
+            } else {
+                mp.game.graphics.notify(`Static Attachments Error: ~r~Invalid Model (0x${model.toString(16)})`);
+            }
+        } else {
+            mp.game.graphics.notify("Static Attachments Error: ~r~Duplicate Entry");
+        }
+    },
+
+    unregister: function(id) {
+        if (typeof(id) === 'string') {
+            id = mp.game.joaat(id);
+        }
+
+        if (this.attachments.hasOwnProperty(id)) {
+            this.attachments[id] = undefined;
+        }
+    },
+
+    addLocal: function(attachmentName) {
+        if (typeof(attachmentName) === 'string') {
+            attachmentName = mp.game.joaat(attachmentName);
+        }
+
+        let entity = mp.players.local;
+
+        if (!entity.__attachments || entity.__attachments.indexOf(attachmentName) === -1) {
+            mp.events.callRemote("staticAttachments.Add", attachmentName.toString(36));
+        }
+    },
+
+    removeLocal: function(attachmentName) {
+        if (typeof(attachmentName) === 'string') {
+            attachmentName = mp.game.joaat(attachmentName);
+        }
+
+        let entity = mp.players.local;
+
+        if (entity.__attachments && entity.__attachments.indexOf(attachmentName) !== -1) {
+            mp.events.callRemote("staticAttachments.Remove", attachmentName.toString(36));
+        }
+    },
+
+    getAttachments: function() {
+        return Object.assign({}, this.attachments);
+    }
+};
 
 mp.events.add("entityStreamIn", (entity) => {
     if (entity.__attachments) {

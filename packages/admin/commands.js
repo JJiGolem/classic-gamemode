@@ -278,5 +278,41 @@ module.exports = {
             console.log(player)
         }
     },
+    "/getpos": {
+        access: 6,
+        description: "Логировать координаты игрока в консоль",
+        args: "",
+        handler: (player) => {
+            console.log("player.position:")
+            console.log(player.position)
+            console.log("player.heading:")
+            console.log(player.heading)
+        }
+    },
+    "/attach": {
+        description: "Добавить аттач предмета к игроку.",
+        access: 6,
+        args: "[ид_игрока]:n [ид_аттача]",
+        handler: (player, args, out) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
 
+            args.splice(0, 1);
+            var id = args.join(" ").trim();
+            rec.addAttachment(id);
+        }
+    },
+    "/remattach": {
+        description: "Удалить аттач предмета у игрока.",
+        access: 6,
+        args: "[ид_игрока]:n [ид_аттача]",
+        handler: (player, args, out) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+
+            args.splice(0, 1);
+            var id = args.join(" ").trim();
+            rec.addAttachment(id, true);
+        }
+    },
 }

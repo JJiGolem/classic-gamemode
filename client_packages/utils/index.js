@@ -51,16 +51,14 @@ mp.utils.objToString = (obj) => {
     var rs = '';
     var not_first = false;
 
-    for(var k in obj){
-        if(not_first) rs += ',';
-        if(typeof obj[k] === 'object'){
-            rs +=  '"'+k+'": {'+objToString(obj[k])+'}';
-        }
-        else if(typeof obj[k] === 'string' || typeof obj[k] === 'function'){
-            rs += '"'+k+'":"'+obj[k]+'"';
-        }
-        else if(typeof obj[k] === 'number'){
-            rs += '"'+k+'":'+obj[k]+'';
+    for (var k in obj) {
+        if (not_first) rs += ',';
+        if (typeof obj[k] === 'object') {
+            rs += '"' + k + '": {' + objToString(obj[k]) + '}';
+        } else if (typeof obj[k] === 'string' || typeof obj[k] === 'function') {
+            rs += '"' + k + '":"' + obj[k] + '"';
+        } else if (typeof obj[k] === 'number') {
+            rs += '"' + k + '":' + obj[k] + '';
         }
         not_first = true;
     }
@@ -77,3 +75,12 @@ mp.events.add("blur", (enable, time = 1000) => {
 mp.events.add('effect', (effect, duration) => {
     mp.game.graphics.startScreenEffect(effect, duration, false);
 });
+
+//  Иниц. анимации
+mp.utils.requestAnimDict = (dict, callback) => {
+    mp.game.streaming.requestAnimDict(dict);
+    while (!mp.game.streaming.hasAnimDictLoaded(dict)) {
+        mp.game.wait(0);
+    }
+    callback();
+};
