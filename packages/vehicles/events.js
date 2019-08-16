@@ -1,5 +1,7 @@
 "use strict";
 var vehicles = require('./index.js')
+
+let money = call('money');
 module.exports = {
     "init": () => {
         vehicles.init();
@@ -28,10 +30,15 @@ module.exports = {
         //     player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);
         //     player.removeFromVehicle();
         // }
+
+        if (vehicle.key == 'job' && vehicle.owner != player.character.job && seat == -1) {
+            player.removeFromVehicle();
+            player.call('notifications.push.error', ["Это рабочий транспорт", "Нет доступа"]);
+        }
+
         let isPrivate = false;
         if (vehicle.key == 'private' && vehicle.owner == player.character.id) {
             isPrivate = true;
-            console.log('private veh')
         }
         player.call('vehicles.enter.private', [isPrivate]);
 
@@ -311,6 +318,37 @@ module.exports = {
                 return;
             }
             // todo remove cash
+            let price = target.sellCarTargetOffer.price;
+            let vehId = target.sellCarTargetOffer.vehId;
+            money.moveCash(target, seller, price, function (result) {
+                console.log(vehId)
+                if (result) {
+                    target.call('notifications.push.success', ['Вы купили транспорт', 'Успешно']);
+                    seller.call('notifications.push.success', ['Вы продали транспорт', 'Успешно']);
+                    db.Models.Vehicle.update({
+                        owner: target.character.id,
+                    }, {
+                            where: {
+                                id: vehId
+                            }
+                        });
+                    let veh = vehicles.getVehicleBySqlId(vehId);
+                    if (veh) {
+                        veh.owner = target.character.id;
+                    }
+                    if (seller.vehicle) {
+                        seller.removeFromVehicle();
+                    }
+
+                    delete target.sellCarTargetOffer;
+                    delete seller.sellCarSenderOffer;
+                } else {
+                    target.call('notifications.push.error', ['Не удалось купить т/с', 'Ошибка']);
+                    seller.call('notifications.push.error', ['Не удалось продать т/с', 'Ошибка']);
+                    delete target.sellCarTargetOffer;
+                    delete seller.sellCarSenderOffer;
+                }
+            });
         } else {
             delete target.sellCarTargetOffer;
             delete seller.sellCarSenderOffer;

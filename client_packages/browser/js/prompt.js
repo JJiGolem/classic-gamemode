@@ -22,6 +22,9 @@ var prompt = new Vue({
             "documents_close": {
                 text: "Нажмите <span>Esc</span> для того, чтобы закрыть документ"
             },
+            "fuelstation_control": {
+                text: "Чтобы заправить транспортное средство, вы должны находиться за рулем"
+            },
         },
         text: null
     },

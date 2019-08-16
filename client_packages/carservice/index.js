@@ -114,7 +114,6 @@ mp.events.add('carservice.shape.leave', () => {
     isInCarServiceShape = false;
 });
 
-
 mp.events.add('carservice.diagnostics.offer', () => {
     mp.chat.debug('offer');
 
@@ -122,38 +121,28 @@ mp.events.add('carservice.diagnostics.offer', () => {
     mp.chat.debug(veh.type);
     if (!veh) return mp.chat.debug('!veh');
     if (veh.type != 'vehicle') return mp.chat.debug(`veh.type != 'vehicle'`);
-    // let timer = setTimeout(() => {
-        // try {
-            mp.chat.debug('timeout')
-            let driver = veh.getPedInSeat(-1);
-            mp.chat.debug(driver);
-            if (!driver) return mp.notify.error('В т/с нет водителя', 'Ошибка');
-            let targetId = mp.players.atHandle(driver).remoteId;
-            mp.chat.debug(mp.players.atHandle(driver).remoteId);
-            mp.events.callRemote('carservice.diagnostics.offer', targetId);
-            mp.notify.success('Вы предложили диагностику', 'Автомастерская');
-        // } catch (err) {
-        //     mp.chat.debug(JSON.stringify(err));
-        // }
 
-   // }, 3000)
-
+    mp.chat.debug('timeout')
+    let driver = veh.getPedInSeat(-1);
+    mp.chat.debug(driver);
+    if (!driver) return mp.notify.error('В т/с нет водителя', 'Ошибка');
+    let targetId = mp.players.atHandle(driver).remoteId;
+    mp.chat.debug(mp.players.atHandle(driver).remoteId);
+    mp.events.callRemote('carservice.diagnostics.offer', targetId);
+    mp.notify.success('Вы предложили диагностику', 'Автомастерская');
 });
 
 
 mp.events.add('carservice.diagnostics.preparation', (vehId) => {
     mp.busy.add('carservice.mechanicProcess');
     carServiceControlsToDisable = true;
-    //mp.chat.debug('prepare');
+
     let vehicle = mp.vehicles.atRemoteId(vehId);
 
     var hoodPos = getHoodPosition(vehicle);
-    //mp.chat.debug(JSON.stringify(hoodPos));
     if (hoodPos) {
         var hoodDist = mp.vdist(vehicle.position, hoodPos);
         let pos = vehicle.getOffsetFromInWorldCoords(0, hoodDist + 1, 0);
-        // mp.chat.debug(JSON.stringify(pos));
-        // mp.chat.debug(JSON.stringify(hoodPos));
         mp.players.local.taskFollowNavMeshToCoord(pos.x, pos.y, pos.z, 1, -1, 1, true, 0);
 
     } else {
@@ -170,7 +159,7 @@ mp.events.add('carservice.diagnostics.preparation', (vehId) => {
             if (!mp.players.local.isWalking()) {
                 isPreparingForDiagnostics = false;
                 mp.chat.debug('остановился');
-                
+
                 mp.players.local.setHeading(currentRepairingVehicle.getHeading() - 180);
 
                 var hoodPos = getHoodPosition(currentRepairingVehicle);
@@ -188,7 +177,7 @@ mp.events.add('carservice.diagnostics.preparation', (vehId) => {
                         mp.players.local.freezePosition(true);
                     } catch (err) {
 
-                    }      
+                    }
                 }, 100);
                 mp.events.callRemote('carservice.diagnostics.start', animType);
             }
@@ -221,34 +210,6 @@ function getRepairAnimType(vehicle) {
     }
 }
 
-
-
-let data = {
-    engine: {
-        state: 1,
-        price: 200
-    },
-    steering: {
-        state: 1,
-        price: 350
-    },
-    fuel: {
-        state: 1,
-        price: 350
-    },
-    brake: {
-        state: 1,
-        price: 350
-    },
-    body: {
-        price: 150
-    }
-}
-
-mp.keys.bind(0x73, true, function () {
-    mp.events.call('carservice.check.show', data);
-});
-
 mp.events.add('carservice.check.show', (data) => {
     mp.busy.add('carservice.check');
     mp.gui.cursor.show(true, true);
@@ -256,9 +217,8 @@ mp.events.add('carservice.check.show', (data) => {
     mp.callCEFV(`check.records = []`);
 
     if (data.body) {
-            mp.callCEFV(`check.records.push({ header: "Повреждения кузова", price: ${data.body.price} })`);
+        mp.callCEFV(`check.records.push({ header: "Повреждения кузова", price: ${data.body.price} })`);
     }
-
     if (data.engine) {
         if (data.engine.state == 1) {
             mp.callCEFV(`check.records.push({ header: "Неисправность системы охлаждения", price: ${data.engine.price} })`);
@@ -294,7 +254,7 @@ mp.events.add('carservice.check.show', (data) => {
     mp.callCEFV('check.show = true')
 });
 
-mp.events.add('carservice.check.close', (data) => {
+mp.events.add('carservice.check.close', () => {
     mp.busy.remove('carservice.check');
     mp.gui.cursor.show(false, false);
     mp.game.graphics.transitionFromBlurred(500);
@@ -307,7 +267,6 @@ mp.events.add('carservice.service.end.mechanic', () => {
     mp.players.local.freezePosition(false);
 });
 
-
 mp.events.add('render', () => {
     if (carServiceControlsToDisable) {
         mp.game.controls.disableControlAction(0, 21, true); /// бег
@@ -317,4 +276,3 @@ mp.events.add('render', () => {
         mp.game.controls.disableControlAction(0, 24, true); /// удары
     }
 });
-

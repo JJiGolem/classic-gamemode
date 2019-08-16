@@ -24,6 +24,9 @@ var inputWindow = new Vue({
             if (this.name == 'carsell_price') {
                 mp.trigger('vehicles.sell.price', this.value);
             }
+            if (this.name == 'fuelstations_litres') {
+                mp.trigger('fuelstations.fill.litres.send', this.value);
+            }
         },
         decline() {
             if (this.name == 'money_giving') {
@@ -32,6 +35,9 @@ var inputWindow = new Vue({
             if (this.name == 'carsell_id') {
                 mp.trigger('vehicles.sell.close');
              }
+             if (this.name == 'fuelstations_litres') {
+                mp.trigger('fuelstations.fill.litres.close');
+            }
         },
     }
 });

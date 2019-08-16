@@ -144,6 +144,10 @@ module.exports = {
         if (litres < 1) return;
         vehicle.fuel = litres;
     },
+    addFuel(vehicle, litres) {
+        if (litres < 1) return;
+        vehicle.fuel = vehicle.fuel + litres;
+    },
     setVehiclePropertiesByModel(modelName) {
         for (let i = 0; i < dbVehicleProperties.length; i++) {
             if (dbVehicleProperties[i].model == modelName) {
@@ -297,7 +301,7 @@ module.exports = {
             }
         }
     },
-    getVehicleBySqlId() {
+    getVehicleBySqlId(sqlId) {
         if (!sqlId) return null;
         var result;
         mp.vehicles.forEach((veh) => {

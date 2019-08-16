@@ -1,43 +1,42 @@
-"use strict";
-const Sequelize = require('sequelize');
-
-/// Модель мест в гараже
 module.exports = (sequelize, DataTypes) => {
-    const model = sequelize.define("GaragePlace", {
+
+    const model = sequelize.define("FuelStation", {
         id: {
             type: DataTypes.INTEGER(11),
             primaryKey: true,
             autoIncrement: true
         },
-        garageId: {
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        bizId: {
             type: DataTypes.INTEGER(11),
+            defaultValue: 0,
             allowNull: false
         },
         x: {
             type: DataTypes.FLOAT,
+            defaultValue: 100,
             allowNull: false
         },
         y: {
             type: DataTypes.FLOAT,
+            defaultValue: 100,
             allowNull: false
         },
         z: {
             type: DataTypes.FLOAT,
+            defaultValue: 100,
             allowNull: false
         },
-        angle: {
+        fuelPrice: {
             type: DataTypes.INTEGER(11),
+            defaultValue: 3,
             allowNull: false
         },
-    }, 
-    {
-        timestamps: false
-    });
+    }, { timestamps: false });
 
-    model.associate = (models) => {
-        model.belongsTo(models.Garage, {
-            foreignKey: "garageId"
-        });
-    };
+
     return model;
 };

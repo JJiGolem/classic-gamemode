@@ -118,7 +118,7 @@ setInterval(() => {
 	listeners.forEach(listener => {
         let player = mp.players.atRemoteId(listener.playerId);
         if (player == null) return;
-		if(player.handle !== 0) {
+		if(player.handle !== 0 && player.dimension == mp.players.local.dimension) {
             if (channels[listener.channels[listener.current]].maxRange != 0) {		
                 let dist = mp.game.system.vdist(player.position.x, player.position.y, player.position.z,  
                     mp.players.local.position.x,  mp.players.local.position.y,  mp.players.local.position.z);

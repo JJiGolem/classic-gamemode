@@ -29,10 +29,6 @@ module.exports = {
             this.createCarService(dbCarServices[i]);
         }
         console.log(`[CARSERVICE] Загружено автомастерских: ${i}`);
-
-        // serviceData.forEach((service) => {
-        //     this.createCarService(service);
-        // });
     },
     createCarService(carService) {
         mp.blips.new(402, new mp.Vector3(carService.x, carService.y, carService.z),

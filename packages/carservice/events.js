@@ -161,9 +161,7 @@ module.exports = {
         let vehicle = player.repairTargetVehicle;
         //let vehicle = target.vehicle;
         //if (target.vehicle != vehicle) return;
-        //vehicle.setVariable('hood', true);
         vehicle.setVariable("hood", true);
-        //player.heading = vehicle.heading - 180;
 
         player.lastRepairAnim = animType;
         player.call('notifications.push.success', [`Вы начали диагностику`, 'Автомастерская']);
@@ -195,7 +193,7 @@ module.exports = {
         let vehicle = player.repairTargetVehicle;
 
         target.currentMechanic = player;
-        //console.log(vehicle);
+
         console.log(vehicle.bodyHealth);
 
         let multiplier = carservice.getRepairPriceMultiplier(vehicle);
@@ -238,7 +236,6 @@ module.exports = {
                 price: price
             }
         }
-
         if (vehicle.bodyHealth < 999) {
             let price = parseInt((1000 - vehicle.bodyHealth) * DEFAULT_PRICE.BODY * multiplier);
             console.log(price);

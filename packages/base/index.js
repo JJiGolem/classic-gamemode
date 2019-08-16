@@ -24,7 +24,7 @@ global.call = (moduleName) => {
 /// Должен быть ниже объявления глобальных функций, что бы они успели загрузииться
 db.connect(function() {
     fs.readdirSync(path.dirname(__dirname)).forEach(file => {
-        file != 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname)+ "/" + file + "/events.js") && mp.events.add(require('../' + file + '/events'));
+        !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname)+ "/" + file + "/events.js") && mp.events.add(require('../' + file + '/events'));
     });
 
     fs.readdirSync(path.dirname(__dirname) + "/../client_packages").forEach(file => {
