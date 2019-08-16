@@ -23,6 +23,17 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             allowNull: false
         },
+        // Организация
+        factionId: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: null,
+            allowNull: true
+        },
+        factionRank: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: null,
+            allowNull: true
+        },
         /// Финансы
         cash: {
             type: DataTypes.INTEGER(11),
@@ -208,6 +219,16 @@ module.exports = (sequelize, DataTypes) => {
         });
         model.hasMany(models.Appearance, {
             foreignKey: "characterId"
+        });
+        model.belongsTo(models.Faction, {
+            foreignKey: "factionId",
+            onDelete: "RESTRICT",
+            onUpdate: "RESTRICT",
+        });
+        model.belongsTo(models.FactionRank, {
+            foreignKey: "factionRank",
+            onDelete: "RESTRICT",
+            onUpdate: "RESTRICT"
         });
     };
     return model;

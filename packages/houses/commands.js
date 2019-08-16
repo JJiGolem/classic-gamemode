@@ -12,6 +12,27 @@ module.exports = {
             player.call("house.add.open", []);
         }
     },
+    "/housedrop": {
+        access: 5,
+        handler: (player, args) => {
+            if (isNaN(parseInt(args[0]))) return;
+            houseService.dropHouseById(parseInt(args[0]), player);
+        }
+    },
+    "/houseremove": {
+        access: 5,
+        handler: (player, args) => {
+            if (isNaN(parseInt(args[0]))) return;
+            houseService.removeHouse(parseInt(args[0]), player);
+        }
+    },
+    "/housechangeprice": {
+        access: 5,
+        handler: (player, args) => {
+            if (isNaN(parseInt(args[0])) || isNaN(parseInt(args[1]))) return;
+            houseService.changePrice(parseInt(args[0]), parseInt(args[1]));
+        }
+    },
     "/interioradd": {
         access: 5,
         handler: (player, args) => {

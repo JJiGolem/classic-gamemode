@@ -132,6 +132,44 @@ module.exports = {
         this.setTimer(houses.length - 1);
         console.log("[HOUSES] added new house");
     },
+    removeHouse(id, player) {
+        let house = this.getHouseById(id);
+        if (house.info.characterId != null) {
+            if (player != null) player.call('notifications.push.error', ["Нельзя удалить дом у которого есть владелец", "Ошибка"]);
+            return;
+        }
+        if (house.timer != null) {
+            clearTimeout(house.timer);
+            house.timer = null;
+        }
+        house.enter.destroy();
+        house.enter.marker.destroy();
+        house.exit.destroy();
+        house.exit.marker.destroy();
+        if (house.exitGarage != null) {
+            house.exitGarage.destroy();
+            house.exitGarage.marker.destroy();
+        }
+        house.blip.destroy();
+        house.info.destroy();
+        this.setHouseById(id, null);
+        if (player != null) player.call('notifications.push.success', ["Вы удалили дом с id " + id, "Успешно"]);
+    },
+    dropHouseById(id, player) {
+        let index = this.getHouseIndexById(id);
+        if (index == -1) return;
+        dropHouse(index);
+        if (player != null) player.call('notifications.push.success', ["Вы продали дом с id " + id + " в гос. собственность", "Успешно"]);
+    },
+    async changePrice(id, price) {
+        if (price <= 0) return;
+        let index = this.getHouseIndexById(id);
+        if (index == -1) return;
+        if (houses[index].info.characterId != null) return;
+        houses[index].info.price = price;
+        await houses[index].info.save();
+        if (player != null) player.call('notifications.push.success', ["Вы изменили цену у дома с id " + id + " на " + price, "Успешно"]);
+    },
     async createInterior(player, interiorInfo) {
         let interior = await db.Models.Interior.create({
             garageId: interiorInfo.garageId,
@@ -247,6 +285,11 @@ module.exports = {
     changeBlip: changeBlip,
     getHouse(i) {
         return houses[i];
+    },
+    setHouseById(id, value) {
+        let index = houses.findIndex( x => x.info.id == id);
+        if (index == -1) return;
+        houses[index] = null;
     },
     getHouseById(id) {
         return houses.find( x => x.info.id == id);

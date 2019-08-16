@@ -14,8 +14,8 @@ module.exports = {
                     accountId: player.account.id
                 },
                 include: [
-                    db.Models.Feature, 
-                    db.Models.Appearance
+                    db.Models.Feature,
+                    db.Models.Appearance,
                 ]
             });
         }
@@ -62,7 +62,7 @@ module.exports = {
                 name: fullname
             }
         });
-        if (characters.length != 0) return player.call('characterInit.create.check.ans', [0]); 
+        if (characters.length != 0) return player.call('characterInit.create.check.ans', [0]);
         player.character = JSON.parse(charData);
         player.character.name = fullname;
         let pos = this.getSpawn();
@@ -72,11 +72,11 @@ module.exports = {
         this.applyCharacter(player);
         player.character = await db.Models.Character.create(player.character, {
             include: [
-                db.Models.Feature, 
+                db.Models.Feature,
                 db.Models.Appearance
             ]
         });
-        
+
         player.call('characterInit.create.check.ans', [1]);
         mp.events.call('characterInit.done', player);
     },
@@ -93,26 +93,26 @@ module.exports = {
         });
         player.setCustomization(
             player.character.gender == 0,
-    
+
             player.character.mother,
             player.character.father,
             0,
-    
+
             0,
             player.character.skin,
             0,
-    
+
             player.character.similarity,
             1.0,
             0.0,
-    
+
             player.character.eyeColor,
             player.character.hairColor,
             player.character.hairHighlightColor,
-    
+
             features
         );
-    
+
         player.setClothes(2, player.character.hair, 0, 2);
         for (let i = 0; i < 10; i++) {
             player.setHeadOverlay(i, [player.character.Appearances[i].value,
