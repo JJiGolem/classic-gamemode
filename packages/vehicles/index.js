@@ -12,6 +12,8 @@ let breakdownConfig = {
     brakeState: 0.004
 };
 
+let houses = call('houses');
+
 module.exports = {
     async init() {
         await this.loadVehiclePropertiesFromDB();
@@ -219,6 +221,7 @@ module.exports = {
         });
         console.log(player.vehicleList);
         // if (player.home) spawnHomeVehicles()
+        //if (houses.isHaveHouse(player.character.id)) console.log(houses.getHouseCarPlaces(player.character.id));
         // проверка на отсутствие дома todo
         if (dbPrivate.length > 0) {
             if (dbPrivate[0].isOnParking == 1) {
