@@ -17,7 +17,6 @@ mp.attachmentMngr = {
 
                 var a = attInfo.anim;
                 if (a) {
-                    mp.callCEFV(`terminal.push('debug', '${JSON.stringify(a)}')`);
                     entity.clearTasksImmediately();
                     mp.utils.requestAnimDict(a.dict, () => {
                         entity.taskPlayAnim(a.dict, a.name, a.speed, 0, -1, a.flag, 0, false, false, false);
