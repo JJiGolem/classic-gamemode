@@ -1,4 +1,5 @@
 "use strict";
+var notifs = require('../notifications');
 
 module.exports = {
     // Организации
@@ -11,10 +12,16 @@ module.exports = {
     warehouses: [],
     // Маркеры выдачи предметов организаций
     storages: [],
+    // Склад нескончаемых боеприпасов (навешен blip)
+    ammoWarehouse: null,
+    // Склад нескончаемых медикаментов (навешен blip)
+    medicinesWarehouse: null,
 
     async init() {
         await this.loadFactionsFromDB();
         this.initFactionMarkers();
+        this.createAmmoWarehouseMarker();
+        this.createMedicinesWarehouseMarker();
     },
     async loadFactionsFromDB() {
         var dbFactons = await db.Models.Faction.findAll({
@@ -48,6 +55,7 @@ module.exports = {
         }));
     },
     createWarehouseMarker(faction) {
+        if (!faction.wX) return;
         var pos = new mp.Vector3(faction.wX, faction.wY, faction.wZ - 1);
 
         this.warehouses.push(mp.markers.new(1, pos, 0.5, {
@@ -76,6 +84,52 @@ module.exports = {
             console.log(`storage onExit: ${player.name} ${faction.name}`)
         };
     },
+    createAmmoWarehouseMarker() {
+        var pos = new mp.Vector3(-257.62, -339.59, 29.95 - 2);
+
+        this.ammoWarehouse = mp.markers.new(1, pos, 2, {
+            color: [255, 187, 0, 100]
+        });
+        this.ammoWarehouse.blip = mp.blips.new(473, pos, {
+            color: 1,
+            name: "Боеприпасы",
+            shortRange: 10,
+            scale: 0.7
+        });
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 2.5);
+        colshape.onEnter = (player) => {
+            if (!this.isArmyFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, `Склад боеприпасов`);
+            player.call("factions.insideWarehouse", [true, "ammo"]);
+            player.insideWarehouse = true;
+        };
+        colshape.onExit = (player) => {
+            player.call("factions.insideWarehouse", [false]);
+            delete player.insideWarehouse;
+        };
+    },
+    createMedicinesWarehouseMarker() {
+        var pos = new mp.Vector3(-255.80, -342.41, 29.88 - 2);
+
+        this.ammoWarehouse = mp.markers.new(1, pos, 2, {
+            color: [255, 187, 0, 100]
+        });
+        this.ammoWarehouse.blip = mp.blips.new(153, pos, {
+            color: 1,
+            name: "Медикаменты",
+            shortRange: 10,
+            scale: 0.7
+        });
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 2.5);
+        colshape.onEnter = (player) => {
+            if (!this.isHospitalFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, `Склад медикаментов`);
+            player.call("factions.insideWarehouse", [true, "medicines"]);
+            player.insideWarehouse = true;
+        };
+        colshape.onExit = (player) => {
+            player.call("factions.insideWarehouse", [false]);
+            delete player.insideWarehouse;
+        };
+    },
     getFaction(id) {
         return this.factions[id - 1];
     },
@@ -94,13 +148,14 @@ module.exports = {
         return faction.ranks[faction.ranks.length - 1];
     },
     setLeader(faction, character) {
-        if (typeof faction == 'number') faction = this.faction[faction - 1];
+        if (typeof faction == 'number') faction = this.getFaction(faction);
 
         character.factionId = faction.id;
         character.factionRank = this.getMaxRank(faction).id;
         character.save();
     },
     setBlip(faction, type, color) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
         var blip = this.getBlip(faction.id);
         blip.model = type;
         blip.color = color;
@@ -109,13 +164,13 @@ module.exports = {
         faction.save();
     },
     addMember(faction, character) {
-        if (typeof faction == 'number') faction = this.faction[faction - 1];
+        if (typeof faction == 'number') faction = this.getFaction(faction);
         character.factionId = faction.id;
         character.factionRank = this.getMinRank(faction).id;
         character.save();
     },
     deleteMember(faction, character) {
-        if (typeof faction == 'number') faction = this.faction[faction - 1];
+        if (typeof faction == 'number') faction = this.getFaction(faction);
         character.factionId = null;
         character.factionRank = null;
         character.save();
@@ -126,4 +181,42 @@ module.exports = {
         character.factionRank = rank.id;
         character.save();
     },
+    isGovernmentFaction(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction.id == 1;
+    },
+    isPoliceFaction(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction.id == 2 || faction.id == 3;
+    },
+    isFibFaction(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction.id == 4;
+    },
+    isHospitalFaction(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction.id == 5;
+    },
+    isArmyFaction(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction.id == 6;
+    },
+    isNewsFaction(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction.id == 7;
+    },
+    takeBox(player, type) {
+        var header = "";
+        if (type == 'ammo') {
+            header = "Склад боеприпасов";
+            if (!this.isArmyFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, header);
+        } else if (type == 'medicines') {
+            header = "Склад медикаментов";
+            if (!this.isHospitalFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, header);
+        }
+        if (!player.insideWarehouse) return notifs.error(player, `Вы далеко`, header);
+        var haveBox = player.hasAttachment("ammoBox") || player.hasAttachment("medicinesBox");
+        if (haveBox) return notifs.error(player, `[S] Нельзя нести больше`, header);
+        player.addAttachment(type + "Box");
+    }
 };

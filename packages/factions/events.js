@@ -3,11 +3,7 @@ module.exports = {
     "init": () => {
         factions.init();
     },
-    // TODO: Вынести куда-то в общее место
-    "playerEnterColshape": (player, colshape) => {
-        if (colshape.onEnter) colshape.onEnter(player);
-    },
-    "playerExitColshape": (player, colshape) => {
-        if (colshape.onExit) colshape.onExit(player);
+    "factions.warehouse.takeBox": (player, type) => {
+        factions.takeBox(player, type);
     },
 };
