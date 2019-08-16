@@ -16,6 +16,21 @@ module.exports = {
     ammoWarehouse: null,
     // Склад нескончаемых медикаментов (навешен blip)
     medicinesWarehouse: null,
+    // Кол-во боеприпасов в ящике
+    ammoBox: 500,
+    // Кол-во медикаментов в ящике
+    medicinesBox: 500,
+    // Белый лист организаций, которые могут пополнять склады
+    whiteListWarehouse: {
+        "ammo": {
+            2: [4],
+            3: [4],
+            6: [2, 3, 6]
+        },
+        "medicines": {
+            5: [2, 3, 4, 5, 6]
+        }
+    },
 
     async init() {
         await this.loadFactionsFromDB();
@@ -64,10 +79,22 @@ module.exports = {
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
-            console.log(`warehouse onEnter: ${player.name} ${faction.name}`)
+            var boxType = "";
+            if (player.hasAttachment("ammoBox")) {
+                boxType = "ammo";
+            } else if (player.hasAttachment("medicinesBox")) {
+                boxType = "medicines";
+            } else return;
+
+            if (!this.canFillWarehouse(player, boxType, faction))
+                return notifs.error(player, `Нет прав для пополнения`, `Склад ${faction.name}`);
+
+            player.call("factions.insideFactionWarehouse", [true, boxType]);
+            player.insideFactionWarehouse = faction;
         };
         colshape.onExit = (player) => {
-            console.log(`warehouse onExit: ${player.name} ${faction.name}`)
+            player.call("factions.insideFactionWarehouse", [false]);
+            delete player.insideFactionWarehouse;
         };
     },
     createStorageMarker(faction) {
@@ -218,5 +245,26 @@ module.exports = {
         var haveBox = player.hasAttachment("ammoBox") || player.hasAttachment("medicinesBox");
         if (haveBox) return notifs.error(player, `[S] Нельзя нести больше`, header);
         player.addAttachment(type + "Box");
-    }
+    },
+    putBox(player) {
+        var faction = player.insideFactionWarehouse;
+        if (!faction) return notifs.error(player, `Вы далеко`, `Склад организации`);
+        if (player.hasAttachment("ammoBox")) {
+            faction.ammo += this.ammoBox;
+            faction.save();
+            player.addAttachment("ammoBox", true);
+            notifs.info(player, `Боеприпасы: ${faction.ammo} из ${faction.maxAmmo} ед.`, `Склад ${faction.name}`);
+            if (faction.ammo == faction.maxAmmo) notifs.success(player, `Склад заполнен`, `Склад ${faction.name}`);
+        } else if (player.hasAttachment("medicinesBox")) {
+            faction.medicines += this.medicinesBox;
+            faction.save();
+            player.addAttachment("medicinesBox", true);
+            notifs.info(player, `Медикаменты: ${faction.medicines} из ${faction.maxMedicines} ед.`, `Склад ${faction.name}`);
+            if (faction.medicines == faction.maxMedicines) notifs.success(player, `Склад заполнен`, `Склад ${faction.name}`);
+        } else return;
+    },
+    canFillWarehouse(player, boxType, faction) {
+        if (!this.whiteListWarehouse[boxType][player.character.factionId]) return false;
+        return this.whiteListWarehouse[boxType][player.character.factionId].includes(faction.id)
+    },
 };

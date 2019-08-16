@@ -6,4 +6,7 @@ module.exports = {
     "factions.warehouse.takeBox": (player, type) => {
         factions.takeBox(player, type);
     },
+    "factions.warehouse.putBox": (player) => {
+        factions.putBox(player);
+    },
 };
