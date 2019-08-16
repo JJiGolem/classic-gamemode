@@ -352,7 +352,7 @@ module.exports = {
         }); 
     },
     getHouseCarPlaces(id) {
-        let house = getHouseByCharId(id);
+        let house = this.getHouseByCharId(id);
         if (house == null) return null;
 
         let garagePlaces = [{
