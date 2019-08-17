@@ -310,6 +310,8 @@ module.exports = {
             console.log('accept');
             let vehicle = seller.vehicle;
             if (!vehicle || vehicle.sqlId != target.sellCarTargetOffer.vehId) {
+                target.call('vehicles.sell.target.final', [2]);
+                seller.call('vehicles.sell.seller.final', [2]);
                 delete target.sellCarTargetOffer;
                 delete seller.sellCarSenderOffer;
                 return;
