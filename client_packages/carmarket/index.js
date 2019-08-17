@@ -102,6 +102,9 @@ mp.events.add('carmarket.car.buy.ans', (ans, data) => {
         case 3:
             mp.notify.error('Недостаточно денег', 'Ошибка');
             break;
+        case 4:
+            mp.notify.error('Достигнут лимит на т/с', 'Ошибка');
+            break;
     }
 });
 
