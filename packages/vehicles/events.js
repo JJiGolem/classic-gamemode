@@ -31,6 +31,8 @@ module.exports = {
         //     player.removeFromVehicle();
         // }
 
+        player.call('vehicles.garage', [vehicle.isInGarage]);
+
         if (vehicle.key == 'job' && vehicle.owner != player.character.job && seat == -1) {
             player.removeFromVehicle();
             player.call('notifications.push.error', ["Это рабочий транспорт", "Нет доступа"]);
@@ -42,7 +44,7 @@ module.exports = {
         }
         player.call('vehicles.enter.private', [isPrivate]);
 
-        if (!vehicle.engine && seat == -1) {
+        if (!vehicle.engine && seat == -1 && !vehicle.isInGarage) {
             player.call('prompt.showByName', ['vehicle_engine']);
         }
         if (seat == -1) {
@@ -74,6 +76,7 @@ module.exports = {
         }
         player.call('vehicles.indicators.show', [false]);
         player.call('vehicles.speedometer.show', [false]);
+        player.call('vehicles.garage', [false]);
         player.call('prompt.hide');
     },
     "playerStartExitVehicle": (player) => {
@@ -353,7 +356,22 @@ module.exports = {
             delete target.sellCarTargetOffer;
             delete seller.sellCarSenderOffer;
         }
+    },
+    "vehicles.garage.leave": (player) => {
+        if (!player.vehicle) return;
+        if (!player.vehicle.isInGarage) return;
+        if (player.vehicle.key != 'private' || player.vehicle.owner != player.character.id) return;
 
+        let streetPlace = player.carPlaces.find(x => x.d == 0);
 
+        if (!streetPlace) return;
+        player.vehicle.isInGarage = false;
+        player.call('vehicles.garage', false);
+        player.vehicle.position = new mp.Vector3(streetPlace.x, streetPlace.y, streetPlace.z);
+        //player.vehicle.rotation = new mp.Vector3(0, 0, 0);
+        //player.vehicle.setHeading(streetPlace.h);
+        player.call('vehicles.heading.set', [streetPlace.h]);
+
+        player.vehicle.dimension = 0;
     }
 }

@@ -25,6 +25,21 @@ var prompt = new Vue({
             "fuelstation_control": {
                 text: "Чтобы заправить транспортное средство, вы должны находиться за рулем"
             },
+            "take_ammobox": {
+                text: "Нажмите <span>E</span> для того, чтобы взять ящик с боеприпасами",
+            },
+            "take_medicinesbox": {
+                text: "Нажмите <span>E</span> для того, чтобы взять ящик с медикаментами",
+            },
+            "put_ammobox": {
+                text: "Нажмите <span>E</span> для того, чтобы положить ящик с боеприпасами",
+            },
+            "put_medicinesbox": {
+                text: "Нажмите <span>E</span> для того, чтобы положить ящик с медикаментами",
+            },
+            "garage_control": {
+                text: "Нажмите <span>E</span> для того, чтобы выехать из гаража"
+            }
         },
         text: null
     },

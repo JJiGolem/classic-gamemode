@@ -27,6 +27,6 @@ module.exports = {
         parkings.spawnParkingVehicle(player, parkingId);
     },
     "playerQuit": (player) => {
-        parkings.savePlayerParkingVehicles(player);
+        parkings.savePlayerVehicles(player);
     }
 }

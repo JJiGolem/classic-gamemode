@@ -263,7 +263,7 @@ mp.events.add('interaction.money.accept', (value) => {
     if (sum > 500) return mp.notify.error('Слишком большая сумма', 'Ошибка');
 
     let targetId = currentInteractionEntity.remoteId;
-    if (targetId) return mp.notify.error('Игрок не найден', 'Ошибка');
+    if (targetId == null) return mp.notify.error('Игрок не найден', 'Ошибка');
     mp.events.callRemote('interaction.money.give', targetId, sum);
     mp.callCEFV('loader.show = true');
     mp.events.call('interaction.money.close');

@@ -17,5 +17,11 @@ module.exports = {
                 h: player.vehicle.heading
             });
         }
-    }
+    },
+    "/sellall": {
+        access: 6,
+        handler: (player, args) => {
+            carmarket.sellAllCharacterVehicles(player.character.id);
+        }
+    },
 }

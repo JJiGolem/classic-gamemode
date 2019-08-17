@@ -17,6 +17,8 @@ let camera;
 
 let controlsDisabled = false;
 
+let updateTimeout;
+
 mp.events.add('carshow.list.show', (inputList, inputInfo) => {
 
     if (!inputList[0]) return;
@@ -93,14 +95,17 @@ mp.events.add('carshow.list.close', () => {
 });
 
 mp.events.add('carshow.vehicle.show', (i) => {
-    currentIndex = i;
-    current.destroy();
-    if (current) {
-        current = mp.vehicles.new(mp.game.joaat(list[i].vehiclePropertyModel), new mp.Vector3(carShowInfo.toX, carShowInfo.toY, carShowInfo.toZ));
-        current.setHeading(carShowInfo.toH);
-        current.setColours(primary, secondary);
-        updateSpecifications(currentIndex);
-    }
+    clearTimeout(updateTimeout);
+    updateTimeout = setTimeout(() => {
+        currentIndex = i;
+        current.destroy();
+        if (current) {
+            current = mp.vehicles.new(mp.game.joaat(list[i].vehiclePropertyModel), new mp.Vector3(carShowInfo.toX, carShowInfo.toY, carShowInfo.toZ));
+            current.setHeading(carShowInfo.toH);
+            current.setColours(primary, secondary);
+            updateSpecifications(currentIndex);
+        }
+    }, 300);
 });
 
 mp.events.add('carshow.vehicle.color', (color1, color2) => {
@@ -143,8 +148,14 @@ mp.events.add("carshow.car.buy.ans", (ans, carInfo, parkingInfo) => {
             mp.notify.error('Неизвестная ошибка', 'Ошибка');
             break;
         case 5:
-            mp.chat.debug('неизвестная ошибка');
+            //mp.chat.debug('неизвестная ошибка');
             mp.notify.error('Достигнут лимит на т/с', 'Ошибка');
+            break;
+        case 6:
+            mp.notify.success('Вы приобрели транспорт', 'Успех');
+            mp.events.call('chat.message.push', `!{#80c102}Вы успешно приобрели транспортное средство !{#009eec}${carInfo.properties.name}`);
+            mp.events.call('chat.message.push', `!{#f3c800}Транспорт доставлен !{#009eec}к вашему дому`);
+            mp.events.call('carshow.list.close');
             break;
     }
 });
