@@ -26,3 +26,8 @@ export const deleteOrderTaxiDriver = orderId => ({
     type: 'DELETE_ORDER_TAXI_DRIVER',
     payload: orderId
 });
+
+export const setDestinationTaxiDriver = (area, street, price) => ({
+    type: 'SET_DESTINATION_TAXI_DRIVER',
+    payload: { area, street, price }
+});

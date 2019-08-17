@@ -16,11 +16,22 @@ export default function taxiClient(state = initialState, action) {
                 location: null
             };
 
-        case 'ANS_TAXI_CLIENT':
+        case 'ANS_ORDER_TAXI_CLIENT':
             const newState = { ...state };
             newState.isSearch = false;
             newState.answer = payload;
             return newState;
+
+        case 'SET_DESTINATION_TAXI_CLIENT':
+            return {
+                ...state,
+                order: {
+                    isWay: true,
+                    area: payload.area,
+                    street: payload.street,
+                    price: payload.price
+                }
+            };
 
         case 'CREATE_ORDER_TAXI_CLIENT':
             return {

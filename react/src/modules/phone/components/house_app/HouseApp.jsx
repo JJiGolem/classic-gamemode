@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
-import {addAppDisplay, closeAppDisplay} from "../../actions/action.apps";
+import {addAppDisplay, closeAppDisplay, deleteApp} from "../../actions/action.apps";
 import HouseManager from "./HouseManager";
 import HeaderHouseApp from "./HeaderHouseApp";
 
@@ -9,6 +9,12 @@ class HouseApp extends Component {
         super(props);
         this.state = {};
     }
+
+    // componentDidMount() {
+    //     setTimeout(() => {
+    //         this.props.deleteApp('house');
+    //     }, 2000);
+    // }
 
     render() {
 
@@ -71,6 +77,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     closeApp: () => dispatch(closeAppDisplay()),
     addApp: app => dispatch(addAppDisplay(app)),
+    deleteApp: appName => dispatch(deleteApp(appName))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HouseApp);
