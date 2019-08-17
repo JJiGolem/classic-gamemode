@@ -259,14 +259,14 @@ export default function info(state = initialState, action) {
             return newState;
 
         case 'SELL_HOUSE':
-            newState = { ...state };
-            let houseIndex = newState.houses.findIndex(house => house.name === payload);
+            const newStateSell = { ...state };
+            let houseIndex = newStateSell.houses.findIndex(house => house.name === payload);
 
             if (houseIndex !== -1) {
-                newState.houses.splice(houseIndex, 1);
+                newStateSell.houses.splice(houseIndex, 1);
             }
 
-            return newState;
+            return newStateSell;
 
         case 'SET_SELL_BUSINESS':
             newState = {  ...state };

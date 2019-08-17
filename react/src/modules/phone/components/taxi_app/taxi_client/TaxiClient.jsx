@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {
+    ansOrderTaxiClient,
     ansTaxiClient,
     cancelOrderTaxiClient, clearLocationTaxiClient,
     createOrderTaxiClient,
@@ -20,12 +21,12 @@ class TaxiClient extends Component {
     }
 
     componentDidMount() {
-        // setTimeout(() => {
-        //     this.props.loadLocation('Бертон', 'Карсон-Авеню')
-        // }, 1000)
+        setTimeout(() => {
+            this.props.loadLocation('Бертон', 'Карсон-Авеню')
+        }, 1000)
 
         // eslint-disable-next-line no-undef
-        mp.trigger('taxi.client.app.open');
+        // mp.trigger('taxi.client.app.open');
     }
 
     componentWillUnmount() {
@@ -35,23 +36,23 @@ class TaxiClient extends Component {
     createOrder() {
         this.props.createOrderTaxi();
 
-        // setTimeout(() => {
-        //     this.props.ansTaxi({
-        //         name: 'Dun Hill',
-        //         model: 'Blista',
-        //         number: 'ZBT228'
-        //     })
-        // }, 1000);
+        setTimeout(() => {
+            this.props.ansTaxi({
+                name: 'Dun Hill',
+                model: 'Blista',
+                number: 'ZBT228'
+            })
+        }, 1000);
 
         // eslint-disable-next-line no-undef
-        mp.trigger('taxi.client.app.search');
+        // mp.trigger('taxi.client.app.search');
     }
 
     cancelOrder() {
         this.props.cancelOrderTaxi();
 
         // eslint-disable-next-line no-undef
-        mp.trigger('taxi.client.app.cancel');
+        // mp.trigger('taxi.client.app.cancel');
     }
 
     getSearchButton() {
@@ -198,7 +199,7 @@ const mapDispatchToProps = dispatch => ({
     loadLocation: (area, street) => dispatch(loadLocationTaxiClient(area, street)),
     createOrderTaxi: () => dispatch(createOrderTaxiClient()),
     cancelOrderTaxi: () => dispatch(cancelOrderTaxiClient()),
-    ansTaxi: answer => dispatch(ansTaxiClient(answer)),
+    ansTaxi: answer => dispatch(ansOrderTaxiClient(answer)),
     closeApp: () => dispatch(closeAppDisplay()),
     clearLocation: () => dispatch(clearLocationTaxiClient())
 });

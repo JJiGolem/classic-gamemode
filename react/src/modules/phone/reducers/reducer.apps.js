@@ -43,7 +43,7 @@ export default function apps(state = initialState, action) {
                 appName = 'BusinessApp'
             }
 
-            let indDel = newState.findIndex(app => app.name === appName);
+            let indDel = newStateDel.findIndex(app => app.name === appName);
             if (indDel !== -1) {
                 return [ {
                     name: 'MainDisplay',

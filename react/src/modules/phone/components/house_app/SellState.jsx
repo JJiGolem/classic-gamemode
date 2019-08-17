@@ -27,9 +27,9 @@ class SellState extends Component {
         // eslint-disable-next-line no-undef
         mp.trigger('house.sell.toGov', house.name);
 
-        /*setTimeout(() => {
-            setSellStatus(0);
-        }, 1000);*/
+        // setTimeout(() => {
+        //     setSellStatus(1);
+        // }, 1000);
     }
 
     render() {

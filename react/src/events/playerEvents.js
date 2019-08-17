@@ -196,7 +196,7 @@ export const PlayerEvents = (dispatch, getState) => {
 
     myEventEmmiter.on('taxi.client.order.ans', (answer) => {
         dispatch({
-            type: 'ANS_TAXI_CLIENT',
+            type: 'ANS_ORDER_TAXI_CLIENT',
             payload: answer
         });
     });
@@ -221,6 +221,14 @@ export const PlayerEvents = (dispatch, getState) => {
             payload: orderId
         });
     });
+
+    myEventEmmiter.on('taxi.driver.order.way', (area, street, price) => {
+        dispatch({
+            type: 'DELETE_ORDER_TAXI_DRIVER',
+            payload: { area, street, price }
+        });
+    });
+
 
     // ------------ ТЕЛЕФОН (ТАКСИ) - КОНЕЦ -----------------
 

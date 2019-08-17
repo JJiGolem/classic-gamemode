@@ -51,6 +51,18 @@ export default function taxiDriver(state = initialState, action) {
             }
 
             return newStateDelete;
+
+        case 'SET_DESTINATION_TAXI_DRIVER':
+            return {
+                ...state,
+                activeOrder: {
+                    ...state.activeOrder,
+                    isWay: true,
+                    area: payload.area,
+                    street: payload.street,
+                    price: payload.price
+                }
+            }
     }
 
     return state;
