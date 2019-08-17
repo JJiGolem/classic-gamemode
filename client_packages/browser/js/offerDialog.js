@@ -63,10 +63,12 @@ var offerDialog = new Vue({
                 },
                 yes() {
                     mp.trigger("callRemote", "vehicles.sell.offer.accept", 1);
+                    loader.show = true;
+                    mp.trigger("offerDialog.close");
                 },
                 no() {
                     mp.trigger("callRemote", "vehicles.sell.offer.accept", 0);
-                    //mp.trigger("offerDialog.close");
+                    mp.trigger("offerDialog.close");
                 },
                 ignore() {
                     alert("Диалог предложения был проигнорирован!");

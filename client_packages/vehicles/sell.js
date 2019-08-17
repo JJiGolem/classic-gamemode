@@ -96,17 +96,51 @@ mp.events.add('vehicles.sell.send.ans', (ans, data) => {
             mp.notify.error('Игрок далеко', 'Ошибка');
             break;
         case 5:
-                mp.gui.cursor.show(true, true);
-                mp.callCEFV(`acceptWindow.header = 'Вы действительно хотите продать т/с "${data.vehicleName}" игроку ${data.targetName} за ${data.price}?';`);
-                mp.callCEFV(`acceptWindow.name = 'carsell';`);
-                mp.callCEFV(`acceptWindow.show = true;`);
+            mp.gui.cursor.show(true, true);
+            mp.callCEFV(`acceptWindow.header = 'Вы действительно хотите продать т/с "${data.vehicleName}" игроку ${data.targetName} за $${data.price}?';`);
+            mp.callCEFV(`acceptWindow.name = 'carsell';`);
+            mp.callCEFV(`acceptWindow.show = true;`);
             break;
     }
 
 });
 
+mp.events.add('vehicles.sell.target.final', (ans) => {
+    mp.callCEFV('loader.show = false');
+    mp.gui.cursor.show(false, false);
+    switch (ans) {
+        case 0:
+            mp.notify.error('Недостаточно денег', 'Ошибка');
+            break;
+        case 1:
+            mp.notify.success('Вы купили транспорт', 'Успешно');
+            break;
+        case 2:
+            mp.notify.error('Не удалось купить т/с', 'Ошибка');
+            break;
+    }
+});
+
+
+mp.events.add('vehicles.sell.seller.final', (ans) => {
+
+    mp.gui.cursor.show(false, false);
+    switch (ans) {
+        case 0:
+            mp.notify.error('У покупателя недостаточно денег', 'Ошибка');
+            break;
+        case 1:
+            mp.notify.success('Вы продали транспорт', 'Успешно');
+            break;
+        case 2:
+            mp.notify.error('Не удалось продать т/с', 'Ошибка');
+            break;
+    }
+});
+
 mp.events.add('vehicles.sell.seller.accept', (accept) => {
     if (accept) {
+        //mp.callCEFV('loader.show = true');
         mp.events.callRemote('vehicles.sell.seller.accept', JSON.stringify(carSellData));
         mp.callCEFV(`acceptWindow.show = false;`);
         mp.gui.cursor.show(false, false);
