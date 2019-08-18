@@ -166,9 +166,9 @@ mp.events.add('chat.action.shout', (nickname, id, message) => {
     mp.events.call('chat.message.push', message);
 });
 
-mp.events.add('chat.action.walkietalkie', (nickname, id, message) => { //add rank
+mp.events.add('chat.action.walkietalkie', (nickname, id, rank, message) => { //add rank
     if (typeof (message) != "string") message = message.join(' ');
-    message = `!{#33cc66}[R] Генерал ${nickname}[${id}]: ${message}`;
+    message = `!{#33cc66}[R] ${rank} ${nickname}[${id}]: ${message}`;
     mp.events.call('chat.message.push', message);
 });
 
@@ -213,7 +213,7 @@ mp.events.add('chat.action.try', (nickname, id, message, result) => {
 //     mp.events.call('pushChatMessage', message);
 // });
 /*
-Если будет сообщение о payday в чате: 
+Если будет сообщение о payday в чате:
 
 mp.events.add('payDayMessage.client', (hours) => {
     mp.events.call('pushChatMessage.client', `!{#ffffff}Текущее время: !{#4fbeff}${formatTime(hours)}:00`);

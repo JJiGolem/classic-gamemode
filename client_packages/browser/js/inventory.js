@@ -683,12 +683,14 @@ var inventory = new Vue({
             setCursor(val);
             mp.trigger("blur", val, 300);
             hud.show = !val;
-            // TODO: Скрытие/показ чата.
+            if (val) busy.add("inventory", true);
+            else busy.remove("inventory", true);
         }
     },
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
+            if (busy.includes(["chat", "terminal", "interaction"])) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;
             if (e.keyCode > 47 && e.keyCode < 58) {
                 var num = e.keyCode - 48;

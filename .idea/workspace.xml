@@ -2,20 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3b4f40e7-2b00-4af6-93b4-f955a86f8251" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/InTaxiPage.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/OrderPage.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/SearchPage.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/SelectPage.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/StartPage.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/TaxiReadyPage.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/WayPage.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client_packages/browser/build/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/build/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client_packages/browser/build/css/styles.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/build/css/styles.css.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client_packages/browser/build/js/build.js" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/build/js/build.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client_packages/browser/build/js/build.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/build/js/build.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react/src/events/playerEvents.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/events/playerEvents.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react/src/modules/phone/actions/action.taxi.client.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/actions/action.taxi.client.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/actions/action.taxi.driver.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/actions/action.taxi.driver.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/HouseApp.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/HouseApp.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/SellState.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/house_app/SellState.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/TaxiClient.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/TaxiClient.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/ActiveOrder.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/ActiveOrder.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/OrderList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/OrderList.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/TaxiDriver.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/TaxiDriver.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.apps.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.apps.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.info.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.info.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.taxi.cleint.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.taxi.cleint.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.taxi.driver.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.taxi.driver.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/react/src/modules/phone/styles/phone.css" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/styles/phone.css" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -30,9 +35,19 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/AnsSell.jsx">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/StartPage.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="-209">
+              <caret line="9" column="55" selection-start-line="9" selection-start-column="55" selection-end-line="9" selection-end-column="55" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/TaxiClient.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="268">
+              <caret line="37" column="5" selection-start-line="37" selection-start-column="5" selection-end-line="37" selection-end-column="5" />
               <folding>
                 <element signature="e#0#49#0" expanded="true" />
               </folding>
@@ -41,75 +56,28 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/Success.jsx">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/InTaxiPage.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="628">
-              <caret line="50" column="89" selection-start-line="50" selection-start-column="89" selection-end-line="50" selection-end-column="89" />
-              <folding>
-                <element signature="e#0#49#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="-126">
+              <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/events/playerEvents.js">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/SelectPage.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="116" column="38" selection-start-line="116" selection-start-column="19" selection-end-line="116" selection-end-column="38" />
-              <folding>
-                <element signature="e#0#26#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="247">
+              <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.info.js">
+        <entry file="file://$PROJECT_DIR$/react/src/helpers/store/forms.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="71">
-              <caret line="320" column="13" selection-start-line="320" selection-start-column="13" selection-end-line="320" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/actions/action.apps.js">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.apps.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="627">
-              <caret line="57" lean-forward="true" selection-start-line="57" selection-end-line="57" />
-              <folding>
-                <element signature="e#0#26#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/HouseApp.jsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="12" column="4" lean-forward="true" selection-start-line="12" selection-start-column="7" selection-end-line="16" selection-end-column="8" />
-              <folding>
-                <element signature="e#0#49#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/react/src/index.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
-              <folding>
-                <element signature="e#0#26#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="38">
+              <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -118,19 +86,58 @@
         <entry file="file://$PROJECT_DIR$/react/src/styles/main.css">
           <provider selected="true" editor-type-id="text-editor">
             <state>
-              <caret selection-end-line="10" />
+              <caret selection-start-column="2" selection-end-line="9" selection-end-column="3" />
               <folding>
-                <marker date="1566073816283" expanded="true" signature="2:395" ph="..." />
+                <marker date="1566125005644" expanded="true" signature="2:395" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/react/src/helpers/store/forms.js">
+        <entry file="file://$PROJECT_DIR$/react/src/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="38">
-              <caret line="2" column="15" lean-forward="true" selection-start-line="2" selection-start-column="15" selection-end-line="2" selection-end-column="15" />
+            <state relative-caret-position="266">
+              <caret line="14" selection-start-line="14" selection-end-line="14" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/ActiveOrder.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="437">
+              <caret line="23" column="5" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/OrderList.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="513">
+              <caret line="27" column="5" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/TaxiDriver.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="475">
+              <caret line="43" column="5" selection-start-line="43" selection-start-column="5" selection-end-line="43" selection-end-column="5" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -204,13 +211,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/react/src/modules/bank/actions/action.bank.js" />
-        <option value="$PROJECT_DIR$/react/src/modules/bank/components/BankTaxes.jsx" />
-        <option value="$PROJECT_DIR$/react/src/modules/bank/reducers/reducer.bank.js" />
-        <option value="$PROJECT_DIR$/react/src/modules/bank/components/BankCashBox.jsx" />
-        <option value="$PROJECT_DIR$/react/src/modules/business/actions/action.business.js" />
-        <option value="$PROJECT_DIR$/react/src/modules/house/styles/house.css" />
-        <option value="$PROJECT_DIR$/react/src/modules/business/styles/business.css" />
         <option value="$PROJECT_DIR$/react/src/modules/business/reducers/reducer.business.js" />
         <option value="$PROJECT_DIR$/react/src/modules/business/components/Business.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/bank/components/BankPush.jsx" />
@@ -236,25 +236,32 @@
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/HeadAppPhone.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/Header.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/house/components/House.jsx" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/OrderList.jsx" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/TaxiDriver.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/house_app/SellState.jsx" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/TaxiClient.jsx" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/styles/phone.css" />
-        <option value="$PROJECT_DIR$/react/src/events/playerEvents.js" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/actions/action.taxi.client.js" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/actions/action.taxi.driver.js" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/ActiveOrder.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.taxi.driver.js" />
-        <option value="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.taxi.cleint.js" />
         <option value="$PROJECT_DIR$/packages/auth/events.js" />
         <option value="$PROJECT_DIR$/packages/admin/commands.js" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.info.js" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.apps.js" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/house_app/HouseApp.jsx" />
-        <option value="$PROJECT_DIR$/react/src/index.js" />
-        <option value="$PROJECT_DIR$/react/src/styles/main.css" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.taxi.cleint.js" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/actions/action.taxi.client.js" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/styles/phone.css" />
+        <option value="$PROJECT_DIR$/react/src/events/playerEvents.js" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/WayPage.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/TaxiDriver.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/SelectPage.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/InTaxiPage.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/OrderPage.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/StartPage.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/SearchPage.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/TaxiReadyPage.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/ActiveOrder.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/OrderList.jsx" />
+        <option value="$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/TaxiClient.jsx" />
         <option value="$PROJECT_DIR$/react/src/helpers/store/forms.js" />
+        <option value="$PROJECT_DIR$/react/src/styles/main.css" />
+        <option value="$PROJECT_DIR$/react/src/index.js" />
       </list>
     </option>
   </component>
@@ -270,6 +277,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -360,7 +368,48 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="modules" type="462c0819:PsiDirectoryNode" />
               <item name="phone" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="taxi_app" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
+              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
+              <item name="react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+              <item name="phone" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="taxi_app" type="462c0819:PsiDirectoryNode" />
+              <item name="taxi_client" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
+              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
+              <item name="react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+              <item name="phone" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="taxi_app" type="462c0819:PsiDirectoryNode" />
+              <item name="taxi_driver" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
+              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
+              <item name="react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+              <item name="phone" type="462c0819:PsiDirectoryNode" />
               <item name="reducers" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
+              <item name="classic-gamemode" type="462c0819:PsiDirectoryNode" />
+              <item name="react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="modules" type="462c0819:PsiDirectoryNode" />
+              <item name="phone" type="462c0819:PsiDirectoryNode" />
+              <item name="styles" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="classic-gamemode" type="b2602c69:ProjectViewProjectNode" />
@@ -373,7 +422,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -450,7 +498,8 @@
       <workItem from="1565863156522" duration="6166000" />
       <workItem from="1565876198933" duration="1217000" />
       <workItem from="1565943197980" duration="6751000" />
-      <workItem from="1566031825913" duration="11367000" />
+      <workItem from="1566031825913" duration="17767000" />
+      <workItem from="1566121422342" duration="3357000" />
     </task>
     <task id="LOCAL-00001" summary="[Phone] taxi app&#10;[Houses] actions menu fix">
       <created>1565949187139</created>
@@ -459,11 +508,18 @@
       <option name="project" value="LOCAL" />
       <updated>1565949187139</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="[Phone] remove house app fix">
+      <created>1566074185348</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1566074185348</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="313704000" />
+    <option name="totallyTimeSpent" value="323461000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1296" height="1000" extended-state="6" />
@@ -514,101 +570,10 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="[Phone] taxi app&#10;[Houses] actions menu fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="[Phone] taxi app&#10;[Houses] actions menu fix" />
+    <MESSAGE value="[Phone] remove house app fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="[Phone] remove house app fix" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/TaxiClient.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="855">
-          <caret line="54" column="5" selection-start-line="54" selection-start-column="5" selection-end-line="54" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/styles/phone.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="16074">
-          <caret line="846" column="11" selection-start-line="846" selection-start-column="11" selection-end-line="846" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/actions/action.taxi.driver.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="567">
-          <caret line="30" column="38" selection-start-line="30" selection-start-column="11" selection-end-line="30" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/TaxiDriver.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="475">
-          <caret line="31" column="37" selection-start-line="31" selection-start-column="37" selection-end-line="31" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/ActiveOrder.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="32" column="43" selection-start-line="32" selection-start-column="43" selection-end-line="32" selection-end-column="43" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/actions/action.taxi.client.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="23" column="38" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.taxi.driver.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="415">
-          <caret line="62" column="40" lean-forward="true" selection-start-line="59" selection-start-column="20" selection-end-line="62" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client_packages/attaches/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.taxi.cleint.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="111">
-          <caret line="28" column="20" lean-forward="true" selection-start-line="28" selection-start-column="20" selection-end-line="28" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client_packages/utils/camera.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="703">
-          <caret line="37" column="1" lean-forward="true" selection-start-line="37" selection-start-column="1" selection-end-line="37" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client_packages/chat/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="138" column="47" lean-forward="true" selection-start-line="138" selection-start-column="47" selection-end-line="138" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/packages/characterInit/db/Appearance.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/packages/characterInit/data.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/packages/characterInit/commands.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/packages/characterInit/db/Character.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="377">
-          <caret line="206" column="37" lean-forward="true" selection-start-line="206" selection-start-column="37" selection-end-line="206" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/packages/auth/db/Account.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="282">
@@ -727,25 +692,6 @@
         <state relative-caret-position="-473" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/AnsSell.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/Success.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="628">
-          <caret line="50" column="89" selection-start-line="50" selection-start-column="89" selection-end-line="50" selection-end-column="89" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/packages/houses/events.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2565" />
@@ -784,16 +730,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/events/playerEvents.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="116" column="38" selection-start-line="116" selection-start-column="19" selection-end-line="116" selection-end-column="38" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.info.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="71">
@@ -807,7 +743,7 @@
     <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.apps.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="627">
-          <caret line="57" lean-forward="true" selection-start-line="57" selection-end-line="57" />
+          <caret line="57" selection-start-line="57" selection-end-line="57" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>
@@ -817,9 +753,175 @@
     <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/HouseApp.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="228">
-          <caret line="12" column="4" lean-forward="true" selection-start-line="12" selection-start-column="7" selection-end-line="16" selection-end-column="8" />
+          <caret line="12" column="4" selection-start-line="12" selection-start-column="7" selection-end-line="16" selection-end-column="8" />
           <folding>
             <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/Success.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="628">
+          <caret line="50" column="89" selection-start-line="50" selection-start-column="89" selection-end-line="50" selection-end-column="89" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/AnsSell.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/styles/phone.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16017">
+          <caret line="843" column="14" selection-start-line="843" selection-start-column="14" selection-end-line="843" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/actions/action.taxi.client.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="608">
+          <caret line="32" column="20" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.taxi.driver.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="54" column="41" selection-start-line="54" selection-start-column="14" selection-end-line="54" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/events/playerEvents.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="625">
+          <caret line="251" column="46" selection-start-line="251" selection-start-column="46" selection-end-line="251" selection-end-column="46" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/WayPage.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-240">
+          <caret line="15" column="5" lean-forward="true" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.taxi.cleint.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="589">
+          <caret line="70" column="38" selection-start-line="70" selection-start-column="14" selection-end-line="70" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/OrderPage.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-354">
+          <caret line="31" lean-forward="true" selection-start-line="31" selection-end-line="31" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/SearchPage.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="15" column="5" lean-forward="true" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/TaxiReadyPage.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-126">
+          <caret line="15" column="5" lean-forward="true" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/InTaxiPage.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-126">
+          <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/TaxiDriver.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="475">
+          <caret line="43" column="5" selection-start-line="43" selection-start-column="5" selection-end-line="43" selection-end-column="5" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/OrderList.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="27" column="5" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_driver/ActiveOrder.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="437">
+          <caret line="23" column="5" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/TaxiClient.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="268">
+          <caret line="37" column="5" selection-start-line="37" selection-start-column="5" selection-end-line="37" selection-end-column="5" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/StartPage.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-209">
+          <caret line="9" column="55" selection-start-line="9" selection-start-column="55" selection-end-line="9" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/taxi_app/taxi_client/SelectPage.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/helpers/store/forms.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="38">
+          <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react/src/styles/main.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-start-column="2" selection-end-line="9" selection-end-column="3" />
+          <folding>
+            <marker date="1566125005644" expanded="true" signature="2:395" ph="..." />
           </folding>
         </state>
       </provider>
@@ -827,27 +929,10 @@
     <entry file="file://$PROJECT_DIR$/react/src/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="266">
-          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/styles/main.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="10" />
-          <folding>
-            <marker date="1566073816283" expanded="true" signature="2:395" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/react/src/helpers/store/forms.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" column="15" lean-forward="true" selection-start-line="2" selection-start-column="15" selection-end-line="2" selection-end-column="15" />
         </state>
       </provider>
     </entry>

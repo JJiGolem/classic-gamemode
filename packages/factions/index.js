@@ -66,16 +66,17 @@ module.exports = {
             color: faction.blipColor,
             name: faction.name,
             shortRange: 10,
-            scale: 0.7
+            scale: 1
         }));
     },
     createWarehouseMarker(faction) {
         if (!faction.wX) return;
         var pos = new mp.Vector3(faction.wX, faction.wY, faction.wZ - 1);
 
-        this.warehouses.push(mp.markers.new(1, pos, 0.5, {
+        var warehouse = mp.markers.new(1, pos, 0.5, {
             color: [0, 187, 255, 70]
-        }));
+        });
+        this.warehouses.push(warehouse);
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
@@ -96,12 +97,15 @@ module.exports = {
             player.call("factions.insideFactionWarehouse", [false]);
             delete player.insideFactionWarehouse;
         };
+        warehouse.colshape = colshape;
     },
     createStorageMarker(faction) {
         var pos = new mp.Vector3(faction.sX, faction.sY, faction.sZ - 1);
-        this.storages.push(mp.markers.new(1, pos, 0.5, {
+
+        var storage = mp.markers.new(1, pos, 0.5, {
             color: [0, 187, 255, 70]
-        }));
+        });
+        this.storages.push(storage);
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
@@ -110,6 +114,7 @@ module.exports = {
         colshape.onExit = (player) => {
             console.log(`storage onExit: ${player.name} ${faction.name}`)
         };
+        storage.colshape = colshape;
     },
     createAmmoWarehouseMarker() {
         var pos = new mp.Vector3(-257.62, -339.59, 29.95 - 2);
@@ -121,7 +126,7 @@ module.exports = {
             color: 1,
             name: "Боеприпасы",
             shortRange: 10,
-            scale: 0.7
+            scale: 1
         });
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 2.5);
         colshape.onEnter = (player) => {
@@ -144,7 +149,7 @@ module.exports = {
             color: 1,
             name: "Медикаменты",
             shortRange: 10,
-            scale: 0.7
+            scale: 1
         });
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 2.5);
         colshape.onEnter = (player) => {
@@ -160,11 +165,27 @@ module.exports = {
     getFaction(id) {
         return this.factions[id - 1];
     },
+    getMarker(id) {
+        return this.markers[id - 1];
+    },
+    getWarehouse(id) {
+        return this.warehouses[id - 1];
+    },
+    getStorage(id) {
+        return this.storages[id - 1];
+    },
     getBlip(id) {
         return this.blips[id - 1];
     },
     getRank(factionId, rank) {
         return this.getFaction(factionId).ranks[rank - 1];
+    },
+    getRankById(factionId, rankId) {
+        var ranks = this.getFaction(factionId).ranks;
+        for (var i = 0; i < ranks.length; i++) {
+            if (ranks[i].id == rankId) return ranks[i];
+        }
+        return null;
     },
     getMinRank(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
@@ -232,6 +253,10 @@ module.exports = {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         return faction.id == 7;
     },
+    isStateFaction(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction.id >= 1 && faction.id <= 7;
+    },
     takeBox(player, type) {
         var header = "";
         if (type == 'ammo') {
@@ -266,5 +291,16 @@ module.exports = {
     canFillWarehouse(player, boxType, faction) {
         if (!this.whiteListWarehouse[boxType][player.character.factionId]) return false;
         return this.whiteListWarehouse[boxType][player.character.factionId].includes(faction.id)
+    },
+    sayRadio(player, text) {
+        var factionId = player.character.factionId;
+        if (!factionId) return notifs.error(player, `Вы не состоите в организации`, `Рация`);
+        if (!this.isStateFaction(factionId)) return notifs.error(player, `Вы не в гос. структуре`, `Рация`);
+
+        var rank = this.getRankById(factionId, player.character.factionRank);
+        mp.players.forEach((rec) => {
+            if (rec.character && rec.character.factionId == factionId)
+                rec.call('chat.action.walkietalkie', [player.name, player.id, rank.name, text]);
+        });
     },
 };

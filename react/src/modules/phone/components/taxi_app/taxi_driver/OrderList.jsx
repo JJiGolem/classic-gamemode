@@ -24,7 +24,7 @@ class OrderList extends Component {
         this.props.takeOrder(id);
 
         // eslint-disable-next-line no-undef
-        // mp.trigger('taxi.driver.app.order.take', id);
+        mp.trigger('taxi.driver.app.order.take', id);
     }
 
     render() {

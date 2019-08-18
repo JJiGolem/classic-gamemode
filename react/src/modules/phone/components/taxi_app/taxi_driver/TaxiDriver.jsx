@@ -15,32 +15,32 @@ class TaxiDriver extends Component {
     }
 
     componentDidMount() {
-        setTimeout(() => {
-            this.props.loadInfo({
-                name: 'Dun Hill',
-                orders: [
-                    {
-                        id: 0,
-                        distance: 4.2
-                    },
-                    {
-                        id: 1,
-                        distance: 0.5
-                    },
-                    {
-                        id: 2,
-                        distance: 2.0
-                    },
-                ]
-            })
-        }, )
-
-        setTimeout(() => {
-            this.props.addOrder({id: 4, distance: 3.1});
-        }, 2000)
+        // setTimeout(() => {
+        //     this.props.loadInfo({
+        //         name: 'Dun Hill',
+        //         orders: [
+        //             {
+        //                 id: 0,
+        //                 distance: 4.2
+        //             },
+        //             {
+        //                 id: 1,
+        //                 distance: 0.5
+        //             },
+        //             {
+        //                 id: 2,
+        //                 distance: 2.0
+        //             },
+        //         ]
+        //     })
+        // }, )
+        //
+        // setTimeout(() => {
+        //     this.props.addOrder({id: 4, distance: 3.1});
+        // }, 2000)
 
         // eslint-disable-next-line no-undef
-        // mp.trigger('taxi.driver.app.open');
+        mp.trigger('taxi.driver.app.open');
     }
 
     getLoader() {

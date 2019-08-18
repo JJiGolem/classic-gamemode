@@ -8,11 +8,11 @@ class ActiveOrder extends Component {
         this.state = {};
     }
 
-    componentDidMount() {
-        setTimeout(() => {
-            this.props.setDestination('Бертон', 'Карсон-Авеню', 16)
-        }, 3000)
-    }
+    // componentDidMount() {
+    //     setTimeout(() => {
+    //         this.props.setDestination('Бертон', 'Карсон-Авеню', 16)
+    //     }, 3000)
+    // }
 
     cancelOrder() {
         const { taxi, cancelOrderTaxi } = this.props;
@@ -20,7 +20,7 @@ class ActiveOrder extends Component {
         cancelOrderTaxi(taxi.activeOrder.id);
 
         // eslint-disable-next-line no-undef
-        // mp.trigger('taxi.driver.app.order.cancel', taxi.activeOrder.id);
+        mp.trigger('taxi.driver.app.order.cancel', taxi.activeOrder.id);
     }
 
     getWayPage() {
