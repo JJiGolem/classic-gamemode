@@ -801,10 +801,10 @@
     width: 100%;
     background-position: 100% 0%;
     background-size: 130%;
-    height: 85%;
+    height: 65%;
     border-radius: 0 0 20px 20px;
     filter: blur(1px) brightness(70%);
-    box-shadow: 0px 2px 6px rgba(0,0,0,0.3);
+    box-shadow: 0px 3px 5px rgba(0,0,0,0.3);
 }
 
 .logo_taxi-phone-react {
@@ -815,14 +815,14 @@
 }
 
 .block_location_taxi-phone-react {
-    margin-top: 50%;
+    margin-top: 30%;
     width: 100%;
     height: 30%;
     position: absolute;
 }
 .pointer_taxi-phone-react {
     width: 100%;
-    height: 50%;
+    height: 35%;
     text-align: center;
 }
 
@@ -841,25 +841,26 @@
     margin-left: 10%;
     text-align: center;
     /*height: 10%;*/
-    bottom: 10%;
+    bottom: 16%;
     background: #FBD825;
     position: absolute;
     font-size: 130%;
-    padding: 5%;
+    padding: 4%;
     box-sizing: border-box;
     border-radius: 20px;
     color: black;
     transition: .1s ease-in-out;
-    box-shadow: 0px 4px 2px rgba(46, 46, 46, 0.22);
+    /*box-shadow: 0px 4px 2px rgba(46, 46, 46, 0.22);*/
 }
 
 .search_button_taxi-phone-react:hover {
-    transform: scale(1.05);
+    /*transform: scale(1.05);*/
+    box-shadow: 0px 2px 7px #FBD825;
 }
 
 .search_button_taxi-phone-react:active {
-    box-shadow: none;
-    transform: scale(1);
+    /*box-shadow: 0px 4px 15px #FBD825;*/
+    /*transform: scale(1);*/
 }
 
 .search_panel_taxi-phone-react {

@@ -2,6 +2,7 @@ var dbParkings;
 var parkings = [];
 var parkingVehicles = []; /// автомобили на парковке
 var vehicles = call("vehicles");
+var houses = call("houses");
 
 const PARKING_PRICE = 2; /// цена парковки за час
 
@@ -63,19 +64,37 @@ module.exports = {
         parkingVehicles.push(veh);
     },
     spawnParkingVehicle(player, parkingId) {
-        
+
         for (var i = 0; i < parkingVehicles.length; i++) {
             if ((parkingVehicles[i].owner == player.character.id) && (parkingId == parkingVehicles[i].parkingId)) {
 
                 let index = this.findParkingIndexById(parkingVehicles[i].parkingId);
                 // TODO Проверки на деньги и снятие денег
-                player.call('chat.message.push', [`!{#80c102} Вы забрали транспорт с парковки за !{#009eec}$${parkingVehicles[i].parkingHours*PARKING_PRICE}`]);
+                player.call('chat.message.push', [`!{#80c102} Вы забрали транспорт с парковки за !{#009eec}$${parkingVehicles[i].parkingHours * PARKING_PRICE}`]);
                 player.call('notifications.push.success', ["Вы забрали т/с с парковки", "Успешно"]);
                 parkingVehicles[i].x = parkings[index].carX;
                 parkingVehicles[i].y = parkings[index].carY;
                 parkingVehicles[i].z = parkings[index].carZ;
                 parkingVehicles[i].h = parkings[index].carH;
                 parkingVehicles[i].parkingHours = 0;
+
+                if (houses.isHaveHouse(player.character.id)) {
+                    parkingVehicles[i].isOnParking = 0;
+
+                    let id;
+                    if (parkingVehicles[i].sqlId) {
+                        id = parkingVehicles[i].sqlId;
+                    } else {
+                        id = parkingVehicles[i].id;
+                    }
+                    db.Models.Vehicle.update({
+                        isOnParking: 0
+                    }, {
+                            where: {
+                                id: id
+                            }
+                        });
+                }
                 if (!parkingVehicles[i].sqlId) {
                     vehicles.spawnVehicle(parkingVehicles[i], 0);
                 } else {
@@ -120,7 +139,7 @@ module.exports = {
             } catch (err) {
                 console.log(err);
             }
-        }, 60*60*1000);
+        }, 60 * 60 * 1000);
     },
     async parkingHoursUpdater() {
         let data = await db.Models.Vehicle.findAll({
@@ -138,9 +157,9 @@ module.exports = {
             veh.parkingHours = veh.parkingHours + 1;
         });
     },
-    savePlayerParkingVehicles(player) {
-        if(!player.character) return;
-        
+    savePlayerVehicles(player) {
+        if (!player.character) return;
+
         mp.vehicles.forEach((current) => {
             if (current.key == "private" && current.owner == player.character.id) {
                 if (current.isOnParking) {
@@ -149,22 +168,23 @@ module.exports = {
                         parkingId: this.getClosestParkingId(player),
                         parkingHours: 0
                     });
-                    clearInterval(current.fuelTimer);
-                    current.destroy();
                 }
+                clearInterval(current.fuelTimer);
+                current.destroy();
             }
         });
-        parkingVehicles.forEach((current) => {
-            if (current.db) {
-                current.db.update({
-                    parkingHours: current.parkingHours
-                });
-            } else {
-                current.update({
-                    parkingHours: current.parkingHours
-                });
-            }
-        });
+        // parkingVehicles.forEach((current) => {
+        //     if (current.db) {
+        //         current.db.update({
+        //             parkingHours: current.parkingHours
+        //         });
+        //     } else {
+        //         current.update({
+        //             parkingHours: current.parkingHours
+        //         });
+        //     }
+        // });
+        // Для чего это? D:  
     },
     getParkingInfoById(id) {
         for (let i = 0; i < parkings.length; i++) {

@@ -153,9 +153,11 @@ module.exports = {
                 // проверки на деньги и т д
                 if (player.character.cash < carList[i].properties.price) return player.call('carshow.car.buy.ans', [2]);
                 if (carList[i].count < 1) return player.call('carshow.car.buy.ans', [0]);
-                let house = houses.isHaveHouse(player.character.id);
-                if (!house) {
-                    if ( player.vehicleList.length > 1) return player.call('carshow.car.buy.ans', [5]);
+                let hasHouse = houses.isHaveHouse(player.character.id);
+                if (!hasHouse) {
+                    if (player.vehicleList.length > 1) return player.call('carshow.car.buy.ans', [5]);
+                } else {
+                    if (player.vehicleList.length + 1 > player.carPlaces.length - 1) return player.call('carshow.car.buy.ans', [5]);
                 }
                 let carToBuy = carList[i];
                 money.removeCash(player, carList[i].properties.price, async function (result) {
@@ -175,7 +177,7 @@ module.exports = {
                                 y: 0,
                                 z: 0,
                                 h: 0,
-                                isOnParking: 1,
+                                isOnParking: hasHouse ? 0 : 1,
                                 parkingId: parking,
                                 plate: carPlate,
                                 owners: 1
@@ -191,7 +193,7 @@ module.exports = {
                                 z: 0,
                                 h: 0,
                                 parkingId: parking,
-                                isOnParking: 1,
+                                isOnParking: hasHouse ? 0 : 1,
                                 fuel: 50,
                                 mileage: 0,
                                 plate: carPlate,
@@ -205,7 +207,12 @@ module.exports = {
                             }
                             veh.sqlId = data.id;
                             veh.db = data;
-                            mp.events.call('parkings.vehicle.add', veh);
+                            if (!hasHouse) {
+                                mp.events.call('parkings.vehicle.add', veh);
+                            } else {
+                                console.log('spawn house');
+                                vehicles.spawnHomeVehicle(player, veh);
+                            }
 
                             carToBuy.db.update({
                                 count: carToBuy.count - 1
@@ -223,7 +230,14 @@ module.exports = {
                                 vehType: props.vehType,
                                 price: props.price
                             });
-                            player.call('carshow.car.buy.ans', [1, carToBuy, parkingInfo]);
+
+                            if (!hasHouse) {
+                                player.call('carshow.car.buy.ans', [1, carToBuy, parkingInfo]);
+                            } else {
+                                player.call('carshow.car.buy.ans', [6, carToBuy]);
+                            }
+
+                            
                         } catch (err) {
                             console.log(err);
                             player.call('carshow.car.buy.ans', [2]);

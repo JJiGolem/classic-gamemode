@@ -1,5 +1,6 @@
 let breakdowns = require('./vehicles/breakdowns.js');
 let sell = require('./vehicles/sell.js');
+let garage = require('./vehicles/garage.js');
 
 let currentSirenState = false;
 
@@ -414,3 +415,17 @@ mp.vehicles.getVehiclePosition = (vehicle) => {
     }
     return data;
 }
+
+mp.events.add('vehicles.heading.set', (heading) => {
+    let veh = mp.players.local.vehicle;
+    if (!veh) return;
+
+    veh.setHeading(heading);
+    veh.setOnGroundProperly();
+});
+
+mp.events.add('vehicles.onGroundProperly.set', () => {
+    let veh = mp.players.local.vehicle;
+    if (!veh) return;
+    veh.setOnGroundProperly();
+});

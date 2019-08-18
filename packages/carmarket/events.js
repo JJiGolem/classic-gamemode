@@ -1,6 +1,7 @@
 var carmarket = require('./index.js');
 var money = call('money');
 var vehicles = call('vehicles');
+var houses = call('houses');
 
 const PRICE_CONFIG = {
     BUY: 0.8,
@@ -10,6 +11,10 @@ const PRICE_CONFIG = {
 module.exports = {
     "init": () => {
         carmarket.init();
+    },
+    "vehicles.loaded": async () => {
+        await carmarket.loadCarMarketData();
+        await carmarket.loadCarMarketVehicles();
     },
     "playerEnterColshape": (player, shape) => {
         if (shape.isCarMarket) {
@@ -41,7 +46,14 @@ module.exports = {
         console.log(price);
         money.addCash(player, price, function (result) {
             if (result) {
+                try {
                 vehicles.removeVehicleFromPlayerVehicleList(player, player.vehicle.sqlId);
+
+                    vehicles.removeVehicleFromCarPlace(player, player.vehicle);
+                } catch (err) {
+                    console.log(err);
+                }
+                
                 carmarket.sellCar(player.vehicle);
                 // player.vehiclesCount = player.vehiclesCount - 1;
                 // console.log(player.vehiclesCount);
@@ -83,6 +95,14 @@ module.exports = {
         let price = (player.vehicle.properties.price * PRICE_CONFIG.BUY).toFixed();
 
         if (player.character.cash < price) return player.call('carmarket.car.buy.ans', [3]);
+
+        let hasHouse = houses.isHaveHouse(player.character.id);
+        if (!hasHouse) {
+            if (player.vehicleList.length > 1) return player.call('carmarket.car.buy.ans', [4]);
+        } else {
+            if (player.vehicleList.length + 1 > player.carPlaces.length - 1) return player.call('carmarket.car.buy.ans', [4]);
+        }
+
         money.removeCash(player, price, function(result) {
             if (result) {
 
@@ -97,12 +117,24 @@ module.exports = {
                 player.vehicle.db.update({
                     key: 'private',
                     owner: player.character.id,
-                    isOnParking: 1 /// если нет дома
+                    isOnParking: hasHouse ? 0 : 1
                 });
-                player.vehicle.isOnParking = 1;
+                player.vehicle.isOnParking = hasHouse ? 0 : 1;
+                
+                if (hasHouse) vehicles.setVehicleHomeSpawnPlace(player);
                 carmarket.setMarketSpotFree(player.vehicle.marketSpot);
-                // player.vehiclesCount = player.vehiclesCount + 1;
-                // console.log(player.vehiclesCount); // TODO добавление в vehicleList
+
+                let veh = player.vehicle;
+                player.vehicleList.push({
+                    id: veh.sqlId,
+                    name: veh.properties.name,
+                    plate: veh.plate,
+                    regDate: veh.regDate,
+                    owners: veh.owners,
+                    vehType: veh.properties.vehType,
+                    price: veh.properties.price
+                });
+                
                 player.call('carmarket.car.buy.ans', [2, carInfo]);
                 mp.events.call('vehicles.engine.toggle', player);
             } else {

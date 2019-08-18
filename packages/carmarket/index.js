@@ -14,9 +14,10 @@ var carMarket = {
 
 module.exports = {
     async init() {
-        await this.loadCarMarketData();
-        await this.loadCarMarketVehicles();
-        this.createCarMarket();
+        await this.createCarMarket();
+        // await this.loadCarMarketData();
+        // await this.loadCarMarketVehicles();
+
 
     },
     createCarMarket() {
@@ -87,7 +88,7 @@ module.exports = {
                 veh.z = marketSpots[i].z;
                 veh.h = marketSpots[i].h;
                 veh.marketSpot = i;
-                
+
                 if (!veh.sqlId) {
                     vehicles.spawnVehicle(veh, 0);
                 } else {
@@ -107,20 +108,20 @@ module.exports = {
             marketSpots[spotIndex].vehicle.destroy();
             this.destroyMarketVehicleById(marketSpots[spotIndex].vehicle.id);
         }
-        
-        marketSpots[spotIndex].vehicle = veh;
-            veh.x = marketSpots[spotIndex].x;
-            veh.y = marketSpots[spotIndex].y;
-            veh.z = marketSpots[spotIndex].z;
-            veh.h = marketSpots[spotIndex].h;
-            veh.marketSpot = spotIndex;
 
-            if (!veh.sqlId) {
-                vehicles.spawnVehicle(veh, 0);
-            } else {
-                vehicles.spawnVehicle(veh, 1);
-            }
-            return;
+        marketSpots[spotIndex].vehicle = veh;
+        veh.x = marketSpots[spotIndex].x;
+        veh.y = marketSpots[spotIndex].y;
+        veh.z = marketSpots[spotIndex].z;
+        veh.h = marketSpots[spotIndex].h;
+        veh.marketSpot = spotIndex;
+
+        if (!veh.sqlId) {
+            vehicles.spawnVehicle(veh, 0);
+        } else {
+            vehicles.spawnVehicle(veh, 1);
+        }
+        return;
     },
     isPlayerInCarMarketColshape(player) {
         if (shape.isPointWithin(player.position)) {
@@ -155,5 +156,20 @@ module.exports = {
     },
     setMarketSpotFree(spotId) {
         marketSpots[spotId].isFree = true;
+    },
+    async sellAllCharacterVehicles(id) {
+        let vehs = await db.Models.Vehicle.findAll({
+            where: {
+                key: "private",
+                owner: id
+            }
+        })
+        console.log(vehs);
+        for (let i = 0; i < vehs.length; i++) {
+            vehs[i].update({
+                key: "market"
+            });
+            this.addMarketVehicle(vehs[i]);
+        }
     }
 }
