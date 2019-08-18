@@ -11,9 +11,9 @@ export const cancelOrderTaxiClient = () => ({
    type: 'CANCEL_ORDER_TAXI_CLIENT'
 });
 
-export const ansOrderTaxiClient = answer => ({
+export const ansOrderTaxiClient = order => ({
    type: 'ANS_ORDER_TAXI_CLIENT',
-   payload: answer
+   payload: order
 });
 
 export const clearLocationTaxiClient = () => ({
@@ -23,5 +23,17 @@ export const clearLocationTaxiClient = () => ({
 export const setDestinationTaxiClient = (area, street, price) => ({
     type: 'SET_DESTINATION_TAXI_CLIENT',
     payload: { area, street, price }
+});
+
+export const driverReadyTaxiClient = () => ({
+    type: 'DRIVER_READY_TAXI_CLIENT'
+});
+
+export const playerInTaxiClient = () => ({
+    type: 'PLAYER_IN_TAXI_CLIENT'
+});
+
+export const confirmOrderTaxiClient = () => ({
+    type: 'CONFIRM_ORDER_TAXI_CLIENT'
 });
 
