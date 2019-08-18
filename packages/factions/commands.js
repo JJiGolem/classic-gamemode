@@ -276,4 +276,53 @@ module.exports = {
             out.info(`${player.name} изменил позицию выдачи предметов у организации #${faction.id}`);
         }
     },
+    "/franks": {
+        description: "Получить список рангов организации.",
+        access: 6,
+        args: "[ид_организации]:n",
+        handler: (player, args, out) => {
+            var faction = factions.getFaction(args[0]);
+            if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
+
+            var text = `Организация ${faction.name}:<br/>`;
+            for (var i = 0; i < faction.ranks.length; i++) {
+                var rank = faction.ranks[i];
+                text += `${i + 1}) ${rank.name} - $${rank.pay}<br/>`;
+            }
+
+            out.log(text, player);
+        }
+    },
+    "/fsetrankname": {
+        description: "Изменить название ранга.",
+        access: 6,
+        args: "[ид_организации]:n [номер_ранга]:n [название]",
+        handler: (player, args, out) => {
+            var faction = factions.getFaction(args[0]);
+            if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
+
+            var rank = faction.ranks[args[1] - 1];
+
+            args.splice(0, 2);
+            var name = args.join(" ").trim();
+            out.info(`${player.name} изменил название ранга ${rank.rank} у организации #${faction.id} (${rank.name} => ${name})`);
+            rank.name = name;
+            rank.save();
+        }
+    },
+    "/fsetrankpay": {
+        description: "Изменить зарплату ранга.",
+        access: 6,
+        args: "[ид_организации]:n [номер_ранга]:n [сумма]:n",
+        handler: (player, args, out) => {
+            var faction = factions.getFaction(args[0]);
+            if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
+
+            var rank = faction.ranks[args[1] - 1];
+
+            out.info(`${player.name} изменил зарплату ранга ${rank.pay} у организации #${faction.id} (${rank.pay} => ${args[2]})`);
+            rank.pay = args[2];
+            rank.save();
+        }
+    },
 }
