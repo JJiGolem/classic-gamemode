@@ -310,12 +310,16 @@ module.exports = {
             console.log('accept');
             let vehicle = seller.vehicle;
             if (!vehicle || vehicle.sqlId != target.sellCarTargetOffer.vehId) {
+                target.call('vehicles.sell.target.final', [2]);
+                seller.call('vehicles.sell.seller.final', [2]);
                 delete target.sellCarTargetOffer;
                 delete seller.sellCarSenderOffer;
                 return;
             }
             if (target.character.cash < target.sellCarTargetOffer.price) {
-                target.call('notifications.push.error', ['Недостаточно денег', 'Ошибка']);
+                //target.call('notifications.push.error', ['Недостаточно денег', 'Ошибка']);
+                target.call('vehicles.sell.target.final', [0]);
+                seller.call('vehicles.sell.seller.final', [0]);
                 delete target.sellCarTargetOffer;
                 delete seller.sellCarSenderOffer;
                 return;
@@ -326,8 +330,10 @@ module.exports = {
             money.moveCash(target, seller, price, function (result) {
                 console.log(vehId)
                 if (result) {
-                    target.call('notifications.push.success', ['Вы купили транспорт', 'Успешно']);
-                    seller.call('notifications.push.success', ['Вы продали транспорт', 'Успешно']);
+                    //target.call('notifications.push.success', ['Вы купили транспорт', 'Успешно']);
+                    target.call('vehicles.sell.target.final', [1]);
+                    //seller.call('notifications.push.success', ['Вы продали транспорт', 'Успешно']);
+                    seller.call('vehicles.sell.seller.final', [1]);
                     db.Models.Vehicle.update({
                         owner: target.character.id,
                     }, {
@@ -346,8 +352,10 @@ module.exports = {
                     delete target.sellCarTargetOffer;
                     delete seller.sellCarSenderOffer;
                 } else {
-                    target.call('notifications.push.error', ['Не удалось купить т/с', 'Ошибка']);
-                    seller.call('notifications.push.error', ['Не удалось продать т/с', 'Ошибка']);
+                    //target.call('notifications.push.error', ['Не удалось купить т/с', 'Ошибка']);
+                    target.call('vehicles.sell.target.final', [2]);
+                    seller.call('vehicles.sell.seller.final', [2]);
+                    //seller.call('notifications.push.error', ['Не удалось продать т/с', 'Ошибка']);
                     delete target.sellCarTargetOffer;
                     delete seller.sellCarSenderOffer;
                 }
