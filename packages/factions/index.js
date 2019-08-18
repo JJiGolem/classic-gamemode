@@ -66,7 +66,7 @@ module.exports = {
             color: faction.blipColor,
             name: faction.name,
             shortRange: 10,
-            scale: 0.7
+            scale: 1
         }));
     },
     createWarehouseMarker(faction) {
@@ -126,7 +126,7 @@ module.exports = {
             color: 1,
             name: "Боеприпасы",
             shortRange: 10,
-            scale: 0.7
+            scale: 1
         });
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 2.5);
         colshape.onEnter = (player) => {
@@ -149,7 +149,7 @@ module.exports = {
             color: 1,
             name: "Медикаменты",
             shortRange: 10,
-            scale: 0.7
+            scale: 1
         });
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 2.5);
         colshape.onEnter = (player) => {

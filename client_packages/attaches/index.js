@@ -3,7 +3,7 @@ mp.attachmentMngr = {
 
     addFor: function(entity, id) {
         if (this.attachments.hasOwnProperty(id)) {
-            if (entity && !entity.__attachmentObjects.hasOwnProperty(id)) {
+            if (entity && entity.__attachmentObjects && !entity.__attachmentObjects.hasOwnProperty(id)) {
                 let attInfo = this.attachments[id];
                 let object = mp.objects.new(attInfo.model, entity.position);
 
