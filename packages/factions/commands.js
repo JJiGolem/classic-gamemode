@@ -15,6 +15,19 @@ module.exports = {
             out.log(text, player);
         }
     },
+    "/ftp": {
+        description: "Телепортироваться к организации.",
+        access: 2,
+        args: "[ид_организации]:n",
+        handler: (player, args, out) => {
+            var marker = factions.getMarker(args[0]);
+            if (!marker) return out.error(`Организация #${args[0]} не найдена`, player);
+            var pos = marker.position;
+            pos.z++;
+            player.position = pos;
+            out.info(`Вы телепортировались к организации #${args[0]}`, player);
+        }
+    },
     "/fsetname": {
         description: "Сменить имя организации.",
         access: 6,
@@ -40,7 +53,7 @@ module.exports = {
 
             var fullName = `${args[1]} ${args[2]}`;
             var rec = mp.players.getByName(fullName);
-            var character = (rec)? rec.character : await db.Models.Character.findOne({
+            var character = (rec) ? rec.character : await db.Models.Character.findOne({
                 attributes: ['id', 'faction', 'factionRank'],
                 where: {
                     name: fullName
@@ -165,16 +178,102 @@ module.exports = {
             factions.setBlip(faction, args[1], args[2]);
         }
     },
-    // "/factionsetpos": {
-    //     description: "Изменить позицию организации. Позиция берется от игрока.",
-    //     access: 6,
-    //     args: "[ид_организации]:n",
-    //     handler: (player, args, out) => {
-    //         var faction = factions.getFaction(args[0]);
-    //         if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
-    //
-    //         faction.setPosition(player.position, player.heading);
-    //         terminal.info(`${player.name} изменил позицию у организации с ID: ${args[0]} на ${JSON.stringify(player.position)}`);
-    //     }
-    // },
+    "/fsetpos": {
+        description: "Изменить позицию организации. Позиция берется от игрока.",
+        access: 6,
+        args: "[ид_организации]:n",
+        handler: (player, args, out) => {
+            var faction = factions.getFaction(args[0]);
+            if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
+
+            var pos = player.position;
+            faction.x = pos.x;
+            faction.y = pos.y;
+            faction.z = pos.z;
+            faction.h = player.heading;
+            faction.save();
+            pos.z -= 1;
+
+            var marker = factions.getMarker(faction.id);
+            marker.position = pos;
+            var blip = factions.getBlip(faction.id);
+            blip.position = pos;
+
+            out.info(`${player.name} изменил позицию у организации #${faction.id}`);
+        }
+    },
+    "/fsetwarehousepos": {
+        description: "Изменить позицию склада организации. Позиция берется от игрока.",
+        access: 6,
+        args: "[ид_организации]:n",
+        handler: (player, args, out) => {
+            var faction = factions.getFaction(args[0]);
+            if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
+
+            var pos = player.position;
+            faction.wX = pos.x;
+            faction.wY = pos.y;
+            faction.wZ = pos.z;
+            faction.save();
+            pos.z -= 1;
+
+            var warehouse = factions.getWarehouse(faction.id);
+            warehouse.colshape.destroy();
+            warehouse.position = pos;
+
+            var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+            colshape.onEnter = (player) => {
+                var boxType = "";
+                if (player.hasAttachment("ammoBox")) {
+                    boxType = "ammo";
+                } else if (player.hasAttachment("medicinesBox")) {
+                    boxType = "medicines";
+                } else return;
+
+                if (!factions.canFillWarehouse(player, boxType, faction))
+                    return notifs.error(player, `Нет прав для пополнения`, `Склад ${faction.name}`);
+
+                player.call("factions.insideFactionWarehouse", [true, boxType]);
+                player.insideFactionWarehouse = faction;
+            };
+            colshape.onExit = (player) => {
+                player.call("factions.insideFactionWarehouse", [false]);
+                delete player.insideFactionWarehouse;
+            };
+            warehouse.colshape = colshape;
+
+
+            out.info(`${player.name} изменил позицию склада у организации #${faction.id}`);
+        }
+    },
+    "/fsetstorageepos": {
+        description: "Изменить позицию выдачи предметов организации. Позиция берется от игрока.",
+        access: 6,
+        args: "[ид_организации]:n",
+        handler: (player, args, out) => {
+            var faction = factions.getFaction(args[0]);
+            if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
+
+            var pos = player.position;
+            faction.sX = pos.x;
+            faction.sY = pos.y;
+            faction.sZ = pos.z;
+            faction.save();
+            pos.z -= 1;
+
+            var storage = factions.getStorage(faction.id);
+            storage.colshape.destroy();
+            storage.position = pos;
+
+            var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+            colshape.onEnter = (player) => {
+                console.log(`storage onEnter: ${player.name} ${faction.name}`)
+            };
+            colshape.onExit = (player) => {
+                console.log(`storage onExit: ${player.name} ${faction.name}`)
+            };
+
+            out.info(`${player.name} изменил позицию выдачи предметов у организации #${faction.id}`);
+        }
+    },
 }

@@ -73,9 +73,10 @@ module.exports = {
         if (!faction.wX) return;
         var pos = new mp.Vector3(faction.wX, faction.wY, faction.wZ - 1);
 
-        this.warehouses.push(mp.markers.new(1, pos, 0.5, {
+        var warehouse = mp.markers.new(1, pos, 0.5, {
             color: [0, 187, 255, 70]
-        }));
+        });
+        this.warehouses.push(warehouse);
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
@@ -96,12 +97,15 @@ module.exports = {
             player.call("factions.insideFactionWarehouse", [false]);
             delete player.insideFactionWarehouse;
         };
+        warehouse.colshape = colshape;
     },
     createStorageMarker(faction) {
         var pos = new mp.Vector3(faction.sX, faction.sY, faction.sZ - 1);
-        this.storages.push(mp.markers.new(1, pos, 0.5, {
+
+        var storage = mp.markers.new(1, pos, 0.5, {
             color: [0, 187, 255, 70]
-        }));
+        });
+        this.storages.push(storage);
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
@@ -110,6 +114,7 @@ module.exports = {
         colshape.onExit = (player) => {
             console.log(`storage onExit: ${player.name} ${faction.name}`)
         };
+        storage.colshape = colshape;
     },
     createAmmoWarehouseMarker() {
         var pos = new mp.Vector3(-257.62, -339.59, 29.95 - 2);
@@ -159,6 +164,15 @@ module.exports = {
     },
     getFaction(id) {
         return this.factions[id - 1];
+    },
+    getMarker(id) {
+        return this.markers[id - 1];
+    },
+    getWarehouse(id) {
+        return this.warehouses[id - 1];
+    },
+    getStorage(id) {
+        return this.storages[id - 1];
     },
     getBlip(id) {
         return this.blips[id - 1];
