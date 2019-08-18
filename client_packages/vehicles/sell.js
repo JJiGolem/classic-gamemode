@@ -15,6 +15,7 @@ mp.events.add('vehicles.enter.private', (isPrivate) => {
 
 
 mp.events.add('vehicles.sell.show', () => {
+    mp.busy.add('vehicle_sell');
     mp.gui.cursor.show(true, true);
     mp.callCEFV(`inputWindow.name = 'carsell_id';
 inputWindow.header = "Продажа транспорта";
@@ -27,6 +28,7 @@ inputWindow.show = true;
 
 
 mp.events.add('vehicles.sell.close', () => {
+    mp.busy.remove('vehicle_sell');
     mp.gui.cursor.show(false, false);
     mp.callCEFV(`inputWindow.show = false`);
 });
@@ -100,6 +102,7 @@ mp.events.add('vehicles.sell.send.ans', (ans, data) => {
             mp.callCEFV(`acceptWindow.header = 'Вы действительно хотите продать т/с "${data.vehicleName}" игроку ${data.targetName} за $${data.price}?';`);
             mp.callCEFV(`acceptWindow.name = 'carsell';`);
             mp.callCEFV(`acceptWindow.show = true;`);
+            mp.busy.add('vehicle_seller_accept');
             break;
     }
 
@@ -118,6 +121,9 @@ mp.events.add('vehicles.sell.target.final', (ans) => {
         case 2:
             mp.notify.error('Не удалось купить т/с', 'Ошибка');
             break;
+        case 3:
+            mp.notify.error('У покупателя лимит на т/с', 'Ошибка');
+            break;
     }
 });
 
@@ -135,10 +141,14 @@ mp.events.add('vehicles.sell.seller.final', (ans) => {
         case 2:
             mp.notify.error('Не удалось продать т/с', 'Ошибка');
             break;
+        case 3:
+            mp.notify.error('Достигнут лимит на т/с', 'Ошибка');
+            break;
     }
 });
 
 mp.events.add('vehicles.sell.seller.accept', (accept) => {
+    mp.busy.remove('vehicle_seller_accept');
     if (accept) {
         //mp.callCEFV('loader.show = true');
         mp.events.callRemote('vehicles.sell.seller.accept', JSON.stringify(carSellData));

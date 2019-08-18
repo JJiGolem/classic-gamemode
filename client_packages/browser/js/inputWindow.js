@@ -35,6 +35,9 @@ var inputWindow = new Vue({
             if (this.name == 'carsell_id') {
                 mp.trigger('vehicles.sell.close');
              }
+             if (this.name == 'carsell_price') {
+                mp.trigger('vehicles.sell.close');
+            }
              if (this.name == 'fuelstations_litres') {
                 mp.trigger('fuelstations.fill.litres.close');
             }

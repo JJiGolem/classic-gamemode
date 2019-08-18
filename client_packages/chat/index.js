@@ -71,7 +71,7 @@ mp.events.add('chat.load', () => {
     mp.callCEFR('setTimeChat', [true]);
 
     mp.keys.bind(0x54, true, function () {
-        
+
         if (mp.busy.includes()) return;
         mp.busy.add('chat');
         isOpen = true;
@@ -98,7 +98,6 @@ mp.events.add('chat.load', () => {
         }
         mp.callCEFR('setOpacityChat', [chatOpacity]);
     });
-
 });
 
 mp.events.add('chat.close', () => {
@@ -111,6 +110,18 @@ mp.events.add('chat.tags.add', (tagIDs) => {
     tagIDs.forEach((tagID) => {
         if (!isTagExisting(TAGS_LIST[tagID])) {
             availableTags.push(TAGS_LIST[tagID]);
+        }
+    });
+    sortTagsById();
+    mp.callCEFR('setTagsChat', [availableTags]);
+});
+
+mp.events.add('chat.tags.delete', (tagIDs) => {
+    tagIDs.forEach((tagID) => {
+        let i = availableTags.findIndex(x => x.id == tagID)
+        mp.chat.debug(i);
+        if (i != -1) {
+            availableTags.splice(i, 1);
         }
     });
     sortTagsById();

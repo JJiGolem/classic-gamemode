@@ -42,23 +42,20 @@ module.exports = {
         if (!carmarket.isPlayerInCarMarketColshape(player)) return player.call('carmarket.car.sell.ans', [1]);;
         if (player.vehicle.key != 'private' || player.vehicle.owner != player.character.id) return player.call('carmarket.car.sell.ans', [0]);
 
-        let price = (player.vehicle.properties.price*PRICE_CONFIG.SELL).toFixed();
+        let price = (player.vehicle.properties.price * PRICE_CONFIG.SELL).toFixed();
         console.log(price);
         money.addCash(player, price, function (result) {
             if (result) {
                 try {
-                vehicles.removeVehicleFromPlayerVehicleList(player, player.vehicle.sqlId);
-
+                    vehicles.removeVehicleFromPlayerVehicleList(player, player.vehicle.sqlId);
                     vehicles.removeVehicleFromCarPlace(player, player.vehicle);
                 } catch (err) {
                     console.log(err);
                 }
-                
+                player.vehicle.d = 0;
                 carmarket.sellCar(player.vehicle);
-                // player.vehiclesCount = player.vehiclesCount - 1;
-                // console.log(player.vehiclesCount);
                 player.call('carmarket.car.sell.ans', [3, price]);
-                
+
             } else {
                 console.log(`${player.name} не смог продать авто на рынке (addcash error)`)
                 player.call('carmarket.car.sell.ans', [2]);
@@ -97,13 +94,14 @@ module.exports = {
         if (player.character.cash < price) return player.call('carmarket.car.buy.ans', [3]);
 
         let hasHouse = houses.isHaveHouse(player.character.id);
-        if (!hasHouse) {
-            if (player.vehicleList.length > 1) return player.call('carmarket.car.buy.ans', [4]);
-        } else {
-            if (player.vehicleList.length + 1 > player.carPlaces.length - 1) return player.call('carmarket.car.buy.ans', [4]);
-        }
+        // if (!hasHouse) {
+        //     if (player.vehicleList.length > 1) return player.call('carmarket.car.buy.ans', [4]);
+        // } else {
+        //     if (player.vehicleList.length + 1 > player.carPlaces.length - 1) return player.call('carmarket.car.buy.ans', [4]);
+        // }
+        if (!vehicles.isAbleToBuyVehicle(player)) return player.call('carmarket.car.buy.ans', [4]);
 
-        money.removeCash(player, price, function(result) {
+        money.removeCash(player, price, function (result) {
             if (result) {
 
                 let carInfo = {
@@ -113,14 +111,16 @@ module.exports = {
 
                 player.vehicle.key = 'private';
                 player.vehicle.owner = player.character.id;
-    
+
                 player.vehicle.db.update({
                     key: 'private',
                     owner: player.character.id,
+                    owners: player.vehicle.owners + 1,
                     isOnParking: hasHouse ? 0 : 1
                 });
+                player.vehicle.owners = player.vehicle.owners + 1;
                 player.vehicle.isOnParking = hasHouse ? 0 : 1;
-                
+                player.call('vehicles.enter.private', [true]);
                 if (hasHouse) vehicles.setVehicleHomeSpawnPlace(player);
                 carmarket.setMarketSpotFree(player.vehicle.marketSpot);
 
@@ -134,7 +134,7 @@ module.exports = {
                     vehType: veh.properties.vehType,
                     price: veh.properties.price
                 });
-                
+
                 player.call('carmarket.car.buy.ans', [2, carInfo]);
                 mp.events.call('vehicles.engine.toggle', player);
             } else {
