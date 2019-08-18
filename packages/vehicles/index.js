@@ -239,7 +239,7 @@ module.exports = {
         console.log(player.vehicleList);
         if (dbPrivate.length > 0) {
             let parkingVeh = dbPrivate.find(x => x.isOnParking);
-            console.log(`VEHHH ${parkingVeh}`)
+
             if (parkingVeh) {
                 mp.events.call('parkings.vehicle.add', parkingVeh);
                 //player.call('chat.message.push', [`!{#f3c800}Транспорт доставлен`]);
