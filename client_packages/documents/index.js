@@ -28,7 +28,7 @@ mp.events.add('documents.show', (type, data) => {
                 data.vehType = 'Велосипед'
                 break;
         }
-        let newDate = data.regDate.slice(0, 10);
+        let newDate = data.regDate ? data.regDate.slice(0, 10) : null;
         data.regDate = dateFormatter(newDate);
         for (var key in data) {
             if (typeof data[key] == 'string') data[key] = `'${data[key]}'`;
