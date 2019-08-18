@@ -25,9 +25,34 @@ function setCursor(enable) {
 function cloneObj(inObj) {
     let outObj = JSON.parse(JSON.stringify(inObj));
     for (let key in inObj) {
-        if (typeof (inObj[key]) == 'function') {
+        if (typeof(inObj[key]) == 'function') {
             outObj[key] = inObj[key];
         }
     }
     return outObj;
 }
+
+var busy = {
+    list: [],
+    add(name, client = false) {
+        if (this.list.includes(name)) return false;
+        this.list.push(name);
+        if (client) mp.trigger('busy.add', name, true);
+        return true;
+    },
+    includes(name) {
+        if (name == null) return this.list.length > 0;
+        if (typeof name != 'object') return this.list.includes(name);
+        else {
+            for (var i = 0; i < name.length; i++) {
+                if (this.list.includes(name[i])) return true;
+            }
+            return false;
+        }
+    },
+    remove(name, client = false) {
+        var index = this.list.indexOf(name);
+        if (index != -1) this.list.splice(index, 1);
+        if (client) mp.trigger('busy.remove', name, true);
+    },
+};

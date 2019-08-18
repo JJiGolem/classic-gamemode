@@ -31,6 +31,7 @@ var terminal = new Vue({
     },
     methods: {
         push(type, text) {
+            if (typeof text == 'object') text = JSON.stringify(text);
             this.messages.push({
                 type: type,
                 text: text
@@ -80,17 +81,19 @@ var terminal = new Vue({
         },
         show(val) {
             if (val) {
+                busy.add("terminal", true);
                 this.inputText = "";
                 setTimeout(() => {
                     this.$refs["input"].focus();
                 }, 100);
-            }
+            } else busy.remove("terminal", true);
             setCursor(val);
         }
     },
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
+            if (busy.includes("chat")) return;
             if ((e.keyCode == 192 || e.keyCode == 1040) && self.enable) self.show = !self.show;
         });
         window.addEventListener('mousemove', function(e) {
