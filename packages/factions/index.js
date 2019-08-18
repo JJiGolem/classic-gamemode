@@ -180,6 +180,13 @@ module.exports = {
     getRank(factionId, rank) {
         return this.getFaction(factionId).ranks[rank - 1];
     },
+    getRankById(factionId, rankId) {
+        var ranks = this.getFaction(factionId).ranks;
+        for (var i = 0; i < ranks.length; i++) {
+            if (ranks[i].id == rankId) return ranks[i];
+        }
+        return null;
+    },
     getMinRank(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         return faction.ranks[0];
@@ -246,6 +253,10 @@ module.exports = {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         return faction.id == 7;
     },
+    isStateFaction(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction.id >= 1 && faction.id <= 7;
+    },
     takeBox(player, type) {
         var header = "";
         if (type == 'ammo') {
@@ -280,5 +291,16 @@ module.exports = {
     canFillWarehouse(player, boxType, faction) {
         if (!this.whiteListWarehouse[boxType][player.character.factionId]) return false;
         return this.whiteListWarehouse[boxType][player.character.factionId].includes(faction.id)
+    },
+    sayRadio(player, text) {
+        var factionId = player.character.factionId;
+        if (!factionId) return notifs.error(player, `Вы не состоите в организации`, `Рация`);
+        if (!this.isStateFaction(factionId)) return notifs.error(player, `Вы не в гос. структуре`, `Рация`);
+
+        var rank = this.getRankById(factionId, player.character.factionRank);
+        mp.players.forEach((rec) => {
+            if (rec.character && rec.character.factionId == factionId)
+                rec.call('chat.action.walkietalkie', [player.name, player.id, rank.name, text]);
+        });
     },
 };

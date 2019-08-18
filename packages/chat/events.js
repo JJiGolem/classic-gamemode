@@ -1,4 +1,6 @@
 "use strict";
+var factions = require('../factions');
+
 module.exports = {
 
     "characterInit.done": (player) => {     //characterInit.done
@@ -8,7 +10,7 @@ module.exports = {
             player.call('chat.message.push', [`!{#f7f692} Вы вошли как администратор ${player.character.admin} уровня`]);
         }
         player.setVariable('nick', player.character.name);
-        player.name = player.character.name; 
+        player.name = player.character.name;
     },
 
     // "playerJoin": (player) => {
@@ -17,7 +19,7 @@ module.exports = {
     // },
 
     "chat.tags.update": () => {
-        /* 
+        /*
         TODO:
         Вызывать функцию при выборе персонажа/принятии/увольнении
         Сделать проверку на то, состоит ли человек в организации
@@ -109,11 +111,7 @@ module.exports = {
     },
 
     "/r": (player, message) => {
-        mp.players.forEach((currentPlayer) => {
-            if (true) {
-                currentPlayer.call('chat.action.walkietalkie', [player.name, player.id, message]);
-            };
-        });
+        factions.sayRadio(player, message.join(' '));
     },
 
     "/n": (player, message) => {
