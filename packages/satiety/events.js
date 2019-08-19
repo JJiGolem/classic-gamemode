@@ -7,9 +7,7 @@ module.exports = {
     },
     "playerQuit": (player) => {
         satiety.stopTimer(player);
-        console.log(player.character)
-        player.character.update({
-            health: player.health
-        });
+        player.character.health = player.health;
+        player.character.save();
     }
 };
