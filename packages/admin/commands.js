@@ -341,9 +341,9 @@ module.exports = {
         access: 1,
         args: "",
         handler: (player, args) => {
+            player.call('chat.message.push', [`!{#ecffbf}Список администраторов в сети:`])
             mp.players.forEach((current) => {
                 if (!current.character) return;
-                player.call('chat.message.push', [`!{#ecffbf}Список администраторов в сети:`])
                 if (current.character.admin) {
                     player.call('chat.message.push', [`!{#ecffbf}${current.character.name} (${current.character.admin} уровень)`]);
                 }
