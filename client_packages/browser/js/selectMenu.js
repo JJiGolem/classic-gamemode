@@ -1264,7 +1264,7 @@ var selectMenu = new Vue({
                 header: "Добавление гаража",
                 items: [{
                         text: "Создать авто",
-                    },  
+                    },
                     {
                         text: "Добавить парковочное место",
                     },
@@ -1406,6 +1406,48 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "factionGiveRank": {
+                name: "factionGiveRank",
+                header: "Название организации",
+                items: [{
+                        text: "Ранг",
+                        values: ['Ранг 1', 'Ранг 2', 'Ранг 3', 'Ранг 4', 'Ранг 5', 'Ранг 6'],
+                        i: 0,
+                    },
+                    {
+                        text: "Установить",
+                        location: "center",
+                        i: 0,
+                    },
+                    {
+                        text: "Закрыть",
+                        location: "center",
+                        i: 0,
+                    }
+                ],
+                i: 0,
+                j: 0,
+                playerId: null,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Установить') {
+                            var rank = this.items[0].i + 1;
+                            mp.trigger("callRemote", "factions.giverank.set", JSON.stringify([this.playerId, rank]));
+                            selectMenu.show = false;
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
         },
         // Уведомление
         notification: null,
@@ -1489,6 +1531,27 @@ var selectMenu = new Vue({
         },
         onEscapePressed() {
             this.menu.handler("onEscapePressed");
+        },
+        showByName(menuName) {
+            var menu = this.menus[menuName];
+            if (!menu) return;
+            this.menu = menu;
+            this.show = true;
+        },
+        setItemValues(menuName, itemName, values) {
+            if (typeof values == 'string') values = JSON.parse(values);
+            var menu = this.menus[menuName];
+            if (!menu) return;
+            var item = this.getItemByName(itemName, menu.items);
+            if (!item) return;
+            Vue.set(item, 'values', values);
+        },
+        getItemByName(name, items) {
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                if (item.text == name) return item;
+            }
+            return null;
         },
         // open() {
         //     this.menu.i = 0; // TEMP, нужно разобраться, почему i/j остаются прежними при закрытии/открытии меню

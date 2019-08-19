@@ -200,6 +200,14 @@ module.exports = {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         return faction.ranks[faction.ranks.length - 1];
     },
+    getRankNames(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        var names = [];
+        for (var i = 0; i < faction.ranks.length; i++) {
+            names.push(faction.ranks[i].name);
+        }
+        return names;
+    },
     setLeader(faction, character) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
 

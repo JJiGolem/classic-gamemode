@@ -66,7 +66,42 @@ module.exports = {
         notifs.info(rec, `${player.name} вас уволил`, `Организация`);
     },
     "factions.giverank.show": (player, recId) => {
+        var rec = mp.players.at(recId);
+        if (!rec) return notifs.error(player, `Игрок #${recId} не найден`, `Ранг организации`);
+        if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, `Ранг организации`);
+        if (!player.character.factionId) return notifs.error(player, `Вы не состоите в организации`, `Ранг организации`);
+        if (rec.character.factionId != player.character.factionId) return notifs.error(player, `${rec.name} не вашей организации`, `Ранг организации`);
+        if (rec.character.factionRank >= player.character.factionRank) return notifs.error(player, `Нельзя повысить до своего ранга или выше`, `Ранг организации`);
+        if (!factions.canGiveRank(player)) return notifs.error(player, `Недостаточно прав`, `Ранг организации`);
 
+        var faction = factions.getFaction(player.character.factionId);
+        var rank = factions.getRankById(faction, rec.character.factionRank);
+
+        var rankNames = factions.getRankNames(faction);
+        player.call("factions.giverank.showMenu", [faction.name, rankNames, rank.rank, recId]);
+    },
+    "factions.giverank.set": (player, values) => {
+        values = JSON.parse(values);
+        var recId = values[0];
+        var rank = values[1];
+
+        var rec = mp.players.at(recId);
+        if (!rec) return notifs.error(player, `Игрок #${recId} не найден`, `Ранг организации`);
+        if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, `Ранг организации`);
+        if (!player.character.factionId) return notifs.error(player, `Вы не состоите в организации`, `Ранг организации`);
+        if (rec.character.factionId != player.character.factionId) return notifs.error(player, `${rec.name} не вашей организации`, `Ранг организации`);
+        if (rec.character.factionRank >= player.character.factionRank) return notifs.error(player, `Нельзя повысить до своего ранга или выше`, `Ранг организации`);
+        if (!factions.canGiveRank(player)) return notifs.error(player, `Недостаточно прав`, `Ранг организации`);
+
+        rank = factions.getRank(player.character.factionId, rank);
+        if (rank.id > rec.character.factionRank) {
+            notifs.info(rec, `${player.name} повысил вас до ${rank.name}`, `Повышение`);
+            notifs.success(player, `${rec.name} повышен до ${rank.name}`, `Повышение`);
+        } else {
+            notifs.info(rec, `${player.name} понизил вас до ${rank.name}`, `Понижение`);
+            notifs.success(player, `${rec.name} понижен до ${rank.name}`, `Понижение`);
+        }
+        factions.setRank(rec.character, rank);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (seat != -1 || vehicle.key != 'faction' || !player.character.factionId) return;
