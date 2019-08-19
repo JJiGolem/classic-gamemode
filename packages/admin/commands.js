@@ -178,22 +178,10 @@ module.exports = {
             mp.players.at(args[0]).kick("q");
         }
     },
-    "/nick": {
-        access: 6,
-        handler: (player, args) => {
-            player.setVariable('nick', `${args[0]} ${args[1]}`);
-        }
-    },
     "/clothes": {
         access: 6,
         handler: (player, args) => {
             player.setClothes(parseInt(args[0]), parseInt(args[1]), parseInt(args[2]), 0);
-        }
-    },
-    "/over": {
-        access: 6,
-        handler: (player, args) => {
-            player.setHeadOverlay(parseInt(args[0]), [parseInt(args[1]), parseInt(args[2]), parseInt(args[3]), parseInt(args[4])]);
         }
     },
     "/tempwear": {
@@ -313,6 +301,53 @@ module.exports = {
             args.splice(0, 1);
             var id = args.join(" ").trim();
             rec.addAttachment(id, true);
+        }
+    },
+    "/setadmin": {
+        description: "Назначить игрока администратором",
+        access: 5,
+        args: "[ID] [Уровень администрирования]",
+        handler: (player, args) => {
+            let lvl = parseInt(args[1]);
+            let id = parseInt(args[0]);
+
+            if (isNaN(lvl) || lvl < 1 || isNaN(id) || id < 0) return;
+            let target = mp.players.at(id);
+            if (!target) return player.call('notifications.push.error', [`Игрок не найден`, 'Ошибка']);
+            if (lvl >= player.character.admin /*|| target.character.admin > player.character.admin*/) return player.call('notifications.push.error', [`Недостаточно прав`, 'Ошибка'])
+            target.character.admin = lvl;
+            target.character.save();
+            target.call('chat.message.push', [`!{#ffcf0d} ${player.character.name} назначил вас администратором ${lvl} уровня`]);
+        }
+    },
+    "/deladmin": {
+        description: "Снять админку с игрока",
+        access: 5,
+        args: "[ID]",
+        handler: (player, args) => {
+            let id = parseInt(args[0]);
+
+            if (isNaN(id) || id < 0) return;
+            let target = mp.players.at(id);
+            if (!target) return player.call('notifications.push.error', [`Игрок не найден`, 'Ошибка']);
+            if (player.character.admin < target.character.admin) return player.call('notifications.push.error', [`Недостаточно прав`, 'Ошибка'])
+            target.character.admin = 0;
+            target.character.save();
+            target.call('chat.message.push', [`!{#ff8819} ${player.character.name} забрал у вас права администратора`]);
+        }
+    },
+    "/admins": {
+        description: "Список администраторов",
+        access: 1,
+        args: "",
+        handler: (player, args) => {
+            mp.players.forEach((current) => {
+                if (!current.character) return;
+                player.call('chat.message.push', [`!{#ecffbf}Список администраторов в сети:`])
+                if (current.character.admin) {
+                    player.call('chat.message.push', [`!{#ecffbf}${current.character.name} (${current.character.admin} уровень)`]);
+                }
+            });
         }
     },
 }
