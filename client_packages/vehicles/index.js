@@ -4,6 +4,8 @@ let garage = require('./vehicles/garage.js');
 
 let currentSirenState = false;
 
+mp.speedometerEnabled = true;
+
 mp.events.add("playerLeaveVehicle", () => {
     mp.callCEFV('speedometer.arrow = 0');
     mp.callCEFV('speedometer.emergency = false');
@@ -105,15 +107,18 @@ mp.events.add('vehicles.engine.toggle', (state) => {
 })
 
 mp.events.add('vehicles.speedometer.show', (state) => {
-    if (state) {
-        let vehicle = mp.players.local.vehicle;
-        if (!vehicle) return;
-        let engine = vehicle.getIsEngineRunning()
-        mp.callCEFV(`speedometer.isActive = ${engine}`);
-        mp.callCEFV('speedometer.show = true');
-    } else {
-        mp.callCEFV('speedometer.show = false');
+    if (mp.speedometerEnabled) {
+        if (state) {
+            let vehicle = mp.players.local.vehicle;
+            if (!vehicle) return;
+            let engine = vehicle.getIsEngineRunning()
+            mp.callCEFV(`speedometer.isActive = ${engine}`);
+            mp.callCEFV('speedometer.show = true');
+        } else {
+            mp.callCEFV('speedometer.show = false');
+        }
     }
+
 });
 
 mp.events.add('vehicles.speedometer.sync', () => {
@@ -428,4 +433,9 @@ mp.events.add('vehicles.onGroundProperly.set', () => {
     let veh = mp.players.local.vehicle;
     if (!veh) return;
     veh.setOnGroundProperly();
+});
+
+
+mp.events.add('vehicles.speedometer.enabled', (enabled) => {
+    mp.speedometerEnabled = enabled;
 });

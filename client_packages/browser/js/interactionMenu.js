@@ -124,10 +124,11 @@ var interactionMenu = new Vue({
                     var item = this.items[index];
                     if (item.text == 'Документы') {
                         mp.trigger(`documents.list`);
-                    }
-                    if (item.text == 'Деньги') {
+                    } else if (item.text == 'Деньги') {
                         mp.trigger(`interaction.menu.close`);
                         mp.trigger(`interaction.money.show`);
+                    } else if (item.text == 'Организация') {
+                        // TODO: ...
                     }
                 }
             },
@@ -174,7 +175,26 @@ var interactionMenu = new Vue({
                     mp.trigger('documents.carPass.list.choose', plate);
                     mp.trigger(`interaction.menu.close`);
                 }
-            }
+            },
+            "faction": {
+                name: "faction",
+                items: [
+                    {
+                        text: "Пригласить",
+                    },
+                    {
+                        text: "Уволить",
+                    },
+                    {
+                        text: "Ранг",
+                    }
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    mp.trigger(`interactionMenu.onClick`, this.name, item.text);
+                    interactionMenu.show = false;
+                }
+            },
         }
     },
     methods: {
@@ -186,7 +206,14 @@ var interactionMenu = new Vue({
         onClick(index) {
             this.menu.handler(index);
         }
-    }
+    },
+    watch: {
+        show(val) {
+            setCursor(val);
+            if (val) busy.add("interaction", true);
+            else busy.remove("interaction", true);
+        }
+    },
 });
 
 // for tests

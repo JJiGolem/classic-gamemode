@@ -12,6 +12,8 @@ mp.events.add('carmarket.colshape.leave', () => {
 
 mp.keys.bind(0x45, true, () => {
     if (isInCarMarketColshape) {
+        if (!mp.players.local.vehicle) return;
+        if (mp.players.local.vehicle.getPedInSeat(-1) != mp.players.local.handle) return;
         mp.events.callRemote('carmarket.sellmenu.show');
     }
 });
@@ -111,6 +113,7 @@ mp.events.add('carmarket.car.buy.ans', (ans, data) => {
 
 function dateFormatter(date) {
     if (!date) return '11-09-2001';
+    date = date.slice(0, 10);
     //mp.chat.debug(date);
     date = date.split('-');
     //mp.chat.debug(date);

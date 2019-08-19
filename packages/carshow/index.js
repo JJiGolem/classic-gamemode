@@ -154,11 +154,13 @@ module.exports = {
                 if (player.character.cash < carList[i].properties.price) return player.call('carshow.car.buy.ans', [2]);
                 if (carList[i].count < 1) return player.call('carshow.car.buy.ans', [0]);
                 let hasHouse = houses.isHaveHouse(player.character.id);
-                if (!hasHouse) {
-                    if (player.vehicleList.length > 1) return player.call('carshow.car.buy.ans', [5]);
-                } else {
-                    if (player.vehicleList.length + 1 > player.carPlaces.length - 1) return player.call('carshow.car.buy.ans', [5]);
-                }
+                // if (!hasHouse) {
+                //     if (player.vehicleList.length > 1) return player.call('carshow.car.buy.ans', [5]);
+                // } else {
+                //     if (player.carPlaces.length > 1 && player.vehicleList.length + 1 > player.carPlaces.length - 1) return player.call('carshow.car.buy.ans', [5]);
+                //     if (player.carPlaces.length == 1 && player.vehicleList.length >= player.carPlaces.length) return player.call('carshow.car.buy.ans', [5]);
+                // }
+                if (!vehicles.isAbleToBuyVehicle(player)) return player.call('carshow.car.buy.ans', [5]);
                 let carToBuy = carList[i];
                 money.removeCash(player, carList[i].properties.price, async function (result) {
                     if (result) {
@@ -167,6 +169,9 @@ module.exports = {
                             let parking = parkings.getClosestParkingId(player);
                             let parkingInfo = parkings.getParkingInfoById(parking);
                             console.log(parkingInfo);
+
+                            let now = new Date();
+
                             var data = await db.Models.Vehicle.create({
                                 key: "private",
                                 owner: player.character.id,
@@ -180,7 +185,8 @@ module.exports = {
                                 isOnParking: hasHouse ? 0 : 1,
                                 parkingId: parking,
                                 plate: carPlate,
-                                owners: 1
+                                owners: 1,
+                                regDate: now
                             });
                             var veh = {
                                 key: "private",
@@ -203,7 +209,8 @@ module.exports = {
                                 brakeState: 0,
                                 destroys: 0,
                                 parkingHours: 0,
-                                owners: 1
+                                owners: 1,
+                                regDate: now
                             }
                             veh.sqlId = data.id;
                             veh.db = data;

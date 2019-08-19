@@ -114,19 +114,22 @@ module.exports = {
 
             switch (args[0]) {
                 case "newbie":
-                    mp.players.forEach((current) => { //TODO проверка на адм
-                        current.call('chat.message.push', [`!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для новичков`]);
-                    });
+                    // mp.players.forEach((current) => { //TODO проверка на адм
+                    //     current.call('chat.message.push', [`!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для новичков`]);
+                    // });
+                    mp.events.call('admin.notify.all', `!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для новичков`);
                     break;
                 case "faction":
-                    mp.players.forEach((current) => { //TODO проверка на адм
-                        current.call('chat.message.push', [`!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для фракции с ID ${args[1]}`]);
-                    });
+                    // mp.players.forEach((current) => { //TODO проверка на адм
+                    //     current.call('chat.message.push', [`!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для фракции с ID ${args[1]}`]);
+                    // });
+                    mp.events.call('admin.notify.all', `!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для фракции с ID ${args[1]}`);
                     break;
                 case "job":
-                    mp.players.forEach((current) => { //TODO проверка на адм
-                        current.call('chat.message.push', [`!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для работы с ID ${args[1]}`]);
-                    });
+                    // mp.players.forEach((current) => { //TODO проверка на адм
+                    //     current.call('chat.message.push', [`!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для работы с ID ${args[1]}`]);
+                    // });
+                    mp.events.call('admin.notify.all', `!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для работы с ID ${args[1]}`);
                     break;
             }
         }

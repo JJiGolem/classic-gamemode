@@ -16,7 +16,8 @@ var offerDialog = new Vue({
                     mp.trigger("offerDialog.close");
                 },
                 ignore() {
-                    alert("Диалог предложения был проигнорирован!");
+                    mp.trigger("callRemote", "documents.offer.accept", 0);
+                    mp.trigger("offerDialog.close");
                 },
             },
             "carservice_diagnostics": {
@@ -34,7 +35,8 @@ var offerDialog = new Vue({
                     mp.trigger("offerDialog.close");
                 },
                 ignore() {
-                    alert("Диалог предложения был проигнорирован!");
+                    mp.trigger("callRemote", "carservice.diagnostics.accept", 0);
+                    mp.trigger("offerDialog.close");
                 },
             },
             "house_sell": {
@@ -71,7 +73,23 @@ var offerDialog = new Vue({
                     mp.trigger("offerDialog.close");
                 },
                 ignore() {
-                    alert("Диалог предложения был проигнорирован!");
+                    mp.trigger("callRemote", "vehicles.sell.offer.accept", 0);
+                    mp.trigger("offerDialog.close");
+                },
+            },
+            "faction_invite": {
+                text: `Carter Slade предлагает вам вступить в Groove Street`,
+                on(values) {
+                    this.text = `${values.name} предлагает вам вступить в ${values.faction}`;
+                },
+                yes() {
+                    mp.trigger("callRemote", "factions.invite.accept");
+                },
+                no() {
+                    mp.trigger("callRemote", "factions.invite.cancel");
+                },
+                ignore() {
+                    mp.trigger("callRemote", "factions.invite.cancel");
                 },
             },
         },
@@ -111,7 +129,13 @@ var offerDialog = new Vue({
                 self.hide();
             }
         });
-    }
+    },
+    watch: {
+        dialog(val) {
+            if (val) setCursor(true);
+            else setCursor(false);
+        }
+    },
 });
 
 // for tests

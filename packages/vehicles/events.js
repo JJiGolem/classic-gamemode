@@ -48,6 +48,8 @@ module.exports = {
             player.call('prompt.showByName', ['vehicle_engine']);
         }
         if (seat == -1) {
+            let enabled = vehicle.properties.vehType == 2 ? false : true;
+            player.call('vehicles.speedometer.enabled', [enabled]);
             player.call('vehicles.speedometer.show', [true]);
             player.call('vehicles.speedometer.max.update', [vehicle.properties.maxFuel]);
             player.call('vehicles.speedometer.sync');
@@ -295,7 +297,7 @@ module.exports = {
 
         target.call('offerDialog.show', ["vehicles_sell", {
             name: player.character.name,
-            model: vehicle.modelName,
+            model: vehicle.properties.name,
             price: price,
             plate: vehicle.plate
         }]);
@@ -324,9 +326,17 @@ module.exports = {
                 delete seller.sellCarSenderOffer;
                 return;
             }
-            // todo remove cash
+            if (!vehicles.isAbleToBuyVehicle(target)) {
+                target.call('vehicles.sell.target.final', [3]);
+                seller.call('vehicles.sell.seller.final', [3]);
+                delete target.sellCarTargetOffer;
+                delete seller.sellCarSenderOffer;
+                return;
+            }
+
             let price = target.sellCarTargetOffer.price;
             let vehId = target.sellCarTargetOffer.vehId;
+            let owners = vehicle.owners;
             money.moveCash(target, seller, price, function (result) {
                 console.log(vehId)
                 if (result) {
@@ -336,6 +346,7 @@ module.exports = {
                     seller.call('vehicles.sell.seller.final', [1]);
                     db.Models.Vehicle.update({
                         owner: target.character.id,
+                        owners: owners + 1
                     }, {
                             where: {
                                 id: vehId
@@ -344,10 +355,25 @@ module.exports = {
                     let veh = vehicles.getVehicleBySqlId(vehId);
                     if (veh) {
                         veh.owner = target.character.id;
+                        veh.owners = veh.owners + 1;
                     }
                     if (seller.vehicle) {
                         seller.removeFromVehicle();
                     }
+
+                    vehicles.removeVehicleFromPlayerVehicleList(seller, vehId);
+
+                    let props = vehicles.setVehiclePropertiesByModel(veh.modelName)
+                    console.log(props)
+                    target.vehicleList.push({
+                        id: veh.id,
+                        name: props.name,
+                        plate: veh.plate,
+                        regDate: veh.regDate,
+                        owners: veh.owners,
+                        vehType: props.vehType,
+                        price: props.price
+                    });
 
                     delete target.sellCarTargetOffer;
                     delete seller.sellCarSenderOffer;

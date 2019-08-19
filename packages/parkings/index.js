@@ -159,7 +159,7 @@ module.exports = {
     },
     savePlayerVehicles(player) {
         if (!player.character) return;
-
+        this.deletePlayerParkingVehicles(player.character.id);
         mp.vehicles.forEach((current) => {
             if (current.key == "private" && current.owner == player.character.id) {
                 if (current.isOnParking) {
@@ -192,5 +192,8 @@ module.exports = {
                 return parkings[i];
             }
         }
+    },
+    deletePlayerParkingVehicles(id) {
+        parkingVehicles = parkingVehicles.filter(x => x.owner != id);
     }
 }

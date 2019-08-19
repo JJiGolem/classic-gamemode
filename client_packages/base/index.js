@@ -48,7 +48,8 @@ mp.busy.list = new Array();
 /// house.add
 /// END LIST
 /// Добавить модуль (true - операция провшла успешно, false - такой модуль уже содержится в массиве)
-mp.busy.add = function(name) {
+mp.busy.add = function(name, nocef = false) {
+    if (!nocef) mp.callCEFV(`busy.add('${name}')`);
     if (mp.busy.list.includes(name)) return false;
     mp.busy.list.push(name);
     return true;
@@ -64,10 +65,15 @@ mp.busy.includes = function(name) {
     }
 }
 /// Удалить модуль
-mp.busy.remove = function(name) {
+mp.busy.remove = function(name, nocef = false) {
+    if (!nocef) mp.callCEFV(`busy.remove('${name}')`);
     let index = mp.busy.list.findIndex(x => x == name);
     index != -1 && mp.busy.list.splice(index, 1);
 }
+
+mp.events.add("busy.add", mp.busy.add);
+mp.events.add("busy.remove", mp.busy.remove);
+
 /// 2)
 /// ...
 
