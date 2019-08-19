@@ -14,6 +14,10 @@ let taxiStation = {
     },
 }
 
+const MIN_PRICE = 20;
+
+let orders = [];
+
 module.exports = {
     init() {
         this.createTaxiStation();
@@ -37,5 +41,28 @@ module.exports = {
         shape = mp.colshapes.newSphere(taxiStation.marker.x, taxiStation.marker.y, taxiStation.marker.z + 1, 1.2);
         shape.pos = new mp.Vector3(taxiStation.marker.x, taxiStation.marker.y, taxiStation.marker.z);
         shape.isTaxiStation = true;
+    },
+    getMinimalPrice() {
+        return MIN_PRICE;
+    },
+    getOrders() {
+        return orders;
+    },
+    addOrder(clientId, position) {
+        orders.push({
+            orderId: orders.length + 1,
+            clientId: clientId,
+            position: position
+        });
+    },
+    doesPlayerHaveOrders(id) {
+        let order = orders.find(x => x.clientId == id);
+        if (order) return true 
+        else return false;
+    },
+    deleteOrder(orderId) {
+        let index = orders.findIndex(x => x.orderId == orderId);
+        if (index != -1) orders.splice(index, 1);
+        // todo отправка всем события удаления ордера
     }
 }

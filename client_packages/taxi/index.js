@@ -1,3 +1,5 @@
+let client = require('./taxi/client.js');
+
 let peds = [{
     model: "a_m_m_hasjew_01",
     position: {
