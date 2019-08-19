@@ -246,7 +246,7 @@ module.exports = {
             out.info(`${player.name} изменил позицию склада у организации #${faction.id}`);
         }
     },
-    "/fsetstorageepos": {
+    "/fsetstoragepos": {
         description: "Изменить позицию выдачи предметов организации. Позиция берется от игрока.",
         access: 6,
         args: "[ид_организации]:n",

@@ -40,6 +40,11 @@ mp.factions = {
         mp.callCEFV(`selectMenu.menus['factionGiveRank'].playerId = ${playerId}`);
         mp.callCEFV(`selectMenu.showByName('factionGiveRank')`);
     },
+    showStorageSelectMenu(factionId) {
+        if (factionId == 2) { // LSPD
+            mp.callCEFV(`selectMenu.showByName('lspdStorage')`);
+        }
+    },
 };
 
 mp.events.add("characterInit.done", () => {
@@ -69,3 +74,5 @@ mp.events.add("factions.insideWarehouse", mp.factions.insideWarehouse);
 mp.events.add("factions.insideFactionWarehouse", mp.factions.insideFactionWarehouse);
 
 mp.events.add("factions.giverank.showMenu", mp.factions.showGiveRankSelectMenu);
+
+mp.events.add("factions.storage.showMenu", mp.factions.showStorageSelectMenu);
