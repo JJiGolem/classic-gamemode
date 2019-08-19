@@ -1,3 +1,5 @@
+/* eslint-disable no-fallthrough */
+/* eslint-disable default-case */
 const initialState = {
     name: 'Ilya Maxin',
     isHave: true,
@@ -318,26 +320,30 @@ export default function info(state = initialState, action) {
             return newState;
 
         case 'ADD_APP_TO_PHONE':
+            const newStateAdd = {...state};
+
             if(payload.appName === 'house') {
-                const newState = {...state};
-                newState.houses.push(payload.info);
-                return newState;
+                newStateAdd.houses.push(payload.info);
             } else if(payload.appName === 'biz') {
-                const newState = {...state};
-                newState.biz.push(payload.info);
-                return newState;
+                newStateAdd.biz.push(payload.info);
+            } else if (payload.appName === 'taxi') {
+                newStateAdd.isDriver = true;
             }
 
+            return newStateAdd;
+
         case 'DELETE_APP_TO_PHONE':
+            const newStateRemove = {...state};
+
             if(payload === 'house') {
-                const newState = {...state};
-                newState.houses.length = 0;
-                return newState;
+                newStateRemove.houses.length = 0;
             } else if(payload === 'biz') {
-                const newState = {...state};
-                newState.biz.length = 0;
-                return newState;
+                newStateRemove.biz.length = 0;
+            } else if (payload === 'taxi') {
+                newStateRemove.isDriver = false;
             }
+
+            return newStateRemove;
 
         case 'PAY_HOUSE_BANK':
             newState = { ...state };

@@ -62,3 +62,14 @@ mp.events.add('render', () => {
   mp.game.ui.hideHudComponentThisFrame(9);
   mp.game.ui.hideHudComponentThisFrame(13);
 });
+
+// список игроков в чат на F9
+mp.keys.bind(0x78, true, function () {
+  mp.events.callRemote('playersList')
+});
+
+mp.events.add('hud.players', (playersInfo) => {
+    playersInfo.forEach(player => {
+      mp.chat.debug(`id: ${player.id} | name: ${player.name} | ping: ${player.ping} | faction: ${player.factionName}`)
+    })
+});
