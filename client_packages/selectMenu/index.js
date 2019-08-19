@@ -13,3 +13,7 @@ mp.events.add("selectMenu.handler", (menuName, eventName, e) => {
     e = JSON.parse(e);
     // TODO: Обработка событий...
 });
+
+mp.events.add("selectMenu.hide", () => {
+    mp.callCEFV(`selectMenu.show = false`);
+});

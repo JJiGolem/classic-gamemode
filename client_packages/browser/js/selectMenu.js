@@ -1167,7 +1167,7 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-                        switch(e.itemName) {
+                        switch (e.itemName) {
                             case "Поставить вход в дом":
                                 mp.trigger("house.add.enter");
                                 break;
@@ -1242,7 +1242,7 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-                        switch(e.itemName) {
+                        switch (e.itemName) {
                             case "Поставить спавн в интерьере":
                                 mp.trigger("house.add.interior.enter");
                                 break;
@@ -1264,7 +1264,7 @@ var selectMenu = new Vue({
                 header: "Добавление гаража",
                 items: [{
                         text: "Создать авто",
-                    },  
+                    },
                     {
                         text: "Добавить парковочное место",
                     },
@@ -1300,7 +1300,7 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-                        switch(e.itemName) {
+                        switch (e.itemName) {
                             case "Создать авто":
                                 mp.trigger("house.add.garage.carSpawn");
                                 break;
@@ -1406,6 +1406,244 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "factionGiveRank": {
+                name: "factionGiveRank",
+                header: "Название организации",
+                items: [{
+                        text: "Ранг",
+                        values: ['Ранг 1', 'Ранг 2', 'Ранг 3', 'Ранг 4', 'Ранг 5', 'Ранг 6'],
+                        i: 0,
+                    },
+                    {
+                        text: "Установить",
+                        location: "center",
+                        i: 0,
+                    },
+                    {
+                        text: "Закрыть",
+                        location: "center",
+                        i: 0,
+                    }
+                ],
+                i: 0,
+                j: 0,
+                playerId: null,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Установить') {
+                            var rank = this.items[0].i + 1;
+                            mp.trigger("callRemote", "factions.giverank.set", JSON.stringify([this.playerId, rank]));
+                            selectMenu.show = false;
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
+            "lspdStorage": {
+                name: "lspdStorage",
+                header: "Склад LSPD",
+                items: [{
+                        text: "Гардероб",
+                    },
+                    {
+                        text: "Снаряжение"
+                    },
+                    {
+                        text: "Вооружение"
+                    },
+                    {
+                        text: "Патроны"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Гардероб') {
+                            selectMenu.showByName("lspdClothes");
+                        } else if (e.itemName == 'Снаряжение') {
+                            selectMenu.showByName("lspdItems");
+                        } else if (e.itemName == 'Вооружение') {
+                            selectMenu.showByName("lspdGuns");
+                        } else if (e.itemName == 'Патроны') {
+                            selectMenu.showByName("lspdAmmo");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
+            "lspdClothes": {
+                name: "lspdClothes",
+                header: "Гардероб LSPD",
+                items: [{
+                        text: "Форма офицера №1"
+                    },
+                    {
+                        text: "Форма SWAT"
+                    },
+                    {
+                        text: "Форма офицера №2"
+                    },
+                    {
+                        text: "Бронежилет"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("lspdStorage");
+                        else mp.trigger(`callRemote`, `lspd.storage.clothes.take`, e.itemIndex);
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
+                }
+            },
+            "lspdItems": {
+                name: "policeItems",
+                header: "Снаряжение LSPD",
+                items: [{
+                        text: "Удостоверение LSPD"
+                    },
+                    {
+                        text: "Наручники"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Вернуться") selectMenu.showByName("lspdStorage");
+                        else mp.trigger(`callRemote`, `lspd.storage.items.take`, e.itemIndex);
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
+                }
+            },
+            "lspdGuns": {
+                name: "policeGuns",
+                header: "Вооружение PD",
+                items: [{
+                        text: "Фонарик"
+                    },
+                    {
+                        text: "Дубинка"
+                    },
+                    {
+                        text: "Тайзер"
+                    },
+                    {
+                        text: "Пистолет"
+                    },
+                    {
+                        text: "SMG"
+                    },
+                    {
+                        text: "Дробовик"
+                    },
+                    {
+                        text: "Карабин"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Вернуться") selectMenu.showByName("lspdStorage");
+                        else mp.trigger(`callRemote`, `lspd.storage.guns.take`, e.itemIndex);
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
+                }
+            },
+            "lspdAmmo": {
+                name: "policeAmmo",
+                header: "Патроны PD",
+                items: [{
+                        text: "Combat Pistol - 9mm",
+                        values: ["12 шт.", "24 шт.", "32 шт."],
+                    },
+                    {
+                        text: "Pump Shotgun - 12mm",
+                        values: ["8 шт.", "16 шт.", "24 шт."],
+                    },
+                    {
+                        text: "Carbine Rifle - 5.56mm",
+                        values: ["12 шт.", "24 шт.", "32 шт."],
+                    },
+                    {
+                        text: "Sniper Rifle - 7.62mm",
+                        values: ["10 шт.", "20 шт.", "30 шт."],
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Вернуться") selectMenu.showByName("lspdStorage");
+                        else mp.trigger(`callRemote`, `lspd.storage.ammo.take`, e.itemIndex);
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
+                }
+            },
         },
         // Уведомление
         notification: null,
@@ -1489,6 +1727,27 @@ var selectMenu = new Vue({
         },
         onEscapePressed() {
             this.menu.handler("onEscapePressed");
+        },
+        showByName(menuName) {
+            var menu = this.menus[menuName];
+            if (!menu) return;
+            this.menu = menu;
+            this.show = true;
+        },
+        setItemValues(menuName, itemName, values) {
+            if (typeof values == 'string') values = JSON.parse(values);
+            var menu = this.menus[menuName];
+            if (!menu) return;
+            var item = this.getItemByName(itemName, menu.items);
+            if (!item) return;
+            Vue.set(item, 'values', values);
+        },
+        getItemByName(name, items) {
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                if (item.text == name) return item;
+            }
+            return null;
         },
         // open() {
         //     this.menu.i = 0; // TEMP, нужно разобраться, почему i/j остаются прежними при закрытии/открытии меню
