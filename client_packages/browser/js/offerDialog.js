@@ -77,6 +77,21 @@ var offerDialog = new Vue({
                     mp.trigger("offerDialog.close");
                 },
             },
+            "faction_invite": {
+                text: `Carter Slade предлагает вам вступить в Groove Street`,
+                on(values) {
+                    this.text = `${values.name} предлагает вам вступить в ${values.faction}`;
+                },
+                yes() {
+                    mp.trigger("callRemote", "factions.invite.accept");
+                },
+                no() {
+                    mp.trigger("callRemote", "factions.invite.cancel");
+                },
+                ignore() {
+                    mp.trigger("callRemote", "factions.invite.cancel");
+                },
+            },
         },
         dialog: null,
         timeout: null,
@@ -114,7 +129,13 @@ var offerDialog = new Vue({
                 self.hide();
             }
         });
-    }
+    },
+    watch: {
+        dialog(val) {
+            if (val) setCursor(true);
+            else setCursor(false);
+        }
+    },
 });
 
 // for tests

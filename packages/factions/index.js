@@ -297,6 +297,21 @@ module.exports = {
         if (!this.whiteListWarehouse[boxType][player.character.factionId]) return false;
         return this.whiteListWarehouse[boxType][player.character.factionId].includes(faction.id)
     },
+    canInvite(player) {
+        if (!player.character.factionId) return false;
+        var maxId = this.getMaxRank(player.character.factionId).id;
+        return maxId - player.character.factionRank <= 1;
+    },
+    canUval(player) {
+        if (!player.character.factionId) return false;
+        var maxId = this.getMaxRank(player.character.factionId).id;
+        return maxId - player.character.factionRank <= 2;
+    },
+    canGiveRank(player) {
+        if (!player.character.factionId) return false;
+        var maxId = this.getMaxRank(player.character.factionId).id;
+        return maxId - player.character.factionRank <= 1;
+    },
     sayRadio(player, text) {
         var factionId = player.character.factionId;
         if (!factionId) return notifs.error(player, `Вы не состоите в организации`, `Рация`);

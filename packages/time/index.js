@@ -30,8 +30,10 @@ module.exports = {
     allBroadcast() {
         mp.players.forEach((rec) => {
             if (!rec.character) return;
-            rec.character.minutes += parseInt((Date.now() - rec.authTime) / 1000 / 60 % 60);
-            notifs.info(rec, `Минуты: ${rec.character.minutes}`, `PayDay`)
+            var minutes = parseInt((Date.now() - rec.authTime) / 1000 / 60 % 60);
+            notifs.info(rec, `Минуты: ${rec.character.minutes} + ${minutes}`, `PayDay`)
+            rec.character.minutes += minutes;
+            rec.character.save();
         });
     },
     updateWorldTime(date) {

@@ -12,5 +12,17 @@
 
 // Вызов события необходимо прописать в [CEF] interactionMenu.menu.handler(), если в этом есть необходимость.
 mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
-    // TODO: Обработка событий...
+    if (menuName == 'faction') {
+        var entity = mp.getCurrentInteractionEntity();
+        if (!entity) return;
+        if (entity.type != 'player') return;
+
+        if (itemName == 'Пригласить') {
+            mp.events.callRemote(`factions.invite.show`, entity.remoteId);
+        } else if (itemName == 'Уволить') {
+            mp.events.callRemote(`factions.uval.show`, entity.remoteId);
+        } else if (itemName == 'Ранг') {
+            mp.events.callRemote(`factions.giverank.show`, entity.remoteId);
+        }
+    }
 });
