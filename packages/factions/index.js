@@ -1,4 +1,5 @@
 "use strict";
+var money = require('../money')
 var notifs = require('../notifications');
 
 module.exports = {
@@ -31,6 +32,8 @@ module.exports = {
             5: [2, 3, 4, 5, 6]
         }
     },
+    // Кол-во минут онлайна, необходимых для получения ЗП
+    payMins: 15,
 
     async init() {
         await this.loadFactionsFromDB();
@@ -177,11 +180,13 @@ module.exports = {
     getBlip(id) {
         return this.blips[id - 1];
     },
-    getRank(factionId, rank) {
-        return this.getFaction(factionId).ranks[rank - 1];
+    getRank(faction, rank) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction.ranks[rank - 1];
     },
-    getRankById(factionId, rankId) {
-        var ranks = this.getFaction(factionId).ranks;
+    getRankById(faction, rankId) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        var ranks = faction.ranks;
         for (var i = 0; i < ranks.length; i++) {
             if (ranks[i].id == rankId) return ranks[i];
         }
@@ -301,6 +306,20 @@ module.exports = {
         mp.players.forEach((rec) => {
             if (rec.character && rec.character.factionId == factionId)
                 rec.call('chat.action.walkietalkie', [player.name, player.id, rank.name, text]);
+        });
+    },
+    pay(player) {
+        if (!player.character.factionId) return;
+
+        var faction = this.getFaction(player.character.factionId);
+        var pay = this.getRankById(faction, player.character.factionRank).pay;
+
+        var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60 % 60);
+        if (minutes < this.payMins) return notifs.warning(player, `Зарплата не получена из-за низкой активности`, faction.name);
+
+        money.addMoney(player, pay, (res) => {
+            if (!res) return console.log(`[factions] Ошибка выдачи ЗП для ${player.name}`);
+            notifs.info(player, `Зарплата: $${pay}`, faction.name);
         });
     },
 };
