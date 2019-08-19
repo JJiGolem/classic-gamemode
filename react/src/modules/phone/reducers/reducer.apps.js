@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 import React from 'react';
 
 import MainDisplay from "../components/MainDisplay";
@@ -41,6 +42,10 @@ export default function apps(state = initialState, action) {
 
             if (payload === 'biz') {
                 appName = 'BusinessApp'
+            }
+
+            if (payload === 'taxi') {
+                appName = 'TaxiDriver'
             }
 
             let indDel = newStateDel.findIndex(app => app.name === appName);
