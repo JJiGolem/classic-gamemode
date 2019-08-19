@@ -6,11 +6,13 @@ module.exports = {
     "characterInit.done": (player) => {     //characterInit.done
         player.call('chat.load');
         player.call('chat.message.push', ['!{#00abff} Добро пожаловать на Classic Roleplay!']);
-        if (player.character.admin > 0) {
-            player.call('chat.message.push', [`!{#f7f692} Вы вошли как администратор ${player.character.admin} уровня`]);
-        }
         player.setVariable('nick', player.character.name);
-        player.name = player.character.name;
+
+        player.name = player.character.name; 
+        if (player.character.admin > 0) {
+            mp.events.call('admin.notify.all', `!{#f7f692}[A] Администратор ${player.character.admin} уровня ${player.name} авторизовался`);
+        }
+
     },
 
     // "playerJoin": (player) => {

@@ -61,7 +61,7 @@ module.exports = {
 
         vehicle.numberPlate = veh.plate; /// устанавливаем номер
 
-        veh.d ? vehicle.dimension = veh.d : vehicle.d = 0; /// устанавливаем измерение
+        veh.d ? vehicle.dimension = veh.d : vehicle.dimension = 0; /// устанавливаем измерение
 
         veh.isInGarage ? vehicle.isInGarage = veh.isInGarage : vehicle.isInGarage = false;
 
@@ -234,17 +234,23 @@ module.exports = {
         });
         console.log(`[VEHICLES] Для игрока ${player.character.name} загружено ${dbPrivate.length} авто`)
         if (houses.isHaveHouse(player.character.id)) {
-            await this.setPlayerCarPlaces(player); 
+            await this.setPlayerCarPlaces(player);
         }
         console.log(player.vehicleList);
         if (dbPrivate.length > 0) {
             let parkingVeh = dbPrivate.find(x => x.isOnParking);
-            if (parkingVeh) mp.events.call('parkings.vehicle.add', parkingVeh);
+
+            if (parkingVeh) {
+                mp.events.call('parkings.vehicle.add', parkingVeh);
+                //player.call('chat.message.push', [`!{#f3c800}Транспорт доставлен`]);
+                mp.events.call('parkings.notify', player, parkingVeh, 0);
+            }
 
             if (houses.isHaveHouse(player.character.id)) {
                 //await this.setPlayerCarPlaces(player);
                 console.log(dbPrivate)
-                for (let i = 0; i < player.carPlaces.length - 1; i++) {
+                let length = player.carPlaces.length != 1 ? player.carPlaces.length - 1 : player.carPlaces.length;
+                for (let i = 0; i < length; i++) {
                     if (i >= dbPrivate.length) return;
                     console.log('push')
                     if (!dbPrivate[i].isOnParking) {
@@ -403,23 +409,31 @@ module.exports = {
     spawnHomeVehicle(player, vehicle) {
         if (player.carPlaces.length == 1 && player.carPlaces[0].d == 0) { // TODO ПРОВЕРИТЬ С БИЧ ДОМОМ
 
-            vehicle.db ? this.spawnVehicle(vehicle, 1) : this.spawnVehicle(vehicle, 0);
-            
+            let place = player.carPlaces[0];
+            vehicle.x = place.x;
+            vehicle.y = place.y;
+            vehicle.z = place.z;
+            vehicle.h = place.h;
+            vehicle.d = place.d;
+            place.veh = vehicle;
+            vehicle.isInGarage = false;
+
+        } else {
+            let index = player.carPlaces.findIndex(x => x.veh == null && x.d != 0);
+            //let place = player.carPlaces.find(x => x.veh == null && x.d != 0);
+            let place = player.carPlaces[index];
+            vehicle.carPlaceIndex = index;
+            console.log(`index ${vehicle.carPlaceIndex}`)
+            vehicle.x = place.x;
+            vehicle.y = place.y;
+            vehicle.z = place.z;
+            vehicle.h = place.h;
+            vehicle.d = place.d;
+            place.veh = vehicle;
+            vehicle.isInGarage = true;
         }
 
-        let index = player.carPlaces.findIndex(x => x.veh == null && x.d != 0);
-        //let place = player.carPlaces.find(x => x.veh == null && x.d != 0);
-        let place = player.carPlaces[index];
-        vehicle.carPlaceIndex = index;
-        console.log(`index ${vehicle.carPlaceIndex}`)
-        vehicle.x = place.x;
-        vehicle.y = place.y;
-        vehicle.z = place.z;
-        vehicle.h = place.h;
-        vehicle.d = place.d;
-        place.veh = vehicle;
-        vehicle.isInGarage = true;
-        //this.spawnVehicle(vehicle, 0);
+
         vehicle.db ? this.spawnVehicle(vehicle, 1) : this.spawnVehicle(vehicle, 0);
         console.log(player.carPlaces);
     },
@@ -440,11 +454,12 @@ module.exports = {
         if (!player) return;
         if (!player.vehicle) return;
         let vehicle = player.vehicle;
-        if (player.carPlaces.length == 1 && player.carPlaces[0].d == 0) { // TODO ПРОВЕРИТЬ С БИЧ ДОМОМ
-            //vehicle.db ? this.spawnVehicle(vehicle, 1) : this.spawnVehicle(vehicle, 0);
-        }
 
         let index = player.carPlaces.findIndex(x => x.veh == null && x.d != 0);
+
+        if (player.carPlaces.length == 1 && player.carPlaces[0].d == 0) { // TODO ПРОВЕРИТЬ С БИЧ ДОМОМ
+            index = 0;
+        }
 
         let place = player.carPlaces[index];
         vehicle.carPlaceIndex = index;
@@ -458,5 +473,15 @@ module.exports = {
 
 
         console.log(player.carPlaces);
+    },
+    isAbleToBuyVehicle(player) {
+        let hasHouse = houses.isHaveHouse(player.character.id);
+        if (!hasHouse) {
+            if (player.vehicleList.length > 1) return false;
+        } else {
+            if (player.carPlaces.length > 1 && player.vehicleList.length + 1 > player.carPlaces.length - 1) return false;
+            if (player.carPlaces.length == 1 && player.vehicleList.length >= player.carPlaces.length) return false;
+        }
+        return true;
     }
 }

@@ -21,8 +21,15 @@ mp.events.add('documents.show', (type, data) => {
             case 0:
                 data.vehType = 'Автомобиль'
                 break;
+            case 1:
+                data.vehType = 'Мотоцикл'
+                break;
+            case 2:
+                data.vehType = 'Велосипед'
+                break;
         }
-        data.regDate = dateFormatter(data.regDate);
+        let newDate = data.regDate ? data.regDate.slice(0, 10) : null;
+        data.regDate = dateFormatter(newDate);
         for (var key in data) {
             if (typeof data[key] == 'string') data[key] = `'${data[key]}'`;
             mp.callCEFV(`carPass.${key} = ${data[key]}`);
