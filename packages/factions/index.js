@@ -222,8 +222,7 @@ module.exports = {
         character.factionRank = this.getMinRank(faction).id;
         character.save();
     },
-    deleteMember(faction, character) {
-        if (typeof faction == 'number') faction = this.getFaction(faction);
+    deleteMember(character) {
         character.factionId = null;
         character.factionRank = null;
         character.save();

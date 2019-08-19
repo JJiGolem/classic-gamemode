@@ -20,7 +20,7 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
         if (itemName == 'Пригласить') {
             mp.events.callRemote(`factions.invite.show`, entity.remoteId);
         } else if (itemName == 'Уволить') {
-            mp.events.callRemote(`factions.uval.show`, entity.remoteId);
+            mp.events.callRemote(`factions.uval`, entity.remoteId);
         } else if (itemName == 'Ранг') {
             mp.events.callRemote(`factions.giverank.show`, entity.remoteId);
         }

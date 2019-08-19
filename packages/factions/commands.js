@@ -78,7 +78,7 @@ module.exports = {
             if (!faction) return out.error(`Организация #${rec.character.factionId} не найдена`, player);
 
             out.info(`${player.name} уволил ${rec.name} из организации #${faction.id}`);
-            factions.deleteMember(faction, rec.character);
+            factions.deleteMember(rec.character);
         }
     },
     "/fadd": {

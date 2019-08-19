@@ -46,10 +46,24 @@ module.exports = {
         delete player.offer;
     },
     "factions.invite.cancel": (player) => {
-
+        if (!player.offer) return;
+        var inviter = mp.players.at(player.offer.inviterId);
+        delete player.offer;
+        if (!inviter) return;
+        notifs.info(player, `Предложение отклонено`, `Организация`);
+        notifs.info(inviter, `${player.name} отклонил предложение`, `Организация`);
     },
-    "factions.uval.show": (player, recId) => {
+    "factions.uval": (player, recId) => {
+        var rec = mp.players.at(recId);
+        if (!rec) return notifs.error(player, `Игрок #${recId} не найден`, `Увольнение`);
+        if (!player.character.factionId) return notifs.error(player, `Вы не состоите в организации`, `Увольнение`);
+        if (rec.character.factionId != player.character.factionId) return notifs.error(player, `${rec.name} не вашей организации`, `Увольнение`);
+        if (player.character.factionRank <= rec.character.factionRank) return notifs.error(player, `${rec.name} должен иметь ниже ранг`, `Увольнение`);
+        if (!factions.canUval(player)) return notifs.error(player, `Недостаточно прав`, `Увольнение`);
 
+        factions.deleteMember(rec.character);
+        notifs.success(player, `${rec.name} уволен`, `Организация`);
+        notifs.info(rec, `${player.name} вас уволил`, `Организация`);
     },
     "factions.giverank.show": (player, recId) => {
 
