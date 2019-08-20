@@ -14,7 +14,7 @@ let taxiStation = {
     },
 }
 
-const MIN_PRICE = 20;
+const PRICE_PER_KM = 30;
 
 let orders = [];
 
@@ -42,27 +42,46 @@ module.exports = {
         shape.pos = new mp.Vector3(taxiStation.marker.x, taxiStation.marker.y, taxiStation.marker.z);
         shape.isTaxiStation = true;
     },
-    getMinimalPrice() {
-        return MIN_PRICE;
+    getPricePerKilometer() {
+        return PRICE_PER_KM;
     },
     getOrders() {
         return orders;
     },
     addOrder(clientId, position) {
-        orders.push({
+        let order = {
             orderId: orders.length + 1,
             clientId: clientId,
             position: position
+        }
+        orders.push(order);
+
+        mp.players.forEach((current) => {
+            if (!current.character) return;
+            if (current.character.job == 2) {
+                current.call('taxi.driver.orders.add', [order]);
+            }
         });
     },
-    doesPlayerHaveOrders(id) {
+    doesClientHaveOrders(id) {
         let order = orders.find(x => x.clientId == id);
-        if (order) return true 
-        else return false;
+        return order ? true : false;
     },
     deleteOrder(orderId) {
         let index = orders.findIndex(x => x.orderId == orderId);
-        if (index != -1) orders.splice(index, 1);
-        // todo отправка всем события удаления ордера
+        if (index == -1) return;
+        
+        orders.splice(index, 1);
+        
+        mp.players.forEach((current) => {
+            if (!current.character) return;
+            if (current.character.job == 2) {
+                current.call('taxi.driver.orders.delete', [orderId]);
+            }
+        });
+    },
+    getOrderById(id) {
+        let order = orders.find(x => x.orderId == id);
+        return order;
     }
 }
