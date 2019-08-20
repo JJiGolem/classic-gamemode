@@ -1637,8 +1637,9 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
+                        var values = JSON.stringify([e.itemIndex, parseInt(e.itemValue)]);
                         if (e.itemName == "Вернуться") selectMenu.showByName("lspdStorage");
-                        else mp.trigger(`callRemote`, `police.storage.ammo.take`, e.itemIndex);
+                        else mp.trigger(`callRemote`, `police.storage.ammo.take`, values);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
                 }
             },

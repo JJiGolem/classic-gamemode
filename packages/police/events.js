@@ -400,7 +400,33 @@ module.exports = {
             faction.save();
         });
     },
-    "police.storage.ammo.take": (player, index) => {
-        console.log(`takeAmmo: ${index}`)
+    "police.storage.ammo.take": (player, values) => {
+        values = JSON.parse(values);
+        var index = values[0];
+        var ammo = values[1];
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Police`);
+        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Склад Police`);
+
+        var character = player.character;
+        var faction = factions.getFaction(character.factionId);
+        var header = `Склад ${faction.name}`;
+
+        var itemIds = [37, 38, 40, 39];
+        index = Math.clamp(index, 0, itemIds.length - 1);
+        if (faction.ammo < police.ammoAmmo * ammo) return notifs.error(player, `Недостаточно боеприпасов`, header);
+
+        // inventory.fullDeleteItemsByParams(itemIds[index], ["faction", "owner"], [character.factionId, character.id]);
+        var params = {
+            count: ammo,
+            faction: character.factionId,
+            owner: character.id
+        };
+        inventory.addItem(player, itemIds[index], params, (e) => {
+            if (e) return notifs.error(player, e, header);
+
+            notifs.success(player, `Вам выданы ${inventory.getInventoryItem(itemIds[index]).name} (${ammo} ед.)`, header);
+            faction.ammo -= police.ammoAmmo * ammo;
+            faction.save();
+        });
     },
 }
