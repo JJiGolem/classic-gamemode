@@ -63,7 +63,7 @@ mp.events.add("characterInit.done", () => {
     mp.players.local.freezePosition(false);
     mp.game.ui.displayRadar(true);
     mp.game.ui.displayHud(true);
-    
+
     mp.game.controls.disableControlAction(1, 199, false);    //ESC
 
     mp.utils.cam.destroy();
@@ -74,6 +74,9 @@ mp.events.add("characterInit.done", () => {
     }
     selectMarkers = new Array();
     peds = new Array();
+
+    // Отключение регенарции здоровья
+    mp.game.player.setHealthRechargeMultiplier(0);
 });
 
 mp.events.add('characterInit.choose', () => {
@@ -107,7 +110,7 @@ let createPeds = function() {
     for (let i = 0; i < charNum; i++) {
         setCharCustom(i);
         //setCharClothes(i);
-    
+
         setTimeout(async () => {
             let x = (camPos[0] + i * pedDist * sinPedRot) + camDist * sinCamRot;
             let y = (camPos[1] + i * pedDist * cosPedRot) + camDist * cosCamRot;
@@ -115,7 +118,7 @@ let createPeds = function() {
             let ped = mp.peds.new(mp.players.local.model, new mp.Vector3(x, y, z), pedRotation, mp.players.local.dimension);
             mp.players.local.cloneToTarget(ped.handle);
 
-            selectMarkers.push(mp.markers.new(2, new mp.Vector3(x, y, z + 1), 0.2, 
+            selectMarkers.push(mp.markers.new(2, new mp.Vector3(x, y, z + 1), 0.2,
             {
                 direction: 0,
                 rotation: new mp.Vector3(0, 180, 0),
@@ -165,27 +168,27 @@ let setInfo = function() {
     mp.callCEFV(`characterInfo.show = true;`);
 };
 
-let chooseLeft = function() { 
+let chooseLeft = function() {
     if (currentCharacter > 0) {
         currentCharacter--;
     }
     else {
         return;
     }
-    
+
     updateMarkers();
     mp.callCEFV(`characterInfo.i = ${currentCharacter};`);
     mp.utils.cam.moveTo(
         camPos[0] + currentCharacter * pedDist * sinPedRot,
-        camPos[1] + currentCharacter * pedDist * cosPedRot, 
+        camPos[1] + currentCharacter * pedDist * cosPedRot,
         camPos[2],
-        (camPos[0] + currentCharacter * pedDist * sinPedRot) + camDist * sinCamRot, 
-        (camPos[1] + currentCharacter * pedDist * cosPedRot) + camDist * cosCamRot, 
-        camPos[2] + camPosZDelta, 
+        (camPos[0] + currentCharacter * pedDist * sinPedRot) + camDist * sinCamRot,
+        (camPos[1] + currentCharacter * pedDist * cosPedRot) + camDist * cosCamRot,
+        camPos[2] + camPosZDelta,
         500);
 };
 
-let chooseRight = function() { 
+let chooseRight = function() {
     if (currentCharacter < charNum) {
         currentCharacter++;
     }
@@ -196,11 +199,11 @@ let chooseRight = function() {
     mp.callCEFV(`characterInfo.i = ${currentCharacter};`);
     mp.utils.cam.moveTo(
         camPos[0] + currentCharacter * pedDist * sinPedRot,
-        camPos[1] + currentCharacter * pedDist * cosPedRot, 
+        camPos[1] + currentCharacter * pedDist * cosPedRot,
         camPos[2],
-        (camPos[0] + currentCharacter * pedDist * sinPedRot) + camDist * sinCamRot, 
-        (camPos[1] + currentCharacter * pedDist * cosPedRot) + camDist * cosCamRot, 
-        camPos[2] + camPosZDelta, 
+        (camPos[0] + currentCharacter * pedDist * sinPedRot) + camDist * sinCamRot,
+        (camPos[1] + currentCharacter * pedDist * cosPedRot) + camDist * cosCamRot,
+        camPos[2] + camPosZDelta,
         500);
 };
 
@@ -245,7 +248,7 @@ let setCharCustom = function (indexPed) {
     for (let i = 0; i < 10; i++) {
         mp.players.local.setHeadOverlay(i, charInfos[indexPed].Appearances[i].value,
             charInfos[indexPed].Appearances[i].opacity, colorForOverlayIdx(i, indexPed), 0);
-        
+
     }
     for (let i = 0; i < 20; i++) {
         mp.players.local.setFaceFeature(i, charInfos[indexPed].Features[i].value);

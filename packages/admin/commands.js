@@ -98,6 +98,17 @@ module.exports = {
             }
         }
     },
+    "/kill": {
+        access: 4,
+        description: "Убить игрока",
+        args: "[ид_игрока]:n",
+        handler: (player, args, out) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+
+            rec.health = 0;
+        }
+    },
     "/restart": {
         access: 6,
         description: "Рестарт сервера (Linux)",

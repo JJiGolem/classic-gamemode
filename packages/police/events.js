@@ -429,4 +429,42 @@ module.exports = {
             faction.save();
         });
     },
+    // снять/надеть наручники
+    "police.cuffs": (player, recId) => {
+        var rec = mp.players.at(recId);
+        if (!rec) return notifs.error(player, `Гражданин не найден`, `Наручники`);
+        var dist = player.dist(rec.position);
+        if (dist > 20) return notifs.error(player, `${rec.name} далеко`, `Наручники`);
+        var character = player.character;
+        if (!factions.isPoliceFaction(character.factionId)) return notifs.error(player, `Вы не сотрудник полиции`, `Наручники`);
+        if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, `Наручники`);
+
+        if (!rec.hasCuffs) {
+            var cuffs = inventory.getArrayByItemId(rec, 28);
+            if (!cuffs.length) return notifs.error(player, `Необходим предмет`, `Наручники`);
+            inventory.deleteItem(player, cuffs[0]);
+
+            notifs.info(rec, `${player.name} задержал вас`, `Наручники`);
+            notifs.success(player, `${rec.name} задержан`, `Наручники`);
+        } else {
+            var params = {
+                faction: character.factionId,
+                owner: character.id
+            };
+            inventory.addItem(player, 28, params, (e) => {
+                if (e) return notifs.error(player, e, `Наручники`);
+            });
+
+            notifs.info(rec, `${player.name} отпустил вас`, `Наручники`);
+            notifs.info(player, `${rec.name} отпущен`, `Наручники`);
+
+            // delete rec.isFollowing;
+            // rec.call(`stopFollowToPlayer`);
+        }
+
+        police.setCuffs(rec, !rec.hasCuffs);
+    },
+    "playerDeath": (player) => {
+        if (player.hasCuffs) police.setCuffs(player, false);
+    },
 }
