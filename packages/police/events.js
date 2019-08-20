@@ -464,6 +464,24 @@ module.exports = {
 
         police.setCuffs(rec, !rec.hasCuffs);
     },
+    "police.follow": (player, recId) => {
+        var rec = mp.players.at(recId);
+        if (!rec) return notifs.error(player, `Гражданин не найден`, `Следование`);
+        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции`, `Следование`);
+
+        if (!rec.isFollowing) {
+            if (!rec.hasCuffs) return notifs.error(player, `${rec.name} не в наручниках`, `Следование`);
+            rec.isFollowing = true;
+            rec.call(`police.follow.start`, [player.id]);
+            notifs.success(player, `${rec.name} следует за вами`, `Следование`);
+            notifs.info(rec, `Вы следуете за ${player.name}`, `Следование`);
+        } else {
+            delete rec.isFollowing;
+            rec.call(`police.follow.stop`);
+            notifs.success(player, `${rec.name} не следует за вами`, `Следование`);
+            notifs.info(rec, `Вы не следуете за ${player.name}`, `Следование`);
+        }
+    },
     "playerDeath": (player) => {
         if (player.hasCuffs) police.setCuffs(player, false);
     },
