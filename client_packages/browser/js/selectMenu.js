@@ -1534,9 +1534,6 @@ var selectMenu = new Vue({
                 name: "policeItems",
                 header: "Снаряжение LSPD",
                 items: [{
-                        text: "Удостоверение LSPD"
-                    },
-                    {
                         text: "Наручники"
                     },
                     {

@@ -258,7 +258,7 @@ module.exports = {
 
         topParams.pockets = '[5,5,5,5,5,5,10,10]';
         legsParams.pockets = '[5,5,5,5,5,5,10,10]';
-        topParams.name = `Фуражка ${faction.name}`;
+        topParams.name = `Рубашка ${faction.name}`;
         legsParams.name = `Брюки ${faction.name}`;
 
         hatParams.owner = character.id;
@@ -318,6 +318,7 @@ module.exports = {
         params.faction = character.factionId;
         params.owner = character.id;
         params.health = 100;
+        params.pockets = '[2,3,1,3,1,3,6,3,3,2,4,2,2,2,2,2,4,2,3,2]';
         params.sex = !character.gender;
 
         inventory.addItem(player, 3, params, (e) => {
@@ -328,7 +329,37 @@ module.exports = {
         faction.save();
     },
     "police.storage.items.take": (player, index) => {
-        console.log(`takeItem: ${index}`)
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Police`);
+        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Склад Police`);
+
+        var character = player.character;
+        var faction = factions.getFaction(character.factionId);
+        var header = `Склад ${faction.name}`;
+
+        if (faction.ammo < police.itemAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
+
+        var itemIds = [28];
+
+        index = Math.clamp(index, 0, itemIds.length - 1);
+        var itemId = itemIds[index];
+
+        var itemName = inventory.getInventoryItem(itemId).name;
+        // var items = inventory.getArrayByItemId(player, itemId);
+        // if (items.length > 0) return notifs.error(player, `Вы уже имеете ${itemName}`, header);
+
+        // inventory.fullDeleteItemsByParams(itemId, ["faction", "owner"], [character.factionId, character.id]);
+        var params = {
+            faction: character.factionId,
+            owner: character.id
+        };
+
+        inventory.addItem(player, itemId, params, (e) => {
+            if (e) return notifs.error(player, e, header);
+
+            notifs.success(player, `Вам выданы ${itemName}`, header);
+            faction.ammo -= police.itemAmmo;
+            faction.save();
+        });
     },
     "police.storage.guns.take": (player, index) => {
         console.log(`takeGun: ${index}`)

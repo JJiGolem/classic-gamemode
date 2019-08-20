@@ -226,4 +226,16 @@ module.exports = {
             console.log(player.inventory.items)
         }
     },
+    "/pitemids": {
+        access: 6,
+        description: "Логировать иды предметов игрока в консоль.",
+        args: "",
+        handler: (player) => {
+            var ids = [];
+            player.inventory.items.forEach((item) => {
+                ids.push(item.id);
+            });
+            console.log(ids)
+        }
+    },
 }

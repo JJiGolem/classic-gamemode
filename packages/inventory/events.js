@@ -12,9 +12,6 @@ module.exports = {
     // срабатывает, когда игрок переместил предмет (в любом месте)
     "item.add": (player, data) => {
         data = JSON.parse(data);
-        console.log("item.add")
-        console.log(data)
-
         if (data.placeSqlId > 0 || data.placeSqlId == null) { // переместил в свой карман или на себя
             var item = inventory.getItem(player, data.sqlId);
             if (item) { // предмет уже есть у игрока

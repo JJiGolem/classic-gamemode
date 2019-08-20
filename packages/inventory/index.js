@@ -24,6 +24,13 @@ module.exports = {
         11: [8],
         12: [9],
     },
+    // Блек-лист предметов, которые не могут храниться в других предметах
+    blackList: {
+        // parentItemId: [cildItemId, ...]
+        3: [13],
+        7: [13],
+        8: [13],
+    },
 
     init() {
         this.loadInventoryItemsFromDB();
@@ -182,7 +189,7 @@ module.exports = {
     },
     async addItem(player, itemId, params, callback) {
         var slot = this.findFreeSlot(player, itemId);
-        if (!slot) return callback(`Свободный слот для ${this.inventoryItems[itemId - 1].name} не найден`);
+        if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(itemId).name} не найден`);
         var struct = [];
         for (var key in params) {
             struct.push({
@@ -213,6 +220,7 @@ module.exports = {
         player.inventory.items.push(item);
         if (!item.parentId) this.updateView(player, item);
         player.call("inventory.addItem", [this.convertServerToClientItem(item), item.pocketIndex, item.index, item.parentId]);
+        callback();
     },
     deleteItem(player, item) {
         if (typeof item == 'number') item = this.getItem(player, item);
@@ -244,6 +252,9 @@ module.exports = {
         var index = items.indexOf(item);
         items.splice(index, 1);
     },
+    getInventoryItem(itemId) {
+        return this.inventoryItems[itemId - 1];
+    },
     getItem(player, sqlId) {
         for (var i = 0; i < player.inventory.items.length; i++) {
             var item = player.inventory.items[i];
@@ -257,6 +268,15 @@ module.exports = {
         for (var i = 0; i < items.length; i++) {
             var child = items[i];
             if (child.parentId == item.id) children.push(child);
+        }
+        return children;
+    },
+    getChildrenInPocket(player, item, pocketIndex) {
+        var items = player.inventory.items;
+        var children = [];
+        for (var i = 0; i < items.length; i++) {
+            var child = items[i];
+            if (child.parentId == item.id && child.pocketIndex == pocketIndex) children.push(child);
         }
         return children;
     },
@@ -387,6 +407,7 @@ module.exports = {
         for (var i = 0; i < item.params.length; i++) {
             var param = item.params[i];
             params[param.key] = param.value;
+            if (param.key == 'pockets') params[param.key] = JSON.parse(params[param.key]);
         }
         return params;
     },
@@ -413,11 +434,108 @@ module.exports = {
                 };
             }
         }
-        // return {
-        //     pocketIndex: null,
-        //     index: 0,
-        //     parentId: null
-        // };
+
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var params = this.getParamsValues(item);
+            if (item.parentId || !params.pockets) continue; // предмет в предмете или не имеет карманы
+            if (item.itemId == itemId) continue; // тип предмета совпадает (рубашку в рубашку нельзя и т.д.)
+            if (this.blackList[item.itemId].includes(itemId)) continue; // предмет в черном списке (сумку в рубашку нельзя и т.д.)
+            for (var j = 0; j < params.pockets.length / 2; j++) {
+                var matrix = this.genMatrix(player, item, j);
+                // console.log(`itemId: ${item.itemId}`);
+                // console.log(`pocketIndex: ${j}`);
+                // console.log(`matrix:`);
+                // console.log(matrix);
+                if (!matrix) continue;
+
+                var freeIndex = this.findFreeIndexMatrix(matrix, itemId);
+                // console.log(`freeIndex: ${freeIndex}`)
+                if (freeIndex == -1) continue;
+
+                return {
+                    pocketIndex: j,
+                    index: freeIndex,
+                    parentId: item.id
+                };
+            }
+        }
+        return null;
+    },
+    genMatrix(player, item, pocketIndex) {
+        var params = this.getParamsValues(item);
+        if (!params.pockets) return null;
+
+        var matrix = [];
+        var cols = params.pockets[pocketIndex * 2];
+        var rows = params.pockets[pocketIndex * 2 + 1];
+        // Создаем пустую матрицу
+        for (var i = 0; i < rows; i++) {
+            matrix[i] = [];
+            for (var j = 0; j < cols; j++) {
+                matrix[i][j] = 0;
+            }
+        }
+
+        var children = this.getChildrenInPocket(player, item, pocketIndex);
+        // console.log(`------------ children:`);
+        // console.log(children);
+        // Наполняем матрицу занятами ячейками
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i];
+            var coord = this.indexToXY(rows, cols, child.index);
+            if (!coord) continue;
+
+            var info = this.getInventoryItem(child.itemId);
+            for (var x = 0; x < info.width; x++) {
+                for (var y = 0; y < info.height; y++) {
+                    matrix[coord.y + y][coord.x + x] = 1;
+                }
+            }
+        }
+
+        return matrix;
+    },
+    indexToXY(rows, cols, index) {
+        if (!rows || !cols) return null;
+        var x = index % cols;
+        var y = (index - x) / cols;
+        if (x >= cols || y >= rows) return null;
+        return {
+            x: x,
+            y: y
+        };
+    },
+    xyToIndex(rows, cols, coord) {
+        if (!rows || !cols) return -1;
+        return coord.y * cols + coord.x;
+    },
+    findFreeIndexMatrix(matrix, itemId) {
+        var info = this.getInventoryItem(itemId);
+        if (!info || !matrix) return -1;
+        var w = info.width;
+        var h = info.height;
+
+        for (var i = 0; i < matrix.length - h + 1; i++) {
+            for (var j = 0; j < matrix[i].length - w + 1; j++) {
+                var doBreak = false;
+                for (var y = 0; y < h; y++) {
+                    for (var x = 0; x < w; x++) {
+                        if (matrix[i + y][j + x] == 1) {
+                            doBreak = true;
+                            break;
+                        }
+                    }
+                    if (doBreak) break;
+                }
+                if (!doBreak) return this.xyToIndex(matrix.length, matrix[0].length, {
+                    x: j,
+                    y: i
+                });
+            }
+        }
+
+        return -1;
     },
     getArrayByItemId(player, itemId) {
         var items = player.inventory.items;
