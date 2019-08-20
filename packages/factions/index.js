@@ -114,9 +114,11 @@ module.exports = {
         colshape.onEnter = (player) => {
             if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
             player.call("factions.storage.showMenu", [faction.id]);
+            player.insideFactionWarehouse = faction.id;
         };
         colshape.onExit = (player) => {
             player.call("selectMenu.hide");
+            delete player.insideFactionWarehouse;
         };
         storage.colshape = colshape;
     },

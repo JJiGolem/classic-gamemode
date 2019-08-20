@@ -5,6 +5,7 @@ var notifs = require('../notifications');
 module.exports = {
     init() {
         this.initPayDayTimer();
+        this.updateWorldTime(new Date());
     },
     initPayDayTimer() {
         var lastPayDayHour = new Date().getHours();
