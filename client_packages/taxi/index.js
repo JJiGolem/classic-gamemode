@@ -1,4 +1,6 @@
 let client = require('./taxi/client.js');
+let driver = require('./taxi/driver.js');
+
 
 let peds = [{
     model: "a_m_m_hasjew_01",

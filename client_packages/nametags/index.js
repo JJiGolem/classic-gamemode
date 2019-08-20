@@ -47,7 +47,7 @@ mp.events.add('render', (nametags) => {
 
             y -= scale * (0.005 * (screenRes.y / 1080));
 
-            mp.game.graphics.drawText(`${player.getVariable('nick')} (${player.remoteId})`, [x, y],
+            mp.game.graphics.drawText(`${player.name} (${player.remoteId})`, [x, y],
                 {
                     font: FONT,
                     color: [255, 255, 255, 255],
