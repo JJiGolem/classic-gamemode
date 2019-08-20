@@ -18,80 +18,67 @@ module.exports = {
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
             if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
-            var slot = inventory.findFreeSlot(rec, 1);
-            inventory.addItem(rec, 1, slot, {
+            inventory.addItem(rec, 1, {
                 variation: 1,
                 texture: 0,
                 sex: 1
             });
-            var slot = inventory.findFreeSlot(rec, 6);
-            inventory.addItem(rec, 6, slot, {
+            inventory.addItem(rec, 6, {
                 variation: 1,
                 texture: 0,
                 sex: 1
             });
-            var slot = inventory.findFreeSlot(rec, 14);
-            inventory.addItem(rec, 14, slot, {
+            inventory.addItem(rec, 14, {
                 variation: 1,
                 texture: 0,
                 sex: 1
             });
-            var slot = inventory.findFreeSlot(rec, 2);
-            inventory.addItem(rec, 2, slot, {
+            inventory.addItem(rec, 2, {
                 variation: 1,
                 texture: 0,
                 sex: 1
             });
-            var slot = inventory.findFreeSlot(rec, 3);
-            inventory.addItem(rec, 3, slot, {
+            inventory.addItem(rec, 3, {
                 variation: 1,
                 texture: 0,
                 sex: 1,
                 pockets: '[3,3,3,3,5,4,5,5,10,6,6,6]',
                 health: 100,
             });
-            var slot = inventory.findFreeSlot(rec, 7);
-            inventory.addItem(rec, 7, slot, {
+            inventory.addItem(rec, 7, {
                 variation: 1,
                 texture: 0,
                 sex: 1,
                 pockets: '[4,5,5,5,5,5]'
             });
-            // return;
-            var slot = inventory.findFreeSlot(rec, 11);
-            inventory.addItem(rec, 11, slot, {
+            inventory.addItem(rec, 11, {
                 variation: 1,
                 texture: 0,
                 sex: 1
             });
-            var slot = inventory.findFreeSlot(rec, 10);
-            inventory.addItem(rec, 10, slot, {
+            inventory.addItem(rec, 10, {
                 variation: 1,
                 texture: 0,
                 sex: 1
             });
-            var slot = inventory.findFreeSlot(rec, 12);
-            inventory.addItem(rec, 12, slot, {
+            inventory.addItem(rec, 12, {
                 variation: 1,
                 texture: 0,
                 sex: 1
             });
-            var slot = inventory.findFreeSlot(rec, 13);
-            inventory.addItem(rec, 13, slot, {
+            inventory.addItem(rec, 13, {
                 variation: 1,
                 texture: 0,
                 sex: 1,
                 pockets: '[2,2,6,5,2,3,6,6,12,10]'
             });
-            var slot = inventory.findFreeSlot(rec, 8);
-            inventory.addItem(rec, 8, slot, {
+            inventory.addItem(rec, 8, {
                 variation: 1,
                 texture: 0,
                 sex: 1,
                 pockets: '[6,6,6,6,8,10]'
             });
-            var slot = inventory.findFreeSlot(rec, 9);
-            inventory.addItem(rec, 9, slot, {
+            inventory.addItem(rec, 9, {
                 variation: 1,
                 texture: 0,
                 sex: 1

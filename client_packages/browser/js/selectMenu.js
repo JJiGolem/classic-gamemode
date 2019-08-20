@@ -1525,7 +1525,8 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("lspdStorage");
-                        else mp.trigger(`callRemote`, `lspd.storage.clothes.take`, e.itemIndex);
+                        else if (e.itemIndex == 3) mp.trigger(`callRemote`, `police.storage.armour.take`);
+                        else mp.trigger(`callRemote`, `police.storage.clothes.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
                 }
             },
@@ -1555,7 +1556,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == "Вернуться") selectMenu.showByName("lspdStorage");
-                        else mp.trigger(`callRemote`, `lspd.storage.items.take`, e.itemIndex);
+                        else mp.trigger(`callRemote`, `police.storage.items.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
                 }
             },
@@ -1600,7 +1601,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == "Вернуться") selectMenu.showByName("lspdStorage");
-                        else mp.trigger(`callRemote`, `lspd.storage.guns.take`, e.itemIndex);
+                        else mp.trigger(`callRemote`, `police.storage.guns.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
                 }
             },
@@ -1640,7 +1641,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == "Вернуться") selectMenu.showByName("lspdStorage");
-                        else mp.trigger(`callRemote`, `lspd.storage.ammo.take`, e.itemIndex);
+                        else mp.trigger(`callRemote`, `police.storage.ammo.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
                 }
             },
@@ -1813,6 +1814,7 @@ var selectMenu = new Vue({
         let self = this;
         window.addEventListener('keyup', function(e) {
             if (!self.menu) return;
+            if (busy.includes()) return;
             self.onKeyUp(e);
         });
     }

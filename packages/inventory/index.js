@@ -180,7 +180,9 @@ module.exports = {
         }
         return clientItem;
     },
-    async addItem(player, itemId, slot, params) {
+    async addItem(player, itemId, params, callback) {
+        var slot = this.findFreeSlot(player, itemId);
+        if (!slot) return callback(`Свободный слот для ${this.inventoryItems[itemId - 1].name} не найден`);
         var struct = [];
         for (var key in params) {
             struct.push({
@@ -416,5 +418,70 @@ module.exports = {
         //     index: 0,
         //     parentId: null
         // };
+    },
+    getArrayByItemId(player, itemId) {
+        var items = player.inventory.items;
+        var result = [];
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            if (item.itemId == itemId) result.push(item);
+        }
+        return result;
+    },
+    // Полное удаление предметов инвентаря с сервера
+    fullDeleteItemsByParams(itemId, keys, values) {
+        /* Для всех игроков. */
+        mp.players.forEach((rec) => {
+            if (rec.character) this.deleteByParams(rec, itemId, keys, values);
+        });
+        /* Для всех объектов на полу. */
+        // TODO: ...
+        // mp.objects.forEach((obj) => {
+        //     if (obj.getVariable("inventoryItemSqlId") > 0) {
+        //         var item = obj.item;
+        //         var doDelete = true;
+        //         for (var i = 0; i < keys.length; i++) {
+        //             var param = item.params[keys[i]];
+        //             if (!param) {
+        //                 doDelete = false;
+        //                 break;
+        //             }
+        //             if (param && param != values[i]) {
+        //                 doDelete = false;
+        //                 break;
+        //             }
+        //         }
+        //         if (doDelete) {
+        //             DB.Handle.query(`DELETE FROM inventory_players WHERE id=?`, obj.getVariable("inventoryItemSqlId"));
+        //             obj.destroy();
+        //         }
+        //     }
+        // });
+        /* Для всех игроков из БД. */
+        // TODO: ^^
+    },
+    deleteByParams(player, itemId, keys, values) {
+        if (keys.length != values.length) return;
+
+        var items = this.getArrayByItemId(player, itemId);
+        if (!items.length) return;
+
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var params = this.getParamsValues(item);
+            var doDelete = true;
+            for (var i = 0; i < keys.length; i++) {
+                var param = params[keys[i]];
+                if (!param) {
+                    doDelete = false;
+                    break;
+                }
+                if (param && param != values[i]) {
+                    doDelete = false;
+                    break;
+                }
+            }
+            if (doDelete) this.deleteItem(player, item);
+        }
     },
 };
