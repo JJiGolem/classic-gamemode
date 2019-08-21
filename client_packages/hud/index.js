@@ -65,7 +65,7 @@ mp.events.add('render', () => {
   mp.game.ui.hideHudComponentThisFrame(13);
 });
 
-// список игроков в чат на F9
+// список игроков на F9
 mp.keys.bind(0x78, true, function () {
   if (playersListState) {
     mp.events.call('hud.players.list.enable', false)

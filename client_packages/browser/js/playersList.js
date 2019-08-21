@@ -1,7 +1,7 @@
 var playersList = new Vue({
     el: '#playersList',
     data: {
-        show: true,
+        show: false,
         players: [
             {
                 id: 0,

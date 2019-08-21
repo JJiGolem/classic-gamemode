@@ -10,18 +10,12 @@
     left: 0;
     bottom: 0;
     margin: auto;
-    /* border-radius: 20px; */
-    /* padding: 5%; */
-    /* box-sizing: border-box; */
     overflow: auto;
 }
 
 #playersList table {
     width: 100%;
     overflow: auto;
-    /* height: 80%; */
-    /* margin-top: 10%;
-    margin-bottom: 10%; */
     border: 1px solid white;
 }
 
@@ -29,6 +23,7 @@
     font-size: 140%;
     background: rgba(255, 255, 255, 0.39);
     color: black;
+    display: table-header-group;
 }
 
 #playersList th {

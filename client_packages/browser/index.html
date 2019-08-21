@@ -122,37 +122,6 @@
         </div>
     </div>
 
-    <!-- ------------------------ СПИСОК ИГРОКОВ ------------------------ -->
-
-    <div id="playersList" v-show="show">
-        <table rules="all">
-            <colgroup>
-                <col style="width: 10%"/>
-                <col style="width: 40%"/>
-                <col style="width: 40%"/>
-                <col style="width: 10%"/>
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>id</th>
-                    <th>Имя</th>
-                    <th>Организация</th>
-                    <th>ping</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="player in players">
-                    <th>{{ player.id }}</th>
-                    <th>{{ player.name }}</th>
-                    <th>{{ player.faction ? player.faction : '-' }}</th>
-                    <th>{{ player.ping }}</th>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- ------------------------ СПИСОК ИГРОКОВ ------------------------ -->
-
     <div v-cloak="v-cloak" id="characterInfo" v-if="show && i < characters.length">
         <div class="header">Статистика персонажа</div>
         <div class="content">
@@ -733,8 +702,36 @@
         </div>
     </div>
 
+    <!-- ------------------------ СПИСОК ИГРОКОВ ------------------------ -->
 
+    <div id="playersList" v-show="show">
+        <table rules="all">
+            <colgroup>
+                <col style="width: 10%"/>
+                <col style="width: 40%"/>
+                <col style="width: 40%"/>
+                <col style="width: 10%"/>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Имя</th>
+                    <th>Организация</th>
+                    <th>ping</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="player in players">
+                    <th>{{ player.id }}</th>
+                    <th>{{ player.name }}</th>
+                    <th>{{ player.faction ? player.faction : '-' }}</th>
+                    <th>{{ player.ping }}</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
+    <!-- ------------------------ СПИСОК ИГРОКОВ ------------------------ -->
 
     <!-- ------------------------ REACT ------------------------------ -->
     <script async src="build/js/build.js" type="text/javascript"></script>
