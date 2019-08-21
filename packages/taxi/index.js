@@ -93,6 +93,7 @@ module.exports = {
         return price;
     },
     deletePlayerOrders(player) {
-        orders = orders.filter(x => x.clientId != player.id);
+        let order = orders.find(x => x.clientId == player.id);
+        this.deleteOrder(order.orderId);
     }
 }
