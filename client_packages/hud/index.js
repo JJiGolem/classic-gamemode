@@ -2,6 +2,8 @@
 
 var prevValues = {};
 var hudState = false;
+var playersListState = false;
+
 mp.events.add('hud.load', () => {
   var anchor = mp.utils.getMinimapAnchor();
   var resolution = mp.game.graphics.getScreenActiveResolution(0, 0);
@@ -65,11 +67,19 @@ mp.events.add('render', () => {
 
 // список игроков в чат на F9
 mp.keys.bind(0x78, true, function () {
-  mp.events.callRemote('playersList')
+  if (playersListState) {
+    mp.events.call('hud.players.list.enable', false)
+  } else {
+    mp.events.callRemote('hud.players.list');
+    mp.events.call('hud.players.list.enable', true)
+  }
 });
 
-mp.events.add('hud.players', (playersInfo) => {
-    playersInfo.forEach(player => {
-      mp.chat.debug(`id: ${player.id} | name: ${player.name} | ping: ${player.ping} | faction: ${player.factionName}`)
-    })
+mp.events.add('hud.players.list.enable', (state) => {
+  mp.callCEFVN({"playersList.show": state});
+  playersListState = state;
+})
+
+mp.events.add('hud.players.list', (playersInfo) => {
+    mp.callCEFVN({"playersList.players": playersInfo})
 });

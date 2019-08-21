@@ -15,6 +15,8 @@ class TaxiDriver extends Component {
     }
 
     componentDidMount() {
+        const { taxi } = this.props;
+
         // setTimeout(() => {
         //     this.props.loadInfo({
         //         name: 'Dun Hill',
@@ -39,8 +41,10 @@ class TaxiDriver extends Component {
         //     this.props.addOrder({id: 4, distance: 3.1});
         // }, 2000)
 
-        // eslint-disable-next-line no-undef
-        mp.trigger('taxi.driver.app.open');
+        if (Object.keys(taxi).length === 0) {
+            // eslint-disable-next-line no-undef
+            mp.trigger('taxi.driver.app.open');
+        }
     }
 
     getLoader() {

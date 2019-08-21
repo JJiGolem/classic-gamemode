@@ -1,0 +1,36 @@
+#playersList {
+    width: 80vh;
+    height: 50vh;
+    font-size: 120%;
+    color: white;
+    background: rgba(0, 0, 0, 0.803);
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    margin: auto;
+    /* border-radius: 20px; */
+    /* padding: 5%; */
+    /* box-sizing: border-box; */
+    overflow: auto;
+}
+
+#playersList table {
+    width: 100%;
+    overflow: auto;
+    /* height: 80%; */
+    /* margin-top: 10%;
+    margin-bottom: 10%; */
+    border: 1px solid white;
+}
+
+#playersList thead {
+    font-size: 140%;
+    background: rgba(255, 255, 255, 0.39);
+    color: black;
+}
+
+#playersList th {
+    padding: 1%;
+}
