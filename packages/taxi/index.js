@@ -94,6 +94,7 @@ module.exports = {
     },
     deletePlayerOrders(player) {
         let order = orders.find(x => x.clientId == player.id);
+        if (!order) return;
         this.deleteOrder(order.orderId);
     }
 }
