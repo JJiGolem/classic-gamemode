@@ -40,7 +40,7 @@ module.exports = {
         if (player.vehicle) return player.call('taxi.client.order.ans', [0]);
         if (player.dimension != 0) return player.call('taxi.client.order.ans', [1]);
         if (player.character.cash < taxi.getPricePerKilometer()) return player.call('taxi.client.order.ans', [2]);
-        //if (taxi.doesClientHaveOrders(player.id)) return player.call('taxi.client.order.ans', [3]);
+        if (taxi.doesClientHaveOrders(player.id)) return player.call('taxi.client.order.ans', [3]);
         taxi.addOrder(player.id, player.position);
         player.call('taxi.client.order.ans', [4]);
         console.log(taxi.getOrders());
@@ -118,6 +118,7 @@ module.exports = {
         let price = driver.taxiDriverDestination.price;
         console.log(`водитель ${driver.name} привез игрока ${client.name} за $${price}`);
 
+        client.call('taxi.client.destination.reach');
         money.removeCash(client, price, function(result) {
             if (result) {
                 client.call('notifications.push.success', ['Вы оплатили поездку', 'Такси']);
