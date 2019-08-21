@@ -125,6 +125,8 @@ mp.events.add('taxi.client.app.confirm.ans', (ans) => {
             mp.notify.success('Данные переданы таксисту', 'Такси');
             break;
         case 1:
+            mp.callCEFR('taxi.client.order.error', []);
+            mp.notify.error('Недостаточно денег, выберите другое место', 'Такси');
             break;
     }
 });

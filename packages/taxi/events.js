@@ -1,5 +1,5 @@
-var taxi = require('./index.js');
-// var money = call('money');
+let taxi = require('./index.js');
+let money = call('money');
 // var vehicles = call('vehicles');
 
 module.exports = {
@@ -96,6 +96,55 @@ module.exports = {
 
         let driver = mp.players.at(player.currentTaxiClientOrder.driverId);
         player.call('taxi.client.app.confirm.ans', [0]);
-        //driver.call('')
+        driver.call('taxi.driver.destination.confirmed', [destination, price]);
+        player.taxiClientDestination = {
+            driverId: driver.id,
+            destination: destination,
+            price: price
+        }
+        driver.taxiDriverDestination = {
+            clientId: player.id,
+            destination: destination,
+            price: price
+        }
+    },
+    "taxi.driver.destination.reach": (player) => {
+        let driver = player;
+        let client = mp.players.at(driver.taxiDriverDestination.clientId);
+        let price = driver.taxiDriverDestination.price;
+        console.log(`водитель ${driver.name} привез игрока ${client.name} за $${price}`);
+
+        money.removeCash(client, price, function(result) {
+            if (result) {
+                client.call('notifications.push.success', ['Вы оплатили поездку', 'Такси']);
+                try {
+                    money.addMoney(driver, price, function(result) {
+                        if (result) {
+                            driver.call('notifications.push.success', ['Деньги зачислены на счет', 'Такси']);
+                        } else {
+                            driver.call('notifications.push.error', ['Ошибка зачисления денег', 'Такси']);
+                        }
+                    });
+                } catch (err) {
+                    console.log(err);
+                }
+            } else {
+                client.call('notifications.push.error', ['Вы не смогли оплатить поездку', 'Такси']);
+                driver.call('notifications.push.error', ['Клиент не смог оплатить поездку', 'Такси']);
+            }
+        });
+        delete driver.taxiDriverDestination;
+        delete client.taxiClientDestination;
     }
 }
+
+
+
+// money.removeCash(client, price, function(result) {
+//     if (result) {
+//         // уведомление об успехе
+//         // КОД С ОШИБКОЙ
+//     } else {
+//         // уведомление об ошибке
+//     }
+// });
