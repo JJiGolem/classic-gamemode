@@ -3,6 +3,8 @@
 
 let client = {};
 
+let destination = {};
+
 mp.events.add('taxi.driver.app.open', () => {
     mp.chat.debug('driver open');
     mp.events.callRemote('taxi.driver.orders.get');
@@ -100,4 +102,33 @@ mp.events.add("taxi.driver.route.destroy", () => {
     if (client.marker) client.marker.destroy();
     if (client.shape) client.shape.destroy();
 
+});
+
+mp.events.add("taxi.driver.destination.create", (position) => {
+    createFinalDestination();
+
+});
+
+function createFinalDestination(pos) {
+    destination.blip = mp.blips.new(1, pos, { color: 71, name: "Точка назначения" });
+    destination.blip.setRoute(true);
+
+    destination.shape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 6);
+    mp.colshapes.newTube(pos.x, pos.y, -1000, 20.0, 1000.0, 0);
+
+    destination.shape.pos = pos;
+    destination.shape.isFinalDestinationShape = true;
+}
+
+
+mp.events.add("playerEnterColshape", (shape) => {
+    if (shape.isFinalDestinationShape) {
+        mp.chat.debug('enter final destination');
+    };
+});
+
+mp.events.add("playerExitColshape", (shape) => {
+    if (shape.isFinalDestinationShape) {
+        mp.chat.debug('exit final destination');
+    }
 });

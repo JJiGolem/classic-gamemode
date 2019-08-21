@@ -70,7 +70,7 @@ module.exports = {
     deleteOrder(orderId) {
         let index = orders.findIndex(x => x.orderId == orderId);
         if (index == -1) return;
-        
+
         orders.splice(index, 1);
         
         mp.players.forEach((current) => {
@@ -83,5 +83,13 @@ module.exports = {
     getOrderById(id) {
         let order = orders.find(x => x.orderId == id);
         return order;
+    },
+    calculatePrice(player, destination) {
+        console.log(destination);
+        console.log(player.dist(destination));
+        let price = Math.round((player.dist(destination) / 1000) * PRICE_PER_KM);
+        if (price < PRICE_PER_KM) price = PRICE_PER_KM;
+        console.log(price);
+        return price;
     }
 }
