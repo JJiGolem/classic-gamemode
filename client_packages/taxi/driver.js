@@ -16,8 +16,9 @@ mp.events.add('taxi.driver.orders.load', (orders) => {
 });
 
 mp.events.add('taxi.driver.orders.add', (order) => {
+    mp.chat.debug('add order');
     order = {
-        id: order.id,
+        id: order.orderId,
         distance: calculateDistanceToClient(order.position)
     }
     mp.callCEFR('taxi.driver.order.add', [order]);
@@ -104,8 +105,10 @@ mp.events.add("taxi.driver.route.destroy", () => {
 
 });
 
-mp.events.add("taxi.driver.destination.create", (position) => {
-    createFinalDestination();
+mp.events.add("taxi.driver.destination.confirmed", (destination, price) => {
+    createFinalDestination(destination);
+    mp.chat.debug(`Ставим колшейп на ${JSON.stringify(destination)}`);
+    mp.callCEFR('taxi.driver.order.way', [mp.utils.getRegionName(destination), mp.utils.getStreetName(destination), price]);
 
 });
 
@@ -113,22 +116,21 @@ function createFinalDestination(pos) {
     destination.blip = mp.blips.new(1, pos, { color: 71, name: "Точка назначения" });
     destination.blip.setRoute(true);
 
-    destination.shape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 6);
-    mp.colshapes.newTube(pos.x, pos.y, -1000, 20.0, 1000.0, 0);
-
-    destination.shape.pos = pos;
+    destination.shape = mp.colshapes.newTube(pos.x, pos.y, -1000, 20.0, 2000.0, 0);
     destination.shape.isFinalDestinationShape = true;
+}
+
+
+function deleteFinalDestination() {
+     if (destination.blip) destination.blip.destroy();
+     if (destination.shape) destination.shape.destroy();
 }
 
 
 mp.events.add("playerEnterColshape", (shape) => {
     if (shape.isFinalDestinationShape) {
-        mp.chat.debug('enter final destination');
+        mp.events.callRemote('taxi.driver.destination.reach');
+        mp.notify.success('Вы доставили клиента', 'Такси');
+        deleteFinalDestination();
     };
-});
-
-mp.events.add("playerExitColshape", (shape) => {
-    if (shape.isFinalDestinationShape) {
-        mp.chat.debug('exit final destination');
-    }
 });
