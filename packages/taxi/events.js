@@ -97,6 +97,10 @@ module.exports = {
         let driver = mp.players.at(player.currentTaxiClientOrder.driverId);
         player.call('taxi.client.app.confirm.ans', [0]);
         driver.call('taxi.driver.destination.confirmed', [destination, price]);
+
+        delete player.currentTaxiClientOrder;
+        delete driver.currentTaxiDriverOrder;
+
         player.taxiClientDestination = {
             driverId: driver.id,
             destination: destination,
@@ -135,6 +139,39 @@ module.exports = {
         });
         delete driver.taxiDriverDestination;
         delete client.taxiClientDestination;
+    },
+    "playerQuit": (player) => {
+        taxi.deletePlayerOrders(player);
+    },
+    "taxi.client.order.cancel": (player) => {
+        taxi.deletePlayerOrders(player);
+
+        if (player.currentTaxiClientOrder) {
+            let driver = mp.players.at(player.currentTaxiClientOrder.driverId);
+            driver.call('taxi.driver.order.canceled');
+            delete driver.currentTaxiDriverOrder;
+            delete player.currentTaxiClientOrder;
+        }
+        if (player.taxiClientDestination) {
+            let driver = mp.players.at(player.taxiClientDestination.driverId);
+            driver.call('taxi.driver.order.canceled');
+            delete driver.taxiDriverDestination;
+            delete player.taxiClientDestination;
+        }
+    },
+    "taxi.driver.order.cancel": (player) => {
+        if (player.currentTaxiDriverOrder) {
+            let client = mp.players.at(player.currentTaxiDriverOrder.clientId);
+            client.call('taxi.client.order.canceled');
+            delete player.currentTaxiDriverOrder;
+            delete client.currentTaxiClientOrder;
+        }
+        if (player.taxiDriverDestination) {
+            let client = mp.players.at(player.taxiDriverDestination.clientId);
+            client.call('taxi.client.order.canceled');
+            delete player.taxiDriverDestination;
+            delete client.taxiClientDestination;
+        }
     }
 }
 

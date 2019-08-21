@@ -99,9 +99,18 @@ mp.events.add("playerExitColshape", (shape) => {
 });
 
 mp.events.add("taxi.driver.route.destroy", () => {
-    if (client.blip) client.blip.destroy();
-    if (client.marker) client.marker.destroy();
-    if (client.shape) client.shape.destroy();
+    if (client.blip) {
+        client.blip.destroy();
+        client.blip = null;
+    }
+    if (client.marker) {
+        client.marker.destroy();
+        client.marker = null;
+    }
+    if (client.shape) {
+        client.shape.destroy();
+        client.shape = null;
+    }
 
 });
 
@@ -122,8 +131,14 @@ function createFinalDestination(pos) {
 
 
 function deleteFinalDestination() {
-     if (destination.blip) destination.blip.destroy();
-     if (destination.shape) destination.shape.destroy();
+     if (destination.blip) {
+         destination.blip.destroy();
+         destination.blip = null;
+     }
+     if (destination.shape) {
+        destination.shape.destroy();
+        destination.shape = null;
+     }
 }
 
 
@@ -133,4 +148,22 @@ mp.events.add("playerEnterColshape", (shape) => {
         mp.notify.success('Вы доставили клиента', 'Такси');
         deleteFinalDestination();
     };
+});
+
+mp.events.add("taxi.driver.app.order.cancel", () => {
+    mp.events.call('taxi.driver.order.cancel');
+});
+
+mp.events.add("taxi.driver.order.cancel", () => {
+    mp.notify.warning('Вы отменили заказ', 'Такси');
+    mp.events.call('taxi.driver.route.destroy');
+    deleteFinalDestination();
+    mp.events.callRemote('taxi.driver.order.cancel');
+});
+
+mp.events.add("taxi.driver.order.canceled", () => {
+    mp.notify.error('Клиент отменил заказ', 'Такси');
+    mp.events.call('taxi.driver.route.destroy');
+    deleteFinalDestination();
+    mp.callCEFR('taxi.driver.order.cancel', []);
 });
