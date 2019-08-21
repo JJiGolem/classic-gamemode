@@ -63,7 +63,8 @@ function filterOrders(orders) {
 }
 
 function calculateDistanceToClient(pos) {
-    return parseFloat((mp.vdist(mp.players.local.position, pos) / 1000).toFixed(1));
+    //return parseFloat((mp.vdist(mp.players.local.position, pos) / 1000).toFixed(1));
+    return (mp.vdist(mp.players.local.position, pos) / 1000).toFixed(1);
 }
 
 function createRouteToClient(pos) {
