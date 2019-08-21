@@ -62,7 +62,7 @@ module.exports = {
             target.currentTaxiClientOrder = {
                 driverId: player.id,
                 name: player.name,
-                model: player.vehicle.modelName,
+                model: player.vehicle.properties.name,
                 plate: player.vehicle.plate
             }
             target.call('taxi.client.order.taken', [target.currentTaxiClientOrder]);
