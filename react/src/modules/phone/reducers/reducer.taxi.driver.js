@@ -36,8 +36,8 @@ export default function taxiDriver(state = initialState, action) {
 
         case 'CANCEL_ORDER_TAXI_DRIVER':
             const newStateCancel = { ...state };
+            let cancelIndex = newStateCancel.orders.findIndex(order => order.id === newStateCancel.activeOrder.id);
             newStateCancel.activeOrder = null;
-            let cancelIndex = newStateCancel.orders.findIndex(order => order.id === payload);
             if (cancelIndex !== -1) {
                 newStateCancel.orders.splice(cancelIndex, 1);
             }
