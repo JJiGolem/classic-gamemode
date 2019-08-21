@@ -122,6 +122,10 @@ mp.events.add("taxi.driver.destination.confirmed", (destination, price) => {
 
 });
 
+mp.events.add('taxi.driver.destination.reach', () => {
+    mp.callCEFR('taxi.driver.order.cancel', []);
+});
+
 function createFinalDestination(pos) {
     destination.blip = mp.blips.new(1, pos, { color: 71, name: "Точка назначения" });
     destination.blip.setRoute(true);
@@ -145,6 +149,7 @@ function deleteFinalDestination() {
 
 mp.events.add("playerEnterColshape", (shape) => {
     if (shape.isFinalDestinationShape) {
+        mp.events.call('taxi.driver.destination.reach');
         mp.events.callRemote('taxi.driver.destination.reach');
         mp.notify.success('Вы доставили клиента', 'Такси');
         deleteFinalDestination();

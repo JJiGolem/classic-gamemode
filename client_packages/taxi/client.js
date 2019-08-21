@@ -120,6 +120,10 @@ mp.events.add('taxi.client.app.confirm', () => {
     mp.events.callRemote('taxi.client.app.confirm', destination);
 });
 
+mp.events.add('taxi.client.destination.reach', () => {
+    mp.callCEFR('taxi.client.order.cancel', []);
+});
+
 mp.events.add('taxi.client.app.confirm.ans', (ans) => {
     switch (ans) {
         case 0:
