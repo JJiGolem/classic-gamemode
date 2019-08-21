@@ -67,8 +67,9 @@
     background: linear-gradient(to left, #0000, rgb(0, 0, 0, 0.6));
     bottom: 2vh;
     left: 35vh;
+    min-width: 18vh;
     padding: 3vh 2vh;
-    width: 18vh;
+    width: fit-content;
 }
 
 #hud .weather>img {
