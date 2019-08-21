@@ -77,8 +77,17 @@ mp.keys.bind(0x78, true, function () {
 
 mp.events.add('hud.players.list.enable', (state) => {
   mp.callCEFVN({"playersList.show": state});
+
+  if (state) {
+    if (!mp.busy.includes()) {
+      mp.busy.add('playersList');
+    }
+  } else {
+    mp.busy.remove('playersList');
+  }
+
   playersListState = state;
-})
+});
 
 mp.events.add('hud.players.list', (playersInfo) => {
     mp.callCEFVN({"playersList.players": playersInfo})

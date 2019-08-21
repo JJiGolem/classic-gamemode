@@ -8,7 +8,7 @@ class Chat extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            cur: '',
+            currentMessage: '',
             index: 0,
             curTagIndex: 0,
             opacity: 1
@@ -21,6 +21,7 @@ class Chat extends React.Component {
         this.keyUpInput = this.keyUpInput.bind(this);
         this.pastePrevMessage = this.pastePrevMessage.bind(this);
         this.pasteNextMessage = this.pasteNextMessage.bind(this);
+        this.handleChangeInput = this.handleChangeInput.bind(this);
     }
 
     componentDidUpdate() {
@@ -34,6 +35,10 @@ class Chat extends React.Component {
                 this.refList.style.overflowY = 'hidden'
             }
         }
+    }
+
+    handleChangeInput(e) {
+        this.setState({ currentMessage: e.target.value })
     }
 
     getMessage(index, message) {
@@ -57,47 +62,43 @@ class Chat extends React.Component {
     }
 
     sendMessage(event) {
-        const { curTagIndex } = this.state;
+        const { curTagIndex, currentMessage, opacity } = this.state;
         const { chat, setFocusChat, setOpacityChat } = this.props;
 
         event.preventDefault();
 
-        let message = this.refInput.value;
-
-        if(message && message.length <= 300) {
-            this.history.push(message);
+        if(currentMessage && currentMessage.length <= 300) {
+            this.history.push(currentMessage);
             this.setState({index: this.history.length});
             // eslint-disable-next-line no-undef
-            mp.trigger('chat.message.get', chat.tags[curTagIndex].id, message);
-            this.refInput.value = ''
+            mp.trigger('chat.message.get', chat.tags[curTagIndex].id, currentMessage);
+            this.setState({ currentMessage: '' });
         }
 
         setFocusChat(false);
-        setOpacityChat(this.state.opacity);
+        setOpacityChat(opacity);
         // eslint-disable-next-line no-undef
         mp.trigger('chat.close');
     }
 
     pastePrevMessage() {
-        const { index } = this.state;
+        const { index, currentMessage } = this.state;
 
         if(index > 0) {
             if(index === this.history.length) {
-                this.setState({cur: this.refInput.value})
+                this.setState({currentMessage: this.refInput.value})
             }
-            this.refInput.value = this.history[index - 1];
-            this.setState({index: index - 1})
+
+            this.setState({ index: index - 1, currentMessage: this.history[index - 1] })
         }
     }
 
     pasteNextMessage() {
         const { index } = this.state;
         if(index < this.history.length - 1) {
-            this.refInput.value = this.history[index + 1];
-            this.setState({index: index + 1})
+             this.setState({ index: index + 1, currentMessage: this.history[index + 1] })
         } else if(index === this.history.length - 1){
-            this.setState({index: index + 1});
-            this.refInput.value = this.state.cur;
+            this.setState({ index: index + 1, currentMessage: '' })
         }
     }
 
@@ -178,6 +179,8 @@ class Chat extends React.Component {
                         </div>
                         <input
                             type='text'
+                            value={this.state.currentMessage}
+                            onChange={this.handleChangeInput}
                             ref={(input) => {this.refInput = input}}
                             placeholder='Введите сообщение'
                             id="chat-message-input-react"

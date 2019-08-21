@@ -24,7 +24,7 @@ export default function taxiDriver(state = initialState, action) {
 
         case 'SORT_ORDERS_BY_DISTANCE_TAXI_DRIVER':
             const newStateSort = { ...state };
-            newStateSort.orders.sort((a, b) => !a.distance.toString().localeCompare(b.distance.toString()));
+            newStateSort.orders.sort((a, b) => a.distance.toString().localeCompare(b.distance.toString()));
             newStateSort.isSorted = true;
 
             return newStateSort;
