@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 const initialState = {};
 
 export default function taxiClient(state = initialState, action) {
@@ -74,6 +75,15 @@ export default function taxiClient(state = initialState, action) {
                 isSearch: false,
                 order: null
             };
+
+        case 'ERROR_ORDER_TAXI_CLIENT':
+            return {
+                ...state,
+                order: {
+                    ...state.order,
+                    isWay: false
+                }
+            }
     }
 
     return state;

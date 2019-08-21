@@ -226,6 +226,12 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
+    myEventEmmiter.on('taxi.client.order.error', () => {
+        dispatch({
+            type: 'ERROR_ORDER_TAXI_CLIENT'
+        });
+    });
+
     myEventEmmiter.on('taxi.driver.load', (info) => {
         dispatch({
             type: 'LOAD_INFO_TAXI_DRIVER',
