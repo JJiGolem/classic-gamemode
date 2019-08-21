@@ -65,13 +65,13 @@ mp.events.add('render', () => {
   mp.game.ui.hideHudComponentThisFrame(13);
 });
 
-// список игроков в чат на F9
+// список игроков на F9
 mp.keys.bind(0x78, true, function () {
-  if (!playersListState) {
+  if (playersListState) {
+    mp.events.call('hud.players.list.enable', false)
+  } else {
     mp.events.callRemote('hud.players.list');
     mp.events.call('hud.players.list.enable', true)
-  } else {
-    mp.events.call('hud.players.list.enable', false)
   }
 });
 
@@ -81,9 +81,5 @@ mp.events.add('hud.players.list.enable', (state) => {
 })
 
 mp.events.add('hud.players.list', (playersInfo) => {
-    // playersInfo.forEach(player => {
-    //   mp.chat.debug(`id: ${player.id} | name: ${player.name} | ping: ${player.ping} | faction: ${player.factionName}`)
-    // })
-
     mp.callCEFVN({"playersList.players": playersInfo})
 });

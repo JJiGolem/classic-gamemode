@@ -1,6 +1,8 @@
 let waitShape;
 let waitMarker;
 
+let destination;
+
 const PRICE_PER_KM = 30;
 
 let isActiveTaxiClient = false;
@@ -78,19 +80,19 @@ mp.events.add('taxi.client.car.ready', () => {
 });
 
 mp.events.add('taxi.client.car.enter', () => {
-    mp.chat.debug('enter1')
+    isActiveTaxiClient = true;
     mp.callCEFR('taxi.client.order.inTaxi', []);
-    mp.chat.debug('enter2')
-
 });
 
 mp.events.add("playerEnterColshape", (shape) => {
+    mp.chat.debug('enter')
     if (shape.isTaxiClientShape) {
         mp.chat.debug('enter taxi client shape');
     };
 });
 
 mp.events.add("playerExitColshape", (shape) => {
+    mp.chat.debug('exit')
     if (shape.isTaxiClientShape) {
         mp.chat.debug('exit taxi client shape');
         //mp.events.call('taxi.client.waitshape.destroy');
@@ -103,12 +105,28 @@ function getClientLocation() {
 }
 
 mp.events.add('taxi.client.waypoint.created', (position) => {
+    destination = position;
     mp.chat.debug(`${JSON.stringify(position)}`);
     let area = mp.utils.getRegionName(position);
     let street = mp.utils.getStreetName(position);
     let price = calculatePrice(position);
     mp.callCEFR('taxi.client.order.destination', [area, street, price]);
 
+});
+
+mp.events.add('taxi.client.app.confirm', () => {
+    destination = JSON.stringify(destination);
+    mp.events.callRemote('taxi.client.app.confirm', destination);
+});
+
+mp.events.add('taxi.client.app.confirm.ans', (ans) => {
+    switch (ans) {
+        case 0:
+            mp.notify.success('Данные переданы таксисту', 'Такси');
+            break;
+        case 1:
+            break;
+    }
 });
 
 function calculatePrice(pos) {

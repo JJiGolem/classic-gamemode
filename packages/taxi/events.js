@@ -88,5 +88,14 @@ module.exports = {
                 player.call('taxi.client.car.enter');
             }
         }
+    },
+    "taxi.client.app.confirm": (player, destination) => {
+        destination = JSON.parse(destination);
+        let price = taxi.calculatePrice(player, destination)
+        if (player.character.cash < price) return player.call('taxi.client.app.confirm.ans', [1]);
+
+        let driver = mp.players.at(player.currentTaxiClientOrder.driverId);
+        player.call('taxi.client.app.confirm.ans', [0]);
+        //driver.call('')
     }
 }
