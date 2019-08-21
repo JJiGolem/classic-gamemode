@@ -247,6 +247,12 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
+    myEventEmmiter.on('taxi.driver.order.cancel', () => {
+        dispatch({
+            type: 'CANCEL_ORDER_TAXI_DRIVER'
+        });
+    });
+
     myEventEmmiter.on('taxi.driver.order.way', (area, street, price) => {
         dispatch({
             type: 'SET_DESTINATION_TAXI_DRIVER',

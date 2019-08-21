@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 const initialState = {
     // phone: true,
     // house: true,

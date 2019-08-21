@@ -30,6 +30,7 @@
     <link rel="stylesheet" type="text/css" href="css/inputWindow.css" />
     <link rel="stylesheet" type="text/css" href="css/acceptWindow.css" />
     <link rel="stylesheet" type="text/css" href="css/terminal.css" />
+    <link rel="stylesheet" type="text/css" href="css/playersList.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -120,6 +121,37 @@
             </div>
         </div>
     </div>
+
+    <!-- ------------------------ СПИСОК ИГРОКОВ ------------------------ -->
+
+    <div id="playersList" v-show="show">
+        <table rules="all">
+            <colgroup>
+                <col style="width: 10%"/>
+                <col style="width: 40%"/>
+                <col style="width: 40%"/>
+                <col style="width: 10%"/>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Имя</th>
+                    <th>Организация</th>
+                    <th>ping</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="player in players">
+                    <th>{{ player.id }}</th>
+                    <th>{{ player.name }}</th>
+                    <th>{{ player.faction }}</th>
+                    <th>{{ player.ping }}</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ------------------------ СПИСОК ИГРОКОВ ------------------------ -->
 
     <div v-cloak="v-cloak" id="characterInfo" v-if="show && i < characters.length">
         <div class="header">Статистика персонажа</div>
@@ -728,6 +760,7 @@
     <script src="js/inputWindow.js"></script>
     <script src="js/acceptWindow.js"></script>
     <script src="js/terminal.js"></script>
+    <script src="js/playersList.js"></script>
 
 </body>
 

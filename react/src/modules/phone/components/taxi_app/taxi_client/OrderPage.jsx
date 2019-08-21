@@ -17,13 +17,13 @@ class OrderPage extends Component {
     //     setTimeout(() => {
     //         this.props.taxiReady()
     //     }, 1000);
-    //
+    
     //     setTimeout(() => {
     //         this.props.inTaxi()
     //     }, 2000);
-    //
+    
     //     setTimeout(() => {
-    //         this.props.setDestination('Бертон', 'Карсон-Авеню', 120)
+    //         this.props.setDestination('Бертон', 'Ветряная ферма Ron Alternates', 120)
     //     }, 3000);
     // }
 

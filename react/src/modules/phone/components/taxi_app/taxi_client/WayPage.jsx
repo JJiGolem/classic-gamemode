@@ -15,6 +15,26 @@ class WayPage extends Component {
         mp.trigger('taxi.client.app.cancel');
     }
 
+    getFontSizeStreet(street) {
+        let leng = street.toString().length;
+
+        if (leng < 10) {
+            return '1.5em'
+        }
+
+        if (leng > 10 && leng < 15) {
+            return '1.4em'
+        }
+
+        if (leng > 15 && leng < 20) {
+            return '1.3em'
+        }
+
+        if (leng > 20) {
+            return '1.2em'
+        }
+    }
+
     render() {
         const { taxi } = this.props;
 
@@ -36,7 +56,7 @@ class WayPage extends Component {
                     </div>
                     <div className='location_taxi-phone-react'  style={{ width: '80%', marginLeft: '10%' }}>
                         <div style={{ fontSize: '0.9em' }}>Место назначения:</div>
-                        <div style={{ fontSize: '1.5em' }}>{ taxi.order.street }</div>
+                        <div style={{ fontSize: this.getFontSizeStreet(taxi.order.street) }}>{ taxi.order.street }</div>
                         <div>{ taxi.order.area }</div>
                         <div style={{ marginTop: '5%' }}>Стоимость поездки</div>
                         <div style={{ fontSize: '1.3em' }}>{ taxi.order.price }$</div>
