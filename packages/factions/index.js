@@ -112,10 +112,13 @@ module.exports = {
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
-            console.log(`storage onEnter: ${player.name} ${faction.name}`)
+            if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
+            player.call("factions.storage.showMenu", [faction.id]);
+            player.insideFactionWarehouse = faction.id;
         };
         colshape.onExit = (player) => {
-            console.log(`storage onExit: ${player.name} ${faction.name}`)
+            player.call("selectMenu.hide");
+            delete player.insideFactionWarehouse;
         };
         storage.colshape = colshape;
     },
@@ -199,6 +202,14 @@ module.exports = {
     getMaxRank(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         return faction.ranks[faction.ranks.length - 1];
+    },
+    getRankNames(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        var names = [];
+        for (var i = 0; i < faction.ranks.length; i++) {
+            names.push(faction.ranks[i].name);
+        }
+        return names;
     },
     setLeader(faction, character) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
