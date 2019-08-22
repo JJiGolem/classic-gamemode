@@ -4,13 +4,14 @@
     font-size: 120%;
     color: white;
     background: rgba(0, 0, 0, 0.803);
+    backdrop-filter: blur(2px);
     position: absolute;
     top: 0;
     right: 0;
     left: 0;
     bottom: 0;
     margin: auto;
-    /* overflow: auto; */
+    /* animation: show-react .1s ease-in-out; */
 }
 
 .players_list-head {
@@ -23,18 +24,8 @@
     margin-top: -.8%;
 }
 
-/* tr:nth-child(2n) {
-    background: #f0f0f0;
-} 
-
-tr:nth-child(1) {
-    background: #666;
-    color: #fff;
-}  */
-
 #playersList table {
     width: 100%;
-    /* overflow: auto; */
     border: 1px solid white;
 }
 
@@ -42,7 +33,6 @@ tr:nth-child(1) {
     font-size: 140%;
     background: rgba(252, 231, 4, 0.562);
     color: black;
-    /* display: table-header-group; */
 }
 
 #playersList th {
