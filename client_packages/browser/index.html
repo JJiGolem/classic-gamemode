@@ -706,8 +706,9 @@
     <!-- ------------------------ СПИСОК ИГРОКОВ ------------------------ -->
 
     <div id="playersList" v-show="show">
-        <table rules="all">
-            <colgroup>
+        <div class="players_list-head">
+            <table rules="all">
+                <colgroup>
                 <col style="width: 10%"/>
                 <col style="width: 40%"/>
                 <col style="width: 40%"/>
@@ -721,15 +722,26 @@
                     <th>ping</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr v-for="player in players">
-                    <th>{{ player.id }}</th>
-                    <th>{{ player.name }}</th>
-                    <th>{{ player.faction ? player.faction: '-' }}</th>
-                    <th>{{ player.ping }}</th>
-                </tr>
-            </tbody>
-        </table>
+            </table>
+        </div>
+        <div class="players_list-body">
+            <table rules="all">
+                <colgroup>
+                    <col style="width: 10%"/>
+                    <col style="width: 40%"/>
+                    <col style="width: 40%"/>
+                    <col style="width: 10%"/>
+                </colgroup>
+                <tbody>
+                    <tr v-for="player in players">
+                        <th>{{ player.id }}</th>
+                        <th>{{ player.name }}</th>
+                        <th>{{ player.faction ? player.faction: '-' }}</th>
+                        <th>{{ player.ping }}</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- ------------------------ СПИСОК ИГРОКОВ ------------------------ -->
