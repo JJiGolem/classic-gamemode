@@ -5,18 +5,20 @@
     border-radius: 1vh;
     box-shadow: 0px 0px 10px #0008;
     font-family: Montserrat;
+    font-size: 2vh;
     left: 50%;
     padding: 0.5vh;
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 50vh;
+    width: 77vh;
 }
 
 #driverLicense .close {
-    font-size: 2vh;
+    font-family: monospace;
+    font-size: 3vh;
     position: absolute;
-    right: 1vh;
+    right: 3vh;
 }
 
 #driverLicense .close:hover {
@@ -24,12 +26,14 @@
 }
 
 #driverLicense .content {
+    align-items: center;
     display: flex;
     justify-content: space-around;
-    margin: 3vh 0;
+    margin: 7vh 0;
 }
 
 #driverLicense .content h3 {
+    font-size: 3vh;
     text-transform: uppercase;
 }
 
@@ -38,7 +42,9 @@
 }
 
 #driverLicense .content .infoB {
-    margin-top: 3vh;
+    line-height: 3vh;
+    margin-left: 13vh;
+    margin-top: 6vh;
     text-align: right;
     width: 15vh;
 }
