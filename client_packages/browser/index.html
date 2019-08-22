@@ -31,6 +31,7 @@
     <link rel="stylesheet" type="text/css" href="css/acceptWindow.css" />
     <link rel="stylesheet" type="text/css" href="css/terminal.css" />
     <link rel="stylesheet" type="text/css" href="css/playersList.css" />
+    <link rel="stylesheet" type="text/css" href="css/gunLicense.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -687,7 +688,7 @@
             <div class="right" @click="decline">{{ rightWord }}</div>
         </div>
     </div>
-    
+
 
     <div id="terminal" v-if="show" :style="{left: pos.x + 'px', top: pos.y + 'px'}">
         <div class="header" @mousedown="onHeaderMouseDown($event)">
@@ -733,6 +734,24 @@
 
     <!-- ------------------------ СПИСОК ИГРОКОВ ------------------------ -->
 
+    <div id="gunLicense" style="display: none">
+        <span class="close">x</span>
+        <div class="header">State of San Andreas License To Carry Handgun</div>
+        <div class="line"></div>
+        <div class="content">
+            <div class="name">Jonathan Rockfall</div>
+            <div class="sex">
+                <div class="key">Пол</div>
+                <div class="value">М</div>
+            </div>
+            <div class="date">
+                <div class="key">Дата выдачи</div>
+                <div class="value">18.08.2020</div>
+            </div>
+            <div class="number">№ 12332</div>
+        </div>
+    </div>
+
     <!-- ------------------------ REACT ------------------------------ -->
     <script async src="build/js/build.js" type="text/javascript"></script>
     <div id="root"></div>
@@ -758,6 +777,7 @@
     <script src="js/acceptWindow.js"></script>
     <script src="js/terminal.js"></script>
     <script src="js/playersList.js"></script>
+    <script src="js/gunLicense.js"></script>
 
 </body>
 
