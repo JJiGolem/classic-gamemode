@@ -40,7 +40,7 @@ module.exports = {
         if (player.vehicle) return player.call('taxi.client.order.ans', [0]);
         if (player.dimension != 0) return player.call('taxi.client.order.ans', [1]);
         if (player.character.cash < taxi.getPricePerKilometer()) return player.call('taxi.client.order.ans', [2]);
-        //if (taxi.doesClientHaveOrders(player.id)) return player.call('taxi.client.order.ans', [3]);
+        if (taxi.doesClientHaveOrders(player.id)) return player.call('taxi.client.order.ans', [3]);
         taxi.addOrder(player.id, player.position);
         player.call('taxi.client.order.ans', [4]);
         console.log(taxi.getOrders());
@@ -62,7 +62,7 @@ module.exports = {
             target.currentTaxiClientOrder = {
                 driverId: player.id,
                 name: player.name,
-                model: player.vehicle.modelName,
+                model: player.vehicle.properties.name,
                 plate: player.vehicle.plate
             }
             target.call('taxi.client.order.taken', [target.currentTaxiClientOrder]);
@@ -97,6 +97,10 @@ module.exports = {
         let driver = mp.players.at(player.currentTaxiClientOrder.driverId);
         player.call('taxi.client.app.confirm.ans', [0]);
         driver.call('taxi.driver.destination.confirmed', [destination, price]);
+
+        delete player.currentTaxiClientOrder;
+        delete driver.currentTaxiDriverOrder;
+
         player.taxiClientDestination = {
             driverId: driver.id,
             destination: destination,
@@ -114,6 +118,7 @@ module.exports = {
         let price = driver.taxiDriverDestination.price;
         console.log(`водитель ${driver.name} привез игрока ${client.name} за $${price}`);
 
+        client.call('taxi.client.destination.reach');
         money.removeCash(client, price, function(result) {
             if (result) {
                 client.call('notifications.push.success', ['Вы оплатили поездку', 'Такси']);
@@ -135,6 +140,39 @@ module.exports = {
         });
         delete driver.taxiDriverDestination;
         delete client.taxiClientDestination;
+    },
+    "playerQuit": (player) => {
+        taxi.deletePlayerOrders(player);
+    },
+    "taxi.client.order.cancel": (player) => {
+        taxi.deletePlayerOrders(player);
+
+        if (player.currentTaxiClientOrder) {
+            let driver = mp.players.at(player.currentTaxiClientOrder.driverId);
+            driver.call('taxi.driver.order.canceled');
+            delete driver.currentTaxiDriverOrder;
+            delete player.currentTaxiClientOrder;
+        }
+        if (player.taxiClientDestination) {
+            let driver = mp.players.at(player.taxiClientDestination.driverId);
+            driver.call('taxi.driver.order.canceled');
+            delete driver.taxiDriverDestination;
+            delete player.taxiClientDestination;
+        }
+    },
+    "taxi.driver.order.cancel": (player) => {
+        if (player.currentTaxiDriverOrder) {
+            let client = mp.players.at(player.currentTaxiDriverOrder.clientId);
+            client.call('taxi.client.order.canceled');
+            delete player.currentTaxiDriverOrder;
+            delete client.currentTaxiClientOrder;
+        }
+        if (player.taxiDriverDestination) {
+            let client = mp.players.at(player.taxiDriverDestination.clientId);
+            client.call('taxi.client.order.canceled');
+            delete player.taxiDriverDestination;
+            delete client.taxiClientDestination;
+        }
     }
 }
 

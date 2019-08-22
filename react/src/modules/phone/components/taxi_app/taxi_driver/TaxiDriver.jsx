@@ -36,7 +36,7 @@ class TaxiDriver extends Component {
         //         ]
         //     })
         // }, )
-        //
+        // //
         // setTimeout(() => {
         //     this.props.addOrder({id: 4, distance: 3.1});
         // }, 2000)

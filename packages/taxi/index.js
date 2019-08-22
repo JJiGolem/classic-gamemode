@@ -91,5 +91,10 @@ module.exports = {
         if (price < PRICE_PER_KM) price = PRICE_PER_KM;
         console.log(price);
         return price;
+    },
+    deletePlayerOrders(player) {
+        let order = orders.find(x => x.clientId == player.id);
+        if (!order) return;
+        this.deleteOrder(order.orderId);
     }
 }

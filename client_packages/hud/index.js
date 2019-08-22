@@ -70,15 +70,24 @@ mp.keys.bind(0x78, true, function () {
   if (playersListState) {
     mp.events.call('hud.players.list.enable', false)
   } else {
-    mp.events.callRemote('hud.players.list');
-    mp.events.call('hud.players.list.enable', true)
+    if (!mp.busy.includes()) {
+      mp.events.callRemote('hud.players.list');
+      mp.events.call('hud.players.list.enable', true)
+    }
   }
 });
 
 mp.events.add('hud.players.list.enable', (state) => {
   mp.callCEFVN({"playersList.show": state});
+
+  if (state) {
+    mp.busy.add('playersList');
+  } else {
+    mp.busy.remove('playersList');
+  }
+
   playersListState = state;
-})
+});
 
 mp.events.add('hud.players.list', (playersInfo) => {
     mp.callCEFVN({"playersList.players": playersInfo})

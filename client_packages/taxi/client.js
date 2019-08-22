@@ -16,6 +16,7 @@ mp.events.add('taxi.client.app.search', () => {
     if (mp.players.local.vehicle) {
         mp.notify.error('Нельзя заказать такси из транспорта', 'Такси');
         mp.callCEFR('taxi.client.order.cancel', []);
+        return;
     }
     mp.events.callRemote('taxi.client.order.send');
 });
@@ -119,6 +120,10 @@ mp.events.add('taxi.client.app.confirm', () => {
     mp.events.callRemote('taxi.client.app.confirm', destination);
 });
 
+mp.events.add('taxi.client.destination.reach', () => {
+    mp.callCEFR('taxi.client.order.cancel', []);
+});
+
 mp.events.add('taxi.client.app.confirm.ans', (ans) => {
     switch (ans) {
         case 0:
@@ -158,3 +163,21 @@ setInterval(() => {
         mp.console(JSON.stringify(err.message));
     }
 }, 100);
+
+mp.events.add('taxi.client.order.canceled', () => {
+    mp.chat.debug('canceled by driver');
+    mp.notify.error('Заказ отменен водителем', 'Такси');
+    mp.events.call('taxi.client.waitshape.destroy');
+    mp.callCEFR('taxi.client.order.cancel', []);
+});
+
+mp.events.add('taxi.client.app.cancel', () => {
+    mp.chat.debug('client cancel');
+    mp.events.call('taxi.client.order.cancel');
+});
+
+mp.events.add('taxi.client.order.cancel', () => {
+    mp.notify.warning('Вы отменили заказ', 'Такси');    
+    mp.events.call('taxi.client.waitshape.destroy');
+    mp.events.callRemote('taxi.client.order.cancel');
+});
