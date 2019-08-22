@@ -86,7 +86,7 @@ class Chat extends React.Component {
 
         if(index > 0) {
             if(index === this.history.length) {
-                this.setState({currentMessage: this.refInput.value})
+                this.setState({firstMessage: this.refInput.value})
             }
 
             this.setState({ index: index - 1, currentMessage: this.history[index - 1] })
@@ -94,11 +94,11 @@ class Chat extends React.Component {
     }
 
     pasteNextMessage() {
-        const { index } = this.state;
+        const { index, firstMessage } = this.state;
         if(index < this.history.length - 1) {
              this.setState({ index: index + 1, currentMessage: this.history[index + 1] })
         } else if(index === this.history.length - 1){
-            this.setState({ index: index + 1, currentMessage: '' })
+            this.setState({ index: index + 1, currentMessage: firstMessage })
         }
     }
 

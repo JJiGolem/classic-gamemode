@@ -4,6 +4,7 @@
     font-size: 120%;
     color: white;
     background: rgba(0, 0, 0, 0.803);
+    backdrop-filter: blur(2px);
     position: absolute;
     top: 0;
     right: 0;
