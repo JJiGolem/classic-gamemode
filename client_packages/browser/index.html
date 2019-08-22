@@ -365,7 +365,7 @@
     </div>
 
     <div v-cloak="v-cloak" id="driverLicense" v-if="show">
-        <span class="close" @click="close()">x</span>
+        <span class="close" @click="close">x</span>
         <div class="header">{{ header }}</div>
         <div class="content">
             <div class="infoA">
@@ -734,21 +734,21 @@
 
     <!-- ------------------------ СПИСОК ИГРОКОВ ------------------------ -->
 
-    <div id="gunLicense" style="display: none">
-        <span class="close">x</span>
-        <div class="header">State of San Andreas License To Carry Handgun</div>
+    <div v-cloak id="gunLicense" v-if="show">
+        <span class="close" @click="close">x</span>
+        <div class="header">{{ header }}</div>
         <div class="line"></div>
         <div class="content">
-            <div class="name">Jonathan Rockfall</div>
+            <div class="name">{{ name }}</div>
             <div class="sex">
                 <div class="key">Пол</div>
-                <div class="value">М</div>
+                <div class="value">{{ prettySex }}</div>
             </div>
             <div class="date">
                 <div class="key">Дата выдачи</div>
-                <div class="value">18.08.2020</div>
+                <div class="value">{{ date }}</div>
             </div>
-            <div class="number">№ 12332</div>
+            <div class="number">№ {{ number }}</div>
         </div>
     </div>
 
