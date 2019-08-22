@@ -44,6 +44,12 @@ export default function taxiDriver(state = initialState, action) {
 
             return newStateCancel;
 
+        case 'ERROR_ORDER_TAXI_DRIVER':
+            return {
+                ...state,
+                activeOrder: null
+            }
+
         case 'DELETE_ORDER_TAXI_DRIVER':
             const newStateDelete = { ...state };
             let deleteIndex = newStateDelete.orders.findIndex(order => order.id === payload);

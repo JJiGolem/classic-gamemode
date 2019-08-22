@@ -92,7 +92,7 @@ class MainDisplay extends Component {
                     </div>
 
                     {
-                        //info.isDriver &&
+                        info.isDriver &&
                         <div className="menu_panel_app-phone-react" onClick={() => addApp({name: 'TaxiDriver', form: <TaxiDriver />})}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="110%" height="110%" viewBox="0 0 88.775 81.925">
                                 <g id="house" transform="translate(-1604 -378)">
