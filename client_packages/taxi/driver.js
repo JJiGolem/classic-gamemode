@@ -16,6 +16,7 @@ mp.events.add('taxi.driver.orders.load', (orders) => {
 });
 
 mp.events.add('taxi.driver.orders.add', (order) => {
+    mp.notify.info('Получен новый заказ', 'Такси');
     mp.chat.debug('add order');
     order = {
         id: order.orderId,
@@ -44,7 +45,15 @@ mp.events.add('taxi.driver.orders.take.ans', (ans, orderInfo) => {
             break;
         case 1:
             mp.notify.error('Заказ уже взят', 'Такси');
-            mp.callCEFR('taxi.driver.order.cancel', []);
+            mp.callCEFR('taxi.driver.order.error', []);
+            break;
+        case 2:
+            mp.notify.error('Вы не в рабочем т/с', 'Такси');
+            mp.callCEFR('taxi.driver.order.error', []);
+            break;
+        case 3:
+            mp.notify.error('Вы не таксист', 'Такси');
+            mp.callCEFR('taxi.driver.order.error', []);
             break;
     }
 });
@@ -64,7 +73,6 @@ function filterOrders(orders) {
 }
 
 function calculateDistanceToClient(pos) {
-    //return parseFloat((mp.vdist(mp.players.local.position, pos) / 1000).toFixed(1));
     return (mp.vdist(mp.players.local.position, pos) / 1000).toFixed(1);
 }
 
@@ -137,14 +145,14 @@ function createFinalDestination(pos) {
 
 
 function deleteFinalDestination() {
-     if (destination.blip) {
-         destination.blip.destroy();
-         destination.blip = null;
-     }
-     if (destination.shape) {
+    if (destination.blip) {
+        destination.blip.destroy();
+        destination.blip = null;
+    }
+    if (destination.shape) {
         destination.shape.destroy();
         destination.shape = null;
-     }
+    }
 }
 
 
@@ -174,3 +182,8 @@ mp.events.add("taxi.driver.order.canceled", () => {
     deleteFinalDestination();
     mp.callCEFR('taxi.driver.order.cancel', []);
 });
+
+setTimeout(() => {
+    mp.chat.debug('add app');
+    mp.callCEFR('phone.app.add', ['taxi', null]);
+}, 8000); // TEMP 

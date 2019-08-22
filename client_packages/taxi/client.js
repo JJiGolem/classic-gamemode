@@ -63,8 +63,14 @@ mp.events.add('taxi.client.waitshape.create', () => {
 });
 
 mp.events.add('taxi.client.waitshape.destroy', () => {
-    if (waitMarker) waitMarker.destroy();
-    if (waitShape) waitShape.destroy();
+    if (waitMarker) {
+        waitMarker.destroy();
+        waitMarker = null;
+    }
+    if (waitShape) {
+        waitShape.destroy();
+        waitShape = null;
+    }
 });
 
 mp.events.add('taxi.client.order.taken', (driverInfo) => {
@@ -77,6 +83,7 @@ mp.events.add('taxi.client.order.taken', (driverInfo) => {
 });
 
 mp.events.add('taxi.client.car.ready', () => {
+    mp.events.call('taxi.client.waitshape.destroy');
     mp.callCEFR('taxi.client.order.ready', []);
 });
 
@@ -86,14 +93,12 @@ mp.events.add('taxi.client.car.enter', () => {
 });
 
 mp.events.add("playerEnterColshape", (shape) => {
-    mp.chat.debug('enter')
     if (shape.isTaxiClientShape) {
         mp.chat.debug('enter taxi client shape');
     };
 });
 
 mp.events.add("playerExitColshape", (shape) => {
-    mp.chat.debug('exit')
     if (shape.isTaxiClientShape) {
         mp.chat.debug('exit taxi client shape');
         //mp.events.call('taxi.client.waitshape.destroy');
@@ -177,7 +182,7 @@ mp.events.add('taxi.client.app.cancel', () => {
 });
 
 mp.events.add('taxi.client.order.cancel', () => {
-    mp.notify.warning('Вы отменили заказ', 'Такси');    
+    mp.notify.warning('Вы отменили заказ', 'Такси');
     mp.events.call('taxi.client.waitshape.destroy');
     mp.events.callRemote('taxi.client.order.cancel');
 });

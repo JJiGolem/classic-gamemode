@@ -14,6 +14,7 @@ let taxiStation = {
     },
 }
 
+const RENT_PRICE = 50;
 const PRICE_PER_KM = 30;
 
 let orders = [];
@@ -44,6 +45,9 @@ module.exports = {
     },
     getPricePerKilometer() {
         return PRICE_PER_KM;
+    },
+    getRentPrice() {
+        return RENT_PRICE;
     },
     getOrders() {
         return orders;
