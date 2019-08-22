@@ -44,3 +44,12 @@ mp.events.add('taxi.jobmenu.employment', () => {
     mp.events.call('taxi.jobmenu.close');
     mp.events.callRemote('taxi.employment');
 });
+
+mp.events.add('taxi.rent.show', (price) => {
+    mp.gui.cursor.show(true, true);
+    mp.callCEFV(`acceptWindow.header = 'Вы хотите арендовать такси за $${price}?';`);
+    mp.callCEFV(`acceptWindow.name = 'carsell';`);
+    mp.callCEFV(`acceptWindow.show = true;`);
+    mp.busy.add('vehicle_seller_accept');
+});
+

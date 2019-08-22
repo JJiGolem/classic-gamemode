@@ -176,6 +176,12 @@ module.exports = {
             delete player.taxiDriverDestination;
             delete client.taxiClientDestination;
         }
+    },
+    "taxi.vehicle.enter": (player, vehicle) => {
+        console.log(`${player.name} сел в такси ${vehicle.id} таксистом`);
+        if (!vehicle.isActiveTaxi) {
+            player.call('taxi.rent.show', [taxi.getRentPrice()]);
+        }
     }
 }
 
