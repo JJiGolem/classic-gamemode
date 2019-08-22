@@ -25,6 +25,7 @@ mp.events.add('taxi.driver.orders.add', (order) => {
 });
 
 mp.events.add('taxi.driver.orders.delete', (orderId) => {
+    mp.chat.debug('delete order');
     mp.callCEFR('taxi.driver.order.delete', [orderId]);
 });
 

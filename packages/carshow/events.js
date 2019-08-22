@@ -5,6 +5,7 @@ module.exports = {
     },
     "playerEnterColshape": (player, shape) => {
         if (shape.isCarShow) {
+            if (player.vehicle) return;
             player.call('chat.message.push', [`!{#ffffff}${player.name} зашел в колшейп с carshowid ${shape.carShowId}`]);
             player.call('chat.message.push', [`!{#ffffff}${carshow.getCarShowPropertyBySqlId("name", shape.carShowId)}`]);
             mp.events.call('carshow.list.show', player, shape.carShowId);
