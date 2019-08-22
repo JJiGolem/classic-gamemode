@@ -91,5 +91,5 @@ mp.events.add('hud.players.list.enable', (state) => {
 
 mp.events.add('hud.players.list', (playersInfo) => {
   mp.events.call('hud.players.list.enable', true);
-  mp.callCEFVN({ "playersList.players": playersInfo })
+  mp.callCEFVN({ "playersList.players": playersInfo });
 });
