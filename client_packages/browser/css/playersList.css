@@ -10,25 +10,39 @@
     left: 0;
     bottom: 0;
     margin: auto;
+    /* overflow: auto; */
 }
+
+.players_list-head {
+    height: 10%;
+}
+
+.players_list-body {
+    height: 91%;
+    overflow: auto;
+    margin-top: -.8%;
+}
+
+/* tr:nth-child(2n) {
+    background: #f0f0f0;
+} 
+
+tr:nth-child(1) {
+    background: #666;
+    color: #fff;
+}  */
 
 #playersList table {
     width: 100%;
     /* overflow: auto; */
-    height: 300px;
     border: 1px solid white;
 }
 
 #playersList thead {
     font-size: 140%;
-    background: rgba(255, 255, 255, 0.39);
+    background: rgba(252, 231, 4, 0.562);
     color: black;
-    display: table-header-group;
-}
-
-#playersList tbody {
-    overflow: auto;
-    height: 200px;
+    /* display: table-header-group; */
 }
 
 #playersList th {
