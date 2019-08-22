@@ -50,6 +50,8 @@ module.exports = {
         player.call('taxi.driver.orders.load', [orders]);
     },
     "taxi.driver.orders.take": (player, orderId) => {
+        if (player.character.job != 2) return player.call('taxi.driver.orders.take.ans', [3]);;
+        if (!player.vehicle) return player.call('taxi.driver.orders.take.ans', [2]);;
         console.log(orderId);
         let order = taxi.getOrderById(orderId);
         console.log(`order ${order}`)
@@ -142,7 +144,8 @@ module.exports = {
         delete client.taxiClientDestination;
     },
     "playerQuit": (player) => {
-        taxi.deletePlayerOrders(player);
+        mp.events.call('taxi.client.order.cancel', player);
+        mp.events.call('taxi.driver.order.cancel', player);
     },
     "taxi.client.order.cancel": (player) => {
         taxi.deletePlayerOrders(player);
