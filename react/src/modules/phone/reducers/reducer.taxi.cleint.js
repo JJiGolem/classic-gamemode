@@ -70,11 +70,7 @@ export default function taxiClient(state = initialState, action) {
             };
 
         case 'CANCEL_ORDER_TAXI_CLIENT':
-            return {
-                ...state,
-                isSearch: false,
-                order: undefined
-            };
+            return {};
 
         case 'ERROR_ORDER_TAXI_CLIENT':
             return {

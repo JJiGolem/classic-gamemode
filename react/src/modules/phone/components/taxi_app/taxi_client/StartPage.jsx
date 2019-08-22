@@ -10,6 +10,15 @@ class StartPage extends Component {
         this.getLocation = this.getLocation.bind(this);
     }
 
+    componentDidMount() {
+        // setTimeout(() => {
+        //     this.props.loadLocation('Бертон', 'Карсон-Авеню')
+        // }, 1000)
+
+        // eslint-disable-next-line no-undef
+        mp.trigger('taxi.client.app.open');
+    }
+
     createOrder() {
         this.props.createOrderTaxi();
 
