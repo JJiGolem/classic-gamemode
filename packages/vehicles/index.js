@@ -228,7 +228,8 @@ module.exports = {
                 regDate: current.regDate,
                 owners: current.owners,
                 vehType: props.vehType,
-                price: props.price
+                price: props.price,
+                isOnParking: current.isOnParking
             });
             temp++;
         });
@@ -483,5 +484,12 @@ module.exports = {
             if (player.carPlaces.length == 1 && player.vehicleList.length >= player.carPlaces.length) return false;
         }
         return true;
+    },
+    doesPlayerHaveHomeVehicles(player) {
+        let list = player.vehicleList;
+        let result = list.filter(x => x.isOnParking == 0);
+        console.log(result);
+        if (result.length > 0) return true
+        else return false;
     }
 }

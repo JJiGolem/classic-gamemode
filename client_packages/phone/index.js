@@ -6,21 +6,27 @@ let isBinding = false;
 mp.attachmentMngr.register("takePhone", "prop_npc_phone", 58867, new mp.Vector3(0.06, 0.04, 0.01), new mp.Vector3(-15, 0, -145)); /// Телефон в руке
 mp.attachmentMngr.register("callPhone", "prop_npc_phone", 58867, new mp.Vector3(0.01, 0.05, -0.02), new mp.Vector3(-5, -65, 165)); /// Телефон у уха
 
-mp.events.add('phone.load', function (phoneInfo, phoneDialogs) {
+mp.events.add('phone.load', function (phoneInfo, phoneDialogs, apps) {
     phoneInfo.houses.forEach(house => {
         house.area = mp.game.ui.getLabelText(mp.game.zone.getNameOfZone(house.pos[0], house.pos[1], house.pos[2]));
     });
     
     mp.callCEFR('phone.load', [phoneInfo]);
     mp.callCEFR('phone.message.list', [phoneDialogs]);
+    apps.forEach(app => {
+        mp.callCEFR('phone.app.add', [app, null]);
+    });
     bindButtons(phoneInfo.isHave);
 });
 
 /// Добавление приложения
 /// house
 /// biz
+/// taxi
 mp.events.add('phone.app.add', function (appName, info) {
-    info.area = mp.game.ui.getLabelText(mp.game.zone.getNameOfZone(info.pos[0], info.pos[1], info.pos[2]));
+    if (info != null) {
+        info.area = mp.game.ui.getLabelText(mp.game.zone.getNameOfZone(info.pos[0], info.pos[1], info.pos[2]));
+    }
     mp.callCEFR('phone.app.add', [appName, info]);
 });
 /// Удаление приложения

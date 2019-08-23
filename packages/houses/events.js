@@ -2,6 +2,7 @@
 /// Модуль системы домов
 let housesService = require("./index.js");
 let money = call('money');
+let vehicles = call("vehicles");
 
 let carPlaceVehicle = new Array();
 
@@ -116,6 +117,7 @@ module.exports = {
             housesService.updateHouse(player.house.index);
             
             player.call('phone.app.add', ["house", housesService.getHouseInfoForApp(player.house.index)]);
+            vehicles != null && vehicles.setPlayerCarPlaces(player);
         });
     },
     /// Phone app events
@@ -129,7 +131,9 @@ module.exports = {
     },
     "house.sell.toGov": (player, id) => {
         if (money == null) return player.call('house.sell.toGov.ans', [0]);
-        if (player == null) return player.call('house.sell.toGov.ans', [0]);
+        if (player == null) return;
+        if (vehicles == null) return player.call('house.sell.toGov.ans', [0]);
+        if (vehicles.doesPlayerHaveHomeVehicles(player)) return player.call('house.sell.toGov.ans', [5]);
         id = parseInt(id);
         if (isNaN(id)) return player.call('house.sell.toGov.ans', [0]);
         let index = housesService.getHouseIndexById(id);
@@ -168,6 +172,8 @@ module.exports = {
     "house.sell": (player, name, cost) => {
         if (player.house.buyerIndex == null) return player.call("house.sell.ans", [0]);
         if (mp.players.at(player.house.buyerIndex) == null) return player.call("house.sell.ans", [0]);
+        if (vehicles == null) return player.call('house.sell.ans', [0]);
+        if (vehicles.doesPlayerHaveHomeVehicles(player)) return player.call('house.sell.ans', [5]);
         name = parseInt(name);
         cost = parseInt(cost);
         if (isNaN(name) || isNaN(cost)) return player.call("house.sell.ans", [0]);
@@ -228,7 +234,6 @@ module.exports = {
         housesService.createHouse(JSON.parse(houseInfo));
     },
     "house.add.carSpawn": (player, i, garage) => {
-        let vehicles = call("vehicles");
         if (vehicles == null) return;
         if (carPlaceVehicle[i] != null) {
             clearInterval(carPlaceVehicle[i].fuelTimer);

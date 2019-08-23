@@ -41,6 +41,7 @@ mp.events.add('taxi.client.order.ans', (ans) => {
             break;
         case 4:
             mp.notify.success('Заказ отправлен', 'Такси');
+            mp.notify.warning('Не покидайте зону, выделенную зеленым', 'Такси');
             mp.events.call('taxi.client.waitshape.create');
             break;
     }
@@ -80,16 +81,21 @@ mp.events.add('taxi.client.order.taken', (driverInfo) => {
         number: driverInfo.plate
     }
     mp.callCEFR('taxi.client.order.ans', [info]);
+    mp.notify.success('Ваш заказ принят', 'Такси');
 });
 
 mp.events.add('taxi.client.car.ready', () => {
     mp.events.call('taxi.client.waitshape.destroy');
     mp.callCEFR('taxi.client.order.ready', []);
+    mp.notify.success('Машина на месте, садитесь в такси', 'Такси');
 });
 
 mp.events.add('taxi.client.car.enter', () => {
     isActiveTaxiClient = true;
     mp.callCEFR('taxi.client.order.inTaxi', []);
+    mp.notify.info('Поставьте метку на карте и подтвердите выбор в приложении', 'Такси');
+    mp.events.call('chat.message.push', `!{#f3c800}Чтобы начать поездку, откройте карту и поставьте метку на пункте назначения`); //!{#009eec}${carInfo.properties.name}
+    mp.events.call('chat.message.push', `!{#80c102}После этого нажмите !{#009eec}"Подтвердить" !{#80c102}в приложении на телефоне`);
 });
 
 mp.events.add("playerEnterColshape", (shape) => {
@@ -111,6 +117,7 @@ function getClientLocation() {
 }
 
 mp.events.add('taxi.client.waypoint.created', (position) => {
+    mp.notify.info('Метка поставлена, подтвердите заказ в приложении', 'Такси');
     destination = position;
     mp.chat.debug(`${JSON.stringify(position)}`);
     let area = mp.utils.getRegionName(position);

@@ -41,6 +41,7 @@ mp.events.add('taxi.driver.orders.take.ans', (ans, orderInfo) => {
         case 0:
             mp.chat.debug(JSON.stringify(orderInfo.position));
             mp.chat.debug(JSON.stringify(orderInfo.clientId));
+            mp.notify.success('Заказ принят, следуйте по маршруту', 'Такси');
             createRouteToClient(orderInfo.position);
             break;
         case 1:
@@ -102,6 +103,11 @@ mp.events.add("playerEnterColshape", (shape) => {
     };
 });
 
+mp.events.add('taxi.driver.car.entered', () => {
+    mp.notify.info('Ожидайте, пока клиент не поставит метку на карте', 'Такси');
+});
+
+
 mp.events.add("playerExitColshape", (shape) => {
     if (shape.isRouteToClientShape) {
         mp.chat.debug('exit route to client shape');
@@ -127,6 +133,7 @@ mp.events.add("taxi.driver.route.destroy", () => {
 mp.events.add("taxi.driver.destination.confirmed", (destination, price) => {
     createFinalDestination(destination);
     mp.chat.debug(`Ставим колшейп на ${JSON.stringify(destination)}`);
+    mp.notify.success('Клиент поставил метку, следуйте по маршруту', 'Такси');
     mp.callCEFR('taxi.driver.order.way', [mp.utils.getRegionName(destination), mp.utils.getStreetName(destination), price]);
 
 });

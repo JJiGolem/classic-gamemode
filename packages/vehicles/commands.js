@@ -151,5 +151,11 @@ module.exports = {
                 regDate: now
             });
         }
-    }
+    },
+    "/vehs": {
+        access: 6,
+        handler: (player, args) => {
+            console.log(vehicles.doesPlayerHaveHomeVehicles(player));
+        }
+    },
 }

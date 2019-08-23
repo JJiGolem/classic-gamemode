@@ -371,7 +371,7 @@ module.exports = {
                     }
 
                     vehicles.removeVehicleFromPlayerVehicleList(seller, vehId);
-
+                    // TODO на парковке или нет
                     let props = vehicles.setVehiclePropertiesByModel(veh.modelName)
                     console.log(props)
                     target.vehicleList.push({
@@ -381,7 +381,7 @@ module.exports = {
                         regDate: veh.regDate,
                         owners: veh.owners,
                         vehType: props.vehType,
-                        price: props.price
+                        price: props.price // todo isOnParking
                     });
 
                     delete target.sellCarTargetOffer;
