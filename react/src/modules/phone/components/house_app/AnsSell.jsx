@@ -36,6 +36,18 @@ class AnsSell extends Component {
             closeApp();
             addApp({ name: 'Error', form: <Error status='Вы находитесь не рядом с домом'/> });
         }
+
+        else if (status == 4) {
+            closeApp();
+            closeApp();
+            addApp({ name: 'Error', form: <Error status='Нельзя продать дом дешевле гос. стоимости'/> });
+        }
+
+        else if (status == 5) {
+            closeApp();
+            closeApp();
+            addApp({ name: 'Error', form: <Error status='Вы не можете продать дом с машинами в гараже'/> });
+        }
     }
 
     render() {

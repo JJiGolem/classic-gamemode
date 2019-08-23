@@ -24,6 +24,17 @@ mp.events.add('hud.load', () => {
       mp.game.ui.displayRadar(true);
     }
   });
+
+  // список игроков на F9
+  mp.keys.bind(0x78, true, function () {
+    if (playersListState) {
+      mp.events.call('hud.players.list.enable', false)
+    } else {
+      if (!mp.busy.includes()) {
+        mp.events.callRemote('hud.players.list');
+      }
+    }
+  });
 });
 
 mp.events.add('hud.enable', (state) => {
@@ -63,17 +74,6 @@ mp.events.add('render', () => {
   mp.game.ui.hideHudComponentThisFrame(8);
   mp.game.ui.hideHudComponentThisFrame(9);
   mp.game.ui.hideHudComponentThisFrame(13);
-});
-
-// список игроков на F9
-mp.keys.bind(0x78, true, function () {
-  if (playersListState) {
-    mp.events.call('hud.players.list.enable', false)
-  } else {
-    if (!mp.busy.includes()) {
-      mp.events.callRemote('hud.players.list');
-    }
-  }
 });
 
 mp.events.add('hud.players.list.enable', (state) => {
