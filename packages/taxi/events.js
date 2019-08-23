@@ -88,6 +88,8 @@ module.exports = {
             if (player.currentTaxiClientOrder.plate == vehicle.plate) {
                 console.log('клиент сел в авто');
                 player.call('taxi.client.car.enter');
+                let driver = mp.players.at(player.currentTaxiClientOrder.driverId);
+                driver.call('taxi.driver.car.entered');
             }
         }
     },
