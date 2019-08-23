@@ -235,7 +235,8 @@ module.exports = {
                                 regDate: data.regDate,
                                 owners: data.owners,
                                 vehType: props.vehType,
-                                price: props.price
+                                price: props.price,
+                                isOnParking: data.isOnParking
                             });
 
                             if (!hasHouse) {
