@@ -1,12 +1,21 @@
 "use strict";
 var factions = require('../factions');
 var inventory = require('../inventory');
+var money = require('../money');
 var notifs = require('../notifications');
-var police = require('../police');
+var police = require('../police')
 
 module.exports = {
     "init": () => {
 
+    },
+    "characterInit.done": (player) => {
+        if (!player.character.arrestTime) return;
+
+        console.log(`arrestTime: ${player.character.arrestTime}`)
+
+        var time = player.character.arrestTime;
+        police.startCellArrest(player, null, time);
     },
     "police.storage.clothes.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Police`);
@@ -482,7 +491,51 @@ module.exports = {
             notifs.info(rec, `Вы не следуете за ${player.name}`, `Следование`);
         }
     },
+    // арестовать в КПЗ ЛСПД
+    "police.cells.arrest": (player, recId) => {
+        var rec = mp.players.at(recId);
+        if (!rec) return notifs.error(player, `Гражданин не найден`, `Следование`);
+        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции`, `Следование`);
+
+        if (rec.arrestTime > 0) {
+            console.log("stopArrest")
+            // rec.utils.clearArrest();
+            // return rec.utils.info(`${player.name} выпустил Вас на свободу`);
+        }
+        if (!rec.character.wanted) return notifs.error(player, `${rec.name} не преступник`, `Арест`);
+
+        var cell = police.getNearCell(player);
+        if (!cell) return notifs.error(player, `Вы далеко от камеры`, `Арест`);
+        if (rec.hasCuffs) {
+            var params = {
+                faction: player.character.factionId,
+                owner: player.character.id
+            };
+            inventory.addItem(player, 28, params, (e) => {
+                if (e) return notifs.error(player, e, `Наручники`);
+            });
+        }
+
+        var time = police.arrestTime * rec.character.wanted;
+        rec.character.arrestTime = time;
+        police.startCellArrest(rec, cell, time);
+        notifs.info(rec, `${player.name} посадил вас в КПЗ`, `Арест`);
+        notifs.success(player, `Вы посадили ${rec.name} к КПЗ`, `Арест`);
+
+        money.addCash(player, police.arrestPay, (res) => {
+            if (!res) return console.log(`[police] Ошибка выдачи ЗП за арест ${player.name}`);
+            notifs.info(player, `+ $${police.arrestPay}`, `Бонус`);
+        });
+
+        //todo broadcast to radio
+    },
     "playerDeath": (player) => {
         if (player.hasCuffs) police.setCuffs(player, false);
+    },
+    "playerQuit": (player) => {
+        if (!player.character.arrestTime) return;
+        var time = Date.now() - player.cellArrestDate;
+        player.character.arrestTime -= time;
+        player.character.save();
     },
 }
