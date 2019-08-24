@@ -187,7 +187,7 @@ module.exports = {
         }
         return clientItem;
     },
-    async addItem(player, itemId, params, callback) {
+    async addItem(player, itemId, params, callback = () => {}) {
         var slot = this.findFreeSlot(player, itemId);
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(itemId).name} не найден`);
         var struct = [];

@@ -48,6 +48,7 @@ module.exports = {
             inventory.addItem(rec, 7, {
                 variation: 1,
                 texture: 0,
+                torso: 0,
                 sex: 1,
                 pockets: '[4,5,5,5,5,5]'
             });

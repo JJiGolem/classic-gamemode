@@ -28,8 +28,22 @@ module.exports = {
             var mins = Math.clamp(args[1], 1, 60 * 12); // 12 суток макс.
 
             notifs.info(rec, `${player.name} посадил вас на ${mins} минут`, `КПЗ`);
-            out.info(`${player.name} посадил ${rec.name} на ${mins} минут`);
+            out.info(`${player.name} посадил ${rec.name} в КПЗ на ${mins} минут`);
             police.startCellArrest(player, null, mins * 60 * 1000);
+        }
+    },
+    "/pjailarrest": {
+        access: 6,
+        description: "Посадить игрока в тюрьму за городом.",
+        args: "[ид_игрока]:n [минуты]:n",
+        handler: (player, args, out) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            var mins = Math.clamp(args[1], 1, 60 * 12); // 12 суток макс.
+
+            notifs.info(rec, `${player.name} посадил вас на ${mins} минут`, `Тюрьма`);
+            out.info(`${player.name} посадил ${rec.name} в тюрьму на ${mins} минут`);
+            police.startJailArrest(player, null, mins * 60 * 1000);
         }
     },
     "/pwanted": {
@@ -45,6 +59,14 @@ module.exports = {
 
             notifs.success(player, `${rec.name} имеет ${rec.character.wanted} ур.`, `Розыск`);
             notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур.`, `Розыск`);
+        }
+    },
+    "/pvehput": {
+        access: 6,
+        description: "Запихнуть игрока в авто.",
+        args: "[ид_игрока]:n",
+        handler: (player, args, out) => {
+            mp.events.call(`police.vehicle.put`, player, args[0]);
         }
     },
 }
