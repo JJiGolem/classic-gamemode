@@ -72,6 +72,8 @@ module.exports = {
             }, 1000);
         }
         player.call('vehicles.mileage.start', [vehicle.mileage]);
+
+        mp.events.call('vehicle.ready', player, vehicle, seat);
     },
     "playerQuit": (player) => {
         if (player.indicatorsUpdateTimer) {
