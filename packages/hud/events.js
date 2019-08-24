@@ -1,4 +1,4 @@
-var factions = require('../factions');
+var hud = require('./index.js');
 
 module.exports = {
     /// Отображение онлайна в худе
@@ -15,27 +15,9 @@ module.exports = {
             current.call("hud.setData", [{players: mp.players.length}]); /// После выхода из игры игрок какое-то время висит в пуле, возможно стоит создать таймер
         });
     },
-    "playersList": (player) => {
+    "hud.players.list": (player) => {
         if (player.character.admin > 0) {
-            let playersInfo = mp.players.toArray().map((pl, index) => {
-
-                let faction;
-                
-                if (pl.character.factionId != null) {
-                    faction = factions.getFaction(pl.character.factionId).name;
-                }
-
-                return {
-                    id: pl.id,
-                    name: pl.name,
-                    ping: pl.ping,
-                    factionName: faction
-                }
-            });
-    
-            console.log(playersInfo)
-    
-            player.call("hud.players", [playersInfo]);
+            player.call("hud.players.list", [hud.getPlayers()]);
         }
     }
 }

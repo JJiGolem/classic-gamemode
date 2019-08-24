@@ -36,6 +36,15 @@ module.exports = {
         if (vehicle.key == 'job' && vehicle.owner != player.character.job && seat == -1) {
             player.removeFromVehicle();
             player.call('notifications.push.error', ["Это рабочий транспорт", "Нет доступа"]);
+            return;
+        }
+
+        if (vehicle.key == 'job' && seat == -1) {
+            switch (vehicle.owner) {
+                case 2:
+                    mp.events.call('taxi.vehicle.enter', player, vehicle);
+                    return;
+            }
         }
 
         let isPrivate = false;
@@ -172,8 +181,8 @@ module.exports = {
         let vehicle = mp.vehicles.at(vehicleId);
         if (!vehicle) return;
         // TEMP 
-        // if (vehicle.key != 'private') return player.call('notifications.push.error', ['Это не ваше т/с', 'Ошибка']);
-        // if (vehicle.owner != player.character.id) return player.call('notifications.push.error', ['Это не ваше т/с', 'Транспорт']);
+        if (vehicle.key != 'private') return player.call('notifications.push.error', ['Это не ваше т/с', 'Ошибка']);
+        if (vehicle.owner != player.character.id) return player.call('notifications.push.error', ['Это не ваше т/с', 'Транспорт']);
 
         let state = vehicle.locked;
         if (state) {
@@ -362,7 +371,7 @@ module.exports = {
                     }
 
                     vehicles.removeVehicleFromPlayerVehicleList(seller, vehId);
-
+                    // TODO на парковке или нет
                     let props = vehicles.setVehiclePropertiesByModel(veh.modelName)
                     console.log(props)
                     target.vehicleList.push({
@@ -372,7 +381,7 @@ module.exports = {
                         regDate: veh.regDate,
                         owners: veh.owners,
                         vehType: props.vehType,
-                        price: props.price
+                        price: props.price // todo isOnParking
                     });
 
                     delete target.sellCarTargetOffer;

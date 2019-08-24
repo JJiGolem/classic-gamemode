@@ -226,6 +226,12 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
+    myEventEmmiter.on('taxi.client.order.error', () => {
+        dispatch({
+            type: 'ERROR_ORDER_TAXI_CLIENT'
+        });
+    });
+
     myEventEmmiter.on('taxi.driver.load', (info) => {
         dispatch({
             type: 'LOAD_INFO_TAXI_DRIVER',
@@ -244,6 +250,18 @@ export const PlayerEvents = (dispatch, getState) => {
         dispatch({
             type: 'DELETE_ORDER_TAXI_DRIVER',
             payload: orderId
+        });
+    });
+
+    myEventEmmiter.on('taxi.driver.order.cancel', () => {
+        dispatch({
+            type: 'CANCEL_ORDER_TAXI_DRIVER'
+        });
+    });
+
+    myEventEmmiter.on('taxi.driver.order.error', () => {
+        dispatch({
+            type: 'ERROR_ORDER_TAXI_DRIVER'
         });
     });
 

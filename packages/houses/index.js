@@ -4,6 +4,8 @@ let houses = new Array();
 let interiors = new Array();
 let garages = new Array();
 let money = call('money');
+let vehicles = call('vehicles');
+let carmarket = call('carmarket');
 
 /// Функции модуля системы домов
 let changeBlip = function(i) {
@@ -36,11 +38,12 @@ let dropHouse = function(i, sellToGov) {
                             }
                             else {
                                 mp.players.at(j).call('phone.app.remove', ["house", i]);
+                                carmarket != null && carmarket.sellAllCharacterVehicles(characterId);
                             }
-                            j = mp.players.length;
+                            console.log("[HOUSES] House dropped " + i);
+                            return;
                         }
                     }
-                    console.log("[HOUSES] House dropped " + i);
                 }
                 else {
                     console.log("[HOUSES] House dropped " + i + ". But player didn't getmoney");
@@ -344,6 +347,7 @@ module.exports = {
                         days: parseInt((houses[i].info.date.getTime() - new Date().getTime()) / (24 * 60 * 60 * 1000)),
                         pos: [houses[i].info.pickupX, houses[i].info.pickupY, houses[i].info.pickupZ]
                     }]);
+                    vehicles != null && vehicles.setPlayerCarPlaces(buyer);
                 }
                 else {
                     callback(false);

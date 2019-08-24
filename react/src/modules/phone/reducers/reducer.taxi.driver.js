@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 const initialState = {};
 
 export default function taxiDriver(state = initialState, action) {
@@ -35,13 +36,19 @@ export default function taxiDriver(state = initialState, action) {
 
         case 'CANCEL_ORDER_TAXI_DRIVER':
             const newStateCancel = { ...state };
+            let cancelIndex = newStateCancel.orders.findIndex(order => order.id === newStateCancel.activeOrder.id);
             newStateCancel.activeOrder = null;
-            let cancelIndex = newStateCancel.orders.findIndex(order => order.id === payload);
             if (cancelIndex !== -1) {
                 newStateCancel.orders.splice(cancelIndex, 1);
             }
 
             return newStateCancel;
+
+        case 'ERROR_ORDER_TAXI_DRIVER':
+            return {
+                ...state,
+                activeOrder: null
+            }
 
         case 'DELETE_ORDER_TAXI_DRIVER':
             const newStateDelete = { ...state };
@@ -63,6 +70,13 @@ export default function taxiDriver(state = initialState, action) {
                     price: payload.price
                 }
             }
+
+        case 'DELETE_APP_TO_PHONE':
+            if (payload === 'taxi') {
+                return {};
+            }
+
+            return state;
     }
 
     return state;

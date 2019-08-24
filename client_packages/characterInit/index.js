@@ -83,8 +83,8 @@ mp.events.add('characterInit.choose', () => {
     if(isBinding) {
         binding(false);
         isBinding = false;
+        mp.events.callRemote('characterInit.choose', currentCharacter);
     }
-    mp.events.callRemote('characterInit.choose', currentCharacter);
 });
 
 mp.events.add('characterInit.choose.ans', (ans) => {     //0 - не успешно     1 - успешно
@@ -208,8 +208,12 @@ let chooseRight = function() {
 };
 
 let choose = function() {
-    mp.callCEFV(`loader.show = true;`);
-    mp.events.call('characterInit.choose');
+    if(isBinding) {
+        binding(false);
+        isBinding = false;
+        mp.events.callRemote('characterInit.choose', currentCharacter);
+        mp.callCEFV(`loader.show = true;`);
+    }
 };
 
 let setCharClothes = function(indexPed) {

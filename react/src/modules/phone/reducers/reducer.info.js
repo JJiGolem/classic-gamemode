@@ -2,6 +2,7 @@
 /* eslint-disable default-case */
 const initialState = {
     name: 'Ilya Maxin',
+    isDriver: false,
     isHave: true,
     contacts: [
         {

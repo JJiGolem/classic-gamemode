@@ -35,7 +35,11 @@ module.exports = {
             let houseId = houseServise.getHouseIndexByCharId(player.character.id);
             houses = houseId != -1 ? [houseServise.getHouseInfoForApp(houseId)] : [];
         }
-        
+
+        let apps = [];
+        if (player.character.job == 2) {
+            apps.push("taxi");
+        }
 
         player.call('phone.load', [{
                 isHave: player.phone != null,
@@ -44,7 +48,8 @@ module.exports = {
                 biz: [],//bizInfo,
                 contacts: player.phone != null ? (player.phone.PhoneContacts != null ? jsonPhone['PhoneContacts'] : []) : []
             },
-            player.phone != null ? (player.phone.PhoneDialogs != null ? jsonPhone['PhoneDialogs'] : []) : []
+            player.phone != null ? (player.phone.PhoneDialogs != null ? jsonPhone['PhoneDialogs'] : []) : [],
+            apps
         ]);
     },
     isExists(number) {

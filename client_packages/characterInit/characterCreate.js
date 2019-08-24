@@ -227,23 +227,33 @@ mp.events.add('characterInit.create.reset', () => {
     applyTorsoCamera();
 });
 
+let setGenderTimer = null;
 mp.events.add('characterInit.create.setGender', gender => {
-    charData.gender = parseInt(gender);
-    if (charData.gender == 0 || charData.gender == 1) {
-        mp.players.local.model = freemodeCharacters[charData.gender];
+    if (setGenderTimer != null) {
+        clearTimeout(setGenderTimer);
     }
-    if (charData.gender == 0) {
-        charData.similarity = 1;
-    }
-    else {
-        charData.similarity = 0;
-    }
-    charData.mother = 21;
-    charData.father = 0;
-    charData.skin = 0;
-    updateParents();
-    applyTorsoCamera();
-    setDefWear();
+    setGenderTimer = setTimeout(function() {
+        try {
+            charData.gender = parseInt(gender);
+            if (charData.gender == 0 || charData.gender == 1) {
+                mp.players.local.model = freemodeCharacters[charData.gender];
+            }
+            if (charData.gender == 0) {
+                charData.similarity = 1;
+            }
+            else {
+                charData.similarity = 0;
+            }
+            charData.mother = 21;
+            charData.father = 0;
+            charData.skin = 0;
+            updateParents();
+            applyTorsoCamera();
+            setDefWear();
+        } catch (error) {
+            mp.console(JSON.stringify(error));
+        }
+    }, 100);
 });
 
 

@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 const initialState = {};
 
 export default function taxiClient(state = initialState, action) {
@@ -13,7 +14,7 @@ export default function taxiClient(state = initialState, action) {
         case 'CLEAR_LOCATION_TAXI_CLIENT':
             return {
                 ...state,
-                location: null
+                location: undefined
             };
 
         case 'ANS_ORDER_TAXI_CLIENT':
@@ -69,11 +70,16 @@ export default function taxiClient(state = initialState, action) {
             };
 
         case 'CANCEL_ORDER_TAXI_CLIENT':
+            return {};
+
+        case 'ERROR_ORDER_TAXI_CLIENT':
             return {
                 ...state,
-                isSearch: false,
-                order: null
-            };
+                order: {
+                    ...state.order,
+                    isWay: false
+                }
+            }
     }
 
     return state;

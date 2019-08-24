@@ -132,7 +132,8 @@ module.exports = {
                     regDate: veh.regDate,
                     owners: veh.owners,
                     vehType: veh.properties.vehType,
-                    price: veh.properties.price
+                    price: veh.properties.price,
+                    isOnParking: veh.isOnParking
                 });
 
                 player.call('carmarket.car.buy.ans', [2, carInfo]);

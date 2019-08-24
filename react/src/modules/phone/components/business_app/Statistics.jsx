@@ -87,13 +87,13 @@ class Statistics extends Component {
                                         <col style={{ width: '70%' }}/>
                                     </colgroup>
                                     <thead>
-                                    <tr>
-                                        <th>Дата</th>
-                                        <th>Прибыль</th>
-                                    </tr>
+                                        <tr>
+                                            <th>Дата</th>
+                                            <th>Прибыль</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    { this.getTableBody() }
+                                        { this.getTableBody() }
                                     </tbody>
                                 </table>
                             </div>

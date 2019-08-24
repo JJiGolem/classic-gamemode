@@ -24,15 +24,6 @@ class TaxiClient extends Component {
         this.getPage = this.getPage.bind(this);
     }
 
-    componentDidMount() {
-        // setTimeout(() => {
-        //     this.props.loadLocation('Бертон', 'Карсон-Авеню')
-        // }, 1000)
-
-        // eslint-disable-next-line no-undef
-        mp.trigger('taxi.client.app.open');
-    }
-
     componentWillUnmount() {
         this.props.clearLocation();
     }

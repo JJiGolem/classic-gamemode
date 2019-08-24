@@ -80,7 +80,11 @@ mp.events.add('house.sell.check.ans', (nick) => {
 });
 
 mp.events.add('house.sell', () => {
-    mp.events.callRemote('house.sell', name, cost);
+    if (name != null && cost != null) {
+        mp.events.callRemote('house.sell', name, cost);
+    }
+    name = null;
+    cost = null;
 });
 mp.events.add('house.sell.ans', (ans) => {
     mp.callCEFR('house.sell.ans', [ans]);

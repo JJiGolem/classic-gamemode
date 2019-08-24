@@ -101,6 +101,7 @@ mp.events.add('chat.load', () => {
 });
 
 mp.events.add('chat.close', () => {
+    mp.callCEFR('setFocusChat', [false]);
     mp.gui.cursor.show(false, false);
     isOpen = false;
     mp.busy.remove('chat');
