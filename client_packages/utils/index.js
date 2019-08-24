@@ -6,12 +6,14 @@ mp.utils = {
 
     /// Возвращает имя улицы
     getStreetName(pos) {
+        if (!pos) return null;
         var getStreet = mp.game.pathfind.getStreetNameAtCoord(pos.x, pos.y, pos.z, 0, 0);
         var streetName = mp.game.ui.getStreetNameFromHashKey(getStreet["streetName"]);
         return streetName;
     },
     /// Возвращает название района
     getRegionName(pos) {
+        if (!pos) return null;
         return mp.game.ui.getLabelText(mp.game.zone.getNameOfZone(pos.x, pos.y, pos.z));
     },
     /// Возваращает якорь миникарты

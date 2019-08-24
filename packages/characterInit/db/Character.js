@@ -260,6 +260,12 @@ module.exports = (sequelize, DataTypes) => {
             onDelete: "RESTRICT",
             onUpdate: "RESTRICT"
         });
+        model.hasOne(models.Phone, {
+            foreignKey: "characterId",
+        });
+        model.hasOne(models.House, {
+            foreignKey: "characterId",
+        });
     };
     return model;
 };

@@ -1,6 +1,9 @@
 "use strict";
-/// Отключение не используемых клавиш
-mp.game.controls.disableControlAction(1, 200, true);    //Pause Menu
+
+mp.events.add("render", () => {
+    /// Отключение не используемых клавиш
+    mp.game.controls.disableControlAction(1, 199, true); //Pause Menu (P)
+});
 
 
 
@@ -57,8 +60,7 @@ mp.busy.add = function(name, nocef = false) {
 mp.busy.includes = function(name) {
     if (name == null) {
         return mp.busy.list.length != 0;
-    }
-    else {
+    } else {
         return mp.busy.list.includes(name);
     }
 }

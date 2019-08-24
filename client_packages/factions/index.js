@@ -45,6 +45,27 @@ mp.factions = {
             mp.callCEFV(`selectMenu.showByName('lspdStorage')`);
         }
     },
+    isGovernmentFaction(factionId) {
+        return factionId == 1;
+    },
+    isPoliceFaction(factionId) {
+        return factionId == 2 || factionId == 3;
+    },
+    isFibFaction(factionId) {
+        return factionId == 4;
+    },
+    isHospitalFaction(factionId) {
+        return factionId == 5;
+    },
+    isArmyFaction(factionId) {
+        return factionId == 6;
+    },
+    isNewsFaction(factionId) {
+        return factionId == 7;
+    },
+    isStateFaction(factionId) {
+        return factionId >= 1 && factionId <= 7;
+    },
 };
 
 mp.events.add("characterInit.done", () => {
