@@ -15,7 +15,8 @@ module.exports = {
         console.log(`arrestTime: ${player.character.arrestTime}`)
 
         var time = player.character.arrestTime;
-        police.startCellArrest(player, null, time);
+        if (player.character.arrestType == 0) police.startCellArrest(player, null, time);
+        else if (player.character.arrestType == 1) police.startJailArrest(player, null, time);
     },
     "police.storage.clothes.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Police`);
@@ -622,8 +623,11 @@ module.exports = {
     },
     "playerQuit": (player) => {
         if (!player.character.arrestTime) return;
-        var time = Date.now() - player.cellArrestDate;
+        var date = (player.character.arrestType == 0)? player.cellArrestDate : player.jailArrestDate;
+        var time = Date.now() - date;
         player.character.arrestTime -= time;
         player.character.save();
+        clearTimeout(player.cellArrestTimer);
+        clearTimeout(player.jailArrestTimer);
     },
 }

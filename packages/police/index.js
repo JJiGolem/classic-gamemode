@@ -73,6 +73,11 @@ module.exports = {
         }
         player.call("police.cuffs.set", [enable])
     },
+    setWanted(player, wanted) {
+        player.character.wanted = wanted;
+        player.character.save();
+        player.call(`police.wanted.set`, [player.character.wanted]);
+    },
     getNearCell(player) {
         return this.cells[0]; // tests
         var min = player.dist(this.cells[0]);
@@ -102,11 +107,16 @@ module.exports = {
         return this.jailCells[index];
     },
     startCellArrest(player, cell, time) {
-        console.log(`startCellArrest: ${player.name}`)
         if (player.vehicle) player.removeFromVehicle();
         if (player.hasCuffs) this.setCuffs(player, false);
         if (player.character.wanted) player.character.update({
             wanted: 0
+        });
+        if (player.character.arrestTime != time) player.character.update({
+            arrestTime: time
+        });
+        if (player.character.arrestType != 0) player.character.update({
+            arrestType: 0
         });
         if (!cell) {
             var i = utils.randomInteger(0, this.cells.length - 1);
@@ -120,6 +130,8 @@ module.exports = {
         player.heading = cell.h;
         var playerId = player.id;
         var characterId = player.character.id;
+        clearTimeout(player.cellArrestTimer);
+        clearTimeout(player.jailArrestTimer);
         player.cellArrestDate = Date.now();
         player.cellArrestTimer = setTimeout(() => {
             try {
@@ -135,6 +147,7 @@ module.exports = {
                 rec.heading = this.cellExit.h;
 
                 rec.character.arrestTime = 0;
+                rec.character.arrestType = 0;
                 rec.character.save();
 
                 notifs.success(rec, `Вы выпущены на свободу`, `Арест`);
@@ -150,6 +163,12 @@ module.exports = {
         if (player.character.wanted) player.character.update({
             wanted: 0
         });
+        if (player.character.arrestTime != time) player.character.update({
+            arrestTime: time
+        });
+        if (player.character.arrestType != 1) player.character.update({
+            arrestType: 1
+        });
         if (!cell) {
             var i = utils.randomInteger(0, this.jailCells.length - 1);
             cell = this.jailCells[i];
@@ -162,6 +181,8 @@ module.exports = {
         player.heading = cell.h;
         var playerId = player.id;
         var characterId = player.character.id;
+        clearTimeout(player.jailArrestTimer);
+        clearTimeout(player.cellArrestTimer);
         player.jailArrestDate = Date.now();
         player.jailArrestTimer = setTimeout(() => {
             try {
@@ -177,6 +198,7 @@ module.exports = {
                 rec.heading = this.jailExit.h;
 
                 rec.character.arrestTime = 0;
+                rec.character.arrestType = 0;
                 rec.character.save();
 
                 notifs.success(rec, `Вы выпущены на свободу`, `Арест`);

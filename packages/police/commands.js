@@ -54,8 +54,7 @@ module.exports = {
             var rec = mp.players.at(args[0]);
             if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
 
-            rec.character.wanted = args[1];
-            rec.character.save();
+            police.setWanted(player, args[1]);
 
             notifs.success(player, `${rec.name} имеет ${rec.character.wanted} ур.`, `Розыск`);
             notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур.`, `Розыск`);

@@ -230,6 +230,12 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('arrestTime', val);
             }
         },
+        // Типа ареста: 0 - КПЗ, 1 - тюрьма, 2 - деморган
+        arrestType: {
+            type: DataTypes.TINYINT(1),
+            defaultValue: 0,
+            allowNull: false
+        },
     }, {
         timestamps: false
     });
