@@ -121,6 +121,10 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             allowNull: false
         },
+        gunLicenseDate: {
+            type: DataTypes.DATE,
+            defaultValue: null
+        },
         /// Внешность
         gender: {
             type: DataTypes.INTEGER(11),

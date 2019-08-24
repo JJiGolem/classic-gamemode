@@ -591,6 +591,32 @@ module.exports = {
         notifs.success(player, `${rec.name} теперь в авто`, header);
         notifs.info(rec, `${player.name} посадил вас в авто`, header);
     },
+    "police.licenses.gun.give": (player, recId) => {
+        var header = `Лицензия на оружие`;
+        var rec = mp.players.at(recId);
+        if (!rec) return notifs.error(player, `Гражданин не найден`, header);
+        var character = rec.character;
+        if (character.gunLicenseDate) return notifs.error(player, `${rec.name} уже имеет лиензию`, header);
+
+        character.gunLicenseDate = new Date();
+        character.save();
+
+        notifs.success(player, `Выдана лицензия ${rec.name}`, header);
+        notifs.info(rec, `${player.name} выдал вам лицензию`, header);
+    },
+    "police.licenses.gun.take": (player, recId) => {
+        var header = `Лицензия на оружие`;
+        var rec = mp.players.at(recId);
+        if (!rec) return notifs.error(player, `Гражданин не найден`, header);
+        var character = rec.character;
+        if (!character.gunLicenseDate) return notifs.error(player, `${rec.name} не имеет лиензию`, header);
+
+        character.gunLicenseDate = null;
+        character.save();
+
+        notifs.success(player, ` Лицензия изъята ${rec.name}`, header);
+        notifs.info(rec, `${player.name} изъял у вас лицензию`, header);
+    },
     "playerDeath": (player) => {
         if (player.hasCuffs) police.setCuffs(player, false);
     },

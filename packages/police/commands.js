@@ -69,4 +69,20 @@ module.exports = {
             mp.events.call(`police.vehicle.put`, player, args[0]);
         }
     },
+    "/pgivelic": {
+        access: 6,
+        description: "Выдать игроку лицензию на оружие.",
+        args: "[ид_игрока]:n",
+        handler: (player, args, out) => {
+            mp.events.call(`police.licenses.gun.give`, player, args[0]);
+        }
+    },
+    "/ptakelic": {
+        access: 6,
+        description: "Забрать у игрока лицензию на оружие.",
+        args: "[ид_игрока]:n",
+        handler: (player, args, out) => {
+            mp.events.call(`police.licenses.gun.take`, player, args[0]);
+        }
+    },
 }
