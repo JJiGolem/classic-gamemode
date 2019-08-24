@@ -56,7 +56,6 @@ class SearchPage extends Component {
                     </div>
                 </div>
                 {
-                    taxi.location &&
                     <div
                         className='search_button_taxi-phone-react'
                         onClick={this.cancelOrder.bind(this)}
