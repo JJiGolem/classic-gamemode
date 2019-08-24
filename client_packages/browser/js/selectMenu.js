@@ -797,14 +797,14 @@ var selectMenu = new Vue({
                 name: "charactercreatename",
                 header: "Имя персоонажа", // заголовок меню, видимый на экране
                 items: [{
-                        text: "",
-                        values: ["Имя"],
+                        text: "Имя",
+                        values: [""],
                         i: 0,
                         type: "editable" // возможность редактирования значения пункта меню
                     },
                     {
-                        text: "",
-                        values: ["Фамилия"],
+                        text: "Фамилия",
+                        values: [""],
                         i: 0,
                         type: "editable" // возможность редактирования значения пункта меню
                     },
@@ -2439,7 +2439,7 @@ var selectMenu = new Vue({
         let self = this;
         window.addEventListener('keyup', function(e) {
             if (!self.menu) return;
-            if (busy.includes()) return;
+            if (busy.includes(["inventory", "chat", "terminal"])) return;
             self.onKeyUp(e);
         });
     }

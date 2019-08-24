@@ -121,6 +121,10 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             allowNull: false
         },
+        gunLicenseDate: {
+            type: DataTypes.DATE,
+            defaultValue: null
+        },
         /// Внешность
         gender: {
             type: DataTypes.INTEGER(11),
@@ -205,7 +209,33 @@ module.exports = (sequelize, DataTypes) => {
                 val = Math.clamp(val, 0, 100);
                 this.setDataValue('thirst', val);
             },
-        }
+        },
+        // Уровень розыска
+        wanted: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, 5);
+                this.setDataValue('wanted', val);
+            },
+        },
+        // Оставшееся время ареста
+        arrestTime: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false,
+            set(val) {
+                if (val < 0) val = 0;
+                this.setDataValue('arrestTime', val);
+            }
+        },
+        // Типа ареста: 0 - КПЗ, 1 - тюрьма, 2 - деморган
+        arrestType: {
+            type: DataTypes.TINYINT(1),
+            defaultValue: 0,
+            allowNull: false
+        },
     }, {
         timestamps: false
     });

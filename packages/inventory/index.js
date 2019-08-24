@@ -187,7 +187,7 @@ module.exports = {
         }
         return clientItem;
     },
-    async addItem(player, itemId, params, callback) {
+    async addItem(player, itemId, params, callback = () => {}) {
         var slot = this.findFreeSlot(player, itemId);
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(itemId).name} не найден`);
         var struct = [];
@@ -360,7 +360,7 @@ module.exports = {
                 player.setClothes(8, undershirtDefault, 0, 0);
             },
             "8": () => {
-                player.setClothes(4, 21, 0, 0);
+                player.setClothes(4, 18, 2, 0);
             },
             "9": () => {
                 var index = (player.character.gender == 0) ? 34 : 35;
