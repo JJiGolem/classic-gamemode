@@ -9,13 +9,13 @@
 
 let shape;
 let fishingPlace = {
-    x: 894.9740600585938,
-    y: -179.16798400878906,
-    z: 74.70034790039062,
+    x: -1850.4912744140625,
+    y: -1242.1881591796875,
+    z: 8.615778923034668,
     marker: {
-        x: 895.3949584960938,
-        y: -179.32843017578125,
-        z: 73.50028686523438,
+        x: -1850.1712744140625,
+        y: -1241.8881591796875,
+        z: 7.415778923034668,
         color: [255, 255, 125, 200],
     }
 }
@@ -25,17 +25,17 @@ module.exports = {
         this.createFishingPlace();
     },
     createFishingPlace() {
-        mp.blips.new(198, new mp.Vector3(fishingPlace.x, fishingPlace.y, fishingPlace.z),
+        mp.blips.new(68, new mp.Vector3(fishingPlace.x, fishingPlace.y, fishingPlace.z),
         {
-            name: `Таксопарк "Cuber"`,
+            name: `"Рыбалка"`,
             shortRange: true,
-            color: 70
+            color: 26
         });
         mp.markers.new(1, new mp.Vector3(fishingPlace.marker.x, fishingPlace.marker.y, fishingPlace.marker.z), 0.4,
             {
                 direction: new mp.Vector3(fishingPlace.marker.x, fishingPlace.marker.y, fishingPlace.marker.z),
                 rotation: 0,
-                color: taxiStation.marker.color,
+                color: fishingPlace.marker.color,
                 visible: true,
                 dimension: 0
             });
