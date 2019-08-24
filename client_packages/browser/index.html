@@ -198,8 +198,7 @@
                     <div class="name" :class="{button: item.location}" :style="{'text-align': item.location}">{{ item.text }}</div>
                     <div class="value" v-if="item.values && valuesType(index) != 1">
                         {{ item.values[item.i] }}
-                        <img
-                        :src="(menu.i != index)? 'img/selectMenu/edit.png' : 'img/selectMenu/edit-selected.png'" v-if="valuesType(index) == 3" />
+                        <img :src="(menu.i != index)? 'img/selectMenu/edit.png' : 'img/selectMenu/edit-selected.png'" v-if="valuesType(index) == 3" />
                     </div>
                     <div class="value color-type" v-else-if="item.values && valuesType(index) == 1" :style="{background: item.values[item.i]}"></div>
                 </div>
@@ -487,8 +486,7 @@
                 <!-- <div>Жажда <span class="thirst">{{ thirst }}</span>%</div> -->
             </div>
             <div class="body-items">
-                <div class="column"
-                    :class="{focus: itemDrag.item && itemDrag.accessColumns.bodyFocus == n-1}" v-for="n in 13" @mouseenter="onBodyItemEnter(n-1)" @mouseleave="onBodyItemLeave(n-1)">
+                <div class="column" :class="{focus: itemDrag.item && itemDrag.accessColumns.bodyFocus == n-1}" v-for="n in 13" @mouseenter="onBodyItemEnter(n-1)" @mouseleave="onBodyItemLeave(n-1)">
                     <!-- <div class="item" v-if="equipment[n-1]" v-bind:style="{backgroundImage: 'url(' + urlItemImg(equipment[n-1].itemId) + ')'}">
                        <div class="count" v-if="equipment[n-1].params.count">{{ equipment[n-1].params.count }}</div>
                        <div class="health" v-if="equipment[n-1].params.health" v-bind:style="{top: 100 - equipment[n-1].params.health + '%'}"></div>
@@ -654,13 +652,17 @@
                 <div>
                     <div class="pay" @click="pay($event)">
                         <div class="noevent">Оплатить</div>
-                        <svg class="noevent"><line x1="0" y1="0" x2="100%" y2="0"></line></svg>
+                        <svg class="noevent">
+                            <line x1="0" y1="0" x2="100%" y2="0"></line>
+                        </svg>
                     </div>
                 </div>
                 <div>
                     <div class="nopay" @click="refuse">
                         <div class="noevent">Отказаться</div>
-                        <svg class="noevent"><line x1="0" y1="0" x2="100%" y2="0"></line></svg>
+                        <svg class="noevent">
+                            <line x1="0" y1="0" x2="100%" y2="0"></line>
+                        </svg>
                     </div>
                 </div>
             </div>
@@ -696,7 +698,9 @@
             <div class="close" @click="show = false">x</div>
         </div>
         <div class="content scroll">
-            <div v-for="mess in messages" v-bind:class="[mess.type]"><p v-html="mess.text"></p></div>
+            <div v-for="mess in messages" v-bind:class="[mess.type]">
+                <p v-html="mess.text"></p>
+            </div>
         </div>
         <div class="footer">
             <input type="text" v-model="inputText" v-on:keyup.enter="onInputEnter" v-on:keyup.up="onInputUp" v-on:keyup.down="onInputDown" :ref="'input'" placeholder="classic command..." autofocus />
@@ -709,28 +713,28 @@
         <div class="players_list-head">
             <table rules="all">
                 <colgroup>
-                <col style="width: 10%"/>
-                <col style="width: 40%"/>
-                <col style="width: 40%"/>
-                <col style="width: 10%"/>
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>id</th>
-                    <th>Имя</th>
-                    <th>Организация</th>
-                    <th>ping</th>
-                </tr>
-            </thead>
+                    <col style="width: 10%" />
+                    <col style="width: 40%" />
+                    <col style="width: 40%" />
+                    <col style="width: 10%" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Имя</th>
+                        <th>Организация</th>
+                        <th>ping</th>
+                    </tr>
+                </thead>
             </table>
         </div>
         <div class="players_list-body">
             <table rules="all">
                 <colgroup>
-                    <col style="width: 10%"/>
-                    <col style="width: 40%"/>
-                    <col style="width: 40%"/>
-                    <col style="width: 10%"/>
+                    <col style="width: 10%" />
+                    <col style="width: 40%" />
+                    <col style="width: 40%" />
+                    <col style="width: 10%" />
                 </colgroup>
                 <tbody>
                     <tr v-for="player in players">
@@ -763,6 +767,332 @@
             <div class="number">№ {{ number }}</div>
         </div>
     </div>
+
+    <!-- ------------------------ ПЛАНШЕТ ПД ------------------------ -->
+    <link rel="stylesheet" type="text/css" href="css/mapCase.css" />
+    <link rel="stylesheet" type="text/css" href="css/mapCasePd.css" />
+
+    <script type="text/x-template" id="map-case-pd-dbSearch">
+        <div class="dbSearch">
+            <div class="logo"><img src="img/mapCase/pd-logo.svg"/></div>
+            <div class="title">ПОИСК ПО БАЗЕ ДАННЫХ</div>
+            <div class="dbSearch-menu">
+                <div class="main-line"></div>
+                <div :class="{focus: menuItemInFocus == 'phone'}" @click="onClickMenuItem('phone')">
+                    <div>Номер телефона</div>
+                    <div class="line"></div>
+                </div>
+                <div></div>
+                <div :class="{focus: menuItemInFocus == 'name'}" @click="onClickMenuItem('name')">
+                    <div>Имя или/и фамилия</div>
+                    <div class="line"></div>
+                </div>
+                <div></div>
+                <div :class="{focus: menuItemInFocus == 'car'}" @click="onClickMenuItem('car')">
+                    <div>Номер автомобиля</div>
+                    <div class="line"></div>
+                </div>
+            </div>
+            <div class="input">
+                <input
+                    :placeholder="menuItems[menuItemInFocus].hint"
+                    v-model="menuItems[menuItemInFocus].inputValue"
+                    @keypress="menuItems[menuItemInFocus].inputCheck($event)"
+                />
+            </div>
+            <div class="search" @click="search()">Поиск</diV>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="map-case-pd-dbResult">
+        <div class="dbResult board">
+            <div class="title">Результат: {{ list.length }}</div>
+            <div class="table">
+                <div class="head">
+                    <div class="first" @click="onClickSort('num')">
+                        <div>#</div>
+                        <svg :class="{focus: sortMod.mod == 'num'}" viewBox="0 0 9 16"><path v-for="path in arrows" :d="path" /></svg>
+                    </div>
+                    <div @click="onClickSort('name')">
+                        <div>Имя и фамилия</div>
+                        <svg :class="{focus: sortMod.mod == 'name'}" viewBox="0 0 9 16"><path v-for="path in arrows" :d="path" /></svg>
+                    </div>
+                    <div @click="onClickSort('phone')">
+                        <div>Номер телефона</div>
+                        <svg :class="{focus: sortMod.mod == 'phone'}" viewBox="0 0 9 16"><path v-for="path in arrows" :d="path" /></svg>
+                    </div>
+                    <div @click="onClickSort('address')">
+                        <div>Проживание</div>
+                        <svg :class="{focus: sortMod.mod == 'address'}" viewBox="0 0 9 16"><path v-for="path in arrows" :d="path" /></svg>
+                    </div>
+                </div>
+                <div class="tbody">
+                    <div class="record" @click="onClickRecord(record)" v-for="record in sortedList" :key="record.id">
+                        <div class="first"><div class="record-align">{{ record.num }}</div></div>
+                        <div><div class="record-align">{{ record.name }}</div></div>
+                        <div><div class="record-align">{{ record.phone }}</div></div>
+                        <div><div class="record-align">{{ record.address | textSplice(28) }}</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="map-case-pd-calls">
+        <div class="calls board">
+            <div class="title">Вызовы</div>
+            <div class="table">
+                <div class="head">
+                    <div class="first" @click="onClickSort('num')">
+                        <div>#</div>
+                        <svg :class="{focus: sortMod.mod == 'num'}" viewBox="0 0 9 16"><path v-for="path in arrows" :d="path" /></svg>
+                    </div>
+                    <div @click="onClickSort('name')">
+                        <div>Имя и фамилия</div>
+                        <svg :class="{focus: sortMod.mod == 'name'}" viewBox="0 0 9 16"><path v-for="path in arrows" :d="path" /></svg>
+                    </div>
+                    <div>Причина вызова</div>
+                    <div>Действие</div>
+                </div>
+                <div class="tbody">
+                    <div class="record" v-for="record in sortedList" :key="record.num">
+                        <div class="first"><div class="record-align">{{ record.num }}</div></div>
+                        <div><div class="record-align">{{ record.name }}</div></div>
+                        <div><div class="record-align">{{ record.description | textSplice(32) }}</div></div>
+                        <div><div class="record-align btn" @click="onClickAccept(record)">Принять</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="map-case-pd-wanted">
+        <div class="wanted board">
+            <div class="title">Список разыскиваемых</div>
+            <div class="table">
+                <div class="head">
+                    <div class="first" @click="onClickSort('num')">
+                        <div>#</div>
+                        <svg :class="{focus: sortMod.mod == 'num'}" viewBox="0 0 9 16"><path v-for="path in arrows" :d="path" /></svg>
+                    </div>
+                    <div @click="onClickSort('name')">
+                        <div>Имя и фамилия</div>
+                        <svg :class="{focus: sortMod.mod == 'name'}" viewBox="0 0 9 16"><path v-for="path in arrows" :d="path" /></svg>
+                    </div>
+                    <div>Причина</div>
+                    <div @click="onClickSort('danger')">
+                        <div>Опасность</div>
+                        <svg :class="{focus: sortMod.mod == 'danger'}" viewBox="0 0 9 16"><path v-for="path in arrows" :d="path" /></svg>
+                    </div>
+                </div>
+                <div class="tbody">
+                    <div class="record" @click="onClickRecord(record)" v-for="record in sortedList" :key="record.num">
+                        <div class="first"><div class="record-align">{{ record.num }}</div></div>
+                        <div><div class="record-align">{{ record.name }}</div></div>
+                        <div><div class="record-align">{{ record.description | textSplice(32) }}</div></div>
+                        <div><div class="record-align stars">
+                            <svg :class="{ fill: record.danger >= n }" v-for="n in 5" viewBox="0 0 14 14"><path :d="star"/></svg>
+                        </div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="map-case-pd-members">
+        <div class="members board">
+            <div class="title">Список сотрудников</div>
+            <div class="table" @click="hideModal($event)">
+                <div class="head">
+                    <div class="first" @click="onClickSort('num')">
+                        <div>#</div>
+                        <svg :class="{focus: sortMod.mod == 'num'}" viewBox="0 0 9 16"><path v-for="path in arrows" :d="path" /></svg>
+                    </div>
+                    <div @click="onClickSort('name')">
+                        <div>Имя и фамилия</div>
+                        <svg :class="{focus: sortMod.mod == 'name'}" viewBox="0 0 9 16"><path v-for="path in arrows" :d="path" /></svg>
+                    </div>
+                    <div @click="onClickSort('rank')">
+                        <div>Звание</div>
+                        <svg :class="{focus: sortMod.mod == 'rank'}" viewBox="0 0 9 16"><path v-for="path in arrows" :d="path" /></svg>
+                    </div>
+                    <div>Действие</div>
+                </div>
+                <div ref="membersBody" class="tbody" @scroll.passive="hideModal()">
+                    <div
+                        :class="['record', {focus: currentRecord == record}]"
+                        v-for="record in sortedList"
+                        :key="record.id"
+                        :style="{ pointerEvents: (currentRecord) ? 'none' : 'auto' }">
+                        <div class="first"><div class="record-align">{{ record.num }}</div></div>
+                        <div><div class="record-align">{{ record.name }}</div></div>
+                        <div><div class="record-align rank">{{ ranks[record.rank] }}</div></div>
+                        <div><div class="record-align btn" @click="showModal($event, record)">
+                            Действие
+                            <svg viewBox="0 0 12 6"><path d="M1 1L5.3753 4.50024C5.74052 4.79242 6.25948 4.79242 6.6247 4.50024L11 1"/></svg>
+                        </div></div>
+                    </div>
+                </div>
+                <div
+                    v-show="modalIsShow"
+                    class="action-modal"
+                    :style="modalStyles">
+                    <div class="btn" @click="onClickRaise()">Повысить</div>
+                    <div class="btn" @click="onClickLower()">Понизить</div>
+                    <div class="btn" @click="onClickDismiss()">Уволить</div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="map-case-pd-identification">
+        <div class="dbSearch identification">
+            <div class="logo"><img src="img/mapCase/identification.svg"/></div>
+            <div class="title">УСТАНОВЛЕНИЕ ЛИЧНОСТИ</div>
+            <div class="input">
+                <input
+                    placeholder="Введите ID..."
+                    v-model="inputValue"
+                    @keypress="inputCheck($event)"
+                />
+            </div>
+            <div class="search" @click="search()">Установить личность</diV>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="map-case-pd-profile">
+        <div class="profile">
+            <div class="title">Профиль</div>
+            <div class="body">
+                <div class="name">{{ profileData[currentMenuFocus].name }} <span>ID: {{ profileData[currentMenuFocus].id}}</span></div>
+                <div class="stars"><svg :class="{ fill: profileData[currentMenuFocus].danger >= n }" v-for="n in 5" viewBox="0 0 14 14"><path :d="star"/></svg></div>
+                <div>
+                    <div class="record" v-for="record in infoList" :key="record.key">{{ record.title }}<span>{{ profileData[currentMenuFocus][record.key] }}</span></div>
+                </div>
+                <div class="cause">Причина:<br />{{ profileData[currentMenuFocus].cause }}</div>
+                <div class="footer">
+                    <div class="btn" @click="showOverWindow('fine')"><img src="img/mapCase/receipt.svg"/></div>
+                    <div class="btn" @click="showOverWindow('wanted')"><img src="img/mapCase/handcuffs.svg"/></div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="map-case-pd-over-fine">
+        <div class="over verification fine">
+            <div class="header"> Выдача штрафа {{ profileData[currentMenuFocus].name}}</div>
+            <div class="title">Введите причину</div>
+            <div class="input"><input placeholder="Введите причину выдачи штрафа..." v-model="causeValue"/></div>
+            <div class="title">Введите сумму наказанния</div>
+            <div class="input"><input placeholder="Введите сумму..." v-model="amountValue" @keypress="inputCheck($event)"/></div>
+            <div class="btns">
+                <div class="btn" @click="give()">Выдать</div>
+                <div class="btn" @click="cancel()">Отмена</div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="map-case-pd-over-wanted">
+        <div class="over verification fine">
+            <div class="header"> Выдача розыска {{ profileData[currentMenuFocus].name}}</div>
+            <div class="title">Введите причину</div>
+            <div class="input"><input placeholder="Введите причину выдачи розыска..." v-model="causeValue"/></div>
+            <div class="title">Выберете степень опасности</div>
+            <div class="stars" @click="setDanger()"><svg
+                                :class="{ fill: overDanger >= n }"
+                                v-for="n in 5"
+                                viewBox="0 0 14 14"
+                                @mouseover="over(n)"
+                                @mouseout="over(0)">
+                                <path :d="star"/></svg></div>
+            <div class="btns">
+                <div class="btn" @click="give()">Выдать</div>
+                <div class="btn" @click="cancel()">Отмена</div>
+            </div>
+        </div>
+    </script>
+
+    <div id="map-case" class="w-bg" v-if="show && enable" v-cloak>
+        <div :class="['b-bg', type]">
+            <div :class="['screen', { blur: blurMod }]">
+                <div class="menu">
+                    <div class="header">
+                        <div class="menu-top">{{ certainData.menuHeader.top }}<br />{{ certainData.menuHeader.bottom}}</div>
+                        <div class="menu-bottom">
+                            <div>
+                                <img :src="certainData.menuHeaderImg" />
+                            </div>
+                            <div>
+                                {{ certainData.menuTitle }}<br />
+                                <span>{{ userName }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-body">
+                        <div :class="['menu-item', {focus: menuFocus == name}]" v-for="(item, name) in certainData.menuBody" :key="name" @click="onClickMenuItem(name)">
+                            <div>
+                                <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path v-for="path in item.img" :d="path" /></svg>
+                            </div>
+                            <div>{{ item.title }}</div>
+                        </div>
+                        <div v-if="emergencyCall" class="emergency" @click="emergencyCall(); showLoad();">
+                            Экстренный вызов
+                        </div>
+                    </div>
+                </div>
+                <div class="body">
+                    <div class="top-bar">
+                        <div>{{ time }}</div>
+                        <div><img src="img/mapCase/wifi.svg" /></div>
+                    </div>
+                    <div class="window">
+                        <keep-alive>
+                            <component :is="currentWindow" v-bind="dataForWindow"></component>
+                        </keep-alive>
+                        <div v-if="certainData.menuBody[menuFocus].windows.length > 1" class="back btn" @click="onClickBack">
+                            <img src="img/mapCase/return.svg" />
+                        </div>
+                    </div>
+                </div>
+                <div v-if="blurMod" class="blurShadow" @click="hidePopupMessage()"></div>
+            </div>
+            <div v-if="loadMod" class="load">
+                <div>Загрузка <span v-if="loadMod.waitingTime >= 0">({{ loadMod.waitingTime }}с)</span></div>
+                <div class="dots">
+                    <div :class="{focus: loadMod.loadCount % 3 == 0}">.</div>
+                    <div :class="{focus: loadMod.loadCount % 3 == 1}">.</div>
+                    <div :class="{focus: loadMod.loadCount % 3 == 2}">.</div>
+                </div>
+                <div class="message" v-html="loadMod.message"></div>
+            </div>
+            <div v-if="popupMessage" class="popup-message">
+                <div class="body">
+                    <div><img :src="'img/mapCase/' + popupMessage.img + '.svg'" /></div>
+                    <div v-html="popupMessage.message"></div>
+                </div>
+                <div class="hint">
+                    <div><img src="img/mapCase/tap.svg" /></div>
+                    <div>Кликните в любое место для закрытия окна</div>
+                </div>
+            </div>
+            <div v-if="verification" class="verification">
+                <div class="message" v-html="verification.message"></div>
+                <div class="btns">
+                    <div class="btn" @click="verification.accept()">Да</div>
+                    <div class="btn" @click="hideVerification()">Нет</div>
+                </div>
+            </div>
+            <keep-alive>
+                <component :is="currentOverWindow" v-bind="dataForWindow"></component>
+            </keep-alive>
+        </div>
+    </div>
+
+    <script src="js/mapCaseSvgPaths.js"></script>
+    <script src="js/mapCasePd.js"></script>
+    <script src="js/mapCase.js"></script>
+    <!-- ------------------------ ПЛАНШЕТ ПД ------------------------ -->
 
     <!-- ------------------------ REACT ------------------------------ -->
     <script async src="build/js/build.js" type="text/javascript"></script>

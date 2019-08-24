@@ -227,16 +227,22 @@ module.exports = {
         faction.blipColor = color;
         faction.save();
     },
-    addMember(faction, character) {
+    addMember(faction, player) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
+        var character = player.character;
         character.factionId = faction.id;
         character.factionRank = this.getMinRank(faction).id;
         character.save();
+
+        player.call(`mapCase.init`, [player.name, faction.id]);
     },
-    deleteMember(character) {
+    deleteMember(player) {
+        var character = player.character;
         character.factionId = null;
         character.factionRank = null;
         character.save();
+
+        player.call(`mapCase.enable`, [false]);
     },
     setRank(character, rank) {
         if (typeof rank == 'number') rank = this.getRank(character.factionId, rank);

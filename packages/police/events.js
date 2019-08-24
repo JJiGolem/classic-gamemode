@@ -10,10 +10,10 @@ module.exports = {
 
     },
     "characterInit.done": (player) => {
+        if (!factions.isPoliceFaction(player.character.factionId)) return;
+        player.call(`mapCase.init`, [player.name, player.character.factionId]);
+
         if (!player.character.arrestTime) return;
-
-        console.log(`arrestTime: ${player.character.arrestTime}`)
-
         var time = player.character.arrestTime;
         if (player.character.arrestType == 0) police.startCellArrest(player, null, time);
         else if (player.character.arrestType == 1) police.startJailArrest(player, null, time);
@@ -623,7 +623,7 @@ module.exports = {
     },
     "playerQuit": (player) => {
         if (!player.character.arrestTime) return;
-        var date = (player.character.arrestType == 0)? player.cellArrestDate : player.jailArrestDate;
+        var date = (player.character.arrestType == 0) ? player.cellArrestDate : player.jailArrestDate;
         var time = Date.now() - date;
         player.character.arrestTime -= time;
         player.character.save();
