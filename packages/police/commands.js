@@ -54,8 +54,7 @@ module.exports = {
             var rec = mp.players.at(args[0]);
             if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
 
-            rec.character.wanted = args[1];
-            rec.character.save();
+            police.setWanted(player, args[1]);
 
             notifs.success(player, `${rec.name} имеет ${rec.character.wanted} ур.`, `Розыск`);
             notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур.`, `Розыск`);
@@ -67,6 +66,22 @@ module.exports = {
         args: "[ид_игрока]:n",
         handler: (player, args, out) => {
             mp.events.call(`police.vehicle.put`, player, args[0]);
+        }
+    },
+    "/pgivelic": {
+        access: 6,
+        description: "Выдать игроку лицензию на оружие.",
+        args: "[ид_игрока]:n",
+        handler: (player, args, out) => {
+            mp.events.call(`police.licenses.gun.give`, player, args[0]);
+        }
+    },
+    "/ptakelic": {
+        access: 6,
+        description: "Забрать у игрока лицензию на оружие.",
+        args: "[ид_игрока]:n",
+        handler: (player, args, out) => {
+            mp.events.call(`police.licenses.gun.take`, player, args[0]);
         }
     },
 }

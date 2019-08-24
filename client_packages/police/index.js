@@ -9,9 +9,13 @@
 mp.police = {
     haveCuffs: false,
     followPlayer: null,
+    wanted: 0,
 
     setCuffs(enable) {
         this.haveCuffs = enable;
+    },
+    setWanted(val) {
+        this.wanted = val;
     },
     startFollowToPlayer(playerId) {
         var player = mp.players.atRemoteId(playerId);
@@ -25,6 +29,11 @@ mp.police = {
 
 mp.events.add("police.cuffs.set", (enable) => {
     mp.police.setCuffs(enable);
+});
+
+mp.events.add("police.wanted.set", (val) => {
+    mp.police.setWanted(val);
+    mp.game.gameplay.setFakeWantedLevel(val);
 });
 
 mp.events.add("render", () => {

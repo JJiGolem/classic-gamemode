@@ -78,7 +78,7 @@ module.exports = {
             if (!faction) return out.error(`Организация #${rec.character.factionId} не найдена`, player);
 
             out.info(`${player.name} уволил ${rec.name} из организации #${faction.id}`);
-            factions.deleteMember(rec.character);
+            factions.deleteMember(rec);
         }
     },
     "/fadd": {
@@ -94,7 +94,7 @@ module.exports = {
 
 
             out.info(`${player.name} добавил ${rec.name} в организацию #${faction.id}`);
-            factions.addMember(faction, rec.character);
+            factions.addMember(faction, rec);
         }
     },
     "/fgiverank": {

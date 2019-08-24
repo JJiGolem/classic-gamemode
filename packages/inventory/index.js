@@ -360,7 +360,7 @@ module.exports = {
                 player.setClothes(8, undershirtDefault, 0, 0);
             },
             "8": () => {
-                player.setClothes(4, 21, 0, 0);
+                player.setClothes(4, 18, 2, 0);
             },
             "9": () => {
                 var index = (player.character.gender == 0) ? 34 : 35;

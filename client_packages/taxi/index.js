@@ -22,6 +22,7 @@ mp.events.add('characterInit.done', () => {
 
 
 mp.events.add('taxi.jobmenu.show', (state) => {
+    mp.busy.add('taxi.jobmenu');
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["taxiJobMenu"])`);
     switch (state) {
         case 0:
@@ -36,6 +37,7 @@ mp.events.add('taxi.jobmenu.show', (state) => {
 
 
 mp.events.add('taxi.jobmenu.close', () => {
+    mp.busy.remove('taxi.jobmenu');
     mp.callCEFV(`selectMenu.show = false`);
 });
 
@@ -48,8 +50,14 @@ mp.events.add('taxi.jobmenu.employment', () => {
 mp.events.add('taxi.rent.show', (price) => {
     mp.gui.cursor.show(true, true);
     mp.callCEFV(`acceptWindow.header = 'Вы хотите арендовать такси за $${price}?';`);
-    mp.callCEFV(`acceptWindow.name = 'carsell';`);
+    mp.callCEFV(`acceptWindow.name = 'taxi_rent';`);
     mp.callCEFV(`acceptWindow.show = true;`);
-    mp.busy.add('vehicle_seller_accept');
+    mp.busy.add('taxi_rent');
+});
+
+mp.events.add('taxi.rent.close', () => {
+    mp.gui.cursor.show(false, false);
+    mp.callCEFV(`acceptWindow.show = false;`);
+    mp.busy.remove('taxi_rent');
 });
 

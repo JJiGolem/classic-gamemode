@@ -42,6 +42,8 @@ mp.events.add("characterInit.done", () => {
     mp.inventory.enable(true);
 });
 
+mp.events.add("inventory.enable", mp.inventory.enable);
+
 mp.events.add("inventory.initItems", mp.inventory.initItems);
 
 mp.events.add("inventory.setItemsInfo", mp.inventory.setItemsInfo);

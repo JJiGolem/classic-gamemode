@@ -39,7 +39,7 @@ module.exports = {
         if (!factions.canInvite(inviter)) return notifs.error(player, `У ${inviter.name} недостаточно прав`, `Приглашение`);
 
         var faction = factions.getFaction(inviter.character.factionId);
-        factions.addMember(faction, player.character);
+        factions.addMember(faction, player);
 
         notifs.success(inviter, `${player.name} вступил в организацию`, faction.name);
         notifs.success(player, `Добро пожаловать`, faction.name);
@@ -61,7 +61,7 @@ module.exports = {
         if (player.character.factionRank <= rec.character.factionRank) return notifs.error(player, `${rec.name} должен иметь ниже ранг`, `Увольнение`);
         if (!factions.canUval(player)) return notifs.error(player, `Недостаточно прав`, `Увольнение`);
 
-        factions.deleteMember(rec.character);
+        factions.deleteMember(rec);
         notifs.success(player, `${rec.name} уволен`, `Организация`);
         notifs.info(rec, `${player.name} вас уволил`, `Организация`);
     },

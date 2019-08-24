@@ -10,12 +10,13 @@ module.exports = {
 
     },
     "characterInit.done": (player) => {
+        if (!factions.isPoliceFaction(player.character.factionId)) return;
+        player.call(`mapCase.init`, [player.name, player.character.factionId]);
+
         if (!player.character.arrestTime) return;
-
-        console.log(`arrestTime: ${player.character.arrestTime}`)
-
         var time = player.character.arrestTime;
-        police.startCellArrest(player, null, time);
+        if (player.character.arrestType == 0) police.startCellArrest(player, null, time);
+        else if (player.character.arrestType == 1) police.startJailArrest(player, null, time);
     },
     "police.storage.clothes.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Police`);
@@ -591,13 +592,42 @@ module.exports = {
         notifs.success(player, `${rec.name} теперь в авто`, header);
         notifs.info(rec, `${player.name} посадил вас в авто`, header);
     },
+    "police.licenses.gun.give": (player, recId) => {
+        var header = `Лицензия на оружие`;
+        var rec = mp.players.at(recId);
+        if (!rec) return notifs.error(player, `Гражданин не найден`, header);
+        var character = rec.character;
+        if (character.gunLicenseDate) return notifs.error(player, `${rec.name} уже имеет лиензию`, header);
+
+        character.gunLicenseDate = new Date();
+        character.save();
+
+        notifs.success(player, `Выдана лицензия ${rec.name}`, header);
+        notifs.info(rec, `${player.name} выдал вам лицензию`, header);
+    },
+    "police.licenses.gun.take": (player, recId) => {
+        var header = `Лицензия на оружие`;
+        var rec = mp.players.at(recId);
+        if (!rec) return notifs.error(player, `Гражданин не найден`, header);
+        var character = rec.character;
+        if (!character.gunLicenseDate) return notifs.error(player, `${rec.name} не имеет лиензию`, header);
+
+        character.gunLicenseDate = null;
+        character.save();
+
+        notifs.success(player, ` Лицензия изъята ${rec.name}`, header);
+        notifs.info(rec, `${player.name} изъял у вас лицензию`, header);
+    },
     "playerDeath": (player) => {
         if (player.hasCuffs) police.setCuffs(player, false);
     },
     "playerQuit": (player) => {
         if (!player.character.arrestTime) return;
-        var time = Date.now() - player.cellArrestDate;
+        var date = (player.character.arrestType == 0) ? player.cellArrestDate : player.jailArrestDate;
+        var time = Date.now() - date;
         player.character.arrestTime -= time;
         player.character.save();
+        clearTimeout(player.cellArrestTimer);
+        clearTimeout(player.jailArrestTimer);
     },
 }
