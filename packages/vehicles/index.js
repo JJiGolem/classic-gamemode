@@ -120,6 +120,7 @@ module.exports = {
         return driver;
     },
     respawnVehicle(veh) {
+        if (!mp.vehicles.exists(veh)) return;
         clearInterval(veh.fuelTimer);
 
         if (veh.key == "admin") return veh.destroy(); /// Если админская, не респавним

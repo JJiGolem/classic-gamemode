@@ -39,13 +39,13 @@ module.exports = {
             return;
         }
 
-        if (vehicle.key == 'job' && seat == -1) {
-            switch (vehicle.owner) {
-                case 2:
-                    mp.events.call('taxi.vehicle.enter', player, vehicle);
-                    return;
-            }
-        }
+        // if (vehicle.key == 'job' && seat == -1) {
+        //     switch (vehicle.owner) {
+        //         case 2:
+        //             mp.events.call('taxi.vehicle.enter', player, vehicle);
+        //             return;
+        //     }
+        // }
 
         let isPrivate = false;
         if (vehicle.key == 'private' && vehicle.owner == player.character.id) {
@@ -96,6 +96,7 @@ module.exports = {
     "vehicles.engine.toggle": (player) => { /// Включение/выключение двигателя
         if (!player.vehicle) return;
         if (player.vehicle.key == "market") return;
+        if (player.vehicle.key == "job" && player.vehicle.owner == 2 && !player.vehicle.isActiveTaxi) return;
         if (player.vehicle.isBeingRepaired) return player.call('notifications.push.warning', ['Двигатель завести нельзя', 'Ремонт']);
         if (player.vehicle.fuel <= 0) return player.call('notifications.push.error', ['Нет топлива', 'Транспорт']);
         if (player.vehicle.engine == true) {

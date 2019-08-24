@@ -16,10 +16,18 @@ var acceptWindow = new Vue({
             if (this.name == 'carsell') {
                 mp.trigger('vehicles.sell.seller.accept', 1);
             }
+            if (this.name == 'taxi_rent') {
+                mp.trigger('callRemote', 'taxi.rent.accept', 1);
+                mp.trigger('taxi.rent.close');
+            }
         },
         decline() {
             if (this.name == 'carsell') {
                 mp.trigger('vehicles.sell.seller.accept', 0);
+            }
+            if (this.name == 'taxi_rent') {
+                mp.trigger('callRemote', 'taxi.rent.accept', 0);
+                mp.trigger('taxi.rent.close');
             }
         },
     }
