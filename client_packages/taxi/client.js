@@ -94,7 +94,7 @@ mp.events.add('taxi.client.car.enter', () => {
     isActiveTaxiClient = true;
     mp.callCEFR('taxi.client.order.inTaxi', []);
     mp.notify.info('Поставьте метку на карте и подтвердите выбор в приложении', 'Такси');
-    mp.events.call('chat.message.push', `!{#f3c800}Чтобы начать поездку, откройте карту и поставьте метку на пункте назначения`); //!{#009eec}${carInfo.properties.name}
+    mp.events.call('chat.message.push', `!{#f3c800}Чтобы начать поездку, откройте карту и поставьте метку на пункте назначения`);
     mp.events.call('chat.message.push', `!{#80c102}После этого нажмите !{#009eec}"Подтвердить" !{#80c102}в приложении на телефоне`);
 });
 

@@ -56,6 +56,14 @@ mp.events.add('taxi.driver.orders.take.ans', (ans, orderInfo) => {
             mp.notify.error('Вы не таксист', 'Такси');
             mp.callCEFR('taxi.driver.order.error', []);
             break;
+        case 4:
+            mp.notify.error('У вас нет прав на легковой транспорт', 'Такси');
+            mp.callCEFR('taxi.driver.order.error', []);
+            break;
+        case 5:
+            mp.notify.error('Вы уже взяли заказ', 'Такси');
+            mp.callCEFR('taxi.driver.order.error', []);
+            break;
     }
 });
 

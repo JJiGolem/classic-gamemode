@@ -1,6 +1,6 @@
 let taxi = require('./index.js');
 let money = call('money');
-// var vehicles = call('vehicles');
+let vehicles = call('vehicles');
 
 module.exports = {
     "init": () => {
@@ -33,6 +33,7 @@ module.exports = {
         if (player.character.job == 2) {
             mp.events.call("jobs.leave", player);
         } else {
+            if (!player.character.carLicense) return player.call('notifications.push.error', ['У вас нет прав на легковой транспорт', 'Такси'])
             mp.events.call("jobs.set", player, 2);
         }
     },
@@ -51,7 +52,10 @@ module.exports = {
     },
     "taxi.driver.orders.take": (player, orderId) => {
         if (player.character.job != 2) return player.call('taxi.driver.orders.take.ans', [3]);;
-        if (!player.vehicle) return player.call('taxi.driver.orders.take.ans', [2]);;
+        if (!player.vehicle) return
+        if (!player.character.carLicense) return player.call('taxi.driver.orders.take.ans', [4]);
+
+        if (player.currentTaxiDriverOrder || player.taxiDriverDestination) return player.call('taxi.driver.orders.take.ans', [5]);
         console.log(orderId);
         let order = taxi.getOrderById(orderId);
         console.log(`order ${order}`)
@@ -77,9 +81,14 @@ module.exports = {
         let order = player.currentTaxiDriverOrder;
         console.log(`Прибыли к клиенту ${order.clientId}`);
         let client = mp.players.at(order.clientId);
-        if (!client) return; // todo
-        if (!client.currentTaxiClientOrder) return; // todo
-        if (client.currentTaxiClientOrder.driverId != player.id) return; // todo
+        if (!client) return;
+        if (!player.vehicle || player.vehicle.plate != client.currentTaxiClientOrder.plate) {
+            mp.events.call('taxi.driver.order.cancel', player);
+            player.call('notifications.push.error', ['Заказ был принят из другого т/с, заказ отменен', 'Такси']);
+            return;
+        }
+        // if (!client.currentTaxiClientOrder) return;
+        // if (client.currentTaxiClientOrder.driverId != player.id) return;
 
         client.call('taxi.client.car.ready');
     },
@@ -91,6 +100,22 @@ module.exports = {
                 let driver = mp.players.at(player.currentTaxiClientOrder.driverId);
                 driver.call('taxi.driver.car.entered');
             }
+        }
+
+        if (vehicle.key == 'job' && vehicle.owner == 2 && seat == -1) {
+            console.log(`${player.name} сел в такси ${vehicle.id} таксистом`);
+            if (!vehicle.isActiveTaxi) {
+                player.call('taxi.rent.show', [taxi.getRentPrice()]);
+            } else {
+                if (vehicle.taxiDriverId != player.id) {
+                    player.call('notifications.push.error', ['Транспорт уже арендован', 'Такси']);
+                    player.removeFromVehicle();
+                }
+            }
+        }
+
+        if (seat == -1 && player.id == vehicle.taxiDriverId) {
+            clearTimeout(vehicle.taxiRespawnTimer);
         }
     },
     "taxi.client.app.confirm": (player, destination) => {
@@ -123,11 +148,11 @@ module.exports = {
         console.log(`водитель ${driver.name} привез игрока ${client.name} за $${price}`);
 
         client.call('taxi.client.destination.reach');
-        money.removeCash(client, price, function(result) {
+        money.removeCash(client, price, function (result) {
             if (result) {
                 client.call('notifications.push.success', ['Вы оплатили поездку', 'Такси']);
                 try {
-                    money.addMoney(driver, price, function(result) {
+                    money.addMoney(driver, price, function (result) {
                         if (result) {
                             driver.call('notifications.push.success', ['Деньги зачислены на счет', 'Такси']);
                         } else {
@@ -148,6 +173,11 @@ module.exports = {
     "playerQuit": (player) => {
         mp.events.call('taxi.client.order.cancel', player);
         mp.events.call('taxi.driver.order.cancel', player);
+        if (player.vehicle) {
+            if (player.vehicle.taxiDriverId == player.id) {
+                vehicles.respawnVehicle(player.vehicle);
+            }
+        }
     },
     "taxi.client.order.cancel": (player) => {
         taxi.deletePlayerOrders(player);
@@ -179,21 +209,33 @@ module.exports = {
             delete client.taxiClientDestination;
         }
     },
-    "taxi.vehicle.enter": (player, vehicle) => {
-        console.log(`${player.name} сел в такси ${vehicle.id} таксистом`);
-        if (!vehicle.isActiveTaxi) {
-            player.call('taxi.rent.show', [taxi.getRentPrice()]);
+    "taxi.rent.accept": (player, accept) => {
+        if (!accept || !player.vehicle) {
+            player.call('notifications.push.warning', ['Вы отказались от аренды', 'Такси']);
+            if (player.vehicle) player.removeFromVehicle();
+            return;
         }
-    }
+        let vehicle = player.vehicle;
+        if (vehicle.key != 'job' || vehicle.owner != 2) {
+            player.call('notifications.push.warning', ['Аренда невозможна', 'Такси']);
+            return;
+        }
+        // todo проверка на деньги и списание
+        vehicle.isActiveTaxi = true;
+        vehicle.taxiDriverId = player.id;
+        player.call('notifications.push.success', ['Вы арендовали транспорт', 'Такси']);
+    },
+    "playerExitVehicle": (player, vehicle) => {
+        if (vehicle.taxiDriverId == player.id) {
+            console.log('покинул такси');
+            player.call('notifications.push.warning', ['У вас есть 30 секунд, чтобы вернуться в транспорт', 'Такси']);
+            vehicle.taxiRespawnTimer = setTimeout(() => {
+                try {
+                        vehicles.respawnVehicle(vehicle);
+                } catch (err) {
+                    console.log(err)
+                }
+            }, 30000);
+        }
+    },
 }
-
-
-
-// money.removeCash(client, price, function(result) {
-//     if (result) {
-//         // уведомление об успехе
-//         // КОД С ОШИБКОЙ
-//     } else {
-//         // уведомление об ошибке
-//     }
-// });
