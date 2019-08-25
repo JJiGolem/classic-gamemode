@@ -3,7 +3,7 @@ var mapCase = require('./index');
 module.exports = {
     "init": async () => {},
     "mapCase.pd.searchByPhone": async (player, number) => {
-        console.log(`searchByPhone: ${number}`)
+        // console.log(`searchByPhone: ${number}`)
         var characters = await db.Models.Character.findAll({
             attributes: ['id', 'name'],
             limit: 20,
@@ -22,7 +22,7 @@ module.exports = {
         player.call(`mapCase.pd.resultData.set`, [result]);
     },
     "mapCase.pd.searchByName": async (player, name) => {
-        console.log(`searchByName: ${name}`)
+        // console.log(`searchByName: ${name}`)
         var characters = await db.Models.Character.findAll({
             attributes: ['id', 'name'],
             where: {
@@ -37,7 +37,7 @@ module.exports = {
         player.call(`mapCase.pd.resultData.set`, [result]);
     },
     "mapCase.pd.searchByCar": async (player, plate) => {
-        console.log(`searchByCar: ${plate}`)
+        // console.log(`searchByCar: ${plate}`)
         var vehicles = await db.Models.Vehicle.findAll({
             attributes: ['owner'],
             where: {
@@ -62,5 +62,22 @@ module.exports = {
         console.log(result)
         player.call(`mapCase.pd.resultData.set`, [result]);
     },
+    "mapCase.pd.getProfile": async (player, id) => {
+        // console.log(`getProfile: ${id}`)
+        var character = await db.Models.Character.findByPk(id, {
+            attributes: ['id', 'name', 'gender', 'wanted'],
+            include: [db.Models.Phone, db.Models.House, db.Models.Faction, db.Models.FactionRank],
+        });
+        var vehicles = await db.Models.Vehicle.findAll({
+            where: {
+                key: "owner",
+                owner: id
+            }
+        });
+        var result = mapCase.convertCharactersToProfileData(character, vehicles);
+        console.log(`result`)
+        console.log(result)
+        player.call(`mapCase.pd.profileData.set`, [result]);
 
+    },
 }

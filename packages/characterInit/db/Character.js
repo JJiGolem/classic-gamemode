@@ -220,6 +220,11 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('wanted', val);
             },
         },
+        // Причина розыска
+        wantedCause: {
+            type: DataTypes.STRING,
+            defaultValue: null
+        },
         // Оставшееся время ареста
         arrestTime: {
             type: DataTypes.INTEGER(11),

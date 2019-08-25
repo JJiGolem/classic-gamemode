@@ -252,31 +252,31 @@ module.exports = {
     },
     isGovernmentFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
-        return faction.id == 1;
+        return faction && faction.id == 1;
     },
     isPoliceFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
-        return faction.id == 2 || faction.id == 3;
+        return faction && (faction.id == 2 || faction.id == 3);
     },
     isFibFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
-        return faction.id == 4;
+        return faction && faction.id == 4;
     },
     isHospitalFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
-        return faction.id == 5;
+        return faction && faction.id == 5;
     },
     isArmyFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
-        return faction.id == 6;
+        return faction && faction.id == 6;
     },
     isNewsFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
-        return faction.id == 7;
+        return faction && faction.id == 7;
     },
     isStateFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
-        return faction.id >= 1 && faction.id <= 7;
+        return faction && (faction.id >= 1 && faction.id <= 7);
     },
     takeBox(player, type) {
         var header = "";

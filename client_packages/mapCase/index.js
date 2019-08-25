@@ -27,11 +27,20 @@ mp.mapCasePd = {
             var pos = array[i].housePos;
             array[i].num = i + 1;
             array[i].address = mp.utils.getStreetName(pos) || "-";
-            if (!array[i].phone) array[i].phone = "-";
         }
         if (typeof array == 'object') array = JSON.stringify(array);
         mp.callCEFV(`mapCasePdDBResultData.setResult('${array}')`);
-    }
+    },
+    setProfileData(data) {
+        var pos = data.housePos;
+        data.property = "-";
+        if (data.housePos) data.property = mp.utils.getStreetName(pos) + `, ${data.houseId}` || "-";
+        data.pass = 2608180000 + data.id;
+        data.gender = (data.gender)? "Ж" : "М";
+
+        if (typeof data == 'object') data = JSON.stringify(data);
+        mp.callCEFV(`mapCasePdProfileData.setProfileData('${data}')`);
+    },
 };
 
 mp.events.add("mapCase.init", (name, factionId) => {
@@ -50,3 +59,5 @@ mp.events.add("mapCase.init", (name, factionId) => {
 mp.events.add("mapCase.enable", mp.mapCase.enable);
 
 mp.events.add("mapCase.pd.resultData.set", mp.mapCasePd.setResultData);
+
+mp.events.add("mapCase.pd.profileData.set", mp.mapCasePd.setProfileData);

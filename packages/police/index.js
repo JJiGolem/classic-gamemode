@@ -73,8 +73,9 @@ module.exports = {
         }
         player.call("police.cuffs.set", [enable])
     },
-    setWanted(player, wanted) {
+    setWanted(player, wanted, cause) {
         player.character.wanted = wanted;
+        player.character.wantedCause = cause;
         player.character.save();
         player.call(`police.wanted.set`, [player.character.wanted]);
     },

@@ -459,6 +459,8 @@ var mapCasePdProfileData = {
         },
     ],
     setProfileData(data) {
+        if (typeof data == 'string') data = JSON.parse(data);
+
         this.profileData[mapCase.menuFocus] = data;
         mapCase.hideLoad();
         mapCasePdData.menuBody[mapCase.menuFocus].windows.push("profile");
@@ -641,24 +643,7 @@ mapCasePdIdentificationData.searchById = (value) => {
 //Функция, срабатывающая при запросе профиля по записи из списка
 //data - данные из записи
 mapCasePdData.getProfile = (data) => {
-    console.log(`Ищем профиль с id: ${data}`);
-
-    setTimeout(() => {
-        mapCasePdProfileData.setProfileData({
-            name: "Cyrus Raider",
-            id: 1,
-            danger: 3,
-            cause: "УК 2.1; УК 2.2; УК 4.2.1",
-            gender: "M",
-            property: "Paleto Bay, 3",
-            phone: 1234567,
-            pass: "passid",
-            faction: "Мэрия",
-            rank: "Старший уборщик",
-            veh: "Elegy Retro (ZBT007), Akuma Dinka (ZBT001)",
-            ...data,
-        });
-    }, 3000);
+    mp.trigger(`callRemote`, `mapCase.pd.getProfile`, data.id)
 }
 
 
