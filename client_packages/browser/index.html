@@ -709,7 +709,7 @@
 
     <!-- ------------------------ СПИСОК ИГРОКОВ ------------------------ -->
 
-    <div id="playersList" v-show="show">
+    <div id="playersList" :class="{inactive: loader}" v-show="show">
         <div class="players_list-head">
             <table rules="all">
                 <colgroup>
@@ -745,6 +745,11 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+        <div v-cloak="v-cloak" id="loader" class="loader lds-css ng-scope" v-if="loader">
+            <div class="lds-rolling">
+                <div></div>
+            </div>
         </div>
     </div>
 

@@ -2,6 +2,10 @@
 
 "use strict"
 
+var money = call('money');
+var notifs = call('notifications');
+var inventory = call('inventory');
+
 // "amb@world_human_stand_fishing@base base" - стоит
 // "amb@world_human_stand_fishing@idle_a idle_a" - медленно крутит
 // "amb@world_human_stand_fishing@idle_a idle_b" - медленно крутит и иногда тянет
@@ -19,6 +23,7 @@ let fishingPlace = {
         color: [255, 255, 125, 200],
     }
 }
+const ROD_PRICE = 100;
 
 module.exports = {
     init() {
@@ -42,5 +47,21 @@ module.exports = {
         shape = mp.colshapes.newSphere(fishingPlace.marker.x, fishingPlace.marker.y, fishingPlace.marker.z + 1, 1.2);
         shape.pos = new mp.Vector3(fishingPlace.marker.x, fishingPlace.marker.y, fishingPlace.marker.z);
         shape.isFishingPlace = true;
+    },
+    async buyRod(player) {
+        money.removeCash(player, ROD_PRICE, async function (result) { 
+            if (result) {
+                inventory.addItem(player, 126, {
+                    variation: 1,
+                    texture: 0,
+                    sex: 1,
+                });
+                player.call('fishing.rod.buy.ans', [1]);
+                notifs.success(player, "Удочка добавлена в инвентарь", "Покупка");
+            } else {
+                player.call('fishing.rod.buy.ans', [0]);
+                notifs.error(player, "Недостаточно денег", "Ошибка");
+            }
+        })
     }
 }

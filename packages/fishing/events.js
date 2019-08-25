@@ -31,6 +31,8 @@ module.exports = {
 
     },
     "fishing.rod.buy": (player) => {
-        
+        if (!player.character) return;
+
+        fishing.buyRod(player);
     },
 }

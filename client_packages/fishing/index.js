@@ -24,7 +24,6 @@ mp.events.add('fishing.menu.show', () => {
 
    mp.busy.add('fishingMenu');
    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["fishingMenu"])`);
-
    mp.callCEFV(`selectMenu.show = true`);
 });
 
@@ -34,6 +33,15 @@ mp.events.add('fishing.menu.close', () => {
 });
 
 mp.events.add('fishing.rod.buy', () => {
+    mp.callCEFV(`selectMenu.loader = true`);
     mp.events.callRemote('fishing.rod.buy');
-})
+});
+
+mp.events.add('fishing.rod.buy.ans', (ans) => {
+    mp.callCEFV(`selectMenu.loader = false`);
+
+    if (ans == 1) {
+        mp.events.call('fishing.menu.close');
+    }
+});
 
