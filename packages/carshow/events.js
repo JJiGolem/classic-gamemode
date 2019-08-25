@@ -1,7 +1,10 @@
 var carshow = require('./index.js');
 module.exports = {
     "init": () => {
-        carshow.init();
+        //carshow.init();
+    },
+    "vehicles.loaded": async () => {
+        await carshow.init();
     },
     "playerEnterColshape": (player, shape) => {
         if (shape.isCarShow) {
