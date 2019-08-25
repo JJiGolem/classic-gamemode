@@ -7,12 +7,10 @@ const PRICE_PER_KM = 30;
 
 let isActiveTaxiClient = false;
 mp.events.add('taxi.client.app.open', () => {
-    mp.chat.debug('open');
     mp.callCEFR('taxi.client.location', getClientLocation())
 });
 
 mp.events.add('taxi.client.app.search', () => {
-    mp.chat.debug('search');
     if (mp.players.local.vehicle) {
         mp.notify.error('Нельзя заказать такси из транспорта', 'Такси');
         mp.callCEFR('taxi.client.order.cancel', []);
@@ -98,16 +96,9 @@ mp.events.add('taxi.client.car.enter', () => {
     mp.events.call('chat.message.push', `!{#80c102}После этого нажмите !{#009eec}"Подтвердить" !{#80c102}в приложении на телефоне`);
 });
 
-mp.events.add("playerEnterColshape", (shape) => {
-    if (shape.isTaxiClientShape) {
-        mp.chat.debug('enter taxi client shape');
-    };
-});
-
 mp.events.add("playerExitColshape", (shape) => {
     if (shape.isTaxiClientShape) {
-        mp.chat.debug('exit taxi client shape');
-        //mp.events.call('taxi.client.waitshape.destroy');
+        mp.events.call('taxi.client.waitshape.leave');
     }
 });
 
@@ -119,7 +110,6 @@ function getClientLocation() {
 mp.events.add('taxi.client.waypoint.created', (position) => {
     mp.notify.info('Метка поставлена, подтвердите заказ в приложении', 'Такси');
     destination = position;
-    mp.chat.debug(`${JSON.stringify(position)}`);
     let area = mp.utils.getRegionName(position);
     let street = mp.utils.getStreetName(position);
     let price = calculatePrice(position);
@@ -177,19 +167,30 @@ setInterval(() => {
 }, 100);
 
 mp.events.add('taxi.client.order.canceled', () => {
-    mp.chat.debug('canceled by driver');
     mp.notify.error('Заказ отменен водителем', 'Такси');
     mp.events.call('taxi.client.waitshape.destroy');
     mp.callCEFR('taxi.client.order.cancel', []);
 });
 
 mp.events.add('taxi.client.app.cancel', () => {
-    mp.chat.debug('client cancel');
     mp.events.call('taxi.client.order.cancel');
 });
 
 mp.events.add('taxi.client.order.cancel', () => {
     mp.notify.warning('Вы отменили заказ', 'Такси');
     mp.events.call('taxi.client.waitshape.destroy');
+    mp.events.callRemote('taxi.client.order.cancel');
+});
+
+mp.events.add('taxi.client.car.leave', () => {
+    mp.notify.warning('Вы покинули такси, заказ отменен', 'Такси');
+    mp.events.call('taxi.client.waitshape.destroy');
+    mp.callCEFR('taxi.client.order.cancel', []);
+});
+
+mp.events.add('taxi.client.waitshape.leave', () => {
+    mp.notify.warning('Вы покинули зону ожидания, заказ отменен', 'Такси');
+    mp.events.call('taxi.client.waitshape.destroy');
+    mp.callCEFR('taxi.client.order.cancel', []);
     mp.events.callRemote('taxi.client.order.cancel');
 });

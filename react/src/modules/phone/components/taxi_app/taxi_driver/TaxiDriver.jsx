@@ -29,10 +29,6 @@ class TaxiDriver extends Component {
         //                 id: 1,
         //                 distance: 0.5
         //             },
-        //             {
-        //                 id: 2,
-        //                 distance: 2.0
-        //             },
         //         ]
         //     })
         // }, )

@@ -79,6 +79,8 @@ mp.events.add("characterInit.done", () => {
     mp.game.player.setHealthRechargeMultiplier(0);
 
     mp.utils.closeDoors();
+
+    mp.utils.requestIpls();
 });
 
 mp.events.add('characterInit.choose', () => {

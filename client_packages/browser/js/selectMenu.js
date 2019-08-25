@@ -1404,6 +1404,45 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "fishingMenu": {
+                name: "fishing",
+                header: "Рыбалка",
+                items: [
+                    {
+                        text: 'Купить удочку',
+                        i: 0,
+                        values: ["$100"]
+                    },
+                    {
+                        text: "Помощь",
+                        i: 0,
+                    },
+                    {
+                        text: "Закрыть",
+                        i: 0,
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Купить удочку') {
+                            mp.trigger(`fishing.rod.buy`);
+                        }
+                        if (e.itemName == 'Закрыть') {
+                            mp.trigger(`fishing.menu.close`);
+                        }
+                    }
+                }
+            },
             "factionGiveRank": {
                 name: "factionGiveRank",
                 header: "Название организации",

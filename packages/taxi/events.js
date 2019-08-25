@@ -32,9 +32,11 @@ module.exports = {
     "taxi.employment": (player) => {
         if (player.character.job == 2) {
             mp.events.call("jobs.leave", player);
+            player.call('phone.app.remove', ['taxi']);
         } else {
             if (!player.character.carLicense) return player.call('notifications.push.error', ['У вас нет прав на легковой транспорт', 'Такси'])
             mp.events.call("jobs.set", player, 2);
+            player.call('phone.app.add', ['taxi', null]);
         }
     },
     "taxi.client.order.send": (player) => {
@@ -52,9 +54,10 @@ module.exports = {
     },
     "taxi.driver.orders.take": (player, orderId) => {
         if (player.character.job != 2) return player.call('taxi.driver.orders.take.ans', [3]);;
-        if (!player.vehicle) return
+        if (!player.vehicle) return player.call('taxi.driver.orders.take.ans', [2]);
+        if (player.vehicle.properties.vehType != 0) return player.call('taxi.driver.orders.take.ans', [6]);
         if (!player.character.carLicense) return player.call('taxi.driver.orders.take.ans', [4]);
-
+        if (!player.vehicle.isActiveTaxi && (player.vehicle.key != 'private' && player.vehicle.owner != player)) return player.call('taxi.driver.orders.take.ans', [2]);
         if (player.currentTaxiDriverOrder || player.taxiDriverDestination) return player.call('taxi.driver.orders.take.ans', [5]);
         console.log(orderId);
         let order = taxi.getOrderById(orderId);
@@ -101,7 +104,12 @@ module.exports = {
                 driver.call('taxi.driver.car.entered');
             }
         }
-
+        if (seat == -1 && player.id == vehicle.taxiDriverId) {
+            console.log('чистим таймер')
+            clearTimeout(vehicle.taxiRespawnTimer);
+        }
+    },
+    "vehicle.ready": (player, vehicle, seat) => {
         if (vehicle.key == 'job' && vehicle.owner == 2 && seat == -1) {
             console.log(`${player.name} сел в такси ${vehicle.id} таксистом`);
             if (!vehicle.isActiveTaxi) {
@@ -112,10 +120,6 @@ module.exports = {
                     player.removeFromVehicle();
                 }
             }
-        }
-
-        if (seat == -1 && player.id == vehicle.taxiDriverId) {
-            clearTimeout(vehicle.taxiRespawnTimer);
         }
     },
     "taxi.client.app.confirm": (player, destination) => {
@@ -220,15 +224,31 @@ module.exports = {
             player.call('notifications.push.warning', ['Аренда невозможна', 'Такси']);
             return;
         }
-        // todo проверка на деньги и списание
-        vehicle.isActiveTaxi = true;
-        vehicle.taxiDriverId = player.id;
-        player.call('notifications.push.success', ['Вы арендовали транспорт', 'Такси']);
+
+        let price = taxi.getRentPrice();
+        if (player.character.cash < price) {
+            player.call('notifications.push.error', ['Недостаточно денег', 'Такси']);
+            if (player.vehicle) player.removeFromVehicle();
+            return;
+        }
+
+        money.removeCash(player, price, function (result) {
+            if (result) {
+                vehicle.isActiveTaxi = true;
+                vehicle.taxiDriverId = player.id;
+                player.call('notifications.push.success', ['Вы арендовали транспорт', 'Такси']);
+            } else {
+                player.call('notifications.push.error', ['Ошибка аренды', 'Такси']);
+                if (player.vehicle) player.removeFromVehicle();
+            }
+        });
+
     },
     "playerExitVehicle": (player, vehicle) => {
         if (vehicle.taxiDriverId == player.id) {
             console.log('покинул такси');
             player.call('notifications.push.warning', ['У вас есть 30 секунд, чтобы вернуться в транспорт', 'Такси']);
+            clearTimeout(vehicle.taxiRespawnTimer);
             vehicle.taxiRespawnTimer = setTimeout(() => {
                 try {
                         vehicles.respawnVehicle(vehicle);
@@ -236,6 +256,10 @@ module.exports = {
                     console.log(err)
                 }
             }, 30000);
+        }
+        if (player.taxiClientDestination) {
+            mp.events.call('taxi.client.order.cancel', player);
+            player.call('taxi.client.car.leave');
         }
     },
 }

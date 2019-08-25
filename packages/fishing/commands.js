@@ -2,7 +2,7 @@ module.exports = {
     "/fi": {
         access: 6,
         handler: (player, args) => {
-            player.position = new mp.Vector3(901.0866088867188, -180.15689086914062, 73.91134643554688 );
+            player.position = new mp.Vector3(-1847.9312744140625, -1248.7381591796875, 8.615778923034668 );
         }
     }
 }

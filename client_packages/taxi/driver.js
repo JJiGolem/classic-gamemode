@@ -6,7 +6,6 @@ let client = {};
 let destination = {};
 
 mp.events.add('taxi.driver.app.open', () => {
-    mp.chat.debug('driver open');
     mp.events.callRemote('taxi.driver.orders.get');
 });
 
@@ -17,7 +16,6 @@ mp.events.add('taxi.driver.orders.load', (orders) => {
 
 mp.events.add('taxi.driver.orders.add', (order) => {
     mp.notify.info('Получен новый заказ', 'Такси');
-    mp.chat.debug('add order');
     order = {
         id: order.orderId,
         distance: calculateDistanceToClient(order.position)
@@ -26,21 +24,16 @@ mp.events.add('taxi.driver.orders.add', (order) => {
 });
 
 mp.events.add('taxi.driver.orders.delete', (orderId) => {
-    mp.chat.debug('delete order');
     mp.callCEFR('taxi.driver.order.delete', [orderId]);
 });
 
 mp.events.add('taxi.driver.app.order.take', (orderId) => {
-    mp.chat.debug('take order');
-    mp.chat.debug(orderId);
     mp.events.callRemote('taxi.driver.orders.take', orderId);
 });
 
 mp.events.add('taxi.driver.orders.take.ans', (ans, orderInfo) => {
     switch (ans) {
         case 0:
-            mp.chat.debug(JSON.stringify(orderInfo.position));
-            mp.chat.debug(JSON.stringify(orderInfo.clientId));
             mp.notify.success('Заказ принят, следуйте по маршруту', 'Такси');
             createRouteToClient(orderInfo.position);
             break;
@@ -62,6 +55,10 @@ mp.events.add('taxi.driver.orders.take.ans', (ans, orderInfo) => {
             break;
         case 5:
             mp.notify.error('Вы уже взяли заказ', 'Такси');
+            mp.callCEFR('taxi.driver.order.error', []);
+            break;
+        case 5:
+            mp.notify.error('На этом транспорте работать нельзя', 'Такси');
             mp.callCEFR('taxi.driver.order.error', []);
             break;
     }
@@ -104,7 +101,6 @@ function createRouteToClient(pos) {
 
 mp.events.add("playerEnterColshape", (shape) => {
     if (shape.isRouteToClientShape) {
-        mp.chat.debug('enter route to client shape');
         mp.events.callRemote('taxi.driver.route.arrive');
         mp.events.call('taxi.driver.route.destroy');
         mp.notify.success('Ожидайте клиента', 'Такси');
@@ -113,13 +109,6 @@ mp.events.add("playerEnterColshape", (shape) => {
 
 mp.events.add('taxi.driver.car.entered', () => {
     mp.notify.info('Ожидайте, пока клиент не поставит метку на карте', 'Такси');
-});
-
-
-mp.events.add("playerExitColshape", (shape) => {
-    if (shape.isRouteToClientShape) {
-        mp.chat.debug('exit route to client shape');
-    }
 });
 
 mp.events.add("taxi.driver.route.destroy", () => {
@@ -140,7 +129,6 @@ mp.events.add("taxi.driver.route.destroy", () => {
 
 mp.events.add("taxi.driver.destination.confirmed", (destination, price) => {
     createFinalDestination(destination);
-    mp.chat.debug(`Ставим колшейп на ${JSON.stringify(destination)}`);
     mp.notify.success('Клиент поставил метку, следуйте по маршруту', 'Такси');
     mp.callCEFR('taxi.driver.order.way', [mp.utils.getRegionName(destination), mp.utils.getStreetName(destination), price]);
 
@@ -154,7 +142,7 @@ function createFinalDestination(pos) {
     destination.blip = mp.blips.new(1, pos, { color: 71, name: "Точка назначения" });
     destination.blip.setRoute(true);
 
-    destination.shape = mp.colshapes.newTube(pos.x, pos.y, -1000, 20.0, 2000.0, 0);
+    destination.shape = mp.colshapes.newTube(pos.x, pos.y, -1000, 50.0, 2000.0, 0);
     destination.shape.isFinalDestinationShape = true;
 }
 
@@ -197,8 +185,3 @@ mp.events.add("taxi.driver.order.canceled", () => {
     deleteFinalDestination();
     mp.callCEFR('taxi.driver.order.cancel', []);
 });
-
-setTimeout(() => {
-    mp.chat.debug('add app');
-    mp.callCEFR('phone.app.add', ['taxi', null]);
-}, 8000); // TEMP 
