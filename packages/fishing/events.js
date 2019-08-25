@@ -9,23 +9,28 @@ module.exports = {
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;
 
-        if (shape.isFishingPlace) {
+        if (shape.isFishingPlaceMenu) {
             player.call('chat.message.push', [`!{#ffffff}${player.name} зашел в колшейп fishing`]);
             player.call('fishing.menu.show');
+            player.currentColshape = shape;
+        }
+
+        if (shape.isFishingPlace) {
+            mp.events.call('fishing.start', player);
             player.currentColshape = shape;
         }
     },
     "playerExitColshape": (player, shape) => {
         if (!player.character) return;
 
-        if (shape.isFishingPlace) {
+        if (shape.isFishingPlaceMenu) {
             player.call('chat.message.push', [`!{#ffffff}${player.name} вышел с колшейпа fishing`]);
             player.call('fishing.menu.close');
             player.currentColshape = null;
         }
     },
     "fishing.start": (player) => {
-
+        player.call('fishing.start');
     },
     "fishing.end": (player) => {
 
