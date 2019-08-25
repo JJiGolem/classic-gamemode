@@ -17,6 +17,7 @@ module.exports = {
     },
     "hud.players.list": (player) => {
         if (player.character.admin > 0) {
+            player.call("hud.players.list.enable", [true]);
             player.call("hud.players.list", [hud.getPlayers()]);
         }
     }

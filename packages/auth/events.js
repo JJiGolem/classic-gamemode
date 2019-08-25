@@ -129,9 +129,6 @@ module.exports = {
                 lastIp: player.ip,
                 confirmEmail: 0,
             });
-            console.log("REGISTER");
-            console.log(player.account);
-            console.log("REGISTER END");
             player.accountRegistrated = true;
             /// Аккаунт зарегестрирован успешно
             player.call('auth.register.result', [9]);

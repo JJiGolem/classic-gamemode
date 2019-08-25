@@ -5,17 +5,19 @@
 module.exports = {
     getPlayers() {  
         return mp.players.toArray().map(currentPlayer => {
-            let faction;
+            if (currentPlayer.character) {
+                let faction;
             
-            if (currentPlayer.character.factionId != null) {
-                faction = factions.getFaction(currentPlayer.character.factionId).name;
-            }
+                if (currentPlayer.character.factionId != null) {
+                    faction = factions.getFaction(currentPlayer.character.factionId).name;
+                }
 
-            return {
-                id: currentPlayer.id,
-                name: currentPlayer.name,
-                ping: currentPlayer.ping,
-                faction: faction
+                return {
+                    id: currentPlayer.id,
+                    name: currentPlayer.name,
+                    ping: currentPlayer.ping,
+                    faction: faction
+                }
             }
         });
     }

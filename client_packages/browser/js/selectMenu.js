@@ -50,8 +50,7 @@ var selectMenu = new Vue({
                     if (eventName == "onItemValueChanged" && e.itemName == "Пол") {
                         selectMenu.menus["characterCreateMainMenu"].items[0].i = e.valueIndex;
                         selectMenu.menus["characterCreateParentsMenu"].items[2].i = e.valueIndex == 0 ? 0 : 4;
-                        selectMenu.menus["characterCreateViewMenu"].items = e.valueIndex == 0 ? selectMenu.menus["characterCreateViewMenu"].itemsMale :
-                            selectMenu.menus["characterCreateViewMenu"].itemsFemale;
+                        selectMenu.menus["characterCreateViewMenu"].items = e.valueIndex == 0 ? selectMenu.menus["characterCreateViewMenu"].itemsMale : selectMenu.menus["characterCreateViewMenu"].itemsFemale;
                         mp.trigger('characterInit.create.setGender', e.valueIndex);
                     }
                     if (eventName == "onEscapePressed") {
@@ -64,7 +63,6 @@ var selectMenu = new Vue({
                                 break;
                             case "Внешность":
                                 selectMenu.menu = selectMenu.menus["characterCreateViewMenu"];
-                                selectMenu.menu.items = selectMenu.menu.itemsMale;
                                 break;
                             case "Сохранить и продолжить":
                                 mp.trigger('characterInit.create.continue');
@@ -133,7 +131,7 @@ var selectMenu = new Vue({
                                 mp.trigger('characterInit.create.setFather', fathers[e.valueIndex]);
                                 break;
                             case "Сходство":
-                                let sim = [0, 25, 50, 75, 100];
+                                let sim = [100, 75, 50, 25, 0];
                                 mp.trigger('characterInit.create.setSimilarity', sim[e.valueIndex]);
                                 break;
                             case "Цвет кожи":
@@ -1406,6 +1404,45 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "fishingMenu": {
+                name: "fishing",
+                header: "Рыбалка",
+                items: [
+                    {
+                        text: 'Купить удочку',
+                        i: 0,
+                        values: ["$100"]
+                    },
+                    {
+                        text: "Помощь",
+                        i: 0,
+                    },
+                    {
+                        text: "Закрыть",
+                        i: 0,
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Купить удочку') {
+                            mp.trigger(`fishing.rod.buy`);
+                        }
+                        if (e.itemName == 'Закрыть') {
+                            mp.trigger(`fishing.menu.close`);
+                        }
+                    }
+                }
+            },
             "factionGiveRank": {
                 name: "factionGiveRank",
                 header: "Название организации",
@@ -2229,6 +2266,70 @@ var selectMenu = new Vue({
                         if (e.itemName == "Вернуться") selectMenu.showByName("armyStorage");
                         else mp.trigger(`callRemote`, `army.storage.ammo.take`, values);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
+                }
+            },
+            "dmvMenu": {
+                name: "dmv",
+                header: "Покупка лицензий",
+                items: [
+                    {
+                        text: 'Легковой транспорт',
+                        values: ["$100"]
+                    },
+                    {
+                        text: 'Пассажирский транспорт',
+                        values: ["$100"]
+                    },
+                    {
+                        text: 'Мотоциклы',
+                        values: ["$100"]
+                    },
+                    {
+                        text: 'Грузовой транспорт',
+                        values: ["$100"]
+                    },
+                    {
+                        text: 'Воздушный транспорт',
+                        values: ["$100"]
+                    },
+                    {
+                        text: 'Водный транспорт',
+                        values: ["$100"]
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        loader.show = true;
+                        mp.trigger(`dmv.menu.close`);
+                        if (e.itemName == 'Легковой транспорт') {
+                            mp.trigger('callRemote', 'dmv.license.buy', 0);
+                        }
+                        if (e.itemName == 'Пассажирский транспорт') {
+                            mp.trigger('callRemote', 'dmv.license.buy', 1);
+                        }
+                        if (e.itemName == 'Мотоциклы') {
+                            mp.trigger('callRemote', 'dmv.license.buy', 2);
+                        }
+                        if (e.itemName == 'Грузовой транспорт') {
+                            mp.trigger('callRemote', 'dmv.license.buy', 3);
+                        }
+                        if (e.itemName == 'Воздушный транспорт') {
+                            mp.trigger('callRemote', 'dmv.license.buy', 4);
+                        }
+                        if (e.itemName == 'Водный транспорт') {
+                            mp.trigger('callRemote', 'dmv.license.buy', 5);
+                        }
+                    }
                 }
             },
         },
