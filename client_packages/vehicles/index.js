@@ -258,7 +258,7 @@ mp.keys.bind(0x27, true, function () {
 });
 
 
-mp.keys.bind(0x28, false, () => {
+mp.keys.bind(0x28, true, () => {
     if (mp.busy.includes()) return;
     var player = mp.players.local;
     var vehicle = player.vehicle;
