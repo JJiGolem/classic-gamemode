@@ -75,7 +75,7 @@ module.exports = {
         }
         player.call("police.cuffs.set", [enable])
     },
-    setWanted(player, wanted, cause) {
+    setWanted(player, wanted, cause = null) {
         player.character.wanted = wanted;
         player.character.wantedCause = cause;
         player.character.save();
@@ -215,5 +215,14 @@ module.exports = {
                 console.log(err.stack);
             }
         }, time);
+    },
+    getWanted() {
+        var wanted = [];
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!rec.character.wanted) return;
+            wanted.push(rec);
+        });
+        return wanted;
     },
 };

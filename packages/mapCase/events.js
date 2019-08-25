@@ -10,19 +10,18 @@ module.exports = {
         if (player.character.wanted) mapCase.addPoliceWanted(player);
         if (!factions.isPoliceFaction(player.character.factionId)) return;
         player.call(`mapCase.pd.calls.add`, [mapCase.policeCalls]);
-        var wanted = [];
-        mp.players.forEach((rec) => {
-            if (!rec.character) return;
-            if (!rec.character.wanted) return;
-            wanted.push({
-                id: rec.character.id,
-                name: rec.name,
-                description: rec.character.wantedCause,
-                danger: rec.character.wanted
-            });
-        });
-        if (!wanted.length) return;
+
+        var wanted = police.getWanted();
+        wanted = mapCase.convertWanted(wanted);
         player.call(`mapCase.pd.wanted.add`, [wanted]);
+
+        var ranks = factions.getRankNames(player.character.factionId);
+        player.call(`mapCase.pd.ranks.set`, [ranks]);
+
+        var members = factions.getMembers(player);
+        members = mapCase.convertMembers(members);
+        player.call(`mapCase.pd.members.add`, [members]);
+        mapCase.addPoliceMember(player);
     },
     "mapCase.pd.searchByPhone": async (player, number) => {
         // console.log(`searchByPhone: ${number}`)
@@ -154,5 +153,7 @@ module.exports = {
         if (!player.character) return;
         mapCase.removePoliceCall(player.character.id);
         if (player.character.wanted) mapCase.removePoliceWanted(player.character.id);
+        if (!factions.isPoliceFaction(player.character.factionId)) return;
+        mapCase.removePoliceMember(player);
     },
 }

@@ -58,6 +58,17 @@ mp.mapCasePd = {
     removeWanted(id) {
         mp.callCEFV(`mapCasePdWantedData.remove(${id})`);
     },
+    addMember(members) {
+        if (typeof members == 'object') members = JSON.stringify(members);
+        mp.callCEFV(`mapCasePdMembersData.add('${members}')`);
+    },
+    removeMember(id) {
+        mp.callCEFV(`mapCasePdMembersData.remove(${id})`);
+    },
+    setRanks(ranks) {
+        if (typeof ranks == 'object') ranks = JSON.stringify(ranks);
+        mp.callCEFV(`mapCasePdMembersData.setRanks('${ranks}')`);
+    },
 };
 
 mp.events.add("mapCase.init", (name, factionId) => {
@@ -88,3 +99,9 @@ mp.events.add("mapCase.pd.calls.remove", mp.mapCasePd.removeCall);
 mp.events.add("mapCase.pd.wanted.add", mp.mapCasePd.addWanted);
 
 mp.events.add("mapCase.pd.wanted.remove", mp.mapCasePd.removeWanted);
+
+mp.events.add("mapCase.pd.members.add", mp.mapCasePd.addMember);
+
+mp.events.add("mapCase.pd.members.remove", mp.mapCasePd.removeMember);
+
+mp.events.add("mapCase.pd.ranks.set", mp.mapCasePd.setRanks);

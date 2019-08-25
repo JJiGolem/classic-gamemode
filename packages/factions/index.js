@@ -244,6 +244,15 @@ module.exports = {
 
         player.call(`mapCase.enable`, [false]);
     },
+    getMembers(player) {
+        var members = [];
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+            members.push(rec);
+        });
+        return members;
+    },
     setRank(character, rank) {
         if (typeof rank == 'number') rank = this.getRank(character.factionId, rank);
 

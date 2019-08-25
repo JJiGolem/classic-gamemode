@@ -56,6 +56,31 @@ module.exports = {
             veh: vehNames.join(", ").trim() || "-",
         };
     },
+    convertWanted(wanted) {
+        var result = [];
+        for (var i = 0; i < wanted.length; i++) {
+            var rec = wanted[i];
+            result.push({
+                id: rec.character.id,
+                name: rec.name,
+                description: rec.character.wantedCause,
+                danger: rec.character.wanted
+            });
+        }
+        return result;
+    },
+    convertMembers(members) {
+        var result = [];
+        for (var i = 0; i < members.length; i++) {
+            var rec = members[i];
+            var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank);
+            result.push({
+                name: rec.name,
+                rank: rank.rank
+            });
+        }
+        return result;
+    },
     addPoliceCall(player, description) {
         this.removePoliceCall(player.character.id);
         var call = {
@@ -110,6 +135,23 @@ module.exports = {
             if (!rec.character) return;
             if (!factions.isPoliceFaction(rec.character.factionId)) return;
             rec.call(`mapCase.pd.wanted.remove`, [id]);
+        });
+    },
+    addPoliceMember(player) {
+        if (!factions.isPoliceFaction(player.character.factionId)) return;
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isPoliceFaction(rec.character.factionId)) return;
+
+            rec.call(`mapCase.pd.members.add`, [this.convertMembers(player)]);
+        });
+    },
+    removePoliceMember(player) {
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isPoliceFaction(rec.character.factionId)) return;
+
+            rec.call(`mapCase.pd.members.remove`, [player.character.id]);
         });
     },
 };

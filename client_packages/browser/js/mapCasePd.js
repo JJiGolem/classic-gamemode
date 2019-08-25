@@ -450,7 +450,25 @@ var mapCasePdMembersData = {
         }
     },
     setRanks(ranksList) {
+        if (typeof ranksList == 'string') ranksList = JSON.parse(ranksList);
         this.ranks = ranksList;
+    },
+    add(members) {
+        if (typeof members == 'string') members = JSON.parse(members);
+        if (!Array.isArray(members)) members = [members];
+        for (var i = 0; i < members.length; i++) {
+            this.remove(members[i].id);
+            members[i].num = members[i].id;
+            this.list.push(members[i]);
+        }
+    },
+    remove(id) {
+        for (var i = 0; i < this.list.length; i++) {
+            if (this.list[i].id == id) {
+                this.list.splice(i, 1);
+                i--;
+            }
+        }
     },
     dismiss(data) {},
     lowerRank(data) {},
@@ -765,80 +783,50 @@ mapCasePdProfileData.giveWanted = (cause, danger, profileData) => {
 
 
 //for tests
-mapCasePdMembersData.list = [{
-        num: 1,
-        name: "Curys Raider",
-        rank: 0,
-    },
-    {
-        num: 2,
-        name: "Curysirusew Raiderderder",
-        rank: 0,
-    },
-    {
-        num: 3,
-        name: "Curysirusew Raiderderder",
-        rank: 1,
-    },
-    {
-        num: 4,
-        name: "Curys Raider",
-        rank: 2,
-    },
-    {
-        num: 5,
-        name: "Curys Raider",
-        rank: 2,
-    },
-    {
-        num: 6,
-        name: "Curys Raider",
-        rank: 2,
-    },
-    {
-        num: 7,
-        name: "Curys Raider",
-        rank: 1,
-    },
-    {
-        num: 8,
-        name: "Curys Raider",
-        rank: 1,
-    },
-    {
-        num: 9,
-        name: "Curys Raider",
-        rank: 1,
-    },
-];
-
-// mapCasePdWantedData.list = [{
-//         id: "111", //for tests
+// mapCasePdMembersData.list = [{
 //         num: 1,
 //         name: "Curys Raider",
-//         description: "ПАльпака покусал",
-//         danger: 5,
+//         rank: 0,
 //     },
 //     {
-//         id: "111", //for tests
 //         num: 2,
-//         name: "Curysirusew RaidWWderder",
-//         description: "Альпака покусал",
-//         danger: 3,
+//         name: "Curysirusew Raiderderder",
+//         rank: 0,
 //     },
 //     {
-//         id: "111", //for tests
 //         num: 3,
 //         name: "Curysirusew Raiderderder",
-//         description: "Альпака покусал",
-//         danger: 4,
+//         rank: 1,
 //     },
 //     {
-//         id: "111", //for tests
 //         num: 4,
 //         name: "Curys Raider",
-//         description: "Альпака покусал",
-//         danger: 1,
+//         rank: 2,
+//     },
+//     {
+//         num: 5,
+//         name: "Curys Raider",
+//         rank: 2,
+//     },
+//     {
+//         num: 6,
+//         name: "Curys Raider",
+//         rank: 2,
+//     },
+//     {
+//         num: 7,
+//         name: "Curys Raider",
+//         rank: 1,
+//     },
+//     {
+//         num: 8,
+//         name: "Curys Raider",
+//         rank: 1,
+//     },
+//     {
+//         num: 9,
+//         name: "Curys Raider",
+//         rank: 1,
 //     },
 // ];
 
