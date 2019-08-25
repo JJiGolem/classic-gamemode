@@ -235,9 +235,11 @@ module.exports = {
         character.save();
 
         player.call(`mapCase.init`, [player.name, faction.id]);
+        if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
     },
     deleteMember(player) {
         var character = player.character;
+        if (this.isPoliceFaction(character.factionId)) require('../mapCase').removePoliceMember(player);
         character.factionId = null;
         character.factionRank = null;
         character.save();

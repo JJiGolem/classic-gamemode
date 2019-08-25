@@ -8,7 +8,8 @@ module.exports = {
     "init": async () => {},
     "characterInit.done": (player) => {
         if (player.character.wanted) mapCase.addPoliceWanted(player);
-        if (!factions.isPoliceFaction(player.character.factionId)) return;
+    },
+    "mapCase.pd.init": (player) => {
         player.call(`mapCase.pd.calls.add`, [mapCase.policeCalls]);
 
         var wanted = police.getWanted();

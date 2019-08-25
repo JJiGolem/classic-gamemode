@@ -12,6 +12,7 @@ module.exports = {
     "characterInit.done": (player) => {
         if (!factions.isPoliceFaction(player.character.factionId)) return;
         player.call(`mapCase.init`, [player.name, player.character.factionId]);
+        mp.events.call(`mapCase.pd.init`, player);
 
         if (!player.character.arrestTime) return;
         var time = player.character.arrestTime;
