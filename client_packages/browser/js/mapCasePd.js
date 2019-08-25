@@ -421,6 +421,23 @@ var mapCasePdWantedData = {
             this.mod = mod;
         }
     },
+    add(wanted) {
+        if (typeof wanted == 'string') wanted = JSON.parse(wanted);
+        if (!Array.isArray(wanted)) wanted = [wanted];
+        for (var i = 0; i < wanted.length; i++) {
+            this.remove(wanted[i].id);
+            wanted[i].num = wanted[i].id;
+            this.list.push(wanted[i]);
+        }
+    },
+    remove(id) {
+        for (var i = 0; i < this.list.length; i++) {
+            if (this.list[i].id == id) {
+                this.list.splice(i, 1);
+                i--;
+            }
+        }
+    }
 }
 
 var mapCasePdMembersData = {
@@ -795,34 +812,34 @@ mapCasePdMembersData.list = [{
     },
 ];
 
-mapCasePdWantedData.list = [{
-        id: "111", //for tests
-        num: 1,
-        name: "Curys Raider",
-        description: "ПАльпака покусал",
-        danger: 5,
-    },
-    {
-        id: "111", //for tests
-        num: 2,
-        name: "Curysirusew RaidWWderder",
-        description: "Альпака покусал",
-        danger: 3,
-    },
-    {
-        id: "111", //for tests
-        num: 3,
-        name: "Curysirusew Raiderderder",
-        description: "Альпака покусал",
-        danger: 4,
-    },
-    {
-        id: "111", //for tests
-        num: 4,
-        name: "Curys Raider",
-        description: "Альпака покусал",
-        danger: 1,
-    },
-];
+// mapCasePdWantedData.list = [{
+//         id: "111", //for tests
+//         num: 1,
+//         name: "Curys Raider",
+//         description: "ПАльпака покусал",
+//         danger: 5,
+//     },
+//     {
+//         id: "111", //for tests
+//         num: 2,
+//         name: "Curysirusew RaidWWderder",
+//         description: "Альпака покусал",
+//         danger: 3,
+//     },
+//     {
+//         id: "111", //for tests
+//         num: 3,
+//         name: "Curysirusew Raiderderder",
+//         description: "Альпака покусал",
+//         danger: 4,
+//     },
+//     {
+//         id: "111", //for tests
+//         num: 4,
+//         name: "Curys Raider",
+//         description: "Альпака покусал",
+//         danger: 1,
+//     },
+// ];
 
 //mapCasePdIdentificationData.waitingTime = 5;

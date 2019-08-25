@@ -1,4 +1,6 @@
 "use strict";
+var factions = require('../factions');
+var mapCase = require('../mapCase');
 var notifs = require('../notifications');
 var utils = require('../utils');
 
@@ -78,6 +80,12 @@ module.exports = {
         player.character.wantedCause = cause;
         player.character.save();
         player.call(`police.wanted.set`, [player.character.wanted]);
+
+        if (!player.character.wanted) {
+            mapCase.removePoliceWanted(player.character.id);
+        } else {
+            mapCase.addPoliceWanted(player);
+        }
     },
     getNearCell(player) {
         return this.cells[0]; // tests

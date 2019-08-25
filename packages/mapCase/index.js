@@ -93,4 +93,23 @@ module.exports = {
     acceptPoliceCall(id) {
         return this.removePoliceCall(id);
     },
+    addPoliceWanted(player) {
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isPoliceFaction(rec.character.factionId)) return;
+            rec.call(`mapCase.pd.wanted.add`, [{
+                id: player.character.id,
+                name: player.name,
+                description: player.character.wantedCause || "-",
+                danger: player.character.wanted
+            }]);
+        });
+    },
+    removePoliceWanted(id) {
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isPoliceFaction(rec.character.factionId)) return;
+            rec.call(`mapCase.pd.wanted.remove`, [id]);
+        });
+    },
 };
