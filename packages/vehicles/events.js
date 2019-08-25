@@ -175,6 +175,7 @@ module.exports = {
         vehicle.setVariable("trunk", state);
     },
     "characterInit.done": (player) => {
+        console.log('init done for vehicles');
         mp.events.call('vehicles.private.load', player);
     },
     "vehicles.private.load": (player) => {

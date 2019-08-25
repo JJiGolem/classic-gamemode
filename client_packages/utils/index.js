@@ -100,6 +100,14 @@ mp.utils = {
         mp.game.object.doorControl(520341586, -14.86892, -1441.182, 31.19323, true, 0.0, 0.0, 0.01);
 
     },
+    /// Загрузка IPL
+    requestIpls() {
+        /// Больница
+        mp.game.streaming.requestIpl("coronertrash");
+        mp.game.streaming.requestIpl("Coroner_Int_On");
+        /// DMV
+        mp.game.streaming.requestIpl("ex_dt1_02_office_02b");
+    }
 
 };
 
