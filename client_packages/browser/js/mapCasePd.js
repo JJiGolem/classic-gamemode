@@ -622,15 +622,7 @@ var mapCasePdData = {
 //Функция, срабатывающая при принятии вызова
 //data - данные о вызове
 mapCasePdCallsData.accept = (data) => {
-
-    setTimeout(() => {
-        let index = mapCasePdCallsData.list.indexOf(data);
-
-        mapCasePdCallsData.list.splice(index, 1);
-
-        mapCase.showGreenMessage(`Вы приняли вызов от <br/><span>${data.name}</span>`);
-
-    }, 3000);
+    mp.trigger(`callRemote`, `mapCase.pd.calls.accept`, data.id);
 }
 
 

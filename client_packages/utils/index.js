@@ -100,7 +100,6 @@ mp.utils = {
         mp.game.object.doorControl(520341586, -14.86892, -1441.182, 31.19323, true, 0.0, 0.0, 0.01);
 
     },
-
 };
 
 
@@ -120,4 +119,9 @@ mp.events.add("blur", (enable, time = 1000) => {
 // Вкл визуальный эффект
 mp.events.add('effect', (effect, duration) => {
     mp.game.graphics.startScreenEffect(effect, duration, false);
+});
+
+// Установить пусть GPS на карте
+mp.events.add("waypoint.set", (x, y) => {
+    mp.game.ui.setNewWaypoint(x, y);
 });

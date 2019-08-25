@@ -81,12 +81,16 @@ module.exports = {
                 deleted = true;
             }
         }
-        if (!deleted) return;
+        if (!deleted) return false;
         mp.players.forEach((rec) => {
             if (!rec.character) return;
             if (!factions.isPoliceFaction(rec.character.factionId)) return;
 
             rec.call(`mapCase.pd.calls.remove`, [id])
         });
-    }
+        return true;
+    },
+    acceptPoliceCall(id) {
+        return this.removePoliceCall(id);
+    },
 };
