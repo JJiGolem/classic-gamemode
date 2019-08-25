@@ -271,6 +271,9 @@ module.exports = (sequelize, DataTypes) => {
         model.hasOne(models.House, {
             foreignKey: "characterId",
         });
+        model.hasMany(models.Fine, {
+            foreignKey: "recId"
+        });
     };
     return model;
 };

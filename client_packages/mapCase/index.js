@@ -16,6 +16,9 @@ mp.mapCase = {
     userName(val) {
         mp.callCEFV(`mapCase.userName = "${val}"`);
     },
+    showGreenMessage(text) {
+        mp.callCEFV(`mapCase.showGreenMessage('${text}')`);
+    },
 };
 mp.mapCasePd = {
     menuHeader(top, bottom) {
@@ -57,6 +60,8 @@ mp.events.add("mapCase.init", (name, factionId) => {
 });
 
 mp.events.add("mapCase.enable", mp.mapCase.enable);
+
+mp.events.add("mapCase.message.green.show", mp.mapCase.showGreenMessage)
 
 mp.events.add("mapCase.pd.resultData.set", mp.mapCasePd.setResultData);
 

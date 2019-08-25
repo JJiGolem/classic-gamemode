@@ -59,7 +59,6 @@ module.exports = {
             include: [db.Models.Phone, db.Models.House],
         });
         var result = mapCase.convertCharactersToResultData(characters);
-        console.log(result)
         player.call(`mapCase.pd.resultData.set`, [result]);
     },
     "mapCase.pd.getProfile": async (player, id) => {
@@ -75,9 +74,22 @@ module.exports = {
             }
         });
         var result = mapCase.convertCharactersToProfileData(character, vehicles);
-        console.log(`result`)
-        console.log(result)
         player.call(`mapCase.pd.profileData.set`, [result]);
 
+    },
+    "mapCase.pd.fines.give": async (player, data) => {
+        data = JSON.parse(data);
+
+        var fine = await db.Models.Fine.create({
+            copId: player.character.id,
+            recId: data.recId,
+            cause: data.cause,
+            price: data.price
+        });
+        var rec = mp.players.getBySqlId(data.recId);
+        if (rec) rec.character.Fines.push(fine);
+
+        var text = `Штраф на сумму <span>${fine.price}$</span><br/>выдан <span>${data.recName}</span><br/> по причине <span>${data.cause}</span>`;
+        player.call(`mapCase.message.green.show`, [text]);
     },
 }

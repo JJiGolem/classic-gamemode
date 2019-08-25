@@ -715,9 +715,13 @@ mapCasePdMembersData.raiseRank = (data) => {
 //Функция, срабатывающая при выдаче штрафа
 //cause - причина; amount - сумма к уплате; profileData - данные профиля
 mapCasePdProfileData.giveFine = (cause, amount, profileData) => {
-    setTimeout(() => {
-        mapCase.showGreenMessage(`Штраф на сумму <span>${amount}$</span><br/>выдан <span>${profileData.name}</span><br/> по причине <span>${cause}</span>`);
-    }, 3000);
+    var data = {
+        recId: profileData.id,
+        recName: profileData.name,
+        cause: cause,
+        price: amount
+    };
+    mp.trigger(`callRemote`, `mapCase.pd.fines.give`, JSON.stringify(data));
 }
 
 
