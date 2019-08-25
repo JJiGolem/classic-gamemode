@@ -149,6 +149,34 @@ module.exports = {
         player.call(`mapCase.message.green.show`, [text]);
         player.call(`waypoint.set`, [rec.position.x, rec.position.y]);
     },
+    "mapCase.pd.rank.raise": (player, recId) => {
+        var header = `Повышение`;
+        var rec = mp.players.getBySqlId(recId);
+        if (!rec) return notifs.error(player, `Игрок #${recId} оффлайн`, header);
+        var max = factions.getMaxRank(rec.character.factionId);
+        if (rec.character.factionRank >= max.id) return notifs.error(player, `${rec.name} имеет макс. ранг`, header);
+
+        mapCase.setPdRank(rec, rec.character.factionRank + 1);
+        var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
+
+        notifs.success(rec, `${player.name} повысил вас до ${rankName}`, header);
+        var text = `<span>${rec.name}</span><br /> был повышен до ранга ${rankName}`;
+        player.call(`mapCase.message.green.show`, [text]);
+    },
+    "mapCase.pd.rank.lower": (player, recId) => {
+        var header = `Понижение`;
+        var rec = mp.players.getBySqlId(recId);
+        if (!rec) return notifs.error(player, `Игрок #${recId} оффлайн`, header);
+        var max = factions.getMinRank(rec.character.factionId);
+        if (rec.character.factionRank <= max.id) return notifs.error(player, `${rec.name} имеет мин. ранг`, header);
+
+        mapCase.setPdRank(rec, rec.character.factionRank - 1);
+        var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
+
+        notifs.success(rec, `${player.name} понизил вас до ${rankName}`, header);
+        var text = `<span>${rec.name}</span><br /> был понижен до ранга ${rankName}`;
+        player.call(`mapCase.message.green.show`, [text]);
+    },
     "playerQuit": (player) => {
         if (!player.character) return;
         mapCase.removePoliceCall(player.character.id);

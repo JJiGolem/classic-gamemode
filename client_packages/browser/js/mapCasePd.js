@@ -453,6 +453,13 @@ var mapCasePdMembersData = {
         if (typeof ranksList == 'string') ranksList = JSON.parse(ranksList);
         this.ranks = ranksList;
     },
+    setMemberRank(id, rank) {
+        rank = Math.clamp(rank, 1, this.ranks.length - 1);
+        for (var i = 0; i < this.list.length; i++) {
+            var rec = this.list[i];
+            if (rec.id == id) rec.rank = rank;
+        }
+    },
     add(members) {
         if (typeof members == 'string') members = JSON.parse(members);
         if (!Array.isArray(members)) members = [members];
@@ -739,20 +746,18 @@ mapCasePdMembersData.dismiss = (data) => {
 //Функция, срабатывающая при понижении сотрудника (крайние случаи не обработаны, может выйти за пределы массива рангов)
 //data - данные о сотруднике из записи в списке
 mapCasePdMembersData.lowerRank = (data) => {
-    setTimeout(() => {
-        data.rank--;
-        mapCase.showGreenMessage(`<span>${data.name}</span><br /> был понижен до ранга ${mapCasePdMembersData.ranks[data.rank]}`);
-    }, 3000);
+    if (data.rank <= 1)
+        return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет мин. ранг - ${mapCasePdMembersData.ranks[data.rank]}`);
+    mp.trigger(`callRemote`, `mapCase.pd.rank.lower`, data.id);
 }
 
 
 //Функция, срабатывающая при повышении сотрудника (крайние случаи не обработаны, может выйти за пределы массива рангов)
 //data - данные о сотруднике из записи в списке
 mapCasePdMembersData.raiseRank = (data) => {
-    setTimeout(() => {
-        data.rank++;
-        mapCase.showGreenMessage(`<span>${data.name}</span><br /> был повышен до ранга ${mapCasePdMembersData.ranks[data.rank]}`);
-    }, 3000);
+    if (data.rank >= mapCasePdMembersData.ranks.length - 1)
+        return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет макс. ранг - ${mapCasePdMembersData.ranks[data.rank]}`);
+    mp.trigger(`callRemote`, `mapCase.pd.rank.raise`, data.id);
 }
 
 
