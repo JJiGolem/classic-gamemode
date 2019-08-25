@@ -728,9 +728,13 @@ mapCasePdProfileData.giveFine = (cause, amount, profileData) => {
 //Функция, срабатывающая при выдаче розыска
 //cause - причина; danger - уровень розыска; profileData - данные профиля
 mapCasePdProfileData.giveWanted = (cause, danger, profileData) => {
-    setTimeout(() => {
-        mapCase.showGreenMessage(`Уровень розыска <span>${danger}&#9733;</span><br/>выдан <span>${profileData.name}</span><br/> по причине <span>${cause}</span>`);
-    }, 3000);
+    var data = {
+        recId: profileData.id,
+        recName: profileData.name,
+        cause: cause,
+        wanted: danger
+    };
+    mp.trigger(`callRemote`, `mapCase.pd.wanted.give`, JSON.stringify(data));
 }
 
 

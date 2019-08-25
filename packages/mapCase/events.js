@@ -1,5 +1,8 @@
 "use strict";
 var mapCase = require('./index');
+var notifs = require('../notifications');
+var police = require('../police');
+
 module.exports = {
     "init": async () => {},
     "mapCase.pd.searchByPhone": async (player, number) => {
@@ -64,7 +67,7 @@ module.exports = {
     "mapCase.pd.getProfile": async (player, id) => {
         // console.log(`getProfile: ${id}`)
         var character = await db.Models.Character.findByPk(id, {
-            attributes: ['id', 'name', 'gender', 'wanted'],
+            attributes: ['id', 'name', 'gender', 'wanted', 'wantedCause'],
             include: [db.Models.Phone, db.Models.House, db.Models.Faction, db.Models.FactionRank],
         });
         var vehicles = await db.Models.Vehicle.findAll({
@@ -90,6 +93,24 @@ module.exports = {
         if (rec) rec.character.Fines.push(fine);
 
         var text = `Штраф на сумму <span>${fine.price}$</span><br/>выдан <span>${data.recName}</span><br/> по причине <span>${data.cause}</span>`;
+        player.call(`mapCase.message.green.show`, [text]);
+    },
+    "mapCase.pd.wanted.give": (player, data) => {
+        data = JSON.parse(data);
+
+        var rec = mp.players.getBySqlId(data.recId);
+        if (rec) {
+            police.setWanted(rec, data.wanted, data.cause);
+            notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур. по причине: ${data.cause}`, `Розыск`);
+        } else db.Models.Character.update({
+            wanted: data.wanted,
+            wantedCause: data.cause
+        }, {
+            where: {
+                id: data.recId
+            }
+        });
+        var text = `Уровень розыска <span>${data.wanted}&#9733;</span><br/>выдан <span>${data.recName}</span><br/> по причине <span>${data.cause}</span>`;
         player.call(`mapCase.message.green.show`, [text]);
     },
 }
