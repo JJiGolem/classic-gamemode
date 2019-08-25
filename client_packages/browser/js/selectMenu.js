@@ -50,8 +50,7 @@ var selectMenu = new Vue({
                     if (eventName == "onItemValueChanged" && e.itemName == "Пол") {
                         selectMenu.menus["characterCreateMainMenu"].items[0].i = e.valueIndex;
                         selectMenu.menus["characterCreateParentsMenu"].items[2].i = e.valueIndex == 0 ? 0 : 4;
-                        selectMenu.menus["characterCreateViewMenu"].items = e.valueIndex == 0 ? selectMenu.menus["characterCreateViewMenu"].itemsMale :
-                            selectMenu.menus["characterCreateViewMenu"].itemsFemale;
+                        selectMenu.menus["characterCreateViewMenu"].items = e.valueIndex == 0 ? selectMenu.menus["characterCreateViewMenu"].itemsMale : selectMenu.menus["characterCreateViewMenu"].itemsFemale;
                         mp.trigger('characterInit.create.setGender', e.valueIndex);
                     }
                     if (eventName == "onEscapePressed") {
@@ -64,7 +63,6 @@ var selectMenu = new Vue({
                                 break;
                             case "Внешность":
                                 selectMenu.menu = selectMenu.menus["characterCreateViewMenu"];
-                                selectMenu.menu.items = selectMenu.menu.itemsMale;
                                 break;
                             case "Сохранить и продолжить":
                                 mp.trigger('characterInit.create.continue');
@@ -133,7 +131,7 @@ var selectMenu = new Vue({
                                 mp.trigger('characterInit.create.setFather', fathers[e.valueIndex]);
                                 break;
                             case "Сходство":
-                                let sim = [0, 25, 50, 75, 100];
+                                let sim = [100, 75, 50, 25, 0];
                                 mp.trigger('characterInit.create.setSimilarity', sim[e.valueIndex]);
                                 break;
                             case "Цвет кожи":
