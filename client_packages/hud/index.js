@@ -85,11 +85,11 @@ mp.events.add('hud.players.list.enable', (state) => {
     mp.busy.remove('playersList');
   }
 
+  mp.callCEFVN({ "playersList.loader": state, "playersList.players": [] });
   mp.gui.cursor.show(state, state);
   playersListState = state;
 });
 
 mp.events.add('hud.players.list', (playersInfo) => {
-  mp.events.call('hud.players.list.enable', true);
-  mp.callCEFVN({ "playersList.players": playersInfo });
+  mp.callCEFVN({ "playersList.players": playersInfo, "playersList.loader": false });
 });
