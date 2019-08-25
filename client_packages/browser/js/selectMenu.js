@@ -2303,6 +2303,70 @@ var selectMenu = new Vue({
                     else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
                 }
             },
+            "dmvMenu": {
+                name: "dmv",
+                header: "Покупка лицензий",
+                items: [
+                    {
+                        text: 'Легковой транспорт',
+                        values: ["$100"]
+                    },
+                    {
+                        text: 'Пассажирский транспорт',
+                        values: ["$100"]
+                    },
+                    {
+                        text: 'Мотоциклы',
+                        values: ["$100"]
+                    },
+                    {
+                        text: 'Грузовой транспорт',
+                        values: ["$100"]
+                    },
+                    {
+                        text: 'Воздушный транспорт',
+                        values: ["$100"]
+                    },
+                    {
+                        text: 'Водный транспорт',
+                        values: ["$100"]
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        loader.show = true;
+                        mp.trigger(`dmv.menu.close`);
+                        if (e.itemName == 'Легковой транспорт') {
+                            mp.trigger('callRemote', 'dmv.license.buy', 0);
+                        }
+                        if (e.itemName == 'Пассажирский транспорт') {
+
+                        }
+                        if (e.itemName == 'Мотоциклы') {
+
+                        }
+                        if (e.itemName == 'Грузовой транспорт') {
+
+                        }
+                        if (e.itemName == 'Воздушный транспорт') {
+
+                        }
+                        if (e.itemName == 'Водный транспорт') {
+
+                        }
+                    }
+                }
+            },
         },
         // Уведомление
         notification: null,
