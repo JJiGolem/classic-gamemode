@@ -40,5 +40,14 @@ mp.events.add('dmv.license.buy.ans', (ans) => {
         case 0:
             mp.notify.warning('У вас уже есть лицензия', 'Лицензии');
             break;
+        case 1:
+            mp.notify.success('Вы приобрели лицензию', 'Лицензии');
+            break;
+        case 2:
+            mp.notify.error('Недостаточно денег', 'Лицензии');
+            break;
+        case 3:
+            mp.notify.error('Ошибка покупки', 'Лицензии');
+            break;
     }
 });

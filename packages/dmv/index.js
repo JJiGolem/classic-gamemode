@@ -75,9 +75,9 @@ module.exports = {
         });
 
 
-        mp.markers.new(1, new mp.Vector3(dmv.menu.x, dmv.menu.y, dmv.menu.z - 1.15), 0.4,
+        mp.markers.new(1, new mp.Vector3(dmv.menu.x, dmv.menu.y, dmv.menu.z - 1.2), 0.4,
             {
-                color: [255, 74, 198, 111],
+                color: [255, 143, 190, 111],
                 visible: true,
                 dimension: 1
             });

@@ -2348,19 +2348,19 @@ var selectMenu = new Vue({
                             mp.trigger('callRemote', 'dmv.license.buy', 0);
                         }
                         if (e.itemName == 'Пассажирский транспорт') {
-
+                            mp.trigger('callRemote', 'dmv.license.buy', 1);
                         }
                         if (e.itemName == 'Мотоциклы') {
-
+                            mp.trigger('callRemote', 'dmv.license.buy', 2);
                         }
                         if (e.itemName == 'Грузовой транспорт') {
-
+                            mp.trigger('callRemote', 'dmv.license.buy', 3);
                         }
                         if (e.itemName == 'Воздушный транспорт') {
-
+                            mp.trigger('callRemote', 'dmv.license.buy', 4);
                         }
                         if (e.itemName == 'Водный транспорт') {
-
+                            mp.trigger('callRemote', 'dmv.license.buy', 5);
                         }
                     }
                 }
