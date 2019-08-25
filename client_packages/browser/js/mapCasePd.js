@@ -394,6 +394,23 @@ var mapCasePdCallsData = {
         }
     },
     accept(data) {},
+    add(calls) {
+        if (typeof calls == 'string') calls = JSON.parse(calls);
+        if (!Array.isArray(calls)) calls = [calls];
+        for (var i = 0; i < calls.length; i++) {
+            this.remove(calls[i].id);
+            calls[i].num = calls[i].id;
+            this.list.push(calls[i]);
+        }
+    },
+    remove(id) {
+        for (var i = 0; i < this.list.length; i++) {
+            if (this.list[i].id == id) {
+                this.list.splice(i, 1);
+                i--;
+            }
+        }
+    }
 };
 
 var mapCasePdWantedData = {
@@ -813,28 +830,6 @@ mapCasePdWantedData.list = [{
         name: "Curys Raider",
         description: "Альпака покусал",
         danger: 1,
-    },
-];
-
-mapCasePdCallsData.list = [{
-        num: 2,
-        name: "Curys Raider",
-        description: "ПАльпака покусал",
-    },
-    {
-        num: 1,
-        name: "ACurysirusew Raiderderder",
-        description: "Альпака покусал",
-    },
-    {
-        num: 3,
-        name: "Curysirusew Raiderderder",
-        description: "Альпака покусал",
-    },
-    {
-        num: 4,
-        name: "Curys Raider",
-        description: "Альпака покусал",
     },
 ];
 

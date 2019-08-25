@@ -44,6 +44,13 @@ mp.mapCasePd = {
         if (typeof data == 'object') data = JSON.stringify(data);
         mp.callCEFV(`mapCasePdProfileData.setProfileData('${data}')`);
     },
+    addCall(calls) {
+        if (typeof calls == 'object') calls = JSON.stringify(calls);
+        mp.callCEFV(`mapCasePdCallsData.add('${calls}')`);
+    },
+    removeCall(id) {
+        mp.callCEFV(`mapCasePdCallsData.remove(${id})`);
+    },
 };
 
 mp.events.add("mapCase.init", (name, factionId) => {
@@ -66,3 +73,7 @@ mp.events.add("mapCase.message.green.show", mp.mapCase.showGreenMessage)
 mp.events.add("mapCase.pd.resultData.set", mp.mapCasePd.setResultData);
 
 mp.events.add("mapCase.pd.profileData.set", mp.mapCasePd.setProfileData);
+
+mp.events.add("mapCase.pd.calls.add", mp.mapCasePd.addCall);
+
+mp.events.add("mapCase.pd.calls.remove", mp.mapCasePd.removeCall);

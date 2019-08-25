@@ -1,6 +1,9 @@
 "use strict";
+var factions = require('../factions');
 
 module.exports = {
+    // Вызовы в планшете ПД
+    policeCalls: [],
 
     convertCharactersToResultData(characters) {
         var result = [];
@@ -24,7 +27,8 @@ module.exports = {
     convertCharactersToProfileData(character, vehicles) {
         var result = [];
         var number = (character.Phone) ? character.Phone.number : null;
-        var housePos = null, houseId = 0;
+        var housePos = null,
+            houseId = 0;
         if (character.House) {
             var h = character.House;
             housePos = new mp.Vector3(h.pickupX, h.pickupY, h.pickupZ);
@@ -52,4 +56,37 @@ module.exports = {
             veh: vehNames.join(", ").trim() || "-",
         };
     },
+    addPoliceCall(player, description) {
+        this.removePoliceCall(player.character.id);
+        var call = {
+            id: player.character.id,
+            name: player.name,
+            description: description
+        };
+        this.policeCalls.push(call);
+
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isPoliceFaction(rec.character.factionId)) return;
+
+            rec.call(`mapCase.pd.calls.add`, [call])
+        });
+    },
+    removePoliceCall(id) {
+        var deleted = false;
+        for (var i = 0; i < this.policeCalls.length; i++) {
+            if (this.policeCalls[i].id == id) {
+                this.policeCalls.splice(i, 1);
+                i--;
+                deleted = true;
+            }
+        }
+        if (!deleted) return;
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isPoliceFaction(rec.character.factionId)) return;
+
+            rec.call(`mapCase.pd.calls.remove`, [id])
+        });
+    }
 };

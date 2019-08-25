@@ -1,10 +1,15 @@
 "use strict";
+var factions = require('../factions');
 var mapCase = require('./index');
 var notifs = require('../notifications');
 var police = require('../police');
 
 module.exports = {
     "init": async () => {},
+    "characterInit.done": (player) => {
+        if (!factions.isPoliceFaction(player.character.factionId)) return;
+        player.call(`mapCase.pd.calls.add`, [mapCase.policeCalls]);
+    },
     "mapCase.pd.searchByPhone": async (player, number) => {
         // console.log(`searchByPhone: ${number}`)
         var characters = await db.Models.Character.findAll({
@@ -112,5 +117,15 @@ module.exports = {
         });
         var text = `Уровень розыска <span>${data.wanted}&#9733;</span><br/>выдан <span>${data.recName}</span><br/> по причине <span>${data.cause}</span>`;
         player.call(`mapCase.message.green.show`, [text]);
+    },
+    "mapCase.pd.calls.add": (player, description) => {
+        mapCase.addPoliceCall(player, description);
+    },
+    "mapCase.pd.calls.remove": (player, id) => {
+        mapCase.removePoliceCall(id);
+    },
+    "playerQuit": (player) => {
+        if (!player.character) return;
+        mapCase.removePoliceCall(player.character.id);
     },
 }

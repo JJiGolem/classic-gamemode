@@ -84,4 +84,20 @@ module.exports = {
             mp.events.call(`police.licenses.gun.take`, player, args[0]);
         }
     },
+    "/paddcall": {
+        access: 6,
+        description: "Добавить вызов в планшет.",
+        args: "[описание]",
+        handler: (player, args, out) => {
+            mp.events.call(`mapCase.pd.calls.add`, player, args.join(" "));
+        }
+    },
+    "/premcall": {
+        access: 6,
+        description: "Удалить вызов из планшета.",
+        args: "[ид]:n",
+        handler: (player, args, out) => {
+            mp.events.call(`mapCase.pd.calls.remove`, player, args[0]);
+        }
+    },
 }
