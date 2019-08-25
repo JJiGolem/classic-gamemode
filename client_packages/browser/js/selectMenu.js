@@ -1442,8 +1442,7 @@ var selectMenu = new Vue({
                             var rank = this.items[0].i + 1;
                             mp.trigger("callRemote", "factions.giverank.set", JSON.stringify([this.playerId, rank]));
                             selectMenu.show = false;
-                        }
-                        else if (e.itemName == 'Закрыть') {
+                        } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
                     }
@@ -1482,17 +1481,13 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Раздевалка') {
                             selectMenu.showByName("lspdClothes");
-                        }
-                        else if (e.itemName == 'Снаряжение') {
+                        } else if (e.itemName == 'Снаряжение') {
                             selectMenu.showByName("lspdItems");
-                        }
-                        else if (e.itemName == 'Вооружение') {
+                        } else if (e.itemName == 'Вооружение') {
                             selectMenu.showByName("lspdGuns");
-                        }
-                        else if (e.itemName == 'Патроны') {
+                        } else if (e.itemName == 'Патроны') {
                             selectMenu.showByName("lspdAmmo");
-                        }
-                        else if (e.itemName == 'Закрыть') {
+                        } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
                     }
@@ -1532,8 +1527,7 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Вернуться') selectMenu.showByName("lspdStorage");
                         else if (e.itemIndex == 3) mp.trigger(`callRemote`, `police.storage.armour.take`);
                         else mp.trigger(`callRemote`, `police.storage.clothes.take`, e.itemIndex);
-                    }
-                    else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
                 }
             },
             "lspdItems": {
@@ -1560,8 +1554,7 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == "Вернуться") selectMenu.showByName("lspdStorage");
                         else mp.trigger(`callRemote`, `police.storage.items.take`, e.itemIndex);
-                    }
-                    else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
                 }
             },
             "lspdGuns": {
@@ -1606,8 +1599,7 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == "Вернуться") selectMenu.showByName("lspdStorage");
                         else mp.trigger(`callRemote`, `police.storage.guns.take`, e.itemIndex);
-                    }
-                    else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
                 }
             },
             "lspdAmmo": {
@@ -1648,8 +1640,7 @@ var selectMenu = new Vue({
                         var values = JSON.stringify([e.itemIndex, parseInt(e.itemValue)]);
                         if (e.itemName == "Вернуться") selectMenu.showByName("lspdStorage");
                         else mp.trigger(`callRemote`, `police.storage.ammo.take`, values);
-                    }
-                    else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
                 }
             },
             "lssdStorage": {
@@ -1685,17 +1676,13 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Раздевалка') {
                             selectMenu.showByName("lssdClothes");
-                        }
-                        else if (e.itemName == 'Снаряжение') {
+                        } else if (e.itemName == 'Снаряжение') {
                             selectMenu.showByName("lssdItems");
-                        }
-                        else if (e.itemName == 'Вооружение') {
+                        } else if (e.itemName == 'Вооружение') {
                             selectMenu.showByName("lssdGuns");
-                        }
-                        else if (e.itemName == 'Патроны') {
+                        } else if (e.itemName == 'Патроны') {
                             selectMenu.showByName("lssdAmmo");
-                        }
-                        else if (e.itemName == 'Закрыть') {
+                        } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
                     }
@@ -1735,8 +1722,7 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Вернуться') selectMenu.showByName("lssdStorage");
                         else if (e.itemIndex == 3) mp.trigger(`callRemote`, `police.storage.armour.take`);
                         else mp.trigger(`callRemote`, `police.storage.clothes.take`, e.itemIndex);
-                    }
-                    else if (eventName == 'onBackspacePressed') selectMenu.showByName("lssdStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lssdStorage");
                 }
             },
             "lssdItems": {
@@ -1763,8 +1749,7 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == "Вернуться") selectMenu.showByName("lssdStorage");
                         else mp.trigger(`callRemote`, `police.storage.items.take`, e.itemIndex);
-                    }
-                    else if (eventName == 'onBackspacePressed') selectMenu.showByName("lssdStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lssdStorage");
                 }
             },
             "lssdGuns": {
@@ -1809,8 +1794,7 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == "Вернуться") selectMenu.showByName("lssdStorage");
                         else mp.trigger(`callRemote`, `police.storage.guns.take`, e.itemIndex);
-                    }
-                    else if (eventName == 'onBackspacePressed') selectMenu.showByName("lssdStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lssdStorage");
                 }
             },
             "lssdAmmo": {
@@ -1851,8 +1835,7 @@ var selectMenu = new Vue({
                         var values = JSON.stringify([e.itemIndex, parseInt(e.itemValue)]);
                         if (e.itemName == "Вернуться") selectMenu.showByName("lssdStorage");
                         else mp.trigger(`callRemote`, `police.storage.ammo.take`, values);
-                    }
-                    else if (eventName == 'onBackspacePressed') selectMenu.showByName("lssdStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lssdStorage");
                 }
             },
             "fibStorage": {
@@ -1888,17 +1871,13 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Раздевалка') {
                             selectMenu.showByName("fibClothes");
-                        }
-                        else if (e.itemName == 'Снаряжение') {
+                        } else if (e.itemName == 'Снаряжение') {
                             selectMenu.showByName("fibItems");
-                        }
-                        else if (e.itemName == 'Вооружение') {
+                        } else if (e.itemName == 'Вооружение') {
                             selectMenu.showByName("fibGuns");
-                        }
-                        else if (e.itemName == 'Патроны') {
+                        } else if (e.itemName == 'Патроны') {
                             selectMenu.showByName("fibAmmo");
-                        }
-                        else if (e.itemName == 'Закрыть') {
+                        } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
                     }
@@ -1944,8 +1923,7 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Вернуться') selectMenu.showByName("fibStorage");
                         else if (e.itemIndex == 3) mp.trigger(`callRemote`, `fib.storage.armour.take`);
                         else mp.trigger(`callRemote`, `fib.storage.clothes.take`, e.itemIndex);
-                    }
-                    else if (eventName == 'onBackspacePressed') selectMenu.showByName("fibStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("fibStorage");
                 }
             },
             "fibItems": {
@@ -1975,8 +1953,7 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == "Вернуться") selectMenu.showByName("fibStorage");
                         else mp.trigger(`callRemote`, `fib.storage.items.take`, e.itemIndex);
-                    }
-                    else if (eventName == 'onBackspacePressed') selectMenu.showByName("fibStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("fibStorage");
                 }
             },
             "fibGuns": {
@@ -2006,8 +1983,7 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == "Вернуться") selectMenu.showByName("fibStorage");
                         else mp.trigger(`callRemote`, `fib.storage.guns.take`, e.itemIndex);
-                    }
-                    else if (eventName == 'onBackspacePressed') selectMenu.showByName("fibStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("fibStorage");
                 }
             },
             "fibAmmo": {
@@ -2048,8 +2024,7 @@ var selectMenu = new Vue({
                         var values = JSON.stringify([e.itemIndex, parseInt(e.itemValue)]);
                         if (e.itemName == "Вернуться") selectMenu.showByName("fibStorage");
                         else mp.trigger(`callRemote`, `fib.storage.ammo.take`, values);
-                    }
-                    else if (eventName == 'onBackspacePressed') selectMenu.showByName("fibStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("fibStorage");
                 }
             },
             "armyStorage": {
@@ -2085,17 +2060,13 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Раздевалка') {
                             selectMenu.showByName("armyClothes");
-                        }
-                        else if (e.itemName == 'Снаряжение') {
+                        } else if (e.itemName == 'Снаряжение') {
                             selectMenu.showByName("armyItems");
-                        }
-                        else if (e.itemName == 'Вооружение') {
+                        } else if (e.itemName == 'Вооружение') {
                             selectMenu.showByName("armyGuns");
-                        }
-                        else if (e.itemName == 'Патроны') {
+                        } else if (e.itemName == 'Патроны') {
                             selectMenu.showByName("armyAmmo");
-                        }
-                        else if (e.itemName == 'Закрыть') {
+                        } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
                     }
@@ -2150,8 +2121,7 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Вернуться') selectMenu.showByName("armyStorage");
                         else if (e.itemIndex == 3) mp.trigger(`callRemote`, `army.storage.armour.take`);
                         else mp.trigger(`callRemote`, `army.storage.clothes.take`, e.itemIndex);
-                    }
-                    else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
                 }
             },
             "armyItems": {
@@ -2178,8 +2148,7 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == "Вернуться") selectMenu.showByName("armyStorage");
                         else mp.trigger(`callRemote`, `army.storage.items.take`, e.itemIndex);
-                    }
-                    else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
                 }
             },
             "armyGuns": {
@@ -2218,8 +2187,7 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == "Вернуться") selectMenu.showByName("armyStorage");
                         else mp.trigger(`callRemote`, `army.storage.guns.take`, e.itemIndex);
-                    }
-                    else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
                 }
             },
             "armyAmmo": {
@@ -2260,8 +2228,7 @@ var selectMenu = new Vue({
                         var values = JSON.stringify([e.itemIndex, parseInt(e.itemValue)]);
                         if (e.itemName == "Вернуться") selectMenu.showByName("armyStorage");
                         else mp.trigger(`callRemote`, `army.storage.ammo.take`, values);
-                    }
-                    else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
                 }
             },
         },
@@ -2280,34 +2247,28 @@ var selectMenu = new Vue({
                 this.menu.i = Math.clamp(this.menu.i - 1, 0, this.menu.items.length - 1);
                 if (this.menu.i < this.menu.j) this.menu.j--;
                 this.onItemFocusChanged();
-            }
-            else if (e.keyCode == 40) { // DOWN
+            } else if (e.keyCode == 40) { // DOWN
                 if (this.menu.i == this.menu.items.length - 1) return;
                 this.menu.i = Math.clamp(this.menu.i + 1, 0, this.menu.items.length - 1);
                 if (this.menu.i - this.menu.j == this.maxItems) this.menu.j++;
                 this.onItemFocusChanged();
-            }
-            else if (e.keyCode == 37) { // LEFT
+            } else if (e.keyCode == 37) { // LEFT
                 var item = this.menu.items[this.menu.i];
                 if (!item.values || item.i == 0) return;
                 item.i = Math.clamp(item.i - 1, 0, item.values.length - 1);
                 if (item.i < item.j) item.j--;
                 this.onItemValueChanged();
-            }
-            else if (e.keyCode == 39) { // RIGHT
+            } else if (e.keyCode == 39) { // RIGHT
                 var item = this.menu.items[this.menu.i];
                 if (!item.values || item.i == item.values.length - 1) return;
                 item.i = Math.clamp(item.i + 1, 0, item.values.length - 1);
                 if (item.i - item.j == this.maxColorValues) item.j++;
                 this.onItemValueChanged();
-            }
-            else if (e.keyCode == 13) { // ENTER
+            } else if (e.keyCode == 13) { // ENTER
                 this.onItemSelected();
-            }
-            else if (e.keyCode == 8) { // BACKSPACE
+            } else if (e.keyCode == 8) { // BACKSPACE
                 this.onBackspacePressed();
-            }
-            else if (e.keyCode == 27) { // ESCAPE
+            } else if (e.keyCode == 27) { // ESCAPE
                 this.onEscapePressed();
             }
         },
@@ -2511,7 +2472,7 @@ var selectMenu = new Vue({
         },
         {
             text: "Выборочный тип 7",
-            values: ['Выбор 1', 'Выбор 2', 'Выбор 3'],
+            values: ['Выбор 1'],
             // i: 0,
         },
         {

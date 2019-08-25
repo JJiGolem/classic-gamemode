@@ -205,7 +205,7 @@
             </div>
             <div class="arrow arr-down" :class="{active: menu.j < menu.items.length - maxItems}"></div>
         </div>
-        <div v-if="valuesType(menu.i) == 0" class="selector" v-show="menu.items[menu.i].values">
+        <div v-if="valuesType(menu.i) == 0" class="selector" v-show="menu.items[menu.i].values.length > 1">
             <div v-for="value in values">{{ value }}</div>
         </div>
         <div v-else-if="valuesType(menu.i) == 1" class="selector select-color">
