@@ -3,9 +3,10 @@
 let houses = new Array();
 let interiors = new Array();
 let garages = new Array();
-let money = call('money');
-let vehicles = call('vehicles');
-let carmarket = call('carmarket');
+
+let money;
+let vehicles;
+let carmarket;
 
 /// Функции модуля системы домов
 let changeBlip = function(i) {
@@ -57,6 +58,9 @@ let dropHouse = function(i, sellToGov) {
 
 module.exports = {
     async init() {
+        money = call('money');
+        vehicles = call('vehicles');
+        carmarket = call('carmarket');
         console.log("[HOUSES] load houses from DB");
         let infoHouses = await db.Models.House.findAll({
             include: [{ model: db.Models.Interior,
