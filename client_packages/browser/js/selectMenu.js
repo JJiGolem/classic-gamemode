@@ -2332,6 +2332,48 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "busJobMenu": {
+                name: "busjob",
+                header: "Управляющий станцией",
+                items: [{
+                        text: "Устроиться на работу",
+                        i: 0,
+                    },
+                    {
+                        text: "Помощь",
+                        i: 0,
+                    },
+                    {
+                        text: "Закрыть",
+                        i: 0,
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Устроиться на работу') {
+                            mp.trigger(`callRemote`, `busdriver.employment`);
+                            mp.trigger(`busdriver.jobmenu.close`);
+                        }
+                        if (e.itemName == 'Уволиться с работы') {
+                            mp.trigger(`callRemote`, `busdriver.employment`);
+                            mp.trigger(`busdriver.jobmenu.close`);
+                        }
+                        if (e.itemName == 'Закрыть') {
+                            mp.trigger(`busdriver.jobmenu.close`);
+                        }
+                    }
+                }
+            },
         },
         // Уведомление
         notification: null,

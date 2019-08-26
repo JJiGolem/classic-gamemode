@@ -15,3 +15,24 @@ mp.events.add('characterInit.done', () => {
         mp.events.call('NPC.create', current);
     })
 });
+
+
+mp.events.add('busdriver.jobmenu.show', (state) => {
+    mp.busy.add('busdriver.jobmenu');
+    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["busJobMenu"])`);
+    switch (state) {
+        case 0:
+            mp.callCEFV(`selectMenu.menu.items[0].text = 'Устроиться на работу'`);
+            break;
+        case 1:
+            mp.callCEFV(`selectMenu.menu.items[0].text = 'Уволиться с работы'`);
+            break;
+    }
+    mp.callCEFV(`selectMenu.show = true`);
+});
+
+
+mp.events.add('busdriver.jobmenu.close', () => {
+    mp.busy.remove('busdriver.jobmenu');
+    mp.callCEFV(`selectMenu.show = false`);
+});

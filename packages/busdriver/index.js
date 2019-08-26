@@ -37,5 +37,14 @@ module.exports = {
                 dimension: 0
             });
         shape = mp.colshapes.newSphere(busStation.marker.x, busStation.marker.y, busStation.marker.z + 1, 1.2);
+
+        shape.onEnter = (player) => {
+            let state = player.character.job == 3 ? 1 : 0;
+            player.call('busdriver.jobmenu.show', [state]);
+        }
+
+        shape.onExit = (player) => {
+            player.call('busdriver.jobmenu.close');
+        }
     }
 }

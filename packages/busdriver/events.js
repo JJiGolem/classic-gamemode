@@ -6,4 +6,12 @@ module.exports = {
     "init": () => {
         bus.init();
     },
+    "busdriver.employment": (player) => {
+        if (player.character.job == 3) {
+            mp.events.call("jobs.leave", player);
+        } else {
+            if (!player.character.passengerLicense) return player.call('notifications.push.error', ['У вас нет прав на пассажирский транспорт', 'Автобусная станция'])
+            mp.events.call("jobs.set", player, 3);
+        }
+    },
 }
