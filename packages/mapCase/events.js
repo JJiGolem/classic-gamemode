@@ -178,6 +178,16 @@ module.exports = {
         var text = `<span>${rec.name}</span><br /> был понижен до ранга ${rankName}`;
         player.call(`mapCase.message.green.show`, [text]);
     },
+    "mapCase.pd.members.uval": (player, recId) => {
+        var header = `Увольнение`;
+        var rec = mp.players.getBySqlId(recId);
+        if (!rec) return notifs.error(player, `Игрок #${recId} оффлайн`, header);
+
+        factions.deleteMember(rec);
+        notifs.info(rec, `${player.name} уволил вас`, header);
+        var text = `<span>${rec.name}</span><br /> был уволен`;
+        player.call(`mapCase.message.red.show`, [text]);
+    },
     "playerQuit": (player) => {
         if (!player.character) return;
         mapCase.removePoliceCall(player.character.id);

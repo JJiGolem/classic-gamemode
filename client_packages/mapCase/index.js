@@ -19,6 +19,9 @@ mp.mapCase = {
     showGreenMessage(text) {
         mp.callCEFV(`mapCase.showGreenMessage('${text}')`);
     },
+    showRedMessage(text) {
+        mp.callCEFV(`mapCase.showRedMessage('${text}')`);
+    },
 };
 mp.mapCasePd = {
     menuHeader(top, bottom) {
@@ -89,7 +92,9 @@ mp.events.add("mapCase.init", (name, factionId) => {
 
 mp.events.add("mapCase.enable", mp.mapCase.enable);
 
-mp.events.add("mapCase.message.green.show", mp.mapCase.showGreenMessage)
+mp.events.add("mapCase.message.green.show", mp.mapCase.showGreenMessage);
+
+mp.events.add("mapCase.message.red.show", mp.mapCase.showRedMessage)
 
 mp.events.add("mapCase.pd.resultData.set", mp.mapCasePd.setResultData);
 

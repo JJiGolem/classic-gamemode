@@ -734,12 +734,7 @@ mapCasePdMembersData.setRanks(["Старший Сержант", "Альпака"
 //Функция, срабатывающая при увольнение сотрудника
 //data - данные о сотруднике из записи в списке
 mapCasePdMembersData.dismiss = (data) => {
-    setTimeout(() => {
-        mapCase.showRedMessage(`<span>${data.name}</span><br /> был уволен`);
-
-        let index = mapCasePdMembersData.list.indexOf(data);
-        mapCasePdMembersData.list.splice(index, 1);
-    }, 3000);
+    mp.trigger(`callRemote`, `mapCase.pd.members.uval`, data.id);
 }
 
 
@@ -747,7 +742,7 @@ mapCasePdMembersData.dismiss = (data) => {
 //data - данные о сотруднике из записи в списке
 mapCasePdMembersData.lowerRank = (data) => {
     if (data.rank <= 1)
-        return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет мин. ранг - ${mapCasePdMembersData.ranks[data.rank]}`);
+        return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет мин. ранг - ${mapCasePdMembersData.ranks[data.rank - 1]}`);
     mp.trigger(`callRemote`, `mapCase.pd.rank.lower`, data.id);
 }
 
@@ -755,8 +750,8 @@ mapCasePdMembersData.lowerRank = (data) => {
 //Функция, срабатывающая при повышении сотрудника (крайние случаи не обработаны, может выйти за пределы массива рангов)
 //data - данные о сотруднике из записи в списке
 mapCasePdMembersData.raiseRank = (data) => {
-    if (data.rank >= mapCasePdMembersData.ranks.length - 1)
-        return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет макс. ранг - ${mapCasePdMembersData.ranks[data.rank]}`);
+    if (data.rank >= mapCasePdMembersData.ranks.length)
+        return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет макс. ранг - ${mapCasePdMembersData.ranks[data.rank - 1]}`);
     mp.trigger(`callRemote`, `mapCase.pd.rank.raise`, data.id);
 }
 
