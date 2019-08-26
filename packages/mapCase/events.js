@@ -1,4 +1,5 @@
 "use strict";
+var chat = require('../chat');
 var factions = require('../factions');
 var mapCase = require('./index');
 var notifs = require('../notifications');
@@ -203,6 +204,16 @@ module.exports = {
         notifs.info(rec, `${player.name} уволил вас`, header);
         var text = `<span>${rec.name}</span><br /> был уволен`;
         player.call(`mapCase.message.red.show`, [text]);
+    },
+    "mapCase.pd.emergency.call": (player) => {
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isPoliceFaction(rec.character.factionId)) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            chat.push(rec, `${player.name} запросил подкрепление`);
+        });
+        player.call(`mapCase.message.green.show`, [`Сработал экстренный вызов`]);
     },
     "playerQuit": (player) => {
         if (!player.character) return;

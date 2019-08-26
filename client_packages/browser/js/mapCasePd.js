@@ -684,9 +684,7 @@ mapCasePdData.getProfile = (data) => {
 
 //Функция, срабатывающая при нажатии на Экстренный вызова+
 mapCasePdData.emergencyCall = () => {
-    setTimeout(() => {
-        mapCase.showGreenMessage(`Сработал экстренный вызов!`);
-    }, 3000);
+    mp.trigger(`callRemote`, `mapCase.pd.emergency.call`);
 };
 
 
