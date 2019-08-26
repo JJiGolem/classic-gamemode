@@ -212,6 +212,7 @@ module.exports = {
             if (rec.character.factionId != player.character.factionId) return;
 
             chat.push(rec, `${player.name} запросил подкрепление`);
+            rec.call(`mapCase.pd.emergencyBlips.add`, [rec.name, rec.position]);
         });
         player.call(`mapCase.message.green.show`, [`Сработал экстренный вызов`]);
     },

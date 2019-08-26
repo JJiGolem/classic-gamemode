@@ -32,6 +32,10 @@ mp.mapCasePd = {
     searchTimer: null,
     // ИД игрока, личность которого устанавливается
     searchPlayerId: null,
+    // Вреся жизни блипа подкрепления (ms)
+    emergencyBlipTime: 60000,
+    // Блипы, где запросили подкрепление
+    emergencyBlips: [],
 
     menuHeader(top, bottom) {
         mp.callCEFV(`mapCasePdData.menuHeader.top = "${top}"`);
@@ -100,6 +104,18 @@ mp.mapCasePd = {
         this.searchPlayerId = null;
         if (text) mp.mapCase.showRedMessage(text);
     },
+    addEmergencyBlip(name, pos) {
+        var blip = mp.blips.new(133, pos, {
+            name: name,
+            color: 39
+        });
+        this.emergencyBlips.push(blip);
+        setTimeout(() => {
+            var index = this.emergencyBlips.indexOf(blip);
+            this.emergencyBlips.splice(index, 1);
+            blip.destroy();
+        }, this.emergencyBlipTime);
+    },
 };
 
 mp.events.add("mapCase.init", (name, factionId) => {
@@ -153,4 +169,8 @@ mp.events.add("time.main.tick", () => {
         var dist = mp.vdist(rec.position, mp.players.local.position);
         if (dist > mp.mapCasePd.searchMaxDist) return mp.mapCasePd.stopSearch(`Игрок далеко`);
     }
+});
+
+mp.events.add("mapCase.pd.emergencyBlips.add", (name, pos) => {
+    mp.mapCasePd.addEmergencyBlip(name, pos);
 });
