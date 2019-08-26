@@ -16,6 +16,7 @@ module.exports = {
                 include: [
                     db.Models.Feature,
                     db.Models.Appearance,
+                    db.Models.Fine,
                 ]
             });
         }

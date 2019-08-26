@@ -394,6 +394,23 @@ var mapCasePdCallsData = {
         }
     },
     accept(data) {},
+    add(calls) {
+        if (typeof calls == 'string') calls = JSON.parse(calls);
+        if (!Array.isArray(calls)) calls = [calls];
+        for (var i = 0; i < calls.length; i++) {
+            this.remove(calls[i].id);
+            calls[i].num = calls[i].id;
+            this.list.push(calls[i]);
+        }
+    },
+    remove(id) {
+        for (var i = 0; i < this.list.length; i++) {
+            if (this.list[i].id == id) {
+                this.list.splice(i, 1);
+                i--;
+            }
+        }
+    }
 };
 
 var mapCasePdWantedData = {
@@ -404,6 +421,23 @@ var mapCasePdWantedData = {
             this.mod = mod;
         }
     },
+    add(wanted) {
+        if (typeof wanted == 'string') wanted = JSON.parse(wanted);
+        if (!Array.isArray(wanted)) wanted = [wanted];
+        for (var i = 0; i < wanted.length; i++) {
+            this.remove(wanted[i].id);
+            wanted[i].num = wanted[i].id;
+            this.list.push(wanted[i]);
+        }
+    },
+    remove(id) {
+        for (var i = 0; i < this.list.length; i++) {
+            if (this.list[i].id == id) {
+                this.list.splice(i, 1);
+                i--;
+            }
+        }
+    }
 }
 
 var mapCasePdMembersData = {
@@ -416,7 +450,32 @@ var mapCasePdMembersData = {
         }
     },
     setRanks(ranksList) {
+        if (typeof ranksList == 'string') ranksList = JSON.parse(ranksList);
         this.ranks = ranksList;
+    },
+    setMemberRank(id, rank) {
+        rank = Math.clamp(rank, 1, this.ranks.length - 1);
+        for (var i = 0; i < this.list.length; i++) {
+            var rec = this.list[i];
+            if (rec.id == id) rec.rank = rank;
+        }
+    },
+    add(members) {
+        if (typeof members == 'string') members = JSON.parse(members);
+        if (!Array.isArray(members)) members = [members];
+        for (var i = 0; i < members.length; i++) {
+            this.remove(members[i].id);
+            members[i].num = members[i].id;
+            this.list.push(members[i]);
+        }
+    },
+    remove(id) {
+        for (var i = 0; i < this.list.length; i++) {
+            if (this.list[i].id == id) {
+                this.list.splice(i, 1);
+                i--;
+            }
+        }
     },
     dismiss(data) {},
     lowerRank(data) {},
@@ -459,6 +518,8 @@ var mapCasePdProfileData = {
         },
     ],
     setProfileData(data) {
+        if (typeof data == 'string') data = JSON.parse(data);
+
         this.profileData[mapCase.menuFocus] = data;
         mapCase.hideLoad();
         mapCasePdData.menuBody[mapCase.menuFocus].windows.push("profile");
@@ -603,15 +664,7 @@ var mapCasePdData = {
 //Функция, срабатывающая при принятии вызова
 //data - данные о вызове
 mapCasePdCallsData.accept = (data) => {
-
-    setTimeout(() => {
-        let index = mapCasePdCallsData.list.indexOf(data);
-
-        mapCasePdCallsData.list.splice(index, 1);
-
-        mapCase.showGreenMessage(`Вы приняли вызов от <br/><span>${data.name}</span>`);
-
-    }, 3000);
+    mp.trigger(`callRemote`, `mapCase.pd.calls.accept`, data.id);
 }
 
 
@@ -641,24 +694,7 @@ mapCasePdIdentificationData.searchById = (value) => {
 //Функция, срабатывающая при запросе профиля по записи из списка
 //data - данные из записи
 mapCasePdData.getProfile = (data) => {
-    console.log(`Ищем профиль с id: ${data}`);
-
-    setTimeout(() => {
-        mapCasePdProfileData.setProfileData({
-            name: "Cyrus Raider",
-            id: 1,
-            danger: 3,
-            cause: "УК 2.1; УК 2.2; УК 4.2.1",
-            gender: "M",
-            property: "Paleto Bay, 3",
-            phone: 1234567,
-            pass: "passid",
-            faction: "Мэрия",
-            rank: "Старший уборщик",
-            veh: "Elegy Retro (ZBT007), Akuma Dinka (ZBT001)",
-            ...data,
-        });
-    }, 3000);
+    mp.trigger(`callRemote`, `mapCase.pd.getProfile`, data.id)
 }
 
 
@@ -710,139 +746,93 @@ mapCasePdMembersData.dismiss = (data) => {
 //Функция, срабатывающая при понижении сотрудника (крайние случаи не обработаны, может выйти за пределы массива рангов)
 //data - данные о сотруднике из записи в списке
 mapCasePdMembersData.lowerRank = (data) => {
-    setTimeout(() => {
-        data.rank--;
-        mapCase.showGreenMessage(`<span>${data.name}</span><br /> был понижен до ранга ${mapCasePdMembersData.ranks[data.rank]}`);
-    }, 3000);
+    if (data.rank <= 1)
+        return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет мин. ранг - ${mapCasePdMembersData.ranks[data.rank]}`);
+    mp.trigger(`callRemote`, `mapCase.pd.rank.lower`, data.id);
 }
 
 
 //Функция, срабатывающая при повышении сотрудника (крайние случаи не обработаны, может выйти за пределы массива рангов)
 //data - данные о сотруднике из записи в списке
 mapCasePdMembersData.raiseRank = (data) => {
-    setTimeout(() => {
-        data.rank++;
-        mapCase.showGreenMessage(`<span>${data.name}</span><br /> был повышен до ранга ${mapCasePdMembersData.ranks[data.rank]}`);
-    }, 3000);
+    if (data.rank >= mapCasePdMembersData.ranks.length - 1)
+        return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет макс. ранг - ${mapCasePdMembersData.ranks[data.rank]}`);
+    mp.trigger(`callRemote`, `mapCase.pd.rank.raise`, data.id);
 }
 
 
 //Функция, срабатывающая при выдаче штрафа
 //cause - причина; amount - сумма к уплате; profileData - данные профиля
 mapCasePdProfileData.giveFine = (cause, amount, profileData) => {
-    setTimeout(() => {
-        mapCase.showGreenMessage(`Штраф на сумму <span>${amount}$</span><br/>выдан <span>${profileData.name}</span><br/> по причине <span>${cause}</span>`);
-    }, 3000);
+    var data = {
+        recId: profileData.id,
+        recName: profileData.name,
+        cause: cause,
+        price: amount
+    };
+    mp.trigger(`callRemote`, `mapCase.pd.fines.give`, JSON.stringify(data));
 }
 
 
 //Функция, срабатывающая при выдаче розыска
 //cause - причина; danger - уровень розыска; profileData - данные профиля
 mapCasePdProfileData.giveWanted = (cause, danger, profileData) => {
-    setTimeout(() => {
-        mapCase.showGreenMessage(`Уровень розыска <span>${danger}&#9733;</span><br/>выдан <span>${profileData.name}</span><br/> по причине <span>${cause}</span>`);
-    }, 3000);
+    var data = {
+        recId: profileData.id,
+        recName: profileData.name,
+        cause: cause,
+        wanted: danger
+    };
+    mp.trigger(`callRemote`, `mapCase.pd.wanted.give`, JSON.stringify(data));
 }
 
 
 //for tests
-mapCasePdMembersData.list = [{
-        num: 1,
-        name: "Curys Raider",
-        rank: 0,
-    },
-    {
-        num: 2,
-        name: "Curysirusew Raiderderder",
-        rank: 0,
-    },
-    {
-        num: 3,
-        name: "Curysirusew Raiderderder",
-        rank: 1,
-    },
-    {
-        num: 4,
-        name: "Curys Raider",
-        rank: 2,
-    },
-    {
-        num: 5,
-        name: "Curys Raider",
-        rank: 2,
-    },
-    {
-        num: 6,
-        name: "Curys Raider",
-        rank: 2,
-    },
-    {
-        num: 7,
-        name: "Curys Raider",
-        rank: 1,
-    },
-    {
-        num: 8,
-        name: "Curys Raider",
-        rank: 1,
-    },
-    {
-        num: 9,
-        name: "Curys Raider",
-        rank: 1,
-    },
-];
-
-mapCasePdWantedData.list = [{
-        id: "111", //for tests
-        num: 1,
-        name: "Curys Raider",
-        description: "ПАльпака покусал",
-        danger: 5,
-    },
-    {
-        id: "111", //for tests
-        num: 2,
-        name: "Curysirusew RaidWWderder",
-        description: "Альпака покусал",
-        danger: 3,
-    },
-    {
-        id: "111", //for tests
-        num: 3,
-        name: "Curysirusew Raiderderder",
-        description: "Альпака покусал",
-        danger: 4,
-    },
-    {
-        id: "111", //for tests
-        num: 4,
-        name: "Curys Raider",
-        description: "Альпака покусал",
-        danger: 1,
-    },
-];
-
-mapCasePdCallsData.list = [{
-        num: 2,
-        name: "Curys Raider",
-        description: "ПАльпака покусал",
-    },
-    {
-        num: 1,
-        name: "ACurysirusew Raiderderder",
-        description: "Альпака покусал",
-    },
-    {
-        num: 3,
-        name: "Curysirusew Raiderderder",
-        description: "Альпака покусал",
-    },
-    {
-        num: 4,
-        name: "Curys Raider",
-        description: "Альпака покусал",
-    },
-];
+// mapCasePdMembersData.list = [{
+//         num: 1,
+//         name: "Curys Raider",
+//         rank: 0,
+//     },
+//     {
+//         num: 2,
+//         name: "Curysirusew Raiderderder",
+//         rank: 0,
+//     },
+//     {
+//         num: 3,
+//         name: "Curysirusew Raiderderder",
+//         rank: 1,
+//     },
+//     {
+//         num: 4,
+//         name: "Curys Raider",
+//         rank: 2,
+//     },
+//     {
+//         num: 5,
+//         name: "Curys Raider",
+//         rank: 2,
+//     },
+//     {
+//         num: 6,
+//         name: "Curys Raider",
+//         rank: 2,
+//     },
+//     {
+//         num: 7,
+//         name: "Curys Raider",
+//         rank: 1,
+//     },
+//     {
+//         num: 8,
+//         name: "Curys Raider",
+//         rank: 1,
+//     },
+//     {
+//         num: 9,
+//         name: "Curys Raider",
+//         rank: 1,
+//     },
+// ];
 
 //mapCasePdIdentificationData.waitingTime = 5;

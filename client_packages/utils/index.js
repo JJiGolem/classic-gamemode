@@ -129,3 +129,8 @@ mp.events.add("blur", (enable, time = 1000) => {
 mp.events.add('effect', (effect, duration) => {
     mp.game.graphics.startScreenEffect(effect, duration, false);
 });
+
+// Установить пусть GPS на карте
+mp.events.add("waypoint.set", (x, y) => {
+    mp.game.ui.setNewWaypoint(x, y);
+});

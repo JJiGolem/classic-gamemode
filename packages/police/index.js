@@ -1,4 +1,6 @@
 "use strict";
+var factions = require('../factions');
+var mapCase = require('../mapCase');
 var notifs = require('../notifications');
 var utils = require('../utils');
 
@@ -73,10 +75,17 @@ module.exports = {
         }
         player.call("police.cuffs.set", [enable])
     },
-    setWanted(player, wanted) {
+    setWanted(player, wanted, cause = null) {
         player.character.wanted = wanted;
+        player.character.wantedCause = cause;
         player.character.save();
         player.call(`police.wanted.set`, [player.character.wanted]);
+
+        if (!player.character.wanted) {
+            mapCase.removePoliceWanted(player.character.id);
+        } else {
+            mapCase.addPoliceWanted(player);
+        }
     },
     getNearCell(player) {
         return this.cells[0]; // tests
@@ -206,5 +215,14 @@ module.exports = {
                 console.log(err.stack);
             }
         }, time);
+    },
+    getWanted() {
+        var wanted = [];
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!rec.character.wanted) return;
+            wanted.push(rec);
+        });
+        return wanted;
     },
 };

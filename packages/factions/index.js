@@ -235,14 +235,25 @@ module.exports = {
         character.save();
 
         player.call(`mapCase.init`, [player.name, faction.id]);
+        if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
     },
     deleteMember(player) {
         var character = player.character;
+        if (this.isPoliceFaction(character.factionId)) require('../mapCase').removePoliceMember(player);
         character.factionId = null;
         character.factionRank = null;
         character.save();
 
         player.call(`mapCase.enable`, [false]);
+    },
+    getMembers(player) {
+        var members = [];
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+            members.push(rec);
+        });
+        return members;
     },
     setRank(character, rank) {
         if (typeof rank == 'number') rank = this.getRank(character.factionId, rank);
@@ -252,31 +263,31 @@ module.exports = {
     },
     isGovernmentFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
-        return faction.id == 1;
+        return faction && faction.id == 1;
     },
     isPoliceFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
-        return faction.id == 2 || faction.id == 3;
+        return faction && (faction.id == 2 || faction.id == 3);
     },
     isFibFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
-        return faction.id == 4;
+        return faction && faction.id == 4;
     },
     isHospitalFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
-        return faction.id == 5;
+        return faction && faction.id == 5;
     },
     isArmyFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
-        return faction.id == 6;
+        return faction && faction.id == 6;
     },
     isNewsFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
-        return faction.id == 7;
+        return faction && faction.id == 7;
     },
     isStateFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
-        return faction.id >= 1 && faction.id <= 7;
+        return faction && (faction.id >= 1 && faction.id <= 7);
     },
     takeBox(player, type) {
         var header = "";

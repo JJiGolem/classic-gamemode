@@ -263,6 +263,7 @@
 #map-case .pd .window .profile .body .name span {
     color: #777777;
     font-size: 1.3vh;
+    white-space: nowrap;
 }
 
 #map-case .pd .window .profile .body .stars {

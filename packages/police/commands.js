@@ -53,7 +53,7 @@ module.exports = {
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
             if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
-
+            if (rec.character.wanted == args[1]) return out.error(`${rec.name} уже имеет ${args[1]} ур. розыска`, player);
             police.setWanted(player, args[1]);
 
             notifs.success(player, `${rec.name} имеет ${rec.character.wanted} ур.`, `Розыск`);
@@ -82,6 +82,22 @@ module.exports = {
         args: "[ид_игрока]:n",
         handler: (player, args, out) => {
             mp.events.call(`police.licenses.gun.take`, player, args[0]);
+        }
+    },
+    "/paddcall": {
+        access: 6,
+        description: "Добавить вызов в планшет.",
+        args: "[описание]",
+        handler: (player, args, out) => {
+            mp.events.call(`mapCase.pd.calls.add`, player, args.join(" "));
+        }
+    },
+    "/premcall": {
+        access: 6,
+        description: "Удалить вызов из планшета.",
+        args: "[ид]:n",
+        handler: (player, args, out) => {
+            mp.events.call(`mapCase.pd.calls.remove`, player, args[0]);
         }
     },
 }

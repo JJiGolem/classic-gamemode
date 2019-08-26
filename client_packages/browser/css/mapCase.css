@@ -290,10 +290,13 @@
 }
 
 #map-case .body .board .table .head div {
-    display: flex;
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    white-space: nowrap;
 }
 
 #map-case .body .board .table .head svg {
+    margin-top: 1vh;
     margin-left: 0.4vh;
     width: 0.9vh;
     fill: #A4A4A4;

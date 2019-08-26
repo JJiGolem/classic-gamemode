@@ -205,7 +205,7 @@
             </div>
             <div class="arrow arr-down" :class="{active: menu.j < menu.items.length - maxItems}"></div>
         </div>
-        <div v-if="valuesType(menu.i) == 0" class="selector" v-show="menu.items[menu.i].values">
+        <div v-if="valuesType(menu.i) == 0" class="selector" v-show="menu.items[menu.i].values.length > 1">
             <div v-for="value in values">{{ value }}</div>
         </div>
         <div v-else-if="valuesType(menu.i) == 1" class="selector select-color">
@@ -931,7 +931,7 @@
                         :style="{ pointerEvents: (currentRecord) ? 'none' : 'auto' }">
                         <div class="first"><div class="record-align">{{ record.num }}</div></div>
                         <div><div class="record-align">{{ record.name }}</div></div>
-                        <div><div class="record-align rank">{{ ranks[record.rank] }}</div></div>
+                        <div><div class="record-align rank">{{ ranks[record.rank - 1] }}</div></div>
                         <div><div class="record-align btn" @click="showModal($event, record)">
                             Действие
                             <svg viewBox="0 0 12 6"><path d="M1 1L5.3753 4.50024C5.74052 4.79242 6.25948 4.79242 6.6247 4.50024L11 1"/></svg>
