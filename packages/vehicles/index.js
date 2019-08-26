@@ -12,10 +12,11 @@ let breakdownConfig = {
     brakeState: 0.004
 };
 
-let houses = call('houses');
+let houses;
 
 module.exports = {
     async init() {
+        houses = call('houses');
         await this.loadVehiclePropertiesFromDB();
         await this.loadVehiclesFromDB();
         await this.loadCarPlates();

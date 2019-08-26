@@ -14,8 +14,18 @@ module.exports = {
                     accountId: player.account.id
                 },
                 include: [
-                    db.Models.Feature,
-                    db.Models.Appearance,
+                    {
+                        model: db.Models.Feature,
+                        order: [
+                            ['id', 'ASC'],
+                        ],
+                    },
+                    {
+                        model: db.Models.Appearance,
+                        order: [
+                            ['id', 'ASC'],
+                        ],
+                    },
                     db.Models.Fine,
                 ]
             });

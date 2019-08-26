@@ -23,7 +23,27 @@ module.exports = {
                     return player.call('chat.message.push', [`!{#ffffff} Используйте: ${command} ${cmd.args}`]);
                 }
             }
-            cmd.handler(player, args);
+
+            // TODO: Swift: реализиовать вывод ответа команд в чат
+            // Если player не передан, значит выводить сообщение всем админам
+            // пример в terminal/index.js
+            cmd.handler(player, args, {
+                log(text, player) {
+                    console.log(`${player.name}: ${text}`);
+                },
+                info(text, player) {
+                    console.log(`${player.name}: ${text}`);
+                },
+                warning(text, player) {
+                    console.log(`${player.name}: ${text}`);
+                },
+                error(text, player) {
+                    console.log(`${player.name}: ${text}`);
+                },
+                debug(text, player) {
+                    console.log(`${player.name}: ${text}`);
+                },
+            });
             // console.log(requiredArgs);
 
         }

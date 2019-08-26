@@ -1,6 +1,7 @@
 "use strict";
-var vehicles = call("vehicles");
-
+let vehicles = call("vehicles");
+// console.log("carmarket:");
+// console.log(vehicles);
 var marketSpots = [];
 var carMarketData;
 var marketCapacity;

@@ -118,6 +118,7 @@ mp.events.add('taxi.client.waypoint.created', (position) => {
 });
 
 mp.events.add('taxi.client.app.confirm', () => {
+    isActiveTaxiClient = false;
     destination = JSON.stringify(destination);
     mp.events.callRemote('taxi.client.app.confirm', destination);
 });
