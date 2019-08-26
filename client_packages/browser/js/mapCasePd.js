@@ -669,25 +669,9 @@ mapCasePdCallsData.accept = (data) => {
 
 
 //Функция, срабатывающая при поиске профиля по id
-//value - (id) значение из input
-mapCasePdIdentificationData.searchById = (value) => {
-    console.log(`Ищем профиль с id: ${value}`);
-
-    setTimeout(() => {
-        mapCasePdProfileData.setProfileData({
-            name: "Cyrus Raider",
-            id: value,
-            danger: 3,
-            cause: "УК 2.1; УК 2.2; УК 4.2.1",
-            gender: "M",
-            property: "Paleto Bay, 3",
-            phone: 1234567,
-            pass: "passid",
-            faction: "Мэрия",
-            rank: "Старший уборщик",
-            veh: "Elegy Retro (ZBT007), Akuma Dinka (ZBT001)"
-        });
-    }, 10000);
+//id - значение из input
+mapCasePdIdentificationData.searchById = (id) => {
+    mp.trigger(`mapCase.pd.search.start`, id);
 }
 
 
@@ -700,9 +684,7 @@ mapCasePdData.getProfile = (data) => {
 
 //Функция, срабатывающая при нажатии на Экстренный вызова+
 mapCasePdData.emergencyCall = () => {
-    setTimeout(() => {
-        mapCase.showGreenMessage(`Сработал экстренный вызов!`);
-    }, 3000);
+    mp.trigger(`callRemote`, `mapCase.pd.emergency.call`);
 };
 
 
@@ -734,12 +716,7 @@ mapCasePdMembersData.setRanks(["Старший Сержант", "Альпака"
 //Функция, срабатывающая при увольнение сотрудника
 //data - данные о сотруднике из записи в списке
 mapCasePdMembersData.dismiss = (data) => {
-    setTimeout(() => {
-        mapCase.showRedMessage(`<span>${data.name}</span><br /> был уволен`);
-
-        let index = mapCasePdMembersData.list.indexOf(data);
-        mapCasePdMembersData.list.splice(index, 1);
-    }, 3000);
+    mp.trigger(`callRemote`, `mapCase.pd.members.uval`, data.id);
 }
 
 
@@ -747,7 +724,7 @@ mapCasePdMembersData.dismiss = (data) => {
 //data - данные о сотруднике из записи в списке
 mapCasePdMembersData.lowerRank = (data) => {
     if (data.rank <= 1)
-        return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет мин. ранг - ${mapCasePdMembersData.ranks[data.rank]}`);
+        return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет мин. ранг - ${mapCasePdMembersData.ranks[data.rank - 1]}`);
     mp.trigger(`callRemote`, `mapCase.pd.rank.lower`, data.id);
 }
 
@@ -755,8 +732,8 @@ mapCasePdMembersData.lowerRank = (data) => {
 //Функция, срабатывающая при повышении сотрудника (крайние случаи не обработаны, может выйти за пределы массива рангов)
 //data - данные о сотруднике из записи в списке
 mapCasePdMembersData.raiseRank = (data) => {
-    if (data.rank >= mapCasePdMembersData.ranks.length - 1)
-        return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет макс. ранг - ${mapCasePdMembersData.ranks[data.rank]}`);
+    if (data.rank >= mapCasePdMembersData.ranks.length)
+        return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет макс. ранг - ${mapCasePdMembersData.ranks[data.rank - 1]}`);
     mp.trigger(`callRemote`, `mapCase.pd.rank.raise`, data.id);
 }
 
@@ -785,54 +762,5 @@ mapCasePdProfileData.giveWanted = (cause, danger, profileData) => {
     };
     mp.trigger(`callRemote`, `mapCase.pd.wanted.give`, JSON.stringify(data));
 }
-
-
-//for tests
-// mapCasePdMembersData.list = [{
-//         num: 1,
-//         name: "Curys Raider",
-//         rank: 0,
-//     },
-//     {
-//         num: 2,
-//         name: "Curysirusew Raiderderder",
-//         rank: 0,
-//     },
-//     {
-//         num: 3,
-//         name: "Curysirusew Raiderderder",
-//         rank: 1,
-//     },
-//     {
-//         num: 4,
-//         name: "Curys Raider",
-//         rank: 2,
-//     },
-//     {
-//         num: 5,
-//         name: "Curys Raider",
-//         rank: 2,
-//     },
-//     {
-//         num: 6,
-//         name: "Curys Raider",
-//         rank: 2,
-//     },
-//     {
-//         num: 7,
-//         name: "Curys Raider",
-//         rank: 1,
-//     },
-//     {
-//         num: 8,
-//         name: "Curys Raider",
-//         rank: 1,
-//     },
-//     {
-//         num: 9,
-//         name: "Curys Raider",
-//         rank: 1,
-//     },
-// ];
 
 //mapCasePdIdentificationData.waitingTime = 5;

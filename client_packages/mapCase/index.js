@@ -19,8 +19,24 @@ mp.mapCase = {
     showGreenMessage(text) {
         mp.callCEFV(`mapCase.showGreenMessage('${text}')`);
     },
+    showRedMessage(text) {
+        mp.callCEFV(`mapCase.showRedMessage('${text}')`);
+    },
 };
 mp.mapCasePd = {
+    // Время установления личности (ms)
+    searchTime: 3000,
+    // Макс. дистанция установления личности
+    searchMaxDist: 10,
+    // Таймер установления личности
+    searchTimer: null,
+    // ИД игрока, личность которого устанавливается
+    searchPlayerId: null,
+    // Вреся жизни блипа подкрепления (ms)
+    emergencyBlipTime: 60000,
+    // Блипы, где запросили подкрепление
+    emergencyBlips: [],
+
     menuHeader(top, bottom) {
         mp.callCEFV(`mapCasePdData.menuHeader.top = "${top}"`);
         mp.callCEFV(`mapCasePdData.menuHeader.bottom = "${bottom}"`);
@@ -39,7 +55,7 @@ mp.mapCasePd = {
         data.property = "-";
         if (data.housePos) data.property = mp.utils.getStreetName(pos) + `, ${data.houseId}` || "-";
         data.pass = 2608180000 + data.id;
-        data.gender = (data.gender)? "Ж" : "М";
+        data.gender = (data.gender) ? "Ж" : "М";
 
         if (typeof data == 'object') data = JSON.stringify(data);
         mp.callCEFV(`mapCasePdProfileData.setProfileData('${data}')`);
@@ -72,6 +88,34 @@ mp.mapCasePd = {
     setMemberRank(id, rank) {
         mp.callCEFV(`mapCasePdMembersData.setMemberRank(${id}, ${rank})`);
     },
+    startSearch(id) {
+        this.stopSearch();
+        var rec = mp.players.atRemoteId(id);
+        if (!id) return mp.mapCase.showRedMessage(`Игрок <span>#${id}</span> не найден`);
+        this.searchPlayerId = id;
+        this.searchTimer = setTimeout(() => {
+            mp.events.callRemote(`mapCase.pd.searchById`, id);
+            mp.mapCasePd.stopSearch();
+        }, this.searchTime);
+    },
+    stopSearch(text = null) {
+        clearTimeout(this.searchTimer);
+        this.searchTimer = null;
+        this.searchPlayerId = null;
+        if (text) mp.mapCase.showRedMessage(text);
+    },
+    addEmergencyBlip(name, pos) {
+        var blip = mp.blips.new(133, pos, {
+            name: name,
+            color: 39
+        });
+        this.emergencyBlips.push(blip);
+        setTimeout(() => {
+            var index = this.emergencyBlips.indexOf(blip);
+            this.emergencyBlips.splice(index, 1);
+            blip.destroy();
+        }, this.emergencyBlipTime);
+    },
 };
 
 mp.events.add("mapCase.init", (name, factionId) => {
@@ -89,7 +133,9 @@ mp.events.add("mapCase.init", (name, factionId) => {
 
 mp.events.add("mapCase.enable", mp.mapCase.enable);
 
-mp.events.add("mapCase.message.green.show", mp.mapCase.showGreenMessage)
+mp.events.add("mapCase.message.green.show", mp.mapCase.showGreenMessage);
+
+mp.events.add("mapCase.message.red.show", mp.mapCase.showRedMessage)
 
 mp.events.add("mapCase.pd.resultData.set", mp.mapCasePd.setResultData);
 
@@ -110,3 +156,21 @@ mp.events.add("mapCase.pd.members.remove", mp.mapCasePd.removeMember);
 mp.events.add("mapCase.pd.ranks.set", mp.mapCasePd.setRanks);
 
 mp.events.add("mapCase.pd.members.rank.set", mp.mapCasePd.setMemberRank);
+
+mp.events.add("mapCase.pd.search.start", (recId) => {
+    mp.mapCasePd.startSearch(recId);
+});
+
+mp.events.add("time.main.tick", () => {
+    var id = mp.mapCasePd.searchPlayerId;
+    if (id) { // происходит установление личности
+        var rec = mp.players.atRemoteId(id);
+        if (!rec) return mp.mapCasePd.stopSearch(`Игрок не найден`);
+        var dist = mp.vdist(rec.position, mp.players.local.position);
+        if (dist > mp.mapCasePd.searchMaxDist) return mp.mapCasePd.stopSearch(`Игрок далеко`);
+    }
+});
+
+mp.events.add("mapCase.pd.emergencyBlips.add", (name, pos) => {
+    mp.mapCasePd.addEmergencyBlip(name, pos);
+});
