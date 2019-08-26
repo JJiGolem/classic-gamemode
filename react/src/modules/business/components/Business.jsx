@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 
@@ -19,6 +20,7 @@ class Business extends Component {
         this.state = {
             colorBuy: '#e1c631',
             colorActions: '#e1c631',
+            colorActionButton: '#e1c631',
             isActionsMenu: false,
             isConfirm: false
         };
@@ -68,29 +70,46 @@ class Business extends Component {
             // eslint-disable-next-line no-undef
             mp.trigger('biz.buy');
 
-             /*setTimeout(() => {
-                 setAnswer({answer: 1, owner: 'Dun Hill'});
-             }, 1000)*/
+            //  setTimeout(() => {
+            //      setAnswer({answer: 1, owner: 'Dun Hill'});
+            //  }, 1000)
         }
     }
 
-    showActionsMenu(house) {
-        return (
-            <div className='message_back-house-react' onClick={() => {
-                this.setState({ isActionsMenu: false });
-                this.props.blurForm(false);
-            }}>
-                <div className='exitEnterBusiness' name='exit'></div>
-                Список действий пуст<br/>
-                <div>
-                    <svg style={{ display: 'block', margin: '5% 45%' }} id="Group_10" data-name="Group 10" xmlns="http://www.w3.org/2000/svg" width="10%" height="10%" viewBox="0 0 233.069 233.069">
-                        <path id="Path_26" data-name="Path 26" d="M116.535,0A116.535,116.535,0,1,0,233.069,116.535,116.666,116.666,0,0,0,116.535,0Zm0,224.1A107.57,107.57,0,1,1,224.1,116.535,107.7,107.7,0,0,1,116.535,224.1Z" fill="#e1c631"/>
-                        <path id="Path_27" data-name="Path 27" d="M104.33,17.314a4.477,4.477,0,0,0-6.338,0l-37.17,37.17-37.17-37.17a4.481,4.481,0,1,0-6.338,6.338l37.17,37.17-37.17,37.17a4.481,4.481,0,1,0,6.338,6.338l37.17-37.17,37.17,37.17a4.481,4.481,0,0,0,6.338-6.338L67.16,60.822l37.17-37.17A4.477,4.477,0,0,0,104.33,17.314Z" transform="translate(55.713 55.713)" fill="#e1c631"/>
-                    </svg>
+    showActionsMenu() {
+        const { business } = this.props;
+
+        if (business.actions.length !== 0) {
+            return (
+                <div className='message_back-house-react' style={{ height: '40%' }}>
+                    <div className='exitEnterBusiness' name='exit'
+                        onClick={() => {
+                            this.setState({ isActionsMenu: false });
+                            this.props.blurForm(false);
+                        }}
+                    >
+                    </div>
+                    { business.actions.map(action => this.getButton(action)) }
                 </div>
-                Нажмите на это сообщение для продолжения
-            </div>
-        )
+            )
+        } else {
+            return (
+                <div className='message_back-house-react' onClick={() => {
+                    this.setState({ isActionsMenu: false });
+                    this.props.blurForm(false);
+                }}>
+                    <div className='exitEnterBusiness' name='exit'></div>
+                    Список действий пуст<br/>
+                    <div>
+                        <svg style={{ display: 'block', margin: '5% 45%' }} id="Group_10" data-name="Group 10" xmlns="http://www.w3.org/2000/svg" width="10%" height="10%" viewBox="0 0 233.069 233.069">
+                            <path id="Path_26" data-name="Path 26" d="M116.535,0A116.535,116.535,0,1,0,233.069,116.535,116.666,116.666,0,0,0,116.535,0Zm0,224.1A107.57,107.57,0,1,1,224.1,116.535,107.7,107.7,0,0,1,116.535,224.1Z" fill="#e1c631"/>
+                            <path id="Path_27" data-name="Path 27" d="M104.33,17.314a4.477,4.477,0,0,0-6.338,0l-37.17,37.17-37.17-37.17a4.481,4.481,0,1,0-6.338,6.338l37.17,37.17-37.17,37.17a4.481,4.481,0,1,0,6.338,6.338l37.17-37.17,37.17,37.17a4.481,4.481,0,0,0,6.338-6.338L67.16,60.822l37.17-37.17A4.477,4.477,0,0,0,104.33,17.314Z" transform="translate(55.713 55.713)" fill="#e1c631"/>
+                        </svg>
+                    </div>
+                    Нажмите на это сообщение для продолжения
+                </div>
+            )
+        }
     }
 
     getButton(name) {
@@ -142,6 +161,25 @@ class Business extends Component {
                         Действия
                     </div>
                 );
+
+            case 'finance':
+                    return (
+                        <div className='button-house-react' 
+                            onClick={() => { 
+                                // eslint-disable-next-line no-undef
+                                mp.trigger('biz.actions', 'finance');
+                             }}
+                            onMouseOver={() => this.setState({ colorActionButton: 'black' })}
+                            onMouseOut={() => this.setState({ colorActionButton: '#e1c631' })}
+                        >
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40%" height="40%" viewBox="0 0 217.794 216.8" fill={this.state.colorActionButton}>
+                                    <path id="two-settings-cogwheels" d="M113.6,133.642l-5.932-13.169a57.493,57.493,0,0,0,14.307-15.209l13.507,5.118a5,5,0,0,0,6.447-2.9l4.964-13.1a5,5,0,0,0-2.9-6.447L130.476,82.81a57.471,57.471,0,0,0-.637-20.871l13.169-5.932a5,5,0,0,0,2.5-6.613l-5.755-12.775a5,5,0,0,0-6.612-2.505l-13.169,5.932a57.493,57.493,0,0,0-15.209-14.307l5.118-13.507a5,5,0,0,0-2.9-6.447L93.88.82a5,5,0,0,0-6.447,2.905L82.316,17.231a57.327,57.327,0,0,0-20.872.636L55.513,4.7a5,5,0,0,0-6.613-2.5L36.124,7.949a5,5,0,0,0-2.505,6.612L39.551,27.73A57.493,57.493,0,0,0,25.244,42.939L11.737,37.821a5,5,0,0,0-6.447,2.9L.326,53.828a5,5,0,0,0,2.9,6.447l13.507,5.118a57.471,57.471,0,0,0,.637,20.871L4.2,92.2a5,5,0,0,0-2.5,6.613l5.755,12.775a5,5,0,0,0,6.612,2.505l13.169-5.932a57.462,57.462,0,0,0,15.209,14.307l-5.118,13.507a5,5,0,0,0,2.9,6.447l13.1,4.964a5,5,0,0,0,6.447-2.9L64.9,130.971a57.348,57.348,0,0,0,20.872-.636L91.7,143.5a5,5,0,0,0,6.613,2.5l12.775-5.754A5,5,0,0,0,113.6,133.642Zm-8.286-47.529A33.864,33.864,0,0,1,61.595,105.8,33.9,33.9,0,0,1,41.9,62.09,33.864,33.864,0,0,1,85.618,42.4a33.9,33.9,0,0,1,19.691,43.714Zm111.169,68.276a5,5,0,0,0-3.469-1.615l-9.418-.4a43.2,43.2,0,0,0-4.633-12.7L205.9,133.3a5,5,0,0,0,.3-7.064l-6.9-7.514a5,5,0,0,0-7.065-.3l-6.944,6.374a43.211,43.211,0,0,0-12.254-5.7l.4-9.418a5,5,0,0,0-4.782-5.209l-10.189-.437a5.018,5.018,0,0,0-5.209,4.781l-.4,9.418a43.251,43.251,0,0,0-12.7,4.632l-6.374-6.945a5,5,0,0,0-7.064-.3l-7.514,6.9a5,5,0,0,0-.3,7.064l6.374,6.945a43.2,43.2,0,0,0-5.7,12.254l-9.417-.4a5.012,5.012,0,0,0-5.21,4.781l-.437,10.189a5,5,0,0,0,4.782,5.21l9.417.4a43.247,43.247,0,0,0,4.632,12.7l-6.944,6.374a5,5,0,0,0-.3,7.064L123,202.6a5,5,0,0,0,7.065.3l6.944-6.374a43.211,43.211,0,0,0,12.254,5.7l-.4,9.418a5,5,0,0,0,4.781,5.209l10.189.437c.072,0,.143,0,.214,0a5,5,0,0,0,5-4.785l.4-9.418a43.251,43.251,0,0,0,12.7-4.632l6.374,6.945a5,5,0,0,0,7.064.3l7.514-6.9a5,5,0,0,0,.3-7.064l-6.374-6.945a43.2,43.2,0,0,0,5.7-12.254l9.417.4a5.011,5.011,0,0,0,5.21-4.781l.437-10.189A5,5,0,0,0,216.478,154.389Zm-56.321,29.564a23.315,23.315,0,0,1,.978-46.609q.507,0,1.019.022a23.315,23.315,0,1,1-2,46.587Z" transform="translate(0 -0.496)"/>
+                                </svg>
+                            </div>
+                            Финансы
+                        </div>
+                    );
         }
     }
 

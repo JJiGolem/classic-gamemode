@@ -1,6 +1,7 @@
 // Основной игровой худ - погода, деньги, онлайн
-
 "use strict"
+
+var factions = call('factions');
 
 module.exports = {
     getPlayers() {  
