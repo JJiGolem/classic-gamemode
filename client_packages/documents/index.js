@@ -160,7 +160,9 @@ mp.events.add('documents.carPass.list.choose', (plate) => {
     //mp.chat.debug(plate);
     for (let i = 0; i < carPassList.length; i++) {
         if (carPassList[i].plate == plate) {
-            mp.events.callRemote('documents.offer', "carPass", mp.players.local.remoteId, JSON.stringify(carPassList[i]));
+            let target = mp.getCurrentInteractionEntity();
+            if (target.type != 'player') return;
+            mp.events.callRemote('documents.offer', "carPass", target.remoteId, JSON.stringify(carPassList[i]));
         }
     }
 });

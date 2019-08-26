@@ -125,8 +125,10 @@ var interactionMenu = new Vue({
                     if (item.text == 'Документы') {
                         mp.trigger(`documents.list`);
                     } else if (item.text == 'Деньги') {
-                        mp.trigger(`interaction.menu.close`);
+                        //mp.trigger(`interaction.menu.close`);
+                        interactionMenu.show = false;
                         mp.trigger(`interaction.money.show`);
+                       
                     } else if (item.text == 'Организация') {
                         // TODO: ...
                     }

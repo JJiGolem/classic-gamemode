@@ -230,7 +230,7 @@ mp.events.add('interaction.money.show', () => {
     if (!currentInteractionEntity) return;
     if (currentInteractionEntity.type != 'player') return;
 
-    let playerName = currentInteractionEntity.getVariable('nick');
+    let playerName = currentInteractionEntity.name;
     if (!playerName) return;
     mp.busy.add('money_giving');
     mp.gui.cursor.show(true, true);
