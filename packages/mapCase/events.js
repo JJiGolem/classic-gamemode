@@ -3,6 +3,7 @@ var factions = require('../factions');
 var mapCase = require('./index');
 var notifs = require('../notifications');
 var police = require('../police');
+var utils = require('../utils');
 
 module.exports = {
     "init": async () => {},
@@ -83,6 +84,20 @@ module.exports = {
         var result = mapCase.convertCharactersToResultData(characters);
         player.call(`mapCase.pd.resultData.set`, [result]);
     },
+    "mapCase.pd.searchById": async (player, recId) => {
+        var header = `Установление личности`;
+        var rec = mp.players.at(recId);
+        if (!rec) return player.call(`mapCase.message.red.show`, [`Игрок <span>#${recId}</span> не найден`]);
+
+        var vehicles = await db.Models.Vehicle.findAll({
+            where: {
+                key: "owner",
+                owner: recId
+            }
+        });
+        var result = mapCase.convertCharactersToProfileData(rec.character, vehicles);
+        player.call(`mapCase.pd.profileData.set`, [result]);
+    },
     "mapCase.pd.getProfile": async (player, id) => {
         // console.log(`getProfile: ${id}`)
         var character = await db.Models.Character.findByPk(id, {
@@ -97,7 +112,6 @@ module.exports = {
         });
         var result = mapCase.convertCharactersToProfileData(character, vehicles);
         player.call(`mapCase.pd.profileData.set`, [result]);
-
     },
     "mapCase.pd.fines.give": async (player, data) => {
         data = JSON.parse(data);
@@ -111,6 +125,7 @@ module.exports = {
         var rec = mp.players.getBySqlId(data.recId);
         if (rec) rec.character.Fines.push(fine);
 
+        notifs.info(rec, `${player.name} выписал вам штраф на сумму $${fine.price} (${fine.cause})`, `Штраф`);
         var text = `Штраф на сумму <span>${fine.price}$</span><br/>выдан <span>${data.recName}</span><br/> по причине <span>${data.cause}</span>`;
         player.call(`mapCase.message.green.show`, [text]);
     },
@@ -129,6 +144,7 @@ module.exports = {
                 id: data.recId
             }
         });
+        notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур. розыска (${data.cause})`, `Розыск`);
         var text = `Уровень розыска <span>${data.wanted}&#9733;</span><br/>выдан <span>${data.recName}</span><br/> по причине <span>${data.cause}</span>`;
         player.call(`mapCase.message.green.show`, [text]);
     },
