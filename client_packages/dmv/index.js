@@ -35,7 +35,7 @@ mp.events.add('dmv.menu.close', () => {
 });
 
 mp.events.add('dmv.license.buy.ans', (ans) => {
-    mp.callCEFV('loader.show = false');
+    mp.callCEFV('selectMenu.loader = false');
     switch (ans) {
         case 0:
             mp.notify.warning('У вас уже есть лицензия', 'Лицензии');

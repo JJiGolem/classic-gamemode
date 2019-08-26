@@ -2309,8 +2309,8 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-                        loader.show = true;
-                        mp.trigger(`dmv.menu.close`);
+                        selectMenu.loader = true;
+                        //mp.trigger(`dmv.menu.close`);
                         if (e.itemName == 'Легковой транспорт') {
                             mp.trigger('callRemote', 'dmv.license.buy', 0);
                         }

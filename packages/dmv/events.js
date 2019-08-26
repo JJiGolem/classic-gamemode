@@ -23,7 +23,7 @@ module.exports = {
                 break;
             case 2:
                 if (player.character.bikeLicense) return player.call('dmv.license.buy.ans', [0]);
-                lic = 'carLicense';
+                lic = 'bikeLicense';
                 price = PRICE.BIKE;
                 break;
             case 3:
