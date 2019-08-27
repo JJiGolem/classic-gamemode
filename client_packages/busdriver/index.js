@@ -40,11 +40,5 @@ mp.events.add('busdriver.jobmenu.close', () => {
 });
 
 
-let newCheckpoint = mp.checkpoints.new(5, new mp.Vector3(-268.616455078125, -333.3382873535156, 30.001811981201172 - 3), 10, // point
-{
-    color: [255, 246, 0, 255],
-    visible: true,
-    dimension: 0
-});
-
 // [30, 206, 255, 255] stop
+// [255, 246, 0, 255] point

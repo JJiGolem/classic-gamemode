@@ -37,7 +37,6 @@ mp.events.add('routecreator.checkpoint.add', (type) => {
 
     mp.notify.success(`${type ? 'Чекпоинт остановки' : 'Чекпоинт'} создан`);
     checkpoints.push(check);
-    mp.chat.debug(JSON.stringify(route.points));
 });
 
 
@@ -47,9 +46,6 @@ mp.events.add('routecreator.route.save', (name, salary, level) => {
     route.name = name;
     route.salary = salary;
     route.level = level;
-    mp.chat.debug(name);
-    mp.chat.debug(salary);
-    mp.chat.debug(level);
     mp.events.callRemote('busdriver.route.add', JSON.stringify(route));
     mp.events.call('routecreator.close');
     clearRoute();
