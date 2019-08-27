@@ -5,11 +5,6 @@ let bus = require('./index.js');
 module.exports = {
     "init": () => {
         bus.init();
-
-        // let busRoutes = await db.Models.BusRoute.findAll({
-        //     include: [{ model: db.Models.BusRoutePoint }]
-        // });
-        // console.log(busRoutes)
     },
     "busdriver.employment": (player) => {
         if (player.character.job == 3) {
@@ -19,4 +14,24 @@ module.exports = {
             mp.events.call("jobs.set", player, 3);
         }
     },
+    "busdriver.route.add": async (player, data) => {
+        data = JSON.parse(data);
+        console.log(data);
+        let route = await db.Models.BusRoute.create({
+            name: data.name,
+            level: data.level,
+            salary: data.salary
+        });
+        console.log(route.id);
+        data.points.forEach((current) => {
+             db.Models.BusRoutePoint.create({
+                routeId: route.id,
+                x: current.x,
+                y: current.y,
+                z: current.z,
+                isStop: current.isStop
+            });
+        });
+        player.call('notifications.push.success', ['Маршрут создан', 'Route Creator']);
+    }
 }

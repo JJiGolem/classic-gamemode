@@ -2378,16 +2378,6 @@ var selectMenu = new Vue({
                 name: "routecreator",
                 header: "Route Creator",
                 items: [
-
-                    {
-                        text: "Добавить чекпоинт",
-                    },
-                    {
-                        text: "Добавить остановку",
-                    },
-                    {
-                        text: "Удалить последнюю точку",
-                    },
                     {
                         text: "Название маршрута",
                         values: [""],
@@ -2402,6 +2392,15 @@ var selectMenu = new Vue({
                         text: "Уровень автобусника",
                         values: ['0', '1'],
                         i: 0,
+                    },
+                    {
+                        text: "Добавить чекпоинт",
+                    },
+                    {
+                        text: "Добавить остановку",
+                    },
+                    {
+                        text: "Удалить последнюю точку",
                     },
                     {
                         text: "Сохранить",
@@ -2426,7 +2425,24 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         switch (e.itemName) {
-
+                            case 'Добавить чекпоинт':
+                                mp.trigger('routecreator.checkpoint.add', 0);
+                                break;
+                            case 'Добавить остановку':
+                                mp.trigger('routecreator.checkpoint.add', 1);
+                                break;
+                            case 'Сохранить':
+                                mp.trigger('routecreator.route.save', this.items[0].values[0], this.items[1].values[0], this.items[2].i);
+                                break;
+                            case 'Закрыть':
+                                mp.trigger('routecreator.close');
+                                break;
+                            case 'Удалить последнюю точку':
+                                mp.trigger('routecreator.checkpoint.delete');
+                                break;
+                            case 'Очистить':
+                                mp.trigger('routecreator.route.clear');
+                                break;
                         }
                     }
                 }
