@@ -1,7 +1,5 @@
 "use strict";
 let vehicles = call("vehicles");
-console.log("driver:");
-console.log(vehicles);
 
 let busStation = {
     x: 435.4512634277344,
