@@ -2374,6 +2374,63 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "routeCreator": {
+                name: "routecreator",
+                header: "Route Creator",
+                items: [
+
+                    {
+                        text: "Добавить чекпоинт",
+                    },
+                    {
+                        text: "Добавить остановку",
+                    },
+                    {
+                        text: "Удалить последнюю точку",
+                    },
+                    {
+                        text: "Название маршрута",
+                        values: [""],
+                        type: "editable"
+                    },
+                    {
+                        text: "Цена за точку",
+                        values: [""],
+                        type: "editable"
+                    },
+                    {
+                        text: "Уровень автобусника",
+                        values: ['0', '1'],
+                        i: 0,
+                    },
+                    {
+                        text: "Сохранить",
+                    },
+                    {
+                        text: "Очистить",
+                    },
+                    {
+                        text: "Закрыть",
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        switch (e.itemName) {
+
+                        }
+                    }
+                }
+            },
         },
         // Уведомление
         notification: null,

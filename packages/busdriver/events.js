@@ -5,6 +5,11 @@ let bus = require('./index.js');
 module.exports = {
     "init": () => {
         bus.init();
+
+        // let busRoutes = await db.Models.BusRoute.findAll({
+        //     include: [{ model: db.Models.BusRoutePoint }]
+        // });
+        // console.log(busRoutes)
     },
     "busdriver.employment": (player) => {
         if (player.character.job == 3) {

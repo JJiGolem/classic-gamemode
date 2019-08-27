@@ -209,13 +209,13 @@ var interactionMenu = new Vue({
             this.menu.handler(index);
         }
     },
-    watch: {
-        show(val) {
-            setCursor(val);
-            if (val) busy.add("interaction", true);
-            else busy.remove("interaction", true);
-        }
-    },
+    // watch: {
+    //     show(val) {
+    //         setCursor(val);
+    //         if (val) busy.add("interaction", true);
+    //         else busy.remove("interaction", true);
+    //     }
+    // },
 });
 
 // for tests

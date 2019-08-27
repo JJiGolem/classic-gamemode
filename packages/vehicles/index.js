@@ -474,7 +474,7 @@ module.exports = {
         vehicle.d = place.d;
         place.veh = vehicle;
 
-
+        // todo comment
         console.log(player.carPlaces);
     },
     isAbleToBuyVehicle(player) {

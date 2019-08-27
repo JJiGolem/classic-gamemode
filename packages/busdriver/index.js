@@ -16,10 +16,12 @@ let busStation = {
 }
 
 let shape;
+let busStops;
 
 module.exports = {
     init() {
         this.createBusStation();
+        this.loadBusStopsFromDB();
     },
     createBusStation() {
         mp.blips.new(513, new mp.Vector3(busStation.x, busStation.y, busStation.z),
@@ -46,5 +48,22 @@ module.exports = {
         shape.onExit = (player) => {
             player.call('busdriver.jobmenu.close');
         }
+    },
+    async loadBusStopsFromDB() {
+        busStops = await db.Models.BusStop.findAll();
+
+        for (var i = 0; i < busStops.length; i++) {
+            this.createBusStop(busStops[i]);
+        }
+        console.log(`[BUSDRIVER] Загружено автобусных остановок: ${i}`);
+    },
+    createBusStop(stop) {
+       let label = mp.labels.new(`Автобусная остановка \n ~y~${stop.name}`, new mp.Vector3(stop.x, stop.y, stop.z),
+        {
+            los: false,
+            font: 0,
+            drawDistance: 15,
+        });
+        label.busStopId = stop.id;
     }
 }
