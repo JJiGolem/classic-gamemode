@@ -256,6 +256,7 @@ module.exports = {
                     console.log(err)
                 }
             }, 30000);
+            console.log('TAXI RESPAWN TIMER: ' + vehicle.taxiRespawnTimer);
         }
         if (player.taxiClientDestination) {
             mp.events.call('taxi.client.order.cancel', player);

@@ -38,3 +38,11 @@ mp.events.add('busdriver.jobmenu.close', () => {
     mp.busy.remove('busdriver.jobmenu');
     mp.callCEFV(`selectMenu.show = false`);
 });
+
+
+// let newCheckpoint = mp.checkpoints.new(5, new mp.Vector3(-268.616455078125, -333.3382873535156, 30.001811981201172 - 3), 10,
+// {
+//     color: [30, 206, 255, 255],
+//     visible: true,
+//     dimension: 0
+// });

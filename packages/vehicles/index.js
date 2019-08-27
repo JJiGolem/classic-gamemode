@@ -98,7 +98,7 @@ module.exports = {
         vehicle.fuelTimer = setInterval(() => {
             try {
                 if (vehicle.engine) {
-
+                    console.log(`fuel tick for ${vehicle.id}`);
                     vehicle.fuel = vehicle.fuel - 1;
                     if (vehicle.fuel <= 0) {
                         vehicle.engine = false;
@@ -111,6 +111,7 @@ module.exports = {
                 console.log(err);
             }
         }, vehicle.fuelTick);
+        console.log('FUEL TIMER: ' + vehicle.fuelTimer);
         return vehicle;
     },
     getDriver(vehicle) {
