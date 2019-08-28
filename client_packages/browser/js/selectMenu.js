@@ -2447,6 +2447,45 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "busMenu": {
+                name: "busmenu",
+                header: "Выбор маршрута",
+                items: [{
+                        text: "Маршрут",
+                        values: ['1', '2'],
+
+                    },
+                    {
+                        text: "Оплата за проезд",
+                        values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                        min: "$0",
+                        max: "$10",
+                    },
+                    {
+                        text: "Начать работу",
+                    },
+                    {
+                        text: "Отмена",
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Начать работу') {
+                            mp.trigger(`busdriver.menu.start`, this.items[0].i, this.items[1].values[this.items[1].i]);
+                        }
+                    }
+                }
+            },
         },
         // Уведомление
         notification: null,

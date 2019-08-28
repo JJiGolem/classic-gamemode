@@ -16,6 +16,8 @@ let busStation = {
 let shape;
 let busStops;
 
+const RENT_PRICE = 50;
+
 module.exports = {
     init() {
         this.createBusStation();
@@ -63,5 +65,12 @@ module.exports = {
             drawDistance: 15,
         });
         label.busStopId = stop.id;
+    },
+    getRentPrice() {
+        return RENT_PRICE;
+    },
+    getRoutesTypeByModel(model) {
+        if (model == 'rentalbus') return 0;
+        if (model == 'coach') return 1;
     }
 }

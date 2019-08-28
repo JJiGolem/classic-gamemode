@@ -20,14 +20,20 @@ var acceptWindow = new Vue({
                 mp.trigger('callRemote', 'taxi.rent.accept', 1);
                 mp.trigger('taxi.rent.close');
             }
+            if (this.name == 'bus_rent') {
+                loader.show = true;
+                mp.trigger('callRemote', 'busdriver.rent.accept', 1);
+                mp.trigger('busdriver.rent.close');
+            }
         },
         decline() {
             if (this.name == 'carsell') {
                 mp.trigger('vehicles.sell.seller.accept', 0);
             }
-            if (this.name == 'taxi_rent') {
-                mp.trigger('callRemote', 'taxi.rent.accept', 0);
-                mp.trigger('taxi.rent.close');
+            if (this.name == 'bus_rent') {
+                loader.show = true;
+                mp.trigger('callRemote', 'busdriver.rent.accept', 0);
+                mp.trigger('busdriver.rent.close');
             }
         },
     }
