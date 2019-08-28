@@ -24,7 +24,7 @@ mp.events.add('routecreator.checkpoint.add', (type) => {
     route.points.push({
         x: position.x,
         y: position.y,
-        z: position.z,
+        z: position.z - 3,
         isStop: type
     });
 

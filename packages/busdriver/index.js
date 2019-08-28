@@ -15,6 +15,7 @@ let busStation = {
 
 let shape;
 let busStops;
+let busRoutes;
 
 const RENT_PRICE = 50;
 
@@ -22,6 +23,7 @@ module.exports = {
     init() {
         this.createBusStation();
         this.loadBusStopsFromDB();
+        this.loadBusRoutesFromDB();
     },
     createBusStation() {
         mp.blips.new(513, new mp.Vector3(busStation.x, busStation.y, busStation.z),
@@ -57,6 +59,19 @@ module.exports = {
         }
         console.log(`[BUSDRIVER] Загружено автобусных остановок: ${i}`);
     },
+    async loadBusRoutesFromDB() {
+        busRoutes = await db.Models.BusRoute.findAll({
+            include: [{
+                model: db.Models.BusRoutePoint
+            }]   
+        });
+
+        // for (var i = 0; i < busStops.length; i++) {
+        //     this.createBusStop(busStops[i]);
+        // }
+        //console.log(busRoutes);
+        console.log(`[BUSDRIVER] Загружено маршрутов: ${busRoutes.length}`);
+    },
     createBusStop(stop) {
        let label = mp.labels.new(`Автобусная остановка \n ~y~${stop.name}`, new mp.Vector3(stop.x, stop.y, stop.z),
         {
@@ -69,8 +84,25 @@ module.exports = {
     getRentPrice() {
         return RENT_PRICE;
     },
-    getRoutesTypeByModel(model) {
+    getRoutesLevelByModel(model) {
         if (model == 'rentalbus') return 0;
         if (model == 'coach') return 1;
+        return null;
+    },
+    getAvailiableRoutes(player) {
+        if (!player.vehicle) return;
+
+        let level = this.getRoutesLevelByModel(player.vehicle.modelName);
+        let routes = busRoutes.filter(x => x.level == level);
+        let result = routes.map(function (current) {
+            return {
+                id: current.id,
+                name: current.name
+            };
+        });
+        return result;
+    },
+    getRouteById(id) {
+        return busRoutes.find(x => x.id == id);
     }
 }

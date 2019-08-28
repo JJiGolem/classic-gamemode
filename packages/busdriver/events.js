@@ -1,6 +1,7 @@
 let bus = require('./index.js');
 let money = call('money');
 // let vehicles = call('vehicles');
+let notify = call('notifications');
 
 module.exports = {
     "init": () => {
@@ -10,7 +11,7 @@ module.exports = {
         if (player.character.job == 3) {
             mp.events.call("jobs.leave", player);
         } else {
-            if (!player.character.passengerLicense) return player.call('notifications.push.error', ['У вас нет прав на пассажирский транспорт', 'Автобусная станция'])
+            if (!player.character.passengerLicense) return notify.error(player, 'У вас нет прав на пассажирский транспорт', 'Автобусная станция');
             mp.events.call("jobs.set", player, 3);
         }
     },
@@ -32,7 +33,7 @@ module.exports = {
                 isStop: current.isStop
             });
         });
-        player.call('notifications.push.success', ['Маршрут создан', 'Route Creator']);
+        notify.success(player, 'Маршрут создан', 'Route Creator');
     },
     "vehicle.ready": (player, vehicle, seat) => {
         if (vehicle.key == 'job' && vehicle.owner == 3 && seat == -1) {
@@ -41,7 +42,7 @@ module.exports = {
                 player.call('busdriver.rent.show', [bus.getRentPrice()]);
             } else {
                 if (vehicle.busDriverId != player.id) {
-                    player.call('notifications.push.error', ['Транспорт уже арендован', 'Автобус']);
+                    notify.error(player, 'Транспорт уже арендован', 'Автобус');
                     player.removeFromVehicle();
                 }
             }
@@ -70,16 +71,11 @@ module.exports = {
             if (result) {
                 vehicle.isActiveBus = true;
                 vehicle.busDriverId = player.id;
-                let data = [{
-                    id: '5',
-                    name: 'Пригородный Лос-Сантос'
-                },
-                {
-                    id: '11',
-                    name: 'Лос-Сантос - Палето-Бэй'
-                }
-            ]
-                player.call('busdriver.rent.ans', [0, data]);
+                    let routes = bus.getAvailiableRoutes(player);
+                    //console.log(routes);
+                    if (routes.length == 0) notify.warning(player, 'Нет доступных маршрутов', 'Автобус');
+                    player.call('busdriver.rent.ans', [0, routes]);
+
             } else {
                 player.call('busdriver.rent.ans', [1]);
                 if (player.vehicle) player.removeFromVehicle();
@@ -87,4 +83,45 @@ module.exports = {
         });
 
     },
+    "busdriver.route.start": (player, routeId, price) => {
+        if (!player.vehicle || !player.vehicle.isActiveBus) return player.call('busdriver.route.start.ans', [0]);
+        let route = bus.getRouteById(routeId);
+        player.vehicle.hasBusRoute = true;
+        player.busRoute = route;
+        player.busPointIndex = 0;
+        player.busPoints = route.BusRoutePoints.map(function(current) {
+            return {
+                x: current.x,
+                y: current.y,
+                z: current.z,
+                isStop: current.isStop
+            }
+        })
+        console.log(player.busPoints);
+        player.call('busdriver.route.start.ans', [1, player.busPoints[0]]);
+    },
+    "busdriver.menu.closed": (player) => {
+        if (player.vehicle) player.removeFromVehicle();
+    },
+    "playerEnterVehicle": (player, vehicle, seat) => {
+        if (seat == -1 && vehicle.busDriverId == player.id && !vehicle.hasBusRoute) {
+            let routes = bus.getAvailiableRoutes(player);
+            if (routes.length == 0) notify.warning(player, 'Нет доступных маршрутов', 'Автобус');
+            player.call('busdriver.menu.show', [routes]);
+        }
+    },
+    "playerExitVehicle": (player, vehicle) => {
+        if (vehicle.busDriverId == player.id && !vehicle.hasBusRoute && vehicle.isActiveBus) {
+            player.call('busdriver.menu.close');
+        }
+    },
+    "busdriver.checkpoint.entered": (player) => {
+        if (!player.vehicle) return; // создавать старый чекпоинт заново ?
+        if (player.vehicle.busDriverId != player.id) return; // создавать старый чекпоинт заново ?
+        player.busPoints[player.busPointIndex].isStop ? notify.info(player, 'Ожидайте пассажиров', 'Остановка') : notify.success(player, 'Продолжайте движение', 'Маршрут');
+        player.busPointIndex++;
+        if (player.busPointIndex == player.busPoints.length) player.busPointIndex = 0;
+        let point = player.busPoints[player.busPointIndex];
+        player.call('busdriver.checkpoint.create', [point]);
+    }
 }

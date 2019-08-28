@@ -2482,6 +2482,12 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Начать работу') {
                             mp.trigger(`busdriver.menu.start`, this.items[0].i, this.items[1].values[this.items[1].i]);
+                            mp.trigger(`busdriver.menu.close`);
+                            loader.show = true;
+                        }
+                        if (e.itemName == 'Отмена') {
+                            mp.trigger(`busdriver.menu.close`);
+                            mp.trigger('callRemote', 'busdriver.menu.closed');
                         }
                     }
                 }

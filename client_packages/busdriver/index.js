@@ -1,5 +1,7 @@
 let routecreator = require('./busdriver/routecreator.js');
+
 let routesAvailable;
+let checkpoint;
 let peds = [{
     model: "a_m_o_genstreet_01",
     position: {
@@ -55,7 +57,6 @@ mp.events.add('busdriver.rent.close', () => {
 
 
 mp.events.add('busdriver.menu.show', (data) => {
-    mp.chat.debug('show bus')
     mp.busy.add('busdriver.menu');
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["busMenu"])`);
     routesAvailable = data;
@@ -63,6 +64,12 @@ mp.events.add('busdriver.menu.show', (data) => {
     data.forEach(current => names.push(current.name));
     mp.callCEFV(`selectMenu.menu.items[0].values = ${JSON.stringify(names)}`);
     mp.callCEFV(`selectMenu.show = true`);
+});
+
+mp.events.add('busdriver.menu.close', () => {
+    mp.gui.cursor.show(false, false);
+    mp.callCEFV(`selectMenu.show = false;`);
+    mp.busy.remove('busdriver.menu');
 });
 
 mp.events.add('busdriver.rent.ans', (ans, data) => {
@@ -91,7 +98,47 @@ mp.events.add('busdriver.menu.start', (routeIndex, price) => {
     mp.chat.debug(routeIndex);
     mp.chat.debug(`route name ${routesAvailable[routeIndex].name} ${routesAvailable[routeIndex].id}`);
     mp.chat.debug(price);
+    mp.events.callRemote('busdriver.route.start', routesAvailable[routeIndex].id, price);
 });
 
+mp.events.add('busdriver.route.start.ans', (ans, data) => {
+    mp.callCEFV('loader.show = false');
+    switch (ans) {
+        case 0:
+            mp.notify.error('Это не рабочий транспорт', 'Автобус');
+            break;
+        case 1:
+            mp.notify.success('Маршрут построен', 'Автобус');
+            createCheckpoint(data);
+            break;
+    }
+});
+
+mp.events.add('busdriver.checkpoint.create', (data) => {
+    // data.isStop ? mp.notify.info('Ожидайте пассажиров', 'Остановка') : mp.notify.success('Продолжайте движение', 'Маршрут');
+    createCheckpoint(data);
+});
+
+mp.events.add('playerEnterCheckpoint', () => {
+    if (!mp.players.local.vehicle) return;
+    //deleteCheckpoint();
+    mp.chat.debug('enter checkpoint');
+    mp.events.callRemote('busdriver.checkpoint.entered');
+});
+
+function createCheckpoint(data) {
+    deleteCheckpoint();
+    checkpoint = mp.checkpoints.new(5, new mp.Vector3(data.x, data.y, data.z), 10,
+    {
+        color: data.isStop ? [30, 206, 255, 255] : [255, 246, 0, 255],
+        visible: true,
+        dimension: 0
+    });
+}
+function deleteCheckpoint() {
+    if (!checkpoint) return;
+    checkpoint.destroy();
+    checkpoint = null;
+}
 // [30, 206, 255, 255] stop
 // [255, 246, 0, 255] point
