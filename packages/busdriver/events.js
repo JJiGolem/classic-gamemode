@@ -98,6 +98,8 @@ module.exports = {
             }
         })
         console.log(player.busPoints);
+        let label = (price == 0) ? `~y~${player.busRoute.name} \n~g~Проезд бесплатный` : `~y~${player.busRoute.name} \n ~w~Стоимость проезда: ~g~$${price}`;
+        player.vehicle.setVariable('label', label);
         player.call('busdriver.route.start.ans', [1, player.busPoints[0]]);
     },
     "busdriver.menu.closed": (player) => {
