@@ -65,11 +65,6 @@ module.exports = {
                 model: db.Models.BusRoutePoint
             }]   
         });
-
-        // for (var i = 0; i < busStops.length; i++) {
-        //     this.createBusStop(busStops[i]);
-        // }
-        //console.log(busRoutes);
         console.log(`[BUSDRIVER] Загружено маршрутов: ${busRoutes.length}`);
     },
     createBusStop(stop) {

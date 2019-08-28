@@ -116,8 +116,8 @@ module.exports = {
         }
     },
     "busdriver.checkpoint.entered": (player) => {
-        if (!player.vehicle) return; // создавать старый чекпоинт заново ?
-        if (player.vehicle.busDriverId != player.id) return; // создавать старый чекпоинт заново ?
+        if (!player.vehicle) return;
+        if (player.vehicle.busDriverId != player.id) return;
         player.busPoints[player.busPointIndex].isStop ? notify.info(player, 'Ожидайте пассажиров', 'Остановка') : notify.success(player, 'Продолжайте движение', 'Маршрут');
         player.busPointIndex++;
         if (player.busPointIndex == player.busPoints.length) player.busPointIndex = 0;

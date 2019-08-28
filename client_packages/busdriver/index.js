@@ -115,7 +115,6 @@ mp.events.add('busdriver.route.start.ans', (ans, data) => {
 });
 
 mp.events.add('busdriver.checkpoint.create', (data) => {
-    // data.isStop ? mp.notify.info('Ожидайте пассажиров', 'Остановка') : mp.notify.success('Продолжайте движение', 'Маршрут');
     createCheckpoint(data);
 });
 

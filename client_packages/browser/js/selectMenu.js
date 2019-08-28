@@ -2296,6 +2296,9 @@ var selectMenu = new Vue({
                         text: 'Водный транспорт',
                         values: ["$100"]
                     },
+                    {
+                        text: 'Закрыть',
+                    },
                 ],
                 i: 0,
                 j: 0,
@@ -2328,6 +2331,10 @@ var selectMenu = new Vue({
                         }
                         if (e.itemName == 'Водный транспорт') {
                             mp.trigger('callRemote', 'dmv.license.buy', 5);
+                        }
+                        if (e.itemName == 'Закрыть') {
+                            selectMenu.loader = false;
+                            mp.trigger(`dmv.menu.close`);
                         }
                     }
                 }
