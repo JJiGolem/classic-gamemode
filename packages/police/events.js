@@ -385,7 +385,7 @@ module.exports = {
         var itemIds = [18, 17, 19, 20, 48, 21, 22];
         var weaponIds = ["weapon_flashlight", "weapon_nightstick", "weapon_stungun",
             "weapon_combatpistol", "weapon_smg", "weapon_pumpshotgun",
-            "weapon_carbinerifle", "weapon_sniperrifle"
+            "weapon_carbinerifle"
         ];
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];

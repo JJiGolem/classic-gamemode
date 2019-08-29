@@ -1563,7 +1563,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("lspdStorage");
-                        else if (e.itemIndex == 3) mp.trigger(`callRemote`, `police.storage.armour.take`);
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `police.storage.armour.take`);
                         else mp.trigger(`callRemote`, `police.storage.clothes.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
                 }
@@ -1758,7 +1758,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("lssdStorage");
-                        else if (e.itemIndex == 3) mp.trigger(`callRemote`, `police.storage.armour.take`);
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `police.storage.armour.take`);
                         else mp.trigger(`callRemote`, `police.storage.clothes.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lssdStorage");
                 }
@@ -1959,7 +1959,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("fibStorage");
-                        else if (e.itemIndex == 3) mp.trigger(`callRemote`, `fib.storage.armour.take`);
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `fib.storage.armour.take`);
                         else mp.trigger(`callRemote`, `fib.storage.clothes.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("fibStorage");
                 }
@@ -2157,7 +2157,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("armyStorage");
-                        else if (e.itemIndex == 3) mp.trigger(`callRemote`, `army.storage.armour.take`);
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `army.storage.armour.take`);
                         else mp.trigger(`callRemote`, `army.storage.clothes.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
                 }
