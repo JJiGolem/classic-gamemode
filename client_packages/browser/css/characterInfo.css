@@ -81,8 +81,9 @@
 
 #characterSelector {
     bottom: 5vh;
-    left: 37%;
+    left: 50%;
     position: absolute;
+    transform: translate(-50%);
 }
 
 #characterSelector>div {
