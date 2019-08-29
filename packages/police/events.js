@@ -623,6 +623,7 @@ module.exports = {
         if (player.hasCuffs) police.setCuffs(player, false);
     },
     "playerQuit": (player) => {
+        if (!player.character) return;
         if (!player.character.arrestTime) return;
         var date = (player.character.arrestType == 0) ? player.cellArrestDate : player.jailArrestDate;
         var time = Date.now() - date;
