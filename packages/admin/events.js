@@ -24,28 +24,78 @@ module.exports = {
                 }
             }
 
-            // TODO: Swift: реализиовать вывод ответа команд в чат
-            // Если player не передан, значит выводить сообщение всем админам
-            // пример в terminal/index.js
             cmd.handler(player, args, {
                 log(text, player) {
-                    console.log(`${player.name}: ${text}`);
+                    let messages = text.split('<br/>');
+                    if (player) {
+                        messages.forEach((message) => {
+                            if (!message) return;
+                            player.call('chat.message.push', [`!{#e0b8ff} ${message}`])
+                        });
+                    } else {
+                        messages.forEach((message) => {
+                            if (!message) return;
+                            mp.events.call('admin.notify.all', `!{#e0b8ff}[A] ${message}`);
+                        });
+                    }
                 },
                 info(text, player) {
-                    console.log(`${player.name}: ${text}`);
+                    let messages = text.split('<br/>');
+                    if (player) {
+                        messages.forEach((message) => {
+                            if (!message) return;
+                            player.call('chat.message.push', [`!{#59dbff} ${message}`])
+                        });
+                    } else {
+                        messages.forEach((message) => {
+                            if (!message) return;
+                            mp.events.call('admin.notify.all', `!{#59dbff}[A] ${message}`);
+                        });
+                    }
                 },
                 warning(text, player) {
-                    console.log(`${player.name}: ${text}`);
+                    let messages = text.split('<br/>');
+                    if (player) {
+                        messages.forEach((message) => {
+                            if (!message) return;
+                            player.call('chat.message.push', [`!{#ffcc24} ${message}`])
+                        });
+                    } else {
+                        messages.forEach((message) => {
+                            if (!message) return;
+                            mp.events.call('admin.notify.all', `!{#ffcc24}[A] ${message}`);
+                        });
+                    }
                 },
                 error(text, player) {
-                    console.log(`${player.name}: ${text}`);
+                    let messages = text.split('<br/>');
+                    if (player) {
+                        messages.forEach((message) => {
+                            if (!message) return;
+                            player.call('chat.message.push', [`!{#ff0000} ${message}`])
+                        });
+                    } else {
+                        messages.forEach((message) => {
+                            if (!message) return;
+                            mp.events.call('admin.notify.all', `!{#ff0000}[A] ${message}`);
+                        });
+                    }
                 },
                 debug(text, player) {
-                    console.log(`${player.name}: ${text}`);
+                    let messages = text.split('<br/>');
+                    if (player) {
+                        messages.forEach((message) => {
+                            if (!message) return;
+                            player.call('chat.message.push', [`!{#ffffff} ${message}`])
+                        });
+                    } else {
+                        messages.forEach((message) => {
+                            if (!message) return;
+                            mp.events.call('admin.notify.all', `!{#ffffff}[A] ${message}`);
+                        });
+                    }
                 },
             });
-            // console.log(requiredArgs);
-
         }
     },
     /// обработка команды ahelp
