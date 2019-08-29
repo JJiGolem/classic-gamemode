@@ -385,7 +385,7 @@ module.exports = {
         var itemIds = [18, 17, 19, 20, 48, 21, 22];
         var weaponIds = ["weapon_flashlight", "weapon_nightstick", "weapon_stungun",
             "weapon_combatpistol", "weapon_smg", "weapon_pumpshotgun",
-            "weapon_carbinerifle", "weapon_sniperrifle"
+            "weapon_carbinerifle"
         ];
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
@@ -447,7 +447,7 @@ module.exports = {
         var dist = player.dist(rec.position);
         if (dist > 20) return notifs.error(player, `${rec.name} далеко`, `Наручники`);
         var character = player.character;
-        if (!factions.isPoliceFaction(character.factionId)) return notifs.error(player, `Вы не сотрудник полиции`, `Наручники`);
+        if (!factions.isPoliceFaction(character.factionId) && !factions.isFibFaction(character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Наручники`);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, `Наручники`);
 
         if (!rec.hasCuffs) {
@@ -469,8 +469,8 @@ module.exports = {
             notifs.info(rec, `${player.name} отпустил вас`, `Наручники`);
             notifs.info(player, `${rec.name} отпущен`, `Наручники`);
 
-            // delete rec.isFollowing;
-            // rec.call(`stopFollowToPlayer`);
+            delete rec.isFollowing;
+            rec.call(`police.follow.stop`);
         }
 
         police.setCuffs(rec, !rec.hasCuffs);
@@ -478,7 +478,7 @@ module.exports = {
     "police.follow": (player, recId) => {
         var rec = mp.players.at(recId);
         if (!rec) return notifs.error(player, `Гражданин не найден`, `Следование`);
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции`, `Следование`);
+        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Следование`);
 
         if (!rec.isFollowing) {
             if (!rec.hasCuffs) return notifs.error(player, `${rec.name} не в наручниках`, `Следование`);
@@ -535,7 +535,7 @@ module.exports = {
     "police.jail.arrest": (player, recId) => {
         var rec = mp.players.at(recId);
         if (!rec) return notifs.error(player, `Гражданин не найден`, `Арест`);
-        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник порядка`, `Арест`);
+        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Арест`);
 
         if (rec.arrestTime > 0) {
             console.log("stopArrest")
@@ -623,6 +623,7 @@ module.exports = {
         if (player.hasCuffs) police.setCuffs(player, false);
     },
     "playerQuit": (player) => {
+        if (!player.character) return;
         if (!player.character.arrestTime) return;
         var date = (player.character.arrestType == 0) ? player.cellArrestDate : player.jailArrestDate;
         var time = Date.now() - date;

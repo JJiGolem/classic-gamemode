@@ -29,7 +29,7 @@ mp.attachmentMngr = {
     },
 
     removeFor: function(entity, id) {
-        if (entity.__attachmentObjects.hasOwnProperty(id)) {
+        if (entity && entity.__attachmentObjects && entity.__attachmentObjects.hasOwnProperty(id)) {
             let obj = entity.__attachmentObjects[id];
             delete entity.__attachmentObjects[id];
 

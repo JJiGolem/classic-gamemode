@@ -50,7 +50,6 @@ var selectMenu = new Vue({
                     if (eventName == "onItemValueChanged" && e.itemName == "Пол") {
                         selectMenu.menus["characterCreateMainMenu"].items[0].i = e.valueIndex;
                         selectMenu.menus["characterCreateParentsMenu"].items[2].i = e.valueIndex == 0 ? 0 : 4;
-                        selectMenu.menus["characterCreateViewMenu"].items = e.valueIndex == 0 ? selectMenu.menus["characterCreateViewMenu"].itemsMale : selectMenu.menus["characterCreateViewMenu"].itemsFemale;
                         mp.trigger('characterInit.create.setGender', e.valueIndex);
                     }
                     if (eventName == "onEscapePressed") {
@@ -62,7 +61,10 @@ var selectMenu = new Vue({
                                 selectMenu.menu = selectMenu.menus["characterCreateParentsMenu"];
                                 break;
                             case "Внешность":
-                                selectMenu.menu = selectMenu.menus["characterCreateViewMenu"];
+                                var sex = selectMenu.menus["characterCreateMainMenu"].items[0].i;
+                                var menu = selectMenu.menus["characterCreateViewMenu"];
+                                menu.items = (sex == 0) ? menu.itemsMale : menu.itemsFemale;
+                                selectMenu.menu = menu;
                                 break;
                             case "Сохранить и продолжить":
                                 mp.trigger('characterInit.create.continue');
@@ -1407,8 +1409,7 @@ var selectMenu = new Vue({
             "fishingMenu": {
                 name: "fishing",
                 header: "Рыбалка",
-                items: [
-                    {
+                items: [{
                         text: 'Купить удочку',
                         i: 0,
                         values: ["$100"]
@@ -1562,7 +1563,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("lspdStorage");
-                        else if (e.itemIndex == 3) mp.trigger(`callRemote`, `police.storage.armour.take`);
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `police.storage.armour.take`);
                         else mp.trigger(`callRemote`, `police.storage.clothes.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
                 }
@@ -1757,7 +1758,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("lssdStorage");
-                        else if (e.itemIndex == 3) mp.trigger(`callRemote`, `police.storage.armour.take`);
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `police.storage.armour.take`);
                         else mp.trigger(`callRemote`, `police.storage.clothes.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lssdStorage");
                 }
@@ -1958,7 +1959,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("fibStorage");
-                        else if (e.itemIndex == 3) mp.trigger(`callRemote`, `fib.storage.armour.take`);
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `fib.storage.armour.take`);
                         else mp.trigger(`callRemote`, `fib.storage.clothes.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("fibStorage");
                 }
@@ -2156,7 +2157,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("armyStorage");
-                        else if (e.itemIndex == 3) mp.trigger(`callRemote`, `army.storage.armour.take`);
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `army.storage.armour.take`);
                         else mp.trigger(`callRemote`, `army.storage.clothes.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
                 }
@@ -2271,8 +2272,7 @@ var selectMenu = new Vue({
             "dmvMenu": {
                 name: "dmv",
                 header: "Покупка лицензий",
-                items: [
-                    {
+                items: [{
                         text: 'Легковой транспорт',
                         values: ["$100"]
                     },
@@ -2384,8 +2384,7 @@ var selectMenu = new Vue({
             "routeCreator": {
                 name: "routecreator",
                 header: "Route Creator",
-                items: [
-                    {
+                items: [{
                         text: "Название маршрута",
                         values: [""],
                         type: "editable"
@@ -2662,13 +2661,17 @@ var selectMenu = new Vue({
                 if (item.j == null) Vue.set(item, 'j', 0);
                 if (!item.values) Vue.set(item, 'values', [""]);
             });
-        }
+        },
+        show(val) {
+            if (val) busy.add("selectMenu", true);
+            else busy.remove("selectMenu", true);
+        },
     },
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
             if (!self.menu) return;
-            if (busy.includes(["inventory", "chat", "terminal"])) return;
+            if (busy.includes(["inventory", "chat", "terminal", "phone"])) return;
             self.onKeyUp(e);
         });
     }
