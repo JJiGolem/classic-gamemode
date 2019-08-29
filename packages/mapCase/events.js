@@ -28,6 +28,7 @@ module.exports = {
     },
     "mapCase.pd.searchByPhone": async (player, number) => {
         // console.log(`searchByPhone: ${number}`)
+        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
         var characters = await db.Models.Character.findAll({
             attributes: ['id', 'name'],
             limit: 20,
@@ -47,6 +48,7 @@ module.exports = {
     },
     "mapCase.pd.searchByName": async (player, name) => {
         // console.log(`searchByName: ${name}`)
+        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
         var characters = await db.Models.Character.findAll({
             attributes: ['id', 'name'],
             where: {
@@ -62,6 +64,7 @@ module.exports = {
     },
     "mapCase.pd.searchByCar": async (player, plate) => {
         // console.log(`searchByCar: ${plate}`)
+        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
         var vehicles = await db.Models.Vehicle.findAll({
             attributes: ['owner'],
             where: {
@@ -86,6 +89,7 @@ module.exports = {
         player.call(`mapCase.pd.resultData.set`, [result]);
     },
     "mapCase.pd.searchById": async (player, recId) => {
+        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
         var header = `Установление личности`;
         var rec = mp.players.at(recId);
         if (!rec) return player.call(`mapCase.message.red.show`, [`Игрок <span>#${recId}</span> не найден`]);
@@ -101,6 +105,7 @@ module.exports = {
     },
     "mapCase.pd.getProfile": async (player, id) => {
         // console.log(`getProfile: ${id}`)
+        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
         var character = await db.Models.Character.findByPk(id, {
             attributes: ['id', 'name', 'gender', 'wanted', 'wantedCause'],
             include: [db.Models.Phone, db.Models.House, db.Models.Faction, db.Models.FactionRank],
@@ -115,6 +120,7 @@ module.exports = {
         player.call(`mapCase.pd.profileData.set`, [result]);
     },
     "mapCase.pd.fines.give": async (player, data) => {
+        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
         data = JSON.parse(data);
 
         var fine = await db.Models.Fine.create({
@@ -131,6 +137,7 @@ module.exports = {
         player.call(`mapCase.message.green.show`, [text]);
     },
     "mapCase.pd.wanted.give": (player, data) => {
+        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
         data = JSON.parse(data);
 
         var rec = mp.players.getBySqlId(data.recId);
@@ -157,6 +164,7 @@ module.exports = {
     },
     "mapCase.pd.calls.accept": (player, id) => {
         // console.log(`calls.accept: ${player.name} ${id}`)
+        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
         var header = `Вызов полиции`;
         var rec = mp.players.getBySqlId(id);
         if (!rec) return notifs.error(player, `Игрок #${id} оффлайн`, header);
@@ -168,6 +176,8 @@ module.exports = {
         player.call(`waypoint.set`, [rec.position.x, rec.position.y]);
     },
     "mapCase.pd.rank.raise": (player, recId) => {
+        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
+        if (!factions.canGiveRank(player)) return notifs.error(player, `Недостаточно прав`, `Police`);
         var header = `Повышение`;
         var rec = mp.players.getBySqlId(recId);
         if (!rec) return notifs.error(player, `Игрок #${recId} оффлайн`, header);
@@ -182,6 +192,8 @@ module.exports = {
         player.call(`mapCase.message.green.show`, [text]);
     },
     "mapCase.pd.rank.lower": (player, recId) => {
+        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
+        if (!factions.canGiveRank(player)) return notifs.error(player, `Недостаточно прав`, `Police`);
         var header = `Понижение`;
         var rec = mp.players.getBySqlId(recId);
         if (!rec) return notifs.error(player, `Игрок #${recId} оффлайн`, header);
@@ -196,6 +208,8 @@ module.exports = {
         player.call(`mapCase.message.green.show`, [text]);
     },
     "mapCase.pd.members.uval": (player, recId) => {
+        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
+        if (!factions.canUval(player)) return notifs.error(player, `Недостаточно прав`, `Police`);
         var header = `Увольнение`;
         var rec = mp.players.getBySqlId(recId);
         if (!rec) return notifs.error(player, `Игрок #${recId} оффлайн`, header);
@@ -206,6 +220,7 @@ module.exports = {
         player.call(`mapCase.message.red.show`, [text]);
     },
     "mapCase.pd.emergency.call": (player) => {
+        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
         mp.players.forEach((rec) => {
             if (!rec.character) return;
             if (!factions.isPoliceFaction(rec.character.factionId)) return;
