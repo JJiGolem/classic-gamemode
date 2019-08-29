@@ -1,5 +1,5 @@
 const initialState = {
-    isShow: false,
+    isShow: true,
     messages: [],
     opacity: 1,
     time: true,
@@ -78,22 +78,35 @@ export default function chatList(state = initialState, action) {
 function formatMessage(message) {
     var reg = /!{#[a-f0-9]{6}}/g;
     var regColor = /#[a-f0-9]{6}/g;
+    var outputArray = [];
 
-    var array = [];
-
-    let colorIndex = 0;
-
-    for (let wordIndex = 0; wordIndex < message.split(reg).length; wordIndex++) {
-        if(message.split(reg)[wordIndex].trim() != '') {
-            array.push({
-                text: message.split(reg)[wordIndex],
-                color: message.match(reg)[colorIndex].match(regColor)[0]
-            })
-            colorIndex++;
+    if (message) {
+        var inputArray = message.split(reg);
+    
+        let colorIndex = 0;
+    
+        for (let wordIndex = 0; wordIndex < inputArray.length; wordIndex++) {
+            console.log('in', inputArray);
+            if(inputArray[wordIndex].trim() != '') {
+                outputArray.push({
+                    text: inputArray[wordIndex],
+                    color: message.match(reg)[colorIndex].match(regColor)[0]
+                });
+                colorIndex++;
+            } else {
+                outputArray.push(
+                    {
+                        text: '',
+                        color: message.match(reg)[colorIndex].match(regColor)[0]
+                    }
+                )
+            }
         }
     }
 
-    return array;
+    console.log('out', outputArray);
+
+    return outputArray;
 }
 
 function getTime() {
