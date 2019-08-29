@@ -50,7 +50,6 @@ var selectMenu = new Vue({
                     if (eventName == "onItemValueChanged" && e.itemName == "Пол") {
                         selectMenu.menus["characterCreateMainMenu"].items[0].i = e.valueIndex;
                         selectMenu.menus["characterCreateParentsMenu"].items[2].i = e.valueIndex == 0 ? 0 : 4;
-                        selectMenu.menus["characterCreateViewMenu"].items = e.valueIndex == 0 ? selectMenu.menus["characterCreateViewMenu"].itemsMale : selectMenu.menus["characterCreateViewMenu"].itemsFemale;
                         mp.trigger('characterInit.create.setGender', e.valueIndex);
                     }
                     if (eventName == "onEscapePressed") {
@@ -62,7 +61,10 @@ var selectMenu = new Vue({
                                 selectMenu.menu = selectMenu.menus["characterCreateParentsMenu"];
                                 break;
                             case "Внешность":
-                                selectMenu.menu = selectMenu.menus["characterCreateViewMenu"];
+                                var sex = selectMenu.menus["characterCreateMainMenu"].items[0].i;
+                                var menu = selectMenu.menus["characterCreateViewMenu"];
+                                menu.items = (sex == 0) ? menu.itemsMale : menu.itemsFemale;
+                                selectMenu.menu = menu;
                                 break;
                             case "Сохранить и продолжить":
                                 mp.trigger('characterInit.create.continue');
@@ -1407,8 +1409,7 @@ var selectMenu = new Vue({
             "fishingMenu": {
                 name: "fishing",
                 header: "Рыбалка",
-                items: [
-                    {
+                items: [{
                         text: 'Купить удочку',
                         i: 0,
                         values: ["$100"]
@@ -2271,8 +2272,7 @@ var selectMenu = new Vue({
             "dmvMenu": {
                 name: "dmv",
                 header: "Покупка лицензий",
-                items: [
-                    {
+                items: [{
                         text: 'Легковой транспорт',
                         values: ["$100"]
                     },
@@ -2384,8 +2384,7 @@ var selectMenu = new Vue({
             "routeCreator": {
                 name: "routecreator",
                 header: "Route Creator",
-                items: [
-                    {
+                items: [{
                         text: "Название маршрута",
                         values: [""],
                         type: "editable"
