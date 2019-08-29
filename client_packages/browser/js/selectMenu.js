@@ -2661,13 +2661,17 @@ var selectMenu = new Vue({
                 if (item.j == null) Vue.set(item, 'j', 0);
                 if (!item.values) Vue.set(item, 'values', [""]);
             });
-        }
+        },
+        show(val) {
+            if (val) busy.add("selectMenu", true);
+            else busy.remove("selectMenu", true);
+        },
     },
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
             if (!self.menu) return;
-            if (busy.includes(["inventory", "chat", "terminal"])) return;
+            if (busy.includes(["inventory", "chat", "terminal", "phone"])) return;
             self.onKeyUp(e);
         });
     }
