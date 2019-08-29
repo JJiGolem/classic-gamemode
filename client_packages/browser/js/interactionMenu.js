@@ -91,10 +91,10 @@ var interactionMenu = new Vue({
                         text: "Мои документы",
                         icon: "doc.png"
                     },
-                    {
-                        text: "Анимации",
-                        icon: "activity.png"
-                    }
+                    // {
+                    //     text: "Анимации",
+                    //     icon: "activity.png"
+                    // }
                 ],
                 handler(index) {
                     var item = this.items[index];
@@ -107,10 +107,10 @@ var interactionMenu = new Vue({
             "player_interaction": {
                 name: "player_interaction",
                 items: [
-                    {
-                        text: "Познакомиться",
-                        icon: "hands.png"
-                    },
+                    // {
+                    //     text: "Познакомиться",
+                    //     icon: "hands.png"
+                    // },
                     {
                         text: "Документы",
                         icon: "doc.png"
