@@ -24,6 +24,10 @@ class Chat extends React.Component {
         this.handleChangeInput = this.handleChangeInput.bind(this);
     }
 
+    componentDidMount() {
+        // this.props.pushMessage('!{#ffffff} w !{#000000}цврфцл    ццц')
+    }
+
     componentDidUpdate() {
         const objDiv = this.refList;
 
