@@ -5,6 +5,9 @@ module.exports = {
     "init": () => {
         jobs.init();
     },
+    "characterInit.done": (player) => {
+        jobs.initJobSkills(player);
+    },
     "jobs.set": (player, jobId) => {
         var header = `Устройство на работу`;
         var job = jobs.getJob(jobId);

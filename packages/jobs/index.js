@@ -26,4 +26,17 @@ module.exports = {
         player.character.job = null;
         player.character.job.save();
     },
+    async initJobSkills(player) {
+        player.character.jobSkills = [];
+        for (var i = 0; i < this.jobs.length; i++) {
+            var job = this.jobs[i];
+            var skill = await db.Models.JobSkill.findOrCreate({
+                where: {
+                    characterId: player.character.id,
+                    jobId: job.id
+                }
+            });
+            player.character.jobSkills.push(skill[0]);
+        }
+    }
 }
