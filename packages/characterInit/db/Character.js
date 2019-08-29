@@ -45,6 +45,11 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             allowNull: false
         },
+        pay: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false
+        },
         /// Последние сохраненные координаты
         x: {
             type: DataTypes.FLOAT,

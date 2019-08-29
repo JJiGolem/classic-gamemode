@@ -1,3 +1,6 @@
+var money = require('../money');
+var notifs = require('../notifications');money
+
 module.exports = {
     // Работы
     jobs: [],
@@ -38,5 +41,24 @@ module.exports = {
             });
             player.character.jobSkills.push(skill[0]);
         }
-    }
+    },
+    getJobSkill(player, job) {
+        if (!player.character) return;
+        if (typeof job == 'number') job = this.getJob(job);
+        var skills = player.character.jobSkills;
+        for (var i = 0; i < skills.length; i++) {
+            if (skills[i].jobId == job.id) return skills[i];
+        }
+        return null;
+    },
+    pay(player) {
+        if (!player.character.pay) return;
+
+        money.addMoney(player, player.character.pay, (res) => {
+            if (!res) return console.log(`[jobs] Ошибка выдачи ЗП для ${player.name}`);
+            player.character.pay = 0;
+            player.character.save();
+            notifs.info(player, `Зарплата: $${pay}`, `Работа`);
+        });
+    },
 }
