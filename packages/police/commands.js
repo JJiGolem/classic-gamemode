@@ -63,9 +63,17 @@ module.exports = {
     "/pvehput": {
         access: 6,
         description: "Запихнуть игрока в авто.",
+        args: "[ид_игрока]:n [ид_авто]:n",
+        handler: (player, args, out) => {
+            mp.events.call(`police.vehicle.put`, player, args[0], args[1]);
+        }
+    },
+    "/pvehrem": {
+        access: 6,
+        description: "Выпихнуть игрока из авто.",
         args: "[ид_игрока]:n",
         handler: (player, args, out) => {
-            mp.events.call(`police.vehicle.put`, player, args[0]);
+            mp.events.call(`police.vehicle.remove`, player, args[0]);
         }
     },
     "/pgivelic": {

@@ -574,10 +574,12 @@ module.exports = {
         var rec = mp.players.at(recId);
         if (!rec) return notifs.error(player, `Гражданин не найден`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} уже в авто`, header);
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции`, header);
+        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, header);
 
         var veh = mp.vehicles.at(vehId);
         if (!veh) return notifs.error(player, `Авто не найдено`, header);
+        var dist = player.dist(veh.position);
+        if (dist > 10) return notifs.error(player, `Авто далеко`, header);
         var freeSeat = [0, 1, 2];
         var occupants = veh.getOccupants();
         for (var i = 0; i < occupants.length; i++) {
@@ -590,8 +592,19 @@ module.exports = {
         rec.call(`police.follow.stop`);
         delete rec.isFollowing;
         rec.putIntoVehicle(veh, freeSeat[0]);
-        notifs.success(player, `${rec.name} теперь в авто`, header);
+        notifs.success(player, `${rec.name} посажен в авто`, header);
         notifs.info(rec, `${player.name} посадил вас в авто`, header);
+    },
+    "police.vehicle.remove": (player, recId) => {
+        var header = `Высадка`;
+        var rec = mp.players.at(recId);
+        if (!rec) return notifs.error(player, `Гражданин не найден`, header);
+        if (!rec.vehicle) return notifs.error(player, `${rec.name} не в авто`, header);
+        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, header);
+
+        rec.removeFromVehicle();
+        notifs.success(player, `${rec.name} высажен из авто`, header);
+        notifs.info(rec, `${player.name} высадил вас из авто`, header);
     },
     "police.licenses.gun.give": (player, recId) => {
         var header = `Лицензия на оружие`;
