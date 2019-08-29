@@ -258,7 +258,7 @@ module.exports = {
 
         if (faction.ammo < fib.itemAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
-        var itemIds = [28, 24];
+        var itemIds = [28, 24, 4];
 
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
@@ -348,5 +348,37 @@ module.exports = {
             faction.ammo -= fib.ammoAmmo * ammo;
             faction.save();
         });
-    }
+    },
+    "fib.spy": (player, recId) => {
+        var header = `Прослушка FIB`;
+        if (!factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не агент`, header);
+
+        var rec = mp.players.at(recId);
+        if (!rec) return notifs.error(player, `Гражданин не найден`, header);
+        var dist = player.dist(rec.position);
+        if (dist > 3) return notifs.error(player, `${rec.name} далеко`, header);
+
+        if (!rec.spy) {
+            var spy = inventory.getItemByItemId(player, 4);
+            if (!spy) return notifs.error(player, `Предмет '${inventory.getName(4)}' не найден`, header);
+
+            // inventory.deleteItem(player, spy);
+            rec.spy = {
+                playerId: player.id,
+                characterId: player.character.id,
+            };
+            notifs.success(player, `Прослушка на ${rec.name} установлена`, header);
+        } else {
+            var params = {
+                faction: player.character.factionId,
+                owner: player.character.id
+            };
+            inventory.addItem(player, 4, params, (e) => {
+                if (e) return notifs.error(player, e, header);
+            });
+
+            delete rec.spy;
+            notifs.success(player, `Прослушка с ${rec.name} снята`, header);
+        }
+    },
 }

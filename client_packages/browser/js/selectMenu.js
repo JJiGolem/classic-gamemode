@@ -1974,6 +1974,9 @@ var selectMenu = new Vue({
                         text: "Аптечка"
                     },
                     {
+                        text: "Прослушка"
+                    },
+                    {
                         text: "Вернуться"
                     },
                 ],
