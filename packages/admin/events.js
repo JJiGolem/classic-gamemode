@@ -78,6 +78,7 @@ module.exports = {
     /// Отправить сообщение всем игрокам
     "admin.notify.players": (message) => {
         mp.players.forEach((current) => {
+            if (!current.character) return;
             try {
                 current.call('chat.message.push', [message]);
             } catch (err) {
