@@ -469,8 +469,8 @@ module.exports = {
             notifs.info(rec, `${player.name} отпустил вас`, `Наручники`);
             notifs.info(player, `${rec.name} отпущен`, `Наручники`);
 
-            // delete rec.isFollowing;
-            // rec.call(`stopFollowToPlayer`);
+            delete rec.isFollowing;
+            rec.call(`police.follow.stop`);
         }
 
         police.setCuffs(rec, !rec.hasCuffs);
