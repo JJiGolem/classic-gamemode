@@ -1,5 +1,6 @@
 /// Базовые админские команды, описание их структуры находится в модуле test
 var vehicles = call("vehicles");
+let notify = call('notifications');
 
 module.exports = {
 
@@ -46,6 +47,7 @@ module.exports = {
             }
             try {
                 player.position = new mp.Vector3(target.position.x + 2, target.position.y, target.position.z);
+                player.dimension = target.dimension;
                 mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} телепортировался к ${target.name}`);
             }
             catch (err) {
@@ -68,6 +70,7 @@ module.exports = {
             }
             try {
                 target.position = new mp.Vector3(player.position.x + 2, player.position.y, player.position.z);
+                target.dimension = player.dimension;
                 mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} телепортировал к себе ${target.name}`);
                 target.call('chat.message.push', [`!{#ffffff}${player.name} телепортировал вас к себе`]);
             }
@@ -184,9 +187,31 @@ module.exports = {
         }
     },
     "/kick": {
-        access: 6,
+        access: 2,
+        description: "Кик игрока",
+        args: "[ID] [причина]",
         handler: (player, args) => {
-            mp.players.at(args[0]).kick("q");
+            if (isNaN(parseInt(args[0]))) return; //temp
+            let target = mp.players.at(args[0]);
+            if (!target || !mp.players.exists(target)) return notify.warning(player, 'Игрок не найден');
+            if (!target.character) return notify.warning(player, 'Игрок не найден');
+            args.shift();
+            let message = args.join(' ');
+            mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] кикнул игрока ${target.name}[${target.id}]: ${message}`);
+            target.kick("kicked");
+        }
+    },
+    "/skick": {
+        access: 4,
+        description: "Тихий кик игрока",
+        args: "[ID]",
+        handler: (player, args) => {
+            if (isNaN(parseInt(args[0]))) return; //temp
+            let target = mp.players.at(args[0]);
+            if (!target || !mp.players.exists(target)) return notify.warning(player, 'Игрок не найден');
+            if (!target.character) return notify.warning(player, 'Игрок не найден');
+            mp.events.call('admin.notify.all', `!{#9e9e9e}[A] Администратор ${player.name}[${player.id}] кикнул игрока ${target.name}[${target.id}] без лишнего шума`);
+            target.kick("kicked");
         }
     },
     "/clothes": {
@@ -359,6 +384,17 @@ module.exports = {
                     player.call('chat.message.push', [`!{#ecffbf}${current.character.name} (${current.character.admin} уровень)`]);
                 }
             });
+        }
+    },
+    "/setd": {
+        description: "Смена измерения",
+        access: 4,
+        args: "[номер]",
+        handler: (player, args) => {
+            let dim = parseInt(args[0]);
+            if (isNaN(dim)) return;
+            player.dimension = dim;
+            notify.info(player, `Установлено измерение: ${dim}`);
         }
     },
 }

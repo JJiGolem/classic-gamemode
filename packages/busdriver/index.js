@@ -1,7 +1,5 @@
 "use strict";
 let vehicles = call("vehicles");
-console.log("driver:");
-console.log(vehicles);
 
 let busStation = {
     x: 435.4512634277344,
@@ -16,10 +14,18 @@ let busStation = {
 }
 
 let shape;
+let busStops;
+let busRoutes;
+
+const RENT_PRICE = 50;
+const STOP_TIMEOUT = 10000;
+const RESPAWN_TIMEOUT = 30000;
 
 module.exports = {
     init() {
         this.createBusStation();
+        this.loadBusStopsFromDB();
+        this.loadBusRoutesFromDB();
     },
     createBusStation() {
         mp.blips.new(513, new mp.Vector3(busStation.x, busStation.y, busStation.z),
@@ -37,5 +43,69 @@ module.exports = {
                 dimension: 0
             });
         shape = mp.colshapes.newSphere(busStation.marker.x, busStation.marker.y, busStation.marker.z + 1, 1.2);
+
+        shape.onEnter = (player) => {
+            let state = player.character.job == 3 ? 1 : 0;
+            player.call('busdriver.jobmenu.show', [state]);
+        }
+
+        shape.onExit = (player) => {
+            player.call('busdriver.jobmenu.close');
+        }
+    },
+    async loadBusStopsFromDB() {
+        busStops = await db.Models.BusStop.findAll();
+
+        for (var i = 0; i < busStops.length; i++) {
+            this.createBusStop(busStops[i]);
+        }
+        console.log(`[BUSDRIVER] Загружено автобусных остановок: ${i}`);
+    },
+    async loadBusRoutesFromDB() {
+        busRoutes = await db.Models.BusRoute.findAll({
+            include: [{
+                model: db.Models.BusRoutePoint
+            }]   
+        });
+        console.log(`[BUSDRIVER] Загружено маршрутов: ${busRoutes.length}`);
+    },
+    createBusStop(stop) {
+       let label = mp.labels.new(`Автобусная остановка \n ~y~${stop.name}`, new mp.Vector3(stop.x, stop.y, stop.z),
+        {
+            los: false,
+            font: 0,
+            drawDistance: 15,
+        });
+        label.busStopId = stop.id;
+    },
+    getRentPrice() {
+        return RENT_PRICE;
+    },
+    getRoutesLevelByModel(model) {
+        if (model == 'rentalbus') return 0;
+        if (model == 'coach') return 1;
+        return null;
+    },
+    getAvailiableRoutes(player) {
+        if (!player.vehicle) return;
+
+        let level = this.getRoutesLevelByModel(player.vehicle.modelName);
+        let routes = busRoutes.filter(x => x.level == level);
+        let result = routes.map(function (current) {
+            return {
+                id: current.id,
+                name: current.name
+            };
+        });
+        return result;
+    },
+    getRouteById(id) {
+        return busRoutes.find(x => x.id == id);
+    },
+    getStopTimeout() {
+        return STOP_TIMEOUT;
+    },
+    getRespawnTimeout() {
+        return RESPAWN_TIMEOUT;
     }
 }

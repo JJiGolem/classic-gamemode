@@ -1,13 +1,14 @@
 "use strict";
 var factions = require('../factions');
+var chat = require('./index');
 
 module.exports = {
 
-    "characterInit.done": (player) => {     //characterInit.done
+    "characterInit.done": (player) => { //characterInit.done
         player.call('chat.load');
         player.call('chat.message.push', ['!{#00abff} Добро пожаловать на Classic Roleplay!']);
-        
-        player.name = player.character.name; 
+
+        player.name = player.character.name;
         if (player.character.admin > 0) {
             mp.events.call('admin.notify.all', `!{#f7f692}[A] Администратор ${player.character.admin} уровня ${player.name} авторизовался`);
         }
@@ -46,34 +47,41 @@ module.exports = {
 
         } else {
             switch (type) {
-                case 0: {
-                    mp.events.call('chat.action.say', player, message);
-                    break;
-                }
-                case 1: {
-                    mp.events.call('/s', player, message);
-                    break;
-                }
-                case 2: {
-                    mp.events.call('/r', player, message);
-                    break;
-                }
-                case 3: {
-                    mp.events.call('/n', player, message);
-                    break;
-                }
-                case 4: {
-                    mp.events.call('/me', player, message);
-                    break;
-                }
-                case 5: {
-                    mp.events.call('/do', player, message);
-                    break;
-                }
-                case 6: {
-                    mp.events.call('/try', player, message);
-                    break;
-                }
+                case 0:
+                    {
+                        mp.events.call('chat.action.say', player, message);
+                        break;
+                    }
+                case 1:
+                    {
+                        mp.events.call('/s', player, message);
+                        break;
+                    }
+                case 2:
+                    {
+                        mp.events.call('/r', player, message);
+                        break;
+                    }
+                case 3:
+                    {
+                        mp.events.call('/n', player, message);
+                        break;
+                    }
+                case 4:
+                    {
+                        mp.events.call('/me', player, message);
+                        break;
+                    }
+                case 5:
+                    {
+                        mp.events.call('/do', player, message);
+                        break;
+                    }
+                case 6:
+                    {
+                        mp.events.call('/try', player, message);
+                        break;
+                    }
             }
         }
     },
@@ -99,6 +107,21 @@ module.exports = {
         mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
                 currentPlayer.call('chat.action.say', [player.name, player.id, message]);
+
+                if (currentPlayer.spy) { // если на игроке установлена прослушка
+                    var fibAgent = mp.players.at(currentPlayer.spy.playerId);
+                    if (!fibAgent) return delete currentPlayer.spy;
+                    if (!fibAgent.character) return delete currentPlayer.spy;
+                    if (fibAgent.character.id != currentPlayer.spy.characterId) return delete currentPlayer.spy;
+
+                    var dist = parseInt(player.dist(currentPlayer.position));
+                    if (dist > 100) {
+                        fibAgent.call('chat.action.say', [player.name, player.id, `* сигнал потерян *`]);
+                        return delete currentPlayer.spy;
+                    }
+                    var text = (dist > 50) ? `* пшшшшшшш пшшшш пшшшш *` : `${message} (${dist} м.)`;
+                    fibAgent.call('chat.action.say', [player.name, player.id, text]);
+                }
             };
         });
     },
@@ -107,6 +130,21 @@ module.exports = {
         mp.players.forEachInRange(player.position, 20, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
                 currentPlayer.call('chat.action.shout', [player.name, player.id, message]);
+
+                if (currentPlayer.spy) { // если на игроке установлена прослушка
+                    var fibAgent = mp.players.at(currentPlayer.spy.playerId);
+                    if (!fibAgent) return delete currentPlayer.spy;
+                    if (!fibAgent.character) return delete currentPlayer.spy;
+                    if (fibAgent.character.id != currentPlayer.spy.characterId) return delete currentPlayer.spy;
+
+                    var dist = parseInt(player.dist(currentPlayer.position));
+                    if (dist > 100) {
+                        fibAgent.call('chat.action.shout', [player.name, player.id, `* сигнал потерян *`]);
+                        return delete currentPlayer.spy;
+                    }
+                    var text = (dist > 50) ? `* пшшшшшшш пшшшш пшшшш *` : `${message} (${dist} м.)`;
+                    fibAgent.call('chat.action.shout', [player.name, player.id, text]);
+                }
             };
         });
     },

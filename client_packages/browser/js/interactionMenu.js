@@ -91,10 +91,10 @@ var interactionMenu = new Vue({
                         text: "Мои документы",
                         icon: "doc.png"
                     },
-                    {
-                        text: "Анимации",
-                        icon: "activity.png"
-                    }
+                    // {
+                    //     text: "Анимации",
+                    //     icon: "activity.png"
+                    // }
                 ],
                 handler(index) {
                     var item = this.items[index];
@@ -107,10 +107,10 @@ var interactionMenu = new Vue({
             "player_interaction": {
                 name: "player_interaction",
                 items: [
-                    {
-                        text: "Познакомиться",
-                        icon: "hands.png"
-                    },
+                    // {
+                    //     text: "Познакомиться",
+                    //     icon: "hands.png"
+                    // },
                     {
                         text: "Документы",
                         icon: "doc.png"
@@ -125,8 +125,10 @@ var interactionMenu = new Vue({
                     if (item.text == 'Документы') {
                         mp.trigger(`documents.list`);
                     } else if (item.text == 'Деньги') {
-                        mp.trigger(`interaction.menu.close`);
+                        //mp.trigger(`interaction.menu.close`);
+                        interactionMenu.show = false;
                         mp.trigger(`interaction.money.show`);
+                       
                     } else if (item.text == 'Организация') {
                         // TODO: ...
                     }
@@ -207,13 +209,13 @@ var interactionMenu = new Vue({
             this.menu.handler(index);
         }
     },
-    watch: {
-        show(val) {
-            setCursor(val);
-            if (val) busy.add("interaction", true);
-            else busy.remove("interaction", true);
-        }
-    },
+    // watch: {
+    //     show(val) {
+    //         setCursor(val);
+    //         if (val) busy.add("interaction", true);
+    //         else busy.remove("interaction", true);
+    //     }
+    // },
 });
 
 // for tests

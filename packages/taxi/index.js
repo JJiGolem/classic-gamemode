@@ -16,6 +16,7 @@ let taxiStation = {
 
 const RENT_PRICE = 50;
 const PRICE_PER_KM = 30;
+const RESPAWN_TIMEOUT = 30000;
 
 let orders = [];
 
@@ -100,5 +101,8 @@ module.exports = {
         let order = orders.find(x => x.clientId == player.id);
         if (!order) return;
         this.deleteOrder(order.orderId);
+    },
+    getRespawnTimeout() {
+        return RESPAWN_TIMEOUT;
     }
 }

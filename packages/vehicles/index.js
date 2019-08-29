@@ -98,7 +98,7 @@ module.exports = {
         vehicle.fuelTimer = setInterval(() => {
             try {
                 if (vehicle.engine) {
-
+                    console.log(`fuel tick for ${vehicle.id}`);
                     vehicle.fuel = vehicle.fuel - 1;
                     if (vehicle.fuel <= 0) {
                         vehicle.engine = false;
@@ -111,6 +111,7 @@ module.exports = {
                 console.log(err);
             }
         }, vehicle.fuelTick);
+        console.log('FUEL TIMER: ' + vehicle.fuelTimer);
         return vehicle;
     },
     getDriver(vehicle) {
@@ -251,7 +252,6 @@ module.exports = {
 
             if (houses.isHaveHouse(player.character.id)) {
                 //await this.setPlayerCarPlaces(player);
-                console.log(dbPrivate)
                 let length = player.carPlaces.length != 1 ? player.carPlaces.length - 1 : player.carPlaces.length;
                 for (let i = 0; i < length; i++) {
                     if (i >= dbPrivate.length) return;
@@ -407,7 +407,6 @@ module.exports = {
             current.veh = null;
         });
         player.carPlaces = places;
-        console.log(player.carPlaces);
     },
     spawnHomeVehicle(player, vehicle) {
         if (player.carPlaces.length == 1 && player.carPlaces[0].d == 0) { // TODO ПРОВЕРИТЬ С БИЧ ДОМОМ
@@ -438,15 +437,12 @@ module.exports = {
 
 
         vehicle.db ? this.spawnVehicle(vehicle, 1) : this.spawnVehicle(vehicle, 0);
-        console.log(player.carPlaces);
     },
     removeVehicleFromCarPlace(player, vehicle) {
         if (!vehicle) return;
         if (!player.carPlaces) return;
         if (vehicle.isOnParking) return;
 
-        console.log(`index ${vehicle.carPlaceIndex}`);
-        console.log(`carPlaces ${player.carPlaces}`)
         let place = player.carPlaces[vehicle.carPlaceIndex];
 
         console.log(place);
@@ -473,9 +469,6 @@ module.exports = {
         vehicle.h = place.h;
         vehicle.d = place.d;
         place.veh = vehicle;
-
-
-        console.log(player.carPlaces);
     },
     isAbleToBuyVehicle(player) {
         let hasHouse = houses.isHaveHouse(player.character.id);
