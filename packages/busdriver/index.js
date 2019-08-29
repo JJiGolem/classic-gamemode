@@ -18,6 +18,8 @@ let busStops;
 let busRoutes;
 
 const RENT_PRICE = 50;
+const STOP_TIMEOUT = 10000;
+const RESPAWN_TIMEOUT = 30000;
 
 module.exports = {
     init() {
@@ -99,5 +101,11 @@ module.exports = {
     },
     getRouteById(id) {
         return busRoutes.find(x => x.id == id);
+    },
+    getStopTimeout() {
+        return STOP_TIMEOUT;
+    },
+    getRespawnTimeout() {
+        return RESPAWN_TIMEOUT;
     }
 }
