@@ -255,6 +255,9 @@ module.exports = {
     getInventoryItem(itemId) {
         return this.inventoryItems[itemId - 1];
     },
+    getName(itemId) {
+        return this.inventoryItems[itemId - 1].name;
+    },
     getItem(player, sqlId) {
         for (var i = 0; i < player.inventory.items.length; i++) {
             var item = player.inventory.items[i];
@@ -536,6 +539,14 @@ module.exports = {
         }
 
         return -1;
+    },
+    getItemByItemId(player, itemId) {
+        var items = player.inventory.items;
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            if (item.itemId == itemId) return item;
+        }
+        return null;
     },
     getArrayByItemId(player, itemId) {
         var items = player.inventory.items;

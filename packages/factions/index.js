@@ -346,8 +346,10 @@ module.exports = {
 
         var rank = this.getRankById(factionId, player.character.factionRank);
         mp.players.forEach((rec) => {
-            if (rec.character && rec.character.factionId == factionId)
-                rec.call('chat.action.walkietalkie', [player.name, player.id, rank.name, text]);
+            if (!rec.character) return;
+            if (rec.character.factionId != factionId) return;
+            
+            rec.call('chat.action.walkietalkie', [player.name, player.id, rank.name, text]);
         });
     },
     pay(player) {
