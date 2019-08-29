@@ -20,8 +20,8 @@ module.exports = (sequelize, DataTypes) => {
         /// Работа
         job: {
             type: DataTypes.INTEGER(11),
-            defaultValue: 0,
-            allowNull: false
+            defaultValue: null,
+            allowNull: true
         },
         // Организация
         factionId: {
@@ -254,6 +254,11 @@ module.exports = (sequelize, DataTypes) => {
         });
         model.hasMany(models.Appearance, {
             foreignKey: "characterId"
+        });
+        model.belongsTo(models.Job, {
+            foreignKey: "job",
+            onDelete: "RESTRICT",
+            onUpdate: "RESTRICT",
         });
         model.belongsTo(models.Faction, {
             foreignKey: "factionId",
