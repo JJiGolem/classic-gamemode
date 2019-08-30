@@ -56,9 +56,9 @@ module.exports = {
 
         money.addMoney(player, player.character.pay, (res) => {
             if (!res) return console.log(`[jobs] Ошибка выдачи ЗП для ${player.name}`);
+            notifs.info(player, `Зарплата: $${player.character.pay}`, `Работа`);
             player.character.pay = 0;
             player.character.save();
-            notifs.info(player, `Зарплата: $${pay}`, `Работа`);
         });
     },
 }
