@@ -67,6 +67,7 @@ mp.busy.includes = function(name) {
 }
 /// Удалить модуль
 mp.busy.remove = function(name, nocef = false) {
+    mp.chat.debug(JSON.stringify(mp.busy.list))
     if (!nocef) mp.callCEFV(`busy.remove('${name}')`);
     let index = mp.busy.list.findIndex(x => x == name);
     index != -1 && mp.busy.list.splice(index, 1);
