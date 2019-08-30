@@ -38,7 +38,7 @@ module.exports = {
     },
     /// Функции создания персоонажа
     create(player) {
-        player.character = {
+        player.characterInfo = {
             accountId: player.account.id,
             name: "",
             gender: 0,
@@ -58,8 +58,8 @@ module.exports = {
             Features: [],
             Appearances: [],
         }
-        for (let i = 0; i < 20; i++) player.character.Features.push({value: 0.0});
-        for (let i = 0; i < 10; i++) player.character.Appearances.push({value: 255, opacity: 1.0});
+        for (let i = 0; i < 20; i++) player.characterInfo.Features.push({value: 0.0});
+        for (let i = 0; i < 10; i++) player.characterInfo.Appearances.push({value: 255, opacity: 1.0});
 
         mp.events.call('characterInit.create.init', player);
 
@@ -74,20 +74,21 @@ module.exports = {
             }
         });
         if (characters.length != 0) return player.call('characterInit.create.check.ans', [0]);
-        player.character = JSON.parse(charData);
-        player.character.name = fullname;
+        player.characterInfo = JSON.parse(charData);
+        player.characterInfo.name = fullname;
         let pos = this.getSpawn();
-        player.character.x = pos[0];
-        player.character.y = pos[1];
-        player.character.z = pos[2];
-        this.applyCharacter(player);
-        player.character = await db.Models.Character.create(player.character, {
+        player.characterInfo.x = pos[0];
+        player.characterInfo.y = pos[1];
+        player.characterInfo.z = pos[2];
+        
+        player.character = await db.Models.Character.create(player.characterInfo, {
             include: [
                 db.Models.Feature,
                 db.Models.Appearance
             ]
         });
-
+        this.applyCharacter(player);
+        
         player.call('characterInit.create.check.ans', [1]);
         mp.events.call('characterInit.done', player);
     },
@@ -95,7 +96,7 @@ module.exports = {
         player.position = creatorPlayerPos;
         player.heading = creatorPlayerHeading;
         player.usingCreator = true;
-        player.call("characterInit.create", [true, JSON.stringify(player.character)]);
+        player.call("characterInit.create", [true, JSON.stringify(player.characterInfo)]);
     },
     applyCharacter(player) {
         let features = new Array();

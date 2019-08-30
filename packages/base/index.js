@@ -40,6 +40,7 @@ mp.events.add('playerJoin', (player) => {
 
 /// Main events list
 /// init - загрузка всех моделей и событий всех модулей закончена
+/// economy.done - загрузка экономических показателей окончена
 /// player.joined - пользователь подключен
 /// auth.done - пользователь авторизован
 /// characterInit.done - пользователь выбрал персоонажа
