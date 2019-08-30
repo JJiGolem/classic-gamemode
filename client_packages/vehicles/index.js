@@ -9,7 +9,7 @@ mp.speedometerEnabled = true;
 mp.events.add("playerLeaveVehicle", () => {
     mp.callCEFV('speedometer.arrow = 0');
     mp.callCEFV('speedometer.emergency = false');
-    setTimeout(()=> {
+    setTimeout(() => {
         try {
             currentSirenState = false;
         } catch (err) {
@@ -33,7 +33,7 @@ setInterval(() => { /// Синхронизация двигателя
         var player = mp.players.local;
         if (player.vehicle && mp.vehicles.exists(player.vehicle)) {
             var engine = player.vehicle.getVariable('engine') || false;
-    
+
             player.vehicle.setUndriveable(!engine);
             player.vehicle.setEngineOn(engine, true, true);
         }
@@ -63,10 +63,10 @@ speedometerUpdateTimer = setInterval(() => { /// Обновление спидо
                 lastEngine = true;
             }
         }
-    
+
         let speed = Math.floor(mp.players.local.vehicle.getSpeed() * 3.6);
         mp.callCEFV(`speedometer.speed = ${speed}`);
-    
+
         let lights = mp.players.local.vehicle.getLightsState(1, 1); /// Фары
 
         let low = lights.lightsOn;
@@ -96,9 +96,9 @@ speedometerUpdateTimer = setInterval(() => { /// Обновление спидо
 }, 100);
 
 mp.keys.bind(0x32, true, function () {
-
+    if (mp.busy.includes()) return;
     if (mp.players.local.vehicle.getPedInSeat(-1) === mp.players.local.handle) {
-        mp.events.callRemote('vehicles.engine.toggle'); // TODO: проверки
+        mp.events.callRemote('vehicles.engine.toggle');
     }
 });
 
@@ -173,16 +173,16 @@ function startMileageCounter() {
         try {
             var vehicle = player.vehicle;
             if (!vehicle) return stopMileageCounter();
-    
+
             var dist = (vehicle.position.x - lastPos.x) * (vehicle.position.x - lastPos.x) + (vehicle.position.y - lastPos.y) * (vehicle.position.y - lastPos.y) +
                 (vehicle.position.z - lastPos.z) * (vehicle.position.z - lastPos.z);
             dist = Math.sqrt(dist);
             if (dist > 200) dist = 50;
             dist /= 1000;
-    
+
             currentDist += dist;
             lastPos = vehicle.position;
-    
+
             var mileage = vehicle.mileage + currentDist;
             mp.events.call('vehicles.speedometer.mileage.update', mileage);
         } catch (err) {
@@ -439,3 +439,20 @@ mp.events.add('vehicles.onGroundProperly.set', () => {
 mp.events.add('vehicles.speedometer.enabled', (enabled) => {
     mp.speedometerEnabled = enabled;
 });
+
+mp.events.add('render', () => {
+    mp.vehicles.forEachInStreamRange((vehicle) => {
+        if (mp.vdist(mp.players.local.position, vehicle.position) > 10) return;
+        if (vehicle.getVariable('label')) {
+            let label = vehicle.getVariable('label');
+            mp.game.graphics.drawText(label, [vehicle.position.x, vehicle.position.y, vehicle.position.z + 2.7], {
+                font: 0,
+                color: [255, 255, 255, 255],
+                scale: [0.35, 0.35],
+                outline: true,
+                centre: true
+            });
+        }
+    });
+});
+

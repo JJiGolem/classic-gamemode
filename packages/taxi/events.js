@@ -247,15 +247,16 @@ module.exports = {
     "playerExitVehicle": (player, vehicle) => {
         if (vehicle.taxiDriverId == player.id) {
             console.log('покинул такси');
-            player.call('notifications.push.warning', ['У вас есть 30 секунд, чтобы вернуться в транспорт', 'Такси']);
+            player.call('notifications.push.warning', [`У вас есть ${taxi.getRespawnTimeout() / 1000} секунд, чтобы вернуться в транспорт`, 'Такси']);
             clearTimeout(vehicle.taxiRespawnTimer);
             vehicle.taxiRespawnTimer = setTimeout(() => {
                 try {
                         vehicles.respawnVehicle(vehicle);
                 } catch (err) {
-                    console.log(err)
+                    console.log(err);
                 }
-            }, 30000);
+            }, taxi.getRespawnTimeout());
+            console.log('TAXI RESPAWN TIMER: ' + vehicle.taxiRespawnTimer);
         }
         if (player.taxiClientDestination) {
             mp.events.call('taxi.client.order.cancel', player);

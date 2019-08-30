@@ -8,7 +8,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         x: {
             type: DataTypes.FLOAT,
-
             allowNull: false
         },
         y: {

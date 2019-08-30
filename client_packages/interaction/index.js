@@ -61,30 +61,23 @@ function getClosestPlayer(pos, range = INTERACTION_RANGE) {
 
 
 function getClosestPlayerOrVehicle(pos) {
-    mp.chat.debug('ищем');
     var closestPlayer = getClosestPlayer(pos);
     var closestVehicle = getClosestVehicle(pos);
     if (!closestPlayer) {
-        mp.chat.debug('возвращаем тс')
         return closestVehicle;
     };
     if (!closestVehicle) {
-        mp.chat.debug('возвращаем игрока')
         return closestPlayer;
     }
     var distToPlayer = vdist(pos, closestPlayer.position);
-    mp.chat.debug(`player ${distToPlayer}`);
 
     var distToVehicle = vdist(pos, closestVehicle.position);
-    mp.chat.debug(`vehicle ${distToVehicle}`);
     if (distToPlayer <= distToVehicle) {
-        mp.chat.debug('возвращаем игрока')
         return closestPlayer;
     } else return closestVehicle;
 }
 
 mp.events.add('interaction.menu.show', () => {
-    //mp.chat.debug('show');
     mp.busy.add('interaction');
     isOpen = true;
     mp.gui.cursor.show(true, true);
@@ -187,7 +180,6 @@ mp.events.add('render', () => {
             mp.events.call('interaction.money.close'); // to be tested
         }
     } catch (err) {
-        mp.chat.debug('Entity уничтожена');
         currentInteractionEntity = null;
     }
 });
@@ -207,7 +199,6 @@ mp.events.add('interaction.ejectlist.show', (list) => {
     mp.callCEFV(`interactionMenu.left = ${vehicleLeft}`);
     mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle_ejectlist"])');
     occupantsToEject.forEach((current) => {
-        mp.chat.debug(`${current.id} ${current.name}`);
         mp.callCEFV(`interactionMenu.menu.items.push({
             text: "ID: ${current.id}",
             icon: "person.png"
@@ -221,8 +212,6 @@ mp.events.add('interaction.eject', (index) => {
     if (!currentInteractionEntity) return;
     if (currentInteractionEntity.type != 'vehicle') return;
     let playerToEject = occupantsToEject[index];
-    mp.chat.debug(`${index}`);
-    mp.chat.debug(`${occupantsToEject[index].name}`);
     mp.events.callRemote('vehicles.eject', JSON.stringify(playerToEject));
 });
 
@@ -250,8 +239,6 @@ mp.events.add('interaction.money.close', () => {
 });
 
 mp.events.add('interaction.money.accept', (value) => {
-    mp.chat.debug('accept');
-    mp.chat.debug(value);
 
     if (!value) return mp.notify.error('Введите сумму', 'Ошибка');
 
@@ -295,6 +282,5 @@ mp.events.add('interaction.money.ans', (ans) => {
 });
 
 mp.events.add('interaction.money.decline', () => {
-    mp.chat.debug('decline');
     mp.events.call('interaction.money.close');
 });
