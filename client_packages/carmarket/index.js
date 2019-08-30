@@ -77,6 +77,7 @@ mp.events.add('carmarket.buymenu.close', () => {
     mp.busy.remove('carmarket.buymenu');
     mp.callCEFV(`carSpecifications.show = false`);
     mp.callCEFV(`selectMenu.show = false`);
+});
 
 mp.events.add('carmarket.car.buy', () => {
     mp.callCEFV(`loader.show = true;`);
