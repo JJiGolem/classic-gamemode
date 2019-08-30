@@ -7,7 +7,6 @@ mp.events.add('parkings.menu.show', (parkingId) => {
 });
 
 mp.events.add('parkings.menu.close', () => {
-    //mp.callCEFV(`selectMenu.menu = null`);
     mp.callCEFV(`selectMenu.show = false`);
 });
 
