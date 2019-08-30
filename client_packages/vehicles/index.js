@@ -237,7 +237,7 @@ mp.keys.bind(0x25, true, function () {
 });
 
 mp.keys.bind(0x27, true, function () {
-    if (mp.busy.includes()) return;
+    if (mp.busy.includes('chat')) return;
     var player = mp.players.local;
     var vehicle = player.vehicle;
     if (!vehicle) return;
