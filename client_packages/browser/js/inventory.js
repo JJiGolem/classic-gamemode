@@ -494,7 +494,16 @@ var inventory = new Vue({
         setItemsInfo(itemsInfo) {
             if (typeof itemsInfo == 'string') itemsInfo = JSON.parse(itemsInfo);
             for (var itemId in itemsInfo) {
-                Vue.set(this.itemsInfo, itemId, itemsInfo[itemId]);
+                this.setItemInfo(itemId, itemsInfo[itemId]);
+
+                if (!this.itemsMenu[itemId]) this.itemsMenu[itemId] = {};
+                var menu = this.itemsMenu[itemId];
+                menu['Выкинуть'] = {
+                    handler(item) {
+                        // console.log(`выкинуть ${item}`)
+                        mp.trigger(`callRemote`, `item.throw`, item.sqlId);
+                    }
+                };
             }
         },
         setItemInfo(itemId, info) {

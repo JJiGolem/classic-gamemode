@@ -31,6 +31,10 @@ module.exports = {
         7: [13],
         8: [13],
     },
+    // Кол-во предметов на земле от одного игрока
+    groundMaxItems: 3,
+    // Время жизни предмета на земле (ms)
+    groundItemTime: 2 * 60 * 1000,
 
     init() {
         this.loadInventoryItemsFromDB();
@@ -139,6 +143,7 @@ module.exports = {
         player.inventory = {
             denyUpdateView: false, // запрещено ли обновлять внешний вид игрока
             items: dbItems, // предметы игрока
+            ground: [], // объекты на земле, которые выкинул игрок
         };
         this.updateAllView(player);
         player.call(`inventory.initItems`, [this.convertServerToClientPlayerItems(dbItems)]);
