@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.FLOAT(11),
             allowNull: false
         },
+        order: {
+            type: DataTypes.INTEGER(11),
+            allowNull: false
+        }
     }, 
     {
         timestamps: false

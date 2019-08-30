@@ -30,6 +30,8 @@ module.exports = {
     },
     /// Разморозка игрока после выбора персоонажа
     "characterInit.done": (player) => {
+        console.log(JSON.parse(JSON.stringify(player.character.Appearances)));
+        console.log(JSON.parse(JSON.stringify(player.character.Features)));
         player.call('characterInit.done');
         player.spawn(new mp.Vector3(player.character.x, player.character.y, player.character.z));
         player.dimension = 0;

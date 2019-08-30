@@ -299,7 +299,10 @@ module.exports = {
         houses[index] = null;
     },
     getHouseById(id) {
-        return houses.find( x => x.info.id == id);
+        return houses.find( x => {
+            if (x == null) return false;
+            return x.info.id == id;
+        });
     },
     getHouseIndexById(id) {
         return houses.findIndex( x => x.info.id == id);
