@@ -21,13 +21,13 @@ module.exports = {
         if (typeof job == 'number') job = this.getJob(job);
 
         player.character.job = job.id;
-        player.character.job.save();
+        player.character.save();
     },
     deleteMember(player) {
         if (!player.character) return;
 
         player.character.job = null;
-        player.character.job.save();
+        player.character.save();
     },
     async initJobSkills(player) {
         player.character.jobSkills = [];
