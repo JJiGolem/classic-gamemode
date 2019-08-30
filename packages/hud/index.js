@@ -18,7 +18,7 @@ module.exports = {
                 outputArray.push(
                     {
                         id: player.id,
-                        name: player.name,
+                        name: player.character.name,
                         ping: player.ping,
                         faction: faction
                     }
