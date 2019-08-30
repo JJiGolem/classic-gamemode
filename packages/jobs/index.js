@@ -21,13 +21,13 @@ module.exports = {
         if (typeof job == 'number') job = this.getJob(job);
 
         player.character.job = job.id;
-        player.character.job.save();
+        player.character.save();
     },
     deleteMember(player) {
         if (!player.character) return;
 
         player.character.job = null;
-        player.character.job.save();
+        player.character.save();
     },
     async initJobSkills(player) {
         player.character.jobSkills = [];
@@ -56,9 +56,9 @@ module.exports = {
 
         money.addMoney(player, player.character.pay, (res) => {
             if (!res) return console.log(`[jobs] Ошибка выдачи ЗП для ${player.name}`);
+            notifs.info(player, `Зарплата: $${player.character.pay}`, `Работа`);
             player.character.pay = 0;
             player.character.save();
-            notifs.info(player, `Зарплата: $${pay}`, `Работа`);
         });
     },
 }

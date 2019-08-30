@@ -71,10 +71,10 @@ var selectMenu = new Vue({
                                 selectMenu.menu = selectMenu.menus["characterCreateNameMenu"];
                                 break;
                             case "Сбросить все изменения":
-                                selectMenu.menu = selectMenu.menus["characterCreateResetMenu"];
+                                //selectMenu.menu = selectMenu.menus["characterCreateResetMenu"];
                                 break;
                             case "Выйти без сохранения":
-                                selectMenu.menu = selectMenu.menus["characterCreateExitMenu"];
+                                //selectMenu.menu = selectMenu.menus["characterCreateExitMenu"];
                                 break;
                         }
                     }
@@ -777,10 +777,10 @@ var selectMenu = new Vue({
                                 mp.trigger('characterInit.create.setMolesFreckles', e.valueIndex);
                                 break;
                             case "Волосы на теле":
-                                mp.trigger('characterInit.create.setChestHair', e.valueIndex);
+                                mp.trigger('characterInit.create.setChestHair', e.valueIndex, true);
                                 break;
                             case "Цвет волос на теле":
-                                mp.trigger('characterInit.create.setChestHairColor', e.valueIndex);
+                                mp.trigger('characterInit.create.setChestHairColor', e.valueIndex, true);
                                 break;
                         }
                     }

@@ -27,7 +27,7 @@ mp.events.add('carmarket.sellmenu.show', () => {
 mp.events.add('carmarket.car.sell', () => {
     mp.callCEFV(`loader.show = true;`);
     mp.events.callRemote('carmarket.car.sell');
-    mp.callCEFV(`selectMenu.menu = null`);
+    mp.callCEFV(`selectMenu.show = false`);
 });
 mp.events.add('carmarket.car.sell.ans', (ans, price) => {
     mp.callCEFV(`loader.show = false;`);
@@ -51,7 +51,7 @@ mp.events.add('carmarket.car.sell.ans', (ans, price) => {
 
 mp.events.add('carmarket.sellmenu.close', () => {
     mp.busy.remove('carmarket.sellmenu');
-    mp.callCEFV(`selectMenu.menu = null`);
+    mp.callCEFV(`selectMenu.show = false`);
 });
 
 mp.events.add('carmarket.buymenu.show', (data) => {
@@ -76,13 +76,13 @@ mp.events.add('carmarket.buymenu.show', (data) => {
 mp.events.add('carmarket.buymenu.close', () => {
     mp.busy.remove('carmarket.buymenu');
     mp.callCEFV(`carSpecifications.show = false`);
-    mp.callCEFV(`selectMenu.menu = null`);
+    mp.callCEFV(`selectMenu.show = false`);
 });
 
 mp.events.add('carmarket.car.buy', () => {
     mp.callCEFV(`loader.show = true;`);
     mp.events.callRemote('carmarket.car.buy');
-    mp.callCEFV(`selectMenu.menu = null`);
+    mp.callCEFV(`selectMenu.show = false`);
 });
 
 mp.events.add('carmarket.car.buy.ans', (ans, data) => {

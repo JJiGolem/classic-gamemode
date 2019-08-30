@@ -83,7 +83,7 @@ mp.events.add('carshow.list.close', () => {
     mp.players.local.freezePosition(false);
     mp.events.call('hud.enable', true);
     mp.game.ui.displayRadar(true);
-    mp.callCEFV(`selectMenu.menu = null`);
+    mp.callCEFV(`selectMenu.show = false`);
     controlsDisabled = false;
     mp.busy.remove('carshow');
     mp.callCEFR('setOpacityChat', [1.0]);
