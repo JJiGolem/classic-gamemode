@@ -347,7 +347,7 @@ module.exports = {
                     for (var i = 0; i < player.inventory.items.length; i++) {
                         var item = player.inventory.items[i];
                         if (!item.parentId && item.itemId == itemId) {
-                            this.updateParam(item, "health", parseInt(player.armour));
+                            this.updateParam(player, item, "health", parseInt(player.armour));
                         }
                     }
                 }
@@ -414,11 +414,12 @@ module.exports = {
         }
         return params;
     },
-    updateParam(item, key, value) {
+    updateParam(player, item, key, value) {
         var param = this.getParam(item, key);
         if (!param) return;
         param.value = value;
         param.save();
+        player.call(`inventory.setItemParam`, [item.id, key, value]);
     },
     findFreeSlot(player, itemId) {
         var items = player.inventory.items;

@@ -30,6 +30,9 @@ mp.inventory = {
     deleteItem(sqlId) {
         mp.callCEFV(`inventory.deleteItem(${sqlId})`);
     },
+    setItemParam(sqlId, key, value) {
+        mp.callCEFV(`inventory.setItemParam(${sqlId}, '${key}', '${value}')`);
+    },
     setSatiety(val) {
         mp.callCEFV(`inventory.satiety = ${val}`)
     },
@@ -53,6 +56,8 @@ mp.events.add("inventory.setItemInfo", mp.inventory.setItemInfo);
 mp.events.add("inventory.deleteItem", mp.inventory.deleteItem);
 
 mp.events.add("inventory.addItem", mp.inventory.addItem);
+
+mp.events.add("inventory.setItemParam", mp.inventory.setItemParam);
 
 mp.events.add("inventory.setSatiety", mp.inventory.setSatiety);
 

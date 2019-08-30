@@ -80,9 +80,10 @@ var inventory = new Vue({
                 }
             },
             24: {
-                'Лечить': {
+                'Вылечиться': {
                     handler(item) {
-                        console.log(`лечить ${item}`)
+                        // console.log(`лечить ${item}`)
+                        mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
                     }
                 }
             },
@@ -539,14 +540,11 @@ var inventory = new Vue({
                 }
             }
         },
-        setItemParam(item, keys, values) {
+        setItemParam(item, key, value) {
             if (typeof item == 'number') item = this.getItem(item);
             if (!item) return this.notify(`setItemParam: Предмет ${item} не найден`);
-            if (!Array.isArray(keys)) keys = [keys];
-            if (!Array.isArray(values)) values = [values];
-            for (var i in keys) {
-                Vue.set(item.params, keys[i], values[i]);
-            }
+            if (!isNaN(value)) value = parseFloat(value);
+            Vue.set(item.params, key, value);
         },
         getItemInfoHash(itemId) {
             var info = this.itemsInfo[itemId];
