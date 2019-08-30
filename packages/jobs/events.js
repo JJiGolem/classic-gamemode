@@ -17,6 +17,7 @@ module.exports = {
         notifs.success(player, `Вы устроились на работу - ${job.name}`, header);
     },
     "jobs.leave": (player) => {
+        var header = `Увольнение с работы`;
         notifs.success(player, `Вы уволились с работы`, header);
         jobs.deleteMember(player);
     }
