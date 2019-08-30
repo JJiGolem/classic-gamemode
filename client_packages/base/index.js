@@ -59,7 +59,6 @@ mp.busy.add = function(name, nocef = false) {
 /// Содержит ли массив данный модуль
 /// В случае если name = null, содержит ли массив какой-либо модуль
 mp.busy.includes = function(name) {
-    mp.chat.debug(JSON.stringify(mp.busy.list))
     if (name == null) {
         return mp.busy.list.length != 0;
     } else {
