@@ -6,7 +6,7 @@ let utils = call("utils");
 module.exports = {
     /// Заморозка игрока перед авторизацией
     'player.joined': (player) => {
-        player = player.id;
+        player.dimension = player.id;
         player.call('auth.init', []);
     },
     'auth.login': async (player, data) => {

@@ -59,7 +59,7 @@ module.exports = {
             Appearances: [],
         }
         for (let i = 0; i < 20; i++) player.character.Features.push({value: 0.0});
-        for (let i = 0; i < 10; i++) player.character.Appearances.push({value: 255, opacity: 1.0});
+        for (let i = 0; i < 11; i++) player.character.Appearances.push({value: 255, opacity: 1.0});
 
         mp.events.call('characterInit.create.init', player);
 
@@ -127,7 +127,7 @@ module.exports = {
         );
 
         player.setClothes(2, player.character.hair, 0, 2);
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 11; i++) {
             player.setHeadOverlay(i, [player.character.Appearances[i].value,
                 player.character.Appearances[i].opacity,
                 this.colorForOverlayIdx(player, i), 0]);

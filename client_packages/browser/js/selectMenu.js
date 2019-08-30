@@ -71,10 +71,10 @@ var selectMenu = new Vue({
                                 selectMenu.menu = selectMenu.menus["characterCreateNameMenu"];
                                 break;
                             case "Сбросить все изменения":
-                                selectMenu.menu = selectMenu.menus["characterCreateResetMenu"];
+                                //selectMenu.menu = selectMenu.menus["characterCreateResetMenu"];
                                 break;
                             case "Выйти без сохранения":
-                                selectMenu.menu = selectMenu.menus["characterCreateExitMenu"];
+                                //selectMenu.menu = selectMenu.menus["characterCreateExitMenu"];
                                 break;
                         }
                     }
