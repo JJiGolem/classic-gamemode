@@ -39,6 +39,11 @@ module.exports = {
         if (vehicle.key == 'job' && vehicle.owner == 3 && seat == -1) {
             console.log(`${player.name} сел в автобус ${vehicle.id} таксистом`);
             if (!vehicle.isActiveBus) {
+                if (player.hasBusRent) {
+                    notify.error(player, 'Вы уже арендуете автобус', 'Автобус');
+                    player.removeFromVehicle();
+                    return;
+                }
                 player.call('busdriver.rent.show', [bus.getRentPrice()]);
             } else {
                 if (vehicle.busDriverId != player.id) {
@@ -73,6 +78,7 @@ module.exports = {
                 vehicle.busDriverId = player.id;
                 let routes = bus.getAvailiableRoutes(player);
                 //console.log(routes);
+                player.hasBusRent = true;
                 if (routes.length == 0) notify.warning(player, 'Нет доступных маршрутов', 'Автобус');
                 player.call('busdriver.rent.ans', [0, routes]);
 
@@ -101,6 +107,8 @@ module.exports = {
         let label = (price == 0) ? `~y~${player.busRoute.name} \n~g~Проезд бесплатный` : `~y~${player.busRoute.name} \n ~w~Стоимость проезда: ~g~$${price}`;
         player.vehicle.setVariable('label', label);
         player.vehicle.busPrice = price;
+        player.busPointsToSave = 0;
+        player.busPassengers = 0;
         player.call('busdriver.route.start.ans', [1, player.busPoints[0]]);
     },
     "busdriver.menu.closed": (player) => {
@@ -120,22 +128,27 @@ module.exports = {
             if (routes.length == 0) notify.warning(player, 'Нет доступных маршрутов', 'Автобус');
             player.call('busdriver.menu.show', [routes]);
         }
-        if (seat != -1 && vehicle.busDriverId != player.id && vehicle.hasBusRoute && vehicle.busPrice) {
-            console.log(`Цена проезда ${vehicle.busPrice}`);
-            let price = vehicle.busPrice;
-            if (player.character.cash < price) {
-                notify.error(player, 'Недостаточно денег');
-                player.removeFromVehicle();
-            }
+        if (seat != -1 && vehicle.busDriverId != player.id && vehicle.hasBusRoute) {
+        
             let driver = mp.players.at(vehicle.busDriverId);
             if (!driver || !mp.players.exists(driver)) {
                 notify.error(player, 'Нет водителя');
                 player.removeFromVehicle();
+                return;
+            }
+            if (!vehicle.busPrice) return driver.busPassengers++;
+
+            let price = vehicle.busPrice;
+            if (player.character.cash < price) {
+                notify.error(player, 'Недостаточно денег');
+                player.removeFromVehicle();
+                return;
             }
 
             money.moveCash(player, driver, price, function (result) {
                 if (result) {
                     notify.success(driver, `+$${price} за пассажира`, `Автобус`);
+                    player.busPassengers++;
                 } else {
                     notify.error(player, 'Ошибка оплаты');
                     player.removeFromVehicle();
@@ -147,6 +160,13 @@ module.exports = {
         if (!player.vehicle) return;
         if (player.vehicle.busDriverId != player.id) return;
 
+        player.character.pay += player.busRoute.salary;
+        player.busPointsToSave++;
+        if (player.busPointsToSave % 10 == 0) {
+            player.character.save();
+            console.log('save');
+        }
+        console.log(player.character.pay);
         let timeout;
         if (player.busPoints[player.busPointIndex].isStop) {
             notify.info(player, 'Ожидайте пассажиров', 'Остановка');
@@ -189,9 +209,18 @@ module.exports = {
     "busdriver.route.end": (player) => {
         if (!player || !mp.players.exists(player)) return;
         notify.info(player, 'Рабочий день окончен');
+        delete player.hasBusRent;
+        if (!player.busRoute) return;
         player.call('busdriver.route.end');
+        console.log(`points ${player.busPointsToSave}`);
+        console.log(`pass ${player.busPassengers}`);
+        player.call(`chat.message.push`, [`!{#f3c800}Рабочий день окончен. Деньги придут на счет во время зарплаты`]);
+        player.call(`chat.message.push`, [`!{#f3c800}Заработано: !{#80c102}$${player.busPointsToSave*player.busRoute.salary}`]);
+        player.call(`chat.message.push`, [`!{#f3c800}Перевезено пассажиров: !{#009eec}${player.busPassengers}`]);
         delete player.busRoute;
         delete player.busPointIndex;
         delete player.busPoints;
+        delete player.busPassengers;
+        delete player.busPointsToSave;
     }
 }
