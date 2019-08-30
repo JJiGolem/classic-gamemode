@@ -318,32 +318,32 @@ var inventory = new Vue({
             columns.hotkeyFocus = null;
         },
         itemMouseHandler(item, e) {
+            var rect = document.getElementById('inventory').getBoundingClientRect();
             var handlers = {
                 'mouseenter': (e) => {
                     this.itemDesc.item = item;
-                    var itemDiv = e.target;
-                    this.itemDesc.x = e.pageX + itemDiv.offsetWidth / 5;
-                    this.itemDesc.y = e.pageY + itemDiv.offsetHeight / 5;
+                    this.itemDesc.x = (e.screenX - rect.x) + 15;
+                    this.itemDesc.y = (e.screenY - rect.y) + 15;
                 },
                 'mouseleave': (e) => {
                     this.itemDesc.item = null;
                 },
                 'mousemove': (e) => {
-                    var itemDiv = e.target;
-                    this.itemDesc.x = e.pageX + itemDiv.offsetWidth / 5;
-                    this.itemDesc.y = e.pageY + itemDiv.offsetHeight / 5;
+                    this.itemDesc.item = item;
+                    this.itemDesc.x = (e.screenX - rect.x) + 15;
+                    this.itemDesc.y = (e.screenY - rect.y) + 15;
                 },
                 'contextmenu': (e) => {
                     this.itemMenu.item = item;
-                    this.itemMenu.x = e.pageX;
-                    this.itemMenu.y = e.pageY;
+                    this.itemMenu.x = e.clientX - rect.x;
+                    this.itemMenu.y = e.clientY - rect.y;
                 },
                 'mousedown': (e) => {
                     if (e.which == 1) { // Left Mouse Button
                         this.itemDrag.item = item;
                         this.itemDrag.div = e.target;
-                        this.itemDrag.x = e.pageX;
-                        this.itemDrag.y = e.pageY;
+                        this.itemDrag.x = e.screenX - rect.x - e.target.offsetWidth / 2;
+                        this.itemDrag.y = e.screenY - rect.y - e.target.offsetHeight / 2;
                     }
                 },
             };
@@ -690,7 +690,7 @@ var inventory = new Vue({
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
-            if (busy.includes(["chat", "terminal", "interaction","mapCase"])) return;
+            if (busy.includes(["chat", "terminal", "interaction", "mapCase"])) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;
             if (e.keyCode > 47 && e.keyCode < 58) {
                 var num = e.keyCode - 48;
@@ -702,9 +702,11 @@ var inventory = new Vue({
         });
         window.addEventListener('mousemove', function(e) {
             if (self.itemDrag.item) {
+                var rect = document.getElementById('inventory').getBoundingClientRect();
                 var itemDiv = self.itemDrag.div;
-                self.itemDrag.x = e.pageX - itemDiv.offsetWidth / 2;
-                self.itemDrag.y = e.pageY - itemDiv.offsetHeight / 2;
+
+                self.itemDrag.x = e.screenX - rect.x - itemDiv.offsetWidth / 2;
+                self.itemDrag.y = e.screenY - rect.y - itemDiv.offsetHeight / 2;
             }
         });
         window.addEventListener('mouseup', function(e) {
