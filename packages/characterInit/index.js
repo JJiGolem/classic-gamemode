@@ -38,7 +38,7 @@ module.exports = {
     },
     /// Функции создания персоонажа
     create(player) {
-        player.characterInfo = {
+        player.character = {
             accountId: player.account.id,
             name: "",
             gender: 0,
@@ -58,13 +58,14 @@ module.exports = {
             Features: [],
             Appearances: [],
         }
-        for (let i = 0; i < 20; i++) player.characterInfo.Features.push({value: 0.0});
-        for (let i = 0; i < 10; i++) player.characterInfo.Appearances.push({value: 255, opacity: 1.0});
+        for (let i = 0; i < 20; i++) player.character.Features.push({value: 0.0});
+        for (let i = 0; i < 10; i++) player.character.Appearances.push({value: 255, opacity: 1.0});
 
         mp.events.call('characterInit.create.init', player);
 
         player.model = freemodeCharacters[0];
         this.applyCharacter(player);
+        player.characterInfo = player.character;
         this.sendToCreator(player);
     },
     async save(player, fullname, charData) {
