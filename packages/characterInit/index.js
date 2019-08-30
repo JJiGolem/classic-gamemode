@@ -16,18 +16,24 @@ module.exports = {
                 include: [
                     {
                         model: db.Models.Feature,
-                        order: [
-                            ['id', 'ASC'],
-                        ],
                     },
                     {
                         model: db.Models.Appearance,
-                        order: [
-                            ['id', 'ASC'],
-                        ],
                     },
                     db.Models.Fine,
                 ]
+            });
+            player.characters.forEach(character => {
+                character.Appearances.sort( (x, y) => {
+                    if (x.order > y.order) return 1;
+                    if (x.order < y.order) return -1;
+                    if (x.order == y.order) return 0;
+                });
+                character.Features.sort( (x, y) => {
+                    if (x.order > y.order) return 1;
+                    if (x.order < y.order) return -1;
+                    if (x.order == y.order) return 0;
+                });
             });
         }
         let charInfos = new Array();
@@ -58,8 +64,8 @@ module.exports = {
             Features: [],
             Appearances: [],
         }
-        for (let i = 0; i < 20; i++) player.character.Features.push({value: 0.0});
-        for (let i = 0; i < 11; i++) player.character.Appearances.push({value: 255, opacity: 1.0});
+        for (let i = 0; i < 20; i++) player.character.Features.push({value: 0.0, order: i});
+        for (let i = 0; i < 11; i++) player.character.Appearances.push({value: 255, opacity: 1.0, order: i});
 
         mp.events.call('characterInit.create.init', player);
 
@@ -84,12 +90,15 @@ module.exports = {
         
         player.character = await db.Models.Character.create(player.characterInfo, {
             include: [
-                db.Models.Feature,
-                db.Models.Appearance
+                {
+                    model: db.Models.Feature,
+                },
+                {
+                    model: db.Models.Appearance,
+                }
             ]
         });
         this.applyCharacter(player);
-        
         player.call('characterInit.create.check.ans', [1]);
         mp.events.call('characterInit.done', player);
     },

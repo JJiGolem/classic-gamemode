@@ -422,10 +422,8 @@ for (let i = 0; i < Data.headOverlays.length; i++) {
         const opacityScale = 1.0;
         if (opacityScale >= 0 && opacityScale <= 1 && value >= 0 && value <= Data.headOverlayItems[i].length) {
             value--;
-            charData.Appearances[i] = {
-                value: value,
-                opacity: opacityScale
-            };
+            charData.Appearances[i].value = value;
+            charData.Appearances[i].opacity = opacityScale;
             localPlayer.setHeadOverlay(i, value, opacityScale, colorForOverlayIdx(i), 0);
         }
     });
