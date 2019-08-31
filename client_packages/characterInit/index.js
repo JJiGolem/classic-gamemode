@@ -32,6 +32,7 @@ const sinPedRot = Math.sin((pedRotation - 90) * Math.PI/180);
 
 let isBinding = false;
 
+let creatorTimer = null;
 
 mp.events.add('characterInit.init', (characters) => {
     mp.gui.cursor.show(true, true);
@@ -48,7 +49,7 @@ mp.events.add('characterInit.init', (characters) => {
         isBinding = true;
     }
 
-    mp.players.local.position = new mp.Vector3(camPos[0], camPos[1], camPos[2]);
+    mp.players.local.position = new mp.Vector3(camPos[0], camPos[1], camPos[2] + 10);
 
     mp.utils.cam.create(camPos[0], camPos[1], camPos[2], camPos[0] + camDist * sinCamRot, camPos[1] + camDist * cosCamRot, camPos[2] + camPosZDelta);
 
@@ -111,11 +112,11 @@ mp.events.add('characterInit.chooseLeft', () => {
 
 let createPeds = function() {
     if (peds.length != 0) return;
-    for (let i = 0; i < charNum; i++) {
-        setCharCustom(i);
-        //setCharClothes(i);
-
-        setTimeout(async () => {
+    creatorTimer = setTimeout(async () => {
+        for (let i = 0; i < charNum; i++) {
+            setCharCustom(i);
+            //setCharClothes(i);
+   
             let x = (camPos[0] + i * pedDist * sinPedRot) + camDist * sinCamRot;
             let y = (camPos[1] + i * pedDist * cosPedRot) + camDist * cosCamRot;
             let z = mp.game.gameplay.getGroundZFor3dCoord(x, y, camPos[2] + 1, 0.0, false) + 1;
@@ -131,8 +132,9 @@ let createPeds = function() {
                 dimension: mp.players.local.dimension
             }));
             peds.push(ped);
-        }, 500);
-    }
+            creatorTimer = null;
+        }
+    }, 500);
 };
 
 let updateMarkers = function() {
@@ -215,6 +217,7 @@ let choose = function() {
     if(isBinding) {
         binding(false);
         isBinding = false;
+        if (creatorTimer != null) clearTimeout(creatorTimer);
         mp.events.callRemote('characterInit.choose', currentCharacter);
         mp.callCEFV(`loader.show = true;`);
     }
