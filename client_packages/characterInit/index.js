@@ -33,7 +33,7 @@ const sinPedRot = Math.sin((pedRotation - 90) * Math.PI/180);
 let isBinding = false;
 
 let creatorTimer = null;
-let creatorCustomizeTimer = null;
+
 
 mp.events.add('characterInit.init', (characters) => {
     mp.gui.cursor.show(true, true);
@@ -117,25 +117,22 @@ let createPeds = function() {
         for (let i = 0; i < charNum; i++) {
             setCharCustom(i);
             //setCharClothes(i);
+            
+            let x = (camPos[0] + i * pedDist * sinPedRot) + camDist * sinCamRot;
+            let y = (camPos[1] + i * pedDist * cosPedRot) + camDist * cosCamRot;
+            let z = mp.game.gameplay.getGroundZFor3dCoord(x, y, camPos[2] + 1, 0.0, false) + 1;
+            let ped = mp.peds.new(mp.players.local.model, new mp.Vector3(x, y, z), pedRotation, mp.players.local.dimension);
+            mp.players.local.cloneToTarget(ped.handle);
 
-            creatorCustomizeTimer = setTimeout(async () => {
-                let x = (camPos[0] + i * pedDist * sinPedRot) + camDist * sinCamRot;
-                let y = (camPos[1] + i * pedDist * cosPedRot) + camDist * cosCamRot;
-                let z = mp.game.gameplay.getGroundZFor3dCoord(x, y, camPos[2] + 1, 0.0, false) + 1;
-                let ped = mp.peds.new(mp.players.local.model, new mp.Vector3(x, y, z), pedRotation, mp.players.local.dimension);
-                mp.players.local.cloneToTarget(ped.handle);
-    
-                selectMarkers.push(mp.markers.new(2, new mp.Vector3(x, y, z + 1), 0.2,
-                {
-                    direction: 0,
-                    rotation: new mp.Vector3(0, 180, 0),
-                    color: (i == currentCharacter) ? [255, 221, 85, 255] : [255, 255, 255, 120],
-                    visible: true,
-                    dimension: mp.players.local.dimension
-                }));
-                peds.push(ped);
-                creatorCustomizeTimer = null;
-            }, 100);
+            selectMarkers.push(mp.markers.new(2, new mp.Vector3(x, y, z + 1), 0.2,
+            {
+                direction: 0,
+                rotation: new mp.Vector3(0, 180, 0),
+                color: (i == currentCharacter) ? [255, 221, 85, 255] : [255, 255, 255, 120],
+                visible: true,
+                dimension: mp.players.local.dimension
+            }));
+            peds.push(ped);
         }
         creatorTimer = null;
     }, 500);
@@ -222,7 +219,6 @@ let choose = function() {
         binding(false);
         isBinding = false;
         if (creatorTimer != null) clearTimeout(creatorTimer);
-        if (creatorCustomizeTimer != null) clearTimeout(creatorCustomizeTimer);
         mp.events.callRemote('characterInit.choose', currentCharacter);
         mp.callCEFV(`loader.show = true;`);
     }
