@@ -31,14 +31,12 @@ mp.events.add("NPC.create", (data) => {
 
 mp.events.add("playerEnterColshape", (shape) => {
     if (shape.isNPC && shape.NPCenterEvent) {
-        mp.chat.debug('1');
         mp.events.call(shape.NPCenterEvent);
     }
 });
 
 mp.events.add("playerExitColshape", (shape) => {
     if (shape.isNPC && shape.NPCleaveEvent) {
-        mp.chat.debug('2');
         mp.events.call(shape.NPCleaveEvent);
     }
 });

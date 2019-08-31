@@ -104,12 +104,10 @@ mp.events.add('carservice.jobmenu.close', () => {
 });
 
 mp.events.add('carservice.shape.enter', () => {
-    mp.chat.debug('enter');
     isInCarServiceShape = true;
 });
 
 mp.events.add('carservice.shape.leave', () => {
-    mp.chat.debug('leave');
     isInCarServiceShape = false;
 });
 

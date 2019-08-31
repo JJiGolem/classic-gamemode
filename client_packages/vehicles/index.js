@@ -356,7 +356,6 @@ mp.events.add('vehicles.lock', () => {
     let veh = mp.getCurrentInteractionEntity();
     if (!veh) return;
     if (veh.type != 'vehicle') return;
-    mp.chat.debug('lock');
     mp.events.callRemote('vehicles.lock', veh.remoteId);
 })
 
