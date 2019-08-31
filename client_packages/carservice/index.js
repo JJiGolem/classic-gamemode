@@ -93,7 +93,6 @@ mp.events.add('carservice.jobmenu.show', (state) => {
             break;
         case 1:
             mp.callCEFV(`selectMenu.menu.items[0].text = 'Уволиться с работы'`);
-            mp.chat.debug('показать увольнение')
             break;
     }
     mp.callCEFV(`selectMenu.show = true`);
