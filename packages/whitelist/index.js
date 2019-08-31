@@ -9,7 +9,8 @@ let allowed = [ /// Список разрешенных social club'ов
     "strainflorein",
     "Cinzu-ra",
     "Eric.Sweep",
-    "Djon_Anderson"
+    "Djon_Anderson",
+    "1d1ssarik"
 ]; 
 
 module.exports = {
