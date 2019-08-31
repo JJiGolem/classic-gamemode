@@ -221,7 +221,7 @@ module.exports = {
         }
     },
     "/tempwear": {
-        access: 6,
+        access: 1,
         description: "Выдача временного набора одежды",
         args: "[ID набора]",
         handler: (player, args) => {

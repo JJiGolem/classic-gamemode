@@ -17,7 +17,7 @@ module.exports = {
     },
     "/ftp": {
         description: "Телепортироваться к организации.",
-        access: 2,
+        access: 5,
         args: "[ид_организации]:n",
         handler: (player, args, out) => {
             var marker = factions.getMarker(args[0]);
