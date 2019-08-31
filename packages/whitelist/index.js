@@ -7,7 +7,9 @@ let allowed = [ /// Список разрешенных social club'ов
     "Pigeon_Gangsta",
     "deusmemes",
     "strainflorein",
-    "Cinzu-ra"
+    "Cinzu-ra",
+    "Eric.Sweep",
+    "Djon_Anderson"
 ]; 
 
 module.exports = {
