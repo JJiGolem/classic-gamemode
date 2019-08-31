@@ -222,6 +222,14 @@ module.exports = {
             player.setClothes(parseInt(args[0]), parseInt(args[1]), parseInt(args[2]), 0);
         }
     },
+    "/prop": {
+        access: 3,
+        description: "Выдача тестового пропа",
+        args: "[тип] [текстура] [вариация]",
+        handler: (player, args) => {
+            player.setProp(parseInt(args[0]), parseInt(args[1]), parseInt(args[2]));
+        }
+    },
     "/tempwear": {
         access: 1,
         description: "Выдача временного набора одежды",
