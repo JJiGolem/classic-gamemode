@@ -58,7 +58,7 @@ mp.events.add('carmarket.buymenu.show', (data) => {
     if (!data) return;
     mp.busy.add('carmarket.buymenu');
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["carMarketBuyMenu"])`);
-
+    if (mp.players.local.vehicle) mp.players.local.vehicle.freezePosition(true);
     mp.callCEFV(`carSpecifications.body = {
         name: { header: 'Название', value: '${data.name}', unit: '' },
         regDate: { header: 'Дата регистрации', value: '${dateFormatter(data.regDate)}', unit: '' },
@@ -97,6 +97,7 @@ mp.events.add('carmarket.car.buy.ans', (ans, data) => {
             break;
         case 2:
             mp.busy.remove('carmarket.buymenu');
+            mp.players.local.vehicle.freezePosition(false);
             mp.callCEFV(`carSpecifications.show = false`);
             mp.notify.success('Вы успешно приобрели т/с', 'Авторынок');
             mp.events.call('chat.message.push', `!{#009eec}Вы приобрели транспортное средство !{#f3c800}${data.name} !{#009eec}за !{#80c102}$${data.price}`);

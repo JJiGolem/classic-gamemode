@@ -97,7 +97,7 @@ module.exports = {
                 mp.events.call(command, player, args);
                 break;
             default:
-                // TODO: проверка на админа
+                if (!player.character.admin) return;
                 mp.events.call('admin.command.handle', player, command, args);
                 break;
         }
