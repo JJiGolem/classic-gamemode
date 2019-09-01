@@ -24,7 +24,7 @@ var bindASCIIKeys = {
   LCtrl: 17,
   Shift: 16
 };
-//mp.game.graphics.notify('~r~NoClip ~w~by ~b~Morbo');
+
 var isNoClip = false;
 var noClipCamera;
 var shiftModifier = false;
@@ -32,7 +32,7 @@ var controlModifier = false;
 var localPlayer = mp.players.local;
 mp.keys.bind(bindVirtualKeys.F2, true, function() {
   isNoClip = !isNoClip;
-  mp.game.ui.displayRadar(!isNoClip);
+  //mp.game.ui.displayRadar(!isNoClip);
   if (isNoClip) {
     startNoClip();
   } else {
