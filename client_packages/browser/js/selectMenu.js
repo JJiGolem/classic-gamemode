@@ -2501,6 +2501,44 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "tuningMain": {
+                name: "tuningMain",
+                header: "LS Customs",
+                items: [{
+                        text: "Покраска"
+                    },
+                    {
+                        text: "Двигатель"
+                    },
+                    {
+                        text: "Тормоза"
+                    },
+                    {
+                        text: "Трансмиссия"
+                    },
+                    {
+                        text: "Подвеска"
+                    },
+                    {
+                        text: "Броня"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        
+                    }
+                }
+            },
         },
         // Уведомление
         notification: null,

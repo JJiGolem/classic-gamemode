@@ -23,10 +23,10 @@ module.exports = {
             });
         let shape = mp.colshapes.newSphere(LSC.x, LSC.y, LSC.z, 4);
 
-        shape.onEnter = this.customsEnterHandler;
+        shape.isCustoms = true;
         shape.customsId = LSC.id;
     },
-    customsEnterHandler(player) {
-        console.log(`${player.name} entered LSC`)
+    getCustomsDataById(id) {
+        return customs.find(x => x.id == id);
     }
 }
