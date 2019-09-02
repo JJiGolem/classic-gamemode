@@ -10,6 +10,34 @@ let vehicle;
 let tuningParams = {
     primaryColour: -1,
     secondaryColour: -1,
+    engineType: {
+        modIndex: 11,
+        current: -1
+    },
+    breakType: {
+        modIndex: 12,
+        current: -1
+    },
+    transmissionType: {
+        modIndex: 13,
+        current: -1
+    },
+    suspensionType:{
+        modIndex: 15,
+        current: -1
+    },
+    armourType: {
+        modIndex: 16,
+        current: -1
+    },
+    turbo: {
+        modIndex: 18,
+        current: -1
+    },
+    // xenon: { // to test
+    //     modIndex: 22,
+    //     current: -1
+    // },
 }
 
 let colorData = {
@@ -46,7 +74,7 @@ mp.events.add('tuning.start', (id, primary, secondary) => {
     tuningParams.secondaryColour = secondary;
     colorData.primary = primary;
     colorData.secondary = secondary;
-    //initTuningParams();
+    initTuningParams();
     mp.events.call('tuning.menu.show');
 });
 
@@ -87,8 +115,6 @@ mp.events.add('tuning.colors.set.ans', (ans) => {
             break;
     }
 
-
-
 });
 
 mp.events.add('tuning.end', () => {
@@ -104,7 +130,12 @@ mp.events.add('render', () => {
 });
 
 function initTuningParams() {
-    
+    for (let key in tuningParams) {
+        if (tuningParams[key].modIndex) {
+            tuningParams[key].current = mp.players.local.vehicle.getMod(tuningParams[key].modIndex);
+            mp.chat.debug(`${key} ${tuningParams[key].current}`)
+        }
+    }
 }
 
 mp.events.add('tuning.params.set', setCurrentParams);
