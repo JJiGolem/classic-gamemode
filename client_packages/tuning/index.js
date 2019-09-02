@@ -94,6 +94,11 @@ mp.events.add('tuning.colorMenu.show', () => {
     
 });
 
+mp.events.add('tuning.engineMenu.show', () => {
+    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["tuningEngine"])`);
+    mp.callCEFV(`selectMenu.show = true`);
+});
+
 mp.events.add('tuning.colors', (primary, secondary) => {
     if (primary != -1) colorData.primary = primary;
     if (secondary != -1) colorData.secondary = secondary;
@@ -121,6 +126,11 @@ mp.events.add('tuning.end', () => {
     mp.callCEFV(`selectMenu.show = false`);
     vehicle.freezePosition(false);
     mp.events.callRemote('tuning.end', customsId);
+});
+
+mp.events.add('tuning.buy', (modType, modIndex) => {
+    mp.callCEFV('selectMenu.loader = true');
+    mp.events.callRemote('tuning.buy', modType, modIndex);
 });
 
 mp.events.add('render', () => {

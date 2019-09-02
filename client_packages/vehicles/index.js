@@ -124,7 +124,7 @@ mp.events.add('vehicles.speedometer.show', (state) => {
 mp.events.add('vehicles.speedometer.sync', () => {
 
     let vehicle = mp.players.local.vehicle;
-
+    if (!vehicle) return;
     var left = vehicle.getVariable(`leftTurnSignal`);
     var right = vehicle.getVariable(`rightTurnSignal`);
 
@@ -150,8 +150,9 @@ mp.events.add('vehicles.speedometer.mileage.update', (mileage) => {
 
 mp.events.add('vehicles.speedometer.max.update', (fuel) => {
     mp.callCEFV(`speedometer.maxFuel = ${fuel}`);
-
-    let maxSpeed = (mp.game.vehicle.getVehicleModelMaxSpeed(mp.players.local.vehicle.model) * 3.6).toFixed(0);
+    let vehicle = mp.players.local.vehicle;
+    if (!vehicle) return;
+    let maxSpeed = (mp.game.vehicle.getVehicleModelMaxSpeed(vehicle.model) * 3.6).toFixed(0);
     mp.callCEFV(`speedometer.maxSpeed = ${maxSpeed}`);
 });
 
