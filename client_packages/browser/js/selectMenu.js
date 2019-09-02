@@ -2522,6 +2522,9 @@ var selectMenu = new Vue({
                     {
                         text: "Броня"
                     },
+                    {
+                        text: "Закрыть"
+                    },
                 ],
                 i: 0,
                 j: 0,
@@ -2535,7 +2538,73 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-                        
+                        switch (e.itemName) {
+                            case 'Закрыть':
+                                mp.trigger('tuning.end');
+                                break;
+                            case 'Покраска':
+                                mp.trigger('tuning.colorMenu.show');
+                                break;
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.end');
+                    }
+                }
+            },
+            "tuningColors": {
+                name: "tuningColors",
+                header: "Покраска",
+                items: [
+                    {
+                        text: "Основной цвет",
+                        values: [],
+                        i: 0,
+                        j: 0
+                    },
+                    {
+                        text: "Дополнительный цвет",
+                        values: []
+                    },
+                    {
+                        text: "Покрасить",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
+                    }
+                ],
+                i: 0, // индекс выбранного пункта
+                j: 0, // индекс первого видимого пункта
+                handler(eventName) { // обработчик взаимодействия с меню
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name, // название меню
+                        itemName: item.text, // текст пункта меню
+                        itemIndex: this.i, // индекс пункта меню
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
+                        valueIndex: item.i, // индекс значения пункта меню
+                    };
+                    if (eventName == 'onItemValueChanged') {
+                        if (e.itemName == 'Основной цвет') {
+                            mp.trigger(`tuning.colors`, e.valueIndex, -1);
+                        }
+                        if (e.itemName == 'Дополнительный цвет') {
+                            mp.trigger(`tuning.colors`, -1, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.menu = cloneObj(selectMenu.menus["tuningMain"]);
+                            mp.trigger('tuning.params.set')
+                        }
+                        if (e.itemName == 'Покрасить') {
+                            mp.trigger('tuning.colors.confirm')
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        selectMenu.menu = cloneObj(selectMenu.menus["tuningMain"]);
+                        mp.trigger('tuning.params.set')
                     }
                 }
             },

@@ -41,21 +41,6 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 100,
 			allowNull: false
         },
-        cameraX: {
-            type: DataTypes.FLOAT(11),
-            defaultValue: 100,
-			allowNull: false
-        },
-        cameraY: {
-            type: DataTypes.FLOAT(11),
-            defaultValue: 100,
-			allowNull: false
-        },
-        cameraZ: {
-            type: DataTypes.FLOAT(11),
-            defaultValue: 100,
-			allowNull: false
-        },
         returnX: {
             type: DataTypes.FLOAT(11),
             defaultValue: 100,
