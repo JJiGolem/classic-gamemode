@@ -257,6 +257,16 @@ module.exports = {
         var index = items.indexOf(item);
         items.splice(index, 1);
     },
+    getArrayItems(player, item, result = []) {
+        var items = player.inventory.items;
+        var children = this.getChildren(player, item);
+        result = result.concat(children);
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i];
+            this.getArrayItems(player, child, result);
+        }
+        return result;
+    },
     getInventoryItem(itemId) {
         return this.inventoryItems[itemId - 1];
     },
