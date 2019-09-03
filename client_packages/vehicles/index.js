@@ -451,11 +451,10 @@ mp.events.add("time.main.tick", () => {
             }
         } else {
             if (nearBootVehicleId != null) {
+                mp.events.call("playerExitVehicleBoot", mp.players.local, mp.vehicles.atRemoteId(nearBootVehicleId));
                 nearBootVehicleId = null;
-                mp.events.call("playerExitVehicleBoot", mp.players.local, entity);
             }
         }
-
 
         var hoodPos = mp.utils.getHoodPosition(entity);
         var distToHood = mp.vdist(mp.players.local.position, hoodPos);
@@ -466,8 +465,8 @@ mp.events.add("time.main.tick", () => {
             }
         } else {
             if (nearHoodVehicleId != null) {
+                mp.events.call("playerExitVehicleHood", mp.players.local, mp.vehicles.atRemoteId(nearHoodVehicleId));
                 nearHoodVehicleId = null;
-                mp.events.call("playerExitVehicleHood", mp.players.local, entity);
             }
         }
     } else {
