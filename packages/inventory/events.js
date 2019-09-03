@@ -37,6 +37,7 @@ module.exports = {
     },
     // срабатывает, когда игрок выкидывает предмет
     "item.ground.put": (player, sqlId) => {
+        // console.log(`item.ground.put: ${sqlId}`)
         var header = `Выброс предмета`;
         var item = inventory.getItem(player, sqlId);
         if (!item) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
@@ -87,7 +88,7 @@ module.exports = {
     },
     // срабатывает, когда игрок поднимает предмет
     "item.ground.take": (player, objId) => {
-        console.log(`item.ground.take: ${objId}`)
+        // console.log(`item.ground.take: ${objId}`)
         var header = `Поднятие предмета`;
         var obj = mp.objects.at(objId);
         if (!obj) return notifs.error(player, `Объект #${objId} не найден`, header);
@@ -111,6 +112,11 @@ module.exports = {
                 if (slot) obj = sObj;
             });
         }
+        obj.children.forEach((item) => {
+            item.playerId = player.character.id;
+            item.save();
+            player.inventory.items.push(item);
+        });
         obj.denyTake = true;
         inventory.addOldItem(player, obj.item, (e) => {
             delete obj.denyTake;

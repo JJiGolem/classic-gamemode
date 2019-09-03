@@ -36,7 +36,7 @@ module.exports = {
     // Время жизни предмета на земле (ms)
     groundItemTime: 2 * 60 * 1000,
     // Макс. дистанция до предмета, чтобы поднять его
-    groundMaxDist: 1,
+    groundMaxDist: 2,
 
     init() {
         this.loadInventoryItemsFromDB();
@@ -95,49 +95,6 @@ module.exports = {
                 {
                     model: db.Models.InventoryItem,
                     as: "item"
-                },
-                {
-                    model: db.Models.CharacterInventory,
-                    as: "children",
-                    include: [{
-                            model: db.Models.CharacterInventoryParam,
-                            as: "params"
-                        },
-                        {
-                            model: db.Models.InventoryItem,
-                            as: "item"
-                        },
-                        {
-                            model: db.Models.CharacterInventory,
-                            as: "children",
-                            include: [{
-                                    model: db.Models.CharacterInventoryParam,
-                                    as: "params"
-                                },
-                                {
-                                    model: db.Models.InventoryItem,
-                                    as: "item"
-                                },
-                                {
-                                    model: db.Models.CharacterInventory,
-                                    as: "children",
-                                    include: [{
-                                            model: db.Models.CharacterInventoryParam,
-                                            as: "params"
-                                        },
-                                        {
-                                            model: db.Models.InventoryItem,
-                                            as: "item"
-                                        },
-                                        {
-                                            model: db.Models.CharacterInventory,
-                                            as: "children",
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
                 }
             ]
         });
@@ -148,19 +105,19 @@ module.exports = {
             ground: [], // объекты на земле, которые выкинул игрок
         };
         this.updateAllView(player);
-        player.call(`inventory.initItems`, [this.convertServerToClientPlayerItems(dbItems)]);
+        player.call(`inventory.initItems`, [this.convertServerToClientPlayerItems(player, dbItems)]);
         console.log(`[INVENTORY] Для игрока ${player.character.name} загружены предметы (${dbItems.length} шт.)`);
     },
-    convertServerToClientPlayerItems(dbItems) {
+    convertServerToClientPlayerItems(player, dbItems) {
         // console.log("convertServerToClientPlayerItems");
         var clientItems = {};
         for (var i = 0; i < dbItems.length; i++) {
             var dbItem = dbItems[i];
-            if (!dbItem.parentId) clientItems[dbItem.index] = this.convertServerToClientItem(dbItem);
+            if (!dbItem.parentId) clientItems[dbItem.index] = this.convertServerToClientItem(player, dbItem);
         }
         return clientItems;
     },
-    convertServerToClientItem(dbItem) {
+    convertServerToClientItem(player, dbItem) {
         // console.log(`convertServerToClientItem`);
         var params = {};
         if (dbItem.params) {
@@ -186,10 +143,11 @@ module.exports = {
             }
             delete params.pockets;
         }
-        if (dbItem.children.length > 0) {
-            for (var i = 0; i < dbItem.children.length; i++) {
-                var child = dbItem.children[i];
-                clientItem.pockets[child.pocketIndex].items[child.index] = this.convertServerToClientItem(child);
+        var children = this.getChildren(player, dbItem);
+        if (children.length > 0) {
+            for (var i = 0; i < children.length; i++) {
+                var child = children[i];
+                clientItem.pockets[child.pocketIndex].items[child.index] = this.convertServerToClientItem(player, child);
             }
         }
         return clientItem;
@@ -212,22 +170,17 @@ module.exports = {
             index: slot.index,
             parentId: slot.parentId,
             params: struct,
-            children: [],
         }, {
             include: [{
                     model: db.Models.CharacterInventoryParam,
                     as: "params",
-                },
-                {
-                    model: db.Models.CharacterInventory,
-                    as: "children"
                 }
             ]
         });
 
         player.inventory.items.push(item);
         if (!item.parentId) this.updateView(player, item);
-        player.call("inventory.addItem", [this.convertServerToClientItem(item), item.pocketIndex, item.index, item.parentId]);
+        player.call("inventory.addItem", [this.convertServerToClientItem(player, item), item.pocketIndex, item.index, item.parentId]);
         callback();
     },
     async addOldItem(player, item, callback = () => {}) {
@@ -243,12 +196,10 @@ module.exports = {
         await item.restore({
 
         });
-        console.log(`item after restore: `)
-        console.log(item)
 
         player.inventory.items.push(item);
         if (!item.parentId) this.updateView(player, item);
-        player.call("inventory.addItem", [this.convertServerToClientItem(item), item.pocketIndex, item.index, item.parentId]);
+        player.call("inventory.addItem", [this.convertServerToClientItem(player, item), item.pocketIndex, item.index, item.parentId]);
         callback();
     },
     deleteItem(player, item) {
@@ -284,10 +235,10 @@ module.exports = {
     getArrayItems(player, item, result = []) {
         var items = player.inventory.items;
         var children = this.getChildren(player, item);
-        result = result.concat(children);
         for (var i = 0; i < children.length; i++) {
             var child = children[i];
-            this.getArrayItems(player, child, result);
+            result.push(child);
+            result = this.getArrayItems(player, child, result);
         }
         return result;
     },

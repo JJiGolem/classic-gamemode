@@ -8,7 +8,7 @@
 */
 
 mp.inventory = {
-    groundMaxDist: 1,
+    groundMaxDist: 2,
 
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
