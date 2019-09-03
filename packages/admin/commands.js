@@ -141,10 +141,9 @@ module.exports = {
     },
     "/update": {
         access: 6,
-        description: "Обновить мод до ветки 'new-architecture'.",
+        description: "Обновить текущую ветку.",
         args: "",
         handler: (player, args, out) => {
-            var branch = 'new-architecture';
             var exec = require("exec");
             exec(`cd ${__dirname} && git clean -d -f && git stash && git pull`, (error, stdout, stderr) => {
                 if (error) console.log(stderr);

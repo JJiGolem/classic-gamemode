@@ -93,7 +93,7 @@ module.exports = {
             topParams = { // clothes 11 / 3 / 8
                 sex: 1,
                 torso: [ // /clothes 3
-                    [0, 85, 85, 92, 86, 17, 85, 85],
+                    [0, 0, 0, 11, 1, 17, 0, 0],
                     []
                 ][f][index],
                 tTexture: [
@@ -183,7 +183,7 @@ module.exports = {
             topParams = { // clothes 11 / 3 / 8
                 sex: 0,
                 torso: [ // /clothes 3
-                    [14, 109, 109, 98, 105, 18, 109, 109],
+                    [14, 14, 14, 0, 3, 18, 14, 14],
                     []
                 ][f][index],
                 tTexture: [
