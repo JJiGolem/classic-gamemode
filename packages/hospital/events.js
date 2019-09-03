@@ -214,8 +214,7 @@ module.exports = {
 
         if (faction.ammo < hospital.itemAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
-        // TODO: Добавить пластырь
-        var itemIds = [28];
+        var itemIds = [24, 25];
 
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
@@ -229,6 +228,11 @@ module.exports = {
             faction: character.factionId,
             owner: character.id
         };
+        if (itemId == 24) { // аптечка
+            params.count = 5
+        } else if (itemId == 25) { // пластырь
+            params.count = 5;
+        }
 
         inventory.addItem(player, itemId, params, (e) => {
             if (e) return notifs.error(player, e, header);

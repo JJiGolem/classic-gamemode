@@ -140,7 +140,11 @@ module.exports = {
         if (!med) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
         var count = inventory.getParam(med, 'count').value;
         if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
-        if (player.health >= hospital.medMaxHealth) return notifs.error(player, `Нельзя вылечиться больше`, header);
+        if (player.health >= hospital.medMaxHealth) {
+            notifs.error(player, `Нельзя вылечиться больше`, header);
+            notifs.warning(player, `Медики лечат эффективнее`, header);
+            return;
+        }
 
         player.health = Math.clamp(player.health + hospital.medHealth, 0, hospital.medMaxHealth);
 
@@ -149,6 +153,26 @@ module.exports = {
         else inventory.updateParam(player, med, 'count', count);
 
         notifs.success(player, `Вы вылечились`, header);
-        notifs.warning(player, `Медики лечат эффективнее`, header);
+    },
+    // вылечиться пластырем
+    "inventory.item.patch.use": (player, sqlId) => {
+        var header = `Пластырь`;
+        var patch = inventory.getItem(player, sqlId);
+        if (!patch) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        var count = inventory.getParam(patch, 'count').value;
+        if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
+        if (player.health >= hospital.medMaxHealth) {
+            notifs.error(player, `Нельзя вылечиться больше`, header);
+            notifs.warning(player, `Медики лечат эффективнее`, header);
+            return;
+        }
+
+        player.health = Math.clamp(player.health + hospital.patchHealth, 0, hospital.medMaxHealth);
+
+        count--;
+        if (!count) inventory.deleteItem(player, patch);
+        else inventory.updateParam(player, patch, 'count', count);
+
+        notifs.success(player, `Вы вылечились`, header);
     },
 };

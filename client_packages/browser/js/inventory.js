@@ -72,14 +72,14 @@ var inventory = new Vue({
         // Меню предмета по ПКМ
         itemsMenu: {
             // itemId: struct menu
-            18: {
+            18: { // test
                 'Включить': {
                     handler(item) {
                         console.log(`Включить ${item}`)
                     }
                 }
             },
-            24: {
+            24: { // аптечка
                 'Вылечиться': {
                     handler(item) {
                         // console.log(`лечить ${item}`)
@@ -87,7 +87,15 @@ var inventory = new Vue({
                     }
                 }
             },
-            37: {
+            25: { // пластырь
+                'Вылечиться': {
+                    handler(item) {
+                        // console.log(`лечить ${item}`)
+                        mp.trigger(`callRemote`, `inventory.item.patch.use`, item.sqlId);
+                    }
+                }
+            },
+            37: { // test
                 'Разрядить': {
                     handler(item) {
                         console.log(`разрядить: ${item}`)
