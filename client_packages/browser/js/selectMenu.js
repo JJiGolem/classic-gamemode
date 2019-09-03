@@ -2882,6 +2882,12 @@ var selectMenu = new Vue({
             if (!item) return;
             Vue.set(item, 'values', values);
         },
+        setItems(menuName, items) {
+            if (typeof items == 'string') items = JSON.parse(items);
+            var menu = this.menus[menuName];
+            if (!menu) return;
+            Vue.set(menu, 'items', items);
+        },
         getItemByName(name, items) {
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
