@@ -3,6 +3,15 @@
 
 let customs;
 
+let modsConfig = {
+    "11": "engineType",
+    "12": "breakType",
+    "13": "transmissionType",
+    "15": "suspensionType",
+    "16": "armourType",
+    "18": "turbo",
+    "0": "spoiler"
+}
 module.exports = {
     async init() {
         await this.loadCustomsFromDB();
@@ -28,5 +37,8 @@ module.exports = {
     },
     getCustomsDataById(id) {
         return customs.find(x => x.id == id);
+    },
+    getModsConfig() {
+        return modsConfig;
     }
 }

@@ -2644,9 +2644,12 @@ var selectMenu = new Vue({
                     {
                         text: "Броня"
                     },
-                    {
-                        text: "Закрыть"
-                    },
+                    // {
+                    //     text: "Турбонаддув"
+                    // },
+                    // {
+                    //     text: "Закрыть"
+                    // },
                 ],
                 i: 0,
                 j: 0,
@@ -2669,6 +2672,24 @@ var selectMenu = new Vue({
                                 break;
                             case 'Двигатель':
                                 mp.trigger('tuning.engineMenu.show');
+                                break;
+                            case 'Тормоза':
+                                mp.trigger('tuning.breakMenu.show');
+                                break;
+                            case 'Трансмиссия':
+                                mp.trigger('tuning.transmissionMenu.show');
+                                break;
+                            case 'Подвеска':
+                                mp.trigger('tuning.suspensionMenu.show');
+                                break;
+                            case 'Броня':
+                                mp.trigger('tuning.armourMenu.show');
+                                break;
+                            case 'Турбонаддув':
+                                mp.trigger('tuning.turboMenu.show');
+                                break;
+                            case 'Спойлеры':
+                                mp.trigger('tuning.defaultMenu.show', 'spoiler');
                                 break;
                         }
                     }
@@ -2727,7 +2748,7 @@ var selectMenu = new Vue({
                         }
                     }
                     if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
-                        selectMenu.menu = cloneObj(selectMenu.menus["tuningMain"]); // переделать ?
+                        mp.trigger('tuning.menu.show');
                         mp.trigger('tuning.params.set')
                     }
                 }
@@ -2772,15 +2793,299 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
-                            selectMenu.menu = cloneObj(selectMenu.menus["tuningMain"]);
+                            mp.trigger('tuning.menu.show');
                         } else {
                             let index = e.itemIndex - 1;
                             mp.trigger('tuning.buy', 11, index);
                         }
                     }
                     if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        //mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningBreak": {
+                name: "tuningBreak",
+                header: "Улучшение тормозов",
+                items: [{
+                        text: "Стандарные тормоза",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Уличные тормоза",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Спортивные тормоза",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Гоночные тормоза",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', 12, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        //mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningTransmission": {
+                name: "tuningTransmission",
+                header: "Улучшение трансмиссии",
+                items: [{
+                        text: "Стандарная трансмиссия",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Уличная трансмиссия",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Спортивная трансмиссия",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Гоночная трансмиссия",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', 13, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
                         selectMenu.menu = cloneObj(selectMenu.menus["tuningMain"]); // переделать ?
                         //mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningSuspension": {
+                name: "tuningTransmission",
+                header: "Улучшение трансмиссии",
+                items: [{
+                        text: "Стандарная подвеска",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Заниженная подвеска",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Уличная подвеска",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Спортивная подвеска",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Гоночная подвеска",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        let index = e.itemIndex - 1;
+                        mp.trigger('tuning.mod.set', 15, index);
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                            mp.trigger('tuning.params.set')
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', 15, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningArmour": {
+                name: "tuningArmour",
+                header: "Броня",
+                items: [{
+                        text: "Нет",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Усиление брони 20%",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Усиление брони 40%",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Усиление брони 60%",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Усиление брони 80%",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Усиление брони 100%",
+                        values: ['$100']
+                    },              
+                    {
+                        text: "Назад"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', 16, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        //mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningTurbo": {
+                name: "tuningTurbo",
+                header: "Турбонаддув",
+                items: [{
+                        text: "Нет",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Турбонаддув",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', 18, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        //mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningDefault": {
+                name: "tuningDefault",
+                header: "",
+                items: [
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        let index = e.itemIndex - 1;
+                        mp.trigger('tuning.mod.set', undefined, index);
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                            mp.trigger('tuning.params.set')
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', undefined, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        mp.trigger('tuning.params.set')
                     }
                 }
             },
