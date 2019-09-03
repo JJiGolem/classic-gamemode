@@ -125,20 +125,30 @@ module.exports = {
             }, 20000);
         }
     },
-    "/update": {
+    "/branch": {
         access: 6,
-        description: "Обновить мод до выбранной ветки",
+        description: "Обновить мод до выбранной ветки.",
         args: "[название ветки]",
-        handler: (player, args) => {
+        handler: (player, args, out) => {
 
             var exec = require("exec");
             exec(`cd ${__dirname} && git clean -d -f && git stash && git checkout ${args[0]} && git pull`, (error, stdout, stderr) => {
                 if (error) console.log(stderr);
                 console.log(stdout);
-
-                mp.players.forEach((current) => {
-                    current.call('chat.message.push', [`!{#edffc2}${player.name} запустил обновление сервера`]);
-                });
+                // out.info(`${player.name} запустил обновление сервера`);
+            });
+        }
+    },
+    "/update": {
+        access: 6,
+        description: "Обновить текущую ветку.",
+        args: "",
+        handler: (player, args, out) => {
+            var exec = require("exec");
+            exec(`cd ${__dirname} && git clean -d -f && git stash && git pull`, (error, stdout, stderr) => {
+                if (error) console.log(stderr);
+                console.log(stdout);
+                out.info(`${player.name} запустил обновление сервера`);
             });
         }
     },

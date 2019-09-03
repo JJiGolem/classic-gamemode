@@ -95,7 +95,7 @@ speedometerUpdateTimer = setInterval(() => { /// Обновление спидо
 
 }, 100);
 
-mp.keys.bind(0x32, true, function () {
+mp.keys.bind(0x32, true, function() {
     if (mp.busy.includes('chat')) return;
     if (mp.players.local.vehicle.getPedInSeat(-1) === mp.players.local.handle) {
         mp.events.callRemote('vehicles.engine.toggle');
@@ -215,7 +215,7 @@ function stopMileageCounter() {
     currentDist = 0;
 };
 
-mp.keys.bind(0x25, true, function () {
+mp.keys.bind(0x25, true, function() {
     if (mp.busy.includes()) return;
     var player = mp.players.local;
     var vehicle = player.vehicle;
@@ -237,7 +237,7 @@ mp.keys.bind(0x25, true, function () {
     }
 });
 
-mp.keys.bind(0x27, true, function () {
+mp.keys.bind(0x27, true, function() {
     if (mp.busy.includes()) return;
     var player = mp.players.local;
     var vehicle = player.vehicle;
@@ -297,8 +297,7 @@ mp.events.addDataHandler("hood", (entity) => {
     var hood = entity.getVariable('hood');
     if (hood) {
         entity.setDoorOpen(4, false, false);
-    }
-    else {
+    } else {
         entity.setDoorShut(4, false);
     }
 });
@@ -439,6 +438,50 @@ mp.events.add('vehicles.onGroundProperly.set', () => {
 mp.events.add('vehicles.speedometer.enabled', (enabled) => {
     mp.speedometerEnabled = enabled;
 });
+mp.events.add("time.main.tick", () => {
+    var entity = mp.utils.getNearPlayerOrVehicle(mp.players.local.position, 10);
+
+    if (entity && entity.type == "vehicle") {
+        var bootPos = mp.utils.getBootPosition(entity);
+        var distToBoot = mp.vdist(mp.players.local.position, bootPos);
+        if (distToBoot < 1) {
+            if (nearBootVehicleId == null) {
+                nearBootVehicleId = entity.remoteId;
+                mp.events.call("playerEnterVehicleBoot", mp.players.local, entity);
+            }
+        } else {
+            if (nearBootVehicleId != null) {
+                mp.events.call("playerExitVehicleBoot", mp.players.local, mp.vehicles.atRemoteId(nearBootVehicleId));
+                nearBootVehicleId = null;
+            }
+        }
+
+        var hoodPos = mp.utils.getHoodPosition(entity);
+        var distToHood = mp.vdist(mp.players.local.position, hoodPos);
+        if (distToHood < 1) {
+            if (nearHoodVehicleId == null) {
+                nearHoodVehicleId = entity.remoteId;
+                mp.events.call("playerEnterVehicleHood", mp.players.local, entity);
+            }
+        } else {
+            if (nearHoodVehicleId != null) {
+                mp.events.call("playerExitVehicleHood", mp.players.local, mp.vehicles.atRemoteId(nearHoodVehicleId));
+                nearHoodVehicleId = null;
+            }
+        }
+    } else {
+        if (nearBootVehicleId != null) {
+            mp.events.call("playerExitVehicleBoot", mp.players.local, mp.vehicles.atRemoteId(nearBootVehicleId));
+            nearBootVehicleId = null;
+        }
+        if (nearHoodVehicleId != null) {
+            mp.events.call("playerExitVehicleHood", mp.players.local, mp.vehicles.atRemoteId(nearHoodVehicleId));
+            nearHoodVehicleId = null;
+        }
+    }
+});
+var nearBootVehicleId = null,
+    nearHoodVehicleId = null;
 
 mp.events.add('render', () => {
     mp.vehicles.forEachInStreamRange((vehicle) => {
@@ -455,4 +498,3 @@ mp.events.add('render', () => {
         }
     });
 });
-
