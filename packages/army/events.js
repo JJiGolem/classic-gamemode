@@ -82,8 +82,7 @@ module.exports = {
                 texture: [3, 3, 1, 1, 1, 1, 1, 9, 1, 0, 9][index],
                 undershirt: // clothes 8
                     [-1, -1, -1, -1, -1, -1, 121, -1, 10, 15, -1][index],
-                uTexture:
-                    [-1, -1, -1, -1, -1, -1, 19, -1, 8, -1, -1][index],
+                uTexture: [-1, -1, -1, -1, -1, -1, 19, -1, 8, -1, -1][index],
             };
             legsParams = { // clothes 4
                 sex: 1,
@@ -113,44 +112,45 @@ module.exports = {
         } else {
             hatParams = { // prop 0
                 sex: 0,
-                variation: [-1][index],
-                texture: [-1][index]
+                variation: [-1, -1, 102, -1, 106, 105, 105, 105, 112, 37, 116][index],
+                texture: [-1, -1, 3, -1, 1, 1, 24, 9, 8, 0, 17][index]
             };
             topParams = { // clothes 11 / 3 / 8
                 sex: 0,
                 torso: // /clothes 3
-                    [0][index],
-                tTexture: [-1][index],
+                    [14, 14, 14, 14, 14, 14, 1, 4, 1, 17, 18][index],
+                tTexture: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3][index],
                 variation: // clothes 11
-                    [208][index],
-                texture: [3][index],
+                    [224, 230, 230, 232, 231, 231, 24, 222, 24, 41, 230][index],
+                texture: [3, 3, 3, 1, 1, 1, 11, 9, 11, 0, 9][index],
                 undershirt: // clothes 8
-                    [-1][index]
+                    [-1, -1, -1, -1, -1, -1, 20, -1, 38, 2, -1][index],
+                uTexture: [-1, -1, -1, -1, -1, -1, 1, -1, 8, -1, -1][index],
             };
             legsParams = { // clothes 4
                 sex: 0,
-                variation: [87][index],
-                texture: [3][index]
+                variation: [90, 80, 90, 90, 90, 90, 23, 90, 23, 29, 90][index],
+                texture: [3, 3, 3, 1, 1, 1, 5, 9, 5, 0, 9][index]
             };
             feetsParams = { // clothes 6
                 sex: 0,
-                variation: [25][index],
-                texture: [0][index]
+                variation: [25, 25, 25, 36, 36, 36, 6, 36, 6, 66, 36][index],
+                texture: [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0][index]
             };
             tiesParams = { // clothes 7
                 sex: 0,
-                variation: [-1][index],
-                texture: [-1][index]
+                variation: [-1, -1, -1, -1, -1, -1, -1, -1, -1, 16, 15][index],
+                texture: [-1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 2][index]
             };
             masksParams = { // clothes 1
                 sex: 0,
-                variation: [-1][index],
-                texture: [-1][index]
+                variation: [-1, -1, -1, -1, -1, -1, -1, -1, -1, 122, 104][index],
+                texture: [-1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 9][index]
             };
             glassesParams = { // prop 1
                 sex: 0,
-                variation: [-1][index],
-                texture: [-1][index]
+                variation: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 27][index],
+                texture: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 4][index]
             };
         }
         if (topParams.undershirt == -1) delete topParams.undershirt;
