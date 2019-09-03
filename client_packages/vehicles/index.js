@@ -96,7 +96,7 @@ speedometerUpdateTimer = setInterval(() => { /// Обновление спидо
 }, 100);
 
 mp.keys.bind(0x32, true, function () {
-    if (mp.busy.includes()) return;
+    if (mp.busy.includes('chat')) return;
     if (mp.players.local.vehicle.getPedInSeat(-1) === mp.players.local.handle) {
         mp.events.callRemote('vehicles.engine.toggle');
     }
@@ -124,7 +124,7 @@ mp.events.add('vehicles.speedometer.show', (state) => {
 mp.events.add('vehicles.speedometer.sync', () => {
 
     let vehicle = mp.players.local.vehicle;
-
+    if (!vehicle) return;
     var left = vehicle.getVariable(`leftTurnSignal`);
     var right = vehicle.getVariable(`rightTurnSignal`);
 
@@ -150,8 +150,9 @@ mp.events.add('vehicles.speedometer.mileage.update', (mileage) => {
 
 mp.events.add('vehicles.speedometer.max.update', (fuel) => {
     mp.callCEFV(`speedometer.maxFuel = ${fuel}`);
-
-    let maxSpeed = (mp.game.vehicle.getVehicleModelMaxSpeed(mp.players.local.vehicle.model) * 3.6).toFixed(0);
+    let vehicle = mp.players.local.vehicle;
+    if (!vehicle) return;
+    let maxSpeed = (mp.game.vehicle.getVehicleModelMaxSpeed(vehicle.model) * 3.6).toFixed(0);
     mp.callCEFV(`speedometer.maxSpeed = ${maxSpeed}`);
 });
 
@@ -356,7 +357,6 @@ mp.events.add('vehicles.lock', () => {
     let veh = mp.getCurrentInteractionEntity();
     if (!veh) return;
     if (veh.type != 'vehicle') return;
-    mp.chat.debug('lock');
     mp.events.callRemote('vehicles.lock', veh.remoteId);
 })
 

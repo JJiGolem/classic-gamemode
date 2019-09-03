@@ -71,10 +71,10 @@ var selectMenu = new Vue({
                                 selectMenu.menu = selectMenu.menus["characterCreateNameMenu"];
                                 break;
                             case "Сбросить все изменения":
-                                selectMenu.menu = selectMenu.menus["characterCreateResetMenu"];
+                                //selectMenu.menu = selectMenu.menus["characterCreateResetMenu"];
                                 break;
                             case "Выйти без сохранения":
-                                selectMenu.menu = selectMenu.menus["characterCreateExitMenu"];
+                                //selectMenu.menu = selectMenu.menus["characterCreateExitMenu"];
                                 break;
                         }
                     }
@@ -777,10 +777,10 @@ var selectMenu = new Vue({
                                 mp.trigger('characterInit.create.setMolesFreckles', e.valueIndex);
                                 break;
                             case "Волосы на теле":
-                                mp.trigger('characterInit.create.setChestHair', e.valueIndex);
+                                mp.trigger('characterInit.create.setChestHair', e.valueIndex, true);
                                 break;
                             case "Цвет волос на теле":
-                                mp.trigger('characterInit.create.setChestHairColor', e.valueIndex);
+                                mp.trigger('characterInit.create.setChestHairColor', e.valueIndex, true);
                                 break;
                         }
                     }
@@ -1084,10 +1084,10 @@ var selectMenu = new Vue({
                         text: "Устроиться на работу",
                         i: 0,
                     },
-                    {
-                        text: "Помощь",
-                        i: 0,
-                    },
+                    // {
+                    //     text: "Помощь", // TODO
+                    //     i: 0,
+                    // },
                     {
                         text: "Закрыть",
                         i: 0,
@@ -1373,10 +1373,10 @@ var selectMenu = new Vue({
                         text: "Устроиться на работу",
                         i: 0,
                     },
-                    {
-                        text: "Помощь",
-                        i: 0,
-                    },
+                    // {
+                    //     text: "Помощь", // TODO
+                    //     i: 0,
+                    // },
                     {
                         text: "Закрыть",
                         i: 0,
@@ -2349,10 +2349,10 @@ var selectMenu = new Vue({
                         text: "Устроиться на работу",
                         i: 0,
                     },
-                    {
-                        text: "Помощь",
-                        i: 0,
-                    },
+                    // {
+                    //     text: "Помощь", // TODO
+                    //     i: 0,
+                    // },
                     {
                         text: "Закрыть",
                         i: 0,
@@ -2498,6 +2498,168 @@ var selectMenu = new Vue({
                             mp.trigger(`busdriver.menu.close`);
                             mp.trigger('callRemote', 'busdriver.menu.closed');
                         }
+                    }
+                }
+            },
+            "tuningMain": {
+                name: "tuningMain",
+                header: "LS Customs",
+                items: [{
+                        text: "Покраска"
+                    },
+                    {
+                        text: "Двигатель"
+                    },
+                    {
+                        text: "Тормоза"
+                    },
+                    {
+                        text: "Трансмиссия"
+                    },
+                    {
+                        text: "Подвеска"
+                    },
+                    {
+                        text: "Броня"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        switch (e.itemName) {
+                            case 'Закрыть':
+                                mp.trigger('tuning.end');
+                                break;
+                            case 'Покраска':
+                                mp.trigger('tuning.colorMenu.show');
+                                break;
+                            case 'Двигатель':
+                                mp.trigger('tuning.engineMenu.show');
+                                break;
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.end');
+                    }
+                }
+            },
+            "tuningColors": {
+                name: "tuningColors",
+                header: "Покраска",
+                items: [
+                    {
+                        text: "Основной цвет",
+                        values: [],
+                        i: 0,
+                        j: 0
+                    },
+                    {
+                        text: "Дополнительный цвет",
+                        values: []
+                    },
+                    {
+                        text: "Покрасить",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
+                    }
+                ],
+                i: 0, // индекс выбранного пункта
+                j: 0, // индекс первого видимого пункта
+                handler(eventName) { // обработчик взаимодействия с меню
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name, // название меню
+                        itemName: item.text, // текст пункта меню
+                        itemIndex: this.i, // индекс пункта меню
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
+                        valueIndex: item.i, // индекс значения пункта меню
+                    };
+                    if (eventName == 'onItemValueChanged') {
+                        if (e.itemName == 'Основной цвет') {
+                            mp.trigger(`tuning.colors`, e.valueIndex, -1);
+                        }
+                        if (e.itemName == 'Дополнительный цвет') {
+                            mp.trigger(`tuning.colors`, -1, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.menu = cloneObj(selectMenu.menus["tuningMain"]);
+                            mp.trigger('tuning.params.set')
+                        }
+                        if (e.itemName == 'Покрасить') {
+                            mp.trigger('tuning.colors.confirm')
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        selectMenu.menu = cloneObj(selectMenu.menus["tuningMain"]); // переделать ?
+                        mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningEngine": {
+                name: "tuningEngine",
+                header: "Улучшение двигателя",
+                items: [{
+                        text: "Стандарт",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Улучшение СУД, уровень 1",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Улучшение СУД, уровень 2",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Улучшение СУД, уровень 3",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Улучшение СУД, уровень 4",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.menu = cloneObj(selectMenu.menus["tuningMain"]);
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', 11, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        selectMenu.menu = cloneObj(selectMenu.menus["tuningMain"]); // переделать ?
+                        //mp.trigger('tuning.params.set')
                     }
                 }
             },

@@ -10,7 +10,6 @@ module.exports = {
         if (!player.character) return;
 
         if (shape.isFuelStation) {
-                player.call('chat.message.push', [`!{#ffffff}${player.name} зашел в колшейп fuelStation`]);
                 player.call('fuelstations.shape.enter');
                 player.currentColshape = shape;
         }
@@ -19,7 +18,6 @@ module.exports = {
         if (!player.character) return;
 
         if (shape.isFuelStation) {
-                player.call('chat.message.push', [`!{#ffffff}${player.name} вышел с колшейпа fuelStation`]);
                 player.call('fuelstations.shape.leave');
                 player.currentColshape = null;
         }

@@ -25,9 +25,10 @@ module.exports = {
 
         if (player.id == targetId) return mp.events.call("documents.show", player.id, type, targetId, data); /// Если показывает себе, то не кидаем оффер
 
+        player.call('notifications.push.info', ['Вы предложили игроку посмотреть документы', 'Документы']);
 
         let target = mp.players.at(targetId);
-
+        if (!target) return;
         target.documentsOffer = {
             playerId: player.id,
             docType: type,
@@ -68,13 +69,9 @@ module.exports = {
         if (accept) {
             console.log('accept');
             mp.events.call('documents.show', offer.playerId, offer.docType, targetId, offer.docData);
-            console.log(player.documentsOffer);
-            console.log(sender.senderDocumentsOffer);
             delete player.documentsOffer;
             delete sender.senderDocumentsOffer;
         } else {
-            console.log(player.documentsOffer);
-            console.log(sender.senderDocumentsOffer);
             delete player.documentsOffer;
             delete sender.senderDocumentsOffer;
         }

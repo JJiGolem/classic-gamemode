@@ -82,24 +82,28 @@ class MainDisplay extends Component {
 
                 <div className="list_apps-phone-react">
                     <div className="menu_panel_app-phone-react" onClick={() => addApp({name: 'TaxiClient', form: <TaxiClient />})}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="110%" height="110%" viewBox="0 0 88.775 81.925">
-                            <g id="house" transform="translate(-1604 -378)">
-                                <rect id="Rectangle_4" data-name="Rectangle 4" width="88.775" height="81.925" rx="20" transform="translate(1604 378)" fill="#FBD825"/>
-                            </g>
+                        <svg id="taxi_app" xmlns="http://www.w3.org/2000/svg" width="110%" height="110%" viewBox="0 0 88 88">
+                            <rect id="Rectangle_2" data-name="Rectangle 2" width="88" height="86" rx="20" fill="#fbd825"/>
+                            <path id="Path_6" data-name="Path 6" d="M142,559.89a3.89,3.89,0,0,1,3.89-3.89h8.994v9.025a3.89,3.89,0,0,1-3.89,3.89h-5.1a3.89,3.89,0,0,1-3.89-3.89Z" transform="translate(-130.952 -511.87)" fill="#fff"/>
+                            <path id="Path_7" data-name="Path 7" d="M307.6,393.89a3.89,3.89,0,0,1,3.89-3.89h5.1a3.89,3.89,0,0,1,3.89,3.89v9.025H307.6Z" transform="translate(-283.186 -359.045)" fill="#fff"/>
+                            <path id="Path_8" data-name="Path 8" d="M473.2,556h12.884v9.025a3.89,3.89,0,0,1-3.89,3.89h-5.1a3.89,3.89,0,0,1-3.89-3.89Z" transform="translate(-435.642 -511.87)" fill="#fff"/>
+                            <path id="Path_9" data-name="Path 9" d="M638.8,393.89a3.89,3.89,0,0,1,3.89-3.89h5.1a3.89,3.89,0,0,1,3.89,3.89v9.025H638.8Z" transform="translate(-588.098 -359.045)" fill="#fff"/>
+                            <path id="Path_10" data-name="Path 10" d="M804.4,556h8.994a3.89,3.89,0,0,1,3.89,3.89v5.135a3.89,3.89,0,0,1-3.89,3.89h-5.1a3.89,3.89,0,0,1-3.89-3.89Z" transform="translate(-740.332 -511.87)" fill="#fff"/>
                         </svg>
-
                         <div>Такси</div>
                     </div>
 
                     {
                         info.isDriver &&
                         <div className="menu_panel_app-phone-react" onClick={() => addApp({name: 'TaxiDriver', form: <TaxiDriver />})}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="110%" height="110%" viewBox="0 0 88.775 81.925">
-                                <g id="house" transform="translate(-1604 -378)">
-                                    <rect id="Rectangle_4" data-name="Rectangle 4" width="88.775" height="81.925" rx="20" transform="translate(1604 378)" fill="black"/>
-                                </g>
-                            </svg>
-
+                            <svg id="taxi_app_taxist" xmlns="http://www.w3.org/2000/svg" width="110%" height="110%" viewBox="0 0 88 88">
+                                <rect id="Rectangle_1" data-name="Rectangle 1" width="88" height="86" rx="20" fill="#141414"/>
+                                <path id="Path_1" data-name="Path 1" d="M142,560.014A4.014,4.014,0,0,1,146.014,556h9.281v9.313a4.014,4.014,0,0,1-4.014,4.014h-5.266A4.014,4.014,0,0,1,142,565.313Z" transform="translate(-130.6 -512.112)" fill="#fff"/>
+                                <path id="Path_2" data-name="Path 2" d="M307.6,394.014A4.014,4.014,0,0,1,311.614,390h5.266a4.014,4.014,0,0,1,4.014,4.014v9.313H307.6Z" transform="translate(-283.319 -359.215)" fill="#fff"/>
+                                <path id="Path_3" data-name="Path 3" d="M473.2,556h13.295v9.313a4.014,4.014,0,0,1-4.014,4.014h-5.266a4.014,4.014,0,0,1-4.014-4.014Z" transform="translate(-435.847 -512.112)" fill="#fff"/>
+                                <path id="Path_4" data-name="Path 4" d="M638.8,394.014A4.014,4.014,0,0,1,642.814,390h5.266a4.014,4.014,0,0,1,4.014,4.014v9.313H638.8Z" transform="translate(-588.375 -359.215)" fill="#fff"/>
+                                <path id="Path_5" data-name="Path 5" d="M804.4,556h9.281a4.014,4.014,0,0,1,4.014,4.014v5.3a4.014,4.014,0,0,1-4.014,4.014h-5.267a4.014,4.014,0,0,1-4.014-4.014Z" transform="translate(-741.095 -512.112)" fill="#fff"/>
+                            </svg>                      
                             <div>Такси</div>
                         </div>
                     }
@@ -107,9 +111,9 @@ class MainDisplay extends Component {
                     {
                         info.houses.length > 0 &&
                         <div className="menu_panel_app-phone-react" onClick={() => addApp({name: 'HouseApp', form: <HouseApp />})}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="110%" height="110%" viewBox="0 0 88.775 81.925">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="110%" height="110%" viewBox="0 0 88 88">
                                 <g id="house" transform="translate(-1604 -378)">
-                                    <rect id="Rectangle_4" data-name="Rectangle 4" width="88.775" height="81.925" rx="20" transform="translate(1604 378)" fill="#29410f"/>
+                                    <rect id="Rectangle_4" data-name="Rectangle 4" width="88" height="88" rx="20" transform="translate(1604 378)" fill="#29410f"/>
                                     <g id="Group_5" data-name="Group 5" transform="translate(1619.71 373.351)">
                                         <path id="Path_21" data-name="Path 21" d="M123.717,300.251a1.63,1.63,0,0,0-1.655,1.656v22.619H110.328V315.29a1.635,1.635,0,0,0-1.6-1.624h-8.484a1.673,1.673,0,0,0-1.685,1.624v9.236H86.86V302.658a1.625,1.625,0,0,0-3.249,0v23.524a1.608,1.608,0,0,0,1.594,1.6h15.044a1.608,1.608,0,0,0,1.594-1.6v-9.236h5.235v9.236a1.622,1.622,0,0,0,1.655,1.6h14.983a1.608,1.608,0,0,0,1.594-1.6V301.907A1.617,1.617,0,0,0,123.717,300.251Z" transform="translate(-75.767 -255.5)" fill="#fff"/>
                                         <path id="Path_22" data-name="Path 22" d="M56.945,46.041,43.888,32.928V23.987a1.654,1.654,0,0,0-1.685-1.65,1.616,1.616,0,0,0-1.595,1.65v5.661L29.837,18.814a1.582,1.582,0,0,0-1.113-.514,1.635,1.635,0,0,0-1.173.514L.5,45.861a1.549,1.549,0,0,0,0,2.285,1.55,1.55,0,0,0,2.286,0L28.724,22.273,54.6,48.39a1.6,1.6,0,0,0,1.173.424,1.817,1.817,0,0,0,1.173-.424A1.707,1.707,0,0,0,56.945,46.041Z" transform="translate(0)" fill="#fff"/>
@@ -125,12 +129,12 @@ class MainDisplay extends Component {
                         info.biz.length > 0 &&
                         <div className="menu_panel_app-phone-react"
                              onClick={() => addApp({name: 'BusinessApp', form: <BusinessApp/>})}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="110%" height="110%" viewBox="0 0 88.775 81.925">
-                                <g id="biz" transform="translate(-1604 -378)">
-                                    <rect id="Rectangle_4" data-name="Rectangle 4" width="88.775" height="81.925" rx="20" transform="translate(1604 378)" fill="#0f2641"/>
-                                    <path id="portfolio" d="M48.843,6.258H35.471V4.693A4.569,4.569,0,0,0,31.049,0H19.258a4.569,4.569,0,0,0-4.422,4.693V6.258H1.474A1.525,1.525,0,0,0,0,7.822V42.241a4.569,4.569,0,0,0,4.422,4.693H45.886a4.569,4.569,0,0,0,4.422-4.693V7.849a1.477,1.477,0,0,0-1.465-1.591ZM17.785,4.693a1.523,1.523,0,0,1,1.474-1.564H31.049a1.523,1.523,0,0,1,1.474,1.564V6.258H17.785Zm29,4.693L42.212,23.962a1.482,1.482,0,0,1-1.4,1.07H32.523V23.467A1.521,1.521,0,0,0,31.049,21.9H19.258a1.521,1.521,0,0,0-1.474,1.564v1.564H9.494a1.482,1.482,0,0,1-1.4-1.07L3.519,9.387ZM29.575,25.032v3.129H20.732V25.032ZM47.36,42.241a1.523,1.523,0,0,1-1.474,1.564H4.422a1.523,1.523,0,0,1-1.474-1.564V17.463L5.3,24.952a4.446,4.446,0,0,0,4.194,3.209h8.291v1.564a1.521,1.521,0,0,0,1.474,1.564H31.049a1.521,1.521,0,0,0,1.474-1.564V28.161h8.291a4.446,4.446,0,0,0,4.194-3.209l2.352-7.488Zm0,0" transform="translate(1622.817 395.548)" fill="#e7b900"/>
+                             <svg xmlns="http://www.w3.org/2000/svg" width="110%" height="110%" viewBox="0 0 88 88">
+                                <g id="Group_1" data-name="Group 1" transform="translate(-1604 -378)">
+                                    <rect id="Rectangle_4" data-name="Rectangle 4" width="88" height="84" rx="20" transform="translate(1604 378)" fill="#0f2641"/>
+                                    <path id="portfolio" d="M48.091,6.047H34.925V4.535A4.452,4.452,0,0,0,30.571,0H18.961a4.452,4.452,0,0,0-4.354,4.535V6.047H1.451A1.486,1.486,0,0,0,0,7.559v33.26a4.452,4.452,0,0,0,4.354,4.535H45.179a4.452,4.452,0,0,0,4.354-4.535V7.585a1.411,1.411,0,0,0-.38-1.077,1.467,1.467,0,0,0-1.062-.46ZM17.511,4.535a1.484,1.484,0,0,1,1.451-1.511H30.571a1.484,1.484,0,0,1,1.451,1.511V6.047H17.511ZM46.064,9.07l-4.5,14.085a1.455,1.455,0,0,1-1.378,1.034H32.022V22.677a1.482,1.482,0,0,0-1.451-1.514H18.961a1.482,1.482,0,0,0-1.451,1.511v1.511H9.348a1.455,1.455,0,0,1-1.378-1.034L3.465,9.071ZM29.119,24.189v3.024H20.413V24.189ZM46.63,40.819a1.484,1.484,0,0,1-1.451,1.511H4.354A1.484,1.484,0,0,1,2.9,40.819V16.875l2.316,7.237a4.365,4.365,0,0,0,4.129,3.1h8.163v1.511a1.482,1.482,0,0,0,1.451,1.511H30.571a1.482,1.482,0,0,0,1.451-1.511V27.213h8.163a4.365,4.365,0,0,0,4.129-3.1l2.316-7.236Zm0,0" transform="translate(1622.817 399.548)" fill="#e7b900"/>
                                 </g>
-                            </svg>
+                            </svg>                           
                             <div>Бизнес</div>
                         </div>
                     }

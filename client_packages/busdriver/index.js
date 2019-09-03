@@ -98,9 +98,6 @@ mp.events.add('busdriver.rent.ans', (ans, data) => {
 });
 
 mp.events.add('busdriver.menu.start', (routeIndex, price) => {
-    mp.chat.debug(routeIndex);
-    mp.chat.debug(`route name ${routesAvailable[routeIndex].name} ${routesAvailable[routeIndex].id}`);
-    mp.chat.debug(price);
     mp.events.callRemote('busdriver.route.start', routesAvailable[routeIndex].id, price);
 });
 

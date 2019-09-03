@@ -27,7 +27,7 @@ mp.events.add('carmarket.sellmenu.show', () => {
 mp.events.add('carmarket.car.sell', () => {
     mp.callCEFV(`loader.show = true;`);
     mp.events.callRemote('carmarket.car.sell');
-    mp.callCEFV(`selectMenu.menu = null`);
+    mp.callCEFV(`selectMenu.show = false`);
 });
 mp.events.add('carmarket.car.sell.ans', (ans, price) => {
     mp.callCEFV(`loader.show = false;`);
@@ -51,14 +51,14 @@ mp.events.add('carmarket.car.sell.ans', (ans, price) => {
 
 mp.events.add('carmarket.sellmenu.close', () => {
     mp.busy.remove('carmarket.sellmenu');
-    mp.callCEFV(`selectMenu.menu = null`);
+    mp.callCEFV(`selectMenu.show = false`);
 });
 
 mp.events.add('carmarket.buymenu.show', (data) => {
     if (!data) return;
     mp.busy.add('carmarket.buymenu');
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["carMarketBuyMenu"])`);
-
+    if (mp.players.local.vehicle) mp.players.local.vehicle.freezePosition(true);
     mp.callCEFV(`carSpecifications.body = {
         name: { header: 'Название', value: '${data.name}', unit: '' },
         regDate: { header: 'Дата регистрации', value: '${dateFormatter(data.regDate)}', unit: '' },
@@ -76,13 +76,13 @@ mp.events.add('carmarket.buymenu.show', (data) => {
 mp.events.add('carmarket.buymenu.close', () => {
     mp.busy.remove('carmarket.buymenu');
     mp.callCEFV(`carSpecifications.show = false`);
-    mp.callCEFV(`selectMenu.menu = null`);
+    mp.callCEFV(`selectMenu.show = false`);
 });
 
 mp.events.add('carmarket.car.buy', () => {
     mp.callCEFV(`loader.show = true;`);
     mp.events.callRemote('carmarket.car.buy');
-    mp.callCEFV(`selectMenu.menu = null`);
+    mp.callCEFV(`selectMenu.show = false`);
 });
 
 mp.events.add('carmarket.car.buy.ans', (ans, data) => {
@@ -97,6 +97,7 @@ mp.events.add('carmarket.car.buy.ans', (ans, data) => {
             break;
         case 2:
             mp.busy.remove('carmarket.buymenu');
+            mp.players.local.vehicle.freezePosition(false);
             mp.callCEFV(`carSpecifications.show = false`);
             mp.notify.success('Вы успешно приобрели т/с', 'Авторынок');
             mp.events.call('chat.message.push', `!{#009eec}Вы приобрели транспортное средство !{#f3c800}${data.name} !{#009eec}за !{#80c102}$${data.price}`);
