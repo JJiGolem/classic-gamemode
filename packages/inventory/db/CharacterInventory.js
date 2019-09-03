@@ -28,7 +28,8 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true
         }
     }, {
-        timestamps: false
+        paranoid: true,
+        timestamps: true,
     });
 
     model.associate = (models) => {

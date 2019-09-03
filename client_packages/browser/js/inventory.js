@@ -501,7 +501,7 @@ var inventory = new Vue({
                 menu['Выкинуть'] = {
                     handler(item) {
                         // console.log(`выкинуть ${item}`)
-                        mp.trigger(`callRemote`, `item.throw`, item.sqlId);
+                        mp.trigger(`callRemote`, `item.ground.put`, item.sqlId);
                     }
                 };
             }

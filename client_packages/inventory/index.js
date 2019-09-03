@@ -8,6 +8,8 @@
 */
 
 mp.inventory = {
+    groundMaxDist: 1,
+
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
     },
@@ -39,10 +41,29 @@ mp.inventory = {
     setThirst(val) {
         mp.callCEFV(`inventory.thirst = ${val}`)
     },
+    takeItemHandler() {
+        // поднятие предмета с земли
+        var pos = mp.players.local.position;
+        var itemObj, minDist = 9999;
+        mp.objects.forEach((obj) => {
+            var objPos = obj.position;
+            let dist = mp.game.system.vdist(pos.x, pos.y, pos.z, objPos.x, objPos.y, objPos.z);
+            if (dist > mp.inventory.groundMaxDist) return;
+            if (!obj.getVariable("groundItem")) return;
+            if (dist > minDist) return;
+
+            minDist = dist;
+            itemObj = obj;
+        });
+        if (!itemObj) return;
+        // TODO: проверка на аттачи
+        mp.events.callRemote("item.ground.take", itemObj.remoteId);
+    },
 };
 
 mp.events.add("characterInit.done", () => {
     mp.inventory.enable(true);
+    mp.keys.bind(69, true, mp.inventory.takeItemHandler); // E
 });
 
 mp.events.add("inventory.enable", mp.inventory.enable);

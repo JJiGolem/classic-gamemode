@@ -35,6 +35,8 @@ module.exports = {
     groundMaxItems: 3,
     // Время жизни предмета на земле (ms)
     groundItemTime: 2 * 60 * 1000,
+    // Макс. дистанция до предмета, чтобы поднять его
+    groundMaxDist: 1,
 
     init() {
         this.loadInventoryItemsFromDB();
@@ -195,6 +197,7 @@ module.exports = {
     async addItem(player, itemId, params, callback = () => {}) {
         var slot = this.findFreeSlot(player, itemId);
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(itemId).name} не найден`);
+        if (params.sex && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
         var struct = [];
         for (var key in params) {
             struct.push({
@@ -221,6 +224,27 @@ module.exports = {
                 }
             ]
         });
+
+        player.inventory.items.push(item);
+        if (!item.parentId) this.updateView(player, item);
+        player.call("inventory.addItem", [this.convertServerToClientItem(item), item.pocketIndex, item.index, item.parentId]);
+        callback();
+    },
+    async addOldItem(player, item, callback = () => {}) {
+        var slot = this.findFreeSlot(player, item.itemId);
+        if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(item.itemId).name} не найден`);
+        var params = this.getParamsValues(item);
+        if (params.sex && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
+
+        item.playerId = player.character.id;
+        item.pocketIndex = slot.pocketIndex,
+        item.index = slot.index,
+        item.parentId = slot.parentId,
+        await item.restore({
+
+        });
+        console.log(`item after restore: `)
+        console.log(item)
 
         player.inventory.items.push(item);
         if (!item.parentId) this.updateView(player, item);
