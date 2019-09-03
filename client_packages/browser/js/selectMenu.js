@@ -1535,13 +1535,28 @@ var selectMenu = new Vue({
                 name: "lspdClothes",
                 header: "Раздевалка LSPD",
                 items: [{
-                        text: "Форма офицера №1"
+                        text: "Кадет"
                     },
                     {
-                        text: "Форма SWAT"
+                        text: "Офицера №1"
                     },
                     {
-                        text: "Форма офицера №2"
+                        text: "Офицера №2"
+                    },
+                    {
+                        text: "Детектив №1"
+                    },
+                    {
+                        text: "Детектив №2"
+                    },
+                    {
+                        text: "SWAT"
+                    },
+                    {
+                        text: "Зам. Шефа"
+                    },
+                    {
+                        text: "Шеф"
                     },
                     {
                         text: "Бронежилет"
