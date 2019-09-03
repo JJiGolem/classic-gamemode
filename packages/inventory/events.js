@@ -44,6 +44,7 @@ module.exports = {
         if (player.vehicle) return notifs.error(player, `Недоступно в авто`, header);
         if (player.hasCuffs) return notifs.error(`Недоступно в наручниках`, header);
 
+        var children = inventory.getArrayItems(player, item);
         inventory.deleteItem(player, item);
 
         var info = inventory.getInventoryItem(item.itemId);
@@ -56,6 +57,7 @@ module.exports = {
         });
         newObj.playerId = player.id;
         newObj.item = item;
+        newObj.children = children;
         newObj.setVariable("groundItem", true);
         player.inventory.ground.push(newObj);
 
