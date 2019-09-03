@@ -11,8 +11,6 @@ module.exports = {
             player.vehicle.dimension = player.id + 1;
             player.vehicle.position = new mp.Vector3(customs.tuneX, customs.tuneY, customs.tuneZ);
             player.call('vehicles.heading.set', [customs.tuneH])
-            // let primary = player.vehicle.getColor(0);
-            // let secondary = player.vehicle.getColor(1);
             let primary = player.vehicle.color1;
             let secondary = player.vehicle.color2;
             player.call('tuning.start', [customs.id, primary, secondary]);
@@ -41,5 +39,13 @@ module.exports = {
             color2: secondary
         });
         player.call('tuning.colors.set.ans', [0]);
+    },
+    "tuning.buy": (player, type, index) => {
+        let config = tuning.getModsConfig();
+        typeName = config[type];
+        
+        console.log(`${type} ${index}`);
+        player.call('tuning.buy.ans', [0, typeName, index]);
+        player.vehicle.setMod(type, index);
     }
 }
