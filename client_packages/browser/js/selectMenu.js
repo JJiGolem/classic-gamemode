@@ -1535,13 +1535,28 @@ var selectMenu = new Vue({
                 name: "lspdClothes",
                 header: "Раздевалка LSPD",
                 items: [{
-                        text: "Форма офицера №1"
+                        text: "Кадет"
                     },
                     {
-                        text: "Форма SWAT"
+                        text: "Офицера №1"
                     },
                     {
-                        text: "Форма офицера №2"
+                        text: "Офицера №2"
+                    },
+                    {
+                        text: "Детектив №1"
+                    },
+                    {
+                        text: "Детектив №2"
+                    },
+                    {
+                        text: "SWAT"
+                    },
+                    {
+                        text: "Зам. Шефа"
+                    },
+                    {
+                        text: "Шеф"
                     },
                     {
                         text: "Бронежилет"
@@ -2272,6 +2287,104 @@ var selectMenu = new Vue({
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
                 }
             },
+            "hospitalStorage": {
+                name: "hospitalStorage",
+                header: "Склад Hospital",
+                items: [{
+                        text: "Раздевалка",
+                    },
+                    {
+                        text: "Снаряжение"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Раздевалка') {
+                            selectMenu.showByName("hospitalClothes");
+                        } else if (e.itemName == 'Снаряжение') {
+                            selectMenu.showByName("hospitalItems");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
+            "hospitalClothes": {
+                name: "hospitalClothes",
+                header: "Раздевалка Clothes",
+                items: [{
+                        text: "Форма №1"
+                    },
+                    {
+                        text: "Форма №2"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("hospitalStorage");
+                        else mp.trigger(`callRemote`, `hospital.storage.clothes.take`, e.itemIndex);
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("hospitalStorage");
+                }
+            },
+            "hospitalItems": {
+                name: "hospitalItems",
+                header: "Снаряжение Hospital",
+                items: [{
+                        text: "Малая аптечка"
+                    },
+                    {
+                        text: "Большая аптечка"
+                    },
+                    {
+                        text: "Пластырь"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Вернуться") selectMenu.showByName("hospitalStorage");
+                        else mp.trigger(`callRemote`, `hospital.storage.items.take`, e.itemIndex);
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("hospitalStorage");
+                }
+            },
             "dmvMenu": {
                 name: "dmv",
                 header: "Покупка лицензий",
@@ -2558,8 +2671,7 @@ var selectMenu = new Vue({
             "tuningColors": {
                 name: "tuningColors",
                 header: "Покраска",
-                items: [
-                    {
+                items: [{
                         text: "Основной цвет",
                         values: [],
                         i: 0,

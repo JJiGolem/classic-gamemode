@@ -407,4 +407,16 @@ module.exports = {
             notify.info(player, `Установлено измерение: ${dim}`);
         }
     },
+    "/sethp": {
+        description: "Изменить кол-во здоровья игроку.",
+        access: 4,
+        args: "[ид_игрока]:n [здоровье]:n",
+        handler: (player, args, out) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            rec.health = Math.clamp(args[1], 0, 100);
+            out.info(`Игроку ${rec.name} установлено ${rec.health} ед. здоровья`, player);
+            notify.info(rec, `${player.name} установил вам ${rec.health} ед. здоровья`);
+        }
+    },
 }

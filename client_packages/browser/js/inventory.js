@@ -72,14 +72,14 @@ var inventory = new Vue({
         // Меню предмета по ПКМ
         itemsMenu: {
             // itemId: struct menu
-            18: {
+            18: { // test
                 'Включить': {
                     handler(item) {
                         console.log(`Включить ${item}`)
                     }
                 }
             },
-            24: {
+            24: { // малая аптечка
                 'Вылечиться': {
                     handler(item) {
                         // console.log(`лечить ${item}`)
@@ -87,7 +87,23 @@ var inventory = new Vue({
                     }
                 }
             },
-            37: {
+            25: { // пластырь
+                'Вылечиться': {
+                    handler(item) {
+                        // console.log(`лечить ${item}`)
+                        mp.trigger(`callRemote`, `inventory.item.patch.use`, item.sqlId);
+                    }
+                }
+            },
+            27: { // большая аптечка
+                'Вылечиться': {
+                    handler(item) {
+                        // console.log(`лечить ${item}`)
+                        mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
+                    }
+                }
+            },
+            37: { // test
                 'Разрядить': {
                     handler(item) {
                         console.log(`разрядить: ${item}`)
@@ -501,7 +517,7 @@ var inventory = new Vue({
                 menu['Выкинуть'] = {
                     handler(item) {
                         // console.log(`выкинуть ${item}`)
-                        mp.trigger(`callRemote`, `item.throw`, item.sqlId);
+                        mp.trigger(`callRemote`, `item.ground.put`, item.sqlId);
                     }
                 };
             }
@@ -697,7 +713,7 @@ var inventory = new Vue({
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
-            if (busy.includes(["chat", "terminal", "interaction", "mapCase"])) return;
+            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone"])) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;
             if (e.keyCode > 47 && e.keyCode < 58) {
                 var num = e.keyCode - 48;

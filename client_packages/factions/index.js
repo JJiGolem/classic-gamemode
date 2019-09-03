@@ -47,6 +47,8 @@ mp.factions = {
             mp.callCEFV(`selectMenu.showByName('lssdStorage')`);
         } else if (factionId == 4) { // FIB
             mp.callCEFV(`selectMenu.showByName('fibStorage')`);
+        } else if (factionId == 5) { // EMS
+            mp.callCEFV(`selectMenu.showByName('hospitalStorage')`);
         } else if (factionId == 6) { // ARMY
             mp.callCEFV(`selectMenu.showByName('armyStorage')`);
         }
