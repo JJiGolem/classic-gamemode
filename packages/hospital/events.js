@@ -1,6 +1,7 @@
 "use strict";
 var factions = require('../factions');
 var inventory = require('../inventory');
+var money = require('../money');
 var notifs = require('../notifications');
 var hospital = require('../hospital');
 
@@ -244,5 +245,60 @@ module.exports = {
             faction.save();
         });
     },
+    // лечение игрока (пополнение ХП) | показ + принятие + отмена:
+    "hospital.healing.show": (player, recId) => {
+        var header = `Лечение`;
+        var rec = mp.players.at(recId);
+        if (!rec) return notifs.error(player, `Игрок #${recId} не найден`, header);
+        if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, header);
+        if (!factions.isHospitalFaction(player.character.factionId)) return notifs.error(player, `Вы не медик`, header);
+        if (rec.health == 100) return notifs.error(player, `${rec.name} полностью здоров`, header);
 
+        rec.offer = {
+            type: "hospital_healing",
+            inviterId: player.id,
+            health: 100 - rec.health
+        };
+        rec.call(`offerDialog.show`, ["hospital_healing", {
+            name: player.name,
+            price: hospital.healingPrice * rec.offer.health
+        }]);
+    },
+    "hospital.healing.accept": (player) => {
+        var header = `Лечение`;
+        if (!player.offer || player.offer.type != "hospital_healing") return notifs.error(player, `Приглашение не найдено`, header);
+        var offer = player.offer;
+        delete player.offer;
+
+        var inviter = mp.players.at(offer.inviterId);
+        if (!inviter) return notifs.error(player, `Медик не найден`, header);
+        if (player.dist(inviter.position) > 10) return notifs.error(player, `${inviter.name} далеко`, header);
+        if (!factions.isHospitalFaction(inviter.character.factionId)) return notifs.error(player, `${inviter.name} не медик`, header);
+        if (player.health == 100) {
+            notifs.error(player, `Вы полностью здоровы`, header);
+            notifs.error(inviter, `${player.name} полностью здоров`, header);
+            return;
+        }
+        var price = offer.health * hospital.healingPrice;
+        if (player.character.cash < price) return notifs.error(player, `Необходимо $${price}`, header);
+
+        money.removeCash(player, price, (res) => {
+            if (!res) return notifs.error(player, `Непредв. ошибка 1! Обратитесь к разработчикам CRP.`, header);
+            money.addCash(inviter, price, (res) => {
+                if (!res) return notifs.error(player, `Непредв. ошибка 2! Обратитесь к разработчикам CRP.`, header);
+
+                player.health = Math.clamp(player.health + offer.health, 1, 100);
+                notifs.success(inviter, `${player.name} вылечился`, header);
+                notifs.success(player, `${inviter.name} вас вылечил`, header);
+            });
+        });
+    },
+    "hospital.healing.cancel": (player) => {
+        if (!player.offer) return;
+        var inviter = mp.players.at(player.offer.inviterId);
+        delete player.offer;
+        if (!inviter) return;
+        notifs.info(player, `Предложение отклонено`, `Лечение`);
+        notifs.info(inviter, `${player.name} отклонил предложение`, `Лечение`);
+    },
 }

@@ -713,7 +713,7 @@ var inventory = new Vue({
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
-            if (busy.includes(["chat", "terminal", "interaction", "mapCase"])) return;
+            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone"])) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;
             if (e.keyCode > 47 && e.keyCode < 58) {
                 var num = e.keyCode - 48;
