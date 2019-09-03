@@ -214,7 +214,7 @@ module.exports = {
 
         if (faction.ammo < hospital.itemAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
-        var itemIds = [24, 25];
+        var itemIds = [24, 27, 25];
 
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
@@ -228,8 +228,10 @@ module.exports = {
             faction: character.factionId,
             owner: character.id
         };
-        if (itemId == 24) { // аптечка
-            params.count = 5
+        if (itemId == 24) { // малая аптечка
+            params.count = 5;
+        } else if (itemId == 27) { // большая аптечка
+            params.count = 10;
         } else if (itemId == 25) { // пластырь
             params.count = 5;
         }

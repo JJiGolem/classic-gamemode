@@ -2341,7 +2341,10 @@ var selectMenu = new Vue({
                 name: "hospitalItems",
                 header: "Снаряжение Hospital",
                 items: [{
-                        text: "Аптечка"
+                        text: "Малая аптечка"
+                    },
+                    {
+                        text: "Большая аптечка"
                     },
                     {
                         text: "Пластырь"

@@ -79,7 +79,7 @@ var inventory = new Vue({
                     }
                 }
             },
-            24: { // аптечка
+            24: { // малая аптечка
                 'Вылечиться': {
                     handler(item) {
                         // console.log(`лечить ${item}`)
@@ -92,6 +92,14 @@ var inventory = new Vue({
                     handler(item) {
                         // console.log(`лечить ${item}`)
                         mp.trigger(`callRemote`, `inventory.item.patch.use`, item.sqlId);
+                    }
+                }
+            },
+            27: { // большая аптечка
+                'Вылечиться': {
+                    handler(item) {
+                        // console.log(`лечить ${item}`)
+                        mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
                     }
                 }
             },
