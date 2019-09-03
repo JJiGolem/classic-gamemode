@@ -253,6 +253,11 @@ module.exports = {
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, header);
         if (!factions.isHospitalFaction(player.character.factionId)) return notifs.error(player, `Вы не медик`, header);
         if (rec.health == 100) return notifs.error(player, `${rec.name} полностью здоров`, header);
+        var med = inventory.getItemByItemId(player, [24, 27]);
+        if (!med) return notifs.error(player, `Аптечка не найдена`, header);
+        var count = inventory.getParam(med, 'count').value;
+        if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
+
 
         rec.offer = {
             type: "hospital_healing",
@@ -281,11 +286,19 @@ module.exports = {
         }
         var price = offer.health * hospital.healingPrice;
         if (player.character.cash < price) return notifs.error(player, `Необходимо $${price}`, header);
+        var med = inventory.getItemByItemId(inviter, [24, 27]);
+        if (!med) return notifs.error(inviter, `Аптечка не найдена`, header);
+        var count = inventory.getParam(med, 'count').value;
+        if (!count) return notifs.error(inviter, `Количество: 0 ед.`, header);
 
         money.removeCash(player, price, (res) => {
             if (!res) return notifs.error(player, `Непредв. ошибка 1! Обратитесь к разработчикам CRP.`, header);
             money.addCash(inviter, price, (res) => {
                 if (!res) return notifs.error(player, `Непредв. ошибка 2! Обратитесь к разработчикам CRP.`, header);
+
+                count--;
+                if (!count) inventory.deleteItem(inviter, med);
+                else inventory.updateParam(inviter, med, 'count', count);
 
                 player.health = Math.clamp(player.health + offer.health, 1, 100);
                 notifs.success(inviter, `${player.name} вылечился`, header);

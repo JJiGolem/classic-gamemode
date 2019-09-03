@@ -531,13 +531,10 @@ module.exports = {
 
         return -1;
     },
-    getItemByItemId(player, itemId) {
+    getItemByItemId(player, itemIds) {
+        if (!Array.isArray(itemIds)) itemIds = [itemIds];
         var items = player.inventory.items;
-        for (var i = 0; i < items.length; i++) {
-            var item = items[i];
-            if (item.itemId == itemId) return item;
-        }
-        return null;
+        return items.find(item => itemIds.includes(item.itemId));
     },
     getArrayByItemId(player, itemId) {
         var items = player.inventory.items;
