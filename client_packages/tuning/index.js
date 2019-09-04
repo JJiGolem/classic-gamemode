@@ -37,8 +37,68 @@ let tuningParams = {
     spoiler: {
         modType: 0,
         current: -1,
-        name: "Спойлеры"
-    }
+        name: "Спойлер"
+    },
+    frontBumper: {
+        modType: 1,
+        current: -1,
+        name: "Передний бампер"
+    },
+    rearBumper: {
+        modType: 2,
+        current: -1,
+        name: "Задний бампер"
+    },
+    sideSkirt: {
+        modType: 3,
+        current: -1,
+        name: "Пороги"
+    },
+    exhaust: {
+        modType: 4,
+        current: -1,
+        name: "Глушитель"
+    },
+    frame: {
+        modType: 5,
+        current: -1,
+        name: "Рама"
+    },
+    grille: {
+        modType: 6,
+        current: -1,
+        name: "Решетка радиатора"
+    },
+    hood: {
+        modType: 7,
+        current: -1,
+        name: "Капот"
+    },
+    fender: {
+        modType: 8,
+        current: -1,
+        name: "Крыло"
+    },
+    rightFender: {
+        modType: 9,
+        current: -1,
+        name: "Правое крыло"
+    },
+    roof: {
+        modType: 10,
+        current: -1,
+        name: "Крыша"
+    },
+    frontWheels: {
+        modType: 23,
+        current: -1,
+        name: "Колеса"
+    },
+    livery: {
+        modType: 48,
+        current: -1,
+        name: "Покрасочные работы"
+    },
 }
 
 let colorData = {
@@ -101,6 +161,7 @@ mp.events.add('tuning.menu.show', () => {
 });
 
 mp.events.add('tuning.defaultMenu.show', (modName) => {
+    mp.events.call('tuning.modType.set', tuningParams[modName].modType);
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["tuningDefault"])`);
     let data = tuningParams[modName];
     mp.callCEFV(`selectMenu.menu.header = '${data.name}'`);
@@ -108,7 +169,9 @@ mp.events.add('tuning.defaultMenu.show', (modName) => {
     for (let i = -1; i < numMods; i++) {
         let label = mp.players.local.vehicle.getModTextLabel(data.modType, i);
         let text = mp.game.ui.getLabelText(label);
-        if (text == 'NULL') text = 'Нет';
+        if (text == 'NULL') {
+            i != -1 ? text = `${data.name} ${i + 1}` : text = 'Нет';
+        }
         mp.callCEFV(`selectMenu.menu.items.push({
             text: '${text}',
             values: ['$100']
@@ -186,12 +249,18 @@ mp.events.add('tuning.end', () => {
     mp.events.callRemote('tuning.end', customsId);
 });
 
-mp.events.add('tuning.mod.set', (type = currentModType, index) => {
+mp.events.add('tuning.mod.set', (type, index) => {
+    if (type == -1) type = currentModType;
+    mp.chat.debug(currentModType);
+    mp.chat.debug(type);
     vehicle.setMod(type, index);
 });
 
-mp.events.add('tuning.buy', (modType = currentModType, modIndex) => {
+mp.events.add('tuning.buy', (modType, modIndex) => {
     mp.callCEFV('selectMenu.loader = true');
+    if (modType == -1) modType = currentModType;
+    mp.chat.debug(currentModType);
+    mp.chat.debug(modType);
     mp.events.callRemote('tuning.buy', modType, modIndex);
 });
 
