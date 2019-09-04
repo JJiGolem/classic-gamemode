@@ -26,16 +26,15 @@ module.exports = {
     "init": () => {
         carservice.init();
     },
+    // "carservice.jobshape.enter": (player) => {
+    //     player.call("carservice.jobmenu.show");
+    //     //mp.events.call("jobs.set", player, 1);
+    // },
     "carservice.jobshape.enter": (player) => {
-        player.call("carservice.jobmenu.show");
-        //mp.events.call("jobs.set", player, 1);
-    },
-    "carservice.jobshape.enter": (player) => {
-        if (player.character.job == 0) {
+        if (player.character.job != 1) {
             player.call("carservice.jobmenu.show", [0]);
         } else {
             player.call("carservice.jobmenu.show", [1]);
-            console.log('показываем увольнение')
         }
     },
     "carservice.jobshape.employment": (player) => {
@@ -52,7 +51,7 @@ module.exports = {
 
         if (shape.isCarService) {
             if (player.character.job == 1) {
-                player.call('chat.message.push', [`!{#ffffff}${player.name} зашел в колшейп carService`]);
+                player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} зашел в колшейп carService`]);
                 player.call('carservice.shape.enter');
             }
         }
@@ -62,7 +61,7 @@ module.exports = {
 
         if (shape.isCarService) {
             if (player.character.job == 1) {
-                player.call('chat.message.push', [`!{#ffffff}${player.name} вышел с колшейпа carService`]);
+                player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} вышел с колшейпа carService`]);
                 player.call('carservice.shape.leave');
             }
         }

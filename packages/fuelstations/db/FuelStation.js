@@ -1,5 +1,4 @@
 module.exports = (sequelize, DataTypes) => {
-
     const model = sequelize.define("FuelStation", {
         id: {
             type: DataTypes.INTEGER(11),
@@ -37,6 +36,11 @@ module.exports = (sequelize, DataTypes) => {
         },
     }, { timestamps: false });
 
+    model.associate = (models) => {
+        model.belongsTo(models.Biz, {
+            foreignKey: "bizId"
+        });
+    };
 
     return model;
 };

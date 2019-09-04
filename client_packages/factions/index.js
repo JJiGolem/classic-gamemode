@@ -43,6 +43,14 @@ mp.factions = {
     showStorageSelectMenu(factionId) {
         if (factionId == 2) { // LSPD
             mp.callCEFV(`selectMenu.showByName('lspdStorage')`);
+        } else if (factionId == 3) { // LSSD
+            mp.callCEFV(`selectMenu.showByName('lssdStorage')`);
+        } else if (factionId == 4) { // FIB
+            mp.callCEFV(`selectMenu.showByName('fibStorage')`);
+        } else if (factionId == 5) { // EMS
+            mp.callCEFV(`selectMenu.showByName('hospitalStorage')`);
+        } else if (factionId == 6) { // ARMY
+            mp.callCEFV(`selectMenu.showByName('armyStorage')`);
         }
     },
     isGovernmentFaction(factionId) {

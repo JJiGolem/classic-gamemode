@@ -125,20 +125,30 @@ module.exports = {
             }, 20000);
         }
     },
-    "/update": {
+    "/branch": {
         access: 6,
-        description: "Обновить мод до выбранной ветки",
+        description: "Обновить мод до выбранной ветки.",
         args: "[название ветки]",
-        handler: (player, args) => {
+        handler: (player, args, out) => {
 
             var exec = require("exec");
             exec(`cd ${__dirname} && git clean -d -f && git stash && git checkout ${args[0]} && git pull`, (error, stdout, stderr) => {
                 if (error) console.log(stderr);
                 console.log(stdout);
-
-                mp.players.forEach((current) => {
-                    current.call('chat.message.push', [`!{#edffc2}${player.name} запустил обновление сервера`]);
-                });
+                // out.info(`${player.name} запустил обновление сервера`);
+            });
+        }
+    },
+    "/update": {
+        access: 6,
+        description: "Обновить текущую ветку.",
+        args: "",
+        handler: (player, args, out) => {
+            var exec = require("exec");
+            exec(`cd ${__dirname} && git clean -d -f && git stash && git pull`, (error, stdout, stderr) => {
+                if (error) console.log(stderr);
+                console.log(stdout);
+                out.info(`${player.name} запустил обновление сервера`);
             });
         }
     },
@@ -187,19 +197,51 @@ module.exports = {
         }
     },
     "/kick": {
-        access: 6,
+        access: 2,
+        description: "Кик игрока",
+        args: "[ID] [причина]",
         handler: (player, args) => {
-            mp.players.at(args[0]).kick("q");
+            if (isNaN(parseInt(args[0]))) return; //temp
+            let target = mp.players.at(args[0]);
+            if (!target || !mp.players.exists(target)) return notify.warning(player, 'Игрок не найден');
+            if (!target.character) return notify.warning(player, 'Игрок не найден');
+            args.shift();
+            let message = args.join(' ');
+            mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] кикнул игрока ${target.name}[${target.id}]: ${message}`);
+            target.kick("kicked");
+        }
+    },
+    "/skick": {
+        access: 4,
+        description: "Тихий кик игрока",
+        args: "[ID]",
+        handler: (player, args) => {
+            if (isNaN(parseInt(args[0]))) return; //temp
+            let target = mp.players.at(args[0]);
+            if (!target || !mp.players.exists(target)) return notify.warning(player, 'Игрок не найден');
+            if (!target.character) return notify.warning(player, 'Игрок не найден');
+            mp.events.call('admin.notify.all', `!{#9e9e9e}[A] Администратор ${player.name}[${player.id}] кикнул игрока ${target.name}[${target.id}] без лишнего шума`);
+            target.kick("kicked");
         }
     },
     "/clothes": {
-        access: 6,
+        access: 3,
+        description: "Выдача тестовой одежды",
+        args: "[тип] [текстура] [вариация]",
         handler: (player, args) => {
             player.setClothes(parseInt(args[0]), parseInt(args[1]), parseInt(args[2]), 0);
         }
     },
+    "/prop": {
+        access: 3,
+        description: "Выдача тестового пропа",
+        args: "[тип] [текстура] [вариация]",
+        handler: (player, args) => {
+            player.setProp(parseInt(args[0]), parseInt(args[1]), parseInt(args[2]));
+        }
+    },
     "/tempwear": {
-        access: 6,
+        access: 1,
         description: "Выдача временного набора одежды",
         args: "[ID набора]",
         handler: (player, args) => {
@@ -373,6 +415,18 @@ module.exports = {
             if (isNaN(dim)) return;
             player.dimension = dim;
             notify.info(player, `Установлено измерение: ${dim}`);
+        }
+    },
+    "/sethp": {
+        description: "Изменить кол-во здоровья игроку.",
+        access: 4,
+        args: "[ид_игрока]:n [здоровье]:n",
+        handler: (player, args, out) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            rec.health = Math.clamp(args[1], 0, 100);
+            out.info(`Игроку ${rec.name} установлено ${rec.health} ед. здоровья`, player);
+            notify.info(rec, `${player.name} установил вам ${rec.health} ед. здоровья`);
         }
     },
 }

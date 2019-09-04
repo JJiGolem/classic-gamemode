@@ -1,9 +1,3 @@
-#loader {
-    left: 45%;
-    position: absolute;
-    top: 40%;
-}
-
 #loader .lds-rolling {
     position: absolute;
     animation: login 1s ease-in-out;
@@ -32,10 +26,12 @@
 }
 
 #loader .lds-rolling {
-    width: 9vh !important;
     height: 9vh !important;
-    -webkit-transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
-    transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    width: 9vh !important;
 }
 
 /* Анимация */

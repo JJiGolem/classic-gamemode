@@ -98,7 +98,6 @@ module.exports = {
         vehicle.fuelTimer = setInterval(() => {
             try {
                 if (vehicle.engine) {
-                    console.log(`fuel tick for ${vehicle.id}`);
                     vehicle.fuel = vehicle.fuel - 1;
                     if (vehicle.fuel <= 0) {
                         vehicle.engine = false;
@@ -111,7 +110,6 @@ module.exports = {
                 console.log(err);
             }
         }, vehicle.fuelTick);
-        console.log('FUEL TIMER: ' + vehicle.fuelTimer);
         return vehicle;
     },
     getDriver(vehicle) {
@@ -240,22 +238,18 @@ module.exports = {
         if (houses.isHaveHouse(player.character.id)) {
             await this.setPlayerCarPlaces(player);
         }
-        console.log(player.vehicleList);
         if (dbPrivate.length > 0) {
             let parkingVeh = dbPrivate.find(x => x.isOnParking);
 
             if (parkingVeh) {
                 mp.events.call('parkings.vehicle.add', parkingVeh);
-                //player.call('chat.message.push', [`!{#f3c800}Транспорт доставлен`]);
                 mp.events.call('parkings.notify', player, parkingVeh, 0);
             }
 
             if (houses.isHaveHouse(player.character.id)) {
-                //await this.setPlayerCarPlaces(player);
                 let length = player.carPlaces.length != 1 ? player.carPlaces.length - 1 : player.carPlaces.length;
                 for (let i = 0; i < length; i++) {
                     if (i >= dbPrivate.length) return;
-                    console.log('push')
                     if (!dbPrivate[i].isOnParking) {
                         this.spawnHomeVehicle(player, dbPrivate[i]);
                     }
@@ -284,7 +278,6 @@ module.exports = {
         let plate = letters + number.toString();
 
         if (plates.includes(plate)) return this.generateVehiclePlate();
-        console.log(`Сгенерировали номер ${plate}`);
         plates.push(plate);
         return plate;
     },
@@ -314,18 +307,17 @@ module.exports = {
         let toUpdate = false;
         for (let key in breakdownConfig) {
             if (veh[key] < MAX_BREAK_LEVEL) {
-                console.log(`Пытаемся сломать ${key} у ${veh.properties.name}`);
+                console.log(`[DEBUG] Пытаемся сломать ${key} у ${veh.properties.name}`);
                 let random = Math.random();
                 console.log(random);
                 if (random < breakdownConfig[key] * multiplier) {
                     veh[key]++;
                     toUpdate = true;
-                    console.log(`сломали ${key}`);
+                    console.log(`[DEBUG] сломали ${key}`);
                 }
             }
         }
         if (toUpdate) {
-            console.log('обновляем поломки в бд');
             if (veh.db) {
                 veh.db.update({
                     engineState: veh.engineState,
@@ -422,10 +414,8 @@ module.exports = {
 
         } else {
             let index = player.carPlaces.findIndex(x => x.veh == null && x.d != 0);
-            //let place = player.carPlaces.find(x => x.veh == null && x.d != 0);
             let place = player.carPlaces[index];
             vehicle.carPlaceIndex = index;
-            console.log(`index ${vehicle.carPlaceIndex}`)
             vehicle.x = place.x;
             vehicle.y = place.y;
             vehicle.z = place.z;
@@ -445,7 +435,6 @@ module.exports = {
 
         let place = player.carPlaces[vehicle.carPlaceIndex];
 
-        console.log(place);
         if (!place) return;
         place.veh = null;
     },
@@ -462,7 +451,6 @@ module.exports = {
 
         let place = player.carPlaces[index];
         vehicle.carPlaceIndex = index;
-        console.log(`index ${vehicle.carPlaceIndex}`)
         vehicle.x = place.x;
         vehicle.y = place.y;
         vehicle.z = place.z;
@@ -483,7 +471,6 @@ module.exports = {
     doesPlayerHaveHomeVehicles(player) {
         let list = player.vehicleList;
         let result = list.filter(x => x.isOnParking == 0);
-        console.log(result);
         if (result.length > 0) return true
         else return false;
     }

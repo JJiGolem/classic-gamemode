@@ -8,6 +8,8 @@
 */
 
 mp.inventory = {
+    groundMaxDist: 2,
+
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
     },
@@ -30,16 +32,38 @@ mp.inventory = {
     deleteItem(sqlId) {
         mp.callCEFV(`inventory.deleteItem(${sqlId})`);
     },
+    setItemParam(sqlId, key, value) {
+        mp.callCEFV(`inventory.setItemParam(${sqlId}, '${key}', '${value}')`);
+    },
     setSatiety(val) {
         mp.callCEFV(`inventory.satiety = ${val}`)
     },
     setThirst(val) {
         mp.callCEFV(`inventory.thirst = ${val}`)
     },
+    takeItemHandler() {
+        // поднятие предмета с земли
+        var pos = mp.players.local.position;
+        var itemObj, minDist = 9999;
+        mp.objects.forEach((obj) => {
+            var objPos = obj.position;
+            let dist = mp.game.system.vdist(pos.x, pos.y, pos.z, objPos.x, objPos.y, objPos.z);
+            if (dist > mp.inventory.groundMaxDist) return;
+            if (!obj.getVariable("groundItem")) return;
+            if (dist > minDist) return;
+
+            minDist = dist;
+            itemObj = obj;
+        });
+        if (!itemObj) return;
+        // TODO: проверка на аттачи
+        mp.events.callRemote("item.ground.take", itemObj.remoteId);
+    },
 };
 
 mp.events.add("characterInit.done", () => {
     mp.inventory.enable(true);
+    mp.keys.bind(69, true, mp.inventory.takeItemHandler); // E
 });
 
 mp.events.add("inventory.enable", mp.inventory.enable);
@@ -53,6 +77,8 @@ mp.events.add("inventory.setItemInfo", mp.inventory.setItemInfo);
 mp.events.add("inventory.deleteItem", mp.inventory.deleteItem);
 
 mp.events.add("inventory.addItem", mp.inventory.addItem);
+
+mp.events.add("inventory.setItemParam", mp.inventory.setItemParam);
 
 mp.events.add("inventory.setSatiety", mp.inventory.setSatiety);
 

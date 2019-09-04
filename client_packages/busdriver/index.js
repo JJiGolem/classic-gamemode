@@ -2,6 +2,9 @@ let routecreator = require('./busdriver/routecreator.js');
 
 let routesAvailable;
 let checkpoint;
+let blip;
+let checkpointTimer;
+
 let peds = [{
     model: "a_m_o_genstreet_01",
     position: {
@@ -95,9 +98,6 @@ mp.events.add('busdriver.rent.ans', (ans, data) => {
 });
 
 mp.events.add('busdriver.menu.start', (routeIndex, price) => {
-    mp.chat.debug(routeIndex);
-    mp.chat.debug(`route name ${routesAvailable[routeIndex].name} ${routesAvailable[routeIndex].id}`);
-    mp.chat.debug(price);
     mp.events.callRemote('busdriver.route.start', routesAvailable[routeIndex].id, price);
 });
 
@@ -114,30 +114,45 @@ mp.events.add('busdriver.route.start.ans', (ans, data) => {
     }
 });
 
-mp.events.add('busdriver.checkpoint.create', (data) => {
-    createCheckpoint(data);
+mp.events.add('busdriver.checkpoint.create', (data, timeout) => {
+    createCheckpoint(data, timeout);
 });
 
 mp.events.add('playerEnterCheckpoint', () => {
     if (!mp.players.local.vehicle) return;
-    //deleteCheckpoint();
-    mp.chat.debug('enter checkpoint');
     mp.events.callRemote('busdriver.checkpoint.entered');
 });
 
-function createCheckpoint(data) {
+mp.events.add('busdriver.route.end', () => {
     deleteCheckpoint();
-    checkpoint = mp.checkpoints.new(5, new mp.Vector3(data.x, data.y, data.z), 10,
-    {
-        color: data.isStop ? [30, 206, 255, 255] : [255, 246, 0, 255],
-        visible: true,
-        dimension: 0
-    });
+});
+
+function createCheckpoint(data, timeout) {
+    deleteCheckpoint();
+    checkpointTimer = setTimeout(() => {
+        try {
+            checkpoint = mp.checkpoints.new(5, new mp.Vector3(data.x, data.y, data.z), 10,
+            {
+                color: data.isStop ? [30, 206, 255, 255] : [255, 246, 0, 255],
+                visible: true,
+                dimension: 0
+            });
+            blip = mp.blips.new(1, new mp.Vector3(data.x, data.y, data.z), { color: data.isStop ? 26 : 71, name: "Остановка" });
+            blip.setRoute(true);
+            blip.setRouteColour(data.isStop ? 26 : 71);
+        } catch (err) {
+            mp.console(JSON.stringify(err));
+        }
+    }, timeout);
 }
 function deleteCheckpoint() {
+    clearTimeout(checkpointTimer);
     if (!checkpoint) return;
     checkpoint.destroy();
     checkpoint = null;
+    if (!blip) return;
+    blip.destroy();
+    blip = null;
 }
 // [30, 206, 255, 255] stop
 // [255, 246, 0, 255] point

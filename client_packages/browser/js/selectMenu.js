@@ -50,7 +50,6 @@ var selectMenu = new Vue({
                     if (eventName == "onItemValueChanged" && e.itemName == "Пол") {
                         selectMenu.menus["characterCreateMainMenu"].items[0].i = e.valueIndex;
                         selectMenu.menus["characterCreateParentsMenu"].items[2].i = e.valueIndex == 0 ? 0 : 4;
-                        selectMenu.menus["characterCreateViewMenu"].items = e.valueIndex == 0 ? selectMenu.menus["characterCreateViewMenu"].itemsMale : selectMenu.menus["characterCreateViewMenu"].itemsFemale;
                         mp.trigger('characterInit.create.setGender', e.valueIndex);
                     }
                     if (eventName == "onEscapePressed") {
@@ -62,17 +61,20 @@ var selectMenu = new Vue({
                                 selectMenu.menu = selectMenu.menus["characterCreateParentsMenu"];
                                 break;
                             case "Внешность":
-                                selectMenu.menu = selectMenu.menus["characterCreateViewMenu"];
+                                var sex = selectMenu.menus["characterCreateMainMenu"].items[0].i;
+                                var menu = selectMenu.menus["characterCreateViewMenu"];
+                                menu.items = (sex == 0) ? menu.itemsMale : menu.itemsFemale;
+                                selectMenu.menu = menu;
                                 break;
                             case "Сохранить и продолжить":
                                 mp.trigger('characterInit.create.continue');
                                 selectMenu.menu = selectMenu.menus["characterCreateNameMenu"];
                                 break;
                             case "Сбросить все изменения":
-                                selectMenu.menu = selectMenu.menus["characterCreateResetMenu"];
+                                //selectMenu.menu = selectMenu.menus["characterCreateResetMenu"];
                                 break;
                             case "Выйти без сохранения":
-                                selectMenu.menu = selectMenu.menus["characterCreateExitMenu"];
+                                //selectMenu.menu = selectMenu.menus["characterCreateExitMenu"];
                                 break;
                         }
                     }
@@ -775,10 +777,10 @@ var selectMenu = new Vue({
                                 mp.trigger('characterInit.create.setMolesFreckles', e.valueIndex);
                                 break;
                             case "Волосы на теле":
-                                mp.trigger('characterInit.create.setChestHair', e.valueIndex);
+                                mp.trigger('characterInit.create.setChestHair', e.valueIndex, true);
                                 break;
                             case "Цвет волос на теле":
-                                mp.trigger('characterInit.create.setChestHairColor', e.valueIndex);
+                                mp.trigger('characterInit.create.setChestHairColor', e.valueIndex, true);
                                 break;
                         }
                     }
@@ -1082,10 +1084,10 @@ var selectMenu = new Vue({
                         text: "Устроиться на работу",
                         i: 0,
                     },
-                    {
-                        text: "Помощь",
-                        i: 0,
-                    },
+                    // {
+                    //     text: "Помощь", // TODO
+                    //     i: 0,
+                    // },
                     {
                         text: "Закрыть",
                         i: 0,
@@ -1371,10 +1373,10 @@ var selectMenu = new Vue({
                         text: "Устроиться на работу",
                         i: 0,
                     },
-                    {
-                        text: "Помощь",
-                        i: 0,
-                    },
+                    // {
+                    //     text: "Помощь", // TODO
+                    //     i: 0,
+                    // },
                     {
                         text: "Закрыть",
                         i: 0,
@@ -1407,8 +1409,7 @@ var selectMenu = new Vue({
             "fishingMenu": {
                 name: "fishing",
                 header: "Рыбалка",
-                items: [
-                    {
+                items: [{
                         text: 'Купить удочку',
                         i: 0,
                         values: ["$100"]
@@ -1534,13 +1535,28 @@ var selectMenu = new Vue({
                 name: "lspdClothes",
                 header: "Раздевалка LSPD",
                 items: [{
-                        text: "Форма офицера №1"
+                        text: "Кадет"
                     },
                     {
-                        text: "Форма SWAT"
+                        text: "Офицер №1"
                     },
                     {
-                        text: "Форма офицера №2"
+                        text: "Офицер №2"
+                    },
+                    {
+                        text: "Детектив №1"
+                    },
+                    {
+                        text: "Детектив №2"
+                    },
+                    {
+                        text: "SWAT"
+                    },
+                    {
+                        text: "Зам. Шефа"
+                    },
+                    {
+                        text: "Шеф"
                     },
                     {
                         text: "Бронежилет"
@@ -1562,7 +1578,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("lspdStorage");
-                        else if (e.itemIndex == 3) mp.trigger(`callRemote`, `police.storage.armour.take`);
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `police.storage.armour.take`);
                         else mp.trigger(`callRemote`, `police.storage.clothes.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
                 }
@@ -1757,7 +1773,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("lssdStorage");
-                        else if (e.itemIndex == 3) mp.trigger(`callRemote`, `police.storage.armour.take`);
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `police.storage.armour.take`);
                         else mp.trigger(`callRemote`, `police.storage.clothes.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lssdStorage");
                 }
@@ -1958,7 +1974,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("fibStorage");
-                        else if (e.itemIndex == 3) mp.trigger(`callRemote`, `fib.storage.armour.take`);
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `fib.storage.armour.take`);
                         else mp.trigger(`callRemote`, `fib.storage.clothes.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("fibStorage");
                 }
@@ -1971,6 +1987,9 @@ var selectMenu = new Vue({
                     },
                     {
                         text: "Аптечка"
+                    },
+                    {
+                        text: "Прослушка"
                     },
                     {
                         text: "Вернуться"
@@ -2113,28 +2132,37 @@ var selectMenu = new Vue({
                 name: "armyClothes",
                 header: "Раздевалка ARMY",
                 items: [{
-                        text: "Форма рекрута"
+                        text: "Новобранец"
                     },
                     {
-                        text: "Отдел IB"
+                        text: "Сержант"
                     },
                     {
-                        text: "Отдел FZA"
+                        text: "Штаб-Сержант"
                     },
                     {
-                        text: "Отдел MLG"
+                        text: "Уоррент-Сержант"
                     },
                     {
-                        text: "Боевая форма TFB"
+                        text: "Мл. офицер"
                     },
                     {
-                        text: "Спец. набор №1"
+                        text: "Ст. офицер"
                     },
                     {
-                        text: "Армейская форма №1"
+                        text: "Парад. Офицер"
                     },
                     {
-                        text: "Армейская форма №2"
+                        text: "Ген. Штаб"
+                    },
+                    {
+                        text: "Парад. Ген. Штаб"
+                    },
+                    {
+                        text: "Пилот"
+                    },
+                    {
+                        text: "Спецназ"
                     },
                     {
                         text: "Бронежилет"
@@ -2156,7 +2184,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("armyStorage");
-                        else if (e.itemIndex == 3) mp.trigger(`callRemote`, `army.storage.armour.take`);
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `army.storage.armour.take`);
                         else mp.trigger(`callRemote`, `army.storage.clothes.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
                 }
@@ -2268,11 +2296,108 @@ var selectMenu = new Vue({
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
                 }
             },
+            "hospitalStorage": {
+                name: "hospitalStorage",
+                header: "Склад Hospital",
+                items: [{
+                        text: "Раздевалка",
+                    },
+                    {
+                        text: "Снаряжение"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Раздевалка') {
+                            selectMenu.showByName("hospitalClothes");
+                        } else if (e.itemName == 'Снаряжение') {
+                            selectMenu.showByName("hospitalItems");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
+            "hospitalClothes": {
+                name: "hospitalClothes",
+                header: "Раздевалка Clothes",
+                items: [{
+                        text: "Форма №1"
+                    },
+                    {
+                        text: "Форма №2"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("hospitalStorage");
+                        else mp.trigger(`callRemote`, `hospital.storage.clothes.take`, e.itemIndex);
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("hospitalStorage");
+                }
+            },
+            "hospitalItems": {
+                name: "hospitalItems",
+                header: "Снаряжение Hospital",
+                items: [{
+                        text: "Малая аптечка"
+                    },
+                    {
+                        text: "Большая аптечка"
+                    },
+                    {
+                        text: "Пластырь"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Вернуться") selectMenu.showByName("hospitalStorage");
+                        else mp.trigger(`callRemote`, `hospital.storage.items.take`, e.itemIndex);
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("hospitalStorage");
+                }
+            },
             "dmvMenu": {
                 name: "dmv",
                 header: "Покупка лицензий",
-                items: [
-                    {
+                items: [{
                         text: 'Легковой транспорт',
                         values: ["$100"]
                     },
@@ -2346,10 +2471,10 @@ var selectMenu = new Vue({
                         text: "Устроиться на работу",
                         i: 0,
                     },
-                    {
-                        text: "Помощь",
-                        i: 0,
-                    },
+                    // {
+                    //     text: "Помощь", // TODO
+                    //     i: 0,
+                    // },
                     {
                         text: "Закрыть",
                         i: 0,
@@ -2384,8 +2509,7 @@ var selectMenu = new Vue({
             "routeCreator": {
                 name: "routecreator",
                 header: "Route Creator",
-                items: [
-                    {
+                items: [{
                         text: "Название маршрута",
                         values: [""],
                         type: "editable"
@@ -2499,6 +2623,472 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "tuningMain": {
+                name: "tuningMain",
+                header: "LS Customs",
+                items: [{
+                        text: "Покраска"
+                    },
+                    {
+                        text: "Двигатель"
+                    },
+                    {
+                        text: "Тормоза"
+                    },
+                    {
+                        text: "Трансмиссия"
+                    },
+                    {
+                        text: "Подвеска"
+                    },
+                    {
+                        text: "Броня"
+                    },
+                    // {
+                    //     text: "Турбонаддув"
+                    // },
+                    // {
+                    //     text: "Закрыть"
+                    // },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        switch (e.itemName) {
+                            case 'Закрыть':
+                                mp.trigger('tuning.end');
+                                break;
+                            case 'Покраска':
+                                mp.trigger('tuning.colorMenu.show');
+                                break;
+                            case 'Двигатель':
+                                mp.trigger('tuning.engineMenu.show');
+                                break;
+                            case 'Тормоза':
+                                mp.trigger('tuning.breakMenu.show');
+                                break;
+                            case 'Трансмиссия':
+                                mp.trigger('tuning.transmissionMenu.show');
+                                break;
+                            case 'Подвеска':
+                                mp.trigger('tuning.suspensionMenu.show');
+                                break;
+                            case 'Броня':
+                                mp.trigger('tuning.armourMenu.show');
+                                break;
+                            case 'Турбонаддув':
+                                mp.trigger('tuning.turboMenu.show');
+                                break;
+                            case 'Спойлеры':
+                                mp.trigger('tuning.defaultMenu.show', 'spoiler');
+                                break;
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.end');
+                    }
+                }
+            },
+            "tuningColors": {
+                name: "tuningColors",
+                header: "Покраска",
+                items: [{
+                        text: "Основной цвет",
+                        values: [],
+                        i: 0,
+                        j: 0
+                    },
+                    {
+                        text: "Дополнительный цвет",
+                        values: []
+                    },
+                    {
+                        text: "Покрасить",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
+                    }
+                ],
+                i: 0, // индекс выбранного пункта
+                j: 0, // индекс первого видимого пункта
+                handler(eventName) { // обработчик взаимодействия с меню
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name, // название меню
+                        itemName: item.text, // текст пункта меню
+                        itemIndex: this.i, // индекс пункта меню
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
+                        valueIndex: item.i, // индекс значения пункта меню
+                    };
+                    if (eventName == 'onItemValueChanged') {
+                        if (e.itemName == 'Основной цвет') {
+                            mp.trigger(`tuning.colors`, e.valueIndex, -1);
+                        }
+                        if (e.itemName == 'Дополнительный цвет') {
+                            mp.trigger(`tuning.colors`, -1, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.menu = cloneObj(selectMenu.menus["tuningMain"]);
+                            mp.trigger('tuning.params.set')
+                        }
+                        if (e.itemName == 'Покрасить') {
+                            mp.trigger('tuning.colors.confirm')
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningEngine": {
+                name: "tuningEngine",
+                header: "Улучшение двигателя",
+                items: [{
+                        text: "Стандарт",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Улучшение СУД, уровень 1",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Улучшение СУД, уровень 2",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Улучшение СУД, уровень 3",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Улучшение СУД, уровень 4",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', 11, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        //mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningBreak": {
+                name: "tuningBreak",
+                header: "Улучшение тормозов",
+                items: [{
+                        text: "Стандарные тормоза",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Уличные тормоза",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Спортивные тормоза",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Гоночные тормоза",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', 12, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        //mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningTransmission": {
+                name: "tuningTransmission",
+                header: "Улучшение трансмиссии",
+                items: [{
+                        text: "Стандарная трансмиссия",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Уличная трансмиссия",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Спортивная трансмиссия",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Гоночная трансмиссия",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', 13, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        selectMenu.menu = cloneObj(selectMenu.menus["tuningMain"]); // переделать ?
+                        //mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningSuspension": {
+                name: "tuningTransmission",
+                header: "Улучшение трансмиссии",
+                items: [{
+                        text: "Стандарная подвеска",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Заниженная подвеска",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Уличная подвеска",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Спортивная подвеска",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Гоночная подвеска",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        let index = e.itemIndex - 1;
+                        mp.trigger('tuning.mod.set', 15, index);
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                            mp.trigger('tuning.params.set')
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', 15, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningArmour": {
+                name: "tuningArmour",
+                header: "Броня",
+                items: [{
+                        text: "Нет",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Усиление брони 20%",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Усиление брони 40%",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Усиление брони 60%",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Усиление брони 80%",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Усиление брони 100%",
+                        values: ['$100']
+                    },              
+                    {
+                        text: "Назад"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', 16, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        //mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningTurbo": {
+                name: "tuningTurbo",
+                header: "Турбонаддув",
+                items: [{
+                        text: "Нет",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Турбонаддув",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', 18, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        //mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningDefault": {
+                name: "tuningDefault",
+                header: "",
+                items: [
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        let index = e.itemIndex - 1;
+                        mp.trigger('tuning.mod.set', undefined, index);
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                            mp.trigger('tuning.params.set')
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', undefined, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        mp.trigger('tuning.params.set')
+                    }
+                }
+            },
         },
         // Уведомление
         notification: null,
@@ -2597,6 +3187,12 @@ var selectMenu = new Vue({
             if (!item) return;
             Vue.set(item, 'values', values);
         },
+        setItems(menuName, items) {
+            if (typeof items == 'string') items = JSON.parse(items);
+            var menu = this.menus[menuName];
+            if (!menu) return;
+            Vue.set(menu, 'items', items);
+        },
         getItemByName(name, items) {
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
@@ -2662,13 +3258,17 @@ var selectMenu = new Vue({
                 if (item.j == null) Vue.set(item, 'j', 0);
                 if (!item.values) Vue.set(item, 'values', [""]);
             });
-        }
+        },
+        show(val) {
+            if (val) busy.add("selectMenu", true);
+            else busy.remove("selectMenu", true);
+        },
     },
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
             if (!self.menu) return;
-            if (busy.includes(["inventory", "chat", "terminal"])) return;
+            if (busy.includes(["inventory", "chat", "terminal", "phone"])) return;
             self.onKeyUp(e);
         });
     }

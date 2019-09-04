@@ -48,7 +48,7 @@ mp.events.add('vehicles.sell.id', (id) => {
     });
 
     if (isFound) {
-        mp.chat.debug('Игрок найден');
+        mp.chat.debug('[debug] Игрок найден');
         carSellData.id = id;
         mp.events.call('vehicles.sell.price.show');
     } else {

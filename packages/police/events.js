@@ -79,179 +79,183 @@ module.exports = {
         var hatParams, topParams, legsParams, feetsParams, tiesParams, masksParams, glassesParams;
         var f = character.factionId - 2;
         if (character.gender == 0) { // муж.
-            hatParams = {
+            hatParams = { // prop 0
                 sex: 1,
                 variation: [
-                    [46, 124, 46],
-                    [117, -1, -1, 58, -1, -1, 13]
+                    [58, 46, 46, -1, -1, 39, 46, 46],
+                    []
                 ][f][index],
                 texture: [
-                    [0, 15, 0],
-                    [0, 0, 0, 1, 0, 0, 0]
+                    [2, 0, 0, -1, -1, 0, 0, 0],
+                    []
                 ][f][index]
             };
-            topParams = {
+            topParams = { // clothes 11 / 3 / 8
                 sex: 1,
-                torso: [
-                    [0, 108, 11],
-                    [17, 0, 11, 11, 11, 11, 6]
+                torso: [ // /clothes 3
+                    [0, 0, 0, 11, 1, 17, 0, 0],
+                    []
                 ][f][index],
                 tTexture: [
-                    [-1, 9, -1],
-                    [-1, -1, -1, -1, -1, -1, -1]
+                    [-1, -1, -1, -1, -1, -1, -1, -1],
+                    []
                 ][f][index],
-                variation: [
-                    [55, 89, 13],
-                    [53, 242, 13, 13, 13, 13, 156]
+                variation: [ // clothes 11
+                    [242, 55, 55, 13, 31, 53, 55, 55],
+                    []
                 ][f][index],
                 texture: [
-                    [0, 0, 1],
-                    [3, 2, 1, 1, 1, 2, 0]
+                    [4, 0, 0, 0, 2, 0, 0, 0],
+                    []
                 ][f][index],
-                undershirt: [
-                    [58, 129, -1],
-                    [122, 129, 58, 58, 122, 130, 115]
+                undershirt: [ // clothes 8
+                    [122, 58, 58, 130, 31, 130, 122, 130],
+                    []
                 ][f][index]
             };
-            legsParams = {
+            legsParams = { // clothes 4
                 sex: 1,
                 variation: [
-                    [35, 59, 35],
-                    [47, 22, 22, 22, 37, 37, 25]
+                    [25, 25, 25, 25, 25, 33, 25, 48],
+                    []
                 ][f][index],
                 texture: [
-                    [0, 9, 0],
-                    [1, 1, 1, 1, 1, 1, 6]
+                    [2, 2, 2, 1, 2, 0, 2, 0],
+                    []
                 ][f][index]
             };
-            feetsParams = {
+            feetsParams = { // clothes 6
                 sex: 1,
                 variation: [
-                    [25, 25, 10],
-                    [25, 25, 25, 25, 25, 10, 10, 10]
+                    [25, 25, 25, 10, 10, 25, 25, 25],
+                    []
                 ][f][index],
                 texture: [
-                    [0, 0, 0],
-                    [0, 0, 0, 0, 12, 0, 12]
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    []
                 ][f][index]
             };
-            tiesParams = {
+            tiesParams = { // clothes 7
                 sex: 1,
                 variation: [
-                    [-1, -1, 21],
-                    [-1, -1, 38, -1, 38, 38, -1]
+                    [-1, -1, -1, 38, 38, -1, -1, -1],
+                    []
                 ][f][index],
                 texture: [
-                    [0, 0, 1],
-                    [0, 0, 0, 0, 0, 1, 0]
+                    [-1, -1, -1, 0, 6, -1, -1, -1],
+                    []
                 ][f][index]
             };
-            masksParams = {
+            masksParams = { // clothes 1
                 sex: 1,
                 variation: [
-                    [-1, 35, -1],
-                    [52, -1, -1, -1, -1, -1, -1]
+                    [-1, -1, -1, -1, -1, 122, -1, -1],
+                    []
                 ][f][index],
                 texture: [
-                    [-1, 0, -1],
-                    [0, 0, 0, 0, 0, 0, 0]
+                    [-1, -1, -1, -1, -1, 0, -1, -1],
+                    []
                 ][f][index]
             };
-            glassesParams = {
+            glassesParams = { // prop 1
                 sex: 1,
                 variation: [
-                    [-1, -1, -1],
-                    [-1, -1, -1, -1, -1, -1, -1]
+                    [-1, -1, -1, -1, -1, 15, -1, -1],
+                    []
                 ][f][index],
                 texture: [
-                    [0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0]
+                    [-1, -1, -1, -1, -1, 9, -1, -1],
+                    []
                 ][f][index]
             };
         } else {
-            hatParams = {
+            hatParams = { // prop 0
                 sex: 0,
                 variation: [
-                    [45, 124, 45],
-                    [116, -1, -1, 58, -1, -1, 20]
+                    [85, 45, 45, -1, -1, 38, 45, 45],
+                    []
                 ][f][index],
                 texture: [
-                    [0, 0, 0],
-                    [0, 0, 0, 1, 0, 0, 1]
+                    [2, 0, 0, -1, -1, 0, 0, 0],
+                    []
                 ][f][index]
             };
-            topParams = {
+            topParams = { // clothes 11 / 3 / 8
                 sex: 0,
-                torso: [
-                    [31, 23, 31],
-                    [18, 0, 0, 20, 20, 20, 20]
+                torso: [ // /clothes 3
+                    [14, 14, 14, 0, 3, 18, 14, 14],
+                    []
                 ][f][index],
-                variation: [
-                    [48, 103, 48],
-                    [46, 165, 27, 27, 27, 27, 183]
+                tTexture: [
+                    [-1, -1, -1, -1, -1, -1, -1, -1],
+                    []
                 ][f][index],
-                texture: [
-                    [0, 0, 0],
-                    [3, 0, 2, 2, 2, 2, 2]
-                ][f][index],
-                undershirt: [
-                    [-1, -1, 35],
-                    [160, 78, 35, 35, 152, 152, 37]
-                ][f][index]
-            };
-            legsParams = {
-                sex: 0,
-                variation: [
-                    [34, 33, 34],
-                    [49, 41, 64, 64, 41, 37, 37]
+                variation: [ // clothes 11
+                    [250, 48, 48, 27, 57, 46, 48, 48],
+                    []
                 ][f][index],
                 texture: [
-                    [0, 0, 0],
-                    [1, 1, 2, 2, 1, 6, 6]
+                    [4, 0, 0, 0, 2, 0, 0, 0],
+                    []
+                ][f][index],
+                undershirt: [ // clothes 8
+                    [122, 35, 35, 160, 64, 160, 152, 152],
+                    []
                 ][f][index]
             };
-            feetsParams = {
+            legsParams = { // clothes 4
                 sex: 0,
                 variation: [
-                    [29, 25, 29],
-                    [25, 13, 55, 55, 29, 29, 29]
+                    [37, 37, 37, 37, 37, 32, 37, 37],
+                    []
                 ][f][index],
                 texture: [
-                    [0, 0, 0],
-                    [0, 0, 0, 0, 0, 2, 2]
+                    [2, 2, 2, 0, 2, 0, 1, 1],
+                    []
                 ][f][index]
             };
-            tiesParams = {
-                sex: 1,
-                variation: [
-                    [-1, -1, -1],
-                    [-1, -1, -1, -1, -1, -1, 95]
-                ][f][index],
-                texture: [
-                    [0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0]
-                ][f][index]
-            };
-            masksParams = {
+            feetsParams = { // clothes 6
                 sex: 0,
                 variation: [
-                    [-1, -1, -1],
-                    [57, -1, -1, -1, -1, -1, -1]
+                    [27, 27, 27, 13, 13, 25, 13, 13],
+                    []
                 ][f][index],
                 texture: [
-                    [0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0]
+                    [0, 0, 0, 0, 0, 0, 0, 0],
+                    []
                 ][f][index]
             };
-            glassesParams = {
+            tiesParams = { // clothes 7
                 sex: 0,
                 variation: [
-                    [-1, -1, -1, -1, 27, -1, -1, -1],
-                    [-1, -1, -1, -1, -1, -1, -1]
+                    [-1, -1, -1, -1, -1, -1, -1, -1],
+                    []
                 ][f][index],
                 texture: [
-                    [0, 0, 0, 0, 4, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0]
+                    [-1, -1, -1, -1, -1, -1, -1, -1],
+                    []
+                ][f][index]
+            };
+            masksParams = { // clothes 1
+                sex: 0,
+                variation: [
+                    [-1, -1, -1, -1, -1, 122, -1, -1],
+                    []
+                ][f][index],
+                texture: [
+                    [-1, -1, -1, -1, -1, 0, -1, -1],
+                    []
+                ][f][index]
+            };
+            glassesParams = { // prop 1
+                sex: 0,
+                variation: [
+                    [-1, -1, -1, -1, -1, 9, -1, -1],
+                    []
+                ][f][index],
+                texture: [
+                    [-1, -1, -1, -1, -1, 9, -1, -1],
+                    []
                 ][f][index]
             };
         }
@@ -385,7 +389,7 @@ module.exports = {
         var itemIds = [18, 17, 19, 20, 48, 21, 22];
         var weaponIds = ["weapon_flashlight", "weapon_nightstick", "weapon_stungun",
             "weapon_combatpistol", "weapon_smg", "weapon_pumpshotgun",
-            "weapon_carbinerifle", "weapon_sniperrifle"
+            "weapon_carbinerifle"
         ];
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
@@ -447,7 +451,7 @@ module.exports = {
         var dist = player.dist(rec.position);
         if (dist > 20) return notifs.error(player, `${rec.name} далеко`, `Наручники`);
         var character = player.character;
-        if (!factions.isPoliceFaction(character.factionId)) return notifs.error(player, `Вы не сотрудник полиции`, `Наручники`);
+        if (!factions.isPoliceFaction(character.factionId) && !factions.isFibFaction(character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Наручники`);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, `Наручники`);
 
         if (!rec.hasCuffs) {
@@ -469,8 +473,8 @@ module.exports = {
             notifs.info(rec, `${player.name} отпустил вас`, `Наручники`);
             notifs.info(player, `${rec.name} отпущен`, `Наручники`);
 
-            // delete rec.isFollowing;
-            // rec.call(`stopFollowToPlayer`);
+            delete rec.isFollowing;
+            rec.call(`police.follow.stop`);
         }
 
         police.setCuffs(rec, !rec.hasCuffs);
@@ -478,7 +482,7 @@ module.exports = {
     "police.follow": (player, recId) => {
         var rec = mp.players.at(recId);
         if (!rec) return notifs.error(player, `Гражданин не найден`, `Следование`);
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции`, `Следование`);
+        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Следование`);
 
         if (!rec.isFollowing) {
             if (!rec.hasCuffs) return notifs.error(player, `${rec.name} не в наручниках`, `Следование`);
@@ -535,7 +539,7 @@ module.exports = {
     "police.jail.arrest": (player, recId) => {
         var rec = mp.players.at(recId);
         if (!rec) return notifs.error(player, `Гражданин не найден`, `Арест`);
-        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник порядка`, `Арест`);
+        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Арест`);
 
         if (rec.arrestTime > 0) {
             console.log("stopArrest")
@@ -574,10 +578,12 @@ module.exports = {
         var rec = mp.players.at(recId);
         if (!rec) return notifs.error(player, `Гражданин не найден`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} уже в авто`, header);
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции`, header);
+        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, header);
 
         var veh = mp.vehicles.at(vehId);
         if (!veh) return notifs.error(player, `Авто не найдено`, header);
+        var dist = player.dist(veh.position);
+        if (dist > 10) return notifs.error(player, `Авто далеко`, header);
         var freeSeat = [0, 1, 2];
         var occupants = veh.getOccupants();
         for (var i = 0; i < occupants.length; i++) {
@@ -590,8 +596,19 @@ module.exports = {
         rec.call(`police.follow.stop`);
         delete rec.isFollowing;
         rec.putIntoVehicle(veh, freeSeat[0]);
-        notifs.success(player, `${rec.name} теперь в авто`, header);
+        notifs.success(player, `${rec.name} посажен в авто`, header);
         notifs.info(rec, `${player.name} посадил вас в авто`, header);
+    },
+    "police.vehicle.remove": (player, recId) => {
+        var header = `Высадка`;
+        var rec = mp.players.at(recId);
+        if (!rec) return notifs.error(player, `Гражданин не найден`, header);
+        if (!rec.vehicle) return notifs.error(player, `${rec.name} не в авто`, header);
+        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, header);
+
+        rec.removeFromVehicle();
+        notifs.success(player, `${rec.name} высажен из авто`, header);
+        notifs.info(rec, `${player.name} высадил вас из авто`, header);
     },
     "police.licenses.gun.give": (player, recId) => {
         var header = `Лицензия на оружие`;
@@ -623,6 +640,7 @@ module.exports = {
         if (player.hasCuffs) police.setCuffs(player, false);
     },
     "playerQuit": (player) => {
+        if (!player.character) return;
         if (!player.character.arrestTime) return;
         var date = (player.character.arrestType == 0) ? player.cellArrestDate : player.jailArrestDate;
         var time = Date.now() - date;

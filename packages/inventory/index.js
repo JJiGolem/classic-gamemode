@@ -31,6 +31,12 @@ module.exports = {
         7: [13],
         8: [13],
     },
+    // Кол-во предметов на земле от одного игрока
+    groundMaxItems: 3,
+    // Время жизни предмета на земле (ms)
+    groundItemTime: 2 * 60 * 1000,
+    // Макс. дистанция до предмета, чтобы поднять его
+    groundMaxDist: 2,
 
     init() {
         this.loadInventoryItemsFromDB();
@@ -89,49 +95,6 @@ module.exports = {
                 {
                     model: db.Models.InventoryItem,
                     as: "item"
-                },
-                {
-                    model: db.Models.CharacterInventory,
-                    as: "children",
-                    include: [{
-                            model: db.Models.CharacterInventoryParam,
-                            as: "params"
-                        },
-                        {
-                            model: db.Models.InventoryItem,
-                            as: "item"
-                        },
-                        {
-                            model: db.Models.CharacterInventory,
-                            as: "children",
-                            include: [{
-                                    model: db.Models.CharacterInventoryParam,
-                                    as: "params"
-                                },
-                                {
-                                    model: db.Models.InventoryItem,
-                                    as: "item"
-                                },
-                                {
-                                    model: db.Models.CharacterInventory,
-                                    as: "children",
-                                    include: [{
-                                            model: db.Models.CharacterInventoryParam,
-                                            as: "params"
-                                        },
-                                        {
-                                            model: db.Models.InventoryItem,
-                                            as: "item"
-                                        },
-                                        {
-                                            model: db.Models.CharacterInventory,
-                                            as: "children",
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
                 }
             ]
         });
@@ -139,21 +102,22 @@ module.exports = {
         player.inventory = {
             denyUpdateView: false, // запрещено ли обновлять внешний вид игрока
             items: dbItems, // предметы игрока
+            ground: [], // объекты на земле, которые выкинул игрок
         };
         this.updateAllView(player);
-        player.call(`inventory.initItems`, [this.convertServerToClientPlayerItems(dbItems)]);
+        player.call(`inventory.initItems`, [this.convertServerToClientPlayerItems(player, dbItems)]);
         console.log(`[INVENTORY] Для игрока ${player.character.name} загружены предметы (${dbItems.length} шт.)`);
     },
-    convertServerToClientPlayerItems(dbItems) {
+    convertServerToClientPlayerItems(player, dbItems) {
         // console.log("convertServerToClientPlayerItems");
         var clientItems = {};
         for (var i = 0; i < dbItems.length; i++) {
             var dbItem = dbItems[i];
-            if (!dbItem.parentId) clientItems[dbItem.index] = this.convertServerToClientItem(dbItem);
+            if (!dbItem.parentId) clientItems[dbItem.index] = this.convertServerToClientItem(player, dbItem);
         }
         return clientItems;
     },
-    convertServerToClientItem(dbItem) {
+    convertServerToClientItem(player, dbItem) {
         // console.log(`convertServerToClientItem`);
         var params = {};
         if (dbItem.params) {
@@ -179,10 +143,11 @@ module.exports = {
             }
             delete params.pockets;
         }
-        if (dbItem.children.length > 0) {
-            for (var i = 0; i < dbItem.children.length; i++) {
-                var child = dbItem.children[i];
-                clientItem.pockets[child.pocketIndex].items[child.index] = this.convertServerToClientItem(child);
+        var children = this.getChildren(player, dbItem);
+        if (children.length > 0) {
+            for (var i = 0; i < children.length; i++) {
+                var child = children[i];
+                clientItem.pockets[child.pocketIndex].items[child.index] = this.convertServerToClientItem(player, child);
             }
         }
         return clientItem;
@@ -190,6 +155,7 @@ module.exports = {
     async addItem(player, itemId, params, callback = () => {}) {
         var slot = this.findFreeSlot(player, itemId);
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(itemId).name} не найден`);
+        if (params.sex && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
         var struct = [];
         for (var key in params) {
             struct.push({
@@ -204,22 +170,36 @@ module.exports = {
             index: slot.index,
             parentId: slot.parentId,
             params: struct,
-            children: [],
         }, {
             include: [{
                     model: db.Models.CharacterInventoryParam,
                     as: "params",
-                },
-                {
-                    model: db.Models.CharacterInventory,
-                    as: "children"
                 }
             ]
         });
 
         player.inventory.items.push(item);
         if (!item.parentId) this.updateView(player, item);
-        player.call("inventory.addItem", [this.convertServerToClientItem(item), item.pocketIndex, item.index, item.parentId]);
+        player.call("inventory.addItem", [this.convertServerToClientItem(player, item), item.pocketIndex, item.index, item.parentId]);
+        callback();
+    },
+    async addOldItem(player, item, callback = () => {}) {
+        var slot = this.findFreeSlot(player, item.itemId);
+        if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(item.itemId).name} не найден`);
+        var params = this.getParamsValues(item);
+        if (params.sex && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
+
+        item.playerId = player.character.id;
+        item.pocketIndex = slot.pocketIndex,
+        item.index = slot.index,
+        item.parentId = slot.parentId,
+        await item.restore({
+
+        });
+
+        player.inventory.items.push(item);
+        if (!item.parentId) this.updateView(player, item);
+        player.call("inventory.addItem", [this.convertServerToClientItem(player, item), item.pocketIndex, item.index, item.parentId]);
         callback();
     },
     deleteItem(player, item) {
@@ -252,8 +232,21 @@ module.exports = {
         var index = items.indexOf(item);
         items.splice(index, 1);
     },
+    getArrayItems(player, item, result = []) {
+        var items = player.inventory.items;
+        var children = this.getChildren(player, item);
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i];
+            result.push(child);
+            result = this.getArrayItems(player, child, result);
+        }
+        return result;
+    },
     getInventoryItem(itemId) {
         return this.inventoryItems[itemId - 1];
+    },
+    getName(itemId) {
+        return this.inventoryItems[itemId - 1].name;
     },
     getItem(player, sqlId) {
         for (var i = 0; i < player.inventory.items.length; i++) {
@@ -344,7 +337,7 @@ module.exports = {
                     for (var i = 0; i < player.inventory.items.length; i++) {
                         var item = player.inventory.items[i];
                         if (!item.parentId && item.itemId == itemId) {
-                            this.updateParam(item, "health", parseInt(player.armour));
+                            this.updateParam(player, item, "health", parseInt(player.armour));
                         }
                     }
                 }
@@ -411,11 +404,12 @@ module.exports = {
         }
         return params;
     },
-    updateParam(item, key, value) {
+    updateParam(player, item, key, value) {
         var param = this.getParam(item, key);
         if (!param) return;
         param.value = value;
         param.save();
+        player.call(`inventory.setItemParam`, [item.id, key, value]);
     },
     findFreeSlot(player, itemId) {
         var items = player.inventory.items;
@@ -536,6 +530,11 @@ module.exports = {
         }
 
         return -1;
+    },
+    getItemByItemId(player, itemIds) {
+        if (!Array.isArray(itemIds)) itemIds = [itemIds];
+        var items = player.inventory.items;
+        return items.find(item => itemIds.includes(item.itemId));
     },
     getArrayByItemId(player, itemId) {
         var items = player.inventory.items;

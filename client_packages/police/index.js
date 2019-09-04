@@ -13,6 +13,7 @@ mp.police = {
 
     setCuffs(enable) {
         this.haveCuffs = enable;
+        mp.inventory.enable(!enable);
     },
     setWanted(val) {
         this.wanted = val;

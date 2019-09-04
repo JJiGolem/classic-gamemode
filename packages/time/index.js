@@ -1,5 +1,6 @@
 "use strict";
 var factions = require('../factions');
+var jobs = require('../jobs');
 var notifs = require('../notifications');
 
 module.exports = {
@@ -25,6 +26,7 @@ module.exports = {
     payDay() {
         this.allBroadcast();
         this.factionPay();
+        this.jobsPay();
         // TODO: Налоги на дома
         // TODO: Налоги на бизы
     },
@@ -46,5 +48,11 @@ module.exports = {
             if (!rec.character) return;
             if (rec.character.factionId) factions.pay(rec);
         });
-    }
+    },
+    jobsPay() {
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (rec.character.pay) jobs.pay(rec);
+        });
+    },
 };

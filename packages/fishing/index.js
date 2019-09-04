@@ -34,7 +34,7 @@ module.exports = {
     createFishingMenuPlace() {
         mp.blips.new(68, new mp.Vector3(fishingPlace.x, fishingPlace.y, fishingPlace.z),
         {
-            name: `"Рыбалка"`,
+            name: `Рыбалка`,
             shortRange: true,
             color: 26
         });

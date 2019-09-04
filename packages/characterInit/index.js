@@ -16,18 +16,24 @@ module.exports = {
                 include: [
                     {
                         model: db.Models.Feature,
-                        order: [
-                            ['id', 'ASC'],
-                        ],
                     },
                     {
                         model: db.Models.Appearance,
-                        order: [
-                            ['id', 'ASC'],
-                        ],
                     },
                     db.Models.Fine,
                 ]
+            });
+            player.characters.forEach(character => {
+                character.Appearances.sort( (x, y) => {
+                    if (x.order > y.order) return 1;
+                    if (x.order < y.order) return -1;
+                    if (x.order == y.order) return 0;
+                });
+                character.Features.sort( (x, y) => {
+                    if (x.order > y.order) return 1;
+                    if (x.order < y.order) return -1;
+                    if (x.order == y.order) return 0;
+                });
             });
         }
         let charInfos = new Array();
@@ -58,13 +64,14 @@ module.exports = {
             Features: [],
             Appearances: [],
         }
-        for (let i = 0; i < 20; i++) player.character.Features.push({value: 0.0});
-        for (let i = 0; i < 10; i++) player.character.Appearances.push({value: 255, opacity: 1.0});
+        for (let i = 0; i < 20; i++) player.character.Features.push({value: 0.0, order: i});
+        for (let i = 0; i < 11; i++) player.character.Appearances.push({value: 255, opacity: 1.0, order: i});
 
         mp.events.call('characterInit.create.init', player);
 
         player.model = freemodeCharacters[0];
         this.applyCharacter(player);
+        player.characterInfo = player.character;
         this.sendToCreator(player);
     },
     async save(player, fullname, charData) {
@@ -74,20 +81,24 @@ module.exports = {
             }
         });
         if (characters.length != 0) return player.call('characterInit.create.check.ans', [0]);
-        player.character = JSON.parse(charData);
-        player.character.name = fullname;
+        player.characterInfo = JSON.parse(charData);
+        player.characterInfo.name = fullname;
         let pos = this.getSpawn();
-        player.character.x = pos[0];
-        player.character.y = pos[1];
-        player.character.z = pos[2];
-        this.applyCharacter(player);
-        player.character = await db.Models.Character.create(player.character, {
+        player.characterInfo.x = pos[0];
+        player.characterInfo.y = pos[1];
+        player.characterInfo.z = pos[2];
+        
+        player.character = await db.Models.Character.create(player.characterInfo, {
             include: [
-                db.Models.Feature,
-                db.Models.Appearance
+                {
+                    model: db.Models.Feature,
+                },
+                {
+                    model: db.Models.Appearance,
+                }
             ]
         });
-
+        this.applyCharacter(player);
         player.call('characterInit.create.check.ans', [1]);
         mp.events.call('characterInit.done', player);
     },
@@ -95,7 +106,7 @@ module.exports = {
         player.position = creatorPlayerPos;
         player.heading = creatorPlayerHeading;
         player.usingCreator = true;
-        player.call("characterInit.create", [true, JSON.stringify(player.character)]);
+        player.call("characterInit.create", [true, JSON.stringify(player.characterInfo)]);
     },
     applyCharacter(player) {
         let features = new Array();
@@ -125,7 +136,7 @@ module.exports = {
         );
 
         player.setClothes(2, player.character.hair, 0, 2);
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 11; i++) {
             player.setHeadOverlay(i, [player.character.Appearances[i].value,
                 player.character.Appearances[i].opacity,
                 this.colorForOverlayIdx(player, i), 0]);
@@ -160,9 +171,9 @@ module.exports = {
             case 0:
                 return [-252.91534423828125, -338.6800231933594, 29.70627212524414];
             case 1:
-                return [-252.91534423828125, -338.6800231933594, 29.70627212524414];
+                return [258.9052429199219, -1112.8656005859375, 29.43829917907715];
             case 2:
-                return [-252.91534423828125, -338.6800231933594, 29.70627212524414];
+                return [-197.68017578125, -804.0416870117188, 30.45401954650879];
             default:
                 return [-252.91534423828125, -338.6800231933594, 29.70627212524414];
         }

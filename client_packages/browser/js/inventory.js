@@ -72,21 +72,38 @@ var inventory = new Vue({
         // Меню предмета по ПКМ
         itemsMenu: {
             // itemId: struct menu
-            18: {
+            18: { // test
                 'Включить': {
                     handler(item) {
                         console.log(`Включить ${item}`)
                     }
                 }
             },
-            24: {
-                'Лечить': {
+            24: { // малая аптечка
+                'Вылечиться': {
                     handler(item) {
-                        console.log(`лечить ${item}`)
+                        // console.log(`лечить ${item}`)
+                        mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
                     }
                 }
             },
-            37: {
+            25: { // пластырь
+                'Вылечиться': {
+                    handler(item) {
+                        // console.log(`лечить ${item}`)
+                        mp.trigger(`callRemote`, `inventory.item.patch.use`, item.sqlId);
+                    }
+                }
+            },
+            27: { // большая аптечка
+                'Вылечиться': {
+                    handler(item) {
+                        // console.log(`лечить ${item}`)
+                        mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
+                    }
+                }
+            },
+            37: { // test
                 'Разрядить': {
                     handler(item) {
                         console.log(`разрядить: ${item}`)
@@ -318,32 +335,32 @@ var inventory = new Vue({
             columns.hotkeyFocus = null;
         },
         itemMouseHandler(item, e) {
+            var rect = document.getElementById('inventory').getBoundingClientRect();
             var handlers = {
                 'mouseenter': (e) => {
                     this.itemDesc.item = item;
-                    var itemDiv = e.target;
-                    this.itemDesc.x = e.pageX + itemDiv.offsetWidth / 5;
-                    this.itemDesc.y = e.pageY + itemDiv.offsetHeight / 5;
+                    this.itemDesc.x = (e.screenX - rect.x) + 15;
+                    this.itemDesc.y = (e.screenY - rect.y) + 15;
                 },
                 'mouseleave': (e) => {
                     this.itemDesc.item = null;
                 },
                 'mousemove': (e) => {
-                    var itemDiv = e.target;
-                    this.itemDesc.x = e.pageX + itemDiv.offsetWidth / 5;
-                    this.itemDesc.y = e.pageY + itemDiv.offsetHeight / 5;
+                    this.itemDesc.item = item;
+                    this.itemDesc.x = (e.screenX - rect.x) + 15;
+                    this.itemDesc.y = (e.screenY - rect.y) + 15;
                 },
                 'contextmenu': (e) => {
                     this.itemMenu.item = item;
-                    this.itemMenu.x = e.pageX;
-                    this.itemMenu.y = e.pageY;
+                    this.itemMenu.x = e.clientX - rect.x;
+                    this.itemMenu.y = e.clientY - rect.y;
                 },
                 'mousedown': (e) => {
                     if (e.which == 1) { // Left Mouse Button
                         this.itemDrag.item = item;
                         this.itemDrag.div = e.target;
-                        this.itemDrag.x = e.pageX;
-                        this.itemDrag.y = e.pageY;
+                        this.itemDrag.x = e.screenX - rect.x - e.target.offsetWidth / 2;
+                        this.itemDrag.y = e.screenY - rect.y - e.target.offsetHeight / 2;
                     }
                 },
             };
@@ -493,7 +510,16 @@ var inventory = new Vue({
         setItemsInfo(itemsInfo) {
             if (typeof itemsInfo == 'string') itemsInfo = JSON.parse(itemsInfo);
             for (var itemId in itemsInfo) {
-                Vue.set(this.itemsInfo, itemId, itemsInfo[itemId]);
+                this.setItemInfo(itemId, itemsInfo[itemId]);
+
+                if (!this.itemsMenu[itemId]) this.itemsMenu[itemId] = {};
+                var menu = this.itemsMenu[itemId];
+                menu['Выкинуть'] = {
+                    handler(item) {
+                        // console.log(`выкинуть ${item}`)
+                        mp.trigger(`callRemote`, `item.ground.put`, item.sqlId);
+                    }
+                };
             }
         },
         setItemInfo(itemId, info) {
@@ -539,14 +565,11 @@ var inventory = new Vue({
                 }
             }
         },
-        setItemParam(item, keys, values) {
+        setItemParam(item, key, value) {
             if (typeof item == 'number') item = this.getItem(item);
             if (!item) return this.notify(`setItemParam: Предмет ${item} не найден`);
-            if (!Array.isArray(keys)) keys = [keys];
-            if (!Array.isArray(values)) values = [values];
-            for (var i in keys) {
-                Vue.set(item.params, keys[i], values[i]);
-            }
+            if (!isNaN(value)) value = parseFloat(value);
+            Vue.set(item.params, key, value);
         },
         getItemInfoHash(itemId) {
             var info = this.itemsInfo[itemId];
@@ -690,7 +713,7 @@ var inventory = new Vue({
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
-            if (busy.includes(["chat", "terminal", "interaction","mapCase"])) return;
+            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone"])) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;
             if (e.keyCode > 47 && e.keyCode < 58) {
                 var num = e.keyCode - 48;
@@ -702,9 +725,11 @@ var inventory = new Vue({
         });
         window.addEventListener('mousemove', function(e) {
             if (self.itemDrag.item) {
+                var rect = document.getElementById('inventory').getBoundingClientRect();
                 var itemDiv = self.itemDrag.div;
-                self.itemDrag.x = e.pageX - itemDiv.offsetWidth / 2;
-                self.itemDrag.y = e.pageY - itemDiv.offsetHeight / 2;
+
+                self.itemDrag.x = e.screenX - rect.x - itemDiv.offsetWidth / 2;
+                self.itemDrag.y = e.screenY - rect.y - itemDiv.offsetHeight / 2;
             }
         });
         window.addEventListener('mouseup', function(e) {

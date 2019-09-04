@@ -4,6 +4,7 @@ mp.voiceChat.muted = true;
 mp.events.add('characterInit.done', function() {
     mp.keys.bind(0x4E, true, function() {		// N
         if (mp.busy.includes('chat')) return;
+        if (mp.busy.includes('terminal')) return;
         if (!mp.busy.add('voicechat')) return;
         mp.voiceChat.muted = false;
         mp.callCEFV("hud.voice = true");
@@ -46,8 +47,8 @@ mp.speechChanel.connect = (player, channel) => {
         mp.events.callRemote("voiceChat.add", player);
         player.voice3d = channels[channel].use3d;
     }
-    
-    
+
+
     if(UseAutoVolume) {
         player.voiceAutoVolume = true;
     }
@@ -64,7 +65,7 @@ mp.speechChanel.disconnect = (player, channel, death = false) => {
         index != -1 && listeners.splice(index, 1);
     }
     else {
-        let channelIndex = listeners[index].channels.findIndex(x => x == channel);	
+        let channelIndex = listeners[index].channels.findIndex(x => x == channel);
         channelIndex != -1 && listeners[index].channels.splice(channelIndex, 1);
 
         if(listeners[index].channels.length == 0) {
@@ -104,7 +105,7 @@ setInterval(() => {
     /// Автоматическое подключение к заданным каналам всех игроков в зоне стрима
 	mp.players.forEachInStreamRange(player => {
 		if (player != mp.players.local && mp.players.local.dimension == player.dimension) {
-            let dist = mp.game.system.vdist(player.position.x, player.position.y, player.position.z,  
+            let dist = mp.game.system.vdist(player.position.x, player.position.y, player.position.z,
                 mp.players.local.position.x,  mp.players.local.position.y,  mp.players.local.position.z);
             for (let key in channels) {
                 if (!channels[key].autoConnection) continue;
@@ -118,12 +119,11 @@ setInterval(() => {
 	listeners.forEach(listener => {
         let player = mp.players.atRemoteId(listener.playerId);
         if (player == null) return;
-        mp.chat.debug("" + player.handle);
 		if(player.handle !== 0 && player.dimension == mp.players.local.dimension) {
-            if (channels[listener.channels[listener.current]].maxRange != 0) {		
-                let dist = mp.game.system.vdist(player.position.x, player.position.y, player.position.z,  
+            if (channels[listener.channels[listener.current]].maxRange != 0) {
+                let dist = mp.game.system.vdist(player.position.x, player.position.y, player.position.z,
                     mp.players.local.position.x,  mp.players.local.position.y,  mp.players.local.position.z);
-                    
+
                 if(dist > channels[listener.channels[listener.current]].maxRange) {
                     mp.speechChanel.disconnect(player, listener.channel);
                 }
