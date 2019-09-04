@@ -15,6 +15,8 @@ function mapCaseSortByKey(list, key) {
 
 var mapCaseData = {
     pd: mapCasePdData,
+    ems: mapCaseEmsData,
+    wnews: mapCaseWnewsData,
 }
 
 var mapCase = new Vue({
@@ -48,6 +50,11 @@ var mapCase = new Vue({
             return winName = wins[wins.length - 1];
         },
         currentWindow() {
+            if (this.currentWindowName == "members")
+                return 'map-case-members';
+            if (this.currentWindowName == "calls")
+                return 'map-case-calls';
+
             return `map-case-${this.type}-${this.currentWindowName}`;
         },
         dataForWindow() {
@@ -130,21 +137,30 @@ var mapCase = new Vue({
             this.menuFocus = Object.keys(this.certainData.menuBody)[0];
         },
         show(val) {
-            setCursor(val);
-            if (val) mp.busy.add("mapCase");
-            else mp.busy.remove("mapCase");
+            try {
+                setCursor(val);
+                if (val) mp.busy.add("mapCase");
+                else mp.busy.remove("mapCase");
+            } catch (e) {
+                this.type = 'pd';
+                this.enable = true;
+            }
             if (!val && this.timerId) {
                 clearInterval(this.timerId);
                 return;
             }
 
-            let date = new Date();
-            mapCase.time = `${date.getHours()}:${date.getMinutes()}`;
-
-            this.timerId = setInterval(() => {
+            function setTime () {
                 let date = new Date();
-                mapCase.time = `${date.getHours()}:${date.getMinutes()}`;
-            }, 60000);
+                let hours = date.getHours() + "";
+                let minutes = date.getMinutes() + "";
+
+                if (hours.length < 2) hours = "0" + hours;
+                if (minutes.length < 2) minutes = "0" + minutes;
+                mapCase.time = `${hours}:${minutes}`;
+            };
+            setTime();
+            this.timerId = setInterval(setTime, 60000);
         },
         enable(val) {
             if (!val) this.show = false;
@@ -156,6 +172,122 @@ var mapCase = new Vue({
             if (busy.includes()) return;
             if (e.keyCode == 80 && self.enable) self.show = !self.show; // P
         });
+    }
+});
+
+Vue.component('map-case-members', {
+    template: "#map-case-members",
+    props: {
+        list: Array,
+        sortMod: Object,
+        ranks: Array,
+        dismiss: Function,
+        lowerRank: Function,
+        raiseRank: Function,
+    },
+    data: () => ({
+        modalIsShow: false,
+        currentRecord: null,
+        lastUsedRecord: null,
+        modalStyles: {
+            top: 0,
+        },
+
+        arrows: mapCaseSvgPaths.tableSortArrows,
+    }),
+    computed: {
+        sortedList () {
+            let newList = [...this.list];
+
+            mapCaseSortByKey(newList, this.sortMod.mod);
+
+            if (this.sortMod.mod == "rank")
+                newList.reverse();
+
+            return newList;
+        },
+    },
+    methods: {
+        onClickSort(sortMod) {
+            this.sortMod.update(sortMod);
+        },
+        showModal(event, record) {
+            this.currentRecord = record;
+            this.lastUsedRecord = record;
+            this.modalIsShow = true;
+
+            let offsetTop = event.target.parentElement.offsetTop;
+            let height = event.target.parentElement.clientHeight;
+            let scrollTop = this.$refs.membersBody.scrollTop;
+
+            let parentHeight = this.$refs.membersBody.clientHeight;
+            let modalHeight = window.innerHeight * 0.09;
+            let compOffsetTop = offsetTop + height - scrollTop;
+
+            this.modalStyles.top = ((compOffsetTop > parentHeight * 1.25) ? (offsetTop - modalHeight - scrollTop) : compOffsetTop) + "px";
+        },
+        hideModal (event) {
+            let className = event && event.target.className;
+
+            if (className == 'record-align btn') return;
+
+            this.modalIsShow = false;
+            this.currentRecord = null;
+        },
+        acceptDismiss () {
+            mapCase.showLoad();
+
+            this.dismiss(this.lastUsedRecord);
+        },
+        onClickDismiss () {
+            mapCase.showVerification(`Вы действительно хотите уволить <br /><span>${this.lastUsedRecord.name}</span>?`, this.acceptDismiss);
+        },
+        acceptLower () {
+            mapCase.showLoad();
+
+            this.lowerRank(this.lastUsedRecord);
+        },
+        onClickLower () {
+            mapCase.showVerification(`Вы действительно хотите понизить <br /><span>${this.lastUsedRecord.name}</span>?`, this.acceptLower);
+        },
+        acceptRaise () {
+            mapCase.showLoad();
+
+            this.raiseRank(this.lastUsedRecord);
+        },
+        onClickRaise () {
+            mapCase.showVerification(`Вы действительно хотите повысить <br /><span>${this.lastUsedRecord.name}</span>?`, this.acceptRaise);
+        },
+    }
+});
+
+Vue.component('map-case-calls', {
+    template: "#map-case-calls",
+    props: {
+        list: Array,
+        sortMod: Object,
+        accept: Function,
+    },
+    data: () => ({
+        arrows: mapCaseSvgPaths.tableSortArrows,
+    }),
+    computed: {
+        sortedList () {
+            let newList = [...this.list];
+
+            mapCaseSortByKey(newList, this.sortMod.mod)
+
+            return newList;
+        },
+    },
+    methods: {
+        onClickSort(sortMod) {
+            this.sortMod.update(sortMod);
+        },
+        onClickAccept (data) {
+            mapCase.showLoad();
+            this.accept(data);
+        }
     }
 });
 
