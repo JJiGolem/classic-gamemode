@@ -184,31 +184,19 @@ module.exports = {
         if (!veh.db) return notifs.error(player, `Авто #${vehId} не находится в БД`, header);
         if (dist > 10) return notifs.error(player, `Авто ${veh.db.modelName} слишком далеко`, header);
         // if (!veh.getVariable("trunk")) return player.utils.error(`Багажник закрыт!`);
-        // if (!veh.inventory) return notifs.error(player, `Авто ${veh.db.modelName} не имеет багажник`, header);
+        if (!veh.inventory) return notifs.error(player, `Авто ${veh.db.modelName} не имеет багажник`, header);
         if (veh.bootPlayerId != null) return notifs.error(player, `С багажником взаимодействует другой игрок`, header);
 
         veh.bootPlayerId = player.id;
         player.bootVehicleId = veh.id;
-        // player.call(`inventory.addVehicleItems`, [veh.inventory.items, {
-        //     name: veh.name,
-        //     sqlId: veh.sqlId
-        // }, 5, 10]);
 
         var place = {
             sqlId: -veh.db.id,
             header: veh.db.modelName,
-            pockets: [{
-                    cols: 10,
-                    rows: 10,
-                    items: {}
-                },
-                {
-                    cols: 10,
-                    rows: 10,
-                    items: {}
-                }
-            ],
+            pockets: inventory.getVehicleClientPockets(veh.inventory.items),
         };
+        console.log(`place.pockets:`)
+        console.log(place.pockets)
         player.call(`inventory.addEnvironmentPlace`, [place]);
     },
     // Запрос на очищение предметов в багажнике

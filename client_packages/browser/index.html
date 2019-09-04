@@ -556,7 +556,7 @@
                 </div>
             </div>
         </div>
-        <div class="item-desc" v-if="itemDesc.item && !itemMenu.item && !itemDrag.item && getItem(itemDesc.item.sqlId)" :style="{left: itemDesc.x + 'px', top: itemDesc.y + 'px'}">
+        <div class="item-desc" v-if="itemDesc.item && !itemMenu.item && !itemDrag.item && (getItem(itemDesc.item.sqlId) || getEnvironmentItem(itemDesc.item.sqlId))" :style="{left: itemDesc.x + 'px', top: itemDesc.y + 'px'}">
             <div class="title">{{ itemsInfo[itemDesc.item.itemId].name }}</div>
             <div class="item" v-if="itemDesc.item" :style="itemStyle(itemDesc.item.itemId)">
                 <div class="sqlid" v-if="debug">#{{ itemDesc.item.sqlId }}</div>

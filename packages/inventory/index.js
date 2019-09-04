@@ -105,19 +105,44 @@ module.exports = {
             ground: [], // объекты на земле, которые выкинул игрок
         };
         this.updateAllView(player);
-        player.call(`inventory.initItems`, [this.convertServerToClientPlayerItems(player, dbItems)]);
+        player.call(`inventory.initItems`, [this.convertServerToClientItems(dbItems)]);
         console.log(`[INVENTORY] Для игрока ${player.character.name} загружены предметы (${dbItems.length} шт.)`);
     },
-    convertServerToClientPlayerItems(player, dbItems) {
-        // console.log("convertServerToClientPlayerItems");
+    async initVehicleInventory(vehicle) {
+        // TODO: include in include in include... WTF??? (08.08.19 Carter Slade)
+        var dbItems = await db.Models.VehicleInventory.findAll({
+            where: {
+                vehicleId: vehicle.db.id
+            },
+            order: [
+                ['parentId', 'ASC']
+            ],
+            include: [{
+                    model: db.Models.VehicleInventoryParam,
+                    as: "params"
+                },
+                {
+                    model: db.Models.InventoryItem,
+                    as: "item"
+                }
+            ]
+        });
+
+        vehicle.inventory = {
+            items: dbItems, // предметы в багажнике
+        };
+        console.log(`[INVENTORY] Для авто ${vehicle.db.modelName} загружены предметы (${dbItems.length} шт.)`);
+    },
+    convertServerToClientItems(dbItems) {
+        // console.log("convertServerToClientItems");
         var clientItems = {};
         for (var i = 0; i < dbItems.length; i++) {
             var dbItem = dbItems[i];
-            if (!dbItem.parentId) clientItems[dbItem.index] = this.convertServerToClientItem(player, dbItem);
+            if (!dbItem.parentId) clientItems[dbItem.index] = this.convertServerToClientItem(dbItems, dbItem);
         }
         return clientItems;
     },
-    convertServerToClientItem(player, dbItem) {
+    convertServerToClientItem(items, dbItem) {
         // console.log(`convertServerToClientItem`);
         var params = {};
         if (dbItem.params) {
@@ -143,11 +168,11 @@ module.exports = {
             }
             delete params.pockets;
         }
-        var children = this.getChildren(player, dbItem);
+        var children = this.getChildren(items, dbItem);
         if (children.length > 0) {
             for (var i = 0; i < children.length; i++) {
                 var child = children[i];
-                clientItem.pockets[child.pocketIndex].items[child.index] = this.convertServerToClientItem(player, child);
+                clientItem.pockets[child.pocketIndex].items[child.index] = this.convertServerToClientItem(items, child);
             }
         }
         return clientItem;
@@ -172,15 +197,14 @@ module.exports = {
             params: struct,
         }, {
             include: [{
-                    model: db.Models.CharacterInventoryParam,
-                    as: "params",
-                }
-            ]
+                model: db.Models.CharacterInventoryParam,
+                as: "params",
+            }]
         });
 
         player.inventory.items.push(item);
         if (!item.parentId) this.updateView(player, item);
-        player.call("inventory.addItem", [this.convertServerToClientItem(player, item), item.pocketIndex, item.index, item.parentId]);
+        player.call("inventory.addItem", [this.convertServerToClientItem(player.inventory.items, item), item.pocketIndex, item.index, item.parentId]);
         callback();
     },
     async addOldItem(player, item, callback = () => {}) {
@@ -191,15 +215,15 @@ module.exports = {
 
         item.playerId = player.character.id;
         item.pocketIndex = slot.pocketIndex,
-        item.index = slot.index,
-        item.parentId = slot.parentId,
-        await item.restore({
+            item.index = slot.index,
+            item.parentId = slot.parentId,
+            await item.restore({
 
-        });
+            });
 
         player.inventory.items.push(item);
         if (!item.parentId) this.updateView(player, item);
-        player.call("inventory.addItem", [this.convertServerToClientItem(player, item), item.pocketIndex, item.index, item.parentId]);
+        player.call("inventory.addItem", [this.convertServerToClientItem(player.inventory.items, item), item.pocketIndex, item.index, item.parentId]);
         callback();
     },
     deleteItem(player, item) {
@@ -224,7 +248,7 @@ module.exports = {
     },
     clearArrayItems(player, item) {
         var items = player.inventory.items;
-        var children = this.getChildren(player, item);
+        var children = this.getChildren(items, item);
         for (var i = 0; i < children.length; i++) {
             var child = children[i];
             this.clearArrayItems(player, child);
@@ -234,7 +258,7 @@ module.exports = {
     },
     getArrayItems(player, item, result = []) {
         var items = player.inventory.items;
-        var children = this.getChildren(player, item);
+        var children = this.getChildren(items, item);
         for (var i = 0; i < children.length; i++) {
             var child = children[i];
             result.push(child);
@@ -255,8 +279,7 @@ module.exports = {
         }
         return null;
     },
-    getChildren(player, item) {
-        var items = player.inventory.items;
+    getChildren(items, item) {
         var children = [];
         for (var i = 0; i < items.length; i++) {
             var child = items[i];
@@ -264,8 +287,7 @@ module.exports = {
         }
         return children;
     },
-    getChildrenInPocket(player, item, pocketIndex) {
-        var items = player.inventory.items;
+    getChildrenInPocket(items, item, pocketIndex) {
         var children = [];
         for (var i = 0; i < items.length; i++) {
             var child = items[i];
@@ -471,7 +493,7 @@ module.exports = {
             }
         }
 
-        var children = this.getChildrenInPocket(player, item, pocketIndex);
+        var children = this.getChildrenInPocket(player.inventory.items, item, pocketIndex);
         // console.log(`------------ children:`);
         // console.log(children);
         // Наполняем матрицу занятами ячейками
@@ -600,5 +622,30 @@ module.exports = {
             }
             if (doDelete) this.deleteItem(player, item);
         }
+    },
+    getVehicleClientPockets(dbItems) {
+        var pockets = [{
+                cols: 18,
+                rows: 10,
+                items: {}
+            },
+            {
+                cols: 9,
+                rows: 8,
+                items: {}
+            },
+            {
+                cols: 9,
+                rows: 8,
+                items: {}
+            },
+        ];
+        for (var i = 0; i < dbItems.length; i++) {
+            var dbItem = dbItems[i];
+            if (dbItem.parentId) continue;
+            var clientItem = this.convertServerToClientItem(dbItems, dbItem);
+            pockets[dbItem.pocketIndex].items[dbItem.index] = clientItem
+        }
+        return pockets;
     },
 };
