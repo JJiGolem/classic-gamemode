@@ -175,4 +175,50 @@ module.exports = {
 
         notifs.success(player, `Вы вылечились`, header);
     },
+    // Запрос предметов инвентаря в багажнике авто
+    "vehicle.boot.items.request": (player, vehId) => {
+        var header = `Багажник`;
+        var veh = mp.vehicles.at(vehId);
+        if (!veh) return notifs.error(player, `Авто #${vehId} не найдено`, header);
+        var dist = player.dist(veh.position);
+        if (!veh.db) return notifs.error(player, `Авто #${vehId} не находится в БД`, header);
+        if (dist > 10) return notifs.error(player, `Авто ${veh.db.modelName} слишком далеко`, header);
+        // if (!veh.getVariable("trunk")) return player.utils.error(`Багажник закрыт!`);
+        // if (!veh.inventory) return notifs.error(player, `Авто ${veh.db.modelName} не имеет багажник`, header);
+        if (veh.bootPlayerId != null) return notifs.error(player, `С багажником взаимодействует другой игрок`, header);
+
+        veh.bootPlayerId = player.id;
+        player.bootVehicleId = veh.id;
+        // player.call(`inventory.addVehicleItems`, [veh.inventory.items, {
+        //     name: veh.name,
+        //     sqlId: veh.sqlId
+        // }, 5, 10]);
+
+        var place = {
+            sqlId: -veh.db.id,
+            header: veh.db.modelName,
+            pockets: [{
+                    cols: 10,
+                    rows: 10,
+                    items: {}
+                },
+                {
+                    cols: 10,
+                    rows: 10,
+                    items: {}
+                }
+            ],
+        };
+        player.call(`inventory.addEnvironmentPlace`, [place]);
+    },
+    // Запрос на очищение предметов в багажнике
+    "vehicle.boot.items.clear": (player, vehId) => {
+        var veh = mp.vehicles.at(vehId);
+        delete player.bootVehicleId;
+
+        if (veh && player.id == veh.bootPlayerId) {
+            player.call(`inventory.deleteEnvironmentPlace`, [-veh.db.id]);
+            delete veh.bootPlayerId;
+        }
+    },
 };

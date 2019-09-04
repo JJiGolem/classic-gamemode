@@ -35,6 +35,13 @@ mp.inventory = {
     setItemParam(sqlId, key, value) {
         mp.callCEFV(`inventory.setItemParam(${sqlId}, '${key}', '${value}')`);
     },
+    addEnvironmentPlace(place) {
+        if (typeof place == 'object') place = JSON.stringify(place);
+        mp.callCEFV(`inventory.addEnvironmentPlace('${place}')`);
+    },
+    deleteEnvironmentPlace(sqlId) {
+        mp.callCEFV(`inventory.deleteEnvironmentPlace(${sqlId})`);
+    },
     setSatiety(val) {
         mp.callCEFV(`inventory.satiety = ${val}`)
     },
@@ -80,6 +87,20 @@ mp.events.add("inventory.addItem", mp.inventory.addItem);
 
 mp.events.add("inventory.setItemParam", mp.inventory.setItemParam);
 
+mp.events.add("inventory.addEnvironmentPlace", mp.inventory.addEnvironmentPlace);
+
+mp.events.add("inventory.deleteEnvironmentPlace", mp.inventory.deleteEnvironmentPlace);
+
 mp.events.add("inventory.setSatiety", mp.inventory.setSatiety);
 
 mp.events.add("inventory.setThirst", mp.inventory.setThirst);
+
+mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
+    // mp.notify.info(`enterBoot: #${vehicle.remoteId}`);
+    mp.events.callRemote(`vehicle.boot.items.request`, vehicle.remoteId);
+});
+
+mp.events.add("playerExitVehicleBoot", (player, vehicle) => {
+    // mp.notify.info(`exitBoot: #${vehicle.remoteId}`);
+    mp.events.callRemote(`vehicle.boot.items.clear`, vehicle.remoteId);
+});

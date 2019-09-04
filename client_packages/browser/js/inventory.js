@@ -632,6 +632,7 @@ var inventory = new Vue({
 
         // ******************  [ Environment ] ******************
         addEnvironmentPlace(place) {
+            if (typeof place == 'string') place = JSON.parse(place);
             place.showPockets = true;
             this.environment.unshift(place);
         },
