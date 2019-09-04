@@ -7,10 +7,10 @@ var police = require('../police');
 var utils = require('../utils');
 var out = {
     error(player, text) {
-        player.call(`mapCase.message.green.show`, [text]);
+        player.call(`mapCase.message.red.show`, [text]);
     },
     success(player, text) {
-        player.call(`mapCase.message.red.show`, [text]);
+        player.call(`mapCase.message.green.show`, [text]);
     }
 };
 module.exports = {

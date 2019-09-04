@@ -441,6 +441,8 @@ module.exports = {
             player.setProp(propsIndexes[item.itemId], params.variation, params.texture);
         } else if (otherItems[item.itemId] != null) {
             otherItems[item.itemId](params);
+        } else if (params.weaponHash) {
+            player.removeWeapon(params.weaponHash);
         } else return console.log("Неподходящий тип предмета для тела!");
 
     },
