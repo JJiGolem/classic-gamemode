@@ -110,6 +110,7 @@ module.exports = {
             },
         };
         this.updateAllView(player);
+        this.loadWeapons(player);
         player.call(`inventory.initItems`, [this.convertServerToClientItems(dbItems)]);
         console.log(`[INVENTORY] Для игрока ${player.character.name} загружены предметы (${dbItems.length} шт.)`);
     },
@@ -186,6 +187,11 @@ module.exports = {
         var slot = this.findFreeSlot(player, itemId);
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(itemId).name} не найден`);
         if (params.sex && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
+        if (params.weaponHash) {
+            var weapon = this.getItemByItemId(player, itemId);
+            if (weapon) return callback(`Оружие ${this.getName(itemId)} уже имеется`);
+            this.giveWeapon(player, params.weaponHash, params.ammo);
+        }
         var struct = [];
         for (var key in params) {
             struct.push({
@@ -217,6 +223,11 @@ module.exports = {
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(item.itemId).name} не найден`);
         var params = this.getParamsValues(item);
         if (params.sex && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
+        if (params.weaponHash) {
+            var weapon = this.getItemByItemId(player, item.itemId);
+            if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
+            this.giveWeapon(player, params.weaponHash, params.ammo);
+        }
 
         item.playerId = player.character.id;
         item.pocketIndex = slot.pocketIndex,
@@ -267,6 +278,11 @@ module.exports = {
         // console.log(`addPlayerItem`)
         var place = player.inventory.place;
         var params = this.getParamsValues(item);
+        if (params.weaponHash) {
+            var weapon = this.getItemByItemId(player, item.itemId);
+            if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
+            this.giveWeapon(player, params.weaponHash, params.ammo);
+        }
         var struct = [];
         for (var key in params) {
             if (key == 'pockets') params[key] = JSON.stringify(params[key]);
@@ -297,7 +313,8 @@ module.exports = {
     deleteItem(player, item) {
         if (typeof item == 'number') item = this.getItem(player, item);
         if (!item) return console.log(`[inventory.deleteItem] Предмет #${item} у ${player.name} не найден`);
-
+        var params = this.getParamsValues(item);
+        if (params.weaponHash) player.removeWeapon(params.weaponHash);
         if (!item.parentId) this.clearView(player, item.itemId);
         item.destroy();
         player.call("inventory.deleteItem", [item.id]);
@@ -332,6 +349,23 @@ module.exports = {
             var child = children[i];
             result.push(child);
             result = this.getArrayItems(player, child, result);
+        }
+        return result;
+    },
+    getArrayWeapons(player) {
+        return this.findArrayWeapons(player.inventory.items);
+    },
+    findArrayWeapons(items) {
+        var result = [];
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var params = this.getParamsValues(item);
+            if (!params.weaponHash) continue;
+            result.push(item);
+            var children = this.getChildren(items, item);
+            if (!children.length) continue;
+
+            result = result.concat(this.findArrayWeapons(children));
         }
         return result;
     },
@@ -716,5 +750,18 @@ module.exports = {
             pockets[dbItem.pocketIndex].items[dbItem.index] = clientItem
         }
         return pockets;
+    },
+    // Загрузка оружия у игрока на основе предметов-оружия в инвентаре
+    loadWeapons(player) {
+        var weapons = this.getArrayWeapons(player);
+        weapons.forEach(weapon => {
+            var params = this.getParamsValues(weapon);
+            this.giveWeapon(player, params.weaponHash, params.ammo);
+        });
+    },
+    giveWeapon(player, hash, ammo) {
+        if (!hash) return;
+        player.giveWeapon(hash, 0);
+        player.setWeaponAmmo(hash, parseInt(ammo));
     },
 };
