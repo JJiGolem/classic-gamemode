@@ -2724,6 +2724,9 @@ var selectMenu = new Vue({
                             case 'Покрасочные работы':
                                 mp.trigger('tuning.defaultMenu.show', 'livery');
                                 break;
+                            case 'Колеса':
+                                mp.trigger('tuning.defaultMenu.show', 'frontWheels');
+                                break;
 
                         }
                     }

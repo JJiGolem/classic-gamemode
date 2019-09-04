@@ -89,6 +89,11 @@ let tuningParams = {
         current: -1,
         name: "Крыша"
     },
+    frontWheels: {
+        modType: 23,
+        current: -1,
+        name: "Колеса"
+    },
     livery: {
         modType: 48,
         current: -1,
