@@ -10,7 +10,18 @@ let modsConfig = {
     "15": "suspensionType",
     "16": "armourType",
     "18": "turbo",
-    "0": "spoiler"
+    "0": "spoiler",
+    "1": "frontBumper",
+    "2": "rearBumper",
+    "3": "sideSkirt",
+    "4": "exhaust",
+    "5": "frame",
+    "6": "grille",
+    "7": "hood",
+    "8": "fender",
+    "9": "rightFender",
+    "10": "roof",
+    "48": "livery"
 }
 module.exports = {
     async init() {

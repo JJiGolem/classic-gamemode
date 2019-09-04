@@ -2627,7 +2627,7 @@ var selectMenu = new Vue({
                 name: "tuningMain",
                 header: "LS Customs",
                 items: [{
-                        text: "Покраска"
+                        text: "Цвета"
                     },
                     {
                         text: "Двигатель"
@@ -2667,7 +2667,7 @@ var selectMenu = new Vue({
                             case 'Закрыть':
                                 mp.trigger('tuning.end');
                                 break;
-                            case 'Покраска':
+                            case 'Цвета':
                                 mp.trigger('tuning.colorMenu.show');
                                 break;
                             case 'Двигатель':
@@ -2688,9 +2688,43 @@ var selectMenu = new Vue({
                             case 'Турбонаддув':
                                 mp.trigger('tuning.turboMenu.show');
                                 break;
-                            case 'Спойлеры':
+                            case 'Спойлер':
                                 mp.trigger('tuning.defaultMenu.show', 'spoiler');
                                 break;
+                            case 'Передний бампер':
+                                mp.trigger('tuning.defaultMenu.show', 'frontBumper');
+                                break;
+                            case 'Задний бампер':
+                                mp.trigger('tuning.defaultMenu.show', 'rearBumper');
+                                break;
+                            case 'Пороги':
+                                mp.trigger('tuning.defaultMenu.show', 'sideSkirt');
+                                break;
+                            case 'Глушитель':
+                                mp.trigger('tuning.defaultMenu.show', 'exhaust');
+                                break;
+                            case 'Рама':
+                                mp.trigger('tuning.defaultMenu.show', 'frame');
+                                break;
+                            case 'Решетка радиатора':
+                                mp.trigger('tuning.defaultMenu.show', 'grille');
+                                break;
+                            case 'Капот':
+                                mp.trigger('tuning.defaultMenu.show', 'hood');
+                                break;
+                            case 'Крыло':
+                                mp.trigger('tuning.defaultMenu.show', 'fender');
+                                break;
+                            case 'Правое крыло':
+                                mp.trigger('tuning.defaultMenu.show', 'rightFender');
+                                break;
+                            case 'Крыша':
+                                mp.trigger('tuning.defaultMenu.show', 'roof');
+                                break;
+                            case 'Покрасочные работы':
+                                mp.trigger('tuning.defaultMenu.show', 'livery');
+                                break;
+
                         }
                     }
                     if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
@@ -2896,8 +2930,7 @@ var selectMenu = new Vue({
                         }
                     }
                     if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
-                        selectMenu.menu = cloneObj(selectMenu.menus["tuningMain"]); // переделать ?
-                        //mp.trigger('tuning.params.set')
+                        mp.trigger('tuning.menu.show');
                     }
                 }
             },
@@ -3072,7 +3105,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemFocusChanged') {
                         let index = e.itemIndex - 1;
-                        mp.trigger('tuning.mod.set', undefined, index);
+                        mp.trigger('tuning.mod.set', -1, index);
                     }
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
@@ -3080,7 +3113,7 @@ var selectMenu = new Vue({
                             mp.trigger('tuning.params.set')
                         } else {
                             let index = e.itemIndex - 1;
-                            mp.trigger('tuning.buy', undefined, index);
+                            mp.trigger('tuning.buy', -1, index);
                         }
                     }
                     if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
