@@ -231,6 +231,7 @@ module.exports = {
         player.call("inventory.addItem", [this.convertServerToClientItem(player.inventory.items, item), item.pocketIndex, item.index, item.parentId]);
         callback();
     },
+    // при перемещении предмета из игрока в окруж. среду
     async addEnvironmentItem(player, item, pocketIndex, index) {
         // console.log(`addEnvironmentItem`)
         var place = player.inventory.place;
@@ -261,6 +262,38 @@ module.exports = {
 
         place.items.push(newItem);
         player.call(`inventory.setEnvironmentItemSqlId`, [item.id, newItem.id]);
+    },
+    // при перемещении предмета из окруж. среды в игрока
+    async addPlayerItem(player, item, parentId, pocketIndex, index) {
+        // console.log(`addPlayerItem`)
+        var place = player.inventory.place;
+        var params = this.getParamsValues(item);
+        var struct = [];
+        for (var key in params) {
+            if (key == 'pockets') params[key] = JSON.stringify(params[key]);
+            struct.push({
+                key: key,
+                value: params[key]
+            });
+        }
+        var conf = {
+            playerId: player.character.id,
+            itemId: item.itemId,
+            pocketIndex: pocketIndex,
+            index: index,
+            parentId: parentId,
+            params: struct,
+        };
+        var newItem = await db.Models.CharacterInventory.create(conf, {
+            include: [{
+                model: db.Models.CharacterInventoryParam,
+                as: "params",
+            }]
+        });
+
+        player.inventory.items.push(newItem);
+        if (!newItem.parentId) this.updateView(player, newItem);
+        player.call(`inventory.setItemSqlId`, [item.id, newItem.id]);
     },
     deleteItem(player, item) {
         if (typeof item == 'number') item = this.getItem(player, item);

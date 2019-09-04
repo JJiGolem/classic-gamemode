@@ -538,7 +538,7 @@ var inventory = new Vue({
             if (typeof parent == 'string') parent = JSON.parse(parent);
 
             this.deleteItem(item.sqlId);
-            // this.deleteEnvironmentItem(item.sqlId);
+            this.deleteEnvironmentItem(item.sqlId);
             if (item.pockets) {
                 item.showPockets = true;
             }
@@ -670,7 +670,7 @@ var inventory = new Vue({
         },
         addEnvironmentItem(item, pocket, index, placeSqlId) {
             this.deleteEnvironmentItem(item.sqlId);
-            // this.deleteItem(item.sqlId);
+            this.deleteItem(item.sqlId);
 
             var place = this.getEnvironmentPlace(placeSqlId);
             if (!place) return this.notify(`addEnvironmentItem: место с sqlId ${placeSqlId} не найдено`);

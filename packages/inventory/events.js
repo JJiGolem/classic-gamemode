@@ -30,11 +30,14 @@ module.exports = {
                 item.parentId = data.placeSqlId;
                 item.save();
             } else { // игрок взял предмет из окруж. среды
-                notifs.info(player, `перемещаем из багажника в себя`)
+                var i = player.inventory.place.items.findIndex(x => x.id == data.sqlId);
+                var item = player.inventory.place.items[i];
+                inventory.addPlayerItem(player, item, data.placeSqlId, data.pocketI, data.index);
+                item.destroy();
+                player.inventory.place.items.splice(i, 1);
             }
         } else { // переместил в окруж. среду
             if (item) { // переместил из своего инвентаря в окруж. среду
-                notifs.info(player, `перемещаем из себя в багажник`)
                 inventory.addEnvironmentItem(player, item, data.pocketI, data.index);
                 inventory.deleteItem(player, item);
             } else { // предмет находится в окруж. среде
