@@ -538,7 +538,7 @@ var inventory = new Vue({
             if (typeof parent == 'string') parent = JSON.parse(parent);
 
             this.deleteItem(item.sqlId);
-            this.deleteEnvironmentItem(item.sqlId);
+            // this.deleteEnvironmentItem(item.sqlId);
             if (item.pockets) {
                 item.showPockets = true;
             }
@@ -564,6 +564,12 @@ var inventory = new Vue({
                     }
                 }
             }
+        },
+        setItemSqlId(item, sqlId) {
+            if (typeof item == 'number') item = this.getItem(item);
+            if (!item) return this.notify(`setItemSqlId: Предмет ${item} не найден`);
+            sqlId = parseInt(sqlId);
+            Vue.set(item, 'sqlId', sqlId);
         },
         setItemParam(item, key, value) {
             if (typeof item == 'number') item = this.getItem(item);
@@ -664,7 +670,7 @@ var inventory = new Vue({
         },
         addEnvironmentItem(item, pocket, index, placeSqlId) {
             this.deleteEnvironmentItem(item.sqlId);
-            this.deleteItem(item.sqlId);
+            // this.deleteItem(item.sqlId);
 
             var place = this.getEnvironmentPlace(placeSqlId);
             if (!place) return this.notify(`addEnvironmentItem: место с sqlId ${placeSqlId} не найдено`);
@@ -689,14 +695,17 @@ var inventory = new Vue({
                 }
             }
         },
-        setEnvironmentItemParam(item, keys, values) {
+        setEnvironmentItemSqlId(item, sqlId) {
             if (typeof item == 'number') item = this.getEnvironmentItem(item);
             if (!item) return this.notify(`setEnvironmentItemParam: Предмет ${item} не найден`);
-            if (!Array.isArray(keys)) keys = [keys];
-            if (!Array.isArray(values)) values = [values];
-            for (var i in keys) {
-                Vue.set(item.params, keys[i], values[i]);
-            }
+            sqlId = parseInt(sqlId);
+            Vue.set(item, 'sqlId', sqlId);
+        },
+        setEnvironmentItemParam(item, key, value) {
+            if (typeof item == 'number') item = this.getEnvironmentItem(item);
+            if (!item) return this.notify(`setEnvironmentItemParam: Предмет ${item} не найден`);
+            if (!isNaN(value)) value = parseFloat(value);
+            Vue.set(item.params, key, value);
         },
     },
     watch: {

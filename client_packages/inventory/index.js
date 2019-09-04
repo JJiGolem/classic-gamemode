@@ -42,6 +42,9 @@ mp.inventory = {
     deleteEnvironmentPlace(sqlId) {
         mp.callCEFV(`inventory.deleteEnvironmentPlace(${sqlId})`);
     },
+    setEnvironmentItemSqlId(id, sqlId) {
+        mp.callCEFV(`inventory.setEnvironmentItemSqlId(${id}, ${sqlId})`);
+    },
     setSatiety(val) {
         mp.callCEFV(`inventory.satiety = ${val}`)
     },
@@ -90,6 +93,8 @@ mp.events.add("inventory.setItemParam", mp.inventory.setItemParam);
 mp.events.add("inventory.addEnvironmentPlace", mp.inventory.addEnvironmentPlace);
 
 mp.events.add("inventory.deleteEnvironmentPlace", mp.inventory.deleteEnvironmentPlace);
+
+mp.events.add("inventory.setEnvironmentItemSqlId", mp.inventory.setEnvironmentItemSqlId);
 
 mp.events.add("inventory.setSatiety", mp.inventory.setSatiety);
 

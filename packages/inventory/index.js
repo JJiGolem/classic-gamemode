@@ -103,6 +103,11 @@ module.exports = {
             denyUpdateView: false, // запрещено ли обновлять внешний вид игрока
             items: dbItems, // предметы игрока
             ground: [], // объекты на земле, которые выкинул игрок
+            place: { // багажник/шкаф/холодильник и пр. при взаимодействии
+                type: "",
+                sqlId: 0,
+                items: [],
+            },
         };
         this.updateAllView(player);
         player.call(`inventory.initItems`, [this.convertServerToClientItems(dbItems)]);
@@ -225,6 +230,37 @@ module.exports = {
         if (!item.parentId) this.updateView(player, item);
         player.call("inventory.addItem", [this.convertServerToClientItem(player.inventory.items, item), item.pocketIndex, item.index, item.parentId]);
         callback();
+    },
+    async addEnvironmentItem(player, item, pocketIndex, index) {
+        // console.log(`addEnvironmentItem`)
+        var place = player.inventory.place;
+        var params = this.getParamsValues(item);
+        var struct = [];
+        for (var key in params) {
+            if (key == 'pockets') params[key] = JSON.stringify(params[key]);
+            struct.push({
+                key: key,
+                value: params[key]
+            });
+        }
+        var conf = {
+            itemId: item.itemId,
+            pocketIndex: pocketIndex,
+            index: index,
+            parentId: null,
+            params: struct,
+        };
+        conf[place.type.toLowerCase() + "Id"] = -place.sqlId;
+        var table = `${place.type}Inventory`;
+        var newItem = await db.Models[table].create(conf, {
+            include: [{
+                model: db.Models[`${table}Param`],
+                as: "params",
+            }]
+        });
+
+        place.items.push(newItem);
+        player.call(`inventory.setEnvironmentItemSqlId`, [item.id, newItem.id]);
     },
     deleteItem(player, item) {
         if (typeof item == 'number') item = this.getItem(player, item);
