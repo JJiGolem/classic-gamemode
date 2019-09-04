@@ -187,10 +187,7 @@ var inventory = new Vue({
         // Предметы на горячих клавишах
         hotkeys: {},
         // Предметы в руках
-        hands: {
-            left: null,
-            right: null
-        },
+        hands: null,
         // Сытость игрока
         satiety: 0,
         // Жажда игрока
@@ -632,14 +629,14 @@ var inventory = new Vue({
         },
 
         // ******************  [ Hands ] ******************
-        fillHand(item, hand) {
+        fillHands(item) {
             if (typeof item == 'number') item = this.getItem(item);
-            if (!item) return this.notify(`fillHand: Предмет ${item} не опреден`);
+            if (!item) return this.notify(`fillHands: Предмет ${item} не опреден`);
 
-            this.hands[hand] = item;
+            this.hands = item;
         },
-        clearHand(hand) {
-            this.hands[hand] = null;
+        clearHands() {
+            this.hands = null;
         },
 
         // ******************  [ Environment ] ******************
