@@ -82,7 +82,6 @@ var inventory = new Vue({
             24: { // малая аптечка
                 'Вылечиться': {
                     handler(item) {
-                        // console.log(`лечить ${item}`)
                         mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
                     }
                 }
@@ -90,7 +89,6 @@ var inventory = new Vue({
             25: { // пластырь
                 'Вылечиться': {
                     handler(item) {
-                        // console.log(`лечить ${item}`)
                         mp.trigger(`callRemote`, `inventory.item.patch.use`, item.sqlId);
                     }
                 }
@@ -98,7 +96,6 @@ var inventory = new Vue({
             27: { // большая аптечка
                 'Вылечиться': {
                     handler(item) {
-                        // console.log(`лечить ${item}`)
                         mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
                     }
                 }
@@ -160,12 +157,21 @@ var inventory = new Vue({
         // Вайт-лист предметов, которые можно использовать в горячих клавишах
         hotkeysList: {
             // itemId: {...}
-            24: {
+            24: { // малая аптечка
                 handler(item) {
-                    console.log("Обработчик горячей клавиши. Предмет: " + item.sqlId);
-                    item.params.count--;
+                    mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
                 }
-            }
+            },
+            25: { // пластырь
+                handler(item) {
+                    mp.trigger(`callRemote`, `inventory.item.patch.use`, item.sqlId);
+                }
+            },
+            27: { // большая аптечка
+                handler(item) {
+                    mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
+                }
+            },
         },
         // Блек-лист предметов, которые не могут храниться в других предметах
         blackList: {
@@ -181,10 +187,7 @@ var inventory = new Vue({
         // Предметы на горячих клавишах
         hotkeys: {},
         // Предметы в руках
-        hands: {
-            left: null,
-            right: null
-        },
+        hands: null,
         // Сытость игрока
         satiety: 0,
         // Жажда игрока
@@ -565,6 +568,12 @@ var inventory = new Vue({
                 }
             }
         },
+        setItemSqlId(item, sqlId) {
+            if (typeof item == 'number') item = this.getItem(item);
+            if (!item) return this.notify(`setItemSqlId: Предмет ${item} не найден`);
+            sqlId = parseInt(sqlId);
+            Vue.set(item, 'sqlId', sqlId);
+        },
         setItemParam(item, key, value) {
             if (typeof item == 'number') item = this.getItem(item);
             if (!item) return this.notify(`setItemParam: Предмет ${item} не найден`);
@@ -620,18 +629,19 @@ var inventory = new Vue({
         },
 
         // ******************  [ Hands ] ******************
-        fillHand(item, hand) {
+        fillHands(item) {
             if (typeof item == 'number') item = this.getItem(item);
-            if (!item) return this.notify(`fillHand: Предмет ${item} не опреден`);
+            if (!item) return this.notify(`fillHands: Предмет ${item} не опреден`);
 
-            this.hands[hand] = item;
+            this.hands = item;
         },
-        clearHand(hand) {
-            this.hands[hand] = null;
+        clearHands() {
+            this.hands = null;
         },
 
         // ******************  [ Environment ] ******************
         addEnvironmentPlace(place) {
+            if (typeof place == 'string') place = JSON.parse(place);
             place.showPockets = true;
             this.environment.unshift(place);
         },
@@ -688,14 +698,17 @@ var inventory = new Vue({
                 }
             }
         },
-        setEnvironmentItemParam(item, keys, values) {
+        setEnvironmentItemSqlId(item, sqlId) {
             if (typeof item == 'number') item = this.getEnvironmentItem(item);
             if (!item) return this.notify(`setEnvironmentItemParam: Предмет ${item} не найден`);
-            if (!Array.isArray(keys)) keys = [keys];
-            if (!Array.isArray(values)) values = [values];
-            for (var i in keys) {
-                Vue.set(item.params, keys[i], values[i]);
-            }
+            sqlId = parseInt(sqlId);
+            Vue.set(item, 'sqlId', sqlId);
+        },
+        setEnvironmentItemParam(item, key, value) {
+            if (typeof item == 'number') item = this.getEnvironmentItem(item);
+            if (!item) return this.notify(`setEnvironmentItemParam: Предмет ${item} не найден`);
+            if (!isNaN(value)) value = parseFloat(value);
+            Vue.set(item.params, key, value);
         },
     },
     watch: {

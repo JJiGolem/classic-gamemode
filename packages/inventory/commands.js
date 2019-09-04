@@ -227,6 +227,14 @@ module.exports = {
             console.log(player.inventory.items)
         }
     },
+    "/vitems": {
+        access: 6,
+        description: "Логировать предметы багажника в консоль.",
+        args: "",
+        handler: (player) => {
+            console.log(player.vehicle.inventory.items)
+        }
+    },
     "/pitemids": {
         access: 6,
         description: "Логировать иды предметов игрока в консоль.",

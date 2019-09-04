@@ -2,6 +2,7 @@
 
 var dbVehicleProperties;
 var plates = [];
+let inventory = call('inventory');
 let utils = call('utils');
 
 const MAX_BREAK_LEVEL = 2;
@@ -71,6 +72,7 @@ module.exports = {
         if (source == 0) { /// Если авто спавнится из БД
             vehicle.sqlId = veh.id;
             vehicle.db = veh;
+            inventory.initVehicleInventory(vehicle);
         }
         if (source == 1 && veh.sqlId) { /// Если авто респавнится (есть в БД)
             vehicle.sqlId = veh.sqlId;
@@ -138,7 +140,7 @@ module.exports = {
         this.spawnVehicle(veh, 1);
         veh.destroy();
     },
-    async loadVehiclesFromDB() { /// Загрузка автомобилей фракций/работ из БД 
+    async loadVehiclesFromDB() { /// Загрузка автомобилей фракций/работ из БД
         var dbVehicles = await db.Models.Vehicle.findAll({
             where: {
                 key: {

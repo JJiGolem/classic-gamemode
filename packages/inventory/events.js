@@ -15,8 +15,10 @@ module.exports = {
     // срабатывает, когда игрок переместил предмет (в любом месте)
     "item.add": (player, data) => {
         data = JSON.parse(data);
+        console.log(`item.add: ${player.name}`)
+        console.log(data)
+        var item = inventory.getItem(player, data.sqlId);
         if (data.placeSqlId > 0 || data.placeSqlId == null) { // переместил в свой карман или на себя
-            var item = inventory.getItem(player, data.sqlId);
             if (item) { // предмет уже есть у игрока
                 if (item.parentId == null && data.placeSqlId) { // снял вещь
                     inventory.clearView(player, item.itemId);
@@ -24,15 +26,26 @@ module.exports = {
                     inventory.updateView(player, item);
                 }
                 item.pocketIndex = data.pocketI;
-                item.index = data.index,
-                    item.parentId = data.placeSqlId;
+                item.index = data.index;
+                item.parentId = data.placeSqlId;
                 item.save();
             } else { // игрок взял предмет из окруж. среды
-
-
+                var i = player.inventory.place.items.findIndex(x => x.id == data.sqlId);
+                var item = player.inventory.place.items[i];
+                inventory.addPlayerItem(player, item, data.placeSqlId, data.pocketI, data.index);
+                item.destroy();
+                player.inventory.place.items.splice(i, 1);
             }
         } else { // переместил в окруж. среду
-
+            if (item) { // переместил из своего инвентаря в окруж. среду
+                inventory.addEnvironmentItem(player, item, data.pocketI, data.index);
+                inventory.deleteItem(player, item);
+            } else { // предмет уже находится в окруж. среде
+                item = player.inventory.place.items.find(x => x.id == data.sqlId);
+                item.pocketIndex = data.pocketI;
+                item.index = data.index;
+                item.save();
+            }
         }
     },
     // срабатывает, когда игрок выкидывает предмет
@@ -114,7 +127,9 @@ module.exports = {
         }
         obj.children.forEach((item) => {
             item.playerId = player.character.id;
-            item.save();
+            // item.save();
+            // из-за paranoid: true
+            item.restore();
             player.inventory.items.push(item);
         });
         obj.denyTake = true;
@@ -174,5 +189,41 @@ module.exports = {
         else inventory.updateParam(player, patch, 'count', count);
 
         notifs.success(player, `Вы вылечились`, header);
+    },
+    // Запрос предметов инвентаря в багажнике авто
+    "vehicle.boot.items.request": (player, vehId) => {
+        var header = `Багажник`;
+        var veh = mp.vehicles.at(vehId);
+        if (!veh) return notifs.error(player, `Авто #${vehId} не найдено`, header);
+        var dist = player.dist(veh.position);
+        if (!veh.db) return notifs.error(player, `Авто #${vehId} не находится в БД`, header);
+        if (dist > 10) return notifs.error(player, `Авто ${veh.db.modelName} слишком далеко`, header);
+        // if (!veh.getVariable("trunk")) return player.utils.error(`Багажник закрыт!`);
+        if (!veh.inventory) return notifs.error(player, `Авто ${veh.db.modelName} не имеет багажник`, header);
+        if (veh.bootPlayerId != null) return notifs.error(player, `С багажником взаимодействует другой игрок`, header);
+
+        veh.bootPlayerId = player.id;
+
+        var place = {
+            sqlId: -veh.db.id,
+            header: veh.db.modelName,
+            pockets: inventory.getVehicleClientPockets(veh.inventory.items),
+        };
+        console.log(`place.pockets:`)
+        console.log(place.pockets[0].items)
+        player.inventory.place.sqlId = place.sqlId;
+        player.inventory.place.type = "Vehicle";
+        player.inventory.place.items = veh.inventory.items;
+        player.call(`inventory.addEnvironmentPlace`, [place]);
+    },
+    // Запрос на очищение предметов в багажнике
+    "vehicle.boot.items.clear": (player, vehId) => {
+        var veh = mp.vehicles.at(vehId);
+        player.inventory.place = {};
+
+        if (veh && player.id == veh.bootPlayerId) {
+            player.call(`inventory.deleteEnvironmentPlace`, [-veh.db.id]);
+            delete veh.bootPlayerId;
+        }
     },
 };

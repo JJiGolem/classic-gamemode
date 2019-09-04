@@ -32,8 +32,21 @@ mp.inventory = {
     deleteItem(sqlId) {
         mp.callCEFV(`inventory.deleteItem(${sqlId})`);
     },
+    setItemSqlId(id, sqlId) {
+        mp.callCEFV(`inventory.setItemSqlId(${id}, ${sqlId})`);
+    },
     setItemParam(sqlId, key, value) {
         mp.callCEFV(`inventory.setItemParam(${sqlId}, '${key}', '${value}')`);
+    },
+    addEnvironmentPlace(place) {
+        if (typeof place == 'object') place = JSON.stringify(place);
+        mp.callCEFV(`inventory.addEnvironmentPlace('${place}')`);
+    },
+    deleteEnvironmentPlace(sqlId) {
+        mp.callCEFV(`inventory.deleteEnvironmentPlace(${sqlId})`);
+    },
+    setEnvironmentItemSqlId(id, sqlId) {
+        mp.callCEFV(`inventory.setEnvironmentItemSqlId(${id}, ${sqlId})`);
     },
     setSatiety(val) {
         mp.callCEFV(`inventory.satiety = ${val}`)
@@ -76,10 +89,28 @@ mp.events.add("inventory.setItemInfo", mp.inventory.setItemInfo);
 
 mp.events.add("inventory.deleteItem", mp.inventory.deleteItem);
 
+mp.events.add("inventory.setItemSqlId", mp.inventory.setItemSqlId);
+
 mp.events.add("inventory.addItem", mp.inventory.addItem);
 
 mp.events.add("inventory.setItemParam", mp.inventory.setItemParam);
 
+mp.events.add("inventory.addEnvironmentPlace", mp.inventory.addEnvironmentPlace);
+
+mp.events.add("inventory.deleteEnvironmentPlace", mp.inventory.deleteEnvironmentPlace);
+
+mp.events.add("inventory.setEnvironmentItemSqlId", mp.inventory.setEnvironmentItemSqlId);
+
 mp.events.add("inventory.setSatiety", mp.inventory.setSatiety);
 
 mp.events.add("inventory.setThirst", mp.inventory.setThirst);
+
+mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
+    // mp.notify.info(`enterBoot: #${vehicle.remoteId}`);
+    mp.events.callRemote(`vehicle.boot.items.request`, vehicle.remoteId);
+});
+
+mp.events.add("playerExitVehicleBoot", (player, vehicle) => {
+    // mp.notify.info(`exitBoot: #${vehicle.remoteId}`);
+    mp.events.callRemote(`vehicle.boot.items.clear`, vehicle.remoteId);
+});
