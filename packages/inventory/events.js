@@ -40,7 +40,7 @@ module.exports = {
             if (item) { // переместил из своего инвентаря в окруж. среду
                 inventory.addEnvironmentItem(player, item, data.pocketI, data.index);
                 inventory.deleteItem(player, item);
-            } else { // предмет находится в окруж. среде
+            } else { // предмет уже находится в окруж. среде
                 item = player.inventory.place.items.find(x => x.id == data.sqlId);
                 item.pocketIndex = data.pocketI;
                 item.index = data.index;
@@ -127,7 +127,9 @@ module.exports = {
         }
         obj.children.forEach((item) => {
             item.playerId = player.character.id;
-            item.save();
+            // item.save();
+            // из-за paranoid: true
+            item.restore();
             player.inventory.items.push(item);
         });
         obj.denyTake = true;
@@ -208,7 +210,7 @@ module.exports = {
             pockets: inventory.getVehicleClientPockets(veh.inventory.items),
         };
         console.log(`place.pockets:`)
-        console.log(place.pockets)
+        console.log(place.pockets[0].items)
         player.inventory.place.sqlId = place.sqlId;
         player.inventory.place.type = "Vehicle";
         player.inventory.place.items = veh.inventory.items;

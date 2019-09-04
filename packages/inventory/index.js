@@ -259,7 +259,6 @@ module.exports = {
                 as: "params",
             }]
         });
-
         place.items.push(newItem);
         player.call(`inventory.setEnvironmentItemSqlId`, [item.id, newItem.id]);
     },
@@ -320,6 +319,7 @@ module.exports = {
         var children = this.getChildren(items, item);
         for (var i = 0; i < children.length; i++) {
             var child = children[i];
+            child.destroy(); // из-за paranoid: true
             this.clearArrayItems(player, child);
         }
         var index = items.indexOf(item);

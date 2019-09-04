@@ -82,7 +82,6 @@ var inventory = new Vue({
             24: { // малая аптечка
                 'Вылечиться': {
                     handler(item) {
-                        // console.log(`лечить ${item}`)
                         mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
                     }
                 }
@@ -90,7 +89,6 @@ var inventory = new Vue({
             25: { // пластырь
                 'Вылечиться': {
                     handler(item) {
-                        // console.log(`лечить ${item}`)
                         mp.trigger(`callRemote`, `inventory.item.patch.use`, item.sqlId);
                     }
                 }
@@ -98,7 +96,6 @@ var inventory = new Vue({
             27: { // большая аптечка
                 'Вылечиться': {
                     handler(item) {
-                        // console.log(`лечить ${item}`)
                         mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
                     }
                 }
@@ -160,12 +157,21 @@ var inventory = new Vue({
         // Вайт-лист предметов, которые можно использовать в горячих клавишах
         hotkeysList: {
             // itemId: {...}
-            24: {
+            24: { // малая аптечка
                 handler(item) {
-                    console.log("Обработчик горячей клавиши. Предмет: " + item.sqlId);
-                    item.params.count--;
+                    mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
                 }
-            }
+            },
+            25: { // пластырь
+                handler(item) {
+                    mp.trigger(`callRemote`, `inventory.item.patch.use`, item.sqlId);
+                }
+            },
+            27: { // большая аптечка
+                handler(item) {
+                    mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
+                }
+            },
         },
         // Блек-лист предметов, которые не могут храниться в других предметах
         blackList: {
