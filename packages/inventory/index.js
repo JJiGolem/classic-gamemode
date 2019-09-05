@@ -697,8 +697,30 @@ module.exports = {
         mp.objects.forEach((obj) => {
             if (!obj.getVariable("groundItem")) return;
             var item = obj.item;
-            var params = this.getParamsValues(item);
+            for (var j = 0; j < obj.children.length; j++) {
+                var child = obj.children[j];
+                if (itemIds && !itemIds.includes(child.itemId)) continue;
+                var doDelete = true;
+                var params = this.getParamsValues(child);
+                for (var i = 0; i < keys.length; i++) {
+                    var param = params[keys[i]];
+                    if (!param) {
+                        doDelete = false;
+                        break;
+                    }
+                    if (param && param != values[i]) {
+                        doDelete = false;
+                        break;
+                    }
+                }
+                if (doDelete) {
+                    obj.children.splice(j, 1);
+                    j--;
+                }
+            }
+            if (itemIds && !itemIds.includes(item.itemId)) return;
             var doDelete = true;
+            var params = this.getParamsValues(item);
             for (var i = 0; i < keys.length; i++) {
                 var param = params[keys[i]];
                 if (!param) {
@@ -710,8 +732,14 @@ module.exports = {
                     break;
                 }
             }
-            if (doDelete) obj.destroy();
-
+            if (doDelete) {
+                clearTimeout(obj.destroyTimer);
+                obj.destroy();
+                var rec = mp.players.at(obj.playerId);
+                if (!rec) return;
+                var i = rec.inventory.ground.indexOf(obj);
+                rec.inventory.ground.splice(i, 1);
+            }
         });
         /* Для всех игроков из БД. */
     },

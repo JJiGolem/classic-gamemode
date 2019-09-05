@@ -350,7 +350,7 @@ module.exports = {
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
 
-        var itemName = inventory.getInventoryItem(itemId).name;
+        var itemName = inventory.getName(itemId);
         // var items = inventory.getArrayByItemId(player, itemId);
         // if (items.length > 0) return notifs.error(player, `Вы уже имеете ${itemName}`, header);
 
@@ -386,7 +386,7 @@ module.exports = {
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
 
-        var gunName = inventory.getInventoryItem(itemId).name;
+        var gunName = inventory.getName(itemId);
         var guns = inventory.getArrayByItemId(player, itemId);
 
         if (guns.length > 0) return notifs.error(player, `Вы уже имеете ${gunName}`, header);
