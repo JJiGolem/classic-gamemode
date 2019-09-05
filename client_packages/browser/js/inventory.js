@@ -637,7 +637,7 @@ var inventory = new Vue({
         onUseHotkey(key) {
             if (!key) key = 10; // для клавиши '0'
             var item = this.hotkeys[key];
-            if (!item) return;
+            if (!item || !this.getItem(item.sqlId)) return;
             this.hotkeysList[item.itemId].handler(item);
         },
         clearHotkeys(item) {

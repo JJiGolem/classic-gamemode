@@ -14,6 +14,12 @@ module.exports = {
             host: 'localhost',
             dialect: 'mysql',
             logging: false,
+            pool: {
+                max: 100,
+                min: 2,
+                // acquire: 30000,
+                idle: 10000
+            },
         });
         this.loadModels();
         callback();
