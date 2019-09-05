@@ -145,7 +145,7 @@ module.exports = {
             if (!factions.isPoliceFaction(rec.character.factionId)) return;
             if (rec.character.factionId != player.character.factionId) return;
 
-            rec.call(`mapCase.pd.members.add`, [this.convertMembers(player)]);
+            rec.call(`mapCase.pd.members.add`, [this.convertMembers([player])]);
         });
     },
     removePoliceMember(player) {
