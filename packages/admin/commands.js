@@ -293,7 +293,8 @@ module.exports = {
             console.log(`${player.heading}`);
             if (player.vehicle) {
                 player.call('chat.message.push', [`!{#ffffff} ${player.vehicle.heading}`]);
-                console.log(`veh= ${player.vehicle.heading}`);
+                console.log(`veh heading = ${player.vehicle.heading}`);
+                console.log(`veh rotation = ${JSON.stringify(player.vehicle.rotation)}`);
             }
         }
     },
