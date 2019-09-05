@@ -217,8 +217,6 @@ module.exports = {
             header: veh.db.modelName,
             pockets: inventory.getVehicleClientPockets(veh.inventory.items),
         };
-        console.log(`place.pockets:`)
-        console.log(place.pockets[0].items)
         player.inventory.place.sqlId = place.sqlId;
         player.inventory.place.type = "Vehicle";
         player.inventory.place.items = veh.inventory.items;
@@ -233,5 +231,12 @@ module.exports = {
             player.call(`inventory.deleteEnvironmentPlace`, [-veh.db.id]);
             delete veh.bootPlayerId;
         }
+    },
+    "playerQuit": (player) => {
+        if (!player.character) return;
+        if (!player.inventory.place || player.inventory.place.type != "Vehicle") return;
+        var veh = mp.vehicles.getBySqlId(-player.inventory.place.sqlId);
+        if (!veh) return;
+        delete veh.bootPlayerId;
     },
 };

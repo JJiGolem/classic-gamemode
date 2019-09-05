@@ -51,6 +51,9 @@ mp.inventory = {
     setEnvironmentItemSqlId(id, sqlId) {
         mp.callCEFV(`inventory.setEnvironmentItemSqlId(${id}, ${sqlId})`);
     },
+    deleteEnvironmentItem(id) {
+        mp.callCEFV(`inventory.deleteEnvironmentItem(${id})`);
+    },
     setSatiety(val) {
         mp.callCEFV(`inventory.satiety = ${val}`)
     },
@@ -106,20 +109,27 @@ mp.events.add("inventory.deleteEnvironmentPlace", mp.inventory.deleteEnvironment
 
 mp.events.add("inventory.setEnvironmentItemSqlId", mp.inventory.setEnvironmentItemSqlId);
 
+mp.events.add("inventory.deleteEnvironmentItem", mp.inventory.deleteEnvironmentItem);
+
 mp.events.add("inventory.setSatiety", mp.inventory.setSatiety);
 
 mp.events.add("inventory.setThirst", mp.inventory.setThirst);
 
 mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`enterBoot: #${vehicle.remoteId}`);
-    if (!vehicle.getVariable("trunk")) {
-        return mp.prompt.showByName("vehicle_boot");
-    }
+    if (!vehicle.getVariable("trunk")) return;
+    mp.prompt.showByName("vehicle_items_boot");
     mp.events.callRemote(`vehicle.boot.items.request`, vehicle.remoteId);
 });
 
 mp.events.add("playerExitVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`exitBoot: #${vehicle.remoteId}`);
-    mp.prompt.hide();
     mp.events.callRemote(`vehicle.boot.items.clear`, vehicle.remoteId);
+});
+
+mp.events.addDataHandler("trunk", (vehicle, value) => {
+    if (nearBootVehicleId == null) return;
+    if (nearBootVehicleId != vehicle.remoteId) return;
+    if (value) mp.prompt.showByName("vehicle_items_boot");
+    else mp.prompt.showByName("vehicle_open_boot");
 });

@@ -483,6 +483,25 @@ mp.events.add("time.main.tick", () => {
 var nearBootVehicleId = null,
     nearHoodVehicleId = null;
 
+mp.events.add({
+    "playerEnterVehicleBoot": (player, vehicle) => {
+        if (!vehicle.getVariable("trunk")) {
+            mp.prompt.showByName("vehicle_open_boot");
+        }
+    },
+    "playerEnterVehicleHood": (player, vehicle) => {
+        if (!vehicle.getVariable("hood")) {
+            mp.prompt.showByName("vehicle_open_hood");
+        } else mp.prompt.showByName("vehicle_close_hood");
+    },
+    "playerExitVehicleBoot": (player, vehicle) => {
+        mp.prompt.hide();
+    },
+    "playerExitVehicleHood": (player, vehicle) => {
+        mp.prompt.hide();
+    },
+});
+
 mp.events.add('render', () => {
     mp.vehicles.forEachInStreamRange((vehicle) => {
         if (mp.vdist(mp.players.local.position, vehicle.position) > 10) return;

@@ -668,7 +668,7 @@ module.exports = {
     },
     getArrayByItemId(player, itemIds) {
         if (!Array.isArray(itemIds)) itemIds = [itemIds];
-        var items = player.inventory.items;
+        var items = (!Array.isArray(player)) ? player.inventory.items : player;
         var result = [];
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
@@ -693,7 +693,17 @@ module.exports = {
         mp.vehicles.forEach((veh) => {
             if (!veh.inventory) return;
 
-            // this.deleteByParams(veh, itemIds, keys, values);
+            var items = this.getItemsByParams(veh.inventory.items, itemIds, keys, values);
+            items.forEach(item => {
+                item.destroy();
+                var i = veh.inventory.items.indexOf(item);
+                veh.inventory.items.splice(i, 1);
+                if (veh.bootPlayerId != null) {
+                    var rec = mp.players.at(veh.bootPlayerId);
+                    if (!rec) return;
+                    rec.call(`inventory.deleteEnvironmentItem`, [item.id]);
+                }
+            });
         });
         // предметы на земле
         mp.objects.forEach((obj) => {
@@ -777,6 +787,37 @@ module.exports = {
         list.forEach(item => {
             this.deleteItem(player, item);
         });
+    },
+    getItemsByParams(items, itemIds, keys, values) {
+        // console.log(`deleteByParams: ${player.name}`)
+        if (itemIds && !Array.isArray(itemIds)) itemIds = [itemIds];
+        if (!Array.isArray(keys)) keys = [keys];
+        if (!Array.isArray(values)) values = [values];
+
+        var list = [];
+        if (keys.length != values.length) return list;
+
+        var items = (itemIds) ? this.getArrayByItemId(items, itemIds) : items;
+        if (!items.length) return list;
+
+        for (var j = 0; j < items.length; j++) {
+            var item = items[j];
+            var params = this.getParamsValues(item);
+            var isFind = true;
+            for (var i = 0; i < keys.length; i++) {
+                var param = params[keys[i]];
+                if (!param) {
+                    isFind = false;
+                    break;
+                }
+                if (param && param != values[i]) {
+                    isFind = false;
+                    break;
+                }
+            }
+            if (isFind) list.push(item);
+        }
+        return list;
     },
     getVehicleClientPockets(dbItems) {
         var pockets = [{

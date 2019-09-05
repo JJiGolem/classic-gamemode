@@ -10,6 +10,7 @@ module.exports = {
         mp.players.getBySqlId = this.getPlayerBySqlId;
         mp.players.getByName = this.getPlayerByName;
         mp.players.getNear = this.getNearPlayer;
+        mp.vehicles.getBySqlId = this.getVehicleBySqlId;
     },
     /// Отправка писем на почту
     sendMail(to, subject, message) {
@@ -82,5 +83,16 @@ module.exports = {
             }
         });
         return nearPlayer;
+    },
+    getVehicleBySqlId(sqlId) {
+        if (!sqlId) return null;
+        var result;
+        mp.vehicles.forEach((veh) => {
+            if (veh.db.id == sqlId) {
+                result = veh;
+                return;
+            }
+        });
+        return result;
     },
 };

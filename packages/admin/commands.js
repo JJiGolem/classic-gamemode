@@ -322,6 +322,14 @@ module.exports = {
             console.log(player)
         }
     },
+    "/vinfo": {
+        access: 6,
+        description: "Логировать авто в консоль",
+        args: "",
+        handler: (player) => {
+            console.log(player.vehicle)
+        }
+    },
     "/getpos": {
         access: 6,
         description: "Логировать координаты игрока в консоль",
