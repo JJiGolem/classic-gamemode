@@ -263,13 +263,14 @@ module.exports = {
         };
         conf[place.type.toLowerCase() + "Id"] = -place.sqlId;
         var table = `${place.type}Inventory`;
-        var newItem = await db.Models[table].create(conf, {
+        var newItem = db.Models[table].build(conf, {
             include: [{
                 model: db.Models[`${table}Param`],
                 as: "params",
             }]
         });
         place.items.push(newItem);
+        await newItem.save();
         player.call(`inventory.setEnvironmentItemSqlId`, [item.id, newItem.id]);
     },
     // при перемещении предмета из окруж. среды в игрока
@@ -298,7 +299,7 @@ module.exports = {
             parentId: parentId,
             params: struct,
         };
-        var newItem = await db.Models.CharacterInventory.create(conf, {
+        var newItem = db.Models.CharacterInventory.build(conf, {
             include: [{
                 model: db.Models.CharacterInventoryParam,
                 as: "params",
@@ -307,6 +308,7 @@ module.exports = {
 
         player.inventory.items.push(newItem);
         if (!newItem.parentId) this.updateView(player, newItem);
+        await newItem.save();
         player.call(`inventory.setItemSqlId`, [item.id, newItem.id]);
     },
     deleteItem(player, item) {
