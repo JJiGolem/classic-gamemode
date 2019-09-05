@@ -389,10 +389,11 @@ var inventory = new Vue({
         },
         columnMouseHandler(place, pocket, index, e) {
             if (!this.itemDrag.item) return;
+            var item = this.itemDrag.item;
             var columns = this.itemDrag.accessColumns;
             var pocketI = place.pockets.indexOf(pocket);
-            var w = this.itemsInfo[this.itemDrag.item.itemId].width;
-            var h = this.itemsInfo[this.itemDrag.item.itemId].height;
+            var w = this.itemsInfo[item.itemId].width;
+            var h = this.itemsInfo[item.itemId].height;
             if (w > pocket.cols || h > pocket.rows) return;
             var coord = this.indexToXY(pocket.rows, pocket.cols, index);
             coord.x = Math.clamp(coord.x - parseInt(w / 2), 0, pocket.cols - w);
@@ -402,9 +403,10 @@ var inventory = new Vue({
                     // console.log('mouseenter')
                     columns.placeSqlId = place.sqlId;
                     columns.pocketI = pocketI;
-                    columns.deny = place.sqlId == this.itemDrag.item.sqlId ||
-                        place.itemId == this.itemDrag.item.itemId ||
-                        (this.blackList[place.itemId] && this.blackList[place.itemId].includes(this.itemDrag.item.itemId));
+                    columns.deny = place.sqlId == item.sqlId ||
+                        place.itemId == item.itemId ||
+                        place.sqlId < 0 && this.getItemsCount(item) > 0 ||
+                        (this.blackList[place.itemId] && this.blackList[place.itemId].includes(item.itemId));
                     for (var x = 0; x < w; x++) {
                         for (var y = 0; y < h; y++) {
                             var i = this.xyToIndex(pocket.rows, pocket.cols, {
