@@ -44,7 +44,7 @@ mp.events.add({
     "police.follow.start": (playerId) => {
         mp.police.startFollowToPlayer(playerId);
     },
-    "player.follow.stop": () => {
+    "police.follow.stop": () => {
         mp.police.stopFollowToPlayer();
     },
     "time.main.tick": () => {
