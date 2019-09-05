@@ -65,10 +65,12 @@ module.exports = {
     isValidArg(type, arg) {
         if (type == "n") return !isNaN(arg) && arg.length > 0;
         if (type == "s") return arg && arg.length > 0;
+        if (type == "b") return !isNaN(arg) && (arg == 0 || arg == 1);
         return false;
     },
     toValidArg(type, arg) {
         if (type == "n") return parseFloat(arg);
+        if (type == "b") return arg == 1 ? true : false;
         return arg;
     },
     log(text, player) {
