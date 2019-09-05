@@ -14,6 +14,7 @@ mp.police = {
     setCuffs(enable) {
         this.haveCuffs = enable;
         mp.inventory.enable(!enable);
+        mp.callCEFR('phone.show', [false]);
     },
     setWanted(val) {
         this.wanted = val;
@@ -28,39 +29,47 @@ mp.police = {
     },
 };
 
-mp.events.add("police.cuffs.set", (enable) => {
-    mp.police.setCuffs(enable);
-});
-
-mp.events.add("police.wanted.set", (val) => {
-    mp.police.setWanted(val);
-    mp.game.gameplay.setFakeWantedLevel(val);
-});
-
-mp.events.add("render", () => {
-    if (mp.police.haveCuffs) mp.game.controls.disableAllControlActions(0);
-});
-
-mp.events.add("police.follow.start", (playerId) => {
-    mp.police.startFollowToPlayer(playerId);
-});
-
-mp.events.add("player.follow.stop", () => {
-    mp.police.stopFollowToPlayer();
-});
-
-mp.events.add("time.main.tick", () => {
-    if (mp.police.followPlayer) {
-        var pos = mp.police.followPlayer.position;
-        var localPos = mp.players.local.position;
-        var dist = mp.game.system.vdist(pos.x, pos.y, pos.z, localPos.x, localPos.y, localPos.z);
-        if (dist > 30) {
-            followPlayer = null;
-            return;
+mp.events.add({
+    "police.cuffs.set": (enable) => {
+        mp.police.setCuffs(enable);
+    },
+    "police.wanted.set": (val) => {
+        mp.police.setWanted(val);
+        mp.game.gameplay.setFakeWantedLevel(val);
+    },
+    "render": () => {
+        if (mp.police.haveCuffs) mp.game.controls.disableAllControlActions(0);
+    },
+    "police.follow.start": (playerId) => {
+        mp.police.startFollowToPlayer(playerId);
+    },
+    "player.follow.stop": () => {
+        mp.police.stopFollowToPlayer();
+    },
+    "time.main.tick": () => {
+        if (mp.police.followPlayer) {
+            var pos = mp.police.followPlayer.position;
+            var localPos = mp.players.local.position;
+            var dist = mp.game.system.vdist(pos.x, pos.y, pos.z, localPos.x, localPos.y, localPos.z);
+            if (dist > 30) {
+                mp.police.followPlayer = null;
+                return;
+            }
+            var speed = 3;
+            if (dist < 10) speed = 2;
+            if (dist < 5) speed = 1;
+            mp.players.local.taskFollowNavMeshToCoord(pos.x, pos.y, pos.z, speed, -1, 1, true, 0);
         }
-        var speed = 3;
-        if (dist < 10) speed = 2;
-        if (dist < 5) speed = 1;
-        mp.players.local.taskFollowNavMeshToCoord(pos.x, pos.y, pos.z, speed, -1, 1, true, 0);
-    }
+    },
+    "entityStreamOut": (entity) => {
+        if (entity.type != "player") return;
+        if (!mp.police.followPlayer) return;
+        if (entity.remoteId != mp.police.followPlayer.remoteId) return;
+        mp.police.followPlayer = null;
+    },
+    "playerQuit": (player) => {
+        if (!mp.police.followPlayer) return;
+        if (player.remoteId != mp.police.followPlayer.remoteId) return;
+        mp.police.followPlayer = null;
+    },
 });

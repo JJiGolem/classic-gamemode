@@ -10,7 +10,7 @@ mp.events.add('phone.load', function (phoneInfo, phoneDialogs, apps) {
     phoneInfo.houses.forEach(house => {
         house.area = mp.game.ui.getLabelText(mp.game.zone.getNameOfZone(house.pos[0], house.pos[1], house.pos[2]));
     });
-    
+
     mp.callCEFR('phone.load', [phoneInfo]);
     mp.callCEFR('phone.message.list', [phoneDialogs]);
     apps.forEach(app => {
@@ -179,8 +179,9 @@ let bindButtons = (state) => {
     }
 }
 
-let showPhone = () => {		
+let showPhone = () => {
     if (mp.busy.includes()) return;
+    if (mp.police.haveCuffs) return;
     if (!mp.busy.add('phone')) return;
     mp.callCEFR('phone.show', [true]);
     mp.gui.cursor.show(true, true);
@@ -189,9 +190,9 @@ let showPhone = () => {
 }
 
 let hidePhone = () => {
-    if (!mp.busy.includes('phone')) return;		
-    
-    mp.callCEFR('phone.show', [false]); 
+    if (!mp.busy.includes('phone')) return;
+
+    mp.callCEFR('phone.show', [false]);
     mp.gui.cursor.show(false, false);
     mp.busy.remove('phone');
     playHoldAnimation(false);
