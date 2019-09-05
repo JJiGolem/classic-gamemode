@@ -454,7 +454,7 @@ var mapCasePdMembersData = {
         this.ranks = ranksList;
     },
     setMemberRank(id, rank) {
-        rank = Math.clamp(rank, 1, this.ranks.length - 1);
+        rank = Math.clamp(rank, 1, this.ranks.length);
         for (var i = 0; i < this.list.length; i++) {
             var rec = this.list[i];
             if (rec.id == id) rec.rank = rank;
