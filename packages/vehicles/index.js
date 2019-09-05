@@ -123,12 +123,28 @@ module.exports = {
     },
     respawnVehicle(veh) {
         if (!mp.vehicles.exists(veh)) return;
-        clearInterval(veh.fuelTimer);
+        
+        //let occupants = veh.getOccupants();
+        //console.log(occupants);
+        // if (occupants.length > 0) {
+        //     occupants.forEach((player) => {
+        //         try {
+        //             player.removeFromVehicle();
+        //         } catch (err) {
+        //             console.log(err);
+        //         }
+        //     });
+        // }
 
-        if (veh.key == "admin") return veh.destroy(); /// Если админская, не респавним
+        if (veh.key == "admin") { /// Если админская, не респавним
+            clearInterval(veh.fuelTimer);
+            veh.destroy();
+            return;
+        }
 
         if (veh.key == "private" && veh.isOnParking) {
             mp.events.call('parkings.vehicle.add', veh);
+            clearInterval(veh.fuelTimer);
             veh.destroy();
             return;
         }
@@ -136,7 +152,16 @@ module.exports = {
         if (veh.key == "private" && !veh.isOnParking && veh.d != 0) {
             veh.isInGarage = true;
         }
-
+        // veh.repair();
+        // veh.position = new mp.Vector3(veh.x, veh.y, veh.z);
+        // veh.rotation = new mp.Vector3(0, 0, veh.h);
+        // veh.d ? veh.dimension = veh.d : veh.dimension = 0;
+        // veh.setVariable('engine', false);
+        // veh.setVariable("leftTurnSignal", false);
+        // veh.setVariable("rightTurnSignal", false);
+        // veh.setVariable("hood", false);
+        // veh.setVariable("trunk", false);
+        clearInterval(veh.fuelTimer);  
         this.spawnVehicle(veh, 1);
         veh.destroy();
     },
