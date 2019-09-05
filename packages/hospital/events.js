@@ -258,7 +258,7 @@ module.exports = {
         };
         rec.call(`offerDialog.show`, ["hospital_healing", {
             name: player.name,
-            price: hospital.healingPrice * rec.offer.health
+            price: parseInt(hospital.healingPrice * rec.offer.health)
         }]);
     },
     "hospital.healing.accept": (player) => {

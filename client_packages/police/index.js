@@ -14,6 +14,7 @@ mp.police = {
     setCuffs(enable) {
         this.haveCuffs = enable;
         mp.inventory.enable(!enable);
+        mp.mapCase.enable(!enable);
         mp.callCEFR('phone.show', [false]);
     },
     setWanted(val) {

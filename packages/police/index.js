@@ -74,6 +74,8 @@ module.exports = {
             player.setClothes(7, 0, 0, 0);
             delete player.cuffs;
             player.call("police.cuffs.set", [false])
+            delete player.isFollowing;
+            player.call("police.follow.stop");
         }
     },
     setWanted(player, wanted, cause = null) {
@@ -118,7 +120,7 @@ module.exports = {
     },
     startCellArrest(player, cell, time) {
         if (player.vehicle) player.removeFromVehicle();
-        if (player.cuffs) this.setCuffs(player, false);
+        if (player.cuffs) this.setCuffs(player, null);
         if (player.character.wanted) player.character.update({
             wanted: 0
         });
