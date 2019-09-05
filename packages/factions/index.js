@@ -263,6 +263,16 @@ module.exports = {
 
         character.factionRank = rank.id;
         character.save();
+
+        if (!this.isPoliceFaction(character.factionId)) return;
+
+        var rank = this.getRankById(character.factionId, character.factionRank).rank;
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (rec.character.factionId != character.factionId) return;
+
+            rec.call(`mapCase.pd.members.rank.set`, [character.id, rank]);
+        });
     },
     isGovernmentFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);

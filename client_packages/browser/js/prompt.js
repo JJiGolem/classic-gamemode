@@ -10,6 +10,9 @@ var prompt = new Vue({
             "vehicle_engine": {
                 text: "Нажмите <span>2</span> для того, чтобы завести двигатель автомобиля"
             },
+            "vehicle_boot": {
+                text: "Нажмите <span>I</span> для того, чтобы взаимодействовать с багажником"
+            },
             "carshow_control": {
                 text: "Нажмите <span>Esc</span> для того, чтобы выйти из автосалона"
             },
@@ -39,7 +42,7 @@ var prompt = new Vue({
             },
             "garage_control": {
                 text: "Нажмите <span>E</span> для того, чтобы выехать из гаража"
-            }
+            },
         },
         text: null
     },

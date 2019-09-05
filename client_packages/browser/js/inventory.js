@@ -520,7 +520,7 @@ var inventory = new Vue({
             return null;
         },
         notify(message) {
-            alert("[Inventory] " + message);
+            console.log("[Inventory] " + message);
         },
         callRemote(eventName, values) {
             // console.log(`callRemote: ${eventName}`);

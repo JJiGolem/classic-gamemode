@@ -205,7 +205,7 @@ module.exports = {
         var faction = factions.getFaction(character.factionId);
         var header = `Склад ${faction.name}`;
 
-        if (faction.ammo < hospital.itemAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
+        if (faction.medicines < hospital.itemMedicines) return notifs.error(player, `Недостаточно медикаментов`, header);
 
         var itemIds = [24, 27, 25];
 
@@ -258,7 +258,7 @@ module.exports = {
         };
         rec.call(`offerDialog.show`, ["hospital_healing", {
             name: player.name,
-            price: hospital.healingPrice * rec.offer.health
+            price: parseInt(hospital.healingPrice * rec.offer.health)
         }]);
     },
     "hospital.healing.accept": (player) => {
@@ -279,7 +279,11 @@ module.exports = {
         var price = offer.health * hospital.healingPrice;
         if (player.character.cash < price) return notifs.error(player, `Необходимо $${price}`, header);
         var med = inventory.getItemByItemId(inviter, [24, 27]);
-        if (!med) return notifs.error(inviter, `Аптечка не найдена`, header);
+        if (!med) {
+            notifs.error(player, `${inviter.name} не имеет аптечки`, header);
+            notifs.error(inviter, `Аптечка не найдена`, header);
+            return;
+        }
         var count = inventory.getParam(med, 'count').value;
         if (!count) return notifs.error(inviter, `Количество: 0 ед.`, header);
 

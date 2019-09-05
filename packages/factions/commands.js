@@ -267,11 +267,15 @@ module.exports = {
 
             var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
             colshape.onEnter = (player) => {
-                console.log(`storage onEnter: ${player.name} ${faction.name}`)
+                if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
+                player.call("factions.storage.showMenu", [faction.id]);
+                player.insideFactionWarehouse = faction.id;
             };
             colshape.onExit = (player) => {
-                console.log(`storage onExit: ${player.name} ${faction.name}`)
+                player.call("selectMenu.hide");
+                delete player.insideFactionWarehouse;
             };
+            storage.colshape = colshape;
 
             out.info(`${player.name} изменил позицию выдачи предметов у организации #${faction.id}`);
         }

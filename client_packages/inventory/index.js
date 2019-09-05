@@ -112,10 +112,14 @@ mp.events.add("inventory.setThirst", mp.inventory.setThirst);
 
 mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`enterBoot: #${vehicle.remoteId}`);
+    if (!vehicle.getVariable("trunk")) {
+        return mp.prompt.showByName("vehicle_boot");
+    }
     mp.events.callRemote(`vehicle.boot.items.request`, vehicle.remoteId);
 });
 
 mp.events.add("playerExitVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`exitBoot: #${vehicle.remoteId}`);
+    mp.prompt.hide();
     mp.events.callRemote(`vehicle.boot.items.clear`, vehicle.remoteId);
 });

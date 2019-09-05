@@ -191,7 +191,8 @@ module.exports = {
         var max = factions.getMaxRank(rec.character.factionId);
         if (rec.character.factionRank >= max.id) return out.error(player, `${rec.name} имеет макс. ранг`);
 
-        mapCase.setPdRank(rec, rec.character.factionRank + 1);
+        var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank + 1);
+        factions.setRank(rec.character, rank.rank);
         var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
 
         notifs.success(rec, `${player.name} повысил вас до ${rankName}`, header);
@@ -204,10 +205,11 @@ module.exports = {
         var header = `Понижение`;
         var rec = mp.players.getBySqlId(recId);
         if (!rec) return out.error(player, `Игрок #${recId} оффлайн`, header);
-        var max = factions.getMinRank(rec.character.factionId);
-        if (rec.character.factionRank <= max.id) return out.error(player, `${rec.name} имеет мин. ранг`);
+        var min = factions.getMinRank(rec.character.factionId);
+        if (rec.character.factionRank <= min.id) return out.error(player, `${rec.name} имеет мин. ранг`);
 
-        mapCase.setPdRank(rec, rec.character.factionRank - 1);
+        var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank - 1);
+        factions.setRank(rec.character, rank.rank);
         var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
 
         notifs.success(rec, `${player.name} понизил вас до ${rankName}`, header);
@@ -233,8 +235,9 @@ module.exports = {
             if (!factions.isPoliceFaction(rec.character.factionId)) return;
             if (rec.character.factionId != player.character.factionId) return;
 
-            chat.push(rec, `${player.name} запросил подкрепление`);
-            rec.call(`mapCase.pd.emergencyBlips.add`, [rec.name, rec.position]);
+            // chat.push(rec, `${player.name} запросил подкрепление`);
+            notifs.warning(rec, `${player.name} запросил подкрепление`, `Police`);
+            rec.call(`mapCase.pd.emergencyBlips.add`, [player.name, player.position]);
         });
         out.success(player, `Сработал экстренный вызов`);
     },

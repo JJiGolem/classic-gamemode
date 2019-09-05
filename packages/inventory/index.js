@@ -756,6 +756,7 @@ module.exports = {
         var items = (itemIds) ? this.getArrayByItemId(player, itemIds) : player.inventory.items;
         if (!items.length) return;
 
+        var list = [];
         for (var j = 0; j < items.length; j++) {
             var item = items[j];
             var params = this.getParamsValues(item);
@@ -771,11 +772,11 @@ module.exports = {
                     break;
                 }
             }
-            if (doDelete) {
-                this.deleteItem(player, item);
-                j--;
-            }
+            if (doDelete) list.push(item);
         }
+        list.forEach(item => {
+            this.deleteItem(player, item);
+        });
     },
     getVehicleClientPockets(dbItems) {
         var pockets = [{
