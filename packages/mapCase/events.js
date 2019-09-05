@@ -235,8 +235,9 @@ module.exports = {
             if (!factions.isPoliceFaction(rec.character.factionId)) return;
             if (rec.character.factionId != player.character.factionId) return;
 
-            chat.push(rec, `${player.name} запросил подкрепление`);
-            rec.call(`mapCase.pd.emergencyBlips.add`, [rec.name, rec.position]);
+            // chat.push(rec, `${player.name} запросил подкрепление`);
+            notifs.warning(rec, `${player.name} запросил подкрепление`, `Police`);
+            rec.call(`mapCase.pd.emergencyBlips.add`, [player.name, player.position]);
         });
         out.success(player, `Сработал экстренный вызов`);
     },
