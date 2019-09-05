@@ -31,7 +31,7 @@ module.exports = {
 
             notifs.info(rec, `${player.name} посадил вас на ${mins} минут`, `КПЗ`);
             out.info(`${player.name} посадил ${rec.name} в КПЗ на ${mins} минут`);
-            police.startCellArrest(player, null, mins * 60 * 1000);
+            police.startCellArrest(rec, null, mins * 60 * 1000);
         }
     },
     "/pjailarrest": {

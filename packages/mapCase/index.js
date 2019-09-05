@@ -156,17 +156,4 @@ module.exports = {
             rec.call(`mapCase.pd.members.remove`, [player.character.id]);
         });
     },
-    setPdRank(player, rank) {
-        if (!factions.isPoliceFaction(player.character.factionId)) return;
-        player.character.factionRank = rank;
-        player.character.save();
-
-        var rank = factions.getRankById(player.character.factionId, player.character.factionRank).rank;
-        mp.players.forEach((rec) => {
-            if (!rec.character) return;
-            if (!factions.isPoliceFaction(rec.character.factionId)) return;
-
-            rec.call(`mapCase.pd.members.rank.set`, [player.character.id, rank]);
-        });
-    },
 };
