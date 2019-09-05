@@ -100,6 +100,16 @@ var inventory = new Vue({
                     }
                 }
             },
+            28: { // наручники
+                'Скрутить': {
+                    handler(item) {
+                        var data = {
+                            cuffsSqlId: item.sqlId
+                        };
+                        mp.trigger(`callRemote`, `police.cuffs`, JSON.stringify(data));
+                    }
+                }
+            },
             37: { // test
                 'Разрядить': {
                     handler(item) {
@@ -170,6 +180,14 @@ var inventory = new Vue({
             27: { // большая аптечка
                 handler(item) {
                     mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
+                }
+            },
+            28: { // наручники
+                handler(item) {
+                    var data = {
+                        cuffsSqlId: item.sqlId
+                    };
+                    mp.trigger(`callRemote`, `police.cuffs`, JSON.stringify(data));
                 }
             },
         },

@@ -9,6 +9,7 @@ module.exports = {
         Math.clamp = this.clamp;
         mp.players.getBySqlId = this.getPlayerBySqlId;
         mp.players.getByName = this.getPlayerByName;
+        mp.players.getNear = this.getNearPlayer;
     },
     /// Отправка писем на почту
     sendMail(to, subject, message) {
@@ -68,5 +69,18 @@ module.exports = {
             }
         });
         return result;
+    },
+    getNearPlayer(player) {
+        var nearPlayer;
+        var minDist = 99999;
+        mp.players.forEach((rec) => {
+            if (rec.id == player.id) return;
+            var distance = player.dist(rec.position);
+            if (distance < minDist) {
+                nearPlayer = rec;
+                minDist = distance;
+            }
+        });
+        return nearPlayer;
     },
 };

@@ -58,7 +58,7 @@ module.exports = {
         if (!item) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
 
         if (player.vehicle) return notifs.error(player, `Недоступно в авто`, header);
-        if (player.hasCuffs) return notifs.error(`Недоступно в наручниках`, header);
+        if (player.cuffs) return notifs.error(`Недоступно в наручниках`, header);
 
         var children = inventory.getArrayItems(player, item);
         inventory.deleteItem(player, item);
@@ -110,7 +110,7 @@ module.exports = {
 
         if (!obj.getVariable("groundItem") || !obj.item) return notifs.error(player, `Объект #${objId} не является предметом`, header);
         if (obj.denyTake) return notifs.error(player, `Предмет занят другим игроком`, header);
-        if (player.hasCuffs) return notifs.error(player, `Недоступно в наручниках`, header);
+        if (player.cuffs) return notifs.error(player, `Недоступно в наручниках`, header);
         var dist = player.dist(obj.position);
         if (dist > inventory.groundMaxDist) return notifs.error(player, `Вы слишком далеко от предмета`, header);
         var slot = inventory.findFreeSlot(player, obj.item.itemId);

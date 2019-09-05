@@ -62,18 +62,19 @@ module.exports = {
     arrestTime: 10000,
 
 
-    setCuffs(player, enable) {
-        if (enable) {
+    setCuffs(player, cuffs) {
+        if (cuffs) {
             player.playAnimation("mp_arresting", 'idle', 1, 49);
             var index = (player.character.gender == 0) ? 41 : 25;
             player.setClothes(7, index, 0, 0);
-            player.hasCuffs = true;
+            player.cuffs = cuffs;
+            player.call("police.cuffs.set", [true])
         } else {
             player.playAnimation("special_ped@tonya@intro", 'idle', 1, 49);
             player.setClothes(7, 0, 0, 0);
-            delete player.hasCuffs;
+            delete player.cuffs;
+            player.call("police.cuffs.set", [false])
         }
-        player.call("police.cuffs.set", [enable])
     },
     setWanted(player, wanted, cause = null) {
         player.character.wanted = wanted;
@@ -117,7 +118,7 @@ module.exports = {
     },
     startCellArrest(player, cell, time) {
         if (player.vehicle) player.removeFromVehicle();
-        if (player.hasCuffs) this.setCuffs(player, false);
+        if (player.cuffs) this.setCuffs(player, false);
         if (player.character.wanted) player.character.update({
             wanted: 0
         });
@@ -168,7 +169,7 @@ module.exports = {
     startJailArrest(player, cell, time) {
         console.log(`startJailArrest: ${player.name}`)
         if (player.vehicle) player.removeFromVehicle();
-        if (player.hasCuffs) this.setCuffs(player, false);
+        if (player.cuffs) this.setCuffs(player, false);
         if (player.character.wanted) player.character.update({
             wanted: 0
         });

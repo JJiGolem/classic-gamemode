@@ -7,7 +7,9 @@ module.exports = {
         description: "Надеть/снять наручники.",
         args: "[ид_игрока]:n",
         handler: (player, args, out) => {
-            mp.events.call(`police.cuffs`, player, args[0]);
+            mp.events.call(`police.cuffs`, player, {
+                recId: args[0]
+            });
         }
     },
     "/pfollow": {

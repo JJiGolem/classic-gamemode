@@ -437,8 +437,9 @@ module.exports = {
         });
     },
     // снять/надеть наручники
-    "police.cuffs": (player, recId) => {
-        var rec = mp.players.at(recId);
+    "police.cuffs": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+        var rec = (data.recId != null)? mp.players.at(data.recId): mp.players.getNear(player);
         if (!rec) return notifs.error(player, `Гражданин не найден`, `Наручники`);
         var dist = player.dist(rec.position);
         if (dist > 20) return notifs.error(player, `${rec.name} далеко`, `Наручники`);
@@ -446,30 +447,26 @@ module.exports = {
         if (!factions.isPoliceFaction(character.factionId) && !factions.isFibFaction(character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Наручники`);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, `Наручники`);
 
-        if (!rec.hasCuffs) {
-            var cuffs = inventory.getArrayByItemId(rec, 28);
-            if (!cuffs.length) return notifs.error(player, `Необходим предмет`, `Наручники`);
-            inventory.deleteItem(player, cuffs[0]);
+        if (!rec.cuffs) {
+            var cuffs = (data.cuffsSqlId)? inventory.getItem(player, data.cuffsSqlId) : inventory.getItemByItemId(player, 28);
+            if (!cuffs) return notifs.error(player, `Необходим предмет`, `Наручники`);
+            inventory.deleteItem(player, cuffs);
+            police.setCuffs(rec, cuffs);
 
             notifs.info(rec, `${player.name} задержал вас`, `Наручники`);
             notifs.success(player, `${rec.name} задержан`, `Наручники`);
         } else {
-            var params = {
-                faction: character.factionId,
-                owner: character.id
-            };
-            inventory.addItem(player, 28, params, (e) => {
+            inventory.addOldItem(player, rec.cuffs, (e) => {
                 if (e) return notifs.error(player, e, `Наручники`);
             });
 
             notifs.info(rec, `${player.name} отпустил вас`, `Наручники`);
             notifs.info(player, `${rec.name} отпущен`, `Наручники`);
 
+            police.setCuffs(rec, null);
             delete rec.isFollowing;
             rec.call(`police.follow.stop`);
         }
-
-        police.setCuffs(rec, !rec.hasCuffs);
     },
     "police.follow": (player, recId) => {
         var rec = mp.players.at(recId);
@@ -477,7 +474,7 @@ module.exports = {
         if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Следование`);
 
         if (!rec.isFollowing) {
-            if (!rec.hasCuffs) return notifs.error(player, `${rec.name} не в наручниках`, `Следование`);
+            if (!rec.cuffs) return notifs.error(player, `${rec.name} не в наручниках`, `Следование`);
             rec.isFollowing = true;
             rec.call(`police.follow.start`, [player.id]);
             notifs.success(player, `${rec.name} следует за вами`, `Следование`);
@@ -504,7 +501,7 @@ module.exports = {
 
         var cell = police.getNearCell(player);
         if (!cell) return notifs.error(player, `Вы далеко от камеры`, `Арест`);
-        if (rec.hasCuffs) {
+        if (rec.cuffs) {
             var params = {
                 faction: player.character.factionId,
                 owner: player.character.id
@@ -542,7 +539,7 @@ module.exports = {
 
         var cell = police.getNearJailCell(player);
         if (!cell) return notifs.error(player, `Вы далеко от камеры`, `Арест`);
-        if (rec.hasCuffs) {
+        if (rec.cuffs) {
             var params = {
                 faction: player.character.factionId,
                 owner: player.character.id
@@ -629,7 +626,7 @@ module.exports = {
         notifs.info(rec, `${player.name} изъял у вас лицензию`, header);
     },
     "playerDeath": (player) => {
-        if (player.hasCuffs) police.setCuffs(player, false);
+        if (player.cuffs) police.setCuffs(player, false);
     },
     "playerQuit": (player) => {
         if (!player.character) return;
