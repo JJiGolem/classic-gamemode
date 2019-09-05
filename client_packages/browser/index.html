@@ -466,7 +466,7 @@
                     <div class="items" v-for="pocket in place.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
                         <div class="column" v-for="n in pocket.cols * pocket.rows" :key="n-1" :class="columnClass(n-1, pocket, place)" @mouseenter="columnMouseHandler(place, pocket, n-1, $event)" @mouseleave="columnMouseHandler(place, pocket, n-1, $event)">
                             <div class="item" v-if="pocket.items[n-1]" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
-                                @contextmenu="itemMouseHandler(pocket.items[n-1], $event)" @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1].itemId)" :class="{dragging: pocket.items[n-1] == itemDrag.item}">
+                                @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1].itemId)" :class="{dragging: pocket.items[n-1] == itemDrag.item}">
                                 <div class="count" v-if="pocket.items[n-1].params.count">{{ pocket.items[n-1].params.count }}</div>
                                 <div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>
                                 <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
