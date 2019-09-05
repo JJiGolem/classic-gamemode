@@ -313,6 +313,10 @@
     width: 6vh;
 }
 
+#inventory .hotkeys.active {
+    background: #333d;
+}
+
 #inventory .hotkeys>.key {
     align-items: center;
     background-repeat: no-repeat;
