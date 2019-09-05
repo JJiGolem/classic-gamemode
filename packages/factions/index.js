@@ -1,4 +1,5 @@
 "use strict";
+var inventory = call('inventory');
 var money = require('../money')
 var notifs = require('../notifications');
 
@@ -240,6 +241,7 @@ module.exports = {
     deleteMember(player) {
         var character = player.character;
         if (this.isPoliceFaction(character.factionId)) require('../mapCase').removePoliceMember(player);
+        this.fullDeleteItems(character.id, character.factionId);
         character.factionId = null;
         character.factionRank = null;
         character.save();
@@ -348,7 +350,7 @@ module.exports = {
         mp.players.forEach((rec) => {
             if (!rec.character) return;
             if (rec.character.factionId != factionId) return;
-            
+
             rec.call('chat.action.walkietalkie', [player.name, player.id, rank.name, text]);
         });
     },
@@ -365,5 +367,9 @@ module.exports = {
             if (!res) return console.log(`[factions] Ошибка выдачи ЗП для ${player.name}`);
             notifs.info(player, `Зарплата: $${pay}`, faction.name);
         });
+    },
+    fullDeleteItems(owner, faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        inventory.fullDeleteItemsByParams(null, ["owner", "faction"], [owner, faction.id]);
     },
 };

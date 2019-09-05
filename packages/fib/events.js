@@ -64,14 +64,7 @@ module.exports = {
         }
 
 
-        inventory.fullDeleteItemsByParams(6, ["faction", "owner"], [character.factionId, character.id]);
-        inventory.fullDeleteItemsByParams(7, ["faction", "owner"], [character.factionId, character.id]);
-        inventory.fullDeleteItemsByParams(8, ["faction", "owner"], [character.factionId, character.id]);
-        inventory.fullDeleteItemsByParams(9, ["faction", "owner"], [character.factionId, character.id]);
-        inventory.fullDeleteItemsByParams(10, ["faction", "owner"], [character.factionId, character.id]);
-        inventory.fullDeleteItemsByParams(2, ["faction", "owner"], [character.factionId, character.id]);
-        inventory.fullDeleteItemsByParams(14, ["faction", "owner"], [character.factionId, character.id]);
-        inventory.fullDeleteItemsByParams(1, ["faction", "owner"], [character.factionId, character.id]);
+        inventory.fullDeleteItemsByParams([6, 7, 8, 9, 10, 2, 14, 1], ["faction", "owner"], [character.factionId, character.id]);
 
         var hatParams, topParams, legsParams, feetsParams, earsParams, tiesParams, masksParams, glassesParams;
         var f = character.factionId - 2;

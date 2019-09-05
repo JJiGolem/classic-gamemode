@@ -199,7 +199,7 @@ module.exports = {
                 value: params[key]
             });
         }
-        var item = await db.Models.CharacterInventory.create({
+        var item = db.Models.CharacterInventory.build({
             playerId: player.character.id,
             itemId: itemId,
             pocketIndex: slot.pocketIndex,
@@ -215,6 +215,7 @@ module.exports = {
 
         player.inventory.items.push(item);
         if (!item.parentId) this.updateView(player, item);
+        await item.save();
         player.call("inventory.addItem", [this.convertServerToClientItem(player.inventory.items, item), item.pocketIndex, item.index, item.parentId]);
         callback();
     },
@@ -663,55 +664,39 @@ module.exports = {
         var items = player.inventory.items;
         return items.find(item => itemIds.includes(item.itemId));
     },
-    getArrayByItemId(player, itemId) {
+    getArrayByItemId(player, itemIds) {
+        if (!Array.isArray(itemIds)) itemIds = [itemIds];
         var items = player.inventory.items;
         var result = [];
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
-            if (item.itemId == itemId) result.push(item);
+            if (itemIds.includes(item.itemId)) result.push(item);
         }
         return result;
     },
     // Полное удаление предметов инвентаря с сервера
-    fullDeleteItemsByParams(itemId, keys, values) {
-        /* Для всех игроков. */
+    fullDeleteItemsByParams(itemIds, keys, values) {
+        // console.log(`fullDeleteItemsByParams`)
+        if (itemIds && !Array.isArray(itemIds)) itemIds = [itemIds];
+        if (!Array.isArray(keys)) keys = [keys];
+        if (!Array.isArray(values)) values = [values];
+
+        // у всех игроков онлайн
         mp.players.forEach((rec) => {
-            if (rec.character) this.deleteByParams(rec, itemId, keys, values);
+            if (!rec.character) return;
+
+            this.deleteByParams(rec, itemIds, keys, values);
         });
-        /* Для всех объектов на полу. */
-        // TODO: ...
-        // mp.objects.forEach((obj) => {
-        //     if (obj.getVariable("inventoryItemSqlId") > 0) {
-        //         var item = obj.item;
-        //         var doDelete = true;
-        //         for (var i = 0; i < keys.length; i++) {
-        //             var param = item.params[keys[i]];
-        //             if (!param) {
-        //                 doDelete = false;
-        //                 break;
-        //             }
-        //             if (param && param != values[i]) {
-        //                 doDelete = false;
-        //                 break;
-        //             }
-        //         }
-        //         if (doDelete) {
-        //             DB.Handle.query(`DELETE FROM inventory_players WHERE id=?`, obj.getVariable("inventoryItemSqlId"));
-        //             obj.destroy();
-        //         }
-        //     }
-        // });
-        /* Для всех игроков из БД. */
-        // TODO: ^^
-    },
-    deleteByParams(player, itemId, keys, values) {
-        if (keys.length != values.length) return;
+        // у всех багажников авто онлайн
+        mp.vehicles.forEach((veh) => {
+            if (!veh.inventory) return;
 
-        var items = this.getArrayByItemId(player, itemId);
-        if (!items.length) return;
-
-        for (var i = 0; i < items.length; i++) {
-            var item = items[i];
+            // this.deleteByParams(veh, itemIds, keys, values);
+        });
+        // предметы на земле
+        mp.objects.forEach((obj) => {
+            if (!obj.getVariable("groundItem")) return;
+            var item = obj.item;
             var params = this.getParamsValues(item);
             var doDelete = true;
             for (var i = 0; i < keys.length; i++) {
@@ -725,7 +710,41 @@ module.exports = {
                     break;
                 }
             }
-            if (doDelete) this.deleteItem(player, item);
+            if (doDelete) obj.destroy();
+
+        });
+        /* Для всех игроков из БД. */
+    },
+    deleteByParams(player, itemIds, keys, values) {
+        // console.log(`deleteByParams: ${player.name}`)
+        if (itemIds && !Array.isArray(itemIds)) itemIds = [itemIds];
+        if (!Array.isArray(keys)) keys = [keys];
+        if (!Array.isArray(values)) values = [values];
+
+        if (keys.length != values.length) return;
+
+        var items = (itemIds) ? this.getArrayByItemId(player, itemIds) : player.inventory.items;
+        if (!items.length) return;
+
+        for (var j = 0; j < items.length; j++) {
+            var item = items[j];
+            var params = this.getParamsValues(item);
+            var doDelete = true;
+            for (var i = 0; i < keys.length; i++) {
+                var param = params[keys[i]];
+                if (!param) {
+                    doDelete = false;
+                    break;
+                }
+                if (param && param != values[i]) {
+                    doDelete = false;
+                    break;
+                }
+            }
+            if (doDelete) {
+                this.deleteItem(player, item);
+                j--;
+            }
         }
     },
     getVehicleClientPockets(dbItems) {
