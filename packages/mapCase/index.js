@@ -1,5 +1,6 @@
 "use strict";
 var factions = require('../factions');
+var notifs = call('notifications');
 
 module.exports = {
     // Вызовы в планшете ПД
@@ -90,11 +91,12 @@ module.exports = {
             description: description
         };
         this.policeCalls.push(call);
-
+        notifs.success(player, `Вызов отправлен`, `Police`);
         mp.players.forEach((rec) => {
             if (!rec.character) return;
             if (!factions.isPoliceFaction(rec.character.factionId)) return;
 
+            notifs.info(rec, `Поступил вызов от ${call.name}`, `Планшет PD`);
             rec.call(`mapCase.pd.calls.add`, [call])
         });
     },
