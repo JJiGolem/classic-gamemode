@@ -129,9 +129,10 @@ module.exports = {
         }
         obj.children.forEach((item) => {
             var params = inventory.getParamsValues(item);
-            if (!params.weaponHash) return;
-            var weapon = inventory.getItemByItemId(player, item.itemId);
-            if (weapon) return notifs.error(player, `Оружие ${inventory.getName(item.itemId)} уже имеется`, header);
+            if (params.weaponHash) {
+                var weapon = inventory.getItemByItemId(player, item.itemId);
+                if (weapon) return notifs.error(player, `Оружие ${inventory.getName(item.itemId)} уже имеется`, header);
+            }
 
             item.playerId = player.character.id;
             // из-за paranoid: true
