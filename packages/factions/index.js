@@ -231,6 +231,7 @@ module.exports = {
     addMember(faction, player) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         var character = player.character;
+        if (character.factionId) this.fullDeleteItems(character.id, character.factionId);
         character.factionId = faction.id;
         character.factionRank = this.getMinRank(faction).id;
         character.save();

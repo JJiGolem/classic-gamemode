@@ -128,11 +128,16 @@ module.exports = {
             });
         }
         obj.children.forEach((item) => {
+            var params = inventory.getParamsValues(item);
+            if (!params.weaponHash) return;
+            var weapon = inventory.getItemByItemId(player, item.itemId);
+            if (weapon) return notifs.error(player, `Оружие ${inventory.getName(item.itemId)} уже имеется`, header);
+
             item.playerId = player.character.id;
-            // item.save();
             // из-за paranoid: true
             item.restore();
             player.inventory.items.push(item);
+            inventory.giveWeapon(player, params.weaponHash, params.ammo);
         });
         obj.denyTake = true;
         inventory.addOldItem(player, obj.item, (e) => {

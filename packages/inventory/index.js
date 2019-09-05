@@ -32,7 +32,7 @@ module.exports = {
         8: [13],
     },
     // Кол-во предметов на земле от одного игрока
-    groundMaxItems: 3,
+    groundMaxItems: 30,
     // Время жизни предмета на земле (ms)
     groundItemTime: 2 * 60 * 1000,
     // Макс. дистанция до предмета, чтобы поднять его
@@ -231,15 +231,13 @@ module.exports = {
         }
 
         item.playerId = player.character.id;
-        item.pocketIndex = slot.pocketIndex,
-            item.index = slot.index,
-            item.parentId = slot.parentId,
-            await item.restore({
-
-            });
+        item.pocketIndex = slot.pocketIndex;
+        item.index = slot.index;
+        item.parentId = slot.parentId;
 
         player.inventory.items.push(item);
         if (!item.parentId) this.updateView(player, item);
+        item.restore();
         player.call("inventory.addItem", [this.convertServerToClientItem(player.inventory.items, item), item.pocketIndex, item.index, item.parentId]);
         callback();
     },
@@ -338,6 +336,8 @@ module.exports = {
         for (var i = 0; i < children.length; i++) {
             var child = children[i];
             child.destroy(); // из-за paranoid: true
+            var params = this.getParamsValues(child);
+            if (params.weaponHash) player.removeWeapon(params.weaponHash);
             this.clearArrayItems(player, child);
         }
         var index = items.indexOf(item);
