@@ -212,12 +212,15 @@ module.exports = {
         }
         return names;
     },
-    setLeader(faction, character) {
+    setLeader(faction, player) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
-
+        var character = player.character;
         character.factionId = faction.id;
         character.factionRank = this.getMaxRank(faction).id;
         character.save();
+
+        player.call(`mapCase.init`, [player.name, faction.id]);
+        if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
     },
     setBlip(faction, type, color) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
