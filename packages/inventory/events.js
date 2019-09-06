@@ -50,6 +50,12 @@ module.exports = {
             }
         }
     },
+    // срабатывает, когда игрок переместил предмет на предмет (в любом месте)
+    "item.merge": (player, data) => {
+        data = JSON.parse(data);
+        console.log(`item.merge: ${player.name}`)
+        console.log(data)
+    },
     // срабатывает, когда игрок выкидывает предмет
     "item.ground.put": (player, sqlId) => {
         // console.log(`item.ground.put: ${sqlId}`)

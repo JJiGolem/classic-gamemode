@@ -54,6 +54,13 @@ var inventory = new Vue({
                 width: 8,
                 weight: 2,
             },
+            21: {
+                name: 'Дробаш',
+                description: 'Может стрелять.',
+                height: 6,
+                width: 8,
+                weight: 2,
+            },
             24: {
                 name: 'Аптечка',
                 description: 'Описание аптечки.',
@@ -62,6 +69,13 @@ var inventory = new Vue({
                 weight: 0.1,
             },
             37: {
+                name: 'Патрон',
+                description: 'Описание патрона.',
+                height: 4,
+                width: 4,
+                weight: 0.02,
+            },
+            39: {
                 name: 'Патрон',
                 description: 'Описание патрона.',
                 height: 4,
@@ -198,6 +212,18 @@ var inventory = new Vue({
             7: [13],
             8: [13],
         },
+        // Блек-лист предметов, которые могут перетаскиваться друг на друга
+        mergeList: {
+            // parentItemId: [cildItemId, ...]
+            // 9mm
+            37: [20],
+            // 12mm
+            38: [48],
+            // 7.62mm
+            39: [21, 107],
+            // 5.56mm
+            40: [22, 99],
+        },
         // Огнестрельные оружия
         weaponsList: [20, 21, 22, 48, 99, 107],
         // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
@@ -238,6 +264,7 @@ var inventory = new Vue({
                 placeSqlId: null,
                 pocketI: null,
                 deny: false,
+                targetSqlId: null,
                 columns: {},
                 bodyFocus: null,
                 hotkeyFocus: null,
@@ -416,7 +443,16 @@ var inventory = new Vue({
                                 y: coord.y + y
                             });
                             columns.columns[i] = true;
-                            if (!columns.deny) columns.deny = this.isColumnBusy(place, pocketI, i, this.itemDrag.item);
+                            if (!columns.deny) {
+                                columns.deny = this.isColumnBusy(place, pocketI, i, item);
+                                if (columns.deny) {
+                                    if (this.mergeList[item.itemId]) {
+                                        var target = this.getItemInColumn(place, pocketI, i);
+                                        var canMerge = this.mergeList[item.itemId].includes(target.itemId);
+                                        columns.targetSqlId = (canMerge) ? target.sqlId : null;
+                                    }
+                                } else columns.targetSqlId = null;
+                            }
                         }
                     }
                 },
@@ -436,12 +472,21 @@ var inventory = new Vue({
             if (!cols[place.sqlId][pocketI][index]) return false;
             return cols[place.sqlId][pocketI][index] != item.sqlId;
         },
+        getItemInColumn(place, pocketI, index) {
+            var cols = (place.sqlId > 0) ? this.equipmentBusyColumns : this.environmentBusyColumns;
+            if (!cols[place.sqlId][pocketI]) return null;
+            if (!cols[place.sqlId][pocketI][index]) return null;
+            var sqlId = cols[place.sqlId][pocketI][index];
+            return (place.sqlId > 0) ? this.getItem(sqlId) : this.getEnvironmentItem(sqlId);
+        },
         columnClass(index, pocket, place) {
             var classes = {
                 access: this.isColumnAccess(index, pocket, place),
             };
-            if (classes.access && this.itemDrag.accessColumns.deny)
-                classes.deny = true;
+            if (classes.access) {
+                classes.deny = this.itemDrag.accessColumns.deny;
+                classes.merge = this.itemDrag.accessColumns.targetSqlId;
+            }
 
             return classes;
         },
@@ -757,7 +802,7 @@ var inventory = new Vue({
             hud.show = !val;
             if (val) busy.add("inventory", true);
             else busy.remove("inventory", true);
-        }
+        },
     },
     mounted() {
         let self = this;
@@ -794,6 +839,13 @@ var inventory = new Vue({
                 });
             } else if (columns.hotkeyFocus) {
                 self.bindHotkey(self.itemDrag.item.sqlId, columns.hotkeyFocus);
+            } else if (columns.targetSqlId) {
+                self.callRemote("item.merge", {
+                    sqlId: self.itemDrag.item.sqlId,
+                    targetSqlId: columns.targetSqlId,
+                    pocketI: columns.pocketI,
+                    placeSqlId: columns.placeSqlId
+                });
             } else {
                 var index = Object.keys(columns.columns)[0];
                 if (!columns.deny && columns.placeSqlId != null &&
@@ -968,7 +1020,7 @@ inventory.addEnvironmentPlace({
             },
             5: {
                 sqlId: 2,
-                itemId: 37,
+                itemId: 39,
                 // index: 5,
                 params: {
                     count: 10
@@ -997,6 +1049,11 @@ inventory.addEnvironmentPlace({
                 // index: 10,
                 params: {}
             },
+            290: {
+                sqlId: 6,
+                itemId: 21,
+                params: {}
+            }
         }
     }]
 });
