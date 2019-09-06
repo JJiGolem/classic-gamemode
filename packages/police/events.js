@@ -486,6 +486,16 @@ module.exports = {
             notifs.info(rec, `Вы не следуете за ${player.name}`, `Следование`);
         }
     },
+    "police.wanted": (player, recId) => {
+        var rec = mp.players.at(recId);
+        if (!rec) return notifs.error(player, `Гражданин не найден`, `Следование`);
+        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Следование`);
+
+        police.setWanted(rec, rec.character.wanted + 1);
+
+        notifs.success(player, `${rec.name} имеет ${rec.character.wanted} ур.`, `Розыск`);
+        notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур.`, `Розыск`);
+    },
     // арестовать в КПЗ ЛСПД
     "police.cells.arrest": (player, recId) => {
         var rec = mp.players.at(recId);
@@ -572,7 +582,7 @@ module.exports = {
         var veh = mp.vehicles.at(vehId);
         if (!veh) return notifs.error(player, `Авто не найдено`, header);
         var dist = player.dist(veh.position);
-        if (dist > 10) return notifs.error(player, `Авто далеко`, header);
+        if (dist > 3) return notifs.error(player, `Авто далеко`, header);
         var freeSeat = [0, 1, 2];
         var occupants = veh.getOccupants();
         for (var i = 0; i < occupants.length; i++) {
