@@ -79,6 +79,9 @@ mp.events.add({
         if (i == -1) return;
         mp.weapons.hashes.splice(i, 1);
     },
+    "weapons.ammo.sync": () => {
+        mp.weapons.sync();
+    },
     "weapons.ammo.remove": (sqlId, hash) => {
         hash = parseInt(hash);
         var ammo = mp.weapons.getAmmoWeapon(hash);

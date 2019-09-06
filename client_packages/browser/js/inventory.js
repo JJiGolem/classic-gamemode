@@ -551,6 +551,17 @@ var inventory = new Vue({
             });
             return count;
         },
+        getChildren(item) {
+            var result = [];
+            if (!item.pockets) return result;
+            item.pockets.forEach((pocket) => {
+                for (var index in pocket.items) {
+                    var child = pocket.items[index];
+                    result.push(child);
+                }
+            });
+            return result;
+        },
         isColumnAccess(index, pocket, place) {
             if (!this.itemDrag.item) return false;
             var columns = this.itemDrag.accessColumns;
@@ -652,6 +663,12 @@ var inventory = new Vue({
                 menu['Выкинуть'] = {
                     handler(item) {
                         // console.log(`выкинуть ${item}`)
+                        if (inventory.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`);
+                        else {
+                            var children = inventory.getChildren(item);
+                            var weapon = children.find(x => inventory.weaponsList.includes(x.itemId));
+                            if (weapon) mp.trigger(`weapons.ammo.sync`);
+                        }
                         mp.trigger(`callRemote`, `item.ground.put`, item.sqlId);
                     }
                 };
