@@ -92,6 +92,7 @@ module.exports = {
         if (player) return player.call(`terminal.push`, [type, text]);
 
         mp.players.forEach((rec) => {
+            if (!rec.character) return;
             if (this.haveAccess(rec)) rec.call(`terminal.push`, [type, text]);
         });
     },

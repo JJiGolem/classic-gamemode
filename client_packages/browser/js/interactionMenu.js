@@ -303,7 +303,7 @@ var interactionMenu = new Vue({
                 this.addItems("player_interaction", {
                     text: "Police"
                 });
-            }
+            } else this.deleteItem("player_interaction", "Police");
         }
     },
 });

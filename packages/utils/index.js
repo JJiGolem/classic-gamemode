@@ -53,6 +53,7 @@ module.exports = {
         if (!sqlId) return null;
         var result;
         mp.players.forEach((rec) => {
+            if (!rec.character) return;
             if (rec.character.id == sqlId) {
                 result = rec;
                 return;
