@@ -356,6 +356,8 @@ mp.events.add('vehicles.lock', () => {
     let veh = mp.getCurrentInteractionEntity();
     if (!veh) return;
     if (veh.type != 'vehicle') return;
+    if (nearBootVehicleId != null || nearHoodVehicleId != null)
+        return mp.notify.error(`Необходимо находиться у двери`, `Авто`);
     mp.events.callRemote('vehicles.lock', veh.remoteId);
 })
 
@@ -363,6 +365,8 @@ mp.events.add('vehicles.hood', () => {
     let veh = mp.getCurrentInteractionEntity();
     if (!veh) return;
     if (veh.type != 'vehicle') return;
+    if (nearHoodVehicleId == null || nearHoodVehicleId != veh.remoteId)
+        return mp.notify.error(`Необходимо находиться у капота`, `Авто`);
 
     if (veh.getVariable("hood")) {
         mp.events.callRemote('vehicles.hood', veh.remoteId, false);
@@ -375,6 +379,8 @@ mp.events.add('vehicles.trunk', () => {
     let veh = mp.getCurrentInteractionEntity();
     if (!veh) return;
     if (veh.type != 'vehicle') return;
+    if (nearBootVehicleId == null || nearBootVehicleId != veh.remoteId)
+        return mp.notify.error(`Необходимо находиться у багажника`, `Авто`);
 
     if (veh.getVariable("trunk")) {
         mp.events.callRemote('vehicles.trunk', veh.remoteId, false);
@@ -500,6 +506,13 @@ mp.events.add({
     "playerExitVehicleHood": (player, vehicle) => {
         mp.prompt.hide();
     },
+});
+
+mp.events.addDataHandler("hood", (vehicle, value) => {
+    if (nearHoodVehicleId == null) return;
+    if (nearHoodVehicleId != vehicle.remoteId) return;
+    if (value) mp.prompt.showByName("vehicle_close_hood");
+    else mp.prompt.showByName("vehicle_open_hood");
 });
 
 mp.events.add('render', () => {
