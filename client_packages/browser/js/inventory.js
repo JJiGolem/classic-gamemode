@@ -637,6 +637,11 @@ var inventory = new Vue({
                 if (!this.itemsMenu[itemId]) this.itemsMenu[itemId] = {};
                 var menu = this.itemsMenu[itemId];
                 if (this.weaponsList.includes(itemId)) {
+                    menu['Зарядить'] = {
+                        handler(item) {
+                            mp.trigger(`callRemote`, `weapons.weapon.ammo.fill`, item.sqlId);
+                        }
+                    };
                     menu['Разрядить'] = {
                         handler(item) {
                             var hash = item.params.weaponHash;

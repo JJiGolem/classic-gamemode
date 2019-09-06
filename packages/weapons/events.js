@@ -45,7 +45,9 @@ module.exports = {
             return;
         }
 
-        inventory.addItem(player, ammoId, {count: ammo}, (e) => {
+        inventory.addItem(player, ammoId, {
+            count: ammo
+        }, (e) => {
             if (e) return notifs.error(player, e, header);
             var ammoName = inventory.getName(ammoId);
 
@@ -75,5 +77,16 @@ module.exports = {
         inventory.deleteItem(player, ammo);
         player.setWeaponAmmo(weaponParams.weaponHash, newAmmo);
         notifs.success(player, `${name} заряжен`, ammoName);
+    },
+    "weapons.weapon.ammo.fill": (player, sqlId) => {
+        var header = `Зарядка оружия`;
+        var weapon = inventory.getItem(player, sqlId);
+        if (!weapon) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        var ammoId = weapons.getAmmoItemId(weapon.itemId);
+        var name = inventory.getName(weapon.itemId);
+        if (!ammoId) return notifs.error(player, `Тип патронов для ${name} не найден`, header);
+        var ammo = inventory.getItemByItemId(player, ammoId);
+        if (!ammo) return notifs.error(player, `Подходящие патроны не найдены`, name);
+        mp.events.call(`weapons.ammo.fill`, player, ammo, weapon);
     },
 }
