@@ -9,6 +9,7 @@
 
 mp.inventory = {
     groundMaxDist: 2,
+    lastArmour: 0,
 
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
@@ -59,6 +60,11 @@ mp.inventory = {
     },
     setThirst(val) {
         mp.callCEFV(`inventory.thirst = ${val}`)
+    },
+    setArmour(val) {
+        if (this.lastArmour == val) return;
+        this.lastArmour = val;
+        mp.callCEFV(`inventory.setArmour(${val})`);
     },
     takeItemHandler() {
         // поднятие предмета с земли
@@ -125,6 +131,11 @@ mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
 mp.events.add("playerExitVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`exitBoot: #${vehicle.remoteId}`);
     mp.events.callRemote(`vehicle.boot.items.clear`, vehicle.remoteId);
+});
+
+mp.events.add("time.main.tick", () => {
+    var value = mp.players.local.getArmour();
+    mp.inventory.setArmour(value);
 });
 
 mp.events.addDataHandler("trunk", (vehicle, value) => {

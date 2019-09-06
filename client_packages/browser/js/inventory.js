@@ -623,6 +623,11 @@ var inventory = new Vue({
             }
             return hashes;
         },
+        setArmour(value) {
+            var item = this.equipment[4];
+            if (!item) return;
+            item.params.health = value;
+        },
 
         // ******************  [ Hotkeys ] ******************
         bindHotkey(itemSqlId, key) {
