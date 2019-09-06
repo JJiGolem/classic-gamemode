@@ -141,6 +141,11 @@ mp.events.add("time.main.tick", () => {
 mp.events.addDataHandler("trunk", (vehicle, value) => {
     if (nearBootVehicleId == null) return;
     if (nearBootVehicleId != vehicle.remoteId) return;
-    if (value) mp.prompt.showByName("vehicle_items_boot");
-    else mp.prompt.showByName("vehicle_open_boot");
+    if (value) {
+        mp.events.callRemote(`vehicle.boot.items.request`, vehicle.remoteId);
+        mp.prompt.showByName("vehicle_items_boot");
+    } else {
+        mp.events.callRemote(`vehicle.boot.items.clear`, vehicle.remoteId);
+        mp.prompt.showByName("vehicle_open_boot");
+    }
 });
