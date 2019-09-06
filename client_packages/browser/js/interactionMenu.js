@@ -128,9 +128,9 @@ var interactionMenu = new Vue({
                         //mp.trigger(`interaction.menu.close`);
                         interactionMenu.show = false;
                         mp.trigger(`interaction.money.show`);
-                       
+
                     } else if (item.text == 'Организация') {
-                        // TODO: ...
+                        interactionMenu.menu = interactionMenu.menus["faction"];
                     }
                 }
             },
@@ -205,7 +205,8 @@ var interactionMenu = new Vue({
                     interactionMenu.show = false;
                 }
             },
-        }
+        },
+        faction: null,
     },
     methods: {
         imgSrc(index) {
@@ -215,15 +216,39 @@ var interactionMenu = new Vue({
         },
         onClick(index) {
             this.menu.handler(index);
+        },
+        addItem(menuName, item) {
+            if (typeof item == 'string') item = JSON.parse(item);
+            var menu = this.menus[menuName];
+            if (!menu) return;
+            this.deleteItem(menuName, item.text);
+            menu.items.push(item);
+        },
+        deleteItem(menuName, itemText) {
+            var menu = this.menus[menuName];
+            if (!menu) return;
+            for (var i = 0; i < menu.items.length; i++) {
+                var item = menu.items[i];
+                if (item.text == itemText) {
+                    menu.items.splice(i, 1);
+                    i--;
+                }
+            }
+        },
+    },
+    watch: {
+        // show(val) {
+        //     setCursor(val);
+        //     if (val) busy.add("interaction", true);
+        //     else busy.remove("interaction", true);
+        // },
+        faction(val) {
+            if (!val) return this.deleteItem("player_interaction", "Организация");
+            this.addItem("player_interaction", {
+                text: "Организация"
+            });
         }
     },
-    // watch: {
-    //     show(val) {
-    //         setCursor(val);
-    //         if (val) busy.add("interaction", true);
-    //         else busy.remove("interaction", true);
-    //     }
-    // },
 });
 
 // for tests

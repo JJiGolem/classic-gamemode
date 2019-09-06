@@ -219,6 +219,7 @@ module.exports = {
         character.factionRank = this.getMaxRank(faction).id;
         character.save();
 
+        player.call(`factions.faction.set`, [character.factionId]);
         player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
     },
@@ -239,6 +240,7 @@ module.exports = {
         character.factionRank = this.getMinRank(faction).id;
         character.save();
 
+        player.call(`factions.faction.set`, [character.factionId]);
         player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
     },
@@ -250,6 +252,7 @@ module.exports = {
         character.factionRank = null;
         character.save();
 
+        player.call(`factions.faction.set`, [null]);
         player.call(`mapCase.enable`, [false]);
     },
     getMembers(player) {
