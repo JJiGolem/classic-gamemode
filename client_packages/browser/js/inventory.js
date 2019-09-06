@@ -424,7 +424,7 @@ var inventory = new Vue({
             // console.log("onHotkeyItemEnter")
             if (!this.itemDrag.item) return;
             var item = this.hotkeys[key];
-            if (item) return;
+            if (item && this.getItem(item.sqlId)) return;
             if (!this.hotkeysList[this.itemDrag.item.itemId]) return;
             var columns = this.itemDrag.accessColumns;
             columns.hotkeyFocus = key;
