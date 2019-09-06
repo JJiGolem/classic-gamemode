@@ -1,5 +1,7 @@
 "use strict";
 
+let inventory = call('inventory');
+
 module.exports = {
     // связь тип_патронов-оружие
     ammo: {
@@ -13,6 +15,9 @@ module.exports = {
         40: [22, 99],
     },
 
+    init() {
+        inventory.mergeList = Object.assign(inventory.mergeList, this.ammo);
+    },
     // получить ID предмета патронов по ID предмета оружия
     getAmmoItemId(itemId) {
         for (var ammoId in this.ammo) {

@@ -7,7 +7,7 @@ let weapons = call('weapons');
 
 module.exports = {
     "init": () => {
-
+        weapons.init();
     },
     "weapons.ammo.sync": (player, data) => {
         data = JSON.parse(data);
@@ -53,5 +53,22 @@ module.exports = {
             player.setWeaponAmmo(params.weaponHash, 0);
             notifs.success(player, `${name} разряжен`, ammoName)
         });
+    },
+    "weapons.ammo.fill": (player, weapon, ammo) => {
+        // console.log(`weapons.ammo.fill: ${player.name} ${weapon.id} (${ammo.id})`)
+        var header = `Зарядка оружия`
+        var params = inventory.getParamsValues(ammo);
+        if (!params.count) return notifs.error(player, `Патронов: 0 ед.`, header);
+        if (weapons.getAmmoItemId(weapon.itemId) != ammo.itemId) return notifs.error(player, `Неверный тип патронов`, header);
+
+        var name = inventory.getName(weapon.itemId);
+        var ammoName = inventory.getName(ammo.itemId);
+
+        var weaponParams = inventory.getParamsValues(weapon);
+        var newAmmo = weaponParams.ammo + params.count;
+        inventory.updateParam(player, weapon, 'ammo', newAmmo);
+        inventory.deleteItem(player, ammo);
+        player.setWeaponAmmo(weaponParams.weaponHash, newAmmo);
+        notifs.success(player, `${name} заряжен`, ammoName);
     },
 }

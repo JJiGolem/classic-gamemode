@@ -31,6 +31,8 @@ module.exports = {
         7: [13],
         8: [13],
     },
+    // Вайт-лист предметов, которые могут перетаскиваться друг на друга
+    mergeList: {},
     // Кол-во предметов на земле от одного игрока
     groundMaxItems: 30,
     // Время жизни предмета на земле (ms)
@@ -861,5 +863,8 @@ module.exports = {
     removeWeapon(player, hash) {
         player.removeWeapon(hash);
         player.call(`weapons.removeWeapon`, [hash.toString()]);
+    },
+    canMerge(itemId, targetId) {
+        return this.mergeList[itemId] && this.mergeList[itemId].includes(targetId);
     },
 };

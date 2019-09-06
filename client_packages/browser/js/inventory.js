@@ -86,13 +86,13 @@ var inventory = new Vue({
         // Меню предмета по ПКМ
         itemsMenu: {
             // itemId: struct menu
-            18: { // test
+            /*18: { // test
                 'Включить': {
                     handler(item) {
                         console.log(`Включить ${item}`)
                     }
                 }
-            },
+            },*/
             24: { // малая аптечка
                 'Вылечиться': {
                     handler(item) {
@@ -124,7 +124,7 @@ var inventory = new Vue({
                     }
                 }
             },
-            37: { // test
+            /*37: { // test
                 'Разрядить': {
                     handler(item) {
                         console.log(`разрядить: ${item}`)
@@ -159,7 +159,7 @@ var inventory = new Vue({
                         console.log(`Отсоединить ${item}`);
                     }
                 },
-            },
+            },*/
         },
         // Вайт-лист предметов, которые можно надеть
         bodyList: {
@@ -212,7 +212,7 @@ var inventory = new Vue({
             7: [13],
             8: [13],
         },
-        // Блек-лист предметов, которые могут перетаскиваться друг на друга
+        // Вайт-лист предметов, которые могут перетаскиваться друг на друга
         mergeList: {
             // parentItemId: [cildItemId, ...]
             // 9mm
@@ -448,7 +448,8 @@ var inventory = new Vue({
                                 if (columns.deny) {
                                     if (this.mergeList[item.itemId]) {
                                         var target = this.getItemInColumn(place, pocketI, i);
-                                        var canMerge = this.mergeList[item.itemId].includes(target.itemId);
+                                        var canMerge = this.mergeList[item.itemId].includes(target.itemId) &&
+                                            place.sqlId > 0 && this.getItem(item.sqlId);
                                         columns.targetSqlId = (canMerge) ? target.sqlId : null;
                                     }
                                 } else columns.targetSqlId = null;
@@ -840,6 +841,7 @@ var inventory = new Vue({
             } else if (columns.hotkeyFocus) {
                 self.bindHotkey(self.itemDrag.item.sqlId, columns.hotkeyFocus);
             } else if (columns.targetSqlId) {
+                self.deleteItem(self.itemDrag.item.sqlId);
                 self.callRemote("item.merge", {
                     sqlId: self.itemDrag.item.sqlId,
                     targetSqlId: columns.targetSqlId,

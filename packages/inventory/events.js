@@ -55,6 +55,17 @@ module.exports = {
         data = JSON.parse(data);
         console.log(`item.merge: ${player.name}`)
         console.log(data)
+        var header = `Слияние предметов`;
+        var item = inventory.getItem(player, data.sqlId);
+        var target = inventory.getItem(player, data.targetSqlId);
+        if (!item) return notifs.error(player, `Предмет #${data.sqlId} не найден`, header);
+        if (!target) return notifs.error(player, `Целевой предмет #${data.targetSqlId} не найден`, header);
+        if (!inventory.canMerge(item.itemId, target.itemId)) return notifs.error(player, `Предметы недоступны для слияния`, header);
+
+        var params = inventory.getParamsValues(target);
+        if (params.weaponHash) { // зарядка оружия
+            mp.events.call("weapons.ammo.fill", player, target, item);
+        }
     },
     // срабатывает, когда игрок выкидывает предмет
     "item.ground.put": (player, sqlId) => {
