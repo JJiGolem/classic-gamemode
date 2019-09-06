@@ -315,7 +315,7 @@ module.exports = {
         if (typeof item == 'number') item = this.getItem(player, item);
         if (!item) return console.log(`[inventory.deleteItem] Предмет #${item} у ${player.name} не найден`);
         var params = this.getParamsValues(item);
-        if (params.weaponHash) player.removeWeapon(params.weaponHash);
+        if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
         if (!item.parentId) this.clearView(player, item.itemId);
         item.destroy();
         player.call("inventory.deleteItem", [item.id]);
@@ -339,7 +339,7 @@ module.exports = {
             var child = children[i];
             child.destroy(); // из-за paranoid: true
             var params = this.getParamsValues(child);
-            if (params.weaponHash) player.removeWeapon(params.weaponHash);
+            if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
             this.clearArrayItems(player, child);
         }
         var index = items.indexOf(item);
@@ -445,7 +445,7 @@ module.exports = {
         } else if (otherItems[item.itemId] != null) {
             otherItems[item.itemId](params);
         } else if (params.weaponHash) {
-            player.removeWeapon(params.weaponHash);
+            this.removeWeapon(player, params.weaponHash);
         } else return console.log("Неподходящий тип предмета для тела!");
 
     },
@@ -856,5 +856,10 @@ module.exports = {
         if (!hash) return;
         player.giveWeapon(hash, 0);
         player.setWeaponAmmo(hash, parseInt(ammo));
+        player.call(`weapons.giveWeapon`, [hash.toString()]);
+    },
+    removeWeapon(player, hash) {
+        player.removeWeapon(hash);
+        player.call(`weapons.removeWeapon`, [hash.toString()]);
     },
 };
