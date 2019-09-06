@@ -160,6 +160,35 @@ var inventory = new Vue({
                     }
                 },
             },*/
+            // 4 типа патронов
+            37: {
+                'Зарядить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
+                    }
+                }
+            },
+            38: {
+                'Зарядить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
+                    }
+                }
+            },
+            39: {
+                'Зарядить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
+                    }
+                }
+            },
+            40: {
+                'Зарядить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
+                    }
+                }
+            },
         },
         // Вайт-лист предметов, которые можно надеть
         bodyList: {
@@ -202,6 +231,27 @@ var inventory = new Vue({
                         cuffsSqlId: item.sqlId
                     };
                     mp.trigger(`callRemote`, `police.cuffs`, JSON.stringify(data));
+                }
+            },
+            // патроны
+            37: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
+                }
+            },
+            38: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
+                }
+            },
+            39: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
+                }
+            },
+            40: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
                 }
             },
         },

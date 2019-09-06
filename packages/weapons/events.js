@@ -54,11 +54,16 @@ module.exports = {
             notifs.success(player, `${name} разряжен`, ammoName)
         });
     },
-    "weapons.ammo.fill": (player, weapon, ammo) => {
-        // console.log(`weapons.ammo.fill: ${player.name} ${weapon.id} (${ammo.id})`)
-        var header = `Зарядка оружия`
+    "weapons.ammo.fill": (player, ammo, weapon) => {
+        // console.log(`weapons.ammo.fill: ${player.name} ${ammo} (${weapon})`)
+        var header = `Зарядка оружия`;
+        if (typeof ammo == 'number') ammo = inventory.getItem(player, ammo);
+        if (!ammo) return notifs.error(player, `Патроны не найдены`, header);
+
         var params = inventory.getParamsValues(ammo);
         if (!params.count) return notifs.error(player, `Патронов: 0 ед.`, header);
+        if (!weapon) weapon = weapons.getWeaponByAmmoId(player, ammo.itemId);
+        if (!weapon) return notifs.error(player, `Подходящее оружие не найдено`, header);
         if (weapons.getAmmoItemId(weapon.itemId) != ammo.itemId) return notifs.error(player, `Неверный тип патронов`, header);
 
         var name = inventory.getName(weapon.itemId);

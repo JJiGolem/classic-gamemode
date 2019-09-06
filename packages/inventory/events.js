@@ -64,7 +64,7 @@ module.exports = {
 
         var params = inventory.getParamsValues(target);
         if (params.weaponHash) { // зарядка оружия
-            mp.events.call("weapons.ammo.fill", player, target, item);
+            mp.events.call("weapons.ammo.fill", player, item, target);
         }
     },
     // срабатывает, когда игрок выкидывает предмет
