@@ -198,6 +198,8 @@ var inventory = new Vue({
             7: [13],
             8: [13],
         },
+        // Огнестрельные оружия
+        weaponsList: [20, 21, 22, 48, 99, 107],
         // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
         environment: [],
         // Предметы на игроке (экипировка)
@@ -533,10 +535,19 @@ var inventory = new Vue({
         setItemsInfo(itemsInfo) {
             if (typeof itemsInfo == 'string') itemsInfo = JSON.parse(itemsInfo);
             for (var itemId in itemsInfo) {
+                itemId = parseInt(itemId);
                 this.setItemInfo(itemId, itemsInfo[itemId]);
 
                 if (!this.itemsMenu[itemId]) this.itemsMenu[itemId] = {};
                 var menu = this.itemsMenu[itemId];
+                if (this.weaponsList.includes(itemId)) {
+                    menu['Разрядить'] = {
+                        handler(item) {
+                            var hash = item.params.weaponHash;
+                            mp.trigger(`weapons.ammo.remove`, item.sqlId, hash.toString());
+                        }
+                    };
+                }
                 menu['Выкинуть'] = {
                     handler(item) {
                         // console.log(`выкинуть ${item}`)
