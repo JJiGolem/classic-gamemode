@@ -120,7 +120,6 @@ mp.events.add('chat.tags.add', (tagIDs) => {
 mp.events.add('chat.tags.delete', (tagIDs) => {
     tagIDs.forEach((tagID) => {
         let i = availableTags.findIndex(x => x.id == tagID)
-        mp.chat.debug(i);
         if (i != -1) {
             availableTags.splice(i, 1);
         }

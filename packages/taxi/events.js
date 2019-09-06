@@ -10,7 +10,6 @@ module.exports = {
         if (!player.character) return;
 
         if (shape.isTaxiStation) {
-            player.call('chat.message.push', [`!{#ffffff}${player.name} зашел в колшейп taxi`]);
             if (player.character.job == 2) {
                 player.call('taxi.jobmenu.show', [1]);
             } else {
@@ -24,7 +23,6 @@ module.exports = {
         if (!player.character) return;
 
         if (shape.isTaxiStation) {
-            player.call('chat.message.push', [`!{#ffffff}${player.name} вышел с колшейпа taxi`]);
             player.call('taxi.jobmenu.close');
             player.currentColshape = null;
         }

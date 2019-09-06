@@ -37,6 +37,13 @@ var terminal = new Vue({
                 text: text
             });
             if (this.messages.length > this.maxCount) this.messages.shift();
+            this.scrollTop();
+        },
+        scrollTop() {
+            setTimeout(() => {
+                var content = this.$el.querySelector(".content");
+                content.scrollTop = 99999;
+            }, 10);
         },
         onHeaderMouseDown(e) {
             this.dragging.active = true;
@@ -88,7 +95,7 @@ var terminal = new Vue({
                 }, 100);
             } else busy.remove("terminal", true);
             setCursor(val);
-        }
+        },
     },
     mounted() {
         let self = this;

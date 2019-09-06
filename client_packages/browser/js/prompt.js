@@ -2,6 +2,7 @@ var prompt = new Vue({
     el: "#prompt",
     data: {
         showTime: 10000,
+        showTimer: null,
         prompts: {
             "select_menu": {
                 text: "Используйте <span>&uarr;</span> <span>&darr;</span> <span>&crarr;</span> для выбора пункта в меню.",
@@ -9,6 +10,21 @@ var prompt = new Vue({
             },
             "vehicle_engine": {
                 text: "Нажмите <span>2</span> для того, чтобы завести двигатель автомобиля"
+            },
+            "vehicle_open_boot": {
+                text: "Нажмите <span>E</span> для того, чтобы открыть багажник"
+            },
+            "vehicle_open_hood": {
+                text: "Нажмите <span>E</span> для того, чтобы открыть капот"
+            },
+            "vehicle_close_boot": {
+                text: "Нажмите <span>E</span> для того, чтобы закрыть багажник"
+            },
+            "vehicle_close_hood": {
+                text: "Нажмите <span>E</span> для того, чтобы закрыть капот"
+            },
+            "vehicle_items_boot": {
+                text: "Нажмите <span>I</span> для того, чтобы взаимодействовать с содержимым багажника"
             },
             "carshow_control": {
                 text: "Нажмите <span>Esc</span> для того, чтобы выйти из автосалона"
@@ -39,7 +55,7 @@ var prompt = new Vue({
             },
             "garage_control": {
                 text: "Нажмите <span>E</span> для того, чтобы выехать из гаража"
-            }
+            },
         },
         text: null
     },
@@ -49,24 +65,26 @@ var prompt = new Vue({
             if (!prompt) return;
             this.text = prompt.text;
             hud.showOnline = false;
+
+            var self = this;
+            clearTimeout(this.showTimer);
+            this.showTimer = setTimeout(function() {
+                self.hide();
+            }, self.showTime);
         },
         show(text) {
             this.text = text;
             hud.showOnline = false;
+
+            var self = this;
+            clearTimeout(this.showTimer);
+            this.showTimer = setTimeout(function() {
+                self.hide();
+            }, self.showTime);
         },
         hide() {
             this.text = null;
             hud.showOnline = true;
         }
     },
-    watch: {
-        text(val, oldVal) {
-            if (oldVal || !val) return;
-
-            var self = this;
-            setTimeout(function() {
-                self.hide();
-            }, self.showTime);
-        },
-    }
 });

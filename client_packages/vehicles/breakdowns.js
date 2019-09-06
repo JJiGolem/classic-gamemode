@@ -28,10 +28,10 @@ mp.events.add('vehicles.breakdowns.init', (data) => {
         return mp.callCEFV('speedometer.danger = 0');
     }
     mp.events.call('notifications.push.warning', 'Обратитесь к механикам', 'Т/с неисправно');
-    mp.chat.debug(`engineState ${data.engineState}`);
-    mp.chat.debug(`steeringState ${data.steeringState}`);
-    mp.chat.debug(`fuelState ${data.fuelState}`);
-    mp.chat.debug(`brakeState ${data.brakeState}`);
+    // mp.chat.debug(`engineState ${data.engineState}`);
+    // mp.chat.debug(`steeringState ${data.steeringState}`);
+    // mp.chat.debug(`fuelState ${data.fuelState}`);
+    // mp.chat.debug(`brakeState ${data.brakeState}`);
 
     engineState = data.engineState;
     steeringState = data.steeringState;
@@ -53,7 +53,6 @@ mp.events.add('vehicles.breakdowns.init', (data) => {
 });
 
 mp.events.add('vehicles.breakdowns.engine', () => {
-    mp.chat.debug('сломали двигатель');
     if (!mp.players.local.vehicle) return;
     let multiplier;
     switch (engineState) {
@@ -68,16 +67,14 @@ mp.events.add('vehicles.breakdowns.engine', () => {
 });
 
 mp.events.add('vehicles.breakdowns.steering', () => {
-    mp.chat.debug('сломали руль');
     startSteeringTimer();
 });
 
 mp.events.add('vehicles.breakdowns.fuel', () => {
-    mp.chat.debug('сломали топливо');
+    //
 });
 
 mp.events.add('vehicles.breakdowns.brake', () => {
-    mp.chat.debug('сломали тормоза');
     startBrakeTimer();
 });
 
@@ -107,13 +104,11 @@ function startBrakeTimer() {
                     try {
                         mp.players.local.vehicle.setHandbrake(false);
                     } catch (err) {
-                        mp.chat.debug('err');
                         stopBrakeTimer();
                     }
                 }, 1000);
             }
         } catch (err) {
-            mp.chat.debug('err');
             stopBrakeTimer();
         }
     }, 5000);
@@ -152,7 +147,6 @@ function startSteeringTimer() {
             mp.players.local.vehicle.setSteerBias(bias);
 
         } catch (err) {
-            mp.chat.debug('err');
             stopSteeringTimer()
         }
     }, 2000);

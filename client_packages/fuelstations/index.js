@@ -3,12 +3,10 @@ let isInFuelStationColshape = false;
 let menuIsOpen = false;
 
 mp.events.add('fuelstations.shape.enter', () => {
-    mp.chat.debug('enter');
     isInFuelStationColshape = true;
 });
 
 mp.events.add('fuelstations.shape.leave', () => {
-    mp.chat.debug('leave');
     isInFuelStationColshape = false;
     mp.events.call('fuelstations.menu.close');
 });

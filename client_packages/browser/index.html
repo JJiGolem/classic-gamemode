@@ -466,7 +466,7 @@
                     <div class="items" v-for="pocket in place.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
                         <div class="column" v-for="n in pocket.cols * pocket.rows" :key="n-1" :class="columnClass(n-1, pocket, place)" @mouseenter="columnMouseHandler(place, pocket, n-1, $event)" @mouseleave="columnMouseHandler(place, pocket, n-1, $event)">
                             <div class="item" v-if="pocket.items[n-1]" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
-                                @contextmenu="itemMouseHandler(pocket.items[n-1], $event)" @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1].itemId)" :class="{dragging: pocket.items[n-1] == itemDrag.item}">
+                                @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1].itemId)" :class="{dragging: pocket.items[n-1] == itemDrag.item}">
                                 <div class="count" v-if="pocket.items[n-1].params.count">{{ pocket.items[n-1].params.count }}</div>
                                 <div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>
                                 <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
@@ -526,26 +526,26 @@
             </div>
         </div>
         <div class="hands">
-            <div class="left-slot" v-bind:class="{busy: hands.left}">
-                <div class="item" v-if="hands.left && getItem(hands.left.sqlId)" v-bind:style="{backgroundImage: 'url(' + urlItemImg(hands.left.itemId) + ')'}">
-                    <div class="count" v-if="hands.left.params.count">{{ hands.left.params.count }}</div>
-                    <div class="health" v-if="hands.left.params.health" v-bind:style="{top: 100 - hands.left.params.health + '%', 'border-color': valueColor(hands.left.params.health)}"></div>
-                    <div class="sqlid" v-if="debug">#{{ hands.left.sqlId }}</div>
+            <div class="left-slot" v-bind:class="{busy: hands}">
+                <div class="item" v-if="hands && getItem(hands.sqlId)" v-bind:style="{backgroundImage: 'url(' + urlItemImg(hands.itemId) + ')'}">
+                    <div class="count" v-if="hands.params.count">{{ hands.params.count }}</div>
+                    <div class="health" v-if="hands.params.health" v-bind:style="{top: 100 - hands.params.health + '%', 'border-color': valueColor(hands.params.health)}"></div>
+                    <div class="sqlid" v-if="debug">#{{ hands.sqlId }}</div>
                 </div>
-                <img v-else src="img/inventory/hand.png" />
-                <span v-if="!hands.left">в левой <br />руке</span>
+                <img v-if="!hands" src="img/inventory/hand.png" />
+                <!-- <span v-if="!hands.left">в левой <br />руке</span> -->
             </div>
-            <div class="right-slot" v-bind:class="{busy: hands.right}">
-                <div class="item" v-if="hands.right" v-bind:style="{backgroundImage: 'url(' + urlItemImg(hands.right.itemId) + ')'}">
-                    <div class="count" v-if="hands.right.params.count">{{ hands.right.params.count }}</div>
-                    <div class="health" v-if="hands.right.params.health" v-bind:style="{top: 100 - hands.right.params.health + '%', 'border-color': valueColor(hands.right.params.health)}"></div>
-                    <div class="sqlid" v-if="debug">#{{ hands.right.sqlId }}</div>
-                </div>
-                <span v-else>в правой <br />руке</span>
-                <img v-if="!hands.right" src="img/inventory/hand.png" />
+            <div class="right-slot" v-show="!hands" v-bind:class="{busy: hands}">
+                <!-- <div class="item" v-if="hands" v-bind:style="{backgroundImage: 'url(' + urlItemImg(hands.itemId) + ')'}">
+                    <div class="count" v-if="hands.params.count">{{ hands.params.count }}</div>
+                    <div class="health" v-if="hands.params.health" v-bind:style="{top: 100 - hands.params.health + '%', 'border-color': valueColor(hands.params.health)}"></div>
+                    <div class="sqlid" v-if="debug">#{{ hands.sqlId }}</div>
+                </div> -->
+                <!-- <span v-else>в правой <br />руке</span> -->
+                <img v-if="!hands" src="img/inventory/hand.png" />
             </div>
         </div>
-        <div class="hotkeys">
+        <div class="hotkeys" :class="{active: itemDrag.item && hotkeysList[itemDrag.item.itemId]}">
             <div class="key" :class="{focus: itemDrag.item && itemDrag.accessColumns.hotkeyFocus == n}" v-for="n in 10" @mouseenter="onHotkeyItemEnter(n)" @mouseleave="onHotkeyItemLeave(n)">
                 <div class="item" v-if="hotkeys[n] && getItem(hotkeys[n].sqlId)" v-bind:style="{backgroundImage: 'url('+urlItemImg(hotkeys[n].itemId)+')'}">
                     <span class="hotkey">{{ (n == 10)? 0 : n }}</span>
@@ -556,8 +556,9 @@
                 </div>
             </div>
         </div>
-        <div class="item-desc" v-if="itemDesc.item && !itemMenu.item && !itemDrag.item && getItem(itemDesc.item.sqlId)" :style="{left: itemDesc.x + 'px', top: itemDesc.y + 'px'}">
+        <div class="item-desc" v-if="itemDesc.item && !itemMenu.item && !itemDrag.item && (getItem(itemDesc.item.sqlId) || getEnvironmentItem(itemDesc.item.sqlId))" :style="{left: itemDesc.x + 'px', top: itemDesc.y + 'px'}">
             <div class="title">{{ itemsInfo[itemDesc.item.itemId].name }}</div>
+            <div v-if="debug">itemId: #{{ itemDesc.item.itemId }}</div>
             <div class="item" v-if="itemDesc.item" :style="itemStyle(itemDesc.item.itemId)">
                 <div class="sqlid" v-if="debug">#{{ itemDesc.item.sqlId }}</div>
                 <div class="count" v-if="itemDesc.item.params.count">{{ itemDesc.item.params.count }}</div>
@@ -988,7 +989,7 @@
             <div class="header"> Выдача штрафа {{ profileData[currentMenuFocus].name}}</div>
             <div class="title">Введите причину</div>
             <div class="input"><input placeholder="Введите причину выдачи штрафа..." v-model="causeValue"/></div>
-            <div class="title">Введите сумму наказанния</div>
+            <div class="title">Введите сумму штрафа</div>
             <div class="input"><input placeholder="Введите сумму..." v-model="amountValue" @keypress="inputCheck($event)"/></div>
             <div class="btns">
                 <div class="btn" @click="give()">Выдать</div>

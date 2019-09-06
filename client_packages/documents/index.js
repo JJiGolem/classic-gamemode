@@ -59,7 +59,6 @@ mp.events.add('documents.show', (type, data) => {
         mp.callCEFV('driverLicense.show = true');
     }
     if (type == 'gunLicense') {
-        mp.chat.debug('show lic')
         let newDate = data.date ? data.date.slice(0, 10) : null;
         data.date = dateFormatter(newDate);
         for (var key in data) {

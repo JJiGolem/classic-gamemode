@@ -85,7 +85,7 @@ module.exports = {
                     z: veh.position.z,
                     h: veh.heading,
                     plate: veh.plate,
-                    fuel: veh.properties.maxFuel*0.7
+                    fuel: veh.properties.maxFuel * 0.7
                 });
             } else {
                 var data = await db.Models.Vehicle.create({ /// Если автомобиля нет в БД, то создаем запись в БД 
@@ -100,7 +100,7 @@ module.exports = {
                     h: veh.heading,
                     license: veh.license,
                     plate: veh.plate,
-                    fuel: veh.properties.maxFuel*0.7
+                    fuel: veh.properties.maxFuel * 0.7
                 });
                 veh.sqlId = data.id;
                 veh.db = data;
@@ -114,25 +114,39 @@ module.exports = {
 
             switch (args[0]) {
                 case "newbie":
-                    // mp.players.forEach((current) => { //TODO проверка на адм
-                    //     current.call('chat.message.push', [`!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для новичков`]);
-                    // });
                     mp.events.call('admin.notify.all', `!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для новичков`);
                     break;
                 case "faction":
-                    // mp.players.forEach((current) => { //TODO проверка на адм
-                    //     current.call('chat.message.push', [`!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для фракции с ID ${args[1]}`]);
-                    // });
                     mp.events.call('admin.notify.all', `!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для фракции с ID ${args[1]}`);
                     break;
                 case "job":
-                    // mp.players.forEach((current) => { //TODO проверка на адм
-                    //     current.call('chat.message.push', [`!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для работы с ID ${args[1]}`]);
-                    // });
                     mp.events.call('admin.notify.all', `!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для работы с ID ${args[1]}`);
                     break;
             }
         }
+    },
+    "/delveh": {
+        access: 5,
+        description: "Удалить транспорт из БД",
+        args: ``,
+        handler: async (player, args, out) => {
+            let veh = player.vehicle;
+            if (!veh) return out.error('Вы не в авто!', player);
+            clearTimeout(veh.fuelTimer);
+            if (!veh.db || veh.key == 'admin') {
+                veh.destroy();
+                out.info('Автомобиль удален, но его нет в БД', player);
+                return;
+            }
+            try {
+                await veh.db.destroy();
+                veh.destroy()
+                out.info('Автомобиль удален', player);
+            } catch (err) {
+                console.log(err);
+            }
+
+        },
     },
     "/fuelstate": {
         access: 6,

@@ -123,11 +123,9 @@ mp.events.add("carshow.car.buy.ans", (ans, carInfo, parkingInfo) => {
     mp.callCEFV(`loader.show = false;`);
     switch (ans) {
         case 0:
-            mp.chat.debug('Автомобилей нет');
             mp.notify.error('Т/с нет в наличии', 'Ошибка');
             break;
         case 1:
-            mp.chat.debug('Успешно куплен');
             mp.notify.success('Вы приобрели транспорт', 'Успех');
             mp.events.call('chat.message.push', `!{#80c102}Вы успешно приобрели транспортное средство !{#009eec}${carInfo.properties.name}`);
             mp.events.call('chat.message.push', `!{#f3c800}Транспорт доставлен на подземную парковку !{#009eec}${parkingInfo.name}`);
@@ -136,19 +134,15 @@ mp.events.add("carshow.car.buy.ans", (ans, carInfo, parkingInfo) => {
             mp.events.call('carshow.list.close');
             break;
         case 2:
-            mp.chat.debug('Нет денег');
             mp.notify.error('Недостаточно денег', 'Ошибка');
             break;
         case 3:
-            mp.chat.debug('операция не прошла');
             mp.notify.error('Операция не прошла', 'Ошибка');
             break;
         case 4:
-            mp.chat.debug('неизвестная ошибка');
             mp.notify.error('Неизвестная ошибка', 'Ошибка');
             break;
         case 5:
-            //mp.chat.debug('неизвестная ошибка');
             mp.notify.error('Достигнут лимит на т/с', 'Ошибка');
             break;
         case 6:

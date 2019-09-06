@@ -131,8 +131,9 @@ var mapCase = new Vue({
         },
         show(val) {
             setCursor(val);
-            if (val) mp.busy.add("mapCase");
-            else mp.busy.remove("mapCase");
+            mp.trigger("blur", val, 300);
+            if (val) busy.add("mapCase", true);
+            else busy.remove("mapCase", true);
             if (!val && this.timerId) {
                 clearInterval(this.timerId);
                 return;
@@ -153,7 +154,7 @@ var mapCase = new Vue({
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
-            if (busy.includes()) return;
+            if (busy.includes(["chat", "terminal", "inventory", "phone"])) return;
             if (e.keyCode == 80 && self.enable) self.show = !self.show; // P
         });
     }

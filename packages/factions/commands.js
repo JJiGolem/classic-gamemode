@@ -17,7 +17,7 @@ module.exports = {
     },
     "/ftp": {
         description: "Телепортироваться к организации.",
-        access: 2,
+        access: 5,
         args: "[ид_организации]:n",
         handler: (player, args, out) => {
             var marker = factions.getMarker(args[0]);
@@ -43,8 +43,8 @@ module.exports = {
             faction.save();
         }
     },
-    "/fsetleader": {
-        description: "Сменить лидера организации.",
+    "/fsetleaderoff": {
+        description: "Сменить лидера организации оффлайн.",
         access: 6,
         args: "[ид_организации]:n [имя] [фамилия]",
         handler: async (player, args, out) => {
@@ -61,8 +61,25 @@ module.exports = {
             });;
             if (!character) return out.error(`Персонаж ${fullName} не найден`, player);
 
-            out.info(`${player.name} добавил лидера организации #${faction.id} (#${character.id})`);
-            factions.setLeader(faction, character);
+            out.info(`${player.name} добавил лидера организации #${faction.id} оффлайн (#${character.id})`);
+            character.factionId = faction.id;
+            character.factionRank = factions.getMaxRank(faction).id;
+            character.save();
+        }
+    },
+    "/fsetleader": {
+        description: "Сменить лидера организации.",
+        access: 6,
+        args: "[ид_игрока]:n [ид_организации]:n",
+        handler: async (player, args, out) => {
+            var faction = factions.getFaction(args[1]);
+            if (!faction) return out.error(`Организация #${args[1]} не найдена`, player);
+
+            var rec = mp.players.at(args[0]);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
+
+            out.info(`${player.name} добавил лидера организации #${faction.id} (#${rec.name})`);
+            factions.setLeader(faction, rec);
         }
     },
     "/fuval": {
@@ -267,11 +284,15 @@ module.exports = {
 
             var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
             colshape.onEnter = (player) => {
-                console.log(`storage onEnter: ${player.name} ${faction.name}`)
+                if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
+                player.call("factions.storage.showMenu", [faction.id]);
+                player.insideFactionWarehouse = faction.id;
             };
             colshape.onExit = (player) => {
-                console.log(`storage onExit: ${player.name} ${faction.name}`)
+                player.call("selectMenu.hide");
+                delete player.insideFactionWarehouse;
             };
+            storage.colshape = colshape;
 
             out.info(`${player.name} изменил позицию выдачи предметов у организации #${faction.id}`);
         }

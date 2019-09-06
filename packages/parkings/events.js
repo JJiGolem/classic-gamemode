@@ -10,13 +10,11 @@ module.exports = {
     "playerEnterColshape": (player, shape) => {
         if (shape.isParking) {
             if (player.vehicle) return;
-            player.call('chat.message.push', [`!{#ffffff}${player.name} зашел в колшейп с parkingId ${shape.parkingId}`]);
             player.call('parkings.menu.show', [shape.parkingId]);
         }
     },
     "playerExitColshape": (player, shape) => {
         if (shape.isParking) {
-            player.call('chat.message.push', [`!{#ffffff}${player.name} вышел из колшейпа с parkingId ${shape.parkingId}`]);
             player.call('parkings.menu.close');
         }
     },

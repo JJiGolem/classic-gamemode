@@ -1,4 +1,5 @@
 "use strict";
+var inventory = call('inventory');
 var money = require('../money')
 var notifs = require('../notifications');
 
@@ -211,12 +212,16 @@ module.exports = {
         }
         return names;
     },
-    setLeader(faction, character) {
+    setLeader(faction, player) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
-
+        var character = player.character;
         character.factionId = faction.id;
         character.factionRank = this.getMaxRank(faction).id;
         character.save();
+
+        player.call(`factions.faction.set`, [character.factionId]);
+        player.call(`mapCase.init`, [player.name, faction.id]);
+        if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
     },
     setBlip(faction, type, color) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
@@ -230,20 +235,24 @@ module.exports = {
     addMember(faction, player) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         var character = player.character;
+        if (character.factionId) this.fullDeleteItems(character.id, character.factionId);
         character.factionId = faction.id;
         character.factionRank = this.getMinRank(faction).id;
         character.save();
 
+        player.call(`factions.faction.set`, [character.factionId]);
         player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
     },
     deleteMember(player) {
         var character = player.character;
         if (this.isPoliceFaction(character.factionId)) require('../mapCase').removePoliceMember(player);
+        this.fullDeleteItems(character.id, character.factionId);
         character.factionId = null;
         character.factionRank = null;
         character.save();
 
+        player.call(`factions.faction.set`, [null]);
         player.call(`mapCase.enable`, [false]);
     },
     getMembers(player) {
@@ -260,6 +269,16 @@ module.exports = {
 
         character.factionRank = rank.id;
         character.save();
+
+        if (!this.isPoliceFaction(character.factionId)) return;
+
+        var rank = this.getRankById(character.factionId, character.factionRank).rank;
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (rec.character.factionId != character.factionId) return;
+
+            rec.call(`mapCase.pd.members.rank.set`, [character.id, rank]);
+        });
     },
     isGovernmentFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
@@ -348,7 +367,7 @@ module.exports = {
         mp.players.forEach((rec) => {
             if (!rec.character) return;
             if (rec.character.factionId != factionId) return;
-            
+
             rec.call('chat.action.walkietalkie', [player.name, player.id, rank.name, text]);
         });
     },
@@ -365,5 +384,9 @@ module.exports = {
             if (!res) return console.log(`[factions] Ошибка выдачи ЗП для ${player.name}`);
             notifs.info(player, `Зарплата: $${pay}`, faction.name);
         });
+    },
+    fullDeleteItems(owner, faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        inventory.fullDeleteItemsByParams(null, ["owner", "faction"], [owner, faction.id]);
     },
 };

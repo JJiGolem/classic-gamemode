@@ -9,6 +9,8 @@ module.exports = {
         Math.clamp = this.clamp;
         mp.players.getBySqlId = this.getPlayerBySqlId;
         mp.players.getByName = this.getPlayerByName;
+        mp.players.getNear = this.getNearPlayer;
+        mp.vehicles.getBySqlId = this.getVehicleBySqlId;
     },
     /// Отправка писем на почту
     sendMail(to, subject, message) {
@@ -51,6 +53,7 @@ module.exports = {
         if (!sqlId) return null;
         var result;
         mp.players.forEach((rec) => {
+            if (!rec.character) return;
             if (rec.character.id == sqlId) {
                 result = rec;
                 return;
@@ -64,6 +67,30 @@ module.exports = {
         mp.players.forEach((rec) => {
             if (rec.name == name) {
                 result = rec;
+                return;
+            }
+        });
+        return result;
+    },
+    getNearPlayer(player) {
+        var nearPlayer;
+        var minDist = 99999;
+        mp.players.forEach((rec) => {
+            if (rec.id == player.id) return;
+            var distance = player.dist(rec.position);
+            if (distance < minDist) {
+                nearPlayer = rec;
+                minDist = distance;
+            }
+        });
+        return nearPlayer;
+    },
+    getVehicleBySqlId(sqlId) {
+        if (!sqlId) return null;
+        var result;
+        mp.vehicles.forEach((veh) => {
+            if (veh.db.id == sqlId) {
+                result = veh;
                 return;
             }
         });

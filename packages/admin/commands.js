@@ -125,20 +125,30 @@ module.exports = {
             }, 20000);
         }
     },
-    "/update": {
+    "/branch": {
         access: 6,
-        description: "Обновить мод до выбранной ветки",
+        description: "Обновить мод до выбранной ветки.",
         args: "[название ветки]",
-        handler: (player, args) => {
+        handler: (player, args, out) => {
 
             var exec = require("exec");
             exec(`cd ${__dirname} && git clean -d -f && git stash && git checkout ${args[0]} && git pull`, (error, stdout, stderr) => {
                 if (error) console.log(stderr);
                 console.log(stdout);
-
-                mp.players.forEach((current) => {
-                    current.call('chat.message.push', [`!{#edffc2}${player.name} запустил обновление сервера`]);
-                });
+                // out.info(`${player.name} запустил обновление сервера`);
+            });
+        }
+    },
+    "/update": {
+        access: 6,
+        description: "Обновить текущую ветку.",
+        args: "",
+        handler: (player, args, out) => {
+            var exec = require("exec");
+            exec(`cd ${__dirname} && git clean -d -f && git stash && git pull`, (error, stdout, stderr) => {
+                if (error) console.log(stderr);
+                console.log(stdout);
+                out.info(`${player.name} запустил обновление сервера`);
             });
         }
     },
@@ -215,13 +225,23 @@ module.exports = {
         }
     },
     "/clothes": {
-        access: 6,
+        access: 3,
+        description: "Выдача тестовой одежды",
+        args: "[тип] [текстура] [вариация]",
         handler: (player, args) => {
             player.setClothes(parseInt(args[0]), parseInt(args[1]), parseInt(args[2]), 0);
         }
     },
+    "/prop": {
+        access: 3,
+        description: "Выдача тестового пропа",
+        args: "[тип] [текстура] [вариация]",
+        handler: (player, args) => {
+            player.setProp(parseInt(args[0]), parseInt(args[1]), parseInt(args[2]));
+        }
+    },
     "/tempwear": {
-        access: 6,
+        access: 1,
         description: "Выдача временного набора одежды",
         args: "[ID набора]",
         handler: (player, args) => {
@@ -273,7 +293,8 @@ module.exports = {
             console.log(`${player.heading}`);
             if (player.vehicle) {
                 player.call('chat.message.push', [`!{#ffffff} ${player.vehicle.heading}`]);
-                console.log(`veh= ${player.vehicle.heading}`);
+                console.log(`veh heading = ${player.vehicle.heading}`);
+                console.log(`veh rotation = ${JSON.stringify(player.vehicle.rotation)}`);
             }
         }
     },
@@ -300,6 +321,14 @@ module.exports = {
         args: "",
         handler: (player) => {
             console.log(player)
+        }
+    },
+    "/vinfo": {
+        access: 6,
+        description: "Логировать авто в консоль",
+        args: "",
+        handler: (player) => {
+            console.log(player.vehicle)
         }
     },
     "/getpos": {
@@ -395,6 +424,18 @@ module.exports = {
             if (isNaN(dim)) return;
             player.dimension = dim;
             notify.info(player, `Установлено измерение: ${dim}`);
+        }
+    },
+    "/sethp": {
+        description: "Изменить кол-во здоровья игроку.",
+        access: 4,
+        args: "[ид_игрока]:n [здоровье]:n",
+        handler: (player, args, out) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            rec.health = Math.clamp(args[1], 0, 100);
+            out.info(`Игроку ${rec.name} установлено ${rec.health} ед. здоровья`, player);
+            notify.info(rec, `${player.name} установил вам ${rec.health} ед. здоровья`);
         }
     },
 }

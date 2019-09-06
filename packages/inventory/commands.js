@@ -219,12 +219,33 @@ module.exports = {
             inventory.updateItemInfo(item);
         }
     },
+    "/idebug": {
+        description: "Вкл/выкл режим дебага инвентаря у всех игроков.",
+        access: 6,
+        args: "[дебаг]:b",
+        handler: (player, args, out) => {
+            mp.players.forEach((rec) => {
+                if (!rec.character) return;
+                rec.call(`inventory.debug`, [args[0]]);
+            });
+            var val = (args[0])? "включил" : "выключил";
+            out.info(`${player.name} ${val} DEBUG-режим инвентаря`);
+        }
+    },
     "/pitems": {
         access: 6,
         description: "Логировать предметы игрока в консоль.",
         args: "",
         handler: (player) => {
             console.log(player.inventory.items)
+        }
+    },
+    "/vitems": {
+        access: 6,
+        description: "Логировать предметы багажника в консоль.",
+        args: "",
+        handler: (player) => {
+            console.log(player.vehicle.inventory.items)
         }
     },
     "/pitemids": {
