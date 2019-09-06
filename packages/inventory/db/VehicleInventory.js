@@ -49,11 +49,6 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: "parentId"
         });
 
-        model.belongsTo(models.Vehicle, {
-            as: "vehicle",
-            foreignKey: "vehicleId",
-        });
-
         model.belongsTo(models.InventoryItem, {
             as: "item",
             foreignKey: "itemId"
