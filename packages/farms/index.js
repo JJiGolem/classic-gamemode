@@ -195,4 +195,13 @@ module.exports = {
         farmId = Math.clamp(farmId, 1, positions.length);
         return positions[farmId - 1];
     },
+    getFarm(id) {
+        return this.farms[id - 1];
+    },
+    getMarker(id) {
+        return this.markers[id - 1];
+    },
+    getWarehouse(id) {
+        return this.warehouses[id - 1];
+    },
 };

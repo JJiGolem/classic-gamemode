@@ -190,6 +190,11 @@ module.exports = {
             if (!vehicle.products) return;
             var count = vehicle.products.count;
             notifs.info(player, `Урожай в пикапе: ${count} из 200 ед.`, header);
+            if (count == 200) {
+                notifs.info(player, `Разгрузите урожай на склад фермы`, header);
+                var pos = farms.getWarehouse(player.farmJob.farm.id).position;
+                player.call(`waypoint.set`, [pos.x, pos.y]);
+            }
         } else if (jobType == 2) { // тракторист
             // if (!vehicle.products.count) player.utils.info(`Загрузить зерно возможно у склада`);
             // player.utils.info(`Зерно: ${vehicle.products.count} / ${vehicle.products.maxCount} ед.`);
