@@ -5,7 +5,7 @@ let customs;
 
 let modsConfig = {
     "11": "engineType",
-    "12": "breakType",
+    "12": "brakeType",
     "13": "transmissionType",
     "15": "suspensionType",
     "16": "armourType",
@@ -24,6 +24,16 @@ let modsConfig = {
     "23": "frontWheels",
     "48": "livery"
 }
+
+let priceConfig = { 
+    default: 0.02,
+    engine: 0.03,
+    brake: 0.04,
+    transmission: 0.01,
+    suspension: 0.01,
+    armour: 0.05
+}
+
 module.exports = {
     async init() {
         await this.loadCustomsFromDB();
@@ -52,5 +62,51 @@ module.exports = {
     },
     getModsConfig() {
         return modsConfig;
-    }
+    },
+    setTuning(vehicle) {
+        for (let key in modsConfig) {
+            let modType = parseInt(key);
+            let modIndex = vehicle.tuning[modsConfig[key]];
+            if (modIndex != -1) {
+                vehicle.setMod(modType, modIndex);
+            }
+        }
+    },
+    getModTypeByName(name) {
+        for (let key in modsConfig) {
+            if (modsConfig[key] == name) return key;
+        }
+    },
+    saveMod(vehicle, typeName, modIndex) {
+        vehicle.tuning[typeName] = modIndex;
+        vehicle.tuning.save();
+    },
+    getPriceConfig() {
+        return priceConfig;
+    },
+    calculateModPrice(vehPrice, modType, index) {
+        let key;
+        let i = index + 1;
+        switch (modType) {
+            case 11:
+                key = 'engine';
+                break;
+            case 12:
+                key = 'brake';
+                break;
+            case 13:
+                key = 'transmission';
+                break;
+            case 15:
+                key = 'suspension';
+                break;
+            case 16:
+                key = 'armour';
+                break;
+            default:
+                key = 'default';
+                break;
+        }
+        return parseInt(priceConfig[key] * vehPrice * i);
+    } 
 }
