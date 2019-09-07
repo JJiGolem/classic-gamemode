@@ -1,4 +1,5 @@
-var tuning = require('./index.js');
+let tuning = require('./index.js');
+let money = call('money');
 module.exports = {
     "init": () => {
         tuning.init();
@@ -50,12 +51,22 @@ module.exports = {
         player.call('tuning.colors.set.ans', [0]);
     },
     "tuning.buy": (player, type, index) => {
-        let config = tuning.getModsConfig();
-        typeName = config[type];
         let vehicle = player.vehicle;
-        console.log(`price = ${tuning.calculateModPrice(vehicle.properties.price, type, index)}`);
-        tuning.saveMod(vehicle, typeName, index);
-        vehicle.setMod(type, index);
-        player.call('tuning.buy.ans', [0, typeName, index]);
+        if (!vehicle) return player.call('tuning.buy.ans', [2]);
+        let price = tuning.calculateModPrice(vehicle.properties.price, type, index);
+        if (player.character.cash < price) return player.call('tuning.buy.ans', [1]);
+
+        money.removeCash(player, price, function(result) {
+            if (result) {
+                let config = tuning.getModsConfig();
+                typeName = config[type];
+                tuning.saveMod(vehicle, typeName, index);
+                vehicle.setMod(type, index);
+                player.call('tuning.buy.ans', [0, typeName, index]);
+            } else {
+                player.call('tuning.buy.ans', [4]);
+            }
+        });
+
     }
 }

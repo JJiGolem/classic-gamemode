@@ -304,6 +304,18 @@ mp.events.add('tuning.buy.ans', (ans, mod, index) => {
             vehicle.setMod(tuningParams[mod].modType, tuningParams[mod].current);
             mp.callCEFV(`selectMenu.notification = 'Элемент тюнинга установлен'`);
             break;
+        case 1:
+            mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+            break;
+        case 2:
+            mp.callCEFV(`selectMenu.notification = 'Вы не в транспорте'`);
+            break;
+        case 3:
+            mp.callCEFV(`selectMenu.notification = 'Модификация недоступна'`);
+            break;
+        case 4:
+            mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
+            break;
     }
 });
 
