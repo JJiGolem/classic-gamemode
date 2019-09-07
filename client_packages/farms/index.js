@@ -15,6 +15,7 @@ mp.farms = {
         if (this.jobType == null) return;
         if (this.isCropping()) return;
         if (this.hasProduct()) return;
+        if (mp.players.local.vehicle) return;
         // TODO: проверка на состояние присмерти
         var object = mp.utils.getNearObject(mp.players.local.position, 3);
         if (object) mp.events.callRemote("farms.field.crop.take", object.remoteId);
@@ -83,8 +84,15 @@ mp.events.add({
     "farms.jobType.set": (val) => {
         mp.farms.setJobType(val);
     },
-    "playerEnterBootVehicle": (player, vehicle) => {
+    "farms.isCropping.end": () => {
+        if (nearBootVehicleId == null) return;
+        var vehicle = mp.vehicles.atRemoteId(nearBootVehicleId);
+        if (!vehicle) return;
+        mp.events.callRemote(`farms.vehicle.products.put`, vehicle.remoteId);
+    },
+    "playerEnterVehicleBoot": (player, vehicle) => {
         if (!mp.farms.hasProduct()) return;
-        mp.events.callRemote(`farms.vehicle.products.put`);
+        // if (!vehicle.getVariable("trunk")) return;
+        mp.events.callRemote(`farms.vehicle.products.put`, vehicle.remoteId);
     },
 });

@@ -48,7 +48,7 @@ module.exports = {
         delete player.farmJob;
     },
     "farms.field.crop.take": (player, objId) => {
-        console.log(`farms.field.crop.take: ${player.name} ${objId}`)
+        // console.log(`farms.field.crop.take: ${player.name} ${objId}`)
         var header = `Сбор урожая`;
         var object = mp.objects.at(objId);
         if (!object || !object.field) {
@@ -84,6 +84,7 @@ module.exports = {
                 }
                 var names = ["farmProductA", "farmProductA", "farmProductB", "farmProductC"];
                 player.addAttachment(names[field.type]);
+                player.call(`farms.isCropping.end`);
 
                 obj.count--;
                 obj.field.count--;
@@ -94,19 +95,42 @@ module.exports = {
                     list.splice(i, 1);
                     obj.destroy();
                 }
-                rec.farmJob.pay += rec.farmJob.farm.pay;
-                notifs.info(rec, `Заработано $${rec.farmJob.pay}`, header);
             } catch (e) {
                 console.log(e);
             }
         }, farms.takeCropTime);
     },
-    "farms.vehicle.products.put": (player) => {
-        console.log(`farms.vehicle.products.put: ${player.name}`);
+    "farms.vehicle.products.put": (player, vehId) => {
+        // console.log(`farms.vehicle.products.put: ${player.name}`);
+        var header = `Загрузка урожая`;
+        var veh = mp.vehicles.at(vehId);
+        if (!veh) return notifs.error(player, `Авто #${player.bootVehicleId} не найдено`, header);
+        if (!veh.db || veh.db.key != "farm") return notifs.error(player, `Авто не принадлежит ферме`, header);
+        if (player.dist(veh.position) > 10) return notifs.error(player, `Авто далеко`, header);
+        var prodType;
+        if (player.hasAttachment("farmProductA")) {
+            player.addAttachment("farmProductA", true);
+            prodType = 1;
+        } else if (player.hasAttachment("farmProductB")) {
+            player.addAttachment("farmProductB", true);
+            prodType = 2;
+        } else if (player.hasAttachment("farmProductC")) {
+            player.addAttachment("farmProductC", true);
+            prodType = 3;
+        } else return notifs.error(player, `Соберите урожай на поле`, header);
+        if (veh.products && veh.products.type != prodType) return notifs.error(player, `Неверный типа урожая`, header);
+        farms.addVehicleProducts(veh, prodType, 1);
+
+        if (!player.farmJob) return notifs.error(player, `Вы не работаете`, header);
+        if (player.farmJob.farm.id != veh.db.owner) return notifs.error(player, `Вы работаете на другой ферме`, header);
+
+        player.farmJob.pay += player.farmJob.farm.pay;
+        notifs.info(player, `Заработано $${player.farmJob.pay}`, header);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;
         if (vehicle.db.key != "farm") return;
+        if (seat != -1) return;
         // player.farmJob = {
         //     farm: farms.farms[0],
         //     type: 1,

@@ -150,7 +150,13 @@ module.exports = {
         return objPositions;
     },
     addVehicleProducts(vehicle, type, count) {
+        if (!vehicle.products) vehicle.products = {
+            type: type,
+            count: count
+        };
+        if (vehicle.products.type != type) return;
+
         // TODO: Синхра объектов в кузове
-        
+        vehicle.products.count++;
     }
 };
