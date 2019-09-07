@@ -19,6 +19,8 @@ module.exports = {
         "tractor2": 2,
         "duster": 3,
     },
+    // Объекты урожая на поле
+    fieldObjects: {},
 
     async init() {
         await this.loadFarmsFromDB();
@@ -40,6 +42,29 @@ module.exports = {
             this.createFarmMarker(farm);
             this.initFarmWarehouse(farm);
             this.initFarmLabels(farm);
+            this.initFarmFieldObjects(farm);
+        }
+    },
+    initFarmFieldObjects(farm) {
+        for (var i = 0; i < farm.fields.length; i++) {
+            var field = farm.fields[i];
+            var count = field.count;
+            var objPositions = this.getObjPositions(field);
+            this.fieldObjects[field.id] = [];
+            for (var j = 0; j < objPositions.length; j++) {
+                var fieldCount = Math.clamp(parseInt(600 / objPositions.length), 0, count);
+                count -= fieldCount;
+                if (fieldCount <= 0) break;
+                objPositions[j].z = field.p1.z;
+                var object = mp.objects.new(mp.joaat("prop_veg_crop_04"), objPositions[j], {
+                    rotation: new mp.Vector3(0, 0, 0),
+                    alpha: 255,
+                    heading: 90
+                });
+                // object.count = fieldCount;
+                object.field = field;
+                this.fieldObjects[field.id].push(object);
+            }
         }
     },
     createFarmMarker(farm) {
@@ -107,5 +132,19 @@ module.exports = {
     getJobTypeByVehModel(model) {
         if (!this.vehModels[model]) return -1;
         return this.vehModels[model];
+    },
+    getObjPositions(field) {
+        var step = 5;
+        var pointsLeft = utils.getPointsOnInterval(field.p1, field.p3, 5);
+        var pointsRight = utils.getPointsOnInterval(field.p2, field.p4, 5);
+        if (pointsLeft.length > pointsRight.length) pointsLeft.splice(pointsRight.length);
+        if (pointsLeft.length < pointsRight.length) pointsRight.splice(pointsLeft.length);
+
+        var objPositions = [];
+        for (var i = 0; i < pointsLeft.length; i++) {
+            var points = utils.getPointsOnInterval(pointsLeft[i], pointsRight[i], 5);
+            objPositions = objPositions.concat(points);
+        }
+        return objPositions;
     },
 };

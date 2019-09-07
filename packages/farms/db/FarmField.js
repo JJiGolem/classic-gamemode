@@ -7,23 +7,58 @@ module.exports = (sequelize, DataTypes) => {
         },
         labelPos: {
             type: DataTypes.STRING(128),
-            allowNull: false
+            allowNull: false,
+            get() {
+                var val = this.getDataValue('labelPos');
+                return JSON.parse(val);
+            },
+            set(val) {
+                this.setDataValue('labelPos', JSON.stringify(val));
+            }
         },
         p1: {
             type: DataTypes.STRING(128),
-            allowNull: false
+            allowNull: false,
+            get() {
+                var val = this.getDataValue('p1');
+                return JSON.parse(val);
+            },
+            set(val) {
+                this.setDataValue('p1', JSON.stringify(val));
+            }
         },
         p2: {
             type: DataTypes.STRING(128),
-            allowNull: false
+            allowNull: false,
+            get() {
+                var val = this.getDataValue('p2');
+                return JSON.parse(val);
+            },
+            set(val) {
+                this.setDataValue('p2', JSON.stringify(val));
+            }
         },
         p3: {
             type: DataTypes.STRING(128),
-            allowNull: false
+            allowNull: false,
+            get() {
+                var val = this.getDataValue('p3');
+                return JSON.parse(val);
+            },
+            set(val) {
+                this.setDataValue('p3', JSON.stringify(val));
+            }
         },
         p4: {
             type: DataTypes.STRING(128),
-            allowNull: false
+            allowNull: false,
+            get() {
+                var val = this.getDataValue('p4');
+                return JSON.parse(val);
+            },
+            set(val) {
+                this.setDataValue('p4', JSON.stringify(val));
+            }
         },
         type: {
             type: DataTypes.INTEGER(11),
