@@ -21,6 +21,8 @@ module.exports = {
     },
     // Объекты урожая на поле
     fieldObjects: {},
+    // Время сбора одного 1 ед. урожая (ms)
+    takeCropTime: 1000,
 
     async init() {
         await this.loadFarmsFromDB();
@@ -61,7 +63,7 @@ module.exports = {
                     alpha: 255,
                     heading: 90
                 });
-                // object.count = fieldCount;
+                object.count = fieldCount;
                 object.field = field;
                 this.fieldObjects[field.id].push(object);
             }
@@ -147,4 +149,8 @@ module.exports = {
         }
         return objPositions;
     },
+    addVehicleProducts(vehicle, type, count) {
+        // TODO: Синхра объектов в кузове
+        
+    }
 };

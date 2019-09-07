@@ -19,7 +19,7 @@ module.exports = {
         };
 
         farms.setJobClothes(player, true, player.farmJob.type);
-        // player.utils.setLocalVar("farmJobType", player.farmJob.type);
+        player.call("farms.jobType.set", [player.farmJob.type]);
         notifs.success(player, `Вы начали работу (${farms.getJobName(player.farmJob.type)})`, header);
     },
     "farms.job.stop": (player, isDied = false) => {
@@ -38,14 +38,71 @@ module.exports = {
         }
 
         farms.setJobClothes(player, false);
-        // player.utils.setLocalVar("farmJobType", null);
-        notifs.success(player, `Работа на ферме завершена`, header);
+        player.call("farms.jobType.set", [null]);
+        notifs.success(player, `Удачного дня!`, header);
         // player.utils.putObject();
         // if (player.farmJob.tractorColshape) {
         //     player.call("checkpoint.clearForTractor");
         //     player.farmJob.tractorColshape.destroy();
         // }
         delete player.farmJob;
+    },
+    "farms.field.crop.take": (player, objId) => {
+        console.log(`farms.field.crop.take: ${player.name} ${objId}`)
+        var header = `Сбор урожая`;
+        var object = mp.objects.at(objId);
+        if (!object || !object.field) {
+            mp.objects.forEachInRange(player.position, 4, (obj) => {
+                if (obj.field) {
+                    objId = obj.id;
+                    object = obj;
+                }
+            });
+            if (!object || !object.field) return notifs.error(player, `Урожай не найден`, header);
+        }
+        var field = object.field;
+        // if (field.state != 3) return player.utils.error(`Урожай не созрел!`);
+
+        if (!player.farmJob) return notifs.error(player, `Вы не работаете на ферме`, header);
+        if (field.farmId != player.farmJob.farm.id) return notifs.error(player, `Поле принадлежит другой ферме`, header);
+        var jobName = farms.getJobName(player.farmJob.type);
+        if (player.farmJob.type != 0 && player.farmJob.type != 1) return notifs.error(player, `Для должности ${jobName} недоступно`, header);
+        if (player.hasAttachment("farmTrowel")) return notifs.error(player, `Вы уже собираете урожай`, header);
+        player.addAttachment("farmTrowel");
+        var playerId = player.id;
+        var characterId = player.character.id;
+        setTimeout(() => {
+            try {
+                var rec = mp.players.at(playerId);
+                if (!rec || rec.character.id != characterId) return;
+                // TODO: проверка на присмерти
+                if (!rec.farmJob) return;
+                var obj = mp.objects.at(objId);
+                rec.addAttachment("farmTrowel", true);
+                if (!obj || !obj.field) {
+                    return notifs.error(rec, `В этой части поля урожай уже собран`, header);
+                }
+                var names = ["farmProductA", "farmProductA", "farmProductB", "farmProductC"];
+                player.addAttachment(names[field.type]);
+
+                obj.count--;
+                obj.field.count--;
+                if (obj.field.count % 20 == 0) obj.field.save();
+                if (obj.count <= 0) {
+                    var list = farms.fieldObjects[obj.field.id];
+                    var i = list.indexOf(obj);
+                    list.splice(i, 1);
+                    obj.destroy();
+                }
+                rec.farmJob.pay += rec.farmJob.farm.pay;
+                notifs.info(rec, `Заработано $${rec.farmJob.pay}`, header);
+            } catch (e) {
+                console.log(e);
+            }
+        }, farms.takeCropTime);
+    },
+    "farms.vehicle.products.put": (player) => {
+        console.log(`farms.vehicle.products.put: ${player.name}`);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;
