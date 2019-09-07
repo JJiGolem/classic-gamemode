@@ -192,11 +192,12 @@ mp.events.add({
         if (nearBootVehicleId == null) return;
         var vehicle = mp.vehicles.atRemoteId(nearBootVehicleId);
         if (!vehicle) return;
+        if (!vehicle.getVariable("trunk")) return mp.notify.warning(`Для погрузки урожая откройте багажник`);
         mp.events.callRemote(`farms.vehicle.products.put`, vehicle.remoteId);
     },
     "playerEnterVehicleBoot": (player, vehicle) => {
         if (!mp.farms.hasProduct()) return;
-        // if (!vehicle.getVariable("trunk")) return;
+        if (!vehicle.getVariable("trunk")) return mp.notify.warning(`Для погрузки урожая откройте багажник`);
         mp.events.callRemote(`farms.vehicle.products.put`, vehicle.remoteId);
     },
     "entityStreamIn": (vehicle) => {
@@ -212,4 +213,13 @@ mp.events.add({
 mp.events.addDataHandler("farmProductsState", (vehicle) => {
     if (vehicle.type != "vehicle") return;
     mp.farms.attachProductsObjects(vehicle);
+});
+
+mp.events.addDataHandler("trunk", (vehicle, value) => {
+    if (!value) return;
+    if (nearBootVehicleId == null) return;
+    if (nearBootVehicleId != vehicle.remoteId) return;
+    if (!mp.farms.hasProduct()) return;
+
+    mp.events.callRemote(`farms.vehicle.products.put`, vehicle.remoteId);
 });
