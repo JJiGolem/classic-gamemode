@@ -47,4 +47,35 @@ module.exports = {
         // }
         delete player.farmJob;
     },
+    "playerEnterVehicle": (player, vehicle, seat) => {
+        if (!vehicle.db) return;
+        if (vehicle.db.key != "farm") return;
+        // player.farmJob = {
+        //     farm: farms.farms[0],
+        //     type: 1,
+        //     pay: 0
+        // }; //for test
+
+        var header = `Техника фермы`;
+        if (!player.farmJob) {
+            player.removeFromVehicle();
+            return notifs.error(player, `Вы не работаете на ферме`, header);
+        }
+        if (player.farmJob.farm.id != vehicle.db.owner) {
+            player.removeFromVehicle();
+            return notifs.error(player, `Вы работаете на другой ферме`, header);
+        }
+        var jobType = farms.getJobTypeByVehModel(vehicle.db.modelName);
+        if (jobType == -1) return notifs.error(player, `Должность для авто ${vehicle.db.modelName} не найдена`, header);
+        if (jobType != player.farmJob.type) {
+            player.removeFromVehicle();
+            return notifs.error(player, `Необходимо иметь должность: ${farms.getJobName(jobType)}`, header);
+        }
+        if (jobType == 1) { // фермер
+            // player.call(`selectMenu.show`, [`farm_crop_loading`]);
+        } else if (jobType == 2) { // тракторист
+            // if (!vehicle.products.count) player.utils.info(`Загрузить зерно возможно у склада`);
+            // player.utils.info(`Зерно: ${vehicle.products.count} / ${vehicle.products.maxCount} ед.`);
+        }
+    },
 };

@@ -12,6 +12,13 @@ module.exports = {
     blips: [],
     // Должности
     jobNames: ["Рабочий", "Фермер", "Тракторист", "Пилот"],
+    // Модели авто и их типы работ
+    vehModels: {
+        "bodhi2": 1,
+        "rebel": 1,
+        "tractor2": 2,
+        "duster": 3,
+    },
 
     async init() {
         await this.loadFarmsFromDB();
@@ -96,5 +103,9 @@ module.exports = {
     getJobName(jobType) {
         jobType = Math.clamp(jobType, 0, this.jobNames.length - 1);
         return this.jobNames[jobType];
+    },
+    getJobTypeByVehModel(model) {
+        if (!this.vehModels[model]) return -1;
+        return this.vehModels[model];
     },
 };
