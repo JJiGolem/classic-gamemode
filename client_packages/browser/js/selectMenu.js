@@ -3199,15 +3199,15 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Работник') {
-
+                            mp.trigger(`callRemote`, `farms.job.start`, 0);
                         } else if (e.itemName == 'Фермер') {
-
+                            mp.trigger(`callRemote`, `farms.job.start`, 1);
                         } else if (e.itemName == 'Тракторит') {
-
+                            mp.trigger(`callRemote`, `farms.job.start`, 2);
                         } else if (e.itemName == 'Пилот') {
-
+                            mp.trigger(`callRemote`, `farms.job.start`, 3);
                         } else if (e.itemName == 'Уволиться') {
-
+                            mp.trigger(`callRemote`, `farms.job.stop`);
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farm");
                         }

@@ -1,5 +1,8 @@
 "use strict";
 
+let inventory = call('inventory');
+let utils = call('utils');
+
 module.exports = {
     // Фермы
     farms: [],
@@ -7,6 +10,8 @@ module.exports = {
     markers: [],
     // Блипы ферм
     blips: [],
+    // Должности
+    jobNames: ["Рабочий", "Фермер", "Тракторист", "Пилот"],
 
     async init() {
         await this.loadFarmsFromDB();
@@ -44,7 +49,8 @@ module.exports = {
             player.call(`selectMenu.hide`);
             delete player.farm;
         };
-        warehouse.colshape = colshape;
+        marker.colshape = colshape;
+        this.markers.push(marker);
         this.blips.push(mp.blips.new(88, pos, {
             color: 60,
             name: `Ферма #${farm.id}`,
@@ -57,5 +63,38 @@ module.exports = {
     },
     initFarmLabels(farm) {
 
-    }
+    },
+    setJobClothes(player, enable, job) {
+        if (enable) {
+            inventory.clearAllView(player);
+            player.inventory.denyUpdateView = true;
+            var textures = [6, 0, 8, 4];
+            if (player.character.gender == 0) {
+                var torsos = [41, 63, 74];
+                var torso = torsos[utils.randomInteger(0, torsos.length - 1)];
+                player.setProp(0, 13, 1);
+                player.setClothes(11, 56, 0, 0);
+                player.setClothes(3, torso, 0, 0);
+                player.setClothes(4, 90, textures[job], 0);
+                player.setClothes(6, 51, 4, 0);
+            } else {
+                var torsos = [72, 85, 114];
+                var torso = torsos[utils.randomInteger(0, torsos.length - 1)];
+                player.setProp(0, 20, 0);
+                player.setClothes(11, 0, 0, 0);
+                player.setClothes(3, torso, 0, 0);
+                player.setClothes(4, 93, textures[job], 0);
+                player.setClothes(6, 64, 2, 0);
+            }
+        } else {
+            // TODO: Clear Clothes.
+            player.inventory.denyUpdateView = false;
+            inventory.clearAllView(player);
+            inventory.updateAllView(player);
+        }
+    },
+    getJobName(jobType) {
+        jobType = Math.clamp(jobType, 0, this.jobNames.length - 1);
+        return this.jobNames[jobType];
+    },
 };
