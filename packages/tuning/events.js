@@ -43,9 +43,10 @@ module.exports = {
     "tuning.buy": (player, type, index) => {
         let config = tuning.getModsConfig();
         typeName = config[type];
-        
+        let vehicle = player.vehicle;
         console.log(`${type} ${index}`);
+        tuning.saveMod(vehicle, typeName, index);
+        vehicle.setMod(type, index);
         player.call('tuning.buy.ans', [0, typeName, index]);
-        player.vehicle.setMod(type, index);
     }
 }

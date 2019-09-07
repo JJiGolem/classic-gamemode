@@ -4,6 +4,7 @@ var dbVehicleProperties;
 var plates = [];
 let inventory = call('inventory');
 let utils = call('utils');
+let tuning = call('tuning');
 
 const MAX_BREAK_LEVEL = 2;
 let breakdownConfig = {
@@ -23,7 +24,7 @@ module.exports = {
         await this.loadCarPlates();
         mp.events.call('vehicles.loaded');
     },
-    spawnVehicle(veh, source) { /// source: 0 - спавн автомобиля из БД, 1 - респавн любого автомобиля, null - спавн админского авто и т. д.
+    async spawnVehicle(veh, source) { /// source: 0 - спавн автомобиля из БД, 1 - респавн любого автомобиля, null - спавн админского авто и т. д.
         let vehicle = mp.vehicles.new(veh.modelName, new mp.Vector3(veh.x, veh.y, veh.z),
             {
                 heading: veh.h,
@@ -83,6 +84,20 @@ module.exports = {
         } else {
             vehicle.properties = veh.properties;
         }
+
+        if (veh.key == 'private' || veh.key == 'newbie') { // temp
+            console.log('test 1');
+            if (!veh.tuning) {
+                console.log('test 2');
+                await this.initTuning(vehicle);
+            } else {
+                console.log('test 3');
+                vehicle.tuning = veh.tuning;
+            }
+            //console.log(vehicle.tuning);
+            tuning.setTuning(vehicle);
+        }
+
 
         let multiplier = vehicle.multiplier;
         if (vehicle.fuelState) {
@@ -242,7 +257,10 @@ module.exports = {
             where: {
                 key: "private",
                 owner: player.character.id
-            }
+            },
+            // include: [{
+            //     model: db.Models.VehicleTuning
+            // }]  
         });
         player.vehicleList = [];
         let temp = 0;
@@ -500,5 +518,14 @@ module.exports = {
         let result = list.filter(x => x.isOnParking == 0);
         if (result.length > 0) return true
         else return false;
+    },
+    async initTuning(vehicle) {
+        let tuning = await db.Models.VehicleTuning.findOrCreate({
+            where: {
+                vehicleId: vehicle.sqlId
+            }
+        });
+        vehicle.tuning = tuning[0];
+        //console.log(vehicle.tuning);
     }
 }

@@ -5,7 +5,7 @@ let customs;
 
 let modsConfig = {
     "11": "engineType",
-    "12": "breakType",
+    "12": "brakeType",
     "13": "transmissionType",
     "15": "suspensionType",
     "16": "armourType",
@@ -52,5 +52,24 @@ module.exports = {
     },
     getModsConfig() {
         return modsConfig;
-    }
+    },
+    setTuning(vehicle) {
+        for (let key in modsConfig) {
+            let modType = parseInt(key);
+            let modIndex = vehicle.tuning[modsConfig[key]];
+            if (modIndex != -1) {
+                //console.log(`${modsConfig[key]} set`)
+                vehicle.setMod(modType, modIndex);
+            }
+        }
+    },
+    getModTypeByName(name) {
+        for (let key in modsConfig) {
+            if (modsConfig[key] == name) return key;
+        }
+    },
+    saveMod(vehicle, typeName, modIndex) {
+        vehicle.tuning[typeName] = modIndex;
+        vehicle.tuning.save();
+    } 
 }

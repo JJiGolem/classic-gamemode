@@ -156,7 +156,7 @@ module.exports = {
         access: 4,
         description: "Заспавнить транспорт",
         args: "[название т/c] [ID цвета #1] [ID цвета #2]",
-        handler: (player, args) => {
+        handler: async (player, args) => {
             if (vehicles != null) {
                 let veh = {
                     modelName: args[0],
@@ -174,7 +174,7 @@ module.exports = {
                     plate: vehicles.generateVehiclePlate(),
                     //multiplier: 1
                 }
-                veh = vehicles.spawnVehicle(veh);
+                veh = await vehicles.spawnVehicle(veh);
                 mp.events.call("admin.notify.all", `!{#e0bc43}[A] ${player.name} создал транспорт ${veh.modelName}`);
             }
         }

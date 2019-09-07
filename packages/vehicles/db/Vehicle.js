@@ -130,6 +130,11 @@ module.exports = (sequelize, DataTypes) => {
 		}
 	}, {timestamps: false});
 
+	model.associate = (models) => {
+		model.hasOne(models.VehicleTuning, {
+			foreignKey: "vehicleId",
+		});
+	};
 
 	return model;
 };

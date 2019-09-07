@@ -14,7 +14,7 @@ let tuningParams = {
         modType: 11,
         current: -1
     },
-    breakType: {
+    brakeType: {
         modType: 12,
         current: -1
     },
