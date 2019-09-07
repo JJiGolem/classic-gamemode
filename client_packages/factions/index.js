@@ -11,6 +11,7 @@ mp.factions = {
     enableTakeBox: false,
     enablePutBox: false,
     typeBox: "",
+    faction: null,
 
     insideWarehouse(inside, type = null) {
         if (inside) mp.prompt.showByName(`take_${type}box`);
@@ -74,34 +75,40 @@ mp.factions = {
     isStateFaction(factionId) {
         return factionId >= 1 && factionId <= 7;
     },
+    setFaction(factionId) {
+        // mp.notify.info(`setFaction: ${factionId}`)
+        this.faction = factionId;
+        mp.callCEFV(`interactionMenu.faction = ${factionId}`);
+    },
 };
 
-mp.events.add("characterInit.done", () => {
-    mp.keys.bind(69, true, mp.factions.boxHandler); // E
-    // коробка с боеприпасами в руках
-    mp.attachmentMngr.register("ammoBox", "prop_box_ammo04a", 58867, new mp.Vector3(0.2, -0.3, 0.1),
-        new mp.Vector3(-45, 20, 120), {
-            dict: "anim@heists@box_carry@",
-            name: "idle",
-            speed: 8,
-            flag: 49
-        }
-    );
-    // коробка с медикаментами в руках
-    mp.attachmentMngr.register("medicinesBox", "ex_office_swag_pills4", 58867, new mp.Vector3(0.2, -0.3, 0.1),
-        new mp.Vector3(-45, 20, 120), {
-            dict: "anim@heists@box_carry@",
-            name: "idle",
-            speed: 8,
-            flag: 49
-        }
-    );
+mp.events.add({
+    "characterInit.done": () => {
+        mp.keys.bind(69, true, mp.factions.boxHandler); // E
+        // коробка с боеприпасами в руках
+        mp.attachmentMngr.register("ammoBox", "prop_box_ammo04a", 58867, new mp.Vector3(0.2, -0.3, 0.1),
+            new mp.Vector3(-45, 20, 120), {
+                dict: "anim@heists@box_carry@",
+                name: "idle",
+                speed: 8,
+                flag: 49
+            }
+        );
+        // коробка с медикаментами в руках
+        mp.attachmentMngr.register("medicinesBox", "ex_office_swag_pills4", 58867, new mp.Vector3(0.2, -0.3, 0.1),
+            new mp.Vector3(-45, 20, 120), {
+                dict: "anim@heists@box_carry@",
+                name: "idle",
+                speed: 8,
+                flag: 49
+            }
+        );
+    },
+    "factions.insideWarehouse": mp.factions.insideWarehouse,
+    "factions.insideFactionWarehouse": mp.factions.insideFactionWarehouse,
+    "factions.giverank.showMenu": mp.factions.showGiveRankSelectMenu,
+    "factions.storage.showMenu": mp.factions.showStorageSelectMenu,
+    "factions.faction.set": (val) => {
+        mp.factions.setFaction(val);
+    },
 });
-
-mp.events.add("factions.insideWarehouse", mp.factions.insideWarehouse);
-
-mp.events.add("factions.insideFactionWarehouse", mp.factions.insideFactionWarehouse);
-
-mp.events.add("factions.giverank.showMenu", mp.factions.showGiveRankSelectMenu);
-
-mp.events.add("factions.storage.showMenu", mp.factions.showStorageSelectMenu);

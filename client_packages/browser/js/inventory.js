@@ -54,6 +54,13 @@ var inventory = new Vue({
                 width: 8,
                 weight: 2,
             },
+            21: {
+                name: 'Дробаш',
+                description: 'Может стрелять.',
+                height: 6,
+                width: 8,
+                weight: 2,
+            },
             24: {
                 name: 'Аптечка',
                 description: 'Описание аптечки.',
@@ -68,17 +75,24 @@ var inventory = new Vue({
                 width: 4,
                 weight: 0.02,
             },
+            39: {
+                name: 'Патрон',
+                description: 'Описание патрона.',
+                height: 4,
+                width: 4,
+                weight: 0.02,
+            },
         },
         // Меню предмета по ПКМ
         itemsMenu: {
             // itemId: struct menu
-            18: { // test
+            /*18: { // test
                 'Включить': {
                     handler(item) {
                         console.log(`Включить ${item}`)
                     }
                 }
-            },
+            },*/
             24: { // малая аптечка
                 'Вылечиться': {
                     handler(item) {
@@ -110,7 +124,7 @@ var inventory = new Vue({
                     }
                 }
             },
-            37: { // test
+            /*37: { // test
                 'Разрядить': {
                     handler(item) {
                         console.log(`разрядить: ${item}`)
@@ -145,6 +159,35 @@ var inventory = new Vue({
                         console.log(`Отсоединить ${item}`);
                     }
                 },
+            },*/
+            // 4 типа патронов
+            37: {
+                'Зарядить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
+                    }
+                }
+            },
+            38: {
+                'Зарядить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
+                    }
+                }
+            },
+            39: {
+                'Зарядить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
+                    }
+                }
+            },
+            40: {
+                'Зарядить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
+                    }
+                }
             },
         },
         // Вайт-лист предметов, которые можно надеть
@@ -190,6 +233,27 @@ var inventory = new Vue({
                     mp.trigger(`callRemote`, `police.cuffs`, JSON.stringify(data));
                 }
             },
+            // патроны
+            37: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
+                }
+            },
+            38: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
+                }
+            },
+            39: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
+                }
+            },
+            40: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
+                }
+            },
         },
         // Блек-лист предметов, которые не могут храниться в других предметах
         blackList: {
@@ -198,6 +262,20 @@ var inventory = new Vue({
             7: [13],
             8: [13],
         },
+        // Вайт-лист предметов, которые могут перетаскиваться друг на друга
+        mergeList: {
+            // parentItemId: [cildItemId, ...]
+            // 9mm
+            37: [20],
+            // 12mm
+            38: [48],
+            // 7.62mm
+            39: [21, 107],
+            // 5.56mm
+            40: [22, 99],
+        },
+        // Огнестрельные оружия
+        weaponsList: [20, 21, 22, 48, 99, 107],
         // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
         environment: [],
         // Предметы на игроке (экипировка)
@@ -236,6 +314,7 @@ var inventory = new Vue({
                 placeSqlId: null,
                 pocketI: null,
                 deny: false,
+                targetSqlId: null,
                 columns: {},
                 bodyFocus: null,
                 hotkeyFocus: null,
@@ -345,7 +424,7 @@ var inventory = new Vue({
             // console.log("onHotkeyItemEnter")
             if (!this.itemDrag.item) return;
             var item = this.hotkeys[key];
-            if (item) return;
+            if (item && this.getItem(item.sqlId)) return;
             if (!this.hotkeysList[this.itemDrag.item.itemId]) return;
             var columns = this.itemDrag.accessColumns;
             columns.hotkeyFocus = key;
@@ -414,7 +493,17 @@ var inventory = new Vue({
                                 y: coord.y + y
                             });
                             columns.columns[i] = true;
-                            if (!columns.deny) columns.deny = this.isColumnBusy(place, pocketI, i, this.itemDrag.item);
+                            if (!columns.deny) {
+                                columns.deny = this.isColumnBusy(place, pocketI, i, item);
+                                if (columns.deny) {
+                                    if (this.mergeList[item.itemId]) {
+                                        var target = this.getItemInColumn(place, pocketI, i);
+                                        var canMerge = this.mergeList[item.itemId].includes(target.itemId) &&
+                                            place.sqlId > 0 && this.getItem(item.sqlId);
+                                        columns.targetSqlId = (canMerge) ? target.sqlId : null;
+                                    }
+                                } else columns.targetSqlId = null;
+                            }
                         }
                     }
                 },
@@ -434,12 +523,21 @@ var inventory = new Vue({
             if (!cols[place.sqlId][pocketI][index]) return false;
             return cols[place.sqlId][pocketI][index] != item.sqlId;
         },
+        getItemInColumn(place, pocketI, index) {
+            var cols = (place.sqlId > 0) ? this.equipmentBusyColumns : this.environmentBusyColumns;
+            if (!cols[place.sqlId][pocketI]) return null;
+            if (!cols[place.sqlId][pocketI][index]) return null;
+            var sqlId = cols[place.sqlId][pocketI][index];
+            return (place.sqlId > 0) ? this.getItem(sqlId) : this.getEnvironmentItem(sqlId);
+        },
         columnClass(index, pocket, place) {
             var classes = {
                 access: this.isColumnAccess(index, pocket, place),
             };
-            if (classes.access && this.itemDrag.accessColumns.deny)
-                classes.deny = true;
+            if (classes.access) {
+                classes.deny = this.itemDrag.accessColumns.deny;
+                classes.merge = this.itemDrag.accessColumns.targetSqlId;
+            }
 
             return classes;
         },
@@ -452,6 +550,17 @@ var inventory = new Vue({
                 }
             });
             return count;
+        },
+        getChildren(item) {
+            var result = [];
+            if (!item.pockets) return result;
+            item.pockets.forEach((pocket) => {
+                for (var index in pocket.items) {
+                    var child = pocket.items[index];
+                    result.push(child);
+                }
+            });
+            return result;
         },
         isColumnAccess(index, pocket, place) {
             if (!this.itemDrag.item) return false;
@@ -533,13 +642,33 @@ var inventory = new Vue({
         setItemsInfo(itemsInfo) {
             if (typeof itemsInfo == 'string') itemsInfo = JSON.parse(itemsInfo);
             for (var itemId in itemsInfo) {
+                itemId = parseInt(itemId);
                 this.setItemInfo(itemId, itemsInfo[itemId]);
 
                 if (!this.itemsMenu[itemId]) this.itemsMenu[itemId] = {};
                 var menu = this.itemsMenu[itemId];
+                if (this.weaponsList.includes(itemId)) {
+                    menu['Зарядить'] = {
+                        handler(item) {
+                            mp.trigger(`callRemote`, `weapons.weapon.ammo.fill`, item.sqlId);
+                        }
+                    };
+                    menu['Разрядить'] = {
+                        handler(item) {
+                            var hash = item.params.weaponHash;
+                            mp.trigger(`weapons.ammo.remove`, item.sqlId, hash.toString());
+                        }
+                    };
+                }
                 menu['Выкинуть'] = {
                     handler(item) {
                         // console.log(`выкинуть ${item}`)
+                        if (inventory.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`);
+                        else {
+                            var children = inventory.getChildren(item);
+                            var weapon = children.find(x => inventory.weaponsList.includes(x.itemId));
+                            if (weapon) mp.trigger(`weapons.ammo.sync`);
+                        }
                         mp.trigger(`callRemote`, `item.ground.put`, item.sqlId);
                     }
                 };
@@ -622,6 +751,11 @@ var inventory = new Vue({
                 hashes.splice(i + 1, chunk - 1);
             }
             return hashes;
+        },
+        setArmour(value) {
+            var item = this.equipment[4];
+            if (!item) return;
+            item.params.health = value;
         },
 
         // ******************  [ Hotkeys ] ******************
@@ -741,7 +875,7 @@ var inventory = new Vue({
             hud.show = !val;
             if (val) busy.add("inventory", true);
             else busy.remove("inventory", true);
-        }
+        },
     },
     mounted() {
         let self = this;
@@ -778,6 +912,14 @@ var inventory = new Vue({
                 });
             } else if (columns.hotkeyFocus) {
                 self.bindHotkey(self.itemDrag.item.sqlId, columns.hotkeyFocus);
+            } else if (columns.targetSqlId) {
+                self.deleteItem(self.itemDrag.item.sqlId);
+                self.callRemote("item.merge", {
+                    sqlId: self.itemDrag.item.sqlId,
+                    targetSqlId: columns.targetSqlId,
+                    pocketI: columns.pocketI,
+                    placeSqlId: columns.placeSqlId
+                });
             } else {
                 var index = Object.keys(columns.columns)[0];
                 if (!columns.deny && columns.placeSqlId != null &&
@@ -952,7 +1094,7 @@ inventory.addEnvironmentPlace({
             },
             5: {
                 sqlId: 2,
-                itemId: 37,
+                itemId: 39,
                 // index: 5,
                 params: {
                     count: 10
@@ -981,6 +1123,11 @@ inventory.addEnvironmentPlace({
                 // index: 10,
                 params: {}
             },
+            290: {
+                sqlId: 6,
+                itemId: 21,
+                params: {}
+            }
         }
     }]
 });

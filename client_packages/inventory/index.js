@@ -9,6 +9,7 @@
 
 mp.inventory = {
     groundMaxDist: 2,
+    lastArmour: 0,
 
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
@@ -51,11 +52,19 @@ mp.inventory = {
     setEnvironmentItemSqlId(id, sqlId) {
         mp.callCEFV(`inventory.setEnvironmentItemSqlId(${id}, ${sqlId})`);
     },
+    deleteEnvironmentItem(id) {
+        mp.callCEFV(`inventory.deleteEnvironmentItem(${id})`);
+    },
     setSatiety(val) {
         mp.callCEFV(`inventory.satiety = ${val}`)
     },
     setThirst(val) {
         mp.callCEFV(`inventory.thirst = ${val}`)
+    },
+    setArmour(val) {
+        if (this.lastArmour == val) return;
+        this.lastArmour = val;
+        mp.callCEFV(`inventory.setArmour(${val})`);
     },
     takeItemHandler() {
         // поднятие предмета с земли
@@ -106,20 +115,37 @@ mp.events.add("inventory.deleteEnvironmentPlace", mp.inventory.deleteEnvironment
 
 mp.events.add("inventory.setEnvironmentItemSqlId", mp.inventory.setEnvironmentItemSqlId);
 
+mp.events.add("inventory.deleteEnvironmentItem", mp.inventory.deleteEnvironmentItem);
+
 mp.events.add("inventory.setSatiety", mp.inventory.setSatiety);
 
 mp.events.add("inventory.setThirst", mp.inventory.setThirst);
 
 mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`enterBoot: #${vehicle.remoteId}`);
-    if (!vehicle.getVariable("trunk")) {
-        return mp.prompt.showByName("vehicle_boot");
-    }
+    if (!vehicle.getVariable("trunk")) return;
+    mp.prompt.showByName("vehicle_items_boot");
     mp.events.callRemote(`vehicle.boot.items.request`, vehicle.remoteId);
 });
 
 mp.events.add("playerExitVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`exitBoot: #${vehicle.remoteId}`);
-    mp.prompt.hide();
     mp.events.callRemote(`vehicle.boot.items.clear`, vehicle.remoteId);
+});
+
+mp.events.add("time.main.tick", () => {
+    var value = mp.players.local.getArmour();
+    mp.inventory.setArmour(value);
+});
+
+mp.events.addDataHandler("trunk", (vehicle, value) => {
+    if (nearBootVehicleId == null) return;
+    if (nearBootVehicleId != vehicle.remoteId) return;
+    if (value) {
+        mp.events.callRemote(`vehicle.boot.items.request`, vehicle.remoteId);
+        mp.prompt.showByName("vehicle_items_boot");
+    } else {
+        mp.events.callRemote(`vehicle.boot.items.clear`, vehicle.remoteId);
+        mp.prompt.showByName("vehicle_open_boot");
+    }
 });

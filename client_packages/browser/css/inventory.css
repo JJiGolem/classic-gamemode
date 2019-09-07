@@ -554,6 +554,10 @@
     background-color: #f001;
 }
 
+#inventory .items .column.merge {
+    background-color: #0f01;
+}
+
 #inventory .items .column.col-bottom {
     /* border-bottom: 1px solid #555; */
 }

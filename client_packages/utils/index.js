@@ -176,7 +176,15 @@ mp.utils = {
         if (distToPlayer <= nearVehicle.minDist) return nearPlayer;
         else return nearVehicle;
     },
-
+    // Рисовать текст на экране
+    drawText2d(text, pos = [0.8, 0.5], color = [255, 255, 255, 255], scale = [0.3, 0.3]) {
+        mp.game.graphics.drawText(text, pos, {
+            font: 0,
+            color: color,
+            scale: scale,
+            outline: true
+        });
+    },
 };
 
 

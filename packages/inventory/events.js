@@ -50,6 +50,23 @@ module.exports = {
             }
         }
     },
+    // срабатывает, когда игрок переместил предмет на предмет (в любом месте)
+    "item.merge": (player, data) => {
+        data = JSON.parse(data);
+        console.log(`item.merge: ${player.name}`)
+        console.log(data)
+        var header = `Слияние предметов`;
+        var item = inventory.getItem(player, data.sqlId);
+        var target = inventory.getItem(player, data.targetSqlId);
+        if (!item) return notifs.error(player, `Предмет #${data.sqlId} не найден`, header);
+        if (!target) return notifs.error(player, `Целевой предмет #${data.targetSqlId} не найден`, header);
+        if (!inventory.canMerge(item.itemId, target.itemId)) return notifs.error(player, `Предметы недоступны для слияния`, header);
+
+        var params = inventory.getParamsValues(target);
+        if (params.weaponHash) { // зарядка оружия
+            mp.events.call("weapons.ammo.fill", player, item, target);
+        }
+    },
     // срабатывает, когда игрок выкидывает предмет
     "item.ground.put": (player, sqlId) => {
         // console.log(`item.ground.put: ${sqlId}`)
@@ -217,8 +234,6 @@ module.exports = {
             header: veh.db.modelName,
             pockets: inventory.getVehicleClientPockets(veh.inventory.items),
         };
-        console.log(`place.pockets:`)
-        console.log(place.pockets[0].items)
         player.inventory.place.sqlId = place.sqlId;
         player.inventory.place.type = "Vehicle";
         player.inventory.place.items = veh.inventory.items;
@@ -233,5 +248,12 @@ module.exports = {
             player.call(`inventory.deleteEnvironmentPlace`, [-veh.db.id]);
             delete veh.bootPlayerId;
         }
+    },
+    "playerQuit": (player) => {
+        if (!player.character) return;
+        if (!player.inventory.place || player.inventory.place.type != "Vehicle") return;
+        var veh = mp.vehicles.getBySqlId(-player.inventory.place.sqlId);
+        if (!veh) return;
+        delete veh.bootPlayerId;
     },
 };

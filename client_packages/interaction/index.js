@@ -108,6 +108,7 @@ mp.events.add('characterInit.done', () => { /// E
         //getClosestPlayer(mp.players.local.position);
         //currentInteractionEntity = getClosestVehicle(mp.players.local.position);
         currentInteractionEntity = getClosestPlayerOrVehicle(mp.players.local.position);
+        // currentInteractionEntity = mp.players.local; // for tests
         if (!currentInteractionEntity) return;
 
         if (currentInteractionEntity.type == 'vehicle') {
@@ -127,7 +128,7 @@ mp.events.add('characterInit.done', () => { /// E
             }
             mp.events.call('interaction.menu.show');
         } else if (currentInteractionEntity.type == 'player') {
-            mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["player_interaction"])');
+            mp.callCEFV(`interactionMenu.showByName('player_interaction')`);
             mp.callCEFV(`interactionMenu.left = ${defaultLeft}`);
             mp.events.call('interaction.menu.show');
         }

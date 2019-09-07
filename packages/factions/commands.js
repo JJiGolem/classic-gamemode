@@ -43,8 +43,8 @@ module.exports = {
             faction.save();
         }
     },
-    "/fsetleader": {
-        description: "Сменить лидера организации.",
+    "/fsetleaderoff": {
+        description: "Сменить лидера организации оффлайн.",
         access: 6,
         args: "[ид_организации]:n [имя] [фамилия]",
         handler: async (player, args, out) => {
@@ -61,8 +61,25 @@ module.exports = {
             });;
             if (!character) return out.error(`Персонаж ${fullName} не найден`, player);
 
-            out.info(`${player.name} добавил лидера организации #${faction.id} (#${character.id})`);
-            factions.setLeader(faction, character);
+            out.info(`${player.name} добавил лидера организации #${faction.id} оффлайн (#${character.id})`);
+            character.factionId = faction.id;
+            character.factionRank = factions.getMaxRank(faction).id;
+            character.save();
+        }
+    },
+    "/fsetleader": {
+        description: "Сменить лидера организации.",
+        access: 6,
+        args: "[ид_игрока]:n [ид_организации]:n",
+        handler: async (player, args, out) => {
+            var faction = factions.getFaction(args[1]);
+            if (!faction) return out.error(`Организация #${args[1]} не найдена`, player);
+
+            var rec = mp.players.at(args[0]);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
+
+            out.info(`${player.name} добавил лидера организации #${faction.id} (#${rec.name})`);
+            factions.setLeader(faction, rec);
         }
     },
     "/fuval": {

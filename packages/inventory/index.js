@@ -31,6 +31,8 @@ module.exports = {
         7: [13],
         8: [13],
     },
+    // Вайт-лист предметов, которые могут перетаскиваться друг на друга
+    mergeList: {},
     // Кол-во предметов на земле от одного игрока
     groundMaxItems: 30,
     // Время жизни предмета на земле (ms)
@@ -315,7 +317,7 @@ module.exports = {
         if (typeof item == 'number') item = this.getItem(player, item);
         if (!item) return console.log(`[inventory.deleteItem] Предмет #${item} у ${player.name} не найден`);
         var params = this.getParamsValues(item);
-        if (params.weaponHash) player.removeWeapon(params.weaponHash);
+        if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
         if (!item.parentId) this.clearView(player, item.itemId);
         item.destroy();
         player.call("inventory.deleteItem", [item.id]);
@@ -339,7 +341,7 @@ module.exports = {
             var child = children[i];
             child.destroy(); // из-за paranoid: true
             var params = this.getParamsValues(child);
-            if (params.weaponHash) player.removeWeapon(params.weaponHash);
+            if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
             this.clearArrayItems(player, child);
         }
         var index = items.indexOf(item);
@@ -445,7 +447,7 @@ module.exports = {
         } else if (otherItems[item.itemId] != null) {
             otherItems[item.itemId](params);
         } else if (params.weaponHash) {
-            player.removeWeapon(params.weaponHash);
+            this.removeWeapon(player, params.weaponHash);
         } else return console.log("Неподходящий тип предмета для тела!");
 
     },
@@ -668,7 +670,7 @@ module.exports = {
     },
     getArrayByItemId(player, itemIds) {
         if (!Array.isArray(itemIds)) itemIds = [itemIds];
-        var items = player.inventory.items;
+        var items = (!Array.isArray(player)) ? player.inventory.items : player;
         var result = [];
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
@@ -693,7 +695,17 @@ module.exports = {
         mp.vehicles.forEach((veh) => {
             if (!veh.inventory) return;
 
-            // this.deleteByParams(veh, itemIds, keys, values);
+            var items = this.getItemsByParams(veh.inventory.items, itemIds, keys, values);
+            items.forEach(item => {
+                item.destroy();
+                var i = veh.inventory.items.indexOf(item);
+                veh.inventory.items.splice(i, 1);
+                if (veh.bootPlayerId != null) {
+                    var rec = mp.players.at(veh.bootPlayerId);
+                    if (!rec) return;
+                    rec.call(`inventory.deleteEnvironmentItem`, [item.id]);
+                }
+            });
         });
         // предметы на земле
         mp.objects.forEach((obj) => {
@@ -778,6 +790,37 @@ module.exports = {
             this.deleteItem(player, item);
         });
     },
+    getItemsByParams(items, itemIds, keys, values) {
+        // console.log(`deleteByParams: ${player.name}`)
+        if (itemIds && !Array.isArray(itemIds)) itemIds = [itemIds];
+        if (!Array.isArray(keys)) keys = [keys];
+        if (!Array.isArray(values)) values = [values];
+
+        var list = [];
+        if (keys.length != values.length) return list;
+
+        var items = (itemIds) ? this.getArrayByItemId(items, itemIds) : items;
+        if (!items.length) return list;
+
+        for (var j = 0; j < items.length; j++) {
+            var item = items[j];
+            var params = this.getParamsValues(item);
+            var isFind = true;
+            for (var i = 0; i < keys.length; i++) {
+                var param = params[keys[i]];
+                if (!param) {
+                    isFind = false;
+                    break;
+                }
+                if (param && param != values[i]) {
+                    isFind = false;
+                    break;
+                }
+            }
+            if (isFind) list.push(item);
+        }
+        return list;
+    },
     getVehicleClientPockets(dbItems) {
         var pockets = [{
                 cols: 18,
@@ -815,5 +858,13 @@ module.exports = {
         if (!hash) return;
         player.giveWeapon(hash, 0);
         player.setWeaponAmmo(hash, parseInt(ammo));
+        player.call(`weapons.giveWeapon`, [hash.toString()]);
+    },
+    removeWeapon(player, hash) {
+        player.removeWeapon(hash);
+        player.call(`weapons.removeWeapon`, [hash.toString()]);
+    },
+    canMerge(itemId, targetId) {
+        return this.mergeList[itemId] && this.mergeList[itemId].includes(targetId);
     },
 };
