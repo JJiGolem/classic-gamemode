@@ -85,16 +85,12 @@ module.exports = {
             vehicle.properties = veh.properties;
         }
 
-        if (veh.key == 'private' || veh.key == 'newbie') { // temp
-            console.log('test 1');
+        if (veh.key == 'private' || veh.key == 'market' || veh.key == 'newbie') { // temp
             if (!veh.tuning) {
-                console.log('test 2');
                 await this.initTuning(vehicle);
             } else {
-                console.log('test 3');
                 vehicle.tuning = veh.tuning;
             }
-            //console.log(vehicle.tuning);
             tuning.setTuning(vehicle);
         }
 
@@ -526,6 +522,5 @@ module.exports = {
             }
         });
         vehicle.tuning = tuning[0];
-        //console.log(vehicle.tuning);
     }
 }

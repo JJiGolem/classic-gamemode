@@ -24,6 +24,16 @@ let modsConfig = {
     "23": "frontWheels",
     "48": "livery"
 }
+
+let priceConfig = { 
+    default: 0.02,
+    engine: 0.03,
+    brake: 0.04,
+    transmission: 0.01,
+    suspension: 0.01,
+    armour: 0.05
+}
+
 module.exports = {
     async init() {
         await this.loadCustomsFromDB();
@@ -58,7 +68,6 @@ module.exports = {
             let modType = parseInt(key);
             let modIndex = vehicle.tuning[modsConfig[key]];
             if (modIndex != -1) {
-                //console.log(`${modsConfig[key]} set`)
                 vehicle.setMod(modType, modIndex);
             }
         }
@@ -71,5 +80,8 @@ module.exports = {
     saveMod(vehicle, typeName, modIndex) {
         vehicle.tuning[typeName] = modIndex;
         vehicle.tuning.save();
+    },
+    getPriceConfig() {
+        return priceConfig;
     } 
 }

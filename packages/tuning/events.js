@@ -13,7 +13,11 @@ module.exports = {
             player.call('vehicles.heading.set', [customs.tuneH])
             let primary = player.vehicle.color1;
             let secondary = player.vehicle.color2;
-            player.call('tuning.start', [customs.id, primary, secondary]);
+            let priceInfo = {
+                veh: player.vehicle.properties.price,
+                config: tuning.getPriceConfig()
+            }
+            player.call('tuning.start', [customs.id, primary, secondary, priceInfo]);
             player.call('vehicles.engine.toggle', [false]);
             player.vehicle.setVariable("engine", false);
             player.vehicle.isBeingTuned = true;
