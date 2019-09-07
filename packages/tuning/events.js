@@ -5,7 +5,12 @@ module.exports = {
     },
     "playerEnterColshape": (player, shape) => {
         if (shape.isCustoms) {
-            if (!player.vehicle) return;
+            if (!player.vehicle) return player.call('prompt.show', ['Вы должны находиться в транспорте']);
+            console.log(player.vehicle.key);
+            if (player.vehicle.key != 'newbie' && player.vehicle.key != 'private') return player.call('prompt.show', ['Этот транспорт нельзя модифицировать']); //temp
+            //if (player.vehicle.owner != player.character.id) return player.call('prompt.show', ['Нельзя модифицировать чужой транспорт']); //temp
+            if (!player.vehicle.tuning || player.vehicle.properties.vehType != 0) return player.call('prompt.show', ['Этот транспорт нельзя модифицировать']);
+
             console.log(`${player.name} entered LSC ${shape.customsId}`)
             let customs = tuning.getCustomsDataById(shape.customsId);
             player.vehicle.dimension = player.id + 1;
@@ -48,7 +53,7 @@ module.exports = {
         let config = tuning.getModsConfig();
         typeName = config[type];
         let vehicle = player.vehicle;
-        console.log(`${type} ${index}`);
+        console.log(`price = ${tuning.calculateModPrice(vehicle.properties.price, type, index)}`);
         tuning.saveMod(vehicle, typeName, index);
         vehicle.setMod(type, index);
         player.call('tuning.buy.ans', [0, typeName, index]);

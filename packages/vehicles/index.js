@@ -107,6 +107,7 @@ module.exports = {
 
         vehicle.consumption = vehicle.properties.consumption * multiplier;
         vehicle.fuelTick = 60000 / vehicle.consumption;
+        if (!vehicle.fuelTick || isNaN(vehicle.fuelTick)) vehicle.fuelTick = 60000;
 
         vehicle.fuelTimer = setInterval(() => {
             try {
@@ -134,7 +135,7 @@ module.exports = {
     },
     respawnVehicle(veh) {
         if (!mp.vehicles.exists(veh)) return;
-        
+        console.log('respawn');
         //let occupants = veh.getOccupants();
         //console.log(occupants);
         // if (occupants.length > 0) {
@@ -326,8 +327,7 @@ module.exports = {
         if (veh.key == 'admin') return 1;
         let multiplier = 1;
         let mileage = veh.mileage;
-        let destroys = veh.destroys;
-
+        let destroys = veh.destroys ? veh.destroys : 0;
         if (mileage < 10) multiplier += 0.01;
         if (mileage >= 10 && mileage < 100) multiplier += 0.05;
         if (mileage >= 100 && mileage < 300) multiplier += 0.1;

@@ -83,5 +83,30 @@ module.exports = {
     },
     getPriceConfig() {
         return priceConfig;
+    },
+    calculateModPrice(vehPrice, modType, index) {
+        let key;
+        let i = index + 1;
+        switch (modType) {
+            case 11:
+                key = 'engine';
+                break;
+            case 12:
+                key = 'brake';
+                break;
+            case 13:
+                key = 'transmission';
+                break;
+            case 15:
+                key = 'suspension';
+                break;
+            case 16:
+                key = 'armour';
+                break;
+            default:
+                key = 'default';
+                break;
+        }
+        return parseInt(priceConfig[key] * vehPrice * i);
     } 
 }
