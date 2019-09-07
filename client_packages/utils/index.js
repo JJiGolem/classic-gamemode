@@ -201,7 +201,9 @@ mp.utils = {
 };
 
 
-
+Math.clamp = function(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+}
 
 /// Вывод информации в серверную консоль
 mp.console = function(object) {

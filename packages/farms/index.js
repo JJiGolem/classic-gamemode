@@ -22,7 +22,7 @@ module.exports = {
     // Объекты урожая на поле
     fieldObjects: {},
     // Время сбора одного 1 ед. урожая (ms)
-    takeCropTime: 1000,
+    takeCropTime: 7000,
 
     async init() {
         await this.loadFarmsFromDB();
@@ -156,7 +156,9 @@ module.exports = {
         };
         if (vehicle.products.type != type) return;
 
-        // TODO: Синхра объектов в кузове
         vehicle.products.count++;
-    }
+        // Синхра объектов в кузове
+        if (vehicle.products.count % 33 == 0)
+            vehicle.setVariable("farmProductsState", parseInt(vehicle.products.count / 33));
+    },
 };

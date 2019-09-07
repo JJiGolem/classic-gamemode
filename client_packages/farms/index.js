@@ -9,6 +9,83 @@
 
 mp.farms = {
     jobType: null,
+    vehAttachInfo: {
+        0xAA699BB6: [
+            [
+                ["prop_haybale_01", 5, 0.01, -2.88, -0.26, 0, 0, 90],
+            ],
+            [
+                ["prop_haybale_01", 5, 0.01, -2.88, -0.26, 0, 0, 90],
+                ["prop_haybale_01", 5, 0.27, -2, -0.26, 0, 0, 0],
+            ],
+            [
+                ["prop_haybale_01", 5, 0.01, -2.88, -0.26, 0, 0, 90],
+                ["prop_haybale_01", 5, 0.27, -2, -0.26, 0, 0, 0],
+                ["prop_haybale_01", 5, -0.2, -2, -0.26, 0, 0, 0],
+            ],
+            [
+                ["prop_haybale_01", 5, 0.01, -2.88, -0.26, 0, 0, 90],
+                ["prop_haybale_01", 5, 0.27, -2, -0.26, 0, 0, 0],
+                ["prop_haybale_01", 5, -0.2, -2, -0.26, 0, 0, 0],
+                ["prop_haybale_01", 5, 0.01, -3.4, -0.26, 0, 0, 90],
+            ],
+            [
+                ["prop_haybale_01", 5, 0.01, -2.88, -0.26, 0, 0, 90],
+                ["prop_haybale_01", 5, 0.27, -2, -0.26, 0, 0, 0],
+                ["prop_haybale_01", 5, -0.2, -2, -0.26, 0, 0, 0],
+                ["prop_haybale_01", 5, 0.01, -3.4, -0.26, 0, 0, 90],
+                ["prop_haybale_01", 5, 0.6, -2.6, 0.2, 0, 30, 0],
+            ],
+            [
+                ["prop_haybale_01", 5, 0.01, -2.88, -0.26, 0, 0, 90],
+                ["prop_haybale_01", 5, 0.27, -2, -0.26, 0, 0, 0],
+                ["prop_haybale_01", 5, -0.2, -2, -0.26, 0, 0, 0],
+                ["prop_haybale_01", 5, 0.01, -3.4, -0.26, 0, 0, 90],
+                ["prop_haybale_01", 5, 0.6, -2.6, 0.2, 0, 30, 0],
+                ["prop_haybale_01", 5, -0.53, -2.6, 0.2, 0, 150, 0],
+                ["prop_haybale_01", 5, 0.01, -2.6, 0.3, 0, 0, 0],
+                ["prop_haybale_01", 5, 0.03, -3.5, 0.3, 0, 0, 90],
+            ],
+        ],
+        0xB802DD46: [
+            [
+                ["prop_haybale_01", 3, 0.13, -1.60, 0.1, 0, 0, 0],
+            ],
+            [
+                ["prop_haybale_01", 3, 0.13, -1.60, 0.1, 0, 0, 0],
+                ["prop_haybale_01", 3, 0.67, -1.60, 0.1, 0, 0, 0],
+            ],
+            [
+                ["prop_haybale_01", 3, 0.13, -1.60, 0.1, 0, 0, 0],
+                ["prop_haybale_01", 3, 0.67, -1.60, 0.1, 0, 0, 0],
+                ["prop_haybale_01", 3, 0.4, -2.41, 0.1, 0, 0, 90],
+            ],
+            [
+                ["prop_haybale_01", 3, 0.13, -1.60, 0.1, 0, 0, 0],
+                ["prop_haybale_01", 3, 0.67, -1.60, 0.1, 0, 0, 0],
+                ["prop_haybale_01", 3, 0.4, -2.41, 0.1, 0, 0, 90],
+                ["prop_haybale_01", 3, 0.40, -1.3, 0.63, 0, 0, 90],
+            ],
+            [
+                ["prop_haybale_01", 3, 0.13, -1.60, 0.1, 0, 0, 0],
+                ["prop_haybale_01", 3, 0.67, -1.60, 0.1, 0, 0, 0],
+                ["prop_haybale_01", 3, 0.4, -2.41, 0.1, 0, 0, 90],
+                ["prop_haybale_01", 3, 0.40, -1.3, 0.63, 0, 0, 90],
+                ["prop_haybale_01", 3, 0.75, -2.1, 0.63, 0, 0, 0],
+                ["prop_haybale_01", 3, 0.1, -2.1, 0.63, 0, 0, 0],
+            ],
+            [
+                ["prop_haybale_01", 3, 0.13, -1.60, 0.1, 0, 0, 0],
+                ["prop_haybale_01", 3, 0.67, -1.60, 0.1, 0, 0, 0],
+                ["prop_haybale_01", 3, 0.4, -2.41, 0.1, 0, 0, 90],
+                ["prop_haybale_01", 3, 0.40, -1.3, 0.63, 0, 0, 90],
+                ["prop_haybale_01", 3, 0.75, -2.1, 0.63, 0, 0, 0],
+                ["prop_haybale_01", 3, 0.1, -2.1, 0.63, 0, 0, 0],
+                ["prop_haybale_01", 3, 0.4, -2.1, 1.1, 0, 0, 0],
+                ["prop_haybale_01", 3, 0.4, -1.2, 1.1, 0, 0, 90],
+            ],
+        ],
+    },
 
     takeCropHandler() {
         if (mp.busy.includes()) return;
@@ -71,7 +148,34 @@ mp.farms = {
             if (player.hasAttachment(names[i])) return true;
         }
         return false;
-    }
+    },
+    attachProductsObjects(vehicle) {
+        if (!this.vehAttachInfo[vehicle.model]) return;
+        this.clearProductsObjects(vehicle);
+        var state = Math.clamp(vehicle.getVariable("farmProductsState"), 0, 6);
+        if (!state) return;
+        var info = this.vehAttachInfo[vehicle.model][state - 1];
+
+        for (var i = 0; i < info.length; i++) {
+            var o = info[i];
+            var obj = mp.objects.new(mp.game.joaat(o[0]), vehicle.position, {
+                rotation: new mp.Vector3(0, 0, 30),
+                dimension: -1
+            });
+            obj.attachTo(vehicle.handle, o[1], o[2], o[3], o[4], o[5], o[6], o[7],
+                false, false, false, false, 2, true);
+
+            vehicle.objects.push(obj);
+        }
+    },
+    clearProductsObjects(vehicle) {
+        if (!vehicle.objects) vehicle.objects = [];
+        for (var i = 0; i < vehicle.objects.length; i++) {
+            var obj = vehicle.objects[i];
+            if (mp.objects.exists(obj)) obj.destroy();
+        }
+        vehicle.objects = [];
+    },
 };
 
 mp.events.add({
@@ -95,4 +199,17 @@ mp.events.add({
         // if (!vehicle.getVariable("trunk")) return;
         mp.events.callRemote(`farms.vehicle.products.put`, vehicle.remoteId);
     },
+    "entityStreamIn": (vehicle) => {
+        if (vehicle.type != "vehicle") return;
+        mp.farms.attachProductsObjects(vehicle);
+    },
+    "entityStreamOut": (vehicle) => {
+        if (vehicle.type != "vehicle") return;
+        mp.farms.clearProductsObjects(vehicle);
+    },
+});
+
+mp.events.addDataHandler("farmProductsState", (vehicle) => {
+    if (vehicle.type != "vehicle") return;
+    mp.farms.attachProductsObjects(vehicle);
 });
