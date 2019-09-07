@@ -24,12 +24,12 @@ module.exports = {
         mp.events.call('vehicles.loaded');
     },
     spawnVehicle(veh, source) { /// source: 0 - спавн автомобиля из БД, 1 - респавн любого автомобиля, null - спавн админского авто и т. д.
-        let vehicle = mp.vehicles.new(veh.modelName, new mp.Vector3(veh.x, veh.y, veh.z),
-            {
-                heading: veh.h,
-                engine: false,
-                locked: false
-            });
+        let vehicle = mp.vehicles.new(veh.modelName, new mp.Vector3(veh.x, veh.y, veh.z), {
+            // heading: veh.h,
+            engine: false,
+            locked: false
+        });
+        vehicle.rotation = new mp.Vector3(0, 0, veh.h);
         vehicle.setColor(veh.color1, veh.color2);
         vehicle.modelName = veh.modelName;
         vehicle.color1 = veh.color1;
@@ -123,7 +123,7 @@ module.exports = {
     },
     respawnVehicle(veh) {
         if (!mp.vehicles.exists(veh)) return;
-        
+
         //let occupants = veh.getOccupants();
         //console.log(occupants);
         // if (occupants.length > 0) {
@@ -161,7 +161,7 @@ module.exports = {
         // veh.setVariable("rightTurnSignal", false);
         // veh.setVariable("hood", false);
         // veh.setVariable("trunk", false);
-        clearInterval(veh.fuelTimer);  
+        clearInterval(veh.fuelTimer);
         this.spawnVehicle(veh, 1);
         veh.destroy();
     },
@@ -169,7 +169,7 @@ module.exports = {
         var dbVehicles = await db.Models.Vehicle.findAll({
             where: {
                 key: {
-                    [Op.or]: ["newbie", "faction", "job"]
+                    [Op.or]: ["newbie", "faction", "job", "farm"]
                 }
             }
         });
