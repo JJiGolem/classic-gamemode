@@ -119,13 +119,46 @@ module.exports = {
             prodType = 3;
         } else return notifs.error(player, `Соберите урожай на поле`, header);
         if (veh.products && veh.products.type != prodType) return notifs.error(player, `Неверный типа урожая`, header);
-        farms.addVehicleProducts(veh, prodType, 1);
+        farms.addVehicleProducts(veh, prodType);
 
         if (!player.farmJob) return notifs.error(player, `Вы не работаете`, header);
         if (player.farmJob.farm.id != veh.db.owner) return notifs.error(player, `Вы работаете на другой ферме`, header);
 
         player.farmJob.pay += player.farmJob.farm.pay;
         notifs.info(player, `Заработано $${player.farmJob.pay}`, header);
+    },
+    "farms.warehouse.products.fill": (player) => {
+        var header = `Склад фермы`;
+        var veh = player.vehicle;
+        if (!veh || !veh.db || veh.db.key != "farm") return notifs.error(player, `Необходимо находиться в фермерском пикапе`, header);
+        if (!player.farm) return notifs.error(player, `Вы далеко`, header);
+        if (!player.farmJob) return notifs.error(player, `Вы не работаете на ферме`, header);
+        if (player.farmJob.farm.id != player.farm.id) return notifs.error(player, `Вы работаете на другой ферме`, header);
+        if (player.farmJob.type != 1) {
+            var jobName = farms.getJobName(player.farmJob.type);
+            return notifs.error(player, `Для должности ${jobName} недоступно`, header);
+        }
+        if (!veh.products || !veh.products.count) return notifs.error(player, `Пикап пустой`, header);
+        var names = ["productA", "productB", "productC"];
+        if (veh.products.type < 1 || veh.products.type > names.length) return notifs.error(player, `Не подходящее содержимое пикапа`, header);
+        var key = names[veh.products.type - 1];
+        var farm = player.farm;
+
+        var count = Math.clamp(veh.products.count, 0, farms.productsMax - farm[key]);
+        farm[key] += count;
+        farm.save();
+        veh.products.count -= count;
+        veh.setVariable("farmProductsState", parseInt(veh.products.count / 33));
+        if (veh.products.count) notifs.info(player, `Склад заполнен. ${veh.products.count} ед. урожая осталось в пикапе`, header);
+        else delete veh.products;
+        var pay = parseInt(farms.farmerPay * (count / 200));
+        if (farm.balance < pay) notifs.warning(player, `Баланс фермы не позволяет вам выплатить заплату`, header);
+        else {
+            farm.balance -= pay;
+            farm.save();
+            money.addCash(player, pay);
+        }
+        notifs.success(player, `Разгружено ${count} ед. урожая. Премия $${pay}`, header);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;
@@ -153,7 +186,10 @@ module.exports = {
             return notifs.error(player, `Необходимо иметь должность: ${farms.getJobName(jobType)}`, header);
         }
         if (jobType == 1) { // фермер
-            // player.call(`selectMenu.show`, [`farm_crop_loading`]);
+            player.call(`prompt.waitShowByName`, [`farm_farmer`]);
+            if (!vehicle.products) return;
+            var count = vehicle.products.count;
+            notifs.info(player, `Урожай в пикапе: ${count} из 200 ед.`, header);
         } else if (jobType == 2) { // тракторист
             // if (!vehicle.products.count) player.utils.info(`Загрузить зерно возможно у склада`);
             // player.utils.info(`Зерно: ${vehicle.products.count} / ${vehicle.products.maxCount} ед.`);

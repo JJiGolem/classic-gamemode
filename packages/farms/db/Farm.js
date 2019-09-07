@@ -1,3 +1,5 @@
+let farms = call('farms');
+
 module.exports = (sequelize, DataTypes) => {
     const model = sequelize.define("Farm", {
         id: {
@@ -8,22 +10,38 @@ module.exports = (sequelize, DataTypes) => {
         grains: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
-            allowNull: false
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, farms.grainsMax);
+                this.setDataValue('grains', val);
+            }
         },
         productA: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
-            allowNull: false
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, farms.productsMax);
+                this.setDataValue('productA', val);
+            }
         },
         productB: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
-            allowNull: false
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, farms.productsMax);
+                this.setDataValue('productB', val);
+            }
         },
         productC: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
-            allowNull: false
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, farms.productsMax);
+                this.setDataValue('productC', val);
+            }
         },
         productAPrice: {
             type: DataTypes.INTEGER(11),

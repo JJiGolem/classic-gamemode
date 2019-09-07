@@ -3419,7 +3419,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Выгрузить') {
-
+                            mp.trigger(`callRemote`, `farms.warehouse.products.fill`);
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmProducts");
                         }

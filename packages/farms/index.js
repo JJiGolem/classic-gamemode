@@ -10,6 +10,8 @@ module.exports = {
     markers: [],
     // Блипы ферм
     blips: [],
+    // Склады ферм
+    warehouses: [],
     // Должности
     jobNames: ["Рабочий", "Фермер", "Тракторист", "Пилот"],
     // Модели авто и их типы работ
@@ -22,7 +24,13 @@ module.exports = {
     // Объекты урожая на поле
     fieldObjects: {},
     // Время сбора одного 1 ед. урожая (ms)
-    takeCropTime: 7000,
+    takeCropTime: 100,
+    // Вместимость зерна на складе
+    grainsMax: 2000,
+    // Вместимость урожая на складе (для каждого типа)
+    productsMax: 800,
+    // ЗП фермера за разгруз пикапа с урожаем на склад
+    farmerPay: 100,
 
     async init() {
         await this.loadFarmsFromDB();
@@ -42,7 +50,7 @@ module.exports = {
         for (var i = 0; i < this.farms.length; i++) {
             var farm = this.farms[i];
             this.createFarmMarker(farm);
-            this.initFarmWarehouse(farm);
+            this.createFarmWarehouse(farm);
             this.initFarmLabels(farm);
             this.initFarmFieldObjects(farm);
         }
@@ -72,7 +80,7 @@ module.exports = {
     createFarmMarker(farm) {
         var pos = new mp.Vector3(farm.x, farm.y, farm.z - 1);
         var marker = mp.markers.new(1, pos, 0.5, {
-            color: [255, 187, 0, 70]
+            color: [255, 0, 0, 70]
         });
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
@@ -92,8 +100,22 @@ module.exports = {
             scale: 1
         }));
     },
-    initFarmWarehouse(farm) {
-
+    createFarmWarehouse(farm) {
+        var pos = this.getWarehousePosByFarmId(farm.id)[3];
+        var marker = mp.markers.new(1, pos, 3, {
+            color: [187, 255, 0, 70],
+        });
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 2);
+        colshape.onEnter = (player) => {
+            player.call(`selectMenu.show`, [`farmWarehouse`]);
+            player.farm = farm;
+        };
+        colshape.onExit = (player) => {
+            player.call(`selectMenu.hide`);
+            delete player.farm;
+        };
+        marker.colshape = colshape;
+        this.warehouses.push(marker);
     },
     initFarmLabels(farm) {
 
@@ -149,10 +171,10 @@ module.exports = {
         }
         return objPositions;
     },
-    addVehicleProducts(vehicle, type, count) {
+    addVehicleProducts(vehicle, type) {
         if (!vehicle.products) vehicle.products = {
             type: type,
-            count: count
+            count: 1
         };
         if (vehicle.products.type != type) return;
 
@@ -160,5 +182,17 @@ module.exports = {
         // Синхра объектов в кузове
         if (vehicle.products.count % 33 == 0)
             vehicle.setVariable("farmProductsState", parseInt(vehicle.products.count / 33));
+    },
+    getWarehousePosByFarmId(farmId) {
+        var positions = [
+            [
+                new mp.Vector3(1981.6806640625, 5029.39892578125, 42.03016662597656),
+                new mp.Vector3(1985.9840087890625, 5023.95458984375, 42.088829040527344),
+                new mp.Vector3(1991.2686767578125, 5018.3994140625, 42.13268280029297),
+                new mp.Vector3(1982.4197998046875, 5020.7783203125, 42.205257415771484 - 2)
+            ],
+        ];
+        farmId = Math.clamp(farmId, 1, positions.length);
+        return positions[farmId - 1];
     },
 };
