@@ -1,6 +1,6 @@
 "use strict"
 
-mp.attachmentMngr.register("takeRod", "prop_fishing_rod_01", 58867, new mp.Vector3(0.06, 0, 0.05), new mp.Vector3(90, -30, 0)); /// Телефон в руке
+mp.attachmentMngr.register("takeRod", "prop_fishing_rod_01", 26611, new mp.Vector3(0, -0.05, -0.03), new mp.Vector3(-20, 10, -30)); /// Телефон в руке
 // mp.attachmentMngr.register("callPhone", "prop_npc_phone", 58867, new mp.Vector3(0.01, 0.05, -0.02), new mp.Vector3(-5, -65, 165)); /// Телефон у уха
 
 let peds = [
@@ -56,7 +56,7 @@ function playHoldAnimation(state, timeout) { /// Анимация держани
     if (state) {
         if (!timeout) timeout = 0;
         setTimeout(()=> {
-            mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@base', 'base', 1, 49);
+            mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@idle_a', 'idle_a', 1, 49);
             mp.attachmentMngr.addLocal("takeRod");
         }, timeout);
     } else {

@@ -2,6 +2,7 @@ var parkings = require('./index.js');
 var newPark = {};
 module.exports = {
     "/newpark": {
+        access: 6,
         handler: (player, args) => {
             if (args[0] == 0) {
                 args.splice(0, 1);

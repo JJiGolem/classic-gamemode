@@ -156,14 +156,14 @@ module.exports = {
         access: 4,
         description: "Заспавнить транспорт",
         args: "[название т/c] [ID цвета #1] [ID цвета #2]",
-        handler: (player, args) => {
+        handler: async (player, args) => {
             if (vehicles != null) {
                 let veh = {
                     modelName: args[0],
                     x: player.position.x,
                     y: player.position.y + 2,
                     z: player.position.z,
-                    spawnHeading: player.heading,
+                    h: player.heading,
                     color1: parseInt(args[1]),
                     color2: parseInt(args[2]),
                     license: 0,
@@ -172,10 +172,39 @@ module.exports = {
                     fuel: 40,
                     mileage: 0,
                     plate: vehicles.generateVehiclePlate(),
-                    //multiplier: 1
+                    destroys: 0
                 }
-                veh = vehicles.spawnVehicle(veh);
+                veh = await vehicles.spawnVehicle(veh);
                 mp.events.call("admin.notify.all", `!{#e0bc43}[A] ${player.name} создал транспорт ${veh.modelName}`);
+            }
+        }
+    },
+    "/mvehs": {
+        access: 6,
+        description: "Заспавнить N машин [for test]",
+        args: "[количество]",
+        handler: async (player, args) => {
+            if (vehicles != null) {
+                for (let i = 0; i < parseInt(args[0]); i++) {
+                    let veh = {
+                        modelName: 'cheburek',
+                        x: 0,
+                        y: 0,
+                        z: 0,
+                        h: 0,
+                        color1: parseInt(args[1]),
+                        color2: parseInt(args[2]),
+                        license: 0,
+                        key: "admin",
+                        owner: 0,
+                        fuel: 40,
+                        mileage: 0,
+                        plate: vehicles.generateVehiclePlate(),
+                        destroys: 0
+                    }
+                    veh = await vehicles.spawnVehicle(veh);
+                }
+                mp.events.call("admin.notify.all", `!{#e0bc43}[A] ${player.name} создал ${args[0]} чебуреков`);
             }
         }
     },
@@ -186,6 +215,36 @@ module.exports = {
         handler: (player, args) => {
             player.call('chat.message.push', [`!{#ffffff} ${player.position.x} ${player.position.y} ${player.position.z}`]);
             console.log(`${player.position.x} ${player.position.y} ${player.position.z}`);
+        }
+    },
+    "/timers": {
+        access: 5,
+        description: "создать N таймеров",
+        args: "[count] [ms]",
+        handler: (player, args) => {
+            for (let i = 0; i < parseInt(args[0]); i++) {
+                setInterval(() => {
+                    let i = 1 + 1;
+                }, parseInt(args[1]));
+            }
+        }
+    },
+    "/vcount": {
+        access: 5,
+        description: "Вывести кол-во машин на сервере",
+        args: "",
+        handler: (player, args, out) => {
+            let private = mp.vehicles.toArray().filter(x => x.key == 'private');
+            let admin = mp.vehicles.toArray().filter(x => x.key == 'admin');
+            let faction = mp.vehicles.toArray().filter(x => x.key == 'faction');
+            let market = mp.vehicles.toArray().filter(x => x.key == 'market');
+            let newbie = mp.vehicles.toArray().filter(x => x.key == 'newbie');
+            out.info(`Всего транспорта: ${mp.vehicles.length}`, player);
+            out.info(`Личные: ${private.length}`, player);
+            out.info(`Админские: ${admin.length}`, player);
+            out.info(`Фракционные: ${faction.length}`, player);
+            out.info(`Авторынок: ${market.length}`, player);
+            out.info(`Для новичков: ${newbie.length}`, player);
         }
     },
     "/tpos": {

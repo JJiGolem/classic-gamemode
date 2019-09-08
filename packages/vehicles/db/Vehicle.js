@@ -136,7 +136,11 @@ module.exports = (sequelize, DataTypes) => {
         model.hasMany(models.VehicleInventory, {
             as: "items",
             foreignKey: "vehicleId"
-        });
+		});
+		
+		model.hasOne(models.VehicleTuning, {
+			foreignKey: "vehicleId",
+		});
     };
 
     return model;

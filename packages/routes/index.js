@@ -22,7 +22,6 @@ module.exports = {
         player.call(`routes.checkpoint.create`, [this.checkpointData]);
     },
     next(player) {
-        console.log(`next`)
         if (!player.route) return;
         if (!player.route.valid()) return;
         if (player.route.i >= player.route.points.length - 1) return this.stop(player);
