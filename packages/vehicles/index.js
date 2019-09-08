@@ -256,7 +256,14 @@ module.exports = {
             },
             // include: [{
             //     model: db.Models.VehicleTuning
+            <<
+            << << < HEAD
             // }]
+            ===
+            === =
+            // }]
+            >>>
+            >>> > 2693545 d9befb6828d814496092c6079a11acda0
         });
         player.vehicleList = [];
         let temp = 0;
