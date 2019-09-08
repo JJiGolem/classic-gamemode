@@ -452,6 +452,7 @@ module.exports = {
 
     },
     clearView(player, itemId) {
+        if (player.inventory && player.inventory.denyUpdateView) return;
         var clothesIndexes = {
             "2": 7,
             "13": 5

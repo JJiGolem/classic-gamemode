@@ -5,7 +5,10 @@ mp.events.add("render", () => {
     mp.game.controls.disableControlAction(1, 199, true); //Pause Menu (P)
 });
 
-
+// debug
+d = (text) => {
+    mp.notify.info(text);
+}
 
 
 
