@@ -204,4 +204,24 @@ module.exports = {
     getWarehouse(id) {
         return this.warehouses[id - 1];
     },
+    getFillingPoints(field) {
+        var pointsLeft = utils.getPointsOnInterval(field.p1, field.p3, 4);
+        var pointsRight = utils.getPointsOnInterval(field.p2, field.p4, 4);
+        if (pointsLeft.length > pointsRight.length) pointsLeft.splice(pointsRight.length);
+        if (pointsLeft.length < pointsRight.length) pointsRight.splice(pointsLeft.length);
+        var route = [];
+        var k = 0;
+        pointsLeft.forEach((point) => {
+            point.z = field.p1.z - 1;
+            route[k] = point;
+            k += 2;
+        });
+        k = 1;
+        pointsRight.forEach((point) => {
+            point.z = field.p1.z - 1;
+            route[k] = point;
+            k += 2;
+        });
+        return route;
+    },
 };

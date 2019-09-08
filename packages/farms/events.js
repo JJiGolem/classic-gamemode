@@ -1,6 +1,7 @@
 let farms = call('farms');
 let money = call('money');
 let notifs = call('notifications');
+let routes = call('routes');
 
 module.exports = {
     "init": () => {
@@ -176,6 +177,9 @@ module.exports = {
         }
         if (veh.products && veh.products.count) return notifs.error(player, `Трактор уже загружен`, header);
         var farm = player.farm;
+        if (data.field < 0 || data.field >= farm.fields.length) return notifs.error(player, `Поле #${data.field} не найдено`, header);
+        var field = farm.fields[data.field];
+        if (!field) return notifs.error(player, `Поле #${data.field} не найдено`, header);
         var count = 600;
         if (farm.grains < count) return notifs.error(player, `Недостаточно для загрузки`, header);
 
@@ -185,8 +189,22 @@ module.exports = {
         veh.products.type = data.grain + 1;
         veh.products.count = count;
 
-        // TODO: показать чекпоинт
-        // TODO: направить туда GPS
+        var points = farms.getFillingPoints(field);
+        routes.checkpointData.scale = 4;
+        routes.start(player, points, () => {
+            var veh = player.vehicle;
+            if (!veh || !veh.db || veh.db.key != "farm") {
+                notifs.error(player, `Необходимо находиться в тракторе`, header);
+                return false;
+            }
+            if (!player.farmJob) {
+                notifs.error(player, `Вы не работаете на ферме`, header);
+                return false;
+            }
+            return true;
+        }, () => {
+            // TODO: засеять поле
+        });
 
         notifs.success(player, `Загружено ${count} ед. урожая`, header);
     },

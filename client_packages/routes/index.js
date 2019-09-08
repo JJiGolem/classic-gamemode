@@ -20,6 +20,7 @@ mp.routes = {
         checkpoint.params = {
             type: "route"
         };
+        mp.game.ui.setNewWaypoint(checkpoint.position.x, checkpoint.position.y);
     },
     destroyCheckpoints() {
         mp.checkpoints.forEach(checkpoint => {
