@@ -2976,8 +2976,10 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemFocusChanged') {
-                        let index = e.itemIndex - 1;
-                        mp.trigger('tuning.mod.set', 15, index);
+                        if (e.itemName != 'Назад') {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.mod.set', 15, index);
+                        }  
                     }
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {

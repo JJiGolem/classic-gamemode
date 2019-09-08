@@ -1,5 +1,7 @@
 let data = require('carshow/data.js');
 
+mp.game.cam.doScreenFadeIn(50);
+
 let colorIDs = [];
 let colorValues = [];
 
@@ -139,7 +141,15 @@ mp.events.add('mods.get', (type) => { // temp
     mp.chat.debug(num);
 }); 
 
+mp.events.add('tuning.fadeOut', () => {
+    mp.game.cam.doScreenFadeOut(80);
+});
+
 mp.events.add('tuning.start', (id, primary, secondary, priceInfo) => {
+    setTimeout(() => {
+        mp.game.cam.doScreenFadeIn(500);
+    }, 500);
+    
     if (!mp.players.local.vehicle) return;
     controlsDisabled = true;
     mp.events.call('hud.enable', false);
@@ -264,6 +274,18 @@ mp.events.add('tuning.colors.set.ans', (ans) => {
             tuningParams.primaryColour = colorData.primary;
             tuningParams.secondaryColour = colorData.secondary;
             mp.callCEFV(`selectMenu.notification = 'Автомобиль перекрашен'`);
+            break;
+        case 1:
+            mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+            break;
+        case 2:
+            mp.callCEFV(`selectMenu.notification = 'Вы не в транспорте'`);
+            break;
+        case 3:
+            mp.callCEFV(`selectMenu.notification = 'Модификация недоступна'`);
+            break;
+        case 4:
+            mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
             break;
     }
 });

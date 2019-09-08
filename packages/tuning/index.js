@@ -34,6 +34,8 @@ let priceConfig = {
     armour: 0.05
 }
 
+let colorsPrice = 100;
+
 module.exports = {
     async init() {
         await this.loadCustomsFromDB();
@@ -108,5 +110,8 @@ module.exports = {
                 break;
         }
         return parseInt(priceConfig[key] * vehPrice * i);
+    },
+    getColorsPrice() {
+        return colorsPrice;
     } 
 }
