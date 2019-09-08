@@ -128,7 +128,7 @@ module.exports = {
         notifs.info(player, `Заработано $${player.farmJob.pay}`, header);
     },
     "farms.warehouse.products.fill": (player) => {
-        var header = `Склад фермы`;
+        var header = `Выгрузка урожая`;
         var veh = player.vehicle;
         if (!veh || !veh.db || veh.db.key != "farm") return notifs.error(player, `Необходимо находиться в фермерском пикапе`, header);
         if (!player.farm) return notifs.error(player, `Вы далеко`, header);
@@ -160,6 +160,36 @@ module.exports = {
         }
         notifs.success(player, `Разгружено ${count} ед. урожая. Премия $${pay}`, header);
     },
+    "farms.warehouse.grains.take": (player, data) => {
+        data = JSON.parse(data);
+        console.log(`farms.warehouse.grains.take: ${player.name}`)
+        console.log(data);
+        var header = `Загрузка зерна`;
+        var veh = player.vehicle;
+        if (!veh || !veh.db || veh.db.key != "farm") return notifs.error(player, `Необходимо находиться в тракторе`, header);
+        if (!player.farm) return notifs.error(player, `Вы далеко`, header);
+        if (!player.farmJob) return notifs.error(player, `Вы не работаете на ферме`, header);
+        if (player.farmJob.farm.id != player.farm.id) return notifs.error(player, `Вы работаете на другой ферме`, header);
+        if (player.farmJob.type != 2) {
+            var jobName = farms.getJobName(player.farmJob.type);
+            return notifs.error(player, `Для должности ${jobName} недоступно`, header);
+        }
+        if (veh.products && veh.products.count) return notifs.error(player, `Трактор уже загружен`, header);
+        var farm = player.farm;
+        var count = 600;
+        if (farm.grains < count) return notifs.error(player, `Недостаточно для загрузки`, header);
+
+        farm.grains -= count;
+        farm.save();
+        if (!veh.products) veh.products = {};
+        veh.products.type = data.grain + 1;
+        veh.products.count = count;
+
+        // TODO: показать чекпоинт
+        // TODO: направить туда GPS
+
+        notifs.success(player, `Загружено ${count} ед. урожая`, header);
+    },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;
         if (vehicle.db.key != "farm") return;
@@ -187,7 +217,7 @@ module.exports = {
         }
         if (jobType == 1) { // фермер
             player.call(`prompt.waitShowByName`, [`farm_farmer`]);
-            if (!vehicle.products) return;
+            if (!vehicle.products || !vehicle.products.count) return;
             var count = vehicle.products.count;
             notifs.info(player, `Урожай в пикапе: ${count} из 200 ед.`, header);
             if (count == 200) {
@@ -196,8 +226,16 @@ module.exports = {
                 player.call(`waypoint.set`, [pos.x, pos.y]);
             }
         } else if (jobType == 2) { // тракторист
-            // if (!vehicle.products.count) player.utils.info(`Загрузить зерно возможно у склада`);
-            // player.utils.info(`Зерно: ${vehicle.products.count} / ${vehicle.products.maxCount} ед.`);
+            player.call(`prompt.waitShowByName`, [`farm_tractor`]);
+            if (!vehicle.grains || !vehicle.grains.count) {
+                notifs.info(player, `Загрузите зерно на складе фермы`, header);
+                var pos = farms.getWarehouse(player.farmJob.farm.id).position;
+                player.call(`waypoint.set`, [pos.x, pos.y]);
+                return;
+            }
+            var count = vehicle.grains.count;
+
+            notifs.info(player, `Зерно в тракторе: ${count} из 600 ед.`, header);
         }
     },
 };

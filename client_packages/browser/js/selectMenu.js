@@ -3174,7 +3174,7 @@ var selectMenu = new Vue({
                         text: "Фермер"
                     },
                     {
-                        text: "Тракторит"
+                        text: "Тракторист"
                     },
                     {
                         text: "Пилот"
@@ -3202,7 +3202,7 @@ var selectMenu = new Vue({
                             mp.trigger(`callRemote`, `farms.job.start`, 0);
                         } else if (e.itemName == 'Фермер') {
                             mp.trigger(`callRemote`, `farms.job.start`, 1);
-                        } else if (e.itemName == 'Тракторит') {
+                        } else if (e.itemName == 'Тракторист') {
                             mp.trigger(`callRemote`, `farms.job.start`, 2);
                         } else if (e.itemName == 'Пилот') {
                             mp.trigger(`callRemote`, `farms.job.start`, 3);
@@ -3317,7 +3317,11 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Загрузить') {
-
+                            var data = {
+                                field: this.items[0].i,
+                                grain: this.items[1].i,
+                            };
+                            mp.trigger(`callRemote`, `farms.warehouse.grains.take`, JSON.stringify(data));
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmGrains");
                         }

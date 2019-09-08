@@ -105,7 +105,7 @@ module.exports = {
         var marker = mp.markers.new(1, pos, 3, {
             color: [187, 255, 0, 70],
         });
-        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 2);
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z + 2, 2);
         colshape.onEnter = (player) => {
             player.call(`selectMenu.show`, [`farmWarehouse`]);
             player.farm = farm;
