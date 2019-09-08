@@ -1,4 +1,4 @@
-const INTERACTION_RANGE = 3.5;
+const INTERACTION_RANGE = 7;
 const classesToIgnore = [8, 13, 14, 15, 16];
 const defaultLeft = 50;
 const vehicleLeft = 60;
@@ -28,14 +28,17 @@ mp.vdist = (posA, posB) => {
 }
 
 function getClosestVehicle(pos, range = INTERACTION_RANGE) {
-    var closestVehicle;
-    var minDist = 99999;
+    let closestVehicle;
+    let minDist = 99999;
     mp.vehicles.forEachInStreamRange((veh) => {
-        var distToVeh = vdist(pos, veh.position);
+        let distToVeh = vdist(pos, veh.position);
         if (distToVeh < range) {
-            if (distToVeh < minDist) {
+            let distToHood = vdist(pos, mp.utils.getHoodPosition(veh));
+            let distToBoot = vdist(pos, mp.utils.getBootPosition(veh));
+            let finalDist = Math.min(distToVeh, distToHood, distToBoot);
+            if (finalDist < minDist) {
                 closestVehicle = veh;
-                minDist = distToVeh;
+                minDist = finalDist;
             }
         }
     });
