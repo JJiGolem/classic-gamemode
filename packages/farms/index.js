@@ -17,8 +17,8 @@ module.exports = {
     // Должности
     jobNames: ["Работник", "Фермер", "Тракторист", "Пилот"],
     // Муж. рабочая одежда
-    maleClothes: {
-        1: [{
+    maleClothes: [
+        [{
                 type: "Clothes",
                 params: [3, 41, 0],
             },
@@ -39,7 +39,7 @@ module.exports = {
                 params: [0, 58, 0],
             },
         ],
-        2: [{
+        [{
                 type: "Clothes",
                 params: [3, 0, 0],
             },
@@ -60,7 +60,7 @@ module.exports = {
                 params: [11, 179, 2],
             },
         ],
-        3: [{
+        [{
                 type: "Clothes",
                 params: [3, 41, 1],
             },
@@ -85,7 +85,7 @@ module.exports = {
                 params: [11, 56, 0],
             },
         ],
-        4: [{
+        [{
                 type: "Clothes",
                 params: [3, 1, 0],
             },
@@ -113,11 +113,11 @@ module.exports = {
                 type: "Prop",
                 params: [1, 24, 0],
             },
-        ],
-    },
+        ]
+    ],
     // Жен. рабочая одежда
-    femaleClothes: {
-        1: [{
+    femaleClothes: [
+        [{
                 type: "Clothes",
                 params: [3, 57, 0],
             },
@@ -138,7 +138,7 @@ module.exports = {
                 params: [0, 58, 0],
             },
         ],
-        2: [{
+        [{
                 type: "Clothes",
                 params: [3, 14, 0],
             },
@@ -163,7 +163,7 @@ module.exports = {
                 params: [0, 20, 0],
             },
         ],
-        3: [{
+        [{
                 type: "Clothes",
                 params: [3, 57, 1]
             },
@@ -188,7 +188,7 @@ module.exports = {
                 params: [0, 58, 0]
             },
         ],
-        4: [{
+        [{
                 type: "Clothes",
                 params: [3, 3, 0],
             },
@@ -217,7 +217,7 @@ module.exports = {
                 params: [1, 26, 0],
             },
         ],
-    },
+    ],
     // Модели авто и их типы работ
     vehModels: {
         "bodhi2": 1,
@@ -228,7 +228,7 @@ module.exports = {
     // Объекты урожая на поле
     fieldObjects: {},
     // Время сбора одного 1 ед. урожая (ms)
-    takeCropTime: 100,
+    takeCropTime: 7000,
     // Время созревания поля (ms)
     growthTime: 20000,
     // Вместимость зерна на складе
@@ -374,13 +374,13 @@ module.exports = {
             inventory.clearAllView(player);
             player.inventory.denyUpdateView = true;
             if (player.character.gender == 0) {
-                this.maleClothes[job + 1].forEach(item => {
+                this.maleClothes[job].forEach(item => {
                     var params = item.params;
                     if (item.type == "Clothes") player.setClothes(params[0], params[1], params[2], 0);
                     else player.setProp(params[0], params[1], params[2]);
                 });
             } else {
-                this.femaleClothes[job + 1].forEach(item => {
+                this.femaleClothes[job].forEach(item => {
                     var params = item.params;
                     if (item.type == "Clothes") player.setClothes(params[0], params[1], params[2], 0);
                     else player.setProp(params[0], params[1], params[2]);
