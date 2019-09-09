@@ -15,7 +15,209 @@ module.exports = {
     // Склады ферм с удобрением
     soilsWarehouse: [],
     // Должности
-    jobNames: ["Рабочий", "Фермер", "Тракторист", "Пилот"],
+    jobNames: ["Работник", "Фермер", "Тракторист", "Пилот"],
+    // Муж. рабочая одежда
+    maleClothes: {
+        1: [{
+                type: "Clothes",
+                params: [3, 41, 0],
+            },
+            {
+                type: "Clothes",
+                params: [4, 97, 4],
+            },
+            {
+                type: "Clothes",
+                params: [6, 27, 0],
+            },
+            {
+                type: "Clothes",
+                params: [11, 56, 0],
+            },
+            {
+                type: "Prop",
+                params: [0, 58, 0],
+            },
+        ],
+        2: [{
+                type: "Clothes",
+                params: [3, 0, 0],
+            },
+            {
+                type: "Clothes",
+                params: [4, 97, 4],
+            },
+            {
+                type: "Clothes",
+                params: [6, 27, 0],
+            },
+            {
+                type: "Clothes",
+                params: [8, 81, 0],
+            },
+            {
+                type: "Clothes",
+                params: [11, 179, 2],
+            },
+        ],
+        3: [{
+                type: "Clothes",
+                params: [3, 41, 1],
+            },
+            {
+                type: "Clothes",
+                params: [4, 97, 4],
+            },
+            {
+                type: "Clothes",
+                params: [6, 27, 0],
+            },
+            {
+                type: "Clothes",
+                params: [8, 59, 0],
+            },
+            {
+                type: "Clothes",
+                params: [11, 56, 0],
+            },
+            {
+                type: "Prop",
+                params: [11, 56, 0],
+            },
+        ],
+        4: [{
+                type: "Clothes",
+                params: [3, 1, 0],
+            },
+            {
+                type: "Clothes",
+                params: [4, 97, 4],
+            },
+            {
+                type: "Clothes",
+                params: [6, 27, 0],
+            },
+            {
+                type: "Clothes",
+                params: [8, 2, 11],
+            },
+            {
+                type: "Clothes",
+                params: [11, 37, 1],
+            },
+            {
+                type: "Prop",
+                params: [0, 19, 0],
+            },
+            {
+                type: "Prop",
+                params: [1, 24, 0],
+            },
+        ],
+    },
+    // Жен. рабочая одежда
+    femaleClothes: {
+        1: [{
+                type: "Clothes",
+                params: [3, 57, 0],
+            },
+            {
+                type: "Clothes",
+                params: [4, 100, 4],
+            },
+            {
+                type: "Clothes",
+                params: [6, 26, 0],
+            },
+            {
+                type: "Clothes",
+                params: [11, 49, 0],
+            },
+            {
+                type: "Prop",
+                params: [0, 58, 0],
+            },
+        ],
+        2: [{
+                type: "Clothes",
+                params: [3, 14, 0],
+            },
+            {
+                type: "Clothes",
+                params: [4, 100, 4],
+            },
+            {
+                type: "Clothes",
+                params: [6, 26, 0],
+            },
+            {
+                type: "Clothes",
+                params: [8, 86, 6],
+            },
+            {
+                type: "Clothes",
+                params: [11, 154, 2],
+            },
+            {
+                type: "Prop",
+                params: [0, 20, 0],
+            },
+        ],
+        3: [{
+                type: "Clothes",
+                params: [3, 57, 1]
+            },
+            {
+                type: "Clothes",
+                params: [4, 100, 4]
+            },
+            {
+                type: "Clothes",
+                params: [6, 26, 0]
+            },
+            {
+                type: "Clothes",
+                params: [8, 36, 0]
+            },
+            {
+                type: "Clothes",
+                params: [11, 49, 0]
+            },
+            {
+                type: "Prop",
+                params: [0, 58, 0]
+            },
+        ],
+        4: [{
+                type: "Clothes",
+                params: [3, 3, 0],
+            },
+            {
+                type: "Clothes",
+                params: [4, 100, 4],
+            },
+            {
+                type: "Clothes",
+                params: [6, 26, 0],
+            },
+            {
+                type: "Clothes",
+                params: [8, 2, 0],
+            },
+            {
+                type: "Clothes",
+                params: [11, 55, 0],
+            },
+            {
+                type: "Prop",
+                params: [0, 19, 0],
+            },
+            {
+                type: "Prop",
+                params: [1, 26, 0],
+            },
+        ],
+    },
     // Модели авто и их типы работ
     vehModels: {
         "bodhi2": 1,
@@ -171,23 +373,18 @@ module.exports = {
         if (enable) {
             inventory.clearAllView(player);
             player.inventory.denyUpdateView = true;
-            var textures = [6, 0, 8, 4];
             if (player.character.gender == 0) {
-                var torsos = [41, 63, 74];
-                var torso = torsos[utils.randomInteger(0, torsos.length - 1)];
-                player.setProp(0, 13, 1);
-                player.setClothes(11, 56, 0, 0);
-                player.setClothes(3, torso, 0, 0);
-                player.setClothes(4, 90, textures[job], 0);
-                player.setClothes(6, 51, 4, 0);
+                this.maleClothes[job + 1].forEach(item => {
+                    var params = item.params;
+                    if (item.type == "Clothes") player.setClothes(params[0], params[1], params[2], 0);
+                    else player.setProp(params[0], params[1], params[2]);
+                });
             } else {
-                var torsos = [72, 85, 114];
-                var torso = torsos[utils.randomInteger(0, torsos.length - 1)];
-                player.setProp(0, 20, 0);
-                player.setClothes(11, 0, 0, 0);
-                player.setClothes(3, torso, 0, 0);
-                player.setClothes(4, 93, textures[job], 0);
-                player.setClothes(6, 64, 2, 0);
+                this.femaleClothes[job + 1].forEach(item => {
+                    var params = item.params;
+                    if (item.type == "Clothes") player.setClothes(params[0], params[1], params[2], 0);
+                    else player.setProp(params[0], params[1], params[2]);
+                });
             }
         } else {
             // TODO: Clear Clothes.
