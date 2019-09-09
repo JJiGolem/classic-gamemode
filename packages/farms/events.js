@@ -89,13 +89,14 @@ module.exports = {
 
                 obj.count--;
                 obj.field.count--;
-                if (obj.field.count % 20 == 0) obj.field.save();
                 if (obj.count <= 0) {
                     var list = farms.fieldObjects[obj.field.id];
                     var i = list.indexOf(obj);
                     list.splice(i, 1);
+                    if (!list.length) obj.field.count = 0;
                     obj.destroy();
                 }
+                if (obj.field.count % 20 == 0) obj.field.save();
             } catch (e) {
                 console.log(e);
             }
@@ -120,6 +121,7 @@ module.exports = {
             prodType = 3;
         } else return notifs.error(player, `Соберите урожай на поле`, header);
         if (veh.products && veh.products.type != prodType) return notifs.error(player, `Неверный типа урожая`, header);
+        if (veh.products && veh.products.count >= 200) return notifs.error(player, `Пикап заполнен`, header);
         farms.addVehicleProducts(veh, prodType);
 
         if (!player.farmJob) return notifs.error(player, `Вы не работаете`, header);
@@ -216,6 +218,55 @@ module.exports = {
 
         notifs.success(player, `Загружено ${count} ед. урожая`, header);
     },
+    "farms.soilsWarehouse.take": (player) => {
+        var header = `Загрузка удобрения`;
+        var veh = player.vehicle;
+        if (!veh || !veh.db || veh.db.key != "farm") return notifs.error(player, `Необходимо находиться в самолете`, header);
+        if (!player.farm) return notifs.error(player, `Вы далеко`, header);
+        if (!player.farmJob) return notifs.error(player, `Вы не работаете на ферме`, header);
+        if (player.farmJob.farm.id != player.farm.id) return notifs.error(player, `Вы работаете на другой ферме`, header);
+        if (player.farmJob.type != 3) {
+            var jobName = farms.getJobName(player.farmJob.type);
+            return notifs.error(player, `Для должности ${jobName} недоступно`, header);
+        }
+        if (veh.soils && veh.soils.count) return notifs.error(player, `Самолет уже загружен`, header);
+        var farm = player.farm;
+        var count = 200;
+        if (farm.soils < count) return notifs.error(player, `Недостаточно для загрузки`, header);
+
+        farm.soils -= count;
+        farm.save();
+        if (!veh.soils) veh.soils = {};
+        veh.soils.count = count;
+
+        var points = farms.getPilotPoints(farm);
+        routes.checkpointData.scale = 4;
+        routes.start(player, points, () => {
+            var veh = player.vehicle;
+            if (!veh || !veh.db || veh.db.key != "farm") {
+                notifs.error(player, `Необходимо находиться в самолете`, header);
+                return false;
+            }
+            if (!player.farmJob) {
+                notifs.error(player, `Вы не работаете на ферме`, header);
+                return false;
+            }
+            return true;
+        }, () => {
+            var pay = farm.pilotPay;
+            if (farm.balance < pay) notifs.warning(player, `Баланс фермы не позволяет вам выплатить заплату`, header);
+            else {
+                farm.balance -= pay;
+                farm.save();
+                money.addCash(player, pay);
+            }
+            notifs.success(player, `Урожай полей увеличился. Премия $${pay}`, header);
+            farms.soilFields(farm);
+            delete veh.soils;
+        });
+
+        notifs.success(player, `Загружено ${count} ед. удобрения`, header);
+    },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;
         if (vehicle.db.key != "farm") return;
@@ -262,6 +313,17 @@ module.exports = {
             var count = vehicle.grains.count;
 
             notifs.info(player, `Зерно в тракторе: ${count} из 600 ед.`, header);
+        } else if (jobType == 3) { // пилот
+            player.call(`prompt.waitShowByName`, [`farm_pilot`]);
+            if (!vehicle.soils || !vehicle.soils.count) {
+                notifs.info(player, `Загрузите удобрение на складе`, header);
+                var pos = farms.getSoilsWarehouse(player.farmJob.farm.id).position;
+                player.call(`waypoint.set`, [pos.x, pos.y]);
+                return;
+            }
+            var count = vehicle.soils.count;
+
+            notifs.info(player, `Удобрение в самолете: ${count} из 200 ед.`, header);
         }
     },
 };

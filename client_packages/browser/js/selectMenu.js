@@ -3347,7 +3347,8 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmWarehouse");
                         }
-                    }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("farmWarehouse");
                 }
             },
             "farmGrains": {
@@ -3568,6 +3569,76 @@ var selectMenu = new Vue({
                         }
                     } else if (eventName == 'onBackspacePressed')
                         selectMenu.showByName("farmProducts");
+                }
+            },
+            "farmSoilsWarehouse": {
+                name: "farmSoilsWarehouse",
+                header: "Склад с удобрением",
+                items: [{
+                        text: "Загрузить",
+                    },
+                    {
+                        text: "Выгрузить"
+                    },
+                    {
+                        text: "О складе"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Загрузить') {
+                            mp.trigger(`callRemote`, `farms.soilsWarehouse.take`);
+                        } else if (e.itemName == 'Выгрузить') {
+
+                        } else if (e.itemName == 'О складе') {
+                            selectMenu.showByName("farmSoilsWarehouseInfo");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
+            "farmSoilsWarehouseInfo": {
+                name: "farmSoilsWarehouseInfo",
+                header: "О складе",
+                items: [{
+                        text: "Удобрение",
+                        values: [`9999 из 9999 ед.`],
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmSoilsWarehouse")
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("farmSoilsWarehouse");
                 }
             },
         },

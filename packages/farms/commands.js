@@ -28,6 +28,19 @@ module.exports = {
             out.info(`${player.name} изменил количество зерна на ферме #${farm.id} (${farm.grains} ед.)`);
         }
     },
+    "/farmsetsoils": {
+        access: 4,
+        description: "Изменить количество удобрения на складе.",
+        args: "[ид_фермы]:n [удобрение]:n",
+        handler: (player, args, out) => {
+            var farm = farms.getFarm(args[0]);
+            if (!farm) return out.error(`Ферма #${args[0]} не найдена`, player);
+
+            farm.soils = args[1];
+            farm.save();
+            out.info(`${player.name} изменил количество удобрения на ферме #${farm.id} (${farm.soils} ед.)`);
+        }
+    },
     "/farmfill": {
         access: 4,
         description: "Засеять поле.",
@@ -39,6 +52,18 @@ module.exports = {
             if (field.count) return out.error(`Поле #${args[1]} уже засеяно`, player);
             farms.fillField(field, args[2]);
             out.info(`${player.name} засеял поле #${args[1]} на ферме #${farm.id}`);
+        }
+    },
+    "/farmsoil": {
+        access: 6,
+        description: "Удобрить поля фермы.",
+        args: "[ид_фермы]:n",
+        handler: (player, args, out) => {
+            var farm = farms.getFarm(args[0]);
+            if (!farm) return out.error(`Ферма #${args[0]} не найдена`, player);
+
+            farms.soilFields(farm);
+            out.info(`${player.name} удобрил поля на ферме #${farm.id}`);
         }
     },
 }

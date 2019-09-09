@@ -158,6 +158,17 @@ mp.farms = {
         ];
         mp.callCEFV(`selectMenu.setItems('farmWarehouseInfo', '${JSON.stringify(items)}')`);
     },
+    setSoilsWarehouseInfo(data) {
+        var items = [{
+                text: "Удобрение",
+                values: [`${data.soils} из ${data.soilsMax} ед.`],
+            },
+            {
+                text: "Вернуться"
+            },
+        ];
+        mp.callCEFV(`selectMenu.setItems('farmSoilsWarehouseInfo', '${JSON.stringify(items)}')`);
+    },
     registerAttachments() {
         // лопатка в руках при сборе урожка
         mp.attachmentMngr.register("farmTrowel", "prop_cs_trowel", 58867, new mp.Vector3(0.01, 0.03, 0),
@@ -258,6 +269,9 @@ mp.events.add({
     },
     "farms.warehouse.info.set": (data) => {
         mp.farms.setWarehouseInfo(data);
+    },
+    "farms.soilsWarehouse.info.set": (data) => {
+        mp.farms.setSoilsWarehouseInfo(data);
     },
     "playerEnterVehicleBoot": (player, vehicle) => {
         if (!mp.farms.hasProduct()) return;

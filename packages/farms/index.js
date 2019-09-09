@@ -12,6 +12,8 @@ module.exports = {
     blips: [],
     // Склады ферм
     warehouses: [],
+    // Склады ферм с удобрением
+    soilsWarehouse: [],
     // Должности
     jobNames: ["Рабочий", "Фермер", "Тракторист", "Пилот"],
     // Модели авто и их типы работ
@@ -31,6 +33,10 @@ module.exports = {
     grainsMax: 2000,
     // Вместимость урожая на складе (для каждого типа)
     productsMax: 800,
+    // Вместимость удобрения на складе
+    soilsMax: 1000,
+    // Вместимость урожая на поле
+    cropMax: 600 + 400, // 400 ед. для эффекта удобрения
 
     async init() {
         await this.loadFarmsFromDB();
@@ -57,7 +63,7 @@ module.exports = {
             var farm = this.farms[i];
             this.createFarmMarker(farm);
             this.createFarmWarehouse(farm);
-            this.initFarmLabels(farm);
+            this.createFarmSoilsWarehouse(farm);
             this.initFarmFieldObjects(farm);
         }
     },
@@ -116,7 +122,7 @@ module.exports = {
         }));
     },
     createFarmWarehouse(farm) {
-        var pos = this.getWarehousePosByFarmId(farm.id)[3];
+        var pos = this.getWarehousePosByFarmId(farm.id);
         var marker = mp.markers.new(1, pos, 3, {
             color: [187, 255, 0, 70],
         });
@@ -140,8 +146,26 @@ module.exports = {
         marker.colshape = colshape;
         this.warehouses.push(marker);
     },
-    initFarmLabels(farm) {
-
+    createFarmSoilsWarehouse(farm) {
+        var pos = this.getSoilsWarehousePosByFarmId(farm.id);
+        var marker = mp.markers.new(1, pos, 3, {
+            color: [187, 255, 0, 70],
+        });
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z + 2, 2);
+        colshape.onEnter = (player) => {
+            player.call(`selectMenu.show`, [`farmSoilsWarehouse`]);
+            player.call(`farms.soilsWarehouse.info.set`, [{
+                soils: farm.soils,
+                soilsMax: this.soilsMax,
+            }]);
+            player.farm = farm;
+        };
+        colshape.onExit = (player) => {
+            player.call(`selectMenu.hide`);
+            delete player.farm;
+        };
+        marker.colshape = colshape;
+        this.soilsWarehouse.push(marker);
     },
     setJobClothes(player, enable, job) {
         if (enable) {
@@ -208,12 +232,14 @@ module.exports = {
     },
     getWarehousePosByFarmId(farmId) {
         var positions = [
-            [
-                new mp.Vector3(1981.6806640625, 5029.39892578125, 42.03016662597656),
-                new mp.Vector3(1985.9840087890625, 5023.95458984375, 42.088829040527344),
-                new mp.Vector3(1991.2686767578125, 5018.3994140625, 42.13268280029297),
-                new mp.Vector3(1982.4197998046875, 5020.7783203125, 42.205257415771484 - 2)
-            ],
+            new mp.Vector3(1982.4197998046875, 5020.7783203125, 42.205257415771484 - 2)
+        ];
+        farmId = Math.clamp(farmId, 1, positions.length);
+        return positions[farmId - 1];
+    },
+    getSoilsWarehousePosByFarmId(farmId) {
+        var positions = [
+            new mp.Vector3(2104.150146484375, 4782.9306640625, 41.20178985595703 - 2)
         ];
         farmId = Math.clamp(farmId, 1, positions.length);
         return positions[farmId - 1];
@@ -226,6 +252,9 @@ module.exports = {
     },
     getWarehouse(id) {
         return this.warehouses[id - 1];
+    },
+    getSoilsWarehouse(id) {
+        return this.soilsWarehouse[id - 1];
     },
     getFillingPoints(field) {
         var pointsLeft = utils.getPointsOnInterval(field.p1, field.p3, 4);
@@ -246,6 +275,13 @@ module.exports = {
             k += 2;
         });
         return route;
+    },
+    getPilotPoints(farm) {
+        var player = mp.players.at(0);
+        var points = [player.position];
+        // points[0].x += 10;
+        points[0].z -= 1;
+        return points;
     },
     fillField(field, crop) {
         if (field.count) return;
@@ -298,5 +334,18 @@ module.exports = {
                 console.log(e);
             }
         }, this.growthTime / 3);
+    },
+    // удобрить поля фермы
+    soilFields(farm) {
+        var fields = farm.fields.filter(x => x.count && x.count < this.cropMax);
+        var objects = [];
+        fields.forEach(field => {
+            var list = this.fieldObjects[field.id];
+            objects = objects.concat(list);
+        });
+        var objSoils = 2;
+        objects.forEach(obj => {
+            obj.count += objSoils;
+        });
     },
 };
