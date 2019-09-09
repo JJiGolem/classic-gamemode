@@ -277,11 +277,14 @@ module.exports = {
         return route;
     },
     getPilotPoints(farm) {
-        var player = mp.players.at(0);
-        var points = [player.position];
-        // points[0].x += 10;
-        points[0].z -= 1;
-        return points;
+        var points = [
+            [new mp.Vector3(2081.72705078125, 4784.01513671875, 41.48800277709961),
+                new mp.Vector3(2042.3280029296875, 4763.7509765625, 41.42406463623047),
+                new mp.Vector3(1961.8079833984375, 4726.33447265625, 41.404598236083984),
+                new mp.Vector3(1906.7515869140625, 4700.05712890625, 41.0810546875),
+            ]
+        ];
+        return points[farm.id - 1];
     },
     fillField(field, crop) {
         if (field.count) return;
