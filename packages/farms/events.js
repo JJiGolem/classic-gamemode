@@ -39,13 +39,13 @@ module.exports = {
         }
 
         farms.setJobClothes(player, false);
+        player.addAttachment("farmProductA", true);
+        player.addAttachment("farmProductB", true);
+        player.addAttachment("farmProductC", true);
         player.call("farms.jobType.set", [null]);
+        player.call("routes.checkpoints.destroy");
         notifs.success(player, `Удачного дня!`, header);
-        // player.utils.putObject();
-        // if (player.farmJob.tractorColshape) {
-        //     player.call("checkpoint.clearForTractor");
-        //     player.farmJob.tractorColshape.destroy();
-        // }
+
         delete player.farmJob;
     },
     "farms.field.crop.take": (player, objId) => {
@@ -62,7 +62,7 @@ module.exports = {
             if (!object || !object.field) return notifs.error(player, `Урожай не найден`, header);
         }
         var field = object.field;
-        if (field.state != 3) return notifs.error(player, `Урожай не созрел`, header);
+        if (field.state != null && field.state != 3) return notifs.error(player, `Урожай не созрел`, header);
 
         if (!player.farmJob) return notifs.error(player, `Вы не работаете на ферме`, header);
         if (field.farmId != player.farmJob.farm.id) return notifs.error(player, `Поле принадлежит другой ферме`, header);
