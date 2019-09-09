@@ -1938,19 +1938,22 @@ var selectMenu = new Vue({
                 name: "fibClothes",
                 header: "Раздевалка FIB",
                 items: [{
-                        text: "Форма стажера"
+                        text: "Стажер"
                     },
                     {
-                        text: "Агент"
+                        text: "Агент (деловая)"
                     },
                     {
-                        text: "Снайпер"
+                        text: "Агент (рабочая)"
                     },
                     {
-                        text: "Спец. набор №1"
+                        text: "ATF/HRT"
                     },
                     {
-                        text: "Спец. набор №2"
+                        text: "Агент №2"
+                    },
+                    {
+                        text: "Агент №3"
                     },
                     {
                         text: "Бронежилет"
