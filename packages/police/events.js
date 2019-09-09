@@ -75,89 +75,89 @@ module.exports = {
                 sex: 1,
                 variation: [
                     [58, 46, 46, -1, -1, 39, 46, 46],
-                    []
+                    [58, 13, 12, 39, 17, 13, 13]
                 ][f][index],
                 texture: [
                     [2, 0, 0, -1, -1, 0, 0, 0],
-                    []
+                    [2, 2, 2, 0, 5, 2, 2]
                 ][f][index]
             };
             topParams = { // clothes 11 / 3 / 8
                 sex: 1,
                 torso: [ // /clothes 3
                     [0, 0, 0, 11, 1, 17, 0, 0],
-                    []
+                    [0, 11, 14, 17, 11, 11, 11]
                 ][f][index],
                 tTexture: [
                     [-1, -1, -1, -1, -1, -1, -1, -1],
-                    []
+                    [-1, -1, -1, -1, -1, -1, -1]
                 ][f][index],
                 variation: [ // clothes 11
                     [242, 55, 55, 13, 31, 53, 55, 55],
-                    []
+                    [242, 26, 230, 53, 26, 26, 13]
                 ][f][index],
                 texture: [
                     [4, 0, 0, 0, 2, 0, 0, 0],
-                    []
+                    [4, 2, 1, 2, 2, 2, 0]
                 ][f][index],
                 undershirt: [ // clothes 8
                     [122, 58, 58, 130, 31, 130, 122, 130],
-                    []
+                    [122, 58, 27, 130, 58, 122, 130]
                 ][f][index]
             };
             legsParams = { // clothes 4
                 sex: 1,
                 variation: [
                     [25, 25, 25, 25, 25, 33, 25, 48],
-                    []
+                    [25, 25, 25, 46, 31, 25, 25]
                 ][f][index],
                 texture: [
                     [2, 2, 2, 1, 2, 0, 2, 0],
-                    []
+                    [6, 6, 6, 0, 0, 6, 6]
                 ][f][index]
             };
             feetsParams = { // clothes 6
                 sex: 1,
                 variation: [
                     [25, 25, 25, 10, 10, 25, 25, 25],
-                    []
+                    [25, 25, 25, 25, 25, 25, 25]
                 ][f][index],
                 texture: [
                     [0, 0, 0, 0, 0, 0, 0, 0],
-                    []
+                    [0, 0, 0, 0, 0, 0, 0]
                 ][f][index]
             };
             tiesParams = { // clothes 7
                 sex: 1,
                 variation: [
                     [-1, -1, -1, 38, 38, -1, -1, -1],
-                    []
+                    [-1, -1, -1, -1, -1, 38, 38]
                 ][f][index],
                 texture: [
                     [-1, -1, -1, 0, 6, -1, -1, -1],
-                    []
+                    [-1, -1, -1, -1, -1, 7, 1]
                 ][f][index]
             };
             masksParams = { // clothes 1
                 sex: 1,
                 variation: [
                     [-1, -1, -1, -1, -1, 122, -1, -1],
-                    []
+                    [-1, -1, -1, 122, -1, -1, -1]
                 ][f][index],
                 texture: [
                     [-1, -1, -1, -1, -1, 0, -1, -1],
-                    []
+                    [-1, -1, -1, -1, -1, -1, -1]
                 ][f][index]
             };
             glassesParams = { // prop 1
                 sex: 1,
                 variation: [
                     [-1, -1, -1, -1, -1, 15, -1, -1],
-                    []
+                    [-1, -1, -1, 15, 15, -1, -1]
                 ][f][index],
                 texture: [
                     [-1, -1, -1, -1, -1, 9, -1, -1],
-                    []
+                    [-1, -1, -1, 9, 9, -1, -1]
                 ][f][index]
             };
         } else {
@@ -439,7 +439,7 @@ module.exports = {
     // снять/надеть наручники
     "police.cuffs": (player, data) => {
         if (typeof data == 'string') data = JSON.parse(data);
-        var rec = (data.recId != null)? mp.players.at(data.recId): mp.players.getNear(player);
+        var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
         if (!rec) return notifs.error(player, `Гражданин не найден`, `Наручники`);
         var dist = player.dist(rec.position);
         if (dist > 20) return notifs.error(player, `${rec.name} далеко`, `Наручники`);
@@ -448,7 +448,7 @@ module.exports = {
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, `Наручники`);
 
         if (!rec.cuffs) {
-            var cuffs = (data.cuffsSqlId)? inventory.getItem(player, data.cuffsSqlId) : inventory.getItemByItemId(player, 28);
+            var cuffs = (data.cuffsSqlId) ? inventory.getItem(player, data.cuffsSqlId) : inventory.getItemByItemId(player, 28);
             if (!cuffs) return notifs.error(player, `Необходим предмет`, `Наручники`);
             inventory.deleteItem(player, cuffs);
             police.setCuffs(rec, cuffs);

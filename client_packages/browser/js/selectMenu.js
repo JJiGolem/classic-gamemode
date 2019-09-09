@@ -1743,13 +1743,25 @@ var selectMenu = new Vue({
                 name: "lssdClothes",
                 header: "Раздевалка LSSD",
                 items: [{
-                        text: "Форма офицера №1"
+                        text: "Кадет"
                     },
                     {
-                        text: "Форма SWAT"
+                        text: "Deputy Sheriff №1"
                     },
                     {
-                        text: "Форма офицера №2"
+                        text: "Deputy Sheriff №2"
+                    },
+                    {
+                        text: "Спец. Отдел"
+                    },
+                    {
+                        text: "Мотопатруль"
+                    },
+                    {
+                        text: "Зам. Шефа"
+                    },
+                    {
+                        text: "Шеф"
                     },
                     {
                         text: "Бронежилет"
