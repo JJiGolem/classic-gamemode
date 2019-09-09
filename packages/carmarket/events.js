@@ -3,10 +3,7 @@ var money = call('money');
 var vehicles = call('vehicles');
 var houses = call('houses');
 
-const PRICE_CONFIG = {
-    BUY: 0.8,
-    SELL: 0.7
-}
+let PRICE_CONFIG = carmarket.getPriceConfig();
 
 module.exports = {
     "init": () => {
