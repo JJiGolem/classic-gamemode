@@ -217,6 +217,7 @@ module.exports = {
         });
 
         notifs.success(player, `Загружено ${count} ед. урожая`, header);
+        notifs.info(player, `Отправляйтесь на посев поля`, header);
     },
     "farms.soilsWarehouse.take": (player) => {
         var header = `Загрузка удобрения`;
@@ -266,6 +267,7 @@ module.exports = {
         });
 
         notifs.success(player, `Загружено ${count} ед. удобрения`, header);
+        notifs.info(player, `Отправляйтесь на орошение полей`, header);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;
