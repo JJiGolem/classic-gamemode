@@ -31,10 +31,6 @@ module.exports = {
     grainsMax: 2000,
     // Вместимость урожая на складе (для каждого типа)
     productsMax: 800,
-    // ЗП фермера за разгруз пикапа с урожаем на склад
-    farmerPay: 100,
-    // ЗП тракториста за засев поля
-    tractorPay: 100,
 
     async init() {
         await this.loadFarmsFromDB();
@@ -43,9 +39,15 @@ module.exports = {
     async loadFarmsFromDB() {
         var dbFarms = await db.Models.Farm.findAll({
             include: [{
-                model: db.Models.FarmField,
-                as: "fields"
-            }]
+                    model: db.Models.FarmField,
+                    as: "fields"
+                },
+                {
+                    model: db.Models.Character,
+                    as: "owner",
+                    attributes: ['name']
+                }
+            ]
         });
         this.farms = dbFarms;
         console.log(`[FARMS] Фермы загужены (${dbFarms.length} шт.)`);
@@ -89,6 +91,15 @@ module.exports = {
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
             player.call(`selectMenu.show`, [`farm`]);
+            player.call(`farms.info.set`, [{
+                id: farm.id,
+                owner: (farm.owner) ? farm.owner.name : null,
+                pay: farm.pay,
+                farmerPay: farm.farmerPay,
+                tractorPay: farm.tractorPay,
+                pilotPay: farm.pilotPay,
+                fields: farm.fields.length
+            }]);
             player.farm = farm;
         };
         colshape.onExit = (player) => {

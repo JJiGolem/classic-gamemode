@@ -100,6 +100,42 @@ mp.farms = {
     setJobType(val) {
         this.jobType = val;
     },
+    setFarmInfo(data) {
+        mp.terminal.push(`debug`, data);
+        var items = [{
+                text: "Ферма",
+                values: [`ID ${data.id}`],
+            },
+            {
+                text: "Хозяин",
+                values: [data.owner],
+            },
+            {
+                text: "Зарплата",
+                values: [`$${data.pay}`],
+            },
+            {
+                text: "Премия фермера",
+                values: [`$${data.farmerPay}`],
+            },
+            {
+                text: "Премия тракториста",
+                values: [`$${data.tractorPay}`],
+            },
+            {
+                text: "Премия пилота",
+                values: [`$${data.pilotPay}`],
+            },
+            {
+                text: "Количество полей",
+                values: [`${data.fields} ед.`],
+            },
+            {
+                text: "Вернуться"
+            },
+        ];
+        mp.callCEFV(`selectMenu.setItems('farmInfo', '${JSON.stringify(items)}')`);
+    },
     registerAttachments() {
         // лопатка в руках при сборе урожка
         mp.attachmentMngr.register("farmTrowel", "prop_cs_trowel", 58867, new mp.Vector3(0.01, 0.03, 0),
@@ -194,6 +230,9 @@ mp.events.add({
         if (!vehicle) return;
         if (!vehicle.getVariable("trunk")) return mp.notify.warning(`Для погрузки урожая откройте багажник`);
         mp.events.callRemote(`farms.vehicle.products.put`, vehicle.remoteId);
+    },
+    "farms.info.set": (data) => {
+        mp.farms.setFarmInfo(data);
     },
     "playerEnterVehicleBoot": (player, vehicle) => {
         if (!mp.farms.hasProduct()) return;

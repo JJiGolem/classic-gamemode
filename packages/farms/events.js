@@ -152,7 +152,7 @@ module.exports = {
         veh.setVariable("farmProductsState", parseInt(veh.products.count / 33));
         if (veh.products.count) notifs.info(player, `Склад заполнен. ${veh.products.count} ед. урожая осталось в пикапе`, header);
         else delete veh.products;
-        var pay = parseInt(farms.farmerPay * (count / 200));
+        var pay = parseInt(farm.farmerPay * (count / 200));
         if (farm.balance < pay) notifs.warning(player, `Баланс фермы не позволяет вам выплатить заплату`, header);
         else {
             farm.balance -= pay;
@@ -202,7 +202,7 @@ module.exports = {
             }
             return true;
         }, () => {
-            var pay = farms.tractorPay;
+            var pay = farm.tractorPay;
             if (farm.balance < pay) notifs.warning(player, `Баланс фермы не позволяет вам выплатить заплату`, header);
             else {
                 farm.balance -= pay;

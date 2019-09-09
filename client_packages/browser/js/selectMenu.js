@@ -2977,7 +2977,7 @@ var selectMenu = new Vue({
                         if (e.itemName != 'Назад') {
                             let index = e.itemIndex - 1;
                             mp.trigger('tuning.mod.set', 15, index);
-                        }  
+                        }
                     }
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
@@ -3131,7 +3131,7 @@ var selectMenu = new Vue({
                         text: "Работа",
                     },
                     {
-                        text: "Статистка"
+                        text: "О ферме",
                     },
                     {
                         text: "Помощь"
@@ -3154,8 +3154,8 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Работа') {
                             selectMenu.showByName("farmJob");
-                        } else if (e.itemName == 'Статистка') {
-
+                        } else if (e.itemName == 'О ферме') {
+                            selectMenu.showByName("farmInfo");
                         } else if (e.itemName == 'Помощь') {
 
                         } else if (e.itemName == 'Закрыть') {
@@ -3209,6 +3209,60 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Уволиться') {
                             mp.trigger(`callRemote`, `farms.job.stop`);
                         } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farm");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("farm");
+                }
+            },
+            "farmInfo": {
+                name: "farmInfo",
+                header: "О ферме",
+                items: [{
+                        text: "Ферма",
+                        values: ["ID 111"],
+                    },
+                    {
+                        text: "Хозяин",
+                        values: ["Swift Slade"],
+                    },
+                    {
+                        text: "Зарплата",
+                        values: ["$30"],
+                    },
+                    {
+                        text: "Премия фермера",
+                        values: ["$50"],
+                    },
+                    {
+                        text: "Премия тракториста",
+                        values: ["$70"],
+                    },
+                    {
+                        text: "Премия пилота",
+                        values: ["$80"],
+                    },
+                    {
+                        text: "Количество полей",
+                        values: ["10 ед."],
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farm");
                         }
                     } else if (eventName == 'onBackspacePressed')
