@@ -101,7 +101,6 @@ mp.farms = {
         this.jobType = val;
     },
     setFarmInfo(data) {
-        mp.terminal.push(`debug`, data);
         var items = [{
                 text: "Ферма",
                 values: [`ID ${data.id}`],
@@ -135,6 +134,29 @@ mp.farms = {
             },
         ];
         mp.callCEFV(`selectMenu.setItems('farmInfo', '${JSON.stringify(items)}')`);
+    },
+    setWarehouseInfo(data) {
+        var items = [{
+                text: "Зерно",
+                values: [`${data.grains} из ${data.grainsMax} ед.`],
+            },
+            {
+                text: "Урожай А",
+                values: [`${data.productA} из ${data.productsMax} ед.`],
+            },
+            {
+                text: "Урожай Б",
+                values: [`${data.productB} из ${data.productsMax} ед.`],
+            },
+            {
+                text: "Урожай С",
+                values: [`${data.productC} из ${data.productsMax} ед.`],
+            },
+            {
+                text: "Вернуться"
+            },
+        ];
+        mp.callCEFV(`selectMenu.setItems('farmWarehouseInfo', '${JSON.stringify(items)}')`);
     },
     registerAttachments() {
         // лопатка в руках при сборе урожка
@@ -233,6 +255,9 @@ mp.events.add({
     },
     "farms.info.set": (data) => {
         mp.farms.setFarmInfo(data);
+    },
+    "farms.warehouse.info.set": (data) => {
+        mp.farms.setWarehouseInfo(data);
     },
     "playerEnterVehicleBoot": (player, vehicle) => {
         if (!mp.farms.hasProduct()) return;

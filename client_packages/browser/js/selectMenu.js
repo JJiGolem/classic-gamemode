@@ -3279,6 +3279,9 @@ var selectMenu = new Vue({
                         text: "Урожай"
                     },
                     {
+                        text: "О складе"
+                    },
+                    {
                         text: "Закрыть"
                     },
                 ],
@@ -3298,8 +3301,51 @@ var selectMenu = new Vue({
                             selectMenu.showByName("farmGrains");
                         } else if (e.itemName == 'Урожай') {
                             selectMenu.showByName("farmProducts");
+                        } else if (e.itemName == 'О складе') {
+                            selectMenu.showByName("farmWarehouseInfo");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
+                        }
+                    }
+                }
+            },
+            "farmWarehouseInfo": {
+                name: "farmWarehouseInfo",
+                header: "О складе",
+                items: [{
+                        text: "Зерно",
+                        values: ["9999 из 9999 ед."],
+                    },
+                    {
+                        text: "Урожай А",
+                        values: ["9999 из 9999 ед."],
+                    },
+                    {
+                        text: "Урожай Б",
+                        values: ["9999 из 9999 ед."],
+                    },
+                    {
+                        text: "Урожай С",
+                        values: ["9999 из 9999 ед."],
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmWarehouse");
                         }
                     }
                 }

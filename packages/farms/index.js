@@ -123,6 +123,14 @@ module.exports = {
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z + 2, 2);
         colshape.onEnter = (player) => {
             player.call(`selectMenu.show`, [`farmWarehouse`]);
+            player.call(`farms.warehouse.info.set`, [{
+                grains: farm.grains,
+                productA: farm.productA,
+                productB: farm.productB,
+                productC: farm.productC,
+                grainsMax: this.grainsMax,
+                productsMax: this.productsMax,
+            }]);
             player.farm = farm;
         };
         colshape.onExit = (player) => {
