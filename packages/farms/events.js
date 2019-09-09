@@ -19,6 +19,8 @@ module.exports = {
             farm: player.farm,
         };
 
+        if (player.farmJob.type == 0) player.call(`prompt.showByName`, ["farm_job"]);
+
         farms.setJobClothes(player, true, player.farmJob.type);
         player.call("farms.jobType.set", [player.farmJob.type]);
         notifs.success(player, `Вы начали работу (${farms.getJobName(player.farmJob.type)})`, header);
