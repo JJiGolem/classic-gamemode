@@ -25,12 +25,16 @@ module.exports = {
     fieldObjects: {},
     // Время сбора одного 1 ед. урожая (ms)
     takeCropTime: 100,
+    // Время созревания поля (ms)
+    growthTime: 20000,
     // Вместимость зерна на складе
     grainsMax: 2000,
     // Вместимость урожая на складе (для каждого типа)
     productsMax: 800,
     // ЗП фермера за разгруз пикапа с урожаем на склад
     farmerPay: 100,
+    // ЗП тракториста за засев поля
+    tractorPay: 100,
 
     async init() {
         await this.loadFarmsFromDB();
@@ -223,5 +227,57 @@ module.exports = {
             k += 2;
         });
         return route;
+    },
+    fillField(field, crop) {
+        if (field.count) return;
+        if (this.fieldObjects[field.id]) {
+            this.fieldObjects[field.id].forEach((object) => {
+                object.destroy();
+            });
+        }
+        field.type = Math.clamp(crop, 1, 3);
+        field.count = 600;
+        field.save();
+        field.state = 0;
+        this.fieldObjects[field.id] = [];
+
+        var timerId = setInterval(() => {
+            try {
+                field.state++;
+                if (field.state == 1) {
+                    var objPositions = this.getObjPositions(field);
+                    for (var i = 0; i < objPositions.length; i++) {
+                        objPositions[i].z = field.p1.z - 0.5;
+                        var object = mp.objects.new(mp.joaat("prop_veg_crop_04"), objPositions[i], {
+                            rotation: new mp.Vector3(0, 0, 0),
+                            alpha: 255,
+                            heading: 90
+                        });
+                        object.count = parseInt(600 / objPositions.length);
+                        object.field = field;
+                        this.fieldObjects[field.id].push(object);
+                    }
+                    // debug(`Поле ${field.sqlId} проросло!`)
+                } else if (field.state == 2) {
+                    for (var i = 0; i < this.fieldObjects[field.id].length; i++) {
+                        var pos = this.fieldObjects[field.id][i].position;
+                        pos.z += 0.25;
+                        this.fieldObjects[field.id][i].position = pos;
+                    }
+                    // debug(`Поле ${field.sqlId} почти созрело!`)
+                } else if (field.state == 3) {
+                    for (var i = 0; i < this.fieldObjects[field.id].length; i++) {
+                        var pos = this.fieldObjects[field.id][i].position;
+                        pos.z += 0.25;
+                        this.fieldObjects[field.id][i].position = pos;
+                    }
+
+                    // debug(`Поле ${field.sqlId} созрело!`)
+                    clearInterval(timerId);
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        }, this.growthTime / 3);
     },
 };

@@ -28,4 +28,17 @@ module.exports = {
             out.info(`${player.name} изменил количество зерна на ферме #${farm.id} (${farm.grains} ед.)`);
         }
     },
+    "/farmfill": {
+        access: 4,
+        description: "Засеять поле.",
+        args: "[ид_фермы]:n [ид_поля]:n [тип_урожая]:n",
+        handler: (player, args, out) => {
+            var farm = farms.getFarm(args[0]);
+            if (!farm) return out.error(`Ферма #${args[0]} не найдена`, player);
+            var field = farm.fields[Math.clamp(args[1], 0, farm.fields.length - 1)];
+            if (field.count) return out.error(`Поле #${args[1]} уже засеяно`, player);
+            farms.fillField(field, args[2]);
+            out.info(`${player.name} засеял поле #${args[1]} на ферме #${farm.id}`);
+        }
+    },
 }

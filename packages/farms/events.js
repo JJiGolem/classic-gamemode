@@ -62,7 +62,7 @@ module.exports = {
             if (!object || !object.field) return notifs.error(player, `Урожай не найден`, header);
         }
         var field = object.field;
-        // if (field.state != 3) return player.utils.error(`Урожай не созрел!`);
+        if (field.state != 3) return notifs.error(player, `Урожай не созрел`, header);
 
         if (!player.farmJob) return notifs.error(player, `Вы не работаете на ферме`, header);
         if (field.farmId != player.farmJob.farm.id) return notifs.error(player, `Поле принадлежит другой ферме`, header);
@@ -163,8 +163,6 @@ module.exports = {
     },
     "farms.warehouse.grains.take": (player, data) => {
         data = JSON.parse(data);
-        console.log(`farms.warehouse.grains.take: ${player.name}`)
-        console.log(data);
         var header = `Загрузка зерна`;
         var veh = player.vehicle;
         if (!veh || !veh.db || veh.db.key != "farm") return notifs.error(player, `Необходимо находиться в тракторе`, header);
@@ -180,6 +178,7 @@ module.exports = {
         if (data.field < 0 || data.field >= farm.fields.length) return notifs.error(player, `Поле #${data.field} не найдено`, header);
         var field = farm.fields[data.field];
         if (!field) return notifs.error(player, `Поле #${data.field} не найдено`, header);
+        if (field.count) return notifs.error(player, `Поле #${data.field} уже засеяно`, header);
         var count = 600;
         if (farm.grains < count) return notifs.error(player, `Недостаточно для загрузки`, header);
 
@@ -203,7 +202,16 @@ module.exports = {
             }
             return true;
         }, () => {
-            // TODO: засеять поле
+            var pay = farms.tractorPay;
+            if (farm.balance < pay) notifs.warning(player, `Баланс фермы не позволяет вам выплатить заплату`, header);
+            else {
+                farm.balance -= pay;
+                farm.save();
+                money.addCash(player, pay);
+            }
+            notifs.success(player, `Полея засеяно. Премия $${pay}`, header);
+            farms.fillField(field, veh.products.type);
+            delete veh.products;
         });
 
         notifs.success(player, `Загружено ${count} ед. урожая`, header);
