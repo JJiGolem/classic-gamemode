@@ -1,3 +1,5 @@
+let farms = call('farms');
+
 module.exports = (sequelize, DataTypes) => {
     const model = sequelize.define("FarmField", {
         id: {
@@ -63,12 +65,20 @@ module.exports = (sequelize, DataTypes) => {
         type: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
-            allowNull: false
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, 3);
+                this.setDataValue('type', val);
+            },
         },
         count: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
-            allowNull: false
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, farms.cropMax);
+                this.setDataValue('count', val);
+            },
         },
         farmId: {
             type: DataTypes.INTEGER(11),

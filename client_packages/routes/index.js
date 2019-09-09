@@ -41,6 +41,15 @@ mp.events.add({
     "playerEnterCheckpoint": (checkpoint) => {
         if (!checkpoint.params) return;
         if (checkpoint.params.type != "route") return;
+        var veh = mp.players.local.vehicle;
+        if (veh) {
+            var hoodPos = mp.utils.getHoodPosition(veh);
+            if (hoodPos) {
+                var hoodDist = mp.vdist(checkpoint.position, hoodPos);
+                var playerDist = mp.vdist(checkpoint.position, mp.players.local.position);
+                if (hoodDist > playerDist) return mp.notify.warning(`Заезжайте капотом вперед`);
+            }
+        }
         mp.events.callRemote(`routes.points.next`);
     },
 });

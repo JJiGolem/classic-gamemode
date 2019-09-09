@@ -16,6 +16,15 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('grains', val);
             }
         },
+        soils: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, farms.soilsMax);
+                this.setDataValue('soils', val);
+            }
+        },
         productA: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
@@ -85,8 +94,35 @@ module.exports = (sequelize, DataTypes) => {
         },
         pay: {
             type: DataTypes.INTEGER(11),
-            defaultValue: 5,
-            allowNull: false
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 1, 300);
+                this.setDataValue('pay', val);
+            }
+        },
+        farmerPay: {
+            type: DataTypes.INTEGER(11),
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 1, 300);
+                this.setDataValue('farmerPay', val);
+            }
+        },
+        tractorPay: {
+            type: DataTypes.INTEGER(11),
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 1, 300);
+                this.setDataValue('tractorPay', val);
+            }
+        },
+        pilotPay: {
+            type: DataTypes.INTEGER(11),
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 1, 300);
+                this.setDataValue('pilotPay', val);
+            }
         },
         x: {
             type: DataTypes.FLOAT,

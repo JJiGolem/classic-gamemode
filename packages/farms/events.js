@@ -39,13 +39,13 @@ module.exports = {
         }
 
         farms.setJobClothes(player, false);
+        player.addAttachment("farmProductA", true);
+        player.addAttachment("farmProductB", true);
+        player.addAttachment("farmProductC", true);
         player.call("farms.jobType.set", [null]);
+        player.call("routes.checkpoints.destroy");
         notifs.success(player, `Удачного дня!`, header);
-        // player.utils.putObject();
-        // if (player.farmJob.tractorColshape) {
-        //     player.call("checkpoint.clearForTractor");
-        //     player.farmJob.tractorColshape.destroy();
-        // }
+
         delete player.farmJob;
     },
     "farms.field.crop.take": (player, objId) => {
@@ -62,7 +62,7 @@ module.exports = {
             if (!object || !object.field) return notifs.error(player, `Урожай не найден`, header);
         }
         var field = object.field;
-        // if (field.state != 3) return player.utils.error(`Урожай не созрел!`);
+        if (field.state != null && field.state != 3) return notifs.error(player, `Урожай не созрел`, header);
 
         if (!player.farmJob) return notifs.error(player, `Вы не работаете на ферме`, header);
         if (field.farmId != player.farmJob.farm.id) return notifs.error(player, `Поле принадлежит другой ферме`, header);
@@ -89,13 +89,14 @@ module.exports = {
 
                 obj.count--;
                 obj.field.count--;
-                if (obj.field.count % 20 == 0) obj.field.save();
                 if (obj.count <= 0) {
                     var list = farms.fieldObjects[obj.field.id];
                     var i = list.indexOf(obj);
                     list.splice(i, 1);
+                    if (!list.length) obj.field.count = 0;
                     obj.destroy();
                 }
+                if (obj.field.count % 20 == 0) obj.field.save();
             } catch (e) {
                 console.log(e);
             }
@@ -120,6 +121,7 @@ module.exports = {
             prodType = 3;
         } else return notifs.error(player, `Соберите урожай на поле`, header);
         if (veh.products && veh.products.type != prodType) return notifs.error(player, `Неверный типа урожая`, header);
+        if (veh.products && veh.products.count >= 200) return notifs.error(player, `Пикап заполнен`, header);
         farms.addVehicleProducts(veh, prodType);
 
         if (!player.farmJob) return notifs.error(player, `Вы не работаете`, header);
@@ -152,7 +154,7 @@ module.exports = {
         veh.setVariable("farmProductsState", parseInt(veh.products.count / 33));
         if (veh.products.count) notifs.info(player, `Склад заполнен. ${veh.products.count} ед. урожая осталось в пикапе`, header);
         else delete veh.products;
-        var pay = parseInt(farms.farmerPay * (count / 200));
+        var pay = parseInt(farm.farmerPay * (count / 200));
         if (farm.balance < pay) notifs.warning(player, `Баланс фермы не позволяет вам выплатить заплату`, header);
         else {
             farm.balance -= pay;
@@ -163,8 +165,6 @@ module.exports = {
     },
     "farms.warehouse.grains.take": (player, data) => {
         data = JSON.parse(data);
-        console.log(`farms.warehouse.grains.take: ${player.name}`)
-        console.log(data);
         var header = `Загрузка зерна`;
         var veh = player.vehicle;
         if (!veh || !veh.db || veh.db.key != "farm") return notifs.error(player, `Необходимо находиться в тракторе`, header);
@@ -180,6 +180,7 @@ module.exports = {
         if (data.field < 0 || data.field >= farm.fields.length) return notifs.error(player, `Поле #${data.field} не найдено`, header);
         var field = farm.fields[data.field];
         if (!field) return notifs.error(player, `Поле #${data.field} не найдено`, header);
+        if (field.count) return notifs.error(player, `Поле #${data.field} уже засеяно`, header);
         var count = 600;
         if (farm.grains < count) return notifs.error(player, `Недостаточно для загрузки`, header);
 
@@ -203,10 +204,70 @@ module.exports = {
             }
             return true;
         }, () => {
-            // TODO: засеять поле
+            var pay = farm.tractorPay;
+            if (farm.balance < pay) notifs.warning(player, `Баланс фермы не позволяет вам выплатить заплату`, header);
+            else {
+                farm.balance -= pay;
+                farm.save();
+                money.addCash(player, pay);
+            }
+            notifs.success(player, `Полея засеяно. Премия $${pay}`, header);
+            farms.fillField(field, veh.products.type);
+            delete veh.products;
         });
 
         notifs.success(player, `Загружено ${count} ед. урожая`, header);
+        notifs.info(player, `Отправляйтесь на посев поля`, header);
+    },
+    "farms.soilsWarehouse.take": (player) => {
+        var header = `Загрузка удобрения`;
+        var veh = player.vehicle;
+        if (!veh || !veh.db || veh.db.key != "farm") return notifs.error(player, `Необходимо находиться в самолете`, header);
+        if (!player.farm) return notifs.error(player, `Вы далеко`, header);
+        if (!player.farmJob) return notifs.error(player, `Вы не работаете на ферме`, header);
+        if (player.farmJob.farm.id != player.farm.id) return notifs.error(player, `Вы работаете на другой ферме`, header);
+        if (player.farmJob.type != 3) {
+            var jobName = farms.getJobName(player.farmJob.type);
+            return notifs.error(player, `Для должности ${jobName} недоступно`, header);
+        }
+        if (veh.soils && veh.soils.count) return notifs.error(player, `Самолет уже загружен`, header);
+        var farm = player.farm;
+        var count = 200;
+        if (farm.soils < count) return notifs.error(player, `Недостаточно для загрузки`, header);
+
+        farm.soils -= count;
+        farm.save();
+        if (!veh.soils) veh.soils = {};
+        veh.soils.count = count;
+
+        var points = farms.getPilotPoints(farm);
+        routes.checkpointData.scale = 4;
+        routes.start(player, points, () => {
+            var veh = player.vehicle;
+            if (!veh || !veh.db || veh.db.key != "farm") {
+                notifs.error(player, `Необходимо находиться в самолете`, header);
+                return false;
+            }
+            if (!player.farmJob) {
+                notifs.error(player, `Вы не работаете на ферме`, header);
+                return false;
+            }
+            return true;
+        }, () => {
+            var pay = farm.pilotPay;
+            if (farm.balance < pay) notifs.warning(player, `Баланс фермы не позволяет вам выплатить заплату`, header);
+            else {
+                farm.balance -= pay;
+                farm.save();
+                money.addCash(player, pay);
+            }
+            notifs.success(player, `Урожай полей увеличился. Премия $${pay}`, header);
+            farms.soilFields(farm);
+            delete veh.soils;
+        });
+
+        notifs.success(player, `Загружено ${count} ед. удобрения`, header);
+        notifs.info(player, `Отправляйтесь на орошение полей`, header);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;
@@ -254,6 +315,17 @@ module.exports = {
             var count = vehicle.grains.count;
 
             notifs.info(player, `Зерно в тракторе: ${count} из 600 ед.`, header);
+        } else if (jobType == 3) { // пилот
+            player.call(`prompt.waitShowByName`, [`farm_pilot`]);
+            if (!vehicle.soils || !vehicle.soils.count) {
+                notifs.info(player, `Загрузите удобрение на складе`, header);
+                var pos = farms.getSoilsWarehouse(player.farmJob.farm.id).position;
+                player.call(`waypoint.set`, [pos.x, pos.y]);
+                return;
+            }
+            var count = vehicle.soils.count;
+
+            notifs.info(player, `Удобрение в самолете: ${count} из 200 ед.`, header);
         }
     },
 };

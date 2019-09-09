@@ -100,6 +100,75 @@ mp.farms = {
     setJobType(val) {
         this.jobType = val;
     },
+    setFarmInfo(data) {
+        var items = [{
+                text: "Ферма",
+                values: [`ID ${data.id}`],
+            },
+            {
+                text: "Хозяин",
+                values: [data.owner],
+            },
+            {
+                text: "Зарплата",
+                values: [`$${data.pay}`],
+            },
+            {
+                text: "Премия фермера",
+                values: [`$${data.farmerPay}`],
+            },
+            {
+                text: "Премия тракториста",
+                values: [`$${data.tractorPay}`],
+            },
+            {
+                text: "Премия пилота",
+                values: [`$${data.pilotPay}`],
+            },
+            {
+                text: "Количество полей",
+                values: [`${data.fields} ед.`],
+            },
+            {
+                text: "Вернуться"
+            },
+        ];
+        mp.callCEFV(`selectMenu.setItems('farmInfo', '${JSON.stringify(items)}')`);
+    },
+    setWarehouseInfo(data) {
+        var items = [{
+                text: "Зерно",
+                values: [`${data.grains} из ${data.grainsMax} ед.`],
+            },
+            {
+                text: "Урожай А",
+                values: [`${data.productA} из ${data.productsMax} ед.`],
+            },
+            {
+                text: "Урожай Б",
+                values: [`${data.productB} из ${data.productsMax} ед.`],
+            },
+            {
+                text: "Урожай С",
+                values: [`${data.productC} из ${data.productsMax} ед.`],
+            },
+            {
+                text: "Вернуться"
+            },
+        ];
+        mp.callCEFV(`selectMenu.setItems('farmWarehouseInfo', '${JSON.stringify(items)}')`);
+    },
+    setSoilsWarehouseInfo(data) {
+        var items = [{
+                text: "Удобрение",
+                values: [`${data.soils} из ${data.soilsMax} ед.`],
+            },
+            {
+                text: "Вернуться"
+            },
+        ];
+        mp.callCEFV(`selectMenu.setItems('farmSoilsWarehouseInfo', '${JSON.stringify(items)}')`);
+    },
     registerAttachments() {
         // лопатка в руках при сборе урожка
         mp.attachmentMngr.register("farmTrowel", "prop_cs_trowel", 58867, new mp.Vector3(0.01, 0.03, 0),
@@ -194,6 +263,15 @@ mp.events.add({
         if (!vehicle) return;
         if (!vehicle.getVariable("trunk")) return mp.notify.warning(`Для погрузки урожая откройте багажник`);
         mp.events.callRemote(`farms.vehicle.products.put`, vehicle.remoteId);
+    },
+    "farms.info.set": (data) => {
+        mp.farms.setFarmInfo(data);
+    },
+    "farms.warehouse.info.set": (data) => {
+        mp.farms.setWarehouseInfo(data);
+    },
+    "farms.soilsWarehouse.info.set": (data) => {
+        mp.farms.setSoilsWarehouseInfo(data);
     },
     "playerEnterVehicleBoot": (player, vehicle) => {
         if (!mp.farms.hasProduct()) return;
