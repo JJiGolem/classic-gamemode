@@ -177,7 +177,10 @@ module.exports = {
         veh.products.count -= count;
         veh.setVariable("farmProductsState", parseInt(veh.products.count / 33));
         if (veh.products.count) notifs.info(player, `Склад заполнен. ${veh.products.count} ед. урожая осталось в пикапе`, header);
-        else delete veh.products;
+        else {
+            veh.setVariable("label", null);
+            delete veh.products;
+        }
         var pay = parseInt(farm.farmerPay * (count / 200));
         if (farm.balance < pay) notifs.warning(player, `Баланс фермы не позволяет вам выплатить заплату`, header);
         else {
@@ -213,6 +216,7 @@ module.exports = {
         if (!veh.products) veh.products = {};
         veh.products.type = data.grain + 1;
         veh.products.count = count;
+        veh.setVariable("label", `${count} из 600 ед.`);
 
         var points = farms.getFillingPoints(field);
         routes.checkpointData.scale = 4;
@@ -226,6 +230,8 @@ module.exports = {
                 notifs.error(player, `Вы не работаете на ферме`, header);
                 return false;
             }
+            veh.products.count -= parseInt(600 / points.length);
+            veh.setVariable("label", `${veh.products.count} из 600 ед.`);
             return true;
         }, () => {
             var pay = farm.tractorPay;
@@ -237,6 +243,7 @@ module.exports = {
             }
             notifs.success(player, `Полея засеяно. Премия $${pay}`, header);
             farms.fillField(field, veh.products.type);
+            veh.setVariable("label", null);
             delete veh.products;
         });
 

@@ -435,11 +435,12 @@ module.exports = {
     addVehicleProducts(vehicle, type) {
         if (!vehicle.products) vehicle.products = {
             type: type,
-            count: 1
+            count: 0
         };
         if (vehicle.products.type != type) return;
 
         vehicle.products.count++;
+        vehicle.setVariable("label", `${vehicle.products.count} из 200 ед.`);
         // Синхра объектов в кузове
         if (vehicle.products.count % 33 == 0)
             vehicle.setVariable("farmProductsState", parseInt(vehicle.products.count / 33));
