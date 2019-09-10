@@ -20,4 +20,7 @@ mp.events.add({
     "selectMenu.hide": () => {
         mp.callCEFV(`selectMenu.show = false`);
     },
+    "selectMenu.loader": (enable) => {
+        mp.callCEFV(`selectMenu.loader = ${enable}`);
+    },
 });

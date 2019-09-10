@@ -306,7 +306,8 @@ module.exports = {
                 farmerPay: farm.farmerPay,
                 tractorPay: farm.tractorPay,
                 pilotPay: farm.pilotPay,
-                fields: farm.fields.length
+                fields: farm.fields.length,
+                price: farm.price,
             }]);
             player.farm = farm;
         };

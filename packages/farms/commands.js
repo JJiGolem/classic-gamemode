@@ -41,6 +41,40 @@ module.exports = {
             out.info(`${player.name} изменил количество удобрения на ферме #${farm.id} (${farm.soils} ед.)`);
         }
     },
+    "/farmsetowner": {
+        access: 5,
+        description: "Изменить хозяина фермы.",
+        args: "[ид_фермы]:n [ид_игрока]:n",
+        handler: (player, args, out) => {
+            var farm = farms.getFarm(args[0]);
+            if (!farm) return out.error(`Ферма #${args[0]} не найдена`, player);
+            var rec = mp.players.at(args[1]);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[1]} не найден`, player);
+
+            farm.playerId = rec.character.id;
+            farm.owner = rec.character;
+            farm.save();
+
+            out.info(`${player.name} изменил хозяина фермы #${farm.id} на ${rec.name}`);
+            notifs.info(rec, `${player.name} установил вас хозяином фермы #${farm.id}`, `Ферма`);
+        }
+    },
+    "/farmdelowner": {
+        access: 5,
+        description: "Удалить хозяина фермы.",
+        args: "[ид_фермы]:n",
+        handler: (player, args, out) => {
+            var farm = farms.getFarm(args[0]);
+            if (!farm) return out.error(`Ферма #${args[0]} не найдена`, player);
+            if (!farm.playerId) return out.error(`Ферма #${args[0]} не имеет хозяина`, player);
+
+            farm.playerId = null;
+            farm.owner = null;
+            farm.save();
+
+            out.info(`${player.name} удалил хозяина фермы #${farm.id}`);
+        }
+    },
     "/farmfill": {
         access: 4,
         description: "Засеять поле.",

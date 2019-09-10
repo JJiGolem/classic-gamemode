@@ -7,11 +7,33 @@ module.exports = {
     "init": () => {
         farms.init();
     },
+    "farms.buy": (player) => {
+        var header = `Покупка фермы`;
+        var out = (text) => {
+            player.call(`selectMenu.loader`, [false]);
+            notifs.error(player, text, header);
+        };
+        if (!player.farm) return out(`Вы не у фермы`);
+        if (player.farm.playerId) return out(`Ферма уже имеет хозяина`);
+        var farm = player.farm;
+        if (player.character.cash < farm.price) return out(`Необходимо $${farm.price}`);
+
+        money.removeCash(player, farm.price, (res) => {
+            if (!res) return out(`Ошибка списания наличных`);
+            farm.playerId = player.character.id;
+            farm.owner = player.character;
+            farm.save();
+            notifs.success(player, `Ферма #${farm.id} куплена`, header);
+            notifs.warning(player, `Пополните балансы фермы`, header);
+            player.call(`selectMenu.loader`, [false]);
+            player.call(`selectMenu.hide`);
+        });
+    },
     "farms.job.start": (player, index) => {
         var header = `Работа на ферме`
         if (!player.farm) return notifs.error(player, `Вы не у фермы`, header);
         if (player.farmJob) return notifs.error(player, `Увольтесь, чтобы сменить должность`, header);
-        if (!player.farm.playerId) return notifs.error(player, `Ферма не имеет владельца`, header);
+        if (!player.farm.playerId) return notifs.error(player, `Ферма не имеет хозяина`, header);
 
         player.farmJob = {
             type: Math.clamp(index, 0, 3),

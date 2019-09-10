@@ -1696,7 +1696,7 @@ var selectMenu = new Vue({
             },
             "lssdStorage": {
                 name: "lssdStorage",
-                header: "Склад LSSD",
+                header: "Склад BCSD",
                 items: [{
                         text: "Раздевалка",
                     },
@@ -1741,7 +1741,7 @@ var selectMenu = new Vue({
             },
             "lssdClothes": {
                 name: "lssdClothes",
-                header: "Раздевалка LSSD",
+                header: "Раздевалка BCSD",
                 items: [{
                         text: "Кадет"
                     },
@@ -1790,7 +1790,7 @@ var selectMenu = new Vue({
             },
             "lssdItems": {
                 name: "lssdItems",
-                header: "Снаряжение LSSD",
+                header: "Снаряжение BCSD",
                 items: [{
                         text: "Наручники"
                     },
@@ -1817,7 +1817,7 @@ var selectMenu = new Vue({
             },
             "lssdGuns": {
                 name: "lssdGuns",
-                header: "Вооружение LSSD",
+                header: "Вооружение BCSD",
                 items: [{
                         text: "Фонарик"
                     },
@@ -1862,7 +1862,7 @@ var selectMenu = new Vue({
             },
             "lssdAmmo": {
                 name: "lssdAmmo",
-                header: "Патроны LSSD",
+                header: "Патроны BCSD",
                 items: [{
                         text: "Combat Pistol - 9mm",
                         values: ["12 шт.", "24 шт.", "32 шт."],
@@ -3173,6 +3173,9 @@ var selectMenu = new Vue({
                             selectMenu.showByName("farmInfo");
                         } else if (e.itemName == 'Помощь') {
 
+                        } else if (e.itemName == 'Купить') {
+                            selectMenu.loader = true;
+                            mp.trigger(`callRemote`, `farms.buy`);
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
@@ -3766,6 +3769,31 @@ var selectMenu = new Vue({
                 if (item.text == name) return item;
             }
             return null;
+        },
+        addItem(menuName, item, index) {
+            var menu = this.menus[menuName];
+            if (!menu) return;
+            if (typeof item == 'string') item = JSON.parse(item);
+            if (this.getItemByName(item.text, menu.items)) return;
+            if (item.i == null) Vue.set(item, 'i', 0);
+            if (item.j == null) Vue.set(item, 'j', 0);
+            if (!item.values) Vue.set(item, 'values', [""]);
+            
+            menu.items.splice(index, 0, item);
+            menu.i = 0;
+            menu.j = 0;
+        },
+        deleteItem(menuName, itemName) {
+            var menu = this.menus[menuName];
+            if (!menu) return;
+            var items = menu.items;
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                if (item.text == itemName) {
+                    items.splice(i, 1);
+                    i--;
+                }
+            }
         },
         // open() {
         //     this.menu.i = 0; // TEMP, нужно разобраться, почему i/j остаются прежними при закрытии/открытии меню

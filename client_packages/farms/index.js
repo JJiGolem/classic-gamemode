@@ -134,6 +134,22 @@ mp.farms = {
             },
         ];
         mp.callCEFV(`selectMenu.setItems('farmInfo', '${JSON.stringify(items)}')`);
+        if (data.owner) {
+            mp.callCEFV(`selectMenu.deleteItem('farm', 'Купить')`);
+            if (mp.players.local.name == data.owner) {
+                var item = {
+                    text: "Управление",
+                };
+                mp.callCEFV(`selectMenu.addItem('farm', '${JSON.stringify(item)}', 2)`);
+            }
+        } else {
+            mp.callCEFV(`selectMenu.deleteItem('farm', 'Управление')`);
+            var item = {
+                text: "Купить",
+                values: [`$${data.price}`],
+            };
+            mp.callCEFV(`selectMenu.addItem('farm', '${JSON.stringify(item)}', 0)`);
+        }
     },
     setWarehouseInfo(data) {
         var items = [{
