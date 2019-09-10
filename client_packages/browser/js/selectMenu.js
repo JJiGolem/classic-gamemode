@@ -2640,23 +2640,27 @@ var selectMenu = new Vue({
                 name: "tuningMain",
                 header: "LS Customs",
                 items: [{
-                        text: "Цвета"
-                    },
-                    {
-                        text: "Двигатель"
-                    },
-                    {
-                        text: "Тормоза"
-                    },
-                    {
-                        text: "Трансмиссия"
-                    },
-                    {
-                        text: "Подвеска"
-                    },
-                    {
-                        text: "Броня"
-                    },
+                    text: "Ремонт кузова",
+                    values: ['$100']
+                },
+                {
+                    text: "Цвета"
+                },
+                {
+                    text: "Двигатель"
+                },
+                {
+                    text: "Тормоза"
+                },
+                {
+                    text: "Трансмиссия"
+                },
+                {
+                    text: "Подвеска"
+                },
+                {
+                    text: "Броня"
+                },
                     // {
                     //     text: "Турбонаддув"
                     // },
@@ -2676,9 +2680,13 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
+                        mp.trigger('tuning.lastIndex.set', e.itemIndex);
                         switch (e.itemName) {
                             case 'Закрыть':
                                 mp.trigger('tuning.end');
+                                break;
+                            case 'Ремонт кузова':
+                                mp.trigger('tuning.repair');
                                 break;
                             case 'Цвета':
                                 mp.trigger('tuning.colorMenu.show');
@@ -2859,7 +2867,7 @@ var selectMenu = new Vue({
                 name: "tuningBreak",
                 header: "Улучшение тормозов",
                 items: [{
-                        text: "Стандарные тормоза",
+                        text: "Стандартные тормоза",
                         values: ['$100']
                     },
                     {
@@ -2907,7 +2915,7 @@ var selectMenu = new Vue({
                 name: "tuningTransmission",
                 header: "Улучшение трансмиссии",
                 items: [{
-                        text: "Стандарная трансмиссия",
+                        text: "Стандартная трансмиссия",
                         values: ['$100']
                     },
                     {
@@ -2954,7 +2962,7 @@ var selectMenu = new Vue({
                 name: "tuningTransmission",
                 header: "Улучшение трансмиссии",
                 items: [{
-                        text: "Стандарная подвеска",
+                        text: "Стандартная подвеска",
                         values: ['$100']
                     },
                     {

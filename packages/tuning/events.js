@@ -64,7 +64,7 @@ module.exports = {
     "tuning.buy": (player, type, index) => {
         let vehicle = player.vehicle;
         if (!vehicle) return player.call('tuning.buy.ans', [2]);
-        if (vehicle.key != 'private' || vehicle.owner != player.character.id) return player.call('tuning.colors.set.ans', [3]);
+        if (vehicle.key != 'private' || vehicle.owner != player.character.id) return player.call('tuning.buy.ans', [3]);
         let price = tuning.calculateModPrice(vehicle.properties.price, type, index);
         if (player.character.cash < price) return player.call('tuning.buy.ans', [1]);
 
@@ -80,5 +80,21 @@ module.exports = {
             }
         });
 
+    },
+    "tuning.repair": (player) => {
+        let vehicle = player.vehicle;
+        if (!vehicle) return player.call('tuning.repair.ans', [2]);
+        if (vehicle.key != 'private' || vehicle.owner != player.character.id) return player.call('tuning.repair.ans', [3]);
+        let price = tuning.getPriceConfig().repair;
+        if (player.character.cash < price) return player.call('tuning.repair.ans', [1]);
+
+        money.removeCash(player, price, function (result) {
+            if (result) {
+                player.vehicle.repair();
+                player.call('tuning.repair.ans', [0]);
+            } else {
+                player.call('tuning.repair.ans', [4]);
+            }
+        });
     }
 }
