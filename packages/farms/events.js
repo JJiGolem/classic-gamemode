@@ -29,6 +29,33 @@ module.exports = {
             player.call(`selectMenu.hide`);
         });
     },
+    "farms.sell.state": (player) => {
+        var header = `Продажа фермы`
+        var out = (text) => {
+            player.call(`selectMenu.loader`, [false]);
+            notifs.error(player, text, header);
+        };
+        if (!player.farm) return out(`Вы не у фермы`);
+        if (player.farm.playerId != player.character.id) return out(`Вы не хозяин фермы`);
+        var farm = player.farm;
+        var price = parseInt(farm.price * farms.farmSellK + farm.balance + farm.taxBalance);
+        money.addCash(player, price, (res) => {
+            if (!res) return out(`Ошибка зачисления наличных`);
+            farm.playerId = null;
+            farm.owner = null;
+            farm.balance = 0;
+            farm.taxBalance = 0;
+            farm.save();
+            notifs.success(player, `Ферма продана в штат`, header);
+            player.call(`selectMenu.loader`, [false]);
+            player.call(`selectMenu.hide`);
+        });
+    },
+    "farms.sell.player": (player, data) => {
+        data = JSON.parse(data);
+        console.log(`farms.sell.player: ${player.name}`)
+        console.log(data);
+    },
     "farms.job.start": (player, index) => {
         var header = `Работа на ферме`
         if (!player.farm) return notifs.error(player, `Вы не у фермы`, header);

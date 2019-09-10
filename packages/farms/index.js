@@ -243,6 +243,8 @@ module.exports = {
     priceMax: 100,
     // Макс. ЗП для работника/фермера/тракториста/пилота
     payMax: 100,
+    // Коэффициент при продаже фермы в штат (farmPrice * farmSellK)
+    farmSellK: 0.8,
 
     async init() {
         await this.loadFarmsFromDB();
@@ -311,9 +313,9 @@ module.exports = {
                 tractorPay: farm.tractorPay,
                 pilotPay: farm.pilotPay,
                 fields: farm.fields.length,
+                price: farm.price,
             };
             if (player.character.id == farm.playerId) {
-                data.price = farm.price;
                 data.balance = farm.balance;
                 data.taxBalance = farm.taxBalance;
                 data.pay = farm.pay;
@@ -325,6 +327,7 @@ module.exports = {
                 data.productAPrice = farm.productAPrice;
                 data.productBPrice = farm.productBPrice;
                 data.productCPrice = farm.productCPrice;
+                data.statePrice = parseInt(farm.price * this.farmSellK);
             }
             player.call(`farms.info.set`, [data]);
             player.farm = farm;

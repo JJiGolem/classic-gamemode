@@ -3339,9 +3339,11 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Продать') {
                             selectMenu.showByName("farmControlSell");
                         } else if (e.itemName == 'Вернуться') {
-                            selectMenu.showByName("farmControl");
+                            selectMenu.showByName("farm");
                         }
-                    }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("farm");
+
                 }
             },
             "farmControlGrains": {
@@ -3463,7 +3465,7 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmControl");
                         }
-                    } else if (eventName == 'onBackspacePressed' && this.i > 1)
+                    } else if (eventName == 'onBackspacePressed' && this.i != 1)
                         selectMenu.showByName("farmControl");
                 }
             },
@@ -3511,7 +3513,7 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmControl");
                         }
-                    } else if (eventName == 'onBackspacePressed' && this.i > 1)
+                    } else if (eventName == 'onBackspacePressed' && this.i != 1)
                         selectMenu.showByName("farmControl");
                 }
             },
@@ -3558,8 +3560,99 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmControl");
                         }
-                    } else if (eventName == 'onBackspacePressed' && this.i > 1)
+                    } else if (eventName == 'onBackspacePressed' && this.i != 1)
                         selectMenu.showByName("farmControl");
+                }
+            },
+            "farmControlSell": {
+                name: "farmControlSell",
+                header: "Продажа фермы",
+                items: [{
+                        text: "В штат",
+                        values: ["$999"],
+                    },
+                    {
+                        text: "Игроку",
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'В штат') {
+                            selectMenu.loader = true;
+                            mp.trigger(`callRemote`, `farms.sell.state`);
+                        } else if (e.itemName == 'Игроку') {
+                            selectMenu.showByName("farmControlSellToPlayer");
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmControl");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("farmControl");
+                }
+            },
+            "farmControlSellToPlayer": {
+                name: "farmControlSellToPlayer",
+                header: "Продажа фермы игроку",
+                items: [{
+                        text: "ID игрока",
+                        values: [""],
+                        type: "editable",
+                    },
+                    {
+                        text: "Сумма $",
+                        values: [""],
+                        type: "editable",
+                    },
+                    {
+                        text: "Предложить"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'В штат') {
+                            selectMenu.showByName("farmControlSellToState");
+                        } else if (e.itemName == 'Игроку') {
+                            selectMenu.showByName("farmControlSellToPlayer");
+                        } else if (e.itemName == 'Предложить') {
+                            var playerId = this.items[0].values[0];
+                            var sum = this.items[1].values[0];
+                            if (isNaN(playerId) || isNaN(sum)) return notifications.push(`error`, `Требуется число`);
+                            if (playerId < 0 || sum < 0) return notifications.push(`error`, `Требуется положительное число`);
+                            var data = {
+                                playerId: parseInt(this.items[0].values[0]),
+                                sum: parseInt(this.items[1].values[0]),
+                            };
+                            mp.trigger(`callRemote`, `farms.sell.player`, JSON.stringify(data))
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmControlSell");
+                        }
+                    } else if (eventName == 'onBackspacePressed' && this.i > 1)
+                        selectMenu.showByName("farmControlSell");
                 }
             },
             "farmWarehouse": {
