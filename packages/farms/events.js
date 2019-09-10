@@ -313,6 +313,18 @@ module.exports = {
         farm.save();
         notifs.success(player, `Цена $${farm.soilPrice} установлена`, header);
     },
+    "farms.crops.price.set": (player, data) => {
+        data = JSON.parse(data);
+        var header = `Цена на удобрение`
+        if (!player.farm) return notifs.error(player, `Вы не у фермы`, header);
+        if (player.farm.playerId != player.character.id) return notifs.error(player, `Вы не хозяин фермы`, header);
+        if (data.price < 0 || data.price > farms.priceMax) return notifs.error(player, `Не более $${farms.priceMax}`, header);
+        var names = ["productAPrice", "productBPrice", "productCPrice"];
+        var farm = player.farm;
+        farm[names[data.field]] = data.price;
+        farm.save();
+        notifs.success(player, `Цена $${farm[names[data.field]]} установлена`, header);
+    },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;
         if (vehicle.db.key != "farm") return;
