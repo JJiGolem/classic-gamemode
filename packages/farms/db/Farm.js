@@ -121,7 +121,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: false,
             set(val) {
-                val = Math.clamp(val, 1, 300);
+                val = Math.clamp(val, 1, farms.payMax);
                 this.setDataValue('pay', val);
             }
         },
@@ -129,7 +129,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: false,
             set(val) {
-                val = Math.clamp(val, 1, 300);
+                val = Math.clamp(val, 1, farms.payMax);
                 this.setDataValue('farmerPay', val);
             }
         },
@@ -137,7 +137,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: false,
             set(val) {
-                val = Math.clamp(val, 1, 300);
+                val = Math.clamp(val, 1, farms.payMax);
                 this.setDataValue('tractorPay', val);
             }
         },
@@ -145,7 +145,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: false,
             set(val) {
-                val = Math.clamp(val, 1, 300);
+                val = Math.clamp(val, 1, farms.payMax);
                 this.setDataValue('pilotPay', val);
             }
         },

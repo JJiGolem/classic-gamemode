@@ -366,6 +366,22 @@ module.exports = {
             });
         }
     },
+    "farms.pay.set": (player, data) => {
+        data = JSON.parse(data);
+        var header = `Зарплата на ферме`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.farm) return out(`Вы не у фермы`);
+        if (player.farm.playerId != player.character.id) return out(`Вы не хозяин фермы`);
+        var key = ["pay", "farmerPay", "tractorPay", "pilotPay"][data.job];
+        var farm = player.farm;
+        if (data.sum < 0 || data.sum > farms.payMax) return out(`Не более $${data.sum}`);
+
+        farm[key] = data.sum;
+        farm.save();
+        notifs.success(player, `Зарплата $${farm[key]} установлена`, header);
+    },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;
         if (vehicle.db.key != "farm") return;
