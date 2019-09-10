@@ -428,6 +428,7 @@ module.exports = {
         };
         if (!player.farm) return out(`Вы не у фермы`);
         if (player.farm.playerId != player.character.id) return out(`Вы не хозяин фермы`);
+        if (data.balance == 1 && data.sum > farms.taxBalanceMax) return out(`Баланс налога не более $${farms.taxBalanceMax}`);
         var key = ["balance", "taxBalance"][data.balance];
         var farm = player.farm;
         if (farm[key] == data.sum) return out(`Баланс уже $${data.sum}`);

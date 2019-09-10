@@ -245,6 +245,10 @@ module.exports = {
     payMax: 100,
     // Коэффициент при продаже фермы в штат (farmPrice * farmSellK)
     farmSellK: 0.8,
+    // Макс. баланс налога
+    taxBalanceMax: 10000,
+    // Налог в час
+    tax: 50,
 
     async init() {
         await this.loadFarmsFromDB();
