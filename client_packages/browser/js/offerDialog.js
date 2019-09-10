@@ -109,6 +109,23 @@ var offerDialog = new Vue({
                     mp.trigger("callRemote", "hospital.healing.cancel");
                 },
             },
+            "farm_sell": {
+                text: `Carter Slade предлагает вам купить Ферму #99`,
+                price: 999,
+                on(values) {
+                    this.text = `${values.name} предлагает вам купить Ферму #${values.farmId}`;
+                    this.price = values.price;
+                },
+                yes() {
+                    mp.trigger("callRemote", "farms.sell.player.accept");
+                },
+                no() {
+                    mp.trigger("callRemote", "farms.sell.player.cancel");
+                },
+                ignore() {
+                    mp.trigger("callRemote", "farms.sell.player.cancel");
+                },
+            },
         },
         dialog: null,
         timeout: null,

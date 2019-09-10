@@ -53,8 +53,68 @@ module.exports = {
     },
     "farms.sell.player": (player, data) => {
         data = JSON.parse(data);
-        console.log(`farms.sell.player: ${player.name}`)
-        console.log(data);
+        var header = `Продажа фермы`
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.farm) return out(`Вы не у фермы`);
+        if (player.farm.playerId != player.character.id) return out(`Вы не хозяин фермы`);
+        var rec = mp.players.at(data.playerId);
+        if (!rec || !rec.character) return out(`Игрок #${data.playerId} не найден`);
+        if (player.dist(rec.position) > 10) return out(`${rec.name} далеко`);
+
+        rec.offer = {
+            type: "farm_sell",
+            inviterId: player.id,
+            price: data.sum
+        };
+        rec.call(`offerDialog.show`, ["farm_sell", {
+            name: player.name,
+            farmId: player.farm.id,
+            price: data.sum
+        }]);
+        notifs.success(player, `Предложение ${rec.name} отправлено`, header);
+    },
+    "farms.sell.player.accept": (player) => {
+        var header = `Покупка фермы`;
+        if (!player.offer || player.offer.type != "farm_sell") return notifs.error(player, `Предложение не найдено`, header);
+
+        var owner = mp.players.at(player.offer.playerId);
+        var price = player.offer.price;
+        delete player.offer;
+        if (!owner) return notifs.error(player, `Хозяин не найден`, header);
+        if (player.dist(owner.position) > 10) return notifs.error(player, `${owner.name} далеко`, header);
+        if (!owner.farm) {
+            notifs.error(owner, `Вы не у фермы`, `Продажа фермы`);
+            return notifs.error(player, `${owner.name} не у фермы`, header);
+        }
+        var farm = owner.farm;
+        if (farm.playerId != owner.character.id) return notifs.error(player, `${owner.name} не хозяин`, header);
+        if (player.character.cash < price) return notifs.error(player, `Необходимо $${price}`, header);
+
+        money.removeCash(owner, price, (res) => {
+            if (!res) return notifs.error(owner, `Ошибка списания наличных`);
+
+            money.addCash(player, price, (res) => {
+                if (!res) return notifs.error(owner, `Ошибка начисления наличных`);
+
+                farm.playerId = player.character.id;
+                farm.owner = player.character;
+                farm.save();
+            });
+        });
+        notifs.success(owner, `Ферма #${farm.id} продана игроку ${player.name}`, `Продажа фермы`);
+        notifs.success(player, `Ферма #${farm.id} куплена у игрока ${owner.name}`, header);
+    },
+    "farms.sell.player.cancel": (player) => {
+        if (!player.offer) return;
+        var owner = mp.players.at(player.offer.playerId);
+        var price = mp.players.at(player.offer.price);
+        delete player.offer;
+        if (!owner) return;
+        var header = `Покупка фермы`;
+        notifs.info(player, `Предложение отклонено`, header);
+        notifs.info(owner, `${player.name} отклонил предложение`, header);
     },
     "farms.job.start": (player, index) => {
         var header = `Работа на ферме`

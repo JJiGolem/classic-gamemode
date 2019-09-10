@@ -3642,7 +3642,7 @@ var selectMenu = new Vue({
                             var playerId = this.items[0].values[0];
                             var sum = this.items[1].values[0];
                             if (isNaN(playerId) || isNaN(sum)) return notifications.push(`error`, `Требуется число`);
-                            if (playerId < 0 || sum < 0) return notifications.push(`error`, `Требуется положительное число`);
+                            if (playerId < 0 || sum <= 0) return notifications.push(`error`, `Требуется положительное число`);
                             var data = {
                                 playerId: parseInt(this.items[0].values[0]),
                                 sum: parseInt(this.items[1].values[0]),
