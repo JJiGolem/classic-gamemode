@@ -359,9 +359,13 @@ module.exports = {
             player.call(`selectMenu.show`, [`farmWarehouse`]);
             player.call(`farms.warehouse.info.set`, [{
                 grains: farm.grains,
+                grainPrice: farm.grainPrice,
                 productA: farm.productA,
                 productB: farm.productB,
                 productC: farm.productC,
+                productAPrice: farm.productAPrice,
+                productBPrice: farm.productBPrice,
+                productCPrice: farm.productCPrice,
                 grainsMax: this.grainsMax,
                 productsMax: this.productsMax,
             }]);
@@ -384,6 +388,7 @@ module.exports = {
             player.call(`selectMenu.show`, [`farmSoilsWarehouse`]);
             player.call(`farms.soilsWarehouse.info.set`, [{
                 soils: farm.soils,
+                soilPrice: farm.soilPrice,
                 soilsMax: this.soilsMax,
             }]);
             player.farm = farm;
