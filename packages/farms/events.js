@@ -293,6 +293,16 @@ module.exports = {
         notifs.success(player, `Загружено ${count} ед. удобрения`, header);
         notifs.info(player, `Отправляйтесь на орошение полей`, header);
     },
+    "farms.grains.price.set": (player, val) => {
+        var header = `Цена на зерно`
+        if (!player.farm) return notifs.error(player, `Вы не у фермы`, header);
+        if (player.farm.playerId != player.character.id) return notifs.error(player, `Вы не хозяин фермы`, header);
+        if (val < 0 || val > farms.priceMax) return notifs.error(player, `Не более $${farms.priceMax}`, header);
+        var farm = player.farm;
+        farm.grainPrice = val;
+        farm.save();
+        notifs.success(player, `Цена $${farm.grainPrice} установлена`, header);
+    },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;
         if (vehicle.db.key != "farm") return;

@@ -55,22 +55,47 @@ module.exports = (sequelize, DataTypes) => {
         productAPrice: {
             type: DataTypes.INTEGER(11),
             defaultValue: 10,
-            allowNull: false
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 1, farms.priceMax);
+                this.setDataValue('productAPrice', val);
+            }
         },
         productBPrice: {
             type: DataTypes.INTEGER(11),
             defaultValue: 10,
-            allowNull: false
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 1, farms.priceMax);
+                this.setDataValue('productBPrice', val);
+            }
         },
         productCPrice: {
             type: DataTypes.INTEGER(11),
             defaultValue: 10,
-            allowNull: false
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 1, farms.priceMax);
+                this.setDataValue('productCPrice', val);
+            }
         },
         grainPrice: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
-            allowNull: false
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 1, farms.priceMax);
+                this.setDataValue('grainPrice', val);
+            }
+        },
+        soilPrice: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 1, farms.priceMax);
+                this.setDataValue('soilPrice', val);
+            }
         },
         price: {
             type: DataTypes.INTEGER(11),
