@@ -141,6 +141,9 @@ mp.farms = {
                     text: "Управление",
                 };
                 mp.callCEFV(`selectMenu.addItem('farm', '${JSON.stringify(item)}', 2)`);
+                mp.callCEFV(`selectMenu.menus['farmControlGrains'].items[0].values[0] = "${data.grainPrice}"`);
+                mp.callCEFV(`selectMenu.menus['farmControlSoils'].items[0].values[0] = "${data.soilPrice}"`);
+                mp.callCEFV(`selectMenu.menus['farmControlCrops'].items[1].values[0] = "${data.productAPrice}"`);
             }
         } else {
             mp.callCEFV(`selectMenu.deleteItem('farm', 'Управление')`);

@@ -239,6 +239,10 @@ module.exports = {
     soilsMax: 1000,
     // Вместимость урожая на поле
     cropMax: 600 + 400, // 400 ед. для эффекта удобрения
+    // Макс. цена за 1 ед. зерна/удобрения/урожая
+    priceMax: 100,
+    // Макс. ЗП для работника/фермера/тракториста/пилота
+    payMax: 100,
 
     async init() {
         await this.loadFarmsFromDB();
@@ -299,7 +303,7 @@ module.exports = {
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
             player.call(`selectMenu.show`, [`farm`]);
-            player.call(`farms.info.set`, [{
+            var data = {
                 id: farm.id,
                 owner: (farm.owner) ? farm.owner.name : null,
                 pay: farm.pay,
@@ -307,8 +311,22 @@ module.exports = {
                 tractorPay: farm.tractorPay,
                 pilotPay: farm.pilotPay,
                 fields: farm.fields.length,
-                price: farm.price,
-            }]);
+            };
+            if (player.character.id == farm.playerId) {
+                data.price = farm.price;
+                data.balance = farm.balance;
+                data.taxBalance = farm.taxBalance;
+                data.pay = farm.pay;
+                data.farmerPay = farm.farmerPay;
+                data.tractorPay = farm.tractorPay;
+                data.pilotPay = farm.pilotPay;
+                data.grainPrice = farm.grainPrice;
+                data.soilPrice = farm.soilPrice;
+                data.productAPrice = farm.productAPrice;
+                data.productBPrice = farm.productBPrice;
+                data.productCPrice = farm.productCPrice;
+            }
+            player.call(`farms.info.set`, [data]);
             player.farm = farm;
         };
         colshape.onExit = (player) => {
@@ -419,11 +437,12 @@ module.exports = {
     addVehicleProducts(vehicle, type) {
         if (!vehicle.products) vehicle.products = {
             type: type,
-            count: 1
+            count: 0
         };
         if (vehicle.products.type != type) return;
 
         vehicle.products.count++;
+        vehicle.setVariable("label", `${vehicle.products.count} из 200 ед.`);
         // Синхра объектов в кузове
         if (vehicle.products.count % 33 == 0)
             vehicle.setVariable("farmProductsState", parseInt(vehicle.products.count / 33));
