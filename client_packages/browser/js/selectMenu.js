@@ -3467,6 +3467,54 @@ var selectMenu = new Vue({
                         selectMenu.showByName("farmControl");
                 }
             },
+            "farmControlBalance": {
+                name: "farmControlBalance",
+                header: "Баланс фермы",
+                items: [{
+                        text: "Тип баланса",
+                        values: ["Основной", "Налог"],
+                    },
+                    {
+                        text: "Сумма $",
+                        values: ["999"],
+                        type: "editable"
+                    },
+                    {
+                        text: "Установить"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Установить') {
+                            var balance = this.items[0].i;
+                            var sum = this.items[1].values[0];
+                            if (isNaN(sum)) return notifications.push(`error`, `Требуется число`);
+                            var data = {
+                                sum: parseInt(sum),
+                                balance: balance
+                            };
+                            selectMenu.loader = true;
+                            mp.trigger(`callRemote`, `farms.balance.set`, JSON.stringify(data));
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmControl");
+                        }
+                    } else if (eventName == 'onBackspacePressed' && this.i > 1)
+                        selectMenu.showByName("farmControl");
+                }
+            },
             "farmWarehouse": {
                 name: "farmWarehouse",
                 header: "Склад фермы",
