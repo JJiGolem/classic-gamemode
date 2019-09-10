@@ -3378,7 +3378,46 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmControl");
                         }
-                    }
+                    } else if (eventName == 'onBackspacePressed' && this.i != 0)
+                        selectMenu.showByName("farmControl");
+                }
+            },
+            "farmControlSoils": {
+                name: "farmControlSoils",
+                header: "Удобрение фермы",
+                items: [{
+                        text: "Цена $ за 1 ед.",
+                        values: ["999"],
+                        type: "editable"
+                    },
+                    {
+                        text: "Установить"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Установить') {
+                            var price = this.items[0].values[0];
+                            if (isNaN(price)) return notifications.push(`error`, `Требуется число`);
+                            mp.trigger(`callRemote`, `farms.soils.price.set`, parseInt(price));
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmControl");
+                        }
+                    } else if (eventName == 'onBackspacePressed' && this.i != 0)
+                        selectMenu.showByName("farmControl");
                 }
             },
             "farmWarehouse": {

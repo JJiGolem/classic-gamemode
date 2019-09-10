@@ -101,6 +101,7 @@ mp.farms = {
         this.jobType = val;
     },
     setFarmInfo(data) {
+        mp.terminal.push(`debug`, data);
         var items = [{
                 text: "Ферма",
                 values: [`ID ${data.id}`],
@@ -141,8 +142,8 @@ mp.farms = {
                     text: "Управление",
                 };
                 mp.callCEFV(`selectMenu.addItem('farm', '${JSON.stringify(item)}', 2)`);
-                mp.callCEFV(`selectMenu.setItemValues('farmControlGrains', 'Цена', ["${data.grainPrice}"])`);
                 mp.callCEFV(`selectMenu.menus['farmControlGrains'].items[0].values[0] = "${data.grainPrice}"`);
+                mp.callCEFV(`selectMenu.menus['farmControlSoils'].items[0].values[0] = "${data.soilPrice}"`);
             }
         } else {
             mp.callCEFV(`selectMenu.deleteItem('farm', 'Управление')`);
