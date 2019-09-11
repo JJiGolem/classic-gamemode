@@ -432,6 +432,7 @@ module.exports = {
                 farm.save();
                 notifs.success(player, `Баланс пополнен`, header);
                 player.call(`selectMenu.loader`, [false]);
+                player.call(`selectMenu.hide`);
             });
         } else { // снять с баланса
             data.sum = farm[key] - data.sum;
@@ -442,6 +443,7 @@ module.exports = {
                 farm.save();
                 notifs.success(player, `Наличные сняты`, header);
                 player.call(`selectMenu.loader`, [false]);
+                player.call(`selectMenu.hide`);
             });
         }
     },
@@ -460,6 +462,7 @@ module.exports = {
         farm[key] = data.sum;
         farm.save();
         notifs.success(player, `Зарплата $${farm[key]} установлена`, header);
+        player.call(`selectMenu.hide`);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;

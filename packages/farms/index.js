@@ -312,6 +312,8 @@ module.exports = {
             var data = {
                 id: farm.id,
                 owner: (farm.owner) ? farm.owner.name : null,
+                balance: farm.balance,
+                taxBalance: farm.taxBalance,
                 pay: farm.pay,
                 farmerPay: farm.farmerPay,
                 tractorPay: farm.tractorPay,

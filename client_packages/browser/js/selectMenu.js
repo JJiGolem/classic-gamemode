@@ -3267,6 +3267,14 @@ var selectMenu = new Vue({
                         values: ["Swift Slade"],
                     },
                     {
+                        text: "Баланс",
+                        values: ["$999"],
+                    },
+                    {
+                        text: "Налог. баланс",
+                        values: ["$999"],
+                    },
+                    {
                         text: "Зарплата",
                         values: ["$30"],
                     },

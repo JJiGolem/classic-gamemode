@@ -110,6 +110,14 @@ mp.farms = {
                 values: [data.owner || "-"],
             },
             {
+                text: "Баланс",
+                values: [`$${data.balance}`],
+            },
+            {
+                text: "Налог. баланс",
+                values: [`$${data.taxBalance}`],
+            },
+            {
                 text: "Зарплата",
                 values: [`$${data.pay}`],
             },
