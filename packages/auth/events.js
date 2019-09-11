@@ -110,10 +110,10 @@ module.exports = {
         });
 
         if (account) {
-            if (account.login.toUpperCase() == data.login.toUpperCase()) {
+            if (account.login == data.login) {
                 /// Логин занят
                 return player.call('auth.register.result', [6]);
-            } else if (account.email.toUpperCase() == data.email.toUpperCase() && account.confirmEmail) {
+            } else if (account.email == data.email && account.confirmEmail) {
                 /// Email занят
                 return player.call('auth.register.result', [7]);
             } else if (account.socialClub == player.socialClub) {

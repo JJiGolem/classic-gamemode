@@ -18,7 +18,6 @@ module.exports = {
     },
     /// Загрузка телефона после выбора персоонажа
     'characterInit.done': async (player) => {
-        // PhoneDialogs = [{name: null, number: "5553535", PhoneMessages: [isMine: true, text: "Займы под 100% годовых"]}];
         player.phone = await db.Models.Phone.findOne({
             where: {
                 characterId: player.character.id

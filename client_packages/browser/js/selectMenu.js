@@ -836,7 +836,11 @@ var selectMenu = new Vue({
                                 let reg = /^[A-z]{2,15}$/;
                                 if (!reg.test(this.items[0].values[0]) || !reg.test(this.items[1].values[0])) return selectMenu.notification = "Имя и фамилия должны состоять из 2-15 латинских букв каждое.";
                                 selectMenu.loader = true;
-                                mp.trigger('characterInit.create.check', this.items[0].values[0], this.items[1].values[0]);
+                                let name = this.items[0].values[0];
+                                let surname = this.items[1].values[0];
+                                name = name[0].toUpperCase() + name.toLowerCase().substring(1, 20);
+                                surname = surname[0].toUpperCase() + surname.toLowerCase().substring(1, 20);
+                                mp.trigger('characterInit.create.check', name, surname);
                                 break;
                             case "Назад":
                                 mp.trigger('characterInit.create.back');
