@@ -4069,9 +4069,6 @@ var selectMenu = new Vue({
                         text: "Товар",
                     },
                     {
-                        text: "Помощь"
-                    },
-                    {
                         text: "Закрыть"
                     },
                 ],
@@ -4091,8 +4088,6 @@ var selectMenu = new Vue({
                             selectMenu.showByName("carrierLoadWarehouses");
                         } else if (e.itemName == 'Товар') {
                             selectMenu.showByName("carrierLoadProducts");
-                        } else if (e.itemName == 'Помощь') {
-
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
@@ -4300,6 +4295,46 @@ var selectMenu = new Vue({
                         }
                     } else if (eventName == 'onBackspacePressed' && this.i != 1)
                         selectMenu.showByName("carrierLoad");
+                }
+            },
+            "carrierJob": {
+                name: "carrierJob",
+                header: "Работа грузоперевозчика",
+                items: [{
+                        text: "Устроиться",
+                    },
+                    {
+                        text: "Уволиться",
+                    },
+                    {
+                        text: "Помощь"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Устроиться') {
+                            mp.trigger(`callRemote`, `carrier.job.start`);
+                        } else if (e.itemName == 'Уволиться') {
+                            mp.trigger(`callRemote`, `carrier.job.stop`);
+                        } else if (e.itemName == 'Помощь') {
+
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
                 }
             },
         },

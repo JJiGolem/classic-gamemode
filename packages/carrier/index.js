@@ -13,6 +13,8 @@ module.exports = {
     productsMax: 1000,
     // Коэффициент при списании товара назад на склад (productPrice * productSellK)
     productSellK: 0.8,
+    // Цена аренды грузовика
+    vehPrice: 100,
 
     init() {
         this.createLoadMarker();
