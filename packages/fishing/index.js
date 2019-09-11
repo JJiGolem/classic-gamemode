@@ -79,5 +79,12 @@ module.exports = {
                 notifs.error(player, "Недостаточно денег", "Ошибка");
             }
         });
+    },
+    setCamera(player) {
+        return {
+            x: 0,
+            y: 0,
+            z: 0
+        }
     }
 }

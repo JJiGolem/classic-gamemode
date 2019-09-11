@@ -15,6 +15,8 @@ let peds = [
     }
 ];
 
+let camera;
+
 mp.events.add('characterInit.done', () => {
     peds.forEach((current) => {
         mp.events.call('NPC.create', current);
@@ -47,14 +49,33 @@ mp.events.add('fishing.rod.buy.ans', (ans) => {
     }
 });
 
-mp.events.add('fishing.start', () => {
+mp.events.add('fishing.game.menu', () => {
+    mp.events.call('prompt.show', 'Нажмите <span>E</span>, чтобы начать рыбачить', 'Информация');
+    mp.keys.bind(0x45, true, () => {
+        mp.events.callRemote('fishing.start');
+    })
+});
+
+mp.events.add('fishing.start', (cam) => {
+    if (mp.busy.includes()) return;
+
+    mp.busy.add('fishingGame');
     playBaseAnimation(true);
-    mp.gui.cursor.show(true, false);
+    mp.gui.cursor.show(true, true);
+    mp.game.cam.setCinematicModeActive(true);
+    camera = mp.cameras.new('fishingCamera', new mp.Vector3(cam.x, cam.y, cam.z), new mp.Vector3(cam.x, cam.y, cam.z), 60);
+    camera.pointAtCoord(100, 100, 100);
+    camera.setActive(true);
+    mp.game.cam.renderScriptCams(true, false, 0, true, false);
 });
 
 mp.events.add('fishing.end', () => {
+    if (!mp.busy.includes('fishingGame')) return;
+
+    mp.busy.remove('fishingGame');
     playBaseAnimation(false);
     mp.gui.cursor.show(false, false);
+    mp.game.cam.setCinematicModeActive(true);
 });
 
 function playBaseAnimation(state, timeout) { /// Анимация держания удочки
