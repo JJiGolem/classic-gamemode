@@ -1,6 +1,8 @@
 "use strict"
 
-var fishing = require('./index.js');
+let fishing = require('./index.js');
+let inventory = call('inventory');
+let notifs = call('notifications');
 
 module.exports = {
     "init": () => {
@@ -28,12 +30,21 @@ module.exports = {
             player.call('fishing.menu.close');
             player.currentColshape = null;
         }
+
+        if (shape.isFishingPlace) {
+            mp.events.call('fishing.end', player);
+            player.currentColshape = shape;
+        }
     },
     "fishing.start": (player) => {
+        if (!player.character) return;
+        if (!inventory.getItemByItemId(player, fishing.getRodId())) return notifs.error(player, "У вас нет удочки", "Ошибка");
+
         player.call('fishing.start');
     },
     "fishing.end": (player) => {
-
+        if (!player.character) return;
+        player.call('fishing.end');
     },
     "fishing.rod.buy": (player) => {
         if (!player.character) return;
