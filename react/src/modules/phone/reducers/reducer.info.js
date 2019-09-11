@@ -282,9 +282,19 @@ export default function info(state = initialState, action) {
             return newState;
 
         case 'SET_SELL_INFO_BUSINESS':
-            newState = { ...state };
-            newState.biz[0].ansSell = payload;
-            return newState;
+            // newState = { ...state };
+            // newState.biz[0].ansSell = payload;
+            // return newState;
+
+            return {
+                ...state,
+                biz: [
+                    {
+                        ...state.biz,
+                        ansSell: payload
+                    }
+                ] 
+            }
 
         case 'CREATE_ORDER_BUSINESS':
             newState = { ...state };

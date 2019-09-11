@@ -2,11 +2,15 @@
 
 const fs = require('fs');
 const path = require('path');
+const dir = './data';
 
-function writeToFile(data, fileName) {
+function writeToFile(data, fileName, callback) {
     fs.writeFile(path.resolve(__dirname, `./data/${fileName}.json`), JSON.stringify(data), (err) => {
         if (err) throw err;
-        else console.log(`File ${fileName}.json created`);
+        else {
+            console.log(`File ${fileName}.json created`);
+            callback();
+        }
     });
 }
 
@@ -27,18 +31,22 @@ module.exports = {
             let data = await db.Models[model].findAll();
 
             if (data.length !== 0) {
-                writeToFile(data, model);
+                writeToFile(data, model, () => {
+                    player.call('serializer.save.all.ans');
+                });
             }
         }
-
-        player.call('serializer.save.all.ans');
     },
     async saveTable(player, tableName) {
         let data = await db.Models[tableName].findAll();
 
         if (data.length !== 0) {
-            writeToFile(data, tableName);
-            player.call('serializer.save.table.ans', [tableName]);
+            if (!fs.existsSync(path.resolve(__dirname, dir))) {
+                fs.mkdirSync(path.resolve(__dirname, dir));
+            }   
+            writeToFile(data, tableName, () => {
+                player.call('serializer.save.table.ans', [tableName]);
+            });
         }
     },
     async clearAll(player) {
