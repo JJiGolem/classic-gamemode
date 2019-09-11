@@ -93,19 +93,9 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             allowNull: false
         },
-        consumption: {
-            type: DataTypes.INTEGER(11),
-            defaultValue: 2,
-            allowNull: false
-        },
         dimension: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
-            allowNull: false
-        },
-        license: {
-            type: DataTypes.INTEGER(11),
-            defaultValue: 1,
             allowNull: false
         },
         mileage: {
@@ -118,16 +108,11 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 1,
             allowNull: false
         },
-        isOnParking: {
-            type: DataTypes.TINYINT(1),
-            defaultValue: 0,
-            allowNull: false
+        parkingDate: {
+            type: DataTypes.DATE,
+            defaultValue: null,
+            allowNull: true
         },
-        parkingHours: {
-            type: DataTypes.INTEGER(11),
-            defaultValue: 0,
-            allowNull: false
-        }
     }, {
         timestamps: false
     });

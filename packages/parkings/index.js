@@ -9,7 +9,6 @@ const PARKING_PRICE = 2; /// цена парковки за час
 module.exports = {
     async init() {
         await this.loadParkingsFromDB();
-        this.startParkingHoursUpdater();
     },
     async loadParkingsFromDB() {
         dbParkings = await db.Models.Parking.findAll();
@@ -60,6 +59,15 @@ module.exports = {
         label.parkingId = parking.id;
     },
     addVehicleToParking(veh) {
+        if (!veh.parkingDate) {
+            let now = new Date();
+            veh.parkingDate = now;
+            if (veh.db) {
+                veh.db.update({ parkingDate: now });
+            } else {
+                veh.update({ parkingDate: now });
+            }
+        }
         console.log(`добавили на парковку ${veh.modelName}`);
         parkingVehicles.push(veh);
     },
@@ -70,30 +78,26 @@ module.exports = {
 
                 let index = this.findParkingIndexById(parkingVehicles[i].parkingId);
                 // TODO Проверки на деньги и снятие денег
-                player.call('chat.message.push', [`!{#80c102} Вы забрали транспорт с парковки за !{#009eec}$${parkingVehicles[i].parkingHours * PARKING_PRICE}`]);
+                let date = parkingVehicles[i].parkingDate;
+                let now = new Date();
+                let hours = parseInt((now - date) / (1000 * 60 * 60));
+                console.log(hours);
+                player.call('chat.message.push', [`!{#80c102} Вы забрали транспорт с парковки за !{#009eec}$${hours * PARKING_PRICE}`]);
                 player.call('notifications.push.success', ["Вы забрали т/с с парковки", "Успешно"]);
                 parkingVehicles[i].x = parkings[index].carX;
                 parkingVehicles[i].y = parkings[index].carY;
                 parkingVehicles[i].z = parkings[index].carZ;
                 parkingVehicles[i].h = parkings[index].carH;
-                parkingVehicles[i].parkingHours = 0;
 
-                if (houses.isHaveHouse(player.character.id)) {
-                    parkingVehicles[i].isOnParking = 0;
-
-                    let id;
-                    if (parkingVehicles[i].sqlId) {
-                        id = parkingVehicles[i].sqlId;
-                    } else {
-                        id = parkingVehicles[i].id;
-                    }
-                    db.Models.Vehicle.update({
-                        isOnParking: 0
-                    }, {
-                            where: {
-                                id: id
-                            }
-                        });
+                parkingVehicles[i].parkingDate = null;
+                if (parkingVehicles[i].db) {
+                    parkingVehicles[i].db.update({
+                        parkingDate: null
+                    });
+                } else {
+                    parkingVehicles[i].update({
+                        parkingDate: null
+                    });
                 }
                 if (!parkingVehicles[i].sqlId) {
                     vehicles.spawnVehicle(parkingVehicles[i], 0);
@@ -131,60 +135,26 @@ module.exports = {
         parkings.push(parking);
         this.createParking(parking);
     },
-    startParkingHoursUpdater() {
-        setInterval(() => {
-            try {
-                this.parkingHoursUpdater();
-                console.log('[PARKINGS] Обновление платных часов у парковок');
-            } catch (err) {
-                console.log(err);
-            }
-        }, 60 * 60 * 1000);
-    },
-    async parkingHoursUpdater() {
-        let data = await db.Models.Vehicle.findAll({
-            where: {
-                key: "private",
-                isOnParking: 1
-            }
-        });
-        data.forEach((current) => {
-            current.update({
-                parkingHours: data[0].parkingHours + 1,
-            });
-        })
-        parkingVehicles.forEach((veh) => {
-            veh.parkingHours = veh.parkingHours + 1;
-        });
-    },
     savePlayerVehicles(player) {
         if (!player.character) return;
         this.deletePlayerParkingVehicles(player.character.id);
+        let hasHouse = houses.isHaveHouse(player.character.id);
+        //if (hasHouse) return;
         mp.vehicles.forEach((current) => {
             if (current.key == "private" && current.owner == player.character.id) {
-                if (current.isOnParking) {
+                if (!hasHouse) {
                     console.log("Сохраняем парковочную");
+                    let now = new Date();
+                    console.log(now);
                     current.db.update({
                         parkingId: this.getClosestParkingId(player),
-                        parkingHours: 0
+                        parkingDate: now
                     });
                 }
                 clearInterval(current.fuelTimer);
                 current.destroy();
             }
         });
-        // parkingVehicles.forEach((current) => {
-        //     if (current.db) {
-        //         current.db.update({
-        //             parkingHours: current.parkingHours
-        //         });
-        //     } else {
-        //         current.update({
-        //             parkingHours: current.parkingHours
-        //         });
-        //     }
-        // });
-        // Для чего это? D:  
     },
     getParkingInfoById(id) {
         for (let i = 0; i < parkings.length; i++) {

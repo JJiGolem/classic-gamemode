@@ -182,7 +182,7 @@ module.exports = {
                                 y: 0,
                                 z: 0,
                                 h: 0,
-                                isOnParking: hasHouse ? 0 : 1,
+                                parkingDate: hasHouse ? null : now,
                                 parkingId: parking,
                                 plate: carPlate,
                                 owners: 1,
@@ -199,7 +199,7 @@ module.exports = {
                                 z: 0,
                                 h: 0,
                                 parkingId: parking,
-                                isOnParking: hasHouse ? 0 : 1,
+                                parkingDate: hasHouse ? null : now,
                                 fuel: 50,
                                 mileage: 0,
                                 plate: carPlate,
@@ -208,7 +208,6 @@ module.exports = {
                                 steeringState: 0,
                                 brakeState: 0,
                                 destroys: 0,
-                                parkingHours: 0,
                                 owners: 1,
                                 regDate: now
                             }
@@ -236,7 +235,7 @@ module.exports = {
                                 owners: data.owners,
                                 vehType: props.vehType,
                                 price: props.price,
-                                isOnParking: data.isOnParking
+                                //isOnParking: data.isOnParking
                             });
 
                             if (!hasHouse) {
