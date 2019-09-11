@@ -6,6 +6,16 @@ module.exports = {
     "init": () => {
         carrier.init();
     },
+    "carrier.job.start": (player) => {
+        mp.events.call("jobs.set", player, 4);
+    },
+    "carrier.job.stop": (player) => {
+        var header = `Устройство на работу`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        mp.events.call("jobs.leave", player);
+    },
     "carrier.load.products.buy": (player, data) => {
         data = JSON.parse(data);
         var header = `Покупка товара`;
@@ -23,7 +33,7 @@ module.exports = {
         money.removeCash(player, price, (res) => {
             if (!res) return out(`Ошибка списания наличных`);
 
-            var type = ["grains","soils"][data.product];
+            var type = ["grains", "soils"][data.product];
             veh.products = {
                 type: type,
                 count: data.count
