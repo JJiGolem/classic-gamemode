@@ -1,7 +1,6 @@
 "use strict"
 
-mp.attachmentMngr.register("takeRod", "prop_fishing_rod_01", 26611, new mp.Vector3(0, -0.05, -0.03), new mp.Vector3(-20, 10, -30)); /// Телефон в руке
-// mp.attachmentMngr.register("callPhone", "prop_npc_phone", 58867, new mp.Vector3(0.01, 0.05, -0.02), new mp.Vector3(-5, -65, 165)); /// Телефон у уха
+mp.attachmentMngr.register("takeRod", "prop_fishing_rod_01", 26611, new mp.Vector3(0, -0.05, -0.03), new mp.Vector3(-40, 10, -50)); /// Телефон в руке
 
 let peds = [
     {
@@ -15,6 +14,8 @@ let peds = [
         defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
     }
 ];
+
+let camera;
 
 mp.events.add('characterInit.done', () => {
     peds.forEach((current) => {
@@ -48,11 +49,36 @@ mp.events.add('fishing.rod.buy.ans', (ans) => {
     }
 });
 
-mp.events.add('fishing.start', () => {
-    playHoldAnimation(true);
-})
+mp.events.add('fishing.game.menu', () => {
+    mp.events.call('prompt.show', 'Нажмите <span>E</span>, чтобы начать рыбачить', 'Информация');
+    mp.keys.bind(0x45, true, () => {
+        mp.events.callRemote('fishing.start');
+    })
+});
 
-function playHoldAnimation(state, timeout) { /// Анимация держания удочки
+mp.events.add('fishing.start', (cam) => {
+    if (mp.busy.includes()) return;
+
+    mp.busy.add('fishingGame');
+    playBaseAnimation(true);
+    mp.gui.cursor.show(true, true);
+    mp.game.cam.setCinematicModeActive(true);
+    camera = mp.cameras.new('fishingCamera', new mp.Vector3(cam.x, cam.y, cam.z), new mp.Vector3(cam.x, cam.y, cam.z), 60);
+    camera.pointAtCoord(100, 100, 100);
+    camera.setActive(true);
+    mp.game.cam.renderScriptCams(true, false, 0, true, false);
+});
+
+mp.events.add('fishing.end', () => {
+    if (!mp.busy.includes('fishingGame')) return;
+
+    mp.busy.remove('fishingGame');
+    playBaseAnimation(false);
+    mp.gui.cursor.show(false, false);
+    mp.game.cam.setCinematicModeActive(true);
+});
+
+function playBaseAnimation(state, timeout) { /// Анимация держания удочки
     if (state) {
         if (!timeout) timeout = 0;
         setTimeout(()=> {
@@ -61,6 +87,7 @@ function playHoldAnimation(state, timeout) { /// Анимация держани
         }, timeout);
     } else {
         mp.attachmentMngr.removeLocal("takeRod");
+        mp.events.callRemote('animations.stop');
     }
 }
 

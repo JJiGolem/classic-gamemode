@@ -115,7 +115,11 @@ module.exports = (sequelize, DataTypes) => {
         taxBalance: {
             type: DataTypes.INTEGER(11),
             defaultValue: 1000,
-            allowNull: false
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, farms.taxBalanceMax);
+                this.setDataValue('taxBalance', val);
+            }
         },
         pay: {
             type: DataTypes.INTEGER(11),

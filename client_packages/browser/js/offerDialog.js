@@ -56,6 +56,23 @@ var offerDialog = new Vue({
                     mp.trigger("callRemote", "house.sell.ans", 2);
                 },
             },
+            "biz_sell": {
+                text: "Swifty Swift предлагает вам купить его бизнес",
+                price: 100,
+                on(values) {
+                    this.price = values.price;
+                    this.text = `${values.name} предлагает вам купить его бизнес`;
+                },
+                yes() {
+                    mp.trigger("callRemote", "biz.sell.ans", 1);
+                },
+                no() {
+                    mp.trigger("callRemote", "biz.sell.ans", 2);
+                },
+                ignore() {
+                    mp.trigger("callRemote", "biz.sell.ans", 2);
+                },
+            },
             "vehicles_sell": {
                 text: `Carter Slade предлагает вам купить т/с "Glendale" (AYE741)`,
                 price: 228,
@@ -108,6 +125,35 @@ var offerDialog = new Vue({
                 ignore() {
                     mp.trigger("callRemote", "hospital.healing.cancel");
                 },
+            },
+            "farm_sell": {
+                text: `Carter Slade предлагает вам купить Ферму #99`,
+                price: 999,
+                on(values) {
+                    this.text = `${values.name} предлагает вам купить Ферму #${values.farmId}`;
+                    this.price = values.price;
+                },
+                yes() {
+                    mp.trigger("callRemote", "farms.sell.player.accept");
+                },
+                no() {
+                    mp.trigger("callRemote", "farms.sell.player.cancel");
+                },
+                ignore() {
+                    mp.trigger("callRemote", "farms.sell.player.cancel");
+                },
+            },
+            "carrier_job": {
+                text: `Арендовать грузовик?`,
+                price: 999,
+                on(values) {
+                    this.price = values.price;
+                },
+                yes() {
+                    mp.trigger("callRemote", "carrier.vehicle.buy");
+                },
+                no() {},
+                ignore() {},
             },
         },
         dialog: null,

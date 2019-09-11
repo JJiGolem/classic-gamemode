@@ -29,6 +29,93 @@ module.exports = {
             player.call(`selectMenu.hide`);
         });
     },
+    "farms.sell.state": (player) => {
+        var header = `Продажа фермы`
+        var out = (text) => {
+            player.call(`selectMenu.loader`, [false]);
+            notifs.error(player, text, header);
+        };
+        if (!player.farm) return out(`Вы не у фермы`);
+        if (player.farm.playerId != player.character.id) return out(`Вы не хозяин фермы`);
+        var farm = player.farm;
+        var price = parseInt(farm.price * farms.farmSellK + farm.balance + farm.taxBalance);
+        money.addCash(player, price, (res) => {
+            if (!res) return out(`Ошибка зачисления наличных`);
+            farm.playerId = null;
+            farm.owner = null;
+            farm.balance = 0;
+            farm.taxBalance = 0;
+            farm.save();
+            notifs.success(player, `Ферма продана в штат`, header);
+            player.call(`selectMenu.loader`, [false]);
+            player.call(`selectMenu.hide`);
+        });
+    },
+    "farms.sell.player": (player, data) => {
+        data = JSON.parse(data);
+        var header = `Продажа фермы`
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.farm) return out(`Вы не у фермы`);
+        if (player.farm.playerId != player.character.id) return out(`Вы не хозяин фермы`);
+        var rec = mp.players.at(data.playerId);
+        if (!rec || !rec.character) return out(`Игрок #${data.playerId} не найден`);
+        if (player.dist(rec.position) > 10) return out(`${rec.name} далеко`);
+
+        rec.offer = {
+            type: "farm_sell",
+            inviterId: player.id,
+            price: data.sum
+        };
+        rec.call(`offerDialog.show`, ["farm_sell", {
+            name: player.name,
+            farmId: player.farm.id,
+            price: data.sum
+        }]);
+        notifs.success(player, `Предложение ${rec.name} отправлено`, header);
+    },
+    "farms.sell.player.accept": (player) => {
+        var header = `Покупка фермы`;
+        if (!player.offer || player.offer.type != "farm_sell") return notifs.error(player, `Предложение не найдено`, header);
+
+        var owner = mp.players.at(player.offer.playerId);
+        var price = player.offer.price;
+        delete player.offer;
+        if (!owner) return notifs.error(player, `Хозяин не найден`, header);
+        if (player.dist(owner.position) > 10) return notifs.error(player, `${owner.name} далеко`, header);
+        if (!owner.farm) {
+            notifs.error(owner, `Вы не у фермы`, `Продажа фермы`);
+            return notifs.error(player, `${owner.name} не у фермы`, header);
+        }
+        var farm = owner.farm;
+        if (farm.playerId != owner.character.id) return notifs.error(player, `${owner.name} не хозяин`, header);
+        if (player.character.cash < price) return notifs.error(player, `Необходимо $${price}`, header);
+
+        money.removeCash(owner, price, (res) => {
+            if (!res) return notifs.error(owner, `Ошибка списания наличных`);
+
+            money.addCash(player, price, (res) => {
+                if (!res) return notifs.error(owner, `Ошибка начисления наличных`);
+
+                farm.playerId = player.character.id;
+                farm.owner = player.character;
+                farm.save();
+            });
+        });
+        notifs.success(owner, `Ферма #${farm.id} продана игроку ${player.name}`, `Продажа фермы`);
+        notifs.success(player, `Ферма #${farm.id} куплена у игрока ${owner.name}`, header);
+    },
+    "farms.sell.player.cancel": (player) => {
+        if (!player.offer) return;
+        var owner = mp.players.at(player.offer.playerId);
+        var price = mp.players.at(player.offer.price);
+        delete player.offer;
+        if (!owner) return;
+        var header = `Покупка фермы`;
+        notifs.info(player, `Предложение отклонено`, header);
+        notifs.info(owner, `${player.name} отклонил предложение`, header);
+    },
     "farms.job.start": (player, index) => {
         var header = `Работа на ферме`
         if (!player.farm) return notifs.error(player, `Вы не у фермы`, header);
@@ -182,12 +269,8 @@ module.exports = {
             delete veh.products;
         }
         var pay = parseInt(farm.farmerPay * (count / 200));
-        if (farm.balance < pay) notifs.warning(player, `Баланс фермы не позволяет вам выплатить заплату`, header);
-        else {
-            farm.balance -= pay;
-            farm.save();
-            money.addCash(player, pay);
-        }
+        player.farmJob.pay += pay;
+
         notifs.success(player, `Разгружено ${count} ед. урожая. Премия $${pay}`, header);
     },
     "farms.warehouse.grains.take": (player, data) => {
@@ -235,12 +318,7 @@ module.exports = {
             return true;
         }, () => {
             var pay = farm.tractorPay;
-            if (farm.balance < pay) notifs.warning(player, `Баланс фермы не позволяет вам выплатить заплату`, header);
-            else {
-                farm.balance -= pay;
-                farm.save();
-                money.addCash(player, pay);
-            }
+            player.farmJob.pay += pay;
             notifs.success(player, `Полея засеяно. Премия $${pay}`, header);
             farms.fillField(field, veh.products.type);
             veh.setVariable("label", null);
@@ -341,6 +419,7 @@ module.exports = {
         };
         if (!player.farm) return out(`Вы не у фермы`);
         if (player.farm.playerId != player.character.id) return out(`Вы не хозяин фермы`);
+        if (data.balance == 1 && data.sum > farms.taxBalanceMax) return out(`Баланс налога не более $${farms.taxBalanceMax}`);
         var key = ["balance", "taxBalance"][data.balance];
         var farm = player.farm;
         if (farm[key] == data.sum) return out(`Баланс уже $${data.sum}`);
@@ -353,6 +432,7 @@ module.exports = {
                 farm.save();
                 notifs.success(player, `Баланс пополнен`, header);
                 player.call(`selectMenu.loader`, [false]);
+                player.call(`selectMenu.hide`);
             });
         } else { // снять с баланса
             data.sum = farm[key] - data.sum;
@@ -363,6 +443,7 @@ module.exports = {
                 farm.save();
                 notifs.success(player, `Наличные сняты`, header);
                 player.call(`selectMenu.loader`, [false]);
+                player.call(`selectMenu.hide`);
             });
         }
     },
@@ -381,6 +462,7 @@ module.exports = {
         farm[key] = data.sum;
         farm.save();
         notifs.success(player, `Зарплата $${farm[key]} установлена`, header);
+        player.call(`selectMenu.hide`);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;

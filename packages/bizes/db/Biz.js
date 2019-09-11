@@ -5,6 +5,18 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
+        characterId: {
+            type: DataTypes.INTEGER(11),
+            allowNull: true
+        },
+        characterNick: {
+            type: DataTypes.STRING(50),
+            allowNull: true
+        },
+        date: {
+            type: DataTypes.DATE,
+            allowNull: true
+        },
         name: {
             type: DataTypes.STRING,
             allowNull: false
@@ -17,7 +29,15 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: false
         },
+        cashBox: {
+            type: DataTypes.INTEGER(11),
+            allowNull: false
+        },
         productsCount: {
+            type: DataTypes.INTEGER(11),
+            allowNull: false
+        },
+        productsMaxCount: {
             type: DataTypes.INTEGER(11),
             allowNull: false
         },
@@ -34,6 +54,12 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     }, { timestamps: false });
+
+    model.associate = (models) => {
+        model.belongsTo(models.Character, {
+            foreignKey: "characterId"
+        });
+    };
 
     return model;
 };

@@ -11,6 +11,10 @@ mp.events.add('phone.load', function (phoneInfo, phoneDialogs, apps) {
         house.area = mp.game.ui.getLabelText(mp.game.zone.getNameOfZone(house.pos[0], house.pos[1], house.pos[2]));
     });
 
+    phoneInfo.biz.forEach(currentBiz => {
+        currentBiz.area = mp.game.ui.getLabelText(mp.game.zone.getNameOfZone(currentBiz.pos[0], currentBiz.pos[1], currentBiz.pos[2]));
+    });
+    
     mp.callCEFR('phone.load', [phoneInfo]);
     mp.callCEFR('phone.message.list', [phoneDialogs]);
     apps.forEach(app => {

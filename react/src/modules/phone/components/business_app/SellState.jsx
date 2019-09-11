@@ -23,7 +23,7 @@ class SellState extends Component {
         addApp({ name: 'AnsSell', form: <AnsSell /> });
 
         // eslint-disable-next-line no-undef
-        mp.trigger('business.sell.toGov', business.id);
+        mp.trigger('biz.sell.toGov', business.id);
 
         // setTimeout(() => {
         //     setSellStatus(1);

@@ -107,7 +107,15 @@ mp.farms = {
             },
             {
                 text: "Хозяин",
-                values: [data.owner],
+                values: [data.owner || "-"],
+            },
+            {
+                text: "Баланс",
+                values: [`$${data.balance}`],
+            },
+            {
+                text: "Налог. баланс",
+                values: [`$${data.taxBalance}`],
             },
             {
                 text: "Зарплата",
@@ -144,6 +152,7 @@ mp.farms = {
                 mp.callCEFV(`selectMenu.menus['farmControlGrains'].items[0].values[0] = "${data.grainPrice}"`);
                 mp.callCEFV(`selectMenu.menus['farmControlSoils'].items[0].values[0] = "${data.soilPrice}"`);
                 mp.callCEFV(`selectMenu.menus['farmControlCrops'].items[1].values[0] = "${data.productAPrice}"`);
+                mp.callCEFV(`selectMenu.menus['farmControlSell'].items[0].values[0] = "$${data.statePrice}"`);
             }
         } else {
             mp.callCEFV(`selectMenu.deleteItem('farm', 'Управление')`);
@@ -157,19 +166,19 @@ mp.farms = {
     setWarehouseInfo(data) {
         var items = [{
                 text: "Зерно",
-                values: [`${data.grains} из ${data.grainsMax} ед.`],
+                values: [`${data.grains} из ${data.grainsMax} ед. ($${data.grainPrice})`],
             },
             {
                 text: "Урожай А",
-                values: [`${data.productA} из ${data.productsMax} ед.`],
+                values: [`${data.productA} из ${data.productsMax} ед. ($${data.productAPrice})`],
             },
             {
                 text: "Урожай Б",
-                values: [`${data.productB} из ${data.productsMax} ед.`],
+                values: [`${data.productB} из ${data.productsMax} ед. ($${data.productBPrice})`],
             },
             {
                 text: "Урожай С",
-                values: [`${data.productC} из ${data.productsMax} ед.`],
+                values: [`${data.productC} из ${data.productsMax} ед. ($${data.productCPrice})`],
             },
             {
                 text: "Вернуться"
@@ -180,7 +189,7 @@ mp.farms = {
     setSoilsWarehouseInfo(data) {
         var items = [{
                 text: "Удобрение",
-                values: [`${data.soils} из ${data.soilsMax} ед.`],
+                values: [`${data.soils} из ${data.soilsMax} ед. ($${data.soilPrice})`],
             },
             {
                 text: "Вернуться"

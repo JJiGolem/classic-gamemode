@@ -433,6 +433,8 @@ module.exports = {
                 player.setClothes(11, params.variation, params.texture, 0);
                 var texture = params.uTexture || 0;
                 if (params.undershirt != null) player.setClothes(8, params.undershirt, texture, 0);
+                var texture = params.dTexture || 0;
+                if (params.decal != null) player.setClothes(10, params.decal, texture, 0);
             },
             "14": (params) => {
                 if (this.masksWithHideHairs.includes(params.variation)) player.setClothes(2, 0, 0, 0);
@@ -484,6 +486,7 @@ module.exports = {
                 player.setClothes(3, 15, 0, 0);
                 player.setClothes(11, index, 0, 0);
                 player.setClothes(8, undershirtDefault, 0, 0);
+                player.setClothes(10, 0, 0, 0);
             },
             "8": () => {
                 player.setClothes(4, 18, 2, 0);

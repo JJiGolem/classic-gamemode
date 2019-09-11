@@ -243,6 +243,12 @@ module.exports = {
     priceMax: 100,
     // Макс. ЗП для работника/фермера/тракториста/пилота
     payMax: 100,
+    // Коэффициент при продаже фермы в штат (farmPrice * farmSellK)
+    farmSellK: 0.8,
+    // Макс. баланс налога
+    taxBalanceMax: 10000,
+    // Налог в час
+    tax: 50,
 
     async init() {
         await this.loadFarmsFromDB();
@@ -306,14 +312,16 @@ module.exports = {
             var data = {
                 id: farm.id,
                 owner: (farm.owner) ? farm.owner.name : null,
+                balance: farm.balance,
+                taxBalance: farm.taxBalance,
                 pay: farm.pay,
                 farmerPay: farm.farmerPay,
                 tractorPay: farm.tractorPay,
                 pilotPay: farm.pilotPay,
                 fields: farm.fields.length,
+                price: farm.price,
             };
             if (player.character.id == farm.playerId) {
-                data.price = farm.price;
                 data.balance = farm.balance;
                 data.taxBalance = farm.taxBalance;
                 data.pay = farm.pay;
@@ -325,6 +333,7 @@ module.exports = {
                 data.productAPrice = farm.productAPrice;
                 data.productBPrice = farm.productBPrice;
                 data.productCPrice = farm.productCPrice;
+                data.statePrice = parseInt(farm.price * this.farmSellK);
             }
             player.call(`farms.info.set`, [data]);
             player.farm = farm;
@@ -352,9 +361,13 @@ module.exports = {
             player.call(`selectMenu.show`, [`farmWarehouse`]);
             player.call(`farms.warehouse.info.set`, [{
                 grains: farm.grains,
+                grainPrice: farm.grainPrice,
                 productA: farm.productA,
                 productB: farm.productB,
                 productC: farm.productC,
+                productAPrice: farm.productAPrice,
+                productBPrice: farm.productBPrice,
+                productCPrice: farm.productCPrice,
                 grainsMax: this.grainsMax,
                 productsMax: this.productsMax,
             }]);
@@ -377,6 +390,7 @@ module.exports = {
             player.call(`selectMenu.show`, [`farmSoilsWarehouse`]);
             player.call(`farms.soilsWarehouse.info.set`, [{
                 soils: farm.soils,
+                soilPrice: farm.soilPrice,
                 soilsMax: this.soilsMax,
             }]);
             player.farm = farm;

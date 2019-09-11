@@ -1,11 +1,16 @@
 "use strict";
 
 let phoneNumbers = new Array();
-let utils = call('utils');
-let houseServise = call('houses');
+let utils;
+let houseServise;
+let bizService;
 
 module.exports = {
     async init() {
+        utils = call('utils');
+        houseServise = call('houses');
+        bizService = call("bizes");
+
         console.log("[PHONE] load numbers from DB...");
         let phoneNumbersTemp = await db.Models.Phone.findAll({
             attributes: ['number'],
@@ -32,8 +37,14 @@ module.exports = {
 
         let houses = [];
         if (houseServise) {
-            let houseId = houseServise.getHouseIndexByCharId(player.character.id);
-            houses = houseId != -1 ? [houseServise.getHouseInfoForApp(houseId)] : [];
+            let house = houseServise.getHouseByCharId(player.character.id);
+            houses = house != null ? [houseServise.getHouseInfoForApp(house)] : [];
+        }
+
+        let bizes = [];
+        if (bizService) {
+            let biz = bizService.getBizByCharId(player.character.id);
+            bizes = biz != null ? [bizService.getBizInfoForApp(biz)] : [];
         }
 
         let apps = [];
@@ -45,7 +56,7 @@ module.exports = {
                 isHave: player.phone != null,
                 name: player.character.name,
                 houses: houses,
-                biz: [],//bizInfo,
+                biz: bizes,
                 contacts: player.phone != null ? (player.phone.PhoneContacts != null ? jsonPhone['PhoneContacts'] : []) : []
             },
             player.phone != null ? (player.phone.PhoneDialogs != null ? jsonPhone['PhoneDialogs'] : []) : [],
