@@ -1,7 +1,7 @@
 "use strict";
 /// Глобальный таймер
 
-const duration = 60000;
+const duration = 1000;
 let timers = new Array();
 let gId = 0;
 
@@ -30,6 +30,7 @@ module.exports = {
         }, duration);
     },
     /// Добавление нового таймера
+    /// handler желательно async
     /// return timer
     add(handler, time, isInterval = false) {
         let id = gId++;

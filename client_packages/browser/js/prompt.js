@@ -39,6 +39,9 @@ var prompt = new Vue({
             },
             "garage_control": {
                 text: "Нажмите <span>E</span> для того, чтобы выехать из гаража"
+            },
+            "biz_info_ask": {
+                text: "Нажмите <span>B</span> для просмотра информации о бизнесе"
             }
         },
         text: null

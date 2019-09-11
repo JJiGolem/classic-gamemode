@@ -47,6 +47,7 @@ mp.busy.list = new Array();
 /// phone
 /// interaction
 /// house.add
+/// biz.info
 /// economy
 /// END LIST
 /// Добавить модуль (true - операция провшла успешно, false - такой модуль уже содержится в массиве)
