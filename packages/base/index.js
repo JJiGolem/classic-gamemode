@@ -13,6 +13,7 @@ let activeClientModules = new Array();
 /// Если модуль существует, возвращаются его функции (те что в module.exports, в index.js)
 /// Если модуль не существует возвращается null
 /// Важно перед каждым использованием модуля  проверять подключился ли он!
+/// Использовать после события init во избежание ошибок
 global.call = (moduleName) => {
     if(!fs.existsSync(path.dirname(__dirname)+ "/" + moduleName + "/index.js") || ignoreModules.includes(moduleName)) return null;
     return require(path.dirname(__dirname)+ "/" + moduleName + "/index.js");

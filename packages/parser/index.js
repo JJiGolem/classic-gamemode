@@ -4,6 +4,8 @@ let houses = require('./files/houses.json');
 let interiors = require('./files/interiors.json');
 let garages = require('./files/garages.json');
 
+let bizes = require('./files/biz.json');
+
 /// Функции модуля парсера JSON в БД
 module.exports = {
     async init() {
@@ -72,6 +74,25 @@ module.exports = {
                 }, {});
             }
             console.log("[PARSE] houses loaded");
+        }
+
+        let bizesDB = await db.Models.Biz.findAll();
+        if (bizesDB.length == 0) {
+            for (let i = 0; i < bizes.length; i++) {
+                if (bizes[i].type == 2) continue;
+                db.Models.Biz.create({
+                    name: bizes[i].name,
+                    price: bizes[i].price,
+                    type: bizes[i].type,
+                    cashBox: 0,
+                    productsCount: 0,
+                    productsMaxCount: 100,
+                    x: bizes[i].pos[0],
+                    y: bizes[i].pos[1],
+                    z: bizes[i].pos[2]
+                }, {});
+            }
+            console.log("[PARSE] bizes loaded");
         }
         console.log("[PARSE] end");
     },

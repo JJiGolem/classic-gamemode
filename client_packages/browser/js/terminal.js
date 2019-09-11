@@ -39,6 +39,9 @@ var terminal = new Vue({
             if (this.messages.length > this.maxCount) this.messages.shift();
             this.scrollTop();
         },
+        debug(text) {
+            this.push(`debug`, text);
+        },
         scrollTop() {
             setTimeout(() => {
                 var content = this.$el.querySelector(".content");
