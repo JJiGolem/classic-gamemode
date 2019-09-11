@@ -15,6 +15,9 @@ mp.terminal = {
         if (typeof text == 'object') text = JSON.stringify(text);
         mp.callCEFV(`terminal.push('${type}', '${text}')`);
     },
+    debug(text) {
+        this.push(`debug`, text);
+    },
 };
 
 mp.events.add("terminal.enable", mp.terminal.enable);

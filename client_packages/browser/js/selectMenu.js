@@ -2652,27 +2652,27 @@ var selectMenu = new Vue({
                 name: "tuningMain",
                 header: "LS Customs",
                 items: [{
-                    text: "Ремонт кузова",
-                    values: ['$100']
-                },
-                {
-                    text: "Цвета"
-                },
-                {
-                    text: "Двигатель"
-                },
-                {
-                    text: "Тормоза"
-                },
-                {
-                    text: "Трансмиссия"
-                },
-                {
-                    text: "Подвеска"
-                },
-                {
-                    text: "Броня"
-                },
+                        text: "Ремонт кузова",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Цвета"
+                    },
+                    {
+                        text: "Двигатель"
+                    },
+                    {
+                        text: "Тормоза"
+                    },
+                    {
+                        text: "Трансмиссия"
+                    },
+                    {
+                        text: "Подвеска"
+                    },
+                    {
+                        text: "Броня"
+                    },
                     // {
                     //     text: "Турбонаддув"
                     // },
@@ -4055,6 +4055,249 @@ var selectMenu = new Vue({
                         selectMenu.showByName("farmSoilsWarehouse");
                 }
             },
+            "carrierLoad": {
+                name: "carrierLoad",
+                header: "Грузоперевозчик",
+                items: [{
+                        text: "Склады",
+                    },
+                    {
+                        text: "Товар",
+                    },
+                    {
+                        text: "Помощь"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Склады') {
+                            selectMenu.showByName("carrierLoadWarehouses");
+                        } else if (e.itemName == 'Товар') {
+                            selectMenu.showByName("carrierLoadProducts");
+                        } else if (e.itemName == 'Помощь') {
+
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
+            "carrierLoadWarehouses": {
+                name: "carrierLoadWarehouses",
+                header: "Склады",
+                items: [{
+                        text: "Фермы",
+                    },
+                    {
+                        text: "Бизнесы"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Фермы') {
+                            selectMenu.showByName("carrierLoadFarms");
+                        } else if (e.itemName == 'Бизнесы') {
+                            // selectMenu.showByName("carrierLoadBizs");
+                            notifications.push(`warning`, `In development...`)
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("carrierLoad");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("carrierLoad");
+                }
+            },
+            "carrierLoadFarms": {
+                name: "carrierLoadFarms",
+                header: "Фермы",
+                farms: [{
+                        grains: 123,
+                        grainsMax: 321,
+                        grainPrice: 111,
+                        soils: 123,
+                        soilsMax: 321,
+                        soilPrice: 222,
+                    },
+                    {
+                        grains: 123,
+                        grainsMax: 321,
+                        grainPrice: 111,
+                        soils: 123,
+                        soilsMax: 321,
+                        soilPrice: 222,
+                    }
+                ],
+                update() {
+                    var i = this.items[0].i;
+                    Vue.set(this.items[1].values, 0, `${this.farms[i].grains} из ${this.farms[i].grainsMax} ед.`);
+                    Vue.set(this.items[2].values, 0, `$${this.farms[i].grainPrice}`);
+                    Vue.set(this.items[3].values, 0, `${this.farms[i].soils} из ${this.farms[i].soilsMax} ед.`);
+                    Vue.set(this.items[4].values, 0, `$${this.farms[i].soilPrice}`);
+                },
+                items: [{
+                        text: "Ферма",
+                        values: ["ID: 1"],
+                        i: 0,
+                    },
+                    {
+                        text: "Зерно",
+                        values: ["9999 из 9999 ед."],
+                    },
+                    {
+                        text: "Цена зерна",
+                        values: ["$999"]
+                    },
+                    {
+                        text: "Удобрение",
+                        values: ["9999 из 9999 ед."],
+                    },
+                    {
+                        text: "Цена удобрения",
+                        values: ["$999"]
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("carrierLoad");
+                        }
+                    } else if (eventName == 'onItemValueChanged') {
+                        if (e.itemName == 'Ферма') {
+                            // this.update();
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("carrierLoad");
+                }
+            },
+            "carrierLoadBizs": {
+                name: "carrierLoadBizs",
+                header: "Бизнесы",
+                items: [{
+                        text: "Бизнес",
+                        values: ["ID: 1", "ID: 2"],
+                    },
+                    {
+                        text: "Выбрать"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("carrierLoad");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("carrierLoad");
+                }
+            },
+            "carrierLoadProducts": {
+                name: "carrierLoadProducts",
+                header: "Товар",
+                items: [{
+                        text: "Тип товара",
+                        values: ["Зерно", "Удобрение"]
+                    },
+                    {
+                        text: "Количество",
+                        values: [""],
+                        type: "editable"
+                    },
+                    {
+                        text: "Купить",
+                        values: ["$999"]
+                    },
+                    {
+                        text: "Списать",
+                        values: ["-999%"]
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Купить') {
+                            var product = this.items[0].i;
+                            var count = this.items[1].values[0];
+                            if (isNaN(count)) return notifications.push(`error`, `Требуется число`);
+                            if (count <= 0) return notifications.push(`error`, `Требуется положительное число`);
+                            var data = {
+                                count: parseInt(count),
+                                product: product
+                            };
+                            selectMenu.loader = true;
+                            mp.trigger(`callRemote`, `carrier.load.products.buy`, JSON.stringify(data));
+                        } else if(e.itemName == 'Списать') {
+                            selectMenu.loader = true;
+                            mp.trigger(`callRemote`, `carrier.load.products.sell`);
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("carrierLoad");
+                        }
+                    } else if (eventName == 'onBackspacePressed' && this.i != 1)
+                        selectMenu.showByName("carrierLoad");
+                }
+            },
         },
         // Уведомление
         notification: null,
@@ -4190,6 +4433,13 @@ var selectMenu = new Vue({
                     i--;
                 }
             }
+        },
+        setProp(menuName, propName, propValue) {
+            var menu = this.menus[menuName];
+            if (!menu) return;
+            if (typeof propValue == 'string') propValue = JSON.parse(propValue);
+            Vue.set(menu, propName, propValue);
+            if (menu.update) menu.update();
         },
         // open() {
         //     this.menu.i = 0; // TEMP, нужно разобраться, почему i/j остаются прежними при закрытии/открытии меню
