@@ -6,6 +6,7 @@ mp.events.add('vehicles.garage', (state) => {
 });
 
 mp.keys.bind(0x45, true, () => { /// E
+    if (mp.busy.includes()) return;
     if (!isInGarageVehicle) return;
     isInGarageVehicle = false;
     mp.prompt.hide();

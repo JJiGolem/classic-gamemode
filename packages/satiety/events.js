@@ -6,6 +6,7 @@ module.exports = {
         satiety.startTimer(player);
     },
     "playerQuit": (player) => {
+        if (!player.character) return;
         satiety.stopTimer(player);
         player.character.health = player.health;
         player.character.save();

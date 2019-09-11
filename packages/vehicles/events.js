@@ -5,32 +5,8 @@ let money = call('money');
 module.exports = {
     "init": () => {
         vehicles.init();
-        // let now = new Date();
-        // console.log(now);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
-        // console.log('ENGINE ' + vehicle.engineState);
-        // console.log('STEERING ' + vehicle.steeringState);
-        // console.log('FUEL ' + vehicle.fuelState);
-        // console.log('BRAKE ' + vehicle.brakeState);
-        // console.log(`multiplier ${vehicle.multiplier}`);
-        // player.call('chat.message.push', [`!{#70a7ff} Модель ${vehicle.model}`]);
-        // player.call('chat.message.push', [`!{#70a7ff} Имя модели ${vehicle.modelName}`]);
-        // player.call('chat.message.push', [`!{#70a7ff} Ключ ${vehicle.key}`]);
-        // player.call('chat.message.push', [`!{#70a7ff} Владелец ${vehicle.owner}`]);
-        // player.call('chat.message.push', [`!{#70a7ff} sqlId ${vehicle.sqlId}`]);
-        // player.call('chat.message.push', [`!{#70a7ff} fuel ${vehicle.fuel}`]);
-        // player.call('chat.message.push', [`!{#71a0ff} maxfuel ${vehicle.properties.maxFuel}`]);
-        // player.call('chat.message.push', [`!{#71a0ff} name ${vehicle.properties.name}`]);
-        // player.call('chat.message.push', [`!{#71a0ff} def consumption ${vehicle.properties.consumption}`]);
-        // player.call('chat.message.push', [`!{#71a0ff} license ${vehicle.properties.license}`]);
-        // player.call('chat.message.push', [`!{#71a0ff} parkingHours ${vehicle.parkingHours}`]);
-
-        // if ((vehicle.license != 0) && vehicle.license != player.license) {
-        //     player.call('notifications.push.error', ["У вас нет лицензии", "Транспорт"]);
-        //     player.removeFromVehicle();
-        // }
-
         player.call('vehicles.garage', [vehicle.isInGarage]);
 
         if (vehicle.key == 'job' && vehicle.owner != player.character.job && seat == -1) {
@@ -38,14 +14,6 @@ module.exports = {
             player.call('notifications.push.error', ["Это рабочий транспорт", "Нет доступа"]);
             return;
         }
-
-        // if (vehicle.key == 'job' && seat == -1) {
-        //     switch (vehicle.owner) {
-        //         case 2:
-        //             mp.events.call('taxi.vehicle.enter', player, vehicle);
-        //             return;
-        //     }
-        // }
 
         let isPrivate = false;
         if (vehicle.key == 'private' && vehicle.owner == player.character.id) {
@@ -101,6 +69,7 @@ module.exports = {
         if (player.vehicle.key == "job" && player.vehicle.owner == 2 && !player.vehicle.isActiveTaxi) return;
         if (player.vehicle.key == "job" && player.vehicle.owner == 3 && !player.vehicle.isActiveBus) return;
         if (player.vehicle.isBeingRepaired) return player.call('notifications.push.warning', ['Двигатель завести нельзя', 'Ремонт']);
+        if (player.vehicle.isBeingTuned) return;
         if (player.vehicle.fuel <= 0) return player.call('notifications.push.error', ['Нет топлива', 'Транспорт']);
         if (player.vehicle.engine == true) {
             player.vehicle.engine = false;
@@ -317,7 +286,6 @@ module.exports = {
         }]);
     },
     "vehicles.sell.offer.accept": (player, accept) => {
-        console.log('test');
         if (!player.sellCarTargetOffer) return;
         let target = player;
         let seller = target.sellCarTargetOffer.seller;

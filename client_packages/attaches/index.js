@@ -168,6 +168,10 @@ function InitAttachmentsOnJoin() {
             _player.__attachments = atts;
             _player.__attachmentObjects = {};
         }
+        _player.hasAttachment = (name) => {
+            if (!_player.__attachmentObjects) return false;
+            return _player.__attachmentObjects.hasOwnProperty(mp.game.joaat(name));
+        };
     });
 }
 

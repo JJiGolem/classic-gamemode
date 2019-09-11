@@ -947,8 +947,6 @@ var selectMenu = new Vue({
                         itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
                         valueIndex: item.i, // индекс значения пункта меню
                     };
-                    mp.trigger(`chat.message.push`, `!{#ffffff} Событие: ${eventName}`);
-                    mp.trigger(`chat.message.push`, `!{#ffffff} ${JSON.stringify(e)}`);
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Забрать автомобиль') {
                             mp.trigger(`parkings.vehicle.get`);
@@ -1539,13 +1537,28 @@ var selectMenu = new Vue({
                 name: "lspdClothes",
                 header: "Раздевалка LSPD",
                 items: [{
-                        text: "Форма офицера №1"
+                        text: "Кадет"
                     },
                     {
-                        text: "Форма SWAT"
+                        text: "Офицер №1"
                     },
                     {
-                        text: "Форма офицера №2"
+                        text: "Офицер №2"
+                    },
+                    {
+                        text: "Детектив №1"
+                    },
+                    {
+                        text: "Детектив №2"
+                    },
+                    {
+                        text: "SWAT"
+                    },
+                    {
+                        text: "Зам. Шефа"
+                    },
+                    {
+                        text: "Шеф"
                     },
                     {
                         text: "Бронежилет"
@@ -1687,7 +1700,7 @@ var selectMenu = new Vue({
             },
             "lssdStorage": {
                 name: "lssdStorage",
-                header: "Склад LSSD",
+                header: "Склад BCSD",
                 items: [{
                         text: "Раздевалка",
                     },
@@ -1732,15 +1745,27 @@ var selectMenu = new Vue({
             },
             "lssdClothes": {
                 name: "lssdClothes",
-                header: "Раздевалка LSSD",
+                header: "Раздевалка BCSD",
                 items: [{
-                        text: "Форма офицера №1"
+                        text: "Кадет"
                     },
                     {
-                        text: "Форма SWAT"
+                        text: "Deputy Sheriff №1"
                     },
                     {
-                        text: "Форма офицера №2"
+                        text: "Deputy Sheriff №2"
+                    },
+                    {
+                        text: "Спец. Отдел"
+                    },
+                    {
+                        text: "Мотопатруль"
+                    },
+                    {
+                        text: "Зам. Шефа"
+                    },
+                    {
+                        text: "Шеф"
                     },
                     {
                         text: "Бронежилет"
@@ -1769,7 +1794,7 @@ var selectMenu = new Vue({
             },
             "lssdItems": {
                 name: "lssdItems",
-                header: "Снаряжение LSSD",
+                header: "Снаряжение BCSD",
                 items: [{
                         text: "Наручники"
                     },
@@ -1796,7 +1821,7 @@ var selectMenu = new Vue({
             },
             "lssdGuns": {
                 name: "lssdGuns",
-                header: "Вооружение LSSD",
+                header: "Вооружение BCSD",
                 items: [{
                         text: "Фонарик"
                     },
@@ -1841,7 +1866,7 @@ var selectMenu = new Vue({
             },
             "lssdAmmo": {
                 name: "lssdAmmo",
-                header: "Патроны LSSD",
+                header: "Патроны BCSD",
                 items: [{
                         text: "Combat Pistol - 9mm",
                         values: ["12 шт.", "24 шт.", "32 шт."],
@@ -1929,19 +1954,22 @@ var selectMenu = new Vue({
                 name: "fibClothes",
                 header: "Раздевалка FIB",
                 items: [{
-                        text: "Форма стажера"
+                        text: "Стажер"
                     },
                     {
-                        text: "Агент"
+                        text: "Агент (деловая)"
                     },
                     {
-                        text: "Снайпер"
+                        text: "Агент (рабочая)"
                     },
                     {
-                        text: "Спец. набор №1"
+                        text: "ATF/HRT"
                     },
                     {
-                        text: "Спец. набор №2"
+                        text: "Агент №2"
+                    },
+                    {
+                        text: "Агент №3"
                     },
                     {
                         text: "Бронежилет"
@@ -2121,28 +2149,37 @@ var selectMenu = new Vue({
                 name: "armyClothes",
                 header: "Раздевалка ARMY",
                 items: [{
-                        text: "Форма рекрута"
+                        text: "Новобранец"
                     },
                     {
-                        text: "Отдел IB"
+                        text: "Сержант"
                     },
                     {
-                        text: "Отдел FZA"
+                        text: "Штаб-Сержант"
                     },
                     {
-                        text: "Отдел MLG"
+                        text: "Уоррент-Сержант"
                     },
                     {
-                        text: "Боевая форма TFB"
+                        text: "Мл. офицер"
                     },
                     {
-                        text: "Спец. набор №1"
+                        text: "Ст. офицер"
                     },
                     {
-                        text: "Армейская форма №1"
+                        text: "Парад. Офицер"
                     },
                     {
-                        text: "Армейская форма №2"
+                        text: "Ген. Штаб"
+                    },
+                    {
+                        text: "Парад. Ген. Штаб"
+                    },
+                    {
+                        text: "Пилот"
+                    },
+                    {
+                        text: "Спецназ"
                     },
                     {
                         text: "Бронежилет"
@@ -2274,6 +2311,116 @@ var selectMenu = new Vue({
                         if (e.itemName == "Вернуться") selectMenu.showByName("armyStorage");
                         else mp.trigger(`callRemote`, `army.storage.ammo.take`, values);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
+                }
+            },
+            "hospitalStorage": {
+                name: "hospitalStorage",
+                header: "Склад Hospital",
+                items: [{
+                        text: "Раздевалка",
+                    },
+                    {
+                        text: "Снаряжение"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Раздевалка') {
+                            selectMenu.showByName("hospitalClothes");
+                        } else if (e.itemName == 'Снаряжение') {
+                            selectMenu.showByName("hospitalItems");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
+            "hospitalClothes": {
+                name: "hospitalClothes",
+                header: "Раздевалка Clothes",
+                items: [{
+                        text: "Форма №1"
+                    },
+                    {
+                        text: "Форма №2"
+                    },
+                    {
+                        text: "Форма №3"
+                    },
+                    {
+                        text: "Форма №4"
+                    },
+                    {
+                        text: "Форма №5"
+                    },
+                    {
+                        text: "Форма №6"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("hospitalStorage");
+                        else mp.trigger(`callRemote`, `hospital.storage.clothes.take`, e.itemIndex);
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("hospitalStorage");
+                }
+            },
+            "hospitalItems": {
+                name: "hospitalItems",
+                header: "Снаряжение Hospital",
+                items: [{
+                        text: "Малая аптечка"
+                    },
+                    {
+                        text: "Большая аптечка"
+                    },
+                    {
+                        text: "Пластырь"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Вернуться") selectMenu.showByName("hospitalStorage");
+                        else mp.trigger(`callRemote`, `hospital.storage.items.take`, e.itemIndex);
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("hospitalStorage");
                 }
             },
             "dmvMenu": {
@@ -2509,22 +2656,202 @@ var selectMenu = new Vue({
                 name: "tuningMain",
                 header: "LS Customs",
                 items: [{
-                        text: "Покраска"
+                    text: "Ремонт кузова",
+                    values: ['$100']
+                },
+                {
+                    text: "Цвета"
+                },
+                {
+                    text: "Двигатель"
+                },
+                {
+                    text: "Тормоза"
+                },
+                {
+                    text: "Трансмиссия"
+                },
+                {
+                    text: "Подвеска"
+                },
+                {
+                    text: "Броня"
+                },
+                    // {
+                    //     text: "Турбонаддув"
+                    // },
+                    // {
+                    //     text: "Закрыть"
+                    // },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        mp.trigger('tuning.lastIndex.set', e.itemIndex);
+                        switch (e.itemName) {
+                            case 'Закрыть':
+                                mp.trigger('tuning.end');
+                                break;
+                            case 'Ремонт кузова':
+                                mp.trigger('tuning.repair');
+                                break;
+                            case 'Цвета':
+                                mp.trigger('tuning.colorMenu.show');
+                                break;
+                            case 'Двигатель':
+                                mp.trigger('tuning.engineMenu.show');
+                                break;
+                            case 'Тормоза':
+                                mp.trigger('tuning.breakMenu.show');
+                                break;
+                            case 'Трансмиссия':
+                                mp.trigger('tuning.transmissionMenu.show');
+                                break;
+                            case 'Подвеска':
+                                mp.trigger('tuning.suspensionMenu.show');
+                                break;
+                            case 'Броня':
+                                mp.trigger('tuning.armourMenu.show');
+                                break;
+                            case 'Турбонаддув':
+                                mp.trigger('tuning.turboMenu.show');
+                                break;
+                            case 'Спойлер':
+                                mp.trigger('tuning.defaultMenu.show', 'spoiler');
+                                break;
+                            case 'Передний бампер':
+                                mp.trigger('tuning.defaultMenu.show', 'frontBumper');
+                                break;
+                            case 'Задний бампер':
+                                mp.trigger('tuning.defaultMenu.show', 'rearBumper');
+                                break;
+                            case 'Пороги':
+                                mp.trigger('tuning.defaultMenu.show', 'sideSkirt');
+                                break;
+                            case 'Глушитель':
+                                mp.trigger('tuning.defaultMenu.show', 'exhaust');
+                                break;
+                            case 'Рама':
+                                mp.trigger('tuning.defaultMenu.show', 'frame');
+                                break;
+                            case 'Решетка радиатора':
+                                mp.trigger('tuning.defaultMenu.show', 'grille');
+                                break;
+                            case 'Капот':
+                                mp.trigger('tuning.defaultMenu.show', 'hood');
+                                break;
+                            case 'Крыло':
+                                mp.trigger('tuning.defaultMenu.show', 'fender');
+                                break;
+                            case 'Правое крыло':
+                                mp.trigger('tuning.defaultMenu.show', 'rightFender');
+                                break;
+                            case 'Крыша':
+                                mp.trigger('tuning.defaultMenu.show', 'roof');
+                                break;
+                            case 'Покрасочные работы':
+                                mp.trigger('tuning.defaultMenu.show', 'livery');
+                                break;
+                            case 'Колеса':
+                                mp.trigger('tuning.defaultMenu.show', 'frontWheels');
+                                break;
+
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.end');
+                    }
+                }
+            },
+            "tuningColors": {
+                name: "tuningColors",
+                header: "Покраска",
+                items: [{
+                        text: "Основной цвет",
+                        values: [],
+                        i: 0,
+                        j: 0
                     },
                     {
-                        text: "Двигатель"
+                        text: "Дополнительный цвет",
+                        values: []
                     },
                     {
-                        text: "Тормоза"
+                        text: "Покрасить",
+                        values: ['$100']
                     },
                     {
-                        text: "Трансмиссия"
+                        text: "Назад"
+                    }
+                ],
+                i: 0, // индекс выбранного пункта
+                j: 0, // индекс первого видимого пункта
+                handler(eventName) { // обработчик взаимодействия с меню
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name, // название меню
+                        itemName: item.text, // текст пункта меню
+                        itemIndex: this.i, // индекс пункта меню
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
+                        valueIndex: item.i, // индекс значения пункта меню
+                    };
+                    if (eventName == 'onItemValueChanged') {
+                        if (e.itemName == 'Основной цвет') {
+                            mp.trigger(`tuning.colors`, e.valueIndex, -1);
+                        }
+                        if (e.itemName == 'Дополнительный цвет') {
+                            mp.trigger(`tuning.colors`, -1, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.menu = cloneObj(selectMenu.menus["tuningMain"]);
+                            mp.trigger('tuning.params.set')
+                        }
+                        if (e.itemName == 'Покрасить') {
+                            mp.trigger('tuning.colors.confirm')
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningEngine": {
+                name: "tuningEngine",
+                header: "Улучшение двигателя",
+                items: [{
+                        text: "Стандарт",
+                        values: ['$100']
                     },
                     {
-                        text: "Подвеска"
+                        text: "Улучшение СУД, уровень 1",
+                        values: ['$100']
                     },
                     {
-                        text: "Броня"
+                        text: "Улучшение СУД, уровень 2",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Улучшение СУД, уровень 3",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Улучшение СУД, уровень 4",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
                     },
                 ],
                 i: 0,
@@ -2539,8 +2866,1197 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-                        
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', 11, index);
+                        }
                     }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        //mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningBreak": {
+                name: "tuningBreak",
+                header: "Улучшение тормозов",
+                items: [{
+                        text: "Стандартные тормоза",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Уличные тормоза",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Спортивные тормоза",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Гоночные тормоза",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', 12, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        //mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningTransmission": {
+                name: "tuningTransmission",
+                header: "Улучшение трансмиссии",
+                items: [{
+                        text: "Стандартная трансмиссия",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Уличная трансмиссия",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Спортивная трансмиссия",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Гоночная трансмиссия",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', 13, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                    }
+                }
+            },
+            "tuningSuspension": {
+                name: "tuningTransmission",
+                header: "Улучшение трансмиссии",
+                items: [{
+                        text: "Стандартная подвеска",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Заниженная подвеска",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Уличная подвеска",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Спортивная подвеска",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Гоночная подвеска",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.mod.set', 15, index);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                            mp.trigger('tuning.params.set')
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', 15, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningArmour": {
+                name: "tuningArmour",
+                header: "Броня",
+                items: [{
+                        text: "Нет",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Усиление брони 20%",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Усиление брони 40%",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Усиление брони 60%",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Усиление брони 80%",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Усиление брони 100%",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', 16, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        //mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningTurbo": {
+                name: "tuningTurbo",
+                header: "Турбонаддув",
+                items: [{
+                        text: "Нет",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Турбонаддув",
+                        values: ['$100']
+                    },
+                    {
+                        text: "Назад"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', 18, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        //mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "tuningDefault": {
+                name: "tuningDefault",
+                header: "",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        let index = e.itemIndex - 1;
+                        mp.trigger('tuning.mod.set', -1, index);
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('tuning.menu.show');
+                            mp.trigger('tuning.params.set')
+                        } else {
+                            let index = e.itemIndex - 1;
+                            mp.trigger('tuning.buy', -1, index);
+                        }
+                    }
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
+                        mp.trigger('tuning.menu.show');
+                        mp.trigger('tuning.params.set')
+                    }
+                }
+            },
+            "farm": {
+                name: "farm",
+                header: "Ферма",
+                items: [{
+                        text: "Работа",
+                    },
+                    {
+                        text: "О ферме",
+                    },
+                    {
+                        text: "Помощь"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Работа') {
+                            selectMenu.showByName("farmJob");
+                        } else if (e.itemName == 'О ферме') {
+                            selectMenu.showByName("farmInfo");
+                        } else if (e.itemName == 'Помощь') {
+
+                        } else if (e.itemName == 'Купить') {
+                            selectMenu.loader = true;
+                            mp.trigger(`callRemote`, `farms.buy`);
+                        } else if (e.itemName == 'Управление') {
+                            selectMenu.showByName("farmControl");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
+            "farmJob": {
+                name: "farmJob",
+                header: "Должности",
+                items: [{
+                        text: "Работник",
+                    },
+                    {
+                        text: "Фермер"
+                    },
+                    {
+                        text: "Тракторист"
+                    },
+                    {
+                        text: "Пилот"
+                    },
+                    {
+                        text: "Уволиться"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Работник') {
+                            mp.trigger(`callRemote`, `farms.job.start`, 0);
+                        } else if (e.itemName == 'Фермер') {
+                            mp.trigger(`callRemote`, `farms.job.start`, 1);
+                        } else if (e.itemName == 'Тракторист') {
+                            mp.trigger(`callRemote`, `farms.job.start`, 2);
+                        } else if (e.itemName == 'Пилот') {
+                            mp.trigger(`callRemote`, `farms.job.start`, 3);
+                        } else if (e.itemName == 'Уволиться') {
+                            mp.trigger(`callRemote`, `farms.job.stop`);
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farm");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("farm");
+                }
+            },
+            "farmInfo": {
+                name: "farmInfo",
+                header: "О ферме",
+                items: [{
+                        text: "Ферма",
+                        values: ["ID 111"],
+                    },
+                    {
+                        text: "Хозяин",
+                        values: ["Swift Slade"],
+                    },
+                    {
+                        text: "Баланс",
+                        values: ["$999"],
+                    },
+                    {
+                        text: "Налог. баланс",
+                        values: ["$999"],
+                    },
+                    {
+                        text: "Зарплата",
+                        values: ["$30"],
+                    },
+                    {
+                        text: "Премия фермера",
+                        values: ["$50"],
+                    },
+                    {
+                        text: "Премия тракториста",
+                        values: ["$70"],
+                    },
+                    {
+                        text: "Премия пилота",
+                        values: ["$80"],
+                    },
+                    {
+                        text: "Количество полей",
+                        values: ["10 ед."],
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farm");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("farm");
+                }
+            },
+            "farmControl": {
+                name: "farmControl",
+                header: "Управление фермой",
+                items: [{
+                        text: "Зерно",
+                    },
+                    {
+                        text: "Удобрение",
+                    },
+                    {
+                        text: "Урожай"
+                    },
+                    {
+                        text: "Баланс"
+                    },
+                    {
+                        text: "Зарплаты"
+                    },
+                    {
+                        text: "Продать"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Зерно') {
+                            selectMenu.showByName("farmControlGrains");
+                        } else if (e.itemName == 'Удобрение') {
+                            selectMenu.showByName("farmControlSoils");
+                        } else if (e.itemName == 'Урожай') {
+                            selectMenu.showByName("farmControlCrops");
+                        } else if (e.itemName == 'Баланс') {
+                            selectMenu.showByName("farmControlBalance");
+                        } else if (e.itemName == 'Зарплаты') {
+                            selectMenu.showByName("farmControlPays");
+                        } else if (e.itemName == 'Продать') {
+                            selectMenu.showByName("farmControlSell");
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farm");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("farm");
+
+                }
+            },
+            "farmControlGrains": {
+                name: "farmControlGrains",
+                header: "Зерно фермы",
+                items: [{
+                        text: "Цена $ за 1 ед.",
+                        values: ["999"],
+                        type: "editable"
+                    },
+                    {
+                        text: "Установить"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Установить') {
+                            var price = this.items[0].values[0];
+                            if (isNaN(price)) return notifications.push(`error`, `Требуется число`);
+                            mp.trigger(`callRemote`, `farms.grains.price.set`, parseInt(price));
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmControl");
+                        }
+                    } else if (eventName == 'onBackspacePressed' && this.i != 0)
+                        selectMenu.showByName("farmControl");
+                }
+            },
+            "farmControlSoils": {
+                name: "farmControlSoils",
+                header: "Удобрение фермы",
+                items: [{
+                        text: "Цена $ за 1 ед.",
+                        values: ["999"],
+                        type: "editable"
+                    },
+                    {
+                        text: "Установить"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Установить') {
+                            var price = this.items[0].values[0];
+                            if (isNaN(price)) return notifications.push(`error`, `Требуется число`);
+                            mp.trigger(`callRemote`, `farms.soils.price.set`, parseInt(price));
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmControl");
+                        }
+                    } else if (eventName == 'onBackspacePressed' && this.i != 0)
+                        selectMenu.showByName("farmControl");
+                }
+            },
+            "farmControlCrops": {
+                name: "farmControlCrops",
+                header: "Урожай фермы",
+                items: [{
+                        text: "Тип урожая",
+                        values: ["Урожай А", "Урожай Б", "Урожай С"],
+                    },
+                    {
+                        text: "Цена $ за 1 ед.",
+                        values: ["999"],
+                        type: "editable"
+                    },
+                    {
+                        text: "Установить"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Установить') {
+                            var field = this.items[0].i;
+                            var price = this.items[1].values[0];
+                            if (isNaN(price)) return notifications.push(`error`, `Требуется число`);
+                            var data = {
+                                price: parseInt(price),
+                                field: field
+                            };
+                            mp.trigger(`callRemote`, `farms.crops.price.set`, JSON.stringify(data));
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmControl");
+                        }
+                    } else if (eventName == 'onBackspacePressed' && this.i != 1)
+                        selectMenu.showByName("farmControl");
+                }
+            },
+            "farmControlBalance": {
+                name: "farmControlBalance",
+                header: "Баланс фермы",
+                items: [{
+                        text: "Тип баланса",
+                        values: ["Основной", "Налог"],
+                    },
+                    {
+                        text: "Сумма $",
+                        values: ["0"],
+                        type: "editable"
+                    },
+                    {
+                        text: "Установить"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Установить') {
+                            var balance = this.items[0].i;
+                            var sum = this.items[1].values[0];
+                            if (isNaN(sum)) return notifications.push(`error`, `Требуется число`);
+                            var data = {
+                                sum: parseInt(sum),
+                                balance: balance
+                            };
+                            selectMenu.loader = true;
+                            mp.trigger(`callRemote`, `farms.balance.set`, JSON.stringify(data));
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmControl");
+                        }
+                    } else if (eventName == 'onBackspacePressed' && this.i != 1)
+                        selectMenu.showByName("farmControl");
+                }
+            },
+            "farmControlPays": {
+                name: "farmControlPays",
+                header: "Зарплаты фермы",
+                items: [{
+                        text: "Должность",
+                        values: ["Работник", "Фермер", "Тракторист", "Пилот"],
+                    },
+                    {
+                        text: "Сумма $",
+                        values: ["0"],
+                        type: "editable"
+                    },
+                    {
+                        text: "Установить"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Установить') {
+                            var job = this.items[0].i;
+                            var sum = this.items[1].values[0];
+                            if (isNaN(sum)) return notifications.push(`error`, `Требуется число`);
+                            var data = {
+                                sum: parseInt(sum),
+                                job: job
+                            };
+                            mp.trigger(`callRemote`, `farms.pay.set`, JSON.stringify(data));
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmControl");
+                        }
+                    } else if (eventName == 'onBackspacePressed' && this.i != 1)
+                        selectMenu.showByName("farmControl");
+                }
+            },
+            "farmControlSell": {
+                name: "farmControlSell",
+                header: "Продажа фермы",
+                items: [{
+                        text: "В штат",
+                        values: ["$999"],
+                    },
+                    {
+                        text: "Игроку",
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'В штат') {
+                            selectMenu.loader = true;
+                            mp.trigger(`callRemote`, `farms.sell.state`);
+                        } else if (e.itemName == 'Игроку') {
+                            selectMenu.showByName("farmControlSellToPlayer");
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmControl");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("farmControl");
+                }
+            },
+            "farmControlSellToPlayer": {
+                name: "farmControlSellToPlayer",
+                header: "Продажа фермы игроку",
+                items: [{
+                        text: "ID игрока",
+                        values: [""],
+                        type: "editable",
+                    },
+                    {
+                        text: "Сумма $",
+                        values: [""],
+                        type: "editable",
+                    },
+                    {
+                        text: "Предложить"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'В штат') {
+                            selectMenu.showByName("farmControlSellToState");
+                        } else if (e.itemName == 'Игроку') {
+                            selectMenu.showByName("farmControlSellToPlayer");
+                        } else if (e.itemName == 'Предложить') {
+                            var playerId = this.items[0].values[0];
+                            var sum = this.items[1].values[0];
+                            if (isNaN(playerId) || isNaN(sum)) return notifications.push(`error`, `Требуется число`);
+                            if (playerId < 0 || sum <= 0) return notifications.push(`error`, `Требуется положительное число`);
+                            var data = {
+                                playerId: parseInt(this.items[0].values[0]),
+                                sum: parseInt(this.items[1].values[0]),
+                            };
+                            mp.trigger(`callRemote`, `farms.sell.player`, JSON.stringify(data))
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmControlSell");
+                        }
+                    } else if (eventName == 'onBackspacePressed' && this.i > 1)
+                        selectMenu.showByName("farmControlSell");
+                }
+            },
+            "farmWarehouse": {
+                name: "farmWarehouse",
+                header: "Склад фермы",
+                items: [{
+                        text: "Зерно",
+                    },
+                    {
+                        text: "Урожай"
+                    },
+                    {
+                        text: "О складе"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Зерно') {
+                            selectMenu.showByName("farmGrains");
+                        } else if (e.itemName == 'Урожай') {
+                            selectMenu.showByName("farmProducts");
+                        } else if (e.itemName == 'О складе') {
+                            selectMenu.showByName("farmWarehouseInfo");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
+            "farmWarehouseInfo": {
+                name: "farmWarehouseInfo",
+                header: "О складе",
+                items: [{
+                        text: "Зерно",
+                        values: ["9999 из 9999 ед. ($999)"],
+                    },
+                    {
+                        text: "Урожай А",
+                        values: ["9999 из 9999 ед. ($999)"],
+                    },
+                    {
+                        text: "Урожай Б",
+                        values: ["9999 из 9999 ед. ($999)"],
+                    },
+                    {
+                        text: "Урожай С",
+                        values: ["9999 из 9999 ед. ($999)"],
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmWarehouse");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("farmWarehouse");
+                }
+            },
+            "farmGrains": {
+                name: "farmGrains",
+                header: "Зерно",
+                items: [{
+                        text: "Загрузка",
+                    },
+                    {
+                        text: "Продажа"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Загрузка') {
+                            selectMenu.showByName("farmGrainsTake");
+                        } else if (e.itemName == 'Продажа') {
+                            selectMenu.showByName("farmGrainsSell");
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmWarehouse");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("farmWarehouse");
+                }
+            },
+            "farmGrainsTake": {
+                name: "farmGrainsTake",
+                header: "Загрузка зерна",
+                items: [{
+                        text: "Участок",
+                        values: ["Поле №1", "Поле №2", "Поле №3", "Поле №4"],
+                    },
+                    {
+                        text: "Тип зерна",
+                        values: ["Урожай А", "Урожай Б", "Урожай С"],
+                    },
+                    {
+                        text: "Загрузить",
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Загрузить') {
+                            var data = {
+                                field: this.items[0].i,
+                                grain: this.items[1].i,
+                            };
+                            mp.trigger(`callRemote`, `farms.warehouse.grains.take`, JSON.stringify(data));
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmGrains");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("farmGrains");
+                }
+            },
+            "farmGrainsSell": {
+                name: "farmGrainsSell",
+                header: "Продажа зерна",
+                items: [{
+                        text: "Количество",
+                        values: ["1 ед.", "2 ед.", "3 ед."],
+                    },
+                    {
+                        text: "Продать",
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Продать') {
+
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmGrains");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("farmGrains");
+                }
+            },
+            "farmProducts": {
+                name: "farmProducts",
+                header: "Урожай",
+                items: [{
+                        text: "Выгрузка",
+                    },
+                    {
+                        text: "Покупка"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Выгрузка') {
+                            selectMenu.showByName("farmProductsFill");
+                        } else if (e.itemName == 'Покупка') {
+                            selectMenu.showByName("farmProductsBuy");
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmWarehouse");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("farmWarehouse");
+                }
+            },
+            "farmProductsFill": {
+                name: "farmProductsFill",
+                header: "Выгрузка урожая",
+                items: [{
+                        text: "Выгрузить",
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Выгрузить') {
+                            mp.trigger(`callRemote`, `farms.warehouse.products.fill`);
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmProducts");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("farmProducts");
+                }
+            },
+            "farmProductsBuy": {
+                name: "farmProductsBuy",
+                header: "Покупка урожая",
+                items: [{
+                        text: "Урожай",
+                        values: ["Урожай А", "Урожай Б", "Урожай С"],
+                    },
+                    {
+                        text: "Количество",
+                        values: ["1 ед.", "2 ед.", "3 ед."],
+                    },
+                    {
+                        text: "Купить"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Купить') {
+
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmProducts");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("farmProducts");
+                }
+            },
+            "farmSoilsWarehouse": {
+                name: "farmSoilsWarehouse",
+                header: "Склад с удобрением",
+                items: [{
+                        text: "Загрузить",
+                    },
+                    {
+                        text: "Выгрузить"
+                    },
+                    {
+                        text: "О складе"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Загрузить') {
+                            mp.trigger(`callRemote`, `farms.soilsWarehouse.take`);
+                        } else if (e.itemName == 'Выгрузить') {
+
+                        } else if (e.itemName == 'О складе') {
+                            selectMenu.showByName("farmSoilsWarehouseInfo");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
+            "farmSoilsWarehouseInfo": {
+                name: "farmSoilsWarehouseInfo",
+                header: "О складе",
+                items: [{
+                        text: "Удобрение",
+                        values: [`9999 из 9999 ед.`],
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("farmSoilsWarehouse")
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("farmSoilsWarehouse");
                 }
             },
         },
@@ -2641,12 +4157,43 @@ var selectMenu = new Vue({
             if (!item) return;
             Vue.set(item, 'values', values);
         },
+        setItems(menuName, items) {
+            if (typeof items == 'string') items = JSON.parse(items);
+            var menu = this.menus[menuName];
+            if (!menu) return;
+            Vue.set(menu, 'items', items);
+        },
         getItemByName(name, items) {
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
                 if (item.text == name) return item;
             }
             return null;
+        },
+        addItem(menuName, item, index) {
+            var menu = this.menus[menuName];
+            if (!menu) return;
+            if (typeof item == 'string') item = JSON.parse(item);
+            if (this.getItemByName(item.text, menu.items)) return;
+            if (item.i == null) Vue.set(item, 'i', 0);
+            if (item.j == null) Vue.set(item, 'j', 0);
+            if (!item.values) Vue.set(item, 'values', [""]);
+
+            menu.items.splice(index, 0, item);
+            menu.i = 0;
+            menu.j = 0;
+        },
+        deleteItem(menuName, itemName) {
+            var menu = this.menus[menuName];
+            if (!menu) return;
+            var items = menu.items;
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                if (item.text == itemName) {
+                    items.splice(i, 1);
+                    i--;
+                }
+            }
         },
         // open() {
         //     this.menu.i = 0; // TEMP, нужно разобраться, почему i/j остаются прежними при закрытии/открытии меню

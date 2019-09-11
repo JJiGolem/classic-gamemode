@@ -109,6 +109,40 @@ var offerDialog = new Vue({
                     mp.trigger("callRemote", "factions.invite.cancel");
                 },
             },
+            "hospital_healing": {
+                text: `Carter Slade предлагает вам лечение`,
+                price: 100,
+                on(values) {
+                    this.text = `${values.name} предлагает вам лечение`;
+                    this.price = values.price;
+                },
+                yes() {
+                    mp.trigger("callRemote", "hospital.healing.accept");
+                },
+                no() {
+                    mp.trigger("callRemote", "hospital.healing.cancel");
+                },
+                ignore() {
+                    mp.trigger("callRemote", "hospital.healing.cancel");
+                },
+            },
+            "farm_sell": {
+                text: `Carter Slade предлагает вам купить Ферму #99`,
+                price: 999,
+                on(values) {
+                    this.text = `${values.name} предлагает вам купить Ферму #${values.farmId}`;
+                    this.price = values.price;
+                },
+                yes() {
+                    mp.trigger("callRemote", "farms.sell.player.accept");
+                },
+                no() {
+                    mp.trigger("callRemote", "farms.sell.player.cancel");
+                },
+                ignore() {
+                    mp.trigger("callRemote", "farms.sell.player.cancel");
+                },
+            },
         },
         dialog: null,
         timeout: null,
@@ -137,6 +171,7 @@ var offerDialog = new Vue({
         let self = this;
         window.addEventListener('keyup', function (e) {
             if (!self.dialog) return;
+            if (busy.includes(["chat", "terminal", "mapCase", "phone"])) return;
             if (e.keyCode == 89) { // Y
                 self.dialog.yes();
                 self.hide();

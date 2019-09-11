@@ -125,20 +125,30 @@ module.exports = {
             }, 20000);
         }
     },
-    "/update": {
+    "/branch": {
         access: 6,
-        description: "Обновить мод до выбранной ветки",
+        description: "Обновить мод до выбранной ветки.",
         args: "[название ветки]",
-        handler: (player, args) => {
+        handler: (player, args, out) => {
 
             var exec = require("exec");
             exec(`cd ${__dirname} && git clean -d -f && git stash && git checkout ${args[0]} && git pull`, (error, stdout, stderr) => {
                 if (error) console.log(stderr);
                 console.log(stdout);
-
-                mp.players.forEach((current) => {
-                    current.call('chat.message.push', [`!{#edffc2}${player.name} запустил обновление сервера`]);
-                });
+                // out.info(`${player.name} запустил обновление сервера`);
+            });
+        }
+    },
+    "/update": {
+        access: 6,
+        description: "Обновить текущую ветку.",
+        args: "",
+        handler: (player, args, out) => {
+            var exec = require("exec");
+            exec(`cd ${__dirname} && git clean -d -f && git stash && git pull`, (error, stdout, stderr) => {
+                if (error) console.log(stderr);
+                console.log(stdout);
+                out.info(`${player.name} запустил обновление сервера`);
             });
         }
     },
@@ -146,14 +156,14 @@ module.exports = {
         access: 4,
         description: "Заспавнить транспорт",
         args: "[название т/c] [ID цвета #1] [ID цвета #2]",
-        handler: (player, args) => {
+        handler: async (player, args) => {
             if (vehicles != null) {
                 let veh = {
                     modelName: args[0],
                     x: player.position.x,
                     y: player.position.y + 2,
                     z: player.position.z,
-                    spawnHeading: player.heading,
+                    h: player.heading,
                     color1: parseInt(args[1]),
                     color2: parseInt(args[2]),
                     license: 0,
@@ -162,10 +172,39 @@ module.exports = {
                     fuel: 40,
                     mileage: 0,
                     plate: vehicles.generateVehiclePlate(),
-                    //multiplier: 1
+                    destroys: 0
                 }
-                veh = vehicles.spawnVehicle(veh);
+                veh = await vehicles.spawnVehicle(veh);
                 mp.events.call("admin.notify.all", `!{#e0bc43}[A] ${player.name} создал транспорт ${veh.modelName}`);
+            }
+        }
+    },
+    "/mvehs": {
+        access: 6,
+        description: "Заспавнить N машин [for test]",
+        args: "[количество]",
+        handler: async (player, args) => {
+            if (vehicles != null) {
+                for (let i = 0; i < parseInt(args[0]); i++) {
+                    let veh = {
+                        modelName: 'cheburek',
+                        x: 0,
+                        y: 0,
+                        z: 0,
+                        h: 0,
+                        color1: parseInt(args[1]),
+                        color2: parseInt(args[2]),
+                        license: 0,
+                        key: "admin",
+                        owner: 0,
+                        fuel: 40,
+                        mileage: 0,
+                        plate: vehicles.generateVehiclePlate(),
+                        destroys: 0
+                    }
+                    veh = await vehicles.spawnVehicle(veh);
+                }
+                mp.events.call("admin.notify.all", `!{#e0bc43}[A] ${player.name} создал ${args[0]} чебуреков`);
             }
         }
     },
@@ -176,6 +215,36 @@ module.exports = {
         handler: (player, args) => {
             player.call('chat.message.push', [`!{#ffffff} ${player.position.x} ${player.position.y} ${player.position.z}`]);
             console.log(`${player.position.x} ${player.position.y} ${player.position.z}`);
+        }
+    },
+    "/timers": {
+        access: 5,
+        description: "создать N таймеров",
+        args: "[count] [ms]",
+        handler: (player, args) => {
+            for (let i = 0; i < parseInt(args[0]); i++) {
+                setInterval(() => {
+                    let i = 1 + 1;
+                }, parseInt(args[1]));
+            }
+        }
+    },
+    "/vcount": {
+        access: 5,
+        description: "Вывести кол-во машин на сервере",
+        args: "",
+        handler: (player, args, out) => {
+            let private = mp.vehicles.toArray().filter(x => x.key == 'private');
+            let admin = mp.vehicles.toArray().filter(x => x.key == 'admin');
+            let faction = mp.vehicles.toArray().filter(x => x.key == 'faction');
+            let market = mp.vehicles.toArray().filter(x => x.key == 'market');
+            let newbie = mp.vehicles.toArray().filter(x => x.key == 'newbie');
+            out.info(`Всего транспорта: ${mp.vehicles.length}`, player);
+            out.info(`Личные: ${private.length}`, player);
+            out.info(`Админские: ${admin.length}`, player);
+            out.info(`Фракционные: ${faction.length}`, player);
+            out.info(`Авторынок: ${market.length}`, player);
+            out.info(`Для новичков: ${newbie.length}`, player);
         }
     },
     "/tpos": {
@@ -283,7 +352,8 @@ module.exports = {
             console.log(`${player.heading}`);
             if (player.vehicle) {
                 player.call('chat.message.push', [`!{#ffffff} ${player.vehicle.heading}`]);
-                console.log(`veh= ${player.vehicle.heading}`);
+                console.log(`veh heading = ${player.vehicle.heading}`);
+                console.log(`veh rotation = ${JSON.stringify(player.vehicle.rotation)}`);
             }
         }
     },
@@ -310,6 +380,14 @@ module.exports = {
         args: "",
         handler: (player) => {
             console.log(player)
+        }
+    },
+    "/vinfo": {
+        access: 6,
+        description: "Логировать авто в консоль",
+        args: "",
+        handler: (player) => {
+            console.log(player.vehicle)
         }
     },
     "/getpos": {
@@ -405,6 +483,18 @@ module.exports = {
             if (isNaN(dim)) return;
             player.dimension = dim;
             notify.info(player, `Установлено измерение: ${dim}`);
+        }
+    },
+    "/sethp": {
+        description: "Изменить кол-во здоровья игроку.",
+        access: 4,
+        args: "[ид_игрока]:n [здоровье]:n",
+        handler: (player, args, out) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            rec.health = Math.clamp(args[1], 0, 100);
+            out.info(`Игроку ${rec.name} установлено ${rec.health} ед. здоровья`, player);
+            notify.info(rec, `${player.name} установил вам ${rec.health} ед. здоровья`);
         }
     },
 }

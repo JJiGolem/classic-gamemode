@@ -7,7 +7,9 @@ module.exports = {
         description: "Надеть/снять наручники.",
         args: "[ид_игрока]:n",
         handler: (player, args, out) => {
-            mp.events.call(`police.cuffs`, player, args[0]);
+            mp.events.call(`police.cuffs`, player, {
+                recId: args[0]
+            });
         }
     },
     "/pfollow": {
@@ -29,7 +31,7 @@ module.exports = {
 
             notifs.info(rec, `${player.name} посадил вас на ${mins} минут`, `КПЗ`);
             out.info(`${player.name} посадил ${rec.name} в КПЗ на ${mins} минут`);
-            police.startCellArrest(player, null, mins * 60 * 1000);
+            police.startCellArrest(rec, null, mins * 60 * 1000);
         }
     },
     "/pjailarrest": {
@@ -54,7 +56,7 @@ module.exports = {
             var rec = mp.players.at(args[0]);
             if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
             if (rec.character.wanted == args[1]) return out.error(`${rec.name} уже имеет ${args[1]} ур. розыска`, player);
-            police.setWanted(player, args[1]);
+            police.setWanted(rec, args[1]);
 
             notifs.success(player, `${rec.name} имеет ${rec.character.wanted} ур.`, `Розыск`);
             notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур.`, `Розыск`);

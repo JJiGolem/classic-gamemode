@@ -8,8 +8,7 @@ var interactionMenu = new Vue({
         menus: {
             "vehicle": {
                 name: "vehicle", // название меню
-                items: [
-                    {
+                items: [{
                         text: "Двери",
                         icon: "key.png"
                     },
@@ -44,8 +43,7 @@ var interactionMenu = new Vue({
             },
             "vehicle_inside": {
                 name: "vehicle_inside", // название меню
-                items: [
-                    {
+                items: [{
                         text: "Двери",
                         icon: "key.png"
                     },
@@ -76,8 +74,7 @@ var interactionMenu = new Vue({
             },
             "vehicle_ejectlist": {
                 name: "vehicle_ejectlist",
-                items: [
-                ],
+                items: [],
                 handler(index) {
                     var item = this.items[index];
                     mp.trigger(`interaction.eject`, index);
@@ -86,8 +83,7 @@ var interactionMenu = new Vue({
             },
             "player_ownmenu": {
                 name: "player_ownmenu",
-                items: [
-                    {
+                items: [{
                         text: "Мои документы",
                         icon: "doc.png"
                     },
@@ -128,16 +124,17 @@ var interactionMenu = new Vue({
                         //mp.trigger(`interaction.menu.close`);
                         interactionMenu.show = false;
                         mp.trigger(`interaction.money.show`);
-                       
+
                     } else if (item.text == 'Организация') {
-                        // TODO: ...
+                        interactionMenu.menu = interactionMenu.menus["faction"];
+                    } else if (item.text == 'Police') {
+                        interactionMenu.menu = interactionMenu.menus["police"];
                     }
                 }
             },
             "player_docs": {
                 name: "player_docs",
-                items: [
-                    {
+                items: [{
                         text: "Паспорт",
                         icon: "doc.png"
                     },
@@ -188,8 +185,7 @@ var interactionMenu = new Vue({
             },
             "faction": {
                 name: "faction",
-                items: [
-                    {
+                items: [{
                         text: "Пригласить",
                     },
                     {
@@ -205,7 +201,51 @@ var interactionMenu = new Vue({
                     interactionMenu.show = false;
                 }
             },
-        }
+            "police": {
+                name: "police",
+                items: [{
+                        text: "Наручники",
+                    },
+                    {
+                        text: "Розыск",
+                    },
+                    {
+                        text: "Арест",
+                    },
+                    {
+                        text: "Следование",
+                    },
+                    {
+                        text: "Лиц. на оружие",
+                    },
+                    {
+                        text: "В авто",
+                    },
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    if (item.text == 'Лиц. на оружие') return interactionMenu.showByName("police_gunlicense");
+                    interactionMenu.show = false;
+                    mp.trigger(`interactionMenu.onClick`, this.name, item.text);
+                }
+            },
+            "police_gunlicense": {
+                name: "police_gunlicense",
+                items: [{
+                        text: "Выдать",
+                    },
+                    {
+                        text: "Изъять",
+                    },
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    mp.trigger(`interactionMenu.onClick`, this.name, item.text);
+                    interactionMenu.show = false;
+                }
+            },
+        },
+        faction: null,
     },
     methods: {
         imgSrc(index) {
@@ -215,15 +255,57 @@ var interactionMenu = new Vue({
         },
         onClick(index) {
             this.menu.handler(index);
+        },
+        showByName(name) {
+            var menu = this.menus[name];
+            if (!menu) return;
+            this.menu = menu;
+            this.show = true;
+        },
+        addItems(menuName, items) {
+            if (typeof items == 'string') items = JSON.parse(items);
+            if (!Array.isArray(items)) items = [items];
+            var menu = this.menus[menuName];
+            if (!menu) return;
+            items.forEach(item => {
+                this.deleteItem(menuName, item.text);
+                menu.items.push(item);
+            });
+        },
+        deleteItem(menuName, itemText) {
+            var menu = this.menus[menuName];
+            if (!menu) return;
+            for (var i = 0; i < menu.items.length; i++) {
+                var item = menu.items[i];
+                if (item.text == itemText) {
+                    menu.items.splice(i, 1);
+                    i--;
+                }
+            }
+        },
+    },
+    watch: {
+        // show(val) {
+        //     setCursor(val);
+        //     if (val) busy.add("interaction", true);
+        //     else busy.remove("interaction", true);
+        // },
+        faction(val) {
+            if (!val) {
+                this.deleteItem("player_interaction", "Организация");
+                this.deleteItem("player_interaction", "Police");
+                return;
+            }
+            this.addItems("player_interaction", {
+                text: "Организация"
+            });
+            if (val == 2 || val == 3) { // police
+                this.addItems("player_interaction", {
+                    text: "Police"
+                });
+            } else this.deleteItem("player_interaction", "Police");
         }
     },
-    // watch: {
-    //     show(val) {
-    //         setCursor(val);
-    //         if (val) busy.add("interaction", true);
-    //         else busy.remove("interaction", true);
-    //     }
-    // },
 });
 
 // for tests

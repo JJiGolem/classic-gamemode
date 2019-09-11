@@ -13,7 +13,7 @@ module.exports = {
     },
     handleCommand(player, cmdName, cmdArgs) {
         if (!this.haveAccess(player)) return notifs.error(player, `Доступ запрещен`, "Терминал");
-        // if (cmdName == "help") return helpCmdHandler(player, cmdArgs);
+        if (cmdName == "help") return this.helpCmdHandler(player, cmdArgs);
         var cmd = this.commands["/" + cmdName];
         if (!cmd) return this.error(`Команда "${cmdName}" не найдена. Введите "help" для просмотра всех команд.`, player);
         if (cmd.args.length > 0) {
@@ -29,13 +29,48 @@ module.exports = {
         if (player.character.admin < cmd.access) return this.warning(`Вам недоступна эта команда. Введите "help [name]" для ознакомления`, player);
         cmd.handler(player, cmdArgs, this);
     },
+    helpCmdHandler(player, cmdArgs) {
+        if (cmdArgs.length > 0) {
+            if (parseInt(cmdArgs[0]) >= 0) {
+                var level = parseInt(cmdArgs[0]);
+                if (level > player.character.admin) return this.error(`Отказано в доступе`, player);
+                var text = `${level} уровень администратора:<br/>`;
+                var count = 0;
+                for (var name in this.commands) {
+                    var cmd = this.commands[name];
+                    if (cmd.access != level) continue;
+                    count++;
+                    text += `<b>${name}</b> <i>${cmd.args}</i> - ${cmd.description}<br/>`;
+                }
+                text += `<br/>Всего команд: ${count} шт.<br/>Введите "help [name]" или "help [level]" для ознакомления с командой`;
+                return this.log(text, player);
+            }
+            var cmdName = cmdArgs[0];
+            var cmd = this.commands["/" + cmdName];
+            if (!cmd) return this.error(`Команда "${cmdName}" не найдена`, player);
+            var message = `${cmdName} ${cmd.args} - ${cmd.description}<br/>Мин. уровень: ${cmd.access}`;
+            this.log(message, player);
+        } else {
+            var text = "";
+            for (var name in this.commands) {
+                var cmd = this.commands[name];
+                if (cmd.access > player.character.admin) continue;
+                text += `<b>${name}</b> ${cmd.args} (${cmd.access} lvl.) - ${cmd.description}<br/>`;
+            }
+            var keys = Object.keys(this.commands);
+            text += `<br/>Всего команд: ${keys.length} шт.<br/>Введите "help [name]" или "help [level]" для ознакомления с командой`;
+            this.log(text, player);
+        }
+    },
     isValidArg(type, arg) {
         if (type == "n") return !isNaN(arg) && arg.length > 0;
         if (type == "s") return arg && arg.length > 0;
+        if (type == "b") return !isNaN(arg) && (arg == 0 || arg == 1);
         return false;
     },
     toValidArg(type, arg) {
         if (type == "n") return parseFloat(arg);
+        if (type == "b") return arg == 1 ? true : false;
         return arg;
     },
     log(text, player) {
@@ -57,6 +92,7 @@ module.exports = {
         if (player) return player.call(`terminal.push`, [type, text]);
 
         mp.players.forEach((rec) => {
+            if (!rec.character) return;
             if (this.haveAccess(rec)) rec.call(`terminal.push`, [type, text]);
         });
     },

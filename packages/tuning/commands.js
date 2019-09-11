@@ -27,5 +27,11 @@ module.exports = {
             player.call('mods.label', [parseInt(args[0]), parseInt(args[1])]);
         }
     },
+    "/getmod": {
+        access: 6,
+        handler: (player, args) => {
+            player.call('mods.get', [parseInt(args[0])]);
+        }
+    },
 }
 

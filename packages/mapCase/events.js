@@ -5,7 +5,14 @@ var mapCase = require('./index');
 var notifs = require('../notifications');
 var police = require('../police');
 var utils = require('../utils');
-
+var out = {
+    error(player, text) {
+        player.call(`mapCase.message.red.show`, [text]);
+    },
+    success(player, text) {
+        player.call(`mapCase.message.green.show`, [text]);
+    }
+};
 module.exports = {
     "init": async () => {},
     "characterInit.done": (player) => {
@@ -28,7 +35,7 @@ module.exports = {
     },
     "mapCase.pd.searchByPhone": async (player, number) => {
         // console.log(`searchByPhone: ${number}`)
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
+        if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
         var characters = await db.Models.Character.findAll({
             attributes: ['id', 'name'],
             limit: 20,
@@ -48,7 +55,7 @@ module.exports = {
     },
     "mapCase.pd.searchByName": async (player, name) => {
         // console.log(`searchByName: ${name}`)
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
+        if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
         var characters = await db.Models.Character.findAll({
             attributes: ['id', 'name'],
             where: {
@@ -64,7 +71,7 @@ module.exports = {
     },
     "mapCase.pd.searchByCar": async (player, plate) => {
         // console.log(`searchByCar: ${plate}`)
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
+        if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
         var vehicles = await db.Models.Vehicle.findAll({
             attributes: ['owner'],
             where: {
@@ -89,10 +96,10 @@ module.exports = {
         player.call(`mapCase.pd.resultData.set`, [result]);
     },
     "mapCase.pd.searchById": async (player, recId) => {
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
+        if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
         var header = `Установление личности`;
         var rec = mp.players.at(recId);
-        if (!rec) return player.call(`mapCase.message.red.show`, [`Игрок <span>#${recId}</span> не найден`]);
+        if (!rec) return out.error(player, `Игрок <span>#${recId}</span> не найден`);
 
         var vehicles = await db.Models.Vehicle.findAll({
             where: {
@@ -105,7 +112,7 @@ module.exports = {
     },
     "mapCase.pd.getProfile": async (player, id) => {
         // console.log(`getProfile: ${id}`)
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
+        if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
         var character = await db.Models.Character.findByPk(id, {
             attributes: ['id', 'name', 'gender', 'wanted', 'wantedCause'],
             include: [db.Models.Phone, db.Models.House, db.Models.Faction, db.Models.FactionRank],
@@ -120,7 +127,7 @@ module.exports = {
         player.call(`mapCase.pd.profileData.set`, [result]);
     },
     "mapCase.pd.fines.give": async (player, data) => {
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
+        if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
         data = JSON.parse(data);
 
         var fine = await db.Models.Fine.create({
@@ -134,10 +141,10 @@ module.exports = {
 
         notifs.info(rec, `${player.name} выписал вам штраф на сумму $${fine.price} (${fine.cause})`, `Штраф`);
         var text = `Штраф на сумму <span>${fine.price}$</span><br/>выдан <span>${data.recName}</span><br/> по причине <span>${data.cause}</span>`;
-        player.call(`mapCase.message.green.show`, [text]);
+        out.success(player, text);
     },
     "mapCase.pd.wanted.give": (player, data) => {
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
+        if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
         data = JSON.parse(data);
 
         var rec = mp.players.getBySqlId(data.recId);
@@ -154,7 +161,7 @@ module.exports = {
         });
         notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур. розыска (${data.cause})`, `Розыск`);
         var text = `Уровень розыска <span>${data.wanted}&#9733;</span><br/>выдан <span>${data.recName}</span><br/> по причине <span>${data.cause}</span>`;
-        player.call(`mapCase.message.green.show`, [text]);
+        out.success(player, text);
     },
     "mapCase.pd.calls.add": (player, description) => {
         mapCase.addPoliceCall(player, description);
@@ -164,72 +171,78 @@ module.exports = {
     },
     "mapCase.pd.calls.accept": (player, id) => {
         // console.log(`calls.accept: ${player.name} ${id}`)
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
+        if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
         var header = `Вызов полиции`;
         var rec = mp.players.getBySqlId(id);
-        if (!rec) return notifs.error(player, `Игрок #${id} оффлайн`, header);
+        if (!rec) return out.error(player, `Игрок #${id} оффлайн`);
         var accepted = mapCase.acceptPoliceCall(id);
-        if (!accepted) return notifs.error(player, `Вызов #${id} принят другим полицейским`, header);
+        if (!accepted) return out.error(player, `Вызов #${id} принят другим полицейским`);
         notifs.success(rec, `${player.name} принял ваш вызов, оставайтесь на месте`, header);
         var text = `Вы приняли вызов от <br/><span>${rec.name}</span>`;
-        player.call(`mapCase.message.green.show`, [text]);
+        out.success(player, text);
         player.call(`waypoint.set`, [rec.position.x, rec.position.y]);
     },
     "mapCase.pd.rank.raise": (player, recId) => {
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
-        if (!factions.canGiveRank(player)) return notifs.error(player, `Недостаточно прав`, `Police`);
+        if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
+        if (!factions.canGiveRank(player)) return out.error(player, `Недостаточно прав`);
         var header = `Повышение`;
         var rec = mp.players.getBySqlId(recId);
-        if (!rec) return notifs.error(player, `Игрок #${recId} оффлайн`, header);
+        if (!rec) return out.error(player, `Игрок #${recId} оффлайн`);
+        if (rec.id == player.id) return out.error(player, `Нельзя повысить себя`, header);
         var max = factions.getMaxRank(rec.character.factionId);
-        if (rec.character.factionRank >= max.id) return notifs.error(player, `${rec.name} имеет макс. ранг`, header);
+        if (rec.character.factionRank >= max.id) return out.error(player, `${rec.name} имеет макс. ранг`);
 
-        mapCase.setPdRank(rec, rec.character.factionRank + 1);
+        var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank + 1);
+        factions.setRank(rec.character, rank.rank);
         var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
 
         notifs.success(rec, `${player.name} повысил вас до ${rankName}`, header);
         var text = `<span>${rec.name}</span><br /> был повышен до ранга ${rankName}`;
-        player.call(`mapCase.message.green.show`, [text]);
+        out.success(player, text);
     },
     "mapCase.pd.rank.lower": (player, recId) => {
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
-        if (!factions.canGiveRank(player)) return notifs.error(player, `Недостаточно прав`, `Police`);
+        if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
+        if (!factions.canGiveRank(player)) return out.error(player, `Недостаточно прав`);
         var header = `Понижение`;
         var rec = mp.players.getBySqlId(recId);
-        if (!rec) return notifs.error(player, `Игрок #${recId} оффлайн`, header);
-        var max = factions.getMinRank(rec.character.factionId);
-        if (rec.character.factionRank <= max.id) return notifs.error(player, `${rec.name} имеет мин. ранг`, header);
+        if (!rec) return out.error(player, `Игрок #${recId} оффлайн`, header);
+        if (rec.id == player.id) return out.error(player, `Нельзя понизить себя`, header);
+        var min = factions.getMinRank(rec.character.factionId);
+        if (rec.character.factionRank <= min.id) return out.error(player, `${rec.name} имеет мин. ранг`);
 
-        mapCase.setPdRank(rec, rec.character.factionRank - 1);
+        var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank - 1);
+        factions.setRank(rec.character, rank.rank);
         var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
 
         notifs.success(rec, `${player.name} понизил вас до ${rankName}`, header);
         var text = `<span>${rec.name}</span><br /> был понижен до ранга ${rankName}`;
-        player.call(`mapCase.message.green.show`, [text]);
+        out.success(player, text);
     },
     "mapCase.pd.members.uval": (player, recId) => {
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
-        if (!factions.canUval(player)) return notifs.error(player, `Недостаточно прав`, `Police`);
+        if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
+        if (!factions.canUval(player)) return out.error(player, `Недостаточно прав`);
         var header = `Увольнение`;
         var rec = mp.players.getBySqlId(recId);
-        if (!rec) return notifs.error(player, `Игрок #${recId} оффлайн`, header);
+        if (!rec) return out.error(player, `Игрок #${recId} оффлайн`);
+        if (rec.id == player.id) return out.error(player, `Нельзя уволить себя`, header);
 
         factions.deleteMember(rec);
         notifs.info(rec, `${player.name} уволил вас`, header);
         var text = `<span>${rec.name}</span><br /> был уволен`;
-        player.call(`mapCase.message.red.show`, [text]);
+        out.success(player, text);
     },
     "mapCase.pd.emergency.call": (player) => {
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не являетесь сотрудником`, `Police`);
+        if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
         mp.players.forEach((rec) => {
             if (!rec.character) return;
             if (!factions.isPoliceFaction(rec.character.factionId)) return;
             if (rec.character.factionId != player.character.factionId) return;
 
-            chat.push(rec, `${player.name} запросил подкрепление`);
-            rec.call(`mapCase.pd.emergencyBlips.add`, [rec.name, rec.position]);
+            // chat.push(rec, `${player.name} запросил подкрепление`);
+            notifs.warning(rec, `${player.name} запросил подкрепление`, `Police`);
+            rec.call(`mapCase.pd.emergencyBlips.add`, [player.name, player.position]);
         });
-        player.call(`mapCase.message.green.show`, [`Сработал экстренный вызов`]);
+        out.success(player, `Сработал экстренный вызов`);
     },
     "playerQuit": (player) => {
         if (!player.character) return;

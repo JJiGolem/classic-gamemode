@@ -99,7 +99,7 @@ mp.utils = {
         mp.game.object.doorControl(mp.game.joaat("v_ilev_bank4door01"), -111.0, 6462.0, 32.0, false, 0.0, 0.0, 0.0);
         mp.game.object.doorControl(520341586, -14.86892, -1441.182, 31.19323, true, 0.0, 0.0, 0.01);
         mp.game.object.doorControl(-550347177, -356.0905, -134.7714, 40.01295, false, 0.0, 0.0, 0.0); /// LSC Carcer Way
-        mp.game.object.doorControl(270330101, 723.116, -1088.831, 23.23201, false, 0.0, 0.0, 0.0); /// LSC Popular Street 
+        mp.game.object.doorControl(270330101, 723.116, -1088.831, 23.23201, false, 0.0, 0.0, 0.0); /// LSC Popular Street
         mp.game.object.doorControl(-550347177, -1145.898, -1991.144, 14.18357, false, 0.0, 0.0, 0.0); /// LSC Greenwich
         mp.game.object.doorControl(-822900180, 1174.656, 2644.159, 40.50673, false, 0.0, 0.0, 0.0); /// LSC Route 68 1)
         mp.game.object.doorControl(-822900180, 1182.307, 2644.166, 40.50784, false, 0.0, 0.0, 0.0); /// LSC Route 68 2)
@@ -114,12 +114,96 @@ mp.utils = {
         mp.game.streaming.requestIpl("ex_dt1_02_office_02b");
         /// Трейлер Тревора
         mp.game.streaming.requestIpl("TrevorsTrailerTidy");
-    }
-
+    },
+    // Получить позицию капота авто
+    getHoodPosition(veh) {
+        if (!veh) return null
+        var vehPos = veh.position;
+        var hoodPos = veh.getWorldPositionOfBone(veh.getBoneIndexByName("bonnet"));
+        var hoodDist = mp.vdist(vehPos, hoodPos);
+        if (hoodDist > 10) return null;
+        return veh.getOffsetFromInWorldCoords(0, hoodDist + 2, 0);
+    },
+    // Получить позицию багажника авто
+    getBootPosition(veh) {
+        if (!veh) return null;
+        var vehPos = veh.position;
+        var bootPos = veh.getWorldPositionOfBone(veh.getBoneIndexByName("boot"));
+        var bootDist = mp.vdist(vehPos, bootPos);
+        if (bootDist > 10) return null;
+        return veh.getOffsetFromInWorldCoords(0, -bootDist - 1, 0);
+    },
+    // Получить ближ. игрока
+    getNearPlayer(pos) {
+        var nearPlayer;
+        var minDist = 99999;
+        mp.players.forEachInStreamRange((rec) => {
+            if (rec == mp.players.local) return;
+            var distance = mp.vdist(pos, rec.position);
+            if (distance < minDist) {
+                nearPlayer = rec;
+                minDist = distance;
+            }
+        });
+        return nearPlayer;
+    },
+    // Получить ближ. авто
+    getNearVehicle(pos, range = 10) {
+        var nearVehicle;
+        var minDist = 99999;
+        mp.vehicles.forEachInStreamRange((veh) => {
+            var distToVeh = mp.vdist(pos, veh.position);
+            if (distToVeh < range) {
+                var distToHood = mp.vdist(pos, this.getHoodPosition(veh));
+                var distToBoot = mp.vdist(pos, this.getBootPosition(veh));
+                var dist = Math.min(distToVeh, distToHood, distToBoot);
+                if (dist < minDist) {
+                    nearVehicle = veh;
+                    minDist = dist;
+                }
+            }
+        });
+        if (nearVehicle) nearVehicle.minDist = minDist;
+        return nearVehicle;
+    },
+    // Получить ближ. игрока/авто
+    getNearPlayerOrVehicle(pos, range = 10) {
+        var nearPlayer = this.getNearPlayer(pos);
+        var nearVehicle = this.getNearVehicle(pos);
+        if (!nearPlayer) return nearVehicle;
+        if (!nearVehicle) return nearPlayer;
+        var distToPlayer = mp.vdist(pos, nearPlayer.position);
+        if (distToPlayer <= nearVehicle.minDist) return nearPlayer;
+        else return nearVehicle;
+    },
+    // Получить ближ. объект
+    getNearObject(pos, range = 10) {
+        var nearObj;
+        var minDist = 99999;
+        mp.objects.forEach((obj) => {
+            var distance = vdist(pos, obj.position);
+            if (distance < minDist && distance < range) {
+                nearObj = obj;
+                minDist = distance;
+            }
+        });
+        return nearObj;
+    },
+    // Рисовать текст на экране
+    drawText2d(text, pos = [0.8, 0.5], color = [255, 255, 255, 255], scale = [0.3, 0.3]) {
+        mp.game.graphics.drawText(text, pos, {
+            font: 0,
+            color: color,
+            scale: scale,
+            outline: true
+        });
+    },
 };
 
 
-
+Math.clamp = function(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+}
 
 /// Вывод информации в серверную консоль
 mp.console = function(object) {

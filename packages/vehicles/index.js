@@ -2,7 +2,9 @@
 
 var dbVehicleProperties;
 var plates = [];
+let inventory = call('inventory');
 let utils = call('utils');
+let tuning = call('tuning');
 
 const MAX_BREAK_LEVEL = 2;
 let breakdownConfig = {
@@ -22,13 +24,12 @@ module.exports = {
         await this.loadCarPlates();
         mp.events.call('vehicles.loaded');
     },
-    spawnVehicle(veh, source) { /// source: 0 - спавн автомобиля из БД, 1 - респавн любого автомобиля, null - спавн админского авто и т. д.
-        let vehicle = mp.vehicles.new(veh.modelName, new mp.Vector3(veh.x, veh.y, veh.z),
-            {
-                heading: veh.h,
-                engine: false,
-                locked: false
-            });
+    async spawnVehicle(veh, source) { /// source: 0 - спавн автомобиля из БД, 1 - респавн любого автомобиля, null - спавн админского авто и т. д.
+        let vehicle = mp.vehicles.new(veh.modelName, new mp.Vector3(veh.x, veh.y, veh.z), {
+            heading: veh.h,
+            engine: false,
+            locked: false
+        });
         vehicle.setColor(veh.color1, veh.color2);
         vehicle.modelName = veh.modelName;
         vehicle.color1 = veh.color1;
@@ -71,6 +72,7 @@ module.exports = {
         if (source == 0) { /// Если авто спавнится из БД
             vehicle.sqlId = veh.id;
             vehicle.db = veh;
+            inventory.initVehicleInventory(vehicle);
         }
         if (source == 1 && veh.sqlId) { /// Если авто респавнится (есть в БД)
             vehicle.sqlId = veh.sqlId;
@@ -81,6 +83,16 @@ module.exports = {
         } else {
             vehicle.properties = veh.properties;
         }
+
+        if (veh.key == 'private' || veh.key == 'market' || veh.key == 'newbie') { // temp
+            if (!veh.tuning) {
+                await this.initTuning(vehicle);
+            } else {
+                vehicle.tuning = veh.tuning;
+            }
+            tuning.setTuning(vehicle);
+        }
+
 
         let multiplier = vehicle.multiplier;
         if (vehicle.fuelState) {
@@ -94,11 +106,11 @@ module.exports = {
 
         vehicle.consumption = vehicle.properties.consumption * multiplier;
         vehicle.fuelTick = 60000 / vehicle.consumption;
+        if (!vehicle.fuelTick || isNaN(vehicle.fuelTick)) vehicle.fuelTick = 60000;
 
         vehicle.fuelTimer = setInterval(() => {
             try {
                 if (vehicle.engine) {
-                    //console.log(`fuel tick for ${vehicle.id}`);
                     vehicle.fuel = vehicle.fuel - 1;
                     if (vehicle.fuel <= 0) {
                         vehicle.engine = false;
@@ -111,7 +123,6 @@ module.exports = {
                 console.log(err);
             }
         }, vehicle.fuelTick);
-        //console.log('FUEL TIMER: ' + vehicle.fuelTimer);
         return vehicle;
     },
     getDriver(vehicle) {
@@ -123,12 +134,28 @@ module.exports = {
     },
     respawnVehicle(veh) {
         if (!mp.vehicles.exists(veh)) return;
-        clearInterval(veh.fuelTimer);
+        console.log('respawn');
+        //let occupants = veh.getOccupants();
+        //console.log(occupants);
+        // if (occupants.length > 0) {
+        //     occupants.forEach((player) => {
+        //         try {
+        //             player.removeFromVehicle();
+        //         } catch (err) {
+        //             console.log(err);
+        //         }
+        //     });
+        // }
 
-        if (veh.key == "admin") return veh.destroy(); /// Если админская, не респавним
+        if (veh.key == "admin") { /// Если админская, не респавним
+            clearInterval(veh.fuelTimer);
+            veh.destroy();
+            return;
+        }
 
         if (veh.key == "private" && veh.isOnParking) {
             mp.events.call('parkings.vehicle.add', veh);
+            clearInterval(veh.fuelTimer);
             veh.destroy();
             return;
         }
@@ -136,15 +163,24 @@ module.exports = {
         if (veh.key == "private" && !veh.isOnParking && veh.d != 0) {
             veh.isInGarage = true;
         }
-
+        // veh.repair();
+        // veh.position = new mp.Vector3(veh.x, veh.y, veh.z);
+        // veh.rotation = new mp.Vector3(0, 0, veh.h);
+        // veh.d ? veh.dimension = veh.d : veh.dimension = 0;
+        // veh.setVariable('engine', false);
+        // veh.setVariable("leftTurnSignal", false);
+        // veh.setVariable("rightTurnSignal", false);
+        // veh.setVariable("hood", false);
+        // veh.setVariable("trunk", false);
+        clearInterval(veh.fuelTimer);
         this.spawnVehicle(veh, 1);
         veh.destroy();
     },
-    async loadVehiclesFromDB() { /// Загрузка автомобилей фракций/работ из БД 
+    async loadVehiclesFromDB() { /// Загрузка автомобилей фракций/работ из БД
         var dbVehicles = await db.Models.Vehicle.findAll({
             where: {
                 key: {
-                    [Op.or]: ["newbie", "faction", "job"]
+                    [Op.or]: ["newbie", "faction", "job", "farm"]
                 }
             }
         });
@@ -217,7 +253,11 @@ module.exports = {
             where: {
                 key: "private",
                 owner: player.character.id
-            }
+            },
+            // include: [{
+            //     model: db.Models.VehicleTuning
+            // }]
+            // }]
         });
         player.vehicleList = [];
         let temp = 0;
@@ -240,22 +280,18 @@ module.exports = {
         if (houses.isHaveHouse(player.character.id)) {
             await this.setPlayerCarPlaces(player);
         }
-        console.log(player.vehicleList);
         if (dbPrivate.length > 0) {
             let parkingVeh = dbPrivate.find(x => x.isOnParking);
 
             if (parkingVeh) {
                 mp.events.call('parkings.vehicle.add', parkingVeh);
-                //player.call('chat.message.push', [`!{#f3c800}Транспорт доставлен`]);
                 mp.events.call('parkings.notify', player, parkingVeh, 0);
             }
 
             if (houses.isHaveHouse(player.character.id)) {
-                //await this.setPlayerCarPlaces(player);
                 let length = player.carPlaces.length != 1 ? player.carPlaces.length - 1 : player.carPlaces.length;
                 for (let i = 0; i < length; i++) {
                     if (i >= dbPrivate.length) return;
-                    console.log('push')
                     if (!dbPrivate[i].isOnParking) {
                         this.spawnHomeVehicle(player, dbPrivate[i]);
                     }
@@ -284,7 +320,6 @@ module.exports = {
         let plate = letters + number.toString();
 
         if (plates.includes(plate)) return this.generateVehiclePlate();
-        console.log(`Сгенерировали номер ${plate}`);
         plates.push(plate);
         return plate;
     },
@@ -292,8 +327,7 @@ module.exports = {
         if (veh.key == 'admin') return 1;
         let multiplier = 1;
         let mileage = veh.mileage;
-        let destroys = veh.destroys;
-
+        let destroys = veh.destroys ? veh.destroys : 0;
         if (mileage < 10) multiplier += 0.01;
         if (mileage >= 10 && mileage < 100) multiplier += 0.05;
         if (mileage >= 100 && mileage < 300) multiplier += 0.1;
@@ -314,18 +348,17 @@ module.exports = {
         let toUpdate = false;
         for (let key in breakdownConfig) {
             if (veh[key] < MAX_BREAK_LEVEL) {
-                console.log(`Пытаемся сломать ${key} у ${veh.properties.name}`);
+                console.log(`[DEBUG] Пытаемся сломать ${key} у ${veh.properties.name}`);
                 let random = Math.random();
                 console.log(random);
                 if (random < breakdownConfig[key] * multiplier) {
                     veh[key]++;
                     toUpdate = true;
-                    console.log(`сломали ${key}`);
+                    console.log(`[DEBUG] сломали ${key}`);
                 }
             }
         }
         if (toUpdate) {
-            console.log('обновляем поломки в бд');
             if (veh.db) {
                 veh.db.update({
                     engineState: veh.engineState,
@@ -422,10 +455,8 @@ module.exports = {
 
         } else {
             let index = player.carPlaces.findIndex(x => x.veh == null && x.d != 0);
-            //let place = player.carPlaces.find(x => x.veh == null && x.d != 0);
             let place = player.carPlaces[index];
             vehicle.carPlaceIndex = index;
-            console.log(`index ${vehicle.carPlaceIndex}`)
             vehicle.x = place.x;
             vehicle.y = place.y;
             vehicle.z = place.z;
@@ -445,7 +476,6 @@ module.exports = {
 
         let place = player.carPlaces[vehicle.carPlaceIndex];
 
-        console.log(place);
         if (!place) return;
         place.veh = null;
     },
@@ -462,7 +492,6 @@ module.exports = {
 
         let place = player.carPlaces[index];
         vehicle.carPlaceIndex = index;
-        console.log(`index ${vehicle.carPlaceIndex}`)
         vehicle.x = place.x;
         vehicle.y = place.y;
         vehicle.z = place.z;
@@ -483,8 +512,15 @@ module.exports = {
     doesPlayerHaveHomeVehicles(player) {
         let list = player.vehicleList;
         let result = list.filter(x => x.isOnParking == 0);
-        console.log(result);
         if (result.length > 0) return true
         else return false;
+    },
+    async initTuning(vehicle) {
+        let tuning = await db.Models.VehicleTuning.findOrCreate({
+            where: {
+                vehicleId: vehicle.sqlId
+            }
+        });
+        vehicle.tuning = tuning[0];
     }
 }

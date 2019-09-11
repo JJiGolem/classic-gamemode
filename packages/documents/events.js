@@ -69,13 +69,9 @@ module.exports = {
         if (accept) {
             console.log('accept');
             mp.events.call('documents.show', offer.playerId, offer.docType, targetId, offer.docData);
-            console.log(player.documentsOffer);
-            console.log(sender.senderDocumentsOffer);
             delete player.documentsOffer;
             delete sender.senderDocumentsOffer;
         } else {
-            console.log(player.documentsOffer);
-            console.log(sender.senderDocumentsOffer);
             delete player.documentsOffer;
             delete sender.senderDocumentsOffer;
         }
