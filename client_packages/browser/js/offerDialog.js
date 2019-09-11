@@ -143,6 +143,18 @@ var offerDialog = new Vue({
                     mp.trigger("callRemote", "farms.sell.player.cancel");
                 },
             },
+            "carrier_job": {
+                text: `Арендовать грузовик?`,
+                price: 999,
+                on(values) {
+                    this.price = values.price;
+                },
+                yes() {
+                    mp.trigger("callRemote", "carrier.vehicle.buy");
+                },
+                no() {},
+                ignore() {},
+            },
         },
         dialog: null,
         timeout: null,

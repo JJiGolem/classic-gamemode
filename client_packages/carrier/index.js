@@ -29,8 +29,6 @@ mp.carrier = {
         mp.events.call('NPC.create', pedInfo);
     },
     setLoadInfo(data) {
-        mp.terminal.debug(data);
-
         var price = [`$${data.productPrice}`];
         var sell = [`-${Math.ceil((1 - data.productSellK) * 100)}%`];
 
