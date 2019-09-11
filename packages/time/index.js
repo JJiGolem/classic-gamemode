@@ -1,5 +1,6 @@
 "use strict";
 var factions = require('../factions');
+var farms = call('farms');
 var jobs = require('../jobs');
 var notifs = require('../notifications');
 
@@ -27,6 +28,7 @@ module.exports = {
         this.allBroadcast();
         this.factionPay();
         this.jobsPay();
+        this.farmsTax();
         // TODO: Налоги на дома
         // TODO: Налоги на бизы
     },
@@ -53,6 +55,21 @@ module.exports = {
         mp.players.forEach((rec) => {
             if (!rec.character) return;
             if (rec.character.pay) jobs.pay(rec);
+        });
+    },
+    farmsTax() {
+        farms.farms.forEach(farm => {
+            if (!farm.playerId) return;
+            farm.taxBalance -= farms.tax;
+            if (farm.taxBalance <= 0) {
+                farm.playerId = null;
+                farm.owner = null;
+                farm.balance = 0;
+            } else if (farm.taxBalance < farms.tax * 24) {
+                var owner = mp.players.getBySqlId(farm.playerId);
+                if (owner) notifs.warning(owner, `Ферма #${farm.id} будет продана в штат менее, чем через сутки. Пополните баланс.`, `Налог на ферму`);
+            }
+            farm.save();
         });
     },
 };

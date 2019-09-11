@@ -73,6 +73,8 @@ module.exports = {
         let vehicle = target.vehicle;
         if (!vehicle) return;
 
+        if (vehicle.isBeingRepaired) return player.call('notifications.push.error', ['Транспорт уже ремонтируется', 'Ошибка']);
+
         target.diagnosticsOffer = {
             playerId: player.id,
             vehicleToRepair: vehicle
@@ -91,10 +93,8 @@ module.exports = {
         let offer = target.diagnosticsOffer;
         let sender = mp.players.at(offer.playerId);
         let vehicleToRepair = target.vehicleToRepair;
-        /// Снятие и передача денег
 
-
-        //if (target.vehicle != vehicleToRepair) return;
+        if (target.vehicle != vehicleToRepair) return; // to be checked
         if (!sender) return;
         if (sender.senderDiagnosticsOffer.targetPlayer != target) return;
 

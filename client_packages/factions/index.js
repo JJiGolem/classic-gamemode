@@ -25,6 +25,7 @@ mp.factions = {
         this.enablePutBox = inside;
     },
     boxHandler() {
+        if (mp.busy.includes()) return;
         if (this.enableTakeBox) {
             // TODO: проверка на аттач
             mp.events.callRemote("factions.warehouse.takeBox", this.typeBox);

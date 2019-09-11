@@ -15,7 +15,7 @@ module.exports = {
             }
         }
     },
-    "/fuel": { // temp 
+    "/fuel": { // temp
         access: 6,
         handler: (player, args) => {
             player.call('chat.message.push', [`!{#ffffff} ${player.vehicle.fuel}`]);
@@ -56,11 +56,11 @@ module.exports = {
     },
     "/setveh": {
         access: 5,
-        description: "Установить транспорт для новичков/фракции/работы",
-        args: `["newbie"/"job"/"faction"] [id фракции/работы]`,
+        description: "Установить транспорт для новичков/фракции/работы/фермы",
+        args: `["newbie"/"job"/"faction"/"farm"] [id фракции/работы/фермы]`,
         handler: async (player, args) => {
 
-            if ((args[0] != "newbie") && (args[0] != "job") && (args[0] != "faction")) return player.call('notifications.push.error', ['Неверный синтаксис', 'Ошибка']);
+            if ((args[0] != "newbie") && (args[0] != "job") && (args[0] != "faction") && (args[0] != "farm")) return player.call('notifications.push.error', ['Неверный синтаксис', 'Ошибка']);
 
             if (!args[1] && args[0] != "newbie") return player.call('notifications.push.error', ['Неверный синтаксис', 'Ошибка']);
             if (!player.vehicle) return player.call('notifications.push.error', ['Вы должны быть в транспорте', 'Ошибка']);
@@ -88,7 +88,7 @@ module.exports = {
                     fuel: veh.properties.maxFuel * 0.7
                 });
             } else {
-                var data = await db.Models.Vehicle.create({ /// Если автомобиля нет в БД, то создаем запись в БД 
+                var data = await db.Models.Vehicle.create({ /// Если автомобиля нет в БД, то создаем запись в БД
                     key: args[0],
                     owner: args[1],
                     modelName: veh.modelName,
@@ -121,6 +121,9 @@ module.exports = {
                     break;
                 case "job":
                     mp.events.call('admin.notify.all', `!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для работы с ID ${args[1]}`);
+                    break;
+                case "farm":
+                    mp.events.call('admin.notify.all', `!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для фермы с ID ${args[1]}`);
                     break;
             }
         }

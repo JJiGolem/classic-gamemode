@@ -1,5 +1,6 @@
 "use strict";
 let vehicles = call("vehicles");
+let money = call("money");
 // console.log("carmarket:");
 // console.log(vehicles);
 var marketSpots = [];
@@ -11,6 +12,11 @@ var carMarket = {
     x: 61.73748779296875,
     y: -1727.130615234375,
     z: 29.502595901489258
+}
+
+const PRICE_CONFIG = {
+    BUY: 0.8,
+    SELL: 0.7
 }
 
 module.exports = {
@@ -162,15 +168,46 @@ module.exports = {
         let vehs = await db.Models.Vehicle.findAll({
             where: {
                 key: "private",
-                owner: id
+                owner: id,
+                isOnParking: 0
             }
         })
-        console.log(vehs);
+        if (vehs.length == 0) return;
+
+        let fullPrice = 0;
         for (let i = 0; i < vehs.length; i++) {
-            vehs[i].update({
-                key: "market"
+            let props = vehicles.setVehiclePropertiesByModel(vehs[i].modelName);
+            await vehs[i].update({
+                key: "market",
+                owners: vehs[i].owners + 1
             });
+            fullPrice += parseInt(props.price * PRICE_CONFIG.SELL);
             this.addMarketVehicle(vehs[i]);
         }
+        let player = mp.players.toArray().find(x => x.character && x.character.id == id);
+        if (player) {
+            mp.vehicles.forEach((veh) => {
+                if (veh.key == 'private' && veh.owner == id) {
+                    clearInterval(veh.fuelTimer);
+                    veh.destroy();
+                    vehicles.removeVehicleFromPlayerVehicleList(player, veh.sqlId);
+                    vehicles.removeVehicleFromCarPlace(player, veh);
+                }
+            })
+        }
+        money.addMoneyById(id, fullPrice, function (result) {
+            if (result) {
+                if (player) {
+                    player.call('chat.message.push', [`!{#f3c800} Ваш дом продан государству за неуплату`]);
+                    player.call('chat.message.push', [`!{#f3c800} Весь транспорт из гаража продан государству за !{#80c102}$${fullPrice}`]);
+                    player.call('chat.message.push', [`!{#f3c800} Деньги поступили на ваш банковский счет`]);
+                }
+            } else {
+                console.log(`Ошибка начисления денег за авто, слетевшее в гос для игрока с ID ${id}`);
+            }
+        });
+    },
+    getPriceConfig() {
+        return PRICE_CONFIG;
     }
 }

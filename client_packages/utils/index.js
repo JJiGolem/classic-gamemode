@@ -176,6 +176,19 @@ mp.utils = {
         if (distToPlayer <= nearVehicle.minDist) return nearPlayer;
         else return nearVehicle;
     },
+    // Получить ближ. объект
+    getNearObject(pos, range = 10) {
+        var nearObj;
+        var minDist = 99999;
+        mp.objects.forEach((obj) => {
+            var distance = vdist(pos, obj.position);
+            if (distance < minDist && distance < range) {
+                nearObj = obj;
+                minDist = distance;
+            }
+        });
+        return nearObj;
+    },
     // Рисовать текст на экране
     drawText2d(text, pos = [0.8, 0.5], color = [255, 255, 255, 255], scale = [0.3, 0.3]) {
         mp.game.graphics.drawText(text, pos, {
@@ -188,7 +201,9 @@ mp.utils = {
 };
 
 
-
+Math.clamp = function(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+}
 
 /// Вывод информации в серверную консоль
 mp.console = function(object) {

@@ -1,4 +1,5 @@
-var tuning = require('./index.js');
+let tuning = require('./index.js');
+let money = call('money');
 module.exports = {
     "init": () => {
         tuning.init();
@@ -7,11 +8,11 @@ module.exports = {
         if (shape.isCustoms) {
             if (!player.vehicle) return player.call('prompt.show', ['Вы должны находиться в транспорте']);
             console.log(player.vehicle.key);
-            if (player.vehicle.key != 'newbie' && player.vehicle.key != 'private') return player.call('prompt.show', ['Этот транспорт нельзя модифицировать']); //temp
-            //if (player.vehicle.owner != player.character.id) return player.call('prompt.show', ['Нельзя модифицировать чужой транспорт']); //temp
+            if (player.vehicle.key != 'private') return player.call('prompt.show', ['Этот транспорт нельзя модифицировать']); //temp
+            if (player.vehicle.owner != player.character.id) return player.call('prompt.show', ['Нельзя модифицировать чужой транспорт']);
             if (!player.vehicle.tuning || player.vehicle.properties.vehType != 0) return player.call('prompt.show', ['Этот транспорт нельзя модифицировать']);
 
-            console.log(`${player.name} entered LSC ${shape.customsId}`)
+            player.call('tuning.fadeOut');
             let customs = tuning.getCustomsDataById(shape.customsId);
             player.vehicle.dimension = player.id + 1;
             player.vehicle.position = new mp.Vector3(customs.tuneX, customs.tuneY, customs.tuneZ);
@@ -32,30 +33,68 @@ module.exports = {
         console.log(id);
         if (!player.vehicle) return player.dimension = 0;
         let customs = tuning.getCustomsDataById(id);
-        player.vehicle.dimension = 0;
         player.vehicle.position = new mp.Vector3(customs.returnX, customs.returnY, customs.returnZ);
+        player.vehicle.dimension = 0;
+        player.vehicle.isBeingTuned = false;
         player.call('vehicles.heading.set', [customs.returnH]);
     },
     "tuning.colors.set": async (player, primary, secondary) => {
         let vehicle = player.vehicle;
-        if (!vehicle) return;
-        console.log(`${primary} ${secondary}`);
-        vehicle.setColor(primary, secondary);
-        vehicle.color1 = primary;
-        vehicle.color2 = secondary;
-        await vehicle.db.update({
-            color1: primary,
-            color2: secondary
+        if (!vehicle) return player.call('tuning.colors.set.ans', [2]);
+        if (vehicle.key != 'private' || vehicle.owner != player.character.id) return player.call('tuning.colors.set.ans', [3]);
+        let price = tuning.getColorsPrice();
+
+        if (player.character.cash < price) return player.call('tuning.colors.set.ans', [1]);
+
+        money.removeCash(player, price, async function (result) {
+            if (result) {
+                vehicle.setColor(primary, secondary);
+                vehicle.color1 = primary;
+                vehicle.color2 = secondary;
+                await vehicle.db.update({
+                    color1: primary,
+                    color2: secondary
+                });
+                player.call('tuning.colors.set.ans', [0]);
+            } else {
+                player.call('tuning.colors.set.ans', [4]);
+            }
         });
-        player.call('tuning.colors.set.ans', [0]);
     },
     "tuning.buy": (player, type, index) => {
-        let config = tuning.getModsConfig();
-        typeName = config[type];
         let vehicle = player.vehicle;
-        console.log(`price = ${tuning.calculateModPrice(vehicle.properties.price, type, index)}`);
-        tuning.saveMod(vehicle, typeName, index);
-        vehicle.setMod(type, index);
-        player.call('tuning.buy.ans', [0, typeName, index]);
+        if (!vehicle) return player.call('tuning.buy.ans', [2]);
+        if (vehicle.key != 'private' || vehicle.owner != player.character.id) return player.call('tuning.buy.ans', [3]);
+        let price = tuning.calculateModPrice(vehicle.properties.price, type, index);
+        if (player.character.cash < price) return player.call('tuning.buy.ans', [1]);
+
+        money.removeCash(player, price, function (result) {
+            if (result) {
+                let config = tuning.getModsConfig();
+                typeName = config[type];
+                tuning.saveMod(vehicle, typeName, index);
+                vehicle.setMod(type, index);
+                player.call('tuning.buy.ans', [0, typeName, index]);
+            } else {
+                player.call('tuning.buy.ans', [4]);
+            }
+        });
+
+    },
+    "tuning.repair": (player) => {
+        let vehicle = player.vehicle;
+        if (!vehicle) return player.call('tuning.repair.ans', [2]);
+        if (vehicle.key != 'private' || vehicle.owner != player.character.id) return player.call('tuning.repair.ans', [3]);
+        let price = tuning.getPriceConfig().repair;
+        if (player.character.cash < price) return player.call('tuning.repair.ans', [1]);
+
+        money.removeCash(player, price, function (result) {
+            if (result) {
+                player.vehicle.repair();
+                player.call('tuning.repair.ans', [0]);
+            } else {
+                player.call('tuning.repair.ans', [4]);
+            }
+        });
     }
 }

@@ -52,10 +52,10 @@ mp.weapons = {
 
 mp.events.add({
     "render": () => {
-        var player = mp.players.local;
-        mp.utils.drawText2d(`curr: ${mp.weapons.currentWeapon()} (${mp.weapons.getAmmoWeapon(mp.weapons.currentWeapon())}) weap: ${player.weapon} (${mp.weapons.getAmmoWeapon(player.weapon)}) |
-            type: ${mp.weapons.getAmmoType()} slot: ${mp.weapons.getWeaponSlot(mp.weapons.currentWeapon())}`);
-        mp.utils.drawText2d(`hashes: ${JSON.stringify(mp.weapons.hashes)}`, [0.8, 0.6]);
+        // var player = mp.players.local;
+        // mp.utils.drawText2d(`curr: ${mp.weapons.currentWeapon()} (${mp.weapons.getAmmoWeapon(mp.weapons.currentWeapon())}) weap: ${player.weapon} (${mp.weapons.getAmmoWeapon(player.weapon)}) |
+        //     type: ${mp.weapons.getAmmoType()} slot: ${mp.weapons.getWeaponSlot(mp.weapons.currentWeapon())}`);
+        // mp.utils.drawText2d(`hashes: ${JSON.stringify(mp.weapons.hashes)}`, [0.8, 0.6]);
     },
     "time.main.tick": () => {
         if (!mp.weapons.needSync) return;

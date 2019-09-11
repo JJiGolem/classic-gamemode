@@ -35,6 +35,7 @@ module.exports = {
         if (!player.offer || player.offer.type != "faction_invite") return notifs.error(player, `Приглашение не найдено`, `Организация`);
 
         var inviter = mp.players.at(player.offer.inviterId);
+        delete player.offer;
         if (!inviter) return notifs.error(player, `Пригласивший не найден`, `Приглашение`);
         if (player.dist(inviter.position) > 10) return notifs.error(player, `${inviter.name} далеко`, `Приглашение`);
         if (player.character.factionId) return notifs.error(player, `Вы уже в организации`, `Приглашение`);
@@ -46,7 +47,6 @@ module.exports = {
 
         notifs.success(inviter, `${player.name} вступил в организацию`, faction.name);
         notifs.success(player, `Добро пожаловать`, faction.name);
-        delete player.offer;
     },
     "factions.invite.cancel": (player) => {
         if (!player.offer) return;

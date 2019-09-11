@@ -26,6 +26,7 @@ let modsConfig = {
 }
 
 let priceConfig = { 
+    repair: 125,
     default: 0.02,
     engine: 0.03,
     brake: 0.04,
@@ -33,6 +34,8 @@ let priceConfig = {
     suspension: 0.01,
     armour: 0.05
 }
+
+let colorsPrice = 100;
 
 module.exports = {
     async init() {
@@ -108,5 +111,8 @@ module.exports = {
                 break;
         }
         return parseInt(priceConfig[key] * vehPrice * i);
+    },
+    getColorsPrice() {
+        return colorsPrice;
     } 
 }

@@ -51,8 +51,10 @@ module.exports = {
     },
 
     // temp
-    "playerDeath": (player) => { 
+    "playerDeath": (player) => {
         player.health = 100;
-        player.spawn(new mp.Vector3(-252.91534423828125, -338.6800231933594, 29.70627212524414));
+        // player.spawn(new mp.Vector3(-252.91534423828125, -338.6800231933594, 29.70627212524414));
+        player.spawn(new mp.Vector3(2019.1632080078125, 4984.546875, 41.21428680419922)); // farm
+        player.heading = 35.49
     },
 }

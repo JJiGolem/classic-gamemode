@@ -1,4 +1,5 @@
-const INTERACTION_RANGE = 3.5;
+const MAX_RANGE = 7;
+const INTERACTION_RANGE = 2;
 const classesToIgnore = [8, 13, 14, 15, 16];
 const defaultLeft = 50;
 const vehicleLeft = 60;
@@ -27,15 +28,18 @@ mp.vdist = (posA, posB) => {
     return mp.game.system.vdist(posA.x, posA.y, posA.z, posB.x, posB.y, posB.z);
 }
 
-function getClosestVehicle(pos, range = INTERACTION_RANGE) {
-    var closestVehicle;
-    var minDist = 99999;
+function getClosestVehicle(pos, range = MAX_RANGE) {
+    let closestVehicle;
+    let minDist = 99999;
     mp.vehicles.forEachInStreamRange((veh) => {
-        var distToVeh = vdist(pos, veh.position);
+        let distToVeh = vdist(pos, veh.position);
         if (distToVeh < range) {
-            if (distToVeh < minDist) {
+            let distToHood = vdist(pos, mp.utils.getHoodPosition(veh));
+            let distToBoot = vdist(pos, mp.utils.getBootPosition(veh));
+            let finalDist = Math.min(distToVeh, distToHood, distToBoot);
+            if (finalDist < minDist && finalDist < INTERACTION_RANGE) {
                 closestVehicle = veh;
-                minDist = distToVeh;
+                minDist = finalDist;
             }
         }
     });
@@ -175,7 +179,7 @@ mp.events.add('render', () => {
     if (!currentInteractionEntity) return;
     try {
         let dist = vdist(mp.players.local.position, currentInteractionEntity.position);
-        if (dist > INTERACTION_RANGE) {
+        if (dist > MAX_RANGE) {
             currentInteractionEntity = null;
             mp.events.call('interaction.menu.close');
             mp.events.call('interaction.money.close'); // to be tested

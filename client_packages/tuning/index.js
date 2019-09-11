@@ -1,5 +1,7 @@
 let data = require('carshow/data.js');
 
+mp.game.cam.doScreenFadeIn(50);
+
 let colorIDs = [];
 let colorValues = [];
 
@@ -10,6 +12,7 @@ let vehicle;
 let vehPrice = 100;
 
 let priceConfig = { 
+    repair: 500,
     default: 0.01,
     engine: 0.01,
     brake: 0.01,
@@ -119,6 +122,8 @@ let colorData = {
 
 let currentModType;
 
+let lastIndex = 0;
+
 data.colors.forEach((current) => {
     colorIDs.push(current.id);
     colorValues.push(current.value);
@@ -139,7 +144,15 @@ mp.events.add('mods.get', (type) => { // temp
     mp.chat.debug(num);
 }); 
 
+mp.events.add('tuning.fadeOut', () => {
+    mp.game.cam.doScreenFadeOut(80);
+});
+
 mp.events.add('tuning.start', (id, primary, secondary, priceInfo) => {
+    setTimeout(() => {
+        mp.game.cam.doScreenFadeIn(500);
+    }, 500);
+    
     if (!mp.players.local.vehicle) return;
     controlsDisabled = true;
     mp.events.call('hud.enable', false);
@@ -158,7 +171,7 @@ mp.events.add('tuning.start', (id, primary, secondary, priceInfo) => {
     mp.events.call('tuning.menu.show');
 });
 
-mp.events.add('tuning.menu.show', () => {
+mp.events.add('tuning.menu.show', (index = lastIndex) => {
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["tuningMain"])`);
     for (let key in tuningParams) {
         if (tuningParams[key].hasOwnProperty('name')) {
@@ -174,6 +187,10 @@ mp.events.add('tuning.menu.show', () => {
         text: 'Закрыть',
         values: ''
     })`);
+    let visibleIndex = index < 5 ? 0 : index - 4;
+    mp.callCEFV(`selectMenu.menu.j = ${visibleIndex}`);
+    mp.callCEFV(`selectMenu.menu.i = ${index}`);
+    mp.callCEFV(`selectMenu.menu.items[0].values = ['$${priceConfig.repair}']`);
     mp.callCEFV(`selectMenu.show = true`);
 });
 
@@ -194,6 +211,9 @@ mp.events.add('tuning.defaultMenu.show', (modName) => {
             values: [`$${calculatePrice(data.modType, i)}`]
         });
     }
+    items.push({
+        text: 'Назад'
+    });
     mp.callCEFV(`selectMenu.setItems('tuningDefault', ${JSON.stringify(items)});`)
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["tuningDefault"])`);
     mp.callCEFV(`selectMenu.menu.header = '${data.name}'`);
@@ -265,10 +285,23 @@ mp.events.add('tuning.colors.set.ans', (ans) => {
             tuningParams.secondaryColour = colorData.secondary;
             mp.callCEFV(`selectMenu.notification = 'Автомобиль перекрашен'`);
             break;
+        case 1:
+            mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+            break;
+        case 2:
+            mp.callCEFV(`selectMenu.notification = 'Вы не в транспорте'`);
+            break;
+        case 3:
+            mp.callCEFV(`selectMenu.notification = 'Модификация недоступна'`);
+            break;
+        case 4:
+            mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
+            break;
     }
 });
 
 mp.events.add('tuning.end', () => {
+    lastIndex = 0;
     controlsDisabled = false;
     mp.callCEFV(`selectMenu.show = false`);
     mp.events.call('vehicles.speedometer.show', true);
@@ -283,16 +316,12 @@ mp.events.add('tuning.end', () => {
 
 mp.events.add('tuning.mod.set', (type, index) => {
     if (type == -1) type = currentModType;
-    mp.chat.debug(currentModType);
-    mp.chat.debug(type);
     vehicle.setMod(type, index);
 });
 
 mp.events.add('tuning.buy', (modType, modIndex) => {
     mp.callCEFV('selectMenu.loader = true');
     if (modType == -1) modType = currentModType;
-    mp.chat.debug(currentModType);
-    mp.chat.debug(modType);
     mp.events.callRemote('tuning.buy', modType, modIndex);
 });
 
@@ -304,6 +333,18 @@ mp.events.add('tuning.buy.ans', (ans, mod, index) => {
             vehicle.setMod(tuningParams[mod].modType, tuningParams[mod].current);
             mp.callCEFV(`selectMenu.notification = 'Элемент тюнинга установлен'`);
             break;
+        case 1:
+            mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+            break;
+        case 2:
+            mp.callCEFV(`selectMenu.notification = 'Вы не в транспорте'`);
+            break;
+        case 3:
+            mp.callCEFV(`selectMenu.notification = 'Модификация недоступна'`);
+            break;
+        case 4:
+            mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
+            break;
     }
 });
 
@@ -313,11 +354,40 @@ mp.events.add('render', () => {
     }
 });
 
+mp.events.add('tuning.lastIndex.set', (index) => {
+    lastIndex = index;
+});
+
+mp.events.add('tuning.repair', () => {
+    mp.events.callRemote('tuning.repair');
+    mp.callCEFV('selectMenu.loader = true');
+});
+
+mp.events.add('tuning.repair.ans', (ans) => {
+    mp.callCEFV('selectMenu.loader = false');
+    switch (ans) {
+        case 0:
+            mp.callCEFV(`selectMenu.notification = 'Автомобиль отремонтирован'`);
+            break;
+        case 1:
+            mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+            break;
+        case 2:
+            mp.callCEFV(`selectMenu.notification = 'Вы не в транспорте'`);
+            break;
+        case 3:
+            mp.callCEFV(`selectMenu.notification = 'Ремонт недоступен'`);
+            break;
+        case 4:
+            mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
+            break;
+    }
+});
+
 function initTuningParams() {
     for (let key in tuningParams) {
         if (tuningParams[key].hasOwnProperty('modType')) {
             tuningParams[key].current = mp.players.local.vehicle.getMod(tuningParams[key].modType);
-            mp.chat.debug(`${key} ${tuningParams[key].current}`)
         }
     }
 }
