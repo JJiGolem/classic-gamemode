@@ -1,24 +1,14 @@
 var vehicles = require('./index.js');
 module.exports = {
-    access: 6,
-    "/setlic": { // temp
-        handler: (player, args) => {
-            player.license = args[0];
-        }
-    },
-    "/resp": { // temp
+    "/resp": {
         access: 6,
+        description: "Зареспавнить авто",
+        args: ``,
         handler: (player, args) => {
             if (player.vehicle) {
                 player.removeFromVehicle();
                 vehicles.respawnVehicle(player.vehicle);
             }
-        }
-    },
-    "/fuel": { // temp
-        access: 6,
-        handler: (player, args) => {
-            player.call('chat.message.push', [`!{#ffffff} ${player.vehicle.fuel}`]);
         }
     },
     "/setfuel": {
@@ -32,26 +22,11 @@ module.exports = {
     },
     "/ex": {
         access: 6,
+        description: "Взорвать авто",
+        args: ``,
         handler: (player, args) => {
             if (!player.vehicle) return;
             player.vehicle.explode();
-        }
-    },
-    "/carpass": {
-        access: 6,
-        handler: (player, args) => {
-            if (!player.vehicle) return;
-            let vehicle = player.vehicle;
-            let data = {
-                id: 3940123342,
-                vehType: "Автомобиль",
-                name: vehicle.properties.name,
-                regDate: "06 Дек 2012",
-                price: 111111,
-                owners: 1,
-                number: vehicle.plate
-            }
-            player.call('documents.show', ['carPass', data]);
         }
     },
     "/setveh": {
@@ -126,6 +101,33 @@ module.exports = {
             }
         }
     },
+    "/setcolor": {
+        access: 4,
+        description: "Изменить цвет транспорта",
+        args: `[цвет 1] [цвет 2]`,
+        handler: async (player, args, out) => {
+
+            if (!player.vehicle) return player.call('notifications.push.error', ['Вы должны быть в транспорте', 'Ошибка']);
+            if (player.vehicle.key == "private") return player.call('notifications.push.error', ['Это личный транспорт', 'Ошибка']);
+
+            let veh = player.vehicle;
+            let color1 = parseInt(args[0]);
+            let color2 = parseInt(args[1]);
+            veh.setColor(color1, color2);
+            veh.color1 = color1;
+            veh.color2 = color2;
+            if (veh.db) { /// Если автомобиль уже загружен из БД, то обновляем его
+                await veh.db.update({
+                    color1: color1,
+                    color2: color2
+                });
+                out.info(`${player.name} обновил цвет у т/с №${veh.db.id}`);
+            } else {
+                out.info('Цвет изменен', player);
+            }
+
+        }
+    },
     "/delveh": {
         access: 5,
         description: "Удалить транспорт из БД",
@@ -148,29 +150,5 @@ module.exports = {
             }
 
         },
-    },
-    "/fuelstate": {
-        access: 6,
-        handler: (player, args) => {
-            if (!player.vehicle) return;
-            player.vehicle.fuelState = parseInt(args[0]);
-            player.call('chat.message.push', [`!{#ffffff} установили топливную поломку ${args[0]}`]);
-        }
-    },
-    "/date": {
-        access: 6,
-        handler: (player, args) => {
-            if (!player.vehicle) return;
-            let now = new Date();
-            player.vehicle.db.update({
-                regDate: now
-            });
-        }
-    },
-    "/vehs": {
-        access: 6,
-        handler: (player, args) => {
-            console.log(vehicles.doesPlayerHaveHomeVehicles(player));
-        }
     },
 }
