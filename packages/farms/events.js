@@ -1,4 +1,6 @@
+let carrier = call('carrier');
 let farms = call('farms');
+let jobs = call('jobs');
 let money = call('money');
 let notifs = call('notifications');
 let routes = call('routes');
@@ -263,8 +265,10 @@ module.exports = {
         farm.save();
         veh.products.count -= count;
         veh.setVariable("farmProductsState", parseInt(veh.products.count / 33));
-        if (veh.products.count) notifs.info(player, `Склад заполнен. ${veh.products.count} ед. урожая осталось в пикапе`, header);
-        else {
+        if (veh.products.count) {
+            veh.setVariable("label", `${vehicle.products.count} из 200 ед.`);
+            notifs.info(player, `Склад заполнен. ${veh.products.count} ед. урожая осталось в пикапе`, header);
+        } else {
             veh.setVariable("label", null);
             delete veh.products;
         }
@@ -328,6 +332,39 @@ module.exports = {
         notifs.success(player, `Загружено ${count} ед. урожая`, header);
         notifs.info(player, `Отправляйтесь на посев поля`, header);
     },
+    "farms.warehouse.grains.sell": (player) => {
+        var header = `Продажа зерна`;
+        var veh = player.vehicle;
+        if (!veh || !veh.db || veh.db.key != "job" || veh.db.owner != 4) return notifs.error(player, `Необходимо находиться в грузовике`, header);
+        if (!player.farm) return notifs.error(player, `Вы далеко`, header);
+        var job = jobs.getJob(4);
+        if (player.character.job != job.id) return notifs.error(player, `Вы не ${job.name}`, header);
+        if (!veh.products || !veh.products.count) return notifs.error(player, `Грузовик пустой`, header);
+        if (veh.products.type != "grains") return notifs.error(player, `Неверный тип товара`, header);
+        var farm = player.farm;
+
+        var count = Math.clamp(veh.products.count, 0, farms.grainsMax - farm.grains);
+        farm.grains += count;
+        farm.save();
+        veh.products.count -= count;
+        if (veh.products.count) {
+            veh.setVariable("label", `${veh.products.count} из ${carrier.productsMax} ед.`);
+            notifs.info(player, `Склад заполнен. ${veh.products.count} ед. зерна осталось в грузовике`, header);
+        } else {
+            veh.setVariable("label", null);
+            delete veh.products;
+            notifs.success(player, `Зерно продано`, header);
+        }
+        player.call(`selectMenu.hide`);
+
+        var price = count * farm.grainPrice;
+        if (farm.balance < price) notifs.warning(player, `Баланс фермы не позволяет вам выплатить заплату`, header);
+        else {
+            farm.balance -= price;
+            farm.save();
+            money.addCash(player, price);
+        }
+    },
     "farms.soilsWarehouse.take": (player) => {
         var header = `Загрузка удобрения`;
         var veh = player.vehicle;
@@ -377,6 +414,39 @@ module.exports = {
 
         notifs.success(player, `Загружено ${count} ед. удобрения`, header);
         notifs.info(player, `Отправляйтесь на орошение полей`, header);
+    },
+    "farms.soilsWarehouse.sell": (player) => {
+        var header = `Продажа удобрения`;
+        var veh = player.vehicle;
+        if (!veh || !veh.db || veh.db.key != "job" || veh.db.owner != 4) return notifs.error(player, `Необходимо находиться в грузовике`, header);
+        if (!player.farm) return notifs.error(player, `Вы далеко`, header);
+        var job = jobs.getJob(4);
+        if (player.character.job != job.id) return notifs.error(player, `Вы не ${job.name}`, header);
+        if (!veh.products || !veh.products.count) return notifs.error(player, `Грузовик пустой`, header);
+        if (veh.products.type != "soils") return notifs.error(player, `Неверный тип товара`, header);
+        var farm = player.farm;
+
+        var count = Math.clamp(veh.products.count, 0, farms.soilsMax - farm.soils);
+        farm.soils += count;
+        farm.save();
+        veh.products.count -= count;
+        if (veh.products.count) {
+            veh.setVariable("label", `${veh.products.count} из ${carrier.productsMax} ед.`);
+            notifs.info(player, `Склад заполнен. ${veh.products.count} ед. удобрения осталось в грузовике`, header);
+        } else {
+            veh.setVariable("label", null);
+            delete veh.products;
+            notifs.success(player, `Удобрение продано`, header);
+        }
+        player.call(`selectMenu.hide`);
+
+        var price = count * farm.soilPrice;
+        if (farm.balance < price) notifs.warning(player, `Баланс фермы не позволяет вам выплатить заплату`, header);
+        else {
+            farm.balance -= price;
+            farm.save();
+            money.addCash(player, price);
+        }
     },
     "farms.grains.price.set": (player, val) => {
         var header = `Цена на зерно`

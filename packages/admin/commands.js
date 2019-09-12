@@ -49,8 +49,7 @@ module.exports = {
                 player.position = new mp.Vector3(target.position.x + 2, target.position.y, target.position.z);
                 player.dimension = target.dimension;
                 mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} телепортировался к ${target.name}`);
-            }
-            catch (err) {
+            } catch (err) {
                 player.call('chat.message.push', [`!{#ffffff}Игрок отключился`]);
             }
         }
@@ -73,8 +72,7 @@ module.exports = {
                 target.dimension = player.dimension;
                 mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} телепортировал к себе ${target.name}`);
                 target.call('chat.message.push', [`!{#ffffff}${player.name} телепортировал вас к себе`]);
-            }
-            catch (err) {
+            } catch (err) {
                 player.call('chat.message.push', [`!{#ffffff}Игрок отключился`]);
             }
         }
@@ -95,8 +93,7 @@ module.exports = {
             try {
                 target.health = parseInt(args[1], 10);
                 mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} изменил здоровье игроку ${target.name}`);
-            }
-            catch (err) {
+            } catch (err) {
                 player.call('chat.message.push', [`!{#ffffff}Игрок отключился`]);
             }
         }
@@ -252,7 +249,8 @@ module.exports = {
         description: "Телепорт по координате",
         args: "[x] [y] [z]",
         handler: (player, args) => {
-            player.spawn(new mp.Vector3(parseFloat(args[0]), parseFloat(args[1]), parseFloat(args[2])));
+            var entity = (player.vehicle) ? player.vehicle : player;
+            entity.position = new mp.Vector3(parseFloat(args[0]), parseFloat(args[1]), parseFloat(args[2]));
         }
     },
     "/kick": {
@@ -438,7 +436,7 @@ module.exports = {
             if (isNaN(lvl) || lvl < 1 || isNaN(id) || id < 0) return;
             let target = mp.players.at(id);
             if (!target) return player.call('notifications.push.error', [`Игрок не найден`, 'Ошибка']);
-            if (lvl >= player.character.admin /*|| target.character.admin > player.character.admin*/) return player.call('notifications.push.error', [`Недостаточно прав`, 'Ошибка'])
+            if (lvl >= player.character.admin /*|| target.character.admin > player.character.admin*/ ) return player.call('notifications.push.error', [`Недостаточно прав`, 'Ошибка'])
             target.character.admin = lvl;
             target.character.save();
             target.call('chat.message.push', [`!{#ffcf0d} ${player.character.name} назначил вас администратором ${lvl} уровня`]);

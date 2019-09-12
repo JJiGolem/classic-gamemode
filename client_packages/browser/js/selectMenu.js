@@ -3852,10 +3852,6 @@ var selectMenu = new Vue({
                 name: "farmGrainsSell",
                 header: "Продажа зерна",
                 items: [{
-                        text: "Количество",
-                        values: ["1 ед.", "2 ед.", "3 ед."],
-                    },
-                    {
                         text: "Продать",
                     },
                     {
@@ -3875,7 +3871,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Продать') {
-
+                            mp.trigger(`callRemote`, `farms.warehouse.grains.sell`);
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmGrains");
                         }
@@ -3993,10 +3989,10 @@ var selectMenu = new Vue({
                 name: "farmSoilsWarehouse",
                 header: "Склад с удобрением",
                 items: [{
-                        text: "Загрузить",
+                        text: "Загрузка",
                     },
                     {
-                        text: "Выгрузить"
+                        text: "Продажа"
                     },
                     {
                         text: "О складе"
@@ -4017,10 +4013,10 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-                        if (e.itemName == 'Загрузить') {
+                        if (e.itemName == 'Загрузка') {
                             mp.trigger(`callRemote`, `farms.soilsWarehouse.take`);
-                        } else if (e.itemName == 'Выгрузить') {
-
+                        } else if (e.itemName == 'Продажа') {
+                            mp.trigger(`callRemote`, `farms.soilsWarehouse.sell`);
                         } else if (e.itemName == 'О складе') {
                             selectMenu.showByName("farmSoilsWarehouseInfo");
                         } else if (e.itemName == 'Закрыть') {
@@ -4287,7 +4283,7 @@ var selectMenu = new Vue({
                             };
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `carrier.load.products.buy`, JSON.stringify(data));
-                        } else if(e.itemName == 'Списать') {
+                        } else if (e.itemName == 'Списать') {
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `carrier.load.products.sell`);
                         } else if (e.itemName == 'Вернуться') {

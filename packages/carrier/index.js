@@ -11,7 +11,7 @@ module.exports = {
     // Цена за 1 ед. товара/зерна
     productPrice: 4,
     // Вместимость грузовика
-    productsMax: 1000,
+    productsMax: 500,
     // Коэффициент при списании товара назад на склад (productPrice * productSellK)
     productSellK: 0.8,
     // Цена аренды грузовика
