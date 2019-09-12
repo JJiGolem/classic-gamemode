@@ -50,7 +50,6 @@ var selectMenu = new Vue({
                     if (eventName == "onItemValueChanged" && e.itemName == "Пол") {
                         selectMenu.menus["characterCreateMainMenu"].items[0].i = e.valueIndex;
                         selectMenu.menus["characterCreateParentsMenu"].items[2].i = e.valueIndex == 0 ? 0 : 4;
-                        selectMenu.menus["characterCreateViewMenu"].items = e.valueIndex == 0 ? selectMenu.menus["characterCreateViewMenu"].itemsMale : selectMenu.menus["characterCreateViewMenu"].itemsFemale;
                         mp.trigger('characterInit.create.setGender', e.valueIndex);
                     }
                     if (eventName == "onEscapePressed") {
@@ -62,17 +61,20 @@ var selectMenu = new Vue({
                                 selectMenu.menu = selectMenu.menus["characterCreateParentsMenu"];
                                 break;
                             case "Внешность":
-                                selectMenu.menu = selectMenu.menus["characterCreateViewMenu"];
+                                var sex = selectMenu.menus["characterCreateMainMenu"].items[0].i;
+                                var menu = selectMenu.menus["characterCreateViewMenu"];
+                                menu.items = (sex == 0) ? menu.itemsMale : menu.itemsFemale;
+                                selectMenu.menu = menu;
                                 break;
                             case "Сохранить и продолжить":
                                 mp.trigger('characterInit.create.continue');
                                 selectMenu.menu = selectMenu.menus["characterCreateNameMenu"];
                                 break;
                             case "Сбросить все изменения":
-                                selectMenu.menu = selectMenu.menus["characterCreateResetMenu"];
+                                //selectMenu.menu = selectMenu.menus["characterCreateResetMenu"];
                                 break;
                             case "Выйти без сохранения":
-                                selectMenu.menu = selectMenu.menus["characterCreateExitMenu"];
+                                //selectMenu.menu = selectMenu.menus["characterCreateExitMenu"];
                                 break;
                         }
                     }
@@ -775,10 +777,10 @@ var selectMenu = new Vue({
                                 mp.trigger('characterInit.create.setMolesFreckles', e.valueIndex);
                                 break;
                             case "Волосы на теле":
-                                mp.trigger('characterInit.create.setChestHair', e.valueIndex);
+                                mp.trigger('characterInit.create.setChestHair', e.valueIndex, true);
                                 break;
                             case "Цвет волос на теле":
-                                mp.trigger('characterInit.create.setChestHairColor', e.valueIndex);
+                                mp.trigger('characterInit.create.setChestHairColor', e.valueIndex, true);
                                 break;
                         }
                     }
@@ -1084,10 +1086,10 @@ var selectMenu = new Vue({
                         text: "Устроиться на работу",
                         i: 0,
                     },
-                    {
-                        text: "Помощь",
-                        i: 0,
-                    },
+                    // {
+                    //     text: "Помощь", // TODO
+                    //     i: 0,
+                    // },
                     {
                         text: "Закрыть",
                         i: 0,
@@ -1373,10 +1375,10 @@ var selectMenu = new Vue({
                         text: "Устроиться на работу",
                         i: 0,
                     },
-                    {
-                        text: "Помощь",
-                        i: 0,
-                    },
+                    // {
+                    //     text: "Помощь", // TODO
+                    //     i: 0,
+                    // },
                     {
                         text: "Закрыть",
                         i: 0,
@@ -1409,8 +1411,7 @@ var selectMenu = new Vue({
             "fishingMenu": {
                 name: "fishing",
                 header: "Рыбалка",
-                items: [
-                    {
+                items: [{
                         text: 'Купить удочку',
                         i: 0,
                         values: ["$100"]
@@ -1536,13 +1537,28 @@ var selectMenu = new Vue({
                 name: "lspdClothes",
                 header: "Раздевалка LSPD",
                 items: [{
-                        text: "Форма офицера №1"
+                        text: "Кадет"
                     },
                     {
-                        text: "Форма SWAT"
+                        text: "Офицер №1"
                     },
                     {
-                        text: "Форма офицера №2"
+                        text: "Офицер №2"
+                    },
+                    {
+                        text: "Детектив №1"
+                    },
+                    {
+                        text: "Детектив №2"
+                    },
+                    {
+                        text: "SWAT"
+                    },
+                    {
+                        text: "Зам. Шефа"
+                    },
+                    {
+                        text: "Шеф"
                     },
                     {
                         text: "Бронежилет"
@@ -1564,7 +1580,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("lspdStorage");
-                        else if (e.itemIndex == 3) mp.trigger(`callRemote`, `police.storage.armour.take`);
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `police.storage.armour.take`);
                         else mp.trigger(`callRemote`, `police.storage.clothes.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
                 }
@@ -1771,7 +1787,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("lssdStorage");
-                        else if (e.itemIndex == 3) mp.trigger(`callRemote`, `police.storage.armour.take`);
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `police.storage.armour.take`);
                         else mp.trigger(`callRemote`, `police.storage.clothes.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lssdStorage");
                 }
@@ -1975,7 +1991,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("fibStorage");
-                        else if (e.itemIndex == 3) mp.trigger(`callRemote`, `fib.storage.armour.take`);
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `fib.storage.armour.take`);
                         else mp.trigger(`callRemote`, `fib.storage.clothes.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("fibStorage");
                 }
@@ -1988,6 +2004,9 @@ var selectMenu = new Vue({
                     },
                     {
                         text: "Аптечка"
+                    },
+                    {
+                        text: "Прослушка"
                     },
                     {
                         text: "Вернуться"
@@ -2130,28 +2149,37 @@ var selectMenu = new Vue({
                 name: "armyClothes",
                 header: "Раздевалка ARMY",
                 items: [{
-                        text: "Форма рекрута"
+                        text: "Новобранец"
                     },
                     {
-                        text: "Отдел IB"
+                        text: "Сержант"
                     },
                     {
-                        text: "Отдел FZA"
+                        text: "Штаб-Сержант"
                     },
                     {
-                        text: "Отдел MLG"
+                        text: "Уоррент-Сержант"
                     },
                     {
-                        text: "Боевая форма TFB"
+                        text: "Мл. офицер"
                     },
                     {
-                        text: "Спец. набор №1"
+                        text: "Ст. офицер"
                     },
                     {
-                        text: "Армейская форма №1"
+                        text: "Парад. Офицер"
                     },
                     {
-                        text: "Армейская форма №2"
+                        text: "Ген. Штаб"
+                    },
+                    {
+                        text: "Парад. Ген. Штаб"
+                    },
+                    {
+                        text: "Пилот"
+                    },
+                    {
+                        text: "Спецназ"
                     },
                     {
                         text: "Бронежилет"
@@ -2173,7 +2201,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("armyStorage");
-                        else if (e.itemIndex == 3) mp.trigger(`callRemote`, `army.storage.armour.take`);
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `army.storage.armour.take`);
                         else mp.trigger(`callRemote`, `army.storage.clothes.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
                 }
@@ -2398,8 +2426,7 @@ var selectMenu = new Vue({
             "dmvMenu": {
                 name: "dmv",
                 header: "Покупка лицензий",
-                items: [
-                    {
+                items: [{
                         text: 'Легковой транспорт',
                         values: ["$100"]
                     },
@@ -2473,10 +2500,10 @@ var selectMenu = new Vue({
                         text: "Устроиться на работу",
                         i: 0,
                     },
-                    {
-                        text: "Помощь",
-                        i: 0,
-                    },
+                    // {
+                    //     text: "Помощь", // TODO
+                    //     i: 0,
+                    // },
                     {
                         text: "Закрыть",
                         i: 0,
@@ -2511,8 +2538,7 @@ var selectMenu = new Vue({
             "routeCreator": {
                 name: "routecreator",
                 header: "Route Creator",
-                items: [
-                    {
+                items: [{
                         text: "Название маршрута",
                         values: [""],
                         type: "editable"
@@ -4508,13 +4534,17 @@ var selectMenu = new Vue({
                 if (item.j == null) Vue.set(item, 'j', 0);
                 if (!item.values) Vue.set(item, 'values', [""]);
             });
-        }
+        },
+        show(val) {
+            if (val) busy.add("selectMenu", true);
+            else busy.remove("selectMenu", true);
+        },
     },
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
             if (!self.menu) return;
-            if (busy.includes(["inventory", "chat", "terminal"])) return;
+            if (busy.includes(["inventory", "chat", "terminal", "phone"])) return;
             self.onKeyUp(e);
         });
     }

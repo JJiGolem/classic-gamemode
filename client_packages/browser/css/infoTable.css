@@ -6,7 +6,7 @@
     left: 10vh;
     position: absolute;
     top: 30%;
-    transform: rotateY(10deg) rotateX(0) translateZ(0);
+    transform: rotateY(10deg);
     width: 36vh;
 }
 

@@ -183,6 +183,7 @@ var offerDialog = new Vue({
         let self = this;
         window.addEventListener('keyup', function (e) {
             if (!self.dialog) return;
+            if (busy.includes(["chat", "terminal", "mapCase", "phone"])) return;
             if (e.keyCode == 89) { // Y
                 self.dialog.yes();
                 self.hide();
