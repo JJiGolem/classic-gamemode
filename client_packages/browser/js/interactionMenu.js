@@ -2,6 +2,8 @@ var interactionMenu = new Vue({
     el: "#interactionMenu",
     data: {
         show: false,
+        // Возможность использования
+        enable: true,
         left: 80, /// сдвиг от левой части экрана
         // Текущее меню
         menu: null,
@@ -287,6 +289,9 @@ var interactionMenu = new Vue({
         },
     },
     watch: {
+        enable(val) {
+            if (!val) this.show = false;
+        },
         // show(val) {
         //     setCursor(val);
         //     if (val) busy.add("interaction", true);

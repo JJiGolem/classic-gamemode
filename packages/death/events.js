@@ -7,7 +7,7 @@ module.exports = {
     },
     "death.wait": (player) => {
         player.spawn(player.position);
-        player.health = 1;
+        player.health = death.health;
         player.setVariable("knocked", true);
     },
     "death.spawn": (player) => {

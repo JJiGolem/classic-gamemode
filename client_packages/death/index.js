@@ -24,6 +24,7 @@ mp.death = {
     disableControls(enable) {
         mp.events.call(`mapCase.enable`, !enable);
         mp.events.call(`inventory.enable`, !enable);
+        mp.callCEFV(`interactionMenu.enable = ${!enable}`);
         mp.events.call(`effect`, `MP_Killstreak_Out`, 800);
     },
     startKnockTimer() {
@@ -39,9 +40,17 @@ mp.death = {
 
 mp.events.add({
     "playerDeath": (player, reason, killer) => {
+        mp.death.disableControls(true);
+
         setTimeout(() => {
-            mp.callCEFV(`offerDialog.show('death')`);
+            var knocked = mp.players.local.getVariable("knocked");
+            if (!knocked) {
+                mp.callCEFV(`offerDialog.show('death')`);
+            } else {
+                mp.events.callRemote(`death.spawn`);
+            }
         }, mp.death.waitHurtTime);
+
     },
     "entityStreamIn": (player) => {
         if (player.type != "player") return;
@@ -61,7 +70,6 @@ mp.events.addDataHandler("knocked", (player, knocked) => {
         if (knocked) {
             mp.notify.info(`Ожидайте медиков в течение ${mp.death.knockTime / 1000} сек.`, `Здоровье`);
             mp.death.startKnockTimer();
-        }
-        else (mp.death.stopKnockTimer());
+        } else(mp.death.stopKnockTimer());
     }
 });
