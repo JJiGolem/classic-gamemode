@@ -27,10 +27,17 @@ Vue.component("map-case-wnews-over-ads", {
         adData: Object,
     },
     data: () => ({
+        header: "Текст объявления:",
         text: "",
         editMod: false,
+        refuseMod: false,
     }),
     methods: {
+        inputCheck(event) {
+            if (event.keyCode == 13)
+                event.preventDefault();
+            //console.log(event.keyCode)
+        },
         update (event) {
             if (event.target.innerText.length > this.adData.maxLength) {
                 event.target.innerText = this.text;
@@ -42,14 +49,26 @@ Vue.component("map-case-wnews-over-ads", {
             this.editMod = true;
         },
         send () {
+            if (!this.text)
+                return;
             mapCase.showLoad();
             mapCase.currentOverWindow = null;
             this.adData.send({...this.adData.ad, text: this.text});
         },
         refuse () {
-            mapCase.showLoad();
-            mapCase.currentOverWindow = null;
-            this.adData.refuse({...this.adData.ad, text: this.text});
+            if (this.refuseMod) {
+                if (!this.text)
+                    return;
+                mapCase.showLoad();
+                mapCase.currentOverWindow = null;
+                this.adData.refuse({...this.adData.ad, text: this.text});
+                return;
+            }
+
+            this.header = "Причина отказа:";
+            this.$el.children[1].innerText = "";
+            this.editMod = true;
+            this.refuseMod = true;
         },
     },
     mounted () {
@@ -85,6 +104,7 @@ var mapCaseWnewsMembersData = {
             this.mod = mod;
         }
     },
+    rankHead: "Должность",
     setRanks (ranksList) {
         this.ranks = ranksList;
     },

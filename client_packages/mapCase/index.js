@@ -149,6 +149,8 @@ mp.events.add("mapCase.init", (name, factionId) => {
         else mp.mapCasePd.menuHeader("BONE COUNTY<br/>SHERIFF DEPARTMENT");
     } else if (mp.factions.isHospitalFaction(factionId)) {
         type = "ems";
+    } else if (mp.factions.isNewsFaction(factionId)) {
+        type = "wnews";
     }
     mp.mapCase.type(type);
     mp.mapCase.userName(name);

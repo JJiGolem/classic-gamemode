@@ -779,7 +779,7 @@
     <link rel="stylesheet" type="text/css" href="css/mapCase.css" />
     <link rel="stylesheet" type="text/css" href="css/mapCasePd.css" />
     <link rel="stylesheet" type="text/css" href="css/mapCaseEms.css" />
-    <link rel="stylesheet" type="text/css" href="css/mapCaseWnews.css" />
+    <link rel="stylesheet" type="text/css" href="css/mapCaseWNews.css" />
 
     <script type="text/x-template" id="map-case-pd-dbSearch">
         <div class="dbSearch">
@@ -922,7 +922,7 @@
                         <svg :class="{focus: sortMod.mod == 'name'}" viewBox="0 0 9 16"><path v-for="path in arrows" :d="path" /></svg>
                     </div>
                     <div @click="onClickSort('rank')">
-                        <div>Звание</div>
+                        <div>{{ rankHead }}</div>
                         <svg :class="{focus: sortMod.mod == 'rank'}" viewBox="0 0 9 16"><path v-for="path in arrows" :d="path" /></svg>
                     </div>
                     <div>Действие</div>
@@ -998,13 +998,13 @@
 
     <script type="text/x-template" id="map-case-wnews-over-ads">
         <div class="over ads">
-            <div class="title">Текст объявления: </div>
-            <div :class="['text', { focus: editMod }]" :contenteditable="editMod" @input="update"></div>
+            <div class="title">{{ header }}</div>
+            <div :class="['text', { focus: editMod }]" :contenteditable="editMod" @input="update" @keypress="inputCheck($event)"></div>
             <div class="line"></div>
             <div class="author"><span>Автор:</span> {{ adData.ad.author }}</div>
-            <div class="btns">
-                <div class="btn" @click="edit()"><div><img src="img/mapCase/edit_pen.svg"/></div><div class="cont">РЕДАКТИРОВАТЬ ТЕКСТ</div></div>
-                <div class="btn send" @click="send()"><div><img src="img/mapCase/stopwatch.svg"/></div><div class="cont">ОТПРАВИТЬ</div></div>
+            <div :class="['btns', { refuse: refuseMod }]">
+                <div v-if="!refuseMod" class="btn" @click="edit()"><div><img src="img/mapCase/edit_pen.svg"/></div><div class="cont">РЕДАКТИРОВАТЬ ТЕКСТ</div></div>
+                <div v-if="!refuseMod" class="btn send" @click="send()"><div><img src="img/mapCase/stopwatch.svg"/></div><div class="cont">ОТПРАВИТЬ</div></div>
                 <div class="btn" @click="refuse()"><div><img src="img/mapCase/error_gray.svg"/></div><div class="cont">ОТКАЗАТЬ</div></div>
             </div>
         </div>
