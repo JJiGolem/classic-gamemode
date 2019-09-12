@@ -125,6 +125,20 @@ mp.mapCaseEms = {
     removeCall(id) {
         mp.callCEFV(`mapCaseEmsCallsData.remove(${id})`);
     },
+    addMember(members) {
+        if (typeof members == 'object') members = JSON.stringify(members);
+        mp.callCEFV(`mapCaseEmsMembersData.add('${members}')`);
+    },
+    removeMember(id) {
+        mp.callCEFV(`mapCaseEmsMembersData.remove(${id})`);
+    },
+    setRanks(ranks) {
+        if (typeof ranks == 'object') ranks = JSON.stringify(ranks);
+        mp.callCEFV(`mapCaseEmsMembersData.setRanks('${ranks}')`);
+    },
+    setMemberRank(id, rank) {
+        mp.callCEFV(`mapCaseEmsMembersData.setMemberRank(${id}, ${rank})`);
+    },
 };
 
 mp.events.add("mapCase.init", (name, factionId) => {
@@ -175,6 +189,14 @@ mp.events.add("mapCase.pd.search.start", (recId) => {
 mp.events.add("mapCase.ems.calls.add", mp.mapCaseEms.addCall);
 
 mp.events.add("mapCase.ems.calls.remove", mp.mapCaseEms.removeCall);
+
+mp.events.add("mapCase.ems.members.add", mp.mapCaseEms.addMember);
+
+mp.events.add("mapCase.ems.members.remove", mp.mapCaseEms.removeMember);
+
+mp.events.add("mapCase.ems.ranks.set", mp.mapCaseEms.setRanks);
+
+mp.events.add("mapCase.ems.members.rank.set", mp.mapCaseEms.setMemberRank);
 
 mp.events.add("time.main.tick", () => {
     var id = mp.mapCasePd.searchPlayerId;

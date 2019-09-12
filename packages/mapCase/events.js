@@ -243,6 +243,17 @@ module.exports = {
         });
         out.success(player, `Сработал экстренный вызов`);
     },
+    "mapCase.ems.init": (player) => {
+        player.call(`mapCase.ems.calls.add`, [mapCase.hospitalCalls]);
+
+        var ranks = factions.getRankNames(player.character.factionId);
+        player.call(`mapCase.ems.ranks.set`, [ranks]);
+
+        var members = factions.getMembers(player);
+        members = mapCase.convertMembers(members);
+        player.call(`mapCase.ems.members.add`, [members]);
+        mapCase.addHospitalMember(player);
+    },
     "mapCase.ems.calls.add": (player, description) => {
         mapCase.addHospitalCall(player, description);
     },
@@ -261,6 +272,55 @@ module.exports = {
         var text = `Вы приняли вызов от <br/><span>${rec.name}</span>`;
         out.success(player, text);
         player.call(`waypoint.set`, [rec.position.x, rec.position.y]);
+    },
+    "mapCase.ems.rank.raise": (player, recId) => {
+        if (!factions.isHospitalFaction(player.character.factionId)) return out.error(player, `Вы не являетесь медиком`);
+        if (!factions.canGiveRank(player)) return out.error(player, `Недостаточно прав`);
+        var header = `Повышение`;
+        var rec = mp.players.getBySqlId(recId);
+        if (!rec) return out.error(player, `Игрок #${recId} оффлайн`);
+        if (rec.id == player.id) return out.error(player, `Нельзя повысить себя`, header);
+        var max = factions.getMaxRank(rec.character.factionId);
+        if (rec.character.factionRank >= max.id) return out.error(player, `${rec.name} имеет макс. ранг`);
+
+        var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank + 1);
+        factions.setRank(rec.character, rank.rank);
+        var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
+
+        notifs.success(rec, `${player.name} повысил вас до ${rankName}`, header);
+        var text = `<span>${rec.name}</span><br /> был повышен до ранга ${rankName}`;
+        out.success(player, text);
+    },
+    "mapCase.ems.rank.lower": (player, recId) => {
+        if (!factions.isHospitalFaction(player.character.factionId)) return out.error(player, `Вы не являетесь медиком`);
+        if (!factions.canGiveRank(player)) return out.error(player, `Недостаточно прав`);
+        var header = `Понижение`;
+        var rec = mp.players.getBySqlId(recId);
+        if (!rec) return out.error(player, `Игрок #${recId} оффлайн`, header);
+        if (rec.id == player.id) return out.error(player, `Нельзя понизить себя`, header);
+        var min = factions.getMinRank(rec.character.factionId);
+        if (rec.character.factionRank <= min.id) return out.error(player, `${rec.name} имеет мин. ранг`);
+
+        var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank - 1);
+        factions.setRank(rec.character, rank.rank);
+        var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
+
+        notifs.success(rec, `${player.name} понизил вас до ${rankName}`, header);
+        var text = `<span>${rec.name}</span><br /> был понижен до ранга ${rankName}`;
+        out.success(player, text);
+    },
+    "mapCase.ems.members.uval": (player, recId) => {
+        if (!factions.isHospitalFaction(player.character.factionId)) return out.error(player, `Вы не являетесь медиком`);
+        if (!factions.canUval(player)) return out.error(player, `Недостаточно прав`);
+        var header = `Увольнение`;
+        var rec = mp.players.getBySqlId(recId);
+        if (!rec) return out.error(player, `Игрок #${recId} оффлайн`);
+        if (rec.id == player.id) return out.error(player, `Нельзя уволить себя`, header);
+
+        factions.deleteMember(rec);
+        notifs.info(rec, `${player.name} уволил вас`, header);
+        var text = `<span>${rec.name}</span><br /> был уволен`;
+        out.success(player, text);
     },
     "playerQuit": (player) => {
         if (!player.character) return;

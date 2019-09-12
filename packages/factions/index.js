@@ -222,6 +222,7 @@ module.exports = {
         player.call(`factions.faction.set`, [character.factionId]);
         player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
+        else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
     },
     setBlip(faction, type, color) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
@@ -243,10 +244,12 @@ module.exports = {
         player.call(`factions.faction.set`, [character.factionId]);
         player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
+        else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
     },
     deleteMember(player) {
         var character = player.character;
         if (this.isPoliceFaction(character.factionId)) require('../mapCase').removePoliceMember(player);
+        else if (this.isHospitalFaction(character.factionId)) require('../mapCase').removeHospitalMember(player);
         this.fullDeleteItems(character.id, character.factionId);
         character.factionId = null;
         character.factionRank = null;
@@ -270,14 +273,17 @@ module.exports = {
         character.factionRank = rank.id;
         character.save();
 
-        if (!this.isPoliceFaction(character.factionId)) return;
+        var type = "";
+        if (this.isPoliceFaction(character.factionId)) type = "pd";
+        else if (this.isHospitalFaction(character.factionId)) type = "ems";
+        if (!type) return;
 
         var rank = this.getRankById(character.factionId, character.factionRank).rank;
         mp.players.forEach((rec) => {
             if (!rec.character) return;
             if (rec.character.factionId != character.factionId) return;
 
-            rec.call(`mapCase.pd.members.rank.set`, [character.id, rank]);
+            rec.call(`mapCase.${type}.members.rank.set`, [character.id, rank]);
         });
     },
     isGovernmentFaction(faction) {

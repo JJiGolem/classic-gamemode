@@ -198,4 +198,22 @@ module.exports = {
     acceptHospitalCall(id) {
         return this.removeHospitalCall(id);
     },
+    addHospitalMember(player) {
+        if (!factions.isHospitalFaction(player.character.factionId)) return;
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isHospitalFaction(rec.character.factionId)) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            rec.call(`mapCase.ems.members.add`, [this.convertMembers([player])]);
+        });
+    },
+    removeHospitalMember(player) {
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isHospitalFaction(rec.character.factionId)) return;
+
+            rec.call(`mapCase.ems.members.remove`, [player.character.id]);
+        });
+    },
 };
