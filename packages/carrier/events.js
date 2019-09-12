@@ -35,8 +35,10 @@ module.exports = {
             if (!res) return out(`Ошибка списания наличных`);
 
             var type = ["grains", "soils"][data.product];
+            var name = ["Зерно", "Удобрение"][data.product];
             veh.products = {
                 type: type,
+                name: name,
                 count: data.count
             };
             veh.setVariable("label", `${data.count} из ${carrier.productsMax} ед.`);
@@ -79,13 +81,16 @@ module.exports = {
         if (veh.driver) return out(`Уже арендован`);
         if (player.character.cash < carrier.vehPrice) return out(`Необходимо $${carrier.vehPrice}`);
 
-        money.removeCash(player, carrier.vehPrice);
-        veh.driver = {
-            playerId: player.id,
-            characterId: player.character.id,
-        };
+        money.removeCash(player, carrier.vehPrice, (res) => {
+            if (!res) return out(`Ошибка списания наличных`);
+
+            veh.driver = {
+                playerId: player.id,
+                characterId: player.character.id,
+            };
+            player.call(`prompt.waitShowByName`, [`carrier_job`]);
+        });
         notifs.success(player, `Удачной работы!`, header);
-        player.call(`prompt.waitShowByName`, [`carrier_job`]);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;
@@ -97,14 +102,11 @@ module.exports = {
             player.removeFromVehicle();
             notifs.error(player, text, `Аренда грузовика`);
         };
+        if (!vehicle.driver) return player.call(`offerDialog.show`, ["carrier_job", {
+            price: carrier.vehPrice
+        }]);
         var characterId = player.character.id;
-        if (vehicle.driver && vehicle.driver.characterId != characterId) return out(`Грузовик арендован другим игроком`);
-        if (vehicle.driver) {
-                player.call(`prompt.waitShowByName`, [`carrier_job`]);
-        } else {
-            player.call(`offerDialog.show`, ["carrier_job", {
-                price: carrier.vehPrice
-            }]);
-        }
+        if (vehicle.driver.characterId != characterId) return out(`Грузовик арендован другим игроком`);
+        if (vehicle.products) return notifs.info(player, `Загружено: ${vehicle.products.name}`, `Товар`);
     },
 }

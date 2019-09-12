@@ -1,6 +1,7 @@
 "use strict";
 
 let farms = call('farms');
+let notifs = call('notifications');
 
 module.exports = {
     // Место мониторинга складов бизнесов/ферм и заказа товара
@@ -26,6 +27,7 @@ module.exports = {
         });
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z + 2, 2);
         colshape.onEnter = (player) => {
+            if (player.character.job != 4) return notifs.error(player, `Отказано в доступе`, `Склад`);
             player.call(`selectMenu.show`, [`carrierLoad`]);
             player.call(`carrier.load.info.set`, [this.getLoadData()]);
             player.carrierLoad = marker;
