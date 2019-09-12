@@ -16,7 +16,6 @@ var gunLicense = new Vue({
     methods: {
         close() {
             this.show = false;
-            mp.trigger('documents.close');
         },
     },
 });

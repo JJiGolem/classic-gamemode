@@ -3,8 +3,8 @@ var auth = new Vue({
     data: {
         show: false,
         loaderShow: true,
-        loginOrEmail: "",
-        password: "",
+        loginOrEmail: "admin",
+        password: "123123",
         password2: "",
         login: "",
         email: "",

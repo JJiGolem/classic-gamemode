@@ -1,0 +1,19 @@
+
+#map-case .ems .verification .btns .btn:hover {
+    background-color: #DE2B2B;
+    box-shadow: 0 0 10px rgba(222, 43, 43, 0.5);
+}
+
+#map-case .ems .menu .header,
+#map-case .ems .menu .menu-body .menu-item.focus,
+#map-case .ems .menu .menu-body .menu-item:hover,
+#map-case .ems .window .table .tbody .record .btn,
+#map-case .ems .window .members .action-modal .btn:hover {
+    background-color: #DE2B2B;
+}
+
+#map-case .ems .window .table .tbody .record:hover,
+#map-case .ems .window .table .tbody .record.focus {
+    background-color: #DE2B2B;
+    color: #fff;
+}
