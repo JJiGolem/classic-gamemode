@@ -10,7 +10,9 @@ module.exports = {
 
     },
     "characterInit.done": (player) => {
-
+        if (!factions.isHospitalFaction(player.character.factionId)) return;
+        player.call(`mapCase.init`, [player.name, player.character.factionId]);
+        // TODO: иниц. планшета
     },
     "hospital.storage.clothes.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Hospital`);

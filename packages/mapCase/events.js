@@ -243,6 +243,25 @@ module.exports = {
         });
         out.success(player, `Сработал экстренный вызов`);
     },
+    "mapCase.ems.calls.add": (player, description) => {
+        mapCase.addHospitalCall(player, description);
+    },
+    "mapCase.ems.calls.remove": (player, id) => {
+        mapCase.removeHospitalCall(id);
+    },
+    "mapCase.ems.calls.accept": (player, id) => {
+        // console.log(`calls.accept: ${player.name} ${id}`)
+        if (!factions.isHospitalFaction(player.character.factionId)) return out.error(player, `Вы не являетесь медиком`);
+        var header = `Вызов медика`;
+        var rec = mp.players.getBySqlId(id);
+        if (!rec) return out.error(player, `Игрок #${id} оффлайн`);
+        var accepted = mapCase.acceptHospitalCall(id);
+        if (!accepted) return out.error(player, `Вызов #${id} принят другим медиком`);
+        notifs.success(rec, `${player.name} принял ваш вызов, оставайтесь на месте`, header);
+        var text = `Вы приняли вызов от <br/><span>${rec.name}</span>`;
+        out.success(player, text);
+        player.call(`waypoint.set`, [rec.position.x, rec.position.y]);
+    },
     "playerQuit": (player) => {
         if (!player.character) return;
         mapCase.removePoliceCall(player.character.id);

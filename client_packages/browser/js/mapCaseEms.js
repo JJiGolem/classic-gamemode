@@ -8,6 +8,23 @@ var mapCaseEmsCallsData = {
         }
     },
     accept (data) {},
+    add(calls) {
+        if (typeof calls == 'string') calls = JSON.parse(calls);
+        if (!Array.isArray(calls)) calls = [calls];
+        for (var i = 0; i < calls.length; i++) {
+            this.remove(calls[i].id);
+            calls[i].num = calls[i].id;
+            this.list.push(calls[i]);
+        }
+    },
+    remove(id) {
+        for (var i = 0; i < this.list.length; i++) {
+            if (this.list[i].id == id) {
+                this.list.splice(i, 1);
+                i--;
+            }
+        }
+    }
 };
 
 var mapCaseEmsMembersData = {
@@ -71,15 +88,7 @@ var mapCaseEmsData =  {
 //Функция, срабатывающая при принятии вызова
 //data - данные о вызове
 mapCaseEmsCallsData.accept = (data) => {
-
-    setTimeout(() => {
-        let index = mapCaseEmsCallsData.list.indexOf(data);
-
-        mapCaseEmsCallsData.list.splice(index, 1);
-
-        mapCase.showGreenMessage(`Вы приняли вызов от <br/><span>${data.name}</span>`);
-
-    }, 3000);
+    mp.trigger(`callRemote`, `mapCase.ems.calls.accept`, data.id);
 }
 
 //Функция, устанавливающая массив рангов (от младшего к старшему)
@@ -119,7 +128,7 @@ mapCaseEmsMembersData.raiseRank = (data) => {
 
 
 //for tests
-mapCaseEmsCallsData.list = [
+/*mapCaseEmsCallsData.list = [
     {
         num: 2,
         name: "Curys Raider",
@@ -140,7 +149,7 @@ mapCaseEmsCallsData.list = [
         name: "Curys Raider",
         description: "Альпака покусал",
     },
-];
+];*/
 
 mapCaseEmsMembersData.list = [
     {

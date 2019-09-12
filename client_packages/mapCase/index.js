@@ -117,6 +117,15 @@ mp.mapCasePd = {
         }, this.emergencyBlipTime);
     },
 };
+mp.mapCaseEms = {
+    addCall(calls) {
+        if (typeof calls == 'object') calls = JSON.stringify(calls);
+        mp.callCEFV(`mapCaseEmsCallsData.add('${calls}')`);
+    },
+    removeCall(id) {
+        mp.callCEFV(`mapCaseEmsCallsData.remove(${id})`);
+    },
+};
 
 mp.events.add("mapCase.init", (name, factionId) => {
     mp.mapCase.enable(false);
@@ -125,6 +134,8 @@ mp.events.add("mapCase.init", (name, factionId) => {
         type = "pd";
         if (factionId == 2) mp.mapCasePd.menuHeader("LOS SANTOS", "POLICE DEPARTMENT");
         else mp.mapCasePd.menuHeader("BONE COUNTY", "SHERIFF DEPARTMENT");
+    } else if (mp.factions.isHospitalFaction(factionId)) {
+        type = "ems";
     }
     mp.mapCase.type(type);
     mp.mapCase.userName(name);
@@ -160,6 +171,10 @@ mp.events.add("mapCase.pd.members.rank.set", mp.mapCasePd.setMemberRank);
 mp.events.add("mapCase.pd.search.start", (recId) => {
     mp.mapCasePd.startSearch(recId);
 });
+
+mp.events.add("mapCase.ems.calls.add", mp.mapCaseEms.addCall);
+
+mp.events.add("mapCase.ems.calls.remove", mp.mapCaseEms.removeCall);
 
 mp.events.add("time.main.tick", () => {
     var id = mp.mapCasePd.searchPlayerId;
