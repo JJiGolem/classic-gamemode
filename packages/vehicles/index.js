@@ -41,12 +41,10 @@ module.exports = {
         vehicle.d = veh.d;
         vehicle.key = veh.key; /// ключ показывает тип авто: faction, job, private, newbie
         vehicle.owner = veh.owner;
-        vehicle.license = veh.license;
         vehicle.fuel = veh.fuel;
         vehicle.mileage = veh.mileage;
         vehicle.parkingId = veh.parkingId;
-        vehicle.parkingHours = veh.parkingHours;
-        vehicle.isOnParking = veh.isOnParking;
+        vehicle.parkingDate = veh.parkingDate;
         vehicle.lastMileage = veh.mileage; /// Последний сохраненный пробег
         vehicle.marketSpot = veh.marketSpot;
         vehicle.plate = veh.plate;
@@ -134,45 +132,44 @@ module.exports = {
     },
     respawnVehicle(veh) {
         if (!mp.vehicles.exists(veh)) return;
-        console.log('respawn');
-        //let occupants = veh.getOccupants();
-        //console.log(occupants);
-        // if (occupants.length > 0) {
-        //     occupants.forEach((player) => {
-        //         try {
-        //             player.removeFromVehicle();
-        //         } catch (err) {
-        //             console.log(err);
-        //         }
-        //     });
-        // }
-
-        if (veh.key == "admin") { /// Если админская, не респавним
-            clearInterval(veh.fuelTimer);
-            veh.destroy();
-            return;
-        }
-
-        if (veh.key == "private" && veh.isOnParking) {
-            mp.events.call('parkings.vehicle.add', veh);
-            clearInterval(veh.fuelTimer);
-            veh.destroy();
-            return;
-        }
-
-        if (veh.key == "private" && !veh.isOnParking && veh.d != 0) {
-            veh.isInGarage = true;
-        }
-        // veh.repair();
-        // veh.position = new mp.Vector3(veh.x, veh.y, veh.z);
-        // veh.rotation = new mp.Vector3(0, 0, veh.h);
-        // veh.d ? veh.dimension = veh.d : veh.dimension = 0;
-        // veh.setVariable('engine', false);
-        // veh.setVariable("leftTurnSignal", false);
-        // veh.setVariable("rightTurnSignal", false);
-        // veh.setVariable("hood", false);
-        // veh.setVariable("trunk", false);
         clearInterval(veh.fuelTimer);
+        if (veh.key == "admin") { /// Если админская, не респавним
+            veh.destroy();
+            return;
+        }
+
+        if (veh.key == "private") {
+
+            let owner = mp.players.toArray().find(x => {
+                if (!x.character) return;
+                if (x.character.id == veh.owner) return true;
+            });
+
+            if (!houses.isHaveHouse(owner.character.id)) {
+                mp.events.call('parkings.vehicle.add', veh);
+                veh.destroy();
+                return;
+            }
+
+            if (veh.carPlaceIndex == null || !veh.hasOwnProperty('carPlaceIndex')) {
+                let index = owner.carPlaces.findIndex(x => x.veh == null && x.d != 0);
+
+                if (owner.carPlaces.length == 1 && owner.carPlaces[0].d == 0) {
+                    index = 0;
+                }
+    
+                let place = owner.carPlaces[index];
+                veh.carPlaceIndex = index;
+                veh.x = place.x;
+                veh.y = place.y;
+                veh.z = place.z;
+                veh.h = place.h;
+                veh.d = place.d;
+                place.veh = veh;
+                veh.isInGarage = true;
+            }
+        }
+
         this.spawnVehicle(veh, 1);
         veh.destroy();
     },
@@ -254,15 +251,9 @@ module.exports = {
                 key: "private",
                 owner: player.character.id
             },
-            // include: [{
-            //     model: db.Models.VehicleTuning
-            // }]
-            // }]
         });
         player.vehicleList = [];
-        let temp = 0;
         dbPrivate.forEach((current) => {
-            //if (temp > 3) return; // TEMP!!!
             let props = this.setVehiclePropertiesByModel(current.modelName);
             player.vehicleList.push({
                 id: current.id,
@@ -272,31 +263,43 @@ module.exports = {
                 owners: current.owners,
                 vehType: props.vehType,
                 price: props.price,
-                isOnParking: current.isOnParking
+                //isOnParking: current.isOnParking
             });
-            temp++;
         });
         console.log(`[VEHICLES] Для игрока ${player.character.name} загружено ${dbPrivate.length} авто`)
-        if (houses.isHaveHouse(player.character.id)) {
+        let hasHouse = houses.isHaveHouse(player.character.id);
+        if (hasHouse) {
             await this.setPlayerCarPlaces(player);
         }
         if (dbPrivate.length > 0) {
-            let parkingVeh = dbPrivate.find(x => x.isOnParking);
 
-            if (parkingVeh) {
-                mp.events.call('parkings.vehicle.add', parkingVeh);
-                mp.events.call('parkings.notify', player, parkingVeh, 0);
-            }
+            if (hasHouse) {
+                let parkingVeh = dbPrivate.find(x => x.parkingDate);
 
-            if (houses.isHaveHouse(player.character.id)) {
+                if (parkingVeh) {
+                    mp.events.call('parkings.vehicle.add', parkingVeh);
+                    mp.events.call('parkings.notify', player, parkingVeh, 0);
+                }
+
+                // if (houses.isHaveHouse(player.character.id)) {
                 let length = player.carPlaces.length != 1 ? player.carPlaces.length - 1 : player.carPlaces.length;
                 for (let i = 0; i < length; i++) {
                     if (i >= dbPrivate.length) return;
-                    if (!dbPrivate[i].isOnParking) {
+                    if (!dbPrivate[i].parkingDate) {
                         this.spawnHomeVehicle(player, dbPrivate[i]);
+                        //   }
                     }
                 }
+            } else {
+                let veh = dbPrivate[0];
+                if (dbPrivate[0].parkingDate == null) {
+                    let now = new Date();
+                    dbPrivate[0].update({ parkingDate: now });
+                }
+                mp.events.call('parkings.vehicle.add', veh);
+                mp.events.call('parkings.notify', player, veh, 0);
             }
+
         }
     },
     async loadCarPlates() {
@@ -379,9 +382,6 @@ module.exports = {
             }
         });
         return result;
-    },
-    spawnHomeVehicles(player, vehicles) {
-
     },
     updateConsumption(vehicle) {
         if (!vehicle) return;
@@ -472,7 +472,7 @@ module.exports = {
     removeVehicleFromCarPlace(player, vehicle) {
         if (!vehicle) return;
         if (!player.carPlaces) return;
-        if (vehicle.isOnParking) return;
+        if (vehicle.parkingDate) return;
 
         let place = player.carPlaces[vehicle.carPlaceIndex];
 
@@ -486,7 +486,7 @@ module.exports = {
 
         let index = player.carPlaces.findIndex(x => x.veh == null && x.d != 0);
 
-        if (player.carPlaces.length == 1 && player.carPlaces[0].d == 0) { // TODO ПРОВЕРИТЬ С БИЧ ДОМОМ
+        if (player.carPlaces.length == 1 && player.carPlaces[0].d == 0) {
             index = 0;
         }
 
@@ -511,7 +511,7 @@ module.exports = {
     },
     doesPlayerHaveHomeVehicles(player) {
         let list = player.vehicleList;
-        let result = list.filter(x => x.isOnParking == 0);
+        let result = list.filter(x => x.parkingDate == null);
         if (result.length > 0) return true
         else return false;
     },
@@ -522,5 +522,31 @@ module.exports = {
             }
         });
         vehicle.tuning = tuning[0];
+    },
+    async parseVehicles() {
+        var dbVehicles = await db.Models.OldVeh.findAll({
+            where: {
+                key: {
+                    [Op.or]: ["faction", "job", "farm", "market"]
+                }
+            }
+        });
+        for (var i = 0; i < dbVehicles.length; i++) {
+            var veh = dbVehicles[i];
+            await db.Models.Vehicle.create({
+                key: veh.key,
+                owner: veh.owner,
+                modelName: veh.modelName,
+                plate: veh.plate,
+                regDate: veh.regDate,
+                owners: veh.owners,
+                color1: veh.color1,
+                color2: veh.color2,
+                x: veh.x,
+                y: veh.y,
+                z: veh.z,
+                h: veh.h
+            });
+        }
     }
 }

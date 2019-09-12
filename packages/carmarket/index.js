@@ -25,7 +25,6 @@ module.exports = {
         // await this.loadCarMarketData();
         // await this.loadCarMarketVehicles();
 
-
     },
     createCarMarket() {
         mp.blips.new(225, new mp.Vector3(carMarket.x, carMarket.y, carMarket.z),
@@ -141,8 +140,6 @@ module.exports = {
         vehicle.key = "market";
         vehicle.db.update({
             key: "market",
-            isOnParking: 0,
-            parkingHours: 0
         });
         this.addMarketVehicle(vehicle);
         if (vehicle.fuelTimer) {
@@ -169,7 +166,7 @@ module.exports = {
             where: {
                 key: "private",
                 owner: id,
-                isOnParking: 0
+                parkingDate: null
             }
         })
         if (vehs.length == 0) return;
@@ -184,7 +181,13 @@ module.exports = {
             fullPrice += parseInt(props.price * PRICE_CONFIG.SELL);
             this.addMarketVehicle(vehs[i]);
         }
-        let player = mp.players.toArray().find(x => x.character && x.character.id == id);
+        //let player = mp.players.toArray().find(x => x.character && x.character.id == id);
+
+        let player = mp.players.toArray().find(x => {
+            if (!x.character) return;
+            if (x.character.id == id) return true;
+        });
+
         if (player) {
             mp.vehicles.forEach((veh) => {
                 if (veh.key == 'private' && veh.owner == id) {

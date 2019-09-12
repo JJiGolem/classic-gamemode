@@ -113,10 +113,8 @@ module.exports = {
                     key: 'private',
                     owner: player.character.id,
                     owners: player.vehicle.owners + 1,
-                    isOnParking: hasHouse ? 0 : 1
                 });
                 player.vehicle.owners = player.vehicle.owners + 1;
-                player.vehicle.isOnParking = hasHouse ? 0 : 1;
                 player.call('vehicles.enter.private', [true]);
                 if (hasHouse) vehicles.setVehicleHomeSpawnPlace(player);
                 carmarket.setMarketSpotFree(player.vehicle.marketSpot);
@@ -130,7 +128,7 @@ module.exports = {
                     owners: veh.owners,
                     vehType: veh.properties.vehType,
                     price: veh.properties.price,
-                    isOnParking: veh.isOnParking
+                    //isOnParking: veh.isOnParking
                 });
 
                 player.call('carmarket.car.buy.ans', [2, carInfo]);

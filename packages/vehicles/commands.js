@@ -71,7 +71,6 @@ module.exports = {
 
             if (args[0] == "newbie") {
                 args[1] = 0;
-                veh.license = 0;
             }
             if (veh.sqlId) { /// Если автомобиль уже загружен из БД, то обновляем его
                 await veh.db.update({
@@ -98,7 +97,6 @@ module.exports = {
                     y: veh.position.y,
                     z: veh.position.z,
                     h: veh.heading,
-                    license: veh.license,
                     plate: veh.plate,
                     fuel: veh.properties.maxFuel * 0.7
                 });
