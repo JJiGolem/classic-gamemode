@@ -14,12 +14,12 @@ mp.events.add('hud.load', () => {
     if (mp.busy.list.includes("carshow")) return;
     if (hudState) {
       mp.events.call('hud.enable', false);
-      mp.callCEFV('speedometer.show = false');
+      // mp.callCEFV('speedometer.show = false');
       mp.game.ui.displayRadar(false);
     } else {
       mp.events.call('hud.enable', true);
       if (mp.players.local.vehicle && mp.players.local.vehicle.getPedInSeat(-1) == mp.players.local.handle && mp.speedometerEnabled) {
-        mp.callCEFV('speedometer.show = true');
+        // mp.callCEFV('speedometer.show = true');
       }
       mp.game.ui.displayRadar(true);
     }

@@ -9,7 +9,7 @@
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 70%;
+    width: 138vh;
     z-index: 100;
 }
 

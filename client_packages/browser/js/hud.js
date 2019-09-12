@@ -24,7 +24,12 @@ var hud = new Vue({
             return prettyMoney(val);
         }
     },
+    watch: {
+        show(val) {
+            speedometer.show = val;
+        }
+    },
     mounted() {
         setInterval(this.updateTime, 1000);
-    }
+    },
 });
