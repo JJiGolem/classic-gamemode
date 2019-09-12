@@ -23,7 +23,10 @@ module.exports = {
         money.removeCash(player, farm.price, (res) => {
             if (!res) return out(`Ошибка списания наличных`);
             farm.playerId = player.character.id;
+            farm.balance = 0;
+            farm.taxBalance = farms.tax * 24;
             farm.owner = player.character;
+
             farm.save();
             notifs.success(player, `Ферма #${farm.id} куплена`, header);
             notifs.warning(player, `Пополните балансы фермы`, header);
