@@ -331,6 +331,7 @@ var mapCasePdWantedData = {
         for (var i = 0; i < wanted.length; i++) {
             this.remove(wanted[i].id);
             wanted[i].num = wanted[i].id;
+            if (!wanted[i].description) wanted[i].description = "-";
             this.list.push(wanted[i]);
         }
     },
