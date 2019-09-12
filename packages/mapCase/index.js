@@ -5,6 +5,8 @@ var notifs = call('notifications');
 module.exports = {
     // Вызовы в планшете ПД
     policeCalls: [],
+    // Вызовы в планшете ЕМС
+    hospitalCalls: [],
 
     convertCharactersToResultData(characters) {
         var result = [];
@@ -156,6 +158,62 @@ module.exports = {
             if (!factions.isPoliceFaction(rec.character.factionId)) return;
 
             rec.call(`mapCase.pd.members.remove`, [player.character.id]);
+        });
+    },
+    addHospitalCall(player, description) {
+        this.removeHospitalCall(player.character.id);
+        var call = {
+            id: player.character.id,
+            name: player.name,
+            description: description
+        };
+        this.hospitalCalls.push(call);
+        notifs.success(player, `Вызов отправлен`, `Hospital`);
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isHospitalFaction(rec.character.factionId)) return;
+
+            notifs.info(rec, `Поступил вызов от ${call.name}`, `Планшет EMS`);
+            rec.call(`mapCase.ems.calls.add`, [call])
+        });
+    },
+    removeHospitalCall(id) {
+        var deleted = false;
+        for (var i = 0; i < this.hospitalCalls.length; i++) {
+            if (this.hospitalCalls[i].id == id) {
+                this.hospitalCalls.splice(i, 1);
+                i--;
+                deleted = true;
+            }
+        }
+        if (!deleted) return false;
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isHospitalFaction(rec.character.factionId)) return;
+
+            rec.call(`mapCase.ems.calls.remove`, [id])
+        });
+        return true;
+    },
+    acceptHospitalCall(id) {
+        return this.removeHospitalCall(id);
+    },
+    addHospitalMember(player) {
+        if (!factions.isHospitalFaction(player.character.factionId)) return;
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isHospitalFaction(rec.character.factionId)) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            rec.call(`mapCase.ems.members.add`, [this.convertMembers([player])]);
+        });
+    },
+    removeHospitalMember(player) {
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isHospitalFaction(rec.character.factionId)) return;
+
+            rec.call(`mapCase.ems.members.remove`, [player.character.id]);
         });
     },
 };
