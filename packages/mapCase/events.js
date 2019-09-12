@@ -325,8 +325,9 @@ module.exports = {
     "playerQuit": (player) => {
         if (!player.character) return;
         mapCase.removePoliceCall(player.character.id);
+        mapCase.removeHospitalCall(player.character.id);
         if (player.character.wanted) mapCase.removePoliceWanted(player.character.id);
-        if (!factions.isPoliceFaction(player.character.factionId)) return;
-        mapCase.removePoliceMember(player);
+        if (factions.isPoliceFaction(player.character.factionId)) mapCase.removePoliceMember(player);
+        else if (factions.isHospitalFaction(player.character.factionId)) mapCase.removeHospitalMember(player);
     },
 }
