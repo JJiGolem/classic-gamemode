@@ -6,7 +6,7 @@ module.exports = {
         args: "[ид_игрока]:n",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            rec.call(`familiar.add`, [rec.name]);
+            player.call(`familiar.add`, [rec.name]);
         }
     },
     "/famdel": {
@@ -15,7 +15,7 @@ module.exports = {
         args: "[ид_игрока]:n",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            rec.call(`familiar.remove`, [rec.name]);
+            player.call(`familiar.remove`, [rec.name]);
         }
     },
 
