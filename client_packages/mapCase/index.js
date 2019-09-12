@@ -37,9 +37,8 @@ mp.mapCasePd = {
     // Блипы, где запросили подкрепление
     emergencyBlips: [],
 
-    menuHeader(top, bottom) {
-        mp.callCEFV(`mapCasePdData.menuHeader.top = "${top}"`);
-        mp.callCEFV(`mapCasePdData.menuHeader.bottom = "${bottom}"`);
+    menuHeader(text) {
+        mp.callCEFV(`mapCasePdData.menuHeader = "${text}"`);
     },
     setResultData(array) {
         for (var i = 0; i < array.length; i++) {
@@ -146,8 +145,8 @@ mp.events.add("mapCase.init", (name, factionId) => {
     var type = "";
     if (mp.factions.isPoliceFaction(factionId)) {
         type = "pd";
-        if (factionId == 2) mp.mapCasePd.menuHeader("LOS SANTOS", "POLICE DEPARTMENT");
-        else mp.mapCasePd.menuHeader("BONE COUNTY", "SHERIFF DEPARTMENT");
+        if (factionId == 2) mp.mapCasePd.menuHeader("LOS SANTOS<br/>POLICE DEPARTMENT");
+        else mp.mapCasePd.menuHeader("BONE COUNTY<br/>SHERIFF DEPARTMENT");
     } else if (mp.factions.isHospitalFaction(factionId)) {
         type = "ems";
     }
