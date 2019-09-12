@@ -56,17 +56,28 @@ mp.events.add('fishing.game.menu', () => {
     })
 });
 
-mp.events.add('fishing.start', (cam) => {
+mp.events.add('fishing.game.start', (cam) => {
     if (mp.busy.includes()) return;
 
     mp.busy.add('fishingGame');
     playBaseAnimation(true);
     mp.gui.cursor.show(true, true);
-    mp.game.cam.setCinematicModeActive(true);
-    camera = mp.cameras.new('fishingCamera', new mp.Vector3(cam.x, cam.y, cam.z), new mp.Vector3(cam.x, cam.y, cam.z), 60);
-    camera.pointAtCoord(100, 100, 100);
-    camera.setActive(true);
-    mp.game.cam.renderScriptCams(true, false, 0, true, false);
+    mp.callCEFVN({ "fishing.show": true });
+});
+
+mp.events.add('fishing.game.wait', () => {
+    playWaitAnimation();
+    mp.events.callRemote('fishing.game.start');
+});
+
+mp.events.add('fishing.game.fetch', (speed, zone, weight) => {
+    playFetchAnimation(true);
+    mp.callCEFV(`fishing.fishFetch(${speed},${zone},${weight});`);
+});
+
+mp.events.add('fishing.game.end', (result) => {
+    mp.events.callRemote('fishing.game.end', result);
+    playBaseAnimation(true);
 });
 
 mp.events.add('fishing.end', () => {
@@ -75,14 +86,40 @@ mp.events.add('fishing.end', () => {
     mp.busy.remove('fishingGame');
     playBaseAnimation(false);
     mp.gui.cursor.show(false, false);
-    mp.game.cam.setCinematicModeActive(true);
+    // mp.game.cam.setCinematicModeActive(true);
 });
 
 function playBaseAnimation(state, timeout) { /// Анимация держания удочки
     if (state) {
         if (!timeout) timeout = 0;
         setTimeout(()=> {
+            mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@base', 'base', 1, 49);
+            mp.attachmentMngr.addLocal("takeRod");
+        }, timeout);
+    } else {
+        mp.attachmentMngr.removeLocal("takeRod");
+        mp.events.callRemote('animations.stop');
+    }
+}
+
+function playWaitAnimation(state, timeout) { /// Анимация начала рыбалки
+    if (state) {
+        if (!timeout) timeout = 0;
+        setTimeout(()=> {
             mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@idle_a', 'idle_a', 1, 49);
+            mp.attachmentMngr.addLocal("takeRod");
+        }, timeout);
+    } else {
+        mp.attachmentMngr.removeLocal("takeRod");
+        mp.events.callRemote('animations.stop');
+    }
+}
+
+function playFetchAnimation(state, timeout) { /// Анимация вытягивания
+    if (state) {
+        if (!timeout) timeout = 0;
+        setTimeout(()=> {
+            mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@idle_c', 'idle_c', 1, 49);
             mp.attachmentMngr.addLocal("takeRod");
         }, timeout);
     } else {
