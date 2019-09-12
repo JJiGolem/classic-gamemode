@@ -25,19 +25,19 @@ var dataForSpeedScale = [
     /*23*/    { isFill: false, d: "M 879.041 626.325 L 879.6 630.6 l -19.2 2.535 c -0.379 0.05 -0.77 -0.548 -0.873 -1.334 l -0.187 -1.425 c -0.1 -0.786 0.12 -1.465 0.5 -1.515 Z" },
     /*24*/    { isFill: false, d: "M 883.312 677.1 v 4.31 H 821.053 c -1.228 0 -2.224 -0.643 -2.224 -1.437 v -1.436 c 0 -0.794 1 -1.437 2.224 -1.437 h 62.259 Z" },
     ];
-    
+
     var dataForLightBeam = [
         { transform: "rotate(15deg) translate(15px, -90px)", d: "M 369.147 121.872 h 87.14 c 8.284 0 15 -6.716 15 -15 s -6.716 -15 -15 -15 h -87.14 c -8.284 0 -15 6.716 -15 15 S 360.863 121.872 369.147 121.872 Z" },
         { transform: "rotate(15deg) translate(25px, -100px)", d: "M 374.891 199.635 c 0 8.284 6.716 15 15 15 h 87.14 c 8.284 0 15 -6.716 15 -15 s -6.716 -15 -15 -15 h -87.14 C 381.607 184.635 374.891 191.351 374.891 199.635 Z" },
         { transform: "rotate(15deg) translate(45px, -110px)", d: "M 477.031 277.397 h -87.14 c -8.284 0 -15 6.716 -15 15 s 6.716 15 15 15 h 87.14 c 8.284 0 15 -6.716 15 -15 S 485.316 277.397 477.031 277.397 Z" },
         { transform: "rotate(15deg) translate(70px, -120px)", d: "M 456.287 370.159 h -87.14 c -8.284 0 -15 6.716 -15 15 s 6.716 15 15 15 h 87.14 c 8.284 0 15 -6.716 15 -15 S 464.571 370.159 456.287 370.159 Z" },
     ];
-    
+
     var dataForLock = {
         0: { class: "green", d: "M408.05,195.2h-49.8v-82c0-62.3-50.9-113.2-113.2-113.2s-113.2,50.8-113.2,113.1c0,11.4,9.3,20.8,20.8,20.8s20.8-9.3,20.8-20.8c0-39.5,32.2-71.6,71.6-71.6c39.5,0,71.6,32.2,71.6,71.6v82H82.05c-11.4,0-20.8,9.3-20.8,20.8v253.4c0,11.4,9.3,20.8,20.8,20.8h326c11.4,0,20.8-9.3,20.8-20.8V215.9C428.85,204.5,419.45,195.2,408.05,195.2z M388.35,448.5h-285.6V236.7h285.5v211.8H388.35z" },
         1: { class: "red",   d: "M 408.05 195.2 h -49.8 v -82 c 0 -62.3 -50.9 -113.2 -113.2 -113.2 s -113.2 50.8 -113.2 113.1 v 82 h -49.8 c -11.4 0 -20.8 9.3 -20.8 20.8 v 253.4 c 0 11.4 9.3 20.8 20.8 20.8 h 326 c 11.4 0 20.8 -9.3 20.8 -20.8 V 215.9 C 428.85 204.5 419.45 195.2 408.05 195.2 Z M 174.45 114.2 c 0 -39.5 32.2 -71.6 71.6 -71.6 c 39.5 0 71.6 32.2 71.6 71.6 v 81 h -143.2 V 114.2 Z M 388.35 448.5 h -285.6 V 236.7 h 285.5 v 211.8 H 388.35 Z" },
     }
-    
+
     var dataForFuel = `M352.427,90.24l0.32-0.32L273.28,10.667L250.667,33.28l45.013,45.013c-20.053,7.68-34.347,26.987-34.347,49.707
         c0,29.44,23.893,53.333,53.333,53.333c7.573,0,14.827-1.6,21.333-4.48v153.813C336,342.4,326.4,352,314.667,352
         c-11.733,0-21.333-9.6-21.333-21.333v-96c0-23.573-19.093-42.667-42.667-42.667h-21.333V42.667C229.333,19.093,210.24,0,186.667,0
@@ -45,7 +45,7 @@ var dataForSpeedScale = [
         c29.44,0,53.333-23.893,53.333-53.333V128C368,113.28,362.027,99.947,352.427,90.24z M186.667,149.333h-128V42.667h128V149.333z
         M314.667,149.333c-11.733,0-21.333-9.6-21.333-21.333s9.6-21.333,21.333-21.333c11.733,0,21.333,9.6,21.333,21.333
         S326.4,149.333,314.667,149.333z`;
-    
+
     var dataForDanger = `M507.494,426.066L282.864,53.537c-5.677-9.415-15.87-15.172-26.865-15.172c-10.995,0-21.188,5.756-26.865,15.172
         L4.506,426.066c-5.842,9.689-6.015,21.774-0.451,31.625c5.564,9.852,16.001,15.944,27.315,15.944h449.259
         c11.314,0,21.751-6.093,27.315-15.944C513.508,447.839,513.336,435.755,507.494,426.066z M256.167,167.227
@@ -53,7 +53,7 @@ var dataForSpeedScale = [
         c-10.584,0-19.516-4.3-19.516-14.554c0-39.363-4.63-95.929-4.63-135.292C232.021,174.505,242.605,167.227,256.167,167.227z
          M256.498,411.018c-14.554,0-25.471-11.908-25.471-25.47c0-13.893,10.916-25.47,25.471-25.47c13.562,0,25.14,11.577,25.14,25.47
         C281.638,399.11,270.06,411.018,256.498,411.018z`
-    
+
     var speedometer = new Vue({
         el: "#speedometer",
         data: {
@@ -69,23 +69,23 @@ var dataForSpeedScale = [
             maxSpeed: 480,
             arrow: 0, //0-выкл,1-левый,2-правый (поворотики)
             emergency: 0,
-    
+
             leftArrow: false,
             rightArrow: false,
-    
+
             svgScalePaths: dataForSpeedScale,
             svgLightPaths: dataForLightBeam,
             svgLockPaths: dataForLock,
             svgFuelPath: dataForFuel,
             svgDangerPath: dataForDanger,
-    
+
             arrowInterval: null,
         },
         methods: {
             flickerLight: function () { // 0, 1, 2, 3
                 if (this.arrowInterval)
                     clearInterval(this.arrowInterval);
-    
+
                 if (!(this.arrow + this.emergency)) {
                     this.leftArrow = false;
                     this.rightArrow = false;
@@ -93,7 +93,7 @@ var dataForSpeedScale = [
                 }
                 this.leftArrow = (this.emergency == 1 || this.arrow == 1) ? !this.leftArrow : false;
                 this.rightArrow = (this.emergency == 1 || this.arrow == 2) ? !this.rightArrow : false;
-                
+
                 this.arrowInterval = setInterval(() => {
                     this.leftArrow = (this.emergency == 1 || this.arrow == 1) ? !this.leftArrow : false;
                     this.rightArrow = (this.emergency == 1 || this.arrow == 2) ? !this.rightArrow : false;
@@ -103,25 +103,28 @@ var dataForSpeedScale = [
         computed: {
             compSpeed: function () {
                 let speed = this.speed;
-    
+
                 let amountLines = this.svgScalePaths.length;
                 let step = this.maxSpeed / (amountLines - 1);
                 let count = Math.floor(speed / step);
-    
+
                 for (let i = 0; i < amountLines; i++) {
                     let val = i <= count;
-    
+
                     if (speed == 0) val = false;
-    
+
                     this.svgScalePaths[i].isFill = val;
                 }
-    
+
                 return speed;
             },
             perFuel: function () {
                 let fuel = this.fuel;
-    
+
                 return 100 - (fuel * 100 / this.maxFuel);
+            },
+            isShow() {
+                return this.show && hud.show;
             },
         },
         watch: {
@@ -132,10 +135,9 @@ var dataForSpeedScale = [
                 this.flickerLight();
             }
         }
-    
-    
+
+
     });
-    
+
     // for tests
     // speedometer.show = true;
-    

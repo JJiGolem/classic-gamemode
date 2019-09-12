@@ -385,7 +385,7 @@
         </div>
     </div>
 
-    <div v-cloak id="speedometer" :class="{ noActive: !isActive }" v-if="show">
+    <div v-cloak id="speedometer" :class="{ noActive: !isActive }" v-if="isShow">
         <svg class="scale" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="766.625" height="387.906" viewBox="0 0 766.625 387.906">
             <path v-for="path in svgScalePaths" :class="{ fill: path.isFill }" :d="path.d" transform="translate(-116.688 -293.5)" />
         </svg>
