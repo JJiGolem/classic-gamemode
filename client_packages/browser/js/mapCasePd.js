@@ -661,6 +661,8 @@ mapCasePdProfileData.giveWanted = (cause, danger, profileData) => {
         cause: cause,
         wanted: danger
     };
+    profileData.cause = cause;
+    profileData.danger = danger;
     mp.trigger(`callRemote`, `mapCase.pd.wanted.give`, JSON.stringify(data));
 }
 

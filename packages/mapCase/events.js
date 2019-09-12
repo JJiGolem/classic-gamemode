@@ -159,7 +159,6 @@ module.exports = {
                 id: data.recId
             }
         });
-        notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур. розыска (${data.cause})`, `Розыск`);
         var text = `Уровень розыска <span>${data.wanted}&#9733;</span><br/>выдан <span>${data.recName}</span><br/> по причине <span>${data.cause}</span>`;
         out.success(player, text);
     },
