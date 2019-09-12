@@ -411,6 +411,9 @@ module.exports = {
         var text = `<span>${rec.name}</span><br /> был уволен`;
         out.success(player, text);
     },
+    "time.main.tick": () => {
+        mapCase.publicAd();
+    },
     "playerQuit": (player) => {
         if (!player.character) return;
         mapCase.removePoliceCall(player.character.id);

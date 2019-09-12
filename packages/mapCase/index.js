@@ -1,4 +1,5 @@
 "use strict";
+let chat = call('chat');
 var factions = require('../factions');
 var notifs = call('notifications');
 
@@ -272,10 +273,10 @@ module.exports = {
     },
     acceptAd(player, ad) {
         this.newsAdsEdited.push(ad);
-        debug(`Объявления в очереди: `)
-        debug(this.newsAds);
-        debug(`Готовые объявления: `)
-        debug(this.newsAdsEdited);
+        // debug(`Объявления в очереди: `)
+        // debug(this.newsAds);
+        // debug(`Готовые объявления: `)
+        // debug(this.newsAdsEdited);
         var rec = mp.players.at(ad.playerId);
         var header = factions.getFaction(7).name;
         if (rec) notifs.success(rec, `${player.name} принял ваше объявление`, header);
@@ -284,6 +285,14 @@ module.exports = {
         var rec = mp.players.at(ad.playerId);
         var header = factions.getFaction(7).name;
         if (rec) notifs.info(rec, `${player.name} отменил ваше объявление. Причина: ${ad.text}`, header);
+    },
+    publicAd() {
+        if (!this.newsAdsEdited.length) return;
+        var ad = this.newsAdsEdited.shift();
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            chat.push(rec, `[ADS] ${ad.author}[${ad.playerId}]: ${ad.text}`);
+        });
     },
     addNewsMember(player) {
         if (!factions.isNewsFaction(player.character.factionId)) return;
