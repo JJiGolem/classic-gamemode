@@ -13,7 +13,14 @@
 // Вызов события необходимо прописать в [CEF] interactionMenu.menu.handler(), если в этом есть необходимость.
 mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
     var entity = mp.getCurrentInteractionEntity();
-    if (menuName == 'faction') {
+    if (menuName == 'player_interaction') {
+        if (!entity) return;
+        if (entity.type != 'player') return;
+        if (itemName == 'Познакомиться') {
+            if (mp.familiar.list.includes(entity.name)) return mp.notify.error(`Вы уже знаете ${entity.name}`, `Знакомство`);
+            mp.events.callRemote(`familiar.add`, entity.remoteId);
+        }
+    } else if (menuName == 'faction') {
         if (!entity) return;
         if (entity.type != 'player') return;
 

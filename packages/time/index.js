@@ -4,6 +4,8 @@ var farms = call('farms');
 var jobs = require('../jobs');
 var notifs = require('../notifications');
 
+let CUSTOM_TIME;
+
 module.exports = {
     init() {
         this.initPayDayTimer();
@@ -42,8 +44,10 @@ module.exports = {
         });
     },
     updateWorldTime(date) {
-        mp.world.time.hour = date.getHours();
-        mp.world.time.minute = date.getMinutes();
+        if (!CUSTOM_TIME) {
+            mp.world.time.hour = date.getHours();
+            mp.world.time.minute = date.getMinutes();
+        }
     },
     factionPay() {
         mp.players.forEach((rec) => {
@@ -72,4 +76,13 @@ module.exports = {
             farm.save();
         });
     },
+    setCustomTime(hours) {
+        mp.world.time.hour = hours;
+        CUSTOM_TIME = hours;
+    },
+    resetCustomTime() {
+        CUSTOM_TIME = null;
+        let date = new Date();
+        this.updateWorldTime(date);
+    }
 };

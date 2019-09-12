@@ -65,6 +65,11 @@ Vue.component('map-case-pd-dbSearch', {
         onClickMenuItem(mod) {
             this.menuItemInFocus = mod;
         },
+        enterHandler (e) {
+            if (e.keyCode == 13 && !mapCase.loadMod) {
+                this.search();
+            }
+        }
     },
 });
 
@@ -95,36 +100,6 @@ Vue.component('map-case-pd-dbResult', {
             mapCasePdData.getProfile(record);
         },
     },
-});
-
-Vue.component('map-case-pd-calls', {
-    template: "#map-case-pd-calls",
-    props: {
-        list: Array,
-        sortMod: Object,
-        accept: Function,
-    },
-    data: () => ({
-        arrows: mapCaseSvgPaths.tableSortArrows,
-    }),
-    computed: {
-        sortedList() {
-            let newList = [...this.list];
-
-            mapCaseSortByKey(newList, this.sortMod.mod)
-
-            return newList;
-        },
-    },
-    methods: {
-        onClickSort(sortMod) {
-            this.sortMod.update(sortMod);
-        },
-        onClickAccept(data) {
-            mapCase.showLoad();
-            this.accept(data);
-        }
-    }
 });
 
 Vue.component('map-case-pd-wanted', {
@@ -158,92 +133,6 @@ Vue.component('map-case-pd-wanted', {
             mapCasePdData.getProfile(record);
         },
     },
-});
-
-Vue.component('map-case-pd-members', {
-    template: "#map-case-pd-members",
-    props: {
-        list: Array,
-        sortMod: Object,
-        ranks: Array,
-        dismiss: Function,
-        lowerRank: Function,
-        raiseRank: Function,
-    },
-    data: () => ({
-        modalIsShow: false,
-        currentRecord: null,
-        lastUsedRecord: null,
-        modalStyles: {
-            top: 0,
-        },
-
-        arrows: mapCaseSvgPaths.tableSortArrows,
-    }),
-    computed: {
-        sortedList() {
-            let newList = [...this.list];
-
-            mapCaseSortByKey(newList, this.sortMod.mod);
-
-            if (this.sortMod.mod == "rank")
-                newList.reverse();
-
-            return newList;
-        },
-    },
-    methods: {
-        onClickSort(sortMod) {
-            this.sortMod.update(sortMod);
-        },
-        showModal(event, record) {
-            this.currentRecord = record;
-            this.lastUsedRecord = record;
-            this.modalIsShow = true;
-
-            let offsetTop = event.target.parentElement.offsetTop;
-            let height = event.target.parentElement.clientHeight;
-            let scrollTop = this.$refs.membersBody.scrollTop;
-
-            let parentHeight = this.$refs.membersBody.clientHeight;
-            let modalHeight = window.innerHeight * 0.09;
-            let compOffsetTop = offsetTop + height - scrollTop;
-
-            this.modalStyles.top = ((compOffsetTop > parentHeight * 1.25) ? (offsetTop - modalHeight - scrollTop) : compOffsetTop) + "px";
-        },
-        hideModal(event) {
-            let className = event && event.target.className;
-
-            if (className == 'record-align btn') return;
-
-            this.modalIsShow = false;
-            this.currentRecord = null;
-        },
-        acceptDismiss() {
-            mapCase.showLoad();
-
-            this.dismiss(this.lastUsedRecord);
-        },
-        onClickDismiss() {
-            mapCase.showVerification(`Вы действительно хотите уволить <br /><span>${this.lastUsedRecord.name}</span>?`, this.acceptDismiss);
-        },
-        acceptLower() {
-            mapCase.showLoad();
-
-            this.lowerRank(this.lastUsedRecord);
-        },
-        onClickLower() {
-            mapCase.showVerification(`Вы действительно хотите понизить <br /><span>${this.lastUsedRecord.name}</span>?`, this.acceptLower);
-        },
-        acceptRaise() {
-            mapCase.showLoad();
-
-            this.raiseRank(this.lastUsedRecord);
-        },
-        onClickRaise() {
-            mapCase.showVerification(`Вы действительно хотите повысить <br /><span>${this.lastUsedRecord.name}</span>?`, this.acceptRaise);
-        },
-    }
 });
 
 Vue.component('map-case-pd-profile', {
@@ -284,6 +173,11 @@ Vue.component('map-case-pd-identification', {
             let regex = new RegExp("[0-9]")
             if (!regex.test(event.key))
                 event.preventDefault();
+        },
+        enterHandler (e) {
+            if (e.keyCode == 13 && !mapCase.loadMod) {
+                this.search();
+            }
         }
     }
 });
@@ -316,6 +210,11 @@ Vue.component('map-case-pd-over-fine', {
             let regex = new RegExp("[0-9]")
             if (!regex.test(event.key))
                 event.preventDefault();
+        },
+        enterHandler (e) {
+            if (e.keyCode == 13 && !mapCase.loadMod) {
+                this.give();
+            }
         }
     }
 
@@ -356,6 +255,11 @@ Vue.component('map-case-pd-over-wanted', {
         },
         setDanger() {
             this.danger = this.overDanger
+        },
+        enterHandler (e) {
+            if (e.keyCode == 13 && !mapCase.loadMod) {
+                this.give();
+            }
         }
     }
 
@@ -427,6 +331,7 @@ var mapCasePdWantedData = {
         for (var i = 0; i < wanted.length; i++) {
             this.remove(wanted[i].id);
             wanted[i].num = wanted[i].id;
+            if (!wanted[i].description) wanted[i].description = "-";
             this.list.push(wanted[i]);
         }
     },
@@ -544,10 +449,7 @@ var mapCasePdWindowsData = {
 }
 
 var mapCasePdData = {
-    menuHeader: {
-        top: 'LOS SANTOS',
-        bottom: 'POLICE DEPARTMENT'
-    },
+    menuHeader: 'LOS SANTOS<br />POLICE DEPARTMENT',
     menuTitle: "Добро пожаловать,",
     menuHeaderImg: "img/mapCase/menu-header-pd.svg",
     windowsData: mapCasePdWindowsData,
@@ -760,6 +662,8 @@ mapCasePdProfileData.giveWanted = (cause, danger, profileData) => {
         cause: cause,
         wanted: danger
     };
+    profileData.cause = cause;
+    profileData.danger = danger;
     mp.trigger(`callRemote`, `mapCase.pd.wanted.give`, JSON.stringify(data));
 }
 

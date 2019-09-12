@@ -37,9 +37,8 @@ mp.mapCasePd = {
     // Блипы, где запросили подкрепление
     emergencyBlips: [],
 
-    menuHeader(top, bottom) {
-        mp.callCEFV(`mapCasePdData.menuHeader.top = "${top}"`);
-        mp.callCEFV(`mapCasePdData.menuHeader.bottom = "${bottom}"`);
+    menuHeader(text) {
+        mp.callCEFV(`mapCasePdData.menuHeader = "${text}"`);
     },
     setResultData(array) {
         for (var i = 0; i < array.length; i++) {
@@ -117,14 +116,39 @@ mp.mapCasePd = {
         }, this.emergencyBlipTime);
     },
 };
+mp.mapCaseEms = {
+    addCall(calls) {
+        if (typeof calls == 'object') calls = JSON.stringify(calls);
+        mp.callCEFV(`mapCaseEmsCallsData.add('${calls}')`);
+    },
+    removeCall(id) {
+        mp.callCEFV(`mapCaseEmsCallsData.remove(${id})`);
+    },
+    addMember(members) {
+        if (typeof members == 'object') members = JSON.stringify(members);
+        mp.callCEFV(`mapCaseEmsMembersData.add('${members}')`);
+    },
+    removeMember(id) {
+        mp.callCEFV(`mapCaseEmsMembersData.remove(${id})`);
+    },
+    setRanks(ranks) {
+        if (typeof ranks == 'object') ranks = JSON.stringify(ranks);
+        mp.callCEFV(`mapCaseEmsMembersData.setRanks('${ranks}')`);
+    },
+    setMemberRank(id, rank) {
+        mp.callCEFV(`mapCaseEmsMembersData.setMemberRank(${id}, ${rank})`);
+    },
+};
 
 mp.events.add("mapCase.init", (name, factionId) => {
     mp.mapCase.enable(false);
     var type = "";
     if (mp.factions.isPoliceFaction(factionId)) {
         type = "pd";
-        if (factionId == 2) mp.mapCasePd.menuHeader("LOS SANTOS", "POLICE DEPARTMENT");
-        else mp.mapCasePd.menuHeader("BONE COUNTY", "SHERIFF DEPARTMENT");
+        if (factionId == 2) mp.mapCasePd.menuHeader("LOS SANTOS<br/>POLICE DEPARTMENT");
+        else mp.mapCasePd.menuHeader("BONE COUNTY<br/>SHERIFF DEPARTMENT");
+    } else if (mp.factions.isHospitalFaction(factionId)) {
+        type = "ems";
     }
     mp.mapCase.type(type);
     mp.mapCase.userName(name);
@@ -160,6 +184,18 @@ mp.events.add("mapCase.pd.members.rank.set", mp.mapCasePd.setMemberRank);
 mp.events.add("mapCase.pd.search.start", (recId) => {
     mp.mapCasePd.startSearch(recId);
 });
+
+mp.events.add("mapCase.ems.calls.add", mp.mapCaseEms.addCall);
+
+mp.events.add("mapCase.ems.calls.remove", mp.mapCaseEms.removeCall);
+
+mp.events.add("mapCase.ems.members.add", mp.mapCaseEms.addMember);
+
+mp.events.add("mapCase.ems.members.remove", mp.mapCaseEms.removeMember);
+
+mp.events.add("mapCase.ems.ranks.set", mp.mapCaseEms.setRanks);
+
+mp.events.add("mapCase.ems.members.rank.set", mp.mapCaseEms.setMemberRank);
 
 mp.events.add("time.main.tick", () => {
     var id = mp.mapCasePd.searchPlayerId;

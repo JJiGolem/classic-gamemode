@@ -2,6 +2,8 @@ var interactionMenu = new Vue({
     el: "#interactionMenu",
     data: {
         show: false,
+        // Возможность использования
+        enable: true,
         left: 80, /// сдвиг от левой части экрана
         // Текущее меню
         menu: null,
@@ -102,11 +104,10 @@ var interactionMenu = new Vue({
             },
             "player_interaction": {
                 name: "player_interaction",
-                items: [
-                    // {
-                    //     text: "Познакомиться",
-                    //     icon: "hands.png"
-                    // },
+                items: [{
+                        text: "Познакомиться",
+                        icon: "hands.png"
+                    },
                     {
                         text: "Документы",
                         icon: "doc.png"
@@ -118,7 +119,10 @@ var interactionMenu = new Vue({
                 ],
                 handler(index) {
                     var item = this.items[index];
-                    if (item.text == 'Документы') {
+                    if (item.text == 'Познакомиться') {
+                        interactionMenu.show = false;
+                        mp.trigger(`interactionMenu.onClick`, this.name, item.text);
+                    } else if (item.text == 'Документы') {
                         mp.trigger(`documents.list`);
                     } else if (item.text == 'Деньги') {
                         //mp.trigger(`interaction.menu.close`);
@@ -285,6 +289,9 @@ var interactionMenu = new Vue({
         },
     },
     watch: {
+        enable(val) {
+            if (!val) this.show = false;
+        },
         // show(val) {
         //     setCursor(val);
         //     if (val) busy.add("interaction", true);

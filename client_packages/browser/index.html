@@ -386,7 +386,7 @@
         </div>
     </div>
 
-    <div v-cloak id="speedometer" :class="{ noActive: !isActive }" v-if="show">
+    <div v-cloak id="speedometer" :class="{ noActive: !isActive }" v-if="isShow">
         <svg class="scale" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="766.625" height="387.906" viewBox="0 0 766.625 387.906">
             <path v-for="path in svgScalePaths" :class="{ fill: path.isFill }" :d="path.d" transform="translate(-116.688 -293.5)" />
         </svg>
@@ -448,7 +448,7 @@
         </div>
     </div>
 
-    <div v-cloak id="interactionMenu" v-if="show" v-bind:style="{left: left + 'vw'}">
+    <div v-cloak id="interactionMenu" v-if="show && enable" v-bind:style="{left: left + 'vw'}">
         <div class="interaction_item" v-for="(item, index) in menu.items" @click="onClick(index)">
             <div class="icon"><img :src="imgSrc(index)" />
             </div>
@@ -476,7 +476,7 @@
                     </div>
                 </div>
             </div>
-            <div class="empty" v-show="!environment.length">Не доступно</div>
+            <div class="empty" v-show="!environment.length">Без взаимодействия</div>
         </div>
         <div class="equipment">
             <div class="header">
@@ -778,6 +778,8 @@
     <!-- ------------------------ ПЛАНШЕТ ПД ------------------------ -->
     <link rel="stylesheet" type="text/css" href="css/mapCase.css" />
     <link rel="stylesheet" type="text/css" href="css/mapCasePd.css" />
+    <link rel="stylesheet" type="text/css" href="css/mapCaseEms.css" />
+    <link rel="stylesheet" type="text/css" href="css/mapCaseWnews.css" />
 
     <script type="text/x-template" id="map-case-pd-dbSearch">
         <div class="dbSearch">
@@ -804,7 +806,7 @@
                 <input
                     :placeholder="menuItems[menuItemInFocus].hint"
                     v-model="menuItems[menuItemInFocus].inputValue"
-                    @keypress="menuItems[menuItemInFocus].inputCheck($event)"
+                    @keypress="menuItems[menuItemInFocus].inputCheck($event); enterHandler($event)"
                 />
             </div>
             <div class="search" @click="search()">Поиск</diV>
@@ -845,7 +847,7 @@
         </div>
     </script>
 
-    <script type="text/x-template" id="map-case-pd-calls">
+    <script type="text/x-template" id="map-case-calls">
         <div class="calls board">
             <div class="title">Вызовы</div>
             <div class="table">
@@ -906,7 +908,7 @@
         </div>
     </script>
 
-    <script type="text/x-template" id="map-case-pd-members">
+    <script type="text/x-template" id="map-case-members">
         <div class="members board">
             <div class="title">Список сотрудников</div>
             <div class="table" @click="hideModal($event)">
@@ -960,7 +962,7 @@
                 <input
                     placeholder="Введите ID..."
                     v-model="inputValue"
-                    @keypress="inputCheck($event)"
+                    @keypress="inputCheck($event); enterHandler($event)"
                 />
             </div>
             <div class="search" @click="search()">Установить личность</diV>
@@ -985,8 +987,31 @@
         </div>
     </script>
 
+    <script type="text/x-template" id="map-case-wnews-ads">
+        <div class="ads">
+            <div class="logo"><img src="img/mapCase/news-paper.svg"/></div>
+            <div class="title">РЕДАКТИРОВАНИЕ ОБЪЯВЛЕНИЯ</div>
+            <div class="hint">Объявлений для редактирования: <span>{{ adsAmount }}</span></div>
+            <div class="btn" @click="get()">Получить</diV>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="map-case-wnews-over-ads">
+        <div class="over ads">
+            <div class="title">Текст объявления: </div>
+            <div :class="['text', { focus: editMod }]" :contenteditable="editMod" @input="update"></div>
+            <div class="line"></div>
+            <div class="author"><span>Автор:</span> {{ adData.ad.author }}</div>
+            <div class="btns">
+                <div class="btn" @click="edit()"><div><img src="img/mapCase/edit_pen.svg"/></div><div class="cont">РЕДАКТИРОВАТЬ ТЕКСТ</div></div>
+                <div class="btn send" @click="send()"><div><img src="img/mapCase/stopwatch.svg"/></div><div class="cont">ОТПРАВИТЬ</div></div>
+                <div class="btn" @click="refuse()"><div><img src="img/mapCase/error_gray.svg"/></div><div class="cont">ОТКАЗАТЬ</div></div>
+            </div>
+        </div>
+    </script>
+
     <script type="text/x-template" id="map-case-pd-over-fine">
-        <div class="over verification fine">
+        <div class="over verification fine" @keypress="enterHandler($event)">
             <div class="header"> Выдача штрафа {{ profileData[currentMenuFocus].name}}</div>
             <div class="title">Введите причину</div>
             <div class="input"><input placeholder="Введите причину выдачи штрафа..." v-model="causeValue"/></div>
@@ -1000,7 +1025,7 @@
     </script>
 
     <script type="text/x-template" id="map-case-pd-over-wanted">
-        <div class="over verification fine">
+        <div class="over verification fine" @keypress="enterHandler($event)">
             <div class="header"> Выдача розыска {{ profileData[currentMenuFocus].name}}</div>
             <div class="title">Введите причину</div>
             <div class="input"><input placeholder="Введите причину выдачи розыска..." v-model="causeValue"/></div>
@@ -1024,7 +1049,10 @@
             <div :class="['screen', { blur: blurMod }]">
                 <div class="menu">
                     <div class="header">
-                        <div class="menu-top">{{ certainData.menuHeader.top }}<br />{{ certainData.menuHeader.bottom}}</div>
+                        <div class="menu-top">
+                            <div v-html="certainData.menuHeader"></div>
+                            <img v-if="certainData.menuHeaderName" :src="certainData.menuHeaderName"/>
+                        </div>
                         <div class="menu-bottom">
                             <div>
                                 <img :src="certainData.menuHeaderImg" />
@@ -1090,14 +1118,14 @@
                     <div class="btn" @click="hideVerification()">Нет</div>
                 </div>
             </div>
-            <keep-alive>
-                <component :is="currentOverWindow" v-bind="dataForWindow"></component>
-            </keep-alive>
+            <component :is="currentOverWindow" v-bind="dataForWindow"></component>
         </div>
     </div>
 
     <script src="js/mapCaseSvgPaths.js"></script>
     <script src="js/mapCasePd.js"></script>
+    <script src="js/mapCaseEms.js"></script>
+    <script src="js/mapCaseWNews.js"></script>
     <script src="js/mapCase.js"></script>
     <!-- ------------------------ ПЛАНШЕТ ПД ------------------------ -->
 

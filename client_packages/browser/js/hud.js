@@ -26,5 +26,5 @@ var hud = new Vue({
     },
     mounted() {
         setInterval(this.updateTime, 1000);
-    }
+    },
 });

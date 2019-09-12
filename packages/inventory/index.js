@@ -827,21 +827,10 @@ module.exports = {
     },
     getVehicleClientPockets(dbItems) {
         var pockets = [{
-                cols: 18,
-                rows: 10,
-                items: {}
-            },
-            {
-                cols: 9,
-                rows: 8,
-                items: {}
-            },
-            {
-                cols: 9,
-                rows: 8,
-                items: {}
-            },
-        ];
+            cols: 18,
+            rows: 20,
+            items: {}
+        }, ];
         for (var i = 0; i < dbItems.length; i++) {
             var dbItem = dbItems[i];
             if (dbItem.parentId) continue;

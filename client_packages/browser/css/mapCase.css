@@ -8,6 +8,7 @@
     background: linear-gradient(150deg, #F4F4F4 0%, #666666 100%);
     border-radius: 3vh;
     font-family: Montserrat;
+    z-index: 100;
 }
 
 
@@ -33,7 +34,7 @@
 }
 
 #map-case .screen.blur {
-    filter: blur(1px);
+    filter: blur(0.2vh);
 }
 
 #map-case .screen .blurShadow {
@@ -184,6 +185,8 @@
 
 #map-case .menu .header .menu-top {
     padding-top: 7%;
+    font-size: 1.7vh;
+    font-weight: bold;
 }
 
 #map-case .menu .header .menu-bottom {
@@ -192,7 +195,19 @@
     grid-gap: 8%;
     margin: 1.8vh 0 0 3.5vh;
     text-align: left;
+    font-size: 1.3vh;
+    line-height: 1.6vh;
 }
+
+#map-case .menu .header .menu-bottom span {
+    font-size: 1.4vh;
+    font-weight: bold;
+}
+
+#map-case .menu .header .menu-bottom img {
+    height: 3.6vh;
+}
+
 
 #map-case .menu .menu-body .menu-item {
     height: 3.8vh;
@@ -207,6 +222,12 @@
     font-weight: 600;
     line-height: 3.8vh;
     padding-right: 1.5vh;
+}
+
+#map-case .menu .menu-body .menu-item.focus,
+#map-case .menu .menu-body .menu-item:hover {
+    box-shadow: none;
+    color: #fff;
 }
 
 #map-case .menu .menu-body .menu-item svg {
@@ -356,6 +377,12 @@
     line-height: 2.6vh;
 }
 
+#map-case .body .board .table .tbody .record:hover .btn,
+#map-case .body .board .table .tbody .record.focus .btn {
+    background-color: #fff;
+    color: #000;
+}
+
 #map-case .body .board .table .tbody .record .stars svg {
     width: 1.8vh;
     fill: none;
@@ -365,6 +392,58 @@
 #map-case .body .board .table .first {
     padding-left: 2vh;
 }
+
+#map-case .calls .table .head,
+#map-case .calls .table .tbody .record,
+#map-case .members .table .head,
+#map-case .members .table .tbody .record {
+    grid-template-columns: 4fr 10fr 15vh 8fr;
+}
+
+#map-case .members.board .table .tbody .record .btn {
+    font-size: 1.4vh;
+}
+
+#map-case .members .table .tbody .record .btn svg {
+    width: 1.3vh;
+    fill: none;
+    stroke: #fff;
+    pointer-events: none;
+}
+
+#map-case .members .table .tbody .record:hover .btn svg,
+#map-case .members .table .tbody .record.focus .btn svg {
+    stroke: #000;
+}
+
+#map-case .members .action-modal {
+    position: absolute;
+    width: 12vh;
+    right: 3.2vh;
+    background-color: #fff;
+    border-radius: 0.5vh;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+#map-case .members .action-modal .btn {
+    text-align: center;
+    font-size: 1.5vh;
+    font-weight: bold;
+    height: 3vh;
+    border-radius: 0.5vh;
+    line-height: 3vh;
+}
+
+#map-case .members .table .tbody .record.focus .btn svg {
+    transform: rotate(180deg);
+}
+
+#map-case .members .action-modal .btn:hover {
+    color: #fff;
+}
+
+
+
 
 #map-case .body .back {
     position: absolute;
@@ -381,4 +460,13 @@
     left: 50%;
     transform: translate(-50%, -50%);
     height: 60%;
+}
+
+#map-case .over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border-radius: 0.5vh;
 }

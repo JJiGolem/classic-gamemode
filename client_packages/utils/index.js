@@ -198,6 +198,18 @@ mp.utils = {
             outline: true
         });
     },
+    // Получить игрока по нику
+    getPlayerByName(name) {
+        if (!name) return null;
+        var result;
+        mp.players.forEach((recipient) => {
+            if (recipient.name == name) {
+                result = recipient;
+                return;
+            }
+        });
+        return result;
+    },
 };
 
 

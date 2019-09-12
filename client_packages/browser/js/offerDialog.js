@@ -155,6 +155,32 @@ var offerDialog = new Vue({
                 no() {},
                 ignore() {},
             },
+            "familiar": {
+                text: `Carter Slade хочет познакомиться`,
+                playerId: null,
+                on(values) {
+                    this.text = `${values.name} хочет познакомиться`;
+                    this.playerId = values.playerId;
+                },
+                yes() {
+                    mp.trigger("callRemote", "familiar.accept", this.playerId);
+                },
+                no() {},
+                ignore() {},
+            },
+            "death": {
+                text: `Дождаться медиков?`,
+                on() {},
+                yes() {
+                    mp.trigger(`callRemote`, `death.wait`);
+                },
+                no() {
+                    mp.trigger(`callRemote`, `death.spawn`);
+                },
+                ignore() {
+                    mp.trigger(`callRemote`, `death.wait`);
+                },
+            },
         },
         dialog: null,
         timeout: null,

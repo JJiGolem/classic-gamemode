@@ -68,6 +68,7 @@ module.exports = {
         if (player.vehicle.key == "market") return;
         if (player.vehicle.key == "job" && player.vehicle.owner == 2 && !player.vehicle.isActiveTaxi) return;
         if (player.vehicle.key == "job" && player.vehicle.owner == 3 && !player.vehicle.isActiveBus) return;
+        if (player.vehicle.key == "job" && player.vehicle.owner == 4 && !player.vehicle.driver) return;
         if (player.vehicle.isBeingRepaired) return player.call('notifications.push.warning', ['Двигатель завести нельзя', 'Ремонт']);
         if (player.vehicle.isBeingTuned) return;
         if (player.vehicle.fuel <= 0) return player.call('notifications.push.error', ['Нет топлива', 'Транспорт']);
@@ -154,7 +155,7 @@ module.exports = {
     "vehicles.lock": (player, vehicleId) => {
         let vehicle = mp.vehicles.at(vehicleId);
         if (!vehicle) return;
-        // TEMP 
+        // TEMP
         if (vehicle.key != 'private') return player.call('notifications.push.error', ['Это не ваше т/с', 'Ошибка']);
         if (vehicle.owner != player.character.id) return player.call('notifications.push.error', ['Это не ваше т/с', 'Транспорт']);
 

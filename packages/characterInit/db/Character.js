@@ -228,7 +228,10 @@ module.exports = (sequelize, DataTypes) => {
         // Причина розыска
         wantedCause: {
             type: DataTypes.STRING,
-            defaultValue: null
+            defaultValue: null,
+            set(val) {
+                if (!val) this.setDataValue('wantedCause', '-');
+            }
         },
         // Оставшееся время ареста
         arrestTime: {
