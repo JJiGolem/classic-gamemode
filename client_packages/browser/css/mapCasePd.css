@@ -13,6 +13,10 @@
     background-color: #1861F3;
 }
 
+#map-case .pd .menu .menu-body .menu-item div {
+    pointer-events: none;
+}
+
 #map-case .pd .window .dbSearch {
     width: 60%;
     margin: 3vh auto;

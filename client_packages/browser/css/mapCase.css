@@ -33,7 +33,7 @@
 }
 
 #map-case .screen.blur {
-    filter: blur(1px);
+    filter: blur(0.2vh);
 }
 
 #map-case .screen .blurShadow {
