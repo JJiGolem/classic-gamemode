@@ -139,6 +139,22 @@ mp.mapCaseEms = {
         mp.callCEFV(`mapCaseEmsMembersData.setMemberRank(${id}, ${rank})`);
     },
 };
+mp.mapCaseNews = {
+    addMember(members) {
+        if (typeof members == 'object') members = JSON.stringify(members);
+        mp.callCEFV(`mapCaseWnewsMembersData.add('${members}')`);
+    },
+    removeMember(id) {
+        mp.callCEFV(`mapCaseWnewsMembersData.remove(${id})`);
+    },
+    setRanks(ranks) {
+        if (typeof ranks == 'object') ranks = JSON.stringify(ranks);
+        mp.callCEFV(`mapCaseWnewsMembersData.setRanks('${ranks}')`);
+    },
+    setMemberRank(id, rank) {
+        mp.callCEFV(`mapCaseWnewsMembersData.setMemberRank(${id}, ${rank})`);
+    },
+};
 
 mp.events.add("mapCase.init", (name, factionId) => {
     mp.mapCase.enable(false);
@@ -198,6 +214,14 @@ mp.events.add("mapCase.ems.members.remove", mp.mapCaseEms.removeMember);
 mp.events.add("mapCase.ems.ranks.set", mp.mapCaseEms.setRanks);
 
 mp.events.add("mapCase.ems.members.rank.set", mp.mapCaseEms.setMemberRank);
+
+mp.events.add("mapCase.news.members.add", mp.mapCaseNews.addMember);
+
+mp.events.add("mapCase.news.members.remove", mp.mapCaseNews.removeMember);
+
+mp.events.add("mapCase.news.ranks.set", mp.mapCaseNews.setRanks);
+
+mp.events.add("mapCase.news.members.rank.set", mp.mapCaseNews.setMemberRank);
 
 mp.events.add("time.main.tick", () => {
     var id = mp.mapCasePd.searchPlayerId;

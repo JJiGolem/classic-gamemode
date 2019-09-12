@@ -216,4 +216,22 @@ module.exports = {
             rec.call(`mapCase.ems.members.remove`, [player.character.id]);
         });
     },
+    addNewsMember(player) {
+        if (!factions.isNewsFaction(player.character.factionId)) return;
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isNewsFaction(rec.character.factionId)) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            rec.call(`mapCase.news.members.add`, [this.convertMembers([player])]);
+        });
+    },
+    removeNewsMember(player) {
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isNewsFaction(rec.character.factionId)) return;
+
+            rec.call(`mapCase.news.members.remove`, [player.character.id]);
+        });
+    },
 };

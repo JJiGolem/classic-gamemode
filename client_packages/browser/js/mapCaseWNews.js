@@ -106,7 +106,32 @@ var mapCaseWnewsMembersData = {
     },
     rankHead: "Должность",
     setRanks (ranksList) {
+        if (typeof ranksList == 'string') ranksList = JSON.parse(ranksList);
         this.ranks = ranksList;
+    },
+    setMemberRank(id, rank) {
+        rank = Math.clamp(rank, 1, this.ranks.length);
+        for (var i = 0; i < this.list.length; i++) {
+            var rec = this.list[i];
+            if (rec.id == id) rec.rank = rank;
+        }
+    },
+    add(members) {
+        if (typeof members == 'string') members = JSON.parse(members);
+        if (!Array.isArray(members)) members = [members];
+        for (var i = 0; i < members.length; i++) {
+            this.remove(members[i].id);
+            members[i].num = members[i].id;
+            this.list.push(members[i]);
+        }
+    },
+    remove(id) {
+        for (var i = 0; i < this.list.length; i++) {
+            if (this.list[i].id == id) {
+                this.list.splice(i, 1);
+                i--;
+            }
+        }
     },
     dismiss (data) {},
     lowerRank (data) {},
@@ -176,32 +201,25 @@ mapCaseWnewsMembersData.setRanks(["Старший редахтер", "Альпа
 //Функция, срабатывающая при увольнение сотрудника
 //data - данные о сотруднике из записи в списке
 mapCaseWnewsMembersData.dismiss = (data) => {
-    setTimeout(() => {
-        mapCase.showRedMessage(`<span>${data.name}</span><br /> был уволен`);
-
-        let index = mapCaseWnewsMembersData.list.indexOf(data);
-        mapCaseWnewsMembersData.list.splice(index, 1);
-    }, 3000);
+    mp.trigger(`callRemote`, `mapCase.news.members.uval`, data.id);
 }
 
 
 //Функция, срабатывающая при понижении сотрудника (крайние случаи не обработаны, может выйти за пределы массива рангов)
 //data - данные о сотруднике из записи в списке
 mapCaseWnewsMembersData.lowerRank = (data) => {
-    setTimeout(() => {
-        data.rank--;
-        mapCase.showGreenMessage(`<span>${data.name}</span><br /> был понижен до ранга ${mapCaseWnewsMembersData.ranks[data.rank]}`);
-    }, 3000);
+    if (data.rank <= 1)
+        return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет мин. ранг - ${mapCaseWnewsMembersData.ranks[data.rank - 1]}`);
+    mp.trigger(`callRemote`, `mapCase.news.rank.lower`, data.id);
 }
 
 
 //Функция, срабатывающая при повышении сотрудника (крайние случаи не обработаны, может выйти за пределы массива рангов)
 //data - данные о сотруднике из записи в списке
 mapCaseWnewsMembersData.raiseRank = (data) => {
-    setTimeout(() => {
-        data.rank++;
-        mapCase.showGreenMessage(`<span>${data.name}</span><br /> был повышен до ранга ${mapCaseWnewsMembersData.ranks[data.rank]}`);
-    }, 3000);
+    if (data.rank >= mapCaseWnewsMembersData.ranks.length)
+        return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет макс. ранг - ${mapCaseWnewsMembersData.ranks[data.rank - 1]}`);
+    mp.trigger(`callRemote`, `mapCase.news.rank.raise`, data.id);
 }
 
 //Функция, срабатывающая при запросе объявления
@@ -237,7 +255,7 @@ mapCaseWnewsAdsData.adData.refuse = (adData) => {
 
 //for tests
 
-mapCaseWnewsMembersData.list = [
+/*mapCaseWnewsMembersData.list = [
     {
         num: 1,
         name: "Curys Raider",
@@ -253,6 +271,6 @@ mapCaseWnewsMembersData.list = [
         name: "Curysirusew Raiderderder",
         rank: 1,
     },
-];
+];*/
 
 mapCaseWnewsAdsData.adsAmount = 2;

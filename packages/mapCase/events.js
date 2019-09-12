@@ -322,12 +322,72 @@ module.exports = {
         var text = `<span>${rec.name}</span><br /> был уволен`;
         out.success(player, text);
     },
+    "mapCase.news.init": (player) => {
+        var ranks = factions.getRankNames(player.character.factionId);
+        player.call(`mapCase.news.ranks.set`, [ranks]);
+
+        var members = factions.getMembers(player);
+        members = mapCase.convertMembers(members);
+        player.call(`mapCase.news.members.add`, [members]);
+        mapCase.addNewsMember(player);
+    },
+    "mapCase.news.rank.raise": (player, recId) => {
+        if (!factions.isNewsFaction(player.character.factionId)) return out.error(player, `Вы не являетесь редактором`);
+        if (!factions.canGiveRank(player)) return out.error(player, `Недостаточно прав`);
+        var header = `Повышение`;
+        var rec = mp.players.getBySqlId(recId);
+        if (!rec) return out.error(player, `Игрок #${recId} оффлайн`);
+        if (rec.id == player.id) return out.error(player, `Нельзя повысить себя`, header);
+        var max = factions.getMaxRank(rec.character.factionId);
+        if (rec.character.factionRank >= max.id) return out.error(player, `${rec.name} имеет макс. ранг`);
+
+        var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank + 1);
+        factions.setRank(rec.character, rank.rank);
+        var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
+
+        notifs.success(rec, `${player.name} повысил вас до ${rankName}`, header);
+        var text = `<span>${rec.name}</span><br /> был повышен до ранга ${rankName}`;
+        out.success(player, text);
+    },
+    "mapCase.news.rank.lower": (player, recId) => {
+        if (!factions.isNewsFaction(player.character.factionId)) return out.error(player, `Вы не являетесь редактором`);
+        if (!factions.canGiveRank(player)) return out.error(player, `Недостаточно прав`);
+        var header = `Понижение`;
+        var rec = mp.players.getBySqlId(recId);
+        if (!rec) return out.error(player, `Игрок #${recId} оффлайн`, header);
+        if (rec.id == player.id) return out.error(player, `Нельзя понизить себя`, header);
+        var min = factions.getMinRank(rec.character.factionId);
+        if (rec.character.factionRank <= min.id) return out.error(player, `${rec.name} имеет мин. ранг`);
+
+        var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank - 1);
+        factions.setRank(rec.character, rank.rank);
+        var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
+
+        notifs.success(rec, `${player.name} понизил вас до ${rankName}`, header);
+        var text = `<span>${rec.name}</span><br /> был понижен до ранга ${rankName}`;
+        out.success(player, text);
+    },
+    "mapCase.news.members.uval": (player, recId) => {
+        if (!factions.isNewsFaction(player.character.factionId)) return out.error(player, `Вы не являетесь редактором`);
+        if (!factions.canUval(player)) return out.error(player, `Недостаточно прав`);
+        var header = `Увольнение`;
+        var rec = mp.players.getBySqlId(recId);
+        if (!rec) return out.error(player, `Игрок #${recId} оффлайн`);
+        if (rec.id == player.id) return out.error(player, `Нельзя уволить себя`, header);
+
+        factions.deleteMember(rec);
+        notifs.info(rec, `${player.name} уволил вас`, header);
+        var text = `<span>${rec.name}</span><br /> был уволен`;
+        out.success(player, text);
+    },
     "playerQuit": (player) => {
         if (!player.character) return;
         mapCase.removePoliceCall(player.character.id);
         mapCase.removeHospitalCall(player.character.id);
+        mapCase.removeNewsAd(player.character.id);
         if (player.character.wanted) mapCase.removePoliceWanted(player.character.id);
         if (factions.isPoliceFaction(player.character.factionId)) mapCase.removePoliceMember(player);
         else if (factions.isHospitalFaction(player.character.factionId)) mapCase.removeHospitalMember(player);
+        else if (factions.isNewsFaction(player.character.factionId)) mapCase.removeNewsMember(player);
     },
 }
