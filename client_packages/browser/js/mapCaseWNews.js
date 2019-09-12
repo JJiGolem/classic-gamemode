@@ -88,6 +88,7 @@ var mapCaseWnewsAdsData = {
     },
     getAd: () => {},
     setAd (adData) {
+        if (typeof adData == 'string') adData = JSON.parse(adData);
         this.adData.ad = adData;
 
         mapCase.currentOverWindow = `map-case-wnews-over-ads`;
@@ -224,33 +225,36 @@ mapCaseWnewsMembersData.raiseRank = (data) => {
 
 //Функция, срабатывающая при запросе объявления
 mapCaseWnewsAdsData.getAd = () => {
-    setTimeout(() => {
-        let adData = {
-            text: "Тачку хачу купить",
-            author: "Cy Raider",
-        };
-        mapCaseWnewsAdsData.setAd(adData);
-    }, 3000);
+    mp.trigger(`callRemote`, `mapCase.news.ads.get`);
+    // setTimeout(() => {
+    //     let adData = {
+    //         text: "Тачку хачу купить",
+    //         author: "Cy Raider",
+    //     };
+    //     mapCaseWnewsAdsData.setAd(adData);
+    // }, 3000);
 }
 
 //Функция, срабатывающая при отпралении объявления
 //adData - информация об объявлении ({ text, author })
 mapCaseWnewsAdsData.adData.send = (adData) => {
-    console.log(adData);
-    setTimeout(() => {
-        mapCase.showGreenMessage(`Объявление<br />отправлено!`);
-        mapCaseWnewsAdsData.adsAmount--;
-    }, 3000);
+    mp.trigger(`callRemote`, `mapCase.news.ads.accept`, JSON.stringify(adData));
+    // console.log(adData);
+    // setTimeout(() => {
+    //     mapCase.showGreenMessage(`Объявление<br />отправлено!`);
+    //     mapCaseWnewsAdsData.adsAmount--;
+    // }, 3000);
 }
 
 //Функция, срабатывающая при отказе публикации
 //adData - информация об объявлении ({ text, author })
 mapCaseWnewsAdsData.adData.refuse = (adData) => {
-    console.log(adData);
-    setTimeout(() => {
-        mapCase.showRedMessage(`Отказано<br />в публикации!`);
-        mapCaseWnewsAdsData.adsAmount--;
-    }, 3000);
+    mp.trigger(`callRemote`, `mapCase.news.ads.cancel`, JSON.stringify(adData));
+    // console.log(adData);
+    // setTimeout(() => {
+    //     mapCase.showRedMessage(`Отказано<br />в публикации!`);
+    //     mapCaseWnewsAdsData.adsAmount--;
+    // }, 3000);
 }
 
 //for tests
@@ -273,4 +277,4 @@ mapCaseWnewsAdsData.adData.refuse = (adData) => {
     },
 ];*/
 
-mapCaseWnewsAdsData.adsAmount = 2;
+mapCaseWnewsAdsData.adsAmount = 0;

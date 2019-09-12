@@ -140,6 +140,13 @@ mp.mapCaseEms = {
     },
 };
 mp.mapCaseNews = {
+    setAdsCount(count) {
+        mp.callCEFV(`mapCaseWnewsAdsData.adsAmount = ${count}`);
+    },
+    showAd(ad) {
+        if (typeof ad == 'object') ad = JSON.stringify(ad);
+        mp.callCEFV(`mapCaseWnewsAdsData.setAd('${ad}')`);
+    },
     addMember(members) {
         if (typeof members == 'object') members = JSON.stringify(members);
         mp.callCEFV(`mapCaseWnewsMembersData.add('${members}')`);
@@ -162,7 +169,7 @@ mp.events.add("mapCase.init", (name, factionId) => {
     if (mp.factions.isPoliceFaction(factionId)) {
         type = "pd";
         if (factionId == 2) mp.mapCasePd.menuHeader("LOS SANTOS<br/>POLICE DEPARTMENT");
-        else mp.mapCasePd.menuHeader("BONE COUNTY<br/>SHERIFF DEPARTMENT");
+        else mp.mapCasePd.menuHeader("BLAINE COUNTY<br/>SHERIFF DEPARTMENT");
     } else if (mp.factions.isHospitalFaction(factionId)) {
         type = "ems";
     } else if (mp.factions.isNewsFaction(factionId)) {
@@ -214,6 +221,10 @@ mp.events.add("mapCase.ems.members.remove", mp.mapCaseEms.removeMember);
 mp.events.add("mapCase.ems.ranks.set", mp.mapCaseEms.setRanks);
 
 mp.events.add("mapCase.ems.members.rank.set", mp.mapCaseEms.setMemberRank);
+
+mp.events.add("mapCase.news.ads.count.set", mp.mapCaseNews.setAdsCount);
+
+mp.events.add("mapCase.news.ads.show", mp.mapCaseNews.showAd);
 
 mp.events.add("mapCase.news.members.add", mp.mapCaseNews.addMember);
 

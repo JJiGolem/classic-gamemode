@@ -7,6 +7,12 @@ module.exports = {
     policeCalls: [],
     // Вызовы в планшете ЕМС
     hospitalCalls: [],
+    // Объявления (в очереди) в планшете Ньюс
+    newsAds: [],
+    // Объявления (готовые в эфир) в планшете Ньюс
+    newsAdsEdited: [],
+    // Свободный ID новой новости
+    adId: 1,
 
     convertCharactersToResultData(characters) {
         var result = [];
@@ -215,6 +221,69 @@ module.exports = {
 
             rec.call(`mapCase.ems.members.remove`, [player.character.id]);
         });
+    },
+    addNewsAd(player, text) {
+        // this.removeNewsAd(player.character.id);
+        var ad = {
+            id: this.adId,
+            playerId: player.id,
+            author: player.name,
+            text: text
+        };
+        this.adId++;
+        this.newsAds.push(ad);
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isNewsFaction(rec.character.factionId)) return;
+
+            notifs.info(rec, `Поступило объявление от ${ad.author}`, `Планшет Weazel News`);
+            rec.call(`mapCase.news.ads.count.set`, [this.newsAds.length]);
+        });
+    },
+    removeNewsAd(id) {
+        var deleted = false;
+        for (var i = 0; i < this.newsAds.length; i++) {
+            if (this.newsAds[i].playerId == id) {
+                this.newsAds.splice(i, 1);
+                i--;
+                deleted = true;
+            }
+        }
+        if (!deleted) return false;
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isNewsFaction(rec.character.factionId)) return;
+
+            rec.call(`mapCase.news.ads.count.set`, [this.newsAds.length])
+        });
+        return true;
+    },
+    getNewsAd(player) {
+        if (!this.newsAds.length) return notifs.error(player, `Список объявлений пуст`);
+
+        var ad = this.newsAds.shift();
+        player.call(`mapCase.news.ads.show`, [ad]);
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isNewsFaction(rec.character.factionId)) return;
+
+            rec.call(`mapCase.news.ads.count.set`, [this.newsAds.length])
+        });
+    },
+    acceptAd(player, ad) {
+        this.newsAdsEdited.push(ad);
+        debug(`Объявления в очереди: `)
+        debug(this.newsAds);
+        debug(`Готовые объявления: `)
+        debug(this.newsAdsEdited);
+        var rec = mp.players.at(ad.playerId);
+        var header = factions.getFaction(7).name;
+        if (rec) notifs.success(rec, `${player.name} принял ваше объявление`, header);
+    },
+    cancelAd(player, ad) {
+        var rec = mp.players.at(ad.playerId);
+        var header = factions.getFaction(7).name;
+        if (rec) notifs.info(rec, `${player.name} отменил ваше объявление. Причина: ${ad.text}`, header);
     },
     addNewsMember(player) {
         if (!factions.isNewsFaction(player.character.factionId)) return;

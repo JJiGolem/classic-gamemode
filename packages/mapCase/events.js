@@ -2,6 +2,8 @@
 var chat = require('../chat');
 var factions = require('../factions');
 var mapCase = require('./index');
+let money = call('money');
+let news = call('news');
 var notifs = require('../notifications');
 var police = require('../police');
 var utils = require('../utils');
@@ -326,10 +328,39 @@ module.exports = {
         var ranks = factions.getRankNames(player.character.factionId);
         player.call(`mapCase.news.ranks.set`, [ranks]);
 
+        player.call(`mapCase.news.ads.count.set`, [mapCase.newsAds.length]);
+
         var members = factions.getMembers(player);
         members = mapCase.convertMembers(members);
         player.call(`mapCase.news.members.add`, [members]);
         mapCase.addNewsMember(player);
+    },
+    "mapCase.news.ads.add": (player, text) => {
+        var header = factions.getFaction(7).name;
+        var price = news.symbolPrice * text.length;
+        if (player.character.cash < price) return notifs.error(player, `Необходимо $${price}`, header);
+        money.removeCash(player, price, (res) => {
+            if (!res) return notifs.error(player, `Ошибка списания наличных`, header);
+        });
+
+        mapCase.addNewsAd(player, text);
+        return notifs.success(player, `Объявление отправлено`, header);
+    },
+    "mapCase.news.ads.remove": (player, id) => {
+        mapCase.removeNewsAd(id);
+    },
+    "mapCase.news.ads.get": (player) => {
+        mapCase.getNewsAd(player);
+    },
+    "mapCase.news.ads.accept": (player, ad) => {
+        ad = JSON.parse(ad);
+        mapCase.acceptAd(player, ad);
+        out.success(player, `Объявление отредактировано`);
+    },
+    "mapCase.news.ads.cancel": (player, ad) => {
+        ad = JSON.parse(ad);
+        mapCase.cancelAd(player, ad);
+        out.success(player, `Объявление отклонено`);
     },
     "mapCase.news.rank.raise": (player, recId) => {
         if (!factions.isNewsFaction(player.character.factionId)) return out.error(player, `Вы не являетесь редактором`);
@@ -384,7 +415,7 @@ module.exports = {
         if (!player.character) return;
         mapCase.removePoliceCall(player.character.id);
         mapCase.removeHospitalCall(player.character.id);
-        mapCase.removeNewsAd(player.character.id);
+        mapCase.removeNewsAd(player.id);
         if (player.character.wanted) mapCase.removePoliceWanted(player.character.id);
         if (factions.isPoliceFaction(player.character.factionId)) mapCase.removePoliceMember(player);
         else if (factions.isHospitalFaction(player.character.factionId)) mapCase.removeHospitalMember(player);
