@@ -4,7 +4,7 @@ let interval;
 var fishing = new Vue({
     el: '#fishing',
     data: {
-        show: true,
+        show: false,
         position: 0,
         zone: 10,
         speed: 10,

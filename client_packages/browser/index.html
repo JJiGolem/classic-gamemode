@@ -1135,7 +1135,9 @@
             <div id="fishing-cursor" v-bind:style="{ marginLeft: position + '%' }"></div>
         </div>
         <div v-else>
-            <div>Ждите, пока рыба не клюнет...</div>
+            <div class="fishing-wait">
+                Ждите, пока рыба не клюнет...
+            </div>
         </div>
 
         <div class="fishing-button" @click="isStarted ? stopFishing() : startFishing()">

@@ -46,3 +46,11 @@
 .fishing-button:hover {
     background: rgba(124, 124, 124, 0.9);
 }
+
+.fishing-wait {
+    width: 40%;
+    background: rgba(128, 128, 128, 0.603);
+    padding: 3%;
+    color: whitesmoke;
+    font-size: 160%;
+}
