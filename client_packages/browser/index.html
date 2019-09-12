@@ -598,12 +598,12 @@
                 <div class="arrow" v-if="value.items">></div>
             </div>
         </div>
-        <div class="item-menu" v-if="itemMenu.item && !itemDrag.item" :style="{left: itemMenu.x + 'px', top: itemMenu.y + 'px'}">
+        <!-- <div class="item-menu" v-if="itemMenu.item && !itemDrag.item" :style="{left: itemMenu.x + 'px', top: itemMenu.y + 'px'}">
             <div class="menu-item" v-for="(value, key) in itemsMenu[itemMenu.item.itemId]" @click="value.handler(itemMenu.item)">
                 {{ key }}
                 <div class="arrow" v-if="value.items">></div>
             </div>
-        </div>
+        </div> -->
         <div class="item-drag" v-if="itemDrag.item" :style="{left: itemDrag.x + 'px', top: itemDrag.y + 'px'}">
             <div class="item" v-if="itemDrag.item" :style="itemStyle(itemDrag.item.itemId)">
                 <!-- <div class="count" v-if="itemDrag.item.params.count">{{ itemDrag.item.params.count }}</div>

@@ -46,8 +46,8 @@ mp.events.add('render', (nametags) => {
             var armour = player.getArmour() / 100;
 
             y -= scale * (0.005 * (screenRes.y / 1080));
-
-            mp.game.graphics.drawText(`${player.name} (${player.remoteId})`, [x, y],
+            var playerName = (player.isFamiliar)? `${player.name} (${player.remoteId})` : `ID: ${player.remoteId}`;
+            mp.game.graphics.drawText(playerName, [x, y],
                 {
                     font: FONT,
                     color: [255, 255, 255, 255],
