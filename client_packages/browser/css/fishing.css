@@ -1,3 +1,48 @@
 #fishing {
-    
+    width: 90%;
+    margin: 15% 5%;
+    height: 40%;
+    text-align: center;
+}
+
+.fishing-line {
+    background: #7f7f7f;
+    height: 8%;
+    width: 60%;
+    margin-left: 20%;
+    position: relative;
+    border-radius: 10px;
+}
+
+#fishing-cursor {
+    width: 2%;
+    background: red;
+    height: 100%;
+    position: absolute;
+    border-radius: 20px;
+}
+
+.fishing-zone {
+    background: #796b10;
+    width: 15%;
+    height: 100%;
+    margin-left: 42.5%;
+    position: absolute;
+}
+
+.fishing-button {
+    float: right;
+    margin: 20% 10% 0 0;
+    width: 4%;
+    background: rgba(124, 124, 124, 0.64);
+    font-size: 140%;
+    padding: 3.5% 2%;
+    border-radius: 100px;
+    /*box-sizing: border-box;*/
+    text-align: center;
+    transition: .1s ease-in-out;
+}
+
+.fishing-button:hover {
+    background: rgba(124, 124, 124, 0.9);
 }
