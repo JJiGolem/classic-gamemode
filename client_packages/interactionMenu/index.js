@@ -63,7 +63,7 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
         if (entity.type != 'player') return;
 
         if (itemName == 'Лечить') {
-            // TODO:
+            mp.events.callRemote(`hospital.healing.show`, entity.remoteId);
         } else if (itemName == 'Реанимировать') {
             var data = {
                 recId: entity.remoteId

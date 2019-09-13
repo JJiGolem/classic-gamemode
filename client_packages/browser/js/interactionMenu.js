@@ -310,11 +310,11 @@ var interactionMenu = new Vue({
         enable(val) {
             if (!val) this.show = false;
         },
-        // show(val) {
-        //     setCursor(val);
-        //     if (val) busy.add("interaction", true);
-        //     else busy.remove("interaction", true);
-        // },
+        show(val) {
+            // setCursor(val);
+            if (val) busy.add("interaction", true);
+            else busy.remove("interaction", true);
+        },
         faction(val) {
             if (!val) {
                 this.deleteItem("player_interaction", "Организация");
