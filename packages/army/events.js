@@ -184,8 +184,7 @@ module.exports = {
         if (glassesParams.variation != -1) inventory.addItem(player, 1, glassesParams, response);
 
         notifs.success(player, `Форма выдана`, header);
-        faction.ammo -= army.clothesAmmo;
-        faction.save();
+        factions.setAmmo(faction, faction.ammo - army.clothesAmmo);
     },
     "army.storage.armour.take": (player) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Army`);
@@ -227,8 +226,7 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
         });
         notifs.success(player, `Выдан бронежилет`, header);
-        faction.ammo -= army.armourAmmo;
-        faction.save();
+        factions.setAmmo(faction, faction.ammo - army.armourAmmo);
     },
     "army.storage.items.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Army`);
@@ -253,15 +251,14 @@ module.exports = {
         var params = {
             faction: character.factionId,
             owner: character.id,
-            count: 5,
+            count: 2,
         };
 
         inventory.addItem(player, itemId, params, (e) => {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вам выданы ${itemName}`, header);
-            faction.ammo -= army.itemAmmo;
-            faction.save();
+            factions.setAmmo(faction, faction.ammo - army.itemAmmo);
         });
     },
     "army.storage.guns.take": (player, index) => {
@@ -299,8 +296,7 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вам выдано оружие ${gunName}`, header);
-            faction.ammo -= army.gunAmmo;
-            faction.save();
+            factions.setAmmo(faction, faction.ammo - army.gunAmmo);
         });
     },
     "army.storage.ammo.take": (player, values) => {
@@ -328,8 +324,7 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вам выданы ${inventory.getInventoryItem(itemIds[index]).name} (${ammo} ед.)`, header);
-            faction.ammo -= army.ammoAmmo * ammo;
-            faction.save();
+            factions.setAmmo(faction, faction.ammo - army.ammoAmmo * ammo);
         });
     },
 }

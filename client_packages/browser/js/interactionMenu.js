@@ -134,6 +134,8 @@ var interactionMenu = new Vue({
                         interactionMenu.menu = interactionMenu.menus["faction"];
                     } else if (item.text == 'Police') {
                         interactionMenu.menu = interactionMenu.menus["police"];
+                    } else if (item.text == 'Hospital') {
+                        interactionMenu.menu = interactionMenu.menus["hospital"];
                     }
                 }
             },
@@ -249,6 +251,21 @@ var interactionMenu = new Vue({
                     interactionMenu.show = false;
                 }
             },
+            "hospital": {
+                name: "hospital",
+                items: [{
+                        text: "Лечить",
+                    },
+                    {
+                        text: "Реанимировать",
+                    },
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    interactionMenu.show = false;
+                    mp.trigger(`interactionMenu.onClick`, this.name, item.text);
+                }
+            },
         },
         faction: null,
     },
@@ -293,15 +310,16 @@ var interactionMenu = new Vue({
         enable(val) {
             if (!val) this.show = false;
         },
-        // show(val) {
-        //     setCursor(val);
-        //     if (val) busy.add("interaction", true);
-        //     else busy.remove("interaction", true);
-        // },
+        show(val) {
+            // setCursor(val);
+            if (val) busy.add("interaction", true);
+            else busy.remove("interaction", true);
+        },
         faction(val) {
             if (!val) {
                 this.deleteItem("player_interaction", "Организация");
                 this.deleteItem("player_interaction", "Police");
+                this.deleteItem("player_interaction", "Hospital");
                 return;
             }
             this.addItems("player_interaction", {
@@ -312,6 +330,11 @@ var interactionMenu = new Vue({
                     text: "Police"
                 });
             } else this.deleteItem("player_interaction", "Police");
+            if (val == 5) { // hospital
+                this.addItems("player_interaction", {
+                    text: "Hospital"
+                });
+            } else this.deleteItem("player_interaction", "Hospital");
         }
     },
 });

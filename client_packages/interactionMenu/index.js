@@ -58,5 +58,17 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
         } else if (itemName == 'Изъять') {
             mp.events.callRemote(`police.licenses.gun.take`, entity.remoteId);
         }
+    } else if (menuName == "hospital") {
+        if (!entity) return;
+        if (entity.type != 'player') return;
+
+        if (itemName == 'Лечить') {
+            mp.events.callRemote(`hospital.healing.show`, entity.remoteId);
+        } else if (itemName == 'Реанимировать') {
+            var data = {
+                recId: entity.remoteId
+            };
+            mp.events.callRemote(`inventory.item.adrenalin.use`, JSON.stringify(data));
+        }
     }
 });

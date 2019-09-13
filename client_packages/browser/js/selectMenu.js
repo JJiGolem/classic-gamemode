@@ -1592,6 +1592,9 @@ var selectMenu = new Vue({
                         text: "Наручники"
                     },
                     {
+                        text: "Аптечка",
+                    },
+                    {
                         text: "Вернуться"
                     },
                 ],
@@ -1797,6 +1800,9 @@ var selectMenu = new Vue({
                 header: "Снаряжение BCSD",
                 items: [{
                         text: "Наручники"
+                    },
+                    {
+                        text: "Аптечка"
                     },
                     {
                         text: "Вернуться"
@@ -2401,6 +2407,9 @@ var selectMenu = new Vue({
                     },
                     {
                         text: "Пластырь"
+                    },
+                    {
+                        text: "Адреналин"
                     },
                     {
                         text: "Вернуться"

@@ -2,7 +2,7 @@ var inventory = new Vue({
     el: '#inventory',
     data: {
         // Макс. вес предметов, переносимый игроком
-        maxPlayerWeight: 15,
+        maxPlayerWeight: 30,
         // Общая информация о предметах
         itemsInfo: {
             1: {
@@ -104,6 +104,16 @@ var inventory = new Vue({
                 'Вылечиться': {
                     handler(item) {
                         mp.trigger(`callRemote`, `inventory.item.patch.use`, item.sqlId);
+                    }
+                }
+            },
+            26: { // адреналин
+                'Реанимировать': {
+                    handler(item) {
+                        var data = {
+                            itemSqlId: item.sqlId,
+                        };
+                        mp.trigger(`callRemote`, `inventory.item.adrenalin.use`, JSON.stringify(data));
                     }
                 }
             },
@@ -220,6 +230,14 @@ var inventory = new Vue({
                     mp.trigger(`callRemote`, `inventory.item.patch.use`, item.sqlId);
                 }
             },
+            26: { // адреналин
+                handler(item) {
+                    var data = {
+                        itemSqlId: item.sqlId,
+                    };
+                    mp.trigger(`callRemote`, `inventory.item.adrenalin.use`, JSON.stringify(data));
+                }
+            },
             27: { // большая аптечка
                 handler(item) {
                     mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
@@ -326,8 +344,11 @@ var inventory = new Vue({
     computed: {
         // Тяжесть игрока (в %)
         playerWeight() {
-            var weight = this.getItemWeight(Object.values(this.equipment));
+            var weight = this.commonWeight;
             return weight / this.maxPlayerWeight * 100;
+        },
+        commonWeight() {
+            return this.getItemWeight(Object.values(this.equipment));
         },
         equipmentBusyColumns() {
             var cols = {};
@@ -413,6 +434,8 @@ var inventory = new Vue({
             var item = this.equipment[index];
             if (item) return;
             if (!this.bodyList[index].includes(this.itemDrag.item.itemId)) return;
+            var nextWeight = this.commonWeight + this.itemsInfo[this.itemDrag.item.itemId].weight;
+            if (nextWeight > this.maxPlayerWeight) return;
             var columns = this.itemDrag.accessColumns;
             columns.bodyFocus = index;
         },
@@ -469,6 +492,7 @@ var inventory = new Vue({
         columnMouseHandler(place, pocket, index, e) {
             if (!this.itemDrag.item) return;
             var item = this.itemDrag.item;
+            var nextWeight = this.commonWeight + this.itemsInfo[item.itemId].weight;
             var columns = this.itemDrag.accessColumns;
             var pocketI = place.pockets.indexOf(pocket);
             var w = this.itemsInfo[item.itemId].width;
@@ -484,7 +508,8 @@ var inventory = new Vue({
                     columns.pocketI = pocketI;
                     columns.deny = place.sqlId == item.sqlId ||
                         place.itemId == item.itemId ||
-                        place.sqlId < 0 && this.getItemsCount(item) > 0 ||
+                        (place.sqlId < 0 && this.getItemsCount(item) > 0) ||
+                        (place.sqlId > 0 && nextWeight > this.maxPlayerWeight) ||
                         (this.blackList[place.itemId] && this.blackList[place.itemId].includes(item.itemId));
                     for (var x = 0; x < w; x++) {
                         for (var y = 0; y < h; y++) {
@@ -629,7 +654,8 @@ var inventory = new Vue({
             return null;
         },
         notify(message) {
-            console.log("[Inventory] " + message);
+            // console.log("[Inventory] " + message);
+            notifications.push(`info`, message, `[Inventory]`);
         },
         callRemote(eventName, values) {
             // console.log(`callRemote: ${eventName}`);
@@ -708,7 +734,10 @@ var inventory = new Vue({
         deleteItem(sqlId, items = this.equipment) {
             for (var index in items) {
                 var item = items[index];
-                if (item.sqlId == sqlId) Vue.delete(items, index);
+                if (item.sqlId == sqlId) {
+                    this.clearHotkeys(item);
+                    Vue.delete(items, index);
+                }
                 if (item.pockets) {
                     for (var key in item.pockets) {
                         var pocket = item.pockets[key];
@@ -764,8 +793,10 @@ var inventory = new Vue({
             if (!item) return this.notify(`Предмет должен находиться в инвентаре`);
             this.clearHotkeys(item);
             Vue.set(this.hotkeys, key, item);
+            mp.trigger(`inventory.saveHotkey`, itemSqlId, key);
         },
         unbindHotkey(key) {
+            mp.trigger(`inventory.removeHotkey`, key);
             Vue.delete(this.hotkeys, key);
         },
         onUseHotkey(key) {
@@ -883,6 +914,7 @@ var inventory = new Vue({
             if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone"])) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;
             if (e.keyCode > 47 && e.keyCode < 58) {
+                if (!self.enable && !self.debug) return;
                 var num = e.keyCode - 48;
                 self.onUseHotkey(num);
             }

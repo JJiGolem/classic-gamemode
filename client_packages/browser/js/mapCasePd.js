@@ -354,6 +354,7 @@ var mapCasePdMembersData = {
             this.mod = mod;
         }
     },
+    rankHead: "Звание",
     setRanks(ranksList) {
         if (typeof ranksList == 'string') ranksList = JSON.parse(ranksList);
         this.ranks = ranksList;

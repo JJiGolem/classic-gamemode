@@ -290,8 +290,7 @@ module.exports = {
         if (glassesParams.variation != -1) inventory.addItem(player, 1, glassesParams, response);
 
         notifs.success(player, `Форма выдана`, header);
-        faction.ammo -= police.clothesAmmo;
-        faction.save();
+        factions.setAmmo(faction, faction.ammo - police.clothesAmmo);
     },
     "police.storage.armour.take": (player) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Police`);
@@ -333,8 +332,7 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
         });
         notifs.success(player, `Выдан бронежилет`, header);
-        faction.ammo -= police.armourAmmo;
-        faction.save();
+        factions.setAmmo(faction, faction.ammo - police.armourAmmo);
     },
     "police.storage.items.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Police`);
@@ -344,12 +342,15 @@ module.exports = {
         var faction = factions.getFaction(character.factionId);
         var header = `Склад ${faction.name}`;
 
-        if (faction.ammo < police.itemAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
-        var itemIds = [28];
-
+        var itemIds = [28, 24];
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
+        if (itemId == 24) {
+            if (faction.medicines < police.itemAmmo) return notifs.error(player, `Недостаточно медикаментов`, header);
+        } else {
+            if (faction.ammo < police.itemAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
+        }
 
         var itemName = inventory.getName(itemId);
         // var items = inventory.getArrayByItemId(player, itemId);
@@ -360,13 +361,15 @@ module.exports = {
             faction: character.factionId,
             owner: character.id
         };
+        if (itemId == 24) params.count = 2;
 
         inventory.addItem(player, itemId, params, (e) => {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вам выданы ${itemName}`, header);
-            faction.ammo -= police.itemAmmo;
-            faction.save();
+
+            if (itemId == 24) factions.setMedicines(faction, faction.medicines - police.itemAmmo);
+            else factions.setAmmo(faction, faction.ammo - police.itemAmmo);
         });
     },
     "police.storage.guns.take": (player, index) => {
@@ -404,8 +407,7 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вам выдано оружие ${gunName}`, header);
-            faction.ammo -= police.gunAmmo;
-            faction.save();
+            factions.setAmmo(faction, faction.ammo - police.gunAmmo);
         });
     },
     "police.storage.ammo.take": (player, values) => {
@@ -433,8 +435,7 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вам выданы ${inventory.getInventoryItem(itemIds[index]).name} (${ammo} ед.)`, header);
-            faction.ammo -= police.ammoAmmo * ammo;
-            faction.save();
+            factions.setAmmo(faction, faction.ammo - police.ammoAmmo * ammo);
         });
     },
     // снять/надеть наручники

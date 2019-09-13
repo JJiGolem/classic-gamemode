@@ -7,6 +7,7 @@ module.exports = {
         inventory.init();
     },
     "characterInit.done": (player) => {
+        player.call("inventory.setMaxPlayerWeight", [inventory.maxPlayerWeight]);
         player.call("inventory.setSatiety", [player.character.satiety])
         player.call("inventory.setThirst", [player.character.thirst]);
         inventory.initPlayerItemsInfo(player);
@@ -193,6 +194,31 @@ module.exports = {
         else inventory.updateParam(player, med, 'count', count);
 
         notifs.success(player, `Вы вылечились`, header);
+    },
+    // реанимировать адреналином
+    "inventory.item.adrenalin.use": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+        var header = `Адреналин`;
+        var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
+        if (!rec) return notifs.error(player, `Гражданин не найден`, header);
+        if (!rec.getVariable("knocked")) return notifs.error(player, `${rec.name} не нуждается в реанимации`, header);
+        if (player.dist(rec.position) > 20) return notifs.error(player, `${rec.name} далеко`, header);
+        var adrenalin = (data.itemSqlId) ? inventory.getItem(player, data.itemSqlId) : inventory.getItemByItemId(player, 26);
+        if (!adrenalin) return notifs.error(player, `Необходим предмет`, header);
+        var count = inventory.getParam(adrenalin, 'count').value;
+        if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
+
+        rec.spawn(rec.position);
+        rec.health = 10;
+        rec.setVariable("knocked", false);
+        mp.events.call(`mapCase.ems.calls.remove`, rec, rec.character.id);
+
+        count--;
+        if (!count) inventory.deleteItem(player, adrenalin);
+        else inventory.updateParam(player, adrenalin, 'count', count);
+
+        notifs.success(player, `${rec.name} реанимирован`, header);
+        notifs.success(rec, `${player.name} вас реанимировал`, header);
     },
     // вылечиться пластырем
     "inventory.item.patch.use": (player, sqlId) => {

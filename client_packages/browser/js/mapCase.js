@@ -177,6 +177,7 @@ Vue.component('map-case-members', {
         list: Array,
         sortMod: Object,
         ranks: Array,
+        rankHead: String,
         dismiss: Function,
         lowerRank: Function,
         raiseRank: Function,

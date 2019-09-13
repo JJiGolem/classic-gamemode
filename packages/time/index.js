@@ -15,6 +15,7 @@ module.exports = {
         var lastPayDayHour = new Date().getHours();
         setInterval(() => {
             try {
+                mp.events.call(`time.main.tick`);
                 var date = new Date();
                 this.updateWorldTime(date);
                 if (date.getMinutes() >= 0 && date.getMinutes() <= 3 && date.getHours() != lastPayDayHour) {
