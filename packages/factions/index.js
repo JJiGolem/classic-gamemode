@@ -80,7 +80,6 @@ module.exports = {
         var warehouse = mp.markers.new(1, pos, 0.5, {
             color: [0, 187, 255, 70]
         });
-        this.warehouses.push(warehouse);
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
@@ -102,6 +101,15 @@ module.exports = {
             delete player.insideFactionWarehouse;
         };
         warehouse.colshape = colshape;
+
+        var pos = warehouse.position;
+        pos.z += 2;
+        warehouse.label = mp.labels.new(`${faction.ammo} из ${faction.maxAmmo}\n${faction.medicines} из ${faction.maxMedicines}`,
+            pos, {
+                los: true,
+                drawDistanse: 10,
+            });
+        this.warehouses.push(warehouse);
     },
     createStorageMarker(faction) {
         var pos = new mp.Vector3(faction.sX, faction.sY, faction.sZ - 1);
@@ -336,8 +344,7 @@ module.exports = {
         var faction = player.insideFactionWarehouse;
         if (!faction) return notifs.error(player, `Вы далеко`, `Склад организации`);
         if (player.hasAttachment("ammoBox")) {
-            faction.ammo += this.ammoBox;
-            faction.save();
+            this.setAmmo(faction, faction.ammo + this.ammoBox);
             player.addAttachment("ammoBox", true);
             notifs.info(player, `Боеприпасы: ${faction.ammo} из ${faction.maxAmmo} ед.`, `Склад ${faction.name}`);
             if (faction.ammo == faction.maxAmmo) notifs.success(player, `Склад заполнен`, `Склад ${faction.name}`);
@@ -399,4 +406,33 @@ module.exports = {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         inventory.fullDeleteItemsByParams(null, ["owner", "faction"], [owner, faction.id]);
     },
+    setAmmo(faction, count) {
+        faction.ammo = count;
+        faction.save();
+        this.updateWarehosueLabel(faction);
+    },
+    setMedicines(faction, count) {
+        faction.medicines = count;
+        faction.save();
+        this.updateWarehosueLabel(faction);
+    },
+    setMaxAmmo(faction, count) {
+        faction.maxAmmo = count;
+        faction.save();
+        this.updateWarehosueLabel(faction);
+    },
+    setMaxMedicines(faction, count) {
+        faction.maxMedicines = count;
+        faction.save();
+        this.updateWarehosueLabel(faction);
+    },
+    updateWarehosueLabel(faction) {
+        console.log(`updateWarehosueLabel: ${faction.name}`);
+        console.log(this.warehouses)
+        var text = `${faction.ammo} из ${faction.maxAmmo}\n${faction.medicines} из ${faction.maxMedicines}`;
+        var label = this.getWarehouse(faction.id).label;
+        console.log(label.text)
+        label.text = text;
+        console.log(label.text)
+    }
 };

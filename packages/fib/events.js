@@ -203,8 +203,7 @@ module.exports = {
         if (glassesParams.variation != -1) inventory.addItem(player, 1, glassesParams, response);
 
         notifs.success(player, `Форма выдана`, header);
-        faction.ammo -= fib.clothesAmmo;
-        faction.save();
+        factions.setAmmo(faction, faction.ammo - fib.clothesAmmo);
     },
     "fib.storage.armour.take": (player) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад FIB`);
@@ -246,8 +245,7 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
         });
         notifs.success(player, `Выдан бронежилет`, header);
-        faction.ammo -= fib.armourAmmo;
-        faction.save();
+        factions.setAmmo(faction, faction.ammo - fib.armourAmmo);
     },
     "fib.storage.items.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад FIB`);
@@ -284,9 +282,8 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вам выданы ${itemName}`, header);
-            if (itemId == 24) faction.medicines -= fib.itemAmmo;
-            else faction.ammo -= fib.itemAmmo;
-            faction.save();
+            if (itemId == 24) factions.setMedicines(faction, faction.medicines - fib.itemAmmo);
+            else factions.setAmmo(faction, faction.ammo - fib.itemAmmo);
         });
     },
     "fib.storage.guns.take": (player, index) => {
@@ -321,8 +318,7 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вам выдано оружие ${gunName}`, header);
-            faction.ammo -= fib.gunAmmo;
-            faction.save();
+            factions.setAmmo(faction, faction.ammo - fib.gunAmmo);
         });
     },
     "fib.storage.ammo.take": (player, values) => {
@@ -350,8 +346,7 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вам выданы ${inventory.getInventoryItem(itemIds[index]).name} (${ammo} ед.)`, header);
-            faction.ammo -= fib.ammoAmmo * ammo;
-            faction.save();
+            factions.setAmmo(faction, faction.ammo - fib.ammoAmmo * ammo);
         });
     },
     "fib.spy": (player, recId) => {

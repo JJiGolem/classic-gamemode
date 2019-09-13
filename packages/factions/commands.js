@@ -140,8 +140,7 @@ module.exports = {
             if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
 
             out.info(`${player.name} изменил количество боеприпасов у организации #${args[0]} (${faction.ammo} => ${args[1]})`);
-            faction.ammo = args[1];
-            faction.save();
+            factions.setAmmo(faction, args[1]);
         }
     },
     "/fsetmaxammo": {
@@ -153,8 +152,7 @@ module.exports = {
             if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
 
             out.info(`${player.name} изменил вместимость боеприпасов на складе у организации #${args[0]} (${faction.maxAmmo} => ${args[1]})`);
-            faction.maxAmmo = args[1];
-            faction.save();
+            factions.setMaxAmmo(faction, args[1]);
         }
     },
     "/fsetmeds": {
@@ -166,8 +164,7 @@ module.exports = {
             if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
 
             out.info(`${player.name} изменил количество медикаментов у организации #${args[0]} (${faction.medicines} => ${args[1]})`);
-            faction.medicines = args[1];
-            faction.save();
+            factions.setMedicines(faction, args[1]);
         }
     },
     "/fsetmaxmeds": {
@@ -179,8 +176,7 @@ module.exports = {
             if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
 
             out.info(`${player.name} изменил вместимость медикаментов на складе у организации #${args[0]} (${faction.maxMedicines} => ${args[1]})`);
-            faction.maxMedicines = args[1];
-            faction.save();
+            factions.setMaxMedicines(faction, args[1]);
         }
     },
     "/fsetblip": {
@@ -237,6 +233,8 @@ module.exports = {
             var warehouse = factions.getWarehouse(faction.id);
             warehouse.colshape.destroy();
             warehouse.position = pos;
+            // TODO: перенос label
+            // warehouse.label.position = pos;
 
             var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
             colshape.onEnter = (player) => {

@@ -212,8 +212,7 @@ module.exports = {
         if (glassesParams.variation != -1) inventory.addItem(player, 1, glassesParams, response);
 
         notifs.success(player, `Форма выдана`, header);
-        faction.ammo -= hospital.clothesAmmo;
-        faction.save();
+        factions.setAmmo(faction, faction.ammo - hospital.clothesAmmo);
     },
     "hospital.storage.items.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Hospital`);
@@ -253,8 +252,7 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вам выданы ${itemName}`, header);
-            faction.ammo -= hospital.itemAmmo;
-            faction.save();
+            factions.setAmmo(faction, faction.ammo - hospital.itemAmmo);
         });
     },
     // лечение игрока (пополнение ХП) | показ + принятие + отмена:
