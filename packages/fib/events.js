@@ -257,12 +257,15 @@ module.exports = {
         var faction = factions.getFaction(character.factionId);
         var header = `Склад ${faction.name}`;
 
-        if (faction.ammo < fib.itemAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
         var itemIds = [28, 24, 4];
-
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
+        if (itemId == 24) {
+            if (faction.medicines < fib.itemAmmo) return notifs.error(player, `Недостаточно медикаментов`, header);
+        } else {
+            if (faction.ammo < fib.itemAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
+        }
 
         var itemName = inventory.getInventoryItem(itemId).name;
         // var items = inventory.getArrayByItemId(player, itemId);
@@ -274,14 +277,15 @@ module.exports = {
             owner: character.id
         };
         if (itemId == 24) { // аптечка
-            params.count = 5;
+            params.count = 2;
         }
 
         inventory.addItem(player, itemId, params, (e) => {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вам выданы ${itemName}`, header);
-            faction.ammo -= fib.itemAmmo;
+            if (itemId == 24) faction.medicines -= fib.itemAmmo;
+            else faction.ammo -= fib.itemAmmo;
             faction.save();
         });
     },
