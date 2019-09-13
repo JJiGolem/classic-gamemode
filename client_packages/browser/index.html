@@ -1134,14 +1134,10 @@
             <div class="fishing-zone" v-bind:style="{ width: zone + '%' }"></div>
             <div id="fishing-cursor" v-bind:style="{ marginLeft: position + '%' }"></div>
         </div>
-        <div v-else>
+        <div v-if="isStarted && !isFetch">
             <div class="fishing-wait">
                 Ждите, пока рыба не клюнет...
             </div>
-        </div>
-
-        <div class="fishing-button" @click="isStarted ? stopFishing() : startFishing()">
-            {{ isStarted ? 'Вытянуть' : 'Закинуть' }}
         </div>
     </div>
 
