@@ -253,7 +253,7 @@ module.exports = {
         var params = {
             faction: character.factionId,
             owner: character.id,
-            count: 5,
+            count: 2,
         };
 
         inventory.addItem(player, itemId, params, (e) => {
