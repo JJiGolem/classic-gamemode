@@ -2,7 +2,7 @@ var inventory = new Vue({
     el: '#inventory',
     data: {
         // Макс. вес предметов, переносимый игроком
-        maxPlayerWeight: 15,
+        maxPlayerWeight: 30,
         // Общая информация о предметах
         itemsInfo: {
             1: {
