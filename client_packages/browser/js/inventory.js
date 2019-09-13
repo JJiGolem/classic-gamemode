@@ -647,7 +647,8 @@ var inventory = new Vue({
             return null;
         },
         notify(message) {
-            console.log("[Inventory] " + message);
+            // console.log("[Inventory] " + message);
+            notifications.push(`info`, message, `[Inventory]`);
         },
         callRemote(eventName, values) {
             // console.log(`callRemote: ${eventName}`);
@@ -726,7 +727,10 @@ var inventory = new Vue({
         deleteItem(sqlId, items = this.equipment) {
             for (var index in items) {
                 var item = items[index];
-                if (item.sqlId == sqlId) Vue.delete(items, index);
+                if (item.sqlId == sqlId) {
+                    this.clearHotkeys(item);
+                    Vue.delete(items, index);
+                }
                 if (item.pockets) {
                     for (var key in item.pockets) {
                         var pocket = item.pockets[key];
@@ -782,8 +786,10 @@ var inventory = new Vue({
             if (!item) return this.notify(`Предмет должен находиться в инвентаре`);
             this.clearHotkeys(item);
             Vue.set(this.hotkeys, key, item);
+            mp.trigger(`inventory.saveHotkey`, itemSqlId, key);
         },
         unbindHotkey(key) {
+            mp.trigger(`inventory.removeHotkey`, key);
             Vue.delete(this.hotkeys, key);
         },
         onUseHotkey(key) {

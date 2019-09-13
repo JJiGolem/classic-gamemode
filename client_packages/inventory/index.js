@@ -84,6 +84,35 @@ mp.inventory = {
         // TODO: проверка на аттачи
         mp.events.callRemote("item.ground.take", itemObj.remoteId);
     },
+    loadHotkeys() {
+        if (!mp.storage.data.hotkeys) mp.storage.data.hotkeys = {};
+        var hotkeys = mp.storage.data.hotkeys;
+        // mp.terminal.debug(`[inventory] loadHotkeys:`)
+        // mp.terminal.debug(hotkeys);
+        for (var key in hotkeys) {
+            var sqlId = hotkeys[key];
+            key = parseInt(key);
+            mp.callCEFV(`inventory.bindHotkey(${sqlId}, ${key})`);
+        }
+    },
+    saveHotkey(sqlId, key) {
+        // mp.terminal.debug(`[inventory] saveHotkey: ${sqlId} ${key}`)
+        mp.inventory.clearHotkeys(sqlId);
+        var hotkeys = mp.storage.data.hotkeys;
+        hotkeys[key] = sqlId;
+    },
+    removeHotkey(key) {
+        // mp.terminal.debug(`[inventory] removeHotkey: ${key}`)
+        var hotkeys = mp.storage.data.hotkeys;
+        delete hotkeys[key];
+    },
+    clearHotkeys(sqlId) {
+        var hotkeys = mp.storage.data.hotkeys;
+        for (var key in hotkeys) {
+            var itemSqlId = hotkeys[key];
+            if (sqlId == itemSqlId) this.removeHotkey(key);
+        }
+    },
 };
 
 mp.events.add("characterInit.done", () => {
@@ -95,7 +124,10 @@ mp.events.add("inventory.enable", mp.inventory.enable);
 
 mp.events.add("inventory.debug", mp.inventory.debug);
 
-mp.events.add("inventory.initItems", mp.inventory.initItems);
+mp.events.add("inventory.initItems", (items) => {
+    mp.inventory.initItems(items);
+    mp.inventory.loadHotkeys();
+});
 
 mp.events.add("inventory.setItemsInfo", mp.inventory.setItemsInfo);
 
@@ -120,6 +152,10 @@ mp.events.add("inventory.deleteEnvironmentItem", mp.inventory.deleteEnvironmentI
 mp.events.add("inventory.setSatiety", mp.inventory.setSatiety);
 
 mp.events.add("inventory.setThirst", mp.inventory.setThirst);
+
+mp.events.add("inventory.saveHotkey", mp.inventory.saveHotkey);
+
+mp.events.add("inventory.removeHotkey", mp.inventory.removeHotkey);
 
 mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`enterBoot: #${vehicle.remoteId}`);
