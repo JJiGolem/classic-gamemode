@@ -39,8 +39,8 @@ module.exports = {
                 sex: 1
             });
             inventory.addItem(rec, 3, {
-                variation: 1,
-                texture: 0,
+                variation: 12,
+                texture: 1,
                 sex: 1,
                 pockets: '[3,3,3,3,5,4,5,5,10,6,6,6]',
                 health: 100,
@@ -68,7 +68,7 @@ module.exports = {
                 sex: 1
             });
             inventory.addItem(rec, 13, {
-                variation: 1,
+                variation: 45,
                 texture: 0,
                 sex: 1,
                 pockets: '[2,2,6,5,2,3,6,6,12,10]'
