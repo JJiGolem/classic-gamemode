@@ -234,7 +234,8 @@ module.exports = {
             warehouse.colshape.destroy();
             warehouse.position = pos;
             // TODO: перенос label
-            // warehouse.label.position = pos;
+            pos.z += 2;
+            warehouse.label.position = pos;
 
             var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
             colshape.onEnter = (player) => {
