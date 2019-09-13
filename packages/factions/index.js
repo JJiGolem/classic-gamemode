@@ -223,6 +223,7 @@ module.exports = {
         player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
         else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
+        else if (this.isNewsFaction(faction)) mp.events.call(`mapCase.news.init`, player);
     },
     setBlip(faction, type, color) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
@@ -245,11 +246,13 @@ module.exports = {
         player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
         else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
+        else if (this.isNewsFaction(faction)) mp.events.call(`mapCase.news.init`, player);
     },
     deleteMember(player) {
         var character = player.character;
         if (this.isPoliceFaction(character.factionId)) require('../mapCase').removePoliceMember(player);
         else if (this.isHospitalFaction(character.factionId)) require('../mapCase').removeHospitalMember(player);
+        else if (this.isNewsFaction(character.factionId)) require('../mapCase').removeNewsMember(player);
         this.fullDeleteItems(character.id, character.factionId);
         character.factionId = null;
         character.factionRank = null;
@@ -276,6 +279,7 @@ module.exports = {
         var type = "";
         if (this.isPoliceFaction(character.factionId)) type = "pd";
         else if (this.isHospitalFaction(character.factionId)) type = "ems";
+        else if (this.isNewsFaction(character.factionId)) type = "news";
         if (!type) return;
 
         var rank = this.getRankById(character.factionId, character.factionRank).rank;

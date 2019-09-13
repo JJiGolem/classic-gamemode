@@ -121,6 +121,16 @@
     color: #BC0C0C;
 }
 
+#map-case .wnews .over.ads .btns.refuse {
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    padding-right: 1vh;
+}
+
+#map-case .wnews .over.ads .btns.refuse:before {
+    content: "";
+}
+
 #map-case .wnews .over.ads .btn .cont {
     line-height: 2.1vh;
     height: 1.8vh;

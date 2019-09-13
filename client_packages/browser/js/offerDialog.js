@@ -168,6 +168,19 @@ var offerDialog = new Vue({
                 no() {},
                 ignore() {},
             },
+            "death": {
+                text: `Дождаться медиков?`,
+                on() {},
+                yes() {
+                    mp.trigger(`callRemote`, `death.wait`);
+                },
+                no() {
+                    mp.trigger(`callRemote`, `death.spawn`);
+                },
+                ignore() {
+                    mp.trigger(`callRemote`, `death.wait`);
+                },
+            },
         },
         dialog: null,
         timeout: null,

@@ -225,7 +225,7 @@ module.exports = {
 
         if (faction.medicines < hospital.itemMedicines) return notifs.error(player, `Недостаточно медикаментов`, header);
 
-        var itemIds = [24, 27, 25];
+        var itemIds = [24, 27, 25, 26];
 
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
@@ -240,11 +240,13 @@ module.exports = {
             owner: character.id
         };
         if (itemId == 24) { // малая аптечка
-            params.count = 5;
+            params.count = 2;
         } else if (itemId == 27) { // большая аптечка
-            params.count = 10;
+            params.count = 5;
         } else if (itemId == 25) { // пластырь
             params.count = 5;
+        } else if (itemId == 26) { // адреналин
+            params.count = 3;
         }
 
         inventory.addItem(player, itemId, params, (e) => {

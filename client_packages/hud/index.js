@@ -2,7 +2,7 @@
 
 var prevValues = {};
 var hudState = false;
-var playersListState = false;
+let playersListState = false;
 
 mp.events.add('hud.load', () => {
   var anchor = mp.utils.getMinimapAnchor();

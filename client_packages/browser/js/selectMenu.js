@@ -2403,6 +2403,9 @@ var selectMenu = new Vue({
                         text: "Пластырь"
                     },
                     {
+                        text: "Адреналин"
+                    },
+                    {
                         text: "Вернуться"
                     },
                 ],

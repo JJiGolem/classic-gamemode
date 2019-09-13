@@ -179,7 +179,7 @@
 
 #map-case .menu .header {
     text-align: center;
-
+    margin-left: -1px;
     color: #fff;
 }
 
