@@ -55,6 +55,9 @@ mp.inventory = {
     deleteEnvironmentItem(id) {
         mp.callCEFV(`inventory.deleteEnvironmentItem(${id})`);
     },
+    setMaxPlayerWeight(val) {
+        mp.callCEFV(`inventory.maxPlayerWeight = ${val}`)
+    },
     setSatiety(val) {
         mp.callCEFV(`inventory.satiety = ${val}`)
     },
@@ -148,6 +151,8 @@ mp.events.add("inventory.deleteEnvironmentPlace", mp.inventory.deleteEnvironment
 mp.events.add("inventory.setEnvironmentItemSqlId", mp.inventory.setEnvironmentItemSqlId);
 
 mp.events.add("inventory.deleteEnvironmentItem", mp.inventory.deleteEnvironmentItem);
+
+mp.events.add("inventory.setMaxPlayerWeight", mp.inventory.setMaxPlayerWeight);
 
 mp.events.add("inventory.setSatiety", mp.inventory.setSatiety);
 

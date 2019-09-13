@@ -344,8 +344,11 @@ var inventory = new Vue({
     computed: {
         // Тяжесть игрока (в %)
         playerWeight() {
-            var weight = this.getItemWeight(Object.values(this.equipment));
+            var weight = this.commonWeight;
             return weight / this.maxPlayerWeight * 100;
+        },
+        commonWeight() {
+            return this.getItemWeight(Object.values(this.equipment));
         },
         equipmentBusyColumns() {
             var cols = {};
@@ -431,6 +434,8 @@ var inventory = new Vue({
             var item = this.equipment[index];
             if (item) return;
             if (!this.bodyList[index].includes(this.itemDrag.item.itemId)) return;
+            var nextWeight = this.commonWeight + this.itemsInfo[this.itemDrag.item.itemId].weight;
+            if (nextWeight > this.maxPlayerWeight) return;
             var columns = this.itemDrag.accessColumns;
             columns.bodyFocus = index;
         },
@@ -487,6 +492,7 @@ var inventory = new Vue({
         columnMouseHandler(place, pocket, index, e) {
             if (!this.itemDrag.item) return;
             var item = this.itemDrag.item;
+            var nextWeight = this.commonWeight + this.itemsInfo[item.itemId].weight;
             var columns = this.itemDrag.accessColumns;
             var pocketI = place.pockets.indexOf(pocket);
             var w = this.itemsInfo[item.itemId].width;
@@ -502,7 +508,8 @@ var inventory = new Vue({
                     columns.pocketI = pocketI;
                     columns.deny = place.sqlId == item.sqlId ||
                         place.itemId == item.itemId ||
-                        place.sqlId < 0 && this.getItemsCount(item) > 0 ||
+                        (place.sqlId < 0 && this.getItemsCount(item) > 0) ||
+                        (place.sqlId > 0 && nextWeight > this.maxPlayerWeight) ||
                         (this.blackList[place.itemId] && this.blackList[place.itemId].includes(item.itemId));
                     for (var x = 0; x < w; x++) {
                         for (var y = 0; y < h; y++) {

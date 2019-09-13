@@ -1,6 +1,8 @@
 "use strict";
 
 module.exports = {
+    // Макс. вес предметов, переносимый игроком
+    maxPlayerWeight: 30,
     // Общая информация о предметах
     inventoryItems: [],
     // Объект, подготовленный для отправки на клиент игрока
@@ -189,6 +191,7 @@ module.exports = {
         var slot = this.findFreeSlot(player, itemId);
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(itemId).name} не найден`);
         if (params.sex && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
+        // TODO: проверка на вес
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, itemId);
             if (weapon) return callback(`Оружие ${this.getName(itemId)} уже имеется`);
@@ -226,6 +229,7 @@ module.exports = {
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(item.itemId).name} не найден`);
         var params = this.getParamsValues(item);
         if (params.sex && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
+        // TODO: проверка на вес
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, item.itemId);
             if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
@@ -280,6 +284,7 @@ module.exports = {
         // console.log(`addPlayerItem`)
         var place = player.inventory.place;
         var params = this.getParamsValues(item);
+        // TODO: проверка на вес
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, item.itemId);
             if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
