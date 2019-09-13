@@ -75,6 +75,7 @@ module.exports = {
         if (source == 1 && veh.sqlId) { /// Если авто респавнится (есть в БД)
             vehicle.sqlId = veh.sqlId;
             vehicle.db = veh.db;
+            vehicle.inventory = veh.inventory;
         }
         if (!veh.properties) {
             vehicle.properties = this.setVehiclePropertiesByModel(veh.modelName);
@@ -157,7 +158,7 @@ module.exports = {
                 if (owner.carPlaces.length == 1 && owner.carPlaces[0].d == 0) {
                     index = 0;
                 }
-    
+
                 let place = owner.carPlaces[index];
                 veh.carPlaceIndex = index;
                 veh.x = place.x;
