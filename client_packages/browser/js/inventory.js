@@ -107,6 +107,16 @@ var inventory = new Vue({
                     }
                 }
             },
+            26: { // адреналин
+                'Реанимировать': {
+                    handler(item) {
+                        var data = {
+                            itemSqlId: item.sqlId,
+                        };
+                        mp.trigger(`callRemote`, `inventory.item.adrenalin.use`, JSON.stringify(data));
+                    }
+                }
+            },
             27: { // большая аптечка
                 'Вылечиться': {
                     handler(item) {
@@ -218,6 +228,14 @@ var inventory = new Vue({
             25: { // пластырь
                 handler(item) {
                     mp.trigger(`callRemote`, `inventory.item.patch.use`, item.sqlId);
+                }
+            },
+            26: { // адреналин
+                handler(item) {
+                    var data = {
+                        itemSqlId: item.sqlId,
+                    };
+                    mp.trigger(`callRemote`, `inventory.item.adrenalin.use`, JSON.stringify(data));
                 }
             },
             27: { // большая аптечка
@@ -883,6 +901,7 @@ var inventory = new Vue({
             if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone"])) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;
             if (e.keyCode > 47 && e.keyCode < 58) {
+                if (!self.enable && !self.debug) return;
                 var num = e.keyCode - 48;
                 self.onUseHotkey(num);
             }
