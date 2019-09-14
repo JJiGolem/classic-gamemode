@@ -127,9 +127,13 @@ mp.events.add({
         mp.factions.setFaction(val);
     },
     "playerEnterVehicleBoot": (player, vehicle) => {
-        if (!mp.factions.hasBox()) return;
-        if (!vehicle.getVariable("trunk")) return mp.notify.warning(`Для погрузки ящика откройте багажник`);
-        mp.events.callRemote(`factions.vehicle.products.put`, vehicle.remoteId);
+        if (mp.factions.hasBox()) {
+            if (!vehicle.getVariable("trunk")) return mp.notify.warning(`Для погрузки ящика откройте багажник`);
+            mp.events.callRemote(`factions.vehicle.products.put`, vehicle.remoteId);
+        } else if (vehicle.getVariable("label")) {
+            if (!vehicle.getVariable("unload")) return;
+            mp.events.callRemote(`factions.vehicle.products.take`, vehicle.remoteId);
+        }
     },
 });
 
@@ -138,5 +142,8 @@ mp.events.addDataHandler("trunk", (vehicle, value) => {
     if (nearBootVehicleId == null) return;
     if (nearBootVehicleId != vehicle.remoteId) return;
     if (mp.factions.hasBox()) mp.events.callRemote(`factions.vehicle.products.put`, vehicle.remoteId);
-    else if (vehicle.getVariable("label") && !vehicle.getVariable("unload")) mp.events.callRemote(`factions.vehicle.unload`, vehicle.remoteId);
+    else if (vehicle.getVariable("label")) {
+        if (!vehicle.getVariable("unload")) return mp.events.callRemote(`factions.vehicle.unload`, vehicle.remoteId);
+        mp.events.callRemote(`factions.vehicle.products.take`, vehicle.remoteId);
+    }
 });

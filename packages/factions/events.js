@@ -48,6 +48,28 @@ module.exports = {
             player.addAttachment("medicinesBox", true);
         }
     },
+    "factions.vehicle.products.take": (player, vehId) => {
+        // console.log(`factions.vehicle.products.take: ${player.name}`);
+        var header = `Взятие ящика`;
+        var veh = mp.vehicles.at(vehId);
+        if (!veh || !veh.db) return notifs.error(player, `Авто #${vehId} не найдено`, header);
+        if (player.dist(veh.position) > 10) return notifs.error(player, `Авто далеко`, header);
+        var model = veh.db.modelName;
+        if (veh.db.key != "faction") return notifs.error(player, `Авто ${model} не принадлежит организации`, header);
+        var name = factions.getFaction(player.character.factionId).name;
+        if (veh.db.owner != player.character.factionId) return notifs.error(player, `Авто не принадлежит ${name}`, header);
+        if (!veh.products || !veh.products.count) return notifs.error(player, `Багажник пустой`, header);
+        var type = veh.products.type;
+        if (type != "ammo" && type != "medicines") return notifs.error(player, `Неверный тип товара`, header);
+
+        player.addAttachment(`${type}Box`);
+        veh.products.count -= factions[`${type}Box`];
+        if (veh.products.count <= 0) {
+            veh.setVariable(`label`, null);
+            veh.setVariable(`unload`, null);
+            delete veh.products;
+        } else veh.setVariable(`label`, `${veh.products.count} из ${factions[`${type}VehMax`]} ед.`);
+    },
     "factions.vehicle.unload": (player, vehId) => {
         var veh = mp.vehicles.at(vehId);
         if (!veh || !veh.db) return;
