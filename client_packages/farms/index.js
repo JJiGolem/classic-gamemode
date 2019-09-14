@@ -214,7 +214,8 @@ mp.farms = {
                 name: "idle",
                 speed: 8,
                 flag: 49
-            }
+            },
+            true
         );
         // урожай B в руках
         mp.attachmentMngr.register("farmProductB", "prop_veg_crop_03_cab", 58867, new mp.Vector3(0.2, -0.3, 0.1),
@@ -223,7 +224,8 @@ mp.farms = {
                 name: "idle",
                 speed: 8,
                 flag: 49
-            }
+            },
+            true
         );
         // урожай C в руках
         mp.attachmentMngr.register("farmProductC", "prop_weed_02", 58867, new mp.Vector3(0.2, -0.3, 0.1),
@@ -232,7 +234,8 @@ mp.farms = {
                 name: "idle",
                 speed: 8,
                 flag: 49
-            }
+            },
+            true
         );
     },
     isCropping() {
