@@ -165,6 +165,7 @@ mp.events.add("inventory.removeHotkey", mp.inventory.removeHotkey);
 mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`enterBoot: #${vehicle.remoteId}`);
     if (!vehicle.getVariable("trunk")) return;
+    if (player.vehicle) return;
     mp.prompt.showByName("vehicle_items_boot");
     mp.events.callRemote(`vehicle.boot.items.request`, vehicle.remoteId);
 });

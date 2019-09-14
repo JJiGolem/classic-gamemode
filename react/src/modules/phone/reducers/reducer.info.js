@@ -314,6 +314,11 @@ export default function info(state = initialState, action) {
             newState.biz[0].orderStatus = payload;
             return newState;
 
+        case 'TAKE_ORDER_BUSINESS':
+            newState = { ...state };
+            newState.biz[0].order.isTake = payload;
+            return newState;
+
         case 'ORDER_COMPLETE_BUSINESS':
             newState = { ...state };
             newState.biz[0].resources += payload;

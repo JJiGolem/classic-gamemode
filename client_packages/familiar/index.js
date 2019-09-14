@@ -48,4 +48,9 @@ mp.events.add({
     "familiar.remove": (name) => {
         mp.familiar.remove(name);
     },
+    "entityStreamIn": (player) => {
+        if (player.type != "player") return;
+        if (!mp.familiar.list.includes(player.name)) return;
+        player.isFamiliar = true;
+    },
 });
