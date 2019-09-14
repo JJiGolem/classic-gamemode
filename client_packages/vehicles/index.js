@@ -491,11 +491,13 @@ var nearBootVehicleId = null,
 
 mp.events.add({
     "playerEnterVehicleBoot": (player, vehicle) => {
+        if (player.vehicle) return;
         if (!vehicle.getVariable("trunk")) {
             mp.prompt.showByName("vehicle_open_boot");
         }
     },
     "playerEnterVehicleHood": (player, vehicle) => {
+        if (player.vehicle) return;
         if (!vehicle.getVariable("hood")) {
             mp.prompt.showByName("vehicle_open_hood");
         } else mp.prompt.showByName("vehicle_close_hood");

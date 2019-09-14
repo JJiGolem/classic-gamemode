@@ -427,12 +427,8 @@ module.exports = {
         this.updateWarehosueLabel(faction);
     },
     updateWarehosueLabel(faction) {
-        console.log(`updateWarehosueLabel: ${faction.name}`);
-        console.log(this.warehouses)
         var text = `${faction.ammo} из ${faction.maxAmmo}\n${faction.medicines} из ${faction.maxMedicines}`;
         var label = this.getWarehouse(faction.id).label;
-        console.log(label.text)
         label.text = text;
-        console.log(label.text)
     }
 };

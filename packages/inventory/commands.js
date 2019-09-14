@@ -232,6 +232,25 @@ module.exports = {
             out.info(`${player.name} ${val} DEBUG-режим инвентаря`);
         }
     },
+    "/invweight": {
+        description: "Получить вес предмета.",
+        access: 6,
+        args: "[ид_предмета]:n",
+        handler: (player, args, out) => {
+            var item = inventory.getItem(player, args[0]);
+            if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
+
+            out.info(`Вес: ${inventory.getItemWeight(player, item)}`, player);
+        }
+    },
+    "/invcommon": {
+        description: "Получить общий вес предметов у игрока.",
+        access: 6,
+        args: "",
+        handler: (player, args, out) => {
+            out.info(`Общий вес: ${inventory.getCommonWeight(player)}`, player);
+        }
+    },
     "/pitems": {
         access: 6,
         description: "Логировать предметы игрока в консоль.",

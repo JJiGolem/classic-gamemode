@@ -191,7 +191,8 @@ module.exports = {
         var slot = this.findFreeSlot(player, itemId);
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(itemId).name} не найден`);
         if (params.sex && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
-        // TODO: проверка на вес
+        var nextWeight = this.getCommonWeight(player) + this.getInventoryItem(itemId).weight;
+        if (nextWeight > this.maxPlayerWeight) return callback(`Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`);
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, itemId);
             if (weapon) return callback(`Оружие ${this.getName(itemId)} уже имеется`);
@@ -229,7 +230,8 @@ module.exports = {
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(item.itemId).name} не найден`);
         var params = this.getParamsValues(item);
         if (params.sex && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
-        // TODO: проверка на вес
+        var nextWeight = this.getCommonWeight(player) + this.getItemWeight(player, item);
+        if (nextWeight > this.maxPlayerWeight) return callback(`Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`);
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, item.itemId);
             if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
@@ -282,6 +284,8 @@ module.exports = {
     // при перемещении предмета из окруж. среды в игрока
     async addPlayerItem(player, item, parentId, pocketIndex, index) {
         // console.log(`addPlayerItem`)
+        var nextWeight = this.getCommonWeight(player) + this.getItemWeight(player, item);
+        if (nextWeight > this.maxPlayerWeight) return debug(`Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`);
         var place = player.inventory.place;
         var params = this.getParamsValues(item);
         // TODO: проверка на вес
@@ -394,6 +398,7 @@ module.exports = {
     },
     getChildren(items, item) {
         var children = [];
+        if (!item.id) return children;
         for (var i = 0; i < items.length; i++) {
             var child = items[i];
             if (child.parentId == item.id) children.push(child);
@@ -486,15 +491,16 @@ module.exports = {
             },
             "7": () => {
                 // 0 - муж, 1 - жен
-                var index = (player.character.gender == 0) ? 15 : 82;
-                var undershirtDefault = (player.character.gender == 0) ? 15 : 14;
+                var index = (player.character.gender == 0) ? 15 : 18;
+                var undershirtDefault = (player.character.gender == 0) ? 15 : 3;
                 player.setClothes(3, 15, 0, 0);
                 player.setClothes(11, index, 0, 0);
                 player.setClothes(8, undershirtDefault, 0, 0);
                 player.setClothes(10, 0, 0, 0);
             },
             "8": () => {
-                player.setClothes(4, 18, 2, 0);
+                if (player.character.gender == 0) player.setClothes(4, 18, 2, 0);
+                else player.setClothes(4, 17, 0, 0);
             },
             "9": () => {
                 var index = (player.character.gender == 0) ? 34 : 35;
@@ -575,7 +581,7 @@ module.exports = {
             var params = this.getParamsValues(item);
             if (item.parentId || !params.pockets) continue; // предмет в предмете или не имеет карманы
             if (item.itemId == itemId) continue; // тип предмета совпадает (рубашку в рубашку нельзя и т.д.)
-            if (this.blackList[item.itemId].includes(itemId)) continue; // предмет в черном списке (сумку в рубашку нельзя и т.д.)
+            if (this.blackListExists(item.itemId, itemId)) continue; // предмет в черном списке (сумку в рубашку нельзя и т.д.)
             for (var j = 0; j < params.pockets.length / 2; j++) {
                 var matrix = this.genMatrix(player, item, j);
                 // console.log(`itemId: ${item.itemId}`);
@@ -596,6 +602,10 @@ module.exports = {
             }
         }
         return null;
+    },
+    blackListExists(parentId, childId) {
+        if (!this.blackList[parentId]) return false;
+        return this.blackList[parentId].includes(childId);
     },
     genMatrix(player, item, pocketIndex) {
         var params = this.getParamsValues(item);
@@ -686,6 +696,29 @@ module.exports = {
             if (itemIds.includes(item.itemId)) result.push(item);
         }
         return result;
+    },
+    getItemWeight(player, items, weight = 0) {
+        if (!Array.isArray(items)) items = [items];
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var info = this.getInventoryItem(item.itemId);
+            weight += info.weight;
+            var params = this.getParamsValues(item);
+            if (params.count) weight += params.count * info.weight;
+            var children = this.getChildren(player.inventory.items, item);
+            if (children.length) {
+                for (var j = 0; j < children.length; j++) {
+                    var child = children[j];
+                    weight += this.getItemWeight(player, child, 0);
+                }
+            }
+        }
+
+        return weight;
+    },
+    getCommonWeight(player) {
+        var bodyItems = player.inventory.items.filter(x => !x.parentId);
+        return this.getItemWeight(player, bodyItems);
     },
     // Полное удаление предметов инвентаря с сервера
     fullDeleteItemsByParams(itemIds, keys, values) {

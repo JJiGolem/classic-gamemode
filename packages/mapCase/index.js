@@ -223,13 +223,15 @@ module.exports = {
             rec.call(`mapCase.ems.members.remove`, [player.character.id]);
         });
     },
-    addNewsAd(player, text) {
+    addNewsAd(player, text, price) {
         // this.removeNewsAd(player.character.id);
         var ad = {
             id: this.adId,
             playerId: player.id,
             author: player.name,
-            text: text
+            number: player.phone.number,
+            text: text,
+            price: price,
         };
         this.adId++;
         this.newsAds.push(ad);
@@ -272,6 +274,7 @@ module.exports = {
         });
     },
     acceptAd(player, ad) {
+        ad.editorName = player.name;
         this.newsAdsEdited.push(ad);
         // debug(`Объявления в очереди: `)
         // debug(this.newsAds);
@@ -291,7 +294,7 @@ module.exports = {
         var ad = this.newsAdsEdited.shift();
         mp.players.forEach(rec => {
             if (!rec.character) return;
-            chat.push(rec, `[ADS] ${ad.author}[${ad.playerId}]: ${ad.text}`);
+            chat.push(rec, `[ADS] ${ad.author}[${ad.playerId}]: ${ad.text}. Телефон: ${ad.number}. Редактор: ${ad.editorName}`);
         });
     },
     addNewsMember(player) {
