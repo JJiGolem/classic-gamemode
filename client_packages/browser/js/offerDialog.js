@@ -181,6 +181,20 @@ var offerDialog = new Vue({
                     mp.trigger(`callRemote`, `death.wait`);
                 },
             },
+            "vehicle_unload": {
+                text: `Начать разгрузку боеприпасов?`,
+                vehId: null,
+                on(values) {
+                    if (values.type == 'ammo') this.text = `Начать разгрузку боеприпасов?`;
+                    else if (values.type == 'medicines') this.text = `Начать разгрузку медикаментов?`;
+                    this.vehId = values.vehId;
+                },
+                yes() {
+                    mp.trigger(`callRemote`, `factions.vehicle.unload.start`, this.vehId);
+                },
+                no() {},
+                ignore() {},
+            },
         },
         dialog: null,
         timeout: null,
@@ -207,14 +221,13 @@ var offerDialog = new Vue({
     },
     mounted() {
         let self = this;
-        window.addEventListener('keyup', function (e) {
+        window.addEventListener('keyup', function(e) {
             if (!self.dialog) return;
             if (busy.includes(["chat", "terminal", "mapCase", "phone"])) return;
             if (e.keyCode == 89) { // Y
                 self.dialog.yes();
                 self.hide();
-            }
-            else if (e.keyCode == 78) { // N
+            } else if (e.keyCode == 78) { // N
                 self.dialog.no();
                 self.hide();
             }

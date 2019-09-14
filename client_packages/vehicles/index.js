@@ -530,5 +530,15 @@ mp.events.add('render', () => {
                 centre: true
             });
         }
+        if (vehicle.getVariable('unload')) {
+            var bootPos = mp.utils.getBootPosition(vehicle);
+            mp.game.graphics.drawText(`Разгрузка...`, [bootPos.x, bootPos.y, bootPos.z + 1], {
+                font: 0,
+                color: [187, 255, 0, 255],
+                scale: [0.25, 0.25],
+                outline: true,
+                centre: true
+            });
+        }
     });
 });

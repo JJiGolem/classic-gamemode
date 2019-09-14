@@ -137,7 +137,6 @@ mp.events.addDataHandler("trunk", (vehicle, value) => {
     if (!value) return;
     if (nearBootVehicleId == null) return;
     if (nearBootVehicleId != vehicle.remoteId) return;
-    if (!mp.factions.hasBox()) return;
-
-    mp.events.callRemote(`factions.vehicle.products.put`, vehicle.remoteId);
+    if (mp.factions.hasBox()) mp.events.callRemote(`factions.vehicle.products.put`, vehicle.remoteId);
+    else if (vehicle.getVariable("label") && !vehicle.getVariable("unload")) mp.events.callRemote(`factions.vehicle.unload`, vehicle.remoteId);
 });

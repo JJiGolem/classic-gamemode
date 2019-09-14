@@ -17,12 +17,12 @@ module.exports = {
         // console.log(`farms.vehicle.products.put: ${player.name}`);
         var header = `Погрузка ящика`;
         var veh = mp.vehicles.at(vehId);
-        if (!veh || !veh.db) return notifs.error(player, `Авто #${player.bootVehicleId} не найдено`, header);
+        if (!veh || !veh.db) return notifs.error(player, `Авто #${vehId} не найдено`, header);
         if (player.dist(veh.position) > 10) return notifs.error(player, `Авто далеко`, header);
         var model = veh.db.modelName;
-        if (veh.key != "faction") return notifs.error(player, `Авто ${model} не принадлежит организации`, header);
+        if (veh.db.key != "faction") return notifs.error(player, `Авто ${model} не принадлежит организации`, header);
         var name = factions.getFaction(player.character.factionId).name;
-        if (veh.owner != player.character.factionId) return notifs.error(player, `Авто не принадлежит ${name}`, header);
+        if (veh.db.owner != player.character.factionId) return notifs.error(player, `Авто не принадлежит ${name}`, header);
 
         if (player.hasAttachment("ammoBox")) {
             if (!factions.ammoVehModels.includes(model)) return notifs.error(player, `Авто не предназначено для перевоза боеприпасов`, header);
@@ -47,6 +47,34 @@ module.exports = {
             if (veh.products.count == factions.medicinesVehMax) return notifs.warning(player, `Багажник заполнен`, header);
             player.addAttachment("medicinesBox", true);
         }
+    },
+    "factions.vehicle.unload": (player, vehId) => {
+        var veh = mp.vehicles.at(vehId);
+        if (!veh || !veh.db) return;
+        if (veh.db.key != "faction") return;
+        if (veh.db.owner != player.character.factionId) return;
+        if (!veh.products || (veh.products.type != "ammo" && veh.products.type != "medicines")) return;
+
+        player.call(`offerDialog.show`, [`vehicle_unload`, {
+            type: veh.products.type,
+            vehId: vehId,
+        }]);
+    },
+    "factions.vehicle.unload.start": (player, vehId) => {
+        var header = `Разгрузка авто`;
+        var veh = mp.vehicles.at(vehId);
+        if (!veh || !veh.db) return notifs.error(player, `Авто #${vehId} не найдено`, header);
+        if (player.dist(veh.position) > 10) return notifs.error(player, `Авто далеко`, header);
+        var model = veh.db.modelName;
+        if (veh.db.key != "faction") return notifs.error(player, `Авто ${model} не принадлежит организации`, header);
+        var name = factions.getFaction(player.character.factionId).name;
+        if (veh.db.owner != player.character.factionId) return notifs.error(player, `Авто не принадлежит ${name}`, header);
+        if (!veh.products || !veh.products.count) return notifs.error(player, `Авто не содержит ящики`, header);
+        var type = veh.products.type;
+        if (type != "ammo" && type != "medicines") return notifs.error(player, `Неверный тип товара`, header);
+
+        veh.setVariable("unload", true);
+        notifs.success(player, `Разгрузка началась`, header);
     },
     "factions.invite.show": (player, recId) => {
         var rec = mp.players.at(recId);
