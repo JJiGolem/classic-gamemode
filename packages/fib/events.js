@@ -123,23 +123,23 @@ module.exports = {
             topParams = { // clothes 11 / 3 / 8
                 sex: 0,
                 torso: // /clothes 3
-                    [0, 1, 1, 1, 1, 11][index],
+                    [0, 7, 1, 0, 1, 7][index],
                 tTexture: [-1, -1, -1, -1, -1, -1][index],
                 variation: // clothes 11
-                    [3, 25, 103, 46, 139, 66][index],
-                texture: [0, 2, 3, 1, 0, 0][index],
+                    [27, 90, 103, 46, 139, 90][index],
+                texture: [5, 1, 3, 1, 2, 0][index],
                 undershirt: // clothes 8
                     [160, 39, 159, 159, 39, 64][index]
             };
             legsParams = { // clothes 4
                 sex: 0,
-                variation: [37, 37, 37, 30, 34, 64][index],
-                texture: [0, 5, 0, 2, 0, 0][index]
+                variation: [37, 51, 54, 30, 51, 51][index],
+                texture: [2, 1, 2, 2, 0, 0][index]
             };
             feetsParams = { // clothes 6
                 sex: 0,
                 variation: [29, 29, 29, 25, 29, 29][index],
-                texture: [0, 1, 0, 0, 0, 0][index]
+                texture: [0, 1, 0, 0, 1, 2][index]
             };
             earsParams = { // prop 2
                 sex: 0,
