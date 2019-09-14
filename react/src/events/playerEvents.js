@@ -183,6 +183,13 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
+    myEventEmmiter.on('biz.statistics.update', (date, money) => {
+        dispatch({
+            type: 'UPDATE_STATISTICS_BUSINESS',
+            payload: { date, money }
+        });
+    });
+
     // ------------ ТЕЛЕФОН (БИЗНЕС) - КОНЕЦ -----------------
 
     // ------------ ТЕЛЕФОН (ТАКСИ) -----------------

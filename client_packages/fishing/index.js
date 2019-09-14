@@ -18,6 +18,14 @@ let peds = [
 let camera;
 let isBinding = false;
 
+let isEnter = false;
+let isStarted = false;
+let isFetch = false;
+
+mp.events.add("render", () => {
+    if (isEnter) mp.game.controls.disableAllControlActions(0);
+});
+
 mp.events.add('characterInit.done', () => {
     peds.forEach((current) => {
         mp.events.call('NPC.create', current);
@@ -72,7 +80,7 @@ mp.events.add('fishing.game.start', () => {
 
 mp.events.add('fishing.game.fetch', (speed, zone, weight) => {
     playFetchAnimation(true);
-    // mp.console(speed);
+    isFetch = true;
     mp.callCEFV(`fishing.fishFetch(${speed},${zone},${weight});`);
 });
 
@@ -85,14 +93,14 @@ mp.events.add('fishing.game.end', (result) => {
 });
 
 mp.events.add('fishing.game.exit', () => {
-    if (!mp.busy.includes('fishingGame')) return;
-
-    mp.busy.remove('fishingGame');
+    mp.console('exit');
+    bindButtons(false);
+    mp.events.call('prompt.hide');
     playBaseAnimation(false);
     mp.gui.cursor.show(false, false);
     mp.callCEFV(`fishing.clearData()`);
     mp.callCEFVN({ "fishing.show": false });
-    bindButtons(false);
+    mp.busy.remove('fishingGame');
 });
 
 let bindButtons = (state) => {
@@ -115,29 +123,36 @@ let bindButtons = (state) => {
 }
 
 let fishingEnter = () => {
-    mp.events.callRemote('fishing.game.enter');
-    mp.events.call('prompt.hide');
+    if (!isEnter) {
+        mp.events.callRemote('fishing.game.enter');
+        mp.events.call('prompt.hide');
+        isEnter = true;
+    }
 }
 
 let fishingStart = () => {
-    playWaitAnimation(true);
-    mp.callCEFVN({ "fishing.isStarted": true });
-    mp.events.callRemote('fishing.game.start');
+    if (isEnter && !isStarted) {
+        playWaitAnimation(true);
+        mp.callCEFVN({ "fishing.isStarted": true });
+        mp.events.callRemote('fishing.game.start');
+        isStarted = true;
+    }
 }
 
 let fishingEnd = () => {
-    mp.callCEFV(`fishing.endFishing();`);
+    if (isEnter && isStarted && isFetch) {
+        mp.callCEFV(`fishing.endFishing();`);
+        setTimeout(() => {
+            isStarted = false;
+        }, 1500);
+    }
 }
 
 let fishingExit = () => {
-    if (!mp.busy.includes('fishingGame')) return;
-
-    mp.busy.remove('fishingGame');
-    playBaseAnimation(false);
-    mp.gui.cursor.show(false, false);
-    mp.callCEFV(`fishing.clearData();`);
-    mp.callCEFVN({ "fishing.show": false });
-    bindButtons(false);
+    if (!isStarted) {
+        mp.events.call('fishing.game.exit');
+        isEnter = false;
+    }
 }
 
 function playBaseAnimation(state, timeout) { /// Анимация держания удочки

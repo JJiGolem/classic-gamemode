@@ -44,7 +44,7 @@ var fishing = new Vue({
             this.isComplete = true;
 
             let result;
-            if (Math.abs(this.position - 50) < this.zone) {
+            if (Math.abs(this.position - 50) < parseInt(this.zone / 2)) {
                 result = true;
             } else {
                 result = false;

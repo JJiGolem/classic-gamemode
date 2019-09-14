@@ -34,6 +34,7 @@ module.exports = {
 
         if (shape.isFishingPlace) {
             mp.events.call('fishing.game.menu.close', player);
+            player.call('fishing.game.exit');
             player.currentColshape = null;
         }
     },
@@ -55,9 +56,13 @@ module.exports = {
     "fishing.game.start": (player) => {
           if (!player.character) return;
 
-          let rodHealth = inventory.getItemByItemId(player, fishing.getRodId()).params.health;
+          let rod = inventory.getItem(player, inventory.getRodId);
+          let health = inventory.getParam(rod, 'health').value;
+
+          inventory.updateParam(player, rod, 'health', health - 5);
+
           let zone = utils.randomInteger(10, 20);
-          let speed = 100 / 3;
+          let speed = parseInt(health / 5);
           weight = utils.randomInteger(1,5);
           let timeout = utils.randomInteger(3,10);
 
@@ -68,12 +73,20 @@ module.exports = {
     "fishing.game.end": (player, result) => {
         if (!player.character) return;
 
+        let rod = inventory.getItem(player, inventory.getRodId);
+        let health = inventory.getParam(rod, 'health').value;
+
         if (result) {
             inventory.addItem(player, 127, { weight: weight }, () => {
                 notifs.success(player, `Рыба весом ${weight} кг добавлена в инвентарь`, 'Отлично!');
             })
         } else {
-            return notifs.error(player, 'Рыба сорвалась', 'Провал!');
+            notifs.error(player, 'Рыба сорвалась', 'Провал!');
+        }
+
+        if (health == 0) {
+            inventory.deleteItem(player, rod);
+            notifs.error(player, 'Удочка сломалась', '')
         }
     },
     "fishing.rod.buy": (player) => {

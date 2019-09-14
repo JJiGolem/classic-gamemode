@@ -40,7 +40,11 @@ class ConfirmSell extends Component {
     }
 
     getContent() {
-        const { info, closeApp, addApp } = this.props;
+        const { info, closeApp, addApp, setSell } = this.props;
+
+        if (!info.biz[0].isSell) {
+            setSell(false);
+        }
 
         if (info.biz[0].ansSell.nick != null) {
             return (
