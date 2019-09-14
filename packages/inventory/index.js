@@ -491,15 +491,16 @@ module.exports = {
             },
             "7": () => {
                 // 0 - муж, 1 - жен
-                var index = (player.character.gender == 0) ? 15 : 82;
-                var undershirtDefault = (player.character.gender == 0) ? 15 : 14;
+                var index = (player.character.gender == 0) ? 15 : 18;
+                var undershirtDefault = (player.character.gender == 0) ? 15 : 3;
                 player.setClothes(3, 15, 0, 0);
                 player.setClothes(11, index, 0, 0);
                 player.setClothes(8, undershirtDefault, 0, 0);
                 player.setClothes(10, 0, 0, 0);
             },
             "8": () => {
-                player.setClothes(4, 18, 2, 0);
+                if (player.character.gender == 0) player.setClothes(4, 18, 2, 0);
+                else player.setClothes(4, 17, 0, 0);
             },
             "9": () => {
                 var index = (player.character.gender == 0) ? 34 : 35;
