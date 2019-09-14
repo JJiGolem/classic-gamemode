@@ -223,15 +223,15 @@ module.exports = {
 
         inventory.fullDeleteItemsByParams(3, ["faction", "owner"], [character.factionId, character.id]);
         var params;
-        if (player.sex == 1) {
+        if (character.gender == 0) { // муж.
             params = {
-                variation: 16,
-                texture: 2
+                variation: 12,
+                texture: 1
             };
         } else {
             params = {
-                variation: 18,
-                texture: 2
+                variation: 12,
+                texture: 1
             };
         }
 
