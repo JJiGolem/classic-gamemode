@@ -61,126 +61,126 @@ const initialState = {
             resources: 228,
             price: 112000,
             statistics: [
-                // {
-                //     date: new Date(2019, 6, 10),
-                //     money: 339
-                // },
-                // {
-                //     date: new Date(2019, 6, 11),
-                //     money: 333
-                // },
-                // {
-                //     date: new Date(2019, 6, 12),
-                //     money: 111
-                // },
-                // {
-                //     date: new Date(2019, 6, 13),
-                //     money: 234
-                // },
-                // {
-                //     date: new Date(2019, 6, 14),
-                //     money: 6756
-                // },
-                // {
-                //     date: new Date(2019, 6, 15),
-                //     money: 32
-                // },
-                // {
-                //     date: new Date(2019, 6, 16),
-                //     money: 12
-                // },
-                // {
-                //     date: new Date(2019, 6, 17),
-                //     money: 445
-                // },
-                // {
-                //     date: new Date(2019, 6, 18),
-                //     money: 7876
-                // },
-                // {
-                //     date: new Date(2019, 6, 19),
-                //     money: 435567
-                // },
-                // {
-                //     date: new Date(2019, 6, 20),
-                //     money: 13324
-                // },
-                // {
-                //     date: new Date(2019, 6, 21),
-                //     money: 54
-                // },
-                // {
-                //     date: new Date(2019, 6, 22),
-                //     money: 339
-                // },
-                // {
-                //     date: new Date(2019, 6, 23),
-                //     money: 989
-                // },
-                // {
-                //     date: new Date(2019, 6, 24),
-                //     money: 31239
-                // },
-                // {
-                //     date: new Date(2019, 6, 25),
-                //     money: 339
-                // },
-                // {
-                //     date: new Date(2019, 6, 26),
-                //     money: 3329
-                // },
-                // {
-                //     date: new Date(2019, 6, 27),
-                //     money: 3339
-                // },
-                // {
-                //     date: new Date(2019, 6, 28),
-                //     money: 34339
-                // },
-                // {
-                //     date: new Date(2019, 6, 29),
-                //     money: 12
-                // },
-                // {
-                //     date: new Date(2019, 6, 30),
-                //     money: 6456
-                // },
-                // {
-                //     date: new Date(2019, 6, 31),
-                //     money: 23
-                // },
-                // {
-                //     date: new Date(2019, 7, 1),
-                //     money: 12
-                // },
-                // {
-                //     date: new Date(2019, 7, 2),
-                //     money: 453
-                // },
-                // {
-                //     date: new Date(2019, 7, 3),
-                //     money: 546
-                // },
-                // {
-                //     date: new Date(2019, 7, 4),
-                //     money: 12
-                // },
-                // {
-                //     date: new Date(2019, 7, 5),
-                //     money: 43645
-                // },
-                // {
-                //     date: new Date(2019, 7, 6),
-                //     money: 77
-                // },
-                // {
-                //     date: new Date(2019, 7, 7),
-                //     money: 122
-                // },
-                // {
-                //     date: new Date(2019, 7, 8),
-                //     money: 4343
-                // },
+                {
+                    date: new Date(2019, 6, 10),
+                    money: 339
+                },
+                {
+                    date: new Date(2019, 6, 11),
+                    money: 333
+                },
+                {
+                    date: new Date(2019, 6, 12),
+                    money: 111
+                },
+                {
+                    date: new Date(2019, 6, 13),
+                    money: 234
+                },
+                {
+                    date: new Date(2019, 6, 14),
+                    money: 6756
+                },
+                {
+                    date: new Date(2019, 6, 15),
+                    money: 32
+                },
+                {
+                    date: new Date(2019, 6, 16),
+                    money: 12
+                },
+                {
+                    date: new Date(2019, 6, 17),
+                    money: 445
+                },
+                {
+                    date: new Date(2019, 6, 18),
+                    money: 7876
+                },
+                {
+                    date: new Date(2019, 6, 19),
+                    money: 435567
+                },
+                {
+                    date: new Date(2019, 6, 20),
+                    money: 13324
+                },
+                {
+                    date: new Date(2019, 6, 21),
+                    money: 54
+                },
+                {
+                    date: new Date(2019, 6, 22),
+                    money: 339
+                },
+                {
+                    date: new Date(2019, 6, 23),
+                    money: 989
+                },
+                {
+                    date: new Date(2019, 6, 24),
+                    money: 31239
+                },
+                {
+                    date: new Date(2019, 6, 25),
+                    money: 339
+                },
+                {
+                    date: new Date(2019, 6, 26),
+                    money: 3329
+                },
+                {
+                    date: new Date(2019, 6, 27),
+                    money: 3339
+                },
+                {
+                    date: new Date(2019, 6, 28),
+                    money: 34339
+                },
+                {
+                    date: new Date(2019, 6, 29),
+                    money: 12
+                },
+                {
+                    date: new Date(2019, 6, 30),
+                    money: 6456
+                },
+                {
+                    date: new Date(2019, 6, 31),
+                    money: 23
+                },
+                {
+                    date: new Date(2019, 7, 1),
+                    money: 12
+                },
+                {
+                    date: new Date(2019, 7, 2),
+                    money: 453
+                },
+                {
+                    date: new Date(2019, 7, 3),
+                    money: 546
+                },
+                {
+                    date: new Date(2019, 7, 4),
+                    money: 12
+                },
+                {
+                    date: new Date(2019, 7, 5),
+                    money: 43645
+                },
+                {
+                    date: new Date(2019, 7, 6),
+                    money: 77
+                },
+                {
+                    date: new Date(2019, 7, 7),
+                    money: 122
+                },
+                {
+                    date: new Date(2019, 7, 8),
+                    money: 4343
+                },
 
             ]
             // order: {
@@ -392,6 +392,20 @@ export default function info(state = initialState, action) {
 
             if (indPopCash !== -1) {
                 newState.biz[indPopCash].cashBox -= payload.money;
+            }
+
+            return newState;
+
+        case 'UPDATE_STATISTICS_BUSINESS':
+            newState = { ...state };
+            let dayIndex = newState.biz[0].statistics.findIndex(day => day.date == payload.date);
+            if (dayIndex !== -1) {
+                newState.biz[0].statistics[dayIndex].money = payload.money;
+            } else {
+                if (newState.biz[0].statistics.length === 30) {
+                    newState.biz[0].statistics.pop();
+                }
+                newState.biz[0].statistics.unshift(payload);
             }
 
             return newState;

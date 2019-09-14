@@ -42,7 +42,7 @@ class Sell extends Component {
             mp.trigger('biz.sell.check', business.id, userId, parseInt(price));
 
             // setTimeout(() => {
-            //     setSellInfo({nick: 'Dunhill', price: this.state.sellPrice})
+            //     setSellInfo({nick: null, price: this.state.sellPrice})
             // }, 1000)
         }
     }
