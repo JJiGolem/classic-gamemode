@@ -126,4 +126,18 @@ mp.events.add({
     "factions.faction.set": (val) => {
         mp.factions.setFaction(val);
     },
+    "playerEnterVehicleBoot": (player, vehicle) => {
+        if (!mp.factions.hasBox()) return;
+        if (!vehicle.getVariable("trunk")) return mp.notify.warning(`Для погрузки ящика откройте багажник`);
+        mp.events.callRemote(`factions.vehicle.products.put`, vehicle.remoteId);
+    },
+});
+
+mp.events.addDataHandler("trunk", (vehicle, value) => {
+    if (!value) return;
+    if (nearBootVehicleId == null) return;
+    if (nearBootVehicleId != vehicle.remoteId) return;
+    if (!mp.factions.hasBox()) return;
+
+    mp.events.callRemote(`factions.vehicle.products.put`, vehicle.remoteId);
 });
