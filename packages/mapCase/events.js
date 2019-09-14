@@ -337,6 +337,7 @@ module.exports = {
     },
     "mapCase.news.ads.add": (player, text) => {
         var header = factions.getFaction(7).name;
+        if (!player.phone) return notifs.error(player, `Необходим телефон`, header);
         var price = news.symbolPrice * text.length;
         if (player.character.cash < price) return notifs.error(player, `Необходимо $${price}`, header);
         money.removeCash(player, price, (res) => {
