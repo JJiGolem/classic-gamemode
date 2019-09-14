@@ -54,6 +54,7 @@ mp.events.add('masks.shop.enter', (data, list) => {
 mp.events.add('masks.shop.exit', () => {
     mp.utils.cam.destroy();
     let player = mp.players.local;
+    player.setComponentVariation(1, 0, 0, 0);
     mp.events.call('hud.enable', true);
     mp.game.ui.displayRadar(true);
     mp.callCEFR('setOpacityChat', [1.0]);
@@ -70,6 +71,35 @@ mp.events.add('masks.set', (maskIndex, textureId) => {
     player.setComponentVariation(1, drawableId, textureId, 0);
 });
 
+mp.events.add('masks.buy', (index, textureId) => {
+    let maskIndex = maskList[index].id;
+    mp.events.callRemote('masks.buy', maskIndex, textureId);
+});
+
+mp.events.add('masks.buy.ans', (ans, data) => {
+    mp.callCEFV(`selectMenu.loader = false`);
+    switch (ans) {
+        case 0:
+            mp.callCEFV(`selectMenu.notification = 'Маска добавлена в инвентарь'`);
+            break;
+        case 1:
+            mp.callCEFV(`selectMenu.notification = 'Маска не найдена'`);
+            break; 
+        case 2:
+            mp.callCEFV(`selectMenu.notification = '${data}'`);
+            break; 
+        case 3:
+            mp.callCEFV(`selectMenu.notification = 'Маска недоступна'`);
+            break; 
+        case 4:
+            mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+            break; 
+        case 5:
+            mp.callCEFV(`selectMenu.notification = 'Ошибка финансовой операции'`);
+            break; 
+    }
+});
+
 mp.events.add('render', () => {
     if (controlsDisabled) {
         mp.game.controls.disableControlAction(0, 21, true); /// бег
@@ -77,6 +107,7 @@ mp.events.add('render', () => {
         mp.game.controls.disableControlAction(0, 31, true); /// вперед назад
         mp.game.controls.disableControlAction(0, 30, true); /// влево вправо
         mp.game.controls.disableControlAction(0, 24, true); /// удары
+        mp.game.controls.disableControlAction(1, 200, true); // esc
     }
 });
 

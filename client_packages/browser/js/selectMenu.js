@@ -4359,7 +4359,12 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-
+                        if (e.itemName == 'Выйти') {
+                            mp.trigger('masks.shop.exit');
+                        } else {
+                            mp.trigger('masks.buy', e.itemIndex, e.valueIndex);
+                            selectMenu.loader = true;
+                        }
                     }
                     if (eventName == 'onItemFocusChanged') {
                         if (e.itemName != 'Выйти') {

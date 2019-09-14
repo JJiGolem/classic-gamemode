@@ -36,6 +36,12 @@ class AnsSell extends Component {
             closeApp();
             addApp({ name: 'Error', form: <Error status='Вы находитесь не рядом с бизнесом'/> });
         }
+
+        else if (status === 4) {
+            closeApp();
+            closeApp();
+            addApp({ name: 'Error', form: <Error status='Нельзя продать бизнес дешевле гос.стоимости'/> });
+        }
     }
 
     render() {
