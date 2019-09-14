@@ -6,6 +6,7 @@ mp.attachmentMngr = {
             if (entity && entity.__attachmentObjects && !entity.__attachmentObjects.hasOwnProperty(id)) {
                 let attInfo = this.attachments[id];
                 let object = mp.objects.new(attInfo.model, entity.position);
+                if (attInfo.lost) object.lost = attInfo.lost;
 
                 object.attachTo(entity.handle,
                     (typeof(attInfo.boneName) === 'string') ? entity.getBoneIndexByName(attInfo.boneName) : entity.getBoneIndex(attInfo.boneName),
@@ -52,7 +53,7 @@ mp.attachmentMngr = {
         }
     },
 
-    register: function(id, model, boneName, offset, rotation, anim) {
+    register: function(id, model, boneName, offset, rotation, anim = null, lost = false) {
         if (typeof(id) === 'string') {
             id = mp.game.joaat(id);
         }
@@ -70,6 +71,7 @@ mp.attachmentMngr = {
                     rotation: rotation,
                     boneName: boneName,
                     anim: anim,
+                    lost: lost,
                 };
             } else {
                 mp.game.graphics.notify(`Static Attachments Error: ~r~Invalid Model (0x${model.toString(16)})`);
@@ -127,6 +129,20 @@ mp.events.add("entityStreamIn", (entity) => {
 mp.events.add("entityStreamOut", (entity) => {
     if (entity.__attachmentObjects) {
         mp.attachmentMngr.shutdownFor(entity);
+    }
+});
+
+mp.events.add("render", () => {
+    var player = mp.players.local;
+    if (!player.__attachmentObjects) return;
+    for (var id in player.__attachmentObjects) {
+        id = parseInt(id);
+        var object = player.__attachmentObjects[id];
+        if (!object.lost) continue;
+        if (player.isJumping() || player.isShooting() || player.isSwimming() || player.isFalling()) {
+            mp.attachmentMngr.removeLocal(id);
+            mp.attachmentMngr.removeFor(player, id);
+        }
     }
 });
 

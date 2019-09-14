@@ -103,7 +103,8 @@ mp.events.add({
                 name: "idle",
                 speed: 8,
                 flag: 49
-            }
+            },
+            true
         );
         // коробка с медикаментами в руках
         mp.attachmentMngr.register("medicinesBox", "ex_office_swag_pills4", 58867, new mp.Vector3(0.2, -0.3, 0.1),
@@ -112,7 +113,8 @@ mp.events.add({
                 name: "idle",
                 speed: 8,
                 flag: 49
-            }
+            },
+            true
         );
     },
     "factions.insideWarehouse": (inside, type) => {
