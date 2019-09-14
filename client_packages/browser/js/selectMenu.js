@@ -4342,6 +4342,37 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "maskShop": {
+                name: "maskShop",
+                header: "Магазин масок",
+                items: [
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+
+                    }
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Выйти') {
+                            mp.trigger('masks.set', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onItemValueChanged') {
+                        mp.trigger('masks.set', e.itemIndex, e.valueIndex);
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed')
+                       mp.trigger('masks.shop.exit');
+                }
+            },
         },
         // Уведомление
         notification: null,
