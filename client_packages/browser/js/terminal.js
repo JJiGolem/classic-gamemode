@@ -103,7 +103,7 @@ var terminal = new Vue({
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
-            if (busy.includes(["chat", "mapCase"])) return;
+            if (busy.includes(["chat"])) return;
             if ((e.keyCode == 192 || e.keyCode == 1040) && self.enable) self.show = !self.show;
         });
         window.addEventListener('mousemove', function(e) {

@@ -344,7 +344,7 @@ module.exports = {
             if (!res) return notifs.error(player, `Ошибка списания наличных`, header);
         });
 
-        mapCase.addNewsAd(player, text);
+        mapCase.addNewsAd(player, text, price);
         return notifs.success(player, `Объявление отправлено`, header);
     },
     "mapCase.news.ads.remove": (player, id) => {
@@ -355,6 +355,10 @@ module.exports = {
     },
     "mapCase.news.ads.accept": (player, ad) => {
         ad = JSON.parse(ad);
+        var pay = parseInt(Math.clamp(ad.price, 0, 200) * news.adPayK);
+        money.addMoney(player, pay, (res) => {
+            if (!res) return notifs.error(player, `Ошибка начисления на банк`, `Принятие объявления`);
+        });
         mapCase.acceptAd(player, ad);
         out.success(player, `Объявление отредактировано`);
     },

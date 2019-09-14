@@ -223,7 +223,7 @@ module.exports = {
             rec.call(`mapCase.ems.members.remove`, [player.character.id]);
         });
     },
-    addNewsAd(player, text) {
+    addNewsAd(player, text, price) {
         // this.removeNewsAd(player.character.id);
         var ad = {
             id: this.adId,
@@ -231,6 +231,7 @@ module.exports = {
             author: player.name,
             number: player.phone.number,
             text: text,
+            price: price,
         };
         this.adId++;
         this.newsAds.push(ad);
