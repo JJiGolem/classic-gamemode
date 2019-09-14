@@ -27,12 +27,20 @@ mp.factions = {
     boxHandler() {
         if (mp.busy.includes()) return;
         if (this.enableTakeBox) {
-            // TODO: проверка на аттач
+            if (this.hasBox()) return mp.notify.error(`Нельзя нести больше`, `Склад`);
             mp.events.callRemote("factions.warehouse.takeBox", this.typeBox);
         } else if (this.enablePutBox) {
-            // TODO: проверка на аттач
+            if (!this.hasBox()) return mp.notify.error(`Вы не несете ящик`, `Склад`);
             mp.events.callRemote("factions.warehouse.putBox");
         }
+    },
+    hasBox() {
+        var player = mp.players.local;
+        var names = ["ammoBox", "medicinesBox"];
+        for (var i = 0; i < names.length; i++) {
+            if (player.hasAttachment(names[i])) return true;
+        }
+        return false;
     },
     showGiveRankSelectMenu(factionName, rankNames, rank, playerId) {
         if (typeof rankNames == 'object') rankNames = JSON.stringify(rankNames);
@@ -85,7 +93,9 @@ mp.factions = {
 
 mp.events.add({
     "characterInit.done": () => {
-        mp.keys.bind(69, true, mp.factions.boxHandler); // E
+        mp.keys.bind(69, true, () => {
+            mp.factions.boxHandler();
+        }); // E
         // коробка с боеприпасами в руках
         mp.attachmentMngr.register("ammoBox", "prop_box_ammo04a", 58867, new mp.Vector3(0.2, -0.3, 0.1),
             new mp.Vector3(-45, 20, 120), {
@@ -105,8 +115,12 @@ mp.events.add({
             }
         );
     },
-    "factions.insideWarehouse": mp.factions.insideWarehouse,
-    "factions.insideFactionWarehouse": mp.factions.insideFactionWarehouse,
+    "factions.insideWarehouse": (inside, type) => {
+        mp.factions.insideWarehouse(inside, type);
+    },
+    "factions.insideFactionWarehouse": (inside, type) => {
+        mp.factions.insideFactionWarehouse(inside, type);
+    },
     "factions.giverank.showMenu": mp.factions.showGiveRankSelectMenu,
     "factions.storage.showMenu": mp.factions.showStorageSelectMenu,
     "factions.faction.set": (val) => {

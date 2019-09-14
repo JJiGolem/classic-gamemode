@@ -347,13 +347,13 @@ module.exports = {
             this.setAmmo(faction, faction.ammo + this.ammoBox);
             player.addAttachment("ammoBox", true);
             notifs.info(player, `Боеприпасы: ${faction.ammo} из ${faction.maxAmmo} ед.`, `Склад ${faction.name}`);
-            if (faction.ammo == faction.maxAmmo) notifs.success(player, `Склад заполнен`, `Склад ${faction.name}`);
+            if (faction.ammo == faction.maxAmmo) notifs.warning(player, `Склад заполнен`, `Склад ${faction.name}`);
         } else if (player.hasAttachment("medicinesBox")) {
             faction.medicines += this.medicinesBox;
             faction.save();
             player.addAttachment("medicinesBox", true);
             notifs.info(player, `Медикаменты: ${faction.medicines} из ${faction.maxMedicines} ед.`, `Склад ${faction.name}`);
-            if (faction.medicines == faction.maxMedicines) notifs.success(player, `Склад заполнен`, `Склад ${faction.name}`);
+            if (faction.medicines == faction.maxMedicines) notifs.warning(player, `Склад заполнен`, `Склад ${faction.name}`);
         } else return;
     },
     canFillWarehouse(player, boxType, faction) {
