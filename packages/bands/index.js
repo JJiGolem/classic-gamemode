@@ -107,7 +107,7 @@ module.exports = {
                 rec.call(`bands.capture.start`, [factionId, zone.factionId, this.warTime / 1000]);
                 notifs.success(rec, `Ваша банда напала на ${enemyFaction.name}`, header);
             } else if (factionId == zone.factionId) {
-                rec.call(`bands.capture.start`, [zone.factionId, factionId, this.warTime / 1000]);
+                rec.call(`bands.capture.start`, [zone.factionId, faction.id, this.warTime / 1000]);
                 notifs.info(rec, `На вашу территорию напала банда ${faction.name}`, header);
             }
         });
