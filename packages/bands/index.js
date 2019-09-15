@@ -16,4 +16,26 @@ module.exports = {
     convertToClientBandZones() {
         return this.bandZones.map(x => x.dataValues);
     },
+    getZone(id) {
+        return this.bandZones[id - 1];
+    },
+    isInBandZones(pos) {
+        var first = this.bandZones[0];
+        var last = this.bandZones[this.bandZones.length - 1];
+
+        return pos.x > first.x - 100 && pos.x < last.x + 100 && pos.y < first.y + 100 && pos.y > last.y - 100;
+    },
+    isInBandZone(pos, zone) {
+        return pos.x > zone.x - 100 && pos.x < zone.x + 100 && pos.y < zone.y + 100 && pos.y > zone.y - 100;
+    },
+    getZoneByPos(pos) {
+        if (!this.isInBandZones(pos)) return null;
+
+        for (var i = 0; i < this.bandZones.length; i++) {
+            var zone = this.bandZones[i];
+            if (this.isInBandZone(pos, zone)) return zone;
+        }
+
+        return null;
+    },
 };
