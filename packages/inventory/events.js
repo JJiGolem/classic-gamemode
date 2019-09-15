@@ -6,13 +6,14 @@ module.exports = {
     "init": () => {
         inventory.init();
     },
-    "characterInit.done": (player) => {
+    "characterInit.done": async (player) => {
         player.call("inventory.setMaxPlayerWeight", [inventory.maxPlayerWeight]);
         player.call("inventory.registerWeaponAttachments", [inventory.bodyList[9], inventory.getWeaponModels()]);
         player.call("inventory.setSatiety", [player.character.satiety]);
         player.call("inventory.setThirst", [player.character.thirst]);
         inventory.initPlayerItemsInfo(player);
-        inventory.initPlayerInventory(player);
+        await inventory.initPlayerInventory(player);
+        mp.events.call("inventory.done", player);
     },
     // срабатывает, когда игрок переместил предмет (в любом месте)
     "item.add": (player, data) => {

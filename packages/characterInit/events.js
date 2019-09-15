@@ -5,6 +5,9 @@ let utils = call("utils");
 
 module.exports = {
     "auth.done": (player) => {
+        player.characterInit = {
+            created: false,
+        }
         mp.events.call('characterInit.start', player);
     },
     "characterInit.start": async (player) => {
@@ -48,5 +51,8 @@ module.exports = {
     },
     "characterInit.loadCharacter": (player) => {
         characterInit.applyCharacter(player);
+    },
+    "inventory.done": (player) => {
+        player.characterInit.created && characterInit.setStartClothes(player);
     },
 }
