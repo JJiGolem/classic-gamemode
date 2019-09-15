@@ -17,6 +17,9 @@ mp.inventory = {
     debug(enable) {
         mp.callCEFV(`inventory.debug = ${enable}`);
     },
+    spin(enable) {
+        mp.callCEFV(`inventory.spin = ${enable}`);
+    },
     initItems(items) {
         if (typeof items == 'object') items = JSON.stringify(items);
         mp.callCEFV(`inventory.initItems('${items}')`);
@@ -137,6 +140,8 @@ mp.events.add("characterInit.done", () => {
 mp.events.add("inventory.enable", mp.inventory.enable);
 
 mp.events.add("inventory.debug", mp.inventory.debug);
+
+mp.events.add("inventory.spin", mp.inventory.spin);
 
 mp.events.add("inventory.initItems", (items) => {
     mp.inventory.initItems(items);

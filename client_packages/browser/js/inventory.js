@@ -340,6 +340,8 @@ var inventory = new Vue({
             x: 0,
             y: 0
         },
+        // Крутятся все предметы
+        spin: false,
     },
     computed: {
         // Тяжесть игрока (в %)
