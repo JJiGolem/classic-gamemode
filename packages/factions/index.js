@@ -335,6 +335,10 @@ module.exports = {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         return faction && (faction.id >= 1 && faction.id <= 7);
     },
+    isBandFaction(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction && (faction.id >= 8 && faction.id <= 11);
+    },
     takeBox(player, type) {
         var header = "";
         if (type == 'ammo') {

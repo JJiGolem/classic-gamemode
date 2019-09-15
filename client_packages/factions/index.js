@@ -84,6 +84,9 @@ mp.factions = {
     isStateFaction(factionId) {
         return factionId >= 1 && factionId <= 7;
     },
+    isBandFaction(factionId) {
+        return factionId >= 8 && factionId <= 11;
+    },
     setFaction(factionId) {
         // mp.notify.info(`setFaction: ${factionId}`)
         this.faction = factionId;
