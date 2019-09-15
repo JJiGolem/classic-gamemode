@@ -87,10 +87,14 @@ module.exports = {
 
         var enemyFaction = factions.getFaction(zone.factionId);
         this.wars[zone.id] = {
-            bandId: faction.id,
-            enemyBandId: zone.factionId,
-            score: 0,
-            enemyScore: 0,
+            band: {
+                id: faction.id,
+                score: 0,
+            },
+            enemyBand: {
+                id: zone.factionId,
+                score: 0,
+            },
             startTime: Date.now()
         };
         setTimeout(() => {
@@ -116,11 +120,11 @@ module.exports = {
         if (!this.wars[zone.id]) return;
 
         var war = this.wars[zone.id];
-        var winBandId = war.bandId;
-        var loseBandId = war.enemyBandId;
-        if (war.enemyScore > war.score) {
-            winBandId = war.enemyBandId;
-            loseBandId = war.bandId;
+        var winBandId = war.band.id;
+        var loseBandId = war.enemyBand.id;
+        if (war.enemyBand.score > war.band.score) {
+            winBandId = war.enemyBand.id;
+            loseBandId = war.band.id;
         }
 
         var header = `Захват территории`;
@@ -130,11 +134,11 @@ module.exports = {
             if (!factionId) return;
             if (!factions.isBandFaction(factionId)) return;
             if (factionId == winBandId) {
-                var str = (war.bandId == winBandId)? 'attack' : 'defender';
+                var str = (war.band.id == winBandId) ? 'attack' : 'defender';
                 rec.call(`prompt.showByName`, [`capture_${str}_win`]);
                 notifs.success(rec, `Ваша банда победила`, header);
             } else if (factionId == loseBandId) {
-                var str = (war.bandId == loseBandId)? 'attack' : 'defender';
+                var str = (war.band.id == loseBandId) ? 'attack' : 'defender';
                 rec.call(`prompt.showByName`, [`capture_${str}_lose`]);
                 notifs.error(rec, `Ваша банда проиграла`, header);
             }
@@ -144,7 +148,34 @@ module.exports = {
         delete this.wars[zone.id];
     },
     inWar(factionId) {
-        var i = Object.values(this.wars).findIndex(x => x.bandId == factionId || x.enemyBandId == factionId);
+        var i = Object.values(this.wars).findIndex(x => x.band.id == factionId || x.enemyBand.id == factionId);
         return i != -1;
+    },
+    giveScore(player, zone) {
+        if (typeof zone == 'number') zone = this.getZone(zone);
+        var war = this.wars[zone.id];
+        if (!war) return;
+
+        var bandId, score;
+
+        if (player.character.factionId == war.band.id) {
+            war.band.score++;
+            bandId = war.band.id;
+            score = war.band.score;
+        } else if (player.character.factionId == war.enemyBand.id) {
+            war.enemyBand.score++;
+            bandId = war.enemyBand.id;
+            score = war.enemyBand.score;
+        }
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            var factionId = rec.character.factionId;
+            if (!factionId) return;
+            if (!factions.isBandFaction(factionId)) return;
+            if (factionId != war.band.id && factionId != war.enemyBand.id) return;
+
+            rec.call(`bands.capture.score.set`, [bandId, score]);
+        });
     },
 };

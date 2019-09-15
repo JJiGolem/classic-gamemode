@@ -62,6 +62,10 @@ var captureScore = new Vue({
                 this.time--;
                 if (this.time < 0) this.show = false;
             }, 1000);
+        },
+        setScore(bandId, score) {
+            if (this.leftBandId == bandId) this.leftScore = score;
+            else if (this.rightBandId == bandId) this.rightScore = score;
         }
     }
 });
