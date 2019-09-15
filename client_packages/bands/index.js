@@ -12,8 +12,8 @@ mp.bands = {
     bandZones: [],
     // Цвета блипов (factionId: blipColor)
     colors: {
-        8: 27,
-        9: 2,
+        8: 2,
+        9: 27,
         10: 46,
         11: 3,
     },

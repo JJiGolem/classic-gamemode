@@ -118,12 +118,27 @@ module.exports = {
         var war = this.wars[zone.id];
         var winBandId = war.bandId;
         var loseBandId = war.enemyBandId;
-        if (war.enemyScore >= war.score) {
+        if (war.enemyScore > war.score) {
             winBandId = war.enemyBandId;
             loseBandId = war.bandId;
         }
-        // TODO: разослать бандам-участникам подсказки
-        // TODO: разослать бандам-участникам уведомления
+
+        var header = `Захват территории`;
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            var factionId = rec.character.factionId;
+            if (!factionId) return;
+            if (!factions.isBandFaction(factionId)) return;
+            if (factionId == winBandId) {
+                var str = (war.bandId == winBandId)? 'attack' : 'defender';
+                rec.call(`prompt.showByName`, [`capture_${str}_win`]);
+                notifs.success(rec, `Ваша банда победила`, header);
+            } else if (factionId == loseBandId) {
+                var str = (war.bandId == loseBandId)? 'attack' : 'defender';
+                rec.call(`prompt.showByName`, [`capture_${str}_lose`]);
+                notifs.error(rec, `Ваша банда проиграла`, header);
+            }
+        });
 
         this.setBandZoneOwner(zone, winBandId);
         delete this.wars[zone.id];
