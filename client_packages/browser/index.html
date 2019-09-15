@@ -33,6 +33,7 @@
     <link rel="stylesheet" type="text/css" href="css/playersList.css" />
     <link rel="stylesheet" type="text/css" href="css/gunLicense.css" />
     <link rel="stylesheet" type="text/css" href="css/fishing.css" />
+    <link rel="stylesheet" type="text/css" href="css/captureScore.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -1141,6 +1142,24 @@
         </div>
     </div>
 
+    <div id="captureScore" v-if="show">
+        <div class="header">
+            <img :src="leftImgSrc" />
+            <span :style="{color: colors[leftBandId]}">{{ names[leftBandId] }}</span>
+            vs.
+            <span :style="{color: colors[rightBandId]}">{{ names[rightBandId] }}</span>
+            <img :src="rightImgSrc" />
+        </div>
+        <div class="score">
+            <div>{{ leftScore }}</div>
+            <div>{{ rightScore }}</div>
+        </div>
+        <div class="progress" :style="{background: colors[leftBandId]}">
+            <div class="fill" :style="{width: progressWidth+'%', background: colors[rightBandId]}"></div>
+        </div>
+        <div class="time">{{ prettyTime }}</div>
+    </div>
+
     <!-- ------------------------ REACT ------------------------------ -->
     <script async src="build/js/build.js" type="text/javascript"></script>
     <div id="root"></div>
@@ -1168,6 +1187,7 @@
     <script src="js/playersList.js"></script>
     <script src="js/gunLicense.js"></script>
     <script src="js/fishing.js"></script>
+    <script src="js/captureScore.js"></script>
 
 </body>
 
