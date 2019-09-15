@@ -21,7 +21,7 @@ module.exports = {
         6: [11],
         7: [10],
         8: [12],
-        9: [], // автоматы
+        9: [21, 22, 48, 99, 107], // автоматы
         10: [13],
         11: [8],
         12: [9],
@@ -190,7 +190,7 @@ module.exports = {
     async addItem(player, itemId, params, callback = () => {}) {
         var slot = this.findFreeSlot(player, itemId);
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(itemId).name} не найден`);
-        if (params.sex && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
+        if (params.sex != null && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
         var nextWeight = this.getCommonWeight(player) + this.getInventoryItem(itemId).weight;
         if (nextWeight > this.maxPlayerWeight) return callback(`Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`);
         if (params.weaponHash) {
@@ -373,6 +373,7 @@ module.exports = {
         var result = [];
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
+            if (!item.parentId) continue;
             var params = this.getParamsValues(item);
             if (!params.weaponHash) continue;
             result.push(item);
@@ -382,6 +383,9 @@ module.exports = {
             result = result.concat(this.findArrayWeapons(children));
         }
         return result;
+    },
+    getWeaponModels() {
+        return this.bodyList[9].map(x => this.getInventoryItem(x).model);
     },
     getInventoryItem(itemId) {
         return this.inventoryItems[itemId - 1];
@@ -459,6 +463,7 @@ module.exports = {
         } else if (otherItems[item.itemId] != null) {
             otherItems[item.itemId](params);
         } else if (params.weaponHash) {
+            player.addAttachment(`weapon_${item.itemId}`);
             this.removeWeapon(player, params.weaponHash);
         } else return console.log("Неподходящий тип предмета для тела!");
 
@@ -518,6 +523,8 @@ module.exports = {
             player.setProp(propsIndexes[itemId], -1, 0);
         } else if (otherItems[itemId] != null) {
             otherItems[itemId]();
+        } else if (this.bodyList[9].includes(itemId)) {
+            player.addAttachment(`weapon_${itemId}`, true);
         } else return console.log("Неподходящий тип предмета для тела!");
     },
     updateAllView(player) {

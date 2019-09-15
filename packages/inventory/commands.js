@@ -232,6 +232,19 @@ module.exports = {
             out.info(`${player.name} ${val} DEBUG-режим инвентаря`);
         }
     },
+    "/ispin": {
+        description: "Вкл/выкл режим спина инвентаря у всех игроков.",
+        access: 6,
+        args: "[спин]:b",
+        handler: (player, args, out) => {
+            mp.players.forEach((rec) => {
+                if (!rec.character) return;
+                rec.call(`inventory.spin`, [args[0]]);
+            });
+            var val = (args[0])? "включил" : "выключил";
+                out.info(`${player.name} ${val} SPIN-режим инвентаря`);
+        }
+    },
     "/invweight": {
         description: "Получить вес предмета.",
         access: 6,
