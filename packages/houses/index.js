@@ -290,6 +290,8 @@ module.exports = {
         return date;
     },
     setTimer(house) {
+        if (house == null) return;
+        if (house.info == null) return;
         if (house.info.characterId == null) return;
         if (house.info.date == null) return dropHouse(house);
         if (house.info.date.getTime() - new Date().getTime() <= 10000) return dropHouse(house);
