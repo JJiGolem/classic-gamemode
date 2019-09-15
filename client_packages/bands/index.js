@@ -78,6 +78,9 @@ mp.bands = {
         time = parseInt(time);
         mp.callCEFV(`captureScore.start(${bandId}, ${enemyBandId}, ${time})`);
     },
+    setCaptureScore(bandId, score) {
+        mp.callCEFV(`captureScore.setScore(${bandId}, ${score})`);
+    },
 };
 
 mp.events.add({
@@ -93,6 +96,9 @@ mp.events.add({
     },
     "bands.capture.start": (bandId, enemyBandId, time) => {
         mp.bands.startCapture(bandId, enemyBandId, time);
+    },
+    "bands.capture.score.set": (bandId, score) => {
+        mp.bands.setCaptureScore(bandId, score);
     },
     "render": () => {
         mp.bands.bandZones.forEach(blip => {
