@@ -202,7 +202,7 @@ module.exports = {
     },
     setStartClothes(player) {
         let sex = player.character.gender ? 0 : 1;
-        console.log(`sex = ${sex}`)
+
         let pantsArray = clothesConfig[sex].pants;
         let pants = pantsArray[utils.randomInteger(0, pantsArray.length - 1)];
         let pantsParams = {
@@ -212,7 +212,6 @@ module.exports = {
             pockets: '[5, 5, 5, 5, 4, 4, 4, 4]',
             name: (pants[0] == 15 && sex == 1) || (pants[0] == 14 && sex == 0) ? 'Шорты' : 'Брюки'
         }
-        console.log(pantsParams);
         inventory.addItem(player, PANTS_ID, pantsParams, (e) => {
             //if (e) return notifs.error(player, e);
             if (e) return console.log(e);
@@ -226,7 +225,6 @@ module.exports = {
             texture: shoes[1],
             name: 'Кроссовки'
         }
-        console.log(shoesParams);
         inventory.addItem(player, SHOES_ID, shoesParams, (e) => {
             //if (e) return notifs.error(player, e);
             if (e) return console.log(e);
@@ -245,7 +243,6 @@ module.exports = {
             //pockets: '[3, 3]',
             name: 'Футболка'
         }
-        console.log(topParams)
         inventory.addItem(player, TOP_ID, topParams, (e) => {
             //if (e) return notifs.error(player, e);
             if (e) return console.log(e);
