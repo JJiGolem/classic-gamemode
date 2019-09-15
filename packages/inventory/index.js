@@ -190,7 +190,7 @@ module.exports = {
     async addItem(player, itemId, params, callback = () => {}) {
         var slot = this.findFreeSlot(player, itemId);
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(itemId).name} не найден`);
-        if (params.sex && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
+        if (params.sex != null && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
         var nextWeight = this.getCommonWeight(player) + this.getInventoryItem(itemId).weight;
         if (nextWeight > this.maxPlayerWeight) return callback(`Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`);
         if (params.weaponHash) {
