@@ -116,6 +116,17 @@ mp.inventory = {
             if (sqlId == itemSqlId) this.removeHotkey(key);
         }
     },
+    registerWeaponAttachments(list, models) {
+        for (var i = 0; i < list.length; i++) {
+            var itemId = list[i];
+            var model = models[i];
+
+            mp.attachmentMngr.register(`weapon_${itemId}`, model, 57597, new mp.Vector3(0.01, 0.03, 0),
+                new mp.Vector3(-119, 10, 90)
+            );
+        }
+        mp.callCEFV(`inventory.setBodyList(9, '${JSON.stringify(list)}')`)
+    },
 };
 
 mp.events.add("characterInit.done", () => {
@@ -153,6 +164,8 @@ mp.events.add("inventory.setEnvironmentItemSqlId", mp.inventory.setEnvironmentIt
 mp.events.add("inventory.deleteEnvironmentItem", mp.inventory.deleteEnvironmentItem);
 
 mp.events.add("inventory.setMaxPlayerWeight", mp.inventory.setMaxPlayerWeight);
+
+mp.events.add("inventory.registerWeaponAttachments", mp.inventory.registerWeaponAttachments);
 
 mp.events.add("inventory.setSatiety", mp.inventory.setSatiety);
 

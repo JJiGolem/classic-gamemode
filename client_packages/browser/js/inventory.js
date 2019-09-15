@@ -212,7 +212,7 @@ var inventory = new Vue({
             6: [11],
             7: [10],
             8: [12],
-            9: [21, 22, 23, 48, 49, 50, 51, 52, 53, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], // автоматы
+            9: [], // автоматы
             10: [13],
             11: [8],
             12: [9],
@@ -703,6 +703,10 @@ var inventory = new Vue({
         setItemInfo(itemId, info) {
             if (typeof info == 'string') info = JSON.parse(info);
             Vue.set(this.itemsInfo, itemId, info);
+        },
+        setBodyList(index, list) {
+            if (typeof list == 'string') list = JSON.parse(list);
+            Vue.set(this.bodyList, index, list);
         },
         // ******************  [ Player Inventory ] ******************
         getItem(sqlId) {
