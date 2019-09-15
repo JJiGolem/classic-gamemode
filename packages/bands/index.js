@@ -1,12 +1,24 @@
 "use strict";
 
-let factions = call('factions');
+let factions;
+let notifs;
 
 module.exports = {
     // Зоны гетто
     bandZones: [],
+    // Мин. ранг, который может каптить
+    captureRank: 8,
+    // Зоны, на которых происходит капт
+    wars: {},
+    // Время захвата территории (ms)
+    warTime: 10000,
+    // Кратность часа, по которым можно каптить
+    captureInterval: 0,
 
     init() {
+        factions = call('factions');
+        notifs = call('notifications');
+
         this.loadBandZonesFromDB();
     },
 
@@ -50,5 +62,74 @@ module.exports = {
             if (!rec.character) return;
             rec.call(`bands.bandZones.set`, [zone.id, factionId]);
         });
+    },
+    startCapture(player) {
+        var header = `Захват территории`;
+        var out = (text) => {
+            notifs.error(player, text, header)
+        };
+        var faction = factions.getFaction(player.character.factionId);
+        if (!factions.isBandFaction(faction)) return out(`Вы не член группировки`);
+        var rank = factions.getRank(faction, this.captureRank);
+        if (player.character.factionRank < rank.id) return out(`Доступно с ранга ${rank.name}`);
+        var zone = this.getZoneByPos(player.position);
+        if (!zone) return out(`Вы не в гетто`);
+        if (zone.factionId == faction.id) return out(`Территория уже под контролем ${faction.name}`);
+        if (this.wars[zone.id]) return out(`На данной территории уже идет война`);
+        if (this.inWar(faction.id)) return out(`Ваша банда уже участвует в войне`);
+
+        if (this.captureInterval) {
+            var minutes = new Date().getMinutes();
+            // if (minutes) return out(`Не подходящее время для захвата`);
+            var hours = new Date().getHours();
+            if (hours % this.captureInterval) return out(`Захват доступен каждый ${this.captureInterval} час`);
+        }
+
+        var enemyFaction = factions.getFaction(zone.factionId);
+        this.wars[zone.id] = {
+            bandId: faction.id,
+            enemyBandId: zone.factionId,
+            score: 0,
+            enemyScore: 0,
+            startTime: Date.now()
+        };
+        setTimeout(() => {
+            this.stopCapture(zone);
+        }, this.warTime);
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            var factionId = rec.character.factionId;
+            rec.call(`bands.bandZones.flash`, [zone.id, true]);
+            if (!factionId) return;
+            if (!factions.isBandFaction(factionId)) return;
+            if (factionId == faction.id) {
+                rec.call(`bands.capture.start`, [factionId, zone.factionId, this.warTime / 1000]);
+                notifs.success(rec, `Ваша банда напала на ${enemyFaction.name}`, header);
+            } else if (factionId == zone.factionId) {
+                rec.call(`bands.capture.start`, [zone.factionId, factionId, this.warTime / 1000]);
+                notifs.info(rec, `На вашу территорию напала банда ${faction.name}`, header);
+            }
+        });
+    },
+    stopCapture(zone) {
+        if (typeof zone == 'number') zone = this.getZone(zone);
+        if (!this.wars[zone.id]) return;
+
+        var war = this.wars[zone.id];
+        var winBandId = war.bandId;
+        var loseBandId = war.enemyBandId;
+        if (war.enemyScore >= war.score) {
+            winBandId = war.enemyBandId;
+            loseBandId = war.bandId;
+        }
+        // TODO: разослать бандам-участникам подсказки
+        // TODO: разослать бандам-участникам уведомления
+
+        this.setBandZoneOwner(zone, winBandId);
+        delete this.wars[zone.id];
+    },
+    inWar(factionId) {
+        var i = Object.values(this.wars).findIndex(x => x.bandId == factionId || x.enemyBandId == factionId);
+        return i != -1;
     },
 };

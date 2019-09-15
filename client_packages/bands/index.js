@@ -35,7 +35,6 @@ mp.bands = {
         this.clearBandZones();
         zones.forEach(zone => {
             var blip = mp.game.ui.addBlipForRadius(zone.x, zone.y, 50, 100);
-            mp.terminal.debug(`new blips: ${blip}`);
             mp.game.invoke(this.natives.SET_BLIP_SPRITE, blip, 5);
             mp.game.invoke(this.natives.SET_BLIP_ALPHA, blip, 175);
             mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, this.colors[zone.factionId]);
@@ -61,7 +60,12 @@ mp.bands = {
     },
     setOwner(id, factionId) {
         var blip = this.bandZones[id - 1];
+        this.flashBlip(id, false);
         mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, this.colors[factionId]);
+    },
+    startCapture(bandId, enemyBandId, time) {
+        time = parseInt(time);
+        mp.callCEFV(`captureScore.start(${bandId}, ${enemyBandId}, ${time})`);
     },
 };
 
@@ -75,6 +79,9 @@ mp.events.add({
     },
     "bands.bandZones.set": (id, factionId) => {
         mp.bands.setOwner(id, factionId);
+    },
+    "bands.capture.start": (bandId, enemyBandId, time) => {
+        mp.bands.startCapture(bandId, enemyBandId, time);
     },
     "render": () => {
         mp.bands.bandZones.forEach(blip => {

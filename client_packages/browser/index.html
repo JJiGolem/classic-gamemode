@@ -1154,8 +1154,8 @@
             <div>{{ leftScore }}</div>
             <div>{{ rightScore }}</div>
         </div>
-        <div class="progress" :style="{background: colors[leftBandId]}">
-            <div class="fill" :style="{width: progressWidth+'%', background: colors[rightBandId]}"></div>
+        <div class="progress" :style="{background: colors[rightBandId]}">
+            <div class="fill" :style="{width: progressWidth+'%', background: colors[leftBandId]}"></div>
         </div>
         <div class="time">{{ prettyTime }}</div>
     </div>
