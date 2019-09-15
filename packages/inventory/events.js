@@ -278,7 +278,7 @@ module.exports = {
         }
     },
     "playerQuit": (player) => {
-        if (!player.character) return;
+        if (!player.character || !player.character.inventory) return;
         if (!player.inventory.place || player.inventory.place.type != "Vehicle") return;
         var veh = mp.vehicles.getBySqlId(-player.inventory.place.sqlId);
         if (!veh) return;
