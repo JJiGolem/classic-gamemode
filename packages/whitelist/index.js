@@ -25,7 +25,9 @@ let allowed = [ /// Список разрешенных social club'ов
     "Ramdam1", // andrey
     "Jack_Tekila", //  эдгар
     "ScarlyS2", // roma
-    "QayRey" // юля
+    "QayRey", // юля
+    "..Exi..",
+    "Demidov_Edgar"
 ]; 
 
 module.exports = {
