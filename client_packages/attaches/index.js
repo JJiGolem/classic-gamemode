@@ -146,6 +146,18 @@ mp.events.add("render", () => {
     }
 });
 
+mp.events.add("playerStartEnterVehicle", () => {
+    var player = mp.players.local;
+    if (!player.__attachmentObjects) return;
+    for (var id in player.__attachmentObjects) {
+        id = parseInt(id);
+        var object = player.__attachmentObjects[id];
+        if (!object.lost) continue;
+        mp.attachmentMngr.removeLocal(id);
+        mp.attachmentMngr.removeFor(player, id);
+    }
+});
+
 mp.events.addDataHandler("attachmentsData", (entity, data) => {
     let newAttachments = (data.length > 0) ? data.split('|').map(att => parseInt(att, 36)) : [];
 
