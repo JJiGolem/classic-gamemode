@@ -11,7 +11,7 @@ d = (text) => {
 }
 
 // Отображение в дискорде
-mp.discord.update('Classic Roleplay | Alpha Testing', 'classic-rp.ru');
+mp.discord.update('Classic Roleplay | Alpha', 'classic-rp.ru');
 
 
 
