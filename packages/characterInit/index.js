@@ -3,6 +3,28 @@ const freemodeCharacters = [mp.joaat("mp_m_freemode_01"), mp.joaat("mp_f_freemod
 const creatorPlayerPos = new mp.Vector3(402.8664, -996.4108, -99.00027);
 const creatorPlayerHeading = -185.0;
 
+let inventory = call('inventory');
+let notifs = call('notifs');
+let utils = call("utils");
+
+let clothesConfig = {
+    0: {
+        pants: [[1, 5], [1, 6], [5, 0], [15, 3]],
+        /// 11 / 3 / 8
+        tops: [[17, 0, 5, 0, 15, 0], [1, 0, 0, 0, 15, 0], [5, 2, 5, 0, 15, 0], [34, 0, 0, 0, 15, 0]],
+        shoes: [[1, 2], [9, 2]]
+    },
+    1: {
+        pants: [[0, 0], [14, 0]],
+        /// 11 / 3 / 8
+        tops: [[0, 2, 0, 0, 9, 0], [5, 1, 4, 0, 3, 0], [16, 2, 15, 0, 3, 0]],
+        shoes: [[3, 0], [1, 7]]
+    }
+};
+
+const TOP_ID = 7;
+const PANTS_ID = 8;
+const SHOES_ID = 9;
 
 /// Функции модуля выбора и создания персоонажа
 module.exports = {
@@ -177,5 +199,56 @@ module.exports = {
             default:
                 return [-252.91534423828125, -338.6800231933594, 29.70627212524414];
         }
+    },
+    setStartClothes(player) {
+        let sex = player.character.gender ? 0 : 1;
+        console.log(`sex = ${sex}`)
+        let pantsArray = clothesConfig[sex].pants;
+        let pants = pantsArray[utils.randomInteger(0, pantsArray.length - 1)];
+        let pantsParams = {
+            sex: sex,
+            variation: pants[0],
+            texture: pants[1],
+            pockets: '[5, 5, 5, 5, 4, 4, 4, 4]',
+            name: pants[0] == 15 ? 'Шорты' : 'Брюки'
+        }
+        console.log(pantsParams);
+        inventory.addItem(player, PANTS_ID, pantsParams, (e) => {
+            //if (e) return notifs.error(player, e);
+            if (e) return console.log(e);
+        });
+
+        let shoesArray = clothesConfig[sex].shoes;
+        let shoes = shoesArray[utils.randomInteger(0, shoesArray.length - 1)];
+        let shoesParams = {
+            sex: sex,
+            variation: shoes[0],
+            texture: shoes[1],
+            name: 'Кроссовки'
+        }
+        console.log(shoesParams);
+        inventory.addItem(player, SHOES_ID, shoesParams, (e) => {
+            //if (e) return notifs.error(player, e);
+            if (e) return console.log(e);
+        });
+
+        let topsArray = clothesConfig[sex].tops;
+        let top = topsArray[utils.randomInteger(0, topsArray.length - 1)];
+        let topParams = {
+            sex: sex,
+            variation: top[0],
+            texture: top[1],
+            torso: top[2],
+            tTexture: top[3],
+            undershirt: top[4],
+            uTexture: top[5],
+            //pockets: '[3, 3]',
+            name: 'Футболка'
+        }
+        console.log(topParams)
+        inventory.addItem(player, TOP_ID, topParams, (e) => {
+            //if (e) return notifs.error(player, e);
+            if (e) return console.log(e);
+        });
     }
 };
