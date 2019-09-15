@@ -28,7 +28,10 @@ mp.bands = {
         SET_BLIP_ROTATION: "0xF87683CDF73C3F6E",
         SET_BLIP_COLOUR: "0x03D7FB09E75D6B7E",
         SET_BLIP_FLASHES: "0xB14552383D39CE3E",
+        GET_BLIP_COLOUR: "0xDF729E8D20CF7327",
     },
+    flashTimer: null,
+    flashColor: 1,
 
 
     initBandZones(zones) {
@@ -56,7 +59,15 @@ mp.bands = {
     },
     flashBlip(id, toggle) {
         var blip = this.bandZones[id - 1];
-        mp.game.invoke(this.natives.SET_BLIP_FLASHES, blip, toggle);
+        // mp.game.invoke(this.natives.SET_BLIP_FLASHES, blip, toggle);
+        clearInterval(this.flashTimer);
+        if (!toggle) return;
+        var oldColor = mp.game.invoke(this.natives.GET_BLIP_COLOUR, blip);
+        this.flashTimer = setInterval(() => {
+            var color = mp.game.invoke(this.natives.GET_BLIP_COLOUR, blip);
+            if (color == oldColor) mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, this.flashColor);
+            else mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, oldColor);
+        }, 500);
     },
     setOwner(id, factionId) {
         var blip = this.bandZones[id - 1];
