@@ -49,13 +49,4 @@ module.exports = {
     "characterInit.loadCharacter": (player) => {
         characterInit.applyCharacter(player);
     },
-
-    // temp
-    "playerDeath": (player) => {
-        // player.health = 100;
-        // player.spawn(new mp.Vector3(-252.91534423828125, -338.6800231933594, 29.70627212524414));
-        // player.spawn(new mp.Vector3(2019.1632080078125, 4984.546875, 41.21428680419922)); // farm
-        // player.spawn(new mp.Vector3(919.3203125, -1569.991455078125, 30.715885162353516)); // грузчики
-        // player.heading = 7;
-    },
 }

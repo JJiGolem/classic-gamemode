@@ -8,6 +8,7 @@ let money;
 let vehicles;
 let carmarket;
 let timer;
+let utils;
 
 /// Функции модуля системы домов
 let changeBlip = function(house) {
@@ -66,6 +67,7 @@ module.exports = {
         vehicles = call('vehicles');
         carmarket = call('carmarket');
         timer = call("timer");
+        utils= call("utils");
 
         console.log("[HOUSES] load houses from DB");
         let infoHouses = await db.Models.House.findAll({
