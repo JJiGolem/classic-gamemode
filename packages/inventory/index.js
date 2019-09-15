@@ -84,7 +84,18 @@ module.exports = {
     },
     async initPlayerInventory(player) {
         this.clearAllView(player);
-        // TODO: include in include in include... WTF??? (08.08.19 Carter Slade)
+
+        player.inventory = {
+            denyUpdateView: false, // запрещено ли обновлять внешний вид игрока
+            items: [], // предметы игрока
+            ground: [], // объекты на земле, которые выкинул игрок
+            place: { // багажник/шкаф/холодильник и пр. при взаимодействии
+                type: "",
+                sqlId: 0,
+                items: [],
+            },
+        };
+
         var dbItems = await db.Models.CharacterInventory.findAll({
             where: {
                 playerId: player.character.id
@@ -102,24 +113,18 @@ module.exports = {
                 }
             ]
         });
+        player.inventory.items = dbItems;
 
-        player.inventory = {
-            denyUpdateView: false, // запрещено ли обновлять внешний вид игрока
-            items: dbItems, // предметы игрока
-            ground: [], // объекты на земле, которые выкинул игрок
-            place: { // багажник/шкаф/холодильник и пр. при взаимодействии
-                type: "",
-                sqlId: 0,
-                items: [],
-            },
-        };
         this.updateAllView(player);
         this.loadWeapons(player);
         player.call(`inventory.initItems`, [this.convertServerToClientItems(dbItems)]);
         console.log(`[INVENTORY] Для игрока ${player.character.name} загружены предметы (${dbItems.length} шт.)`);
     },
     async initVehicleInventory(vehicle) {
-        // TODO: include in include in include... WTF??? (08.08.19 Carter Slade)
+        vehicle.inventory = {
+            items: [], // предметы в багажнике
+        };
+
         var dbItems = await db.Models.VehicleInventory.findAll({
             where: {
                 vehicleId: vehicle.db.id
@@ -137,10 +142,8 @@ module.exports = {
                 }
             ]
         });
+        vehicle.inventory.items = dbItems;
 
-        vehicle.inventory = {
-            items: dbItems, // предметы в багажнике
-        };
         console.log(`[INVENTORY] Для авто ${vehicle.db.modelName} загружены предметы (${dbItems.length} шт.)`);
     },
     convertServerToClientItems(dbItems) {
