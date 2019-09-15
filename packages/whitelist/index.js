@@ -28,7 +28,8 @@ let allowed = [ /// Список разрешенных social club'ов
     "QayRey", // юля
     "..Exi..",
     "Demidov_Edgar",
-    "LLlBabPa"
+    "LLlBabPa",
+    "Edward_Melano"
 ]; 
 
 module.exports = {
