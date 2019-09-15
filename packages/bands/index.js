@@ -1,5 +1,7 @@
 "use strict";
 
+let factions = call('factions');
+
 module.exports = {
     // Зоны гетто
     bandZones: [],
@@ -37,5 +39,16 @@ module.exports = {
         }
 
         return null;
+    },
+    setBandZoneOwner(zone, factionId) {
+        if (typeof zone == 'number') zone = this.getZone(zone);
+        if (!factions.isBandFaction(factionId)) return;
+
+        zone.factionId = factionId;
+        zone.save();
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            rec.call(`bands.bandZones.set`, [zone.id, factionId]);
+        });
     },
 };

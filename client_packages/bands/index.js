@@ -58,7 +58,11 @@ mp.bands = {
     flashBlip(id, toggle) {
         var blip = this.bandZones[id - 1];
         mp.game.invoke(this.natives.SET_BLIP_FLASHES, blip, toggle);
-    }
+    },
+    setOwner(id, factionId) {
+        var blip = this.bandZones[id - 1];
+        mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, this.colors[factionId]);
+    },
 };
 
 mp.events.add({
@@ -68,6 +72,9 @@ mp.events.add({
     },
     "bands.bandZones.flash": (id, toggle) => {
         mp.bands.flashBlip(id, toggle);
+    },
+    "bands.bandZones.set": (id, factionId) => {
+        mp.bands.setOwner(id, factionId);
     },
     "render": () => {
         mp.bands.bandZones.forEach(blip => {
