@@ -121,6 +121,7 @@ module.exports = {
             ]
         });
         this.applyCharacter(player);
+        player.characterInit.created = true;
         player.call('characterInit.create.check.ans', [1]);
         mp.events.call('characterInit.done', player);
     },

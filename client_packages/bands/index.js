@@ -12,8 +12,8 @@ mp.bands = {
     bandZones: [],
     // Цвета блипов (factionId: blipColor)
     colors: {
-        8: 27,
-        9: 2,
+        8: 2,
+        9: 27,
         10: 46,
         11: 3,
     },
@@ -28,14 +28,16 @@ mp.bands = {
         SET_BLIP_ROTATION: "0xF87683CDF73C3F6E",
         SET_BLIP_COLOUR: "0x03D7FB09E75D6B7E",
         SET_BLIP_FLASHES: "0xB14552383D39CE3E",
+        GET_BLIP_COLOUR: "0xDF729E8D20CF7327",
     },
+    flashTimer: null,
+    flashColor: 1,
 
 
     initBandZones(zones) {
         this.clearBandZones();
         zones.forEach(zone => {
             var blip = mp.game.ui.addBlipForRadius(zone.x, zone.y, 50, 100);
-            mp.terminal.debug(`new blips: ${blip}`);
             mp.game.invoke(this.natives.SET_BLIP_SPRITE, blip, 5);
             mp.game.invoke(this.natives.SET_BLIP_ALPHA, blip, 175);
             mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, this.colors[zone.factionId]);
@@ -57,11 +59,27 @@ mp.bands = {
     },
     flashBlip(id, toggle) {
         var blip = this.bandZones[id - 1];
-        mp.game.invoke(this.natives.SET_BLIP_FLASHES, blip, toggle);
+        // mp.game.invoke(this.natives.SET_BLIP_FLASHES, blip, toggle);
+        clearInterval(this.flashTimer);
+        if (!toggle) return;
+        var oldColor = mp.game.invoke(this.natives.GET_BLIP_COLOUR, blip);
+        this.flashTimer = setInterval(() => {
+            var color = mp.game.invoke(this.natives.GET_BLIP_COLOUR, blip);
+            if (color == oldColor) mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, this.flashColor);
+            else mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, oldColor);
+        }, 500);
     },
     setOwner(id, factionId) {
         var blip = this.bandZones[id - 1];
+        this.flashBlip(id, false);
         mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, this.colors[factionId]);
+    },
+    startCapture(bandId, enemyBandId, time) {
+        time = parseInt(time);
+        mp.callCEFV(`captureScore.start(${bandId}, ${enemyBandId}, ${time})`);
+    },
+    setCaptureScore(bandId, score) {
+        mp.callCEFV(`captureScore.setScore(${bandId}, ${score})`);
     },
 };
 
@@ -75,6 +93,12 @@ mp.events.add({
     },
     "bands.bandZones.set": (id, factionId) => {
         mp.bands.setOwner(id, factionId);
+    },
+    "bands.capture.start": (bandId, enemyBandId, time) => {
+        mp.bands.startCapture(bandId, enemyBandId, time);
+    },
+    "bands.capture.score.set": (bandId, score) => {
+        mp.bands.setCaptureScore(bandId, score);
     },
     "render": () => {
         mp.bands.bandZones.forEach(blip => {

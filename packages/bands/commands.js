@@ -27,4 +27,12 @@ module.exports = {
             player.position = pos;
         }
     },
+    "/bcapt": {
+        access: 6,
+        description: "Начать капт.",
+        args: "",
+        handler: (player, args, out) => {
+            mp.events.call(`bands.capture.start`, player);
+        }
+    },
 }
