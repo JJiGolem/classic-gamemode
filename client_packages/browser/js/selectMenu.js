@@ -4378,6 +4378,32 @@ var selectMenu = new Vue({
                        mp.trigger('masks.shop.exit');
                 }
             },
+            "barbershopMain": {
+                name: "barbershopMain",
+                header: "Парикмахерская",
+                items: [
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Выйти') {
+                            mp.trigger('barbershop.exit');
+                        }
+                    }
+
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed')
+                       mp.trigger('barbershop.exit');
+                }
+            },
         },
         // Уведомление
         notification: null,
