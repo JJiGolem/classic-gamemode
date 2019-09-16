@@ -81,8 +81,10 @@ module.exports = {
         let health = inventory.getParam(rod, 'health').value;
 
         if (result) {
-            inventory.addItem(player, 15, { weight: weight }, () => {
-                notifs.success(player, `Рыба весом ${weight} кг добавлена в инвентарь`, 'Отлично!');
+            inventory.addItem(player, 15, { weight: weight }, (e) => {
+                if (e) {
+                    notifs.success(player, `Рыба весом ${weight} кг добавлена в инвентарь`, 'Отлично!');
+                }
             })
         } else {
             notifs.error(player, 'Рыба сорвалась', 'Провал!');
