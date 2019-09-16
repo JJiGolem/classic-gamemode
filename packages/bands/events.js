@@ -1,6 +1,7 @@
 let bands = call('bands');
 let factions = call('factions');
 let inventory = call('inventory');
+let money = call('money');
 let notifs = call('notifications');
 
 module.exports = {
@@ -74,6 +75,35 @@ module.exports = {
 
             notifs.success(player, `Вам выданы ${inventory.getInventoryItem(itemIds[index]).name} (${ammo} ед.)`, header);
             factions.setAmmo(faction, faction.ammo - bands.ammoAmmo * ammo);
+        });
+    },
+    "bands.drugsStash.drugs.buy": (player, data) => {
+        data = JSON.parse(data);
+
+        var header = `Наркопритон`;
+        if (!player.insideDrugsStash) return notifs.error(player, `Вы далеко`, header);
+        if (!factions.isBandFaction(player.character.factionId)) return notifs.error(player, `Вы не член группировки`, header);
+
+        var character = player.character;
+        var faction = factions.getFaction(character.factionId);
+
+        var itemIds = [29, 30, 31, 32];
+        data.index = Math.clamp(data.index, 0, itemIds.length - 1);
+        // TODO: стоимость зависит от уровня влияния
+        var price = bands.drugsPrice * data.count;
+        if (character.cash < price) return notifs.error(player, `Необходимо $${price}`, header);
+
+        // inventory.fullDeleteItemsByParams(itemIds[index], ["faction", "owner"], [character.factionId, character.id]);
+        var params = {
+            count: data.count,
+        };
+        money.removeCash(player, price, (res) => {
+            if (!res) return notifs.error(player, `Ошибка списания наличных`, header);
+        });
+        inventory.addItem(player, itemIds[data.index], params, (e) => {
+            if (e) return notifs.error(player, e, header);
+
+            notifs.success(player, `Вы приобрели ${inventory.getInventoryItem(itemIds[data.index]).name} (${data.count} г.)`, header);
         });
     },
     "playerDeath": (player, reason, killer) => {

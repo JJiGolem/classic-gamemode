@@ -18,12 +18,17 @@ module.exports = {
     gunAmmo: 100,
     // Кол-во боеприпасов, списываемое за выдачу патронов
     ammoAmmo: 1,
+    // Наркопритон
+    drugsStashMarker: null,
+    // Цена за 1 г. нарко в наркопритоне
+    drugsPrice: 100,
 
     init() {
         factions = call('factions');
         notifs = call('notifications');
 
         this.loadBandZonesFromDB();
+        this.createDrugsStashMarker();
     },
 
     async loadBandZonesFromDB() {
@@ -178,5 +183,30 @@ module.exports = {
 
             rec.call(`bands.capture.score.set`, [bandId, score]);
         });
+    },
+    createDrugsStashMarker() {
+        var pos = new mp.Vector3(2435.65, 4965.74, 42.35 - 1);
+
+        var marker = mp.markers.new(1, pos, 0.5, {
+            color: [187, 255, 0, 70]
+        });
+        marker.blip = mp.blips.new(140, pos, {
+            color: 25,
+            name: `Наркопритон`,
+            shortRange: 10,
+            scale: 1
+        });
+
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+        colshape.onEnter = (player) => {
+            if (!factions.isBandFaction(player.character.factionId)) return notifs.error(player, `Вы не член группировки`, `Наркопритон`);
+            player.call("selectMenu.show", [`drugsStash`]);
+            player.insideDrugsStash = true;
+        };
+        colshape.onExit = (player) => {
+            player.call("selectMenu.hide");
+            delete player.insideDrugsStash;
+        };
+        this.drugsStashMarker = marker;
     },
 };

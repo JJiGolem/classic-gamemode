@@ -2553,6 +2553,51 @@ var selectMenu = new Vue({
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("bandStorage");
                 }
             },
+            "drugsStash": {
+                name: "drugsStash",
+                header: "Наркопритон",
+                items: [
+                    {
+                        text: "Наркотик 1",
+                        values: ["3 г.", "7 г.", "10 г."],
+                    },
+                    {
+                        text: "Наркотик 2",
+                        values: ["3 г.", "7 г.", "10 г."],
+                    },
+                    {
+                        text: "Наркотик 3",
+                        values: ["3 г.", "7 г.", "10 г."],
+                    },
+                    {
+                        text: "Наркотик 4",
+                        values: ["3 г.", "7 г.", "10 г."],
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        var data = {
+                            index: e.itemIndex,
+                            count: parseInt(e.itemValue)
+                        };
+                        if (e.itemName != "Закрыть") mp.trigger(`callRemote`, `bands.drugsStash.drugs.buy`, JSON.stringify(data));
+                        selectMenu.show = false;
+                    }
+                }
+            },
             "dmvMenu": {
                 name: "dmv",
                 header: "Покупка лицензий",
