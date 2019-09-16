@@ -209,6 +209,7 @@ InitAttachmentsOnJoin();
 mp.events.add({
     "attaches.test": (model, bone, x, y, z, rX, rY, rZ) => {
         var player = mp.players.local;
+        bone = player.getBoneIndex(bone);
         if (player.testAttach) player.testAttach.destroy();
         player.testAttach = mp.objects.new(mp.game.joaat(model), player.position, {
             rotation: new mp.Vector3(0, 0, 30),

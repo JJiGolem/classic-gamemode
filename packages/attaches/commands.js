@@ -36,7 +36,7 @@ module.exports = {
     "/testattachoff": {
         access: 1,
         description: "Удалить тестовый аттач (используется для настройки аттачей).",
-        args: "[model] [bone]:n [x]:n [y]:n [z]:n [rX]:n [rY]:n [rZ]:n",
+        args: "",
         handler: (player, args, out) => {
             player.call(`attaches.testoff`);
         }
