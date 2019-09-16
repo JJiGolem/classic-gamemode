@@ -61,6 +61,8 @@ mp.factions = {
             mp.callCEFV(`selectMenu.showByName('hospitalStorage')`);
         } else if (factionId == 6) { // ARMY
             mp.callCEFV(`selectMenu.showByName('armyStorage')`);
+        } else if (this.isBandFaction(factionId)) {
+            mp.callCEFV(`selectMenu.showByName('bandStorage')`);
         }
     },
     isGovernmentFaction(factionId) {
@@ -128,7 +130,9 @@ mp.events.add({
         mp.factions.insideFactionWarehouse(inside, type);
     },
     "factions.giverank.showMenu": mp.factions.showGiveRankSelectMenu,
-    "factions.storage.showMenu": mp.factions.showStorageSelectMenu,
+    "factions.storage.showMenu": (factionId) => {
+        mp.factions.showStorageSelectMenu(factionId);
+    },
     "factions.faction.set": (val) => {
         mp.factions.setFaction(val);
     },
