@@ -128,11 +128,11 @@ module.exports = {
         this.wars[zone.id] = {
             band: {
                 id: faction.id,
-                score: 10,
+                score: 0,
             },
             enemyBand: {
                 id: zone.factionId,
-                score: 20,
+                score: 0,
             },
             startTime: Date.now()
         };

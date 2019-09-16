@@ -1,6 +1,7 @@
 /// Базовые админские команды, описание их структуры находится в модуле test
 var vehicles = call("vehicles");
 let notify = call('notifications');
+let admin = call('admin');
 
 module.exports = {
 
@@ -477,6 +478,27 @@ module.exports = {
             var rec = mp.players.at(args[0]);
             if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
             rec.giveWeapon(mp.joaat(args[1]), args[2]);
+        }
+    },
+    "/q": {
+        description: "Отключиться от сервера.",
+        access: 1,
+        args: "",
+        handler: (player, args, out) => {
+            out.log(`До скорого!`, player);
+            player.kick();
+        }
+    },
+    "/cmdlevel": {
+        description: "Установить мин. админ уровень для доступа к команде.",
+        access: 6,
+        args: "[cmd_name] [level]:n",
+        handler: (player, args, out) => {
+            var cmd = admin.getCommands()[args[0]];
+            if (!cmd) return out.error(`Команда ${args[0]} не найдена`, player);
+            if (args[1] > player.character.admin) return out.error(`Нельзя установить уровень команды выше своего`, player);
+            cmd.access = args[1];
+            out.info(`${player.name} установил для команды ${args[0]} уровень доступа ${args[1]}`);
         }
     },
 }
