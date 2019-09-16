@@ -138,8 +138,9 @@ module.exports = {
         if (!killerZone) return;
         if (zone.id != killerZone.id) return;
 
-        var war = bands.wars[zone.id];
+        player.lastWarDeathTime = Date.now();
 
+        bands.checkReveangeKill(killer);
         bands.giveScore(killer, zone);
     },
 };

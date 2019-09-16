@@ -2,6 +2,7 @@
 
 let factions;
 let notifs;
+let terminal;
 
 module.exports = {
     // Зоны гетто
@@ -10,6 +11,8 @@ module.exports = {
     captureRank: 8,
     // Зоны, на которых происходит капт
     wars: {},
+    // Повторное участие в капте после убийства
+    reveangeKill: false,
     // Время захвата территории (ms)
     warTime: 5 * 60 * 1000,
     // Промежуток часов, в который можно начать захват
@@ -32,6 +35,7 @@ module.exports = {
     init() {
         factions = call('factions');
         notifs = call('notifications');
+        terminal = call('terminal');
 
         this.loadBandZonesFromDB();
         this.createDrugsStashMarker();
@@ -185,6 +189,16 @@ module.exports = {
     inWar(factionId) {
         var i = Object.values(this.wars).findIndex(x => x.band.id == factionId || x.enemyBand.id == factionId);
         return i != -1;
+    },
+    checkReveangeKill(player) {
+        if (this.reveangeKill) return;
+        if (!player.lastWarDeathTime) return;
+        var diff = Date.now() - player.lastWarDeathTime;
+        if (diff > this.warTime) delete player.lastWarDeathTime;
+        else {
+            notifs.error(player, `Reveange Kill запрещен`, `Захват территории`);
+            terminal.log(`[BANDS] ${player} сделал Reveange Kill на капте`);
+        }
     },
     giveScore(player, zone) {
         if (typeof zone == 'number') zone = this.getZone(zone);

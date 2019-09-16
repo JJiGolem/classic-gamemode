@@ -35,4 +35,14 @@ module.exports = {
             mp.events.call(`bands.capture.start`, player);
         }
     },
+    "/bcaptrk": {
+        access: 6,
+        description: "Вкл/выкл Reveange Kill на капте.",
+        args: "[reveange_kill]:b",
+        handler: (player, args, out) => {
+            bands.reveangeKill = args[0];
+            if (bands.reveangeKill) out.info(`${player.name} включил Reveange Kill на захвате территорий`);
+            else out.info(`${player.name} выключил Reveange Kill на захвате территорий`);
+        }
+    },
 }
