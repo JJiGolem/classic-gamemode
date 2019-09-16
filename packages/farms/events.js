@@ -30,6 +30,7 @@ module.exports = {
             farm.save();
             notifs.success(player, `Ферма #${farm.id} куплена`, header);
             notifs.warning(player, `Пополните балансы фермы`, header);
+            player.call(`prompt.showByName`, [`farm_tax`]);
             player.call(`selectMenu.loader`, [false]);
             player.call(`selectMenu.hide`);
         });
