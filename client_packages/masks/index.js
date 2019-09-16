@@ -9,7 +9,6 @@ mp.events.add('masks.shop.shape', (enter) => {
 mp.keys.bind(0x45, true, () => {
     if (isInMaskShop) {
         if (mp.busy.includes()) return;
-        mp.chat.debug('show masks');
         mp.events.callRemote('masks.shop.enter');
     }
 });
@@ -66,7 +65,6 @@ mp.events.add('masks.shop.exit', () => {
 
 mp.events.add('masks.set', (maskIndex, textureId) => {
     let drawableId = maskList[maskIndex].drawable;
-    mp.chat.debug(getMaskVariationsNumber(drawableId))
     let player = mp.players.local;
     player.setComponentVariation(1, drawableId, textureId, 0);
 });
