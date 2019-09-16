@@ -134,6 +134,35 @@ var inventory = new Vue({
                     }
                 }
             },
+            // 4 типа наркотиков
+            29: {
+                'Употребить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                    }
+                }
+            },
+            30: {
+                'Употребить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                    }
+                }
+            },
+            31: {
+                'Употребить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                    }
+                }
+            },
+            32: {
+                'Употребить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                    }
+                }
+            },
             /*37: { // test
                 'Разрядить': {
                     handler(item) {
@@ -249,6 +278,27 @@ var inventory = new Vue({
                         cuffsSqlId: item.sqlId
                     };
                     mp.trigger(`callRemote`, `police.cuffs`, JSON.stringify(data));
+                }
+            },
+            // наркотики
+            29: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                }
+            },
+            30: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                }
+            },
+            31: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                }
+            },
+            32: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
                 }
             },
             // патроны

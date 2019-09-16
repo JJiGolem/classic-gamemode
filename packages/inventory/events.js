@@ -1,3 +1,4 @@
+let bands = call('bands');
 let inventory = require('./index.js');
 let hospital = require('../hospital');
 let notifs = require('../notifications');
@@ -243,6 +244,23 @@ module.exports = {
         else inventory.updateParam(player, patch, 'count', count);
 
         notifs.success(player, `Вы вылечились`, header);
+    },
+    // употребить наркотик
+    "inventory.item.drugs.use": (player, sqlId) => {
+        var header = `Наркотики`;
+        var drugs = inventory.getItem(player, sqlId);
+        if (!drugs) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        var count = inventory.getParam(drugs, 'count').value;
+        if (!count) return notifs.error(player, `Количество: 0 г.`, header);
+
+        player.health = Math.clamp(player.health + bands.drugsHealth, 0, 100);
+
+        count--;
+        if (!count) inventory.deleteItem(player, drugs);
+        else inventory.updateParam(player, drugs, 'count', count);
+
+        player.call(`effect`, ['DrugsDrivingOut', bands.drugsEffectTime]);
+        notifs.success(player, `Вы упротреблении наркотик`, header);
     },
     // Запрос предметов инвентаря в багажнике авто
     "vehicle.boot.items.request": (player, vehId) => {
