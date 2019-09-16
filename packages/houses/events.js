@@ -101,7 +101,9 @@ module.exports = {
     "house.buy": (player) => {
         if (money == null) return player.call('house.buy.ans', [0, ""]);
         if (player.house.id == -1 || player.house.id == null) return player.call('house.buy.ans', [0, ""]);
-        let info = housesService.getHouseById(player.house.id).info;
+        let house = housesService.getHouseById(player.house.id);
+        if (house == null) return player.call('house.buy.ans', [0, ""]);
+        let info = house.info;
         if (info.characterId != null) return player.call('house.buy.ans', [0, ""]);
         if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return player.call('house.buy.ans', [0, ""]);
         if (player.character.cash < info.price) return player.call('house.buy.ans', [0, ""]);
@@ -114,9 +116,9 @@ module.exports = {
             info.date = housesService.getRandomDate(1);
             await info.save();
             player.call('house.buy.ans', [1, player.character.name]);
-            housesService.updateHouse(player.house.id);
+            housesService.updateHouse(house);
             
-            player.call('phone.app.add', ["house", housesService.getHouseInfoForApp(player.house.id)]);
+            player.call('phone.app.add', ["house", housesService.getHouseInfoForApp(house)]);
             vehicles != null && vehicles.setPlayerCarPlaces(player);
         });
     },

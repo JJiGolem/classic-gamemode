@@ -495,4 +495,14 @@ module.exports = {
             notify.info(rec, `${player.name} установил вам ${rec.health} ед. здоровья`);
         }
     },
+    "/weapon": {
+        description: "Выдать оружие игроку (не в инвентарь).",
+        access: 4,
+        args: "[ид_игрока]:n [ид_оружия] [патроны]:n",
+        handler: (player, args, out) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            rec.giveWeapon(mp.joaat(args[1]), args[2]);
+        }
+    },
 }

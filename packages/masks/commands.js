@@ -43,7 +43,7 @@ module.exports = {
             let name = args.join(' ');
             mask.name = name;
             mask.save();
-            out.info(`Для маски с ID ${id} установлено имя ${name}`);
+            out.info(`Для маски с ID ${id} установлено имя ${name}`, player);
         }
     },
     "/maskprice": {
@@ -58,7 +58,7 @@ module.exports = {
             let price = parseInt(args[1]) || 0;
             mask.price = price;
             mask.save();
-            out.info(`Для маски с ID ${id} установлена цена ${price}`);
+            out.info(`Для маски с ID ${id} установлена цена ${price}`, player);
         }
     },
     "/maskav": {
@@ -73,7 +73,7 @@ module.exports = {
             let available = parseInt(args[1]) || 0;
             mask.isAvailable = available;
             mask.save();
-            out.info(`Маска с ID ${id} теперь ${available ? 'доступна' : 'недоступна'} для покупки`);
+            out.info(`Маска с ID ${id} теперь ${available ? 'доступна' : 'недоступна'} для покупки`, player);
         }
     },
     "/maskadd": {
@@ -94,7 +94,7 @@ module.exports = {
                 name: name
             });
             list.push(mask);
-            out.info(`Добавлена маска #${mask.id} | ${drawable} | $${price} | ${name} | ${available ? 'Доступна' : 'Недоступна'} для покупки`);
+            out.info(`Добавлена маска #${mask.id} | ${drawable} | $${price} | ${name} | ${available ? 'Доступна' : 'Недоступна'} для покупки`, player);
         }
     }
 }

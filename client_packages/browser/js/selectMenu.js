@@ -1664,20 +1664,20 @@ var selectMenu = new Vue({
                 name: "lspdAmmo",
                 header: "Патроны LSPD",
                 items: [{
-                        text: "Combat Pistol - 9mm",
-                        values: ["12 шт.", "24 шт.", "32 шт."],
+                        text: "Патроны - 9mm",
+                        values: ["12 ед.", "24 ед.", "32 ед."],
                     },
                     {
-                        text: "Pump Shotgun - 12mm",
-                        values: ["8 шт.", "16 шт.", "24 шт."],
+                        text: "Патроны - 12mm",
+                        values: ["8 ед.", "16 ед.", "24 ед."],
                     },
                     {
-                        text: "Carbine Rifle - 5.56mm",
-                        values: ["12 шт.", "24 шт.", "32 шт."],
+                        text: "Патроны - 5.56mm",
+                        values: ["12 ед.", "24 ед.", "32 ед."],
                     },
                     {
-                        text: "Sniper Rifle - 7.62mm",
-                        values: ["10 шт.", "20 шт.", "30 шт."],
+                        text: "Патроны - 7.62mm",
+                        values: ["10 ед.", "20 ед.", "30 ед."],
                     },
                     {
                         text: "Вернуться"
@@ -1874,20 +1874,20 @@ var selectMenu = new Vue({
                 name: "lssdAmmo",
                 header: "Патроны BCSD",
                 items: [{
-                        text: "Combat Pistol - 9mm",
-                        values: ["12 шт.", "24 шт.", "32 шт."],
+                        text: "Патроны - 9mm",
+                        values: ["12 ед.", "24 ед.", "32 ед."],
                     },
                     {
-                        text: "Pump Shotgun - 12mm",
-                        values: ["8 шт.", "16 шт.", "24 шт."],
+                        text: "Патроны - 12mm",
+                        values: ["8 ед.", "16 ед.", "24 ед."],
                     },
                     {
-                        text: "Carbine Rifle - 5.56mm",
-                        values: ["12 шт.", "24 шт.", "32 шт."],
+                        text: "Патроны - 5.56mm",
+                        values: ["12 ед.", "24 ед.", "32 ед."],
                     },
                     {
-                        text: "Sniper Rifle - 7.62mm",
-                        values: ["10 шт.", "20 шт.", "30 шт."],
+                        text: "Патроны - 7.62mm",
+                        values: ["10 ед.", "20 ед.", "30 ед."],
                     },
                     {
                         text: "Вернуться"
@@ -2069,20 +2069,20 @@ var selectMenu = new Vue({
                 name: "fibAmmo",
                 header: "Патроны FIB",
                 items: [{
-                        text: "Combat Pistol - 9mm",
-                        values: ["12 шт.", "24 шт.", "32 шт."],
+                        text: "Патроны - 9mm",
+                        values: ["12 ед.", "24 ед.", "32 ед."],
                     },
                     {
-                        text: "Pump Shotgun - 12mm",
-                        values: ["8 шт.", "16 шт.", "24 шт."],
+                        text: "Патроны - 12mm",
+                        values: ["8 ед.", "16 ед.", "24 ед."],
                     },
                     {
-                        text: "Carbine Rifle - 5.56mm",
-                        values: ["12 шт.", "24 шт.", "32 шт."],
+                        text: "Патроны - 5.56mm",
+                        values: ["12 ед.", "24 ед.", "32 ед."],
                     },
                     {
-                        text: "Sniper Rifle - 7.62mm",
-                        values: ["10 шт.", "20 шт.", "30 шт."],
+                        text: "Патроны - 7.62mm",
+                        values: ["10 ед.", "20 ед.", "30 ед."],
                     },
                     {
                         text: "Вернуться"
@@ -2282,20 +2282,20 @@ var selectMenu = new Vue({
                 name: "armyAmmo",
                 header: "Патроны ARMY",
                 items: [{
-                        text: "Combat Pistol - 9mm",
-                        values: ["12 шт.", "24 шт.", "32 шт."],
+                        text: "Патроны - 9mm",
+                        values: ["12 ед.", "24 ед.", "32 ед."],
                     },
                     {
-                        text: "Pump Shotgun - 12mm",
-                        values: ["8 шт.", "16 шт.", "24 шт."],
+                        text: "Патроны - 12mm",
+                        values: ["8 ед.", "16 ед.", "24 ед."],
                     },
                     {
-                        text: "Carbine Rifle - 5.56mm",
-                        values: ["12 шт.", "24 шт.", "32 шт."],
+                        text: "Патроны - 5.56mm",
+                        values: ["12 ед.", "24 ед.", "32 ед."],
                     },
                     {
-                        text: "Sniper Rifle - 7.62mm",
-                        values: ["10 шт.", "20 шт.", "30 шт."],
+                        text: "Патроны - 7.62mm",
+                        values: ["10 ед.", "20 ед.", "30 ед."],
                     },
                     {
                         text: "Вернуться"
@@ -2430,6 +2430,172 @@ var selectMenu = new Vue({
                         if (e.itemName == "Вернуться") selectMenu.showByName("hospitalStorage");
                         else mp.trigger(`callRemote`, `hospital.storage.items.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("hospitalStorage");
+                }
+            },
+            "bandStorage": {
+                name: "bandStorage",
+                header: "Склад банды",
+                items: [{
+                        text: "Вооружение"
+                    },
+                    {
+                        text: "Патроны"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вооружение') {
+                            selectMenu.showByName("bandGuns");
+                        } else if (e.itemName == 'Патроны') {
+                            selectMenu.showByName("bandAmmo");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
+            "bandGuns": {
+                name: "bandGuns",
+                header: "Вооружение банды",
+                items: [{
+                        text: "Baseball Bat"
+                    },
+                    {
+                        text: "Pump Shotgun"
+                    },
+                    {
+                        text: "Pistol"
+                    },
+                    {
+                        text: "Combat Pistol"
+                    },
+                    {
+                        text: "Micro SMG"
+                    },
+                    {
+                        text: "Machine Pistol"
+                    },
+                    {
+                        text: "Compact Rifle"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Вернуться") selectMenu.showByName("bandStorage");
+                        else mp.trigger(`callRemote`, `bands.storage.guns.take`, e.itemIndex);
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("bandStorage");
+                }
+            },
+            "bandAmmo": {
+                name: "bandAmmo",
+                header: "Патроны банды",
+                items: [{
+                        text: "Патроны - 9mm",
+                        values: ["12 ед.", "24 ед.", "32 ед."],
+                    },
+                    {
+                        text: "Патроны - 12mm",
+                        values: ["8 ед.", "16 ед.", "24 ед."],
+                    },
+                    {
+                        text: "Патроны - 5.56mm",
+                        values: ["12 ед.", "24 ед.", "32 ед."],
+                    },
+                    {
+                        text: "Патроны - 7.62mm",
+                        values: ["10 ед.", "20 ед.", "30 ед."],
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        var values = JSON.stringify([e.itemIndex, parseInt(e.itemValue)]);
+                        if (e.itemName == "Вернуться") selectMenu.showByName("bandStorage");
+                        else mp.trigger(`callRemote`, `bands.storage.ammo.take`, values);
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("bandStorage");
+                }
+            },
+            "drugsStash": {
+                name: "drugsStash",
+                header: "Наркопритон",
+                items: [
+                    {
+                        text: "Наркотик 1",
+                        values: ["3 г.", "7 г.", "10 г."],
+                    },
+                    {
+                        text: "Наркотик 2",
+                        values: ["3 г.", "7 г.", "10 г."],
+                    },
+                    {
+                        text: "Наркотик 3",
+                        values: ["3 г.", "7 г.", "10 г."],
+                    },
+                    {
+                        text: "Наркотик 4",
+                        values: ["3 г.", "7 г.", "10 г."],
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        var data = {
+                            index: e.itemIndex,
+                            count: parseInt(e.itemValue)
+                        };
+                        if (e.itemName != "Закрыть") mp.trigger(`callRemote`, `bands.drugsStash.drugs.buy`, JSON.stringify(data));
+                        selectMenu.show = false;
+                    }
                 }
             },
             "dmvMenu": {
@@ -4345,8 +4511,7 @@ var selectMenu = new Vue({
             "maskShop": {
                 name: "maskShop",
                 header: "Магазин масок",
-                items: [
-                ],
+                items: [],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -4359,7 +4524,12 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-
+                        if (e.itemName == 'Выйти') {
+                            mp.trigger('masks.shop.exit');
+                        } else {
+                            mp.trigger('masks.buy', e.itemIndex, e.valueIndex);
+                            selectMenu.loader = true;
+                        }
                     }
                     if (eventName == 'onItemFocusChanged') {
                         if (e.itemName != 'Выйти') {
@@ -4370,7 +4540,32 @@ var selectMenu = new Vue({
                         mp.trigger('masks.set', e.itemIndex, e.valueIndex);
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed')
-                       mp.trigger('masks.shop.exit');
+                        mp.trigger('masks.shop.exit');
+                }
+            },
+            "barbershopMain": {
+                name: "barbershopMain",
+                header: "Парикмахерская",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Выйти') {
+                            mp.trigger('barbershop.exit');
+                        }
+                    }
+
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed')
+                        mp.trigger('barbershop.exit');
                 }
             },
         },

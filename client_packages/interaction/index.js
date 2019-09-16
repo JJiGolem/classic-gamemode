@@ -116,6 +116,7 @@ mp.events.add('characterInit.done', () => { /// E
         if (!currentInteractionEntity) return;
 
         if (currentInteractionEntity.type == 'vehicle') {
+            if (currentInteractionEntity.getVariable("static")) return;
             mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle"])');
             mp.callCEFV(`interactionMenu.left = ${defaultLeft}`);
 

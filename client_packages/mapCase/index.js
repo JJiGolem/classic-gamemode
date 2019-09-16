@@ -174,7 +174,7 @@ mp.events.add("mapCase.init", (name, factionId) => {
         type = "ems";
     } else if (mp.factions.isNewsFaction(factionId)) {
         type = "wnews";
-    }
+    } else return;
     mp.mapCase.type(type);
     mp.mapCase.userName(name);
     mp.mapCase.enable(true);

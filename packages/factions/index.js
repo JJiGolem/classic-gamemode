@@ -22,6 +22,15 @@ module.exports = {
     ammoBox: 500,
     // Кол-во медикаментов в ящике
     medicinesBox: 500,
+    // TODO: Добавить адекватные модели авто
+    // Модели авто, в которые можно грузить боеприпасы
+    ammoVehModels: ["sultan"],
+    // Модели авто, в которые можно грузить медикаменты
+    medicinesVehModels: ["sultan"],
+    // Макс. кол-во боеприпасов в авто
+    ammoVehMax: 3000,
+    // Макс. кол-во медикаментов в авто
+    medicinesVehMax: 3000,
     // Белый лист организаций, которые могут пополнять склады
     whiteListWarehouse: {
         "ammo": {
@@ -228,7 +237,7 @@ module.exports = {
         character.save();
 
         player.call(`factions.faction.set`, [character.factionId]);
-        player.call(`mapCase.init`, [player.name, faction.id]);
+        // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
         else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
         else if (this.isNewsFaction(faction)) mp.events.call(`mapCase.news.init`, player);
@@ -251,7 +260,7 @@ module.exports = {
         character.save();
 
         player.call(`factions.faction.set`, [character.factionId]);
-        player.call(`mapCase.init`, [player.name, faction.id]);
+        // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
         else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
         else if (this.isNewsFaction(faction)) mp.events.call(`mapCase.news.init`, player);
@@ -326,6 +335,10 @@ module.exports = {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         return faction && (faction.id >= 1 && faction.id <= 7);
     },
+    isBandFaction(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction && (faction.id >= 8 && faction.id <= 11);
+    },
     takeBox(player, type) {
         var header = "";
         if (type == 'ammo') {
@@ -347,13 +360,13 @@ module.exports = {
             this.setAmmo(faction, faction.ammo + this.ammoBox);
             player.addAttachment("ammoBox", true);
             notifs.info(player, `Боеприпасы: ${faction.ammo} из ${faction.maxAmmo} ед.`, `Склад ${faction.name}`);
-            if (faction.ammo == faction.maxAmmo) notifs.success(player, `Склад заполнен`, `Склад ${faction.name}`);
+            if (faction.ammo == faction.maxAmmo) notifs.warning(player, `Склад заполнен`, `Склад ${faction.name}`);
         } else if (player.hasAttachment("medicinesBox")) {
             faction.medicines += this.medicinesBox;
             faction.save();
             player.addAttachment("medicinesBox", true);
             notifs.info(player, `Медикаменты: ${faction.medicines} из ${faction.maxMedicines} ед.`, `Склад ${faction.name}`);
-            if (faction.medicines == faction.maxMedicines) notifs.success(player, `Склад заполнен`, `Склад ${faction.name}`);
+            if (faction.medicines == faction.maxMedicines) notifs.warning(player, `Склад заполнен`, `Склад ${faction.name}`);
         } else return;
     },
     canFillWarehouse(player, boxType, faction) {

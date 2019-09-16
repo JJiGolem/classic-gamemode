@@ -134,6 +134,35 @@ var inventory = new Vue({
                     }
                 }
             },
+            // 4 типа наркотиков
+            29: {
+                'Употребить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                    }
+                }
+            },
+            30: {
+                'Употребить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                    }
+                }
+            },
+            31: {
+                'Употребить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                    }
+                }
+            },
+            32: {
+                'Употребить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                    }
+                }
+            },
             /*37: { // test
                 'Разрядить': {
                     handler(item) {
@@ -212,7 +241,7 @@ var inventory = new Vue({
             6: [11],
             7: [10],
             8: [12],
-            9: [21, 22, 23, 48, 49, 50, 51, 52, 53, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], // автоматы
+            9: [], // автоматы
             10: [13],
             11: [8],
             12: [9],
@@ -249,6 +278,27 @@ var inventory = new Vue({
                         cuffsSqlId: item.sqlId
                     };
                     mp.trigger(`callRemote`, `police.cuffs`, JSON.stringify(data));
+                }
+            },
+            // наркотики
+            29: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                }
+            },
+            30: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                }
+            },
+            31: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                }
+            },
+            32: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
                 }
             },
             // патроны
@@ -293,7 +343,7 @@ var inventory = new Vue({
             40: [22, 99],
         },
         // Огнестрельные оружия
-        weaponsList: [20, 21, 22, 48, 99, 107],
+        weaponsList: [20, 21, 22, 41, 44, 47, 48, 52, 89, 99, 107],
         // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
         environment: [],
         // Предметы на игроке (экипировка)
@@ -340,6 +390,8 @@ var inventory = new Vue({
             x: 0,
             y: 0
         },
+        // Крутятся все предметы
+        spin: false,
     },
     computed: {
         // Тяжесть игрока (в %)
@@ -703,6 +755,14 @@ var inventory = new Vue({
         setItemInfo(itemId, info) {
             if (typeof info == 'string') info = JSON.parse(info);
             Vue.set(this.itemsInfo, itemId, info);
+        },
+        setMergeList(list) {
+            if (typeof list == 'string') list = JSON.parse(list);
+            Vue.set(this, 'mergeList', list);
+        },
+        setBodyList(index, list) {
+            if (typeof list == 'string') list = JSON.parse(list);
+            Vue.set(this.bodyList, index, list);
         },
         // ******************  [ Player Inventory ] ******************
         getItem(sqlId) {

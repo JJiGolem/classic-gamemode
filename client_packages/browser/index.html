@@ -33,6 +33,7 @@
     <link rel="stylesheet" type="text/css" href="css/playersList.css" />
     <link rel="stylesheet" type="text/css" href="css/gunLicense.css" />
     <link rel="stylesheet" type="text/css" href="css/fishing.css" />
+    <link rel="stylesheet" type="text/css" href="css/captureScore.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -456,7 +457,7 @@
         </div>
     </div>
 
-    <div id="inventory" v-show="show">
+    <div id="inventory" v-show="show" :class="{spin: spin}">
         <div class="environment">
             <div class="container" v-for="place in environment" v-bind:key="place.header">
                 <div class="header" @click="place.showPockets = !place.showPockets" :class="{hidden: !place.showPockets}">
@@ -494,7 +495,7 @@
                        <div class="sqlid" v-if="debug">#{{ equipment[n-1].sqlId }}</div>
                    </div> -->
                     <div class="item" v-if="equipment[n-1]" @mouseenter="itemMouseHandler(equipment[n-1], $event)" @mouseleave="itemMouseHandler(equipment[n-1], $event)" @mousemove="itemMouseHandler(equipment[n-1], $event)" @contextmenu="itemMouseHandler(equipment[n-1], $event)"
-                        @mousedown="itemMouseHandler(equipment[n-1], $event)" :class="{dragging: equipment[n-1] == itemDrag.item}">
+                        :style="{backgroundImage: 'url('+urlItemImg(equipment[n-1].itemId)+')'}" @mousedown="itemMouseHandler(equipment[n-1], $event)" :class="{dragging: equipment[n-1] == itemDrag.item}">
                         <div class="count" v-if="equipment[n-1].params.count">{{ equipment[n-1].params.count }}</div>
                         <div class="health" v-if="equipment[n-1].params.health" v-bind:style="{top: 100 - equipment[n-1].params.health + '%', 'border-color': valueColor(equipment[n-1].params.health)}"></div>
                         <div class="sqlid" v-if="debug">#{{ equipment[n-1].sqlId }}</div>
@@ -1051,7 +1052,7 @@
                     <div class="header">
                         <div class="menu-top">
                             <div v-html="certainData.menuHeader"></div>
-                            <img v-if="certainData.menuHeaderName" :src="certainData.menuHeaderName"/>
+                            <img v-if="certainData.menuHeaderName" :src="certainData.menuHeaderName" />
                         </div>
                         <div class="menu-bottom">
                             <div>
@@ -1169,6 +1170,24 @@
         </div>
     </div>
 
+    <div id="captureScore" v-if="show">
+        <div class="header">
+            <img :src="leftImgSrc" />
+            <span :style="{color: colors[leftBandId]}">{{ names[leftBandId] }}</span>
+            vs.
+            <span :style="{color: colors[rightBandId]}">{{ names[rightBandId] }}</span>
+            <img :src="rightImgSrc" />
+        </div>
+        <div class="score">
+            <div>{{ leftScore }}</div>
+            <div>{{ rightScore }}</div>
+        </div>
+        <div class="progress" :style="{background: colors[rightBandId]}">
+            <div class="fill" :style="{width: progressWidth+'%', background: colors[leftBandId]}"></div>
+        </div>
+        <div class="time">{{ prettyTime }}</div>
+    </div>
+
     <!-- ------------------------ REACT ------------------------------ -->
     <script async src="build/js/build.js" type="text/javascript"></script>
     <div id="root"></div>
@@ -1196,6 +1215,7 @@
     <script src="js/playersList.js"></script>
     <script src="js/gunLicense.js"></script>
     <script src="js/fishing.js"></script>
+    <script src="js/captureScore.js"></script>
 
 </body>
 

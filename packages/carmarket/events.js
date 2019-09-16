@@ -128,7 +128,7 @@ module.exports = {
                     owners: veh.owners,
                     vehType: veh.properties.vehType,
                     price: veh.properties.price,
-                    //isOnParking: veh.isOnParking
+                    parkingDate: veh.parkingDate
                 });
 
                 player.call('carmarket.car.buy.ans', [2, carInfo]);

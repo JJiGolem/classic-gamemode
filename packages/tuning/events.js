@@ -11,7 +11,9 @@ module.exports = {
             if (player.vehicle.key != 'private') return player.call('prompt.show', ['Этот транспорт нельзя модифицировать']); //temp
             if (player.vehicle.owner != player.character.id) return player.call('prompt.show', ['Нельзя модифицировать чужой транспорт']);
             if (!player.vehicle.tuning || player.vehicle.properties.vehType != 0) return player.call('prompt.show', ['Этот транспорт нельзя модифицировать']);
-
+            let occupants = player.vehicle.getOccupants();
+            if (occupants.length > 1) return player.call('prompt.show', ['Нельзя тюнинговать транспорт с пассажирами']);
+            
             player.call('tuning.fadeOut');
             let customs = tuning.getCustomsDataById(shape.customsId);
             player.vehicle.dimension = player.id + 1;

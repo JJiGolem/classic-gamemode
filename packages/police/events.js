@@ -12,7 +12,7 @@ module.exports = {
     "characterInit.done": (player) => {
         player.call(`police.wanted.set`, [player.character.wanted]);
         if (!factions.isPoliceFaction(player.character.factionId)) return;
-        player.call(`mapCase.init`, [player.name, player.character.factionId]);
+        // player.call(`mapCase.init`, [player.name, player.character.factionId]);
         mp.events.call(`mapCase.pd.init`, player);
 
         if (!player.character.arrestTime) return;
@@ -76,7 +76,7 @@ module.exports = {
                 sex: 1,
                 variation: [
                     [58, 46, 46, -1, -1, 39, 46, 46],
-                    [58, 13, 12, 39, 17, 13, 13]
+                    [58, 13, 13, 39, 17, 13, 13]
                 ][f][index],
                 texture: [
                     [2, 0, 0, -1, -1, 0, 0, 0],
@@ -104,7 +104,15 @@ module.exports = {
                 undershirt: [ // clothes 8
                     [122, 58, 58, 130, 31, 130, 122, 130],
                     [122, 58, 27, 130, 58, 122, 130]
-                ][f][index]
+                ][f][index],
+                decal: [ // clothes 10
+                    [-1, -1, 8, -1, -1, -1, -1, -1],
+                    [-1, -1, -1, -1, -1, -1, -1]
+                ][f][index],
+                dTexture: [
+                    [-1, -1, 1, -1, -1, -1, -1, -1],
+                    [-1, -1, -1, -1, -1, -1, -1]
+                ][f][index],
             };
             legsParams = { // clothes 4
                 sex: 1,

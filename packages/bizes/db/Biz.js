@@ -41,6 +41,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: false
         },
+        productsOrder: {
+            type: DataTypes.INTEGER(11),
+            allowNull: true
+        },
+        productsOrderPrice: {
+            type: DataTypes.INTEGER(11),
+            allowNull: true
+        },
         x: {
             type: DataTypes.FLOAT,
             allowNull: false
@@ -58,6 +66,10 @@ module.exports = (sequelize, DataTypes) => {
     model.associate = (models) => {
         model.belongsTo(models.Character, {
             foreignKey: "characterId"
+        });
+
+        model.hasMany(models.BizStatistics, {
+            foreignKey: "bizId"
         });
     };
 

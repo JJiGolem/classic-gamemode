@@ -21,7 +21,7 @@ module.exports = {
         6: [11],
         7: [10],
         8: [12],
-        9: [], // автоматы
+        9: [21, 22, 48, 99, 107], // автоматы
         10: [13],
         11: [8],
         12: [9],
@@ -84,7 +84,18 @@ module.exports = {
     },
     async initPlayerInventory(player) {
         this.clearAllView(player);
-        // TODO: include in include in include... WTF??? (08.08.19 Carter Slade)
+
+        player.inventory = {
+            denyUpdateView: false, // запрещено ли обновлять внешний вид игрока
+            items: [], // предметы игрока
+            ground: [], // объекты на земле, которые выкинул игрок
+            place: { // багажник/шкаф/холодильник и пр. при взаимодействии
+                type: "",
+                sqlId: 0,
+                items: [],
+            },
+        };
+
         var dbItems = await db.Models.CharacterInventory.findAll({
             where: {
                 playerId: player.character.id
@@ -102,24 +113,18 @@ module.exports = {
                 }
             ]
         });
+        player.inventory.items = dbItems;
 
-        player.inventory = {
-            denyUpdateView: false, // запрещено ли обновлять внешний вид игрока
-            items: dbItems, // предметы игрока
-            ground: [], // объекты на земле, которые выкинул игрок
-            place: { // багажник/шкаф/холодильник и пр. при взаимодействии
-                type: "",
-                sqlId: 0,
-                items: [],
-            },
-        };
         this.updateAllView(player);
         this.loadWeapons(player);
         player.call(`inventory.initItems`, [this.convertServerToClientItems(dbItems)]);
         console.log(`[INVENTORY] Для игрока ${player.character.name} загружены предметы (${dbItems.length} шт.)`);
     },
     async initVehicleInventory(vehicle) {
-        // TODO: include in include in include... WTF??? (08.08.19 Carter Slade)
+        vehicle.inventory = {
+            items: [], // предметы в багажнике
+        };
+
         var dbItems = await db.Models.VehicleInventory.findAll({
             where: {
                 vehicleId: vehicle.db.id
@@ -137,10 +142,8 @@ module.exports = {
                 }
             ]
         });
+        vehicle.inventory.items = dbItems;
 
-        vehicle.inventory = {
-            items: dbItems, // предметы в багажнике
-        };
         console.log(`[INVENTORY] Для авто ${vehicle.db.modelName} загружены предметы (${dbItems.length} шт.)`);
     },
     convertServerToClientItems(dbItems) {
@@ -190,7 +193,7 @@ module.exports = {
     async addItem(player, itemId, params, callback = () => {}) {
         var slot = this.findFreeSlot(player, itemId);
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(itemId).name} не найден`);
-        if (params.sex && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
+        if (params.sex != null && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
         var nextWeight = this.getCommonWeight(player) + this.getInventoryItem(itemId).weight;
         if (nextWeight > this.maxPlayerWeight) return callback(`Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`);
         if (params.weaponHash) {
@@ -373,6 +376,7 @@ module.exports = {
         var result = [];
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
+            if (!item.parentId) continue;
             var params = this.getParamsValues(item);
             if (!params.weaponHash) continue;
             result.push(item);
@@ -382,6 +386,9 @@ module.exports = {
             result = result.concat(this.findArrayWeapons(children));
         }
         return result;
+    },
+    getWeaponModels() {
+        return this.bodyList[9].map(x => this.getInventoryItem(x).model);
     },
     getInventoryItem(itemId) {
         return this.inventoryItems[itemId - 1];
@@ -459,6 +466,7 @@ module.exports = {
         } else if (otherItems[item.itemId] != null) {
             otherItems[item.itemId](params);
         } else if (params.weaponHash) {
+            player.addAttachment(`weapon_${item.itemId}`);
             this.removeWeapon(player, params.weaponHash);
         } else return console.log("Неподходящий тип предмета для тела!");
 
@@ -518,6 +526,8 @@ module.exports = {
             player.setProp(propsIndexes[itemId], -1, 0);
         } else if (otherItems[itemId] != null) {
             otherItems[itemId]();
+        } else if (this.bodyList[9].includes(itemId)) {
+            player.addAttachment(`weapon_${itemId}`, true);
         } else return console.log("Неподходящий тип предмета для тела!");
     },
     updateAllView(player) {
@@ -897,5 +907,46 @@ module.exports = {
     },
     canMerge(itemId, targetId) {
         return this.mergeList[itemId] && this.mergeList[itemId].includes(targetId);
+    },
+    putGround(player, item) {
+        var children = this.getArrayItems(player, item);
+        this.deleteItem(player, item);
+
+        var info = this.getInventoryItem(item.itemId);
+        var pos = player.position;
+        pos.z += info.deltaZ - 1;
+
+        var newObj = mp.objects.new(mp.joaat(info.model), pos, {
+            rotation: new mp.Vector3(info.rX, info.rY, player.heading),
+            dimension: player.dimension
+        });
+        newObj.playerId = player.id;
+        newObj.item = item;
+        newObj.children = children;
+        newObj.setVariable("groundItem", true);
+        player.inventory.ground.push(newObj);
+
+
+        var objId = newObj.id;
+        newObj.destroyTimer = setTimeout(() => {
+            try {
+                var obj = mp.objects.at(objId);
+                if (!obj || !obj.item || obj.item.id != sqlId) return;
+                obj.destroy();
+                var rec = mp.players.at(obj.playerId);
+                if (!rec) return;
+                var i = rec.inventory.ground.indexOf(obj);
+                rec.inventory.ground.splice(i, 1);
+            } catch (e) {
+                console.log(e);
+            }
+        }, this.groundItemTime);
+
+        var ground = player.inventory.ground;
+        if (ground.length > this.groundMaxItems) {
+            var obj = ground.shift();
+            clearTimeout(obj.destroyTimer);
+            obj.destroy();
+        }
     },
 };

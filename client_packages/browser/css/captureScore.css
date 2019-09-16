@@ -1,0 +1,43 @@
+#captureScore {
+    bottom: 10%;
+    color: #fff;
+    font-family: montserrat;
+    font-size: 1.8vh;
+    left: 50%;
+    position: absolute;
+    text-shadow: 0px 2px 3px #000;
+    /* text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.55); */
+    transform: translate(-50%);
+    width: 46vh;
+}
+
+#captureScore .header {
+    /* font-weight: bold; */
+    text-align: center;
+}
+
+#captureScore .header img {
+    width: 1.5vh;
+}
+
+#captureScore .progress {
+    height: 1vh;
+    margin-top: 0.5vh;
+    width: 100%;
+}
+
+#captureScore .progress .fill {
+    height: 100%;
+    transition: width 1s;
+}
+
+#captureScore .score {
+    display: flex;
+    justify-content: space-between;
+    margin-top: -2vh;
+}
+
+#captureScore .time {
+    margin-top: 1vh;
+    text-align: center;
+}

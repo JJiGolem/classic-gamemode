@@ -81,9 +81,9 @@ module.exports = {
             player.call('vehicles.engine.toggle', [true]);
             player.vehicle.setVariable("engine", true);
             player.call('prompt.hide');
-            //if (player.vehicle.key != "job" && player.vehicle.key != "newbie" && player.vehicle.key != "admin") {
+            if (player.vehicle.key == 'private') {
             vehicles.generateBreakdowns(player.vehicle);
-            //}
+            }
             mp.events.call('vehicles.breakdowns.init', player);
         }
     },
@@ -144,6 +144,9 @@ module.exports = {
         if (!vehicle) return;
 
         vehicle.setVariable("trunk", state);
+
+        var unload = vehicle.getVariable("unload");
+        if (unload && !state) vehicle.setVariable("unload", null);
     },
     "characterInit.done": (player) => {
         console.log('init done for vehicles');
@@ -320,7 +323,7 @@ module.exports = {
             let price = target.sellCarTargetOffer.price;
             let vehId = target.sellCarTargetOffer.vehId;
             let owners = vehicle.owners;
-            money.moveCash(target, seller, price, function (result) {
+            money.moveCash(target, seller, price, function(result) {
                 console.log(vehId)
                 if (result) {
                     //target.call('notifications.push.success', ['Вы купили транспорт', 'Успешно']);
@@ -331,10 +334,10 @@ module.exports = {
                         owner: target.character.id,
                         owners: owners + 1
                     }, {
-                            where: {
-                                id: vehId
-                            }
-                        });
+                        where: {
+                            id: vehId
+                        }
+                    });
                     let veh = vehicles.getVehicleBySqlId(vehId);
                     if (veh) {
                         veh.owner = target.character.id;
@@ -355,7 +358,7 @@ module.exports = {
                         regDate: veh.regDate,
                         owners: veh.owners,
                         vehType: props.vehType,
-                        price: props.price // todo isOnParking
+                        price: props.price // todo isOnParking TODO !!!!!!!!!!!!!!!!!!!!!
                     });
 
                     delete target.sellCarTargetOffer;

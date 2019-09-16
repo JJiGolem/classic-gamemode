@@ -44,6 +44,7 @@ mp.weapons = {
         return mp.game.invoke('0x4215460B9B8B7FA0', weaponhash);
     },
     hashToValid(hash) {
+        if (hash == 3675956304) return -619010992; // weapon_machinepistol
         var hashes = [2210333304];
         if (hashes.includes(hash)) return -2084633992;
         return hash;

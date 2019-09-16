@@ -17,6 +17,9 @@ mp.inventory = {
     debug(enable) {
         mp.callCEFV(`inventory.debug = ${enable}`);
     },
+    spin(enable) {
+        mp.callCEFV(`inventory.spin = ${enable}`);
+    },
     initItems(items) {
         if (typeof items == 'object') items = JSON.stringify(items);
         mp.callCEFV(`inventory.initItems('${items}')`);
@@ -28,6 +31,10 @@ mp.inventory = {
     setItemInfo(id, itemInfo) {
         if (typeof itemInfo == 'object') itemInfo = JSON.stringify(itemInfo);
         mp.callCEFV(`inventory.setItemInfo(${id}, '${itemInfo}')`);
+    },
+    setMergeList(list) {
+        if (typeof list == 'object') list = JSON.stringify(list);
+        mp.callCEFV(`inventory.setMergeList('${list}')`);
     },
     addItem(item, pocket, index, parent) {
         if (typeof item == 'object') item = JSON.stringify(item);
@@ -116,6 +123,17 @@ mp.inventory = {
             if (sqlId == itemSqlId) this.removeHotkey(key);
         }
     },
+    registerWeaponAttachments(list, models) {
+        for (var i = 0; i < list.length; i++) {
+            var itemId = list[i];
+            var model = models[i];
+
+            mp.attachmentMngr.register(`weapon_${itemId}`, model, 57597, new mp.Vector3(0.01, 0.03, 0),
+                new mp.Vector3(-119, 10, 90)
+            );
+        }
+        mp.callCEFV(`inventory.setBodyList(9, '${JSON.stringify(list)}')`)
+    },
 };
 
 mp.events.add("characterInit.done", () => {
@@ -127,6 +145,8 @@ mp.events.add("inventory.enable", mp.inventory.enable);
 
 mp.events.add("inventory.debug", mp.inventory.debug);
 
+mp.events.add("inventory.spin", mp.inventory.spin);
+
 mp.events.add("inventory.initItems", (items) => {
     mp.inventory.initItems(items);
     mp.inventory.loadHotkeys();
@@ -135,6 +155,8 @@ mp.events.add("inventory.initItems", (items) => {
 mp.events.add("inventory.setItemsInfo", mp.inventory.setItemsInfo);
 
 mp.events.add("inventory.setItemInfo", mp.inventory.setItemInfo);
+
+mp.events.add("inventory.setMergeList", mp.inventory.setMergeList);
 
 mp.events.add("inventory.deleteItem", mp.inventory.deleteItem);
 
@@ -154,6 +176,8 @@ mp.events.add("inventory.deleteEnvironmentItem", mp.inventory.deleteEnvironmentI
 
 mp.events.add("inventory.setMaxPlayerWeight", mp.inventory.setMaxPlayerWeight);
 
+mp.events.add("inventory.registerWeaponAttachments", mp.inventory.registerWeaponAttachments);
+
 mp.events.add("inventory.setSatiety", mp.inventory.setSatiety);
 
 mp.events.add("inventory.setThirst", mp.inventory.setThirst);
@@ -165,6 +189,7 @@ mp.events.add("inventory.removeHotkey", mp.inventory.removeHotkey);
 mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`enterBoot: #${vehicle.remoteId}`);
     if (!vehicle.getVariable("trunk")) return;
+    if (vehicle.getVariable("static")) return;
     if (player.vehicle) return;
     mp.prompt.showByName("vehicle_items_boot");
     mp.events.callRemote(`vehicle.boot.items.request`, vehicle.remoteId);
@@ -172,6 +197,7 @@ mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
 
 mp.events.add("playerExitVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`exitBoot: #${vehicle.remoteId}`);
+    if (vehicle.getVariable("static")) return;
     mp.events.callRemote(`vehicle.boot.items.clear`, vehicle.remoteId);
 });
 

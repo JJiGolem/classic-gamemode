@@ -7,6 +7,8 @@ let utils = call('utils');
 let tuning = call('tuning');
 
 const MAX_BREAK_LEVEL = 2;
+const NO_BREAK_DAYS = 2;
+
 let breakdownConfig = {
     engineState: 0.004,
     fuelState: 0.004,
@@ -83,7 +85,7 @@ module.exports = {
             vehicle.properties = veh.properties;
         }
 
-        if (veh.key == 'private' || veh.key == 'market' || veh.key == 'newbie') { // temp
+        if (veh.key == 'private' || veh.key == 'market') { // temp
             if (!veh.tuning) {
                 await this.initTuning(vehicle);
             } else {
@@ -151,7 +153,6 @@ module.exports = {
                 veh.destroy();
                 return;
             }
-
             if (veh.carPlaceIndex == null || !veh.hasOwnProperty('carPlaceIndex')) {
                 let index = owner.carPlaces.findIndex(x => x.veh == null && x.d != 0);
 
@@ -167,6 +168,9 @@ module.exports = {
                 veh.h = place.h;
                 veh.d = place.d;
                 place.veh = veh;
+                veh.isInGarage = true;
+            }
+            if (veh.hasOwnProperty('carPlaceIndex')) {
                 veh.isInGarage = true;
             }
         }
@@ -264,7 +268,7 @@ module.exports = {
                 owners: current.owners,
                 vehType: props.vehType,
                 price: props.price,
-                //isOnParking: current.isOnParking
+                parkingDate: current.parkingDate
             });
         });
         console.log(`[VEHICLES] Для игрока ${player.character.name} загружено ${dbPrivate.length} авто`)
@@ -348,13 +352,18 @@ module.exports = {
     generateBreakdowns(veh) {
         if (!veh) return;
         let multiplier = veh.multiplier;
+        if (veh.regDate) {
+            let date = veh.regDate;
+            let now = new Date();
+            let diff = (now - date) / (1000 * 60 * 60 * 24);
+            if (diff < NO_BREAK_DAYS) return console.log('[DEBUG] Новая машина, не ломаем')
+        }
         //let multiplier = 10;
         let toUpdate = false;
         for (let key in breakdownConfig) {
             if (veh[key] < MAX_BREAK_LEVEL) {
                 console.log(`[DEBUG] Пытаемся сломать ${key} у ${veh.properties.name}`);
                 let random = Math.random();
-                console.log(random);
                 if (random < breakdownConfig[key] * multiplier) {
                     veh[key]++;
                     toUpdate = true;
@@ -502,8 +511,9 @@ module.exports = {
     },
     isAbleToBuyVehicle(player) {
         let hasHouse = houses.isHaveHouse(player.character.id);
+        console.log(`hasHouse = ${hasHouse}`)
         if (!hasHouse) {
-            if (player.vehicleList.length > 1) return false;
+            if (player.vehicleList.length >= 1) return false;
         } else {
             if (player.carPlaces.length > 1 && player.vehicleList.length + 1 > player.carPlaces.length - 1) return false;
             if (player.carPlaces.length == 1 && player.vehicleList.length >= player.carPlaces.length) return false;
