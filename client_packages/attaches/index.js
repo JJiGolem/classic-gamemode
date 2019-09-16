@@ -219,6 +219,9 @@ mp.events.add({
     },
     "attaches.testoff": () => {
         var player = mp.players.local;
-        if (player.testAttach) player.testAttach.destroy();
+        if (player.testAttach) {
+            player.testAttach.destroy();
+            delete player.testAttach;
+        }
     },
 });
