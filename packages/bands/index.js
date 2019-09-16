@@ -100,8 +100,9 @@ module.exports = {
         var zone = this.getZoneByPos(player.position);
         if (!zone) return out(`Вы не в гетто`);
         if (zone.factionId == faction.id) return out(`Территория уже под контролем ${faction.name}`);
-        if (this.wars[zone.id]) return out(`На данной территории уже идет война`);
-        if (this.inWar(faction.id)) return out(`Ваша банда уже участвует в войне`);
+        if (Object.keys(this.wars).length) return out(`В гетто уже идет война`);
+        // if (this.wars[zone.id]) return out(`На данной территории уже идет война`);
+        // if (this.inWar(faction.id)) return out(`Ваша банда уже участвует в войне`);
 
         var hours = new Date().getHours();
         if (hours < this.captureInterval[0] || hours > this.captureInterval[1])
