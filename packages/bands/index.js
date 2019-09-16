@@ -20,8 +20,10 @@ module.exports = {
     ammoAmmo: 1,
     // Наркопритон
     drugsStashMarker: null,
-    // Цена за 1 г. нарко в наркопритоне
+    // Цена за 1 г. нарко в наркопритоне (0% влияния в гетто)
     drugsPrice: 100,
+    // Мин. цена 1г. нарко в наркопритоне (100% влияния в гетто)
+    drugsPriceMin: 30,
 
     init() {
         factions = call('factions');
@@ -60,6 +62,16 @@ module.exports = {
         }
 
         return null;
+    },
+    // влияние банды от 0 до 1 (min: 0 - ниодной зоны не захвачено, max: 1 - всё гетто захвачено)
+    getPowerBand(bandId) {
+        var count = 0;
+        for (var i = 0; i < this.bandZones.length; i++) {
+            var zone = this.bandZones[i];
+            if (zone.factionId == bandId) count++;
+        }
+
+        return count / this.bandZones.length;
     },
     setBandZoneOwner(zone, factionId) {
         if (typeof zone == 'number') zone = this.getZone(zone);
