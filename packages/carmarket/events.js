@@ -2,6 +2,7 @@ var carmarket = require('./index.js');
 var money = call('money');
 var vehicles = call('vehicles');
 var houses = call('houses');
+var inventory = call('inventory');
 
 let PRICE_CONFIG = carmarket.getPriceConfig();
 
@@ -41,7 +42,7 @@ module.exports = {
 
         let price = (player.vehicle.properties.price * PRICE_CONFIG.SELL).toFixed();
         console.log(price);
-        money.addCash(player, price, function (result) {
+        money.addCash(player, price, function(result) {
             if (result) {
                 try {
                     vehicles.removeVehicleFromPlayerVehicleList(player, player.vehicle.sqlId);
@@ -98,8 +99,26 @@ module.exports = {
         // }
         if (!vehicles.isAbleToBuyVehicle(player)) return player.call('carmarket.car.buy.ans', [4]);
 
-        money.removeCash(player, price, function (result) {
+        var params = {
+            owner: player.character.id,
+            vehId: player.vehicle.db.id,
+            vehName: player.vehicle.db.modelName
+        };
+        var cant = inventory.cantAdd(player, 33, params);
+        if (cant) return player.call('carmarket.car.buy.ans', [5, {
+            text: cant
+        }]);
+
+
+        money.removeCash(player, price, function(result) {
             if (result) {
+
+                // выдача ключей в инвентарь
+                inventory.addItem(player, 33, params, (e) => {
+                    if (e) player.call('carmarket.car.buy.ans', [5, {
+                        text: e
+                    }]);
+                });
 
                 let carInfo = {
                     name: player.vehicle.properties.name,
