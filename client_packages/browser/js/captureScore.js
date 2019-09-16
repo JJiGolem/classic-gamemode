@@ -39,7 +39,10 @@ var captureScore = new Vue({
             if (minutes < 10) minutes = "0" + minutes;
             if (seconds < 10) seconds = "0" + seconds;
             return `${minutes}:${seconds}`;
-        }
+        },
+        isShow() {
+            return this.show && !offerDialog.dialog;
+        },
     },
     watch: {
         show(val) {
