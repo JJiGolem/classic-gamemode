@@ -908,4 +908,45 @@ module.exports = {
     canMerge(itemId, targetId) {
         return this.mergeList[itemId] && this.mergeList[itemId].includes(targetId);
     },
+    putGround(player, item) {
+        var children = this.getArrayItems(player, item);
+        this.deleteItem(player, item);
+
+        var info = this.getInventoryItem(item.itemId);
+        var pos = player.position;
+        pos.z += info.deltaZ - 1;
+
+        var newObj = mp.objects.new(mp.joaat(info.model), pos, {
+            rotation: new mp.Vector3(info.rX, info.rY, player.heading),
+            dimension: player.dimension
+        });
+        newObj.playerId = player.id;
+        newObj.item = item;
+        newObj.children = children;
+        newObj.setVariable("groundItem", true);
+        player.inventory.ground.push(newObj);
+
+
+        var objId = newObj.id;
+        newObj.destroyTimer = setTimeout(() => {
+            try {
+                var obj = mp.objects.at(objId);
+                if (!obj || !obj.item || obj.item.id != sqlId) return;
+                obj.destroy();
+                var rec = mp.players.at(obj.playerId);
+                if (!rec) return;
+                var i = rec.inventory.ground.indexOf(obj);
+                rec.inventory.ground.splice(i, 1);
+            } catch (e) {
+                console.log(e);
+            }
+        }, this.groundItemTime);
+
+        var ground = player.inventory.ground;
+        if (ground.length > this.groundMaxItems) {
+            var obj = ground.shift();
+            clearTimeout(obj.destroyTimer);
+            obj.destroy();
+        }
+    },
 };
