@@ -11,7 +11,7 @@ module.exports = {
     },
     "characterInit.done": (player) => {
         if (!factions.isHospitalFaction(player.character.factionId)) return;
-        player.call(`mapCase.init`, [player.name, player.character.factionId]);
+        // player.call(`mapCase.init`, [player.name, player.character.factionId]);
         mp.events.call(`mapCase.ems.init`, player);
     },
     "hospital.storage.clothes.take": (player, index) => {
