@@ -1140,7 +1140,7 @@
                 Ждите, пока рыба не клюнет...
             </div>
         </div>
-        <div class="fishing-help" v-if="show">
+        <div class="fishing-help" v-if="!isStarted || isFetch">
             <table>
                 <tr v-if="!isStarted">
                     <th>

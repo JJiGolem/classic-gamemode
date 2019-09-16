@@ -76,7 +76,8 @@ module.exports = {
                         player.call('fishing.rod.buy.ans', [1]);
                         notifs.success(player, "Удочка добавлена в инвентарь", "Покупка");
                     } else {
-                        notifs.error(player, "", "Ошибка");
+                        notifs.error(player, e, "Ошибка");
+                        player.call('fishing.rod.buy.ans', [0]);
                     }
                 });
             } else {
