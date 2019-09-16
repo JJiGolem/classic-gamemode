@@ -38,7 +38,7 @@ module.exports = {
 
             args.splice(0, 1);
             var name = args.join(" ").trim();
-            out.info(`${player.name} сменил имя у организации #${faction.id} (${faction.name} => ${name})`);
+            out.info(`${player.name} сменил имя у организации ${faction.name} (${faction.name} => ${name})`);
             faction.name = name;
             faction.save();
         }
@@ -61,7 +61,7 @@ module.exports = {
             });;
             if (!character) return out.error(`Персонаж ${fullName} не найден`, player);
 
-            out.info(`${player.name} добавил лидера организации #${faction.id} оффлайн (#${character.id})`);
+            out.info(`${player.name} добавил лидера организации ${faction.name} оффлайн (#${character.id})`);
             character.factionId = faction.id;
             character.factionRank = factions.getMaxRank(faction).id;
             character.save();
@@ -78,7 +78,7 @@ module.exports = {
             var rec = mp.players.at(args[0]);
             if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
 
-            out.info(`${player.name} добавил лидера организации #${faction.id} (#${rec.name})`);
+            out.info(`${player.name} добавил лидера организации ${faction.name} (${rec.name})`);
             factions.setLeader(faction, rec);
         }
     },
@@ -94,7 +94,7 @@ module.exports = {
             var faction = factions.getFaction(rec.character.factionId);
             if (!faction) return out.error(`Организация #${rec.character.factionId} не найдена`, player);
 
-            out.info(`${player.name} уволил ${rec.name} из организации #${faction.id}`);
+            out.info(`${player.name} уволил ${rec.name} из организации ${faction.name}`);
             factions.deleteMember(rec);
         }
     },
@@ -110,7 +110,7 @@ module.exports = {
             if (!faction) return out.error(`Организация #${args[1]} не найдена`, player);
 
 
-            out.info(`${player.name} добавил ${rec.name} в организацию #${faction.id}`);
+            out.info(`${player.name} добавил ${rec.name} в организацию ${faction.name}`);
             factions.addMember(faction, rec);
         }
     },
@@ -127,7 +127,7 @@ module.exports = {
             var rank = factions.getRank(rec.character.factionId, args[1]);
             if (!rank) return out.error(`Ранг #${args[1]} не найден`, player);
 
-            out.info(`${player.name} изменил ранг ${rec.name} (${rec.character.factionRank} => ${rank.rank})`);
+            out.info(`${player.name} изменил ранг ${rec.name} (${rank.rank})`);
             factions.setRank(rec.character, rank);
         }
     },
@@ -139,7 +139,7 @@ module.exports = {
             var faction = factions.getFaction(args[0]);
             if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
 
-            out.info(`${player.name} изменил количество боеприпасов у организации #${args[0]} (${faction.ammo} => ${args[1]})`);
+            out.info(`${player.name} изменил количество боеприпасов у организации ${faction.name} (${faction.ammo} => ${args[1]})`);
             factions.setAmmo(faction, args[1]);
         }
     },
@@ -151,7 +151,7 @@ module.exports = {
             var faction = factions.getFaction(args[0]);
             if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
 
-            out.info(`${player.name} изменил вместимость боеприпасов на складе у организации #${args[0]} (${faction.maxAmmo} => ${args[1]})`);
+            out.info(`${player.name} изменил вместимость боеприпасов на складе у организации ${faction.name} (${faction.maxAmmo} => ${args[1]})`);
             factions.setMaxAmmo(faction, args[1]);
         }
     },
@@ -163,7 +163,7 @@ module.exports = {
             var faction = factions.getFaction(args[0]);
             if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
 
-            out.info(`${player.name} изменил количество медикаментов у организации #${args[0]} (${faction.medicines} => ${args[1]})`);
+            out.info(`${player.name} изменил количество медикаментов у организации ${faction.name} (${faction.medicines} => ${args[1]})`);
             factions.setMedicines(faction, args[1]);
         }
     },
@@ -175,7 +175,7 @@ module.exports = {
             var faction = factions.getFaction(args[0]);
             if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
 
-            out.info(`${player.name} изменил вместимость медикаментов на складе у организации #${args[0]} (${faction.maxMedicines} => ${args[1]})`);
+            out.info(`${player.name} изменил вместимость медикаментов на складе у организации ${faction.name} (${faction.maxMedicines} => ${args[1]})`);
             factions.setMaxMedicines(faction, args[1]);
         }
     },
@@ -187,7 +187,7 @@ module.exports = {
             var faction = factions.getFaction(args[0]);
             if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
 
-            out.info(`${player.name} изменил блип у организации #${args[0]} (${faction.blip}-${faction.blipColor} => ${args[0]}-${args[1]})`);
+            out.info(`${player.name} изменил блип у организации ${faction.name} (${faction.blip}-${faction.blipColor} => ${args[0]}-${args[1]})`);
             factions.setBlip(faction, args[1], args[2]);
         }
     },
@@ -212,7 +212,7 @@ module.exports = {
             var blip = factions.getBlip(faction.id);
             blip.position = pos;
 
-            out.info(`${player.name} изменил позицию у организации #${faction.id}`);
+            out.info(`${player.name} изменил позицию у организации ${faction.name}`);
         }
     },
     "/fsetwarehousepos": {
@@ -259,7 +259,7 @@ module.exports = {
             warehouse.colshape = colshape;
 
 
-            out.info(`${player.name} изменил позицию склада у организации #${faction.id}`);
+            out.info(`${player.name} изменил позицию склада у организации ${faction.name}`);
         }
     },
     "/fsetstoragepos": {
@@ -293,7 +293,7 @@ module.exports = {
             };
             storage.colshape = colshape;
 
-            out.info(`${player.name} изменил позицию выдачи предметов у организации #${faction.id}`);
+            out.info(`${player.name} изменил позицию выдачи предметов у организации ${faction.name}`);
         }
     },
     "/franks": {
@@ -325,7 +325,7 @@ module.exports = {
 
             args.splice(0, 2);
             var name = args.join(" ").trim();
-            out.info(`${player.name} изменил название ранга ${rank.rank} у организации #${faction.id} (${rank.name} => ${name})`);
+            out.info(`${player.name} изменил название ранга ${rank.rank} у организации ${faction.name} (${rank.name} => ${name})`);
             rank.name = name;
             rank.save();
         }
@@ -340,7 +340,7 @@ module.exports = {
 
             var rank = faction.ranks[args[1] - 1];
 
-            out.info(`${player.name} изменил зарплату ранга ${rank.pay} у организации #${faction.id} (${rank.pay} => ${args[2]})`);
+            out.info(`${player.name} изменил зарплату ранга ${rank.pay} у организации ${faction.name} (${rank.pay} => ${args[2]})`);
             rank.pay = args[2];
             rank.save();
         }
