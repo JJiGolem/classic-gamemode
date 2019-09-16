@@ -189,6 +189,7 @@ mp.events.add("inventory.removeHotkey", mp.inventory.removeHotkey);
 mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`enterBoot: #${vehicle.remoteId}`);
     if (!vehicle.getVariable("trunk")) return;
+    if (vehicle.getVariable("static")) return;
     if (player.vehicle) return;
     mp.prompt.showByName("vehicle_items_boot");
     mp.events.callRemote(`vehicle.boot.items.request`, vehicle.remoteId);
@@ -196,6 +197,7 @@ mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
 
 mp.events.add("playerExitVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`exitBoot: #${vehicle.remoteId}`);
+    if (vehicle.getVariable("static")) return;
     mp.events.callRemote(`vehicle.boot.items.clear`, vehicle.remoteId);
 });
 

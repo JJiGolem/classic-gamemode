@@ -24,7 +24,7 @@ module.exports = {
         if (faction.ammo < bands.gunAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
         var itemIds = [41, 21, 44, 20, 47, 89, 52];
-        var weaponIds = ["weapon_bat", "weapon_pumpshotgun", "weapon_pistol","weapon_combatpistol","weapon_microsmg","weapon_machinepistol","weapon_compactrifle"];
+        var weaponIds = ["weapon_bat", "weapon_pumpshotgun", "weapon_pistol", "weapon_combatpistol", "weapon_microsmg", "weapon_machinepistol", "weapon_compactrifle"];
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
 
