@@ -457,7 +457,7 @@
         </div>
     </div>
 
-    <div id="inventory" v-show="show" :class="{spin: spin}">
+    <div id="inventory" v-show="show" :class="{spin: spin}" :style="{opacity: 1}">
         <div class="environment">
             <div class="container" v-for="place in environment" v-bind:key="place.header">
                 <div class="header" @click="place.showPockets = !place.showPockets" :class="{hidden: !place.showPockets}">

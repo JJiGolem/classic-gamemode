@@ -6,6 +6,7 @@
     grid-template-rows: repeat(10, 1fr);
     height: 80%;
     left: 50%;
+    opacity: 0;
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);
