@@ -102,7 +102,7 @@ module.exports = {
         var params = {
             owner: player.character.id,
             vehId: player.vehicle.db.id,
-            vehName: player.vehicle.db.modelName
+            vehName: player.vehicle.properties.name
         };
         var cant = inventory.cantAdd(player, 33, params);
         if (cant) return player.call('carmarket.car.buy.ans', [5, {

@@ -252,7 +252,7 @@ module.exports = {
                             inventory.addItem(player, 33, {
                                 owner: player.character.id,
                                 vehId: veh.db.id,
-                                vehName: veh.db.modelName
+                                vehName: carToBuy.properties.name
                             }, (e) => {
                                 if (e) return player.call('carmarket.car.buy.ans', [7, {
                                     text: e
