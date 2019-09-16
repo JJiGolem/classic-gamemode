@@ -358,7 +358,7 @@ module.exports = {
                         regDate: veh.regDate,
                         owners: veh.owners,
                         vehType: props.vehType,
-                        price: props.price // todo isOnParking
+                        price: props.price // todo isOnParking TODO !!!!!!!!!!!!!!!!!!!!!
                     });
 
                     delete target.sellCarTargetOffer;

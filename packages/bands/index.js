@@ -12,8 +12,8 @@ module.exports = {
     wars: {},
     // Время захвата территории (ms)
     warTime: 10000,
-    // Кратность часа, по которым можно каптить
-    captureInterval: 0,
+    // Промежуток часов, в который можно начать захват
+    captureInterval: [13, 23],
 
     init() {
         factions = call('factions');
@@ -78,12 +78,9 @@ module.exports = {
         if (this.wars[zone.id]) return out(`На данной территории уже идет война`);
         if (this.inWar(faction.id)) return out(`Ваша банда уже участвует в войне`);
 
-        if (this.captureInterval) {
-            var minutes = new Date().getMinutes();
-            // if (minutes) return out(`Не подходящее время для захвата`);
-            var hours = new Date().getHours();
-            if (hours % this.captureInterval) return out(`Захват доступен каждый ${this.captureInterval} час`);
-        }
+        var hours = new Date().getHours();
+        if (hours < this.captureInterval[0] || hours > this.captureInterval[1])
+            return out(`Захват доступен с ${this.captureInterval[0]} до ${this.captureInterval[1]} ч.`);
 
         var enemyFaction = factions.getFaction(zone.factionId);
         this.wars[zone.id] = {
@@ -110,7 +107,7 @@ module.exports = {
                 rec.call(`bands.capture.start`, [factionId, zone.factionId, this.warTime / 1000]);
                 notifs.success(rec, `Ваша банда напала на ${enemyFaction.name}`, header);
             } else if (factionId == zone.factionId) {
-                rec.call(`bands.capture.start`, [zone.factionId, factionId, this.warTime / 1000]);
+                rec.call(`bands.capture.start`, [zone.factionId, faction.id, this.warTime / 1000]);
                 notifs.info(rec, `На вашу территорию напала банда ${faction.name}`, header);
             }
         });
