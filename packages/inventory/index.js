@@ -726,6 +726,7 @@ module.exports = {
             var info = this.getInventoryItem(item.itemId);
             weight += info.weight;
             var params = this.getParamsValues(item);
+            if (params.weight) weight += params.weight;
             if (params.count) weight += params.count * info.weight;
             var children = this.getChildren(player.inventory.items, item);
             if (children.length) {
