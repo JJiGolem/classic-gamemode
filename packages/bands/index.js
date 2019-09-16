@@ -57,6 +57,15 @@ module.exports = {
     isInBandZone(pos, zone) {
         return pos.x > zone.x - 100 && pos.x < zone.x + 100 && pos.y < zone.y + 100 && pos.y > zone.y - 100;
     },
+    isSpawnZone(zone) {
+        var bands = factions.factions.filter(x => x.id >= 8 && x.id <= 11);
+        for (var i = 0; i < bands.length; i++) {
+            var marker = factions.getMarker(bands[i].id);
+            var bandZone = this.getZoneByPos(marker.position);
+            if (bandZone && zone.id == bandZone.id) return true;
+        }
+        return false;
+    },
     getZoneByPos(pos) {
         if (!this.isInBandZones(pos)) return null;
 
@@ -100,9 +109,8 @@ module.exports = {
         var zone = this.getZoneByPos(player.position);
         if (!zone) return out(`Вы не в гетто`);
         if (zone.factionId == faction.id) return out(`Территория уже под контролем ${faction.name}`);
+        if (this.isSpawnZone(zone)) return out(`Нельзя захватить зону, в которой проживает банда`);
         if (Object.keys(this.wars).length) return out(`В гетто уже идет война`);
-        // if (this.wars[zone.id]) return out(`На данной территории уже идет война`);
-        // if (this.inWar(faction.id)) return out(`Ваша банда уже участвует в войне`);
 
         var hours = new Date().getHours();
         if (hours < this.captureInterval[0] || hours > this.captureInterval[1])
