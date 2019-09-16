@@ -190,6 +190,18 @@ module.exports = {
         }
         return clientItem;
     },
+    cantAdd(player, itemId, params) {
+        var slot = this.findFreeSlot(player, itemId);
+        if (!slot) return `Свободный слот для ${this.getInventoryItem(itemId).name} не найден`;
+        if (params.sex != null && params.sex != !player.character.gender) return `Предмет противоположного пола`;
+        var nextWeight = this.getCommonWeight(player) + this.getInventoryItem(itemId).weight;
+        if (nextWeight > this.maxPlayerWeight) return `Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`;
+        if (params.weaponHash) {
+            var weapon = this.getItemByItemId(player, itemId);
+            if (weapon) return `Оружие ${this.getName(itemId)} уже имеется`;
+        }
+        return null;
+    },
     async addItem(player, itemId, params, callback = () => {}) {
         var slot = this.findFreeSlot(player, itemId);
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(itemId).name} не найден`);
@@ -928,6 +940,7 @@ module.exports = {
 
 
         var objId = newObj.id;
+        var sqlId = item.id;
         newObj.destroyTimer = setTimeout(() => {
             try {
                 var obj = mp.objects.at(objId);
