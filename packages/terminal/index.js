@@ -3,7 +3,7 @@ let notifs = require('../notifications');
 
 module.exports = {
     // Мин. уровень админки для доступа к кносоли (character.admin)
-    access: 6,
+    access: 1,
     // Доступные команды
     commands: {},
 
