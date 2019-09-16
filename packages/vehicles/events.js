@@ -81,9 +81,9 @@ module.exports = {
             player.call('vehicles.engine.toggle', [true]);
             player.vehicle.setVariable("engine", true);
             player.call('prompt.hide');
-            //if (player.vehicle.key != "job" && player.vehicle.key != "newbie" && player.vehicle.key != "admin") {
+            if (player.vehicle.key == 'private') {
             vehicles.generateBreakdowns(player.vehicle);
-            //}
+            }
             mp.events.call('vehicles.breakdowns.init', player);
         }
     },

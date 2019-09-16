@@ -32,13 +32,11 @@ module.exports = {
         let shape = mp.colshapes.newSphere(shop.x, shop.y, shop.z, 2.5);
 
         shape.onEnter = (player) => {
-            player.call('chat.message.push', ['!{#ffffff}enter masks']);
             player.call('masks.shop.shape', [true]);
             player.call('prompt.show', ['Нажмите <span>E</span> для того, чтобы посмотреть маски']);
         }
 
         shape.onExit = (player) => {
-            player.call('chat.message.push', ['!{#ffffff}exit masks']);
             player.call('masks.shop.shape', [false]);
             player.call('prompt.hide');
         }
