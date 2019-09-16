@@ -91,6 +91,7 @@ mp.factions = {
         // mp.notify.info(`setFaction: ${factionId}`)
         this.faction = factionId;
         mp.callCEFV(`interactionMenu.faction = ${factionId}`);
+        mp.events.call("mapCase.init", mp.players.local.name, factionId);
     },
 };
 
