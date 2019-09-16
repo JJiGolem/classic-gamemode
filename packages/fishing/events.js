@@ -77,7 +77,7 @@ module.exports = {
     "fishing.game.end": (player, result) => {
         if (!player.character) return;
 
-        let rod = inventory.getItem(player, inventory.getRodId);
+        let rod = inventory.getItem(player, fishing.getRodId);
         let health = inventory.getParam(rod, 'health').value;
 
         if (result) {
