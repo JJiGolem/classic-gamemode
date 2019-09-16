@@ -24,7 +24,7 @@ module.exports = {
     medicinesBox: 500,
     // TODO: Добавить адекватные модели авто
     // Модели авто, в которые можно грузить боеприпасы
-    ammoVehModels: ["sultan"],
+    ammoVehModels: ["barracks", "barracks3", "moonbeam", "youga2", "insurgent2"],
     // Модели авто, в которые можно грузить медикаменты
     medicinesVehModels: ["sultan"],
     // Макс. кол-во боеприпасов в авто
@@ -141,9 +141,9 @@ module.exports = {
         storage.colshape = colshape;
     },
     createAmmoWarehouseMarker() {
-        var pos = new mp.Vector3(-257.62, -339.59, 29.95 - 2);
+        var pos = new mp.Vector3(211.51,  -3091.53, 7.01 - 1);
 
-        this.ammoWarehouse = mp.markers.new(1, pos, 2, {
+        this.ammoWarehouse = mp.markers.new(1, pos, 0.5, {
             color: [255, 187, 0, 100]
         });
         this.ammoWarehouse.blip = mp.blips.new(473, pos, {
@@ -152,7 +152,7 @@ module.exports = {
             shortRange: 10,
             scale: 1
         });
-        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 2.5);
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
             if (!this.isArmyFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, `Склад боеприпасов`);
             player.call("factions.insideWarehouse", [true, "ammo"]);
@@ -164,7 +164,7 @@ module.exports = {
         };
     },
     createMedicinesWarehouseMarker() {
-        var pos = new mp.Vector3(-255.80, -342.41, 29.88 - 2);
+        var pos = new mp.Vector3(3600.56, 3659.97, 33.87 - 2);
 
         this.ammoWarehouse = mp.markers.new(1, pos, 2, {
             color: [255, 187, 0, 100]
