@@ -53,7 +53,8 @@ module.exports = {
                 player.vehicle.d = 0;
                 carmarket.sellCar(player.vehicle);
                 player.call('carmarket.car.sell.ans', [3, price]);
-
+                // удаление ключей
+                inventory.deleteByParams(player, 33, 'vehId', player.vehicle.db.id);
             } else {
                 console.log(`${player.name} не смог продать авто на рынке (addcash error)`)
                 player.call('carmarket.car.sell.ans', [2]);
