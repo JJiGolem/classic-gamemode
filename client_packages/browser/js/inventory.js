@@ -460,6 +460,13 @@ var inventory = new Vue({
 
             return cols;
         },
+        descItemName() {
+            var item = this.itemDesc.item;
+            if (!item) return null;
+            if (item.itemId == 33 && item.params.vehName) // ключи авто
+                return `Ключи от ${item.params.vehName}`;
+            return this.itemsInfo[item.itemId].name;
+        },
     },
     methods: {
         // ******************  [ Private ] ******************
