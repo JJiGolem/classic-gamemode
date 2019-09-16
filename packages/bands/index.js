@@ -43,7 +43,11 @@ module.exports = {
         console.log(`[BANDS] Зоны гетто загружены (${dbZones.length} шт.)`)
     },
     convertToClientBandZones() {
-        return this.bandZones.map(x => x.dataValues);
+        var zones = this.bandZones.map(x => x.dataValues);
+        var warZoneIds = Object.keys(this.wars);
+        if (warZoneIds.length) zones[warZoneIds[0] - 1].flash = true;
+
+        return zones;
     },
     getZone(id) {
         return this.bandZones[id - 1];

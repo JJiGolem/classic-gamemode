@@ -43,6 +43,7 @@ mp.bands = {
             mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, this.colors[zone.factionId]);
             this.bandZones.push(blip);
             this.saveBlip(blip);
+            if (zone.flash) this.flashBlip(zone.id, true);
         });
     },
     clearBandZones() {
