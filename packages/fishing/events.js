@@ -48,7 +48,11 @@ module.exports = {
     },
     "fishing.game.enter": (player) => {
         if (!player.character) return;
-        if (!inventory.getItemByItemId(player, fishing.getRodId())) return notifs.error(player, "У вас нет удочки", "Ошибка");
+        if (!inventory.getItemByItemId(player, fishing.getRodId())) {
+            notifs.error(player, "У вас нет удочки", "Ошибка");
+            player.call('fishing.game.exit');
+            return;
+        }
 
         let cam = fishing.setCamera(player);
         player.call('fishing.game.enter', [cam]);
@@ -77,7 +81,7 @@ module.exports = {
         let health = inventory.getParam(rod, 'health').value;
 
         if (result) {
-            inventory.addItem(player, 127, { weight: weight }, () => {
+            inventory.addItem(player, 15, { weight: weight }, () => {
                 notifs.success(player, `Рыба весом ${weight} кг добавлена в инвентарь`, 'Отлично!');
             })
         } else {

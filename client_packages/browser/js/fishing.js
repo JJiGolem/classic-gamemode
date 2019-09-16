@@ -8,7 +8,6 @@ var fishing = new Vue({
         zone: null,
         isStarted: false,
         isFetch: false,
-        isComplete: false,
         direction: 'right',
         weight: null
     },
@@ -41,7 +40,6 @@ var fishing = new Vue({
         },
         endFishing() {
             clearInterval(interval);
-            this.isComplete = true;
 
             let result;
             if (Math.abs(this.position - 50) < parseInt(this.zone / 2)) {
@@ -59,7 +57,6 @@ var fishing = new Vue({
             this.direction = 'right',
             this.isStarted = false;
             this.isFetch = false;
-            this.isComplete = false;
         }
     },
 });

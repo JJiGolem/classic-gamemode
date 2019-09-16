@@ -1139,6 +1139,34 @@
                 Ждите, пока рыба не клюнет...
             </div>
         </div>
+        <div class="fishing-help" v-if="show">
+            <table>
+                <tr v-if="!isStarted">
+                    <th>
+                        <span class="fishing-help-button">Space</span>
+                    </th>
+                    <th>
+                        <span>Забросить удочку</span>
+                    </th>
+                </tr>
+                <tr v-if="isFetch">
+                    <th>
+                        <span class="fishing-help-button">F</span>
+                    </th>
+                    <th>
+                        <span>Вытянуть</span>
+                    </th>
+                </tr>
+                <tr v-if="!isStarted">
+                    <th>
+                        <span class="fishing-help-button">Esc</span>
+                    </th>
+                    <th>
+                        <span>Выйти</span>
+                    </th>
+                </tr>
+            </table>
+        </div>
     </div>
 
     <!-- ------------------------ REACT ------------------------------ -->
