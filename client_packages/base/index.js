@@ -1,7 +1,5 @@
 "use strict";
 
-import { isArray } from "util";
-
 mp.events.add("render", () => {
     /// Отключение не используемых клавиш
     mp.game.controls.disableControlAction(1, 199, true); //Pause Menu (P)
@@ -67,7 +65,7 @@ mp.busy.add = function(name, nocef = false) {
 /// Содержит ли массив данный модуль
 /// В случае если name = null, содержит ли массив какой-либо модуль
 mp.busy.includes = function(name) {
-    if (isArray(name)) {
+    if (Array.isArray(name)) {
         for (let index = 0; index < name.length; index++) {
             if (mp.busy.list.includes(name[index])) {
                 return true;
