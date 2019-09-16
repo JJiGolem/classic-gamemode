@@ -1,5 +1,6 @@
 "use strict";
 var vehicles = require('./index.js')
+var inventory = call('inventory');
 
 let money = call('money');
 module.exports = {
@@ -320,6 +321,19 @@ module.exports = {
                 return;
             }
 
+            var cant = inventory.cantAdd(target, 33, {});
+            if (cant) {
+                target.call('vehicles.sell.target.final', [4, {
+                    text: cant
+                }]);
+                // seller.call('vehicles.sell.seller.final', [4, {
+                //     text: cant
+                // }]);
+                delete target.sellCarTargetOffer;
+                delete seller.sellCarSenderOffer;
+                return;
+            }
+
             let price = target.sellCarTargetOffer.price;
             let vehId = target.sellCarTargetOffer.vehId;
             let owners = vehicle.owners;
@@ -360,6 +374,19 @@ module.exports = {
                         vehType: props.vehType,
                         price: props.price // todo isOnParking TODO !!!!!!!!!!!!!!!!!!!!!
                     });
+
+                    // выдача ключей в инвентарь
+                    inventory.addItem(target, 33, {
+                        owner: target.character.id,
+                        vehId: vehId,
+                        vehName: props.name
+                    }, (e) => {
+                        if (e) return player.call('vehicles.sell.target.final', [4, {
+                            text: e
+                        }]);
+                    });
+                    // удаление ключей у продавца
+                    inventory.deleteByParams(seller, 33, 'vehId', vehId);
 
                     delete target.sellCarTargetOffer;
                     delete seller.sellCarSenderOffer;

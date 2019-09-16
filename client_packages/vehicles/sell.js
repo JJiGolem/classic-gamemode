@@ -108,7 +108,7 @@ mp.events.add('vehicles.sell.send.ans', (ans, data) => {
 
 });
 
-mp.events.add('vehicles.sell.target.final', (ans) => {
+mp.events.add('vehicles.sell.target.final', (ans, data) => {
     mp.callCEFV('loader.show = false');
     mp.gui.cursor.show(false, false);
     switch (ans) {
@@ -123,6 +123,9 @@ mp.events.add('vehicles.sell.target.final', (ans) => {
             break;
         case 3:
             mp.notify.error('У покупателя лимит на т/с', 'Ошибка');
+            break;
+        case 4:
+            mp.notify.error(data.text, `Инвентарь`);
             break;
     }
 });
