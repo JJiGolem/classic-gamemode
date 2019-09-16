@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 
@@ -142,6 +143,16 @@ class House extends Component {
         )
     }
 
+    showActions() {
+        const { blurForm, house } = this.props;
+
+        if (!house.isBlur) {
+            this.setState({ isActionsMenu: true });
+            blurForm(true);
+        }
+        //!house.isBlur && this.setState({ isActionsMenu: true }) && blurForm(true);
+    }
+
     enterHouse() {
         const { blurForm, setLoading } = this.props;
 
@@ -206,8 +217,7 @@ class House extends Component {
             case 'enter':
                 return (
                     <div className='button-house-react' onClick={() => {
-                        house.garage ? showEnterMenu(0) : this.enterHouse();
-                        blurForm(true);
+                        house.garage ? (showEnterMenu(0) && blurForm(true)) : this.enterHouse()
                     }}
                          onMouseOver={() => this.setState({ colorEnter: 'black' })}
                          onMouseOut={() => this.setState({ colorEnter: '#e1c631' })}
@@ -226,10 +236,7 @@ class House extends Component {
 
             case 'actions':
                 return (
-                    <div className='button-house-react' onClick={() => {
-                        !house.isBlur && this.setState({ isActionsMenu: true });
-                        blurForm(true)
-                    }}
+                    <div className='button-house-react' onClick={this.showActions.bind(this)}
                          onMouseOver={() => this.setState({ colorActions: 'black' })}
                          onMouseOut={() => this.setState({ colorActions: '#e1c631' })}
                     >
@@ -376,7 +383,7 @@ class House extends Component {
                     <div className='house_form-react'>
                         { Object.keys(house).length > 0 ? this.getForm() : this.getLoader() }
                         { house.answerBuy !== null && this.getMessage(house.answerBuy) }
-                        { house.answerBuy === null && !enterMenu.isShow && isActionsMenu && this.showActionsMenu(house) }
+                        { isActionsMenu && this.showActionsMenu(house) }
                         { isConfirm && this.showConfirmBuy() }
                     </div>
                 }
