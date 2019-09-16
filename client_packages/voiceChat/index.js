@@ -3,8 +3,7 @@
 mp.voiceChat.muted = true;
 mp.events.add('characterInit.done', function() {
     mp.keys.bind(0x4E, true, function() {		// N
-        if (mp.busy.includes('chat')) return;
-        if (mp.busy.includes('terminal')) return;
+        if (mp.busy.includes(['chat', 'terminal'])) return;
         if (!mp.busy.add('voicechat')) return;
         mp.voiceChat.muted = false;
         mp.callCEFV("hud.voice = true");
@@ -39,7 +38,7 @@ mp.speechChanel.connect = (player, channel) => {
     if (index != -1) {
         if (!listeners[index].channels.includes(channel)) {
             listeners[index].channels.push(channel);
-            updateCurrent(player, index);
+            updateCurrent(player, index, channel);
         }
     }
     else {
@@ -68,7 +67,7 @@ mp.speechChanel.disconnect = (player, channel, death = false) => {
         let channelIndex = listeners[index].channels.findIndex(x => x == channel);
         channelIndex != -1 && listeners[index].channels.splice(channelIndex, 1);
 
-        if(listeners[index].channels.length == 0) {
+        if (listeners[index].channels.length == 0) {
             listeners.splice(index, 1);
             mp.events.callRemote("voiceChat.remove", player);
             return;
@@ -82,20 +81,28 @@ mp.speechChanel.disconnect = (player, channel, death = false) => {
     }
 }
 
-let updateCurrent = function(player, index) {
-    let maxI = -1;
-    for (let i = 0, max = -1; i < listeners[index].channels.length; i++) {
-        if (channels[listeners[index].channels[i]].maxRange == 0) {
-            maxI = i;
-            break;
-        }
-        if (channels[listeners[index].channels[i]].maxRange > max) {
-            max = channels[listeners[index].channels[i]].maxRange;
-            maxI = i;
+let updateCurrent = function(player, index, newCh) {
+    if (channels[listeners[index].current].maxRange == 0) return;
+    let maxChannel = listeners[index].current;
+    if (newCh) {
+        if (channels[newCh].maxRange == 0 || channels[newCh].maxRange > channels[listeners[index].current].maxRange) {
+            maxChannel = newCh;
         }
     }
-    listeners[index].current = maxI;
-    player.voice3d = channels[listeners[index].channels[maxI]].use3d;
+    else {
+        for (let i = 0, max = -1; i < listeners[index].channels.length; i++) {
+            if (channels[listeners[index].channels[i]].maxRange == 0) {
+                maxChannel = listeners[index].channels[i];
+                break;
+            }
+            if (channels[listeners[index].channels[i]].maxRange > max) {
+                max = channels[listeners[index].channels[i]].maxRange;
+                maxChannel = listeners[index].channels[i];
+            }
+        }
+    }
+    listeners[index].current = maxChannel;
+    player.voice3d = channels[maxChannel].use3d;
 }
 
 
@@ -120,15 +127,15 @@ setInterval(() => {
         let player = mp.players.atRemoteId(listener.playerId);
         if (player == null) return;
 		if(player.handle !== 0 && player.dimension == mp.players.local.dimension) {
-            if (channels[listener.channels[listener.current]].maxRange != 0) {
+            if (channels[listener.current].maxRange != 0) {
                 let dist = mp.game.system.vdist(player.position.x, player.position.y, player.position.z,
                     mp.players.local.position.x,  mp.players.local.position.y,  mp.players.local.position.z);
 
-                if(dist > channels[listener.channels[listener.current]].maxRange) {
+                if(dist > channels[listener.current].maxRange) {
                     mp.speechChanel.disconnect(player, listener.channel);
                 }
                 else if(!UseAutoVolume) {
-                    player.voiceVolume = 1 - (dist / channels[listener.channels[listener.current]].maxRange);
+                    player.voiceVolume = 1 - (dist / channels[listener.current].maxRange);
                 }
             }
             else {
