@@ -72,9 +72,11 @@ module.exports = {
         money.removeCash(player, ROD_PRICE,  (result) => { 
             if (result) {
                 inventory.addItem(player, ROD_ID, { health: 100 }, (e) => {
-                    if (e) {
+                    if (!e) {
                         player.call('fishing.rod.buy.ans', [1]);
                         notifs.success(player, "Удочка добавлена в инвентарь", "Покупка");
+                    } else {
+                        notifs.error(player, "", "Ошибка");
                     }
                 });
             } else {
