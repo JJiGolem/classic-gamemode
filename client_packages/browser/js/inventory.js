@@ -706,6 +706,11 @@ var inventory = new Vue({
             if (typeof info == 'string') info = JSON.parse(info);
             Vue.set(this.itemsInfo, itemId, info);
         },
+        setMergeList(list) {
+            terminal.debug(list)
+            if (typeof list == 'string') list = JSON.parse(list);
+            Vue.set(this, 'mergeList', list);
+        },
         setBodyList(index, list) {
             if (typeof list == 'string') list = JSON.parse(list);
             Vue.set(this.bodyList, index, list);

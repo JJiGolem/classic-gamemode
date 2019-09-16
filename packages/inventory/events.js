@@ -8,6 +8,7 @@ module.exports = {
     },
     "characterInit.done": async (player) => {
         player.call("inventory.setMaxPlayerWeight", [inventory.maxPlayerWeight]);
+        player.call("inventory.setMergeList", [inventory.mergeList]);
         player.call("inventory.registerWeaponAttachments", [inventory.bodyList[9], inventory.getWeaponModels()]);
         player.call("inventory.setSatiety", [player.character.satiety]);
         player.call("inventory.setThirst", [player.character.thirst]);
