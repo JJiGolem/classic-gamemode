@@ -235,7 +235,7 @@ module.exports = {
                                 owners: data.owners,
                                 vehType: props.vehType,
                                 price: props.price,
-                                //isOnParking: data.isOnParking
+                                parkingDate: data.parkingDate
                             });
 
                             if (!hasHouse) {

@@ -264,7 +264,7 @@ module.exports = {
                 owners: current.owners,
                 vehType: props.vehType,
                 price: props.price,
-                //isOnParking: current.isOnParking
+                parkingDate: current.parkingDate
             });
         });
         console.log(`[VEHICLES] Для игрока ${player.character.name} загружено ${dbPrivate.length} авто`)
@@ -502,8 +502,9 @@ module.exports = {
     },
     isAbleToBuyVehicle(player) {
         let hasHouse = houses.isHaveHouse(player.character.id);
+        console.log(`hasHouse = ${hasHouse}`)
         if (!hasHouse) {
-            if (player.vehicleList.length > 1) return false;
+            if (player.vehicleList.length >= 1) return false;
         } else {
             if (player.carPlaces.length > 1 && player.vehicleList.length + 1 > player.carPlaces.length - 1) return false;
             if (player.carPlaces.length == 1 && player.vehicleList.length >= player.carPlaces.length) return false;
