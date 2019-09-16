@@ -25,14 +25,12 @@ mp.keys.bind(0x45, true, () => { /// E
 
 mp.events.add('fuelstations.menu.show', () => {
     if (mp.busy.includes()) return;
-    mp.busy.add('fuelstations.menu');
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["fuelStationMenu"])`);
     mp.callCEFV(`selectMenu.show = true`);
     menuIsOpen = true;
 });
 
 mp.events.add('fuelstations.menu.close', () => {
-    mp.busy.remove('fuelstations.menu');
     if (menuIsOpen) {
         mp.callCEFV(`selectMenu.show = false`);
         menuIsOpen = false;
@@ -41,7 +39,7 @@ mp.events.add('fuelstations.menu.close', () => {
 
 mp.events.add('fuelstations.fill.litres.show', () => {
     mp.events.call('fuelstations.menu.close');
-    if (mp.busy.includes()) return;
+    //if (mp.busy.includes()) return;
     mp.busy.add('fuelstations.litres');
     mp.gui.cursor.show(true, true);
     mp.callCEFV(`inputWindow.name = 'fuelstations_litres';
