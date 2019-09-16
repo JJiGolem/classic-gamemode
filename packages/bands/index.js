@@ -124,11 +124,11 @@ module.exports = {
         this.wars[zone.id] = {
             band: {
                 id: faction.id,
-                score: 0,
+                score: 10,
             },
             enemyBand: {
                 id: zone.factionId,
-                score: 0,
+                score: 20,
             },
             startTime: Date.now()
         };
@@ -237,5 +237,9 @@ module.exports = {
             delete player.insideDrugsStash;
         };
         this.drugsStashMarker = marker;
+    },
+    // сколько осталось для окончания капта (ms)
+    haveTime(war) {
+        return this.warTime - (Date.now() - war.startTime);
     },
 };

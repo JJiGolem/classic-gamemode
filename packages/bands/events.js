@@ -10,6 +10,15 @@ module.exports = {
     },
     "characterInit.done": (player) => {
         player.call(`bands.bandZones.init`, [bands.convertToClientBandZones()]);
+        var warZoneIds = Object.keys(bands.wars);
+        if (!warZoneIds.length) return;
+        var factionId = player.character.factionId;
+        if (!factions.isBandFaction(factionId)) return;
+
+        var war = bands.wars[warZoneIds[0]];
+        var time = bands.haveTime(war) / 1000;
+        if (war.band.id == factionId) player.call(`bands.capture.start`, [factionId, war.enemyBand.id, time, war.band.score, war.enemyBand.score]);
+        else if (war.enemyBand.id == factionId) player.call(`bands.capture.start`, [factionId, war.band.id, time, war.enemyBand.score, war.band.score]);
     },
     "bands.capture.start": (player) => {
         bands.startCapture(player);
