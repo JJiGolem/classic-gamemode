@@ -151,7 +151,6 @@ module.exports = {
                 veh.destroy();
                 return;
             }
-
             if (veh.carPlaceIndex == null || !veh.hasOwnProperty('carPlaceIndex')) {
                 let index = owner.carPlaces.findIndex(x => x.veh == null && x.d != 0);
 
@@ -167,6 +166,9 @@ module.exports = {
                 veh.h = place.h;
                 veh.d = place.d;
                 place.veh = veh;
+                veh.isInGarage = true;
+            }
+            if (veh.hasOwnProperty('carPlaceIndex')) {
                 veh.isInGarage = true;
             }
         }
