@@ -70,6 +70,7 @@ mp.events.add('fishing.game.enter', (cam) => {
     playBaseAnimation(true);
     mp.gui.cursor.show(true, true);
     mp.callCEFVN({ "fishing.show": true });
+    isEnter = true;
 });
 
 mp.events.add('fishing.game.start', () => {
@@ -88,7 +89,8 @@ mp.events.add('fishing.game.end', (result) => {
     playBaseAnimation(true);
     mp.events.callRemote('fishing.game.end', result);
     setTimeout(() => {
-        mp.callCEFV(`fishing.clearData()`);
+        mp.callCEFV(`fishing.clearData();`);
+        mp.callCEFVN({ "fishing.isStarted": false });
     }, 1500);
 });
 
@@ -126,7 +128,6 @@ let fishingEnter = () => {
     if (!isEnter) {
         mp.events.callRemote('fishing.game.enter');
         mp.events.call('prompt.hide');
-        isEnter = true;
     }
 }
 

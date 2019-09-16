@@ -26,7 +26,7 @@ let fishingPlace = {
 }
 
 const ROD_PRICE = 100;
-const ROD_ID = 126;
+const ROD_ID = 5;
 
 module.exports = {
     init() {
