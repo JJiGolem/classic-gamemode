@@ -112,7 +112,63 @@ let getTypeName = function(type, isTable = false) {
             default: return null;
         }
     }
+};
+let bizUpdateCashBox = async function(id, money) {
+    let biz = getBizById(id);
+    if (biz == null) return;
+    biz.info.cashBox += money;
+    let currentDay = biz.info.BizStatistics.find(x => x.date.toLocaleDateString() == new Date().toLocaleDateString());
+    if (currentDay == null) {
+        currentDay = {
+            bizId: biz.info.id,
+            date: new Date(),
+            money: money
+        }
+        currentDay = await db.Models.BizStatistics.create(currentDay);
+        biz.info.BizStatistics.unshift(currentDay);
+    }
+    else {
+        currentDay.money += money;
+        currentDay.save();
+    }
+    biz.info.save();
+};
+let addProducts = async function(id, count) {
+    let biz = getBizById(id);
+    if (biz == null) return false;
+    biz.info.productsCount += count;
+    if (biz.info.productsCount > biz.info.productsMaxCount) biz.info.productsCount = biz.info.productsMaxCount;
+    await biz.info.save();
+    return true;
+};
+let removeProducts = async function(id, count) {
+    let biz = getBizById(id);
+    if (biz == null) return false;
+    if (biz.info.productsCount < count) return false;
+    biz.info.productsCount -= count;
+    await biz.info.save();
+    return true;
+};
+let createOrder = async function(id, count, price) {
+    let biz = getBizById(id);
+    if (biz == null) return false;
+    if (biz.info.productsCount + count > biz.info.productsMaxCount) return false;
+    //if (price > ) проверка в модуле экономики. Входит ли цена за 1 продукт в разрешенный диапазон
+    biz.info.productsOrder = count;
+    biz.info.productsOrderPrice = price;
+    await biz.info.save();
+    return true;
 }
+let destroyOrder = async function(id) {
+    let biz = getBizById(id);
+    if (biz == null) return false;
+    // if проверка взял ли дальнобой заказ
+    biz.info.productsOrder = null;
+    biz.info.productsOrderPrice = null;
+    await biz.info.save();
+    return true;
+}
+
 
 module.exports = {
     async init() {
@@ -121,9 +177,11 @@ module.exports = {
         money = call("money");
 
         console.log("[BIZES] load bizes from DB");
-        let bizesInfo = await db.Models.Biz.findAll();
+        let bizesInfo = await db.Models.Biz.findAll({
+            include: [db.Models.BizStatistics]
+        });
         for (let i = 0; i < bizesInfo.length; i++) {
-            let biz = this.addBiz(bizesInfo[i]);
+            let biz = await this.addBiz(bizesInfo[i]);
             setTimer(biz);
         }
         bizInfos[0] = await db.Models.FuelStation.findAll();
@@ -140,15 +198,32 @@ module.exports = {
     isHaveBiz(characterId) {
         return bizes.findIndex( x => x.info.characterId == characterId) != -1;
     },
-    addBiz(bizInfo) {
+    async addBiz(bizInfo) {
         let colshape = mp.colshapes.newSphere(bizInfo.x, bizInfo.y, bizInfo.z, 4.0);
         colshape.isBiz = true;
         colshape.bizId = bizInfo.id;
+        bizInfo.BizStatistics = bizInfo.BizStatistics.sort((x, y) => {
+            if (x.date.getTime() < y.date.getTime()) {
+                return 1;
+            }
+            if (x.date.getTime() > y.date.getTime()) {
+                return -1;
+            }
+            return 0;
+        }); 
         bizes.push({
                 colshape: colshape,
                 info: bizInfo
             }
         );
+        if (bizInfo.BizStatistics.length != 0) {
+            if (bizInfo.BizStatistics[0].date.toLocaleDateString() != new Date().toLocaleDateString()) {
+                await bizUpdateCashBox(bizInfo.id, 0);
+            }
+        }
+        else {
+            await bizUpdateCashBox(bizInfo.id, 0);
+        }
         return bizes[bizes.length - 1];
     },
     sellBiz(biz, cost, seller, buyer, callback) {
@@ -174,4 +249,13 @@ module.exports = {
     getRandomDate: getRandomDate,
     getBizInfoForApp: getBizInfoForApp,
     setTimer: setTimer,
+    /// Функция пополняющая кассу биза
+    /// После каждой покупки передавать в нее стоимость покупки и id бизнеса
+    bizUpdateCashBox: bizUpdateCashBox,
+
+    addProducts: addProducts,
+    removeProducts: removeProducts,
+
+    createOrder: createOrder,
+    destroyOrder: destroyOrder,
 }

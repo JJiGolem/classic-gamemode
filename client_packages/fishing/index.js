@@ -16,6 +16,15 @@ let peds = [
 ];
 
 let camera;
+let isBinding = false;
+
+let isEnter = false;
+let isStarted = false;
+let isFetch = false;
+
+mp.events.add("render", () => {
+    if (isEnter) mp.game.controls.disableAllControlActions(0);
+});
 
 mp.events.add('characterInit.done', () => {
     peds.forEach((current) => {
@@ -51,43 +60,101 @@ mp.events.add('fishing.rod.buy.ans', (ans) => {
 
 mp.events.add('fishing.game.menu', () => {
     mp.events.call('prompt.show', 'Нажмите <span>E</span>, чтобы начать рыбачить', 'Информация');
-    mp.keys.bind(0x45, true, () => {
-        mp.events.callRemote('fishing.start');
-    })
+    bindButtons(true);
 });
 
-mp.events.add('fishing.game.start', (cam) => {
+mp.events.add('fishing.game.enter', (cam) => {
     if (mp.busy.includes()) return;
 
     mp.busy.add('fishingGame');
     playBaseAnimation(true);
     mp.gui.cursor.show(true, true);
     mp.callCEFVN({ "fishing.show": true });
+    isEnter = true;
 });
 
-mp.events.add('fishing.game.wait', () => {
-    playWaitAnimation();
+mp.events.add('fishing.game.start', () => {
+    playWaitAnimation(true);
+    mp.callCEFVN({ "fishing.isStarted": true });
     mp.events.callRemote('fishing.game.start');
 });
 
 mp.events.add('fishing.game.fetch', (speed, zone, weight) => {
     playFetchAnimation(true);
+    isFetch = true;
     mp.callCEFV(`fishing.fishFetch(${speed},${zone},${weight});`);
 });
 
 mp.events.add('fishing.game.end', (result) => {
-    mp.events.callRemote('fishing.game.end', result);
     playBaseAnimation(true);
+    mp.events.callRemote('fishing.game.end', result);
+    setTimeout(() => {
+        mp.callCEFV(`fishing.clearData();`);
+        mp.callCEFVN({ "fishing.isStarted": false });
+    }, 1500);
 });
 
-mp.events.add('fishing.end', () => {
-    if (!mp.busy.includes('fishingGame')) return;
-
-    mp.busy.remove('fishingGame');
+mp.events.add('fishing.game.exit', () => {
+    mp.console('exit');
+    bindButtons(false);
+    mp.events.call('prompt.hide');
     playBaseAnimation(false);
     mp.gui.cursor.show(false, false);
-    // mp.game.cam.setCinematicModeActive(true);
+    mp.callCEFV(`fishing.clearData()`);
+    mp.callCEFVN({ "fishing.show": false });
+    mp.busy.remove('fishingGame');
 });
+
+let bindButtons = (state) => {
+    if (state) {
+        if (isBinding) return;
+        isBinding = true;
+        mp.keys.bind(0x45, true, fishingEnter);
+        mp.keys.bind(0x20, true, fishingStart);
+        mp.keys.bind(0x46, true, fishingEnd);
+        mp.keys.bind(0x1B, true, fishingExit);
+    }
+    else {
+        if (!isBinding) return;
+        isBinding = false;
+        mp.keys.unbind(0x45, true, fishingEnter);
+        mp.keys.unbind(0x20, true, fishingStart);
+        mp.keys.unbind(0x46, true, fishingEnd);
+        mp.keys.unbind(0x1B, true, fishingExit);
+    }
+}
+
+let fishingEnter = () => {
+    if (!isEnter) {
+        mp.events.callRemote('fishing.game.enter');
+        mp.events.call('prompt.hide');
+    }
+}
+
+let fishingStart = () => {
+    if (isEnter && !isStarted) {
+        playWaitAnimation(true);
+        mp.callCEFVN({ "fishing.isStarted": true });
+        mp.events.callRemote('fishing.game.start');
+        isStarted = true;
+    }
+}
+
+let fishingEnd = () => {
+    if (isEnter && isStarted && isFetch) {
+        mp.callCEFV(`fishing.endFishing();`);
+        setTimeout(() => {
+            isStarted = false;
+        }, 1500);
+    }
+}
+
+let fishingExit = () => {
+    if (!isStarted) {
+        mp.events.call('fishing.game.exit');
+        isEnter = false;
+    }
+}
 
 function playBaseAnimation(state, timeout) { /// Анимация держания удочки
     if (state) {
@@ -119,7 +186,7 @@ function playFetchAnimation(state, timeout) { /// Анимация вытяги�
     if (state) {
         if (!timeout) timeout = 0;
         setTimeout(()=> {
-            mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@idle_c', 'idle_c', 1, 49);
+            mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@idle_a', 'idle_c', 1, 49);
             mp.attachmentMngr.addLocal("takeRod");
         }, timeout);
     } else {

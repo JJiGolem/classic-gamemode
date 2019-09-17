@@ -34,6 +34,7 @@ module.exports = {
 
         if (shape.isFishingPlace) {
             mp.events.call('fishing.game.menu.close', player);
+            player.call('fishing.game.exit');
             player.currentColshape = null;
         }
     },
@@ -45,19 +46,27 @@ module.exports = {
         if (!player.character) return;
         player.call('fishing.game.menu.close'); 
     },
-    "fishing.start": (player) => {
+    "fishing.game.enter": (player) => {
         if (!player.character) return;
-        if (!inventory.getItemByItemId(player, fishing.getRodId())) return notifs.error(player, "У вас нет удочки", "Ошибка");
+        if (!inventory.getItemByItemId(player, fishing.getRodId())) {
+            notifs.error(player, "У вас нет удочки", "Ошибка");
+            player.call('fishing.game.exit');
+            return;
+        }
 
         let cam = fishing.setCamera(player);
-        player.call('fishing.game.start', [cam]);
+        player.call('fishing.game.enter', [cam]);
     },
     "fishing.game.start": (player) => {
           if (!player.character) return;
 
-          let rodHealth = inventory.getItemByItemId(player, fishing.getRodId()).params.health;
+          let rod = inventory.getItem(player, inventory.getRodId);
+          let health = inventory.getParam(rod, 'health').value;
+
+          inventory.updateParam(player, rod, 'health', health - 5);
+
           let zone = utils.randomInteger(10, 20);
-          let speed = rodHealth / 5;
+          let speed = parseInt(health / 5);
           weight = utils.randomInteger(1,5);
           let timeout = utils.randomInteger(3,10);
 
@@ -68,17 +77,23 @@ module.exports = {
     "fishing.game.end": (player, result) => {
         if (!player.character) return;
 
+        let rod = inventory.getItem(player, fishing.getRodId);
+        let health = inventory.getParam(rod, 'health').value;
+
         if (result) {
-            //TODO добавить рыбу в инвентарь
-            notifs.success(player, `Рыба весом ${weight} кг добавлена в инвентарь`, 'Отлично!');
+            inventory.addItem(player, 15, { weight: weight }, (e) => {
+                if (e) {
+                    notifs.success(player, `Рыба весом ${weight} кг добавлена в инвентарь`, 'Отлично!');
+                }
+            })
         } else {
-            return notifs.error(player, 'Рыба сорвалась', 'Провал!');
+            notifs.error(player, 'Рыба сорвалась', 'Провал!');
         }
-    },
-    "fishing.end": (player) => {
-        if (!player.character) return;
-        
-        player.call('fishing.end');
+
+        if (health == 0) {
+            inventory.deleteItem(player, rod);
+            notifs.error(player, 'Удочка сломалась', '')
+        }
     },
     "fishing.rod.buy": (player) => {
         if (!player.character) return;

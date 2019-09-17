@@ -1,3 +1,4 @@
+let bands = call('bands');
 let inventory = require('./index.js');
 let hospital = require('../hospital');
 let notifs = require('../notifications');
@@ -6,11 +7,15 @@ module.exports = {
     "init": () => {
         inventory.init();
     },
-    "characterInit.done": (player) => {
-        player.call("inventory.setSatiety", [player.character.satiety])
+    "characterInit.done": async (player) => {
+        player.call("inventory.setMaxPlayerWeight", [inventory.maxPlayerWeight]);
+        player.call("inventory.setMergeList", [inventory.mergeList]);
+        player.call("inventory.registerWeaponAttachments", [inventory.bodyList[9], inventory.getWeaponModels()]);
+        player.call("inventory.setSatiety", [player.character.satiety]);
         player.call("inventory.setThirst", [player.character.thirst]);
         inventory.initPlayerItemsInfo(player);
-        inventory.initPlayerInventory(player);
+        await inventory.initPlayerInventory(player);
+        mp.events.call("inventory.done", player);
     },
     // срабатывает, когда игрок переместил предмет (в любом месте)
     "item.add": (player, data) => {
@@ -77,46 +82,8 @@ module.exports = {
         if (player.vehicle) return notifs.error(player, `Недоступно в авто`, header);
         if (player.cuffs) return notifs.error(`Недоступно в наручниках`, header);
 
-        var children = inventory.getArrayItems(player, item);
-        inventory.deleteItem(player, item);
-
-        var info = inventory.getInventoryItem(item.itemId);
-        var pos = player.position;
-        pos.z += info.deltaZ - 1;
-
-        var newObj = mp.objects.new(mp.joaat(info.model), pos, {
-            rotation: new mp.Vector3(info.rX, info.rY, player.heading),
-            dimension: player.dimension
-        });
-        newObj.playerId = player.id;
-        newObj.item = item;
-        newObj.children = children;
-        newObj.setVariable("groundItem", true);
-        player.inventory.ground.push(newObj);
-
-        notifs.success(player, `Предмет ${info.name} на земле`, header);
-
-        var objId = newObj.id;
-        newObj.destroyTimer = setTimeout(() => {
-            try {
-                var obj = mp.objects.at(objId);
-                if (!obj || !obj.item || obj.item.id != sqlId) return;
-                obj.destroy();
-                var rec = mp.players.at(obj.playerId);
-                if (!rec) return;
-                var i = rec.inventory.ground.indexOf(obj);
-                rec.inventory.ground.splice(i, 1);
-            } catch (e) {
-                console.log(e);
-            }
-        }, inventory.groundItemTime);
-
-        var ground = player.inventory.ground;
-        if (ground.length > inventory.groundMaxItems) {
-            var obj = ground.shift();
-            clearTimeout(obj.destroyTimer);
-            obj.destroy();
-        }
+        inventory.putGround(player, item);
+        notifs.success(player, `Предмет ${inventory.getName(item.itemId)} на земле`, header);
     },
     // срабатывает, когда игрок поднимает предмет
     "item.ground.take": (player, objId) => {
@@ -194,6 +161,31 @@ module.exports = {
 
         notifs.success(player, `Вы вылечились`, header);
     },
+    // реанимировать адреналином
+    "inventory.item.adrenalin.use": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+        var header = `Адреналин`;
+        var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
+        if (!rec) return notifs.error(player, `Гражданин не найден`, header);
+        if (!rec.getVariable("knocked")) return notifs.error(player, `${rec.name} не нуждается в реанимации`, header);
+        if (player.dist(rec.position) > 20) return notifs.error(player, `${rec.name} далеко`, header);
+        var adrenalin = (data.itemSqlId) ? inventory.getItem(player, data.itemSqlId) : inventory.getItemByItemId(player, 26);
+        if (!adrenalin) return notifs.error(player, `Необходим предмет`, header);
+        var count = inventory.getParam(adrenalin, 'count').value;
+        if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
+
+        rec.spawn(rec.position);
+        rec.health = 10;
+        rec.setVariable("knocked", false);
+        mp.events.call(`mapCase.ems.calls.remove`, rec, rec.character.id);
+
+        count--;
+        if (!count) inventory.deleteItem(player, adrenalin);
+        else inventory.updateParam(player, adrenalin, 'count', count);
+
+        notifs.success(player, `${rec.name} реанимирован`, header);
+        notifs.success(rec, `${player.name} вас реанимировал`, header);
+    },
     // вылечиться пластырем
     "inventory.item.patch.use": (player, sqlId) => {
         var header = `Пластырь`;
@@ -215,6 +207,23 @@ module.exports = {
 
         notifs.success(player, `Вы вылечились`, header);
     },
+    // употребить наркотик
+    "inventory.item.drugs.use": (player, sqlId) => {
+        var header = `Наркотики`;
+        var drugs = inventory.getItem(player, sqlId);
+        if (!drugs) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        var count = inventory.getParam(drugs, 'count').value;
+        if (!count) return notifs.error(player, `Количество: 0 г.`, header);
+
+        player.health = Math.clamp(player.health + bands.drugsHealth, 0, 100);
+
+        count--;
+        if (!count) inventory.deleteItem(player, drugs);
+        else inventory.updateParam(player, drugs, 'count', count);
+
+        player.call(`effect`, ['DrugsDrivingOut', bands.drugsEffectTime]);
+        notifs.success(player, `Вы упротреблении наркотик`, header);
+    },
     // Запрос предметов инвентаря в багажнике авто
     "vehicle.boot.items.request": (player, vehId) => {
         var header = `Багажник`;
@@ -225,7 +234,10 @@ module.exports = {
         if (dist > 50) return notifs.error(player, `Авто ${veh.db.modelName} слишком далеко`, header);
         if (!veh.getVariable("trunk")) return notifs.error(player, `Багажник закрыт`, header);
         if (!veh.inventory) return notifs.error(player, `Авто ${veh.db.modelName} не имеет багажник`, header);
-        if (veh.bootPlayerId != null) return notifs.error(player, `С багажником взаимодействует другой игрок`, header);
+        if (veh.bootPlayerId != null) {
+            var rec = mp.players.at(veh.bootPlayerId);
+            if (rec && rec.dist(veh.position) < 50) return notifs.error(player, `С багажником взаимодействует другой игрок`, header);
+        }
 
         veh.bootPlayerId = player.id;
 
@@ -249,8 +261,17 @@ module.exports = {
             delete veh.bootPlayerId;
         }
     },
-    "playerQuit": (player) => {
+    "death.spawn": (player) => {
         if (!player.character) return;
+        var weapons = inventory.getArrayWeapons(player);
+        if (!weapons.length) return;
+        weapons.forEach(weapon => {
+            inventory.putGround(player, weapon);
+        });
+        notifs.warning(player, `Вы потеряли оружие`, `Инвентарь`);
+    },
+    "playerQuit": (player) => {
+        if (!player.character || !player.character.inventory) return;
         if (!player.inventory.place || player.inventory.place.type != "Vehicle") return;
         var veh = mp.vehicles.getBySqlId(-player.inventory.place.sqlId);
         if (!veh) return;

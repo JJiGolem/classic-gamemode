@@ -61,4 +61,10 @@ module.exports = {
             player.character.save();
         });
     },
+    clearJobApps(player) {
+        if (!player.character) return;
+        if (player.character.job == 2) {
+            player.call('phone.app.remove', ['taxi']);
+        }
+    }
 }

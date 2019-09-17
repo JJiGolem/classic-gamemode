@@ -491,11 +491,15 @@ var nearBootVehicleId = null,
 
 mp.events.add({
     "playerEnterVehicleBoot": (player, vehicle) => {
+        if (player.vehicle) return;
+        if (vehicle.getVariable("static")) return;
         if (!vehicle.getVariable("trunk")) {
             mp.prompt.showByName("vehicle_open_boot");
         }
     },
     "playerEnterVehicleHood": (player, vehicle) => {
+        if (player.vehicle) return;
+        if (vehicle.getVariable("static")) return;
         if (!vehicle.getVariable("hood")) {
             mp.prompt.showByName("vehicle_open_hood");
         } else mp.prompt.showByName("vehicle_close_hood");
@@ -524,6 +528,16 @@ mp.events.add('render', () => {
                 font: 0,
                 color: [255, 255, 255, 255],
                 scale: [0.35, 0.35],
+                outline: true,
+                centre: true
+            });
+        }
+        if (vehicle.getVariable('unload')) {
+            var bootPos = mp.utils.getBootPosition(vehicle);
+            mp.game.graphics.drawText(`Разгрузка...`, [bootPos.x, bootPos.y, bootPos.z + 1], {
+                font: 0,
+                color: [187, 255, 0, 255],
+                scale: [0.25, 0.25],
                 outline: true,
                 centre: true
             });

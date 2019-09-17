@@ -9,7 +9,12 @@ mp.events.add("render", () => {
 d = (text) => {
     mp.notify.info(text);
 }
+debug = (text) => {
+    mp.terminal.debug(text);
+}
 
+// Отображение в дискорде
+mp.discord.update('Classic Roleplay | Alpha', 'classic-rp.ru');
 
 
 
@@ -63,10 +68,20 @@ mp.busy.add = function(name, nocef = false) {
 /// Содержит ли массив данный модуль
 /// В случае если name = null, содержит ли массив какой-либо модуль
 mp.busy.includes = function(name) {
-    if (name == null) {
-        return mp.busy.list.length != 0;
-    } else {
-        return mp.busy.list.includes(name);
+    if (Array.isArray(name)) {
+        for (let index = 0; index < name.length; index++) {
+            if (mp.busy.list.includes(name[index])) {
+                return true;
+            }
+        }
+        return false;
+    }
+    else {
+        if (name == null) {
+            return mp.busy.list.length != 0;
+        } else {
+            return mp.busy.list.includes(name);
+        }
     }
 }
 /// Удалить модуль

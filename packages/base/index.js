@@ -19,6 +19,11 @@ global.call = (moduleName) => {
     return require(path.dirname(__dirname)+ "/" + moduleName + "/index.js");
 }
 
+// Дебаг
+global.debug = (text) => {
+    require('../terminal').debug(text);
+}
+
 
 
 /// Вызов подключения к БД, подключение всех модулей и вызов их инициализации

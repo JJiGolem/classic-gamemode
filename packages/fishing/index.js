@@ -26,7 +26,7 @@ let fishingPlace = {
 }
 
 const ROD_PRICE = 100;
-const ROD_ID = 126;
+const ROD_ID = 5;
 
 module.exports = {
     init() {
@@ -69,11 +69,17 @@ module.exports = {
         place.isFishingPlace = true;
     },
     async buyRod(player) {
-        money.removeCash(player, ROD_PRICE, async function (result) { 
+        money.removeCash(player, ROD_PRICE,  (result) => { 
             if (result) {
-                inventory.addItem(player, ROD_ID, { health: 100 });
-                player.call('fishing.rod.buy.ans', [1]);
-                notifs.success(player, "Удочка добавлена в инвентарь", "Покупка");
+                inventory.addItem(player, ROD_ID, { health: 100 }, (e) => {
+                    if (!e) {
+                        player.call('fishing.rod.buy.ans', [1]);
+                        notifs.success(player, "Удочка добавлена в инвентарь", "Покупка");
+                    } else {
+                        notifs.error(player, e, "Ошибка");
+                        player.call('fishing.rod.buy.ans', [0]);
+                    }
+                });
             } else {
                 player.call('fishing.rod.buy.ans', [0]);
                 notifs.error(player, "Недостаточно денег", "Ошибка");

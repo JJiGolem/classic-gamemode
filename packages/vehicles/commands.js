@@ -77,6 +77,9 @@ module.exports = {
                 });
                 veh.sqlId = data.id;
                 veh.db = data;
+                veh.inventory = {
+                    items: [], // предметы в багажнике
+                };
             }
             veh.key = args[0];
             veh.owner = args[1];

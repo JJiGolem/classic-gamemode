@@ -27,12 +27,20 @@ mp.factions = {
     boxHandler() {
         if (mp.busy.includes()) return;
         if (this.enableTakeBox) {
-            // TODO: проверка на аттач
+            if (this.hasBox()) return mp.notify.error(`Нельзя нести больше`, `Склад`);
             mp.events.callRemote("factions.warehouse.takeBox", this.typeBox);
         } else if (this.enablePutBox) {
-            // TODO: проверка на аттач
+            if (!this.hasBox()) return mp.notify.error(`Вы не несете ящик`, `Склад`);
             mp.events.callRemote("factions.warehouse.putBox");
         }
+    },
+    hasBox() {
+        var player = mp.players.local;
+        var names = ["ammoBox", "medicinesBox"];
+        for (var i = 0; i < names.length; i++) {
+            if (player.hasAttachment(names[i])) return true;
+        }
+        return false;
     },
     showGiveRankSelectMenu(factionName, rankNames, rank, playerId) {
         if (typeof rankNames == 'object') rankNames = JSON.stringify(rankNames);
@@ -43,7 +51,9 @@ mp.factions = {
         mp.callCEFV(`selectMenu.showByName('factionGiveRank')`);
     },
     showStorageSelectMenu(factionId) {
-        if (factionId == 2) { // LSPD
+        if (factionId == 1) { // Government
+            mp.callCEFV(`selectMenu.showByName('governmentStorage')`);
+        } else if (factionId == 2) { // LSPD
             mp.callCEFV(`selectMenu.showByName('lspdStorage')`);
         } else if (factionId == 3) { // LSSD
             mp.callCEFV(`selectMenu.showByName('lssdStorage')`);
@@ -53,6 +63,10 @@ mp.factions = {
             mp.callCEFV(`selectMenu.showByName('hospitalStorage')`);
         } else if (factionId == 6) { // ARMY
             mp.callCEFV(`selectMenu.showByName('armyStorage')`);
+        } else if (factionId == 7) { // NEWS
+            mp.callCEFV(`selectMenu.showByName('newsStorage')`);
+        } else if (this.isBandFaction(factionId)) {
+            mp.callCEFV(`selectMenu.showByName('bandStorage')`);
         }
     },
     isGovernmentFaction(factionId) {
@@ -76,16 +90,22 @@ mp.factions = {
     isStateFaction(factionId) {
         return factionId >= 1 && factionId <= 7;
     },
+    isBandFaction(factionId) {
+        return factionId >= 8 && factionId <= 11;
+    },
     setFaction(factionId) {
         // mp.notify.info(`setFaction: ${factionId}`)
         this.faction = factionId;
         mp.callCEFV(`interactionMenu.faction = ${factionId}`);
+        mp.events.call("mapCase.init", mp.players.local.name, factionId);
     },
 };
 
 mp.events.add({
     "characterInit.done": () => {
-        mp.keys.bind(69, true, mp.factions.boxHandler); // E
+        mp.keys.bind(69, true, () => {
+            mp.factions.boxHandler();
+        }); // E
         // коробка с боеприпасами в руках
         mp.attachmentMngr.register("ammoBox", "prop_box_ammo04a", 58867, new mp.Vector3(0.2, -0.3, 0.1),
             new mp.Vector3(-45, 20, 120), {
@@ -93,7 +113,8 @@ mp.events.add({
                 name: "idle",
                 speed: 8,
                 flag: 49
-            }
+            },
+            true
         );
         // коробка с медикаментами в руках
         mp.attachmentMngr.register("medicinesBox", "ex_office_swag_pills4", 58867, new mp.Vector3(0.2, -0.3, 0.1),
@@ -102,14 +123,41 @@ mp.events.add({
                 name: "idle",
                 speed: 8,
                 flag: 49
-            }
+            },
+            true
         );
     },
-    "factions.insideWarehouse": mp.factions.insideWarehouse,
-    "factions.insideFactionWarehouse": mp.factions.insideFactionWarehouse,
+    "factions.insideWarehouse": (inside, type) => {
+        mp.factions.insideWarehouse(inside, type);
+    },
+    "factions.insideFactionWarehouse": (inside, type) => {
+        mp.factions.insideFactionWarehouse(inside, type);
+    },
     "factions.giverank.showMenu": mp.factions.showGiveRankSelectMenu,
-    "factions.storage.showMenu": mp.factions.showStorageSelectMenu,
+    "factions.storage.showMenu": (factionId) => {
+        mp.factions.showStorageSelectMenu(factionId);
+    },
     "factions.faction.set": (val) => {
         mp.factions.setFaction(val);
     },
+    "playerEnterVehicleBoot": (player, vehicle) => {
+        if (mp.factions.hasBox()) {
+            if (!vehicle.getVariable("trunk")) return mp.notify.warning(`Для погрузки ящика откройте багажник`);
+            mp.events.callRemote(`factions.vehicle.products.put`, vehicle.remoteId);
+        } else if (vehicle.getVariable("label")) {
+            if (!vehicle.getVariable("unload")) return;
+            mp.events.callRemote(`factions.vehicle.products.take`, vehicle.remoteId);
+        }
+    },
+});
+
+mp.events.addDataHandler("trunk", (vehicle, value) => {
+    if (!value) return;
+    if (nearBootVehicleId == null) return;
+    if (nearBootVehicleId != vehicle.remoteId) return;
+    if (mp.factions.hasBox()) mp.events.callRemote(`factions.vehicle.products.put`, vehicle.remoteId);
+    else if (vehicle.getVariable("label")) {
+        if (!vehicle.getVariable("unload")) return mp.events.callRemote(`factions.vehicle.unload`, vehicle.remoteId);
+        mp.events.callRemote(`factions.vehicle.products.take`, vehicle.remoteId);
+    }
 });

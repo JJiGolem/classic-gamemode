@@ -33,6 +33,7 @@
     <link rel="stylesheet" type="text/css" href="css/playersList.css" />
     <link rel="stylesheet" type="text/css" href="css/gunLicense.css" />
     <link rel="stylesheet" type="text/css" href="css/fishing.css" />
+    <link rel="stylesheet" type="text/css" href="css/captureScore.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -456,7 +457,7 @@
         </div>
     </div>
 
-    <div id="inventory" v-show="show">
+    <div id="inventory" v-show="show" :class="{spin: spin}" :style="{opacity: 1}">
         <div class="environment">
             <div class="container" v-for="place in environment" v-bind:key="place.header">
                 <div class="header" @click="place.showPockets = !place.showPockets" :class="{hidden: !place.showPockets}">
@@ -494,7 +495,7 @@
                        <div class="sqlid" v-if="debug">#{{ equipment[n-1].sqlId }}</div>
                    </div> -->
                     <div class="item" v-if="equipment[n-1]" @mouseenter="itemMouseHandler(equipment[n-1], $event)" @mouseleave="itemMouseHandler(equipment[n-1], $event)" @mousemove="itemMouseHandler(equipment[n-1], $event)" @contextmenu="itemMouseHandler(equipment[n-1], $event)"
-                        @mousedown="itemMouseHandler(equipment[n-1], $event)" :class="{dragging: equipment[n-1] == itemDrag.item}">
+                        :style="{backgroundImage: 'url('+urlItemImg(equipment[n-1].itemId)+')'}" @mousedown="itemMouseHandler(equipment[n-1], $event)" :class="{dragging: equipment[n-1] == itemDrag.item}">
                         <div class="count" v-if="equipment[n-1].params.count">{{ equipment[n-1].params.count }}</div>
                         <div class="health" v-if="equipment[n-1].params.health" v-bind:style="{top: 100 - equipment[n-1].params.health + '%', 'border-color': valueColor(equipment[n-1].params.health)}"></div>
                         <div class="sqlid" v-if="debug">#{{ equipment[n-1].sqlId }}</div>
@@ -558,7 +559,7 @@
             </div>
         </div>
         <div class="item-desc" v-if="itemDesc.item && !itemMenu.item && !itemDrag.item && (getItem(itemDesc.item.sqlId) || getEnvironmentItem(itemDesc.item.sqlId))" :style="{left: itemDesc.x + 'px', top: itemDesc.y + 'px'}">
-            <div class="title">{{ itemsInfo[itemDesc.item.itemId].name }}</div>
+            <div class="title">{{ descItemName }}</div>
             <div v-if="debug">itemId: #{{ itemDesc.item.itemId }}</div>
             <div class="item" v-if="itemDesc.item" :style="itemStyle(itemDesc.item.itemId)">
                 <div class="sqlid" v-if="debug">#{{ itemDesc.item.sqlId }}</div>
@@ -694,7 +695,7 @@
     </div>
 
 
-    <div id="terminal" v-if="show" :style="{left: pos.x + 'px', top: pos.y + 'px'}">
+    <div v-cloak id="terminal" v-if="show" :style="{left: pos.x + 'px', top: pos.y + 'px'}">
         <div class="header" @mousedown="onHeaderMouseDown($event)">
             <div>Консоль разработчика</div>
             <div class="close" @click="show = false">x</div>
@@ -711,7 +712,7 @@
 
     <!-- ------------------------ СПИСОК ИГРОКОВ ------------------------ -->
 
-    <div id="playersList" :class="{inactive: loader}" v-show="show">
+    <div v-cloak id="playersList" :class="{inactive: loader}" v-show="show">
         <div class="players_list-head">
             <table rules="all">
                 <colgroup>
@@ -779,7 +780,7 @@
     <link rel="stylesheet" type="text/css" href="css/mapCase.css" />
     <link rel="stylesheet" type="text/css" href="css/mapCasePd.css" />
     <link rel="stylesheet" type="text/css" href="css/mapCaseEms.css" />
-    <link rel="stylesheet" type="text/css" href="css/mapCaseWnews.css" />
+    <link rel="stylesheet" type="text/css" href="css/mapCaseWNews.css" />
 
     <script type="text/x-template" id="map-case-pd-dbSearch">
         <div class="dbSearch">
@@ -922,7 +923,7 @@
                         <svg :class="{focus: sortMod.mod == 'name'}" viewBox="0 0 9 16"><path v-for="path in arrows" :d="path" /></svg>
                     </div>
                     <div @click="onClickSort('rank')">
-                        <div>Звание</div>
+                        <div>{{ rankHead }}</div>
                         <svg :class="{focus: sortMod.mod == 'rank'}" viewBox="0 0 9 16"><path v-for="path in arrows" :d="path" /></svg>
                     </div>
                     <div>Действие</div>
@@ -998,13 +999,13 @@
 
     <script type="text/x-template" id="map-case-wnews-over-ads">
         <div class="over ads">
-            <div class="title">Текст объявления: </div>
-            <div :class="['text', { focus: editMod }]" :contenteditable="editMod" @input="update"></div>
+            <div class="title">{{ header }}</div>
+            <div :class="['text', { focus: editMod }]" :contenteditable="editMod" @input="update" @keypress="inputCheck($event)"></div>
             <div class="line"></div>
             <div class="author"><span>Автор:</span> {{ adData.ad.author }}</div>
-            <div class="btns">
-                <div class="btn" @click="edit()"><div><img src="img/mapCase/edit_pen.svg"/></div><div class="cont">РЕДАКТИРОВАТЬ ТЕКСТ</div></div>
-                <div class="btn send" @click="send()"><div><img src="img/mapCase/stopwatch.svg"/></div><div class="cont">ОТПРАВИТЬ</div></div>
+            <div :class="['btns', { refuse: refuseMod }]">
+                <div v-if="!refuseMod" class="btn" @click="edit()"><div><img src="img/mapCase/edit_pen.svg"/></div><div class="cont">РЕДАКТИРОВАТЬ ТЕКСТ</div></div>
+                <div v-if="!refuseMod" class="btn send" @click="send()"><div><img src="img/mapCase/stopwatch.svg"/></div><div class="cont">ОТПРАВИТЬ</div></div>
                 <div class="btn" @click="refuse()"><div><img src="img/mapCase/error_gray.svg"/></div><div class="cont">ОТКАЗАТЬ</div></div>
             </div>
         </div>
@@ -1051,7 +1052,7 @@
                     <div class="header">
                         <div class="menu-top">
                             <div v-html="certainData.menuHeader"></div>
-                            <img v-if="certainData.menuHeaderName" :src="certainData.menuHeaderName"/>
+                            <img v-if="certainData.menuHeaderName" :src="certainData.menuHeaderName" />
                         </div>
                         <div class="menu-bottom">
                             <div>
@@ -1129,18 +1130,62 @@
     <script src="js/mapCase.js"></script>
     <!-- ------------------------ ПЛАНШЕТ ПД ------------------------ -->
 
-    <div id="fishing" v-if="show">
+    <div v-cloak id="fishing" v-if="show">
         <div class="fishing-line" v-if="isFetch">
             <div class="fishing-zone" v-bind:style="{ width: zone + '%' }"></div>
             <div id="fishing-cursor" v-bind:style="{ marginLeft: position + '%' }"></div>
         </div>
-        <div v-else>
-            <div>Ждите, пока рыба не клюнет...</div>
+        <div v-if="isStarted && !isFetch">
+            <div class="fishing-wait">
+                Ждите, пока рыба не клюнет...
+            </div>
         </div>
+        <div class="fishing-help" v-if="!isStarted || isFetch">
+            <table>
+                <tr v-if="!isStarted">
+                    <th>
+                        <span class="fishing-help-button">Space</span>
+                    </th>
+                    <th>
+                        <span>Забросить удочку</span>
+                    </th>
+                </tr>
+                <tr v-if="isFetch">
+                    <th>
+                        <span class="fishing-help-button">F</span>
+                    </th>
+                    <th>
+                        <span>Вытянуть</span>
+                    </th>
+                </tr>
+                <tr v-if="!isStarted">
+                    <th>
+                        <span class="fishing-help-button">Esc</span>
+                    </th>
+                    <th>
+                        <span>Выйти</span>
+                    </th>
+                </tr>
+            </table>
+        </div>
+    </div>
 
-        <div class="fishing-button" @click="isStarted ? stopFishing() : startFishing()">
-            {{ isStarted ? 'Вытянуть' : 'Закинуть' }}
+    <div v-cloak id="captureScore" v-if="isShow">
+        <div class="header">
+            <img :src="leftImgSrc" />
+            <span :style="{color: colors[leftBandId]}">{{ names[leftBandId] }}</span>
+            vs.
+            <span :style="{color: colors[rightBandId]}">{{ names[rightBandId] }}</span>
+            <img :src="rightImgSrc" />
         </div>
+        <div class="score">
+            <div>{{ leftScore }}</div>
+            <div>{{ rightScore }}</div>
+        </div>
+        <div class="progress" :style="{background: colors[rightBandId]}">
+            <div class="fill" :style="{width: progressWidth+'%', background: colors[leftBandId]}"></div>
+        </div>
+        <div class="time">{{ prettyTime }}</div>
     </div>
 
     <!-- ------------------------ REACT ------------------------------ -->
@@ -1170,6 +1215,7 @@
     <script src="js/playersList.js"></script>
     <script src="js/gunLicense.js"></script>
     <script src="js/fishing.js"></script>
+    <script src="js/captureScore.js"></script>
 
 </body>
 

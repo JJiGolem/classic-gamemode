@@ -2,6 +2,7 @@ var vehicles = call('vehicles');
 var parkings = call('parkings');
 var money = call('money');
 var houses = call('houses');
+var inventory = call('inventory');
 var dbCarList;
 var dbCarShow;
 var carShow = [];
@@ -45,31 +46,28 @@ module.exports = {
         console.log(`[CARSHOW] Загружено автосалонов: ${i}`);
     },
     createCarShow(carShow) {
-        mp.blips.new(carShow.blipId, new mp.Vector3(carShow.x, carShow.y, carShow.z),
-            {
-                name: carShow.name,
-                color: carShow.blipColor,
-                shortRange: true,
-            });
-        mp.markers.new(1, new mp.Vector3(carShow.x, carShow.y, carShow.z), 1.6,
-            {
-                direction: new mp.Vector3(carShow.x, carShow.y, carShow.z),
-                rotation: 0,
-                color: [255, 255, 125, 128],
-                visible: true,
-                dimension: 0
-            });
+        mp.blips.new(carShow.blipId, new mp.Vector3(carShow.x, carShow.y, carShow.z), {
+            name: carShow.name,
+            color: carShow.blipColor,
+            shortRange: true,
+        });
+        mp.markers.new(1, new mp.Vector3(carShow.x, carShow.y, carShow.z), 1.6, {
+            direction: new mp.Vector3(carShow.x, carShow.y, carShow.z),
+            rotation: 0,
+            color: [255, 255, 125, 128],
+            visible: true,
+            dimension: 0
+        });
         let shape = mp.colshapes.newSphere(carShow.x, carShow.y, carShow.z + 0.5, 2);
         shape.isCarShow = true;
         shape.carShowId = carShow.id;
 
         let shortName = carShow.name.split(' ')[0];
-        let label = mp.labels.new(`${shortName}`, new mp.Vector3(carShow.x, carShow.y, carShow.z + 1.7),
-            {
-                los: false,
-                font: 0,
-                drawDistance: 10,
-            });
+        let label = mp.labels.new(`${shortName}`, new mp.Vector3(carShow.x, carShow.y, carShow.z + 1.7), {
+            los: false,
+            font: 0,
+            drawDistance: 10,
+        });
         label.isCarShow = true;
         label.carShowId = carShow.id;
     },
@@ -161,8 +159,14 @@ module.exports = {
                 //     if (player.carPlaces.length == 1 && player.vehicleList.length >= player.carPlaces.length) return player.call('carshow.car.buy.ans', [5]);
                 // }
                 if (!vehicles.isAbleToBuyVehicle(player)) return player.call('carshow.car.buy.ans', [5]);
+
+                var cant = inventory.cantAdd(player, 33, {});
+                if (cant) return player.call('carshow.car.buy.ans', [7, {
+                    text: cant
+                }]);
+
                 let carToBuy = carList[i];
-                money.removeCash(player, carList[i].properties.price, async function (result) {
+                money.removeCash(player, carList[i].properties.price, async function(result) {
                     if (result) {
                         try {
                             var carPlate = vehicles.generateVehiclePlate();
@@ -235,7 +239,7 @@ module.exports = {
                                 owners: data.owners,
                                 vehType: props.vehType,
                                 price: props.price,
-                                //isOnParking: data.isOnParking
+                                parkingDate: data.parkingDate
                             });
 
                             if (!hasHouse) {
@@ -244,7 +248,17 @@ module.exports = {
                                 player.call('carshow.car.buy.ans', [6, carToBuy]);
                             }
 
-                            
+                            // выдача ключей в инвентарь
+                            inventory.addItem(player, 33, {
+                                owner: player.character.id,
+                                vehId: veh.db.id,
+                                vehName: carToBuy.properties.name
+                            }, (e) => {
+                                if (e) return player.call('carmarket.car.buy.ans', [7, {
+                                    text: e
+                                }]);
+                            });
+
                         } catch (err) {
                             console.log(err);
                             player.call('carshow.car.buy.ans', [2]);

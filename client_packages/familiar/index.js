@@ -39,13 +39,19 @@ mp.familiar = {
 };
 
 mp.events.add({
-    "characterInit.done": () => {
-        mp.familiar.initList();
-    },
+    "characterInit.done": () => {},
     "familiar.add": (name) => {
         mp.familiar.add(name);
     },
     "familiar.remove": (name) => {
         mp.familiar.remove(name);
     },
+    "entityStreamIn": (player) => {
+        if (player.type != "player") return;
+        if (!mp.familiar.list) return;
+        if (!mp.familiar.list.includes(player.name)) return;
+        player.isFamiliar = true;
+    },
 });
+
+mp.familiar.initList();

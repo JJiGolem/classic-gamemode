@@ -11,7 +11,7 @@ module.exports = {
     },
     "characterInit.done": (player) => {
         if (!factions.isHospitalFaction(player.character.factionId)) return;
-        player.call(`mapCase.init`, [player.name, player.character.factionId]);
+        // player.call(`mapCase.init`, [player.name, player.character.factionId]);
         mp.events.call(`mapCase.ems.init`, player);
     },
     "hospital.storage.clothes.take": (player, index) => {
@@ -212,8 +212,7 @@ module.exports = {
         if (glassesParams.variation != -1) inventory.addItem(player, 1, glassesParams, response);
 
         notifs.success(player, `Форма выдана`, header);
-        faction.ammo -= hospital.clothesAmmo;
-        faction.save();
+        factions.setAmmo(faction, faction.ammo - hospital.clothesAmmo);
     },
     "hospital.storage.items.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Hospital`);
@@ -225,7 +224,7 @@ module.exports = {
 
         if (faction.medicines < hospital.itemMedicines) return notifs.error(player, `Недостаточно медикаментов`, header);
 
-        var itemIds = [24, 27, 25];
+        var itemIds = [24, 27, 25, 26];
 
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
@@ -240,19 +239,20 @@ module.exports = {
             owner: character.id
         };
         if (itemId == 24) { // малая аптечка
-            params.count = 5;
+            params.count = 2;
         } else if (itemId == 27) { // большая аптечка
-            params.count = 10;
+            params.count = 5;
         } else if (itemId == 25) { // пластырь
             params.count = 5;
+        } else if (itemId == 26) { // адреналин
+            params.count = 3;
         }
 
         inventory.addItem(player, itemId, params, (e) => {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вам выданы ${itemName}`, header);
-            faction.ammo -= hospital.itemAmmo;
-            faction.save();
+            factions.setAmmo(faction, faction.ammo - hospital.itemAmmo);
         });
     },
     // лечение игрока (пополнение ХП) | показ + принятие + отмена:

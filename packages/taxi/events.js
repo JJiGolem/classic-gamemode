@@ -30,7 +30,6 @@ module.exports = {
     "taxi.employment": (player) => {
         if (player.character.job == 2) {
             mp.events.call("jobs.leave", player);
-            player.call('phone.app.remove', ['taxi']);
         } else {
             if (!player.character.carLicense) return player.call('notifications.push.error', ['У вас нет прав на легковой транспорт', 'Такси'])
             mp.events.call("jobs.set", player, 2);

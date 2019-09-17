@@ -2,7 +2,7 @@
 let browser = mp.browsers.new("package://browser/index.html");
 
 /// Вызов событий в браузере на React
-mp.callCEFR = function (eventName, args) { 
+mp.callCEFR = function (eventName, args) {
     let argumentsString = '';
 
     args.forEach(arg => {

@@ -36,6 +36,7 @@ var mapCaseEmsMembersData = {
             this.mod = mod;
         }
     },
+    rankHead: "Должность",
     setRanks (ranksList) {
         if (typeof ranksList == 'string') ranksList = JSON.parse(ranksList);
         this.ranks = ranksList;

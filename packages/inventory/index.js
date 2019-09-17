@@ -1,6 +1,8 @@
 "use strict";
 
 module.exports = {
+    // Макс. вес предметов, переносимый игроком
+    maxPlayerWeight: 30,
     // Общая информация о предметах
     inventoryItems: [],
     // Объект, подготовленный для отправки на клиент игрока
@@ -19,7 +21,7 @@ module.exports = {
         6: [11],
         7: [10],
         8: [12],
-        9: [], // автоматы
+        9: [21, 22, 48, 99, 107], // автоматы
         10: [13],
         11: [8],
         12: [9],
@@ -82,7 +84,18 @@ module.exports = {
     },
     async initPlayerInventory(player) {
         this.clearAllView(player);
-        // TODO: include in include in include... WTF??? (08.08.19 Carter Slade)
+
+        player.inventory = {
+            denyUpdateView: false, // запрещено ли обновлять внешний вид игрока
+            items: [], // предметы игрока
+            ground: [], // объекты на земле, которые выкинул игрок
+            place: { // багажник/шкаф/холодильник и пр. при взаимодействии
+                type: "",
+                sqlId: 0,
+                items: [],
+            },
+        };
+
         var dbItems = await db.Models.CharacterInventory.findAll({
             where: {
                 playerId: player.character.id
@@ -100,24 +113,18 @@ module.exports = {
                 }
             ]
         });
+        player.inventory.items = dbItems;
 
-        player.inventory = {
-            denyUpdateView: false, // запрещено ли обновлять внешний вид игрока
-            items: dbItems, // предметы игрока
-            ground: [], // объекты на земле, которые выкинул игрок
-            place: { // багажник/шкаф/холодильник и пр. при взаимодействии
-                type: "",
-                sqlId: 0,
-                items: [],
-            },
-        };
         this.updateAllView(player);
         this.loadWeapons(player);
         player.call(`inventory.initItems`, [this.convertServerToClientItems(dbItems)]);
         console.log(`[INVENTORY] Для игрока ${player.character.name} загружены предметы (${dbItems.length} шт.)`);
     },
     async initVehicleInventory(vehicle) {
-        // TODO: include in include in include... WTF??? (08.08.19 Carter Slade)
+        vehicle.inventory = {
+            items: [], // предметы в багажнике
+        };
+
         var dbItems = await db.Models.VehicleInventory.findAll({
             where: {
                 vehicleId: vehicle.db.id
@@ -135,10 +142,8 @@ module.exports = {
                 }
             ]
         });
+        vehicle.inventory.items = dbItems;
 
-        vehicle.inventory = {
-            items: dbItems, // предметы в багажнике
-        };
         console.log(`[INVENTORY] Для авто ${vehicle.db.modelName} загружены предметы (${dbItems.length} шт.)`);
     },
     convertServerToClientItems(dbItems) {
@@ -185,10 +190,24 @@ module.exports = {
         }
         return clientItem;
     },
+    cantAdd(player, itemId, params) {
+        var slot = this.findFreeSlot(player, itemId);
+        if (!slot) return `Свободный слот для ${this.getInventoryItem(itemId).name} не найден`;
+        if (params.sex != null && params.sex != !player.character.gender) return `Предмет противоположного пола`;
+        var nextWeight = this.getCommonWeight(player) + this.getInventoryItem(itemId).weight;
+        if (nextWeight > this.maxPlayerWeight) return `Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`;
+        if (params.weaponHash) {
+            var weapon = this.getItemByItemId(player, itemId);
+            if (weapon) return `Оружие ${this.getName(itemId)} уже имеется`;
+        }
+        return null;
+    },
     async addItem(player, itemId, params, callback = () => {}) {
         var slot = this.findFreeSlot(player, itemId);
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(itemId).name} не найден`);
-        if (params.sex && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
+        if (params.sex != null && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
+        var nextWeight = this.getCommonWeight(player) + this.getInventoryItem(itemId).weight;
+        if (nextWeight > this.maxPlayerWeight) return callback(`Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`);
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, itemId);
             if (weapon) return callback(`Оружие ${this.getName(itemId)} уже имеется`);
@@ -226,6 +245,8 @@ module.exports = {
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(item.itemId).name} не найден`);
         var params = this.getParamsValues(item);
         if (params.sex && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
+        var nextWeight = this.getCommonWeight(player) + this.getItemWeight(player, item);
+        if (nextWeight > this.maxPlayerWeight) return callback(`Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`);
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, item.itemId);
             if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
@@ -278,8 +299,11 @@ module.exports = {
     // при перемещении предмета из окруж. среды в игрока
     async addPlayerItem(player, item, parentId, pocketIndex, index) {
         // console.log(`addPlayerItem`)
+        var nextWeight = this.getCommonWeight(player) + this.getItemWeight(player, item);
+        if (nextWeight > this.maxPlayerWeight) return debug(`Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`);
         var place = player.inventory.place;
         var params = this.getParamsValues(item);
+        // TODO: проверка на вес
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, item.itemId);
             if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
@@ -364,6 +388,7 @@ module.exports = {
         var result = [];
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
+            if (!item.parentId) continue;
             var params = this.getParamsValues(item);
             if (!params.weaponHash) continue;
             result.push(item);
@@ -373,6 +398,9 @@ module.exports = {
             result = result.concat(this.findArrayWeapons(children));
         }
         return result;
+    },
+    getWeaponModels() {
+        return this.bodyList[9].map(x => this.getInventoryItem(x).model);
     },
     getInventoryItem(itemId) {
         return this.inventoryItems[itemId - 1];
@@ -389,6 +417,7 @@ module.exports = {
     },
     getChildren(items, item) {
         var children = [];
+        if (!item.id) return children;
         for (var i = 0; i < items.length; i++) {
             var child = items[i];
             if (child.parentId == item.id) children.push(child);
@@ -449,6 +478,7 @@ module.exports = {
         } else if (otherItems[item.itemId] != null) {
             otherItems[item.itemId](params);
         } else if (params.weaponHash) {
+            player.addAttachment(`weapon_${item.itemId}`);
             this.removeWeapon(player, params.weaponHash);
         } else return console.log("Неподходящий тип предмета для тела!");
 
@@ -481,15 +511,16 @@ module.exports = {
             },
             "7": () => {
                 // 0 - муж, 1 - жен
-                var index = (player.character.gender == 0) ? 15 : 82;
-                var undershirtDefault = (player.character.gender == 0) ? 15 : 14;
+                var index = (player.character.gender == 0) ? 15 : 18;
+                var undershirtDefault = (player.character.gender == 0) ? 15 : 3;
                 player.setClothes(3, 15, 0, 0);
                 player.setClothes(11, index, 0, 0);
                 player.setClothes(8, undershirtDefault, 0, 0);
                 player.setClothes(10, 0, 0, 0);
             },
             "8": () => {
-                player.setClothes(4, 18, 2, 0);
+                if (player.character.gender == 0) player.setClothes(4, 18, 2, 0);
+                else player.setClothes(4, 17, 0, 0);
             },
             "9": () => {
                 var index = (player.character.gender == 0) ? 34 : 35;
@@ -507,6 +538,8 @@ module.exports = {
             player.setProp(propsIndexes[itemId], -1, 0);
         } else if (otherItems[itemId] != null) {
             otherItems[itemId]();
+        } else if (this.bodyList[9].includes(itemId)) {
+            player.addAttachment(`weapon_${itemId}`, true);
         } else return console.log("Неподходящий тип предмета для тела!");
     },
     updateAllView(player) {
@@ -570,7 +603,7 @@ module.exports = {
             var params = this.getParamsValues(item);
             if (item.parentId || !params.pockets) continue; // предмет в предмете или не имеет карманы
             if (item.itemId == itemId) continue; // тип предмета совпадает (рубашку в рубашку нельзя и т.д.)
-            if (this.blackList[item.itemId].includes(itemId)) continue; // предмет в черном списке (сумку в рубашку нельзя и т.д.)
+            if (this.blackListExists(item.itemId, itemId)) continue; // предмет в черном списке (сумку в рубашку нельзя и т.д.)
             for (var j = 0; j < params.pockets.length / 2; j++) {
                 var matrix = this.genMatrix(player, item, j);
                 // console.log(`itemId: ${item.itemId}`);
@@ -591,6 +624,10 @@ module.exports = {
             }
         }
         return null;
+    },
+    blackListExists(parentId, childId) {
+        if (!this.blackList[parentId]) return false;
+        return this.blackList[parentId].includes(childId);
     },
     genMatrix(player, item, pocketIndex) {
         var params = this.getParamsValues(item);
@@ -681,6 +718,30 @@ module.exports = {
             if (itemIds.includes(item.itemId)) result.push(item);
         }
         return result;
+    },
+    getItemWeight(player, items, weight = 0) {
+        if (!Array.isArray(items)) items = [items];
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var info = this.getInventoryItem(item.itemId);
+            weight += info.weight;
+            var params = this.getParamsValues(item);
+            if (params.weight) weight += params.weight;
+            if (params.count) weight += params.count * info.weight;
+            var children = this.getChildren(player.inventory.items, item);
+            if (children.length) {
+                for (var j = 0; j < children.length; j++) {
+                    var child = children[j];
+                    weight += this.getItemWeight(player, child, 0);
+                }
+            }
+        }
+
+        return weight;
+    },
+    getCommonWeight(player) {
+        var bodyItems = player.inventory.items.filter(x => !x.parentId);
+        return this.getItemWeight(player, bodyItems);
     },
     // Полное удаление предметов инвентаря с сервера
     fullDeleteItemsByParams(itemIds, keys, values) {
@@ -859,5 +920,47 @@ module.exports = {
     },
     canMerge(itemId, targetId) {
         return this.mergeList[itemId] && this.mergeList[itemId].includes(targetId);
+    },
+    putGround(player, item) {
+        var children = this.getArrayItems(player, item);
+        this.deleteItem(player, item);
+
+        var info = this.getInventoryItem(item.itemId);
+        var pos = player.position;
+        pos.z += info.deltaZ - 1;
+
+        var newObj = mp.objects.new(mp.joaat(info.model), pos, {
+            rotation: new mp.Vector3(info.rX, info.rY, player.heading),
+            dimension: player.dimension
+        });
+        newObj.playerId = player.id;
+        newObj.item = item;
+        newObj.children = children;
+        newObj.setVariable("groundItem", true);
+        player.inventory.ground.push(newObj);
+
+
+        var objId = newObj.id;
+        var sqlId = item.id;
+        newObj.destroyTimer = setTimeout(() => {
+            try {
+                var obj = mp.objects.at(objId);
+                if (!obj || !obj.item || obj.item.id != sqlId) return;
+                obj.destroy();
+                var rec = mp.players.at(obj.playerId);
+                if (!rec) return;
+                var i = rec.inventory.ground.indexOf(obj);
+                rec.inventory.ground.splice(i, 1);
+            } catch (e) {
+                console.log(e);
+            }
+        }, this.groundItemTime);
+
+        var ground = player.inventory.ground;
+        if (ground.length > this.groundMaxItems) {
+            var obj = ground.shift();
+            clearTimeout(obj.destroyTimer);
+            obj.destroy();
+        }
     },
 };

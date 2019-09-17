@@ -1,17 +1,15 @@
-let cursor = document.getElementById('fishing-cursor');
 let interval;
 
 var fishing = new Vue({
     el: '#fishing',
     data: {
-        show: true,
+        show: false,
         position: 0,
-        zone: 10,
-        speed: 10,
+        zone: null,
         isStarted: false,
         isFetch: false,
         direction: 'right',
-        weight: 0
+        weight: null
     },
     watch: {
         position: function (newPosition, oldPosition) {
@@ -34,31 +32,31 @@ var fishing = new Vue({
                 this.position--;
             }
         },
-        startFishing() {
-            this.isStarted = true;
-            mp.trigger('fishing.game.start');
-        },
         fishFetch(speed, zone, weight) {
             this.isFetch = true;
-            this.speed = speed;
             this.zone = zone;
             this.weight = weight;
-            interval = setInterval(this.moveCursor, this.speed);
-        },
-        stopFishing() {
-            clearInterval(interval);
-            this.isStarted = false;
-            this.isFetch = false;
-            this.position = 0;
-            this.direction = 'right';
-
-            let result;
-
+            interval = setInterval(this.moveCursor, speed);
         },
         endFishing() {
-            mp.trigger('fishing.end');
+            clearInterval(interval);
+
+            let result;
+            if (Math.abs(this.position - 50) < parseInt(this.zone / 2)) {
+                result = true;
+            } else {
+                result = false;
+            }
+
+            mp.trigger('fishing.game.end', result);
+        },
+        clearData() {
+            this.position = 0;
+            this.weight = null;
+            this.zone = null;
+            this.direction = 'right',
+            this.isStarted = false;
+            this.isFetch = false;
         }
     },
-    mounted() {
-    }
 });

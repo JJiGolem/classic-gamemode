@@ -2,7 +2,7 @@ var inventory = new Vue({
     el: '#inventory',
     data: {
         // Макс. вес предметов, переносимый игроком
-        maxPlayerWeight: 15,
+        maxPlayerWeight: 30,
         // Общая информация о предметах
         itemsInfo: {
             1: {
@@ -107,6 +107,16 @@ var inventory = new Vue({
                     }
                 }
             },
+            26: { // адреналин
+                'Реанимировать': {
+                    handler(item) {
+                        var data = {
+                            itemSqlId: item.sqlId,
+                        };
+                        mp.trigger(`callRemote`, `inventory.item.adrenalin.use`, JSON.stringify(data));
+                    }
+                }
+            },
             27: { // большая аптечка
                 'Вылечиться': {
                     handler(item) {
@@ -121,6 +131,35 @@ var inventory = new Vue({
                             cuffsSqlId: item.sqlId
                         };
                         mp.trigger(`callRemote`, `police.cuffs`, JSON.stringify(data));
+                    }
+                }
+            },
+            // 4 типа наркотиков
+            29: {
+                'Употребить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                    }
+                }
+            },
+            30: {
+                'Употребить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                    }
+                }
+            },
+            31: {
+                'Употребить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                    }
+                }
+            },
+            32: {
+                'Употребить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
                     }
                 }
             },
@@ -202,7 +241,7 @@ var inventory = new Vue({
             6: [11],
             7: [10],
             8: [12],
-            9: [21, 22, 23, 48, 49, 50, 51, 52, 53, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], // автоматы
+            9: [], // автоматы
             10: [13],
             11: [8],
             12: [9],
@@ -220,6 +259,14 @@ var inventory = new Vue({
                     mp.trigger(`callRemote`, `inventory.item.patch.use`, item.sqlId);
                 }
             },
+            26: { // адреналин
+                handler(item) {
+                    var data = {
+                        itemSqlId: item.sqlId,
+                    };
+                    mp.trigger(`callRemote`, `inventory.item.adrenalin.use`, JSON.stringify(data));
+                }
+            },
             27: { // большая аптечка
                 handler(item) {
                     mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
@@ -231,6 +278,27 @@ var inventory = new Vue({
                         cuffsSqlId: item.sqlId
                     };
                     mp.trigger(`callRemote`, `police.cuffs`, JSON.stringify(data));
+                }
+            },
+            // наркотики
+            29: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                }
+            },
+            30: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                }
+            },
+            31: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
+                }
+            },
+            32: {
+                handler(item) {
+                    mp.trigger(`callRemote`, `inventory.item.drugs.use`, item.sqlId);
                 }
             },
             // патроны
@@ -275,7 +343,7 @@ var inventory = new Vue({
             40: [22, 99],
         },
         // Огнестрельные оружия
-        weaponsList: [20, 21, 22, 48, 99, 107],
+        weaponsList: [20, 21, 22, 41, 44, 47, 48, 52, 89, 99, 107],
         // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
         environment: [],
         // Предметы на игроке (экипировка)
@@ -322,12 +390,17 @@ var inventory = new Vue({
             x: 0,
             y: 0
         },
+        // Крутятся все предметы
+        spin: false,
     },
     computed: {
         // Тяжесть игрока (в %)
         playerWeight() {
-            var weight = this.getItemWeight(Object.values(this.equipment));
+            var weight = this.commonWeight;
             return weight / this.maxPlayerWeight * 100;
+        },
+        commonWeight() {
+            return this.getItemWeight(Object.values(this.equipment));
         },
         equipmentBusyColumns() {
             var cols = {};
@@ -387,6 +460,13 @@ var inventory = new Vue({
 
             return cols;
         },
+        descItemName() {
+            var item = this.itemDesc.item;
+            if (!item) return null;
+            if (item.itemId == 33 && item.params.vehName) // ключи авто
+                return `Ключи от ${item.params.vehName}`;
+            return this.itemsInfo[item.itemId].name;
+        },
     },
     methods: {
         // ******************  [ Private ] ******************
@@ -413,6 +493,8 @@ var inventory = new Vue({
             var item = this.equipment[index];
             if (item) return;
             if (!this.bodyList[index].includes(this.itemDrag.item.itemId)) return;
+            var nextWeight = this.commonWeight + this.itemsInfo[this.itemDrag.item.itemId].weight;
+            if (nextWeight > this.maxPlayerWeight) return;
             var columns = this.itemDrag.accessColumns;
             columns.bodyFocus = index;
         },
@@ -469,6 +551,7 @@ var inventory = new Vue({
         columnMouseHandler(place, pocket, index, e) {
             if (!this.itemDrag.item) return;
             var item = this.itemDrag.item;
+            var nextWeight = this.commonWeight + this.itemsInfo[item.itemId].weight;
             var columns = this.itemDrag.accessColumns;
             var pocketI = place.pockets.indexOf(pocket);
             var w = this.itemsInfo[item.itemId].width;
@@ -484,7 +567,8 @@ var inventory = new Vue({
                     columns.pocketI = pocketI;
                     columns.deny = place.sqlId == item.sqlId ||
                         place.itemId == item.itemId ||
-                        place.sqlId < 0 && this.getItemsCount(item) > 0 ||
+                        (place.sqlId < 0 && this.getItemsCount(item) > 0) ||
+                        (place.sqlId > 0 && nextWeight > this.maxPlayerWeight) ||
                         (this.blackList[place.itemId] && this.blackList[place.itemId].includes(item.itemId));
                     for (var x = 0; x < w; x++) {
                         for (var y = 0; y < h; y++) {
@@ -588,6 +672,7 @@ var inventory = new Vue({
                 var info = this.itemsInfo[item.itemId];
                 // if (!info) return weight;
                 weight += info.weight;
+                if (item.params.weight) weight += item.params.weight;
                 if (item.params.count) weight += item.params.count * info.weight;
                 if (item.pockets) {
                     for (var key in item.pockets) {
@@ -629,7 +714,8 @@ var inventory = new Vue({
             return null;
         },
         notify(message) {
-            console.log("[Inventory] " + message);
+            // console.log("[Inventory] " + message);
+            notifications.push(`info`, message, `[Inventory]`);
         },
         callRemote(eventName, values) {
             // console.log(`callRemote: ${eventName}`);
@@ -678,6 +764,14 @@ var inventory = new Vue({
             if (typeof info == 'string') info = JSON.parse(info);
             Vue.set(this.itemsInfo, itemId, info);
         },
+        setMergeList(list) {
+            if (typeof list == 'string') list = JSON.parse(list);
+            Vue.set(this, 'mergeList', list);
+        },
+        setBodyList(index, list) {
+            if (typeof list == 'string') list = JSON.parse(list);
+            Vue.set(this.bodyList, index, list);
+        },
         // ******************  [ Player Inventory ] ******************
         getItem(sqlId) {
             var item = this.getItemBySqlId(sqlId, this.equipment);
@@ -708,7 +802,10 @@ var inventory = new Vue({
         deleteItem(sqlId, items = this.equipment) {
             for (var index in items) {
                 var item = items[index];
-                if (item.sqlId == sqlId) Vue.delete(items, index);
+                if (item.sqlId == sqlId) {
+                    this.clearHotkeys(item);
+                    Vue.delete(items, index);
+                }
                 if (item.pockets) {
                     for (var key in item.pockets) {
                         var pocket = item.pockets[key];
@@ -764,8 +861,10 @@ var inventory = new Vue({
             if (!item) return this.notify(`Предмет должен находиться в инвентаре`);
             this.clearHotkeys(item);
             Vue.set(this.hotkeys, key, item);
+            mp.trigger(`inventory.saveHotkey`, itemSqlId, key);
         },
         unbindHotkey(key) {
+            mp.trigger(`inventory.removeHotkey`, key);
             Vue.delete(this.hotkeys, key);
         },
         onUseHotkey(key) {
@@ -883,6 +982,7 @@ var inventory = new Vue({
             if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone"])) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;
             if (e.keyCode > 47 && e.keyCode < 58) {
+                if (!self.enable && !self.debug) return;
                 var num = e.keyCode - 48;
                 self.onUseHotkey(num);
             }

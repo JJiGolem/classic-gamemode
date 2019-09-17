@@ -27,10 +27,17 @@ Vue.component("map-case-wnews-over-ads", {
         adData: Object,
     },
     data: () => ({
+        header: "Текст объявления:",
         text: "",
         editMod: false,
+        refuseMod: false,
     }),
     methods: {
+        inputCheck(event) {
+            if (event.keyCode == 13)
+                event.preventDefault();
+            //console.log(event.keyCode)
+        },
         update (event) {
             if (event.target.innerText.length > this.adData.maxLength) {
                 event.target.innerText = this.text;
@@ -42,14 +49,26 @@ Vue.component("map-case-wnews-over-ads", {
             this.editMod = true;
         },
         send () {
+            if (!this.text)
+                return;
             mapCase.showLoad();
             mapCase.currentOverWindow = null;
             this.adData.send({...this.adData.ad, text: this.text});
         },
         refuse () {
-            mapCase.showLoad();
-            mapCase.currentOverWindow = null;
-            this.adData.refuse({...this.adData.ad, text: this.text});
+            if (this.refuseMod) {
+                if (!this.text)
+                    return;
+                mapCase.showLoad();
+                mapCase.currentOverWindow = null;
+                this.adData.refuse({...this.adData.ad, text: this.text});
+                return;
+            }
+
+            this.header = "Причина отказа:";
+            this.$el.children[1].innerText = "";
+            this.editMod = true;
+            this.refuseMod = true;
         },
     },
     mounted () {
@@ -69,6 +88,7 @@ var mapCaseWnewsAdsData = {
     },
     getAd: () => {},
     setAd (adData) {
+        if (typeof adData == 'string') adData = JSON.parse(adData);
         this.adData.ad = adData;
 
         mapCase.currentOverWindow = `map-case-wnews-over-ads`;
@@ -85,8 +105,34 @@ var mapCaseWnewsMembersData = {
             this.mod = mod;
         }
     },
+    rankHead: "Должность",
     setRanks (ranksList) {
+        if (typeof ranksList == 'string') ranksList = JSON.parse(ranksList);
         this.ranks = ranksList;
+    },
+    setMemberRank(id, rank) {
+        rank = Math.clamp(rank, 1, this.ranks.length);
+        for (var i = 0; i < this.list.length; i++) {
+            var rec = this.list[i];
+            if (rec.id == id) rec.rank = rank;
+        }
+    },
+    add(members) {
+        if (typeof members == 'string') members = JSON.parse(members);
+        if (!Array.isArray(members)) members = [members];
+        for (var i = 0; i < members.length; i++) {
+            this.remove(members[i].id);
+            members[i].num = members[i].id;
+            this.list.push(members[i]);
+        }
+    },
+    remove(id) {
+        for (var i = 0; i < this.list.length; i++) {
+            if (this.list[i].id == id) {
+                this.list.splice(i, 1);
+                i--;
+            }
+        }
     },
     dismiss (data) {},
     lowerRank (data) {},
@@ -156,68 +202,64 @@ mapCaseWnewsMembersData.setRanks(["Старший редахтер", "Альпа
 //Функция, срабатывающая при увольнение сотрудника
 //data - данные о сотруднике из записи в списке
 mapCaseWnewsMembersData.dismiss = (data) => {
-    setTimeout(() => {
-        mapCase.showRedMessage(`<span>${data.name}</span><br /> был уволен`);
-
-        let index = mapCaseWnewsMembersData.list.indexOf(data);
-        mapCaseWnewsMembersData.list.splice(index, 1);
-    }, 3000);
+    mp.trigger(`callRemote`, `mapCase.news.members.uval`, data.id);
 }
 
 
 //Функция, срабатывающая при понижении сотрудника (крайние случаи не обработаны, может выйти за пределы массива рангов)
 //data - данные о сотруднике из записи в списке
 mapCaseWnewsMembersData.lowerRank = (data) => {
-    setTimeout(() => {
-        data.rank--;
-        mapCase.showGreenMessage(`<span>${data.name}</span><br /> был понижен до ранга ${mapCaseWnewsMembersData.ranks[data.rank]}`);
-    }, 3000);
+    if (data.rank <= 1)
+        return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет мин. ранг - ${mapCaseWnewsMembersData.ranks[data.rank - 1]}`);
+    mp.trigger(`callRemote`, `mapCase.news.rank.lower`, data.id);
 }
 
 
 //Функция, срабатывающая при повышении сотрудника (крайние случаи не обработаны, может выйти за пределы массива рангов)
 //data - данные о сотруднике из записи в списке
 mapCaseWnewsMembersData.raiseRank = (data) => {
-    setTimeout(() => {
-        data.rank++;
-        mapCase.showGreenMessage(`<span>${data.name}</span><br /> был повышен до ранга ${mapCaseWnewsMembersData.ranks[data.rank]}`);
-    }, 3000);
+    if (data.rank >= mapCaseWnewsMembersData.ranks.length)
+        return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет макс. ранг - ${mapCaseWnewsMembersData.ranks[data.rank - 1]}`);
+    mp.trigger(`callRemote`, `mapCase.news.rank.raise`, data.id);
 }
 
 //Функция, срабатывающая при запросе объявления
 mapCaseWnewsAdsData.getAd = () => {
-    setTimeout(() => {
-        let adData = {
-            text: "Тачку хачу купить",
-            author: "Cy Raider",
-        };
-        mapCaseWnewsAdsData.setAd(adData);
-    }, 3000);
+    mp.trigger(`callRemote`, `mapCase.news.ads.get`);
+    // setTimeout(() => {
+    //     let adData = {
+    //         text: "Тачку хачу купить",
+    //         author: "Cy Raider",
+    //     };
+    //     mapCaseWnewsAdsData.setAd(adData);
+    // }, 3000);
 }
 
 //Функция, срабатывающая при отпралении объявления
 //adData - информация об объявлении ({ text, author })
 mapCaseWnewsAdsData.adData.send = (adData) => {
-    console.log(adData);
-    setTimeout(() => {
-        mapCase.showGreenMessage(`Объявление<br />отправлено!`);
-        mapCaseWnewsAdsData.adsAmount--;
-    }, 3000);
+    mp.trigger(`callRemote`, `mapCase.news.ads.accept`, JSON.stringify(adData));
+    // console.log(adData);
+    // setTimeout(() => {
+    //     mapCase.showGreenMessage(`Объявление<br />отправлено!`);
+    //     mapCaseWnewsAdsData.adsAmount--;
+    // }, 3000);
 }
 
 //Функция, срабатывающая при отказе публикации
 //adData - информация об объявлении ({ text, author })
 mapCaseWnewsAdsData.adData.refuse = (adData) => {
-    console.log(adData);
-    setTimeout(() => {
-        mapCase.showRedMessage(`Отказано<br />в публикации!`);
-        mapCaseWnewsAdsData.adsAmount--;
-    }, 3000);
+    mp.trigger(`callRemote`, `mapCase.news.ads.cancel`, JSON.stringify(adData));
+    // console.log(adData);
+    // setTimeout(() => {
+    //     mapCase.showRedMessage(`Отказано<br />в публикации!`);
+    //     mapCaseWnewsAdsData.adsAmount--;
+    // }, 3000);
 }
 
 //for tests
 
-mapCaseWnewsMembersData.list = [
+/*mapCaseWnewsMembersData.list = [
     {
         num: 1,
         name: "Curys Raider",
@@ -233,6 +275,6 @@ mapCaseWnewsMembersData.list = [
         name: "Curysirusew Raiderderder",
         rank: 1,
     },
-];
+];*/
 
-mapCaseWnewsAdsData.adsAmount = 2;
+mapCaseWnewsAdsData.adsAmount = 0;

@@ -46,6 +46,7 @@ module.exports = {
             mp.events.call('chat.command.handle', player, command, args)
 
         } else {
+            if (!/\S/.test(message)) return;
             switch (type) {
                 case 0:
                     {
@@ -94,6 +95,7 @@ module.exports = {
             case '/me':
             case '/do':
             case '/try':
+                if (!/\S/.test(args.join(' '))) return;
                 mp.events.call(command, player, args);
                 break;
             default:

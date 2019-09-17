@@ -1,5 +1,6 @@
 "use strict";
 var vehicles = require('./index.js')
+var inventory = call('inventory');
 
 let money = call('money');
 module.exports = {
@@ -81,9 +82,9 @@ module.exports = {
             player.call('vehicles.engine.toggle', [true]);
             player.vehicle.setVariable("engine", true);
             player.call('prompt.hide');
-            //if (player.vehicle.key != "job" && player.vehicle.key != "newbie" && player.vehicle.key != "admin") {
+            if (player.vehicle.key == 'private') {
             vehicles.generateBreakdowns(player.vehicle);
-            //}
+            }
             mp.events.call('vehicles.breakdowns.init', player);
         }
     },
@@ -144,6 +145,9 @@ module.exports = {
         if (!vehicle) return;
 
         vehicle.setVariable("trunk", state);
+
+        var unload = vehicle.getVariable("unload");
+        if (unload && !state) vehicle.setVariable("unload", null);
     },
     "characterInit.done": (player) => {
         console.log('init done for vehicles');
@@ -317,10 +321,23 @@ module.exports = {
                 return;
             }
 
+            var cant = inventory.cantAdd(target, 33, {});
+            if (cant) {
+                target.call('vehicles.sell.target.final', [4, {
+                    text: cant
+                }]);
+                // seller.call('vehicles.sell.seller.final', [4, {
+                //     text: cant
+                // }]);
+                delete target.sellCarTargetOffer;
+                delete seller.sellCarSenderOffer;
+                return;
+            }
+
             let price = target.sellCarTargetOffer.price;
             let vehId = target.sellCarTargetOffer.vehId;
             let owners = vehicle.owners;
-            money.moveCash(target, seller, price, function (result) {
+            money.moveCash(target, seller, price, function(result) {
                 console.log(vehId)
                 if (result) {
                     //target.call('notifications.push.success', ['Вы купили транспорт', 'Успешно']);
@@ -331,10 +348,10 @@ module.exports = {
                         owner: target.character.id,
                         owners: owners + 1
                     }, {
-                            where: {
-                                id: vehId
-                            }
-                        });
+                        where: {
+                            id: vehId
+                        }
+                    });
                     let veh = vehicles.getVehicleBySqlId(vehId);
                     if (veh) {
                         veh.owner = target.character.id;
@@ -355,8 +372,21 @@ module.exports = {
                         regDate: veh.regDate,
                         owners: veh.owners,
                         vehType: props.vehType,
-                        price: props.price // todo isOnParking
+                        price: props.price // todo isOnParking TODO !!!!!!!!!!!!!!!!!!!!!
                     });
+
+                    // выдача ключей в инвентарь
+                    inventory.addItem(target, 33, {
+                        owner: target.character.id,
+                        vehId: vehId,
+                        vehName: props.name
+                    }, (e) => {
+                        if (e) return player.call('vehicles.sell.target.final', [4, {
+                            text: e
+                        }]);
+                    });
+                    // удаление ключей у продавца
+                    inventory.deleteByParams(seller, 33, 'vehId', vehId);
 
                     delete target.sellCarTargetOffer;
                     delete seller.sellCarSenderOffer;

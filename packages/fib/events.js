@@ -123,23 +123,23 @@ module.exports = {
             topParams = { // clothes 11 / 3 / 8
                 sex: 0,
                 torso: // /clothes 3
-                    [0, 1, 1, 1, 1, 11][index],
+                    [0, 7, 1, 0, 1, 7][index],
                 tTexture: [-1, -1, -1, -1, -1, -1][index],
                 variation: // clothes 11
-                    [3, 25, 103, 46, 139, 66][index],
-                texture: [0, 2, 3, 1, 0, 0][index],
+                    [27, 90, 103, 46, 139, 90][index],
+                texture: [5, 1, 3, 1, 2, 0][index],
                 undershirt: // clothes 8
                     [160, 39, 159, 159, 39, 64][index]
             };
             legsParams = { // clothes 4
                 sex: 0,
-                variation: [37, 37, 37, 30, 34, 64][index],
-                texture: [0, 5, 0, 2, 0, 0][index]
+                variation: [37, 51, 54, 30, 51, 51][index],
+                texture: [2, 1, 2, 2, 0, 0][index]
             };
             feetsParams = { // clothes 6
                 sex: 0,
                 variation: [29, 29, 29, 25, 29, 29][index],
-                texture: [0, 1, 0, 0, 0, 0][index]
+                texture: [0, 1, 0, 0, 1, 2][index]
             };
             earsParams = { // prop 2
                 sex: 0,
@@ -203,8 +203,7 @@ module.exports = {
         if (glassesParams.variation != -1) inventory.addItem(player, 1, glassesParams, response);
 
         notifs.success(player, `Форма выдана`, header);
-        faction.ammo -= fib.clothesAmmo;
-        faction.save();
+        factions.setAmmo(faction, faction.ammo - fib.clothesAmmo);
     },
     "fib.storage.armour.take": (player) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад FIB`);
@@ -224,15 +223,15 @@ module.exports = {
 
         inventory.fullDeleteItemsByParams(3, ["faction", "owner"], [character.factionId, character.id]);
         var params;
-        if (player.sex == 1) {
+        if (character.gender == 0) { // муж.
             params = {
-                variation: 16,
-                texture: 2
+                variation: 12,
+                texture: 1
             };
         } else {
             params = {
-                variation: 18,
-                texture: 2
+                variation: 12,
+                texture: 1
             };
         }
 
@@ -246,8 +245,7 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
         });
         notifs.success(player, `Выдан бронежилет`, header);
-        faction.ammo -= fib.armourAmmo;
-        faction.save();
+        factions.setAmmo(faction, faction.ammo - fib.armourAmmo);
     },
     "fib.storage.items.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад FIB`);
@@ -257,12 +255,15 @@ module.exports = {
         var faction = factions.getFaction(character.factionId);
         var header = `Склад ${faction.name}`;
 
-        if (faction.ammo < fib.itemAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
         var itemIds = [28, 24, 4];
-
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
+        if (itemId == 24) {
+            if (faction.medicines < fib.itemAmmo) return notifs.error(player, `Недостаточно медикаментов`, header);
+        } else {
+            if (faction.ammo < fib.itemAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
+        }
 
         var itemName = inventory.getInventoryItem(itemId).name;
         // var items = inventory.getArrayByItemId(player, itemId);
@@ -274,15 +275,15 @@ module.exports = {
             owner: character.id
         };
         if (itemId == 24) { // аптечка
-            params.count = 5;
+            params.count = 2;
         }
 
         inventory.addItem(player, itemId, params, (e) => {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вам выданы ${itemName}`, header);
-            faction.ammo -= fib.itemAmmo;
-            faction.save();
+            if (itemId == 24) factions.setMedicines(faction, faction.medicines - fib.itemAmmo);
+            else factions.setAmmo(faction, faction.ammo - fib.itemAmmo);
         });
     },
     "fib.storage.guns.take": (player, index) => {
@@ -317,8 +318,7 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вам выдано оружие ${gunName}`, header);
-            faction.ammo -= fib.gunAmmo;
-            faction.save();
+            factions.setAmmo(faction, faction.ammo - fib.gunAmmo);
         });
     },
     "fib.storage.ammo.take": (player, values) => {
@@ -346,8 +346,7 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вам выданы ${inventory.getInventoryItem(itemIds[index]).name} (${ammo} ед.)`, header);
-            faction.ammo -= fib.ammoAmmo * ammo;
-            faction.save();
+            factions.setAmmo(faction, faction.ammo - fib.ammoAmmo * ammo);
         });
     },
     "fib.spy": (player, recId) => {

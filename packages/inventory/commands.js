@@ -39,8 +39,8 @@ module.exports = {
                 sex: 1
             });
             inventory.addItem(rec, 3, {
-                variation: 1,
-                texture: 0,
+                variation: 12,
+                texture: 1,
                 sex: 1,
                 pockets: '[3,3,3,3,5,4,5,5,10,6,6,6]',
                 health: 100,
@@ -68,7 +68,7 @@ module.exports = {
                 sex: 1
             });
             inventory.addItem(rec, 13, {
-                variation: 1,
+                variation: 45,
                 texture: 0,
                 sex: 1,
                 pockets: '[2,2,6,5,2,3,6,6,12,10]'
@@ -230,6 +230,38 @@ module.exports = {
             });
             var val = (args[0])? "включил" : "выключил";
             out.info(`${player.name} ${val} DEBUG-режим инвентаря`);
+        }
+    },
+    "/ispin": {
+        description: "Вкл/выкл режим спина инвентаря у всех игроков.",
+        access: 6,
+        args: "[спин]:b",
+        handler: (player, args, out) => {
+            mp.players.forEach((rec) => {
+                if (!rec.character) return;
+                rec.call(`inventory.spin`, [args[0]]);
+            });
+            var val = (args[0])? "включил" : "выключил";
+                out.info(`${player.name} ${val} SPIN-режим инвентаря`);
+        }
+    },
+    "/invweight": {
+        description: "Получить вес предмета.",
+        access: 6,
+        args: "[ид_предмета]:n",
+        handler: (player, args, out) => {
+            var item = inventory.getItem(player, args[0]);
+            if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
+
+            out.info(`Вес: ${inventory.getItemWeight(player, item)}`, player);
+        }
+    },
+    "/invcommon": {
+        description: "Получить общий вес предметов у игрока.",
+        access: 6,
+        args: "",
+        handler: (player, args, out) => {
+            out.info(`Общий вес: ${inventory.getCommonWeight(player)}`, player);
         }
     },
     "/pitems": {

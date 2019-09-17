@@ -30,6 +30,7 @@ module.exports = {
             farm.save();
             notifs.success(player, `Ферма #${farm.id} куплена`, header);
             notifs.warning(player, `Пополните балансы фермы`, header);
+            player.call(`prompt.showByName`, [`farm_tax`]);
             player.call(`selectMenu.loader`, [false]);
             player.call(`selectMenu.hide`);
         });
@@ -151,7 +152,9 @@ module.exports = {
         else {
             farm.balance -= player.farmJob.pay;
             farm.save();
-            money.addCash(player, player.farmJob.pay);
+            money.addCash(player, player.farmJob.pay, (res) => {
+                if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
+            });
         }
 
         farms.setJobClothes(player, false);
@@ -365,7 +368,9 @@ module.exports = {
         else {
             farm.balance -= price;
             farm.save();
-            money.addCash(player, price);
+            money.addCash(player, price, (res) => {
+                if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
+            });
         }
     },
     "farms.soilsWarehouse.take": (player) => {
@@ -408,7 +413,9 @@ module.exports = {
             else {
                 farm.balance -= pay;
                 farm.save();
-                money.addCash(player, pay);
+                money.addCash(player, pay, (res) => {
+                    if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
+                });
             }
             notifs.success(player, `Урожай полей увеличился. Премия $${pay}`, header);
             farms.soilFields(farm);
@@ -448,7 +455,9 @@ module.exports = {
         else {
             farm.balance -= price;
             farm.save();
-            money.addCash(player, price);
+            money.addCash(player, price, (res) => {
+                if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
+            });
         }
     },
     "farms.grains.price.set": (player, val) => {
