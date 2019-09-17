@@ -211,7 +211,7 @@ module.exports = {
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, itemId);
             if (weapon) return callback(`Оружие ${this.getName(itemId)} уже имеется`);
-            this.giveWeapon(player, params.weaponHash, params.ammo);
+            if (slot.parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
         }
         var struct = [];
         for (var key in params) {
@@ -250,7 +250,7 @@ module.exports = {
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, item.itemId);
             if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
-            this.giveWeapon(player, params.weaponHash, params.ammo);
+            if (slot.parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
         }
 
         item.playerId = player.character.id;
@@ -303,11 +303,10 @@ module.exports = {
         if (nextWeight > this.maxPlayerWeight) return debug(`Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`);
         var place = player.inventory.place;
         var params = this.getParamsValues(item);
-        // TODO: проверка на вес
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, item.itemId);
             if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
-            this.giveWeapon(player, params.weaponHash, params.ammo);
+            if (parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
         }
         var struct = [];
         for (var key in params) {
