@@ -9,7 +9,11 @@ var SIZE = 0.4;
 
 mp.nametags.enabled = false;
 
+let showNametags = true;
+
 mp.events.add('render', (nametags) => {
+
+    if (!showNametags) return;
 
     const graphics = mp.game.graphics;
     const screenRes = graphics.getScreenResolution(0, 0);
@@ -61,3 +65,11 @@ mp.events.add('render', (nametags) => {
         }
     })
 })
+
+mp.keys.bind(0x75, true, function () { /// Включение/отключение ников на F6
+    if (showNametags) {
+        showNametags = false;
+    } else {
+        showNametags = true
+    }
+});
