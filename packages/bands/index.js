@@ -197,7 +197,7 @@ module.exports = {
         if (diff > this.warTime) delete player.lastWarDeathTime;
         else {
             notifs.error(player, `Reveange Kill запрещен`, `Захват территории`);
-            terminal.log(`[BANDS] ${player} сделал Reveange Kill на капте`);
+            terminal.log(`[BANDS] ${player.name} сделал Reveange Kill на капте`);
         }
     },
     giveScore(player, enemy, reason, zone) {

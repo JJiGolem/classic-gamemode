@@ -7,8 +7,7 @@ var killList = new Vue({
             10: "#fff629",
             11: "#4a97d1",
         },
-        showTime: 10000,
-        maxCount: 8,
+        maxCount: 10,
         types: ["car", "hand"],
         list: [],
     },
@@ -23,10 +22,6 @@ var killList = new Vue({
                 reason: reason
             });
             if (this.list.length > this.maxCount) this.list.shift();
-            var self = this;
-            setTimeout(() => {
-                self.list.shift();
-            }, this.showTime);
         },
         playerColor(player) {
             return this.colors[player.factionId] || "#fff";
