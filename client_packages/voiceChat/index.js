@@ -112,7 +112,7 @@ let updateCurrent = function(player, index, newCh) {
 }
 
 
-mp.speechChanel.addChannel("voice", 50.0, true, true);
+mp.speechChanel.addChannel("voice", 20, true, true);
 /// Обработчик изменения состояния игроков для изменения состояния голосовой связи
 setInterval(() => {
     /// Автоматическое подключение к заданным каналам всех игроков в зоне стрима
@@ -129,19 +129,20 @@ setInterval(() => {
 		}
     });
     /// Автоматическое отключение заданных каналов всех игроков
-	listeners.forEach(listener => {
-        let player = mp.players.atRemoteId(listener.playerId);
+    for (let i = 0; i < listeners.length; i++) {
+        let player = mp.players.atRemoteId(listeners[i].playerId);
         if (player == null) return;
-		if(player.handle !== 0 && player.dimension == mp.players.local.dimension) {
-            if (channels[listener.current].maxRange != 0) {
+		if (player.handle !== 0 && player.dimension == mp.players.local.dimension) {
+            if (channels[listeners[i].current].maxRange != 0) {
                 let dist = mp.game.system.vdist(player.position.x, player.position.y, player.position.z,
                     mp.players.local.position.x,  mp.players.local.position.y,  mp.players.local.position.z);
 
-                if(dist > channels[listener.current].maxRange) {
-                    mp.speechChanel.disconnect(player, listener.channel);
+                if(dist > channels[listeners[i].current].maxRange) {
+                    mp.speechChanel.disconnect(player, listeners[i].channel);
+                    i--;
                 }
                 else if(!UseAutoVolume) {
-                    player.voiceVolume = 1 - (dist / channels[listener.current].maxRange);
+                    player.voiceVolume = 1 - (dist / channels[listeners[i].current].maxRange);
                 }
             }
             else {
@@ -151,7 +152,7 @@ setInterval(() => {
 		else {
 			mp.speechChanel.disconnect(player, null);
 		}
-    });
+    }
 }, 250);
 
 
