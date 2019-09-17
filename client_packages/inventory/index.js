@@ -128,8 +128,8 @@ mp.inventory = {
             var itemId = list[i];
             var model = models[i];
 
-            mp.attachmentMngr.register(`weapon_${itemId}`, model, 57597, new mp.Vector3(0.01, 0.03, 0),
-                new mp.Vector3(-119, 10, 90)
+            mp.attachmentMngr.register(`weapon_${itemId}`, model, 24818, new mp.Vector3(0.2, -0.155, -0.1),
+                new mp.Vector3(13, 180, 10)
             );
         }
         mp.callCEFV(`inventory.setBodyList(9, '${JSON.stringify(list)}')`)
