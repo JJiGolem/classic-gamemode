@@ -34,7 +34,7 @@ module.exports = {
         }
     },
     "/goto": {
-        access: 3,
+        access: 2,
         description: "Телепорт к игроку",
         args: "[ID игрока]",
         handler: (player, args) => {
@@ -56,7 +56,7 @@ module.exports = {
         }
     },
     "/gethere": {
-        access: 4,
+        access: 3,
         description: "Телепорт игрока к себе",
         args: "[ID игрока]",
         handler: (player, args) => {
