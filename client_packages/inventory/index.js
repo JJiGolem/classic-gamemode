@@ -78,6 +78,7 @@ mp.inventory = {
     },
     takeItemHandler() {
         // поднятие предмета с земли
+        if (mp.busy.includes()) return;
         var pos = mp.players.local.position;
         var itemObj, minDist = 9999;
         mp.objects.forEach((obj) => {
