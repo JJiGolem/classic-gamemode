@@ -234,9 +234,9 @@ module.exports = {
             }]
         });
 
+        player.inventory.items.push(item);
         if (!item.parentId) this.updateView(player, item);
         await item.save();
-        player.inventory.items.push(item);
         player.call("inventory.addItem", [this.convertServerToClientItem(player.inventory.items, item), item.pocketIndex, item.index, item.parentId]);
         callback();
     },
@@ -332,9 +332,9 @@ module.exports = {
             }]
         });
 
+        player.inventory.items.push(newItem);
         if (!newItem.parentId) this.updateView(player, newItem);
         await newItem.save();
-        player.inventory.items.push(newItem);
         player.call(`inventory.setItemSqlId`, [item.id, newItem.id]);
     },
     deleteItem(player, item) {
@@ -601,6 +601,7 @@ module.exports = {
 
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
+            if (!item.id) continue; // предмет еще не сохранен в БД
             var params = this.getParamsValues(item);
             if (item.parentId || !params.pockets) continue; // предмет в предмете или не имеет карманы
             if (item.itemId == itemId) continue; // тип предмета совпадает (рубашку в рубашку нельзя и т.д.)
