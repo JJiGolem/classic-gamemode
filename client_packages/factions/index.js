@@ -51,7 +51,9 @@ mp.factions = {
         mp.callCEFV(`selectMenu.showByName('factionGiveRank')`);
     },
     showStorageSelectMenu(factionId) {
-        if (factionId == 2) { // LSPD
+        if (factionId == 1) { // Government
+            mp.callCEFV(`selectMenu.showByName('governmentStorage')`);
+        } else if (factionId == 2) { // LSPD
             mp.callCEFV(`selectMenu.showByName('lspdStorage')`);
         } else if (factionId == 3) { // LSSD
             mp.callCEFV(`selectMenu.showByName('lssdStorage')`);
