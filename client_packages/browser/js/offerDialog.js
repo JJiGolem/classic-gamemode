@@ -156,10 +156,10 @@ var offerDialog = new Vue({
                 ignore() {},
             },
             "familiar": {
-                text: `Незнакомец (id: 11) хочет пожать вам руку`,
+                text: `Незнакомец (ID: 11) хочет пожать вам руку`,
                 playerId: null,
                 on(values) {
-                    this.text = `Незнакомец (id: ${values.playerId}) хочет пожать вам руку`;
+                    this.text = `Незнакомец (ID: ${values.playerId}) хочет пожать вам руку`;
                     this.playerId = values.playerId;
                 },
                 yes() {
