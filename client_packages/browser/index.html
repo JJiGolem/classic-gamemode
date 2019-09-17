@@ -34,6 +34,7 @@
     <link rel="stylesheet" type="text/css" href="css/gunLicense.css" />
     <link rel="stylesheet" type="text/css" href="css/fishing.css" />
     <link rel="stylesheet" type="text/css" href="css/captureScore.css" />
+    <link rel="stylesheet" type="text/css" href="css/killList.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -1188,6 +1189,14 @@
         </div>
     </div>
 
+    <div v-cloak id="killList" v-if="show && list.length">
+        <div class="log" v-for="kill in list">
+            <div v-if="kill.killer" :style="{color: playerColor(kill.killer)}">{{ kill.killer.name }}</div>
+            <img :src="killImgSrc(kill.reason)" />
+            <div :style="{color: playerColor(kill.target)}">{{ kill.target.name }} <span v-if="kill.reason && isWeapon(kill.reason)"> из {{ kill.reason }}</span></div>
+        </div>
+    </div>
+
     <!-- ------------------------ REACT ------------------------------ -->
     <script async src="build/js/build.js" type="text/javascript"></script>
     <div id="root"></div>
@@ -1216,6 +1225,7 @@
     <script src="js/gunLicense.js"></script>
     <script src="js/fishing.js"></script>
     <script src="js/captureScore.js"></script>
+    <script src="js/killList.js"></script>
 
 </body>
 
