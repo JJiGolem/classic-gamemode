@@ -26,7 +26,7 @@ module.exports = {
     // Модели авто, в которые можно грузить боеприпасы
     ammoVehModels: ["barracks", "barracks3", "moonbeam", "youga2", "insurgent2"],
     // Модели авто, в которые можно грузить медикаменты
-    medicinesVehModels: ["sultan"],
+    medicinesVehModels: ["granger"],
     // Макс. кол-во боеприпасов в авто
     ammoVehMax: 3000,
     // Макс. кол-во медикаментов в авто
@@ -36,7 +36,12 @@ module.exports = {
         "ammo": {
             2: [4],
             3: [4],
-            6: [2, 3, 6]
+            6: [2, 3, 6],
+            // банды
+            8: [8],
+            9: [9],
+            10: [10],
+            11: [11],
         },
         "medicines": {
             5: [2, 3, 4, 5, 6]
