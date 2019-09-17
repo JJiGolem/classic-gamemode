@@ -31,7 +31,7 @@ mp.events.add("offerDialog.show", (name, values) => {
     //     }
     // }
     // TODO: Прикрутить сис-му знакомств, чтобы не было видно ника незнакомца. ^^^
-    mp.gui.cursor.show(true, true);
+    // mp.gui.cursor.show(true, true);
     mp.callCEFV(`offerDialog.show('${name}', '${JSON.stringify(values)}')`);
 });
 
