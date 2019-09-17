@@ -233,12 +233,12 @@ var offerDialog = new Vue({
             }
         });
     },
-    watch: {
-        dialog(val) {
-            if (val) setCursor(true);
-            else setCursor(false);
-        }
-    },
+    // watch: {
+    //     dialog(val) {
+    //         if (val) setCursor(true);
+    //         else setCursor(false);
+    //     }
+    // },
 });
 
 // for tests
