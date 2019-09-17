@@ -60,6 +60,7 @@ mp.speechChanel.connect = (player, channel) => {
     else {
         player.voiceVolume = 1.0;
     }
+    mp.console(JSON.stringify(listeners));
 }
 
 /// Отключить выбранного игрока от канала связи
@@ -76,6 +77,7 @@ mp.speechChanel.disconnect = (player, channel, death = false) => {
         if (listeners[index].channels.length == 0) {
             listeners.splice(index, 1);
             mp.events.callRemote("voiceChat.remove", player);
+            mp.console(JSON.stringify(listeners));
             return;
         }
         else {
@@ -85,6 +87,7 @@ mp.speechChanel.disconnect = (player, channel, death = false) => {
     if (channel == null && death) {
         mp.events.callRemote("voiceChat.remove", player);
     }
+    mp.console(JSON.stringify(listeners));
 }
 
 let updateCurrent = function(player, index, newCh) {
