@@ -234,9 +234,9 @@ module.exports = {
             }]
         });
 
-        player.inventory.items.push(item);
         if (!item.parentId) this.updateView(player, item);
         await item.save();
+        player.inventory.items.push(item);
         player.call("inventory.addItem", [this.convertServerToClientItem(player.inventory.items, item), item.pocketIndex, item.index, item.parentId]);
         callback();
     },
@@ -332,9 +332,9 @@ module.exports = {
             }]
         });
 
-        player.inventory.items.push(newItem);
         if (!newItem.parentId) this.updateView(player, newItem);
         await newItem.save();
+        player.inventory.items.push(newItem);
         player.call(`inventory.setItemSqlId`, [item.id, newItem.id]);
     },
     deleteItem(player, item) {
@@ -369,7 +369,7 @@ module.exports = {
             this.clearArrayItems(player, child);
         }
         var index = items.indexOf(item);
-        items.splice(index, 1);
+        if (index != -1) items.splice(index, 1);
     },
     getArrayItems(player, item, result = []) {
         var items = player.inventory.items;
@@ -581,6 +581,7 @@ module.exports = {
         player.call(`inventory.setItemParam`, [item.id, key, value]);
     },
     findFreeSlot(player, itemId) {
+        // debug(`findFreeSlot | itemId: ${itemId}`)
         var items = player.inventory.items;
         for (var bodyIndex in this.bodyList) {
             var list = this.bodyList[bodyIndex];
@@ -745,7 +746,7 @@ module.exports = {
     },
     // Полное удаление предметов инвентаря с сервера
     fullDeleteItemsByParams(itemIds, keys, values) {
-        // console.log(`fullDeleteItemsByParams`)
+        // debug(`fullDeleteItemsByParams`)
         if (itemIds && !Array.isArray(itemIds)) itemIds = [itemIds];
         if (!Array.isArray(keys)) keys = [keys];
         if (!Array.isArray(values)) values = [values];
@@ -764,7 +765,7 @@ module.exports = {
             items.forEach(item => {
                 item.destroy();
                 var i = veh.inventory.items.indexOf(item);
-                veh.inventory.items.splice(i, 1);
+                if (i != -1) veh.inventory.items.splice(i, 1);
                 if (veh.bootPlayerId != null) {
                     var rec = mp.players.at(veh.bootPlayerId);
                     if (!rec) return;
@@ -817,13 +818,13 @@ module.exports = {
                 var rec = mp.players.at(obj.playerId);
                 if (!rec) return;
                 var i = rec.inventory.ground.indexOf(obj);
-                rec.inventory.ground.splice(i, 1);
+                if (i != -1) rec.inventory.ground.splice(i, 1);
             }
         });
         /* Для всех игроков из БД. */
     },
     deleteByParams(player, itemIds, keys, values) {
-        // console.log(`deleteByParams: ${player.name}`)
+        // debug(`deleteByParams: ${player.name}`)
         if (itemIds && !Array.isArray(itemIds)) itemIds = [itemIds];
         if (!Array.isArray(keys)) keys = [keys];
         if (!Array.isArray(values)) values = [values];
@@ -844,7 +845,7 @@ module.exports = {
                     doDelete = false;
                     break;
                 }
-                if (param && param != values[i]) {
+                if (param != values[i]) {
                     doDelete = false;
                     break;
                 }
@@ -950,7 +951,7 @@ module.exports = {
                 var rec = mp.players.at(obj.playerId);
                 if (!rec) return;
                 var i = rec.inventory.ground.indexOf(obj);
-                rec.inventory.ground.splice(i, 1);
+                if (i != -1) rec.inventory.ground.splice(i, 1);
             } catch (e) {
                 console.log(e);
             }
