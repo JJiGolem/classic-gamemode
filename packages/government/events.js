@@ -87,7 +87,7 @@ module.exports = {
                     [27, 181, 57, 25, 57][index],
                 texture: [0, 0, 0, 2, 2][index],
                 undershirt: // clothes 8
-                    [160, 178, 37, 37, 144][index]
+                    [160, 178, 37, 37, 37][index]
             };
             legsParams = { // clothes 4
                 sex: 0,
