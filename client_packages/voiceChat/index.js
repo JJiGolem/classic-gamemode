@@ -13,7 +13,13 @@ mp.events.add('characterInit.done', function() {
         mp.voiceChat.muted = true;
         mp.callCEFV("hud.voice = false");
 		mp.busy.remove('voicechat');
-	});
+    });
+    
+    // todo назначить на одну из клавиш F_num
+    // mp.keys.bind(0x4E, false, function() {
+    //     if (!mp.voiceChat.muted) return;
+    //     mp.voiceChat.cleanupAndReload(true, true, true);
+    // });
 });
 
 
@@ -42,7 +48,7 @@ mp.speechChanel.connect = (player, channel) => {
         }
     }
     else {
-        listeners.push({"playerId": player.remoteId, "current": 0, "channels": [channel]});
+        listeners.push({"playerId": player.remoteId, "current": channel, "channels": [channel]});
         mp.events.callRemote("voiceChat.add", player);
         player.voice3d = channels[channel].use3d;
     }
@@ -166,8 +172,3 @@ mp.events.add("playerDeath", (player) => {
         mp.speechChanel.disconnect(player, null, true);
     }
 });
-
-// setInterval(() => {
-//     if (!mp.voiceChat.muted) return;
-//     mp.voiceChat.cleanupAndReload(true, true, true);
-// }, 1000);
