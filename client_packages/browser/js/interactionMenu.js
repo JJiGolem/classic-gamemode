@@ -121,7 +121,6 @@ var interactionMenu = new Vue({
                     var item = this.items[index];
                     if (item.text == 'Познакомиться') {
                         interactionMenu.show = false;
-                        setCursor(false);
                         mp.trigger(`interactionMenu.onClick`, this.name, item.text);
                     } else if (item.text == 'Документы') {
                         mp.trigger(`documents.list`);
@@ -311,7 +310,7 @@ var interactionMenu = new Vue({
             if (!val) this.show = false;
         },
         show(val) {
-            // setCursor(val);
+            setCursor(val);
             if (val) busy.add("interaction", true);
             else busy.remove("interaction", true);
         },
