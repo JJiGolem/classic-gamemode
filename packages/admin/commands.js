@@ -459,8 +459,8 @@ module.exports = {
         }
     },
     "/sethp": {
-        description: "Изменить кол-во здоровья игроку.",
-        access: 4,
+        description: "Изменить кол-во здоровья игроку. Реанимирует, если игрок лежит.",
+        access: 3,
         args: "[ид_игрока]:n [здоровье]:n",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
@@ -468,6 +468,7 @@ module.exports = {
             rec.health = Math.clamp(args[1], 0, 100);
             out.info(`Игроку ${rec.name} установлено ${rec.health} ед. здоровья`, player);
             notify.info(rec, `${player.name} установил вам ${rec.health} ед. здоровья`);
+            if (rec.getVariable("knocked")) rec.setVariable("knocked", null);
         }
     },
     "/weapon": {
