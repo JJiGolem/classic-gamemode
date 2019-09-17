@@ -1,7 +1,6 @@
 var killList = new Vue({
     el: "#killList",
     data: {
-        show: false,
         colors: {
             8: "#00b500",
             9: "#da30ff",
@@ -70,6 +69,4 @@ killList.add({
 killList.add({
     name: "Swifty Swift",
     factionId: 9
-});
-
-killList.show = true;*/
+});*/

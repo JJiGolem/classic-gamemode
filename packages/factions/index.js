@@ -349,7 +349,8 @@ module.exports = {
         var header = "";
         if (type == 'ammo') {
             header = "Склад боеприпасов";
-            if (!this.isArmyFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, header);
+            if (!this.isArmyFaction(player.character.factionId) &&
+            !this.isBandFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, header);
         } else if (type == 'medicines') {
             header = "Склад медикаментов";
             if (!this.isHospitalFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, header);

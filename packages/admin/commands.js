@@ -146,7 +146,7 @@ module.exports = {
             exec(`cd ${__dirname} && git clean -d -f && git stash && git pull`, (error, stdout, stderr) => {
                 if (error) console.log(stderr);
                 console.log(stdout);
-                out.info(`${player.name} запустил обновление сервера`);
+                out.info(`${player.name} обновил сборку сервера`);
             });
         }
     },

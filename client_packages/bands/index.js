@@ -83,9 +83,24 @@ mp.bands = {
         mp.callCEFV(`captureScore.setScore(${bandId}, ${score})`);
     },
     logKill(target, killer, reason) {
-        debug(`${killer.name} killed ${target.name} with reason ${reason}`)
-        // TODO: лог в килл-лист
-        // 3452007600 - самоубийство походу?
+        if (killer)
+            debug(`[KILL-LIST] ${killer.name} killed ${target.name} with reason ${reason}`)
+        else
+            debug(`[KILL-LIST] ${target.name} сам себя with reason ${reason}`)
+
+            
+        if (typeof target == 'object') target = JSON.stringify(target);
+        if (typeof killer == 'object') killer = JSON.stringify(killer);
+        // самоубийство
+        if (reason == 3452007600) return mp.callCEFV(`killList.add('${target}')`);
+        // на авто
+        if (reason == 2741846334) return mp.callCEFV(`killList.add('${target}', '${killer}', 'car')`);
+        // рукопашка
+        if (reason == 2725352035) return mp.callCEFV(`killList.add('${target}', '${killer}', 'hand')`);
+
+        // огнестрел, либо что-то еще? :D
+        var name = mp.weapons.getWeaponName(reason);
+        mp.callCEFV(`killList.add('${target}', '${killer}', '${name}')`);
     },
 };
 
