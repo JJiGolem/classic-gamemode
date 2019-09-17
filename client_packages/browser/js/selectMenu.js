@@ -1008,7 +1008,7 @@ var selectMenu = new Vue({
                             mp.trigger(`carshow.car.buy`);
                         }
                     }
-                    if (eventName == 'onEscapePressed') {
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
                         mp.trigger(`carshow.list.close`);
                     }
                 }
