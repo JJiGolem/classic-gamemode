@@ -190,7 +190,7 @@ module.exports = {
         var rec = mp.players.getBySqlId(recId);
         if (!rec) return out.error(player, `Игрок #${recId} оффлайн`);
         if (rec.id == player.id) return out.error(player, `Нельзя повысить себя`, header);
-        if (rec.character.factionRank >= player.character.factionRank) return out(`Недостаточно прав для повышения ${rec.name}`);
+        if (rec.character.factionRank >= player.character.factionRank - 1) return out.error(`Недостаточно прав для повышения ${rec.name}`);
         var max = factions.getMaxRank(rec.character.factionId);
         if (rec.character.factionRank >= max.id) return out.error(player, `${rec.name} имеет макс. ранг`);
 
@@ -209,7 +209,7 @@ module.exports = {
         var rec = mp.players.getBySqlId(recId);
         if (!rec) return out.error(player, `Игрок #${recId} оффлайн`, header);
         if (rec.id == player.id) return out.error(player, `Нельзя понизить себя`, header);
-        if (rec.character.factionRank >= player.character.factionRank) return out(`Недостаточно прав для понижения ${rec.name}`);
+        if (rec.character.factionRank >= player.character.factionRank) return out.error(`Недостаточно прав для понижения ${rec.name}`);
         var min = factions.getMinRank(rec.character.factionId);
         if (rec.character.factionRank <= min.id) return out.error(player, `${rec.name} имеет мин. ранг`);
 
@@ -228,7 +228,7 @@ module.exports = {
         var rec = mp.players.getBySqlId(recId);
         if (!rec) return out.error(player, `Игрок #${recId} оффлайн`);
         if (rec.id == player.id) return out.error(player, `Нельзя уволить себя`, header);
-        if (rec.character.factionRank >= player.character.factionRank) return out(`Недостаточно прав для увольнения ${rec.name}`);
+        if (rec.character.factionRank >= player.character.factionRank) return out.error(`Недостаточно прав для увольнения ${rec.name}`);
 
         factions.deleteMember(rec);
         notifs.info(rec, `${player.name} уволил вас`, header);
@@ -285,7 +285,7 @@ module.exports = {
         var rec = mp.players.getBySqlId(recId);
         if (!rec) return out.error(player, `Игрок #${recId} оффлайн`);
         if (rec.id == player.id) return out.error(player, `Нельзя повысить себя`, header);
-        if (rec.character.factionRank >= player.character.factionRank) return out(`Недостаточно прав для повышения ${rec.name}`);
+        if (rec.character.factionRank >= player.character.factionRank - 1) return out.error(`Недостаточно прав для повышения ${rec.name}`);
         var max = factions.getMaxRank(rec.character.factionId);
         if (rec.character.factionRank >= max.id) return out.error(player, `${rec.name} имеет макс. ранг`);
 
@@ -304,7 +304,7 @@ module.exports = {
         var rec = mp.players.getBySqlId(recId);
         if (!rec) return out.error(player, `Игрок #${recId} оффлайн`, header);
         if (rec.id == player.id) return out.error(player, `Нельзя понизить себя`, header);
-        if (rec.character.factionRank >= player.character.factionRank) return out(`Недостаточно прав для понижения ${rec.name}`);
+        if (rec.character.factionRank >= player.character.factionRank) return out.error(`Недостаточно прав для понижения ${rec.name}`);
         var min = factions.getMinRank(rec.character.factionId);
         if (rec.character.factionRank <= min.id) return out.error(player, `${rec.name} имеет мин. ранг`);
 
@@ -323,7 +323,7 @@ module.exports = {
         var rec = mp.players.getBySqlId(recId);
         if (!rec) return out.error(player, `Игрок #${recId} оффлайн`);
         if (rec.id == player.id) return out.error(player, `Нельзя уволить себя`, header);
-        if (rec.character.factionRank >= player.character.factionRank) return out(`Недостаточно прав для увольнения ${rec.name}`);
+        if (rec.character.factionRank >= player.character.factionRank) return out.error(`Недостаточно прав для увольнения ${rec.name}`);
 
         factions.deleteMember(rec);
         notifs.info(rec, `${player.name} уволил вас`, header);
@@ -380,7 +380,7 @@ module.exports = {
         var rec = mp.players.getBySqlId(recId);
         if (!rec) return out.error(player, `Игрок #${recId} оффлайн`);
         if (rec.id == player.id) return out.error(player, `Нельзя повысить себя`, header);
-        if (rec.character.factionRank >= player.character.factionRank) return out(`Недостаточно прав для повышения ${rec.name}`);
+        if (rec.character.factionRank >= player.character.factionRank - 1) return out.error(`Недостаточно прав для повышения ${rec.name}`);
         var max = factions.getMaxRank(rec.character.factionId);
         if (rec.character.factionRank >= max.id) return out.error(player, `${rec.name} имеет макс. ранг`);
 
@@ -399,7 +399,7 @@ module.exports = {
         var rec = mp.players.getBySqlId(recId);
         if (!rec) return out.error(player, `Игрок #${recId} оффлайн`, header);
         if (rec.id == player.id) return out.error(player, `Нельзя понизить себя`, header);
-        if (rec.character.factionRank >= player.character.factionRank) return out(`Недостаточно прав для понижения ${rec.name}`);
+        if (rec.character.factionRank >= player.character.factionRank) return out.error(`Недостаточно прав для понижения ${rec.name}`);
         var min = factions.getMinRank(rec.character.factionId);
         if (rec.character.factionRank <= min.id) return out.error(player, `${rec.name} имеет мин. ранг`);
 
@@ -418,7 +418,7 @@ module.exports = {
         var rec = mp.players.getBySqlId(recId);
         if (!rec) return out.error(player, `Игрок #${recId} оффлайн`);
         if (rec.id == player.id) return out.error(player, `Нельзя уволить себя`, header);
-        if (rec.character.factionRank >= player.character.factionRank) return out(`Недостаточно прав для увольнения ${rec.name}`);
+        if (rec.character.factionRank >= player.character.factionRank) return out.error(`Недостаточно прав для увольнения ${rec.name}`);
 
         factions.deleteMember(rec);
         notifs.info(rec, `${player.name} уволил вас`, header);
