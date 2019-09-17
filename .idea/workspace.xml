@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3b4f40e7-2b00-4af6-93b4-f955a86f8251" name="Default Changelist" comment="[Taxi] client &amp; driver v.1">
-      <change afterPath="$PROJECT_DIR$/client_packages/browser/js/fishing.js" afterDir="false" />
+    <list default="true" id="3b4f40e7-2b00-4af6-93b4-f955a86f8251" name="Default Changelist" comment="[Fishing] ui &amp; game">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client_packages/browser/css/fishing.css" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/css/fishing.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client_packages/browser/css/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/css/main.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client_packages/browser/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client_packages/fishing/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/fishing/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client_packages/hud/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/hud/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/fishing/events.js" beforeDir="false" afterPath="$PROJECT_DIR$/packages/fishing/events.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client_packages/browser/js/playersList.js" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/js/playersList.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -23,37 +19,31 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client_packages/fishing/index.js">
+        <entry file="file://$PROJECT_DIR$/client_packages/browser/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="524">
-              <caret line="89" column="3" lean-forward="true" selection-start-line="89" selection-start-column="3" selection-end-line="89" selection-end-column="3" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/packages/fishing/events.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="618">
-              <caret line="74" column="19" selection-start-line="74" selection-start-column="19" selection-end-line="74" selection-end-column="19" />
+            <state relative-caret-position="437">
+              <caret line="741" column="58" selection-start-line="741" selection-start-column="58" selection-end-line="741" selection-end-column="58" />
+              <folding>
+                <element signature="e#20305#20330#0" expanded="true" />
+                <element signature="e#20397#20424#0" expanded="true" />
+                <element signature="e#39351#39369#0" expanded="true" />
+                <element signature="e#39398#39416#0" expanded="true" />
+                <element signature="e#39445#39463#0" expanded="true" />
+                <element signature="e#39492#39510#0" expanded="true" />
+                <element signature="e#39958#39976#0" expanded="true" />
+                <element signature="e#40005#40023#0" expanded="true" />
+                <element signature="e#40052#40070#0" expanded="true" />
+                <element signature="e#40099#40117#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/client_packages/browser/index.html">
+        <entry file="file://$PROJECT_DIR$/client_packages/browser/js/playersList.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="241">
-              <caret line="1104" column="47" selection-start-line="1104" selection-start-column="47" selection-end-line="1104" selection-end-column="47" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client_packages/browser/js/fishing.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="358">
-              <caret line="54" column="23" selection-start-line="54" selection-start-column="23" selection-end-line="54" selection-end-column="23" />
+            <state relative-caret-position="540">
+              <caret line="27" column="29" selection-start-line="27" selection-start-column="29" selection-end-line="27" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -127,7 +117,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/react/src/modules/phone/components/business_app/OrderCancel.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/business_app/CreateOrder.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/business_app/SellState.jsx" />
         <option value="$PROJECT_DIR$/react/src/modules/phone/components/business_app/Sell.jsx" />
@@ -178,6 +167,7 @@
         <option value="$PROJECT_DIR$/client_packages/fishing/index.js" />
         <option value="$PROJECT_DIR$/client_packages/browser/js/fishing.js" />
         <option value="$PROJECT_DIR$/client_packages/browser/index.html" />
+        <option value="$PROJECT_DIR$/client_packages/browser/js/playersList.js" />
       </list>
     </option>
   </component>
@@ -193,7 +183,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -278,6 +267,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -360,7 +350,9 @@
       <workItem from="1568178825723" duration="199000" />
       <workItem from="1568179126696" duration="912000" />
       <workItem from="1568185951745" duration="737000" />
-      <workItem from="1568280568344" duration="14727000" />
+      <workItem from="1568280568344" duration="15502000" />
+      <workItem from="1568623688069" duration="248000" />
+      <workItem from="1568719579286" duration="1302000" />
     </task>
     <task id="LOCAL-00001" summary="[Phone] taxi app&#10;[Houses] actions menu fix">
       <created>1565949187139</created>
@@ -383,11 +375,18 @@
       <option name="project" value="LOCAL" />
       <updated>1566126541386</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="[Fishing] ui &amp; game">
+      <created>1568316390038</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1568316390038</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="347321000" />
+    <option name="totallyTimeSpent" value="349646000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -408,7 +407,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="10" weight="0.20254958" />
-      <window_info anchor="bottom" id="Messages" order="11" weight="0.3298731" />
+      <window_info active="true" anchor="bottom" id="Messages" order="11" visible="true" weight="0.3286119" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -442,21 +441,10 @@
     <MESSAGE value="[Phone] taxi app&#10;[Houses] actions menu fix" />
     <MESSAGE value="[Phone] remove house app fix" />
     <MESSAGE value="[Taxi] client &amp; driver v.1" />
-    <option name="LAST_COMMIT_MESSAGE" value="[Taxi] client &amp; driver v.1" />
+    <MESSAGE value="[Fishing] ui &amp; game" />
+    <option name="LAST_COMMIT_MESSAGE" value="[Fishing] ui &amp; game" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/packages/houses/events.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2565" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/packages/phone/events.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="370">
-          <caret line="193" column="25" selection-start-line="193" selection-start-column="19" selection-end-line="193" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/packages/phone/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-31" />
@@ -779,29 +767,51 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client_packages/fishing/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="524">
-          <caret line="89" column="3" lean-forward="true" selection-start-line="89" selection-start-column="3" selection-end-line="89" selection-end-column="3" />
+        <state relative-caret-position="920">
+          <caret line="46" column="8" selection-start-line="46" selection-start-column="8" selection-end-line="46" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/packages/fishing/events.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="618">
+        <state relative-caret-position="1480">
           <caret line="74" column="19" selection-start-line="74" selection-start-column="19" selection-end-line="74" selection-end-column="19" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client_packages/browser/js/fishing.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="358">
+        <state relative-caret-position="618">
           <caret line="54" column="23" selection-start-line="54" selection-start-column="23" selection-end-line="54" selection-end-column="23" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/client_packages/browser/js/selectMenu.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/client_packages/browser/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="241">
-          <caret line="1104" column="47" selection-start-line="1104" selection-start-column="47" selection-end-line="1104" selection-end-column="47" />
+        <state relative-caret-position="437">
+          <caret line="741" column="58" selection-start-line="741" selection-start-column="58" selection-end-line="741" selection-end-column="58" />
+          <folding>
+            <element signature="e#20305#20330#0" expanded="true" />
+            <element signature="e#20397#20424#0" expanded="true" />
+            <element signature="e#39351#39369#0" expanded="true" />
+            <element signature="e#39398#39416#0" expanded="true" />
+            <element signature="e#39445#39463#0" expanded="true" />
+            <element signature="e#39492#39510#0" expanded="true" />
+            <element signature="e#39958#39976#0" expanded="true" />
+            <element signature="e#40005#40023#0" expanded="true" />
+            <element signature="e#40052#40070#0" expanded="true" />
+            <element signature="e#40099#40117#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client_packages/browser/js/playersList.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="27" column="29" selection-start-line="27" selection-start-column="29" selection-end-line="27" selection-end-column="29" />
         </state>
       </provider>
     </entry>
