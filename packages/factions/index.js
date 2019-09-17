@@ -159,7 +159,8 @@ module.exports = {
         });
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
-            if (!this.isArmyFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, `Склад боеприпасов`);
+            if (!this.isArmyFaction(player.character.factionId) &&
+                !this.isBandFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, `Склад боеприпасов`);
             player.call("factions.insideWarehouse", [true, "ammo"]);
             player.insideWarehouse = true;
         };
