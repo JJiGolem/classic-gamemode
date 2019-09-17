@@ -47,6 +47,12 @@ module.exports = {
 
         } else {
             if (!/\S/.test(message)) return;
+
+            if (message == ')') return mp.events.call('/me', player, 'улыбается');
+            if (message == '))') return mp.events.call('/me', player, 'смеется');
+            if (message == '(') return mp.events.call('/me', player, 'расстроился');
+            if (message == '((') return mp.events.call('/me', player, 'сильно расстроился');
+            
             switch (type) {
                 case 0:
                     {
