@@ -8,14 +8,13 @@ module.exports = {
 
     },
     "familiar.add": (player, recId) => {
-        console.log(`familiar.add: ${player.name} ${recId}`)
+        // console.log(`familiar.add: ${player.name} ${recId}`)
         var header = `Знакомство`;
         var rec = mp.players.at(recId);
         if (!rec) return notifs.error(player, `Игрок #${recId} не найден`, header);
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, header);
 
         rec.call(`offerDialog.show`, ["familiar", {
-            name: player.name,
             playerId: player.id
         }]);
     },

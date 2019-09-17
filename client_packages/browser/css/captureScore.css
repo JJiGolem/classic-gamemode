@@ -1,8 +1,8 @@
 #captureScore {
     bottom: 10%;
     color: #fff;
-    font-family: montserrat;
-    font-size: 1.8vh;
+    font-family: Ubuntu;
+    font-size: 1.5vh;
     left: 50%;
     position: absolute;
     text-shadow: 0px 2px 3px #000;
@@ -12,7 +12,7 @@
 }
 
 #captureScore .header {
-    /* font-weight: bold; */
+    font-weight: bold;
     text-align: center;
 }
 
@@ -20,9 +20,14 @@
     width: 1.5vh;
 }
 
+#captureScore .header .vs {
+    margin: 0 1vh;
+}
+
 #captureScore .progress {
     height: 1vh;
-    margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
+    margin-top: 1vh;
     width: 100%;
 }
 
@@ -34,10 +39,4 @@
 #captureScore .score {
     display: flex;
     justify-content: space-between;
-    margin-top: -2vh;
-}
-
-#captureScore .time {
-    margin-top: 1vh;
-    text-align: center;
 }

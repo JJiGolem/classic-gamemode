@@ -10,7 +10,7 @@ mp.death = {
     // Время ожидания предложения (ms)
     waitHurtTime: 4000,
     // Время ожидания медиков (ms)
-    knockTime: 10000,
+    knockTime: 180000,
     // Таймер ожидания медиков
     knockTimer: null,
 

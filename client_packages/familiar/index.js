@@ -39,7 +39,9 @@ mp.familiar = {
 };
 
 mp.events.add({
-    "characterInit.done": () => {},
+    "characterInit.done": () => {
+        mp.familiar.initList();
+    },
     "familiar.add": (name) => {
         mp.familiar.add(name);
     },
@@ -53,5 +55,3 @@ mp.events.add({
         player.isFamiliar = true;
     },
 });
-
-mp.familiar.initList();

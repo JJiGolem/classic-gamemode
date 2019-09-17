@@ -51,7 +51,9 @@ mp.factions = {
         mp.callCEFV(`selectMenu.showByName('factionGiveRank')`);
     },
     showStorageSelectMenu(factionId) {
-        if (factionId == 2) { // LSPD
+        if (factionId == 1) { // Government
+            mp.callCEFV(`selectMenu.showByName('governmentStorage')`);
+        } else if (factionId == 2) { // LSPD
             mp.callCEFV(`selectMenu.showByName('lspdStorage')`);
         } else if (factionId == 3) { // LSSD
             mp.callCEFV(`selectMenu.showByName('lssdStorage')`);
@@ -61,6 +63,8 @@ mp.factions = {
             mp.callCEFV(`selectMenu.showByName('hospitalStorage')`);
         } else if (factionId == 6) { // ARMY
             mp.callCEFV(`selectMenu.showByName('armyStorage')`);
+        } else if (factionId == 7) { // NEWS
+            mp.callCEFV(`selectMenu.showByName('newsStorage')`);
         } else if (this.isBandFaction(factionId)) {
             mp.callCEFV(`selectMenu.showByName('bandStorage')`);
         }
@@ -103,8 +107,8 @@ mp.events.add({
             mp.factions.boxHandler();
         }); // E
         // коробка с боеприпасами в руках
-        mp.attachmentMngr.register("ammoBox", "prop_box_ammo04a", 58867, new mp.Vector3(0.2, -0.3, 0.1),
-            new mp.Vector3(-45, 20, 120), {
+        mp.attachmentMngr.register("ammoBox", "prop_box_ammo04a", 11363, new mp.Vector3(0.05, 0, -0.25),
+            new mp.Vector3(-15, 100, 95), {
                 dict: "anim@heists@box_carry@",
                 name: "idle",
                 speed: 8,
@@ -113,8 +117,8 @@ mp.events.add({
             true
         );
         // коробка с медикаментами в руках
-        mp.attachmentMngr.register("medicinesBox", "ex_office_swag_pills4", 58867, new mp.Vector3(0.2, -0.3, 0.1),
-            new mp.Vector3(-45, 20, 120), {
+        mp.attachmentMngr.register("medicinesBox", "ex_office_swag_pills4", 11363, new mp.Vector3(0.2, 0, -0.2),
+            new mp.Vector3(-100, 0, 20), {
                 dict: "anim@heists@box_carry@",
                 name: "idle",
                 speed: 8,

@@ -228,7 +228,7 @@ module.exports = {
                 if (!rec.character) return;
                 rec.call(`inventory.debug`, [args[0]]);
             });
-            var val = (args[0])? "включил" : "выключил";
+            var val = (args[0]) ? "включил" : "выключил";
             out.info(`${player.name} ${val} DEBUG-режим инвентаря`);
         }
     },
@@ -241,8 +241,8 @@ module.exports = {
                 if (!rec.character) return;
                 rec.call(`inventory.spin`, [args[0]]);
             });
-            var val = (args[0])? "включил" : "выключил";
-                out.info(`${player.name} ${val} SPIN-режим инвентаря`);
+            var val = (args[0]) ? "включил" : "выключил";
+            out.info(`${player.name} ${val} SPIN-режим инвентаря`);
         }
     },
     "/invweight": {
@@ -280,16 +280,20 @@ module.exports = {
             console.log(player.vehicle.inventory.items)
         }
     },
+    "/vitemids": {
+        access: 6,
+        description: "Логировать иды предметов багажника в консоль.",
+        args: "",
+        handler: (player) => {
+            debug(player.vehicle.inventory.items.map(x => x.id));
+        }
+    },
     "/pitemids": {
         access: 6,
         description: "Логировать иды предметов игрока в консоль.",
         args: "",
         handler: (player) => {
-            var ids = [];
-            player.inventory.items.forEach((item) => {
-                ids.push(item.id);
-            });
-            console.log(ids)
+            debug(player.inventory.items.map(x => x.id));
         }
     },
 }

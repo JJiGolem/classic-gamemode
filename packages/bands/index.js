@@ -16,7 +16,7 @@ module.exports = {
     // Время захвата территории (ms)
     warTime: 5 * 60 * 1000,
     // Промежуток часов, в который можно начать захват
-    captureInterval: [13, 23],
+    captureInterval: [14, 23],
     // Кол-во боеприпасов, списываемое за выдачу оружия
     gunAmmo: 100,
     // Кол-во боеприпасов, списываемое за выдачу патронов
@@ -128,11 +128,11 @@ module.exports = {
         this.wars[zone.id] = {
             band: {
                 id: faction.id,
-                score: 10,
+                score: 0,
             },
             enemyBand: {
                 id: zone.factionId,
-                score: 20,
+                score: 0,
             },
             startTime: Date.now()
         };

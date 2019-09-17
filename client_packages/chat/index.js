@@ -141,6 +141,12 @@ function sortTagsById() {
     });
 }
 
+function correctName(name) {
+    var player = mp.utils.getPlayerByName(name);
+    if (player && !player.isFamiliar) return `Незнакомец`;
+    return name;
+}
+
 mp.events.add('chat.message.get', (type, message) => {
     if (message == "/timestamp") {
         if (timestamp) {
@@ -156,11 +162,15 @@ mp.events.add('chat.message.get', (type, message) => {
 });
 
 mp.events.add('chat.action.say', (nickname, id, message) => {
+    nickname = correctName(nickname);
+
     message = `!{#ffffff}${nickname}[${id}]: ${message}`;
     mp.events.call('chat.message.push', message);
 });
 
 mp.events.add('chat.action.shout', (nickname, id, message) => {
+    nickname = correctName(nickname);
+
     if (typeof (message) != "string") message = message.join(' ');
     message = `!{#ffdfa8}${nickname}[${id}] кричит: ${message}`;
     mp.events.call('chat.message.push', message);
@@ -173,24 +183,32 @@ mp.events.add('chat.action.walkietalkie', (nickname, id, rank, message) => { //a
 });
 
 mp.events.add('chat.action.nonrp', (nickname, id, message) => {
+    nickname = correctName(nickname);
+
     if (typeof (message) != "string") message = message.join(' ');
     message = `!{#c6c695}(( ${nickname}[${id}]: ${message} ))`;
     mp.events.call('chat.message.push', message);
 });
 
 mp.events.add('chat.action.me', (nickname, id, message) => {
+    nickname = correctName(nickname);
+
     if (typeof (message) != "string") message = message.join(' ');
     message = `!{#dd90ff}${nickname}[${id}] ${message}`;
     mp.events.call('chat.message.push', message);
 });
 
 mp.events.add('chat.action.do', (nickname, id, message) => {
+    nickname = correctName(nickname);
+
     if (typeof (message) != "string") message = message.join(' ');
     message = `!{#dd90ff}${message} (${nickname}[${id}])`;
     mp.events.call('chat.message.push', message);
 });
 
 mp.events.add('chat.action.try', (nickname, id, message, result) => {
+    nickname = correctName(nickname);
+    
     if (typeof (message) != "string") message = message.join(' ');
     message = `!{#dd90ff}${nickname}[${id}] ${message} ${(result ? '!{#66cc00}[Удачно]' : '!{#ff6600}[Неудачно]')}`;
     mp.events.call('chat.message.push', message);

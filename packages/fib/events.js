@@ -20,49 +20,7 @@ module.exports = {
         var header = `Склад ${faction.name}`;
 
         if (faction.ammo < fib.clothesAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
-
-        var hats = inventory.getArrayByItemId(player, 6);
-        var tops = inventory.getArrayByItemId(player, 7);
-        var legs = inventory.getArrayByItemId(player, 8);
-        var feets = inventory.getArrayByItemId(player, 9);
-        var ears = inventory.getArrayByItemId(player, 10);
-        var ties = inventory.getArrayByItemId(player, 2);
-        var masks = inventory.getArrayByItemId(player, 14);
-        var glasses = inventory.getArrayByItemId(player, 1);
-
-        for (var key in hats) {
-            var params = inventory.getParamsValues(hats[key]);
-            if (factions.isFibFaction(params.faction)) return notifs.error(player, `Вы уже имеете головной убор`, header);
-        }
-        for (var key in tops) {
-            var params = inventory.getParamsValues(tops[key]);
-            if (factions.isFibFaction(params.faction)) return notifs.error(player, `Вы уже имеете рубашку`, header);
-        }
-        for (var key in legs) {
-            var params = inventory.getParamsValues(legs[key]);
-            if (factions.isFibFaction(params.faction)) return notifs.error(player, `Вы уже имеете брюки`, header);
-        }
-        for (var key in feets) {
-            var params = inventory.getParamsValues(feets[key]);
-            if (factions.isFibFaction(params.faction)) return notifs.error(player, `Вы уже имеете ботинки`, header);
-        }
-        for (var key in ears) {
-            var params = inventory.getParamsValues(ears[key]);
-            if (factions.isFibFaction(params.faction)) return notifs.error(player, `Вы уже имеете наушники`, header);
-        }
-        for (var key in ties) {
-            var params = inventory.getParamsValues(ties[key]);
-            if (factions.isFibFaction(params.faction)) return notifs.error(player, `Вы уже имеете аксессуар`, header);
-        }
-        for (var key in masks) {
-            var params = inventory.getParamsValues(masks[key]);
-            if (factions.isFibFaction(params.faction)) return notifs.error(player, `Вы уже имеете шлем`, header);
-        }
-        for (var key in glasses) {
-            var params = inventory.getParamsValues(glasses[key]);
-            if (factions.isFibFaction(params.faction)) return notifs.error(player, `Вы уже имеете очки`, header);
-        }
-
+        if (player.inventory.items.length) return notifs.error(player, `Необходимо раздеться, чтобы надеть форму`, header);
 
         inventory.fullDeleteItemsByParams([6, 7, 8, 9, 10, 2, 14, 1], ["faction", "owner"], [character.factionId, character.id]);
 

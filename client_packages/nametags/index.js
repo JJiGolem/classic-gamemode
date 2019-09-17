@@ -7,28 +7,13 @@ const color = [255, 255, 255, 255];
 var FONT = 4;
 var SIZE = 0.4;
 
-mp.keys.bind(0x75, true, function () {
-    if (FONT == 4) {
-        FONT = 0;
-        SIZE = 0.35;
-    } else {
-        FONT = 4;
-        SIZE = 0.4;
-    }
-});
-
-
 mp.nametags.enabled = false;
 
+let showNametags = true;
+
 mp.events.add('render', (nametags) => {
-    //TEMP
-    // mp.game.graphics.drawText(`Test Test`, [0.5, 0.5],
-    // {
-    //   font: FONT,
-    //   color: [255, 255, 255, 255],
-    //   scale: [SIZE, SIZE],
-    //   outline: true
-    // });
+
+    if (!showNametags) return;
 
     const graphics = mp.game.graphics;
     const screenRes = graphics.getScreenResolution(0, 0);
@@ -80,3 +65,11 @@ mp.events.add('render', (nametags) => {
         }
     })
 })
+
+mp.keys.bind(0x75, true, function () { /// Включение/отключение ников на F6
+    if (showNametags) {
+        showNametags = false;
+    } else {
+        showNametags = true
+    }
+});

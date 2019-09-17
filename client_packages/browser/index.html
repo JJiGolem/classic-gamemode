@@ -34,6 +34,7 @@
     <link rel="stylesheet" type="text/css" href="css/gunLicense.css" />
     <link rel="stylesheet" type="text/css" href="css/fishing.css" />
     <link rel="stylesheet" type="text/css" href="css/captureScore.css" />
+    <link rel="stylesheet" type="text/css" href="css/killList.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -570,7 +571,7 @@
             <div class="params">
                 <div class="param">
                     <div class="name">Вес</div>
-                    <div class="value">{{ getItemWeight(itemDesc.item) }} кг</div>
+                    <div class="value">{{ descItemWeight }} кг</div>
                 </div>
                 <div class="param">
                     <div class="name">Занимает</div>
@@ -1170,22 +1171,30 @@
         </div>
     </div>
 
-    <div v-cloak id="captureScore" v-if="show">
+    <div v-cloak id="captureScore" v-if="isShow">
         <div class="header">
             <img :src="leftImgSrc" />
             <span :style="{color: colors[leftBandId]}">{{ names[leftBandId] }}</span>
-            vs.
+            <span class="vs">vs.</span>
             <span :style="{color: colors[rightBandId]}">{{ names[rightBandId] }}</span>
             <img :src="rightImgSrc" />
-        </div>
-        <div class="score">
-            <div>{{ leftScore }}</div>
-            <div>{{ rightScore }}</div>
         </div>
         <div class="progress" :style="{background: colors[rightBandId]}">
             <div class="fill" :style="{width: progressWidth+'%', background: colors[leftBandId]}"></div>
         </div>
-        <div class="time">{{ prettyTime }}</div>
+        <div class="score">
+            <div>Убийств: {{ leftScore }}</div>
+            <div>{{ prettyTime }}</div>
+            <div>Убийств: {{ rightScore }}</div>
+        </div>
+    </div>
+
+    <div v-cloak id="killList" v-if="show && list.length">
+        <div class="log" v-for="kill in list">
+            <div v-if="kill.killer" :style="{color: playerColor(kill.killer)}">{{ kill.killer.name }}</div>
+            <img :src="killImgSrc(kill.reason)" />
+            <div :style="{color: playerColor(kill.target)}">{{ kill.target.name }} <span v-if="kill.reason && isWeapon(kill.reason)"> из {{ kill.reason }}</span></div>
+        </div>
     </div>
 
     <!-- ------------------------ REACT ------------------------------ -->
@@ -1216,6 +1225,7 @@
     <script src="js/gunLicense.js"></script>
     <script src="js/fishing.js"></script>
     <script src="js/captureScore.js"></script>
+    <script src="js/killList.js"></script>
 
 </body>
 

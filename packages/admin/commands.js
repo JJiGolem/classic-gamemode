@@ -1,6 +1,7 @@
 /// Базовые админские команды, описание их структуры находится в модуле test
 var vehicles = call("vehicles");
 let notify = call('notifications');
+let admin = call('admin');
 
 module.exports = {
 
@@ -33,7 +34,7 @@ module.exports = {
         }
     },
     "/goto": {
-        access: 3,
+        access: 2,
         description: "Телепорт к игроку",
         args: "[ID игрока]",
         handler: (player, args) => {
@@ -55,7 +56,7 @@ module.exports = {
         }
     },
     "/gethere": {
-        access: 4,
+        access: 3,
         description: "Телепорт игрока к себе",
         args: "[ID игрока]",
         handler: (player, args) => {
@@ -458,8 +459,8 @@ module.exports = {
         }
     },
     "/sethp": {
-        description: "Изменить кол-во здоровья игроку.",
-        access: 4,
+        description: "Изменить кол-во здоровья игроку. Реанимирует, если игрок лежит.",
+        access: 3,
         args: "[ид_игрока]:n [здоровье]:n",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
@@ -467,6 +468,7 @@ module.exports = {
             rec.health = Math.clamp(args[1], 0, 100);
             out.info(`Игроку ${rec.name} установлено ${rec.health} ед. здоровья`, player);
             notify.info(rec, `${player.name} установил вам ${rec.health} ед. здоровья`);
+            if (rec.getVariable("knocked")) rec.setVariable("knocked", null);
         }
     },
     "/weapon": {
@@ -477,6 +479,27 @@ module.exports = {
             var rec = mp.players.at(args[0]);
             if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
             rec.giveWeapon(mp.joaat(args[1]), args[2]);
+        }
+    },
+    "/q": {
+        description: "Отключиться от сервера.",
+        access: 1,
+        args: "",
+        handler: (player, args, out) => {
+            out.log(`До скорого!`, player);
+            player.kick();
+        }
+    },
+    "/cmdlevel": {
+        description: "Установить мин. админ уровень для доступа к команде.",
+        access: 6,
+        args: "[cmd_name] [level]:n",
+        handler: (player, args, out) => {
+            var cmd = admin.getCommands()[args[0]];
+            if (!cmd) return out.error(`Команда ${args[0]} не найдена`, player);
+            if (args[1] > player.character.admin) return out.error(`Нельзя установить уровень команды выше своего`, player);
+            cmd.access = args[1];
+            out.info(`${player.name} установил для команды ${args[0]} уровень доступа ${args[1]}`);
         }
     },
 }

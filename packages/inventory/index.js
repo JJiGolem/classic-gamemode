@@ -211,7 +211,7 @@ module.exports = {
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, itemId);
             if (weapon) return callback(`Оружие ${this.getName(itemId)} уже имеется`);
-            this.giveWeapon(player, params.weaponHash, params.ammo);
+            if (slot.parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
         }
         var struct = [];
         for (var key in params) {
@@ -236,9 +236,9 @@ module.exports = {
 
         player.inventory.items.push(item);
         if (!item.parentId) this.updateView(player, item);
+        callback();
         await item.save();
         player.call("inventory.addItem", [this.convertServerToClientItem(player.inventory.items, item), item.pocketIndex, item.index, item.parentId]);
-        callback();
     },
     async addOldItem(player, item, callback = () => {}) {
         var slot = this.findFreeSlot(player, item.itemId);
@@ -250,7 +250,7 @@ module.exports = {
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, item.itemId);
             if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
-            this.giveWeapon(player, params.weaponHash, params.ammo);
+            if (slot.parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
         }
 
         item.playerId = player.character.id;
@@ -303,11 +303,10 @@ module.exports = {
         if (nextWeight > this.maxPlayerWeight) return debug(`Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`);
         var place = player.inventory.place;
         var params = this.getParamsValues(item);
-        // TODO: проверка на вес
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, item.itemId);
             if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
-            this.giveWeapon(player, params.weaponHash, params.ammo);
+            if (parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
         }
         var struct = [];
         for (var key in params) {
@@ -369,7 +368,7 @@ module.exports = {
             this.clearArrayItems(player, child);
         }
         var index = items.indexOf(item);
-        items.splice(index, 1);
+        if (index != -1) items.splice(index, 1);
     },
     getArrayItems(player, item, result = []) {
         var items = player.inventory.items;
@@ -581,6 +580,7 @@ module.exports = {
         player.call(`inventory.setItemParam`, [item.id, key, value]);
     },
     findFreeSlot(player, itemId) {
+        // debug(`findFreeSlot | itemId: ${itemId}`)
         var items = player.inventory.items;
         for (var bodyIndex in this.bodyList) {
             var list = this.bodyList[bodyIndex];
@@ -600,6 +600,7 @@ module.exports = {
 
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
+            if (!item.id) continue; // предмет еще не сохранен в БД
             var params = this.getParamsValues(item);
             if (item.parentId || !params.pockets) continue; // предмет в предмете или не имеет карманы
             if (item.itemId == itemId) continue; // тип предмета совпадает (рубашку в рубашку нельзя и т.д.)
@@ -726,6 +727,7 @@ module.exports = {
             var info = this.getInventoryItem(item.itemId);
             weight += info.weight;
             var params = this.getParamsValues(item);
+            if (params.weight) weight += params.weight;
             if (params.count) weight += params.count * info.weight;
             var children = this.getChildren(player.inventory.items, item);
             if (children.length) {
@@ -744,7 +746,7 @@ module.exports = {
     },
     // Полное удаление предметов инвентаря с сервера
     fullDeleteItemsByParams(itemIds, keys, values) {
-        // console.log(`fullDeleteItemsByParams`)
+        // debug(`fullDeleteItemsByParams`)
         if (itemIds && !Array.isArray(itemIds)) itemIds = [itemIds];
         if (!Array.isArray(keys)) keys = [keys];
         if (!Array.isArray(values)) values = [values];
@@ -763,7 +765,7 @@ module.exports = {
             items.forEach(item => {
                 item.destroy();
                 var i = veh.inventory.items.indexOf(item);
-                veh.inventory.items.splice(i, 1);
+                if (i != -1) veh.inventory.items.splice(i, 1);
                 if (veh.bootPlayerId != null) {
                     var rec = mp.players.at(veh.bootPlayerId);
                     if (!rec) return;
@@ -816,13 +818,13 @@ module.exports = {
                 var rec = mp.players.at(obj.playerId);
                 if (!rec) return;
                 var i = rec.inventory.ground.indexOf(obj);
-                rec.inventory.ground.splice(i, 1);
+                if (i != -1) rec.inventory.ground.splice(i, 1);
             }
         });
         /* Для всех игроков из БД. */
     },
     deleteByParams(player, itemIds, keys, values) {
-        // console.log(`deleteByParams: ${player.name}`)
+        // debug(`deleteByParams: ${player.name}`)
         if (itemIds && !Array.isArray(itemIds)) itemIds = [itemIds];
         if (!Array.isArray(keys)) keys = [keys];
         if (!Array.isArray(values)) values = [values];
@@ -843,7 +845,7 @@ module.exports = {
                     doDelete = false;
                     break;
                 }
-                if (param && param != values[i]) {
+                if (param != values[i]) {
                     doDelete = false;
                     break;
                 }
@@ -949,7 +951,7 @@ module.exports = {
                 var rec = mp.players.at(obj.playerId);
                 if (!rec) return;
                 var i = rec.inventory.ground.indexOf(obj);
-                rec.inventory.ground.splice(i, 1);
+                if (i != -1) rec.inventory.ground.splice(i, 1);
             } catch (e) {
                 console.log(e);
             }

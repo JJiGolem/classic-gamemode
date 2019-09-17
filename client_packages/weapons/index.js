@@ -13,6 +13,7 @@ mp.weapons = {
     waitSync: 20000,
     lastData: {},
     hashes: [],
+    weaponData: require('weapons/data.js'),
 
     sync() {
         var data = {};
@@ -43,6 +44,10 @@ mp.weapons = {
     getWeaponSlot(weaponhash) {
         return mp.game.invoke('0x4215460B9B8B7FA0', weaponhash);
     },
+    getWeaponName(weaponHash) {
+        if (!weaponHash) return null;
+        return this.weaponData[weaponHash].name;
+    },
     hashToValid(hash) {
         if (hash == 3675956304) return -619010992; // weapon_machinepistol
         var hashes = [2210333304];
@@ -53,10 +58,11 @@ mp.weapons = {
 
 mp.events.add({
     "render": () => {
-        // var player = mp.players.local;
-        // mp.utils.drawText2d(`curr: ${mp.weapons.currentWeapon()} (${mp.weapons.getAmmoWeapon(mp.weapons.currentWeapon())}) weap: ${player.weapon} (${mp.weapons.getAmmoWeapon(player.weapon)}) |
-        //     type: ${mp.weapons.getAmmoType()} slot: ${mp.weapons.getWeaponSlot(mp.weapons.currentWeapon())}`);
-        // mp.utils.drawText2d(`hashes: ${JSON.stringify(mp.weapons.hashes)}`, [0.8, 0.6]);
+        var player = mp.players.local;
+        mp.utils.drawText2d(`curr: ${mp.weapons.currentWeapon()} (${mp.weapons.getAmmoWeapon(mp.weapons.currentWeapon())}) weap: ${player.weapon} (${mp.weapons.getAmmoWeapon(player.weapon)}) |
+            type: ${mp.weapons.getAmmoType()} slot: ${mp.weapons.getWeaponSlot(mp.weapons.currentWeapon())}`);
+        mp.utils.drawText2d(`hashes: ${JSON.stringify(mp.weapons.hashes)}`, [0.8, 0.6]);
+        mp.utils.drawText2d(`name: ${mp.weapons.getWeaponName(mp.weapons.currentWeapon())}`, [0.8, 0.65]);
     },
     "time.main.tick": () => {
         if (!mp.weapons.needSync) return;

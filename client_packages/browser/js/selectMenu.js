@@ -1008,7 +1008,7 @@ var selectMenu = new Vue({
                             mp.trigger(`carshow.car.buy`);
                         }
                     }
-                    if (eventName == 'onEscapePressed') {
+                    if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
                         mp.trigger(`carshow.list.close`);
                     }
                 }
@@ -1488,6 +1488,97 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "governmentStorage": {
+                name: "governmentStorage",
+                header: "Склад Government",
+                items: [{
+                        text: "Раздевалка",
+                    },
+                    // {
+                    //     text: "Снаряжение"
+                    // },
+                    // {
+                    //     text: "Вооружение"
+                    // },
+                    // {
+                    //     text: "Патроны"
+                    // },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Раздевалка') {
+                            selectMenu.showByName("governmentClothes");
+                            // } else if (e.itemName == 'Снаряжение') {
+                            // selectMenu.showByName("lspdItems");
+                            // } else if (e.itemName == 'Вооружение') {
+                            // selectMenu.showByName("lspdGuns");
+                            // } else if (e.itemName == 'Патроны') {
+                            // selectMenu.showByName("lspdAmmo");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
+            "governmentClothes": {
+                name: "governmentClothes",
+                header: "Раздевалка Government",
+                items: [{
+                        text: "Охрана"
+                    },
+                    {
+                        text: "Секретарь"
+                    },
+                    {
+                        text: "Судья"
+                    },
+                    {
+                        text: "Адвокат"
+                    },
+                    {
+                        text: "Губернатор"
+                    },
+                    // {
+                    //     text: "Бронежилет"
+                    // },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("governmentStorage");
+                        // else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `police.storage.armour.take`);
+                        else {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `government.storage.clothes.take`, e.itemIndex);
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("governmentStorage");
+                }
+            },
             "lspdStorage": {
                 name: "lspdStorage",
                 header: "Склад LSPD",
@@ -1579,9 +1670,10 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-                        if (e.itemName == 'Вернуться') selectMenu.showByName("lspdStorage");
+                        if (e.itemName == 'Вернуться') return selectMenu.showByName("lspdStorage");
                         else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `police.storage.armour.take`);
                         else mp.trigger(`callRemote`, `police.storage.clothes.take`, e.itemIndex);
+                        selectMenu.show = false;
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
                 }
             },
@@ -1789,9 +1881,10 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-                        if (e.itemName == 'Вернуться') selectMenu.showByName("lssdStorage");
+                        if (e.itemName == 'Вернуться') return selectMenu.showByName("lssdStorage");
                         else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `police.storage.armour.take`);
                         else mp.trigger(`callRemote`, `police.storage.clothes.take`, e.itemIndex);
+                        selectMenu.show = false;
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lssdStorage");
                 }
             },
@@ -1996,9 +2089,10 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-                        if (e.itemName == 'Вернуться') selectMenu.showByName("fibStorage");
+                        if (e.itemName == 'Вернуться') return selectMenu.showByName("fibStorage");
                         else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `fib.storage.armour.take`);
                         else mp.trigger(`callRemote`, `fib.storage.clothes.take`, e.itemIndex);
+                        selectMenu.show = false;
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("fibStorage");
                 }
             },
@@ -2206,9 +2300,10 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-                        if (e.itemName == 'Вернуться') selectMenu.showByName("armyStorage");
+                        if (e.itemName == 'Вернуться') return selectMenu.showByName("armyStorage");
                         else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `army.storage.armour.take`);
                         else mp.trigger(`callRemote`, `army.storage.clothes.take`, e.itemIndex);
+                        selectMenu.show = false;
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
                 }
             },
@@ -2356,7 +2451,7 @@ var selectMenu = new Vue({
             },
             "hospitalClothes": {
                 name: "hospitalClothes",
-                header: "Раздевалка Clothes",
+                header: "Раздевалка Hospital",
                 items: [{
                         text: "Форма №1"
                     },
@@ -2392,7 +2487,10 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("hospitalStorage");
-                        else mp.trigger(`callRemote`, `hospital.storage.clothes.take`, e.itemIndex);
+                        else {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `hospital.storage.clothes.take`, e.itemIndex);
+                        }
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("hospitalStorage");
                 }
             },
@@ -2430,6 +2528,80 @@ var selectMenu = new Vue({
                         if (e.itemName == "Вернуться") selectMenu.showByName("hospitalStorage");
                         else mp.trigger(`callRemote`, `hospital.storage.items.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("hospitalStorage");
+                }
+            },
+            "newsStorage": {
+                name: "newsStorage",
+                header: "Склад Weazel News",
+                items: [{
+                        text: "Раздевалка",
+                    },
+                    // {
+                    //     text: "Снаряжение"
+                    // },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Раздевалка') {
+                            selectMenu.showByName("newsClothes");
+                            // } else if (e.itemName == 'Снаряжение') {
+                            // selectMenu.showByName("hospitalItems");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
+            "newsClothes": {
+                name: "newsClothes",
+                header: "Раздевалка Weazel News",
+                items: [{
+                        text: "Стажер"
+                    },
+                    {
+                        text: "Мл. Состав"
+                    },
+                    {
+                        text: "Ст. Состав"
+                    },
+                    {
+                        text: "Директор"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("newsStorage");
+                        else {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `news.storage.clothes.take`, e.itemIndex);
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("newsStorage");
                 }
             },
             "bandStorage": {
@@ -2556,8 +2728,7 @@ var selectMenu = new Vue({
             "drugsStash": {
                 name: "drugsStash",
                 header: "Наркопритон",
-                items: [
-                    {
+                items: [{
                         text: "Наркотик 1",
                         values: ["3 г.", "7 г.", "10 г."],
                     },

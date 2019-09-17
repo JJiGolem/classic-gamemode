@@ -4,7 +4,7 @@ var captureScore = new Vue({
         show: false,
         colors: {
             8: "#00b500",
-            9: "#8c30ff",
+            9: "#da30ff",
             10: "#fff629",
             11: "#4a97d1",
         },
@@ -39,7 +39,10 @@ var captureScore = new Vue({
             if (minutes < 10) minutes = "0" + minutes;
             if (seconds < 10) seconds = "0" + seconds;
             return `${minutes}:${seconds}`;
-        }
+        },
+        isShow() {
+            return this.show && !offerDialog.dialog;
+        },
     },
     watch: {
         show(val) {
