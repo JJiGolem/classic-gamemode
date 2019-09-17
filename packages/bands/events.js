@@ -119,7 +119,7 @@ module.exports = {
     },
     "playerDeath": (player, reason, killer) => {
         // killer = player; // for tests
-        debug(`playerDeath | reason ${reason} killer: ${killer} `)
+        debug(`playerDeath | reason ${reason} | ${killer.name} => ${player.name} `)
         if (!killer || !killer.character) return;
         if (!player.character) return;
         if (!player.character.factionId) return;
