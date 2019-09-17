@@ -146,7 +146,7 @@ module.exports = {
         storage.colshape = colshape;
     },
     createAmmoWarehouseMarker() {
-        var pos = new mp.Vector3(211.51,  -3091.53, 7.01 - 1);
+        var pos = new mp.Vector3(211.51, -3091.53, 7.01 - 1);
 
         this.ammoWarehouse = mp.markers.new(1, pos, 0.5, {
             color: [255, 187, 0, 100]
