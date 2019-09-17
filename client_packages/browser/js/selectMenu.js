@@ -2444,7 +2444,7 @@ var selectMenu = new Vue({
             },
             "hospitalClothes": {
                 name: "hospitalClothes",
-                header: "Раздевалка Clothes",
+                header: "Раздевалка Hospital",
                 items: [{
                         text: "Форма №1"
                     },
@@ -2518,6 +2518,77 @@ var selectMenu = new Vue({
                         if (e.itemName == "Вернуться") selectMenu.showByName("hospitalStorage");
                         else mp.trigger(`callRemote`, `hospital.storage.items.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("hospitalStorage");
+                }
+            },
+            "newsStorage": {
+                name: "newsStorage",
+                header: "Склад Weazel News",
+                items: [{
+                        text: "Раздевалка",
+                    },
+                    // {
+                    //     text: "Снаряжение"
+                    // },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Раздевалка') {
+                            selectMenu.showByName("newsClothes");
+                        // } else if (e.itemName == 'Снаряжение') {
+                            // selectMenu.showByName("hospitalItems");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
+            "newsClothes": {
+                name: "newsClothes",
+                header: "Раздевалка Weazel News",
+                items: [{
+                        text: "Стажер"
+                    },
+                    {
+                        text: "Мл. Состав"
+                    },
+                    {
+                        text: "Ст. Состав"
+                    },
+                    {
+                        text: "Директор"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("newsStorage");
+                        else mp.trigger(`callRemote`, `news.storage.clothes.take`, e.itemIndex);
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("newsStorage");
                 }
             },
             "bandStorage": {

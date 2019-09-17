@@ -63,6 +63,8 @@ mp.factions = {
             mp.callCEFV(`selectMenu.showByName('hospitalStorage')`);
         } else if (factionId == 6) { // ARMY
             mp.callCEFV(`selectMenu.showByName('armyStorage')`);
+        } else if (factionId == 7) { // NEWS
+            mp.callCEFV(`selectMenu.showByName('newsStorage')`);
         } else if (this.isBandFaction(factionId)) {
             mp.callCEFV(`selectMenu.showByName('bandStorage')`);
         }
