@@ -234,7 +234,10 @@ module.exports = {
         if (dist > 50) return notifs.error(player, `Авто ${veh.db.modelName} слишком далеко`, header);
         if (!veh.getVariable("trunk")) return notifs.error(player, `Багажник закрыт`, header);
         if (!veh.inventory) return notifs.error(player, `Авто ${veh.db.modelName} не имеет багажник`, header);
-        if (veh.bootPlayerId != null) return notifs.error(player, `С багажником взаимодействует другой игрок`, header);
+        if (veh.bootPlayerId != null) {
+            var rec = mp.players.at(veh.bootPlayerId);
+            if (rec && rec.dist(veh.position) < 50) return notifs.error(player, `С багажником взаимодействует другой игрок`, header);
+        }
 
         veh.bootPlayerId = player.id;
 

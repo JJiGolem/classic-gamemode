@@ -460,6 +460,13 @@ var inventory = new Vue({
 
             return cols;
         },
+        descItemName() {
+            var item = this.itemDesc.item;
+            if (!item) return null;
+            if (item.itemId == 33 && item.params.vehName) // ключи авто
+                return `Ключи от ${item.params.vehName}`;
+            return this.itemsInfo[item.itemId].name;
+        },
     },
     methods: {
         // ******************  [ Private ] ******************
@@ -665,6 +672,7 @@ var inventory = new Vue({
                 var info = this.itemsInfo[item.itemId];
                 // if (!info) return weight;
                 weight += info.weight;
+                if (item.params.weight) weight += item.params.weight;
                 if (item.params.count) weight += item.params.count * info.weight;
                 if (item.pockets) {
                     for (var key in item.pockets) {

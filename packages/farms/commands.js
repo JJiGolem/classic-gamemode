@@ -15,6 +15,19 @@ module.exports = {
             out.info(`Вы телепортировались к ферме #${args[0]}`, player);
         }
     },
+    "/farmsetprice": {
+        access: 6,
+        description: "Изменить гос. стоимость фермы.",
+        args: "[ид_фермы]:n [зерно]:n",
+        handler: (player, args, out) => {
+            var farm = farms.getFarm(args[0]);
+            if (!farm) return out.error(`Ферма #${args[0]} не найдена`, player);
+
+            farm.price = args[1];
+            farm.save();
+            out.info(`${player.name} изменил гос. стоимость фермы #${farm.id} ($${farm.price})`);
+        }
+    },
     "/farmsetgrains": {
         access: 4,
         description: "Изменить количество зерна на складе.",

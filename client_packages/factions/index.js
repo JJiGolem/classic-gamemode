@@ -51,7 +51,9 @@ mp.factions = {
         mp.callCEFV(`selectMenu.showByName('factionGiveRank')`);
     },
     showStorageSelectMenu(factionId) {
-        if (factionId == 2) { // LSPD
+        if (factionId == 1) { // Government
+            mp.callCEFV(`selectMenu.showByName('governmentStorage')`);
+        } else if (factionId == 2) { // LSPD
             mp.callCEFV(`selectMenu.showByName('lspdStorage')`);
         } else if (factionId == 3) { // LSSD
             mp.callCEFV(`selectMenu.showByName('lssdStorage')`);
@@ -61,6 +63,8 @@ mp.factions = {
             mp.callCEFV(`selectMenu.showByName('hospitalStorage')`);
         } else if (factionId == 6) { // ARMY
             mp.callCEFV(`selectMenu.showByName('armyStorage')`);
+        } else if (factionId == 7) { // NEWS
+            mp.callCEFV(`selectMenu.showByName('newsStorage')`);
         } else if (this.isBandFaction(factionId)) {
             mp.callCEFV(`selectMenu.showByName('bandStorage')`);
         }

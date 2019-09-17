@@ -204,3 +204,25 @@ function InitAttachmentsOnJoin() {
 }
 
 InitAttachmentsOnJoin();
+
+// для настройки аттачей
+mp.events.add({
+    "attaches.test": (model, bone, x, y, z, rX, rY, rZ) => {
+        var player = mp.players.local;
+        bone = player.getBoneIndex(bone);
+        if (player.testAttach) player.testAttach.destroy();
+        player.testAttach = mp.objects.new(mp.game.joaat(model), player.position, {
+            rotation: new mp.Vector3(0, 0, 30),
+            dimension: -1
+        });
+        player.testAttach.attachTo(player.handle, bone, x, y, z, rX, rY, rZ,
+            false, false, false, false, 2, true);
+    },
+    "attaches.testoff": () => {
+        var player = mp.players.local;
+        if (player.testAttach) {
+            player.testAttach.destroy();
+            delete player.testAttach;
+        }
+    },
+});

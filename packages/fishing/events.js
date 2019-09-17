@@ -77,12 +77,14 @@ module.exports = {
     "fishing.game.end": (player, result) => {
         if (!player.character) return;
 
-        let rod = inventory.getItem(player, inventory.getRodId);
+        let rod = inventory.getItem(player, fishing.getRodId);
         let health = inventory.getParam(rod, 'health').value;
 
         if (result) {
-            inventory.addItem(player, 15, { weight: weight }, () => {
-                notifs.success(player, `Рыба весом ${weight} кг добавлена в инвентарь`, 'Отлично!');
+            inventory.addItem(player, 15, { weight: weight }, (e) => {
+                if (e) {
+                    notifs.success(player, `Рыба весом ${weight} кг добавлена в инвентарь`, 'Отлично!');
+                }
             })
         } else {
             notifs.error(player, 'Рыба сорвалась', 'Провал!');

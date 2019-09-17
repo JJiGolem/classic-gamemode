@@ -44,7 +44,6 @@ mp.events.add("biz.actions", (action) => {
 
 /// Phone app events
 mp.events.add("biz.sell.toGov", (id) => {
-    mp.chat.debug("toGov1");
     mp.events.callRemote("biz.sell.toGov", id);
 });
 mp.events.add("biz.sell.toGov.ans", (result) => {

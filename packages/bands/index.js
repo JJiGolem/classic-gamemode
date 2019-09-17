@@ -2,6 +2,7 @@
 
 let factions;
 let notifs;
+let terminal;
 
 module.exports = {
     // Зоны гетто
@@ -10,10 +11,12 @@ module.exports = {
     captureRank: 8,
     // Зоны, на которых происходит капт
     wars: {},
+    // Повторное участие в капте после убийства
+    reveangeKill: false,
     // Время захвата территории (ms)
-    warTime: 10000,
+    warTime: 5 * 60 * 1000,
     // Промежуток часов, в который можно начать захват
-    captureInterval: [13, 23],
+    captureInterval: [14, 23],
     // Кол-во боеприпасов, списываемое за выдачу оружия
     gunAmmo: 100,
     // Кол-во боеприпасов, списываемое за выдачу патронов
@@ -32,6 +35,7 @@ module.exports = {
     init() {
         factions = call('factions');
         notifs = call('notifications');
+        terminal = call('terminal');
 
         this.loadBandZonesFromDB();
         this.createDrugsStashMarker();
@@ -43,7 +47,11 @@ module.exports = {
         console.log(`[BANDS] Зоны гетто загружены (${dbZones.length} шт.)`)
     },
     convertToClientBandZones() {
-        return this.bandZones.map(x => x.dataValues);
+        var zones = this.bandZones.map(x => x.dataValues);
+        var warZoneIds = Object.keys(this.wars);
+        if (warZoneIds.length) zones[warZoneIds[0] - 1].flash = true;
+
+        return zones;
     },
     getZone(id) {
         return this.bandZones[id - 1];
@@ -56,6 +64,15 @@ module.exports = {
     },
     isInBandZone(pos, zone) {
         return pos.x > zone.x - 100 && pos.x < zone.x + 100 && pos.y < zone.y + 100 && pos.y > zone.y - 100;
+    },
+    isSpawnZone(zone) {
+        var bands = factions.factions.filter(x => x.id >= 8 && x.id <= 11);
+        for (var i = 0; i < bands.length; i++) {
+            var marker = factions.getMarker(bands[i].id);
+            var bandZone = this.getZoneByPos(marker.position);
+            if (bandZone && zone.id == bandZone.id) return true;
+        }
+        return false;
     },
     getZoneByPos(pos) {
         if (!this.isInBandZones(pos)) return null;
@@ -100,8 +117,8 @@ module.exports = {
         var zone = this.getZoneByPos(player.position);
         if (!zone) return out(`Вы не в гетто`);
         if (zone.factionId == faction.id) return out(`Территория уже под контролем ${faction.name}`);
-        if (this.wars[zone.id]) return out(`На данной территории уже идет война`);
-        if (this.inWar(faction.id)) return out(`Ваша банда уже участвует в войне`);
+        if (this.isSpawnZone(zone)) return out(`Нельзя захватить зону, в которой проживает банда`);
+        if (Object.keys(this.wars).length) return out(`В гетто уже идет война`);
 
         var hours = new Date().getHours();
         if (hours < this.captureInterval[0] || hours > this.captureInterval[1])
@@ -173,6 +190,16 @@ module.exports = {
         var i = Object.values(this.wars).findIndex(x => x.band.id == factionId || x.enemyBand.id == factionId);
         return i != -1;
     },
+    checkReveangeKill(player) {
+        if (this.reveangeKill) return;
+        if (!player.lastWarDeathTime) return;
+        var diff = Date.now() - player.lastWarDeathTime;
+        if (diff > this.warTime) delete player.lastWarDeathTime;
+        else {
+            notifs.error(player, `Reveange Kill запрещен`, `Захват территории`);
+            terminal.log(`[BANDS] ${player} сделал Reveange Kill на капте`);
+        }
+    },
     giveScore(player, zone) {
         if (typeof zone == 'number') zone = this.getZone(zone);
         var war = this.wars[zone.id];
@@ -224,5 +251,9 @@ module.exports = {
             delete player.insideDrugsStash;
         };
         this.drugsStashMarker = marker;
+    },
+    // сколько осталось для окончания капта (ms)
+    haveTime(war) {
+        return this.warTime - (Date.now() - war.startTime);
     },
 };

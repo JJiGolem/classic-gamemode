@@ -1,27 +1,25 @@
 "use strict";
-let factions = call('factions');
-let inventory = call('inventory');
-let news = call('news');
-let notifs = call('notifications');
+var government = require('../government');
+var factions = require('../factions');
+var inventory = require('../inventory');
+var notifs = require('../notifications');
 
 module.exports = {
     "init": () => {
 
     },
     "characterInit.done": (player) => {
-        if (!factions.isNewsFaction(player.character.factionId)) return;
-        // player.call(`mapCase.init`, [player.name, player.character.factionId]);
-        mp.events.call(`mapCase.news.init`, player);
+
     },
-    "news.storage.clothes.take": (player, index) => {
-        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Weazel News`);
-        if (!factions.isNewsFaction(player.character.factionId)) return notifs.error(player, `Вы не редактор`, `Склад Weazel News`);
+    "government.storage.clothes.take": (player, index) => {
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Government`);
+        if (!factions.isGovernmentFaction(player.character.factionId)) return notifs.error(player, `Вы не из правительства`, `Склад Government`);
 
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
         var header = `Склад ${faction.name}`;
 
-        if (faction.ammo < news.clothesAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
+        if (faction.ammo < government.clothesAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
         var hats = inventory.getArrayByItemId(player, 6);
         var tops = inventory.getArrayByItemId(player, 7);
@@ -34,35 +32,35 @@ module.exports = {
 
         for (var key in hats) {
             var params = inventory.getParamsValues(hats[key]);
-            if (factions.isNewsFaction(params.faction)) return notifs.error(player, `Вы уже имеете головной убор`, header);
+            if (factions.isGovernmentFaction(params.faction)) return notifs.error(player, `Вы уже имеете головной убор`, header);
         }
         for (var key in tops) {
             var params = inventory.getParamsValues(tops[key]);
-            if (factions.isNewsFaction(params.faction)) return notifs.error(player, `Вы уже имеете рубашку`, header);
+            if (factions.isGovernmentFaction(params.faction)) return notifs.error(player, `Вы уже имеете рубашку`, header);
         }
         for (var key in legs) {
             var params = inventory.getParamsValues(legs[key]);
-            if (factions.isNewsFaction(params.faction)) return notifs.error(player, `Вы уже имеете брюки`, header);
+            if (factions.isGovernmentFaction(params.faction)) return notifs.error(player, `Вы уже имеете брюки`, header);
         }
         for (var key in feets) {
             var params = inventory.getParamsValues(feets[key]);
-            if (factions.isNewsFaction(params.faction)) return notifs.error(player, `Вы уже имеете ботинки`, header);
+            if (factions.isGovernmentFaction(params.faction)) return notifs.error(player, `Вы уже имеете ботинки`, header);
         }
         for (var key in ears) {
             var params = inventory.getParamsValues(ears[key]);
-            if (factions.isNewsFaction(params.faction)) return notifs.error(player, `Вы уже имеете наушники`, header);
+            if (factions.isGovernmentFaction(params.faction)) return notifs.error(player, `Вы уже имеете наушники`, header);
         }
         for (var key in ties) {
             var params = inventory.getParamsValues(ties[key]);
-            if (factions.isNewsFaction(params.faction)) return notifs.error(player, `Вы уже имеете аксессуар`, header);
+            if (factions.isGovernmentFaction(params.faction)) return notifs.error(player, `Вы уже имеете аксессуар`, header);
         }
         for (var key in masks) {
             var params = inventory.getParamsValues(masks[key]);
-            if (factions.isNewsFaction(params.faction)) return notifs.error(player, `Вы уже имеете шлем`, header);
+            if (factions.isGovernmentFaction(params.faction)) return notifs.error(player, `Вы уже имеете шлем`, header);
         }
         for (var key in glasses) {
             var params = inventory.getParamsValues(glasses[key]);
-            if (factions.isNewsFaction(params.faction)) return notifs.error(player, `Вы уже имеете очки`, header);
+            if (factions.isGovernmentFaction(params.faction)) return notifs.error(player, `Вы уже имеете очки`, header);
         }
 
 
@@ -72,96 +70,96 @@ module.exports = {
         if (character.gender == 0) { // муж.
             hatParams = { // prop 0
                 sex: 1,
-                variation: [-1, -1, -1, -1][index],
-                texture: [-1, -1, -1, -1][index]
+                variation: [-1, -1, -1, -1, -1][index],
+                texture: [-1, -1, -1, -1, -1][index]
             };
             topParams = { // clothes 11 / 3 / 8
                 sex: 1,
                 torso: // /clothes 3
-                    [12, 11, 4, 6][index],
-                tTexture: [-1, -1, -1, -1][index],
+                    [11, 11, 12, 11, 11][index],
+                tTexture: [-1, -1, -1, -1, -1][index],
                 variation: // clothes 11
-                    [41, 43, 23, 28][index],
-                texture: [3, 0, 1, 2][index],
+                    [26, 21, 4, 25, 120][index],
+                texture: [0, 0, 3, 0, 0][index],
                 undershirt: // clothes 8
-                    [15, 15, 31, 31][index]
+                    [130, 144, 25, 144, 144][index]
             };
             legsParams = { // clothes 4
                 sex: 1,
-                variation: [1, 0, 10, 10][index],
-                texture: [1, 12, 0, 2][index]
+                variation: [25, 25, 25, 28, 28][index],
+                texture: [0, 0, 1, 8, 13][index]
             };
             feetsParams = { // clothes 6
                 sex: 1,
-                variation: [4, 4, 21, 21][index],
-                texture: [1, 1, 0, 0][index]
+                variation: [20, 20, 20, 21, 21][index],
+                texture: [0, 2, 0, 9, 9][index]
             };
             earsParams = { // prop 2
                 sex: 1,
-                variation: [-1, -1, -1, -1][index],
-                texture: [-1, -1, -1, -1][index]
+                variation: [0, 0, -1, -1, -1][index],
+                texture: [0, 0, -1, -1, -1][index]
             };
             tiesParams = { // clothes 7
                 sex: 1,
-                variation: [-1, -1, -1, 38][index],
-                texture: [-1, -1, -1, 10][index]
+                variation: [-1, -1, -1, -1, -1][index],
+                texture: [-1, -1, -1, -1, -1][index]
             };
             masksParams = { // clothes 1
                 sex: 1,
-                variation: [-1, -1, -1, -1][index],
-                texture: [-1, -1, -1, -1][index]
+                variation: [-1, -1, -1, -1, -1][index],
+                texture: [-1, -1, -1, -1, -1][index]
             };
             glassesParams = { // prop 1
                 sex: 1,
-                variation: [-1, -1, -1, -1][index],
-                texture: [-1, -1, -1, -1][index]
+                variation: [8, -1, 4, -1, 4][index],
+                texture: [0, -1, 2, -1, 0][index]
             };
         } else {
             hatParams = { // prop 0
                 sex: 0,
-                variation: [-1, -1, -1, -1][index],
-                texture: [-1, -1, -1, -1][index]
+                variation: [-1, -1, -1, -1, -1][index],
+                texture: [-1, -1, -1, -1, -1][index]
             };
             topParams = { // clothes 11 / 3 / 8
                 sex: 0,
                 torso: // /clothes 3
-                    [0, 0, 3, 1][index],
-                tTexture: [-1, -1, -1, -1][index],
+                    [0, 0, 1, 1, 1][index],
+                tTexture: [-1, -1, -1, -1, -1][index],
                 variation: // clothes 11
-                    [14, 27, 7, 6][index],
-                texture: [2, 5, 0, 2][index],
+                    [27, 181, 57, 25, 57][index],
+                texture: [0, 0, 0, 2, 2][index],
                 undershirt: // clothes 8
-                    [15, 15, 37, 37][index]
+                    [160, 178, 37, 37, 144][index]
             };
             legsParams = { // clothes 4
                 sex: 0,
-                variation: [4, 64, 8, 6][index],
-                texture: [8, 0, 0, 2][index]
+                variation: [54, 54, 54, 51, 51][index],
+                texture: [2, 2, 2, 0, 1][index]
             };
             feetsParams = { // clothes 6
                 sex: 0,
-                variation: [1, 1, 0, 0][index],
-                texture: [0, 0, 0, 0][index]
+                variation: [29, 29, 29, 20, 23][index],
+                texture: [0, 0, 0, 2, 0][index]
             };
             earsParams = { // prop 2
                 sex: 0,
-                variation: [-1, -1, -1, -1][index],
-                texture: [-1, -1, -1, -1][index]
+                variation: [2, 0, -1, -1, -1][index],
+                texture: [0, 0, -1, -1, -1][index]
             };
             tiesParams = { // clothes 7
                 sex: 0,
-                variation: [-1, -1, -1, -1][index],
-                texture: [-1, -1, -1, -1][index]
+                variation: [-1, -1, -1, -1, -1][index],
+                texture: [-1, -1, -1, -1, -1][index]
             };
             masksParams = { // clothes 1
                 sex: 0,
-                variation: [-1, -1, -1, -1][index],
-                texture: [-1, -1, -1, -1][index]
+                variation: [-1, -1, -1, -1, -1][index],
+                texture: [-1, -1, -1, -1, -1][index]
             };
             glassesParams = { // prop 1
                 sex: 0,
-                variation: [-1, -1, -1, -1][index],
-                texture: [-1, -1, -1, -1][index]
+                variation: [-1, -1, -1, -1, -1][index],
+                texture: [-1, -1, -1, -1, -1][index]
             };
         }
         if (topParams.undershirt == -1) delete topParams.undershirt;
@@ -205,6 +203,6 @@ module.exports = {
         if (glassesParams.variation != -1) inventory.addItem(player, 1, glassesParams, response);
 
         notifs.success(player, `Форма выдана`, header);
-        factions.setAmmo(faction, faction.ammo - news.clothesAmmo);
+        factions.setAmmo(faction, faction.ammo - government.clothesAmmo);
     },
 }

@@ -9,6 +9,9 @@ mp.events.add("render", () => {
 d = (text) => {
     mp.notify.info(text);
 }
+debug = (text) => {
+    mp.terminal.debug(text);
+}
 
 // Отображение в дискорде
 mp.discord.update('Classic Roleplay | Alpha', 'classic-rp.ru');

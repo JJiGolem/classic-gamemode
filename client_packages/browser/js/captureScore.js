@@ -39,7 +39,10 @@ var captureScore = new Vue({
             if (minutes < 10) minutes = "0" + minutes;
             if (seconds < 10) seconds = "0" + seconds;
             return `${minutes}:${seconds}`;
-        }
+        },
+        isShow() {
+            return this.show && !offerDialog.dialog;
+        },
     },
     watch: {
         show(val) {
@@ -47,11 +50,11 @@ var captureScore = new Vue({
         }
     },
     methods: {
-        start(bandA, bandB, time) {
+        start(bandA, bandB, time, leftScore = 0, rightScore = 0) {
             this.leftBandId = bandA;
             this.rightBandId = bandB;
-            this.leftScore = 0;
-            this.rightScore = 0;
+            this.leftScore = leftScore;
+            this.rightScore = rightScore;
             this.time = time;
             this.show = true;
             this.startTimer();

@@ -43,6 +43,7 @@ mp.bands = {
             mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, this.colors[zone.factionId]);
             this.bandZones.push(blip);
             this.saveBlip(blip);
+            if (zone.flash) this.flashBlip(zone.id, true);
         });
     },
     clearBandZones() {
@@ -74,9 +75,9 @@ mp.bands = {
         this.flashBlip(id, false);
         mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, this.colors[factionId]);
     },
-    startCapture(bandId, enemyBandId, time) {
+    startCapture(bandId, enemyBandId, time, bandScore = 0, enemyBandScore = 0) {
         time = parseInt(time);
-        mp.callCEFV(`captureScore.start(${bandId}, ${enemyBandId}, ${time})`);
+        mp.callCEFV(`captureScore.start(${bandId}, ${enemyBandId}, ${time}, ${bandScore}, ${enemyBandScore})`);
     },
     setCaptureScore(bandId, score) {
         mp.callCEFV(`captureScore.setScore(${bandId}, ${score})`);
@@ -94,8 +95,8 @@ mp.events.add({
     "bands.bandZones.set": (id, factionId) => {
         mp.bands.setOwner(id, factionId);
     },
-    "bands.capture.start": (bandId, enemyBandId, time) => {
-        mp.bands.startCapture(bandId, enemyBandId, time);
+    "bands.capture.start": (bandId, enemyBandId, time, bandScore = 0, enemyBandScore = 0) => {
+        mp.bands.startCapture(bandId, enemyBandId, time, bandScore, enemyBandScore);
     },
     "bands.capture.score.set": (bandId, score) => {
         mp.bands.setCaptureScore(bandId, score);
