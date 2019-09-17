@@ -236,9 +236,9 @@ module.exports = {
 
         player.inventory.items.push(item);
         if (!item.parentId) this.updateView(player, item);
+        callback();
         await item.save();
         player.call("inventory.addItem", [this.convertServerToClientItem(player.inventory.items, item), item.pocketIndex, item.index, item.parentId]);
-        callback();
     },
     async addOldItem(player, item, callback = () => {}) {
         var slot = this.findFreeSlot(player, item.itemId);
