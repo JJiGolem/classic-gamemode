@@ -83,12 +83,13 @@ mp.bands = {
         mp.callCEFV(`captureScore.setScore(${bandId}, ${score})`);
     },
     logKill(target, killer, reason) {
+        reason = parseInt(reason);
         if (killer)
             debug(`[KILL-LIST] ${killer.name} killed ${target.name} with reason ${reason}`)
         else
             debug(`[KILL-LIST] ${target.name} сам себя with reason ${reason}`)
 
-            
+
         if (typeof target == 'object') target = JSON.stringify(target);
         if (typeof killer == 'object') killer = JSON.stringify(killer);
         // самоубийство

@@ -230,7 +230,7 @@ module.exports = {
             }, {
                 name: player.name,
                 factionId: player.character.factionId
-            }, reason]);
+            }, reason.toString()]);
             rec.call(`bands.capture.score.set`, [bandId, score]);
         });
     },
