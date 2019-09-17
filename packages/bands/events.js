@@ -141,6 +141,6 @@ module.exports = {
         player.lastWarDeathTime = Date.now();
 
         bands.checkReveangeKill(killer);
-        bands.giveScore(killer, zone);
+        bands.giveScore(killer, player, reason, zone);
     },
 };

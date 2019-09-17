@@ -46,6 +46,7 @@ mp.weapons = {
     },
     getWeaponName(weaponHash) {
         if (!weaponHash) return null;
+        if (!this.weaponData[weaponHash]) return null;
         return this.weaponData[weaponHash].name;
     },
     hashToValid(hash) {

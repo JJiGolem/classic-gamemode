@@ -82,6 +82,11 @@ mp.bands = {
     setCaptureScore(bandId, score) {
         mp.callCEFV(`captureScore.setScore(${bandId}, ${score})`);
     },
+    logKill(target, killer, reason) {
+        debug(`${killer.name} killed ${target.name} with reason ${reason}`)
+        // TODO: лог в килл-лист
+        // 3452007600 - самоубийство походу?
+    },
 };
 
 mp.events.add({
@@ -100,6 +105,9 @@ mp.events.add({
     },
     "bands.capture.score.set": (bandId, score) => {
         mp.bands.setCaptureScore(bandId, score);
+    },
+    "bands.capture.killList.log": (target, killer, reason) => {
+        mp.bands.logKill(target, killer, reason);
     },
     "render": () => {
         mp.bands.bandZones.forEach(blip => {

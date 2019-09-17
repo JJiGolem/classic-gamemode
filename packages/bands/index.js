@@ -200,7 +200,7 @@ module.exports = {
             terminal.log(`[BANDS] ${player} сделал Reveange Kill на капте`);
         }
     },
-    giveScore(player, zone) {
+    giveScore(player, enemy, reason, zone) {
         if (typeof zone == 'number') zone = this.getZone(zone);
         var war = this.wars[zone.id];
         if (!war) return;
@@ -224,6 +224,13 @@ module.exports = {
             if (!factions.isBandFaction(factionId)) return;
             if (factionId != war.band.id && factionId != war.enemyBand.id) return;
 
+            rec.call(`bands.capture.killList.log`, [{
+                name: enemy.name,
+                factionId: enemy.character.factionId
+            }, {
+                name: player.name,
+                factionId: player.character.factionId
+            }, reason]);
             rec.call(`bands.capture.score.set`, [bandId, score]);
         });
     },
