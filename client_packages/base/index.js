@@ -9,7 +9,7 @@ mp.events.add("render", () => {
 d = (text) => {
     mp.notify.info(text);
 }
-debug (text) => {
+debug = (text) => {
     mp.terminal.debug(text);
 }
 
