@@ -1174,18 +1174,18 @@
         <div class="header">
             <img :src="leftImgSrc" />
             <span :style="{color: colors[leftBandId]}">{{ names[leftBandId] }}</span>
-            vs.
+            <span class="vs">vs.</span>
             <span :style="{color: colors[rightBandId]}">{{ names[rightBandId] }}</span>
             <img :src="rightImgSrc" />
-        </div>
-        <div class="score">
-            <div>{{ leftScore }}</div>
-            <div>{{ rightScore }}</div>
         </div>
         <div class="progress" :style="{background: colors[rightBandId]}">
             <div class="fill" :style="{width: progressWidth+'%', background: colors[leftBandId]}"></div>
         </div>
-        <div class="time">{{ prettyTime }}</div>
+        <div class="score">
+            <div>Убийств: {{ leftScore }}</div>
+            <div>{{ prettyTime }}</div>
+            <div>Убийств: {{ rightScore }}</div>
+        </div>
     </div>
 
     <!-- ------------------------ REACT ------------------------------ -->
