@@ -132,6 +132,23 @@ mp.mafia = {
             rec.destroyBlip();
         });
     },
+    setPowerInfo(data) {
+        var items = [];
+        for (var i = 0; i < data.names.length; i++) {
+            var name = data.names[i];
+            var count = data.counts[i];
+            var per = parseInt(count / data.bizCount * 100);
+            items.push({
+                text: name,
+                values: [`${count} биз. ( ${per}% )`],
+            });
+        }
+        items.push({
+            text: "Вернуться"
+        });
+
+        mp.callCEFV(`selectMenu.setItems('mafiaPower', '${JSON.stringify(items)}')`);
+    },
 };
 
 mp.events.add({
@@ -150,6 +167,9 @@ mp.events.add({
     },
     "mafia.bizWar.killList.log": (target, killer, reason) => {
         mp.mafia.logKill(target, killer, reason);
+    },
+    "mafia.power.info.set": (data) => {
+        mp.mafia.setPowerInfo(data);
     },
     "factions.faction.set": (factionId) => {
         var item = {

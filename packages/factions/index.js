@@ -1,5 +1,7 @@
 "use strict";
+var bands = call('bands');
 var inventory = call('inventory');
+var mafia = call('mafia');
 var money = require('../money')
 var notifs = require('../notifications');
 
@@ -136,6 +138,10 @@ module.exports = {
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
             if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
+
+            if (this.isBandFaction(faction.id)) bands.sendPowerInfo(player);
+            else if (this.isMafiaFaction(faction.id)) mafia.sendPowerInfo(player);
+
             player.call("factions.storage.showMenu", [faction.id]);
             player.insideFactionWarehouse = faction.id;
         };
@@ -351,6 +357,12 @@ module.exports = {
     isMafiaFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         return faction && (faction.id >= 12 && faction.id <= 14);
+    },
+    getBandFactions() {
+        return this.factions.filter(x => x.id >= 8 && x.id <= 11);
+    },
+    getMafiaFactions() {
+        return this.factions.filter(x => x.id >= 12 && x.id <= 14);
     },
     takeBox(player, type) {
         var header = "";
