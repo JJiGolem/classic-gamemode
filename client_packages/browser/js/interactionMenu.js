@@ -99,6 +99,9 @@ var interactionMenu = new Vue({
                     if (item.text == 'Мои документы') {
                         mp.trigger(`documents.list`);
                         //mp.trigger(`interaction.menu.close`);
+                    } else if (item.text == "Захват") {
+                        mp.trigger(`callRemote`, `bands.capture.start`);
+                        mp.trigger(`interaction.menu.close`);
                     }
                 }
             },
