@@ -2,6 +2,19 @@ let jobs = call('jobs');
 let notifs = call('notifications');
 
 module.exports = {
+    "/jlist": {
+        description: "Посмотреть список работ.",
+        access: 6,
+        args: "",
+        handler: (player, args, out) => {
+            var text = "ID) Имя<br/>";
+            for (var i = 0; i < jobs.jobs.length; i++) {
+                var job = jobs.jobs[i];
+                text += `${job.id}) ${job.name}<br/>`;
+            }
+            out.log(text, player);
+        }
+    },
     "/jadd": {
         access: 4,
         description: "Сменить работу игрока.",
