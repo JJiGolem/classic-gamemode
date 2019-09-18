@@ -248,6 +248,18 @@ module.exports = {
     getResourceName: getResourceName,
     getRandomDate: getRandomDate,
     getBizInfoForApp: getBizInfoForApp,
+    getBizesFactionIds() {
+        return bizes.map((elem) => elem.info.factionId);
+    },
+    getFactionId(bizId) {
+        return getBizById(bizId).info.factionId;
+    },
+    setFactionId(bizId, factionId) {
+        let biz = getBizById(bizId)
+        if (biz == null) return;
+        biz.info.factionId = factionId;
+        biz.info.save();
+    },
     setTimer: setTimer,
     /// Функция пополняющая кассу биза
     /// После каждой покупки передавать в нее стоимость покупки и id бизнеса
