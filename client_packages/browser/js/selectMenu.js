@@ -4740,10 +4740,82 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Выйти') {
                             mp.trigger('barbershop.exit');
                         }
+                        if (e.itemName == 'Прически') {
+                            mp.trigger('barbershop.hairstylesMenu.show');
+                        }
+                        if (e.itemName == 'Растительность на лице') {
+                            mp.trigger('barbershop.facialHairMenu.show');
+                        }
                     }
 
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed')
                         mp.trigger('barbershop.exit');
+                }
+            },
+            "barbershopHairstyles": {
+                name: "barbershopHairstyles",
+                header: "Прически",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('barbershop.hairstyle.set', e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('barbershop.mainMenu.show');
+                        } else {
+                            mp.trigger('barbershop.hairstyle.buy', e.itemIndex);
+                        }
+                    }
+
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed')
+                        mp.trigger('barbershop.mainMenu.show');
+                }
+            },
+            "barbershopFacialHair": {
+                name: "barbershopFacialHair",
+                header: "Растительность",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('barbershop.facialHair.set', e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('barbershop.mainMenu.show');
+                        } else {
+                            mp.trigger('barbershop.facialHair.buy', e.itemIndex);
+                        }
+                    }
+
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed')
+                        mp.trigger('barbershop.mainMenu.show');
                 }
             },
         },
