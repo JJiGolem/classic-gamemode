@@ -6,6 +6,7 @@ module.exports = {
     },
     "characterInit.done": (player) => {
         player.call(`factions.faction.set`, [player.character.factionId]);
+        player.setVariable("factionId", player.character.factionId);
     },
     "factions.warehouse.takeBox": (player, type) => {
         factions.takeBox(player, type);
@@ -25,7 +26,7 @@ module.exports = {
         if (veh.db.owner != player.character.factionId) return notifs.error(player, `Авто не принадлежит ${name}`, header);
 
         if (player.hasAttachment("ammoBox")) {
-            if (!factions.ammoVehModels.includes(model)) return notifs.error(player, `Авто не предназначено для перевоза боеприпасов`, header);
+            if (!factions.ammoVehModels.includes(model.toLowerCase())) return notifs.error(player, `Авто не предназначено для перевоза боеприпасов`, header);
             if (!veh.products) veh.products = {
                 type: "ammo",
                 count: 0

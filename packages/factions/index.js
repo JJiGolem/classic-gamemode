@@ -159,7 +159,8 @@ module.exports = {
         });
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
-            if (!this.isArmyFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, `Склад боеприпасов`);
+            if (!this.isArmyFaction(player.character.factionId) &&
+                !this.isBandFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, `Склад боеприпасов`);
             player.call("factions.insideWarehouse", [true, "ammo"]);
             player.insideWarehouse = true;
         };
@@ -241,6 +242,7 @@ module.exports = {
         character.factionRank = this.getMaxRank(faction).id;
         character.save();
 
+        player.setVariable("factionId", character.factionId);
         player.call(`factions.faction.set`, [character.factionId]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
@@ -264,6 +266,7 @@ module.exports = {
         character.factionRank = this.getMinRank(faction).id;
         character.save();
 
+        player.setVariable("factionId", character.factionId);
         player.call(`factions.faction.set`, [character.factionId]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
@@ -280,6 +283,7 @@ module.exports = {
         character.factionRank = null;
         character.save();
 
+        player.setVariable("factionId", character.factionId);
         player.call(`factions.faction.set`, [null]);
         player.call(`mapCase.enable`, [false]);
     },
@@ -348,7 +352,8 @@ module.exports = {
         var header = "";
         if (type == 'ammo') {
             header = "Склад боеприпасов";
-            if (!this.isArmyFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, header);
+            if (!this.isArmyFaction(player.character.factionId) &&
+            !this.isBandFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, header);
         } else if (type == 'medicines') {
             header = "Склад медикаментов";
             if (!this.isHospitalFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, header);

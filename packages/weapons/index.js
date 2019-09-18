@@ -7,12 +7,12 @@ module.exports = {
     ammo: {
         // 9mm (пистолеты)
         37: [20, 22, 44, 47, 48, 80, 89, 99],
-        // 12mm (крупные пулеметы)
-        38: [52],
+        // 12mm (крупные пулеметы, дробовики)
+        38: [21, 52],
         // 7.62mm (винтовки)
         39: [107],
-        // 5.56mm (дробовики)
-        40: [21],
+        // 5.56mm ()
+        40: [],
     },
 
     init() {
@@ -22,7 +22,7 @@ module.exports = {
     getAmmoItemId(itemId) {
         for (var ammoId in this.ammo) {
             var list = this.ammo[ammoId];
-            if (list.includes(itemId)) return ammoId;
+            if (list.includes(itemId)) return parseInt(ammoId);
         }
         return null;
     },

@@ -1,17 +1,20 @@
 var killList = new Vue({
     el: "#killList",
     data: {
-        show: false,
         colors: {
             8: "#00b500",
             9: "#da30ff",
             10: "#fff629",
             11: "#4a97d1",
         },
-        showTime: 10000,
-        maxCount: 8,
+        maxCount: 10,
         types: ["car", "hand"],
         list: [],
+    },
+    computed: {
+        isShow() {
+            return this.list.length && !selectMenu.show;
+        }
     },
     methods: {
         add(target, killer, reason) {
@@ -24,10 +27,6 @@ var killList = new Vue({
                 reason: reason
             });
             if (this.list.length > this.maxCount) this.list.shift();
-            var self = this;
-            setTimeout(() => {
-                self.list.shift();
-            }, this.showTime);
         },
         playerColor(player) {
             return this.colors[player.factionId] || "#fff";
@@ -70,6 +69,4 @@ killList.add({
 killList.add({
     name: "Swifty Swift",
     factionId: 9
-});
-
-killList.show = true;*/
+});*/

@@ -55,6 +55,7 @@
                 {{ players }}
                 /
                 {{ maxPlayers }}</p>
+            <p v-if="build">Сборка: #{{ build }}</p>
         </div>
         <div class="money">
             <div class="cash">
@@ -724,13 +725,21 @@
                 </colgroup>
                 <thead>
                     <tr>
-                        <th>id</th>
-                        <th>Имя</th>
-                        <th>Организация</th>
+                        <th @click="setSortedBy('id')">id</th>
+                        <th @click="setSortedBy('name')">Имя</th>
+                        <th @click="setSortedBy('faction')">Организация</th>
                         <th>ping</th>
                     </tr>
                 </thead>
             </table>
+            <div class="players_list-navigate_panel">
+                <input v-model="search"/>
+                <select v-model="type">
+                    <option v-for="option in options" v-bind:value="option.value">
+                        {{ option.text }}
+                    </option>
+                </select>
+            </div>
         </div>
         <div class="players_list-body">
             <table rules="all">
@@ -741,7 +750,7 @@
                     <col style="width: 10%" />
                 </colgroup>
                 <tbody>
-                    <tr v-for="player in players">
+                    <tr v-for="player in getPlayers()">
                         <th>{{ player.id }}</th>
                         <th>{{ player.name }}</th>
                         <th>{{ player.faction ? player.faction: '-' }}</th>
@@ -1189,7 +1198,7 @@
         </div>
     </div>
 
-    <div v-cloak id="killList" v-if="show && list.length">
+    <div v-cloak id="killList" v-if="isShow">
         <div class="log" v-for="kill in list">
             <div v-if="kill.killer" :style="{color: playerColor(kill.killer)}">{{ kill.killer.name }}</div>
             <img :src="killImgSrc(kill.reason)" />

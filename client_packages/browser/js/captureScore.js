@@ -46,7 +46,10 @@ var captureScore = new Vue({
     },
     watch: {
         show(val) {
-            if (!val) clearInterval(this.timer);
+            if (!val) {
+                killList.list = [];
+                clearInterval(this.timer);
+            }
         }
     },
     methods: {

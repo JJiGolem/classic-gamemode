@@ -142,6 +142,7 @@ function sortTagsById() {
 }
 
 function correctName(name) {
+    if (name == mp.players.local.name) return name;
     var player = mp.utils.getPlayerByName(name);
     if (player && !player.isFamiliar) return `Незнакомец`;
     return name;
@@ -208,7 +209,7 @@ mp.events.add('chat.action.do', (nickname, id, message) => {
 
 mp.events.add('chat.action.try', (nickname, id, message, result) => {
     nickname = correctName(nickname);
-    
+
     if (typeof (message) != "string") message = message.join(' ');
     message = `!{#dd90ff}${nickname}[${id}] ${message} ${(result ? '!{#66cc00}[Удачно]' : '!{#ff6600}[Неудачно]')}`;
     mp.events.call('chat.message.push', message);
