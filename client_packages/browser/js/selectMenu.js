@@ -930,7 +930,7 @@ var selectMenu = new Vue({
                 name: "parking",
                 header: "Парковка", // заголовок меню, видимый на экране
                 items: [{
-                        text: "Забрать автомобиль",
+                        text: "Забрать транспорт",
                     },
                     {
                         text: "Закрыть меню",
@@ -948,7 +948,7 @@ var selectMenu = new Vue({
                         valueIndex: item.i, // индекс значения пункта меню
                     };
                     if (eventName == 'onItemSelected') {
-                        if (e.itemName == 'Забрать автомобиль') {
+                        if (e.itemName == 'Забрать транспорт') {
                             mp.trigger(`parkings.vehicle.get`);
                         }
                         if (e.itemName == 'Закрыть меню') {
