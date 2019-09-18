@@ -84,4 +84,30 @@ module.exports = {
             factions.setAmmo(faction, faction.ammo - mafia.ammoAmmo * ammo);
         });
     },
+    "playerDeath": (player, reason, killer) => {
+        // killer = player; // for tests
+        if (!killer || !killer.character) return;
+        if (!player.character) return;
+        if (!player.character.factionId) return;
+        if (!factions.isMafiaFaction(player.character.factionId)) return;
+        if (!mafia.inWar(player.character.factionId)) return;
+        if (player.getVariable("knocked")) return;
+        if (!killer.character.factionId) return;
+        if (!factions.isMafiaFaction(killer.character.factionId)) return;
+        if (killer.character.factionId == player.character.factionId) return;
+        if (!mafia.inWar(killer.character.factionId)) return;
+
+        var zone = mafia.getZoneByPos(player.position);
+        if (!zone) return;
+        if (!mafia.wars[zone.id]) return;
+
+        var killerZone = mafia.getZoneByPos(killer.position);
+        if (!killerZone) return;
+        if (zone.id != killerZone.id) return;
+
+        player.lastWarDeathTime = Date.now();
+
+        mafia.checkReveangeKill(killer);
+        mafia.giveScore(killer, player, reason, zone);
+    },
 };
