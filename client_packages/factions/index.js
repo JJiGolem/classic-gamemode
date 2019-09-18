@@ -67,6 +67,8 @@ mp.factions = {
             mp.callCEFV(`selectMenu.showByName('newsStorage')`);
         } else if (this.isBandFaction(factionId)) {
             mp.callCEFV(`selectMenu.showByName('bandStorage')`);
+        } else if (this.isMafiaFaction(factionId)) {
+            mp.callCEFV(`selectMenu.showByName('mafiaStorage')`);
         }
     },
     isGovernmentFaction(factionId) {
@@ -92,6 +94,9 @@ mp.factions = {
     },
     isBandFaction(factionId) {
         return factionId >= 8 && factionId <= 11;
+    },
+    isMafiaFaction(factionId) {
+        return factionId >= 12 && factionId <= 14;
     },
     setFaction(factionId) {
         // mp.notify.info(`setFaction: ${factionId}`)

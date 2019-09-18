@@ -42,8 +42,8 @@ let dropBiz = function(biz, sellToGov = false) {
             else {
                 console.log("[bizes] Biz dropped " + biz.info.id + ". But player didn't getmoney");
             }
-        });        
-    }); 
+        });
+    });
 };
 let setTimer = function(biz) {
     if (biz == null) return;
@@ -81,7 +81,7 @@ let getResourceName = function(type) {
     switch(type) {
         case 0: return "Топливо";
         case 1: return "Продукты";
-        case 2: return "Авто"; 
+        case 2: return "Авто";
         case 3: return "Запчасти";
         case 4: return "Одежда";
         case 5: return "Оружие и патроны";
@@ -94,7 +94,7 @@ let getTypeName = function(type, isTable = false) {
         switch(type) {
             case 0: return "АЗС";
             case 1: return "Супермаркет";
-            case 2: return "Автосалон"; 
+            case 2: return "Автосалон";
             case 3: return "СТО";
             case 4: return "Магазин одежды";
             case 5: return "Магазин оружия";
@@ -210,7 +210,7 @@ module.exports = {
                 return -1;
             }
             return 0;
-        }); 
+        });
         bizes.push({
                 colshape: colshape,
                 info: bizInfo
@@ -239,8 +239,8 @@ module.exports = {
                 else {
                     callback(false);
                 }
-            });        
-        }); 
+            });
+        });
     },
     getBizById: getBizById,
     getBizByCharId: getBizByCharId,
@@ -248,6 +248,24 @@ module.exports = {
     getResourceName: getResourceName,
     getRandomDate: getRandomDate,
     getBizInfoForApp: getBizInfoForApp,
+    getBizesFactionIds() {
+        return bizes.map((elem) => elem.info.factionId);
+    },
+    getFactionId(bizId) {
+        return getBizById(bizId).info.factionId;
+    },
+    setFactionId(bizId, factionId) {
+        let biz = getBizById(bizId)
+        if (biz == null) return;
+        biz.info.factionId = factionId;
+        biz.info.save();
+    },
+    getBizesCount() {
+        return bizes.length;
+    },
+    getBizesByFactionId(factionId) {
+        return bizes.filter(x => x.info.factionId == factionId);
+    },
     setTimer: setTimer,
     /// Функция пополняющая кассу биза
     /// После каждой покупки передавать в нее стоимость покупки и id бизнеса
