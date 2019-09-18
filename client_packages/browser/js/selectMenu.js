@@ -1417,6 +1417,10 @@ var selectMenu = new Vue({
                         values: ["$100"]
                     },
                     {
+                        text: 'Продать рыбу',
+                        i: 0
+                    },
+                    {
                         text: "Помощь",
                         i: 0,
                     },
@@ -1442,6 +1446,9 @@ var selectMenu = new Vue({
                         }
                         if (e.itemName == 'Закрыть') {
                             mp.trigger(`fishing.menu.close`);
+                        }
+                        if (e.itemName == 'Продать рыбу') {
+                            mp.trigger(`fishing.fish.sell`);
                         }
                     }
                 }
