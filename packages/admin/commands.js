@@ -502,4 +502,26 @@ module.exports = {
             out.info(`${player.name} установил для команды ${args[0]} уровень доступа ${args[1]}`);
         }
     },
+    "/cmd": {
+        description: "Вызвать команду от имени другого игрока.",
+        access: 6,
+        args: "[player_id]:n [cmd]",
+        handler: (player, args, out) => {
+            var rec = mp.players.at(args.shift());
+            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+
+            mp.events.call("terminal.command.handle", rec, args);
+        }
+    },
+    "/godmode": {
+        description: "Вкл/выкл бессмертие.",
+        access: 6,
+        args: "",
+        handler: (player, args, out) => {
+            player.godmode = !player.godmode;
+            player.call(`godmode.set`, [player.godmode]);
+            if (player.godmode) return out.log(`Бессмертие включено`, player);
+            else return out.log(`Бессмертие выключено`, player);
+        }
+    },
 }

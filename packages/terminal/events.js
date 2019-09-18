@@ -9,7 +9,7 @@ module.exports = {
             player.call(`terminal.enable`, [true]);
     },
     "terminal.command.handle": (player, values) => {
-        values = JSON.parse(values);
+        if (typeof values == 'string') values = JSON.parse(values);
         terminal.handleCommand(player, values.shift(), values);
     },
 };

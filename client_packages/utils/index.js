@@ -237,3 +237,8 @@ mp.events.add('effect', (effect, duration) => {
 mp.events.add("waypoint.set", (x, y) => {
     mp.game.ui.setNewWaypoint(x, y);
 });
+
+// Бессмертие
+mp.events.add("godmode.set", (enable) => {
+    mp.players.local.setInvincible(enable);
+});
