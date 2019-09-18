@@ -102,6 +102,9 @@ var interactionMenu = new Vue({
                     } else if (item.text == "Захват") {
                         mp.trigger(`callRemote`, `bands.capture.start`);
                         mp.trigger(`interaction.menu.close`);
+                    } else if (item.text == "Захват биз.") {
+                        mp.trigger(`callRemote`, `mafia.bizWar.start`);
+                        mp.trigger(`interaction.menu.close`);
                     }
                 }
             },

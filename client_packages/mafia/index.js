@@ -74,7 +74,7 @@ mp.mafia = {
     },
     startBizWar(mafiaId, enemyMafiaId, time, mafiaScore = 0, enemyMafiaScore = 0) {
         time = parseInt(time);
-        mp.callCEFV(`captureScore.start(${mafiaId}, ${enemymafiaId}, ${time}, ${mafiaScore}, ${enemyMafiaScore})`);
+        mp.callCEFV(`captureScore.start(${mafiaId}, ${enemyMafiaId}, ${time}, ${mafiaScore}, ${enemyMafiaScore})`);
         clearTimeout(this.bizWarTimer);
         this.removePlayerBlips();
         this.bizWarFactions = [mafiaId, enemyMafiaId];

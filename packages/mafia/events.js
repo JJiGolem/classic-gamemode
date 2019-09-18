@@ -8,6 +8,9 @@ module.exports = {
     "characterInit.done": (player) => {
         player.call(`mafia.mafiaZones.init`, [mafia.convertToClientMafiaZones()]);
     },
+    "mafia.bizWar.start": (player) => {
+        mafia.startBizWar(player);
+    },
     "mafia.storage.guns.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад мафии`);
         if (!factions.isMafiaFaction(player.character.factionId)) return notifs.error(player, `Вы не член мафии`, `Склад мафии`);
