@@ -11,6 +11,11 @@ var killList = new Vue({
         types: ["car", "hand"],
         list: [],
     },
+    computed: {
+        isShow() {
+            return this.list.length && !selectMenu.show;
+        }
+    },
     methods: {
         add(target, killer, reason) {
             if (typeof target == 'string') target = JSON.parse(target);

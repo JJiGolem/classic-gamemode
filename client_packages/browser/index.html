@@ -1190,7 +1190,7 @@
         </div>
     </div>
 
-    <div v-cloak id="killList" v-if="list.length">
+    <div v-cloak id="killList" v-if="isShow">
         <div class="log" v-for="kill in list">
             <div v-if="kill.killer" :style="{color: playerColor(kill.killer)}">{{ kill.killer.name }}</div>
             <img :src="killImgSrc(kill.reason)" />
