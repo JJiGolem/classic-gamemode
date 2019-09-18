@@ -63,7 +63,7 @@ mp.speechChanel.connect = (player, channel) => {
 }
 
 /// Отключить выбранного игрока от канала связи
-mp.speechChanel.disconnect = (player, channel, death = false) => {
+mp.speechChanel.disconnect = (player, channel, isSend = false) => {
     if (player == null) return;
     let index = listeners.findIndex( x => x.playerId == player.remoteId);
     if (channel == null) {
@@ -82,7 +82,7 @@ mp.speechChanel.disconnect = (player, channel, death = false) => {
             updateCurrent(player, index);
         }
     }
-    if (channel == null && death) {
+    if (channel == null && isSend) {
         mp.events.callRemote("voiceChat.remove", player);
     }
 }
@@ -150,7 +150,7 @@ setInterval(() => {
             }
 		}
 		else {
-			mp.speechChanel.disconnect(player, null);
+			mp.speechChanel.disconnect(player, null, true);
 		}
     }
 }, 250);
