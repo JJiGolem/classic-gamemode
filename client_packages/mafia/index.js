@@ -2,20 +2,19 @@
 
 
 /*
-    Модуль банд (организации).
+    Модуль мафий (организации).
 
-    created 15.09.19 by Carter Slade
+    created 18.09.19 by Carter Slade
 */
 
-mp.bands = {
-    // Блипы зон гетто
-    bandZones: [],
+mp.mafia = {
+    // Блипы зон для рекетов
+    mafiaZones: [],
     // Цвета блипов (factionId: blipColor)
     colors: {
-        8: 2,
-        9: 27,
-        10: 46,
-        11: 3,
+        12: 2,
+        13: 27,
+        14: 46,
     },
     // Нативки
     natives: {
@@ -33,24 +32,24 @@ mp.bands = {
     },
     flashTimer: null,
     flashColor: 1,
-    captureTimer: null,
-    captureFactions: [],
+    bizWarTimer: null,
+    bizWarFactions: [],
 
 
-    initBandZones(zones) {
-        this.clearBandZones();
+    initMafiaZones(zones) {
+        this.clearMafiaZones();
         zones.forEach(zone => {
-            var blip = mp.game.ui.addBlipForRadius(zone.x, zone.y, 50, 100);
+            var blip = mp.game.ui.addBlipForRadius(zone.x, zone.y, 50, 150);
             mp.game.invoke(this.natives.SET_BLIP_SPRITE, blip, 5);
-            mp.game.invoke(this.natives.SET_BLIP_ALPHA, blip, 175);
-            mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, this.colors[zone.factionId]);
-            this.bandZones.push(blip);
+            mp.game.invoke(this.natives.SET_BLIP_ALPHA, blip, 120);
+            mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, 4);
+            this.mafiaZones.push(blip);
             this.saveBlip(blip);
             if (zone.flash) this.flashBlip(zone.id, true);
         });
     },
-    clearBandZones() {
-        var blips = mp.storage.data.bandZones;
+    clearMafiaZones() {
+        var blips = mp.storage.data.mafiaZones;
         if (!blips) return;
         blips.forEach(blip => {
             mp.game.ui.removeBlip(blip);
@@ -58,13 +57,14 @@ mp.bands = {
         blips = [];
     },
     saveBlip(blip) {
-        if (!mp.storage.data.bandZones) mp.storage.data.bandZones = [];
-        mp.storage.data.bandZones.push(blip);
+        if (!mp.storage.data.mafiaZones) mp.storage.data.mafiaZones = [];
+        mp.storage.data.mafiaZones.push(blip);
     },
     flashBlip(id, toggle) {
-        var blip = this.bandZones[id - 1];
+        var blip = this.mafiaZones[id];
         // mp.game.invoke(this.natives.SET_BLIP_FLASHES, blip, toggle);
         clearInterval(this.flashTimer);
+        mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, 4);
         if (!toggle) return;
         var oldColor = mp.game.invoke(this.natives.GET_BLIP_COLOUR, blip);
         this.flashTimer = setInterval(() => {
@@ -73,26 +73,21 @@ mp.bands = {
             else mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, oldColor);
         }, 500);
     },
-    setOwner(id, factionId) {
-        var blip = this.bandZones[id - 1];
-        this.flashBlip(id, false);
-        mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, this.colors[factionId]);
-    },
-    startCapture(bandId, enemyBandId, time, bandScore = 0, enemyBandScore = 0) {
+    startBizWar(mafiaId, enemyMafiaId, time, mafiaScore = 0, enemyMafiaScore = 0) {
         time = parseInt(time);
-        mp.callCEFV(`captureScore.start(${bandId}, ${enemyBandId}, ${time}, ${bandScore}, ${enemyBandScore})`);
-        clearTimeout(this.captureTimer);
+        mp.callCEFV(`captureScore.start(${mafiaId}, ${enemyMafiaId}, ${time}, ${mafiaScore}, ${enemyMafiaScore})`);
+        clearTimeout(this.bizWarTimer);
         this.removePlayerBlips();
-        this.captureFactions = [bandId, enemyBandId];
+        this.bizWarFactions = [mafiaId, enemyMafiaId];
 
         this.createPlayerBlips();
-        this.captureTimer = setTimeout(() => {
+        this.bizWarTimer = setTimeout(() => {
             this.removePlayerBlips();
-            this.captureFactions = [];
+            this.bizWarFactions = [];
         }, time * 1000);
     },
-    setCaptureScore(bandId, score) {
-        mp.callCEFV(`captureScore.setScore(${bandId}, ${score})`);
+    setBizWarScore(mafiaId, score) {
+        mp.callCEFV(`captureScore.setScore(${mafiaId}, ${score})`);
     },
     logKill(target, killer, reason) {
         reason = parseInt(reason);
@@ -116,10 +111,10 @@ mp.bands = {
         mp.callCEFV(`killList.add('${target}', '${killer}', '${name}')`);
     },
     createPlayerBlip(player) {
-        if (!this.captureFactions.length) return;
+        if (!this.bizWarFactions.length) return;
         if (player.remoteId == mp.players.local.remoteId) return;
         var factionId = player.getVariable("factionId");
-        if (!this.captureFactions.includes(factionId)) return;
+        if (!this.bizWarFactions.includes(factionId)) return;
         player.createBlip(1);
         mp.game.invoke(this.natives._SET_BLIP_SHOW_HEADING_INDICATOR, player.blip, true);
         mp.game.invoke(this.natives.SET_BLIP_COLOUR, player.blip, this.colors[factionId]);
@@ -134,7 +129,7 @@ mp.bands = {
         // debug(`removePlayerBlips`)
         mp.players.forEach(rec => {
             var factionId = rec.getVariable("factionId");
-            if (!mp.factions.isBandFaction(factionId)) return;
+            if (!mp.factions.isMafiaFaction(factionId)) return;
             rec.destroyBlip();
         });
     },
@@ -143,63 +138,60 @@ mp.bands = {
         for (var i = 0; i < data.names.length; i++) {
             var name = data.names[i];
             var count = data.counts[i];
-            var per = parseInt(count / this.bandZones.length * 100);
+            var per = parseInt(count / data.bizCount * 100);
             items.push({
                 text: name,
-                values: [`${count} зон ( ${per}% )`],
+                values: [`${count} биз. ( ${per}% )`],
             });
         }
         items.push({
             text: "Вернуться"
         });
 
-        mp.callCEFV(`selectMenu.setItems('bandPower', '${JSON.stringify(items)}')`);
+        mp.callCEFV(`selectMenu.setItems('mafiaPower', '${JSON.stringify(items)}')`);
     },
 };
 
 mp.events.add({
     "characterInit.done": () => {},
-    "bands.bandZones.init": (zones) => {
-        mp.bands.initBandZones(zones);
+    "mafia.mafiaZones.init": (zones) => {
+        mp.mafia.initMafiaZones(zones);
     },
-    "bands.bandZones.flash": (id, toggle) => {
-        mp.bands.flashBlip(id, toggle);
+    "mafia.mafiaZones.flash": (id, toggle) => {
+        mp.mafia.flashBlip(id, toggle);
     },
-    "bands.bandZones.set": (id, factionId) => {
-        mp.bands.setOwner(id, factionId);
+    "mafia.bizWar.start": (mafiaId, enemymafiaId, time, mafiacore = 0, enemymafiacore = 0) => {
+        mp.mafia.startBizWar(mafiaId, enemymafiaId, time, mafiacore, enemymafiacore);
     },
-    "bands.capture.start": (bandId, enemyBandId, time, bandScore = 0, enemyBandScore = 0) => {
-        mp.bands.startCapture(bandId, enemyBandId, time, bandScore, enemyBandScore);
+    "mafia.bizWar.score.set": (mafiaId, score) => {
+        mp.mafia.setBizWarScore(mafiaId, score);
     },
-    "bands.capture.score.set": (bandId, score) => {
-        mp.bands.setCaptureScore(bandId, score);
+    "mafia.bizWar.killList.log": (target, killer, reason) => {
+        mp.mafia.logKill(target, killer, reason);
     },
-    "bands.capture.killList.log": (target, killer, reason) => {
-        mp.bands.logKill(target, killer, reason);
-    },
-    "bands.power.info.set": (data) => {
-        mp.bands.setPowerInfo(data);
+    "mafia.power.info.set": (data) => {
+        mp.mafia.setPowerInfo(data);
     },
     "factions.faction.set": (factionId) => {
         var item = {
-            text: "Захват"
+            text: "Захват биз."
         };
-        if (!mp.factions.isBandFaction(factionId)) mp.callCEFV(`interactionMenu.deleteItem('player_ownmenu', '${item.text}')`);
+        if (!mp.factions.isMafiaFaction(factionId)) mp.callCEFV(`interactionMenu.deleteItem('player_ownmenu', '${item.text}')`);
         else mp.callCEFV(`interactionMenu.addItems('player_ownmenu', '${JSON.stringify(item)}')`);
     },
     "render": () => {
-        mp.bands.bandZones.forEach(blip => {
-            mp.game.invoke(mp.bands.natives.SET_BLIP_ROTATION, blip, 0);
+        mp.mafia.mafiaZones.forEach(blip => {
+            mp.game.invoke(mp.mafia.natives.SET_BLIP_ROTATION, blip, 0);
         });
     },
     "entityStreamIn": (player) => {
         if (player.type != "player") return;
 
-        mp.bands.createPlayerBlip(player);
+        mp.mafia.createPlayerBlip(player);
     },
 });
 
 // for tests
 // mp.players.local.destroyBlip();
 // mp.players.local.createBlip(1);
-// mp.game.invoke(mp.bands.natives._SET_BLIP_SHOW_HEADING_INDICATOR, mp.players.local.blip, true);
+// mp.game.invoke(mp.mafia.natives._SET_BLIP_SHOW_HEADING_INDICATOR, mp.players.local.blip, true);

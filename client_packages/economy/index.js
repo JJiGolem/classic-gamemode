@@ -8,7 +8,7 @@ mp.events.add("economy.show", (data) => {
         items += `{
             dataType: "${element.type}",
             text: "${element.name}",
-            values: ["${element.count}"],
+            values: ["${element.value}"],
             i: 0,
             type: "editable" // возможность редактирования значения пункта меню
         },`
@@ -38,7 +38,7 @@ mp.events.add("economy.show", (data) => {
                 if (e.itemName == 'Сохранить') {
                     let data = [];
                     for(let i = 0; i < selectMenu.menu.items.length - 2; i++) {
-                        data.push({type: selectMenu.menu.items[i].dataType, count: selectMenu.menu.items[i].values[0]});
+                        data.push({type: selectMenu.menu.items[i].dataType, value: selectMenu.menu.items[i].values[0]});
                     }
 
                     selectMenu.show = false;

@@ -28,10 +28,26 @@ module.exports = {
         if (!id) return;
         let shopData = barbershop.getRawBarbershopData(id);
         player.dimension = player.id + 1;
-        player.call('barbershop.enter', [shopData]);
+        let gender = player.character.gender;
+        console.log(gender);
+        let appearanceData = {
+            hairColor: player.character.hairColor,
+            hairHighlightColor: player.character.hairHighlightColor,
+            facialHairColor: player.character.beardColor
+        }
+        player.call('barbershop.enter', [shopData, gender, appearanceData]);
     },
     "barbershop.exit": (player) => {
         player.dimension = 0;
         //inventory.updateAllView(player);
     },
+    "barbershop.hairstyle.buy": (player, hairstyleId) => {
+        player.setClothes(2, hairstyleId, 0, 2);
+        player.call('barbershop.hairstyle.buy.ans', [0]);
+    },
+    "barbershop.facialHair.buy": (player, index) => {
+        //player.setClothes(2, hairstyleId, 0, 2);
+        player.setHeadOverlay(1, [index, 1.0, player.character.beardColor, 0]);
+        player.call('barbershop.facialHair.buy.ans', [0]);
+    }
 }

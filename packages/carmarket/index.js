@@ -1,6 +1,7 @@
 "use strict";
 let vehicles = call("vehicles");
 let money = call("money");
+let inventory = call("inventory");
 // console.log("carmarket:");
 // console.log(vehicles);
 var marketSpots = [];
@@ -27,30 +28,27 @@ module.exports = {
 
     },
     createCarMarket() {
-        mp.blips.new(225, new mp.Vector3(carMarket.x, carMarket.y, carMarket.z),
-            {
-                name: "Авторынок",
-                shortRange: true,
-                color: 73
-            });
-        mp.markers.new(1, new mp.Vector3(carMarket.x, carMarket.y, carMarket.z - 3.5), 4,
-            {
-                direction: new mp.Vector3(carMarket.x, carMarket.y, carMarket.z),
-                rotation: 0,
-                color: [102, 186, 255, 128],
-                visible: true,
-                dimension: 0
-            });
+        mp.blips.new(225, new mp.Vector3(carMarket.x, carMarket.y, carMarket.z), {
+            name: "Авторынок",
+            shortRange: true,
+            color: 73
+        });
+        mp.markers.new(1, new mp.Vector3(carMarket.x, carMarket.y, carMarket.z - 3.5), 4, {
+            direction: new mp.Vector3(carMarket.x, carMarket.y, carMarket.z),
+            rotation: 0,
+            color: [102, 186, 255, 128],
+            visible: true,
+            dimension: 0
+        });
         shape = mp.colshapes.newSphere(carMarket.x, carMarket.y, carMarket.z, 4);
         shape.pos = new mp.Vector3(carMarket.x, carMarket.y, carMarket.z);
         shape.isCarMarket = true;
 
-        let label = mp.labels.new(`Продажа транспорта`, new mp.Vector3(carMarket.x, carMarket.y, carMarket.z + 0.5),
-            {
-                los: false,
-                font: 0,
-                drawDistance: 10,
-            });
+        let label = mp.labels.new(`Продажа транспорта`, new mp.Vector3(carMarket.x, carMarket.y, carMarket.z + 0.5), {
+            los: false,
+            font: 0,
+            drawDistance: 10,
+        });
         label.isCarMarket = true;
     },
     async loadCarMarketData() { /// Загрузка точек спавна авто из БД
@@ -188,17 +186,20 @@ module.exports = {
             if (x.character.id == id) return true;
         });
 
-        if (player) {
-            mp.vehicles.forEach((veh) => {
-                if (veh.key == 'private' && veh.owner == id) {
+        mp.vehicles.forEach((veh) => {
+            if (veh.key == 'private' && veh.owner == id) {
+                if (player) {
+                    console.log(veh);
                     clearInterval(veh.fuelTimer);
                     veh.destroy();
                     vehicles.removeVehicleFromPlayerVehicleList(player, veh.sqlId);
                     vehicles.removeVehicleFromCarPlace(player, veh);
-                }
-            })
-        }
-        money.addMoneyById(id, fullPrice, function (result) {
+
+                    inventory.deleteByParams(player, 33, 'vehId', veh.db.id);
+                } else inventory.deleteByParams(id, 33, 'vehId', veh.db.id);
+            }
+        })
+        money.addMoneyById(id, fullPrice, function(result) {
             if (result) {
                 if (player) {
                     player.call('chat.message.push', [`!{#f3c800} Ваш дом продан государству за неуплату`]);

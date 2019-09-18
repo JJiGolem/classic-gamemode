@@ -119,15 +119,6 @@ module.exports = {
     },
     "playerDeath": (player, reason, killer) => {
         // killer = player; // for tests
-        if (killer)
-            debug(`playerDeath | reason ${reason} | ${killer.name} => ${player.name} `)
-        else {
-            player.call(`bands.capture.killList.log`, [{
-                name: player.name,
-                factionId: player.character.factionId
-            }])
-            debug(`playerDeath | reason ${reason} | ${player.name} сам себя `)
-        }
         if (!killer || !killer.character) return;
         if (!player.character) return;
         if (!player.character.factionId) return;
