@@ -40,9 +40,9 @@ module.exports = {
             3: [4],
             6: [2, 3, 6],
             // мафии
-            12: [8,9,10,11,12],
-            13: [8,9,10,11,13],
-            14: [8,9,10,11,14],
+            12: [8, 9, 10, 11, 12],
+            13: [8, 9, 10, 11, 13],
+            14: [8, 9, 10, 11, 14],
         },
         "medicines": {
             5: [2, 3, 4, 5, 6]
@@ -103,7 +103,12 @@ module.exports = {
                 boxType = "ammo";
             } else if (player.hasAttachment("medicinesBox")) {
                 boxType = "medicines";
-            } else return;
+            } else if (this.isBandFaction(player.character.factionId)) {
+                if (faction.ammo < this.ammoBox) return notifs.error(player, `Склад пустой`, `Склад ${faction.name}`);
+                player.addAttachment("ammoBox");
+                this.setAmmo(faction, faction.ammo - this.ammoBox);
+                return;
+            }
 
             if (!this.canFillWarehouse(player, boxType, faction))
                 return notifs.error(player, `Нет прав для пополнения`, `Склад ${faction.name}`);
@@ -368,7 +373,7 @@ module.exports = {
         if (type == 'ammo') {
             header = "Склад боеприпасов";
             if (!this.isArmyFaction(player.character.factionId) &&
-            !this.isMafiaFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, header);
+                !this.isMafiaFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, header);
         } else if (type == 'medicines') {
             header = "Склад медикаментов";
             if (!this.isHospitalFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, header);

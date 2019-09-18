@@ -34,7 +34,7 @@ module.exports = {
                 if (character.satiety <= 0) {
                     rec.health -= this.satietyHealth;
                     if (rec.health <= 0) return notifs.warning(rec, `Вы умерли!`, "Голод");
-                    if (rec.health < 30) return notifs.warning(rec, `Вы проголодались! Посетите закусочную или купите что нибудь из еды!`, "Голод");
+                    if (rec.health < 30) return notifs.warning(rec, `Вы проголодались! Посетите закусочную или купите что-нибудь из еды!`, "Голод");
                 }
                 if (character.thirst <= 0) {
                     rec.health -= this.thirstHealth;
