@@ -4,7 +4,9 @@ let inventory = call('inventory');
 let notifs = call('notifications');
 
 module.exports = {
-    "init": () => {},
+    "init": () => {
+        mafia.init();
+    },
     "characterInit.done": (player) => {
         player.call(`mafia.mafiaZones.init`, [mafia.convertToClientMafiaZones()]);
 

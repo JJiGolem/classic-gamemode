@@ -2621,6 +2621,9 @@ var selectMenu = new Vue({
                         text: "Патроны"
                     },
                     {
+                        text: "Влияние"
+                    },
+                    {
                         text: "Закрыть"
                     },
                 ],
@@ -2640,6 +2643,8 @@ var selectMenu = new Vue({
                             selectMenu.showByName("bandGuns");
                         } else if (e.itemName == 'Патроны') {
                             selectMenu.showByName("bandAmmo");
+                        } else if (e.itemName == 'Влияние') {
+                            selectMenu.showByName("bandPower");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
@@ -2732,6 +2737,45 @@ var selectMenu = new Vue({
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("bandStorage");
                 }
             },
+            "bandPower": {
+                name: "bandPower",
+                header: "Вляние в гетто",
+                items: [{
+                        text: "Банда 1",
+                        values: ["99 зон (100%)"],
+                    },
+                    {
+                        text: "Банда 1",
+                        values: ["99 зон (100%)"],
+                    },
+                    {
+                        text: "Банда 1",
+                        values: ["99 зон (100%)"],
+                    },
+                    {
+                        text: "Банда 1",
+                        values: ["99 зон (100%)"],
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Вернуться") selectMenu.showByName("bandStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("bandStorage");
+                }
+            },
             "mafiaStorage": {
                 name: "mafiaStorage",
                 header: "Склад мафии",
@@ -2740,6 +2784,9 @@ var selectMenu = new Vue({
                     },
                     {
                         text: "Патроны"
+                    },
+                    {
+                        text: "Влияние"
                     },
                     {
                         text: "Закрыть"
@@ -2761,6 +2808,8 @@ var selectMenu = new Vue({
                             selectMenu.showByName("mafiaGuns");
                         } else if (e.itemName == 'Патроны') {
                             selectMenu.showByName("mafiaAmmo");
+                        } else if (e.itemName == 'Влияние') {
+                            selectMenu.showByName("mafiaPower");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
@@ -2853,6 +2902,41 @@ var selectMenu = new Vue({
                         var values = JSON.stringify([e.itemIndex, parseInt(e.itemValue)]);
                         if (e.itemName == "Вернуться") selectMenu.showByName("mafiaStorage");
                         else mp.trigger(`callRemote`, `mafia.storage.ammo.take`, values);
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("mafiaStorage");
+                }
+            },
+            "mafiaPower": {
+                name: "bandPower",
+                header: "Вляние в бизнесах",
+                items: [{
+                        text: "Мафия 1",
+                        values: ["99 биз. (100%)"],
+                    },
+                    {
+                        text: "Мафия 2",
+                        values: ["99 биз. (100%)"],
+                    },
+                    {
+                        text: "Мафия 3",
+                        values: ["99 биз. (100%)"],
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Вернуться") selectMenu.showByName("mafiaStorage");
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("mafiaStorage");
                 }
             },

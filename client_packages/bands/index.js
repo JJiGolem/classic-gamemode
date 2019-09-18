@@ -138,6 +138,23 @@ mp.bands = {
             rec.destroyBlip();
         });
     },
+    setPowerInfo(data) {
+        var items = [];
+        for (var i = 0; i < data.names.length; i++) {
+            var name = data.names[i];
+            var count = data.counts[i];
+            var per = parseInt(count / this.bandZones.length * 100);
+            items.push({
+                text: name,
+                values: [`${count} зон ( ${per}% )`],
+            });
+        }
+        items.push({
+            text: "Вернуться"
+        });
+
+        mp.callCEFV(`selectMenu.setItems('bandPower', '${JSON.stringify(items)}')`);
+    },
 };
 
 mp.events.add({
@@ -159,6 +176,9 @@ mp.events.add({
     },
     "bands.capture.killList.log": (target, killer, reason) => {
         mp.bands.logKill(target, killer, reason);
+    },
+    "bands.power.info.set": (data) => {
+        mp.bands.setPowerInfo(data);
     },
     "factions.faction.set": (factionId) => {
         var item = {

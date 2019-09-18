@@ -1,6 +1,6 @@
 "use strict";
 
-let factions = call('factions');
+let factions;
 let notifs = call('notifications');
 
 module.exports = {
@@ -65,7 +65,9 @@ module.exports = {
         return this.mafiaZones[id];
     },
 
-
+    init() {
+        factions = call('factions');
+    },
     isInMafiaZone(pos, zone) {
         return pos.x > zone.x - 150 && pos.x < zone.x + 150 && pos.y < zone.y + 150 && pos.y > zone.y - 150;
     },
@@ -238,5 +240,18 @@ module.exports = {
     // сколько осталось для окончания бизвар (ms)
     haveTime(war) {
         return this.warTime - (Date.now() - war.startTime);
+    },
+    sendPowerInfo(player) {
+        var data = {
+            names: factions.getMafiaFactions().map(x => x.name),
+            counts: [0, 0, 0],
+            bizCount: 10,
+        };
+
+        // TODO: подсчет бизов
+        // this.bandZones.forEach(zone => {
+        //     data.counts[zone.factionId - 8]++;
+        // });
+        player.call(`mafia.power.info.set`, [data]);
     },
 };
