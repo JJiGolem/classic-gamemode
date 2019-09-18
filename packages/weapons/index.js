@@ -22,7 +22,7 @@ module.exports = {
     getAmmoItemId(itemId) {
         for (var ammoId in this.ammo) {
             var list = this.ammo[ammoId];
-            if (list.includes(itemId)) return ammoId;
+            if (list.includes(itemId)) return parseInt(ammoId);
         }
         return null;
     },
