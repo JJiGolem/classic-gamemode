@@ -5,7 +5,9 @@ let notifs = call('notifications');
 
 module.exports = {
     "init": () => {},
-    "characterInit.done": (player) => {},
+    "characterInit.done": (player) => {
+        player.call(`mafia.mafiaZones.init`, [mafia.convertToClientMafiaZones()]);
+    },
     "mafia.storage.guns.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад мафии`);
         if (!factions.isMafiaFaction(player.character.factionId)) return notifs.error(player, `Вы не член мафии`, `Склад мафии`);
