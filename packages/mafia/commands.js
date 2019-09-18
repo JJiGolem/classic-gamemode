@@ -16,9 +16,9 @@ module.exports = {
     "/mcapt": {
         access: 6,
         description: "Начать захват бизнеса.",
-        args: "",
+        args: "[ид_бизнеса]:n",
         handler: (player, args, out) => {
-            mp.events.call(`mafia.bizWar.start`, player);
+            mp.events.call(`mafia.bizWar.start`, player, args[0]);
         }
     },
     "/mcaptrk": {

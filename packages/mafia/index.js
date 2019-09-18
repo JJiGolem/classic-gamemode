@@ -1,6 +1,7 @@
 "use strict";
 
 let factions;
+let bizes = call('bizes');
 let notifs = call('notifications');
 
 module.exports = {
@@ -80,17 +81,13 @@ module.exports = {
         return null;
     },
     // влияние мафии от 0 до 1 (min: 0 - ниодного бизнеса не захвачено, max: 1 - все бизнесы захвачены)
-    getPowerMafia(bandId) {
-        // TODO: реализовать...
-        // var count = 0;
-        // for (var i = 0; i < this.bandZones.length; i++) {
-        //     var zone = this.bandZones[i];
-        //     if (zone.factionId == bandId) count++;
-        // }
-        //
-        // return count / this.bandZones.length;
+    getPowerMafia(mafiaId) {
+        var count = 0;
+        var bizesCount = bizes.getBizesByFactionId(mafiaId).length;
+
+        return count / bizesCount;
     },
-    startBizWar(player) {
+    startBizWar(player, bizId) {
         var header = `Рекет`;
         var out = (text) => {
             notifs.error(player, text, header)
@@ -101,8 +98,9 @@ module.exports = {
         if (player.character.factionRank < rank.id) return out(`Доступно с ранга ${rank.name}`);
         var zone = this.getZoneByPos(player.position);
         if (!zone) return out(`Вы не в зоне, где можно забить стрелку`);
-        // TODO: проверка на биз
-        // if (zone.factionId == faction.id) return out(`Территория уже под контролем ${faction.name}`);
+        var biz = bizes.getBizById(bizId);
+        if (!biz) return out(`Бизнес #${bizId} не найден`);
+        if (biz.info.factionId == faction.id) return out(`${biz.info.name} уже под вашей крышей`);
         if (Object.keys(this.wars).length) return out(`В штате уже идет война за бизнес`);
         var diff = Date.now() - this.lastWarTime;
         if (diff < this.waitWarTime) {
@@ -114,20 +112,18 @@ module.exports = {
         if (hours < this.bizWarInterval[0] || hours > this.bizWarInterval[1])
             return out(`Захват доступен с ${this.bizWarInterval[0]} до ${this.bizWarInterval[1]} ч.`);
 
-        // TODO: получить врага
-        // var enemyFaction = factions.getFaction(zone.factionId);
-        var enemyFaction = factions.getFaction(14);
+        var enemyFaction = factions.getFaction(biz.info.factionId);
         this.wars[zone.id] = {
             mafia: {
                 id: faction.id,
                 score: 0,
             },
             enemyMafia: {
-                // TODO: заменить 14 на мафию
-                id: 14,
+                id: enemyFaction.id,
                 score: 0,
             },
-            startTime: Date.now()
+            startTime: Date.now(),
+            bizId: biz.info.id,
         };
         setTimeout(() => {
             try {
@@ -143,15 +139,11 @@ module.exports = {
             if (!factionId) return;
             if (!factions.isMafiaFaction(factionId)) return;
             if (factionId == faction.id) {
-                // TODO: 14 заменить на ид врага
-                // TODO: название биза в уведомлении
-                rec.call(`mafia.bizWar.start`, [factionId, 14, this.warTime / 1000]);
-                notifs.success(rec, `Ваша мафия напала на ${enemyFaction.name}`, header);
+                rec.call(`mafia.bizWar.start`, [factionId, enemyFaction.id, this.warTime / 1000]);
+                notifs.success(rec, `Ваша мафия напала на ${enemyFaction.name} для отжатия ${biz.info.name}`, header);
             } else if (factionId == zone.factionId) {
-                // TODO: 14 заменить на ид врага
-                rec.call(`mafia.bizWar.start`, [14, faction.id, this.warTime / 1000]);
-                // TODO: название биза в уведомлении
-                notifs.info(rec, `На вашу территорию напала мафия ${faction.name}`, header);
+                rec.call(`mafia.bizWar.start`, [enemyFaction.id, faction.id, this.warTime / 1000]);
+                notifs.info(rec, `На вас напала мафия ${faction.name} для отжатия ${biz.info.name}`, header);
             }
         });
     },
@@ -174,18 +166,17 @@ module.exports = {
             if (!factionId) return;
             if (!factions.isMafiaFaction(factionId)) return;
             if (factionId == winMafiaId) {
-                var str = (war.band.id == winMafiaId) ? 'attack' : 'defender';
+                var str = (war.mafia.id == winMafiaId) ? 'attack' : 'defender';
                 rec.call(`prompt.showByName`, [`bizWar_${str}_win`]);
                 notifs.success(rec, `Ваша мафия победила`, header);
             } else if (factionId == loseMafiaId) {
-                var str = (war.band.id == loseMafiaId) ? 'attack' : 'defender';
+                var str = (war.mafia.id == loseMafiaId) ? 'attack' : 'defender';
                 rec.call(`prompt.showByName`, [`bizWar_${str}_lose`]);
                 notifs.error(rec, `Ваша мафия проиграла`, header);
             }
         });
 
-        // TODO: изменять крышу биза
-        // this.setBandZoneOwner(zone, winMafiaId);
+        bizes.setFactionId(war.bizId, winMafiaId);
         this.lastWarTime = Date.now();
         delete this.wars[zone.id];
     },
@@ -212,11 +203,11 @@ module.exports = {
 
         if (player.character.factionId == war.mafia.id) {
             war.mafia.score++;
-            bandId = war.mafia.id;
+            mafiaId = war.mafia.id;
             score = war.mafia.score;
         } else if (player.character.factionId == war.enemyMafia.id) {
             war.enemyMafia.score++;
-            bandId = war.enemyMafia.id;
+            mafiaId = war.enemyMafia.id;
             score = war.enemyMafia.score;
         }
 
@@ -242,16 +233,17 @@ module.exports = {
         return this.warTime - (Date.now() - war.startTime);
     },
     sendPowerInfo(player) {
+        var factionIds = bizes.getBizesFactionIds();
         var data = {
             names: factions.getMafiaFactions().map(x => x.name),
             counts: [0, 0, 0],
-            bizCount: 10,
+            bizCount: factionIds.length,
         };
 
-        // TODO: подсчет бизов
-        // this.bandZones.forEach(zone => {
-        //     data.counts[zone.factionId - 8]++;
-        // });
+        factionIds.forEach(id => {
+            data.counts[id - 12]++;
+        });
+
         player.call(`mafia.power.info.set`, [data]);
     },
 };

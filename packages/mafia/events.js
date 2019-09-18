@@ -20,8 +20,8 @@ module.exports = {
         if (war.mafia.id == factionId) player.call(`mafia.bizWar.start`, [factionId, war.enemyMafia.id, time, war.mafia.score, war.enemyMafia.score]);
         else if (war.enemyMafia.id == factionId) player.call(`mafia.bizWar.start`, [factionId, war.mafia.id, time, war.enemyMafia.score, war.mafia.score]);
     },
-    "mafia.bizWar.start": (player) => {
-        mafia.startBizWar(player);
+    "mafia.bizWar.start": (player, bizId) => {
+        mafia.startBizWar(player, bizId);
     },
     "mafia.storage.guns.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад мафии`);
