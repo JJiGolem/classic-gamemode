@@ -6,6 +6,7 @@ module.exports = {
     },
     "characterInit.done": (player) => {
         player.call(`factions.faction.set`, [player.character.factionId]);
+        player.setVariable("factionId", player.character.factionId);
     },
     "factions.warehouse.takeBox": (player, type) => {
         factions.takeBox(player, type);
