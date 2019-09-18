@@ -10,8 +10,9 @@ import enterMenu from '../../modules/house/reducers/reducer.enterMenu';
 import business from '../../modules/business/reducers/reducer.business';
 import bank from '../../modules/bank/reducers/reducer.bank';
 import bankPages from '../../modules/bank/reducers/reducer.bankPages';
-import taxiClient from '../../modules/phone/reducers/reducer.taxi.cleint';
+import taxiClient from '../../modules/phone/reducers/reducer.taxi.client';
 import taxiDriver from '../../modules/phone/reducers/reducer.taxi.driver';
+import players from '../../modules/players/reducers/reducer.players';
 
 export default combineReducers({
     forms,
@@ -25,5 +26,6 @@ export default combineReducers({
     bank,
     bankPages,
     taxiClient,
-    taxiDriver
+    taxiDriver,
+    players
 });

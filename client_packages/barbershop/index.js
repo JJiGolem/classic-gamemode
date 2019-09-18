@@ -5,6 +5,11 @@ let controlsDisabled = false;
 let player = mp.players.local;
 let currentGender = 0;
 
+let rotation = {
+    left: false,
+    right: false
+}
+
 let appearance = {
     hairstyle: 0,
     hairColor: 0,
@@ -32,6 +37,7 @@ mp.keys.bind(0x45, true, () => {
 });
 
 mp.events.add('barbershop.enter', (shopData, gender, appearanceData) => {
+    bindKeys(true);
     controlsDisabled = true;
     mp.events.call('hud.enable', false);
     mp.game.ui.displayRadar(false);
@@ -45,10 +51,12 @@ mp.events.add('barbershop.enter', (shopData, gender, appearanceData) => {
     player.freezePosition(true);
     setTimeout(() => {
         player.setHeading(shopData.pos.h);
+        mp.prompt.show('Используйте <span>A</span> и <span>D</span> для того, чтобы вращать персонажа');
     }, 100);
 });
 
 mp.events.add('barbershop.exit', () => {
+    bindKeys(false);
     mp.utils.cam.destroy();
     mp.events.call('hud.enable', true);
     mp.game.ui.displayRadar(true);
@@ -68,6 +76,9 @@ mp.events.add('render', () => {
         mp.game.controls.disableControlAction(0, 24, true); /// удары
         mp.game.controls.disableControlAction(1, 200, true); // esc
     }
+
+    if (rotation.left) player.setHeading(player.getHeading() - 2);
+    if (rotation.right) player.setHeading(player.getHeading() + 2);
 });
 
 mp.events.add('barbershop.mainMenu.show', () => {
@@ -206,4 +217,34 @@ function initCurrentAppearanceParams(data) {
     appearance.hairColor = data.hairColor;
     appearance.hairHighlightColor = data.hairHighlightColor;
     appearance.facialHairColor = data.facialHairColor;
+}
+
+function bindKeys(bind) {
+    if (bind) {
+        mp.keys.bind(0x41, true, startRotationLeft); // A
+        mp.keys.bind(0x41, false, stopRotationLeft); // A
+        mp.keys.bind(0x44, true, startRotationRight); // D
+        mp.keys.bind(0x44, false, stopRotationRight); // D
+    } else {
+        mp.keys.unbind(0x41, true, startRotationLeft); // A
+        mp.keys.unbind(0x41, false, stopRotationLeft); // A
+        mp.keys.unbind(0x44, true, startRotationRight); // D
+        mp.keys.unbind(0x44, false, stopRotationRight); // D
+    }
+}
+
+function startRotationLeft() {
+    rotation.left = true;
+}
+
+function stopRotationLeft() {
+    rotation.left = false;
+}
+
+function startRotationRight() {
+    rotation.right = true;
+}
+
+function stopRotationRight() {
+    rotation.right = false;
 }

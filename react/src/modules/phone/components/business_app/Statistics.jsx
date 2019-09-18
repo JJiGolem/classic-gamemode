@@ -28,15 +28,15 @@ class Statistics extends Component {
     getTableRow(day, index) {
         return (
             <tr key={index}>
-                <th>{this.getDateStatistics(day)}</th>
+                <th>{this.getDateStatistics(new Date(day.date))}</th>
                 <th style={{ color: '#55af14' }}>{day.money}$</th>
             </tr>
         )
     }
 
-    getDateStatistics(day) {
-        return `${String('00' + day.date.getDate()).slice(-2)}
-        .${String('00' + Number(day.date.getMonth() + 1)).slice(-2)}`
+    getDateStatistics(date) {
+        return `${String('00' + date.getDate()).slice(-2)}
+        .${String('00' + Number(date.getMonth() + 1)).slice(-2)}`
     }
 
     getNavigatePanel() {
