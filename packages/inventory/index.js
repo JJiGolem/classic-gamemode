@@ -825,6 +825,21 @@ module.exports = {
     },
     deleteByParams(player, itemIds, keys, values) {
         // debug(`deleteByParams: ${player.name}`)
+        if (typeof player == 'number') { // удаление у игрока оффлайн
+            db.Models.CharacterInventory.destroy({
+                where: {
+                    playerId: player
+                },
+                include: [{
+                    model: db.Models.CharacterInventoryParam,
+                    where: {
+                        key: keys,
+                        value: values
+                    }
+                }]
+            });
+            return;
+        }
         if (itemIds && !Array.isArray(itemIds)) itemIds = [itemIds];
         if (!Array.isArray(keys)) keys = [keys];
         if (!Array.isArray(values)) values = [values];

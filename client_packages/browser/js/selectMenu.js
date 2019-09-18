@@ -2739,7 +2739,7 @@ var selectMenu = new Vue({
             },
             "bandPower": {
                 name: "bandPower",
-                header: "Вляние в гетто",
+                header: "Влияние в гетто",
                 items: [{
                         text: "Банда 1",
                         values: ["99 зон (100%)"],
@@ -2907,7 +2907,7 @@ var selectMenu = new Vue({
             },
             "mafiaPower": {
                 name: "bandPower",
-                header: "Вляние в бизнесах",
+                header: "Влияние в бизнесах",
                 items: [{
                         text: "Мафия 1",
                         values: ["99 биз. (100%)"],
