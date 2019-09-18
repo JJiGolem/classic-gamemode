@@ -207,7 +207,7 @@ module.exports = {
         }
     },
     "/pos": {
-        access: 5,
+        access: 1,
         description: "Получить текущие координаты",
         args: "",
         handler: (player, args) => {
