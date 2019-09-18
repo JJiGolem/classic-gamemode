@@ -170,7 +170,7 @@ module.exports = {
         };
     },
     createMedicinesWarehouseMarker() {
-        var pos = new mp.Vector3(3600.56, 3659.97, 33.87 - 2);
+        var pos = new mp.Vector3(3608, 3720.03, 29.69 - 2);
 
         this.ammoWarehouse = mp.markers.new(1, pos, 2, {
             color: [255, 187, 0, 100]
@@ -347,6 +347,10 @@ module.exports = {
     isBandFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         return faction && (faction.id >= 8 && faction.id <= 11);
+    },
+    isMafiaFaction(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction && (faction.id >= 12 && faction.id <= 14);
     },
     takeBox(player, type) {
         var header = "";
