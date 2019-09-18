@@ -524,14 +524,4 @@ module.exports = {
             else return out.log(`Бессмертие выключено`, player);
         }
     },
-    "/eval": {
-        description: "Выполнить код.",
-        access: 6,
-        args: "[code]",
-        handler: (player, args, out) => {
-            var code = args.join(" ");
-            out.log(code);
-            out.log(eval(code));
-        }
-    },
 }
