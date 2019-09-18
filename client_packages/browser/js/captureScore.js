@@ -4,7 +4,7 @@ var captureScore = new Vue({
         show: false,
         colors: {
             8: "#00b500",
-            9: "#8c30ff",
+            9: "#da30ff",
             10: "#fff629",
             11: "#4a97d1",
         },
@@ -46,7 +46,10 @@ var captureScore = new Vue({
     },
     watch: {
         show(val) {
-            if (!val) clearInterval(this.timer);
+            if (!val) {
+                killList.list = [];
+                clearInterval(this.timer);
+            }
         }
     },
     methods: {

@@ -208,8 +208,8 @@ mp.farms = {
             }
         );
         // урожай А в руках
-        mp.attachmentMngr.register("farmProductA", "prop_veg_crop_03_pump", 58867, new mp.Vector3(0.2, -0.3, 0.1),
-            new mp.Vector3(-45, 20, 120), {
+        mp.attachmentMngr.register("farmProductA", "prop_veg_crop_03_pump", 11363, new mp.Vector3(0.08, -0.15, -0.25),
+            new mp.Vector3(-100, 0, 0), {
                 dict: "anim@heists@box_carry@",
                 name: "idle",
                 speed: 8,
@@ -218,8 +218,8 @@ mp.farms = {
             true
         );
         // урожай B в руках
-        mp.attachmentMngr.register("farmProductB", "prop_veg_crop_03_cab", 58867, new mp.Vector3(0.2, -0.3, 0.1),
-            new mp.Vector3(-45, 20, 120), {
+        mp.attachmentMngr.register("farmProductB", "prop_veg_crop_03_cab", 11363, new mp.Vector3(0, -0.05, -0.28),
+            new mp.Vector3(80, 85, 90), {
                 dict: "anim@heists@box_carry@",
                 name: "idle",
                 speed: 8,
@@ -228,8 +228,8 @@ mp.farms = {
             true
         );
         // урожай C в руках
-        mp.attachmentMngr.register("farmProductC", "prop_weed_02", 58867, new mp.Vector3(0.2, -0.3, 0.1),
-            new mp.Vector3(-45, 20, 120), {
+        mp.attachmentMngr.register("farmProductC", "prop_weed_02", 11363, new mp.Vector3(0, 0, 0.15),
+            new mp.Vector3(175, 7, 0), {
                 dict: "anim@heists@box_carry@",
                 name: "idle",
                 speed: 8,

@@ -467,6 +467,12 @@ var inventory = new Vue({
                 return `Ключи от ${item.params.vehName}`;
             return this.itemsInfo[item.itemId].name;
         },
+        descItemWeight() {
+            var item = this.itemDesc.item;
+            if (!item) return null;
+
+            return parseInt(this.getItemWeight(item) * 1000) / 1000;
+        },
     },
     methods: {
         // ******************  [ Private ] ******************

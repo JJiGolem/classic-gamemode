@@ -156,10 +156,10 @@ var offerDialog = new Vue({
                 ignore() {},
             },
             "familiar": {
-                text: `Carter Slade хочет познакомиться`,
+                text: `Незнакомец (ID: 11) хочет пожать вам руку`,
                 playerId: null,
                 on(values) {
-                    this.text = `${values.name} хочет познакомиться`;
+                    this.text = `Незнакомец (ID: ${values.playerId}) хочет пожать вам руку`;
                     this.playerId = values.playerId;
                 },
                 yes() {
@@ -233,12 +233,12 @@ var offerDialog = new Vue({
             }
         });
     },
-    watch: {
-        dialog(val) {
-            if (val) setCursor(true);
-            else setCursor(false);
-        }
-    },
+    // watch: {
+    //     dialog(val) {
+    //         if (val) setCursor(true);
+    //         else setCursor(false);
+    //     }
+    // },
 });
 
 // for tests

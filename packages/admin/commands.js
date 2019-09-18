@@ -34,7 +34,7 @@ module.exports = {
         }
     },
     "/goto": {
-        access: 3,
+        access: 2,
         description: "Телепорт к игроку",
         args: "[ID игрока]",
         handler: (player, args) => {
@@ -56,7 +56,7 @@ module.exports = {
         }
     },
     "/gethere": {
-        access: 4,
+        access: 3,
         description: "Телепорт игрока к себе",
         args: "[ID игрока]",
         handler: (player, args) => {
@@ -146,7 +146,7 @@ module.exports = {
             exec(`cd ${__dirname} && git clean -d -f && git stash && git pull`, (error, stdout, stderr) => {
                 if (error) console.log(stderr);
                 console.log(stdout);
-                out.info(`${player.name} запустил обновление сервера`);
+                out.info(`${player.name} обновил сборку сервера`);
             });
         }
     },
@@ -207,7 +207,7 @@ module.exports = {
         }
     },
     "/pos": {
-        access: 5,
+        access: 1,
         description: "Получить текущие координаты",
         args: "",
         handler: (player, args) => {
@@ -459,8 +459,8 @@ module.exports = {
         }
     },
     "/sethp": {
-        description: "Изменить кол-во здоровья игроку.",
-        access: 4,
+        description: "Изменить кол-во здоровья игроку. Реанимирует, если игрок лежит.",
+        access: 3,
         args: "[ид_игрока]:n [здоровье]:n",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
@@ -468,6 +468,7 @@ module.exports = {
             rec.health = Math.clamp(args[1], 0, 100);
             out.info(`Игроку ${rec.name} установлено ${rec.health} ед. здоровья`, player);
             notify.info(rec, `${player.name} установил вам ${rec.health} ед. здоровья`);
+            if (rec.getVariable("knocked")) rec.setVariable("knocked", null);
         }
     },
     "/weapon": {
@@ -499,6 +500,28 @@ module.exports = {
             if (args[1] > player.character.admin) return out.error(`Нельзя установить уровень команды выше своего`, player);
             cmd.access = args[1];
             out.info(`${player.name} установил для команды ${args[0]} уровень доступа ${args[1]}`);
+        }
+    },
+    "/cmd": {
+        description: "Вызвать команду от имени другого игрока.",
+        access: 6,
+        args: "[player_id]:n [cmd]",
+        handler: (player, args, out) => {
+            var rec = mp.players.at(args.shift());
+            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+
+            mp.events.call("terminal.command.handle", rec, args);
+        }
+    },
+    "/godmode": {
+        description: "Вкл/выкл бессмертие.",
+        access: 6,
+        args: "",
+        handler: (player, args, out) => {
+            player.godmode = !player.godmode;
+            player.call(`godmode.set`, [player.godmode]);
+            if (player.godmode) return out.log(`Бессмертие включено`, player);
+            else return out.log(`Бессмертие выключено`, player);
         }
     },
 }

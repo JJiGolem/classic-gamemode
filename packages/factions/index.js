@@ -146,7 +146,7 @@ module.exports = {
         storage.colshape = colshape;
     },
     createAmmoWarehouseMarker() {
-        var pos = new mp.Vector3(211.51,  -3091.53, 7.01 - 1);
+        var pos = new mp.Vector3(211.51, -3091.53, 7.01 - 1);
 
         this.ammoWarehouse = mp.markers.new(1, pos, 0.5, {
             color: [255, 187, 0, 100]
@@ -159,7 +159,8 @@ module.exports = {
         });
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
-            if (!this.isArmyFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, `Склад боеприпасов`);
+            if (!this.isArmyFaction(player.character.factionId) &&
+                !this.isBandFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, `Склад боеприпасов`);
             player.call("factions.insideWarehouse", [true, "ammo"]);
             player.insideWarehouse = true;
         };
@@ -348,7 +349,8 @@ module.exports = {
         var header = "";
         if (type == 'ammo') {
             header = "Склад боеприпасов";
-            if (!this.isArmyFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, header);
+            if (!this.isArmyFaction(player.character.factionId) &&
+            !this.isBandFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, header);
         } else if (type == 'medicines') {
             header = "Склад медикаментов";
             if (!this.isHospitalFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, header);

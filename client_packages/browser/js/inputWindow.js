@@ -42,7 +42,12 @@ var inputWindow = new Vue({
                 mp.trigger('fuelstations.fill.litres.close');
             }
         },
-    }
+    },
+    watch: {
+        show(val) {
+            setCursor(val);
+        }
+    },
 });
 
 //for tests

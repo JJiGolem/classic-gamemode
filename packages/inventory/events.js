@@ -152,6 +152,7 @@ module.exports = {
             notifs.warning(player, `Медики лечат эффективнее`, header);
             return;
         }
+        if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
 
         player.health = Math.clamp(player.health + hospital.medHealth, 0, hospital.medMaxHealth);
 
@@ -198,6 +199,7 @@ module.exports = {
             notifs.warning(player, `Медики лечат эффективнее`, header);
             return;
         }
+        if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
 
         player.health = Math.clamp(player.health + hospital.patchHealth, 0, hospital.medMaxHealth);
 
@@ -214,6 +216,7 @@ module.exports = {
         if (!drugs) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
         var count = inventory.getParam(drugs, 'count').value;
         if (!count) return notifs.error(player, `Количество: 0 г.`, header);
+        if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
 
         player.health = Math.clamp(player.health + bands.drugsHealth, 0, 100);
 

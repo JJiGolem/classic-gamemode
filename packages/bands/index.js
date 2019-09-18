@@ -11,6 +11,10 @@ module.exports = {
     captureRank: 8,
     // Зоны, на которых происходит капт
     wars: {},
+    // Время завершения последнего капта (ms)
+    lastWarTime: 0,
+    // Время отдыха между каптами (ms)
+    waitWarTime: 20 * 60 * 1000,
     // Повторное участие в капте после убийства
     reveangeKill: false,
     // Время захвата территории (ms)
@@ -119,6 +123,11 @@ module.exports = {
         if (zone.factionId == faction.id) return out(`Территория уже под контролем ${faction.name}`);
         if (this.isSpawnZone(zone)) return out(`Нельзя захватить зону, в которой проживает банда`);
         if (Object.keys(this.wars).length) return out(`В гетто уже идет война`);
+        var diff = Date.now() - this.lastWarTime;
+        if (diff < this.waitWarTime) {
+            var minutes = parseInt((this.waitWarTime - diff) / 1000 / 60);
+            return out(`Повторный захват будет доступен через ${minutes} мин.`);
+        }
 
         var hours = new Date().getHours();
         if (hours < this.captureInterval[0] || hours > this.captureInterval[1])
@@ -137,7 +146,11 @@ module.exports = {
             startTime: Date.now()
         };
         setTimeout(() => {
-            this.stopCapture(zone);
+            try {
+                this.stopCapture(zone);
+            } catch (e) {
+                console.log(e);
+            }
         }, this.warTime);
         mp.players.forEach(rec => {
             if (!rec.character) return;
@@ -184,6 +197,7 @@ module.exports = {
         });
 
         this.setBandZoneOwner(zone, winBandId);
+        this.lastWarTime = Date.now();
         delete this.wars[zone.id];
     },
     inWar(factionId) {
@@ -197,10 +211,10 @@ module.exports = {
         if (diff > this.warTime) delete player.lastWarDeathTime;
         else {
             notifs.error(player, `Reveange Kill запрещен`, `Захват территории`);
-            terminal.log(`[BANDS] ${player} сделал Reveange Kill на капте`);
+            terminal.log(`[BANDS] ${player.name} сделал Reveange Kill на капте`);
         }
     },
-    giveScore(player, zone) {
+    giveScore(player, enemy, reason, zone) {
         if (typeof zone == 'number') zone = this.getZone(zone);
         var war = this.wars[zone.id];
         if (!war) return;
@@ -224,6 +238,13 @@ module.exports = {
             if (!factions.isBandFaction(factionId)) return;
             if (factionId != war.band.id && factionId != war.enemyBand.id) return;
 
+            rec.call(`bands.capture.killList.log`, [{
+                name: enemy.name,
+                factionId: enemy.character.factionId
+            }, {
+                name: player.name,
+                factionId: player.character.factionId
+            }, reason.toString()]);
             rec.call(`bands.capture.score.set`, [bandId, score]);
         });
     },

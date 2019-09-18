@@ -14,6 +14,7 @@ mp.familiar = {
     initList() {
         if (!mp.storage.data.familiar) mp.storage.data.familiar = {};
         var list = mp.storage.data.familiar;
+        if (!Array.isArray(list)) list = [];
         var localName = mp.players.local.name;
         if (!list[localName]) list[localName] = [];
         list = list[localName];
@@ -39,7 +40,9 @@ mp.familiar = {
 };
 
 mp.events.add({
-    "characterInit.done": () => {},
+    "characterInit.done": () => {
+        mp.familiar.initList();
+    },
     "familiar.add": (name) => {
         mp.familiar.add(name);
     },
@@ -53,5 +56,3 @@ mp.events.add({
         player.isFamiliar = true;
     },
 });
-
-mp.familiar.initList();
