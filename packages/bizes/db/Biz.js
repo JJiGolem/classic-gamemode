@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(50),
             allowNull: true
         },
+        factionId: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: null,
+            allowNull: true
+        },
         date: {
             type: DataTypes.DATE,
             allowNull: true
@@ -66,6 +71,11 @@ module.exports = (sequelize, DataTypes) => {
     model.associate = (models) => {
         model.belongsTo(models.Character, {
             foreignKey: "characterId"
+        });
+        model.belongsTo(models.Faction, {
+            foreignKey: "factionId",
+            onDelete: "RESTRICT",
+            onUpdate: "RESTRICT",
         });
 
         model.hasMany(models.BizStatistics, {
