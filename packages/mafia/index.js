@@ -141,7 +141,7 @@ module.exports = {
             if (factionId == faction.id) {
                 rec.call(`mafia.bizWar.start`, [factionId, enemyFaction.id, this.warTime / 1000]);
                 notifs.success(rec, `Ваша мафия напала на ${enemyFaction.name} для отжатия ${biz.info.name}`, header);
-            } else if (factionId == zone.factionId) {
+            } else if (factionId == enemyFaction.id) {
                 rec.call(`mafia.bizWar.start`, [enemyFaction.id, faction.id, this.warTime / 1000]);
                 notifs.info(rec, `На вас напала мафия ${faction.name} для отжатия ${biz.info.name}`, header);
             }
@@ -162,6 +162,7 @@ module.exports = {
         var header = `Рекет`;
         mp.players.forEach(rec => {
             if (!rec.character) return;
+            rec.call(`mafia.mafiaZones.flash`, [zone.id, false]);
             var factionId = rec.character.factionId;
             if (!factionId) return;
             if (!factions.isMafiaFaction(factionId)) return;
