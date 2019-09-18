@@ -7,6 +7,16 @@ module.exports = {
     "init": () => {},
     "characterInit.done": (player) => {
         player.call(`mafia.mafiaZones.init`, [mafia.convertToClientMafiaZones()]);
+
+        var warZoneIds = Object.keys(mafia.wars);
+        if (!warZoneIds.length) return;
+        var factionId = player.character.factionId;
+        if (!factions.isMafiaFaction(factionId)) return;
+
+        var war = mafia.wars[warZoneIds[0]];
+        var time = mafia.haveTime(war) / 1000;
+        if (war.mafia.id == factionId) player.call(`mafia.bizWar.start`, [factionId, war.enemyMafia.id, time, war.mafia.score, war.enemyMafia.score]);
+        else if (war.enemyMafia.id == factionId) player.call(`mafia.bizWar.start`, [factionId, war.mafia.id, time, war.enemyMafia.score, war.mafia.score]);
     },
     "mafia.bizWar.start": (player) => {
         mafia.startBizWar(player);
