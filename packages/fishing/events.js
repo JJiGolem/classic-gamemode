@@ -58,32 +58,33 @@ module.exports = {
         player.call('fishing.game.enter', [cam]);
     },
     "fishing.game.start": (player) => {
-          if (!player.character) return;
+        if (!player.character) return;
 
-          let rod = inventory.getItemByItemId(player, fishing.getRodId);
-          let health = inventory.getParam(rod, 'health').value;
+        let rod = inventory.getItemByItemId(player, fishing.getRodId());
+        let health = inventory.getParam(rod, 'health').value;
+        inventory.updateParam(player, rod, 'health', health - 5);
 
-          inventory.updateParam(player, rod, 'health', health - 5);
+        let zone = utils.randomInteger(10, 20);
+        let speed = parseInt(health / 5);
+        weight = utils.randomInteger(1,5);
+        let timeout = utils.randomInteger(3,10);
 
-          let zone = utils.randomInteger(10, 20);
-          let speed = parseInt(health / 5);
-          weight = utils.randomInteger(1,5);
-          let timeout = utils.randomInteger(3,10);
-
-          setTimeout(() => {
-              player.call('fishing.game.fetch', [speed, zone, weight])
-          }, timeout*1000);
+        setTimeout(() => {
+            player.call('fishing.game.fetch', [speed, zone, weight])
+        }, timeout*1000);
     },
     "fishing.game.end": (player, result) => {
         if (!player.character) return;
 
-        let rod = inventory.getItemByItemId(player, fishing.getRodId);
+        let rod = inventory.getItemByItemId(player, fishing.getRodId());
         let health = inventory.getParam(rod, 'health').value;
 
         if (result) {
-            inventory.addItem(player, 15, { weight: weight }, (e) => {
-                if (e) {
+            inventory.addItem(player, 15, { weight: weight - 1 }, (e) => {
+                if (!e) {
                     notifs.success(player, `Рыба весом ${weight} кг добавлена в инвентарь`, 'Отлично!');
+                } else {
+                    return notifs.error(player, e, 'Ошибка');
                 }
             })
         } else {
@@ -100,4 +101,11 @@ module.exports = {
 
         fishing.buyRod(player);
     },
+    "fishing.fish.sell": (player) => {
+        if (!player.character) return;
+
+        let fish = inventory.getItemByItemId(player, 15);
+        let fishes = inventory.getArrayByItemId(player, 15);
+        console.log(fishes.length);
+    }
 }

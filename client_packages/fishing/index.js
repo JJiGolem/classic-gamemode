@@ -63,6 +63,18 @@ mp.events.add('fishing.game.menu', () => {
     bindButtons(true);
 });
 
+mp.events.add('fishing.fish.sell', () => {
+    mp.callCEFV(`selectMenu.loader = true`);
+    mp.events.callRemote('fishing.fish.sell');
+});
+
+mp.events.add('fishing.fish.sell.ans', (ans) => {
+    mp.callCEFV(`selectMenu.loader = false`);
+    if (ans == 1) {
+        mp.events.call('fishing.menu.close');
+    }
+});
+
 mp.events.add('fishing.game.enter', (cam) => {
     if (mp.busy.includes()) return;
 
@@ -143,6 +155,7 @@ let fishingStart = () => {
 let fishingEnd = () => {
     if (isEnter && isStarted && isFetch) {
         mp.callCEFV(`fishing.endFishing();`);
+        isFetch = false;
         setTimeout(() => {
             isStarted = false;
         }, 1500);
