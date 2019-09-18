@@ -132,12 +132,12 @@ setInterval(() => {
     for (let i = 0; i < listeners.length; i++) {
         let player = mp.players.atRemoteId(listeners[i].playerId);
         if (player == null) return;
-		if (player.handle !== 0 && player.dimension == mp.players.local.dimension) {
+		if (player.handle !== 0) {
             if (channels[listeners[i].current].maxRange != 0) {
                 let dist = mp.game.system.vdist(player.position.x, player.position.y, player.position.z,
                     mp.players.local.position.x,  mp.players.local.position.y,  mp.players.local.position.z);
 
-                if(dist > channels[listeners[i].current].maxRange) {
+                if(dist > channels[listeners[i].current].maxRange || player.dimension != mp.players.local.dimension) {
                     mp.speechChanel.disconnect(player, listeners[i].channel);
                     i--;
                 }
