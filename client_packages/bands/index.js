@@ -29,9 +29,12 @@ mp.bands = {
         SET_BLIP_COLOUR: "0x03D7FB09E75D6B7E",
         SET_BLIP_FLASHES: "0xB14552383D39CE3E",
         GET_BLIP_COLOUR: "0xDF729E8D20CF7327",
+        _SET_BLIP_SHOW_HEADING_INDICATOR: "0x5FBCA48327B914DF",
     },
     flashTimer: null,
     flashColor: 1,
+    captureTimer: null,
+    captureFactions: [],
 
 
     initBandZones(zones) {
@@ -78,6 +81,15 @@ mp.bands = {
     startCapture(bandId, enemyBandId, time, bandScore = 0, enemyBandScore = 0) {
         time = parseInt(time);
         mp.callCEFV(`captureScore.start(${bandId}, ${enemyBandId}, ${time}, ${bandScore}, ${enemyBandScore})`);
+        clearTimeout(this.captureTimer);
+        this.removePlayerBlips();
+        this.captureFactions = [bandId, enemyBandId];
+
+        this.createPlayerBlips();
+        this.captureTimer = setTimeout(() => {
+            this.removePlayerBlips();
+            this.captureFactions = [];
+        }, time * 1000);
     },
     setCaptureScore(bandId, score) {
         mp.callCEFV(`captureScore.setScore(${bandId}, ${score})`);
@@ -102,6 +114,29 @@ mp.bands = {
         // огнестрел, либо что-то еще? :D
         var name = mp.weapons.getWeaponName(reason);
         mp.callCEFV(`killList.add('${target}', '${killer}', '${name}')`);
+    },
+    createPlayerBlip(player) {
+        if (!this.captureFactions.length) return;
+        if (player.remoteId == mp.players.local.remoteId) return;
+        var factionId = player.getVariable("factionId");
+        if (!this.captureFactions.includes(factionId)) return;
+        player.createBlip(1);
+        mp.game.invoke(this.natives._SET_BLIP_SHOW_HEADING_INDICATOR, player.blip, true);
+        mp.game.invoke(this.natives.SET_BLIP_COLOUR, player.blip, this.colors[factionId]);
+    },
+    createPlayerBlips() {
+        debug(`createPlayerBlips`)
+        mp.players.forEach(rec => {
+            this.createPlayerBlip(rec);
+        });
+    },
+    removePlayerBlips() {
+        debug(`removePlayerBlips`)
+        mp.players.forEach(rec => {
+            var factionId = rec.getVariable("factionId");
+            if (!mp.factions.isBandFaction(factionId)) return;
+            rec.destroyBlip();
+        });
     },
 };
 
@@ -130,4 +165,14 @@ mp.events.add({
             mp.game.invoke(mp.bands.natives.SET_BLIP_ROTATION, blip, 0);
         });
     },
+    "entityStreamIn": (player) => {
+        if (player.type != "player") return;
+
+        mp.bands.createPlayerBlip(player);
+    },
 });
+
+// for tests
+// mp.players.local.destroyBlip();
+// mp.players.local.createBlip(1);
+// mp.game.invoke(mp.bands.natives._SET_BLIP_SHOW_HEADING_INDICATOR, mp.players.local.blip, true);
