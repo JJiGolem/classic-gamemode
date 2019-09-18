@@ -2,6 +2,7 @@
 
 let economy = require('./index.js');
 let notifs = call('notifications');
+let fs = require('fs');
 
 module.exports = {
     "init": () => {

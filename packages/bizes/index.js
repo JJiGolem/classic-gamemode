@@ -73,7 +73,7 @@ let getBizInfoForApp = function(biz) {
         resourcesMax: biz.info.productsMaxCount,
         resources: biz.info.productsCount,
         price: biz.info.price,
-        statistics: [],
+        statistics: biz.info.BizStatistics,
         order: null
     };
 };

@@ -6,7 +6,6 @@ module.exports = {
     /// Инициализация админских команд из всех модулей
     init() {
         console.log("[COMMANDS] load commands...");
-        //let commands = {};
         fs.readdirSync(path.dirname(__dirname)).forEach(file => {
             if (file != 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname) + "/" + file + '/commands.js'))
             {
@@ -15,7 +14,6 @@ module.exports = {
             }
         });
         console.log("[COMMANDS] loaded.");
-        //return commands;
     },
     getCommands() {
         return commands;
