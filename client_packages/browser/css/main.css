@@ -3,7 +3,7 @@
 }
 
 body {
-     background-image: url('../img/bg.jpg');
+     /*background-image: url('../img/bg.jpg');*/
     background-size: cover;
     font-family: monospace, sans-serif;
     font-size: 1.4vh;
