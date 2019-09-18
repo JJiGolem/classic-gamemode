@@ -9,12 +9,7 @@ module.exports = {
         economy.init();
     },
     "economy.change": (player, data) => {
-        data = JSON.parse(data);
-        data.forEach(element => {
-            element.count = parseFloat(element.count);
-            if (isNaN(element.count)) return notifs.error(player, "Один из экономических показателей не float", "Ошибка");;
-        });
-        economy.setByType(data);
+        economy.setByType(JSON.parse(data));
         notifs.success(player, "Успешно обновлено", "Успешно");
     },
 }
