@@ -7,6 +7,7 @@ import House from './modules/house';
 import Business from "./modules/business";
 import Bank from './modules/bank';
 import EnterMenu from "./modules/house/components/EnterMenu";
+import Players from './modules/players';
 
 class MainContainer extends Component {
     constructor(props) {
@@ -25,6 +26,7 @@ class MainContainer extends Component {
                 { enterMenu.isShow && <EnterMenu /> }
                 { forms.business && <Business /> }
                 { forms.bank && <Bank /> }
+                { forms.players && <Players /> }
             </Fragment>
         );
     }

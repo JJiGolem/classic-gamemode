@@ -377,6 +377,34 @@ export const PlayerEvents = (dispatch, getState) => {
     });
 
     // ------------ БИЗНЕСЫ - КОНЕЦ -----------------
+
+    myEventEmmiter.on('players.show', (flag) => {
+        dispatch({
+            type: 'SHOW_PLAYERS',
+            payload: flag
+        });
+    });
+
+    myEventEmmiter.on('players.load', (players) => {
+        dispatch({
+            type: 'LOAD_PLAYERS',
+            payload: players
+        });
+    });
+
+    myEventEmmiter.on('players.add', (player) => {
+        dispatch({
+            type: 'ADD_PLAYER',
+            payload: player
+        });
+    });
+
+    myEventEmmiter.on('players.remove', (id) => {
+        dispatch({
+            type: 'ADD_PLAYER',
+            payload: id
+        });
+    });
 };
 
 
