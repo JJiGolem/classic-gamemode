@@ -1,5 +1,7 @@
 "use strict";
+var bands = call('bands');
 var inventory = call('inventory');
+var mafia = call('mafia');
 var money = require('../money')
 var notifs = require('../notifications');
 
@@ -26,7 +28,7 @@ module.exports = {
     // Модели авто, в которые можно грузить боеприпасы
     ammoVehModels: ["barracks", "barracks3", "moonbeam", "youga2", "insurgent2"],
     // Модели авто, в которые можно грузить медикаменты
-    medicinesVehModels: ["granger"],
+    medicinesVehModels: ["granger", "fbi2"],
     // Макс. кол-во боеприпасов в авто
     ammoVehMax: 3000,
     // Макс. кол-во медикаментов в авто
@@ -37,11 +39,10 @@ module.exports = {
             2: [4],
             3: [4],
             6: [2, 3, 6],
-            // банды
-            8: [8],
-            9: [9],
-            10: [10],
-            11: [11],
+            // мафии
+            12: [8, 9, 10, 11, 12],
+            13: [8, 9, 10, 11, 13],
+            14: [8, 9, 10, 11, 14],
         },
         "medicines": {
             5: [2, 3, 4, 5, 6]
@@ -102,7 +103,12 @@ module.exports = {
                 boxType = "ammo";
             } else if (player.hasAttachment("medicinesBox")) {
                 boxType = "medicines";
-            } else return;
+            } else if (this.isBandFaction(player.character.factionId)) {
+                if (faction.ammo < this.ammoBox) return notifs.error(player, `Склад пустой`, `Склад ${faction.name}`);
+                player.addAttachment("ammoBox");
+                this.setAmmo(faction, faction.ammo - this.ammoBox);
+                return;
+            }
 
             if (!this.canFillWarehouse(player, boxType, faction))
                 return notifs.error(player, `Нет прав для пополнения`, `Склад ${faction.name}`);
@@ -136,6 +142,10 @@ module.exports = {
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
             if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
+
+            if (this.isBandFaction(faction.id)) bands.sendStorageInfo(player);
+            else if (this.isMafiaFaction(faction.id)) mafia.sendStorageInfo(player);
+
             player.call("factions.storage.showMenu", [faction.id]);
             player.insideFactionWarehouse = faction.id;
         };
@@ -160,7 +170,7 @@ module.exports = {
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
             if (!this.isArmyFaction(player.character.factionId) &&
-                !this.isBandFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, `Склад боеприпасов`);
+                !this.isMafiaFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, `Склад боеприпасов`);
             player.call("factions.insideWarehouse", [true, "ammo"]);
             player.insideWarehouse = true;
         };
@@ -170,7 +180,7 @@ module.exports = {
         };
     },
     createMedicinesWarehouseMarker() {
-        var pos = new mp.Vector3(3600.56, 3659.97, 33.87 - 2);
+        var pos = new mp.Vector3(3608, 3720.03, 29.69 - 2);
 
         this.ammoWarehouse = mp.markers.new(1, pos, 2, {
             color: [255, 187, 0, 100]
@@ -348,12 +358,22 @@ module.exports = {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         return faction && (faction.id >= 8 && faction.id <= 11);
     },
+    isMafiaFaction(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction && (faction.id >= 12 && faction.id <= 14);
+    },
+    getBandFactions() {
+        return this.factions.filter(x => x.id >= 8 && x.id <= 11);
+    },
+    getMafiaFactions() {
+        return this.factions.filter(x => x.id >= 12 && x.id <= 14);
+    },
     takeBox(player, type) {
         var header = "";
         if (type == 'ammo') {
             header = "Склад боеприпасов";
             if (!this.isArmyFaction(player.character.factionId) &&
-            !this.isBandFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, header);
+                !this.isMafiaFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, header);
         } else if (type == 'medicines') {
             header = "Склад медикаментов";
             if (!this.isHospitalFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, header);

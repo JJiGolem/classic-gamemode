@@ -89,6 +89,18 @@ var prompt = new Vue({
             "capture_defender_lose": {
                 text: "Влияние вашей группировки уменьшилось",
             },
+            "bizWar_attack_win": {
+                text: "Влияние вашей мафии увеличилось, новый бизнес под крышей",
+            },
+            "bizWar_attack_lose": {
+                text: "Вашей мафии не удалось увеличить влияние",
+            },
+            "bizWar_defender_win": {
+                text: "Ваша мафия отстояла свой бизнес",
+            },
+            "bizWar_defender_lose": {
+                text: "Влияние вашей мафии уменьшилось, потеряна крыша над бизнесом",
+            },
         },
         text: null
     },

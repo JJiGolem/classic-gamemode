@@ -930,7 +930,7 @@ var selectMenu = new Vue({
                 name: "parking",
                 header: "Парковка", // заголовок меню, видимый на экране
                 items: [{
-                        text: "Забрать автомобиль",
+                        text: "Забрать транспорт",
                     },
                     {
                         text: "Закрыть меню",
@@ -948,7 +948,7 @@ var selectMenu = new Vue({
                         valueIndex: item.i, // индекс значения пункта меню
                     };
                     if (eventName == 'onItemSelected') {
-                        if (e.itemName == 'Забрать автомобиль') {
+                        if (e.itemName == 'Забрать транспорт') {
                             mp.trigger(`parkings.vehicle.get`);
                         }
                         if (e.itemName == 'Закрыть меню') {
@@ -2621,6 +2621,12 @@ var selectMenu = new Vue({
                         text: "Патроны"
                     },
                     {
+                        text: "Влияние"
+                    },
+                    {
+                        text: "Общак"
+                    },
+                    {
                         text: "Закрыть"
                     },
                 ],
@@ -2640,6 +2646,10 @@ var selectMenu = new Vue({
                             selectMenu.showByName("bandGuns");
                         } else if (e.itemName == 'Патроны') {
                             selectMenu.showByName("bandAmmo");
+                        } else if (e.itemName == 'Влияние') {
+                            selectMenu.showByName("bandPower");
+                        } else if (e.itemName == 'Общак') {
+                            selectMenu.showByName("bandCash");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
@@ -2730,6 +2740,426 @@ var selectMenu = new Vue({
                         if (e.itemName == "Вернуться") selectMenu.showByName("bandStorage");
                         else mp.trigger(`callRemote`, `bands.storage.ammo.take`, values);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("bandStorage");
+                }
+            },
+            "bandPower": {
+                name: "bandPower",
+                header: "Влияние в гетто",
+                items: [{
+                        text: "Банда 1",
+                        values: ["99 зон (100%)"],
+                    },
+                    {
+                        text: "Банда 1",
+                        values: ["99 зон (100%)"],
+                    },
+                    {
+                        text: "Банда 1",
+                        values: ["99 зон (100%)"],
+                    },
+                    {
+                        text: "Банда 1",
+                        values: ["99 зон (100%)"],
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Вернуться") selectMenu.showByName("bandStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("bandStorage");
+                }
+            },
+            "bandCash": {
+                name: "bandCash",
+                header: "Общак банды",
+                items: [{
+                        text: "Баланс",
+                        values: ["$999999"],
+                    },
+                    {
+                        text: "Сумма",
+                        values: [""],
+                        type: "editable",
+                    },
+                    {
+                        text: "Пополнить",
+                    },
+                    {
+                        text: "Снять",
+                    },
+                    {
+                        text: "Выписать чек",
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Пополнить") {
+                            var sum = this.items[1].values[0];
+                            if (isNaN(sum)) return notifications.push(`error`, `Требуется число`);
+                            if (sum <= 0) return notifications.push(`error`, `Требуется положительное число`);
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `bands.storage.cash.put`, sum);
+                        } else if (e.itemName == "Снять") {
+                            var sum = this.items[1].values[0];
+                            if (isNaN(sum)) return notifications.push(`error`, `Требуется число`);
+                            if (sum <= 0) return notifications.push(`error`, `Требуется положительное число`);
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `bands.storage.cash.take`, sum);
+                        } else if (e.itemName == "Выписать чек") {
+                            selectMenu.showByName("bandCashCheck");
+                        }
+                        if (e.itemName == "Вернуться") selectMenu.showByName("bandStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("bandStorage");
+                }
+            },
+            "bandCashCheck": {
+                name: "bandCashCheck",
+                header: "Чек на пополнение общака",
+                items: [{
+                        text: "ID игрока",
+                        values: [""],
+                        type: "editable",
+                    },
+                    {
+                        text: "Сумма $",
+                        values: [""],
+                        type: "editable",
+                    },
+                    {
+                        text: "Предложить"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Предложить') {
+                            var playerId = this.items[0].values[0];
+                            var sum = this.items[1].values[0];
+                            if (isNaN(playerId) || isNaN(sum)) return notifications.push(`error`, `Требуется число`);
+                            if (playerId < 0 || sum <= 0) return notifications.push(`error`, `Требуется положительное число`);
+                            var data = {
+                                playerId: parseInt(this.items[0].values[0]),
+                                sum: parseInt(this.items[1].values[0]),
+                            };
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `factions.cash.offer`, JSON.stringify(data));
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("bandCash");
+                        }
+                    } else if (eventName == 'onBackspacePressed' && this.i > 1)
+                        selectMenu.showByName("bandCash");
+                }
+            },
+            "mafiaStorage": {
+                name: "mafiaStorage",
+                header: "Склад мафии",
+                items: [{
+                        text: "Вооружение"
+                    },
+                    {
+                        text: "Патроны"
+                    },
+                    {
+                        text: "Влияние"
+                    },
+                    {
+                        text: "Общак"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вооружение') {
+                            selectMenu.showByName("mafiaGuns");
+                        } else if (e.itemName == 'Патроны') {
+                            selectMenu.showByName("mafiaAmmo");
+                        } else if (e.itemName == 'Влияние') {
+                            selectMenu.showByName("mafiaPower");
+                        } else if (e.itemName == 'Общак') {
+                            selectMenu.showByName("mafiaCash");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
+            "mafiaGuns": {
+                name: "mafiaGuns",
+                header: "Вооружение мафии",
+                items: [{
+                        text: "Pistol"
+                    },
+                    {
+                        text: "Pistol .50"
+                    },
+                    {
+                        text: "Mini SMG"
+                    },
+                    {
+                        text: "SMG"
+                    },
+                    {
+                        text: "Sawed-Off Shotgun"
+                    },
+                    {
+                        text: "Double Barrel Shotgun"
+                    },
+                    {
+                        text: "Assault Rifle"
+                    },
+                    {
+                        text: "Carbine Rifle"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Вернуться") selectMenu.showByName("mafiaStorage");
+                        else mp.trigger(`callRemote`, `mafia.storage.guns.take`, e.itemIndex);
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("mafiaStorage");
+                }
+            },
+            "mafiaAmmo": {
+                name: "mafiaAmmo",
+                header: "Патроны мафии",
+                items: [{
+                        text: "Патроны - 9mm",
+                        values: ["12 ед.", "24 ед.", "32 ед."],
+                    },
+                    {
+                        text: "Патроны - 12mm",
+                        values: ["8 ед.", "16 ед.", "24 ед."],
+                    },
+                    {
+                        text: "Патроны - 5.56mm",
+                        values: ["12 ед.", "24 ед.", "32 ед."],
+                    },
+                    {
+                        text: "Патроны - 7.62mm",
+                        values: ["10 ед.", "20 ед.", "30 ед."],
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        var values = JSON.stringify([e.itemIndex, parseInt(e.itemValue)]);
+                        if (e.itemName == "Вернуться") selectMenu.showByName("mafiaStorage");
+                        else mp.trigger(`callRemote`, `mafia.storage.ammo.take`, values);
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("mafiaStorage");
+                }
+            },
+            "mafiaPower": {
+                name: "bandPower",
+                header: "Влияние в бизнесах",
+                items: [{
+                        text: "Мафия 1",
+                        values: ["99 биз. (100%)"],
+                    },
+                    {
+                        text: "Мафия 2",
+                        values: ["99 биз. (100%)"],
+                    },
+                    {
+                        text: "Мафия 3",
+                        values: ["99 биз. (100%)"],
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Вернуться") selectMenu.showByName("mafiaStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("mafiaStorage");
+                }
+            },
+            "mafiaCash": {
+                name: "mafiaCash",
+                header: "Общак мафии",
+                items: [{
+                        text: "Баланс",
+                        values: ["$999999"],
+                    },
+                    {
+                        text: "Сумма",
+                        values: [""],
+                        type: "editable",
+                    },
+                    {
+                        text: "Пополнить",
+                    },
+                    {
+                        text: "Снять",
+                    },
+                    {
+                        text: "Выписать чек",
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Пополнить") {
+                            var sum = this.items[1].values[0];
+                            if (isNaN(sum)) return notifications.push(`error`, `Требуется число`);
+                            if (sum <= 0) return notifications.push(`error`, `Требуется положительное число`);
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `mafia.storage.cash.put`, sum);
+                        } else if (e.itemName == "Снять") {
+                            var sum = this.items[1].values[0];
+                            if (isNaN(sum)) return notifications.push(`error`, `Требуется число`);
+                            if (sum <= 0) return notifications.push(`error`, `Требуется положительное число`);
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `mafia.storage.cash.take`, sum);
+                        } else if (e.itemName == "Выписать чек") {
+                            selectMenu.showByName("mafiaCashCheck");
+                        }
+                        if (e.itemName == "Вернуться") selectMenu.showByName("bandStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("bandStorage");
+                }
+            },
+            "mafiaCashCheck": {
+                name: "mafiaCashCheck",
+                header: "Чек на пополнение общака",
+                items: [{
+                        text: "ID игрока",
+                        values: [""],
+                        type: "editable",
+                    },
+                    {
+                        text: "Сумма $",
+                        values: [""],
+                        type: "editable",
+                    },
+                    {
+                        text: "Предложить"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Предложить') {
+                            var playerId = this.items[0].values[0];
+                            var sum = this.items[1].values[0];
+                            if (isNaN(playerId) || isNaN(sum)) return notifications.push(`error`, `Требуется число`);
+                            if (playerId < 0 || sum <= 0) return notifications.push(`error`, `Требуется положительное число`);
+                            var data = {
+                                playerId: parseInt(this.items[0].values[0]),
+                                sum: parseInt(this.items[1].values[0]),
+                            };
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `factions.cash.offer`, JSON.stringify(data));
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("mafiaCash");
+                        }
+                    } else if (eventName == 'onBackspacePressed' && this.i > 1)
+                        selectMenu.showByName("mafiaCash");
                 }
             },
             "drugsStash": {
@@ -4019,11 +4449,7 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-                        if (e.itemName == 'В штат') {
-                            selectMenu.showByName("farmControlSellToState");
-                        } else if (e.itemName == 'Игроку') {
-                            selectMenu.showByName("farmControlSellToPlayer");
-                        } else if (e.itemName == 'Предложить') {
+                        if (e.itemName == 'Предложить') {
                             var playerId = this.items[0].values[0];
                             var sum = this.items[1].values[0];
                             if (isNaN(playerId) || isNaN(sum)) return notifications.push(`error`, `Требуется число`);
@@ -4740,10 +5166,82 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Выйти') {
                             mp.trigger('barbershop.exit');
                         }
+                        if (e.itemName == 'Прически') {
+                            mp.trigger('barbershop.hairstylesMenu.show');
+                        }
+                        if (e.itemName == 'Растительность на лице') {
+                            mp.trigger('barbershop.facialHairMenu.show');
+                        }
                     }
 
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed')
                         mp.trigger('barbershop.exit');
+                }
+            },
+            "barbershopHairstyles": {
+                name: "barbershopHairstyles",
+                header: "Прически",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('barbershop.hairstyle.set', e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('barbershop.mainMenu.show');
+                        } else {
+                            mp.trigger('barbershop.hairstyle.buy', e.itemIndex);
+                        }
+                    }
+
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed')
+                        mp.trigger('barbershop.mainMenu.show');
+                }
+            },
+            "barbershopFacialHair": {
+                name: "barbershopFacialHair",
+                header: "Растительность",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('barbershop.facialHair.set', e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('barbershop.mainMenu.show');
+                        } else {
+                            mp.trigger('barbershop.facialHair.buy', e.itemIndex);
+                        }
+                    }
+
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed')
+                        mp.trigger('barbershop.mainMenu.show');
                 }
             },
         },

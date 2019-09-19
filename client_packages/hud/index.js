@@ -28,10 +28,10 @@ mp.events.add('hud.load', () => {
     // список игроков на F9
     mp.keys.bind(0x78, true, function() {
         if (playersListState) {
-            mp.events.call('hud.players.list.enable', false)
+            mp.events.call('hud.players.list.show', false)
         } else {
             if (!mp.busy.includes()) {
-                mp.events.callRemote('hud.players.list');
+                mp.events.callRemote('hud.players.list.load');
             }
         }
     });
@@ -78,10 +78,8 @@ mp.events.add('render', () => {
     mp.game.ui.hideHudComponentThisFrame(13);
 });
 
-mp.events.add('hud.players.list.enable', (state) => {
-    mp.callCEFVN({
-        "playersList.show": state
-    });
+mp.events.add('hud.players.list.show', (state) => {
+    mp.callCEFR('players.show', [state]);
 
     if (state) {
         mp.busy.add('playersList');
@@ -89,17 +87,22 @@ mp.events.add('hud.players.list.enable', (state) => {
         mp.busy.remove('playersList');
     }
 
-    mp.callCEFVN({
-        "playersList.loader": state,
-        "playersList.players": []
-    });
     mp.gui.cursor.show(state, state);
     playersListState = state;
 });
 
-mp.events.add('hud.players.list', (playersInfo) => {
-    mp.callCEFVN({
-        "playersList.players": playersInfo,
-        "playersList.loader": false
-    });
+mp.events.add('hud.players.list.load', (playersInfo) => {
+    mp.callCEFR('players.load', [playersInfo]);
+});
+
+mp.events.add('hud.players.list.add', (newPlayer) => {
+    if (playersListState) {
+        mp.callCEFR('players.add', [newPlayer]);
+    }
+});
+
+mp.events.add('hud.players.list.remove', (id) => {
+    if (playersListState) {
+        mp.callCEFR('players.remove', [id]);
+    }
 });

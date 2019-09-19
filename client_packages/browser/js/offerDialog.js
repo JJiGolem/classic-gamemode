@@ -195,6 +195,21 @@ var offerDialog = new Vue({
                 no() {},
                 ignore() {},
             },
+            "faction_cash_check": {
+                text: `Желаете пополнить общак The Ballas на сумму $999999?`,
+                on(values) {
+                    this.text = `Желаете пополнить общак ${values.name} на сумму $${values.sum}?`;
+                },
+                yes() {
+                    mp.trigger(`callRemote`, `factions.cash.offer.accept`);
+                },
+                no() {
+                    mp.trigger(`callRemote`, `factions.cash.offer.cancel`);
+                },
+                ignore() {
+                    mp.trigger(`callRemote`, `factions.cash.offer.cancel`);
+                },
+            },
         },
         dialog: null,
         timeout: null,

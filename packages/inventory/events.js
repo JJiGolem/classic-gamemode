@@ -1,6 +1,7 @@
 let bands = call('bands');
 let inventory = require('./index.js');
 let hospital = require('../hospital');
+let mafia = call('mafia');
 let notifs = require('../notifications');
 
 module.exports = {
@@ -153,6 +154,7 @@ module.exports = {
             return;
         }
         if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
+        if (mafia.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за бизнес`, header);
 
         player.health = Math.clamp(player.health + hospital.medHealth, 0, hospital.medMaxHealth);
 
@@ -200,6 +202,7 @@ module.exports = {
             return;
         }
         if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
+        if (mafia.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за бизнес`, header);
 
         player.health = Math.clamp(player.health + hospital.patchHealth, 0, hospital.medMaxHealth);
 
@@ -217,6 +220,7 @@ module.exports = {
         var count = inventory.getParam(drugs, 'count').value;
         if (!count) return notifs.error(player, `Количество: 0 г.`, header);
         if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
+        if (mafia.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за бизнес`, header);
 
         player.health = Math.clamp(player.health + bands.drugsHealth, 0, 100);
 

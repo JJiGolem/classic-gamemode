@@ -9,8 +9,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        count: {
-            type: DataTypes.FLOAT,
+        description: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        value: {
+            type: DataTypes.STRING,
             allowNull: false
         },
     }, { timestamps: false });

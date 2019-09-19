@@ -96,10 +96,10 @@ mp.bands = {
     },
     logKill(target, killer, reason) {
         reason = parseInt(reason);
-        if (killer)
-            debug(`[KILL-LIST] ${killer.name} killed ${target.name} with reason ${reason}`)
-        else
-            debug(`[KILL-LIST] ${target.name} сам себя with reason ${reason}`)
+        // if (killer)
+        //     debug(`[KILL-LIST] ${killer.name} killed ${target.name} with reason ${reason}`)
+        // else
+        //     debug(`[KILL-LIST] ${target.name} сам себя with reason ${reason}`)
 
 
         if (typeof target == 'object') target = JSON.stringify(target);
@@ -125,18 +125,38 @@ mp.bands = {
         mp.game.invoke(this.natives.SET_BLIP_COLOUR, player.blip, this.colors[factionId]);
     },
     createPlayerBlips() {
-        debug(`createPlayerBlips`)
+        // debug(`createPlayerBlips`)
         mp.players.forEach(rec => {
             this.createPlayerBlip(rec);
         });
     },
     removePlayerBlips() {
-        debug(`removePlayerBlips`)
+        // debug(`removePlayerBlips`)
         mp.players.forEach(rec => {
             var factionId = rec.getVariable("factionId");
             if (!mp.factions.isBandFaction(factionId)) return;
             rec.destroyBlip();
         });
+    },
+    setStorageInfo(data) {
+        var items = [];
+        for (var i = 0; i < data.names.length; i++) {
+            var name = data.names[i];
+            var count = data.counts[i];
+            var per = parseInt(count / this.bandZones.length * 100);
+            items.push({
+                text: name,
+                values: [`${count} зон ( ${per}% )`],
+            });
+        }
+        items.push({
+            text: "Вернуться"
+        });
+
+        mp.callCEFV(`selectMenu.setItems('bandPower', '${JSON.stringify(items)}')`);
+
+        var cash = JSON.stringify([`$${data.cash}`]);
+        mp.callCEFV(`selectMenu.setItemValues('bandCash', 'Баланс', '${cash}')`);
     },
 };
 
@@ -159,6 +179,16 @@ mp.events.add({
     },
     "bands.capture.killList.log": (target, killer, reason) => {
         mp.bands.logKill(target, killer, reason);
+    },
+    "bands.storage.info.set": (data) => {
+        mp.bands.setStorageInfo(data);
+    },
+    "factions.faction.set": (factionId) => {
+        var item = {
+            text: "Захват"
+        };
+        if (!mp.factions.isBandFaction(factionId)) mp.callCEFV(`interactionMenu.deleteItem('player_ownmenu', '${item.text}')`);
+        else mp.callCEFV(`interactionMenu.addItems('player_ownmenu', '${JSON.stringify(item)}')`);
     },
     "render": () => {
         mp.bands.bandZones.forEach(blip => {

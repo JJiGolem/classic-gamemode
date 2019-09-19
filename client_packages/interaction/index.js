@@ -133,6 +133,7 @@ mp.events.add('characterInit.done', () => { /// E
             }
             mp.events.call('interaction.menu.show');
         } else if (currentInteractionEntity.type == 'player') {
+            if (mp.farms.isCropping()) return;
             mp.callCEFV(`interactionMenu.showByName('player_interaction')`);
             mp.callCEFV(`interactionMenu.left = ${defaultLeft}`);
             mp.events.call('interaction.menu.show');
@@ -148,7 +149,7 @@ mp.events.add('characterInit.done', () => { /// E
         if (!mp.players.local.vehicle) {
             currentInteractionEntity = mp.players.local;
             mp.callCEFV(`interactionMenu.left = ${defaultLeft}`);
-            mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["player_ownmenu"])');
+            mp.callCEFV('interactionMenu.menu = interactionMenu.menus["player_ownmenu"]');
             mp.events.call('interaction.menu.show');
         } else if (mp.players.local.vehicle.getPedInSeat(-1) == mp.players.local.handle) {
             currentInteractionEntity = mp.players.local.vehicle;

@@ -3,7 +3,8 @@ const initialState = {
     // phone: true,
     // house: true,
     // business: true,
-    // bank: true
+    // bank: true,
+    // players: true
 };
 
 export default function forms(state = initialState, action) {
@@ -44,6 +45,12 @@ export default function forms(state = initialState, action) {
             return {
                 ...state,
                 bank: payload
+            };
+
+        case 'SHOW_PLAYERS':
+            return {
+                ...state,
+                players: payload
             };
     }
 

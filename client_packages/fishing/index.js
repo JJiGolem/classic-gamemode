@@ -80,7 +80,7 @@ mp.events.add('fishing.game.enter', (cam) => {
 
     mp.busy.add('fishingGame');
     playBaseAnimation(true);
-    mp.gui.cursor.show(true, true);
+    mp.gui.cursor.show(true, false);
     mp.callCEFVN({ "fishing.show": true });
     isEnter = true;
 });
@@ -107,8 +107,11 @@ mp.events.add('fishing.game.end', (result) => {
 });
 
 mp.events.add('fishing.game.exit', () => {
-    mp.console('exit');
-    bindButtons(false);
+    mp.events.callRemote('fishing.game.exit');
+    setTimeout(() => {
+        bindButtons(false);
+        isEnter = false;
+    }, 100);
     mp.events.call('prompt.hide');
     playBaseAnimation(false);
     mp.gui.cursor.show(false, false);
@@ -163,9 +166,10 @@ let fishingEnd = () => {
 }
 
 let fishingExit = () => {
-    if (!isStarted) {
+    if (!isFetch) {
         mp.events.call('fishing.game.exit');
         isEnter = false;
+        isStarted = false;
     }
 }
 
