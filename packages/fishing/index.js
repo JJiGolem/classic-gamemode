@@ -26,8 +26,30 @@ let fishingPlace = {
 }
 
 const ROD_PRICE = 100;
-const FISH_PRICE = 20;
 const ROD_ID = 5;
+
+let fishesTypes = [
+    {
+        name: 'Карась',
+        price: 10
+    },
+    {
+        name: 'Окунь',
+        price: 15
+    },
+    {
+        name: 'Сардина',
+        price: 20
+    },
+    {
+        name: 'Скумбрия',
+        price: 25
+    },
+];
+
+const getFishPrice = name => {
+    return fishesTypes.find(fish => fish.name == name).price;
+}
 
 module.exports = {
     init() {
@@ -37,8 +59,8 @@ module.exports = {
     getRodId() {
         return ROD_ID;
     },
-    getFishPrice() {
-        return FISH_PRICE;
+    getFishes() {
+        return fishesTypes;
     },
     createFishingMenuPlace() {
         mp.blips.new(68, new mp.Vector3(fishingPlace.x, fishingPlace.y, fishingPlace.z),
@@ -95,6 +117,36 @@ module.exports = {
             x: 0,
             y: 0,
             z: 0
+        }
+    },
+    async sellFish(player) {
+        let fishes = inventory.getArrayByItemId(player, 15);
+        let sum = 0;
+
+        if (fishes && fishes.length > 0) {
+            fishes.forEach(fish => {
+                let fishName = inventory.getParam(fish, 'name').value;
+                let fishWeight = inventory.getParam(fish, 'weight').value;
+                let fishPrice = getFishPrice(fishName);
+                sum += fishPrice * fishWeight;
+                console.log(`${fishName}, ${fishWeight}, ${fishPrice}, ${sum}`);
+            });
+
+            sum = parseInt(sum);
+
+            money.addCash(player, sum, async function(result) {
+                if (result) {
+                    fishes.forEach(fish => inventory.deleteItem(player, fish.id));
+                    player.call('fishing.fish.sell.ans', [1]);
+                    return notifs.success(player, `Вы продали рыбы на ${sum}$`, 'Продажа')
+                } else {
+                    player.call('fishing.fish.sell.ans', [0]);
+                    return notifs.error(player, 'Ошибка', 'Продажа');
+                }
+            })
+        } else {
+            player.call('fishing.fish.sell.ans', [0]);
+            return notifs.error(player, 'У вас нет рыбы', 'Ошибка');
         }
     }
 }
