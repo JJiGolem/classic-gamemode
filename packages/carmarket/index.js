@@ -85,7 +85,6 @@ module.exports = {
     addMarketVehicle(veh) {
         for (var i = 0; i < marketSpots.length; i++) {
             if (marketSpots[i].isFree) {
-                console.log('Нашли свободный спот, ставим на него')
                 marketSpots[i].vehicle = veh;
                 veh.x = marketSpots[i].x;
                 veh.y = marketSpots[i].y;

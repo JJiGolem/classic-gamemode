@@ -44,7 +44,7 @@ class StockManager extends Component {
                         </div>
                     }
                     {
-                        !business.order.isTake &&
+                        (business.order && !business.order.isTake) &&
                         <div className='button_create_order-phone-react' onClick={() => addApp({name: 'OrderCancel', form: <OrderCancel />})}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="50%" height="100%" viewBox="0 0 51.324 33.13">
                                 <g id="backspace" transform="translate(0 -5.09)">

@@ -133,6 +133,7 @@ mp.events.add('characterInit.done', () => { /// E
             }
             mp.events.call('interaction.menu.show');
         } else if (currentInteractionEntity.type == 'player') {
+            if (mp.farms.isCropping()) return;
             mp.callCEFV(`interactionMenu.showByName('player_interaction')`);
             mp.callCEFV(`interactionMenu.left = ${defaultLeft}`);
             mp.events.call('interaction.menu.show');

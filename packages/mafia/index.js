@@ -233,18 +233,19 @@ module.exports = {
     haveTime(war) {
         return this.warTime - (Date.now() - war.startTime);
     },
-    sendPowerInfo(player) {
+    sendStorageInfo(player) {
         var factionIds = bizes.getBizesFactionIds();
         var data = {
             names: factions.getMafiaFactions().map(x => x.name),
             counts: [0, 0, 0],
             bizCount: factionIds.length,
+            cash: factions.getFaction(player.character.factionId).cash,
         };
 
         factionIds.forEach(id => {
             data.counts[id - 12]++;
         });
 
-        player.call(`mafia.power.info.set`, [data]);
+        player.call(`mafia.storage.info.set`, [data]);
     },
 };

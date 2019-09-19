@@ -1,5 +1,7 @@
 let factions = require('./index.js');
 let notifs = require('../notifications');
+let money = call('money');
+
 module.exports = {
     "init": () => {
         factions.init();
@@ -191,6 +193,57 @@ module.exports = {
             notifs.success(player, `${rec.name} понижен до ${rank.name}`, `Понижение`);
         }
         factions.setRank(rec.character, rank);
+    },
+    "factions.cash.offer": (player, data) => {
+        data = JSON.parse(data);
+        data.sum = Math.clamp(data.sum, 0, 1000000);
+        var header = `Чек на пополнение общака`;
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, header);
+        if (player.id == data.playerId) return notifs.error(player, `Нельзя предложить самому себе`, header);
+        var rec = mp.players.at(data.playerId);
+        if (!rec) return notifs.error(player, `Игрок #${data.playerId} не найден`, header);
+        if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, header);
+        var faction = factions.getFaction(player.character.factionId);
+
+        rec.offer = {
+            type: "faction_cash_check",
+            playerId: player.id,
+            factionId: faction.id,
+            sum: data.sum
+        };
+        rec.call(`offerDialog.show`, [`faction_cash_check`, {
+            name: faction.name,
+            sum: data.sum,
+        }]);
+        notifs.success(player, `Предложение ${rec.name} отправлено`, header);
+    },
+    "factions.cash.offer.accept": (player) => {
+        if (!player.offer || player.offer.type != "faction_cash_check") return notifs.error(player, `Предложение не найдено`);
+        var header = `Чек на пополнение общака`;
+        var offer = player.offer;
+        delete player.offer;
+        if (player.character.cash < offer.sum) return notifs.error(player, `Необходимо $${offer.sum}`, header);
+        var faction = factions.getFaction(offer.factionId);
+
+        money.removeCash(player, offer.sum, (res) => {
+            if (!res) return notifs.error(player, `Ошибка списания наличных`, header);
+
+            faction.cash += offer.sum;
+            faction.save();
+        });
+
+        notifs.success(player, `Вы пополнили общак ${faction.name}`, header);
+        var rec = mp.players.at(offer.playerId);
+        if (!rec || player.dist(rec.position) > 50) return;
+        notifs.success(rec, `${player.name} пополнил общак на сумму $${offer.sum}`, header);
+    },
+    "factions.cash.offer.cancel": (player) => {
+        if (!player.offer) return;
+        var inviter = mp.players.at(player.offer.playerId);
+        delete player.offer;
+        if (!inviter) return;
+        notifs.info(player, `Предложение отклонено`, `Чек`);
+        notifs.info(inviter, `${player.name} отклонил предложение`, `Чек`);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (seat != -1 || vehicle.key != 'faction' || !player.character.factionId) return;

@@ -143,8 +143,8 @@ module.exports = {
         colshape.onEnter = (player) => {
             if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
 
-            if (this.isBandFaction(faction.id)) bands.sendPowerInfo(player);
-            else if (this.isMafiaFaction(faction.id)) mafia.sendPowerInfo(player);
+            if (this.isBandFaction(faction.id)) bands.sendStorageInfo(player);
+            else if (this.isMafiaFaction(faction.id)) mafia.sendStorageInfo(player);
 
             player.call("factions.storage.showMenu", [faction.id]);
             player.insideFactionWarehouse = faction.id;

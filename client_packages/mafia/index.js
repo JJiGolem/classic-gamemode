@@ -73,6 +73,29 @@ mp.mafia = {
             else mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, oldColor);
         }, 500);
     },
+    showBizWarMenu(data) {
+        var items = [];
+        var counts = [0, 0, 0];
+        data.bizes.forEach(biz => {
+            items.push({
+                text: biz.name,
+                values: [`ID: ${biz.id}`],
+                factionId: biz.factionId,
+            });
+            counts[biz.factionId - 12]++;
+        });
+        items.push({
+            text: "Закрыть"
+        });
+
+
+        mp.callCEFV(`selectMenu.setItems('mafiaBizWar', '${JSON.stringify(items)}')`);
+        mp.callCEFV(`selectMenu.setProp('mafiaBizWar', 'bizCount', ${data.bizCount})`);
+        mp.callCEFV(`selectMenu.setProp('mafiaBizWar', 'names', '${JSON.stringify(data.names)}')`);
+        mp.callCEFV(`selectMenu.setProp('mafiaBizWar', 'counts', '${JSON.stringify(counts)}')`);
+        mp.callCEFV(`selectMenu.menus['mafiaBizWar'].update()`);
+        mp.callCEFV(`selectMenu.showByName('mafiaBizWar')`);
+    },
     startBizWar(mafiaId, enemyMafiaId, time, mafiaScore = 0, enemyMafiaScore = 0) {
         time = parseInt(time);
         mp.callCEFV(`captureScore.start(${mafiaId}, ${enemyMafiaId}, ${time}, ${mafiaScore}, ${enemyMafiaScore})`);
@@ -133,7 +156,7 @@ mp.mafia = {
             rec.destroyBlip();
         });
     },
-    setPowerInfo(data) {
+    setStorageInfo(data) {
         var items = [];
         for (var i = 0; i < data.names.length; i++) {
             var name = data.names[i];
@@ -149,6 +172,9 @@ mp.mafia = {
         });
 
         mp.callCEFV(`selectMenu.setItems('mafiaPower', '${JSON.stringify(items)}')`);
+
+        var cash = JSON.stringify([`$${data.cash}`]);
+        mp.callCEFV(`selectMenu.setItemValues('mafiaCash', 'Баланс', '${cash}')`);
     },
 };
 
@@ -160,6 +186,9 @@ mp.events.add({
     "mafia.mafiaZones.flash": (id, toggle) => {
         mp.mafia.flashBlip(id, toggle);
     },
+    "mafia.bizWar.showMenu": (data) => {
+        mp.mafia.showBizWarMenu(data);
+    },
     "mafia.bizWar.start": (mafiaId, enemymafiaId, time, mafiacore = 0, enemymafiacore = 0) => {
         mp.mafia.startBizWar(mafiaId, enemymafiaId, time, mafiacore, enemymafiacore);
     },
@@ -169,8 +198,8 @@ mp.events.add({
     "mafia.bizWar.killList.log": (target, killer, reason) => {
         mp.mafia.logKill(target, killer, reason);
     },
-    "mafia.power.info.set": (data) => {
-        mp.mafia.setPowerInfo(data);
+    "mafia.storage.info.set": (data) => {
+        mp.mafia.setStorageInfo(data);
     },
     "factions.faction.set": (factionId) => {
         var item = {

@@ -39,6 +39,11 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 1000,
             allowNull: false
         },
+        cash: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false
+        },
         blip: {
             type: DataTypes.INTEGER(11),
             defaultValue: 1,
