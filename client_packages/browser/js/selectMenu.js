@@ -5225,6 +5225,15 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Растительность на лице') {
                             mp.trigger('barbershop.facialHairMenu.show');
                         }
+                        if (e.itemName == 'Цвет волос') {
+                            mp.trigger('barbershop.colorMenu.show', 0);
+                        }
+                        if (e.itemName == 'Доп. цвет волос') {
+                            mp.trigger('barbershop.colorMenu.show', 1);
+                        }
+                        if (e.itemName == 'Цвет растительности на лице') {
+                            mp.trigger('barbershop.colorMenu.show', 2);
+                        }
                     }
 
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed')
@@ -5290,6 +5299,53 @@ var selectMenu = new Vue({
                             mp.trigger('barbershop.mainMenu.show');
                         } else {
                             mp.trigger('barbershop.facialHair.buy', e.itemIndex);
+                        }
+                    }
+
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed')
+                        mp.trigger('barbershop.mainMenu.show');
+                }
+            },
+            "barbershopColor": {
+                name: "barbershopColor",
+                header: "Выбор цвета",
+                items: [{
+                    text: 'Цвета',
+                    values: []
+                },
+                {
+                    text: 'Применить',
+                    values: ['$100']
+
+                },
+                {
+                    text: 'Назад'
+
+                },
+                ],
+                i: 0,
+                j: 0,
+                hairIndex: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+
+                    if (eventName == 'onItemValueChanged') {
+                        this.hairIndex = e.valueIndex;
+                        mp.trigger('barbershop.color.set', e.valueIndex);
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            mp.trigger('barbershop.mainMenu.show');
+                        }
+                        if (e.itemName == 'Применить') {
+                            mp.trigger('barbershop.color.buy', this.hairIndex);
                         }
                     }
 
