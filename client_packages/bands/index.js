@@ -138,7 +138,7 @@ mp.bands = {
             rec.destroyBlip();
         });
     },
-    setPowerInfo(data) {
+    setStorageInfo(data) {
         var items = [];
         for (var i = 0; i < data.names.length; i++) {
             var name = data.names[i];
@@ -154,6 +154,9 @@ mp.bands = {
         });
 
         mp.callCEFV(`selectMenu.setItems('bandPower', '${JSON.stringify(items)}')`);
+
+        var cash = JSON.stringify([`$${data.cash}`]);
+        mp.callCEFV(`selectMenu.setItemValues('bandCash', 'Баланс', '${cash}')`);
     },
 };
 
@@ -177,8 +180,8 @@ mp.events.add({
     "bands.capture.killList.log": (target, killer, reason) => {
         mp.bands.logKill(target, killer, reason);
     },
-    "bands.power.info.set": (data) => {
-        mp.bands.setPowerInfo(data);
+    "bands.storage.info.set": (data) => {
+        mp.bands.setStorageInfo(data);
     },
     "factions.faction.set": (factionId) => {
         var item = {

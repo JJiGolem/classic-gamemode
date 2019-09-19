@@ -2624,6 +2624,9 @@ var selectMenu = new Vue({
                         text: "Влияние"
                     },
                     {
+                        text: "Общак"
+                    },
+                    {
                         text: "Закрыть"
                     },
                 ],
@@ -2645,6 +2648,8 @@ var selectMenu = new Vue({
                             selectMenu.showByName("bandAmmo");
                         } else if (e.itemName == 'Влияние') {
                             selectMenu.showByName("bandPower");
+                        } else if (e.itemName == 'Общак') {
+                            selectMenu.showByName("bandCash");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
@@ -2772,6 +2777,57 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Вернуться") selectMenu.showByName("bandStorage");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("bandStorage");
+                }
+            },
+            "bandCash": {
+                name: "bandCash",
+                header: "Общак банды",
+                items: [{
+                        text: "Баланс",
+                        values: ["$999999"],
+                    },
+                    {
+                        text: "Сумма",
+                        values: [""],
+                        type: "editable",
+                    },
+                    {
+                        text: "Пополнить",
+                    },
+                    {
+                        text: "Снять",
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Пополнить") {
+                            var sum = this.items[1].values[0];
+                            if (isNaN(sum)) return notifications.push(`error`, `Требуется число`);
+                            if (sum <= 0) return notifications.push(`error`, `Требуется положительное число`);
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `bands.storage.cash.put`, sum);
+                        } else if (e.itemName == "Снять") {
+                            var sum = this.items[1].values[0];
+                            if (isNaN(sum)) return notifications.push(`error`, `Требуется число`);
+                            if (sum <= 0) return notifications.push(`error`, `Требуется положительное число`);
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `bands.storage.cash.take`, sum);
+                        }
                         if (e.itemName == "Вернуться") selectMenu.showByName("bandStorage");
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("bandStorage");
                 }

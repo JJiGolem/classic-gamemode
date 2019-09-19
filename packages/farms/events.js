@@ -300,7 +300,7 @@ module.exports = {
         if (data.field < 0 || data.field >= farm.fields.length) return notifs.error(player, `Поле #${data.field} не найдено`, header);
         var field = farm.fields[data.field];
         if (!field) return notifs.error(player, `Поле #${data.field} не найдено`, header);
-        if (field.count) return notifs.error(player, `Поле #${data.field} уже засеяно`, header);
+        if (field.count) return notifs.error(player, `Поле #${data.field + 1} уже засеяно`, header);
         var count = 600;
         if (farm.grains < count) return notifs.error(player, `Недостаточно для загрузки`, header);
 

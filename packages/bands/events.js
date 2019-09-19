@@ -86,6 +86,42 @@ module.exports = {
             factions.setAmmo(faction, faction.ammo - bands.ammoAmmo * ammo);
         });
     },
+    "bands.storage.cash.put": (player, sum) => {
+        sum = Math.clamp(sum, 0, 1000000);
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Общак банды`);
+
+        var character = player.character;
+        var faction = factions.getFaction(character.factionId);
+        var header = `Общак ${faction.name}`;
+
+        if (character.cash < sum) return notifs.error(player, `Необходимо $${sum}`, header);
+        money.removeCash(player, sum, (res) => {
+            if (!res) return notifs.error(player, `Ошибка списания наличных`, header);
+
+            faction.cash += sum;
+            faction.save();
+        });
+
+        notifs.success(player, `Пополнено на $${sum}`, header);
+    },
+    "bands.storage.cash.take": (player, sum) => {
+        sum = Math.clamp(sum, 0, 1000000);
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Общак банды`);
+
+        var character = player.character;
+        var faction = factions.getFaction(character.factionId);
+        var header = `Общак ${faction.name}`;
+
+        if (faction.cash < sum) return notifs.error(player, `Общак не имеет $${sum}`, header);
+        money.addCash(player, sum, (res) => {
+            if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
+
+            faction.cash -= sum;
+            faction.save();
+        });
+
+        notifs.success(player, `Снято $${sum}`, header);
+    },
     "bands.drugsStash.drugs.buy": (player, data) => {
         data = JSON.parse(data);
 
