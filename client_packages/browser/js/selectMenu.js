@@ -3162,6 +3162,59 @@ var selectMenu = new Vue({
                         selectMenu.showByName("mafiaCash");
                 }
             },
+            "mafiaBizWar": {
+                name: "mafiaBizWar",
+                header: "Отжатие бизнеса",
+                items: [{
+                        text: "Бизнес 1",
+                        values: ["ID: 1"],
+                    },
+                    {
+                        text: "Бизнес 2",
+                        values: ["ID: 2"],
+                    },
+                    {
+                        text: "Бизнес 3",
+                        values: ["ID: 3"],
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                names: ["Мафия 1", "Мафия 2", "Мафия 3"],
+                counts: [111, 222, 333],
+                bizCount: 1000,
+                update() {
+                    var item = this.items[this.i];
+                    var name = this.names[item.factionId - 12];
+                    var count = this.counts[item.factionId - 12];
+                    var per = parseInt(count / this.bizCount * 100);
+
+                    selectMenu.notification = `Крыша: ${name}. Влияние: ${count} биз. ( ${per}% )`;
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName != 'Закрыть') {
+                            var bizId = parseInt(this.items[0].values[0].split(":")[1]);
+                            mp.trigger(`callRemote`, `mafia.bizWar.start`, bizId);
+                        }
+                        selectMenu.show = false;
+                    } else if (eventName == "onItemFocusChanged") {
+                        if (e.itemName != "Закрыть") this.update();
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.show = false;
+                }
+            },
             "drugsStash": {
                 name: "drugsStash",
                 header: "Наркопритон",
@@ -5249,6 +5302,8 @@ var selectMenu = new Vue({
         notification: null,
         // Время показа уведомления
         showNotifTime: 10000,
+        // Таймер показа уведомления
+        showNotifTimer: null,
         // Показ колесика загрузка
         loader: false,
     },
@@ -5346,7 +5401,13 @@ var selectMenu = new Vue({
             if (typeof items == 'string') items = JSON.parse(items);
             var menu = this.menus[menuName];
             if (!menu) return;
+            items.forEach((item) => {
+                if (item.i == null) Vue.set(item, 'i', 0);
+                if (item.j == null) Vue.set(item, 'j', 0);
+                if (!item.values) Vue.set(item, 'values', [""]);
+            });
             Vue.set(menu, 'items', items);
+            menu.i = 0;
         },
         getItemByName(name, items) {
             for (var i = 0; i < items.length; i++) {
@@ -5421,12 +5482,10 @@ var selectMenu = new Vue({
     },
     watch: {
         notification(val, oldVal) {
-            if (oldVal || !val) return;
-
-            var self = this;
-            setTimeout(function() {
-                self.notification = null;
-            }, self.showNotifTime);
+            clearTimeout(this.showNotifTimer);
+            this.showNotifTimer = setTimeout(() => {
+                this.notification = null;
+            }, this.showNotifTime);
         },
         'menu.i': function(val) {
             setTimeout(() => {

@@ -12,7 +12,7 @@ let getBizById = function(id) {
     return bizes.find(x => x.info.id == id);
 };
 let getBizByCharId = function(characterId) {
-    return bizes.find( x => x.info.characterId == characterId);
+    return bizes.find(x => x.info.characterId == characterId);
 };
 let dropBiz = function(biz, sellToGov = false) {
     if (biz == null) return;
@@ -31,15 +31,13 @@ let dropBiz = function(biz, sellToGov = false) {
                     if (characterId == mp.players.at(j).character.id) {
                         if (sellToGov) {
                             mp.players.at(j).call('biz.sell.toGov.ans', [1]);
-                        }
-                        else {
+                        } else {
                             mp.players.at(j).call('phone.app.remove', ["biz", biz.info.id]);
                         }
                         return;
                     }
                 }
-            }
-            else {
+            } else {
                 console.log("[bizes] Biz dropped " + biz.info.id + ". But player didn't getmoney");
             }
         });
@@ -78,38 +76,54 @@ let getBizInfoForApp = function(biz) {
     };
 };
 let getResourceName = function(type) {
-    switch(type) {
-        case 0: return "Топливо";
-        case 1: return "Продукты";
-        case 2: return "Авто";
-        case 3: return "Запчасти";
-        case 4: return "Одежда";
-        case 5: return "Оружие и патроны";
-        default: return null;
+    switch (type) {
+        case 0:
+            return "Топливо";
+        case 1:
+            return "Продукты";
+        case 2:
+            return "Авто";
+        case 3:
+            return "Запчасти";
+        case 4:
+            return "Одежда";
+        case 5:
+            return "Оружие и патроны";
+        default:
+            return null;
     }
 };
 let getTypeName = function(type, isTable = false) {
     /// Список с расшифровкой типов бизнесов
     if (!isTable) {
-        switch(type) {
-            case 0: return "АЗС";
-            case 1: return "Супермаркет";
-            case 2: return "Автосалон";
-            case 3: return "СТО";
-            case 4: return "Магазин одежды";
-            case 5: return "Магазин оружия";
-            default: return null;
+        switch (type) {
+            case 0:
+                return "АЗС";
+            case 1:
+                return "Супермаркет";
+            case 2:
+                return "Автосалон";
+            case 3:
+                return "СТО";
+            case 4:
+                return "Магазин одежды";
+            case 5:
+                return "Магазин оружия";
+            default:
+                return null;
         }
-    }
-    else {
-        switch(type) {
-            case 0: return "FuelStation";
-            //case 1: return ""; //24/7
-            //case 2: return "";    //CarShow
-            case 3: return "CarService";
-            //case 4: return "";   //Clothes
-            //case 5: return "";   //Ammu-Nation
-            default: return null;
+    } else {
+        switch (type) {
+            case 0:
+                return "FuelStation";
+                //case 1: return ""; //24/7
+                //case 2: return "";    //CarShow
+            case 3:
+                return "CarService";
+                //case 4: return "";   //Clothes
+                //case 5: return "";   //Ammu-Nation
+            default:
+                return null;
         }
     }
 };
@@ -126,8 +140,7 @@ let bizUpdateCashBox = async function(id, money) {
         }
         currentDay = await db.Models.BizStatistics.create(currentDay);
         biz.info.BizStatistics.unshift(currentDay);
-    }
-    else {
+    } else {
         currentDay.money += money;
         currentDay.save();
     }
@@ -196,7 +209,7 @@ module.exports = {
 
     },
     isHaveBiz(characterId) {
-        return bizes.findIndex( x => x.info.characterId == characterId) != -1;
+        return bizes.findIndex(x => x.info.characterId == characterId) != -1;
     },
     async addBiz(bizInfo) {
         let colshape = mp.colshapes.newSphere(bizInfo.x, bizInfo.y, bizInfo.z, 4.0);
@@ -212,16 +225,14 @@ module.exports = {
             return 0;
         });
         bizes.push({
-                colshape: colshape,
-                info: bizInfo
-            }
-        );
+            colshape: colshape,
+            info: bizInfo
+        });
         if (bizInfo.BizStatistics.length != 0) {
             if (bizInfo.BizStatistics[0].date.toLocaleDateString() != new Date().toLocaleDateString()) {
                 await bizUpdateCashBox(bizInfo.id, 0);
             }
-        }
-        else {
+        } else {
             await bizUpdateCashBox(bizInfo.id, 0);
         }
         return bizes[bizes.length - 1];
@@ -235,8 +246,7 @@ module.exports = {
                 if (result) {
                     callback(true);
                     buyer.call('phone.app.add', ["biz", getBizInfoForApp(biz)]);
-                }
-                else {
+                } else {
                     callback(false);
                 }
             });
@@ -265,6 +275,18 @@ module.exports = {
     },
     getBizesByFactionId(factionId) {
         return bizes.filter(x => x.info.factionId == factionId);
+    },
+    getBizesForBizWar(factionId) {
+        return bizes.filter(x => x.info.factionId != factionId).map(x => {
+            return {
+                id: x.info.id,
+                name: x.info.name,
+                factionId: x.info.factionId,
+            };
+        });
+    },
+    getBizCount() {
+        return bizes.length;
     },
     setTimer: setTimer,
     /// Функция пополняющая кассу биза

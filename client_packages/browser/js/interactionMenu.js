@@ -100,11 +100,13 @@ var interactionMenu = new Vue({
                         mp.trigger(`documents.list`);
                         //mp.trigger(`interaction.menu.close`);
                     } else if (item.text == "Захват") {
+                        mp.trigger(`interaction.menu.close`);
+                        if (captureScore.show) return notifications.push(`error`, `Недоступно`);
                         mp.trigger(`callRemote`, `bands.capture.start`);
-                        mp.trigger(`interaction.menu.close`);
                     } else if (item.text == "Захват биз.") {
-                        mp.trigger(`callRemote`, `mafia.bizWar.start`);
                         mp.trigger(`interaction.menu.close`);
+                        if (captureScore.show) return notifications.push(`error`, `Недоступно`);
+                        mp.trigger(`callRemote`, `mafia.bizWar.show`);
                     }
                 }
             },
