@@ -1,6 +1,7 @@
 let mafia = call('mafia');
 let factions = call('factions');
 let inventory = call('inventory');
+let money = call('money');
 let notifs = call('notifications');
 
 module.exports = {
@@ -85,6 +86,42 @@ module.exports = {
             notifs.success(player, `Вам выданы ${inventory.getInventoryItem(itemIds[index]).name} (${ammo} ед.)`, header);
             factions.setAmmo(faction, faction.ammo - mafia.ammoAmmo * ammo);
         });
+    },
+    "mafia.storage.cash.put": (player, sum) => {
+        sum = Math.clamp(sum, 0, 1000000);
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Общак мафии`);
+
+        var character = player.character;
+        var faction = factions.getFaction(character.factionId);
+        var header = `Общак ${faction.name}`;
+
+        if (character.cash < sum) return notifs.error(player, `Необходимо $${sum}`, header);
+        money.removeCash(player, sum, (res) => {
+            if (!res) return notifs.error(player, `Ошибка списания наличных`, header);
+
+            faction.cash += sum;
+            faction.save();
+        });
+
+        notifs.success(player, `Пополнено на $${sum}`, header);
+    },
+    "mafia.storage.cash.take": (player, sum) => {
+        sum = Math.clamp(sum, 0, 1000000);
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Общак мафии`);
+
+        var character = player.character;
+        var faction = factions.getFaction(character.factionId);
+        var header = `Общак ${faction.name}`;
+
+        if (faction.cash < sum) return notifs.error(player, `Общак не имеет $${sum}`, header);
+        money.addCash(player, sum, (res) => {
+            if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
+
+            faction.cash -= sum;
+            faction.save();
+        });
+
+        notifs.success(player, `Снято $${sum}`, header);
     },
     "playerDeath": (player, reason, killer) => {
         // killer = player; // for tests

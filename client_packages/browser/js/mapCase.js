@@ -24,6 +24,7 @@ var mapCase = new Vue({
     data: {
         type: "",
         show: false,
+        lastShowTime: 0,
         enable: false,
         userName: "",
         verification: null,
@@ -141,6 +142,7 @@ var mapCase = new Vue({
             mp.trigger("blur", val, 300);
             if (val) busy.add("mapCase", true);
             else busy.remove("mapCase", true);
+            this.lastShowTime = Date.now();
             if (!val && this.timerId) {
                 clearInterval(this.timerId);
                 return;
@@ -166,6 +168,7 @@ var mapCase = new Vue({
         let self = this;
         window.addEventListener('keyup', function(e) {
             if (busy.includes(["chat", "terminal", "inventory", "phone"])) return;
+            if (Date.now() - self.lastShowTime < 500) return;
             if (e.keyCode == 80 && self.enable) self.show = !self.show; // P
         });
     }

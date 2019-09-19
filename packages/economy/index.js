@@ -40,26 +40,26 @@ module.exports = {
 
         console.log("[ECONOMY] economic indicators loaded.");
     },
-    async create(type, name, count) {
-        economicIndicators.push(await db.Models.EconomicIndicator.create({type: type, name: name, count: count}));
+    getByModuleName(moduleName) {
+        return economicIndicators.filter(elem => elem.type.split(".")[0] == moduleName);
     },
     getAll() {
         return economicIndicators;
-    },
-    /// Функция получения своего экономического показателя по типу
-    /// Пример типу:
-    /// bizes.tax.max
-    /// Вернется объект:
-    /// {type: "bizes.tax.max", name: "Max tax for bizes", count: 0.5}
-    getByType(type) {
-        return economicIndicators.find( x => x.type == type);
     },
     /// Функция смены значения по типу
     setByType(array) {
         array.forEach(element => {
             let economicIndicator = economicIndicators.find( x => x.type == element.type);
-            economicIndicator.count = element.count;
+            economicIndicator.value = element.value;
+            let type = economicIndicator.type.split(".");
+            let moduleEconomicIndicators = require('../' + type[0] + '/index');
+
+            if (typeof moduleEconomicIndicators[type[1]] == "number") moduleEconomicIndicators[type[1]] = parseFloat(economicIndicator.value);
+            if (typeof moduleEconomicIndicators[type[1]] == "string") moduleEconomicIndicators[type[1]] = economicIndicator.value;
+            if (typeof moduleEconomicIndicators[type[1]] == "boolean") moduleEconomicIndicators[type[1]] = economicIndicator.value == "true";
+            
             economicIndicator.save();
         });
+        mp.events.call("economy.updated");
     }
 }

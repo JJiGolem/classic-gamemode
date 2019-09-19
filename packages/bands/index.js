@@ -277,15 +277,16 @@ module.exports = {
     haveTime(war) {
         return this.warTime - (Date.now() - war.startTime);
     },
-    sendPowerInfo(player) {
+    sendStorageInfo(player) {
         var data = {
             names: factions.getBandFactions().map(x => x.name),
             counts: [0, 0, 0, 0],
+            cash: factions.getFaction(player.character.factionId).cash,
         };
 
         this.bandZones.forEach(zone => {
             data.counts[zone.factionId - 8]++;
         });
-        player.call(`bands.power.info.set`, [data]);
+        player.call(`bands.storage.info.set`, [data]);
     },
 };

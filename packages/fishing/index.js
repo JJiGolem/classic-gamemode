@@ -26,6 +26,7 @@ let fishingPlace = {
 }
 
 const ROD_PRICE = 100;
+const FISH_PRICE = 20;
 const ROD_ID = 5;
 
 module.exports = {
@@ -35,6 +36,9 @@ module.exports = {
     },
     getRodId() {
         return ROD_ID;
+    },
+    getFishPrice() {
+        return FISH_PRICE;
     },
     createFishingMenuPlace() {
         mp.blips.new(68, new mp.Vector3(fishingPlace.x, fishingPlace.y, fishingPlace.z),

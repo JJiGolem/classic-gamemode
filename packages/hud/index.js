@@ -26,6 +26,8 @@ module.exports = {
             }
         });
 
+        console.log(outputArray);
+
         return outputArray;
     }
 }

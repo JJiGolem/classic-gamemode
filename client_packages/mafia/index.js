@@ -133,7 +133,7 @@ mp.mafia = {
             rec.destroyBlip();
         });
     },
-    setPowerInfo(data) {
+    setStorageInfo(data) {
         var items = [];
         for (var i = 0; i < data.names.length; i++) {
             var name = data.names[i];
@@ -149,6 +149,9 @@ mp.mafia = {
         });
 
         mp.callCEFV(`selectMenu.setItems('mafiaPower', '${JSON.stringify(items)}')`);
+
+        var cash = JSON.stringify([`$${data.cash}`]);
+        mp.callCEFV(`selectMenu.setItemValues('mafiaCash', 'Баланс', '${cash}')`);
     },
 };
 
@@ -169,8 +172,8 @@ mp.events.add({
     "mafia.bizWar.killList.log": (target, killer, reason) => {
         mp.mafia.logKill(target, killer, reason);
     },
-    "mafia.power.info.set": (data) => {
-        mp.mafia.setPowerInfo(data);
+    "mafia.storage.info.set": (data) => {
+        mp.mafia.setStorageInfo(data);
     },
     "factions.faction.set": (factionId) => {
         var item = {

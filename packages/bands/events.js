@@ -86,6 +86,42 @@ module.exports = {
             factions.setAmmo(faction, faction.ammo - bands.ammoAmmo * ammo);
         });
     },
+    "bands.storage.cash.put": (player, sum) => {
+        sum = Math.clamp(sum, 0, 1000000);
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Общак банды`);
+
+        var character = player.character;
+        var faction = factions.getFaction(character.factionId);
+        var header = `Общак ${faction.name}`;
+
+        if (character.cash < sum) return notifs.error(player, `Необходимо $${sum}`, header);
+        money.removeCash(player, sum, (res) => {
+            if (!res) return notifs.error(player, `Ошибка списания наличных`, header);
+
+            faction.cash += sum;
+            faction.save();
+        });
+
+        notifs.success(player, `Пополнено на $${sum}`, header);
+    },
+    "bands.storage.cash.take": (player, sum) => {
+        sum = Math.clamp(sum, 0, 1000000);
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Общак банды`);
+
+        var character = player.character;
+        var faction = factions.getFaction(character.factionId);
+        var header = `Общак ${faction.name}`;
+
+        if (faction.cash < sum) return notifs.error(player, `Общак не имеет $${sum}`, header);
+        money.addCash(player, sum, (res) => {
+            if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
+
+            faction.cash -= sum;
+            faction.save();
+        });
+
+        notifs.success(player, `Снято $${sum}`, header);
+    },
     "bands.drugsStash.drugs.buy": (player, data) => {
         data = JSON.parse(data);
 
@@ -99,8 +135,9 @@ module.exports = {
         var itemIds = [29, 30, 31, 32];
         data.index = Math.clamp(data.index, 0, itemIds.length - 1);
         var price = bands.drugsPrice * data.count;
+        var power = bands.getPowerBand(faction.id);
         // стоимость зависит от уровня влияния
-        price -= parseInt(price * bands.getPowerBand(faction.id));
+        price -= parseInt(price * power);
         price = Math.clamp(price, bands.drugsPriceMin * data.count, price);
         if (character.cash < price) return notifs.error(player, `Необходимо $${price}`, header);
 
@@ -115,6 +152,7 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вы приобрели ${inventory.getInventoryItem(itemIds[data.index]).name} (${data.count} г.)`, header);
+            player.call(`prompt.show`, [`Влияние вашей банды снизило цену на ${parseInt(power * 100)}%`]);
         });
     },
     "playerDeath": (player, reason, killer) => {
