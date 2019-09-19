@@ -135,6 +135,76 @@ module.exports = {
 
         notifs.success(player, `Снято $${sum}`, header);
     },
+    "mafia.power.sell": (player, data) => {
+        data = JSON.parse(data);
+        data.sum = Math.clamp(data.sum, 100, 100000);
+        var header = `Продажа крыши`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!factions.isMafiaFaction(player.character.factionId)) return out(`Вы не член мафии`);
+        var rank = factions.getRank(player.character.factionId, mafia.bizWarRank);
+        if (player.character.factionRank < rank.id) return out(`Доступно с ранга ${rank.name}`);
+        var rec = mp.players.at(data.recId);
+        if (!rec) return out(`Игрок #${data.recId} не найден`);
+        if (player.dist(rec.position) > 10) return out(`${rec.name} далеко`);
+        if (!factions.isMafiaFaction(rec.character.factionId)) return out(`${rec.name} не член мафии`);
+        if (rec.character.factionRank < rank.id) return out(`${rec.name} еще мал для таких сделок`);
+        if (player.character.factionId == rec.character.factionId) return out(`${rec.name} в вашей мафии`);
+
+        var biz = bizes.getNearBiz(player);
+        if (!biz) return out(`Необходимо находиться у бизнеса`);
+        if (biz.info.factionId != player.character.factionId) return out(`${biz.info.name} находится не под вашей крышей`);
+
+        rec.offer = {
+            type: "mafia_power_sell",
+            playerId: player.id,
+            bizId: biz.info.id,
+            sum: data.sum
+        };
+        rec.call(`offerDialog.show`, [`mafia_power_sell`, {
+            player: player.name,
+            biz: biz.info.name,
+            sum: data.sum
+        }]);
+    },
+    "mafia.power.sell.accept": (player) => {
+        var header = `Продажа крыши`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.offer || player.offer.type != "mafia_power_sell") return out(`Сделка не найдена`);
+        var offer = player.offer;
+        delete player.offer;
+
+        var seller = mp.players.at(offer.playerId);
+        if (!seller) return out(`Мафиозник не найден`);
+        if (player.dist(seller.position) > 10) return out(`${seller.name} далеко`);
+        if (player.character.cash < offer.sum) return out(`Необходимо $${sum}`);
+
+        var biz = bizes.getBizById(offer.bizId);
+        if (biz.info.factionId != seller.character.factionId) return out(`${biz.info.name} не под крышей ${seller.name}`);
+
+        money.removeCash(player, offer.sum, (res) => {
+            if (!res) return out(`Ошибка списания наличных`);
+            money.addCash(seller, offer.sum, (res) => {
+                if (!res) return notifs.error(seller, `Ошибка начисления наличных`, header);
+
+                bizes.setFactionId(offer.bizId, player.character.factionId);
+            });
+        });
+
+        notifs.success(seller, `Крыша ${biz.info.name} продана`, header);
+        notifs.success(player, `Крыша ${biz.info.name} куплена`, header);
+    },
+    "mafia.power.sell.cancel": (player) => {
+        if (!player.offer) return;
+        var inviter = mp.players.at(player.offer.playerId);
+        delete player.offer;
+        if (!inviter) return;
+        notifs.info(player, `Предложение отклонено`);
+        notifs.info(inviter, `${player.name} отклонил предложение`);
+    },
     "playerDeath": (player, reason, killer) => {
         // killer = player; // for tests
         if (!killer || !killer.character) return;

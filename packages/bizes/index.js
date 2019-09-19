@@ -288,6 +288,19 @@ module.exports = {
     getBizCount() {
         return bizes.length;
     },
+    getNearBiz(player, range = 10) {
+        var nearBiz;
+        var minDist = 99999;
+        bizes.forEach(biz => {
+            var bizPos = new mp.Vector3(biz.info.x, biz.info.y, biz.info.z);
+            var distance = player.dist(bizPos);
+            if (distance < range && distance < minDist) {
+                nearBiz = biz;
+                minDist = distance;
+            }
+        });
+        return nearBiz;
+    },
     setTimer: setTimer,
     /// Функция пополняющая кассу биза
     /// После каждой покупки передавать в нее стоимость покупки и id бизнеса

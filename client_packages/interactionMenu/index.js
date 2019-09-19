@@ -70,5 +70,19 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
             };
             mp.events.callRemote(`inventory.item.adrenalin.use`, JSON.stringify(data));
         }
+    } else if (menuName == "mafia") {
+        if (!entity) return;
+        if (entity.type != 'player') return;
+
+        if (itemName == 'Продать крышу') {
+            mp.callCEFV(`inputWindow.playerId = ${entity.remoteId}`);
+            mp.callCEFV(`inputWindow.showByName('mafia_power_sell')`);
+        } else if (itemName == 'Связать') {
+
+        } else if (itemName == 'Вести') {
+
+        } else if (itemName == 'Мешок на голову') {
+
+        }
     }
 });
