@@ -1142,7 +1142,7 @@
 
     <div v-cloak id="fishing" v-if="show">
         <div class="fishing-line" v-if="isFetch">
-            <div class="fishing-zone" v-bind:style="{ width: zone + '%' }"></div>
+            <div class="fishing-zone" v-bind:style="{ width: zone + '%', marginLeft: ((100 - zone) / 2) + '%' }"></div>
             <div id="fishing-cursor" v-bind:style="{ marginLeft: position + '%' }"></div>
         </div>
         <div v-if="isStarted && !isFetch">
@@ -1154,7 +1154,7 @@
             <table>
                 <tr v-if="!isStarted">
                     <th>
-                        <span class="fishing-help-button">Space</span>
+                        <span class="fishing-help-button">F</span>
                     </th>
                     <th>
                         <span>Забросить удочку</span>
@@ -1162,7 +1162,7 @@
                 </tr>
                 <tr v-if="isFetch">
                     <th>
-                        <span class="fishing-help-button">F</span>
+                        <span class="fishing-help-button">Space</span>
                     </th>
                     <th>
                         <span>Вытянуть</span>

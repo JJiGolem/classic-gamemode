@@ -125,17 +125,17 @@ let bindButtons = (state) => {
         if (isBinding) return;
         isBinding = true;
         mp.keys.bind(0x45, true, fishingEnter);
-        mp.keys.bind(0x20, true, fishingStart);
-        mp.keys.bind(0x46, true, fishingEnd);
-        mp.keys.bind(0x1B, true, fishingExit);
+        mp.keys.bind(0x20, true, fishingEnd);
+        mp.keys.bind(0x46, true, fishingStart);
+        mp.keys.bind(0x1B, false, fishingExit);
     }
     else {
         if (!isBinding) return;
         isBinding = false;
         mp.keys.unbind(0x45, true, fishingEnter);
-        mp.keys.unbind(0x20, true, fishingStart);
-        mp.keys.unbind(0x46, true, fishingEnd);
-        mp.keys.unbind(0x1B, true, fishingExit);
+        mp.keys.unbind(0x20, true, fishingEnd);
+        mp.keys.unbind(0x46, true, fishingStart);
+        mp.keys.unbind(0x1B, false, fishingExit);
     }
 }
 
