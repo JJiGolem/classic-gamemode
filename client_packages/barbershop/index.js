@@ -4,6 +4,7 @@ let isInBarbershopShape = false;
 let controlsDisabled = false;
 let player = mp.players.local;
 let currentGender = 0;
+let currentColorType = 0;
 
 let rotation = {
     left: false,
@@ -206,9 +207,77 @@ mp.events.add('barbershop.facialHair.buy.ans', (ans) => {
     }
 });
 
+mp.events.add('barbershop.colorMenu.show', (type = currentColorType) => {
+    currentColorType = type;
+    let colorList = config.hairColorList;
+    switch (currentColorType) {
+        case 0:
+            player.setHairColor(0, appearance.hairHighlightColor);
+            break;
+        case 1:
+            player.setHairColor(appearance.hairColor, 0);
+            break;
+        case 2:
+            player.setHeadOverlay(1, appearance.facialHair, 1.0, 0, 0)
+            break;
+    }
+    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["barbershopColor"])`);
+    mp.callCEFVN({ "selectMenu.menu.items[0].values": colorList });
+    mp.callCEFV(`selectMenu.show = true`);
+});
+
+mp.events.add('barbershop.color.set', (color) => {
+    switch (currentColorType) {
+        case 0:
+            player.setHairColor(color, appearance.hairHighlightColor);
+            break;
+        case 1:
+            player.setHairColor(appearance.hairColor, color);
+            break;
+        case 2:
+            player.setHeadOverlay(1, appearance.facialHair, 1.0, color, 0)
+            break;
+    }
+});
+
+mp.events.add('barbershop.color.buy', (index) => {
+    mp.callCEFV('selectMenu.loader = true');
+    switch (currentColorType) {
+        case 0:
+            current.hairColor = index;
+            break;
+        case 1:
+            current.hairHighlightColor = index;
+            break;
+        case 2:
+            current.facialHairColor = index;
+            break;
+    }
+    mp.events.callRemote('barbershop.color.buy', currentColorType, index);
+});
+
+mp.events.add('barbershop.color.buy.ans', (ans) => {
+    mp.callCEFV('selectMenu.loader = false');
+    switch (ans) {
+        case 0:
+            appearance.hairColor = current.hairColor;
+            mp.callCEFV(`selectMenu.notification = 'Цвет изменен'`);
+            break;
+        case 1:
+            appearance.hairHighlightColor = current.hairHighlightColor;
+            mp.callCEFV(`selectMenu.notification = 'Цвет изменен'`);
+            break;
+        case 2:
+            appearance.facialHairColor = current.facialHairColor;
+            mp.callCEFV(`selectMenu.notification = 'Цвет изменен'`);
+            break;
+    }
+});
+
 function setCurrentAppearanceParams() {
     player.setComponentVariation(2, appearance.hairstyle, 0, 2);
     player.setHeadOverlay(1, appearance.facialHair, 1.0, appearance.facialHairColor, 0)
+    player.setHairColor(appearance.hairColor, appearance.hairHighlightColor);
 }
 
 function initCurrentAppearanceParams(data) {
@@ -230,6 +299,8 @@ function bindKeys(bind) {
         mp.keys.unbind(0x41, false, stopRotationLeft); // A
         mp.keys.unbind(0x44, true, startRotationRight); // D
         mp.keys.unbind(0x44, false, stopRotationRight); // D
+        rotation.left = false;
+        rotation.right = false;
     }
 }
 
