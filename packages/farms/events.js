@@ -282,6 +282,38 @@ module.exports = {
 
         notifs.success(player, `Разгружено ${count} ед. урожая. Премия $${pay}`, header);
     },
+    "farms.warehouse.products.buy": (player, index) => {
+        var header = `Покупка урожая`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var veh = player.vehicle;
+        if (!veh || !veh.db || veh.db.key != "job" || veh.db.owner != 4) return out(`Необходимо находиться в грузовике`);
+        if (!player.farm) return out(`Вы далеко`);
+        if (player.character.job != 4) return out(`Вы не грузоперевозчик`);
+        if (veh.products && veh.products.count) return out(`Грузовик уже содержит товар`);
+
+        var farm = player.farm;
+        var key = ["productA", "productB", "productC"][index];
+        if (farm[key] < carrier.productsMax) return out(`На складе недостаточно урожая`);
+
+        var price = farm[`${key}Price`] * carrier.productsMax;
+        if (player.character.cash < price) return out(`Необходимо $${price}`);
+
+        money.removeCash(player, price, (res) => {
+            if (!res) return out(`Ошибка списания наличных`);
+
+            veh.products = {
+                type: key,
+                count: carrier.productsMax,
+            };
+            veh.setVariable(`label`, `${carrier.productsMax} из ${carrier.productsMax} ед.`);
+            farm[key] -= carrier.productsMax;
+            farm.save();
+        });
+
+        notifs.success(player, `Урожай загружен`, header);
+    },
     "farms.warehouse.grains.take": (player, data) => {
         data = JSON.parse(data);
         var header = `Загрузка зерна`;

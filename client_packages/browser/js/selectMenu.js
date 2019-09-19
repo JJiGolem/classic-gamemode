@@ -4785,10 +4785,10 @@ var selectMenu = new Vue({
                         text: "Урожай",
                         values: ["Урожай А", "Урожай Б", "Урожай С"],
                     },
-                    {
-                        text: "Количество",
-                        values: ["1 ед.", "2 ед.", "3 ед."],
-                    },
+                    // {
+                    //     text: "Количество",
+                    //     values: ["1 ед.", "2 ед.", "3 ед."],
+                    // },
                     {
                         text: "Купить"
                     },
@@ -4809,7 +4809,8 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Купить') {
-
+                            var index = this.items[0].i;
+                            mp.trigger(`callRemote`, `farms.warehouse.products.buy`, index);
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmProducts");
                         }
