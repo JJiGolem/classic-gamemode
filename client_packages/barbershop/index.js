@@ -5,6 +5,7 @@ let controlsDisabled = false;
 let player = mp.players.local;
 let currentGender = 0;
 let currentColorType = 0;
+let prices;
 
 let rotation = {
     left: false,
@@ -37,12 +38,13 @@ mp.keys.bind(0x45, true, () => {
     }
 });
 
-mp.events.add('barbershop.enter', (shopData, gender, appearanceData) => {
+mp.events.add('barbershop.enter', (shopData, gender, appearanceData, priceData) => {
     bindKeys(true);
     controlsDisabled = true;
     mp.events.call('hud.enable', false);
     mp.game.ui.displayRadar(false);
     mp.callCEFR('setOpacityChat', [0.0]);
+    prices = priceData;
     currentGender = gender;
     initCurrentAppearanceParams(appearanceData);
     mp.events.call('barbershop.mainMenu.show');
@@ -124,7 +126,7 @@ mp.events.add('barbershop.hairstylesMenu.show', () => {
     hairstyles.forEach((current) => {
         items.push({
             text: current.name,
-            values: ['$100']
+            values: [`$${prices.hairstylePrice}`]
         });
     });
 
@@ -160,6 +162,12 @@ mp.events.add('barbershop.hairstyle.buy.ans', (ans) => {
             appearance.hairstyle = current.hairstyle;
             mp.callCEFV(`selectMenu.notification = 'Прическа сделана'`);
             break;
+        case 1:
+            mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+            break;
+        case 2:
+            mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
+            break;
     }
 });
 
@@ -172,7 +180,7 @@ mp.events.add('barbershop.facialHairMenu.show', () => {
     facialHairList.forEach((current) => {
         items.push({
             text: current,
-            values: ['$100']
+            values: [`$${prices.facialHairPrice}`]
         });
     });
 
@@ -204,6 +212,12 @@ mp.events.add('barbershop.facialHair.buy.ans', (ans) => {
             appearance.facialHair = current.facialHair;
             mp.callCEFV(`selectMenu.notification = 'Борода заменена'`);
             break;
+        case 1:
+            mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+            break;
+        case 2:
+            mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
+            break;
     }
 });
 
@@ -222,6 +236,7 @@ mp.events.add('barbershop.colorMenu.show', (type = currentColorType) => {
             break;
     }
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["barbershopColor"])`);
+    mp.callCEFVN({ "selectMenu.menu.items[1].values": [`$${prices.colorChangePrice}`] });
     mp.callCEFVN({ "selectMenu.menu.items[0].values": colorList });
     mp.callCEFV(`selectMenu.show = true`);
 });
@@ -270,6 +285,12 @@ mp.events.add('barbershop.color.buy.ans', (ans) => {
         case 2:
             appearance.facialHairColor = current.facialHairColor;
             mp.callCEFV(`selectMenu.notification = 'Цвет изменен'`);
+            break;
+        case 3:
+            mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+            break;
+        case 4:
+            mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
             break;
     }
 });

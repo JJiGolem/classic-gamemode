@@ -4,6 +4,9 @@
 let shops;
 
 module.exports = {
+    hairstylePrice: 200,
+    facialHairPrice: 150,
+    colorChangePrice: 100,
     async init() {
         await this.loadBarbershopsFromDB();
     },
