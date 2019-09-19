@@ -2800,6 +2800,9 @@ var selectMenu = new Vue({
                         text: "Снять",
                     },
                     {
+                        text: "Выписать чек",
+                    },
+                    {
                         text: "Вернуться"
                     },
                 ],
@@ -2827,9 +2830,61 @@ var selectMenu = new Vue({
                             if (sum <= 0) return notifications.push(`error`, `Требуется положительное число`);
                             selectMenu.show = false;
                             mp.trigger(`callRemote`, `bands.storage.cash.take`, sum);
+                        } else if (e.itemName == "Выписать чек") {
+                            selectMenu.showByName("bandCashCheck");
                         }
                         if (e.itemName == "Вернуться") selectMenu.showByName("bandStorage");
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("bandStorage");
+                }
+            },
+            "bandCashCheck": {
+                name: "bandCashCheck",
+                header: "Чек на пополнение общака",
+                items: [{
+                        text: "ID игрока",
+                        values: [""],
+                        type: "editable",
+                    },
+                    {
+                        text: "Сумма $",
+                        values: [""],
+                        type: "editable",
+                    },
+                    {
+                        text: "Предложить"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Предложить') {
+                            var playerId = this.items[0].values[0];
+                            var sum = this.items[1].values[0];
+                            if (isNaN(playerId) || isNaN(sum)) return notifications.push(`error`, `Требуется число`);
+                            if (playerId < 0 || sum <= 0) return notifications.push(`error`, `Требуется положительное число`);
+                            var data = {
+                                playerId: parseInt(this.items[0].values[0]),
+                                sum: parseInt(this.items[1].values[0]),
+                            };
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `factions.cash.offer`, JSON.stringify(data));
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("bandCash");
+                        }
+                    } else if (eventName == 'onBackspacePressed' && this.i > 1)
+                        selectMenu.showByName("bandCash");
                 }
             },
             "mafiaStorage": {
@@ -3020,6 +3075,9 @@ var selectMenu = new Vue({
                         text: "Снять",
                     },
                     {
+                        text: "Выписать чек",
+                    },
+                    {
                         text: "Вернуться"
                     },
                 ],
@@ -3047,9 +3105,61 @@ var selectMenu = new Vue({
                             if (sum <= 0) return notifications.push(`error`, `Требуется положительное число`);
                             selectMenu.show = false;
                             mp.trigger(`callRemote`, `mafia.storage.cash.take`, sum);
+                        } else if (e.itemName == "Выписать чек") {
+                            selectMenu.showByName("mafiaCashCheck");
                         }
                         if (e.itemName == "Вернуться") selectMenu.showByName("bandStorage");
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("bandStorage");
+                }
+            },
+            "mafiaCashCheck": {
+                name: "mafiaCashCheck",
+                header: "Чек на пополнение общака",
+                items: [{
+                        text: "ID игрока",
+                        values: [""],
+                        type: "editable",
+                    },
+                    {
+                        text: "Сумма $",
+                        values: [""],
+                        type: "editable",
+                    },
+                    {
+                        text: "Предложить"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Предложить') {
+                            var playerId = this.items[0].values[0];
+                            var sum = this.items[1].values[0];
+                            if (isNaN(playerId) || isNaN(sum)) return notifications.push(`error`, `Требуется число`);
+                            if (playerId < 0 || sum <= 0) return notifications.push(`error`, `Требуется положительное число`);
+                            var data = {
+                                playerId: parseInt(this.items[0].values[0]),
+                                sum: parseInt(this.items[1].values[0]),
+                            };
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `factions.cash.offer`, JSON.stringify(data));
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("mafiaCash");
+                        }
+                    } else if (eventName == 'onBackspacePressed' && this.i > 1)
+                        selectMenu.showByName("mafiaCash");
                 }
             },
             "drugsStash": {
@@ -4339,11 +4449,7 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-                        if (e.itemName == 'В штат') {
-                            selectMenu.showByName("farmControlSellToState");
-                        } else if (e.itemName == 'Игроку') {
-                            selectMenu.showByName("farmControlSellToPlayer");
-                        } else if (e.itemName == 'Предложить') {
+                        if (e.itemName == 'Предложить') {
                             var playerId = this.items[0].values[0];
                             var sum = this.items[1].values[0];
                             if (isNaN(playerId) || isNaN(sum)) return notifications.push(`error`, `Требуется число`);
