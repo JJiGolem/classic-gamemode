@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3b4f40e7-2b00-4af6-93b4-f955a86f8251" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client_packages/browser/js/playersList.js" beforeDir="false" afterPath="$PROJECT_DIR$/client_packages/browser/js/playersList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/src/modules/phone/components/business_app/StockManager.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/react/src/modules/phone/components/business_app/StockManager.jsx" afterDir="false" />
-    </list>
+    <list default="true" id="3b4f40e7-2b00-4af6-93b4-f955a86f8251" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -49,10 +45,6 @@
                 <element signature="e#39690#39708#0" expanded="true" />
                 <element signature="e#39737#39755#0" expanded="true" />
                 <element signature="e#39784#39802#0" expanded="true" />
-                <element signature="e#40674#40692#0" expanded="true" />
-                <element signature="e#40721#40739#0" expanded="true" />
-                <element signature="e#40768#40786#0" expanded="true" />
-                <element signature="e#40815#40833#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -82,8 +74,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/business_app/StockManager.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="404">
-              <caret line="43" column="30" lean-forward="true" selection-start-line="43" selection-start-column="30" selection-end-line="43" selection-end-column="30" />
+            <state relative-caret-position="364">
+              <caret line="40" column="36" lean-forward="true" selection-start-line="40" selection-start-column="36" selection-end-line="40" selection-end-column="36" />
               <folding>
                 <element signature="e#0#49#0" expanded="true" />
               </folding>
@@ -95,7 +87,7 @@
         <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.info.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="5400">
-              <caret line="320" lean-forward="true" selection-start-line="320" selection-end-line="320" />
+              <caret line="320" selection-start-line="320" selection-end-line="320" />
             </state>
           </provider>
         </entry>
@@ -495,7 +487,7 @@
       <workItem from="1568623688069" duration="248000" />
       <workItem from="1568719579286" duration="14547000" />
       <workItem from="1568886155319" duration="245000" />
-      <workItem from="1568903696347" duration="393000" />
+      <workItem from="1568903696347" duration="1116000" />
     </task>
     <task id="LOCAL-00001" summary="[Phone] taxi app&#10;[Houses] actions menu fix">
       <created>1565949187139</created>
@@ -553,17 +545,24 @@
       <option name="project" value="LOCAL" />
       <updated>1568813459970</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="[Biz] fix stock manager">
+      <created>1568904153164</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1568904153164</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="363529000" />
+    <option name="totallyTimeSpent" value="364252000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15532055" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15532055" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -577,7 +576,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.20254958" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.20254958" />
       <window_info anchor="bottom" id="Messages" order="11" weight="0.3286119" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -595,7 +594,8 @@
     <MESSAGE value="[Hud] add search" />
     <MESSAGE value="[Hud] add search &amp; sort in players list" />
     <MESSAGE value="[Hud] temp fix player list" />
-    <option name="LAST_COMMIT_MESSAGE" value="[Hud] temp fix player list" />
+    <MESSAGE value="[Biz] fix stock manager" />
+    <option name="LAST_COMMIT_MESSAGE" value="[Biz] fix stock manager" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/house_app/Success.jsx">
@@ -938,10 +938,6 @@
             <element signature="e#39690#39708#0" expanded="true" />
             <element signature="e#39737#39755#0" expanded="true" />
             <element signature="e#39784#39802#0" expanded="true" />
-            <element signature="e#40674#40692#0" expanded="true" />
-            <element signature="e#40721#40739#0" expanded="true" />
-            <element signature="e#40768#40786#0" expanded="true" />
-            <element signature="e#40815#40833#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -982,14 +978,14 @@
     <entry file="file://$PROJECT_DIR$/react/src/modules/phone/reducers/reducer.info.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5400">
-          <caret line="320" lean-forward="true" selection-start-line="320" selection-end-line="320" />
+          <caret line="320" selection-start-line="320" selection-end-line="320" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/react/src/modules/phone/components/business_app/StockManager.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="404">
-          <caret line="43" column="30" lean-forward="true" selection-start-line="43" selection-start-column="30" selection-end-line="43" selection-end-column="30" />
+        <state relative-caret-position="364">
+          <caret line="40" column="36" lean-forward="true" selection-start-line="40" selection-start-column="36" selection-end-line="40" selection-end-column="36" />
           <folding>
             <element signature="e#0#49#0" expanded="true" />
           </folding>
