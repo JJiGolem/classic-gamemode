@@ -1,24 +1,13 @@
 let vehicles = call('vehicles');
 
-let serviceData = [{
-    x: 484.9,
-    y: -1315.5,
-    z: 29.2
-},
-{
-    x: 540.07470703125,
-    y: -177.12237548828125,
-    z: 54.481346130371094
-},
-{
-    x: -228.7,
-    y: -1388.0,
-    z: 31.2
-}];
-
 let dbCarServices;
 
 module.exports = {
+    resourcePrice: 100,
+    maxPriceMultiplier: 1.5,
+    minPriceMultiplier: 0.5,
+    maxSalaryMultiplier: 0.3,
+    minSalaryMultiplier: 0.1,
     async init() {
         this.loadCarServicesFromDB();
     },
@@ -98,5 +87,32 @@ module.exports = {
         } catch (err) {
             console.log(err);
         }
+    },
+    getBizParamsById(id) {
+        let service = dbCarServices.find(x => x.id == id);
+        if (!service) return;
+        let params = [
+            {
+                key: 'priceMultiplier',
+                name: 'Наценка на услуги',
+                max: this.maxPriceMultiplier,
+                min: this.minPriceMultiplier,
+                current: service.priceMultiplier
+            },
+            {
+                key: 'salaryMultiplier',
+                name: 'Коэффициент зарплаты',
+                max: this.maxSalaryMultiplier,
+                min: this.minSalaryMultiplier,
+                current: service.salaryMultiplier
+            },
+        ]
+        return params;
+    },
+    setBizParam(id, key, value) {
+        let service = dbCarServices.find(x => x.id == id);
+        if (!service) return;
+        service[key] = value;
+        service.save();
     }
 }
