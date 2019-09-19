@@ -204,7 +204,6 @@ module.exports = {
                 }
                 var names = ["farmProductA", "farmProductA", "farmProductB", "farmProductC"];
                 player.addAttachment(names[field.type]);
-                player.call(`farms.isCropping.end`);
 
                 obj.count--;
                 obj.field.count--;

@@ -135,8 +135,9 @@ module.exports = {
         var itemIds = [29, 30, 31, 32];
         data.index = Math.clamp(data.index, 0, itemIds.length - 1);
         var price = bands.drugsPrice * data.count;
+        var power = bands.getPowerBand(faction.id);
         // стоимость зависит от уровня влияния
-        price -= parseInt(price * bands.getPowerBand(faction.id));
+        price -= parseInt(price * power);
         price = Math.clamp(price, bands.drugsPriceMin * data.count, price);
         if (character.cash < price) return notifs.error(player, `Необходимо $${price}`, header);
 
@@ -151,6 +152,7 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вы приобрели ${inventory.getInventoryItem(itemIds[data.index]).name} (${data.count} г.)`, header);
+            player.call(`prompt.show`, [`Влияние вашей банды снизило цену на ${parseInt(power * 100)}%`]);
         });
     },
     "playerDeath": (player, reason, killer) => {

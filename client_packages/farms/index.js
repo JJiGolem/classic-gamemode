@@ -288,13 +288,6 @@ mp.events.add({
     "farms.jobType.set": (val) => {
         mp.farms.setJobType(val);
     },
-    "farms.isCropping.end": () => {
-        if (nearBootVehicleId == null) return;
-        var vehicle = mp.vehicles.atRemoteId(nearBootVehicleId);
-        if (!vehicle) return;
-        if (!vehicle.getVariable("trunk")) return mp.notify.warning(`Для погрузки урожая откройте багажник`);
-        mp.events.callRemote(`farms.vehicle.products.put`, vehicle.remoteId);
-    },
     "farms.info.set": (data) => {
         mp.farms.setFarmInfo(data);
     },
