@@ -733,7 +733,7 @@
                 </thead>
             </table>
             <div class="players_list-navigate_panel">
-                <input v-model="search"/>
+                <input v-model="search" />
                 <select v-model="type">
                     <option v-for="option in options" v-bind:value="option.value">
                         {{ option.text }}
@@ -1198,7 +1198,7 @@
         </div>
     </div>
 
-    <div v-cloak id="killList" v-if="isShow">
+    <div id="killList" v-if="isShow" :style="{opacity: 1}">
         <div class="log" v-for="kill in list">
             <div v-if="kill.killer" :style="{color: playerColor(kill.killer)}">{{ kill.killer.name }}</div>
             <img :src="killImgSrc(kill.reason)" />

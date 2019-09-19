@@ -362,6 +362,8 @@ var inventory = new Vue({
         show: false,
         // Возможность использования инвентаря
         enable: false,
+        // Время последнего открытия/закрытия (ms)
+        lastShowTime: 0,
         // Показ описания предмета на экране
         itemDesc: {
             item: null,
@@ -980,12 +982,14 @@ var inventory = new Vue({
             hud.show = !val;
             if (val) busy.add("inventory", true);
             else busy.remove("inventory", true);
+            this.lastShowTime = Date.now();
         },
     },
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
             if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone"])) return;
+            if (Date.now() - self.lastShowTime < 500) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;
             if (e.keyCode > 47 && e.keyCode < 58) {
                 if (!self.enable && !self.debug) return;

@@ -5,6 +5,7 @@
     flex-direction: column;
     font-family: Ubuntu;
     font-size: 1.5vh;
+    opacity: 0;
     position: absolute;
     right: 2vh;
     top: 30vh;
