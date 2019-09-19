@@ -73,6 +73,29 @@ mp.mafia = {
             else mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, oldColor);
         }, 500);
     },
+    showBizWarMenu(data) {
+        var items = [];
+        var counts = [0, 0, 0];
+        data.bizes.forEach(biz => {
+            items.push({
+                text: biz.name,
+                values: [`ID: ${biz.id}`],
+                factionId: biz.factionId,
+            });
+            counts[biz.factionId - 12]++;
+        });
+        items.push({
+            text: "Закрыть"
+        });
+
+
+        mp.callCEFV(`selectMenu.setItems('mafiaBizWar', '${JSON.stringify(items)}')`);
+        mp.callCEFV(`selectMenu.setProp('mafiaBizWar', 'bizCount', ${data.bizCount})`);
+        mp.callCEFV(`selectMenu.setProp('mafiaBizWar', 'names', '${JSON.stringify(data.names)}')`);
+        mp.callCEFV(`selectMenu.setProp('mafiaBizWar', 'counts', '${JSON.stringify(counts)}')`);
+        mp.callCEFV(`selectMenu.menus['mafiaBizWar'].update()`);
+        mp.callCEFV(`selectMenu.showByName('mafiaBizWar')`);
+    },
     startBizWar(mafiaId, enemyMafiaId, time, mafiaScore = 0, enemyMafiaScore = 0) {
         time = parseInt(time);
         mp.callCEFV(`captureScore.start(${mafiaId}, ${enemyMafiaId}, ${time}, ${mafiaScore}, ${enemyMafiaScore})`);
@@ -162,6 +185,9 @@ mp.events.add({
     },
     "mafia.mafiaZones.flash": (id, toggle) => {
         mp.mafia.flashBlip(id, toggle);
+    },
+    "mafia.bizWar.showMenu": (data) => {
+        mp.mafia.showBizWarMenu(data);
     },
     "mafia.bizWar.start": (mafiaId, enemymafiaId, time, mafiacore = 0, enemymafiacore = 0) => {
         mp.mafia.startBizWar(mafiaId, enemymafiaId, time, mafiacore, enemymafiacore);

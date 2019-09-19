@@ -1,3 +1,4 @@
+let bizes = call('bizes');
 let mafia = call('mafia');
 let factions = call('factions');
 let inventory = call('inventory');
@@ -20,6 +21,17 @@ module.exports = {
         var time = mafia.haveTime(war) / 1000;
         if (war.mafia.id == factionId) player.call(`mafia.bizWar.start`, [factionId, war.enemyMafia.id, time, war.mafia.score, war.enemyMafia.score]);
         else if (war.enemyMafia.id == factionId) player.call(`mafia.bizWar.start`, [factionId, war.mafia.id, time, war.enemyMafia.score, war.mafia.score]);
+    },
+    "mafia.bizWar.show": (player) => {
+        var factionId = player.character.factionId;
+        if (!factions.isMafiaFaction(factionId)) return notifs.error(player, `Вы не член мафии`);
+
+        var data = {
+            bizes: bizes.getBizesForBizWar(factionId),
+            names: factions.getMafiaFactions().map(x => x.name),
+            bizCount: bizes.getBizCount(),
+        };
+        player.call(`mafia.bizWar.showMenu`, [data]);
     },
     "mafia.bizWar.start": (player, bizId) => {
         mafia.startBizWar(player, bizId);

@@ -32,6 +32,10 @@ function cloneObj(inObj) {
     return outObj;
 }
 
+function debug(text) {
+    terminal.debug(text);
+}
+
 var busy = {
     list: [],
     add(name, client = false) {

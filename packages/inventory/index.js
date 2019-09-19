@@ -144,7 +144,7 @@ module.exports = {
         });
         vehicle.inventory.items = dbItems;
 
-        console.log(`[INVENTORY] Для авто ${vehicle.db.modelName} загружены предметы (${dbItems.length} шт.)`);
+        // console.log(`[INVENTORY] Для авто ${vehicle.db.modelName} загружены предметы (${dbItems.length} шт.)`);
     },
     convertServerToClientItems(dbItems) {
         // console.log("convertServerToClientItems");
@@ -964,7 +964,7 @@ module.exports = {
                 if (!obj || !obj.item || obj.item.id != sqlId) return;
                 obj.destroy();
                 var rec = mp.players.at(obj.playerId);
-                if (!rec) return;
+                if (!rec || !rec.character) return;
                 var i = rec.inventory.ground.indexOf(obj);
                 if (i != -1) rec.inventory.ground.splice(i, 1);
             } catch (e) {
