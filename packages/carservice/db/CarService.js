@@ -30,6 +30,16 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.FLOAT,
             defaultValue: 10,
             allowNull: false
+        },
+        priceMultiplier: {
+            type: DataTypes.FLOAT,
+            defaultValue: 1.0,
+            allowNull: false
+        },
+        salaryMultiplier: {
+            type: DataTypes.FLOAT,
+            defaultValue: 0.1,
+            allowNull: false
         }
     }, { timestamps: false });
 
