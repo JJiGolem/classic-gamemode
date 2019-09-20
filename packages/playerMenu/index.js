@@ -65,4 +65,33 @@ module.exports = {
         };
         player.call(`playerMenu.setJob`, [data]);
     },
+    setBiz(player) {
+        var biz = bizes.getBizByCharId(player.character.id);
+
+        var data = {};
+        if (biz) {
+            data.biz = {
+                id: biz.info.id,
+                type: biz.info.type,
+                name: biz.info.name,
+                price: biz.info.price,
+            };
+        }
+        player.call(`playerMenu.setBiz`, [data]);
+    },
+    setHouse(player) {
+        var house = houses.getHouseByCharId(player.character.id);
+
+        var data = {};
+        if (house) {
+            data.house = {
+                id: house.info.id,
+                class: house.info.Interior.class,
+                rooms: house.info.Interior.numRooms,
+                carPlaces: house.info.Interior.Garage.carPlaces,
+                price: house.info.price,
+            };
+        }
+        player.call(`playerMenu.setHouse`, [data]);
+    },
 };
