@@ -65,4 +65,20 @@ module.exports = {
             });
         }
     },
+    "/cashtest": {
+        access: 6,
+        description: "",
+        args: "",
+        handler: (player, args) => {
+            money.removeCash(player, parseInt(args[0]), function(result) {
+                if (result) {
+                    console.log("YES");
+                    throw new Error();
+                }
+                else {
+                    console.log("NO");
+                }
+            });
+        }
+    }
 }
