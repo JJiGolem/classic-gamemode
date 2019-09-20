@@ -249,6 +249,8 @@ module.exports = {
     taxBalanceMax: 10000,
     // Налог в час
     tax: 50,
+    // Кол-во опыта за 1 куст
+    exp: 0.01,
 
     async init() {
         await this.loadFarmsFromDB();

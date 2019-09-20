@@ -144,7 +144,7 @@ module.exports = {
     "farms.job.stop": (player, isDied = false) => {
         var header = `Завершение работы`;
         if (!isDied && (!player.farm)) return notifs.error(player, `Вы не у фермы`, header);
-        if (!player.farmJob) return notifs.error(player, `Вы не работаете на ферме`, header);
+        if (!player.farmJob || player.character.job != 5) return notifs.error(player, `Вы не работаете на ферме`, header);
 
         var farm = player.farmJob.farm;
         if (farm.id != player.farm.id) return notifs.error(player, `Вы работаете на другой ферме`, header);
@@ -185,7 +185,7 @@ module.exports = {
         var field = object.field;
         if (field.state != null && field.state != 3) return notifs.error(player, `Урожай не созрел`, header);
 
-        if (!player.farmJob) return notifs.error(player, `Вы не работаете на ферме`, header);
+        if (!player.farmJob || player.character.job != 5) return notifs.error(player, `Вы не работаете на ферме`, header);
         if (field.farmId != player.farmJob.farm.id) return notifs.error(player, `Поле принадлежит другой ферме`, header);
         var jobName = farms.getJobName(player.farmJob.type);
         if (player.farmJob.type != 0 && player.farmJob.type != 1) return notifs.error(player, `Для должности ${jobName} недоступно`, header);
@@ -229,6 +229,7 @@ module.exports = {
         if (!veh) return notifs.error(player, `Авто #${player.bootVehicleId} не найдено`, header);
         if (!veh.db || veh.db.key != "farm") return notifs.error(player, `Авто не принадлежит ферме`, header);
         if (player.dist(veh.position) > 10) return notifs.error(player, `Авто далеко`, header);
+        if (!player.farmJob || player.character.job != 5) return notifs.error(player, `Вы не работаете на ферме`, header);
         var prodType;
         if (player.hasAttachment("farmProductA")) {
             player.addAttachment("farmProductA", true);
@@ -249,13 +250,14 @@ module.exports = {
 
         player.farmJob.pay += player.farmJob.farm.pay;
         notifs.info(player, `Заработано $${player.farmJob.pay}`, header);
+        jobs.addJobExp(player, farms.exp);
     },
     "farms.warehouse.products.fill": (player) => {
         var header = `Выгрузка урожая`;
         var veh = player.vehicle;
         if (!veh || !veh.db || veh.db.key != "farm") return notifs.error(player, `Необходимо находиться в фермерском пикапе`, header);
         if (!player.farm) return notifs.error(player, `Вы далеко`, header);
-        if (!player.farmJob) return notifs.error(player, `Вы не работаете на ферме`, header);
+        if (!player.farmJob || player.character.job != 5) return notifs.error(player, `Вы не работаете на ферме`, header);
         if (player.farmJob.farm.id != player.farm.id) return notifs.error(player, `Вы работаете на другой ферме`, header);
         if (player.farmJob.type != 1) {
             var jobName = farms.getJobName(player.farmJob.type);
@@ -322,7 +324,7 @@ module.exports = {
         var veh = player.vehicle;
         if (!veh || !veh.db || veh.db.key != "farm") return notifs.error(player, `Необходимо находиться в тракторе`, header);
         if (!player.farm) return notifs.error(player, `Вы далеко`, header);
-        if (!player.farmJob) return notifs.error(player, `Вы не работаете на ферме`, header);
+        if (!player.farmJob || player.character.job != 5) return notifs.error(player, `Вы не работаете на ферме`, header);
         if (player.farmJob.farm.id != player.farm.id) return notifs.error(player, `Вы работаете на другой ферме`, header);
         if (player.farmJob.type != 2) {
             var jobName = farms.getJobName(player.farmJob.type);
@@ -352,7 +354,7 @@ module.exports = {
                 notifs.error(player, `Необходимо находиться в тракторе`, header);
                 return false;
             }
-            if (!player.farmJob) {
+            if (!player.farmJob || player.character.job != 5) {
                 notifs.error(player, `Вы не работаете на ферме`, header);
                 return false;
             }
@@ -411,7 +413,7 @@ module.exports = {
         var veh = player.vehicle;
         if (!veh || !veh.db || veh.db.key != "farm") return notifs.error(player, `Необходимо находиться в самолете`, header);
         if (!player.farm) return notifs.error(player, `Вы далеко`, header);
-        if (!player.farmJob) return notifs.error(player, `Вы не работаете на ферме`, header);
+        if (!player.farmJob || player.character.job != 5) return notifs.error(player, `Вы не работаете на ферме`, header);
         if (player.farmJob.farm.id != player.farm.id) return notifs.error(player, `Вы работаете на другой ферме`, header);
         if (player.farmJob.type != 3) {
             var jobName = farms.getJobName(player.farmJob.type);
@@ -435,7 +437,7 @@ module.exports = {
                 notifs.error(player, `Необходимо находиться в самолете`, header);
                 return false;
             }
-            if (!player.farmJob) {
+            if (!player.farmJob || player.character.job != 5) {
                 notifs.error(player, `Вы не работаете на ферме`, header);
                 return false;
             }
@@ -590,7 +592,7 @@ module.exports = {
         // }; //for test
 
         var header = `Техника фермы`;
-        if (!player.farmJob) {
+        if (!player.farmJob || player.character.job != 5) {
             player.removeFromVehicle();
             return notifs.error(player, `Вы не работаете на ферме`, header);
         }

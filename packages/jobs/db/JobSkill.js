@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         exp: {
-            type: DataTypes.INTEGER(11),
+            type: DataTypes.FLOAT(11),
             defaultValue: 0,
             allowNull: false,
             set(val) {
