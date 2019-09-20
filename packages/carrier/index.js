@@ -16,6 +16,8 @@ module.exports = {
     productSellK: 0.8,
     // Цена аренды грузовика
     vehPrice: 100,
+    // Опыт за доставку товара
+    exp: 0.05,
 
     init() {
         this.createLoadMarker();

@@ -410,6 +410,8 @@ module.exports = {
                 if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
             });
         }
+
+        jobs.addJobExp(player, carrier.exp);
     },
     "farms.soilsWarehouse.take": (player) => {
         var header = `Загрузка удобрения`;
@@ -497,6 +499,8 @@ module.exports = {
                 if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
             });
         }
+
+        jobs.addJobExp(player, carrier.exp);
     },
     "farms.grains.price.set": (player, val) => {
         var header = `Цена на зерно`
