@@ -22,11 +22,11 @@ mp.playerMenu = {
     setJob(data) {
         mp.callCEFV(`playerMenu.setJob('${JSON.stringify(data)}')`);
     },
-    setBiz(data) {
-        mp.callCEFV(`playerMenu.setBiz('${JSON.stringify(data)}')`);
+    setBiz(biz) {
+        mp.callCEFV(`playerMenu.setBiz('${JSON.stringify(biz)}')`);
     },
-    setHouse(data) {
-        mp.callCEFV(`playerMenu.setHouse('${JSON.stringify(data)}')`);
+    setHouse(house) {
+        mp.callCEFV(`playerMenu.setHouse('${JSON.stringify(house)}')`);
     },
 };
 
@@ -44,9 +44,9 @@ mp.events.add({
         mp.playerMenu.setJob(data);
     },
     "playerMenu.setBiz": (data) => {
-        mp.playerMenu.setBiz(data);
+        mp.playerMenu.setBiz(data.biz);
     },
     "playerMenu.setHouse": (data) => {
-        mp.playerMenu.setHouse(data);
+        mp.playerMenu.setHouse(data.house);
     },
 });
