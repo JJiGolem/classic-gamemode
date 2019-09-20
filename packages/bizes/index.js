@@ -21,7 +21,6 @@ let dropBiz = function(biz, sellToGov = false) {
     biz.info.characterId = null;
     biz.info.characterNick = null;
     biz.info.date = null;
-    mp.events.call('player.biz.changed', player);
     biz.info.save().then(() => {
         if (money == null) return console.log("[bizes] Biz dropped " + biz.info.id + ". But player didn't getmoney");
         money.addMoneyById(characterId, biz.info.price * 0.6, function(result) {
@@ -30,6 +29,7 @@ let dropBiz = function(biz, sellToGov = false) {
                 for (let j = 0; j < mp.players.length; j++) {
                     if (mp.players.at(j).character == null) continue;
                     if (characterId == mp.players.at(j).character.id) {
+                        mp.events.call('player.biz.changed', mp.players.at(j));
                         if (sellToGov) {
                             mp.players.at(j).call('biz.sell.toGov.ans', [1]);
                         } else {
@@ -313,6 +313,11 @@ module.exports = {
 
     addProducts: addProducts,
     removeProducts: removeProducts,
+    getProductsAmount(id) {
+        let biz = getBizById(id);
+        if (biz == null) return null;
+        return biz.info.productsCount;
+    },
 
     createOrder: createOrder,
     destroyOrder: destroyOrder,
