@@ -4,7 +4,7 @@ Vue.filter("playerMenuMoneySplit", (value, thisFilter) => {
     return value.replace(/(\d)(?=(\d{3})+(\D|$))/g, '$1 ') + " $";
 });
 
-function playerMenuMoneySplit (value) {
+function playerMenuMoneySplit(value) {
     value = value + '';
     return value.replace(/(\d)(?=(\d{3})+(\D|$))/g, '$1 ');
 }
@@ -14,7 +14,7 @@ let convertWindowData = {
     acceptConvert(amount) {
         // TODO: Конвертация валюты; amount - СС для обмена.
         console.log(amount);
-        playerMenu.coins-=amount;
+        playerMenu.coins -= amount;
     }
 };
 
@@ -23,7 +23,7 @@ let changenameWindowData = {
     acceptChange(firstname, lastname) {
         // TODO: Смена никнейма;
         console.log(firstname, lastname);
-        playerMenu.coins-=120;
+        playerMenu.coins -= 120;
     }
 };
 
@@ -40,7 +40,7 @@ let warnWindowData = {
 let addslotWindowData = {
     amountSlots: 2, // API: Кол-во слотов.
     maxSlots: 3, // API: Максимальное кол-во слотов.
-    price: 120,  // API: Стоимостть слота.
+    price: 120, // API: Стоимостть слота.
     addSlot() {
         // TODO: Добавление слота;
 
@@ -97,11 +97,22 @@ let protectionWindowData = {
 let settingsMenuData = {
     head: "Настройки",
     headImg: "img/playerMenu/list.svg",
-    menu: [
-        { head: "Общие настройки", img: playerMenuSvgPaths.settings, window: "player-menu-settings-main", windowData: settingsmainWindowData },
-        { head: "Защита аккаунта", img: playerMenuSvgPaths.insurance, window: "player-menu-settings-protection", windowData: protectionWindowData },
+    menu: [{
+            head: "Общие настройки",
+            img: playerMenuSvgPaths.settings,
+            window: "player-menu-settings-main",
+            windowData: settingsmainWindowData
+        },
+        {
+            head: "Защита аккаунта",
+            img: playerMenuSvgPaths.insurance,
+            window: "player-menu-settings-protection",
+            windowData: protectionWindowData
+        },
     ],
-    bottom: { head: "Сбросить пароль", img: playerMenuSvgPaths.refresh,
+    bottom: {
+        head: "Сбросить пароль",
+        img: playerMenuSvgPaths.refresh,
         handler() {
             playerMenu.showConfirmWindow(
                 "Подтверждение действия",
@@ -120,11 +131,30 @@ let settingsMenuData = {
 let donateMenuData = {
     head: "Донат",
     headImg: "img/playerMenu/settings.svg",
-    menu: [
-        { head: "Конвертация валюты", img: playerMenuSvgPaths.mailing, window: "player-menu-donate-convert", windowData: convertWindowData },
-        { head: "Смена никнейма", img: playerMenuSvgPaths.idCard, window: "player-menu-donate-changename", windowData: changenameWindowData },
-        { head: "Снятие варна", img: playerMenuSvgPaths.postcard, window: "player-menu-donate-warn", windowData: warnWindowData },
-        { head: "Добавление слота", img: playerMenuSvgPaths.expansion, window: "player-menu-donate-addslot", windowData: addslotWindowData },
+    menu: [{
+            head: "Конвертация валюты",
+            img: playerMenuSvgPaths.mailing,
+            window: "player-menu-donate-convert",
+            windowData: convertWindowData
+        },
+        {
+            head: "Смена никнейма",
+            img: playerMenuSvgPaths.idCard,
+            window: "player-menu-donate-changename",
+            windowData: changenameWindowData
+        },
+        {
+            head: "Снятие варна",
+            img: playerMenuSvgPaths.postcard,
+            window: "player-menu-donate-warn",
+            windowData: warnWindowData
+        },
+        {
+            head: "Добавление слота",
+            img: playerMenuSvgPaths.expansion,
+            window: "player-menu-donate-addslot",
+            windowData: addslotWindowData
+        },
     ],
 };
 
@@ -134,98 +164,362 @@ let referenceData = {
     amountCompleted: 0, // API: Кол-во выполнивших.
 }
 
-let menuBar = [
-    { head: "Персонаж", window: "player-menu-character", windowData: {} },
-    { head: "Настройки", window: "player-menu-window-sidebar", windowData: settingsMenuData },
-    { head: "Репорт", window: "player-menu-report", windowData: {} },
-    { head: "Помощь", window: "player-menu-help", windowData: {} },
-    { head: "Промокод", window: "player-menu-reference", windowData: referenceData },
-    { head: "Донат", window: "player-menu-window-sidebar", windowData: donateMenuData },
+let menuBar = [{
+        head: "Персонаж",
+        window: "player-menu-character",
+        windowData: {}
+    },
+    {
+        head: "Настройки",
+        window: "player-menu-window-sidebar",
+        windowData: settingsMenuData
+    },
+    {
+        head: "Репорт",
+        window: "player-menu-report",
+        windowData: {}
+    },
+    {
+        head: "Помощь",
+        window: "player-menu-help",
+        windowData: {}
+    },
+    {
+        head: "Промокод",
+        window: "player-menu-reference",
+        windowData: referenceData
+    },
+    {
+        head: "Донат",
+        window: "player-menu-window-sidebar",
+        windowData: donateMenuData
+    },
 ];
 
-let socialData = [
-    { head: "Обычный житель", img: "./img/playerMenu/user.svg" },
-    { head: "Администратор", img: "./img/playerMenu/admin.svg" },
-    { head: "Госслужащий", img: "./img/playerMenu/capitol.svg" },
-    { head: "Бандит", img: "./img/playerMenu/hat.svg" },
+let socialData = [{
+        head: "Обычный житель",
+        img: "./img/playerMenu/user.svg"
+    },
+    {
+        head: "Администратор",
+        img: "./img/playerMenu/admin.svg"
+    },
+    {
+        head: "Госслужащий",
+        img: "./img/playerMenu/capitol.svg"
+    },
+    {
+        head: "Бандит",
+        img: "./img/playerMenu/hat.svg"
+    },
 ];
 
 let statistics = [
     // TODO: Заполнить структуру статистики
-    { head: "test", value: "val" },
-    { head: "money", value: 40002300, color: "#638FFF", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#638FFF", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#638FFF", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#638FFF", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
+    {
+        head: "test",
+        value: "val"
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#638FFF",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#638FFF",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#638FFF",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#638FFF",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
 ];
 
 let houseInfo = [
     // TODO: Заполнить структуру с информацией о доме
-    { head: "test", value: "val" },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
+    {
+        head: "test",
+        value: "val"
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
 ];
 
 let businessInfo = [
     // TODO: Заполнить структуру с информацией о бизнесе
-    { head: "test", value: "val" },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
+    {
+        head: "test",
+        value: "val"
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
+    {
+        head: "money",
+        value: 40002300,
+        color: "#0f0",
+        moneyFilter: true
+    },
 ];
 
 let skills = [
     // TODO: Заполнить структуру с информацией о скилах
-    { head: "Terminal", value: 0 },
-    { head: "Terminator", value: 20 },
-    { head: "Terminator1", value: 20 },
-    { head: "Terminator2", value: 20 },
-    { head: "Terminator3", value: 20 },
-    { head: "Terminator4", value: 20 },
-    { head: "Terminator5", value: 20 },
-    { head: "Terminator6", value: 20 },
-    { head: "Terminator7", value: 20 },
-    { head: "Terminator8", value: 20 },
-    { head: "Terminator9", value: 100 },
+    {
+        head: "Terminal",
+        value: 0
+    },
+    {
+        head: "Terminator",
+        value: 20
+    },
+    {
+        head: "Terminator1",
+        value: 20
+    },
+    {
+        head: "Terminator2",
+        value: 20
+    },
+    {
+        head: "Terminator3",
+        value: 20
+    },
+    {
+        head: "Terminator4",
+        value: 20
+    },
+    {
+        head: "Terminator5",
+        value: 20
+    },
+    {
+        head: "Terminator6",
+        value: 20
+    },
+    {
+        head: "Terminator7",
+        value: 20
+    },
+    {
+        head: "Terminator8",
+        value: 20
+    },
+    {
+        head: "Terminator9",
+        value: 100
+    },
 ];
 
 let helpMessages = [
     // TODO: Массив заполняется вопросами (которые в help)
-    { question: "Вопрос?", answer: "" },
-    { question: "Вопрос?", answer: "Ответ" },
-    { question: "Вопрос?", answer: "Ответ" },
-    { question: "Вопрос?", answer: "Ответ" },
-    { question: "Вопрос?", answer: "Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ" },
-    { question: "Вопрос?", answer: "Ответ" },
-    { question: "Вопрос?", answer: "Ответ" },
-    { question: "Вопрос?", answer: "Ответ" },
-    { question: "Вопрос?", answer: "Ответ" },
-    { question: "Вопрос?", answer: "Ответ" },
-    { question: "Вопрос?", answer: "Ответ" },
-    { question: "Вопрос?", answer: "Ответ" },
-    { question: "Вопрос?", answer: "Ответ" },
-    { question: "Вопрос?", answer: "Ответ" },
-    { question: "Вопрос?", answer: "Ответ" },
-    { question: "Вопрос?", answer: "Ответ" },
+    {
+        question: "Вопрос?",
+        answer: ""
+    },
+    {
+        question: "Вопрос?",
+        answer: "Ответ"
+    },
+    {
+        question: "Вопрос?",
+        answer: "Ответ"
+    },
+    {
+        question: "Вопрос?",
+        answer: "Ответ"
+    },
+    {
+        question: "Вопрос?",
+        answer: "Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ"
+    },
+    {
+        question: "Вопрос?",
+        answer: "Ответ"
+    },
+    {
+        question: "Вопрос?",
+        answer: "Ответ"
+    },
+    {
+        question: "Вопрос?",
+        answer: "Ответ"
+    },
+    {
+        question: "Вопрос?",
+        answer: "Ответ"
+    },
+    {
+        question: "Вопрос?",
+        answer: "Ответ"
+    },
+    {
+        question: "Вопрос?",
+        answer: "Ответ"
+    },
+    {
+        question: "Вопрос?",
+        answer: "Ответ"
+    },
+    {
+        question: "Вопрос?",
+        answer: "Ответ"
+    },
+    {
+        question: "Вопрос?",
+        answer: "Ответ"
+    },
+    {
+        question: "Вопрос?",
+        answer: "Ответ"
+    },
+    {
+        question: "Вопрос?",
+        answer: "Ответ"
+    },
 
 ];
 
@@ -233,11 +527,14 @@ var playerMenu = new Vue({
     el: "#player-menu",
     data: {
         show: false,
+        enable: false,
+        lastShowTime: 0,
         menuBar: menuBar,
         socialData: socialData,
         menuBarFocus: menuBar[0],
         name: "Jonathan Rockfall", // API: Имя игрока
-        socialStatus: 0, // API: социальный статус //0-гражданский/1-админ/2-госс/3-бандит
+        admin: 0,
+        factionId: 0,
         coins: 1000, // API: СС
         dateTimer: null,
         time: '00:00',
@@ -247,22 +544,30 @@ var playerMenu = new Vue({
         code: '',
     },
     computed: {
-        blurMod () {
+        blurMod() {
             return this.confirmation;
-        }
+        },
+        socialStatus() {
+            // API: социальный статус //0-гражданский/1-админ/2-госс/3-бандит
+            if (this.admin) return 1;
+            if (!this.factionId) return 0;
+            if (this.factionId < 8) return 2;
+
+            return 3;
+        },
     },
     methods: {
-        onClickMenuBarItem (name) {
+        onClickMenuBarItem(name) {
             this.menuBarFocus = name;
             settingsmainWindowData.currentWindow = name.window;
         },
-        onClickExit () {
+        onClickExit() {
             this.show = false;
         },
         showConfirmWindow(head, description, handler, leftWord, rightWord) {
             this.confirmation = {
                 head: head,
-                description:description,
+                description: description,
                 leftWord: (leftWord) ? leftWord : 'Принять',
                 rightWord: (rightWord) ? rightWord : 'Отказаться',
                 acceptHandler: handler,
@@ -285,15 +590,33 @@ var playerMenu = new Vue({
             console.log(this.code);
 
             this.codeMod = false; //Оставить!
-        }
+        },
+        init(data) {
+            if (typeof data == 'string') data = JSON.parse(data);
+
+            this.name = data.playerName;
+            this.coins = data.donate;
+            this.admin = data.admin;
+            this.factionId = data.factionId;
+
+            this.enable = true;
+        },
     },
     watch: {
-        show (val) {
+        show(val) {
+            setCursor(val);
+            mp.trigger("blur", val, 300);
+            hud.show = !val;
+            if (val) busy.add("playerMenu", true);
+            else busy.remove("playerMenu", true);
+
+            this.lastShowTime = Date.now();
             if (!val && this.dateTimer) {
                 clearInterval(this.dateTimer);
                 return;
             }
-            function setTime () {
+
+            function setTime() {
                 let date = new Date();
                 let hours = date.getHours();
                 let minutes = date.getMinutes();
@@ -311,15 +634,22 @@ var playerMenu = new Vue({
             setTime();
             this.dateTimer = setInterval(setTime, 60000);
         },
-        codeMod (val) {
+        codeMod(val) {
             if (val) this.code = '';
         }
     },
     filters: {
-        test (val) {
+        test(val) {
             return "tes";
         }
-    }
+    },
+    mounted() {
+        window.addEventListener('keyup', (e) => {
+            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "inventory"])) return;
+            if (Date.now() - this.lastShowTime < 500) return;
+            if (e.keyCode == 77 && this.enable) this.show = !this.show;
+        });
+    },
 });
 
 Vue.component('player-menu-character', {
@@ -333,19 +663,19 @@ Vue.component('player-menu-character', {
         count: 0,
     }),
     computed: {
-        skillsList () {
+        skillsList() {
             let newList = [];
-            for (let i = 0; i < this.skills.length; i+=2) {
-                newList.push([this.skills[i], this.skills[i+1]]);
+            for (let i = 0; i < this.skills.length; i += 2) {
+                newList.push([this.skills[i], this.skills[i + 1]]);
             }
             return newList;
         }
     },
     methods: {
-        onClickArrow (isDown) {
+        onClickArrow(isDown) {
             if (!isDown && this.count == 0) return;
             if (isDown && this.count > this.skillsList.length - 4) return;
-            (isDown) ? this.count++ : this.count--;
+            (isDown) ? this.count++: this.count--;
         }
     }
 });
@@ -362,12 +692,12 @@ Vue.component('player-menu-report', {
         showHint: false,
     }),
     computed: {
-        chars () {
+        chars() {
             return this.maxlength - this.message.length;
         },
     },
     methods: {
-        send () {
+        send() {
             if (!this.message.length) return;
             // TODO: Отправка на сервер this.message
 
@@ -390,14 +720,17 @@ Vue.component('player-menu-help', {
         currentAnswer: null,
     }),
     methods: {
-        showAnswer (index) {
+        showAnswer(index) {
             if (!this.messages[index].answer) return;
             this.currentAnswer = (index == this.currentAnswer) ? null : index;
         },
-        send () {
+        send() {
             if (!this.message.length) return;
 
-            helpMessages.unshift({ question: this.message, answer: "" });
+            helpMessages.unshift({
+                question: this.message,
+                answer: ""
+            });
             // TODO: Отправка на сервер this.message
 
             this.message = "";
@@ -438,17 +771,17 @@ Vue.component('player-menu-window-sidebar', {
         }*/
     },
     methods: {
-        onClickMenuItem (item) {
+        onClickMenuItem(item) {
             this.menuFocus = item;
             settingsmainWindowData.currentWindow = item.window;
         },
     },
     watch: {
-        head (val) {
+        head(val) {
             this.menuFocus = this.menu[0];
         }
     },
-    mounted () {
+    mounted() {
         this.menuFocus = this.menu[0];
     }
 });
@@ -463,7 +796,7 @@ Vue.component('player-menu-donate-convert', {
         price: '',
     }),
     computed: {
-        virtualCoins () {
+        virtualCoins() {
             return this.price * this.coefficient;
         },
     },
@@ -472,7 +805,7 @@ Vue.component('player-menu-donate-convert', {
             let regex = new RegExp("[0-9]")
             if (!regex.test(event.key))
                 event.preventDefault();
-            if (this.price+event.key > playerMenu.coins) {
+            if (this.price + event.key > playerMenu.coins) {
                 this.price = playerMenu.coins;
                 event.preventDefault();
             }
@@ -540,8 +873,7 @@ Vue.component('player-menu-donate-warn', {
         price: Number,
         takeoffWarn: Function,
     },
-    data: () => ({
-    }),
+    data: () => ({}),
     computed: {
 
     },
@@ -569,8 +901,7 @@ Vue.component('player-menu-donate-addslot', {
         price: Number,
         addSlot: Function,
     },
-    data: () => ({
-    }),
+    data: () => ({}),
     computed: {
 
     },
@@ -608,7 +939,7 @@ Vue.component('player-menu-settings-main', {
             this.localCurrentSpawn = this.spawnSettings.currentSpawn;
         },
         noChanges() {
-                return this.localMicroVolume == this.microVolume &&
+            return this.localMicroVolume == this.microVolume &&
                 this.localCurrentSpawn == this.spawnSettings.currentSpawn;
         }
     },
@@ -622,13 +953,13 @@ Vue.component('player-menu-settings-main', {
             let val = this.localCurrentSpawn;
             let len = this.spawnSettings.spawnsPull.length;
 
-            this.localCurrentSpawn = (val == len-1) ? 0 : ++val;
+            this.localCurrentSpawn = (val == len - 1) ? 0 : ++val;
         },
         left() {
             let val = this.localCurrentSpawn;
             let len = this.spawnSettings.spawnsPull.length;
 
-            this.localCurrentSpawn = (val == 0) ? len-1 : --val;
+            this.localCurrentSpawn = (val == 0) ? len - 1 : --val;
         }
     }
 });
@@ -658,7 +989,7 @@ Vue.component('player-menu-settings-protection', {
         saveMail() {
             if (!this.newEmail) return;
             var pattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i;
-	        if (!pattern.test(this.newEmail)) return;
+            if (!pattern.test(this.newEmail)) return;
 
             playerMenu.showConfirmWindow(
                 "Подтверждение действия",
@@ -713,7 +1044,7 @@ Vue.component('player-menu-settings-protection', {
         }
     },
     watch: {
-        isConfirmed (val) {
+        isConfirmed(val) {
             if (val) this.codeMod = false;
             this.code = '';
         }

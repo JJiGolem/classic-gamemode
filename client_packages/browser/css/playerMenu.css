@@ -4,8 +4,9 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     font-family: Ubuntu;
+    z-index: 110;
 }
 
 #player-menu .content {
@@ -207,16 +208,16 @@
 }
 
 #player-menu .body .body::-webkit-scrollbar {
-    width: 1vh!important;
+    width: 1vh !important;
 }
 
 #player-menu .body .body::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0.5)!important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
     box-shadow: none;
 }
 
 #player-menu .body .body::-webkit-scrollbar-thumb {
-    background-color: #FFDF29!important;
+    background-color: #FFDF29 !important;
     height: 3vh;
 }
 
@@ -289,7 +290,6 @@
 
 #player-menu .body .skills .arrow {
     text-align: center;
-
 }
 
 #player-menu .body .skills .arrow.top {
@@ -323,9 +323,7 @@
     max-height: 4.9vh;
 }
 
-#player-menu .body .report {
-
-}
+#player-menu .body .report {}
 
 #player-menu .body .report .head {
     text-align: center;
