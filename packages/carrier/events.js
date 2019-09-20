@@ -28,7 +28,8 @@ module.exports = {
         if (!veh || !veh.db || veh.db.key != "job" || veh.db.owner != 4) return out(`Не в грузовике`);
         if (player.character.job != 4) return out(`Не на работе`);
         if (veh.products && veh.products.count) return out(`Товар уже загружен`);
-        if (data.count > carrier.productsMax) return out(`Не более ${carrier.productsMax} ед.`);
+        var max = carrier.getProductsMax(player);
+        if (data.count > max) return out(`Ваш навык не позволяет загрузить более ${max} ед.`);
         var price = data.count * carrier.productPrice;
         if (player.character.cash < price) return out(`Необходимо $${price}`);
         money.removeCash(player, price, (res) => {
@@ -41,7 +42,7 @@ module.exports = {
                 name: name,
                 count: data.count
             };
-            veh.setVariable("label", `${data.count} из ${carrier.productsMax} ед.`);
+            veh.setVariable("label", `${data.count} из ${carrier.getProductsMax(player)} ед.`);
             notifs.success(player, `Товар куплен за $${price}`, header);
             player.call(`selectMenu.loader`, [false]);
             // player.call(`selectMenu.hide`);

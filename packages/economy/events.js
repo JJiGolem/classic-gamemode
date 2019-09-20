@@ -10,6 +10,6 @@ module.exports = {
     },
     "economy.change": (player, data) => {
         economy.setByType(JSON.parse(data));
-        notifs.success(player, "Успешно обновлено", "Успешно");
+        notifs != null && notifs.success(player, "Успешно обновлено", "Успешно");
     },
 }

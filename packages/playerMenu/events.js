@@ -4,6 +4,9 @@ module.exports = {
     "characterInit.done": (player) => {
         playerMenu.init(player);
     },
+    "jobSkillsInit.done": (player) => {
+        playerMenu.setSkills(player);
+    },
     "player.faction.changed": (player) => {
         playerMenu.setFaction(player);
     },
@@ -20,5 +23,8 @@ module.exports = {
     "player.house.changed": (player) => {
         debug(`player.house.changed`)
         playerMenu.setHouse(player);
+    },
+    "player.jobSkill.changed": (player, skill) => {
+        playerMenu.setSkill(player, skill);
     },
 }
