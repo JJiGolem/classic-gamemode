@@ -123,14 +123,17 @@ module.exports = {
         notifs.info(owner, `${player.name} отклонил предложение`, header);
     },
     "farms.job.start": (player, index) => {
+        index = Math.clamp(index, 0, 3);
         var header = `Работа на ферме`
         if (!player.farm) return notifs.error(player, `Вы не у фермы`, header);
         if (player.farmJob) return notifs.error(player, `Увольтесь, чтобы сменить должность`, header);
         if (!player.farm.playerId) return notifs.error(player, `Ферма не имеет хозяина`, header);
+        if (jobs.getJobSkill(player, 5).exp < farms.jobExps[index]) return notifs.error(player, `Необходимо навык ${jobs.getJob(5).name} ${farms.jobExps[index]}%`, header);
+
         jobs.addMember(player, 5);
 
         player.farmJob = {
-            type: Math.clamp(index, 0, 3),
+            type: index,
             pay: 0,
             farm: player.farm,
         };
