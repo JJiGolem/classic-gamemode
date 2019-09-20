@@ -65,6 +65,12 @@ module.exports = {
 
         mp.events.call("player.jobSkill.changed", player, skill);
     },
+    setJobExp(player, skill, exp) {
+        skill.exp = exp;
+        skill.save();
+
+        mp.events.call("player.jobSkill.changed", player, skill);
+    },
     pay(player) {
         if (!player.character.pay) return;
 
