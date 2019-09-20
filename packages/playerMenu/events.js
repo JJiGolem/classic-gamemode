@@ -13,4 +13,12 @@ module.exports = {
     "player.job.changed": (player) => {
         playerMenu.setJob(player);
     },
+    "player.biz.changed": (player) => {
+        debug(`player.biz.changed`)
+        playerMenu.setBiz(player);
+    },
+    "player.house.changed": (player) => {
+        debug(`player.house.changed`)
+        playerMenu.setHouse(player);
+    },
 }
