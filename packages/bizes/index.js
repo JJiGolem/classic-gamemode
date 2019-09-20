@@ -21,6 +21,7 @@ let dropBiz = function(biz, sellToGov = false) {
     biz.info.characterId = null;
     biz.info.characterNick = null;
     biz.info.date = null;
+    mp.events.call('player.biz.changed', player);
     biz.info.save().then(() => {
         if (money == null) return console.log("[bizes] Biz dropped " + biz.info.id + ". But player didn't getmoney");
         money.addMoneyById(characterId, biz.info.price * 0.6, function(result) {
@@ -240,11 +241,15 @@ module.exports = {
     sellBiz(biz, cost, seller, buyer, callback) {
         biz.info.characterId = buyer.character.id;
         biz.info.characterNick = buyer.character.name;
+        biz.info.date = getRandomDate(1);
+        setTimer(biz);
         biz.info.save().then(() => {
             if (money == null) return;
             money.moveCash(buyer, seller, cost, function(result) {
                 if (result) {
                     callback(true);
+                    mp.events.call('player.biz.changed', seller);
+                    mp.events.call('player.biz.changed', buyer);
                     buyer.call('phone.app.add', ["biz", getBizInfoForApp(biz)]);
                 } else {
                     callback(false);
