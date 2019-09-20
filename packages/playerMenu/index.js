@@ -59,4 +59,10 @@ module.exports = {
         };
         player.call(`playerMenu.setFactionRank`, [data]);
     },
+    setJob(player) {
+        var data = {
+            jobName: jobs.getJobName(player),
+        };
+        player.call(`playerMenu.setJob`, [data]);
+    },
 };

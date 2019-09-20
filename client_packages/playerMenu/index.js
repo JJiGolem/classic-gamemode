@@ -19,6 +19,9 @@ mp.playerMenu = {
     setFactionRank(data) {
         mp.callCEFV(`playerMenu.setFactionRank('${JSON.stringify(data)}')`);
     },
+    setJob(data) {
+        mp.callCEFV(`playerMenu.setJob('${JSON.stringify(data)}')`);
+    },
 };
 
 mp.events.add({
@@ -30,6 +33,8 @@ mp.events.add({
     },
     "playerMenu.setFactionRank": (data) => {
         mp.playerMenu.setFactionRank(data);
-
+    },
+    "playerMenu.setJob": (data) => {
+        mp.playerMenu.setJob(data);
     },
 });

@@ -22,12 +22,16 @@ module.exports = {
 
         player.character.job = job.id;
         player.character.save();
+
+        mp.events.call("player.job.changed", player);
     },
     deleteMember(player) {
         if (!player.character) return;
 
         player.character.job = null;
         player.character.save();
+
+        mp.events.call("player.job.changed", player);
     },
     async initJobSkills(player) {
         player.character.jobSkills = [];

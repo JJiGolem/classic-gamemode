@@ -10,4 +10,7 @@ module.exports = {
     "player.factionRank.changed": (player) => {
         playerMenu.setFactionRank(player);
     },
+    "player.job.changed": (player) => {
+        playerMenu.setJob(player);
+    },
 }

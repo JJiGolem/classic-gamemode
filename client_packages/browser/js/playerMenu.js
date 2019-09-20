@@ -540,6 +540,11 @@ var playerMenu = new Vue({
 
             statistics[4].value = data.factionRank || "-";
         },
+        setJob(data) {
+            if (typeof data == 'string') data = JSON.parse(data);
+
+            statistics[5].value = data.jobName || "-";
+        },
     },
     watch: {
         show(val) {
