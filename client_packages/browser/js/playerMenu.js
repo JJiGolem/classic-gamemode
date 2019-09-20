@@ -355,52 +355,46 @@ let statistics = [
 ];
 
 let houseInfo = [
-    // TODO: Заполнить структуру с информацией о доме
     {
-        head: "test",
-        value: "val"
+        head: "Номер",
+        value: "-",
     },
     {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
+        head: "Класс",
+        value: "-",
     },
     {
-        head: "money",
-        value: 40002300,
+        head: "Комнат",
+        value: 0,
+    },
+    {
+        head: "Вместительность гаража",
+        value: 0,
+    },
+    {
+        head: "Гос. стоимость",
+        value: 0,
         color: "#0f0",
         moneyFilter: true
     },
 ];
 
 let businessInfo = [
-    // TODO: Заполнить структуру с информацией о бизнесе
     {
-        head: "test",
-        value: "val"
+        head: "Тип",
+        value: "-"
     },
     {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
+        head: "Имя",
+        value: "-",
     },
     {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
+        head: "Номер",
+        value: 0,
     },
     {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
-    },
-    {
-        head: "money",
-        value: 40002300,
+        head: "Гос. стоимость",
+        value: 0,
         color: "#0f0",
         moneyFilter: true
     },
@@ -598,6 +592,20 @@ var playerMenu = new Vue({
             this.coins = data.donate;
             this.admin = data.admin;
             this.factionId = data.factionId;
+
+            if (data.biz) {
+                businessInfo[0].value = data.biz.type;
+                businessInfo[1].value = data.biz.name;
+                businessInfo[2].value = data.biz.id;
+                businessInfo[3].value = data.biz.price;
+            }
+            if (data.house) {
+                houseInfo[0].value = data.house.id;
+                houseInfo[1].value = data.house.class;
+                houseInfo[2].value = data.house.rooms;
+                houseInfo[3].value = data.house.carPlaces;
+                houseInfo[4].value = data.house.price;
+            }
 
             this.enable = true;
         },
