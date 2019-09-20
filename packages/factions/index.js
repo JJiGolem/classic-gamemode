@@ -266,6 +266,8 @@ module.exports = {
         if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
         else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
         else if (this.isNewsFaction(faction)) mp.events.call(`mapCase.news.init`, player);
+
+        mp.events.call(`player.faction.changed`, player);
     },
     setBlip(faction, type, color) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
@@ -290,6 +292,8 @@ module.exports = {
         if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
         else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
         else if (this.isNewsFaction(faction)) mp.events.call(`mapCase.news.init`, player);
+
+        mp.events.call(`player.faction.changed`, player);
     },
     deleteMember(player) {
         var character = player.character;
@@ -304,6 +308,8 @@ module.exports = {
         player.setVariable("factionId", character.factionId);
         player.call(`factions.faction.set`, [null]);
         player.call(`mapCase.enable`, [false]);
+
+        mp.events.call(`player.faction.changed`, player);
     },
     getMembers(player) {
         var members = [];
@@ -314,11 +320,14 @@ module.exports = {
         });
         return members;
     },
-    setRank(character, rank) {
+    setRank(player, rank) {
+        var character = player.character;
         if (typeof rank == 'number') rank = this.getRank(character.factionId, rank);
 
         character.factionRank = rank.id;
         character.save();
+
+        mp.events.call("player.factionRank.changed", player);
 
         var type = "";
         if (this.isPoliceFaction(character.factionId)) type = "pd";

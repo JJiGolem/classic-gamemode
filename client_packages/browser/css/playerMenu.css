@@ -6,7 +6,7 @@
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
     font-family: Ubuntu;
-    z-index: 110;
+    z-index: 100;
 }
 
 #player-menu .content {

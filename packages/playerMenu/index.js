@@ -45,4 +45,18 @@ module.exports = {
         }
         player.call(`playerMenu.init`, [data]);
     },
+    setFaction(player) {
+        var data = {
+            factionId: player.character.factionId,
+            factionName: factions.getFactionName(player),
+            factionRank: factions.getRankName(player),
+        };
+        player.call(`playerMenu.setFaction`, [data]);
+    },
+    setFactionRank(player) {
+        var data = {
+            factionRank: factions.getRankName(player),
+        };
+        player.call(`playerMenu.setFactionRank`, [data]);
+    },
 };

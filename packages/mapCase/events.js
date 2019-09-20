@@ -195,7 +195,7 @@ module.exports = {
         if (rec.character.factionRank >= max.id) return out.error(player, `${rec.name} имеет макс. ранг`);
 
         var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank + 1);
-        factions.setRank(rec.character, rank.rank);
+        factions.setRank(rec, rank.rank);
         var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
 
         notifs.success(rec, `${player.name} повысил вас до ${rankName}`, header);
@@ -214,7 +214,7 @@ module.exports = {
         if (rec.character.factionRank <= min.id) return out.error(player, `${rec.name} имеет мин. ранг`);
 
         var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank - 1);
-        factions.setRank(rec.character, rank.rank);
+        factions.setRank(rec, rank.rank);
         var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
 
         notifs.success(rec, `${player.name} понизил вас до ${rankName}`, header);
@@ -290,7 +290,7 @@ module.exports = {
         if (rec.character.factionRank >= max.id) return out.error(player, `${rec.name} имеет макс. ранг`);
 
         var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank + 1);
-        factions.setRank(rec.character, rank.rank);
+        factions.setRank(rec, rank.rank);
         var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
 
         notifs.success(rec, `${player.name} повысил вас до ${rankName}`, header);
@@ -309,7 +309,7 @@ module.exports = {
         if (rec.character.factionRank <= min.id) return out.error(player, `${rec.name} имеет мин. ранг`);
 
         var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank - 1);
-        factions.setRank(rec.character, rank.rank);
+        factions.setRank(rec, rank.rank);
         var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
 
         notifs.success(rec, `${player.name} понизил вас до ${rankName}`, header);
@@ -385,7 +385,7 @@ module.exports = {
         if (rec.character.factionRank >= max.id) return out.error(player, `${rec.name} имеет макс. ранг`);
 
         var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank + 1);
-        factions.setRank(rec.character, rank.rank);
+        factions.setRank(rec, rank.rank);
         var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
 
         notifs.success(rec, `${player.name} повысил вас до ${rankName}`, header);
@@ -404,7 +404,7 @@ module.exports = {
         if (rec.character.factionRank <= min.id) return out.error(player, `${rec.name} имеет мин. ранг`);
 
         var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank - 1);
-        factions.setRank(rec.character, rank.rank);
+        factions.setRank(rec, rank.rank);
         var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
 
         notifs.success(rec, `${player.name} понизил вас до ${rankName}`, header);

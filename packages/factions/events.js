@@ -192,7 +192,7 @@ module.exports = {
             notifs.info(rec, `${player.name} понизил вас до ${rank.name}`, `Понижение`);
             notifs.success(player, `${rec.name} понижен до ${rank.name}`, `Понижение`);
         }
-        factions.setRank(rec.character, rank);
+        factions.setRank(rec, rank);
     },
     "factions.cash.offer": (player, data) => {
         data = JSON.parse(data);

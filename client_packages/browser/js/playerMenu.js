@@ -485,13 +485,14 @@ var playerMenu = new Vue({
             this.admin = data.admin;
             this.factionId = data.factionId;
 
-            this.initBiz(data.biz);
-            this.initHouse(data.house);
-            this.initStatistics(data);
+            this.setBiz(data.biz);
+            this.setHouse(data.house);
+            this.setStatistics(data);
 
             this.enable = true;
         },
-        initBiz(biz) {
+        setBiz(biz) {
+            if (typeof biz == 'string') biz = JSON.parse(biz);
             if (biz) {
                 businessInfo[0].value = biz.type;
                 businessInfo[1].value = biz.name;
@@ -503,7 +504,8 @@ var playerMenu = new Vue({
                 });
             }
         },
-        initHouse(house) {
+        setHouse(house) {
+            if (typeof house == 'string') house = JSON.parse(house);
             if (house) {
                 houseInfo[0].value = house.id;
                 houseInfo[1].value = house.class;
@@ -516,7 +518,8 @@ var playerMenu = new Vue({
                 });
             }
         },
-        initStatistics(stats) {
+        setStatistics(stats) {
+            if (typeof stats == 'string') stats = JSON.parse(stats);
             statistics[0].value = `${stats.minutes} мин`;
             statistics[1].value = ["Мужской", "Женский"][stats.gender];
             statistics[2].value = stats.cash;
@@ -524,7 +527,19 @@ var playerMenu = new Vue({
             statistics[4].value = stats.factionRank || "-";
             statistics[5].value = stats.jobName || "-";
             statistics[6].value = `${stats.wanted} зв.`;
-        }
+        },
+        setFaction(data) {
+            if (typeof data == 'string') data = JSON.parse(data);
+
+            this.factionId = data.factionId;
+            statistics[3].value = data.factionName || "-";
+            statistics[4].value = data.factionRank || "-";
+        },
+        setFactionRank(data) {
+            if (typeof data == 'string') data = JSON.parse(data);
+
+            statistics[4].value = data.factionRank || "-";
+        },
     },
     watch: {
         show(val) {
