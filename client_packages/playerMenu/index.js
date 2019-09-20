@@ -28,6 +28,12 @@ mp.playerMenu = {
     setHouse(house) {
         mp.callCEFV(`playerMenu.setHouse('${JSON.stringify(house)}')`);
     },
+    setSkills(skills) {
+        mp.callCEFV(`playerMenu.setSkills('${JSON.stringify(skills)}')`);
+    },
+    setSkill(skill) {
+        mp.callCEFV(`playerMenu.setSkill('${JSON.stringify(skill)}')`);
+    },
 };
 
 mp.events.add({
@@ -48,5 +54,11 @@ mp.events.add({
     },
     "playerMenu.setHouse": (data) => {
         mp.playerMenu.setHouse(data.house);
+    },
+    "playerMenu.setSkills": (data) => {
+        mp.playerMenu.setSkills(data.skills);
+    },
+    "playerMenu.setSkill": (data) => {
+        mp.playerMenu.setSkill(data.skill);
     },
 });

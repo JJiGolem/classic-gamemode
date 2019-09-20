@@ -94,4 +94,25 @@ module.exports = {
         }
         player.call(`playerMenu.setHouse`, [data]);
     },
+    setSkills(player) {
+        var data = {
+            skills: player.character.jobSkills.map(x => {
+                return {
+                    jobId: x.jobId,
+                    name: jobs.getJob(x.jobId).name,
+                    exp: x.exp,
+                };
+            }),
+        };
+        player.call(`playerMenu.setSkills`, [data]);
+    },
+    setSkill(player, skill) {
+        var data = {
+            skill: {
+                jobId: skill.jobId,
+                exp: skill.exp,
+            },
+        };
+        player.call(`playerMenu.setSkill`, [data]);
+    },
 };

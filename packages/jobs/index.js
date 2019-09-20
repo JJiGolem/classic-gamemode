@@ -45,15 +45,25 @@ module.exports = {
             });
             player.character.jobSkills.push(skill[0]);
         }
+        mp.events.call("jobSkillsInit.done", player);
     },
-    getJobSkill(player, job) {
+    getJobSkill(player, job = null) {
         if (!player.character) return;
+        if (!job) job = player.character.job;
         if (typeof job == 'number') job = this.getJob(job);
         var skills = player.character.jobSkills;
         for (var i = 0; i < skills.length; i++) {
             if (skills[i].jobId == job.id) return skills[i];
         }
         return null;
+    },
+    addJobExp(player, exp = 1) {
+        if (!player.character.job) return;
+        var skill = this.getJobSkill(player);
+        skill.exp += exp;
+        skill.save();
+
+        mp.events.call("player.jobSkill.changed", player, skill);
     },
     pay(player) {
         if (!player.character.pay) return;

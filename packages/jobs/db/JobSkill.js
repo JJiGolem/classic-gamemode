@@ -20,7 +20,11 @@ module.exports = (sequelize, DataTypes) => {
         exp: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
-            allowNull: false
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, 100);
+                this.setDataValue('exp', val);
+            }
         },
     },
     {

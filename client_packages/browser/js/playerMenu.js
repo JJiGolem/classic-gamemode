@@ -293,51 +293,14 @@ let businessInfo = [{
 ];
 
 let skills = [
-    // TODO: Заполнить структуру с информацией о скилах
-    {
-        head: "Terminal",
-        value: 0
-    },
-    {
-        head: "Terminator",
-        value: 20
-    },
-    {
-        head: "Terminator1",
-        value: 20
-    },
-    {
-        head: "Terminator2",
-        value: 20
-    },
-    {
-        head: "Terminator3",
-        value: 20
-    },
-    {
-        head: "Terminator4",
-        value: 20
-    },
-    {
-        head: "Terminator5",
-        value: 20
-    },
-    {
-        head: "Terminator6",
-        value: 20
-    },
-    {
-        head: "Terminator7",
-        value: 20
-    },
-    {
-        head: "Terminator8",
-        value: 20
-    },
-    {
-        head: "Terminator9",
-        value: 100
-    },
+    // {
+    //     head: "Terminator",
+    //     value: 20
+    // },
+    // {
+    //     head: "Terminator1",
+    //     value: 20
+    // }
 ];
 
 let helpMessages = [
@@ -489,8 +452,6 @@ var playerMenu = new Vue({
             this.setBiz(data.biz);
             this.setHouse(data.house);
             this.setStatistics(data);
-
-            this.enable = true;
         },
         setBiz(biz) {
             if (typeof biz == 'string') biz = JSON.parse(biz);
@@ -551,6 +512,24 @@ var playerMenu = new Vue({
             if (typeof data == 'string') data = JSON.parse(data);
 
             statistics[5].value = data.jobName || "-";
+        },
+        setSkills(data) {
+            if (typeof data == 'string') data = JSON.parse(data);
+
+            data.forEach(skill => {
+                skills.push({
+                    head: skill.name,
+                    value: skill.exp,
+                    jobId: skill.jobId,
+                });
+            });
+
+            this.enable = true;
+        },
+        setSkill(skill) {
+            if (typeof skill == 'string') skill = JSON.parse(skill);
+
+            skills.find(x => x.jobId == skill.jobId).value = skill.exp;
         },
     },
     watch: {

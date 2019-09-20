@@ -127,6 +127,7 @@ module.exports = {
         if (!player.farm) return notifs.error(player, `Вы не у фермы`, header);
         if (player.farmJob) return notifs.error(player, `Увольтесь, чтобы сменить должность`, header);
         if (!player.farm.playerId) return notifs.error(player, `Ферма не имеет хозяина`, header);
+        jobs.addMember(player, 5);
 
         player.farmJob = {
             type: Math.clamp(index, 0, 3),
@@ -166,6 +167,7 @@ module.exports = {
         notifs.success(player, `Удачного дня!`, header);
 
         delete player.farmJob;
+        jobs.deleteMember(player);
     },
     "farms.field.crop.take": (player, objId) => {
         // console.log(`farms.field.crop.take: ${player.name} ${objId}`)
