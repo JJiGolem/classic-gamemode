@@ -423,6 +423,7 @@ var playerMenu = new Vue({
         factionId: 0,
         coins: 1000, // API: СС
         dateTimer: null,
+        minutesTimer: null,
         time: '00:00',
         date: '00.00.0000',
         confirmation: null,
@@ -527,6 +528,12 @@ var playerMenu = new Vue({
             statistics[4].value = stats.factionRank || "-";
             statistics[5].value = stats.jobName || "-";
             statistics[6].value = `${stats.wanted} зв.`;
+
+            clearInterval(this.minutesTimer);
+            this.minutesTimer = setInterval(() => {
+                var minutes = parseInt(statistics[0].value) + 1;
+                statistics[0].value = `${minutes} мин`;
+            }, 60000);
         },
         setFaction(data) {
             if (typeof data == 'string') data = JSON.parse(data);
