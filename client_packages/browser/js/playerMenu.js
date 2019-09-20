@@ -217,145 +217,38 @@ let socialData = [{
 let statistics = [
     // TODO: Заполнить структуру статистики
     {
-        head: "test",
-        value: "val"
+        head: "Времени на сервере",
+        value: "-"
     },
     {
-        head: "money",
-        value: 40002300,
-        color: "#638FFF",
-        moneyFilter: true
+        head: "Пол",
+        value: "-"
     },
     {
-        head: "money",
-        value: 40002300,
-        color: "#638FFF",
-        moneyFilter: true
-    },
-    {
-        head: "money",
-        value: 40002300,
-        color: "#638FFF",
-        moneyFilter: true
-    },
-    {
-        head: "money",
-        value: 40002300,
-        color: "#638FFF",
-        moneyFilter: true
-    },
-    {
-        head: "money",
-        value: 40002300,
+        head: "Денег на руках",
+        value: 0,
         color: "#0f0",
         moneyFilter: true
     },
     {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
+        head: "Организация",
+        value: "-"
     },
     {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
+        head: "Должность",
+        value: "-"
     },
     {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
+        head: "Работа",
+        value: "-"
     },
     {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
-    },
-    {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
-    },
-    {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
-    },
-    {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
-    },
-    {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
-    },
-    {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
-    },
-    {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
-    },
-    {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
-    },
-    {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
-    },
-    {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
-    },
-    {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
-    },
-    {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
-    },
-    {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
-    },
-    {
-        head: "money",
-        value: 40002300,
-        color: "#0f0",
-        moneyFilter: true
+        head: "Ур. розыска",
+        value: "-"
     },
 ];
 
-let houseInfo = [
-    {
+let houseInfo = [{
         head: "Номер",
         value: "-",
     },
@@ -379,8 +272,7 @@ let houseInfo = [
     },
 ];
 
-let businessInfo = [
-    {
+let businessInfo = [{
         head: "Тип",
         value: "-"
     },
@@ -593,22 +485,46 @@ var playerMenu = new Vue({
             this.admin = data.admin;
             this.factionId = data.factionId;
 
-            if (data.biz) {
-                businessInfo[0].value = data.biz.type;
-                businessInfo[1].value = data.biz.name;
-                businessInfo[2].value = data.biz.id;
-                businessInfo[3].value = data.biz.price;
-            }
-            if (data.house) {
-                houseInfo[0].value = data.house.id;
-                houseInfo[1].value = data.house.class;
-                houseInfo[2].value = data.house.rooms;
-                houseInfo[3].value = data.house.carPlaces;
-                houseInfo[4].value = data.house.price;
-            }
+            this.initBiz(data.biz);
+            this.initHouse(data.house);
+            this.initStatistics(data);
 
             this.enable = true;
         },
+        initBiz(biz) {
+            if (biz) {
+                businessInfo[0].value = biz.type;
+                businessInfo[1].value = biz.name;
+                businessInfo[2].value = biz.id;
+                businessInfo[3].value = biz.price;
+            } else {
+                businessInfo.forEach(x => {
+                    x.value = "-";
+                });
+            }
+        },
+        initHouse(house) {
+            if (house) {
+                houseInfo[0].value = house.id;
+                houseInfo[1].value = house.class;
+                houseInfo[2].value = house.rooms;
+                houseInfo[3].value = house.carPlaces;
+                houseInfo[4].value = house.price;
+            } else {
+                houseInfo.forEach(x => {
+                    x.value = "-";
+                });
+            }
+        },
+        initStatistics(stats) {
+            statistics[0].value = `${stats.minutes} мин`;
+            statistics[1].value = ["Мужской", "Женский"][stats.gender];
+            statistics[2].value = stats.cash;
+            statistics[3].value = stats.factionName || "-";
+            statistics[4].value = stats.factionRank || "-";
+            statistics[5].value = stats.jobName || "-";
+            statistics[6].value = `${stats.wanted} зв.`;
+        }
     },
     watch: {
         show(val) {

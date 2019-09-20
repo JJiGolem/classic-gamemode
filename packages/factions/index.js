@@ -217,6 +217,10 @@ module.exports = {
     getBlip(id) {
         return this.blips[id - 1];
     },
+    getFactionName(player) {
+        if (!player.character.factionId) return null;
+        return this.getFaction(player.character.factionId).name;
+    },
     getRank(faction, rank) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         return faction.ranks[rank - 1];
@@ -228,6 +232,10 @@ module.exports = {
             if (ranks[i].id == rankId) return ranks[i];
         }
         return null;
+    },
+    getRankName(player) {
+        if (!player.character.factionId) return null;
+        return this.getRankById(player.character.factionId, player.character.factionRank).name;
     },
     getMinRank(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);

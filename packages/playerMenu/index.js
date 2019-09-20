@@ -1,17 +1,29 @@
 "use strict";
 
 let bizes = call('bizes');
+let factions = call('factions');
+let jobs = call('jobs');
 let houses = call('houses');
 
 module.exports = {
     init(player) {
         var biz = bizes.getBizByCharId(player.character.id);
         var house = houses.getHouseByCharId(player.character.id);
+        var factionName = factions.getFactionName(player);
+        var rankName = factions.getRankName(player);
+        var jobName = jobs.getJobName(player);
 
         var data = {
             playerName: player.name,
             admin: player.character.admin,
-            factionId: player.character.factionId,
+            factionId: player.character.id,
+            factionName: factionName,
+            factionRank: rankName,
+            jobName: jobName,
+            minutes: player.character.minutes,
+            gender: player.character.gender,
+            cash: player.character.cash,
+            wanted: player.character.wanted,
             donate: player.account.donate,
         };
         if (biz) {

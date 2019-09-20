@@ -66,5 +66,9 @@ module.exports = {
         if (player.character.job == 2) {
             player.call('phone.app.remove', ['taxi']);
         }
-    }
+    },
+    getJobName(player) {
+        if (!player.character.job) return null;
+        return this.getJob(player.character.job).name;
+    },
 }

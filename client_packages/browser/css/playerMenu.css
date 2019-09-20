@@ -187,8 +187,8 @@
 }
 
 #player-menu .body .character .block {
-    display: grid;
-    grid-template-rows: min-content 1fr;
+    /* display: grid; */
+    /* grid-template-rows: min-content 1fr; */
     overflow: hidden;
 }
 
@@ -196,15 +196,12 @@
     grid-row: 1/3;
 }
 
-#player-menu .body .character .statistics .body {
-    height: 99%;
-}
-
 #player-menu .body .character .body {
     margin-top: 0;
-    height: 100%;
+    /* height: 100%; */
     overflow-y: scroll;
     padding: 0 2vh 0 1vh;
+    height: calc(100% - 4.2vh);
 }
 
 #player-menu .body .body::-webkit-scrollbar {
@@ -246,6 +243,7 @@
     overflow: hidden;
     display: grid;
     grid-template-rows: min-content 1fr min-content;
+    height: 100%;
 }
 
 #player-menu .body .skills .skills-board {
