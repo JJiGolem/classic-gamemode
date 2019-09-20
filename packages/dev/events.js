@@ -10,7 +10,7 @@ module.exports = {
         if (!dev.showBuild) return;
 
         player.call(`hud.setData`, [{
-            build: dev.build
+            build: dev.getBuild()
         }]);
     },
 }
