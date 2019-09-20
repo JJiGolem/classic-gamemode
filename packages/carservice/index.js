@@ -1,11 +1,12 @@
 let vehicles = call('vehicles');
+let bizes = call('bizes');
 
 let dbCarServices;
 
 module.exports = {
     resourcePrice: 10,
-    maxPriceMultiplier: 1.5,
-    minPriceMultiplier: 0.5,
+    maxPriceMultiplier: 2.0,
+    minPriceMultiplier: 1.0,
     maxSalaryMultiplier: 0.3,
     minSalaryMultiplier: 0.1,
     defaultResources: {
@@ -122,5 +123,29 @@ module.exports = {
         if (!service) return;
         service[key] = value;
         service.save();
+    },
+    getProductsAmount(id) {
+        let service = dbCarServices.find(x => x.id == id);
+        let bizId = service.bizId;
+        let products = bizes.getProductsAmount(bizId);
+        return products;
+    },
+    removeProducts(id, products) {
+        let service = dbCarServices.find(x => x.id == id);
+        let bizId = service.bizId;
+        bizes.removeProducts(bizId, products);
+    },
+    getPriceMultiplier(id) {
+        let service = dbCarServices.find(x => x.id == id);
+        return service.priceMultiplier;
+    },
+    getSalaryMultiplier(id) {
+        let service = dbCarServices.find(x => x.id == id);
+        return service.salaryMultiplier;
+    },
+    updateCashbox(id, money) {
+        let service = dbCarServices.find(x => x.id == id);
+        let bizId = service.bizId;
+        bizes.bizUpdateCashBox(bizId, money);
     }
 }

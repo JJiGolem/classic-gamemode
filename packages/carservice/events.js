@@ -6,16 +6,6 @@ let DEFAULT_PRODUCTS = carservice.defaultResources;
 let DEFAULT_DIAGNOSTICS_PRODUCTS = DEFAULT_PRODUCTS.DIAGNOSTICS;
 let PRODUCT_PRICE = carservice.resourcePrice;
 
-let DEFAULT_SALARY = {
-    DIAGNOSTICS: 0.2,
-    REPAIR: 0.1
-}
-
-let DEFAULT_INCOME = {
-    DIAGNOSTICS: 0.3,
-    REPAIR: 0.1
-}
-
 module.exports = {
     "init": () => {
         carservice.init();
@@ -40,6 +30,7 @@ module.exports = {
         if (!player.character) return;
 
         if (shape.isCarService) {
+            player.currentCarServiceId = shape.carServiceId;
             if (player.character.job == 1) {
                 player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} зашел в колшейп carService`]);
                 player.call('carservice.shape.enter');
@@ -58,6 +49,7 @@ module.exports = {
     },
     "carservice.diagnostics.offer": (player, targetId) => {
         if (player.character.job != 1) return player.call('notifications.push.error', ['Вы не механик', 'Ошибка']);
+        if (player.currentCarServiceId == null) return;
         let target = mp.players.at(targetId);
         if (!target) return;
         let vehicle = target.vehicle;
@@ -65,6 +57,8 @@ module.exports = {
 
         if (vehicle.isBeingRepaired) return player.call('notifications.push.error', ['Транспорт уже ремонтируется', 'Ошибка']);
 
+        let productsAvailable = carservice.getProductsAmount(player.currentCarServiceId);
+        if (productsAvailable < DEFAULT_DIAGNOSTICS_PRODUCTS) return player.call('notifications.push.error', ['В мастерской недостаточно ресурсов', 'Ошибка']);
         target.diagnosticsOffer = {
             playerId: player.id,
             vehicleToRepair: vehicle
@@ -82,16 +76,27 @@ module.exports = {
         let target = player;
         let offer = target.diagnosticsOffer;
         let sender = mp.players.at(offer.playerId);
-        let vehicleToRepair = target.vehicleToRepair;
 
-        if (target.vehicle != vehicleToRepair) return; // to be checked
         if (!sender) return;
+        if (sender.currentCarServiceId == null) return sender.call('notifications.push.error', ['Вы не у мастерской', 'Ошибка']);
         if (sender.senderDiagnosticsOffer.targetPlayer != target) return;
 
         if (accept) {
-            let salary = parseInt(DEFAULT_DIAGNOSTICS_PRODUCTS * DEFAULT_SALARY.DIAGNOSTICS);
+            let serviceId = sender.currentCarServiceId;
 
-            if (target.character.cash < DEFAULT_DIAGNOSTICS_PRODUCTS) {
+            let productsAvailable = carservice.getProductsAmount(serviceId);
+            if (productsAvailable < DEFAULT_DIAGNOSTICS_PRODUCTS) {
+                sender.call('notifications.push.error', ['В мастерской недостаточно ресурсов', 'Ошибка']);
+                target.call('notifications.push.error', ['В мастерской недостаточно ресурсов', 'Ошибка']);
+                return;
+            }
+
+            let salaryMultiplier = carservice.getSalaryMultiplier(serviceId);
+            let priceMultiplier = carservice.getPriceMultiplier(serviceId);
+            let price = parseInt(DEFAULT_DIAGNOSTICS_PRODUCTS * PRODUCT_PRICE * priceMultiplier);
+            let salary = parseInt(price * salaryMultiplier);
+
+            if (target.character.cash < price) {
                 target.call('notifications.push.error', [`Недостаточно денег`, `Автомастерская`]);
                 sender.call('notifications.push.error', [`У клиента нет денег`, `Автомастерская`]);
                 delete target.diagnosticsOffer;
@@ -99,11 +104,14 @@ module.exports = {
                 return;
             }
 
-            money.removeCash(target, DEFAULT_DIAGNOSTICS_PRODUCTS*PRODUCT_PRICE, function (result) {
+            carservice.removeProducts(serviceId, DEFAULT_DIAGNOSTICS_PRODUCTS);
+
+            money.removeCash(target, price, function (result) {
                 if (result) {
-                    //sender.call('notifications.push.success', [`К зарплате добавлено $${salary}`, 'Автомастерская']);
                     console.log('accept');
                     mp.events.call('carservice.diagnostics.preparation', sender, target);
+                    let income = price - salary;
+                    carservice.updateCashbox(serviceId, income); /// Начисление денег за диагностику в кассу
                     money.addMoney(sender, salary, function (result) {
                         if (result) {
                             sender.call('notifications.push.success', [`К зарплате добавлено $${salary}`, 'Автомастерская']);
@@ -186,13 +194,17 @@ module.exports = {
         console.log(vehicle.bodyHealth);
 
         let multiplier = carservice.getRepairPriceMultiplier(vehicle);
+        let serviceId = player.currentCarServiceId;
+
+        let priceMultiplier = carservice.getPriceMultiplier(serviceId);
+
         console.log(multiplier);
         let checkData = {};
         target.repairPrice = 0;
         target.repairProducts = 0;
         if (vehicle.engineState) {
             let products = parseInt(DEFAULT_PRODUCTS.ENGINE * vehicle.engineState * multiplier);
-            let price = products * PRODUCT_PRICE;
+            let price = products * PRODUCT_PRICE * priceMultiplier;
             console.log(price);
             target.repairPrice += price;
             target.repairProducts += products;
@@ -203,7 +215,7 @@ module.exports = {
         }
         if (vehicle.fuelState) {
             let products = parseInt(DEFAULT_PRODUCTS.FUEL * vehicle.fuelState * multiplier);
-            let price = products * PRODUCT_PRICE;
+            let price = products * PRODUCT_PRICE * priceMultiplier;
             console.log(price);
             target.repairPrice += price;
             target.repairProducts += products;
@@ -214,7 +226,7 @@ module.exports = {
         }
         if (vehicle.steeringState) {
             let products = parseInt(DEFAULT_PRODUCTS.STEERING * vehicle.steeringState * multiplier);
-            let price = products * PRODUCT_PRICE;
+            let price = products * PRODUCT_PRICE * priceMultiplier;
             console.log(price);
             target.repairPrice += price;
             target.repairProducts += products;
@@ -224,7 +236,8 @@ module.exports = {
             }
         }
         if (vehicle.brakeState) {
-            let price = parseInt(DEFAULT_PRODUCTS.BRAKE * vehicle.brakeState * multiplier);
+            let products = parseInt(DEFAULT_PRODUCTS.BRAKE * vehicle.brakeState * multiplier);
+            let price = products * PRODUCT_PRICE * priceMultiplier;
             console.log(price);
             target.repairPrice += price;
             target.repairProducts += products;
@@ -234,8 +247,8 @@ module.exports = {
             }
         }
         if (vehicle.bodyHealth < 999) {
-            let products = DEFAULT_PRODUCTS.BODY * multiplier;
-            let price = parseInt((1000 - vehicle.bodyHealth) * multiplier);
+            let products = parseInt(DEFAULT_PRODUCTS.BODY * multiplier);
+            let price = parseInt((1000 - vehicle.bodyHealth) * multiplier * priceMultiplier);
             console.log(price);
             target.repairPrice += price;
             target.repairProducts += products;
@@ -244,7 +257,7 @@ module.exports = {
             }
         }
         console.log(`REPAIR PRICE =` + target.repairPrice);
-        console.log(`REPAIR PRODUCTS = ` + target.repairPrice);
+        console.log(`REPAIR PRODUCTS = ` + target.repairProducts);
         mp.events.call('animations.stop', player);
         if (Object.keys(checkData).length == 0) {
             target.call('notifications.push.success', ['Т/с не нуждается в ремонте', 'Диагностика']);
@@ -252,6 +265,7 @@ module.exports = {
             mp.events.call('carservice.service.end.target', target, 1);
             return;
         }
+
         player.call('notifications.push.success', [`Выставлен счет в $${target.repairPrice}`, 'Автомастерская']);
         target.call('carservice.check.show', [checkData])
     },
@@ -263,6 +277,17 @@ module.exports = {
         if (!target) return;
         if (!mechanic) return;
         if (!vehicle) return;
+
+        let serviceId = player.currentCarServiceId;
+        let productsAvailable = carservice.getProductsAmount(serviceId);
+        let salaryMultiplier = carservice.getSalaryMultiplier(serviceId);
+        if (productsAvailable < target.repairProducts) {
+            player.call('notifications.push.error', ['В мастерской недостаточно ресурсов', 'Ошибка']);
+            target.call('notifications.push.error', ['В мастерской недостаточно ресурсов', 'Ошибка']);
+            mp.events.call('carservice.service.end.mechanic', player, 1);
+            mp.events.call('carservice.service.end.target', target, 1);
+            return;
+        }
 
         if (state) {
             /// Снять деньги
@@ -280,8 +305,10 @@ module.exports = {
 
                     console.log(target.repairPrice);
                     carservice.repairVehicle(vehicle);
-                    let salary = parseInt(target.repairPrice * DEFAULT_SALARY.REPAIR);
-
+                    let salary = parseInt(target.repairPrice * salaryMultiplier);
+                    let income = target.repairPrice - salary;
+                    carservice.removeProducts(serviceId, target.repairProducts); /// Снятие продуктов
+                    carservice.updateCashbox(serviceId, income); /// Начисление денег за ремонт
                     money.addMoney(mechanic, salary, function (result) {
                         if (result) {
                             mechanic.call('notifications.push.success', [`К зарплате добавлено $${salary}`, 'Автомастерская']);
@@ -332,7 +359,6 @@ module.exports = {
         }
 
     },
-
     "carservice.service.end.mechanic": (player, result) => {
         switch (result) {
             /// Ремонт завершен удачно
