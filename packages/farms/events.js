@@ -289,7 +289,8 @@ module.exports = {
 
         notifs.success(player, `Разгружено ${count} ед. урожая. Премия $${pay}`, header);
     },
-    "farms.warehouse.products.buy": (player, index) => {
+    "farms.warehouse.products.buy": (player, data) => {
+        data = JSON.parse(data);
         var header = `Покупка урожая`;
         var out = (text) => {
             notifs.error(player, text, header);
@@ -299,12 +300,15 @@ module.exports = {
         if (!player.farm) return out(`Вы далеко`);
         if (player.character.job != 4) return out(`Вы не грузоперевозчик`);
         if (veh.products && veh.products.count) return out(`Грузовик уже содержит товар`);
+        var max = carrier.getProductsMax(player);
+        if (data.count > max) return out(`Ваш навык не позволяет загрузить более ${max} ед.`);
 
         var farm = player.farm;
-        var key = ["productA", "productB", "productC"][index];
-        if (farm[key] < carrier.productsMax) return out(`На складе недостаточно урожая`);
+        var key = ["productA", "productB", "productC"][data.index];
+        if (farm[key] < 100) return out(`На складе недостаточно урожая`);
 
-        var price = farm[`${key}Price`] * carrier.productsMax;
+
+        var price = farm[`${key}Price`] * data.count;
         if (player.character.cash < price) return out(`Необходимо $${price}`);
 
         money.removeCash(player, price, (res) => {
@@ -312,10 +316,10 @@ module.exports = {
 
             veh.products = {
                 type: key,
-                count: carrier.productsMax,
+                count: data.count,
             };
-            veh.setVariable(`label`, `${carrier.productsMax} из ${carrier.productsMax} ед.`);
-            farm[key] -= carrier.productsMax;
+            veh.setVariable(`label`, `${data.count} из ${max} ед.`);
+            farm[key] -= data.count;
             farm.save();
         });
 
@@ -392,7 +396,7 @@ module.exports = {
         farm.save();
         veh.products.count -= count;
         if (veh.products.count) {
-            veh.setVariable("label", `${veh.products.count} из ${carrier.productsMax} ед.`);
+            veh.setVariable("label", `${veh.products.count} из ${carrier.getProductsMax(player)} ед.`);
             notifs.info(player, `Склад заполнен. ${veh.products.count} ед. зерна осталось в грузовике`, header);
         } else {
             veh.setVariable("label", null);
@@ -481,7 +485,7 @@ module.exports = {
         farm.save();
         veh.products.count -= count;
         if (veh.products.count) {
-            veh.setVariable("label", `${veh.products.count} из ${carrier.productsMax} ед.`);
+            veh.setVariable("label", `${veh.products.count} из ${carrier.getProductsMax(player)} ед.`);
             notifs.info(player, `Склад заполнен. ${veh.products.count} ед. удобрения осталось в грузовике`, header);
         } else {
             veh.setVariable("label", null);

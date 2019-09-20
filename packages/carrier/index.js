@@ -1,6 +1,7 @@
 "use strict";
 
 let farms = call('farms');
+let jobs = call('jobs');
 let notifs = call('notifications');
 
 module.exports = {
@@ -12,6 +13,8 @@ module.exports = {
     productPrice: 4,
     // Вместимость грузовика
     productsMax: 500,
+    // Доп. вместимость грузовика за 1% навыка
+    skillProducts: 15,
     // Коэффициент при списании товара назад на склад (productPrice * productSellK)
     productSellK: 0.8,
     // Цена аренды грузовика
@@ -41,7 +44,7 @@ module.exports = {
         marker.colshape = colshape;
         mp.blips.new(318, pos, {
             color: 71,
-            name: `Грузчики`,
+            name: `Грузоперевозка`,
             shortRange: 10,
             scale: 1
         });
@@ -63,5 +66,9 @@ module.exports = {
             });
         });
         return data;
+    },
+    getProductsMax(player) {
+        var skill = jobs.getJobSkill(player, 4);
+        return parseInt(this.productsMax + skill.exp * this.skillProducts);
     },
 };
