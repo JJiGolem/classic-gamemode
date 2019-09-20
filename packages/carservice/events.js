@@ -2,15 +2,9 @@ let carservice = require('./index.js');
 
 let money = call('money');
 
-let DEFAULT_PRICE = {
-    BODY: 1,
-    ENGINE: 120,
-    FUEL: 80,
-    STEERING: 110,
-    BRAKE: 90
-}
-
-let DEFAULT_DIAGNOSTICS_PRICE = 50;
+let DEFAULT_PRODUCTS = carservice.defaultResources;
+let DEFAULT_DIAGNOSTICS_PRODUCTS = DEFAULT_PRODUCTS.DIAGNOSTICS;
+let PRODUCT_PRICE = carservice.resourcePrice;
 
 let DEFAULT_SALARY = {
     DIAGNOSTICS: 0.2,
@@ -26,10 +20,6 @@ module.exports = {
     "init": () => {
         carservice.init();
     },
-    // "carservice.jobshape.enter": (player) => {
-    //     player.call("carservice.jobmenu.show");
-    //     //mp.events.call("jobs.set", player, 1);
-    // },
     "carservice.jobshape.enter": (player) => {
         if (player.character.job != 1) {
             player.call("carservice.jobmenu.show", [0]);
@@ -99,9 +89,9 @@ module.exports = {
         if (sender.senderDiagnosticsOffer.targetPlayer != target) return;
 
         if (accept) {
-            let salary = parseInt(DEFAULT_DIAGNOSTICS_PRICE * DEFAULT_SALARY.DIAGNOSTICS);
+            let salary = parseInt(DEFAULT_DIAGNOSTICS_PRODUCTS * DEFAULT_SALARY.DIAGNOSTICS);
 
-            if (target.character.cash < DEFAULT_DIAGNOSTICS_PRICE) {
+            if (target.character.cash < DEFAULT_DIAGNOSTICS_PRODUCTS) {
                 target.call('notifications.push.error', [`Недостаточно денег`, `Автомастерская`]);
                 sender.call('notifications.push.error', [`У клиента нет денег`, `Автомастерская`]);
                 delete target.diagnosticsOffer;
@@ -109,7 +99,7 @@ module.exports = {
                 return;
             }
 
-            money.removeCash(target, DEFAULT_DIAGNOSTICS_PRICE, function (result) {
+            money.removeCash(target, DEFAULT_DIAGNOSTICS_PRODUCTS*PRODUCT_PRICE, function (result) {
                 if (result) {
                     //sender.call('notifications.push.success', [`К зарплате добавлено $${salary}`, 'Автомастерская']);
                     console.log('accept');
@@ -199,51 +189,62 @@ module.exports = {
         console.log(multiplier);
         let checkData = {};
         target.repairPrice = 0;
+        target.repairProducts = 0;
         if (vehicle.engineState) {
-            let price = parseInt(DEFAULT_PRICE.ENGINE * vehicle.engineState * multiplier);
+            let products = parseInt(DEFAULT_PRODUCTS.ENGINE * vehicle.engineState * multiplier);
+            let price = products * PRODUCT_PRICE;
             console.log(price);
             target.repairPrice += price;
+            target.repairProducts += products;
             checkData.engine = {
                 state: vehicle.engineState,
                 price: price
             }
         }
         if (vehicle.fuelState) {
-            let price = parseInt(DEFAULT_PRICE.FUEL * vehicle.fuelState * multiplier);
+            let products = parseInt(DEFAULT_PRODUCTS.FUEL * vehicle.fuelState * multiplier);
+            let price = products * PRODUCT_PRICE;
             console.log(price);
             target.repairPrice += price;
+            target.repairProducts += products;
             checkData.fuel = {
                 state: vehicle.fuelState,
                 price: price
             }
         }
         if (vehicle.steeringState) {
-            let price = parseInt(DEFAULT_PRICE.STEERING * vehicle.steeringState * multiplier);
+            let products = parseInt(DEFAULT_PRODUCTS.STEERING * vehicle.steeringState * multiplier);
+            let price = products * PRODUCT_PRICE;
             console.log(price);
             target.repairPrice += price;
+            target.repairProducts += products;
             checkData.steering = {
                 state: vehicle.steeringState,
                 price: price
             }
         }
         if (vehicle.brakeState) {
-            let price = parseInt(DEFAULT_PRICE.BRAKE * vehicle.brakeState * multiplier);
+            let price = parseInt(DEFAULT_PRODUCTS.BRAKE * vehicle.brakeState * multiplier);
             console.log(price);
             target.repairPrice += price;
+            target.repairProducts += products;
             checkData.brake = {
                 state: vehicle.brakeState,
                 price: price
             }
         }
         if (vehicle.bodyHealth < 999) {
-            let price = parseInt((1000 - vehicle.bodyHealth) * DEFAULT_PRICE.BODY * multiplier);
+            let products = DEFAULT_PRODUCTS.BODY * multiplier;
+            let price = parseInt((1000 - vehicle.bodyHealth) * multiplier);
             console.log(price);
             target.repairPrice += price;
+            target.repairProducts += products;
             checkData.body = {
                 price: price
             }
         }
-        console.log(target.repairPrice);
+        console.log(`REPAIR PRICE =` + target.repairPrice);
+        console.log(`REPAIR PRODUCTS = ` + target.repairPrice);
         mp.events.call('animations.stop', player);
         if (Object.keys(checkData).length == 0) {
             target.call('notifications.push.success', ['Т/с не нуждается в ремонте', 'Диагностика']);

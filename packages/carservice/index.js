@@ -3,11 +3,19 @@ let vehicles = call('vehicles');
 let dbCarServices;
 
 module.exports = {
-    resourcePrice: 100,
+    resourcePrice: 10,
     maxPriceMultiplier: 1.5,
     minPriceMultiplier: 0.5,
     maxSalaryMultiplier: 0.3,
     minSalaryMultiplier: 0.1,
+    defaultResources: {
+        DIAGNOSTICS: 5,
+        BODY: 1,
+        ENGINE: 12,
+        FUEL: 8,
+        STEERING: 11,
+        BRAKE: 9
+    },
     async init() {
         this.loadCarServicesFromDB();
     },
