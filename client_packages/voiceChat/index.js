@@ -58,8 +58,10 @@ mp.speechChanel.connect = (player, channel) => {
 /// Отключить выбранного игрока от канала связи
 mp.speechChanel.disconnect = (player, channel, isSend = false) => {
     mp.console("speechChanel.disconnect");
+    mp.console(`channel ${channel}`);
     if (player == null) return;
     let index = listeners.findIndex( x => x.playerId == player.remoteId);
+    mp.console(`index ${index}`);
     if (channel == null) {
         index != -1 && listeners.splice(index, 1);
     }
@@ -71,7 +73,6 @@ mp.speechChanel.disconnect = (player, channel, isSend = false) => {
             listeners.splice(index, 1);
             mp.events.callRemote("voiceChat.remove", player);
             mp.console("voiceChat.remove");
-            return;
         }
         else {
             updateCurrent(player, index);
