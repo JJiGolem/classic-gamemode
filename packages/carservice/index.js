@@ -4,12 +4,12 @@ let bizes = call('bizes');
 let dbCarServices;
 
 module.exports = {
-    resourcePrice: 10,
+    productPrice: 10,
     maxPriceMultiplier: 2.0,
     minPriceMultiplier: 1.0,
     maxSalaryMultiplier: 0.3,
     minSalaryMultiplier: 0.1,
-    defaultResources: {
+    defaultProducts: {
         DIAGNOSTICS: 5,
         BODY: 1,
         ENGINE: 12,

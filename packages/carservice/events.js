@@ -2,9 +2,9 @@ let carservice = require('./index.js');
 
 let money = call('money');
 
-let DEFAULT_PRODUCTS = carservice.defaultResources;
+let DEFAULT_PRODUCTS = carservice.defaultProducts;
 let DEFAULT_DIAGNOSTICS_PRODUCTS = DEFAULT_PRODUCTS.DIAGNOSTICS;
-let PRODUCT_PRICE = carservice.resourcePrice;
+let PRODUCT_PRICE = carservice.productPrice;
 
 module.exports = {
     "init": () => {
