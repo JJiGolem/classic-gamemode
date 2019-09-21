@@ -217,9 +217,7 @@ module.exports = {
         return bizes.findIndex(x => x.info.characterId == characterId) != -1;
     },
     async addBiz(bizInfo) {
-        console.log(bizInfo);
-        let colshape = await mp.colshapes.newSphere(bizInfo.x, bizInfo.y, bizInfo.z, 4.0);
-        console.log(colshape);
+        let colshape = mp.colshapes.newSphere(bizInfo.x, bizInfo.y, bizInfo.z, 4.0);
         colshape.isBiz = true;
         colshape.bizId = bizInfo.id;
         bizInfo.BizStatistics = bizInfo.BizStatistics.sort((x, y) => {
