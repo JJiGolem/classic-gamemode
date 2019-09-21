@@ -452,6 +452,7 @@ var playerMenu = new Vue({
             this.setBiz(data.biz);
             this.setHouse(data.house);
             this.setStatistics(data);
+            this.setDonatePrice(data);
         },
         setBiz(biz) {
             if (typeof biz == 'string') biz = JSON.parse(biz);
@@ -495,6 +496,15 @@ var playerMenu = new Vue({
                 var minutes = parseInt(statistics[0].value) + 1;
                 statistics[0].value = `${minutes} мин`;
             }, 60000);
+        },
+        setDonatePrice(data) {
+            if (typeof data == 'string') data = JSON.parse(data);
+
+            convertWindowData.coefficient = data.convertCash;
+            changenameWindowData.price = data.nicknamePrice;
+            warnWindowData.price = data.clearWarnPrice;
+            warnWindowData.amountWarns = data.warns;
+            addslotWindowData.price = data.slotPrice;
         },
         setFaction(data) {
             if (typeof data == 'string') data = JSON.parse(data);
