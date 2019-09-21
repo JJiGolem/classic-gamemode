@@ -59,7 +59,7 @@ module.exports = {
     fishesTypes: [
         {
             name: 'Карась',
-            price: 10
+            price: 10,
         },
         {
             name: 'Окунь',

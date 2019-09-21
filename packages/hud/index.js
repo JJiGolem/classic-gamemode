@@ -9,7 +9,7 @@ module.exports = {
         
         mp.players.forEach((player, id) => {
             if (player.character) {
-                let factionName;
+                let factionName = '-';
         
                 if (player.character.factionId != null) {
                     let faction = factions.getFaction(player.character.factionId);

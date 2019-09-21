@@ -84,7 +84,7 @@ module.exports = {
         if (result) {
             inventory.addItem(player, 15, { weight: weight, name: fish.name }, (e) => {
                 if (!e) {
-                    notifs.success(player, `${fish.name} весом ${weight} кг добавлен в инвентарь`, 'Отлично!');
+                    notifs.success(player, `${fish.name} весом ${weight} кг добавлен(a) в инвентарь`, 'Отлично!');
                 } else {
                     return notifs.error(player, e, 'Ошибка');
                 }
