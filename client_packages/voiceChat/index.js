@@ -53,7 +53,7 @@ mp.speechChanel.connect = (player, channel) => {
         mp.console("voiceChat.add");
         player.voice3d = channels[channel].use3d;
     }
-    mp.console(listeners);
+    mp.console(JSON.stringify(listeners));
 
     if(UseAutoVolume) {
         player.voiceAutoVolume = true;
@@ -69,7 +69,7 @@ mp.speechChanel.disconnect = (player, channel, isSend = false) => {
     let index = listeners.findIndex( x => x.playerId == player.remoteId);
     if (channel == null) {
         index != -1 && listeners.splice(index, 1);
-        mp.console(listeners);
+        mp.console(JSON.stringify(listeners));
     }
     else {
         let channelIndex = listeners[index].channels.findIndex(x => x == channel);
@@ -79,12 +79,12 @@ mp.speechChanel.disconnect = (player, channel, isSend = false) => {
             listeners.splice(index, 1);
             mp.events.callRemote("voiceChat.remove", player);
             mp.console("voiceChat.remove");
-            mp.console(listeners);
+            mp.console(JSON.stringify(listeners));
             return;
         }
         else {
             updateCurrent(player, index);
-            mp.console(listeners);
+            mp.console(JSON.stringify(listeners));
         }
     }
     if (channel == null && isSend) {
