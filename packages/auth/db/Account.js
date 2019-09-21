@@ -38,6 +38,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(40),
             allowNull: false
         },
+        clearBanDate: {
+            type: DataTypes.DATE,
+            defaultValue: null,
+            allowNull: true,
+        },
         regDate: {
             type: DataTypes.DATE,
             defaultValue: Sequelize.NOW,

@@ -1,6 +1,7 @@
 "use strict";
 
 let bizes = call('bizes');
+let donate = call('donate');
 let factions = call('factions');
 let jobs = call('jobs');
 let houses = call('houses');
@@ -25,6 +26,11 @@ module.exports = {
             cash: player.character.cash,
             wanted: player.character.wanted,
             donate: player.account.donate,
+            convertCash: donate.convertCash,
+            nicknamePrice: donate.nicknamePrice,
+            clearWarnPrice: donate.clearWarnPrice,
+            slotPrice: donate.slotPrice,
+            warns: player.character.warnNumber,
         };
         if (biz) {
             data.biz = {
