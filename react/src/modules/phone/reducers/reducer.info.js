@@ -185,7 +185,7 @@ const initialState = {
             ]
             // order: {
             //     productCount,
-            //     productPrice
+            //     productPrice,
             // }
         }
     ]
