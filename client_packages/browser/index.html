@@ -35,6 +35,7 @@
     <link rel="stylesheet" type="text/css" href="css/fishing.css" />
     <link rel="stylesheet" type="text/css" href="css/captureScore.css" />
     <link rel="stylesheet" type="text/css" href="css/killList.css" />
+    <link rel="stylesheet" type="text/css" href="css/watermark.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -1511,6 +1512,10 @@
         </div>
     </div>
 
+    <div id="watermark" v-if="isShow">
+        <div v-for="num in id" :style="{width: num * 5 + 'px'}"></div>
+    </div>
+
     <script src="js/playerMenuSvgPaths.js"></script>
     <script src="js/playerMenu.js"></script>
     <!-- ------------------------ МЕНЮ ИГРОКА ------------------------ -->
@@ -1544,6 +1549,7 @@
     <script src="js/fishing.js"></script>
     <script src="js/captureScore.js"></script>
     <script src="js/killList.js"></script>
+    <script src="js/watermark.js"></script>
 
 </body>
 
