@@ -172,8 +172,7 @@ module.exports = {
             if (file != 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname) + "/" + file + '/index.js'))
             {
                 let objects = require('../' + file + '/index');
-                if (objects.business != null && objects.business.type != null && objects.business.name != null && objects.business.productName != null
-                    && objects.rentPerDayMultiplier != null && objects.productPrice != null) {
+                if (objects.business != null && objects.business.type != null && objects.business.name != null && objects.business.productName != null && objects.rentPerDayMultiplier != null && objects.productPrice != null) {
                     bizesModules[objects.business.type] = call(file);
                 }
             }
@@ -185,7 +184,7 @@ module.exports = {
         });
         let loadedCount = 0;
         for (let i = 0; i < bizesInfo.length; i++) {
-            if (!bizesModules.some( x => x.type == bizesInfo[i].type)) continue;
+            if (!bizesModules[bizesInfo[i].type]) continue;
             let biz = await this.addBiz(bizesInfo[i]);
             setTimer(biz);
             loadedCount++;
