@@ -3,6 +3,13 @@
 let commands = {};
 
 module.exports = {
+    // Кол-во варнов, при которых игрок улетаем в бан
+    banWarns: 3,
+    // Время снятия бана за варны
+    warnsBanDays: 30,
+    // Время снятия варна от последнего
+    warnDays: 14,
+
     /// Инициализация админских команд из всех модулей
     init() {
         console.log("[COMMANDS] load commands...");
