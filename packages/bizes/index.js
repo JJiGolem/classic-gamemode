@@ -203,7 +203,7 @@ module.exports = {
             y: position.y,
             z: position.z
         }, {});
-        biz = await db.Models.Biz.findAll({
+        biz = await db.Models.Biz.findOne({
             where: {
                 id: biz.id
             },
@@ -217,7 +217,9 @@ module.exports = {
         return bizes.findIndex(x => x.info.characterId == characterId) != -1;
     },
     async addBiz(bizInfo) {
-        let colshape = mp.colshapes.newSphere(bizInfo.x, bizInfo.y, bizInfo.z, 4.0);
+        console.log(bizInfo);
+        let colshape = await mp.colshapes.newSphere(bizInfo.x, bizInfo.y, bizInfo.z, 4.0);
+        console.log(colshape);
         colshape.isBiz = true;
         colshape.bizId = bizInfo.id;
         bizInfo.BizStatistics = bizInfo.BizStatistics.sort((x, y) => {
