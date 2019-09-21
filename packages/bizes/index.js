@@ -8,7 +8,7 @@ let bizesModules = new Array();
 /// biz types
 /// 0 - АЗС
 /// 1 - Супермаркет
-/// 2 - Автосалон
+/// 2 - 
 /// 3 - СТО
 /// 4 - Магазин одежды
 /// 5 - Магазин оружия
@@ -182,37 +182,29 @@ module.exports = {
         let bizesInfo = await db.Models.Biz.findAll({
             include: [db.Models.BizStatistics]
         });
+        let loadedCount = 0;
         for (let i = 0; i < bizesInfo.length; i++) {
+            if (!bizesModules.some( x => x.type == bizesInfo[i].type)) continue;
             let biz = await this.addBiz(bizesInfo[i]);
             setTimer(biz);
+            loadedCount++;
         }
-        console.log("[BIZES] " + bizesInfo.length + " bizes loaded");
+        console.log("[BIZES] " + loadedCount + " bizes loaded");
     },
-    async createBiz(name, price, type) {
-        // let biz = await db.Models.Biz.create({
-        //     name: bizes[i].name,
-        //     price: bizes[i].price,
-        //     type: bizes[i].type,
-        //     cashBox: 0,
-        //     productsCount: 0,
-        //     productsMaxCount: 100,
-        //     x: bizes[i].pos[0],
-        //     y: bizes[i].pos[1],
-        //     z: bizes[i].pos[2]
-        // }, {});
-        // house = await db.Models.House.findOne({
-        //     where: {
-        //         id: house.id
-        //     },
-        //     include: [{ model: db.Models.Interior,
-        //             include: [{ model: db.Models.Garage,
-        //                 include: [db.Models.GaragePlace]
-        //             }]
-        //         }
-        //     ]
-        // });
-        // this.addHouse(house);
-        // this.setTimer(houses.length - 1);
+    async createBiz(name, price, type, position) {
+        let biz = await db.Models.Biz.create({
+            name: name,
+            price: price,
+            type: type,
+            cashBox: 0,
+            productsCount: 0,
+            productsMaxCount: 100,
+            x: position.x,
+            y: position.y,
+            z: position.z
+        }, {});
+        biz = await this.addBiz(biz);
+        setTimer(biz);
         console.log("[BIZES] added new biz");
     },
     isHaveBiz(characterId) {
