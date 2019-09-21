@@ -135,7 +135,7 @@ setInterval(() => {
                     mp.players.local.position.x,  mp.players.local.position.y,  mp.players.local.position.z);
 
                 if(dist > channels[listeners[i].current].maxRange || player.dimension != mp.players.local.dimension) {
-                    mp.speechChanel.disconnect(player, listeners[i].channel);
+                    mp.speechChanel.disconnect(player, listeners[i].current);
                     i--;
                 }
                 else {
