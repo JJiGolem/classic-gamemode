@@ -1,5 +1,7 @@
 "use strict";
 
+let playerMovingDisabled = false;
+
 mp.utils = {
     /// Управление камерой
     cam: require('utils/camera.js'),
@@ -210,6 +212,10 @@ mp.utils = {
         });
         return result;
     },
+    /// Отключить управление/движение игроку
+    disablePlayerMoving(disable) {
+        playerMovingDisabled = disable;
+    }
 };
 
 
@@ -241,4 +247,17 @@ mp.events.add("waypoint.set", (x, y) => {
 // Бессмертие
 mp.events.add("godmode.set", (enable) => {
     mp.players.local.setInvincible(enable);
+});
+
+/// Отключение движения игрока
+mp.events.add('render', () => {
+    if (playerMovingDisabled) {
+        mp.game.controls.disableControlAction(0, 21, true); /// бег
+        mp.game.controls.disableControlAction(0, 22, true); /// прыжок
+        mp.game.controls.disableControlAction(0, 31, true); /// вперед назад
+        mp.game.controls.disableControlAction(0, 30, true); /// влево вправо
+        mp.game.controls.disableControlAction(0, 24, true); /// удары
+        mp.game.controls.disableControlAction(1, 200, true); // esc
+        mp.game.controls.disableControlAction(0, 140, true); /// удары R
+    }
 });

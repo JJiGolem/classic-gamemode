@@ -16,6 +16,8 @@ module.exports = {
     soilsWarehouse: [],
     // Должности
     jobNames: ["Работник", "Фермер", "Тракторист", "Пилот"],
+    // Требуемые скиллы для работы на должности
+    jobExps: [0, 15, 30, 60],
     // Муж. рабочая одежда
     maleClothes: [
         [{
@@ -249,6 +251,8 @@ module.exports = {
     taxBalanceMax: 10000,
     // Налог в час
     tax: 50,
+    // Кол-во опыта за 1 куст
+    exp: 0.01,
 
     async init() {
         await this.loadFarmsFromDB();

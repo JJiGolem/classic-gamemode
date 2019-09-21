@@ -210,6 +210,21 @@ var offerDialog = new Vue({
                     mp.trigger(`callRemote`, `factions.cash.offer.cancel`);
                 },
             },
+            "mafia_power_sell": {
+                text: `Carter Slade предлагает вам крышу АЗС за $999`,
+                on(values) {
+                    this.text = `${values.player} предлагает вам крышу ${values.biz} за $${values.sum}`;
+                },
+                yes() {
+                    mp.trigger(`callRemote`, `mafia.power.sell.accept`);
+                },
+                no() {
+                    mp.trigger(`callRemote`, `mafia.power.sell.cancel`);
+                },
+                ignore() {
+                    mp.trigger(`callRemote`, `mafia.power.sell.cancel`);
+                },
+            },
         },
         dialog: null,
         timeout: null,

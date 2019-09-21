@@ -1,6 +1,7 @@
 "use strict";
 
 let economy = require('./index.js');
+let notifs = call("notifications");
 
 module.exports = {
     "/economy": {
@@ -12,7 +13,9 @@ module.exports = {
                 player.call('economy.show', [JSON.stringify(economy.getAll())]);
             }
             else {
-                player.call('economy.show', [JSON.stringify(economy.getByModuleName(args[0]))]);
+                let info = economy.getByModuleName(args[0]);
+                if (info.length == 0) return notifs != null && notifs.error(player, "Такого модуля не существует", "Ошибка");
+                player.call('economy.show', [JSON.stringify(info)]);
             }
         }
     },

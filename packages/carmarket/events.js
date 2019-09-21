@@ -33,6 +33,7 @@ module.exports = {
         if (!player.vehicle) return;
         if (!carmarket.isPlayerInCarMarketColshape(player)) return;
         if (player.vehicle.key != 'private' || player.vehicle.owner != player.character.id) return player.call('notifications.push.error', ['Это не ваш транспорт', 'Ошибка']);
+        player.call('notifications.push.info', [`За этот транспорт вы получите $${(player.vehicle.properties.price * PRICE_CONFIG.SELL).toFixed()}`, `Авторынок`]);
         player.call('carmarket.sellmenu.show');
     },
     "carmarket.car.sell": (player) => {

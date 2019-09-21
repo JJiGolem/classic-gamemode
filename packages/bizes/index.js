@@ -29,6 +29,7 @@ let dropBiz = function(biz, sellToGov = false) {
                 for (let j = 0; j < mp.players.length; j++) {
                     if (mp.players.at(j).character == null) continue;
                     if (characterId == mp.players.at(j).character.id) {
+                        mp.events.call('player.biz.changed', mp.players.at(j));
                         if (sellToGov) {
                             mp.players.at(j).call('biz.sell.toGov.ans', [1]);
                         } else {
@@ -240,11 +241,15 @@ module.exports = {
     sellBiz(biz, cost, seller, buyer, callback) {
         biz.info.characterId = buyer.character.id;
         biz.info.characterNick = buyer.character.name;
+        biz.info.date = getRandomDate(1);
+        setTimer(biz);
         biz.info.save().then(() => {
             if (money == null) return;
             money.moveCash(buyer, seller, cost, function(result) {
                 if (result) {
                     callback(true);
+                    mp.events.call('player.biz.changed', seller);
+                    mp.events.call('player.biz.changed', buyer);
                     buyer.call('phone.app.add', ["biz", getBizInfoForApp(biz)]);
                 } else {
                     callback(false);
@@ -288,6 +293,19 @@ module.exports = {
     getBizCount() {
         return bizes.length;
     },
+    getNearBiz(player, range = 10) {
+        var nearBiz;
+        var minDist = 99999;
+        bizes.forEach(biz => {
+            var bizPos = new mp.Vector3(biz.info.x, biz.info.y, biz.info.z);
+            var distance = player.dist(bizPos);
+            if (distance < range && distance < minDist) {
+                nearBiz = biz;
+                minDist = distance;
+            }
+        });
+        return nearBiz;
+    },
     setTimer: setTimer,
     /// Функция пополняющая кассу биза
     /// После каждой покупки передавать в нее стоимость покупки и id бизнеса
@@ -295,6 +313,11 @@ module.exports = {
 
     addProducts: addProducts,
     removeProducts: removeProducts,
+    getProductsAmount(id) {
+        let biz = getBizById(id);
+        if (biz == null) return null;
+        return biz.info.productsCount;
+    },
 
     createOrder: createOrder,
     destroyOrder: destroyOrder,

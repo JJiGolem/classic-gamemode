@@ -78,6 +78,7 @@ mp.events.add('render', () => {
         mp.game.controls.disableControlAction(0, 30, true); /// влево вправо
         mp.game.controls.disableControlAction(0, 24, true); /// удары
         mp.game.controls.disableControlAction(1, 200, true); // esc
+        mp.game.controls.disableControlAction(0, 140, true); /// удары R
     }
 
     if (rotation.left) player.setHeading(player.getHeading() - 2);

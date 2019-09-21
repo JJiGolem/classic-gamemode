@@ -80,6 +80,7 @@ module.exports = {
             await info.save();
             player.call('biz.buy.ans', [1, player.character.name]);
             bizService.setTimer(biz);
+            mp.events.call('player.biz.changed', player);
             player.call('phone.app.add', ["biz", bizService.getBizInfoForApp(biz)]);
         });
     },

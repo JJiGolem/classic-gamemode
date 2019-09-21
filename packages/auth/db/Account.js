@@ -17,6 +17,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(128),
             allowNull: false
         },
+        donate: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false
+        },
         password: {
             type: DataTypes.STRING(128),
             allowNull: false
@@ -48,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             allowNull: false
         },
-    }, 
+    },
     {
         timestamps: false
     });

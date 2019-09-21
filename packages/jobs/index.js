@@ -22,12 +22,16 @@ module.exports = {
 
         player.character.job = job.id;
         player.character.save();
+
+        mp.events.call("player.job.changed", player);
     },
     deleteMember(player) {
         if (!player.character) return;
 
         player.character.job = null;
         player.character.save();
+
+        mp.events.call("player.job.changed", player);
     },
     async initJobSkills(player) {
         player.character.jobSkills = [];
@@ -41,15 +45,31 @@ module.exports = {
             });
             player.character.jobSkills.push(skill[0]);
         }
+        mp.events.call("jobSkillsInit.done", player);
     },
-    getJobSkill(player, job) {
+    getJobSkill(player, job = null) {
         if (!player.character) return;
+        if (!job) job = player.character.job;
         if (typeof job == 'number') job = this.getJob(job);
         var skills = player.character.jobSkills;
         for (var i = 0; i < skills.length; i++) {
             if (skills[i].jobId == job.id) return skills[i];
         }
         return null;
+    },
+    addJobExp(player, exp = 1) {
+        if (!player.character.job) return;
+        var skill = this.getJobSkill(player);
+        skill.exp += exp;
+        skill.save();
+
+        mp.events.call("player.jobSkill.changed", player, skill);
+    },
+    setJobExp(player, skill, exp) {
+        skill.exp = exp;
+        skill.save();
+
+        mp.events.call("player.jobSkill.changed", player, skill);
     },
     pay(player) {
         if (!player.character.pay) return;
@@ -66,5 +86,9 @@ module.exports = {
         if (player.character.job == 2) {
             player.call('phone.app.remove', ['taxi']);
         }
-    }
+    },
+    getJobName(player) {
+        if (!player.character.job) return null;
+        return this.getJob(player.character.job).name;
+    },
 }

@@ -2,9 +2,11 @@
 
 var child_process = require("child_process");
 
+// Версия сборки сервера (кол-во коммитов)
+let build = 0;
+
+
 module.exports = {
-    // Версия сборки сервера (кол-во коммитов)
-    build: 0,
     // Отображать сборку в худе на экране
     showBuild: true,
 
@@ -16,18 +18,21 @@ module.exports = {
         child_process.exec(cmd, (error, stdout, stderr) => {
             if (error) console.log(stderr);
 
-            this.build = parseInt(stdout);
-            console.log(`[DEV] Номер сборки: ${this.build}`);
+            build = parseInt(stdout);
+            console.log(`[DEV] Номер сборки: ${build}`);
         });
     },
     enableBuild(enable) {
         this.showBuild = enable;
-        var build = (enable) ? this.build : 0;
+        var b = (enable) ? build : 0;
         mp.players.forEach(rec => {
             if (!rec.character) return;
             rec.call(`hud.setData`, [{
-                build: build
+                build: b
             }]);
         });
     },
+    getBuild() {
+        return build;
+    }
 }

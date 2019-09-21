@@ -117,6 +117,7 @@ module.exports = {
         handler: (player, args) => {
             mp.players.forEach((current) => {
                 current.call('chat.message.push', [`!{#edffc2}${player.name} запустил рестарт сервера через ${20000 / 1000} сек.`]);
+                mp.events.call("playerQuit", current);
             });
             setTimeout(() => {
                 process.exit();

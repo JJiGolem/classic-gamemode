@@ -1180,6 +1180,310 @@
         </div>
     </div>
 
+    <!-- ------------------------ МЕНЮ ИГРОКА ------------------------ -->
+    <link rel="stylesheet" type="text/css" href="css/playerMenu.css" />
+    <div id="player-menu" v-if="show" v-cloak>
+        <div :class="['content', { blur: blurMod }]">
+            <div class="head">
+                <div class="top-bar">
+                    <div class="info">
+                        <div>{{ name }} |
+                            <span :class="'social-status'+socialStatus">{{ socialData[socialStatus].head }}
+                                <img :src="socialData[socialStatus].img" />
+                            </span>
+                        </div>
+                        <div class="coins"><div class="coin-logo">cc</div> {{ coins }} </div>
+                    </div>
+                    <div class="date">
+                        {{ time }} <br /> {{ date }}
+                    </div>
+                    <div v-if="false" class="exit"><img @click="onClickExit()" src="img/playerMenu/exit.svg"/></div>
+                    <div class="btn" @click="enterCode()">
+                        <div>Ввести промокод</div>
+                        <div><img src="img/playerMenu/box.svg"/></div>
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="menu-bar">
+                    <div :class="['item', {focus: menuBarFocus == menuItem }]"
+                        v-for="menuItem in menuBar"
+                        @click="onClickMenuBarItem(menuItem)">
+                        {{ menuItem.head }}
+                    </div>
+                </div>
+            </div>
+            <div class="body">
+                <keep-alive>
+                    <component :is="menuBarFocus.window" v-bind="menuBarFocus.windowData"></component>
+                </keep-alive>
+            </div>
+        </div>
+        <div v-if="blurMod" class="blur-window">
+            <div class="confirmation">
+                <div class="head">{{ confirmation.head }}</div>
+                <div class="description" v-html="confirmation.description"></div>
+                <div v-if="codeMod"><input placeholder="Введите промокод..." v-model="code"/></div>
+                <div class="actions">
+                    <div class="btn left" @click="confirmation.acceptHandler(); confirmation = null">{{ confirmation.leftWord }}</div>
+                    <div class="btn" @click="confirmation = null; codeMod = false">{{ confirmation.rightWord }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/x-template" id="player-menu-character">
+        <div class="character">
+            <div class="block statistics">
+                <div class="header">Статистика</div>
+                <div class="body">
+                    <div class="record" v-for="record in statistics">
+                        <div>{{ record.head }}</div>
+                        <div :style="record"><span>{{ record.value | playerMenuMoneySplit(record.moneyFilter) }}</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="block">
+                <div class="header">Дом</div>
+                <div class="body">
+                    <div class="record" v-for="record in houseInfo">
+                        <div>{{ record.head }}</div>
+                        <div :style="record"><span>{{ record.value | playerMenuMoneySplit(record.moneyFilter) }}</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="block">
+                <div class="header">Бизнес</div>
+                <div class="body">
+                    <div class="record" v-for="record in businessInfo">
+                        <div>{{ record.head }}</div>
+                        <div :style="record"><span>{{ record.value | playerMenuMoneySplit(record.moneyFilter) }}</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="skills">
+                <div class="header">Навыки</div>
+                <div class="body">
+                    <div class="arrow top" @click="onClickArrow(false)"><img :class="{disable: count == 0}" src="img/playerMenu/skill-scroll.svg"/></div>
+                    <transition-group class="skills-board" name="skills" tag="div">
+                        <div class="skills-line"
+                            v-if="index >= count && index < count + 3"
+                            v-for="(skills, index) in skillsList"
+                            :key="index">
+                                <div class="skill" v-for="skill in skills" v-if="skill">
+                                    <div>{{ skill.head }}</div>
+                                    <div class="val">{{ skill.value }}%</div>
+                                    <div class="progress"><div :style="{width: (skill.value) ? skill.value+'%': '1vh'}"></div></div>
+                                </div>
+                        </div>
+                    </transition-group>
+                    <div class="arrow" @click="onClickArrow(true)"><img :class="{disable: count > skillsList.length - 4}" src="img/playerMenu/skill-scroll.svg"/></div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="player-menu-settings">
+        <div class="character">
+            test message settings
+        </div>
+    </script>
+
+    <script type="text/x-template" id="player-menu-report">
+        <div class="report">
+            <div class="head">Задайте вопрос или оставьте жалобу на игрока указав его ID/Имя и причину жалобы</div>
+            <input placeholder="Введите вопрос или жалобу..." v-model="message" :maxlength="maxlength" @keypress.enter="send()"/>
+            <div>Осталось символов: {{ chars }}</div>
+            <div class="send" @click="send()">Отправить</div>
+            <div v-if="showHint" class="hint">Ваше сообщение было отправлено администрации сервера!<br />Приятной игры!</div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="player-menu-help">
+        <div class="report help">
+            <div class="head">Введите интересующий вас вопрос:</div>
+            <input placeholder="Введите вопрос..." v-model="message" :maxlength="maxlength" @keypress.enter="send()"/>
+            <div class="head sec">Ответы на вопросы</div>
+            <div class="messages body">
+                <div :class="['message', {focus: currentAnswer == index}]"
+                    v-for="(message, index) in messages"
+                    :key="index"
+                    @click="showAnswer(index)">
+                    <div class="img"><img src="img/playerMenu/communication.svg" /></div>
+                    <div class="qw">{{ message.question }}</div>
+                    <div v-if="message.answer" class="arrow"><img src="img/playerMenu/help-arrow.svg" /></div>
+                    <transition name="messages"><div class="answer" v-if="currentAnswer == index">{{ message.answer }}</div></transition>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="player-menu-reference">
+        <div class="reference">
+            <div class="left">
+                <div class="line"></div>
+                <div class="record">
+                    <div class="circle"><img src="img/playerMenu/megafon.svg" /></div>
+                    <div>Расскажите друзьям о вашем<br />реферальном промокоде</div>
+                </div>
+                <div class="record">
+                    <div class="circle"><img src="img/playerMenu/file.svg" /></div>
+                    <div>Ваш реферальный промокод должны ввести<br />в специальное окно для ввода промокодов</div>
+                </div>
+                <div class="record">
+                    <div class="circle"><img src="img/playerMenu/clock.svg" /></div>
+                    <div class="text">А также пробыть на нашем сервере 10 часов</div>
+                </div>
+                <div class="record">
+                    <div class="circle"><img src="img/playerMenu/smile.svg" /></div>
+                    <div>По достижению онлайна 10 часов, вам и вашему другу<br />начисляется игровая валюта</div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="head">Ваш реферальный промокод:</div>
+                <div class="num cp">{{ code }}</div>
+                <div class="head">Количество приглашённых:</div>
+                <div class="num">{{ amountInvitees }}</div>
+                <div class="head">Количество выполнивших условие:</div>
+                <div class="num gr">{{ amountCompleted }}</div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="player-menu-window-sidebar">
+        <div class="sidebar">
+            <div class="left">
+                <div class="head"><img :src="headImg" /><span>{{ head }}</span></div>
+                <div class="menu">
+                    <div :class="['item', { focus: menuFocus == item }]"
+                        v-for="(item, index) in menu" :key="index + head"
+                        @click="onClickMenuItem(item)">
+                        <div>{{item.head}}</div>
+                        <div><svg viewBox="0 0 20 20" ><path v-for="path in item.img" :d="path"/></svg></div>
+                    </div>
+                    <div class="item bottom" v-if="bottom" @click="bottom.handler">
+                        <div>{{bottom.head}}</div>
+                        <div><svg viewBox="0 0 20 20" ><path v-for="path in bottom.img" :d="path"/></svg></div>
+                    </div>
+                </div>
+            </div>
+            <div class="line"></div>
+            <keep-alive>
+                <component v-if="menuFocus" :is="menuFocus.window" v-bind="menuFocus.windowData"></component>
+            </keep-alive>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="player-menu-donate-convert">
+        <div class="sidebar-win convert">
+            <div class="head">Конвертация валюты</div>
+            <div class="hint">Конвертация валюты - это способ получить виртуальную валюту,<br />обменивая <div class="coin-logo">cc</div> на неё</div>
+            <div class="hint sec">Введите число CC, которые вы бы хотели обменять</div>
+            <input placeholder="Введите число..." v-model="price" @keypress="inputCheck($event)"/>
+            <div class="equally">=</div>
+            <div class="coins">{{ virtualCoins | playerMenuMoneySplit(true) }}</div>
+            <div class="btn" @click="convert()">Конвертировать</div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="player-menu-donate-changename">
+        <div class="sidebar-win changename">
+            <div class="head">Смена никнейма</div>
+            <div class="hint">Смените никнейм для вашей новой личности</div>
+            <div class="name"><input placeholder="Введите новое имя" v-model="firstname" @keypress="inputCheck($event)" /></div>
+            <div><input placeholder="Введите новую фамилию" v-model="lastname" @keypress="inputCheck($event)" /></div>
+            <div class="price">Стоимость услуги: <span>{{ price }} CC</span></div>
+            <div class="btn" @click="changename()">Сменить никнейм</div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="player-menu-donate-warn">
+        <div class="sidebar-win warn">
+            <div class="head">Снятие варна</div>
+            <div class="hint">Снимите варн и разблокируйте функции</div>
+            <div class="info" v-if="amountWarns">Варнов: {{ amountWarns }}</div>
+            <div class="info n-warns" v-else>На вашем аккаунте нет варнов</div>
+            <div class="price">Стоимость услуги: <span>{{ price }} CC</span></div>
+            <div :class="['btn', {disable: !amountWarns }]" @click="localtakeoffWarn()">Снять варн</div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="player-menu-donate-addslot">
+        <div class="sidebar-win addslot">
+            <div class="head">Добавление слота</div>
+            <div class="hint">Добавьте слот для создания нового персонажа</div>
+            <div class="info">Слотов: {{ amountSlots }}</div>
+            <div class="price">Стоимость услуги: <span>{{ price }} CC</span></div>
+            <div :class="['btn', {disable: amountSlots == maxSlots }]" @click="localaddSlot()">Добавить слот</div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="player-menu-settings-main">
+        <div class="sidebar-win settings-main">
+            <div class="head">Общие настройки</div>{{ watcher }}
+            <div class="record">
+                <div class="title">Место спавна</div>
+                <div class="slidebar val">
+                    <img class="left" src="img/playerMenu/help-arrow.svg" @click="left()"/>
+                    <div class="value">{{ spawnSettings.spawnsPull[localCurrentSpawn] }}</div>
+                    <img class="right" src="img/playerMenu/help-arrow.svg" @click="right()"/>
+                </div>
+            </div>
+            <div class="record">
+                <div class="title">Громкость микрофона</div>
+                <div class="val"><input type="range" min="0" v-model="localMicroVolume"/></div>
+            </div>
+            <div :class="['btn', {disable: noChanges }]" @click="save()">Сохранить</div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="player-menu-settings-protection">
+        <div class="sidebar-win protection">
+            <div class="head">Общие настройки</div>
+            <div class="record email">
+                <div class="title">Электронная почта</div>
+                <div class="body">
+                    <div v-if="!changeMailMod && !codeMod">
+                        <div class="email">{{ email }}</div>
+                        <div :class="['info', { conf: isConfirmed }]">{{ (isConfirmed) ? 'Подтверждена' : 'Не подтверждена' }}</div>
+                    </div>
+                    <div v-if="changeMailMod">
+                        <input placeholder="Введите новый E-Mail" @keypress.enter="saveMail()" v-model="newEmail"/>
+                    </div>
+                    <div v-if="codeMod">
+                        <input placeholder="Введите код" v-model="code" />
+                    </div>
+                </div>
+                <div class="actions">
+                    <div v-if="!changeMailMod && !codeMod" @click="changeMailMod = true">Изменить</div>
+                    <div v-if="!isConfirmed && !codeMod && !changeMailMod" @click="localsendCode()">Отправить код</div>
+                    <div v-if="codeMod" @click="confCode()">Подтвердить</div>
+                    <div v-if="changeMailMod" @click="saveMail()">Сохранить</div>
+                    <div v-if="changeMailMod || codeMod" @click="cancel()">Отменить</div>
+                </div>
+            </div>
+            <div class="record pass">
+                <div class="title">Пароль</div>
+                <div class="body">
+                    <div v-if="!changePassMod">
+                        {{ passMessage }}
+                    </div>
+                    <div v-if="changePassMod">
+                        <input type="password" placeholder="Введите старый пароль" v-model="oldPass"/>
+                        <input type="password" placeholder="Введите новый пароль" v-model="newPass"/>
+                        <input type="password" placeholder="Повторно новый пароль" v-model="newPass2"/>
+                    </div>
+                </div>
+                <div class="actions">
+                    <div v-if="!changePassMod" @click="changePassMod = true">Изменить</div>
+                    <div v-if="changePassMod" @click="savePass()">Сохранить</div>
+                    <div v-if="changePassMod" @click="passCancel()">Отменить</div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+
+
     <div v-cloak id="captureScore" v-if="isShow">
         <div class="header">
             <img :src="leftImgSrc" />
@@ -1187,14 +1491,15 @@
             <span class="vs">vs.</span>
             <span :style="{color: colors[rightBandId]}">{{ names[rightBandId] }}</span>
             <img :src="rightImgSrc" />
-        </div>
-        <div class="progress" :style="{background: colors[rightBandId]}">
-            <div class="fill" :style="{width: progressWidth+'%', background: colors[leftBandId]}"></div>
-        </div>
-        <div class="score">
-            <div>Убийств: {{ leftScore }}</div>
-            <div>{{ prettyTime }}</div>
-            <div>Убийств: {{ rightScore }}</div>
+
+            <div class="progress" :style="{background: colors[rightBandId]}">
+                <div class="fill" :style="{width: progressWidth+'%', background: colors[leftBandId]}"></div>
+            </div>
+            <div class="score">
+                <div>Убийств: {{ leftScore }}</div>
+                <div>{{ prettyTime }}</div>
+                <div>Убийств: {{ rightScore }}</div>
+            </div>
         </div>
     </div>
 
@@ -1205,6 +1510,10 @@
             <div :style="{color: playerColor(kill.target)}">{{ kill.target.name }} <span v-if="kill.reason && isWeapon(kill.reason)"> из {{ kill.reason }}</span></div>
         </div>
     </div>
+
+    <script src="js/playerMenuSvgPaths.js"></script>
+    <script src="js/playerMenu.js"></script>
+    <!-- ------------------------ МЕНЮ ИГРОКА ------------------------ -->
 
     <!-- ------------------------ REACT ------------------------------ -->
     <script async src="build/js/build.js" type="text/javascript"></script>

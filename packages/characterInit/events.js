@@ -36,6 +36,7 @@ module.exports = {
         player.call('characterInit.done');
         player.spawn(new mp.Vector3(player.character.x, player.character.y, player.character.z));
         player.dimension = 0;
+        player.authTime = Date.now();
     },
     /// События создания персоонажа
     "player.joined": player => {
@@ -54,5 +55,12 @@ module.exports = {
     },
     "inventory.done": (player) => {
         player.characterInit.created && characterInit.setStartClothes(player);
+    },
+    "playerQuit": (player) => {
+        if (!player.character) return;
+
+        var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60);
+        player.character.minutes += minutes;
+        player.character.save();
     },
 }

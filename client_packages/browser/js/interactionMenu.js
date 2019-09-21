@@ -143,6 +143,8 @@ var interactionMenu = new Vue({
                         interactionMenu.menu = interactionMenu.menus["police"];
                     } else if (item.text == 'Hospital') {
                         interactionMenu.menu = interactionMenu.menus["hospital"];
+                    } else if (item.text == 'Mafia') {
+                        interactionMenu.menu = interactionMenu.menus["mafia"];
                     }
                 }
             },
@@ -212,7 +214,7 @@ var interactionMenu = new Vue({
                 handler(index) {
                     var item = this.items[index];
                     mp.trigger(`interactionMenu.onClick`, this.name, item.text);
-                    interactionMenu.show = false;
+                    mp.trigger(`interaction.menu.close`);
                 }
             },
             "police": {
@@ -239,8 +241,8 @@ var interactionMenu = new Vue({
                 handler(index) {
                     var item = this.items[index];
                     if (item.text == 'Лиц. на оружие') return interactionMenu.showByName("police_gunlicense");
-                    interactionMenu.show = false;
                     mp.trigger(`interactionMenu.onClick`, this.name, item.text);
+                    mp.trigger(`interaction.menu.close`);
                 }
             },
             "police_gunlicense": {
@@ -255,7 +257,7 @@ var interactionMenu = new Vue({
                 handler(index) {
                     var item = this.items[index];
                     mp.trigger(`interactionMenu.onClick`, this.name, item.text);
-                    interactionMenu.show = false;
+                    mp.trigger(`interaction.menu.close`);
                 }
             },
             "hospital": {
@@ -269,7 +271,28 @@ var interactionMenu = new Vue({
                 ],
                 handler(index) {
                     var item = this.items[index];
-                    interactionMenu.show = false;
+                    mp.trigger(`interactionMenu.onClick`, this.name, item.text);
+                    mp.trigger(`interaction.menu.close`);
+                }
+            },
+            "mafia": {
+                name: "mafia",
+                items: [{
+                        text: "Продать крышу",
+                    },
+                    {
+                        text: "Связать",
+                    },
+                    {
+                        text: "Вести",
+                    },
+                    {
+                        text: "Мешок на голову",
+                    },
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    mp.trigger(`interaction.menu.close`);
                     mp.trigger(`interactionMenu.onClick`, this.name, item.text);
                 }
             },
@@ -342,6 +365,14 @@ var interactionMenu = new Vue({
                     text: "Hospital"
                 });
             } else this.deleteItem("player_interaction", "Hospital");
+            if (val >= 8 && val <= 11) { // bands
+
+            }
+            if (val >= 12 && val <= 14) { // mafia
+                this.addItems("player_interaction", {
+                    text: "Mafia"
+                });
+            } else this.deleteItem("player_interaction", "Mafia");
         }
     },
 });

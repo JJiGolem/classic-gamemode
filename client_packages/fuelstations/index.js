@@ -12,6 +12,7 @@ mp.events.add('fuelstations.shape.leave', () => {
 });
 
 mp.keys.bind(0x45, true, () => { /// E
+    if (mp.busy.includes()) return;
     if (isInFuelStationColshape) {
         let player = mp.players.local;
         let vehicle = player.vehicle;

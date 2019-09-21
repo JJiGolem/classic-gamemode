@@ -1,24 +1,22 @@
 let vehicles = call('vehicles');
-
-let serviceData = [{
-    x: 484.9,
-    y: -1315.5,
-    z: 29.2
-},
-{
-    x: 540.07470703125,
-    y: -177.12237548828125,
-    z: 54.481346130371094
-},
-{
-    x: -228.7,
-    y: -1388.0,
-    z: 31.2
-}];
+let bizes = call('bizes');
 
 let dbCarServices;
 
 module.exports = {
+    productPrice: 10,
+    maxPriceMultiplier: 2.0,
+    minPriceMultiplier: 1.0,
+    maxSalaryMultiplier: 0.3,
+    minSalaryMultiplier: 0.1,
+    defaultProducts: {
+        DIAGNOSTICS: 5,
+        BODY: 1,
+        ENGINE: 12,
+        FUEL: 8,
+        STEERING: 11,
+        BRAKE: 9
+    },
     async init() {
         this.loadCarServicesFromDB();
     },
@@ -98,5 +96,56 @@ module.exports = {
         } catch (err) {
             console.log(err);
         }
+    },
+    getBizParamsById(id) {
+        let service = dbCarServices.find(x => x.id == id);
+        if (!service) return;
+        let params = [
+            {
+                key: 'priceMultiplier',
+                name: 'Наценка на услуги',
+                max: this.maxPriceMultiplier,
+                min: this.minPriceMultiplier,
+                current: service.priceMultiplier
+            },
+            {
+                key: 'salaryMultiplier',
+                name: 'Коэффициент зарплаты',
+                max: this.maxSalaryMultiplier,
+                min: this.minSalaryMultiplier,
+                current: service.salaryMultiplier
+            },
+        ]
+        return params;
+    },
+    setBizParam(id, key, value) {
+        let service = dbCarServices.find(x => x.id == id);
+        if (!service) return;
+        service[key] = value;
+        service.save();
+    },
+    getProductsAmount(id) {
+        let service = dbCarServices.find(x => x.id == id);
+        let bizId = service.bizId;
+        let products = bizes.getProductsAmount(bizId);
+        return products;
+    },
+    removeProducts(id, products) {
+        let service = dbCarServices.find(x => x.id == id);
+        let bizId = service.bizId;
+        bizes.removeProducts(bizId, products);
+    },
+    getPriceMultiplier(id) {
+        let service = dbCarServices.find(x => x.id == id);
+        return service.priceMultiplier;
+    },
+    getSalaryMultiplier(id) {
+        let service = dbCarServices.find(x => x.id == id);
+        return service.salaryMultiplier;
+    },
+    updateCashbox(id, money) {
+        let service = dbCarServices.find(x => x.id == id);
+        let bizId = service.bizId;
+        bizes.bizUpdateCashBox(bizId, money);
     }
 }
