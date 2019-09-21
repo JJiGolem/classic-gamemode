@@ -270,6 +270,8 @@ module.exports = {
             rec.character.warnDate = new Date();
 
             if (rec.character.warnNumber >= admin.banWarns) { // баним игрока
+                rec.character.warnNumber = 0;
+                rec.character.warnDate = null;
                 rec.account.clearBanDate = new Date(Date.now() + admin.warnsBanDays * 24 * 60 * 60 * 1000);
                 rec.account.save();
                 mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${reason} (${admin.banWarns} варнов)`);
