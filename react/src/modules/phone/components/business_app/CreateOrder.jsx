@@ -124,8 +124,8 @@ class CreateOrder extends Component {
                 </div>
 
                 <div style={{ textAlign: 'center' }}>
-                    <div>Минимальная цена - <span style={{ color: '#47a80f' }}>$5</span></div>
-                    <div>Максимальная цена - <span style={{ color: '#47a80f' }}>$25</span></div>
+                    <div>Минимальная цена - <span style={{ color: '#47a80f' }}>${business.resourcePriceMin}</span></div>
+                    <div>Максимальная цена - <span style={{ color: '#47a80f' }}>${business.resourcePriceMax}</span></div>
                 </div>
 
                 <div className='house_buttons-phone-react' style={{ bottom: '6%', position: 'absolute' }}>
