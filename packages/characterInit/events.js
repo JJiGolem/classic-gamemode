@@ -25,8 +25,7 @@ module.exports = {
 
             player.call('characterInit.choose.ans', [1]);
             mp.events.call('characterInit.done', player);
-        }
-        else {
+        } else {
             player.call('characterInit.choose.ans', [1]);
             characterInit.create(player);
         }
@@ -59,7 +58,7 @@ module.exports = {
     "playerQuit": (player) => {
         if (!player.character) return;
 
-        var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60);
+        var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60 % 60);
         player.character.minutes += minutes;
         player.character.save();
     },
