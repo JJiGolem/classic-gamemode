@@ -36,10 +36,12 @@ module.exports = {
             hairHighlightColor: player.character.hairHighlightColor,
             facialHairColor: player.character.beardColor
         }
+        let productPrice = barbershop.productPrice;
+        let multiplier = barbershop.getPriceMultiplier(id);
         let priceData = {
-            hairstylePrice: barbershop.hairstylePrice,
-            facialHairPrice: barbershop.facialHairPrice,
-            colorChangePrice: barbershop.colorChangePrice
+            hairstylePrice: barbershop.hairstyleProducts * productPrice * multiplier,
+            facialHairPrice: barbershop.facialHairPrice * productPrice * multiplier,
+            colorChangePrice: barbershop.colorChangePrice * productPrice * multiplier
         }
         player.call('barbershop.enter', [shopData, gender, appearanceData, priceData]);
     },
