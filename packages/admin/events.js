@@ -135,5 +135,9 @@ module.exports = {
                 console.log(err);
             }
         });
-    }
+    },
+    // Поступила жалоба от игрока
+    "admin.report": (player, message) => {
+        mp.events.call("admin.notify.all", `!{#f29f53}[A] Жалоба от ${player.name}: ${message}`);
+    },
 }
