@@ -10,6 +10,11 @@ module.exports = {
     },
     "masks.shop.enter": (player) => {
         let list = masks.getRawMaskList();
+        let multiplier = masks.getPriceMultiplier();
+        list = list.map((current) => {
+            current.price *= multiplier;
+            return current;
+        });
         let data = masks.getShopData();
         player.dimension = player.id + 1;
         player.call("masks.shop.enter", [data, list]);
