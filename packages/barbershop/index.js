@@ -3,6 +3,11 @@ let bizes;
 let shops;
 
 module.exports = {
+    business: {
+        type: 6,
+        name: "Парикмахерская",
+        productName: "Ресурсы",
+    },
     minPriceMultiplier: 1.0,
     maxPriceMultiplier: 2.0,
     productPrice: 20,
