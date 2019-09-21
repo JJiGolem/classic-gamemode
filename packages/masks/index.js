@@ -20,6 +20,12 @@ let bizes;
 // }
 
 module.exports = {
+    productPrice: 10,
+    business: {
+        type: 7,
+        name: "Магазин масок",
+        productName: "Ресурсы",
+    },
     async init() {
         bizes = call('bizes');
         await this.loadMaskShop();
@@ -49,6 +55,7 @@ module.exports = {
         }
     },
     createMaskShop() {
+        if (!shop) return;
         mp.blips.new(362, new mp.Vector3(shop.x, shop.y, shop.z),
         {
             name: "Магазин масок",
