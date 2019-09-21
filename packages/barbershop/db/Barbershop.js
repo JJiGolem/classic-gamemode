@@ -8,8 +8,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         bizId: {
 			type: DataTypes.INTEGER(11),
-            defaultValue: 0,
-			allowNull: false
+            defaultValue: null,
+			allowNull: true
         },
         bType: {
 			type: DataTypes.INTEGER(11),
@@ -73,6 +73,11 @@ module.exports = (sequelize, DataTypes) => {
         }
 	}, {timestamps: false});
 
+    model.associate = (models) => {
+        model.belongsTo(models.Biz, {
+            foreignKey: "bizId"
+        });
+    };
 
 	return model;
 };
