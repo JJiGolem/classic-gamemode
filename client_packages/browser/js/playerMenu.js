@@ -531,6 +531,9 @@ var playerMenu = new Vue({
 
             skills.find(x => x.jobId == skill.jobId).value = skill.exp;
         },
+        setCash(cash) {
+            statistics[2].value = cash;
+        },
     },
     watch: {
         show(val) {
@@ -620,6 +623,8 @@ Vue.component('player-menu-report', {
         maxlength: 120,
         message: "",
         showHint: false,
+        waitTime: 60 * 1000,
+        lastSentTime: 0,
     }),
     computed: {
         chars() {
@@ -629,7 +634,10 @@ Vue.component('player-menu-report', {
     methods: {
         send() {
             if (!this.message.length) return;
-            // TODO: Отправка на сервер this.message
+            var diff = Date.now() - this.lastSentTime;
+            if (diff < this.waitTime) return notifications.push('error', `Ожидайте ${parseInt((this.waitTime - diff) / 1000)} сек.`);
+            mp.trigger(`callRemote`, `admin.report`, this.message);
+            this.lastSentTime = Date.now();
 
             // Что ниже, оставить!
             this.message = "";

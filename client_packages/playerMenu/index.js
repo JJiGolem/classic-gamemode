@@ -34,6 +34,9 @@ mp.playerMenu = {
     setSkill(skill) {
         mp.callCEFV(`playerMenu.setSkill('${JSON.stringify(skill)}')`);
     },
+    setCash(cash) {
+        mp.callCEFV(`playerMenu.setCash(${cash})`);
+    },
 };
 
 mp.events.add({
@@ -60,5 +63,8 @@ mp.events.add({
     },
     "playerMenu.setSkill": (data) => {
         mp.playerMenu.setSkill(data.skill);
+    },
+    "money.change": (cash, bank) => {
+        mp.playerMenu.setCash(cash);
     },
 });

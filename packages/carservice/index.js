@@ -4,6 +4,14 @@ let bizes = call('bizes');
 let dbCarServices;
 
 module.exports = {
+    /// Объект который показывает, что данный модуль отвечает за конкретный бизнес
+    business: {
+        type: 3,
+        name: "СТО",
+        productName: "Запчасти",
+    },
+
+    rentPerDayMultiplier: 0.01,
     productPrice: 10,
     maxPriceMultiplier: 2.0,
     minPriceMultiplier: 1.0,
