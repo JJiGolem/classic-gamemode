@@ -4,6 +4,11 @@ let dbFuelStations;
 let bizes;
 
 module.exports = {
+    business: {
+        type: 0,
+        name: "АЗС",
+        productName: "Топливо",
+    },
     productPrice: 1,
     minFuelPrice: 1,
     maxFuelPrice: 8,
