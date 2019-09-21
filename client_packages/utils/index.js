@@ -259,5 +259,10 @@ mp.events.add('render', () => {
         mp.game.controls.disableControlAction(0, 24, true); /// удары
         mp.game.controls.disableControlAction(1, 200, true); // esc
         mp.game.controls.disableControlAction(0, 140, true); /// удары R
+        mp.game.controls.disableControlAction(24, 37, true); /// Tab
+
+        for (let i = 157; i <= 165; i++) {
+            mp.game.controls.disableControlAction(24, i, true); /// цифры 1-9
+        }
     }
 });

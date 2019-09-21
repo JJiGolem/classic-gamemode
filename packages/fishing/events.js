@@ -56,8 +56,7 @@ module.exports = {
             return;
         }
 
-        let cam = fishing.setCamera(player);
-        player.call('fishing.game.enter', [cam]);
+        player.call('fishing.game.enter');
     },
     "fishing.game.start": (player) => {
         if (!player.character) return;

@@ -127,13 +127,6 @@ module.exports = {
             }
         });
     },
-    setCamera(player) {
-        return {
-            x: 0,
-            y: 0,
-            z: 0
-        }
-    },
     async sellFish(player) {
         let fishes = inventory.getArrayByItemId(player, 15);
         let sum = 0;
