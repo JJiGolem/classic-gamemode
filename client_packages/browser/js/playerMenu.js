@@ -531,6 +531,9 @@ var playerMenu = new Vue({
 
             skills.find(x => x.jobId == skill.jobId).value = skill.exp;
         },
+        setCash(cash) {
+            statistics[2].value = cash;
+        },
     },
     watch: {
         show(val) {
