@@ -48,7 +48,6 @@ mp.speechChanel.connect = (player, channel) => {
     else {
         listeners.push({"playerId": player.remoteId, "current": channel, "channels": [channel]});
         mp.events.callRemote("voiceChat.add", player);
-        mp.console("voiceChat.add");
         player.voice3d = channels[channel].use3d;
     }
 
@@ -57,11 +56,8 @@ mp.speechChanel.connect = (player, channel) => {
 
 /// Отключить выбранного игрока от канала связи
 mp.speechChanel.disconnect = (player, channel, isSend = false) => {
-    mp.console("speechChanel.disconnect");
-    mp.console(`channel ${channel}`);
     if (player == null) return;
     let index = listeners.findIndex( x => x.playerId == player.remoteId);
-    mp.console(`index ${index}`);
     if (channel == null) {
         index != -1 && listeners.splice(index, 1);
     }
@@ -72,7 +68,6 @@ mp.speechChanel.disconnect = (player, channel, isSend = false) => {
         if (listeners[index].channels.length == 0) {
             listeners.splice(index, 1);
             mp.events.callRemote("voiceChat.remove", player);
-            mp.console("voiceChat.remove");
         }
         else {
             updateCurrent(player, index);
@@ -80,7 +75,6 @@ mp.speechChanel.disconnect = (player, channel, isSend = false) => {
     }
     if (channel == null && isSend) {
         mp.events.callRemote("voiceChat.remove", player);
-        mp.console("voiceChat.remove");
     }
 }
 
@@ -163,7 +157,6 @@ mp.events.add("playerDeath", (player) => {
     if (player.remoteId == mp.players.local.remoteId) {
         while (listeners.length != 0) {
             mp.events.callRemote("voiceChat.remove", mp.players.atRemoteId(listeners[0].playerId));
-            mp.console("voiceChat.remove");
             listeners.splice(0, 1);
         }
     }
