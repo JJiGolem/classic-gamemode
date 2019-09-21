@@ -81,12 +81,20 @@ function formatMessage(message) {
     var outputArray = [];
 
     if (message) {
+        if (!reg.test(message)) {
+            outputArray.push(
+                {
+                    text: message,
+                    color: 'white'
+                }
+            );
+            return outputArray;
+        }
         var inputArray = message.split(reg);
     
         let colorIndex = 0;
     
         for (let wordIndex = 0; wordIndex < inputArray.length; wordIndex++) {
-            console.log('in', inputArray);
             if(inputArray[wordIndex].trim() != '') {
                 outputArray.push({
                     text: inputArray[wordIndex],
@@ -103,8 +111,6 @@ function formatMessage(message) {
             }
         }
     }
-
-    console.log('out', outputArray);
 
     return outputArray;
 }
