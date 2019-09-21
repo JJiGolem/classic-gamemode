@@ -9,10 +9,14 @@ module.exports = {
         
         mp.players.forEach((player, id) => {
             if (player.character) {
-                let faction;
-            
+                let factionName;
+        
                 if (player.character.factionId != null) {
-                    faction = factions.getFaction(player.character.factionId).name;
+                    let faction = factions.getFaction(player.character.factionId);
+                    
+                    if (faction) {
+                        factionName = faction.name;
+                    }
                 }
 
                 outputArray.push(
@@ -20,7 +24,7 @@ module.exports = {
                         id: player.id,
                         name: player.character.name,
                         ping: player.ping,
-                        faction: faction
+                        faction: factionName
                     }
                 );
             }

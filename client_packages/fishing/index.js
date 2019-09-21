@@ -17,13 +17,22 @@ let peds = [
 
 let camera;
 let isBinding = false;
-
-let isEnter = false;
+let isEnter = true;
 let isStarted = false;
 let isFetch = false;
 
 mp.events.add("render", () => {
-    if (isEnter) mp.game.controls.disableAllControlActions(0);
+    if (isEnter) {
+        mp.game.controls.disableControlAction(0, 21, true); /// бег
+        mp.game.controls.disableControlAction(0, 22, true); /// прыжок
+        mp.game.controls.disableControlAction(0, 31, true); /// вперед назад
+        mp.game.controls.disableControlAction(0, 30, true); /// влево вправо
+        mp.game.controls.disableControlAction(0, 24, true); /// удары
+        mp.game.controls.disableControlAction(0, 45, true); /// удары R
+        mp.game.controls.disableControlAction(1, 200, true); // esc
+        mp.game.controls.disableControlAction(24, 157, true)
+        mp.game.controls.disableControlAction(24, 37, true)
+    }
 });
 
 mp.events.add('characterInit.done', () => {
@@ -80,7 +89,8 @@ mp.events.add('fishing.game.enter', (cam) => {
 
     mp.busy.add('fishingGame');
     playBaseAnimation(true);
-    mp.gui.cursor.show(true, false);
+    // mp.gui.cursor.show(true, false);
+    mp.players.local.freezePosition(false);
     mp.callCEFVN({ "fishing.show": true });
     isEnter = true;
 });
@@ -114,7 +124,8 @@ mp.events.add('fishing.game.exit', () => {
     }, 100);
     mp.events.call('prompt.hide');
     playBaseAnimation(false);
-    mp.gui.cursor.show(false, false);
+    // mp.gui.cursor.show(false, false);
+    mp.players.local.freezePosition(false);
     mp.callCEFV(`fishing.clearData()`);
     mp.callCEFVN({ "fishing.show": false });
     mp.busy.remove('fishingGame');
