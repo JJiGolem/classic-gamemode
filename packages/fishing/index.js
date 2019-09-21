@@ -25,7 +25,6 @@ let fishingPlace = {
     }
 }
 
-const ROD_PRICE = 100;
 const ROD_ID = 5;
 
 let fishesTypes = [
@@ -56,11 +55,27 @@ module.exports = {
         this.createFishingMenuPlace();
         this.createFishingPlaces();
     },
+    rodPrice: 100,
+    fishesTypes: [
+        {
+            name: 'Карась',
+            price: 10
+        },
+        {
+            name: 'Окунь',
+            price: 15
+        },
+        {
+            name: 'Сардина',
+            price: 20
+        },
+        {
+            name: 'Скумбрия',
+            price: 25
+        },
+    ],
     getRodId() {
         return ROD_ID;
-    },
-    getFishes() {
-        return fishesTypes;
     },
     createFishingMenuPlace() {
         mp.blips.new(68, new mp.Vector3(fishingPlace.x, fishingPlace.y, fishingPlace.z),
@@ -95,7 +110,7 @@ module.exports = {
         place.isFishingPlace = true;
     },
     async buyRod(player) {
-        money.removeCash(player, ROD_PRICE,  (result) => { 
+        money.removeCash(player, this.rodPrice,  (result) => { 
             if (result) {
                 inventory.addItem(player, ROD_ID, { health: 100 }, (e) => {
                     if (!e) {
@@ -127,7 +142,7 @@ module.exports = {
             fishes.forEach(fish => {
                 let fishName = inventory.getParam(fish, 'name').value;
                 let fishWeight = inventory.getParam(fish, 'weight').value;
-                let fishPrice = getFishPrice(fishName);
+                let fishPrice = fishesTypes.find(fish => fish.name == fishName).price;
                 sum += fishPrice * fishWeight;
                 console.log(`${fishName}, ${fishWeight}, ${fishPrice}, ${sum}`);
             });
