@@ -3491,6 +3491,7 @@ var selectMenu = new Vue({
             "tuningMain": {
                 name: "tuningMain",
                 header: "LS Customs",
+                headerImg: "lsc.png",
                 items: [{
                         text: "Ремонт кузова",
                         values: ['$100']
@@ -3611,6 +3612,7 @@ var selectMenu = new Vue({
             "tuningColors": {
                 name: "tuningColors",
                 header: "Покраска",
+                headerImg: "lsc.png",
                 items: [{
                         text: "Основной цвет",
                         values: [],
@@ -3666,6 +3668,7 @@ var selectMenu = new Vue({
             "tuningEngine": {
                 name: "tuningEngine",
                 header: "Улучшение двигателя",
+                headerImg: "lsc.png",
                 items: [{
                         text: "Стандарт",
                         values: ['$100']
@@ -3718,6 +3721,7 @@ var selectMenu = new Vue({
             "tuningBreak": {
                 name: "tuningBreak",
                 header: "Улучшение тормозов",
+                headerImg: "lsc.png",
                 items: [{
                         text: "Стандартные тормоза",
                         values: ['$100']
@@ -3766,6 +3770,7 @@ var selectMenu = new Vue({
             "tuningTransmission": {
                 name: "tuningTransmission",
                 header: "Улучшение трансмиссии",
+                headerImg: "lsc.png",
                 items: [{
                         text: "Стандартная трансмиссия",
                         values: ['$100']
@@ -3813,6 +3818,7 @@ var selectMenu = new Vue({
             "tuningSuspension": {
                 name: "tuningTransmission",
                 header: "Улучшение трансмиссии",
+                headerImg: "lsc.png",
                 items: [{
                         text: "Стандартная подвеска",
                         values: ['$100']
@@ -3872,6 +3878,7 @@ var selectMenu = new Vue({
             "tuningArmour": {
                 name: "tuningArmour",
                 header: "Броня",
+                headerImg: "lsc.png",
                 items: [{
                         text: "Нет",
                         values: ['$100']
@@ -3928,6 +3935,7 @@ var selectMenu = new Vue({
             "tuningTurbo": {
                 name: "tuningTurbo",
                 header: "Турбонаддув",
+                headerImg: "lsc.png",
                 items: [{
                         text: "Нет",
                         values: ['$100']
@@ -3968,6 +3976,7 @@ var selectMenu = new Vue({
             "tuningDefault": {
                 name: "tuningDefault",
                 header: "",
+                headerImg: "lsc.png",
                 items: [],
                 i: 0,
                 j: 0,
