@@ -46,6 +46,9 @@ mp.playerMenu = {
     setSlots(slots) {
         mp.callCEFV(`playerMenu.setSlots(${slots})`);
     },
+    setPromocode(code) {
+        mp.callCEFV(`playerMenu.setPromocode('${code}')`);
+    },
 };
 
 mp.events.add({
@@ -81,6 +84,9 @@ mp.events.add({
     },
     "playerMenu.setSlots": (data) => {
         mp.playerMenu.setSlots(data.slots);
+    },
+    "playerMenu.setPromocode": (data) => {
+        mp.playerMenu.setPromocode(data.promocode);
     },
     "money.change": (cash, bank) => {
         mp.playerMenu.setCash(cash);

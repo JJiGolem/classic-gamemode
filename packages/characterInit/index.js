@@ -6,6 +6,7 @@ const creatorPlayerHeading = -185.0;
 let inventory = call('inventory');
 let notifs = call('notifs');
 let utils = call("utils");
+let promocodes = call("promocodes");
 
 let clothesConfig = {
     0: {
@@ -109,7 +110,8 @@ module.exports = {
         player.characterInfo.x = pos[0];
         player.characterInfo.y = pos[1];
         player.characterInfo.z = pos[2];
-        
+        player.characterInfo.promocode = await promocodes.getPromocode();
+
         player.character = await db.Models.Character.create(player.characterInfo, {
             include: [
                 {

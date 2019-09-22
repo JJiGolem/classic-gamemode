@@ -33,6 +33,7 @@ module.exports = {
             warns: player.character.warnNumber,
             slots: player.account.slots,
             slotsMax: donate.slotsMax,
+            promocode: player.character.promocode,
         };
         if (biz) {
             data.biz = {

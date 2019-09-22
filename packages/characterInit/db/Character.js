@@ -249,6 +249,17 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             allowNull: false
         },
+        // Собственный промокод
+        promocode: {
+            type: DataTypes.STRING(20),
+            allowNull: false,
+        },
+        // Пригласивший персонаж
+        inviterId: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: null,
+            allowNull: true,
+        },
     }, {
         timestamps: false
     });
@@ -283,6 +294,9 @@ module.exports = (sequelize, DataTypes) => {
         });
         model.hasOne(models.House, {
             foreignKey: "characterId",
+        });
+        model.hasOne(models.Character, {
+            foreignKey: "inviterId",
         });
         model.hasMany(models.Fine, {
             foreignKey: "recId"
