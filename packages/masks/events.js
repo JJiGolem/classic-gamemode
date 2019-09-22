@@ -29,9 +29,11 @@ module.exports = {
         if (!mask) return player.call('masks.buy.ans', [1]);
         if (!mask.isAvailable) return player.call('masks.buy.ans', [3]);
 
-        let price = mask.price;
+        let products = masks.calculateProductsNeeded(mask.price);
+        let price = mask.price * masks.getPriceMultiplier();
         if (player.character.cash < price) return player.call('masks.buy.ans', [4]);
-
+        let productsAvailable = masks.getProductsAmount();
+        if (products > productsAvailable) return player.call('masks.buy.ans', [6]);
         let params = {
             sex: !player.character.gender,
             variation: mask.drawable,
@@ -41,6 +43,8 @@ module.exports = {
             if (e) return player.call('masks.buy.ans', [2, e]);
             money.removeCash(player, price, function (result) {
                 if (result) {
+                    masks.removeProducts(products);
+                    masks.updateCashbox(price);
                     player.call('masks.buy.ans', [0]);
                 } else {
                     player.call('masks.buy.ans', [5]);

@@ -2,29 +2,16 @@ let maskList;
 let dbData;
 let shop;
 let bizes;
-// let shop = {
-//     x: -1336.258056640625,
-//     y: -1277.6488037109375,
-//     z: 4.873090744018555,
-//     fitting: {
-//         x: -1337.2947998046875,
-//         y: -1276.2763671875,
-//         z: 4.894469738006592,
-//         h: 107.35881805419922
-//     },
-//     camera: {
-//         x: -1338.28515625,
-//         y: -1276.6783447265625,
-//         z: 5.6
-//     }
-// }
 
 module.exports = {
     productPrice: 10,
+    rentPerDayMultiplier: 0.01,
+    minPriceMultiplier: 1.0,
+    maxPriceMultiplier: 2.0,
     business: {
         type: 7,
         name: "Магазин масок",
-        productName: "Ресурсы",
+        productName: "Маски",
     },
     async init() {
         bizes = call('bizes');
@@ -128,5 +115,10 @@ module.exports = {
     updateCashbox(money) {
         let bizId = dbData.bizId;
         bizes.bizUpdateCashBox(bizId, money);
+    },
+    calculateProductsNeeded(price) {
+        if (price < 100) return 5;
+        if (price >= 100) return 8;
+        return 3;
     }
 }
