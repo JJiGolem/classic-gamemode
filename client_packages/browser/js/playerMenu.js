@@ -41,12 +41,12 @@ let warnWindowData = {
 
 let addslotWindowData = {
     amountSlots: 2, // API: Кол-во слотов.
-    maxSlots: 3, // API: Максимальное кол-во слотов.
+    maxSlots: 5, // API: Максимальное кол-во слотов.
     price: 120, // API: Стоимостть слота.
     addSlot() {
         // TODO: Добавление слота;
-
-        addslotWindowData.amountSlots++;
+        mp.trigger(`callRemote`, `donate.slots.add`);
+        // addslotWindowData.amountSlots++;
     }
 };
 
@@ -455,6 +455,9 @@ var playerMenu = new Vue({
             this.setHouse(data.house);
             this.setStatistics(data);
             this.setDonatePrice(data);
+            this.setSlots(data.slots);
+
+            addslotWindowData.maxSlots = data.slotsMax;
         },
         setBiz(biz) {
             if (typeof biz == 'string') biz = JSON.parse(biz);
@@ -556,6 +559,9 @@ var playerMenu = new Vue({
         },
         setWarns(warns) {
             warnWindowData.amountWarns = warns;
+        },
+        setSlots(slots) {
+            addslotWindowData.amountSlots = slots;
         },
     },
     watch: {

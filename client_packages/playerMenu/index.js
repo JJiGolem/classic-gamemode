@@ -43,6 +43,9 @@ mp.playerMenu = {
     setWarns(warns) {
         mp.callCEFV(`playerMenu.setWarns(${warns})`);
     },
+    setSlots(slots) {
+        mp.callCEFV(`playerMenu.setSlots(${slots})`);
+    },
 };
 
 mp.events.add({
@@ -75,6 +78,9 @@ mp.events.add({
     },
     "playerMenu.setWarns": (data) => {
         mp.playerMenu.setWarns(data.warns);
+    },
+    "playerMenu.setSlots": (data) => {
+        mp.playerMenu.setSlots(data.slots);
     },
     "money.change": (cash, bank) => {
         mp.playerMenu.setCash(cash);

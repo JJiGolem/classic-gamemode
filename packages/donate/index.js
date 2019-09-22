@@ -12,6 +12,8 @@ module.exports = {
     clearWarnPrice: 200,
     // Стоимость открытия нового слота
     slotPrice: 500,
+    // Макс. кол-во слотов
+    slotsMax: 3,
 
     setDonate(player, donate) {
         donate = parseInt(donate);
@@ -78,5 +80,21 @@ module.exports = {
         this.setDonate(player, player.account.donate - this.clearWarnPrice);
         notifs.success(player, `Варн снят`, header);
         notifs.success(player, `Списано ${this.clearWarnPrice} CC`, header);
+    },
+    addSlot(player) {
+        var header = `Добавление слота`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (player.account.slot >= this.slotsMax) return out(`Вы имеете максимальное количество слотов`);
+        if (player.account.donate < this.slotPrice) return out(`Необходимо ${this.slotPrice} CC`);
+
+        player.account.slots++;
+        player.account.save();
+        mp.events.call("player.slots.changed", player);
+
+        this.setDonate(player, player.account.donate - this.slotPrice);
+        notifs.success(player, `Добавлен новый слот`, header);
+        notifs.success(player, `Списано ${this.slotPrice} CC`, header);
     },
 };

@@ -31,6 +31,8 @@ module.exports = {
             clearWarnPrice: donate.clearWarnPrice,
             slotPrice: donate.slotPrice,
             warns: player.character.warnNumber,
+            slots: player.account.slots,
+            slotsMax: donate.slotsMax,
         };
         if (biz) {
             data.biz = {
@@ -132,5 +134,11 @@ module.exports = {
             warns: player.character.warnNumber,
         };
         player.call(`playerMenu.setWarns`, [data]);
+    },
+    setSlots(player) {
+        var data = {
+            slots: player.account.slots,
+        };
+        player.call(`playerMenu.setSlots`, [data]);
     },
 };

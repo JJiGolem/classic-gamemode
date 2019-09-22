@@ -10,4 +10,7 @@ module.exports = {
     "donate.warns.clear": (player) => {
         donate.clearWarn(player);
     },
+    "donate.slots.add": (player) => {
+        donate.addSlot(player);
+    },
 }

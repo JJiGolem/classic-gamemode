@@ -33,4 +33,7 @@ module.exports = {
     "player.warns.changed": (player) => {
         playerMenu.setWarns(player);
     },
+    "player.slots.changed": (player) => {
+        playerMenu.setSlots(player);
+    },
 }
