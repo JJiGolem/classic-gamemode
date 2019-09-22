@@ -1,5 +1,6 @@
 let barbershop = require('./index.js');
 let money = call('money');
+let inventory = call('inventory');
 
 module.exports = {
     "init": () => {
@@ -47,7 +48,7 @@ module.exports = {
     },
     "barbershop.exit": (player) => {
         player.dimension = 0;
-        //inventory.updateAllView(player);
+        inventory.updateAllView(player);
     },
     "barbershop.hairstyle.buy": (player, hairstyleId) => {
         let barbershopId = player.currentBarbershopId;

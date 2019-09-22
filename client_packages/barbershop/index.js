@@ -51,6 +51,7 @@ mp.events.add('barbershop.enter', (shopData, gender, appearanceData, priceData) 
     currentGender = gender;
     initCurrentAppearanceParams(appearanceData);
     mp.events.call('barbershop.mainMenu.show');
+    clearClothes();
     mp.utils.cam.create(shopData.camera.x, shopData.camera.y, shopData.camera.z, shopData.pos.x, shopData.pos.y, shopData.pos.z + 0.6, 40);
 
     player.position = new mp.Vector3(shopData.pos.x, shopData.pos.y, shopData.pos.z);
@@ -369,4 +370,9 @@ function getHeaderImageByType(type = bType) {
         case 4:
             return "osheas.png"
     }
+}
+
+function clearClothes() {
+        player.setComponentVariation(1, 0, 0, 0);
+        player.clearAllProps();
 }

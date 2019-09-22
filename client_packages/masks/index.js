@@ -20,6 +20,7 @@ mp.events.add('masks.shop.enter', (data, list) => {
     mp.callCEFR('setOpacityChat', [0.0]);
 
     let player = mp.players.local;
+    player.clearAllProps();
     maskList = list;
 
     mp.events.call('masks.set', 0, 0);
