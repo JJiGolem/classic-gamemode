@@ -12,7 +12,7 @@ module.exports = {
     },
     "characterInit.start": async (player) => {
         let charInfos = await characterInit.init(player);
-        player.call('characterInit.init', [charInfos]);
+        player.call('characterInit.init', [charInfos, player.account.slots]);
     },
     "characterInit.choose": (player, charnumber) => {
         if (charnumber == null || isNaN(charnumber)) return player.call('characterInit.choose.ans', [0]);

@@ -3,10 +3,15 @@ var characterInfo = new Vue({
     data: {
         show: false,
         characters: [], // массив с данными о персонажах
+        slots: 1, // кол-во слотов
         // Индекс текущего персонажа
         i: 0,
+    },
+    computed: {
         // Возможность создать ещё одного персонажа
-        canNewCharacter: true
+        canNewCharacter() {
+            return this.slots > this.characters.length;
+        },
     },
     methods: {
         pretty(val) {

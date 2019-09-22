@@ -35,7 +35,7 @@ let isBinding = false;
 let creatorTimer = null;
 
 
-mp.events.add('characterInit.init', (characters) => {
+mp.events.add('characterInit.init', (characters, slots) => {
     mp.gui.cursor.show(true, true);
     currentCharacter = 0;
     if (characters != null) {
@@ -56,6 +56,7 @@ mp.events.add('characterInit.init', (characters) => {
 
     createPeds();
     setInfo();
+    mp.callCEFV(`characterInfo.slots = ${slots}`);
 
     mp.players.local.setAlpha(0);
 });
@@ -117,7 +118,7 @@ let createPeds = function() {
         for (let i = 0; i < charNum; i++) {
             setCharCustom(i);
             //setCharClothes(i);
-            
+
             let x = (camPos[0] + i * pedDist * sinPedRot) + camDist * sinCamRot;
             let y = (camPos[1] + i * pedDist * cosPedRot) + camDist * cosCamRot;
             let z = mp.game.gameplay.getGroundZFor3dCoord(x, y, camPos[2] + 1, 0.0, false) + 1;
