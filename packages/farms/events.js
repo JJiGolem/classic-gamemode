@@ -146,13 +146,13 @@ module.exports = {
         player.call("farms.jobType.set", [player.farmJob.type]);
         notifs.success(player, `Вы начали работу (${farms.getJobName(player.farmJob.type)})`, header);
     },
-    "farms.job.stop": (player, isDied = false) => {
+    "farms.job.stop": (player) => {
         var header = `Завершение работы`;
-        if (!isDied && (!player.farm)) return notifs.error(player, `Вы не у фермы`, header);
+        // if (!isDied && (!player.farm)) return notifs.error(player, `Вы не у фермы`, header);
         if (!player.farmJob || player.character.job != 5) return notifs.error(player, `Вы не работаете на ферме`, header);
 
         var farm = player.farmJob.farm;
-        if (farm.id != player.farm.id) return notifs.error(player, `Вы работаете на другой ферме`, header);
+        // if (farm.id != player.farm.id) return notifs.error(player, `Вы работаете на другой ферме`, header);
 
         if (farm.balance < player.farmJob.pay) notifs.warning(player, `Баланс фермы не позволяет вам выплатить заплату`, header);
         else {
