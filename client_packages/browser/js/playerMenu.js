@@ -536,10 +536,15 @@ var playerMenu = new Vue({
 
             this.enable = true;
         },
-        setSkill(skill) {
-            if (typeof skill == 'string') skill = JSON.parse(skill);
+        setSkill(data) {
+            if (typeof data == 'string') data = JSON.parse(data);
 
-            skills.find(x => x.jobId == skill.jobId).value = skill.exp;
+            var skill = skills.find(x => x.jobId == data.jobId);
+            var oldExp = skill.value;
+            skill.value = data.exp;
+
+            if (parseInt(skill.value) > parseInt(oldExp)) prompt.show(`Навык '${skill.head}' повысился до ${skill.value}%`);
+            else prompt.show(`Навык '${skill.head}' понизился до ${skill.value}%`);
         },
         setCash(cash) {
             statistics[2].value = cash;
