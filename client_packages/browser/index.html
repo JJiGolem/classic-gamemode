@@ -195,7 +195,8 @@
     </div>
 
     <div v-cloak="v-cloak" id="selectMenu" :class="{inactive: loader}" v-if="show && menu">
-        <div class="header">{{ menu.header }}</div>
+        <div class="header" v-if="!menu.headerImg">{{ menu.header }}</div>
+        <div class="headerImg" :style="headerStyles" v-else></div>
         <div class="content">
             <div class="arrow arr-up" :class="{active: menu.j > 0}"></div>
             <div class="items">

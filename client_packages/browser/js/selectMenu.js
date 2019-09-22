@@ -5540,7 +5540,14 @@ var selectMenu = new Vue({
             var maxValue = values[values.length - 1];
             var curValue = values[this.menu.items[this.menu.i].i];
             return curValue / maxValue * 100 - offset + '%';
-        }
+        },
+        headerStyles() {
+            return {
+                background: `url('img/selectMenu/headers/${this.menu.headerImg}')`,
+                backgroundSize: `contain`,
+                height: `10vh`,
+            };
+        },
     },
     watch: {
         notification(val, oldVal) {
@@ -5586,7 +5593,8 @@ var selectMenu = new Vue({
 // Для своего меню необходимо создать след. структуру (комментарии внутри):
 /*var testMenu = {
     name: "test", // название меню, необходимо для отловки событий
-    header: "Меню выбора", // заголовок меню, видимый на экране
+    // header: "Меню выбора", // заголовок меню, видимый на экране
+    headerImg: "ammunation.png",
     items: [{
             text: "Выборочный тип 1", // текст пункта меню, видимый на экране
             // если ОДНО ИЗ значений начинается с '#', то снизу появится селектор цветов

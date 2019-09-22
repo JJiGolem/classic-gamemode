@@ -203,6 +203,12 @@ module.exports = {
             y: position.y,
             z: position.z
         }, {});
+        biz = await db.Models.Biz.findOne({
+            where: {
+                id: biz.id
+            },
+            include: [db.Models.BizStatistics]
+        });
         biz = await this.addBiz(biz);
         setTimer(biz);
         console.log("[BIZES] added new biz");
@@ -316,6 +322,11 @@ module.exports = {
         let biz = getBizById(id);
         if (biz == null) return null;
         return biz.info.productsCount;
+    },
+    getBizPosition(id) {
+        let biz = getBizById(id);
+        if (biz == null) return null;
+        return new mp.Vector3(biz.info.x, biz.info.y, biz.info.z);
     },
 
     createOrder: createOrder,

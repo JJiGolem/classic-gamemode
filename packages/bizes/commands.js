@@ -1,11 +1,5 @@
 let bizService = require('./index.js');
 module.exports = {
-    "/biztest": {
-        access: 6,
-        handler: (player, args) => {
-            console.log(bizService.rentPerDayMult);
-        }
-    },
     "/createbiz": {
         access: 6,
         description: "Создать бизнес",
@@ -14,6 +8,14 @@ module.exports = {
             bizService.createBiz(args[0], parseInt(args[1]), parseInt(args[2]), player.position);
         }
     },
-    /// тп к бизу
+    "/gotobiz": {
+        access: 6,
+        description: "Перейти к бизнесу",
+        args: "[id]:n",
+        handler: (player, args) => {
+            let position = bizService.getBizPosition(parseInt(args[0]));
+            if (position) player.position = position;
+        }
+    },
 }
 
