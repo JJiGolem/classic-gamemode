@@ -22,8 +22,9 @@ let changenameWindowData = {
     price: 120, // API: Стоимостть смены никнейма.
     acceptChange(firstname, lastname) {
         // TODO: Смена никнейма;
-        console.log(firstname, lastname);
-        playerMenu.coins -= 120;
+        var name = firstname + " " + lastname;
+        mp.trigger(`callRemote`, `donate.nickname.set`, name);
+        // playerMenu.coins -= 120;
     }
 };
 

@@ -37,4 +37,30 @@ module.exports = {
 
         notifs.success(player, `Списано ${donate} CC`, header);
     },
+    async setNickname(player, name) {
+        var header = `Смена никнейма`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (player.account.donate < this.nicknamePrice) return out(`Необходимо ${this.nicknamePrice} CC`);
+
+        // TODO: check nickname
+
+        var character = await db.Models.Character.findOne({
+            attributes: ["id"],
+            where: {
+                name: name
+            }
+        });
+
+        if (character) return out(`Никнейм ${name} занят`);
+
+        player.character.name = name;
+        player.character.save();
+
+        this.setDonate(player, player.account.donate - this.nicknamePrice);
+        notifs.success(player, `Никнейм изменен, перезайдите на сервер`, header);
+        notifs.success(player, `Списано ${this.nicknamePrice} CC`, header);
+        player.kick();
+    },
 };
