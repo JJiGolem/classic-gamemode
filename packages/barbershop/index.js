@@ -52,7 +52,8 @@ module.exports = {
                 x: shop.cameraX,
                 y: shop.cameraY,
                 z: shop.cameraZ
-            }
+            },
+            bType: shop.bType
         }
         return data;
     },

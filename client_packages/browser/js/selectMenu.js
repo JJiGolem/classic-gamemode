@@ -5251,6 +5251,7 @@ var selectMenu = new Vue({
             "barbershopHairstyles": {
                 name: "barbershopHairstyles",
                 header: "Прически",
+                headerImg: "",
                 items: [],
                 i: 0,
                 j: 0,
@@ -5284,6 +5285,7 @@ var selectMenu = new Vue({
             "barbershopFacialHair": {
                 name: "barbershopFacialHair",
                 header: "Растительность",
+                headerImg: "",
                 items: [],
                 i: 0,
                 j: 0,
@@ -5317,6 +5319,7 @@ var selectMenu = new Vue({
             "barbershopColor": {
                 name: "barbershopColor",
                 header: "Выбор цвета",
+                headerImg: "",
                 items: [{
                         text: 'Цвета',
                         values: []
