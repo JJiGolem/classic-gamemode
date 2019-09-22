@@ -129,6 +129,8 @@ module.exports = {
         if (player.farmJob) return notifs.error(player, `Увольтесь, чтобы сменить должность`, header);
         if (!player.farm.playerId) return notifs.error(player, `Ферма не имеет хозяина`, header);
         if (jobs.getJobSkill(player, 5).exp < farms.jobExps[index]) return notifs.error(player, `Необходимо навык ${jobs.getJob(5).name} ${farms.jobExps[index]}%`, header);
+        if ((index == 1 || index == 2) && !player.character.carLicense) return notifs.error(player, `Необходимо водительское удостоверение`, header);
+        if (index == 3 && !player.character.airLicense) return notifs.error(player, `Необходима лицензия на воздушный транспорт`, header);
 
         jobs.addMember(player, 5);
 
