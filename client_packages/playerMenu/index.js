@@ -37,6 +37,12 @@ mp.playerMenu = {
     setCash(cash) {
         mp.callCEFV(`playerMenu.setCash(${cash})`);
     },
+    setDonate(donate) {
+        mp.callCEFV(`playerMenu.setDonate(${donate})`);
+    },
+    setWarns(warns) {
+        mp.callCEFV(`playerMenu.setWarns(${warns})`);
+    },
 };
 
 mp.events.add({
@@ -63,6 +69,12 @@ mp.events.add({
     },
     "playerMenu.setSkill": (data) => {
         mp.playerMenu.setSkill(data.skill);
+    },
+    "playerMenu.setDonate": (data) => {
+        mp.playerMenu.setDonate(data.donate);
+    },
+    "playerMenu.setWarns": (data) => {
+        mp.playerMenu.setWarns(data.warns);
     },
     "money.change": (cash, bank) => {
         mp.playerMenu.setCash(cash);

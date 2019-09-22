@@ -530,6 +530,7 @@
                     </div>
                 </div>
             </div>
+            <div class="empty" v-show="!havePockets">Без карманов</div>
         </div>
         <div class="hands">
             <div class="left-slot" v-bind:class="{busy: hands}">
@@ -1195,22 +1196,22 @@
                                 <img :src="socialData[socialStatus].img" />
                             </span>
                         </div>
-                        <div class="coins"><div class="coin-logo">cc</div> {{ coins }} </div>
+                        <div class="coins">
+                            <div class="coin-logo">cc</div> {{ coins }}
+                        </div>
                     </div>
                     <div class="date">
                         {{ time }} <br /> {{ date }}
                     </div>
-                    <div v-if="false" class="exit"><img @click="onClickExit()" src="img/playerMenu/exit.svg"/></div>
+                    <div v-if="false" class="exit"><img @click="onClickExit()" src="img/playerMenu/exit.svg" /></div>
                     <div class="btn" @click="enterCode()">
                         <div>Ввести промокод</div>
-                        <div><img src="img/playerMenu/box.svg"/></div>
+                        <div><img src="img/playerMenu/box.svg" /></div>
                     </div>
                 </div>
                 <div class="line"></div>
                 <div class="menu-bar">
-                    <div :class="['item', {focus: menuBarFocus == menuItem }]"
-                        v-for="menuItem in menuBar"
-                        @click="onClickMenuBarItem(menuItem)">
+                    <div :class="['item', {focus: menuBarFocus == menuItem }]" v-for="menuItem in menuBar" @click="onClickMenuBarItem(menuItem)">
                         {{ menuItem.head }}
                     </div>
                 </div>
@@ -1225,7 +1226,7 @@
             <div class="confirmation">
                 <div class="head">{{ confirmation.head }}</div>
                 <div class="description" v-html="confirmation.description"></div>
-                <div v-if="codeMod"><input placeholder="Введите промокод..." v-model="code"/></div>
+                <div v-if="codeMod"><input placeholder="Введите промокод..." v-model="code" /></div>
                 <div class="actions">
                     <div class="btn left" @click="confirmation.acceptHandler(); confirmation = null">{{ confirmation.leftWord }}</div>
                     <div class="btn" @click="confirmation = null; codeMod = false">{{ confirmation.rightWord }}</div>

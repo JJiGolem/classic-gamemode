@@ -18,6 +18,7 @@ module.exports = {
         player.health = 10;
         player.setVariable("knocked", false);
         mp.events.call(`mapCase.ems.calls.remove`, player, player.character.id);
+        if (player.farmJob) mp.events.call("farms.job.stop", player);
     },
     "playerDeath": (player, reason, killer) => {
 

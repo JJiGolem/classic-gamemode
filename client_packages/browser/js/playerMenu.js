@@ -13,8 +13,8 @@ let convertWindowData = {
     coefficient: 123, // API: Коеффициент конвертации.
     acceptConvert(amount) {
         // TODO: Конвертация валюты; amount - СС для обмена.
-        console.log(amount);
-        playerMenu.coins -= amount;
+        mp.trigger(`callRemote`, `donate.convert`, parseInt(amount));
+        // playerMenu.coins -= amount;
     }
 };
 
@@ -22,8 +22,9 @@ let changenameWindowData = {
     price: 120, // API: Стоимостть смены никнейма.
     acceptChange(firstname, lastname) {
         // TODO: Смена никнейма;
-        console.log(firstname, lastname);
-        playerMenu.coins -= 120;
+        var name = firstname + " " + lastname;
+        mp.trigger(`callRemote`, `donate.nickname.set`, name);
+        // playerMenu.coins -= 120;
     }
 };
 
@@ -32,8 +33,9 @@ let warnWindowData = {
     price: 120, // API: Стоимостть снятия варна.
     takeoffWarn() {
         // TODO: Снятие варна;
+        mp.trigger(`callRemote`, `donate.warns.clear`);
 
-        warnWindowData.amountWarns--; //this не канает...
+        // warnWindowData.amountWarns--; //this не канает...
     }
 };
 
@@ -536,13 +538,24 @@ var playerMenu = new Vue({
 
             this.enable = true;
         },
-        setSkill(skill) {
-            if (typeof skill == 'string') skill = JSON.parse(skill);
+        setSkill(data) {
+            if (typeof data == 'string') data = JSON.parse(data);
 
-            skills.find(x => x.jobId == skill.jobId).value = skill.exp;
+            var skill = skills.find(x => x.jobId == data.jobId);
+            var oldExp = skill.value;
+            skill.value = data.exp;
+
+            if (parseInt(skill.value) > parseInt(oldExp)) prompt.show(`Навык '${skill.head}' повысился до ${skill.value}%`);
+            else prompt.show(`Навык '${skill.head}' понизился до ${skill.value}%`);
         },
         setCash(cash) {
             statistics[2].value = cash;
+        },
+        setDonate(donate) {
+            this.coins = donate;
+        },
+        setWarns(warns) {
+            warnWindowData.amountWarns = warns;
         },
     },
     watch: {

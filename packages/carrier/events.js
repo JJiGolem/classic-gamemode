@@ -7,6 +7,7 @@ module.exports = {
         carrier.init();
     },
     "carrier.job.start": (player) => {
+        if (!player.character.truckLicense) return notifs.error(player, `Необходима лицензия на фуры`, `Грузоперевозчик`);
         mp.events.call("jobs.set", player, 4);
     },
     "carrier.job.stop": (player) => {

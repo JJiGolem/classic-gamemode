@@ -12,9 +12,9 @@ mp.mafia = {
     mafiaZones: [],
     // Цвета блипов (factionId: blipColor)
     colors: {
-        12: 2,
-        13: 27,
-        14: 46,
+        12: 43,
+        13: 31,
+        14: 85,
     },
     // Нативки
     natives: {

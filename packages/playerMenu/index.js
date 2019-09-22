@@ -121,4 +121,16 @@ module.exports = {
         };
         player.call(`playerMenu.setSkill`, [data]);
     },
+    setDonate(player) {
+        var data = {
+            donate: player.account.donate,
+        };
+        player.call(`playerMenu.setDonate`, [data]);
+    },
+    setWarns(player) {
+        var data = {
+            warns: player.character.warnNumber,
+        };
+        player.call(`playerMenu.setWarns`, [data]);
+    },
 };
