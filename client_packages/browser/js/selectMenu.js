@@ -5561,8 +5561,7 @@ var selectMenu = new Vue({
             setTimeout(() => {
                 if (this.valuesType(val) == 3) { // editable
                     var itemText = this.menu.items[val].text;
-                    this.$refs[itemText].focus();
-                    // console.log("focused")
+                    if (this.$refs[itemText]) this.$refs[itemText].focus();
                 }
             }, 100);
         },
@@ -5582,7 +5581,7 @@ var selectMenu = new Vue({
     },
     mounted() {
         let self = this;
-        window.addEventListener('keyup', function(e) {
+        window.addEventListener('keydown', function(e) {
             if (!self.menu) return;
             if (busy.includes(["inventory", "chat", "terminal", "phone"])) return;
             self.onKeyUp(e);
