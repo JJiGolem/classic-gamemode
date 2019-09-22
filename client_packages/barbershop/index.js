@@ -113,6 +113,7 @@ mp.events.add('barbershop.mainMenu.show', () => {
 
     mp.callCEFV(`selectMenu.setItems('barbershopMain', ${JSON.stringify(items)});`)
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["barbershopMain"])`);
+    mp.callCEFV(`selectMenu.menu.headerImg = 'beachcombover.png'`);
     mp.callCEFV(`selectMenu.show = true`);
 
 });
