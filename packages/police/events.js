@@ -588,7 +588,7 @@ module.exports = {
         var rec = mp.players.at(recId);
         if (!rec) return notifs.error(player, `Гражданин не найден`, header);
         var character = rec.character;
-        if (character.gunLicenseDate) return notifs.error(player, `${rec.name} уже имеет лиензию`, header);
+        if (character.gunLicenseDate) return notifs.error(player, `${rec.name} уже имеет лицензию`, header);
 
         character.gunLicenseDate = new Date();
         character.save();
@@ -601,7 +601,7 @@ module.exports = {
         var rec = mp.players.at(recId);
         if (!rec) return notifs.error(player, `Гражданин не найден`, header);
         var character = rec.character;
-        if (!character.gunLicenseDate) return notifs.error(player, `${rec.name} не имеет лиензию`, header);
+        if (!character.gunLicenseDate) return notifs.error(player, `${rec.name} не имеет лицензию`, header);
 
         character.gunLicenseDate = null;
         character.save();
