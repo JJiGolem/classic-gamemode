@@ -554,6 +554,7 @@
         <div class="hotkeys" :class="{active: itemDrag.item && hotkeysList[itemDrag.item.itemId]}">
             <div class="key" :class="{focus: itemDrag.item && itemDrag.accessColumns.hotkeyFocus == n}" v-for="n in 10" @mouseenter="onHotkeyItemEnter(n)" @mouseleave="onHotkeyItemLeave(n)">
                 <div class="item" v-if="hotkeys[n] && getItem(hotkeys[n].sqlId)" v-bind:style="{backgroundImage: 'url('+urlItemImg(hotkeys[n].itemId)+')'}">
+                    <span class="close" @click="unbindHotkey(n)">x</span>
                     <span class="hotkey">{{ (n == 10)? 0 : n }}</span>
 
                     <div class="count" v-if="hotkeys[n].params.count">{{ hotkeys[n].params.count }}</div>

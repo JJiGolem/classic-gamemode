@@ -992,7 +992,7 @@ var inventory = new Vue({
             if (Date.now() - self.lastShowTime < 500) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;
             if (e.keyCode > 47 && e.keyCode < 58) {
-                if (!self.enable && !self.debug) return;
+                if (!self.enable) return;
                 var num = e.keyCode - 48;
                 self.onUseHotkey(num);
             }
