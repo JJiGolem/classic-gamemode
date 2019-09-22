@@ -5545,6 +5545,7 @@ var selectMenu = new Vue({
             return {
                 background: `url('img/selectMenu/headers/${this.menu.headerImg}')`,
                 backgroundSize: `contain`,
+                borderRadius: `1vh 1vh 0 0`,
                 height: `10vh`,
             };
         },
