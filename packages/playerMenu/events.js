@@ -27,4 +27,7 @@ module.exports = {
     "player.jobSkill.changed": (player, skill) => {
         playerMenu.setSkill(player, skill);
     },
+    "player.donate.changed": (player) => {
+        playerMenu.setDonate(player);
+    },
 }

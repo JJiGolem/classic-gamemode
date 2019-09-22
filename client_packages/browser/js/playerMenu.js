@@ -549,6 +549,9 @@ var playerMenu = new Vue({
         setCash(cash) {
             statistics[2].value = cash;
         },
+        setDonate(donate) {
+            this.coins = donate;
+        },
     },
     watch: {
         show(val) {
