@@ -465,6 +465,8 @@ var inventory = new Vue({
         descItemName() {
             var item = this.itemDesc.item;
             if (!item) return null;
+            if (item.itemId == 15 && item.params.name) // рыба
+                return `${item.params.name}`;
             if (item.itemId == 33 && item.params.vehName) // ключи авто
                 return `Ключи от ${item.params.vehName}`;
             return this.itemsInfo[item.itemId].name;
