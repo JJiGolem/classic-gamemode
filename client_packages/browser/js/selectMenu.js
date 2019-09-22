@@ -5174,6 +5174,7 @@ var selectMenu = new Vue({
             "maskShop": {
                 name: "maskShop",
                 header: "Магазин масок",
+                headerImg: "masks.png",
                 items: [],
                 i: 0,
                 j: 0,
@@ -5209,6 +5210,7 @@ var selectMenu = new Vue({
             "barbershopMain": {
                 name: "barbershopMain",
                 header: "Парикмахерская",
+                headerImg: "",
                 items: [],
                 i: 0,
                 j: 0,
