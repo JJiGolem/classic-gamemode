@@ -477,6 +477,12 @@ var inventory = new Vue({
 
             return parseInt(this.getItemWeight(item) * 1000) / 1000;
         },
+        havePockets() {
+            for (var index in this.equipment)
+                if (this.equipment[index].pockets) return true;
+
+            return false;
+        },
     },
     methods: {
         // ******************  [ Private ] ******************
