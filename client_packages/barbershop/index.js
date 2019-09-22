@@ -169,6 +169,9 @@ mp.events.add('barbershop.hairstyle.buy.ans', (ans) => {
         case 2:
             mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
             break;
+        case 3:
+            mp.callCEFV(`selectMenu.notification = 'В парикмахерской кончились ресурсы'`);
+            break;
     }
 });
 
@@ -218,6 +221,9 @@ mp.events.add('barbershop.facialHair.buy.ans', (ans) => {
             break;
         case 2:
             mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
+            break;
+        case 3:
+            mp.callCEFV(`selectMenu.notification = 'В парикмахерской кончились ресурсы'`);
             break;
     }
 });
@@ -292,6 +298,9 @@ mp.events.add('barbershop.color.buy.ans', (ans) => {
             break;
         case 4:
             mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
+            break;
+        case 5:
+            mp.callCEFV(`selectMenu.notification = 'В парикмахерской кончились ресурсы'`);
             break;
     }
 });

@@ -106,7 +106,7 @@ module.exports = {
         }
     },
     getBizParamsById(id) {
-        let service = dbCarServices.find(x => x.id == id);
+        let service = dbCarServices.find(x => x.bizId == id);
         if (!service) return;
         let params = [
             {
@@ -127,7 +127,7 @@ module.exports = {
         return params;
     },
     setBizParam(id, key, value) {
-        let service = dbCarServices.find(x => x.id == id);
+        let service = dbCarServices.find(x => x.bizId == id);
         if (!service) return;
         service[key] = value;
         service.save();

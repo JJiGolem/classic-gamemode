@@ -10,6 +10,7 @@ module.exports = {
         productName: "Топливо",
     },
     productPrice: 1,
+    rentPerDayMultiplier: 0.01,
     minFuelPrice: 1,
     maxFuelPrice: 8,
     init() {
@@ -82,7 +83,7 @@ module.exports = {
         return null;
     },
     getBizParamsById(id) {
-        let station = dbFuelStations.find(x => x.id == id);
+        let station = dbFuelStations.find(x => x.bizId == id);
         if (!station) return;
         let params = [
             {
@@ -96,7 +97,7 @@ module.exports = {
         return params;
     },
     setBizParam(id, key, value) {
-        let station = dbFuelStations.find(x => x.id == id);
+        let station = dbFuelStations.find(x => x.bizId == id);
         if (!station) return;
         station[key] = value;
         station.save();

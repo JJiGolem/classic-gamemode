@@ -95,6 +95,9 @@ mp.events.add('masks.buy.ans', (ans, data) => {
         case 5:
             mp.callCEFV(`selectMenu.notification = 'Ошибка финансовой операции'`);
             break; 
+        case 6:
+            mp.callCEFV(`selectMenu.notification = 'В магазине кончились маски'`);
+            break; 
     }
 });
 
