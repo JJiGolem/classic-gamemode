@@ -13,8 +13,8 @@ let convertWindowData = {
     coefficient: 123, // API: Коеффициент конвертации.
     acceptConvert(amount) {
         // TODO: Конвертация валюты; amount - СС для обмена.
-        console.log(amount);
-        playerMenu.coins -= amount;
+        mp.trigger(`callRemote`, `donate.convert`, parseInt(amount));
+        // playerMenu.coins -= amount;
     }
 };
 

@@ -417,6 +417,7 @@ module.exports = {
         } else return;
     },
     canFillWarehouse(player, boxType, faction) {
+        if (!this.whiteListWarehouse[boxType]) return false;
         if (!this.whiteListWarehouse[boxType][player.character.factionId]) return false;
         return this.whiteListWarehouse[boxType][player.character.factionId].includes(faction.id)
     },
