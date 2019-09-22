@@ -48,7 +48,6 @@ mp.events.add("hud.setData", (data) => {
     for (var key in data) {
         if (prevValues[key] == data[key]) continue;
         prevValues[key] = data[key];
-        mp.chat.debug('set hud data');
         if (typeof data[key] == 'string') data[key] = `'${data[key]}'`;
         mp.callCEFV(`hud.${key} = ${data[key]}`);
     }
