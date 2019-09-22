@@ -138,6 +138,6 @@ module.exports = {
     },
     // Поступила жалоба от игрока
     "admin.report": (player, message) => {
-        mp.events.call("admin.notify.all", `!{#f29f53}[A] Жалоба от ${player.name}: ${message}`);
+        mp.events.call("admin.notify.all", `!{#87c924}${player.name}[${player.id}]:!{#ffe838} ${message}`);
     },
 }
