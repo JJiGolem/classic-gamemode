@@ -30,4 +30,7 @@ module.exports = {
     "player.donate.changed": (player) => {
         playerMenu.setDonate(player);
     },
+    "player.warns.changed": (player) => {
+        playerMenu.setWarns(player);
+    },
 }

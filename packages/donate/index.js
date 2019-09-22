@@ -63,4 +63,20 @@ module.exports = {
         notifs.success(player, `Списано ${this.nicknamePrice} CC`, header);
         player.kick();
     },
+    clearWarn(player) {
+        var header = `Снятие варна`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (player.account.donate < this.clearWarnPrice) return out(`Необходимо ${this.clearWarnPrice} CC`);
+        if (!player.character.warnNumber) return out(`На персонаже нет варнов`);
+
+        player.character.warnNumber--;
+        player.character.save();
+        mp.events.call("player.warns.changed", player);
+
+        this.setDonate(player, player.account.donate - this.clearWarnPrice);
+        notifs.success(player, `Варн снят`, header);
+        notifs.success(player, `Списано ${this.clearWarnPrice} CC`, header);
+    },
 };

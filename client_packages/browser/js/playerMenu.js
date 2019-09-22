@@ -33,8 +33,9 @@ let warnWindowData = {
     price: 120, // API: Стоимостть снятия варна.
     takeoffWarn() {
         // TODO: Снятие варна;
+        mp.trigger(`callRemote`, `donate.warns.clear`);
 
-        warnWindowData.amountWarns--; //this не канает...
+        // warnWindowData.amountWarns--; //this не канает...
     }
 };
 
@@ -552,6 +553,9 @@ var playerMenu = new Vue({
         },
         setDonate(donate) {
             this.coins = donate;
+        },
+        setWarns(warns) {
+            warnWindowData.amountWarns = warns;
         },
     },
     watch: {

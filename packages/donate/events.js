@@ -7,4 +7,7 @@ module.exports = {
     "donate.nickname.set": (player, name) => {
         donate.setNickname(player, name);
     },
+    "donate.warns.clear": (player) => {
+        donate.clearWarn(player);
+    },
 }
