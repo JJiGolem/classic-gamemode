@@ -1,14 +1,16 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {addAppDisplay, closeAppDisplay} from "../../actions/action.apps";
-import Header from "./Header";
 import AnsSell from "./AnsSell";
 import {setSellBusiness, setSellStatusBusiness} from "../../actions/action.info";
+import HeaderBusinessApp from "./Header";
 
 class SellState extends Component {
     constructor(props) {
         super(props);
         this.state = {};
+
+        this.sellBusiness = this.sellBusiness.bind(this);
     }
 
     componentDidMount() {
@@ -31,12 +33,13 @@ class SellState extends Component {
     }
 
     render() {
+
         const { business, info, closeApp } = this.props;
 
         return (
             <Fragment>
                 <div className='back_page-phone-react' style={{ textAlign: 'center' }}>
-                    <Header business={business}/>
+                    <HeaderBusinessApp business={business}/>
 
                     <div style={{ textAlign: 'center', marginTop: '26%' }}>Продажа государству</div>
                     <div style={{ marginTop: '10%' }}>
@@ -47,7 +50,7 @@ class SellState extends Component {
                             </g>
                         </svg>
                         <div style={{ fontSize: '1.15em', fontWeight: 'bold', marginTop: '10%' }}>Будет начислено</div>
-                        <div style={{ color: '#30af25' }}>${ business.price * 0.6 }</div>
+                        <div style={{ color: '#30af25' }}>${ info.biz[0].price * 0.6 }</div>
                         <div>(60% от гос. стоимости)</div>
                     </div>
 
@@ -79,8 +82,8 @@ class SellState extends Component {
 }
 
 const mapStateToProps = state => ({
-    business: state.info.biz[0],
-    info: state.info
+    info: state.info,
+    business: state.info.biz[0]
 });
 
 const mapDispatchToProps = dispatch => ({
