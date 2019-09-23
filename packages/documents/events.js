@@ -121,7 +121,7 @@ module.exports = {
         if (player.id == target.id) {
             mp.events.call('/me', player, `смотрит паспорт Т/С "${vehData.name}"`);
         } else {
-            mp.events.call('/me', player, `показал${player.character.gender ? 'а' : ''} паспорт Т/С "${vehData.name}" ${target.character.name}[${target.id}]`);
+            mp.events.call('/me', player, `показал${player.character.gender ? 'а' : ''} паспорт своего Т/С "${vehData.name}"`); //${target.character.name}[${target.id}]
         }
         target.call('documents.show', ['carPass', vehData]);
     },
@@ -150,7 +150,7 @@ module.exports = {
         if (player.id == target.id) {
             mp.events.call('/me', player, `смотрит свой паспорт`);
         } else {
-            mp.events.call('/me', player, `показал${player.character.gender ? 'а' : ''} свой паспорт ${target.character.name}[${target.id}]`);
+            mp.events.call('/me', player, `показал${player.character.gender ? 'а' : ''} свой паспорт`);
         }
         target.call('documents.show', ['characterPass', data]);
     },
@@ -168,7 +168,7 @@ module.exports = {
         if (player.id == target.id) {
             mp.events.call('/me', player, `смотрит свои лицензии на Т/С`);
         } else {
-            mp.events.call('/me', player, `показал${player.character.gender ? 'а' : ''} свои лицензии на Т/С ${target.character.name}[${target.id}]`);
+            mp.events.call('/me', player, `показал${player.character.gender ? 'а' : ''} свои лицензии на Т/С`);
         }
         target.call('documents.show', ['driverLicense', data]);
     },
@@ -185,7 +185,7 @@ module.exports = {
         if (player.id == target.id) {
             mp.events.call('/me', player, `смотрит свою лицензию на оружие`);
         } else {
-            mp.events.call('/me', player, `показал${player.character.gender ? 'а' : ''} свои лицензию на оружие ${target.character.name}[${target.id}]`);
+            mp.events.call('/me', player, `показал${player.character.gender ? 'а' : ''} свою лицензию на оружие`);
         }
         target.call('documents.show', ['gunLicense', data]);
     },

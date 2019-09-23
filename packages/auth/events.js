@@ -2,6 +2,7 @@
 /// Модуль авторизации игрока
 let auth = require("./index.js");
 let utils = call("utils");
+let notifs = call("notifications");
 
 module.exports = {
     /// Заморозка игрока перед авторизацией
@@ -53,22 +54,33 @@ module.exports = {
                 },
             },
         });
-        
+
         if (!account) {
             /// Неверный логин или пароль
             return player.call('auth.login.result', [4]);
         }
-        if (!auth.comparePassword( data.password, account.password)) {
+        if (!auth.comparePassword(data.password, account.password)) {
             /// Неверный логин или пароль
             return player.call('auth.login.result', [4]);
         }
         if (account.socialClub != player.socialClub)
-            /// Неверный Social Club 
+            /// Неверный Social Club
             return player.call('auth.login.result', [5]);
 
         if (auth.accountIsOnline(account.id))
             /// Аккаунт уже авторизован
             return player.call('auth.login.result', [6]);
+
+        if (account.clearBanDate) {
+            if (Date.now() < account.clearBanDate.getTime()) {
+                // Аккаунт заблокирован
+                return player.call('auth.login.result', [8]);
+            } else {
+                account.clearBanDate = null;
+                account.save();
+                notifs.success(player, `Аккаунт был разблокирован. Не нарушайте правила.`);
+            }
+        }
 
         player.account = account;
         /// Вход в аккаунт выполнен успешно
@@ -156,8 +168,7 @@ module.exports = {
             /// Подтверждение почты прошло успешно
             player.call('auth.email.confirm.result', [1]);
             mp.events.call('auth.done', player);
-        }
-        else {
+        } else {
             /// Код подтверждения неверный
             player.call('auth.email.confirm.result', [0]);
         }

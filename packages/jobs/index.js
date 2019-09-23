@@ -1,5 +1,5 @@
 var money = require('../money');
-var notifs = require('../notifications');money
+var notifs = require('../notifications');
 
 module.exports = {
     // Работы
@@ -19,6 +19,7 @@ module.exports = {
     addMember(player, job) {
         if (!player.character) return;
         if (typeof job == 'number') job = this.getJob(job);
+        if (player.farmJob && job.id != 5) mp.events.call("farms.job.stop", player);
 
         player.character.job = job.id;
         player.character.save();
@@ -27,6 +28,7 @@ module.exports = {
     },
     deleteMember(player) {
         if (!player.character) return;
+        if (player.farmJob) mp.events.call("farms.job.stop", player);
 
         player.character.job = null;
         player.character.save();

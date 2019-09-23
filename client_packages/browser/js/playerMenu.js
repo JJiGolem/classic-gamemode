@@ -13,8 +13,8 @@ let convertWindowData = {
     coefficient: 123, // API: Коеффициент конвертации.
     acceptConvert(amount) {
         // TODO: Конвертация валюты; amount - СС для обмена.
-        console.log(amount);
-        playerMenu.coins -= amount;
+        mp.trigger(`callRemote`, `donate.convert`, parseInt(amount));
+        // playerMenu.coins -= amount;
     }
 };
 
@@ -22,8 +22,9 @@ let changenameWindowData = {
     price: 120, // API: Стоимостть смены никнейма.
     acceptChange(firstname, lastname) {
         // TODO: Смена никнейма;
-        console.log(firstname, lastname);
-        playerMenu.coins -= 120;
+        var name = firstname + " " + lastname;
+        mp.trigger(`callRemote`, `donate.nickname.set`, name);
+        // playerMenu.coins -= 120;
     }
 };
 
@@ -32,19 +33,20 @@ let warnWindowData = {
     price: 120, // API: Стоимостть снятия варна.
     takeoffWarn() {
         // TODO: Снятие варна;
+        mp.trigger(`callRemote`, `donate.warns.clear`);
 
-        warnWindowData.amountWarns--; //this не канает...
+        // warnWindowData.amountWarns--; //this не канает...
     }
 };
 
 let addslotWindowData = {
     amountSlots: 2, // API: Кол-во слотов.
-    maxSlots: 3, // API: Максимальное кол-во слотов.
+    maxSlots: 5, // API: Максимальное кол-во слотов.
     price: 120, // API: Стоимостть слота.
     addSlot() {
         // TODO: Добавление слота;
-
-        addslotWindowData.amountSlots++;
+        mp.trigger(`callRemote`, `donate.slots.add`);
+        // addslotWindowData.amountSlots++;
     }
 };
 
@@ -452,6 +454,11 @@ var playerMenu = new Vue({
             this.setBiz(data.biz);
             this.setHouse(data.house);
             this.setStatistics(data);
+            this.setDonatePrice(data);
+            this.setSlots(data.slots);
+            this.setPromocode(data.promocode);
+
+            addslotWindowData.maxSlots = data.slotsMax;
         },
         setBiz(biz) {
             if (typeof biz == 'string') biz = JSON.parse(biz);
@@ -496,6 +503,15 @@ var playerMenu = new Vue({
                 statistics[0].value = `${minutes} мин`;
             }, 60000);
         },
+        setDonatePrice(data) {
+            if (typeof data == 'string') data = JSON.parse(data);
+
+            convertWindowData.coefficient = data.convertCash;
+            changenameWindowData.price = data.nicknamePrice;
+            warnWindowData.price = data.clearWarnPrice;
+            warnWindowData.amountWarns = data.warns;
+            addslotWindowData.price = data.slotPrice;
+        },
         setFaction(data) {
             if (typeof data == 'string') data = JSON.parse(data);
 
@@ -526,10 +542,30 @@ var playerMenu = new Vue({
 
             this.enable = true;
         },
-        setSkill(skill) {
-            if (typeof skill == 'string') skill = JSON.parse(skill);
+        setSkill(data) {
+            if (typeof data == 'string') data = JSON.parse(data);
 
-            skills.find(x => x.jobId == skill.jobId).value = skill.exp;
+            var skill = skills.find(x => x.jobId == data.jobId);
+            var oldExp = skill.value;
+            skill.value = data.exp;
+
+            if (parseInt(skill.value) > parseInt(oldExp)) prompt.show(`Навык '${skill.head}' повысился до ${skill.value}%`);
+            else prompt.show(`Навык '${skill.head}' понизился до ${skill.value}%`);
+        },
+        setCash(cash) {
+            statistics[2].value = cash;
+        },
+        setDonate(donate) {
+            this.coins = donate;
+        },
+        setWarns(warns) {
+            warnWindowData.amountWarns = warns;
+        },
+        setSlots(slots) {
+            addslotWindowData.amountSlots = slots;
+        },
+        setPromocode(code) {
+            referenceData.code = code;
         },
     },
     watch: {
@@ -620,6 +656,8 @@ Vue.component('player-menu-report', {
         maxlength: 120,
         message: "",
         showHint: false,
+        waitTime: 60 * 1000,
+        lastSentTime: 0,
     }),
     computed: {
         chars() {
@@ -629,7 +667,10 @@ Vue.component('player-menu-report', {
     methods: {
         send() {
             if (!this.message.length) return;
-            // TODO: Отправка на сервер this.message
+            var diff = Date.now() - this.lastSentTime;
+            if (diff < this.waitTime) return notifications.push('error', `Ожидайте ${parseInt((this.waitTime - diff) / 1000)} сек.`);
+            mp.trigger(`callRemote`, `admin.report`, this.message);
+            this.lastSentTime = Date.now();
 
             // Что ниже, оставить!
             this.message = "";

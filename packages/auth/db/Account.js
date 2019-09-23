@@ -22,6 +22,11 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             allowNull: false
         },
+        slots: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 1,
+            allowNull: false
+        },
         password: {
             type: DataTypes.STRING(128),
             allowNull: false
@@ -37,6 +42,11 @@ module.exports = (sequelize, DataTypes) => {
         lastIp: {
             type: DataTypes.STRING(40),
             allowNull: false
+        },
+        clearBanDate: {
+            type: DataTypes.DATE,
+            defaultValue: null,
+            allowNull: true,
         },
         regDate: {
             type: DataTypes.DATE,

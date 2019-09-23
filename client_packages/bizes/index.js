@@ -86,3 +86,7 @@ mp.events.add("biz.order.cancel", (id) => {
 mp.events.add("biz.order.complete", (resources) => {
     mp.callCEFR("biz.order.complete", [resources]);
 });
+
+mp.events.add("biz.statistics.update", (date, money) => {
+    mp.callCEFR("biz.statistics.update", [date, money]);
+});

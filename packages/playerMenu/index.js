@@ -1,6 +1,7 @@
 "use strict";
 
 let bizes = call('bizes');
+let donate = call('donate');
 let factions = call('factions');
 let jobs = call('jobs');
 let houses = call('houses');
@@ -25,6 +26,14 @@ module.exports = {
             cash: player.character.cash,
             wanted: player.character.wanted,
             donate: player.account.donate,
+            convertCash: donate.convertCash,
+            nicknamePrice: donate.nicknamePrice,
+            clearWarnPrice: donate.clearWarnPrice,
+            slotPrice: donate.slotPrice,
+            warns: player.character.warnNumber,
+            slots: player.account.slots,
+            slotsMax: donate.slotsMax,
+            promocode: player.character.promocode,
         };
         if (biz) {
             data.biz = {
@@ -114,5 +123,23 @@ module.exports = {
             },
         };
         player.call(`playerMenu.setSkill`, [data]);
+    },
+    setDonate(player) {
+        var data = {
+            donate: player.account.donate,
+        };
+        player.call(`playerMenu.setDonate`, [data]);
+    },
+    setWarns(player) {
+        var data = {
+            warns: player.character.warnNumber,
+        };
+        player.call(`playerMenu.setWarns`, [data]);
+    },
+    setSlots(player) {
+        var data = {
+            slots: player.account.slots,
+        };
+        player.call(`playerMenu.setSlots`, [data]);
     },
 };

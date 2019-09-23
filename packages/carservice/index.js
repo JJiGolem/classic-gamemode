@@ -4,6 +4,14 @@ let bizes = call('bizes');
 let dbCarServices;
 
 module.exports = {
+    /// Объект который показывает, что данный модуль отвечает за конкретный бизнес
+    business: {
+        type: 3,
+        name: "СТО",
+        productName: "Запчасти",
+    },
+
+    rentPerDayMultiplier: 0.01,
     productPrice: 10,
     maxPriceMultiplier: 2.0,
     minPriceMultiplier: 1.0,
@@ -98,7 +106,7 @@ module.exports = {
         }
     },
     getBizParamsById(id) {
-        let service = dbCarServices.find(x => x.id == id);
+        let service = dbCarServices.find(x => x.bizId == id);
         if (!service) return;
         let params = [
             {
@@ -119,7 +127,7 @@ module.exports = {
         return params;
     },
     setBizParam(id, key, value) {
-        let service = dbCarServices.find(x => x.id == id);
+        let service = dbCarServices.find(x => x.bizId == id);
         if (!service) return;
         service[key] = value;
         service.save();

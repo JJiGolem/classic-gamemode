@@ -95,6 +95,9 @@ mp.events.add('fuelstations.fill.litres.ans', (ans, data) => {
         case 7:
             mp.notify.error(`Бак не вмещает столько бензина`, 'Ошибка');
             break;
+        case 8:
+            mp.notify.error(`На заправке кончилось топливо`, 'АЗС');
+            break;
     }
 });
 
@@ -126,6 +129,9 @@ mp.events.add('fuelstations.fill.fulltank.ans', (ans, data) => {
             break;
         case 5:
             mp.notify.error(`Не удалось заправиться`, 'Ошибка');
+            break;
+        case 6:
+            mp.notify.error(`На заправке кончилось топливо`, 'АЗС');
             break;
     }
 });

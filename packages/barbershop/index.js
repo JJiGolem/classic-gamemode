@@ -3,6 +3,12 @@ let bizes;
 let shops;
 
 module.exports = {
+    business: {
+        type: 6,
+        name: "Парикмахерская",
+        productName: "Ресурсы",
+    },
+    rentPerDayMultiplier: 0.01,
     minPriceMultiplier: 1.0,
     maxPriceMultiplier: 2.0,
     productPrice: 20,
@@ -46,7 +52,8 @@ module.exports = {
                 x: shop.cameraX,
                 y: shop.cameraY,
                 z: shop.cameraZ
-            }
+            },
+            bType: shop.bType
         }
         return data;
     },
@@ -54,7 +61,7 @@ module.exports = {
         return shops.find(x => x.id == shopId);
     },
     getBizParamsById(id) {
-        let shop = shops.find(x => x.id == id);
+        let shop = shops.find(x => x.bizId == id);
         if (!shop) return;
         let params = [
             {
@@ -68,7 +75,7 @@ module.exports = {
         return params;
     },
     setBizParam(id, key, value) {
-        let shop = shops.find(x => x.id == id);
+        let shop = shops.find(x => x.bizId == id);
         if (!shop) return;
         shop[key] = value;
         shop.save();

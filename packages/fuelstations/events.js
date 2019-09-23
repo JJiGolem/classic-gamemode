@@ -35,13 +35,18 @@ module.exports = {
 
         let litresToFill = parseInt(vehicle.properties.maxFuel - vehicle.fuel);
 
+        let productsAvailable = fuelstations.getProductsAmount(fuelStationId);
+        if (litresToFill > productsAvailable) return player.call('fuelstations.fill.fulltank.ans', [6]);
         let price = fuelstations.getFuelPriceById(fuelStationId);
-        let total = litresToFill * price; // todo get price by shape
+        let total = litresToFill * price;
 
         if (player.character.cash < total) return player.call('fuelstations.fill.fulltank.ans', [4]);
 
+
         money.removeCash(player, total, function(result) {
             if (result) {
+                fuelstations.removeProducts(fuelStationId, litresToFill);
+                fuelstations.updateCashbox(fuelStationId, total);
                 vehicles.setFuel(vehicle, vehicle.properties.maxFuel);
                 let data = {
                     litres: litresToFill,
@@ -70,10 +75,15 @@ module.exports = {
         let price = fuelstations.getFuelPriceById(fuelStationId);
         let total = litres * price; 
 
+        let productsAvailable = fuelstations.getProductsAmount(fuelStationId);
+        if (litres > productsAvailable) return player.call('fuelstations.fill.litres.ans', [8]);
+
         if (player.character.cash < total) return player.call('fuelstations.fill.litres.ans', [4]);
 
         money.removeCash(player, total, function(result) {
             if (result) {
+                fuelstations.removeProducts(fuelStationId, litres);
+                fuelstations.updateCashbox(fuelStationId, total);
                 vehicles.addFuel(vehicle, litres);
                 let data = {
                     litres: litres,

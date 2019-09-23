@@ -44,7 +44,10 @@ module.exports = {
         let bizes = [];
         if (bizService) {
             let biz = bizService.getBizByCharId(player.character.id);
-            bizes = biz != null ? [bizService.getBizInfoForApp(biz)] : [];
+            if (biz != null) {
+                let bizInfo = bizService.getBizInfoForApp(biz);
+                bizes = bizInfo != null ? [bizInfo] : [];
+            }
         }
 
         let apps = [];
