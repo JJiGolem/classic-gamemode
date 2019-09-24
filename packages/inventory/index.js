@@ -195,7 +195,7 @@ module.exports = {
         if (!slot) return `Свободный слот для ${this.getInventoryItem(itemId).name} не найден`;
         if (params.sex != null && params.sex != !player.character.gender) return `Предмет противоположного пола`;
         var nextWeight = this.getCommonWeight(player) + this.getInventoryItem(itemId).weight;
-        if (nextWeight > this.maxPlayerWeight) return `Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`;
+        if (nextWeight > this.maxPlayerWeight) return `Превышение по весу (${nextWeight.toFixed(2)} из ${this.maxPlayerWeight} кг)`;
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, itemId);
             if (weapon) return `Оружие ${this.getName(itemId)} уже имеется`;
@@ -207,7 +207,7 @@ module.exports = {
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(itemId).name} не найден`);
         if (params.sex != null && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
         var nextWeight = this.getCommonWeight(player) + this.getInventoryItem(itemId).weight;
-        if (nextWeight > this.maxPlayerWeight) return callback(`Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`);
+        if (nextWeight > this.maxPlayerWeight) return callback(`Превышение по весу (${nextWeight.toFixed(2)} из ${this.maxPlayerWeight} кг)`);
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, itemId);
             if (weapon) return callback(`Оружие ${this.getName(itemId)} уже имеется`);
@@ -246,7 +246,7 @@ module.exports = {
         var params = this.getParamsValues(item);
         if (params.sex && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
         var nextWeight = this.getCommonWeight(player) + this.getItemWeight(player, item);
-        if (nextWeight > this.maxPlayerWeight) return callback(`Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`);
+        if (nextWeight > this.maxPlayerWeight) return callback(`Превышение по весу (${nextWeight.toFixed(2)} из ${this.maxPlayerWeight} кг)`);
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, item.itemId);
             if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
@@ -300,7 +300,7 @@ module.exports = {
     async addPlayerItem(player, item, parentId, pocketIndex, index) {
         // console.log(`addPlayerItem`)
         var nextWeight = this.getCommonWeight(player) + this.getItemWeight(player, item);
-        if (nextWeight > this.maxPlayerWeight) return debug(`Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`);
+        if (nextWeight > this.maxPlayerWeight) return debug(`Превышение по весу (${nextWeight.toFixed(2)} из ${this.maxPlayerWeight} кг)`);
         var place = player.inventory.place;
         var params = this.getParamsValues(item);
         if (params.weaponHash) {
