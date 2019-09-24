@@ -124,7 +124,7 @@ module.exports = {
             inviter = player.character.inviterId;
         }
         if (!promocode) return debug(`${player.name} выполнил условия промокода, но промокод не найден. Возможно, персонаж пригласившего был удален.`);
-        if (promocode.invited >= promocode.completed) return debug(`Промокод #${promocode.id} имеет >= выполнивших`);
+        if (promocode.invited <= promocode.completed) return debug(`Промокод #${promocode.id} имеет >= выполнивших`);
         var reward = promocode.PromocodeReward;
 
         money.addMoney(player, reward.playerSum, (res) => {
