@@ -150,4 +150,10 @@ module.exports = {
         };
         player.call(`playerMenu.setInvited`, [data]);
     },
+    setPromocode(player) {
+        var data = {
+            promocode: player.character.Promocode.promocode,
+        };
+        player.call(`playerMenu.setPromocode`, [data]);
+    },
 };

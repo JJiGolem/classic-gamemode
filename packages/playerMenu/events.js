@@ -46,4 +46,7 @@ module.exports = {
             notifs.success(owner, `${player.name} активировал ваш промокод`);
         }
     },
+    "player.promocode.changed": (player) => {
+        playerMenu.setPromocode(player);
+    },
 }
