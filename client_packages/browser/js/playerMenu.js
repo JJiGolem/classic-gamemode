@@ -622,7 +622,9 @@ var playerMenu = new Vue({
         window.addEventListener('keyup', (e) => {
             if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "inventory"])) return;
             if (Date.now() - this.lastShowTime < 500) return;
-            if (e.keyCode == 77 && this.enable) this.show = !this.show;
+            if (!this.enable) return;
+            if (e.keyCode == 77) this.show = !this.show;
+            if (e.keyCode == 27 && this.show) this.show = false;
         });
     },
 });
