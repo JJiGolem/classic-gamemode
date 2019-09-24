@@ -44,6 +44,7 @@ module.exports = {
                         model: db.Models.Appearance,
                     },
                     db.Models.Fine,
+                    db.Models.Promocode,
                 ]
             });
             player.characters.forEach(character => {
@@ -86,6 +87,7 @@ module.exports = {
             chestHairColor: 0,
             Features: [],
             Appearances: [],
+            Promocode: {},
         }
         for (let i = 0; i < 20; i++) player.character.Features.push({value: 0.0, order: i});
         for (let i = 0; i < 11; i++) player.character.Appearances.push({value: 255, opacity: 1.0, order: i});
@@ -110,7 +112,7 @@ module.exports = {
         player.characterInfo.x = pos[0];
         player.characterInfo.y = pos[1];
         player.characterInfo.z = pos[2];
-        player.characterInfo.promocode = await promocodes.getPromocode();
+        player.characterInfo.Promocode.promocode = await promocodes.getPromocode();
 
         player.character = await db.Models.Character.create(player.characterInfo, {
             include: [
@@ -119,7 +121,10 @@ module.exports = {
                 },
                 {
                     model: db.Models.Appearance,
-                }
+                },
+                {
+                    model: db.Models.Promocode,
+                },
             ]
         });
         this.applyCharacter(player);

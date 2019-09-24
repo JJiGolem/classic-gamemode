@@ -457,6 +457,8 @@ var playerMenu = new Vue({
             this.setDonatePrice(data);
             this.setSlots(data.slots);
             this.setPromocode(data.promocode);
+            this.setInvited(data.invited);
+            this.setCompleted(data.completed);
 
             addslotWindowData.maxSlots = data.slotsMax;
         },
@@ -566,6 +568,12 @@ var playerMenu = new Vue({
         },
         setPromocode(code) {
             referenceData.code = code;
+        },
+        setInvited(val) {
+            referenceData.amountInvitees = val;
+        },
+        setCompleted(val) {
+            referenceData.amountCompleted = val;
         },
     },
     watch: {

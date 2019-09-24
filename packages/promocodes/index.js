@@ -44,14 +44,14 @@ module.exports = {
         return code;
     },
     async getFreePromocodes(codes) {
-        var characters = await db.Models.Character.findAll({
+        var list = await db.Models.Promocode.findAll({
             attributes: ["promocode"],
             where: {
                 promocode: codes
             }
         });
-        characters.forEach(character => {
-            var i = codes.indexOf(character.promocode);
+        list.forEach(promocode => {
+            var i = codes.indexOf(promocode.promocode);
             if (i != -1) codes.splice(i, 1);
         });
 
