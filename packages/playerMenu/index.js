@@ -150,6 +150,12 @@ module.exports = {
         };
         player.call(`playerMenu.setInvited`, [data]);
     },
+    setCompleted(player) {
+        var data = {
+            invited: player.character.Promocode.completed,
+        };
+        player.call(`playerMenu.setCompleted`, [data]);
+    },
     setPromocode(player) {
         var data = {
             promocode: player.character.Promocode.promocode,

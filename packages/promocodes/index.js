@@ -1,5 +1,6 @@
 "use strict"
 
+let chat = call("chat");
 let money = call("money");
 let notifs = call("notifications");
 let utils = call("utils");
@@ -102,5 +103,49 @@ module.exports = {
         });
 
         notifs.success(player, `Промокод активирован`, header);
+    },
+    async check(player) {
+        var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60 % 60) + player.character.minutes;
+        if (minutes < this.completedMinutes) return;
+        if (player.character.inviteCompleted) return;
+        if (!player.character.inviterId) return;
+
+        var inviter = mp.players.getBySqlId(player.character.inviterId);
+        var promocode;
+        if (inviter) {
+            promocode = inviter.character.Promocode;
+        } else {
+            promocode = await db.Models.Promocode.findOne({
+                where: {
+                    characterId: player.character.inviterId
+                },
+                include: db.Models.PromocodeReward
+            });
+            inviter = player.character.inviterId;
+        }
+        if (!promocode) return debug(`${player.name} выполнил условия промокода, но промокод не найден. Возможно, персонаж пригласившего был удален.`);
+        if (promocode.invited >= promocode.completed) return debug(`Промокод #${promocode.id} имеет >= выполнивших`);
+        var reward = promocode.PromocodeReward;
+
+        money.addMoney(player, reward.playerSum, (res) => {
+            if (!res) return debug(`Ошибка начисления в банк игроку ${player.name} при выполнии условий промокода`);
+
+
+            money.addMoney(inviter, reward.ownerSum, (res) => {
+                if (!res) return debug(`Ошибка начисления в банк пригласившему #${player.character.inviterId} при выполнии условий промокода`);
+
+                promocode.completed++;
+                promocode.save();
+                player.character.inviteCompleted = 1;
+                player.character.save();
+
+                if (typeof inviter != 'number') {
+                    chat.push(inviter, `Получена награда за ${player.name} $${reward.ownerSum}`);
+                    mp.events.call("player.completed.changed", inviter);
+                }
+                chat.push(player, `Получена награда за выполнение условий промокода $${reward.playerSum}`);
+            });
+        });
+
     },
 };

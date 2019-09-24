@@ -255,6 +255,12 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: null,
             allowNull: true,
         },
+        // Условия реф. промокода (0 - не выполнил, 1 - выполнил)
+        inviteCompleted: {
+            type: DataTypes.TINYINT(1),
+            defaultValue: 0,
+            allowNull: false,
+        }
     }, {
         timestamps: false
     });

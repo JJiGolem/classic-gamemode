@@ -49,4 +49,7 @@ module.exports = {
     "player.promocode.changed": (player) => {
         playerMenu.setPromocode(player);
     },
+    "player.completed.changed": (player) => {
+        playerMenu.setCompleted(player);
+    },
 }

@@ -52,6 +52,9 @@ mp.playerMenu = {
     setInvited(invited) {
         mp.callCEFV(`playerMenu.setInvited(${invited})`);
     },
+    setCompleted(completed) {
+        mp.callCEFV(`playerMenu.setCompleted(${completed})`);
+    },
 };
 
 mp.events.add({
@@ -93,6 +96,9 @@ mp.events.add({
     },
     "playerMenu.setInvited": (data) => {
         mp.playerMenu.setInvited(data.invited);
+    },
+    "playerMenu.setCompleted": (data) => {
+        mp.playerMenu.setCompleted(data.completed);
     },
     "money.change": (cash, bank) => {
         mp.playerMenu.setCash(cash);
