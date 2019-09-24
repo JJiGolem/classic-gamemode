@@ -49,6 +49,9 @@ mp.playerMenu = {
     setPromocode(code) {
         mp.callCEFV(`playerMenu.setPromocode('${code}')`);
     },
+    setInvited(invited) {
+        mp.callCEFV(`playerMenu.setInvited(${invited})`);
+    },
 };
 
 mp.events.add({
@@ -87,6 +90,9 @@ mp.events.add({
     },
     "playerMenu.setPromocode": (data) => {
         mp.playerMenu.setPromocode(data.promocode);
+    },
+    "playerMenu.setInvited": (data) => {
+        mp.playerMenu.setInvited(data.invited);
     },
     "money.change": (cash, bank) => {
         mp.playerMenu.setCash(cash);

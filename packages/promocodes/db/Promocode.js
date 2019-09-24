@@ -1,7 +1,6 @@
 "use strict";
 const Sequelize = require('sequelize');
 
-/// Модель персоонажа аккаунта
 module.exports = (sequelize, DataTypes) => {
     const model = sequelize.define("Promocode", {
         id: {
@@ -17,6 +16,12 @@ module.exports = (sequelize, DataTypes) => {
         promocode: {
             type: DataTypes.STRING(20),
             allowNull: false,
+        },
+        // Награда за выполнение
+        rewardId: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 1,
+            allowNull: false
         },
         // Кол-во приглашённых
         invited: {
@@ -35,7 +40,12 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     model.associate = (models) => {
-        
+        model.belongsTo(models.Character, {
+            foreignKey: "characterId",
+        });
+        model.belongsTo(models.PromocodeReward, {
+            foreignKey: "rewardId",
+        });
     };
     return model;
 };

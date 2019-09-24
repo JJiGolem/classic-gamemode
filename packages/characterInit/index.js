@@ -44,7 +44,10 @@ module.exports = {
                         model: db.Models.Appearance,
                     },
                     db.Models.Fine,
-                    db.Models.Promocode,
+                    {
+                        model: db.Models.Promocode,
+                        include: db.Models.PromocodeReward,
+                    },
                 ]
             });
             player.characters.forEach(character => {

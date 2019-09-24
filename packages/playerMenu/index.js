@@ -144,4 +144,10 @@ module.exports = {
         };
         player.call(`playerMenu.setSlots`, [data]);
     },
+    setInvited(player) {
+        var data = {
+            invited: player.character.Promocode.invited,
+        };
+        player.call(`playerMenu.setInvited`, [data]);
+    },
 };

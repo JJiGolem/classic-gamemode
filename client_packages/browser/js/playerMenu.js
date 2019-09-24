@@ -439,7 +439,8 @@ var playerMenu = new Vue({
         },
         sendCode() {
             // TODO: Отправка промокода .this.code
-            console.log(this.code);
+            // console.log(this.code);
+            mp.trigger(`callRemote`, `promocodes.activate`, this.code);
 
             this.codeMod = false; //Оставить!
         },

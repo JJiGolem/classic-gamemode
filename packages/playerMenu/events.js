@@ -1,3 +1,4 @@
+let notifs = call('notifications');
 let playerMenu = call('playerMenu');
 
 module.exports = {
@@ -35,5 +36,14 @@ module.exports = {
     },
     "player.slots.changed": (player) => {
         playerMenu.setSlots(player);
+    },
+    "player.promocode.activated": (player, promocode) => {
+        var owner = mp.players.getBySqlId(promocode.characterId);
+        if (owner && owner.character) {
+            owner.character.Promocode = promocode;
+
+            playerMenu.setInvited(owner);
+            notifs.success(owner, `${player.name} активировал ваш промокод`);
+        }
     },
 }
