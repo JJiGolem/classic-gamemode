@@ -48,6 +48,10 @@ module.exports = {
                         model: db.Models.Promocode,
                         include: db.Models.PromocodeReward,
                     },
+                    {
+                        as: "settings",
+                        model: db.Models.CharacterSettings,
+                    },
                 ]
             });
             player.characters.forEach(character => {
@@ -91,6 +95,7 @@ module.exports = {
             Features: [],
             Appearances: [],
             Promocode: {},
+            settings: {},
         }
         for (let i = 0; i < 20; i++) player.character.Features.push({value: 0.0, order: i});
         for (let i = 0; i < 11; i++) player.character.Appearances.push({value: 255, opacity: 1.0, order: i});
@@ -127,6 +132,10 @@ module.exports = {
                 },
                 {
                     model: db.Models.Promocode,
+                },
+                {
+                    as: "settings",
+                    model: db.Models.CharacterSettings,
                 },
             ]
         });

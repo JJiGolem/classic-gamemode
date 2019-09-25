@@ -299,6 +299,10 @@ module.exports = (sequelize, DataTypes) => {
         model.hasOne(models.Promocode, {
             foreignKey: "characterId",
         });
+        model.hasOne(models.CharacterSettings, {
+            as: "settings",
+            foreignKey: "characterId",
+        });
         model.hasOne(models.Character, {
             foreignKey: "inviterId",
         });
