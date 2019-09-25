@@ -63,6 +63,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.FLOAT,
             allowNull: false
         },
+        h: {
+            type: DataTypes.FLOAT,
+            defaultValue: 0,
+            allowNull: false
+        },
         /// Статус
         status: {
             type: DataTypes.INTEGER(11),

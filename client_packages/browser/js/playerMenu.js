@@ -54,8 +54,8 @@ let settingsmainWindowData = {
     currentWindow: '0',
     microVolume: 20, // API: Громкость микрофона.
     spawnSettings: {
-        spawnsPull: ["Дом", "Тут", "Там", "ХррДырДыр"], // API: Варианты спавна.
-        currentSpawn: 0, // API: Индекс варианта спавна.
+        spawnsPull: ["Улица", "Дом", "Организация"], // API: Варианты спавна.
+        currentSpawn: 1, // API: Индекс варианта спавна.
     },
     saveChanges(microVolume, currentSpawn) {
         // TODO: Сохранение изменений;
@@ -460,6 +460,7 @@ var playerMenu = new Vue({
             this.setPromocode(data.promocode);
             this.setInvited(data.invited);
             this.setCompleted(data.completed);
+            this.setSettings(data.settings);
 
             addslotWindowData.maxSlots = data.slotsMax;
         },
@@ -575,6 +576,9 @@ var playerMenu = new Vue({
         },
         setCompleted(val) {
             referenceData.amountCompleted = val;
+        },
+        setSettings(settings) {
+            settingsmainWindowData.spawnSettings.currentSpawn = settings.spawn;
         },
     },
     watch: {

@@ -36,6 +36,9 @@ module.exports = {
             promocode: player.character.Promocode.promocode,
             invited: player.character.Promocode.invited,
             completed: player.character.Promocode.completed,
+            settings: {
+                spawn: player.character.settings.spawn,
+            },
         };
         if (biz) {
             data.biz = {
