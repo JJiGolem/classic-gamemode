@@ -36,6 +36,7 @@
     <link rel="stylesheet" type="text/css" href="css/captureScore.css" />
     <link rel="stylesheet" type="text/css" href="css/killList.css" />
     <link rel="stylesheet" type="text/css" href="css/watermark.css" />
+    <link rel="stylesheet" type="text/css" href="css/timer.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -1519,6 +1520,15 @@
         <div v-for="num in id" :style="{width: num * 5 + 'px'}"></div>
     </div>
 
+    <div id="timer" v-if="timer" v-cloak>
+        <img :src="'img/timer/'+timer.icon" />
+        <div class="text">{{ timer.text }}</div>
+        <div class="progress">
+            <div class="fill" :style="{width: width + '%'}"></div>
+        </div>
+        <div class="time">{{ time / 1000 }} с.</div>
+    </div>
+
     <script src="js/playerMenuSvgPaths.js"></script>
     <script src="js/playerMenu.js"></script>
     <!-- ------------------------ МЕНЮ ИГРОКА ------------------------ -->
@@ -1553,6 +1563,7 @@
     <script src="js/captureScore.js"></script>
     <script src="js/killList.js"></script>
     <script src="js/watermark.js"></script>
+    <script src="js/timer.js"></script>
 
 </body>
 
