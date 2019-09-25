@@ -43,4 +43,4 @@ var timer = new Vue({
 });
 
 // for tests
-timer.show("death", 180000);
+// timer.show("death", 180000);

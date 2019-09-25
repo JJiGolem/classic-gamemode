@@ -60,6 +60,8 @@ let settingsmainWindowData = {
     saveChanges(microVolume, currentSpawn) {
         // TODO: Сохранение изменений;
 
+        mp.trigger(`callRemote`, `settings.spawn.set`, currentSpawn);
+
         settingsmainWindowData.microVolume = microVolume;
         settingsmainWindowData.spawnSettings.currentSpawn = currentSpawn;
         console.log(microVolume, currentSpawn);

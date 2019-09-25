@@ -16,7 +16,11 @@ module.exports = (sequelize, DataTypes) => {
         spawn: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
-            allowNull: false
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, 2);
+                this.setDataValue('spawn', val);
+            },
         },
     }, {
         timestamps: false
