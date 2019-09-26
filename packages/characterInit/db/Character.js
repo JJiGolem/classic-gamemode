@@ -316,6 +316,9 @@ module.exports = (sequelize, DataTypes) => {
         model.hasMany(models.Fine, {
             foreignKey: "recId"
         });
+        model.hasMany(models.CharacterInventory, {
+            foreignKey: "playerId"
+        });
     };
     return model;
 };

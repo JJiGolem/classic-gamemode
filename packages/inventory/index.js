@@ -431,6 +431,44 @@ module.exports = {
         }
         return children;
     },
+    getView(items) {
+        var list = {
+            "clothes": [],
+            "props": [],
+        };
+        var clothesIndexes = {
+            "2": 7,
+            "3": 9,
+            "8": 4,
+            "9": 6,
+            "13": 5
+        };
+        var propsIndexes = {
+            "6": 0,
+            "1": 1,
+            "10": 2,
+            "11": 6,
+            "12": 7
+        };
+        items.forEach(item => {
+            var params = this.getParamsValues(item);
+
+            if (clothesIndexes[item.itemId] != null) {
+                list.clothes.push([clothesIndexes[item.itemId], params.variation, params.texture]);
+            } else if (propsIndexes[item.itemId] != null) {
+                list.props.push([propsIndexes[item.itemId], params.variation, params.texture]);
+            } else if (item.itemId == 7) {
+                list.clothes.push([3, params.torso || 0, params.tTexture || 0]);
+                list.clothes.push([11, params.variation, params.texture]);
+                if (params.undershirt != null) list.clothes.push([8, params.undershirt, params.uTexture || 0]);
+                if (params.decal != null) list.clothes.push([10, params.decal, params.dTexture || 0]);
+            } else if (item.itemId == 1) {
+                if (this.masksWithHideHairs.includes(params.variation)) list.clothes.push([2, 0, 0]);
+                list.clothes.push([1, params.variation, params.texture]);
+            }
+        });
+        return list;
+    },
     updateView(player, item) {
         if (player.inventory.denyUpdateView) return;
         if (player.character.id != item.playerId) return;
