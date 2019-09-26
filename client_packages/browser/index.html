@@ -794,12 +794,13 @@
     <!-- ------------------------ ПЛАНШЕТ ПД ------------------------ -->
     <link rel="stylesheet" type="text/css" href="css/mapCase.css" />
     <link rel="stylesheet" type="text/css" href="css/mapCasePd.css" />
+    <link rel="stylesheet" type="text/css" href="css/mapCaseFIB.css" />
     <link rel="stylesheet" type="text/css" href="css/mapCaseEms.css" />
     <link rel="stylesheet" type="text/css" href="css/mapCaseWNews.css" />
 
     <script type="text/x-template" id="map-case-pd-dbSearch">
         <div class="dbSearch">
-            <div class="logo"><img src="img/mapCase/pd-logo.svg"/></div>
+            <div class="logo"><img :src="logo"/></div>
             <div class="title">ПОИСК ПО БАЗЕ ДАННЫХ</div>
             <div class="dbSearch-menu">
                 <div class="main-line"></div>
@@ -972,7 +973,7 @@
 
     <script type="text/x-template" id="map-case-pd-identification">
         <div class="dbSearch identification">
-            <div class="logo"><img src="img/mapCase/identification.svg"/></div>
+            <div class="logo"><img :src="logo"/></div>
             <div class="title">УСТАНОВЛЕНИЕ ЛИЧНОСТИ</div>
             <div class="input">
                 <input
@@ -1140,6 +1141,7 @@
 
     <script src="js/mapCaseSvgPaths.js"></script>
     <script src="js/mapCasePd.js"></script>
+    <script src="js/mapCaseFIB.js"></script>
     <script src="js/mapCaseEms.js"></script>
     <script src="js/mapCaseWNews.js"></script>
     <script src="js/mapCase.js"></script>
