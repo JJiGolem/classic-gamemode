@@ -5408,6 +5408,12 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Мобильная связь') {
                             selectMenu.showByName('supermarketMobile');
                         }
+                        if (e.itemName == 'Продукты') {
+                            selectMenu.showByName('supermarketFood');
+                        }
+                        if (e.itemName == 'Табачные изделия') {
+                            selectMenu.showByName('supermarketTobacco');
+                        }
                     }
 
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
@@ -5500,6 +5506,80 @@ var selectMenu = new Vue({
                     }
                     if ((eventName == 'onBackspacePressed' && this.i != 0) || eventName == 'onEscapePressed') {
                         selectMenu.showByName('supermarketMobile');
+                    }
+                
+                }
+            },
+            "supermarketFood": {
+                name: "supermarketFood",
+                header: "Продукты",
+                headerImg: "",
+                items: [
+                {
+                    text: 'Бутылка воды',
+                    values: ["$100"],
+                },
+                {
+                    text: 'Плитка шоколада',
+                    values: ["$100"],
+                },
+                {
+                    text: 'Назад'
+                }
+            ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('supermarketMain');
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('supermarketMain');
+                    }
+                
+                }
+            },
+            "supermarketTobacco": {
+                name: "supermarketTobacco",
+                header: "Табачные изделия",
+                headerImg: "",
+                items: [
+                {
+                    text: 'Сигареты "Redwood"',
+                    values: ["$100"],
+                },
+                {
+                    text: 'Назад'
+                }
+            ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('supermarketMain');
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('supermarketMain');
                     }
                 
                 }

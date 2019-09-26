@@ -72,4 +72,6 @@ function setSupermarketHeaders(type) {
     mp.callCEFV(`selectMenu.menus["supermarketMain"].headerImg = '${img}'`);
     mp.callCEFV(`selectMenu.menus["supermarketMobile"].headerImg = '${img}'`);
     mp.callCEFV(`selectMenu.menus["supermarketNumberChange"].headerImg = '${img}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketFood"].headerImg = '${img}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketTobacco"].headerImg = '${img}'`);
 }
