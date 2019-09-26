@@ -45,6 +45,7 @@ let addslotWindowData = {
         // TODO: Добавление слота;
 
         addslotWindowData.amountSlots++;
+        playerMenu.coins -= 120;
     }
 };
 
@@ -68,6 +69,7 @@ let protectionWindowData = {
     email: "erf233423h4@324", // API: адрес почты.
     isConfirmed: false, // API: Подверждена ли почта.
     passMessage: "изменён 4 дня назад", // API: Сообщение о последнем изменени пароля.
+    maxWaiting: 15, // API: Время блока кнопки отмены.
     changeMail(mail) {
         // TODO: Сохранить новый почтовый адрес
 
@@ -179,9 +181,9 @@ let statistics = [
 
 let houseInfo = [
     // TODO: Заполнить структуру с информацией о доме
-    { head: "test", value: "val" },
+    /*{ head: "test", value: "val" },
     { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
-    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },
+    { head: "money", value: 40002300, color: "#0f0", moneyFilter: true },*/
 ];
 
 let businessInfo = [
@@ -210,10 +212,10 @@ let skills = [
 
 let helpMessages = [
     // TODO: Массив заполняется вопросами (которые в help)
-    { question: "Вопрос?", answer: "" },
-    { question: "Вопрос?", answer: "Ответ" },
-    { question: "Вопрос?", answer: "Ответ" },
-    { question: "Вопрос?", answer: "Ответ" },
+    { question: "Вопрос?", answer: "32" },
+    { question: "Вопрос1", answer: "Ответ" },
+    { question: "Вопрос112", answer: "Ответ" },
+    { question: "Вопрос1123", answer: "Ответ" },
     { question: "Вопрос?", answer: "Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ Ответ" },
     { question: "Вопрос?", answer: "Ответ" },
     { question: "Вопрос?", answer: "Ответ" },
@@ -238,7 +240,7 @@ var playerMenu = new Vue({
         menuBarFocus: menuBar[0],
         name: "Jonathan Rockfall", // API: Имя игрока
         socialStatus: 0, // API: социальный статус //0-гражданский/1-админ/2-госс/3-бандит
-        coins: 1000, // API: СС
+        coins: 120, // API: СС
         dateTimer: null,
         time: '00:00',
         date: '00.00.0000',
@@ -249,7 +251,7 @@ var playerMenu = new Vue({
     computed: {
         blurMod () {
             return this.confirmation;
-        }
+        },
     },
     methods: {
         onClickMenuBarItem (name) {
@@ -389,20 +391,12 @@ Vue.component('player-menu-help', {
         messages: helpMessages,
         currentAnswer: null,
     }),
-    methods: {
-        showAnswer (index) {
-            if (!this.messages[index].answer) return;
-            this.currentAnswer = (index == this.currentAnswer) ? null : index;
+    computed: {
+        searchResult () {
+            // TODO: Более хитрая сортировка, если надо.
+            return this.messages.filter(record => record.question.toLowerCase().includes(this.message.toLowerCase()))
         },
-        send () {
-            if (!this.message.length) return;
-
-            helpMessages.unshift({ question: this.message, answer: "" });
-            // TODO: Отправка на сервер this.message
-
-            this.message = "";
-        },
-    }
+    },
 });
 
 Vue.component('player-menu-reference', {
@@ -433,9 +427,12 @@ Vue.component('player-menu-window-sidebar', {
         menuFocus: null,
     }),
     computed: {
-        /*currentWindow () {
-            return "test";
-        }*/
+        dataForWindow () {
+            return {
+                ...this.menuFocus.windowData,
+                coins: playerMenu.coins,
+            }
+        }
     },
     methods: {
         onClickMenuItem (item) {
@@ -501,6 +498,7 @@ Vue.component('player-menu-donate-changename', {
     props: {
         price: Number,
         acceptChange: Function,
+        coins: Number,
     },
     data: () => ({
         firstname: '',
@@ -508,13 +506,13 @@ Vue.component('player-menu-donate-changename', {
     }),
     methods: {
         inputCheck(event) {
-            let regex = new RegExp("[a-zA-Z\-]")
+            let regex = new RegExp("[a-zA-Z]")
             if (!regex.test(event.key))
                 event.preventDefault();
         },
         changename() {
             if (!this.firstname || !this.lastname) return;
-            if (this.price > playerMenu.coins) return;
+            if (this.price > this.coins) return;
 
             playerMenu.showConfirmWindow(
                 "Подтверждение действия",
@@ -539,6 +537,7 @@ Vue.component('player-menu-donate-warn', {
         amountWarns: Number,
         price: Number,
         takeoffWarn: Function,
+        coins: Number,
     },
     data: () => ({
     }),
@@ -548,7 +547,7 @@ Vue.component('player-menu-donate-warn', {
     methods: {
         localtakeoffWarn() {
             if (!this.amountWarns) return;
-            if (this.price > playerMenu.coins) return;
+            if (this.price > this.coins) return;
 
             playerMenu.showConfirmWindow(
                 "Подтверждение действия",
@@ -568,6 +567,7 @@ Vue.component('player-menu-donate-addslot', {
         maxSlots: Number,
         price: Number,
         addSlot: Function,
+        coins: Number,
     },
     data: () => ({
     }),
@@ -577,7 +577,7 @@ Vue.component('player-menu-donate-addslot', {
     methods: {
         localaddSlot() {
             if (this.amountSlots == this.maxSlots) return;
-            if (this.price > playerMenu.coins) return;
+            if (this.price > this.coins) return;
 
             playerMenu.showConfirmWindow(
                 "Подтверждение действия",
@@ -639,6 +639,7 @@ Vue.component('player-menu-settings-protection', {
         email: String,
         isConfirmed: Boolean,
         passMessage: String,
+        maxWaiting: Number,
         changeMail: Function,
         changePassword: Function,
         sendCode: Function,
@@ -653,12 +654,30 @@ Vue.component('player-menu-settings-protection', {
         oldPass: '',
         newPass: '',
         newPass2: '',
+        waiting: '',
+
+        seconds: 0,
+
+        //maxWaiting: 10,
+        intervalId: null,
     }),
+    computed: {
+        emailIsValid () {
+            var pattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i;
+
+            return pattern.test(this.newEmail)
+        },
+        passIsValid () {
+            if (!this.oldPass || !this.newPass || !this.newPass2) return false;
+            if (this.newPass != this.newPass2) return false;
+
+            return true;
+        }
+    },
     methods: {
         saveMail() {
-            if (!this.newEmail) return;
-            var pattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i;
-	        if (!pattern.test(this.newEmail)) return;
+            if (!this.emailIsValid)
+                return;
 
             playerMenu.showConfirmWindow(
                 "Подтверждение действия",
@@ -675,13 +694,18 @@ Vue.component('player-menu-settings-protection', {
             this.changeMailMod = false;
         },
         confCode() {
+            if (!this.code)
+                return;
+
             this.checkCode()
 
             this.code = '';
         },
         savePass() {
-            if (!this.oldPass || !this.newPass || !this.newPass2) return;
-            if (this.newPass != this.newPass2) return;
+            if (!this.passIsValid)
+                return;
+            /*if (!this.oldPass || !this.newPass || !this.newPass2) return;
+            if (this.newPass != this.newPass2) return;*/
             playerMenu.showConfirmWindow(
                 "Подтверждение действия",
                 `Вы действительно хотите <br />
@@ -693,6 +717,19 @@ Vue.component('player-menu-settings-protection', {
         },
         localsendCode() {
             this.codeMod = true;
+            this.waiting = `(${this.maxWaiting})`;
+            this.seconds = 0;
+            this.intervalId = setInterval(() => {
+                this.waiting = `(${this.maxWaiting - ++this.seconds})`;
+
+                if (this.seconds > this.maxWaiting) {
+                    this.waiting = '';
+                    clearInterval(this.intervalId);
+                    this.intervalId = null;
+                }
+
+            }, 1000);
+
             this.sendCode();
         },
         changePass() {
@@ -700,6 +737,8 @@ Vue.component('player-menu-settings-protection', {
             this.passCancel();
         },
         cancel() {
+            if (this.intervalId)
+                return;
             this.changeMailMod = false;
             this.codeMod = false;
             this.code = '';
@@ -710,16 +749,26 @@ Vue.component('player-menu-settings-protection', {
             this.oldPass = '';
             this.newPass = '';
             this.newPass2 = '';
-        }
+        },
+        inputCheck(event) {
+            let regex = new RegExp("[0-9]")
+            if (!regex.test(event.key))
+                event.preventDefault();
+        },
     },
     watch: {
         isConfirmed (val) {
             if (val) this.codeMod = false;
             this.code = '';
+
+            if (this.intervalId)
+                clearInterval(this.intervalId);
+            this.intervalId = null;
+            this.waiting = '';
         }
     }
 });
 
-// playerMenu.show = true;
+playerMenu.show = true;
 
 //playerMenu.showConfirmWindow("Head ex", "description <br /> description")
