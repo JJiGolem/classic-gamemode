@@ -2,6 +2,7 @@
 var vehicles = call("vehicles");
 let notify = call('notifications');
 let admin = call('admin');
+let factions = call('factions');
 
 module.exports = {
 
@@ -266,6 +267,7 @@ module.exports = {
             args.shift();
             var reason = args.join(" ");
 
+            factions.deleteMember(rec);
             rec.character.warnNumber++;
             rec.character.warnDate = new Date();
 
