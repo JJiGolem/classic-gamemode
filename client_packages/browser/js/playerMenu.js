@@ -22,6 +22,8 @@ let changenameWindowData = {
     price: 120, // API: Стоимостть смены никнейма.
     acceptChange(firstname, lastname) {
         // TODO: Смена никнейма;
+        firstname = firstname[0].toUpperCase() + firstname.toLowerCase().substring(1, 20);
+        lastname = lastname[0].toUpperCase() + lastname.toLowerCase().substring(1, 20);
         var name = firstname + " " + lastname;
         mp.trigger(`callRemote`, `donate.nickname.set`, name);
         // playerMenu.coins -= 120;
