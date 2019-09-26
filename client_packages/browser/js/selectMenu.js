@@ -2173,10 +2173,22 @@ var selectMenu = new Vue({
                 name: "fibGuns",
                 header: "Вооружение FIB",
                 items: [{
-                        text: "Снайпа"
+                        text: "Heavy Sniper"
                     },
                     {
-                        text: "Карабин обновленный"
+                        text: "Carbine Rifle Mk II"
+                    },
+                    {
+                        text: "Combat PDW"
+                    },
+                    {
+                        text: "Pistol .50"
+                    },
+                    {
+                        text: "Stun Gun"
+                    },
+                    {
+                        text: "Pump Shotgun Mk II"
                     },
                     {
                         text: "Вернуться"
@@ -5404,6 +5416,217 @@ var selectMenu = new Vue({
 
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed')
                         mp.trigger('barbershop.mainMenu.show');
+                }
+            },
+            "supermarketMain": {
+                name: "supermarketMain",
+                header: "Супермаркет",
+                headerImg: "",
+                items: [{
+                    text: 'Мобильная связь'
+                },
+                {
+                    text: 'Продукты'
+                },
+                {
+                    text: 'Табачные изделия'
+                },
+                {
+                    text: 'Закрыть'
+                },
+            ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                        if (e.itemName == 'Мобильная связь') {
+                            selectMenu.showByName('supermarketMobile');
+                        }
+                        if (e.itemName == 'Продукты') {
+                            selectMenu.showByName('supermarketFood');
+                        }
+                        if (e.itemName == 'Табачные изделия') {
+                            selectMenu.showByName('supermarketTobacco');
+                        }
+                    }
+
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.show = false;
+                    }
+                
+                }
+            },
+            "supermarketMobile": {
+                name: "supermarketMobile",
+                header: "Мобильная связь",
+                headerImg: "",
+                items: [{
+                    text: 'Купить телефон',
+                    values: ['$100']
+                },
+                {
+                    text: 'Сменить номер телефона',
+                    values: ['$100']
+                },
+                {
+                    text: 'Назад'
+                }
+            ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('supermarketMain');
+                        }
+                        if (e.itemName == 'Сменить номер телефона') {
+                            selectMenu.showByName('supermarketNumberChange');
+                        }
+                        if (e.itemName == 'Купить телефон') {
+                            selectMenu.loader = true;
+                            mp.trigger('supermarket.phone.buy');
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('supermarketMain');
+                    }
+                }
+            },
+            "supermarketNumberChange": {
+                name: "supermarketNumberChange",
+                header: "Смена номера",
+                headerImg: "",
+                items: [{
+                    text: 'Новый номер',
+                    type: "editable",
+                    values: [""],
+                },
+                {
+                    text: 'Сменить',
+                    values: ["$100"],
+                },
+                {
+                    text: 'Назад'
+                }
+            ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('supermarketMobile');
+                        }
+                        if (e.itemName == 'Сменить') {
+                            selectMenu.loader = true;
+                            let number = selectMenu.menu.items[0].values[0];
+                            mp.trigger('supermarket.number.change', number);
+                        }
+                    }
+                    if ((eventName == 'onBackspacePressed' && this.i != 0) || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('supermarketMobile');
+                    }
+                
+                }
+            },
+            "supermarketFood": {
+                name: "supermarketFood",
+                header: "Продукты",
+                headerImg: "",
+                items: [
+                {
+                    text: 'Бутылка воды',
+                    values: ["$100"],
+                },
+                {
+                    text: 'Плитка шоколада',
+                    values: ["$100"],
+                },
+                {
+                    text: 'Назад'
+                }
+            ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('supermarketMain');
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('supermarketMain');
+                    }
+                
+                }
+            },
+            "supermarketTobacco": {
+                name: "supermarketTobacco",
+                header: "Табачные изделия",
+                headerImg: "",
+                items: [
+                {
+                    text: 'Сигареты "Redwood"',
+                    values: ["$100"],
+                },
+                {
+                    text: 'Назад'
+                }
+            ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('supermarketMain');
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('supermarketMain');
+                    }
+                
                 }
             },
         },

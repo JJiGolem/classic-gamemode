@@ -4,7 +4,7 @@ const creatorPlayerPos = new mp.Vector3(402.8664, -996.4108, -99.00027);
 const creatorPlayerHeading = -185.0;
 
 let inventory = call('inventory');
-let notifs = call('notifs');
+let notifs = call('notifications');
 let utils = call("utils");
 let promocodes = call("promocodes");
 
@@ -55,6 +55,7 @@ module.exports = {
     async init(player) {
         if (player.character != null) delete player.character;
         if (player.characters == null) {
+            var start = Date.now();
             player.characters = await db.Models.Character.findAll({
                 where: {
                     accountId: player.account.id
@@ -74,8 +75,20 @@ module.exports = {
                         as: "settings",
                         model: db.Models.CharacterSettings,
                     },
+                    {
+                        model: db.Models.CharacterInventory,
+                        where: {
+                            parentId: null,
+                        },
+                        include: {
+                            as: "params",
+                            model: db.Models.CharacterInventoryParam,
+                        },
+                    },
                 ]
             });
+            var diff = Date.now() - start;
+            notifs.info(player, `Время выборки персонажей: ${diff} ms.`);
             player.characters.forEach(character => {
                 character.Appearances.sort((x, y) => {
                     if (x.order > y.order) return 1;
@@ -93,7 +106,7 @@ module.exports = {
         for (let i = 0; i < player.characters.length; i++) {
             charInfos.push({
                 charInfo: player.characters[i],
-                charClothes: null
+                charClothes: inventory.getView(player.characters[i].CharacterInventories),
             });
         }
         return charInfos;

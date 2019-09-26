@@ -770,6 +770,11 @@
     transform: rotate(-90deg);
 }
 
+#player-menu .protection {
+    display: grid;
+    grid-template-rows: repeat(4, min-content);
+}
+
 #player-menu .protection .head {
     margin-bottom: 2vh;
 }
@@ -777,7 +782,7 @@
 #player-menu .protection .record {
     display: grid;
     grid-template-columns: 1fr 30vh 1fr;
-    height: fit-content;
+    /*min-height: 11vh;*/
 }
 
 #player-menu .protection .record .title {

@@ -1,7 +1,8 @@
+/* eslint-disable no-undef */
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {closeBankPage} from "../actions/action.bankPages";
-import {payBusinessBank, payHouseBank} from "../actions/action.bank";
+import {setLoadingBank, setArgsBank} from "../actions/action.bank";
 
 class BankTaxes extends Component {
     constructor(props) {
@@ -39,10 +40,12 @@ class BankTaxes extends Component {
 
     payHouse() {
         const { houseDays } = this.state;
-        const { bank, info, payHouse } = this.props;
+        const { info, setLoading, setArgs } = this.props;
 
-        payHouse(info.houses[0].name, houseDays, houseDays*info.houses[0].rent);
-        this.setState({ houseDays: 0 })
+        setArgs({ money: parseInt(info.houses[0].rent*houseDays), name: info.houses[0].name, days: parseInt(houseDays) });
+        setLoading(true);
+        mp.trigger('bank.house.push', info.houses[0].name, parseInt(houseDays));
+        this.setState({ houseDays: 0 });
     }
 
     incrementBizDays() {
@@ -58,17 +61,19 @@ class BankTaxes extends Component {
         const { bizDays } = this.state;
         const { bank, info } = this.props;
 
-        if ((bizDays > 0) && ((bizDays - 1)*info.iz[0].rent <= bank.money)) {
+        if ((bizDays > 0) && ((bizDays - 1)*info.biz[0].rent <= bank.money)) {
             this.setState({ bizDays: bizDays - 1 });
         }
     }
 
     payBiz() {
         const { bizDays } = this.state;
-        const { bank, info, payHouse } = this.props;
+        const { info, setLoading, setArgs } = this.props;
 
-        payHouse(info.biz[0].id, bizDays, bizDays*info.biz[0].rent);
-        this.setState({ bizDays: 0 })
+        setArgs({ money: parseInt(info.biz[0].rent*bizDays), id: info.biz[0].id, days: parseInt(bizDays) });
+        setLoading(true);
+        mp.trigger('bank.biz.push', info.biz[0].id, parseInt(bizDays));
+        this.setState({ bizDays: 0 });
     }
 
     getPayHouseForm() {
@@ -190,8 +195,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     closePage: () => dispatch(closeBankPage()),
-    payHouse: (name, days, money) => dispatch(payHouseBank(name, days, money)),
-    payBusiness: (id, days, money) => dispatch(payBusinessBank(id, days, money)),
+    setArgs: args => dispatch(setArgsBank(args)),
+    setLoading: flag => dispatch(setLoadingBank(flag)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BankTaxes);

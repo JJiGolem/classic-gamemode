@@ -39,6 +39,11 @@ module.exports = {
         rand = Math.round(rand);
         return rand;
     },
+    randomFloat(min, max, number) {
+        // number - количество знаков после запятой
+        let rand = min + Math.random() * (max - min);
+        return parseFloat(rand).toFixed(number);
+    },
     getPointsOnInterval(point1, point2, step) {
         var vectorX = point2.x - point1.x;
         var vectorY = point2.y - point1.y;

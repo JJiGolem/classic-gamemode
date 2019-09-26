@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {closeBankPage} from "../actions/action.bankPages";
@@ -49,9 +50,7 @@ class BankPush extends Component {
         if (this.validateForm()) {
             setLoading(true);
             setArgs({ money: parseInt(pushMoney) });
-            // setTimeout(() => {
-            //     setAnswer({ answer: 1, type: 'push' });
-            // }, 1000)
+            mp.trigger('bank.push', parseInt(pushMoney));
         }
     }
 

@@ -1,7 +1,8 @@
+/* eslint-disable no-undef */
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {closeBankPage} from "../actions/action.bankPages";
-import {popCashBoxBank, pushCashBoxBank} from "../actions/action.bank";
+import {setArgsBank, setLoadingBank} from "../actions/action.bank";
 
 class BankCashBox extends Component {
     constructor(props) {
@@ -65,23 +66,27 @@ class BankCashBox extends Component {
 
     pushMoney() {
         const { pushMoney } = this.state;
-        const { info, pushCashBox, closePage } = this.props;
+        const { info } = this.props;
 
         this.setState({ errorPop: '' });
 
         if (this.validPush(pushMoney)) {
-            pushCashBox(info.biz[0].id, parseInt(pushMoney));
+            setArgs({ money: parseInt(pushMoney), id: info.biz[0].id });
+            setLoading(true);
+            mp.trigger('bank.biz.cashbox.push', info.biz[0].id, parseInt(pushMoney));
         }
     }
 
     popMoney() {
         const { popMoney } = this.state;
-        const { info, popCashBox, closePage } = this.props;
+        const { info } = this.props;
 
         this.setState({ errorPush: '' });
 
-        if (this.validPop(popMoney)) {
-            popCashBox(info.biz[0].id, parseInt(popMoney));
+        if (this.validPush(popMoney)) {
+            setArgs({ money: parseInt(popMoney), id: info.biz[0].id });
+            setLoading(true);
+            mp.trigger('bank.biz.cashbox.pop', info.biz[0].id, parseInt(popMoney));
         }
     }
 
@@ -181,8 +186,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     closePage: () => dispatch(closeBankPage()),
-    pushCashBox: (id, money) => dispatch(pushCashBoxBank(id, money)),
-    popCashBox: (id, money) => dispatch(popCashBoxBank(id, money)),
+    setArgs: args => dispatch(setArgsBank(args)),
+    setLoading: flag => dispatch(setLoadingBank(flag)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BankCashBox);

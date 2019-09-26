@@ -28,6 +28,10 @@
     height: 10vh;
 }
 
+#map-case .pd .window .identification .logo img {
+    height: 14vh;
+}
+
 #map-case .pd .window .dbSearch .title {
     font-size: 1.9vh;
     font-weight: bold;

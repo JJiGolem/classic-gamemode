@@ -235,7 +235,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             defaultValue: null,
             set(val) {
-                if (!val) this.setDataValue('wantedCause', '-');
+                if (!val) val = "-";
+
+                this.setDataValue("wantedCause", val);
             }
         },
         // Оставшееся время ареста
@@ -313,6 +315,9 @@ module.exports = (sequelize, DataTypes) => {
         });
         model.hasMany(models.Fine, {
             foreignKey: "recId"
+        });
+        model.hasMany(models.CharacterInventory, {
+            foreignKey: "playerId"
         });
     };
     return model;

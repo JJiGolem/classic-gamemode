@@ -112,6 +112,15 @@ class Business extends Component {
         }
     }
 
+    showActions() {
+        const { blurForm, business } = this.props;
+
+        if (!business.isBlur) {
+            this.setState({ isActionsMenu: true });
+            blurForm(true);
+        }
+    }
+
     getButton(name) {
         const { blurForm, business } = this.props;
 
@@ -146,10 +155,7 @@ class Business extends Component {
 
             case 'actions':
                 return (
-                    <div className='button-house-react' onClick={() => {
-                        business.answerBuy === null && this.setState({ isActionsMenu: true });
-                        blurForm(true)
-                    }}
+                    <div className='button-house-react' onClick={this.showActions.bind(this)}
                          onMouseOver={() => this.setState({ colorActions: 'black' })}
                          onMouseOut={() => this.setState({ colorActions: '#e1c631' })}
                     >
@@ -196,6 +202,7 @@ class Business extends Component {
             return (
                 <Fragment>
                     { this.getButton('buy') }
+                    { this.getButton('actions') }
                 </Fragment>
             )
         }
@@ -305,7 +312,7 @@ class Business extends Component {
                     <div className='business_form-react'>
                         { Object.keys(business).length > 0 ? this.getForm() : this.getLoader() }
                         { business.answerBuy !== null && this.getMessage(business.answerBuy) }
-                        { business.answerBuy === null && isActionsMenu && this.showActionsMenu() }
+                        { isActionsMenu && this.showActionsMenu() }
                         { isConfirm && this.showConfirmBuy() }
                     </div>
                 }
