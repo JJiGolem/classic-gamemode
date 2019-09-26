@@ -92,10 +92,13 @@ let protectionWindowData = {
     },
     changePassword(oldPass, newPass) {
         // TODO: Сменить пароль
-
-        //Хз если старый не совпал...
-        console.log("Сменили пароль");
-        protectionWindowData.passMessage = "изменён сегодня";
+        var data = {
+            oldPass: oldPass,
+            newPass: newPass
+        };
+        mp.trigger(`callRemote`, `settings.password.set`, JSON.stringify(data));
+        // console.log("Сменили пароль");
+        // protectionWindowData.passMessage = "изменён сегодня";
     }
 }
 

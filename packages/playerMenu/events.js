@@ -55,4 +55,7 @@ module.exports = {
     "player.media.changed": (player) => {
         playerMenu.setMedia(player);
     },
+    "player.password.changed": (player) => {
+        // TODO: синзронизация даты смены пароля
+    },
 }
