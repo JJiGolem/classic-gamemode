@@ -17,5 +17,13 @@ module.exports = {
             if (position) player.position = position;
         }
     },
+    "/bizeconomy": {
+        access: 6,
+        description: "Изменить экономические показатели",
+        args: "",
+        handler: (player, args) => {
+            
+        }
+    },
 }
 

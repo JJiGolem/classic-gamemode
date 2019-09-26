@@ -38,7 +38,30 @@ mp.events.add("biz.buy.ans", (ans, owner) => {
 });
 
 mp.events.add("biz.actions", (action) => {
-    mp.chat.debug("BIZ actions opened");
+    mp.events.callRemote("biz.actions", action);
+});
+
+
+/// Actions
+mp.events.add("biz.finance.show", (bizParameters) => {
+    mp.console(`selectMenu.menu = cloneObj(selectMenu.menus["bizEconomic"]);`);
+    bizParameters.params.forEach(param => {
+        let values = new Array();
+        for (let i = param.min; i < param.max; i += 0.1) {
+            values.push(i);
+        }
+        let index = values.findIndex(x => x == param.current);
+        mp.console(`selectMenu.menu.items.unshift({
+            paramKey: "${param.key}",
+            text: "${param.name}",
+            values: ${values},
+            i: ${index},
+            min: "${param.min}",
+            max: "${param.max}",
+        });`);
+    });
+    
+    mp.console(`selectMenu.show = true`);
 });
 
 

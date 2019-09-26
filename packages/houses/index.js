@@ -41,6 +41,7 @@ let dropHouse = function(house, sellToGov) {
                     for (let j = 0; j < mp.players.length; j++) {
                         if (mp.players.at(j).character == null) continue;
                         if (characterId == mp.players.at(j).character.id) {
+                            mp.events.call('player.house.changed', mp.players.at(j));
                             if (sellToGov) {
                                 mp.players.at(j).call('house.sell.toGov.ans', [1]);
                             }
@@ -338,6 +339,8 @@ module.exports = {
             money.moveCash(buyer, seller, cost, function(result) {
                 if (result) {
                     callback(true);
+                    mp.events.call('player.house.changed', seller);
+                    mp.events.call('player.house.changed', buyer);
                     buyer.call('phone.app.add', ["house", {
                         name: house.info.id,
                         class: house.info.Interior.class,

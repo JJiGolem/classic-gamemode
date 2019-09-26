@@ -328,7 +328,25 @@ module.exports = {
         if (biz == null) return null;
         return new mp.Vector3(biz.info.x, biz.info.y, biz.info.z);
     },
+    getBizParameters(charId, id) {
+        let biz = getBizById(id);
+        if (biz == null) return null;
+        if (biz.info.characterId != charId) return null;
+        return {bizId: biz.info.id, params: bizesModules[biz.info.type].getBizParamsById(biz.info.id)};
+    },
+    setBizParameters(charId, bizParameters) {
+        let biz = getBizById(bizParameters.bizId);
+        if (biz == null) return false;
+        if (biz.info.characterId != charId) return false;
+        bizParameters.params.forEach(param => {
+            bizesModules[biz.info.type].setBizParam(bizParameters.bizId, param.key, param.value);
+        });
+        return true;
+    },
 
     createOrder: createOrder,
     destroyOrder: destroyOrder,
+
+    bizesModules: bizesModules,
+    dropBiz: dropBiz,
 }

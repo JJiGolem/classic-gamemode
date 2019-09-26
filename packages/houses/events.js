@@ -21,6 +21,12 @@ module.exports = {
         if (player.character.admin < 5) return;
         housesService.initHouseAdding(player);
     },
+    "player.name.changed": (player) => {
+        let house = housesService.getHouseByCharId(player.character.id);
+        if(house != null) {
+            house.info.characterNick = player.character.name;
+        }
+    },
     "playerEnterColshape": (player, shape) => {
         if (!shape.isHouse) return;
         player.house.place = shape.place;
@@ -116,7 +122,9 @@ module.exports = {
             info.date = housesService.getRandomDate(1);
             await info.save();
             player.call('house.buy.ans', [1, player.character.name]);
+
             housesService.updateHouse(house);
+            mp.events.call('player.house.changed', player);
             
             player.call('phone.app.add', ["house", housesService.getHouseInfoForApp(house)]);
             vehicles != null && vehicles.setPlayerCarPlaces(player);

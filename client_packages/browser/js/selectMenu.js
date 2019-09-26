@@ -1328,6 +1328,39 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "bizEconomic": {
+                name: "bizeconomic",
+                header: "Экономика бизнеса",
+                items: [{
+                        text: "Создать",
+                    },
+                    {
+                        text: "Закрыть",
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        switch (e.itemName) {
+                            case "Создать":
+                                selectMenu.show = false;
+                                break;
+                            case "Закрыть":
+                                selectMenu.show = false;
+                                break;
+                        }
+                    }
+                }
+            },
             "fuelStationMenu": {
                 name: "fuelstation",
                 header: "АЗС",
