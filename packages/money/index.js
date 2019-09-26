@@ -78,6 +78,7 @@ module.exports = {
         }
     },
     addMoney(player, number, callbackT) {
+        if (typeof player == 'number') return this.addMoneyById(player, number, callbackT);
         if (callbackT == null) return;
         let callback = (result) => {
             try {

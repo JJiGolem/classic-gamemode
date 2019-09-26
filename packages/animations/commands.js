@@ -1,17 +1,34 @@
 module.exports = {
     "/anim": {
-        access: 6,
+        access: 1,
+        description: "Проиграть анимацию.",
+        args: "[dict] [name] [speed]:n [flag]:n",
         handler: (player, args) => {
-            console.log(args);
-            //mp.events.call('animations.play', player, args[0], args[1], 1, parseInt(args[3]));
-            player.playAnimation(args[0], args[1], 1, 49);
-            //player.playAnimation('mp_arresting', 'idle', 1, 49)
+            mp.events.call('animations.play', player, args[0], args[1], args[2], args[3]);
         }
     },
     "/stopanim": {
-        access: 6,
+        access: 1,
+        description: "Остановить анимацию.",
+        args: "",
         handler: (player, args) => {
             mp.events.call('animations.stop', player);
         }
-    }
+    },
+    "/animid": {
+        access: 1,
+        description: "Проиграть анимацию по ID анимации.",
+        args: "[id]:n",
+        handler: (player, args) => {
+            mp.events.call('animations.playById', player, args[0]);
+        }
+    },
+    "/animator": {
+        access: 1,
+        description: "Вкл/выкл режим воспроизведения анимаций.",
+        args: "",
+        handler: (player, args) => {
+            player.call("animations.animator");
+        }
+    },
 }

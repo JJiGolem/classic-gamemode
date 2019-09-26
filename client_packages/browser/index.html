@@ -36,6 +36,7 @@
     <link rel="stylesheet" type="text/css" href="css/captureScore.css" />
     <link rel="stylesheet" type="text/css" href="css/killList.css" />
     <link rel="stylesheet" type="text/css" href="css/watermark.css" />
+    <link rel="stylesheet" type="text/css" href="css/timer.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -1248,19 +1249,25 @@
             </div>
             <div class="block">
                 <div class="header">Дом</div>
-                <div class="body">
+                <div :class="['body', { no: !houseInfo.length}]">
                     <div class="record" v-for="record in houseInfo">
                         <div>{{ record.head }}</div>
                         <div :style="record"><span>{{ record.value | playerMenuMoneySplit(record.moneyFilter) }}</span></div>
+                    </div>
+                    <div class="info" v-if="!houseInfo.length">
+                        He приобретён
                     </div>
                 </div>
             </div>
             <div class="block">
                 <div class="header">Бизнес</div>
-                <div class="body">
+                <div :class="['body', { no: !businessInfo.length}]">
                     <div class="record" v-for="record in businessInfo">
                         <div>{{ record.head }}</div>
                         <div :style="record"><span>{{ record.value | playerMenuMoneySplit(record.moneyFilter) }}</span></div>
+                    </div>
+                    <div class="info" v-if="!businessInfo.length">
+                        He приобретён
                     </div>
                 </div>
             </div>
@@ -1275,7 +1282,7 @@
                             :key="index">
                                 <div class="skill" v-for="skill in skills" v-if="skill">
                                     <div>{{ skill.head }}</div>
-                                    <div class="val">{{ skill.value }}%</div>
+                                    <div :class="['val', { paint: skill.value == 100 }]">{{ skill.value }}%</div>
                                     <div class="progress"><div :style="{width: (skill.value) ? skill.value+'%': '1vh'}"></div></div>
                                 </div>
                         </div>
@@ -1305,17 +1312,17 @@
     <script type="text/x-template" id="player-menu-help">
         <div class="report help">
             <div class="head">Введите интересующий вас вопрос:</div>
-            <input placeholder="Введите вопрос..." v-model="message" :maxlength="maxlength" @keypress.enter="send()"/>
+            <input placeholder="Введите вопрос..." v-model="message" :maxlength="maxlength"/>
             <div class="head sec">Ответы на вопросы</div>
             <div class="messages body">
                 <div :class="['message', {focus: currentAnswer == index}]"
-                    v-for="(message, index) in messages"
+                    v-for="(message, index) in searchResult"
                     :key="index"
                     @click="showAnswer(index)">
                     <div class="img"><img src="img/playerMenu/communication.svg" /></div>
                     <div class="qw">{{ message.question }}</div>
                     <div v-if="message.answer" class="arrow"><img src="img/playerMenu/help-arrow.svg" /></div>
-                    <transition name="messages"><div class="answer" v-if="currentAnswer == index">{{ message.answer }}</div></transition>
+                    <div class="answer" v-if="currentAnswer == index">{{ message.answer }}</div>
                 </div>
             </div>
         </div>
@@ -1372,7 +1379,7 @@
             </div>
             <div class="line"></div>
             <keep-alive>
-                <component v-if="menuFocus" :is="menuFocus.window" v-bind="menuFocus.windowData"></component>
+                <component v-if="menuFocus" :is="menuFocus.window" v-bind="dataForWindow"></component>
             </keep-alive>
         </div>
     </script>
@@ -1382,10 +1389,10 @@
             <div class="head">Конвертация валюты</div>
             <div class="hint">Конвертация валюты - это способ получить виртуальную валюту,<br />обменивая <div class="coin-logo">cc</div> на неё</div>
             <div class="hint sec">Введите число CC, которые вы бы хотели обменять</div>
-            <input placeholder="Введите число..." v-model="price" @keypress="inputCheck($event)"/>
+            <input placeholder="Введите число..." v-model="price" @keypress="inputCheck($event)" @keypress.enter="convert()"/>
             <div class="equally">=</div>
             <div class="coins">{{ virtualCoins | playerMenuMoneySplit(true) }}</div>
-            <div class="btn" @click="convert()">Конвертировать</div>
+            <div :class="['btn', {disable: !price }]" @click="convert()">Конвертировать</div>
         </div>
     </script>
 
@@ -1393,10 +1400,10 @@
         <div class="sidebar-win changename">
             <div class="head">Смена никнейма</div>
             <div class="hint">Смените никнейм для вашей новой личности</div>
-            <div class="name"><input placeholder="Введите новое имя" v-model="firstname" @keypress="inputCheck($event)" /></div>
-            <div><input placeholder="Введите новую фамилию" v-model="lastname" @keypress="inputCheck($event)" /></div>
+            <div class="name"><input placeholder="Введите новое имя" v-model="firstname" @keypress="inputCheck($event)" @keypress.enter="changename()" /></div>
+            <div><input placeholder="Введите новую фамилию" v-model="lastname" @keypress="inputCheck($event)" @keypress.enter="changename()" /></div>
             <div class="price">Стоимость услуги: <span>{{ price }} CC</span></div>
-            <div class="btn" @click="changename()">Сменить никнейм</div>
+            <div :class="['btn', {disable: !firstname || !lastname || price > coins }]" @click="changename()">Сменить никнейм</div>
         </div>
     </script>
 
@@ -1407,7 +1414,7 @@
             <div class="info" v-if="amountWarns">Варнов: {{ amountWarns }}</div>
             <div class="info n-warns" v-else>На вашем аккаунте нет варнов</div>
             <div class="price">Стоимость услуги: <span>{{ price }} CC</span></div>
-            <div :class="['btn', {disable: !amountWarns }]" @click="localtakeoffWarn()">Снять варн</div>
+            <div :class="['btn', {disable: !amountWarns || price > coins }]" @click="localtakeoffWarn()">Снять варн</div>
         </div>
     </script>
 
@@ -1417,7 +1424,7 @@
             <div class="hint">Добавьте слот для создания нового персонажа</div>
             <div class="info">Слотов: {{ amountSlots }}</div>
             <div class="price">Стоимость услуги: <span>{{ price }} CC</span></div>
-            <div :class="['btn', {disable: amountSlots == maxSlots }]" @click="localaddSlot()">Добавить слот</div>
+            <div :class="['btn', {disable: amountSlots == maxSlots || price > coins }]" @click="localaddSlot()">Добавить слот</div>
         </div>
     </script>
 
@@ -1454,15 +1461,15 @@
                         <input placeholder="Введите новый E-Mail" @keypress.enter="saveMail()" v-model="newEmail"/>
                     </div>
                     <div v-if="codeMod">
-                        <input placeholder="Введите код" v-model="code" />
+                        <input placeholder="Введите код" v-model="code" @keypress="inputCheck($event)" @keypress.enter="confCode()"/>
                     </div>
                 </div>
                 <div class="actions">
                     <div v-if="!changeMailMod && !codeMod" @click="changeMailMod = true">Изменить</div>
                     <div v-if="!isConfirmed && !codeMod && !changeMailMod" @click="localsendCode()">Отправить код</div>
-                    <div v-if="codeMod" @click="confCode()">Подтвердить</div>
-                    <div v-if="changeMailMod" @click="saveMail()">Сохранить</div>
-                    <div v-if="changeMailMod || codeMod" @click="cancel()">Отменить</div>
+                    <div v-if="codeMod" @click="confCode()" :class="{ disable: !code }">Подтвердить</div>
+                    <div v-if="changeMailMod" @click="saveMail()" :class="{ disable: !emailIsValid }">Сохранить</div>
+                    <div v-if="changeMailMod || codeMod" @click="cancel()" :class="{ disable: intervalId }">Отменить {{ waiting }}</div>
                 </div>
             </div>
             <div class="record pass">
@@ -1472,14 +1479,14 @@
                         {{ passMessage }}
                     </div>
                     <div v-if="changePassMod">
-                        <input type="password" placeholder="Введите старый пароль" v-model="oldPass"/>
-                        <input type="password" placeholder="Введите новый пароль" v-model="newPass"/>
-                        <input type="password" placeholder="Повторно новый пароль" v-model="newPass2"/>
+                        <input type="password" placeholder="Введите старый пароль" v-model="oldPass" @keypress.enter="savePass()"/>
+                        <input type="password" placeholder="Введите новый пароль" v-model="newPass" @keypress.enter="savePass()"/>
+                        <input type="password" placeholder="Повторно новый пароль" v-model="newPass2" @keypress.enter="savePass()"/>
                     </div>
                 </div>
                 <div class="actions">
                     <div v-if="!changePassMod" @click="changePassMod = true">Изменить</div>
-                    <div v-if="changePassMod" @click="savePass()">Сохранить</div>
+                    <div v-if="changePassMod" @click="savePass()" :class="{ disable: !passIsValid }">Сохранить</div>
                     <div v-if="changePassMod" @click="passCancel()">Отменить</div>
                 </div>
             </div>
@@ -1519,6 +1526,15 @@
         <div v-for="num in id" :style="{width: num * 5 + 'px'}"></div>
     </div>
 
+    <div id="timer" v-if="timer" v-cloak>
+        <img :src="'img/timer/'+timer.icon" />
+        <div class="text">{{ timer.text }}</div>
+        <div class="progress">
+            <div class="fill" :style="{width: width + '%'}"></div>
+        </div>
+        <div class="time">{{ time / 1000 }} с.</div>
+    </div>
+
     <script src="js/playerMenuSvgPaths.js"></script>
     <script src="js/playerMenu.js"></script>
     <!-- ------------------------ МЕНЮ ИГРОКА ------------------------ -->
@@ -1553,6 +1569,7 @@
     <script src="js/captureScore.js"></script>
     <script src="js/killList.js"></script>
     <script src="js/watermark.js"></script>
+    <script src="js/timer.js"></script>
 
 </body>
 
