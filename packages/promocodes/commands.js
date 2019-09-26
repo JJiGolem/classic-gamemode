@@ -48,4 +48,31 @@ module.exports = {
             mp.events.call("player.media.changed", rec);
         }
     },
+    "/mediastats": {
+        access: 5,
+        description: "Статистика медиа (ютуберов/стримеров).",
+        args: "",
+        handler: async (player, args, out) => {
+
+            var promocodes = await db.Models.Promocode.findAll({
+                where: {
+                    media: 1
+                },
+                include: {
+                    attributes: ["name"],
+                    model: db.Models.Character,
+                },
+                order: [
+                    ["invited", "DESC"],
+                    ["completed", "DESC"],
+                ],
+            });
+            var text = `ТОП медиа:<br/>`;
+            for (var i = 0; i < promocodes.length; i++) {
+                var p = promocodes[i];
+                text += `${i+1}) ${p.Character.name} - ${p.promocode} [${p.completed}/${p.invited}]<br/>`;
+            }
+            out.log(text);
+        }
+    },
 }
