@@ -17,6 +17,7 @@ module.exports = {
         });
     },
     playAnimationById(player, id) {
+        id = Math.clamp(id, 0, list.length - 1);
         var anim = list[id].split(' ');
         this.playAnimation(player, anim[0], anim[1], 1, 1);
     },

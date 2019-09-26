@@ -28,7 +28,7 @@ module.exports = {
         description: "Вкл/выкл режим воспроизведения анимаций.",
         args: "",
         handler: (player, args) => {
-            // TODO: ...
+            player.call("animations.animator");
         }
     },
 }
