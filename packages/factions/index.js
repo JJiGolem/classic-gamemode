@@ -217,6 +217,10 @@ module.exports = {
     getBlip(id) {
         return this.blips[id - 1];
     },
+    getFactionName(player) {
+        if (!player.character.factionId) return null;
+        return this.getFaction(player.character.factionId).name;
+    },
     getRank(faction, rank) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         return faction.ranks[rank - 1];
@@ -228,6 +232,10 @@ module.exports = {
             if (ranks[i].id == rankId) return ranks[i];
         }
         return null;
+    },
+    getRankName(player) {
+        if (!player.character.factionId) return null;
+        return this.getRankById(player.character.factionId, player.character.factionRank).name;
     },
     getMinRank(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
@@ -258,6 +266,8 @@ module.exports = {
         if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
         else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
         else if (this.isNewsFaction(faction)) mp.events.call(`mapCase.news.init`, player);
+
+        mp.events.call(`player.faction.changed`, player);
     },
     setBlip(faction, type, color) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
@@ -282,6 +292,8 @@ module.exports = {
         if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
         else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
         else if (this.isNewsFaction(faction)) mp.events.call(`mapCase.news.init`, player);
+
+        mp.events.call(`player.faction.changed`, player);
     },
     deleteMember(player) {
         var character = player.character;
@@ -296,6 +308,8 @@ module.exports = {
         player.setVariable("factionId", character.factionId);
         player.call(`factions.faction.set`, [null]);
         player.call(`mapCase.enable`, [false]);
+
+        mp.events.call(`player.faction.changed`, player);
     },
     getMembers(player) {
         var members = [];
@@ -306,11 +320,14 @@ module.exports = {
         });
         return members;
     },
-    setRank(character, rank) {
+    setRank(player, rank) {
+        var character = player.character;
         if (typeof rank == 'number') rank = this.getRank(character.factionId, rank);
 
         character.factionRank = rank.id;
         character.save();
+
+        mp.events.call("player.factionRank.changed", player);
 
         var type = "";
         if (this.isPoliceFaction(character.factionId)) type = "pd";
@@ -400,6 +417,7 @@ module.exports = {
         } else return;
     },
     canFillWarehouse(player, boxType, faction) {
+        if (!this.whiteListWarehouse[boxType]) return false;
         if (!this.whiteListWarehouse[boxType][player.character.factionId]) return false;
         return this.whiteListWarehouse[boxType][player.character.factionId].includes(faction.id)
     },

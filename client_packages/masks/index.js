@@ -20,6 +20,7 @@ mp.events.add('masks.shop.enter', (data, list) => {
     mp.callCEFR('setOpacityChat', [0.0]);
 
     let player = mp.players.local;
+    player.clearAllProps();
     maskList = list;
 
     mp.events.call('masks.set', 0, 0);
@@ -94,6 +95,9 @@ mp.events.add('masks.buy.ans', (ans, data) => {
             break; 
         case 5:
             mp.callCEFV(`selectMenu.notification = 'Ошибка финансовой операции'`);
+            break; 
+        case 6:
+            mp.callCEFV(`selectMenu.notification = 'В магазине кончились маски'`);
             break; 
     }
 });

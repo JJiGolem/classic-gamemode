@@ -5,6 +5,7 @@ let controlsDisabled = false;
 let player = mp.players.local;
 let currentGender = 0;
 let currentColorType = 0;
+let bType = 1;
 let prices;
 
 let rotation = {
@@ -40,6 +41,8 @@ mp.keys.bind(0x45, true, () => {
 
 mp.events.add('barbershop.enter', (shopData, gender, appearanceData, priceData) => {
     bindKeys(true);
+    bType = shopData.bType;
+    mp.chat.debug(bType);
     controlsDisabled = true;
     mp.events.call('hud.enable', false);
     mp.game.ui.displayRadar(false);
@@ -48,6 +51,7 @@ mp.events.add('barbershop.enter', (shopData, gender, appearanceData, priceData) 
     currentGender = gender;
     initCurrentAppearanceParams(appearanceData);
     mp.events.call('barbershop.mainMenu.show');
+    clearClothes();
     mp.utils.cam.create(shopData.camera.x, shopData.camera.y, shopData.camera.z, shopData.pos.x, shopData.pos.y, shopData.pos.z + 0.6, 40);
 
     player.position = new mp.Vector3(shopData.pos.x, shopData.pos.y, shopData.pos.z);
@@ -78,6 +82,7 @@ mp.events.add('render', () => {
         mp.game.controls.disableControlAction(0, 30, true); /// влево вправо
         mp.game.controls.disableControlAction(0, 24, true); /// удары
         mp.game.controls.disableControlAction(1, 200, true); // esc
+        mp.game.controls.disableControlAction(0, 140, true); /// удары R
     }
 
     if (rotation.left) player.setHeading(player.getHeading() - 2);
@@ -112,6 +117,7 @@ mp.events.add('barbershop.mainMenu.show', () => {
 
     mp.callCEFV(`selectMenu.setItems('barbershopMain', ${JSON.stringify(items)});`)
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["barbershopMain"])`);
+    mp.callCEFV(`selectMenu.menu.headerImg = '${getHeaderImageByType()}'`);
     mp.callCEFV(`selectMenu.show = true`);
 
 });
@@ -137,6 +143,7 @@ mp.events.add('barbershop.hairstylesMenu.show', () => {
     player.setComponentVariation(2, 0, 0, 2);
     mp.callCEFV(`selectMenu.setItems('barbershopHairstyles', ${JSON.stringify(items)});`)
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["barbershopHairstyles"])`);
+    mp.callCEFV(`selectMenu.menu.headerImg = '${getHeaderImageByType()}'`);
     mp.callCEFV(`selectMenu.show = true`);
 
 });
@@ -168,6 +175,9 @@ mp.events.add('barbershop.hairstyle.buy.ans', (ans) => {
         case 2:
             mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
             break;
+        case 3:
+            mp.callCEFV(`selectMenu.notification = 'В парикмахерской кончились ресурсы'`);
+            break;
     }
 });
 
@@ -190,6 +200,7 @@ mp.events.add('barbershop.facialHairMenu.show', () => {
     player.setHeadOverlay(1, 255, 1.0, appearance.facialHairColor, 0);
     mp.callCEFV(`selectMenu.setItems('barbershopFacialHair', ${JSON.stringify(items)});`)
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["barbershopFacialHair"])`);
+    mp.callCEFV(`selectMenu.menu.headerImg = '${getHeaderImageByType()}'`);
     mp.callCEFV(`selectMenu.show = true`);
 });
 
@@ -218,6 +229,9 @@ mp.events.add('barbershop.facialHair.buy.ans', (ans) => {
         case 2:
             mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
             break;
+        case 3:
+            mp.callCEFV(`selectMenu.notification = 'В парикмахерской кончились ресурсы'`);
+            break;
     }
 });
 
@@ -238,6 +252,7 @@ mp.events.add('barbershop.colorMenu.show', (type = currentColorType) => {
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["barbershopColor"])`);
     mp.callCEFVN({ "selectMenu.menu.items[1].values": [`$${prices.colorChangePrice}`] });
     mp.callCEFVN({ "selectMenu.menu.items[0].values": colorList });
+    mp.callCEFV(`selectMenu.menu.headerImg = '${getHeaderImageByType()}'`);
     mp.callCEFV(`selectMenu.show = true`);
 });
 
@@ -292,6 +307,9 @@ mp.events.add('barbershop.color.buy.ans', (ans) => {
         case 4:
             mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
             break;
+        case 5:
+            mp.callCEFV(`selectMenu.notification = 'В парикмахерской кончились ресурсы'`);
+            break;
     }
 });
 
@@ -339,4 +357,22 @@ function startRotationRight() {
 
 function stopRotationRight() {
     rotation.right = false;
+}
+
+function getHeaderImageByType(type = bType) {
+    switch (type) {
+        case 1:
+            return "beachcombover.png";
+        case 2:
+            return "herrkutz.png";
+        case 3:
+            return "haironhawick.png";
+        case 4:
+            return "osheas.png"
+    }
+}
+
+function clearClothes() {
+        player.setComponentVariation(1, 0, 0, 0);
+        player.clearAllProps();
 }

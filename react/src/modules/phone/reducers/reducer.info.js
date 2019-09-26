@@ -185,7 +185,7 @@ const initialState = {
             ]
             // order: {
             //     productCount,
-            //     productPrice
+            //     productPrice,
             // }
         }
     ]
@@ -282,20 +282,10 @@ export default function info(state = initialState, action) {
             return newState;
 
         case 'SET_SELL_INFO_BUSINESS':
-            // newState = { ...state };
-            // newState.biz[0].ansSell = payload;
-            // return newState;
-
-            return {
-                ...state,
-                biz: [
-                    {
-                        ...state.biz,
-                        ansSell: payload
-                    }
-                ] 
-            }
-
+            newState = { ...state };
+            newState.biz[0].ansSell = payload;
+            return newState;
+            
         case 'CREATE_ORDER_BUSINESS':
             newState = { ...state };
             newState.biz[0].order = payload;
@@ -326,14 +316,14 @@ export default function info(state = initialState, action) {
             return newState;
 
         case 'SELL_BUSINESS':
-            newState = { ...state };
-            let bizIndex = newState.biz.findIndex(biz => biz.id === payload);
+            const newStateSellBiz = { ...state };
+            let bizIndex = newStateSellBiz.biz.findIndex(biz => biz.id === payload);
 
             if (bizIndex !== -1) {
-                newState.biz.splice(bizIndex, 1);
+                newStateSellBiz.biz.splice(bizIndex, 1);
             }
 
-            return newState;
+            return newStateSellBiz;
 
         case 'ADD_APP_TO_PHONE':
             const newStateAdd = {...state};

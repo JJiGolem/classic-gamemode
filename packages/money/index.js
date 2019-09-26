@@ -5,13 +5,21 @@ module.exports = {
     /// player - игрок которому перевести средства
     /// number - количество средств
     /// callback - функция колбека, которая вызовется по завершению работы или в случае ошибки
-    addCash(player, number, callback) {
-        if (callback == null) return;
+    addCash(player, number, callbackT) {
+        if (callbackT == null) return;
+        let callback = (result) => {
+            try {
+                callbackT(result);
+            }
+            catch(e) {
+                console.log(e);
+            }
+        }
         number = parseInt(number);
-        if (isNaN(number)) callback(false);
-        if (number < 0 || number > 1000000000) callback(false);
-        if (player == null) callback(false);
-        if (player.character == null) callback(false);
+        if (isNaN(number)) return callback(false);
+        if (number < 0 || number > 1000000000) return callback(false);
+        if (player == null) return callback(false);
+        if (player.character == null) return callback(false);
 
         let cash = player.character.cash;
         db.sequelize.transaction(t => {
@@ -30,12 +38,20 @@ module.exports = {
     /// id - id персоонажа которому перевести средства
     /// number - количество средств
     /// callback - функция колбека, которая вызовется по завершению работы или в случае ошибки
-    addCashById(id, number, callback) {
-        if (callback == null) return;
+    addCashById(id, number, callbackT) {
+        if (callbackT == null) return;
+        let callback = (result) => {
+            try {
+                callbackT(result);
+            }
+            catch(e) {
+                console.log(e);
+            }
+        }
         id = parseInt(id);
         number = parseInt(number);
-        if (isNaN(number) || isNaN(id)) callback(false);
-        if (number < 0 || number > 1000000000 || id < 0 || id > 100000000) callback(false);
+        if (isNaN(number) || isNaN(id)) return callback(false);
+        if (number < 0 || number > 1000000000 || id < 0 || id > 100000000) return callback(false);
 
         let player = mp.players.toArray().find( player => {
             if(player.character) {
@@ -61,13 +77,22 @@ module.exports = {
             this.addCash(player, number, callback);
         }
     },
-    addMoney(player, number, callback) {
-        if (callback == null) return;
+    addMoney(player, number, callbackT) {
+        if (typeof player == 'number') return this.addMoneyById(player, number, callbackT);
+        if (callbackT == null) return;
+        let callback = (result) => {
+            try {
+                callbackT(result);
+            }
+            catch(e) {
+                console.log(e);
+            }
+        }
         number = parseInt(number);
-        if (isNaN(number)) callback(false);
-        if (number < 0 || number > 1000000000) callback(false);
-        if (player == null) callback(false);
-        if (player.character == null) callback(false);
+        if (isNaN(number)) return callback(false);
+        if (number < 0 || number > 1000000000) return callback(false);
+        if (player == null) return callback(false);
+        if (player.character == null) return callback(false);
 
         let bank = player.character.bank;
         db.sequelize.transaction(t => {
@@ -83,12 +108,20 @@ module.exports = {
             callback(false);
         });
     },
-    addMoneyById(id, number, callback) {
-        if (callback == null) return;
+    addMoneyById(id, number, callbackT) {
+        if (callbackT == null) return;
+        let callback = (result) => {
+            try {
+                callbackT(result);
+            }
+            catch(e) {
+                console.log(e);
+            }
+        }
         id = parseInt(id);
         number = parseInt(number);
-        if (isNaN(number) || isNaN(id)) callback(false);
-        if (number < 0 || number > 1000000000 || id < 0 || id > 100000000) callback(false);
+        if (isNaN(number) || isNaN(id)) return callback(false);
+        if (number < 0 || number > 1000000000 || id < 0 || id > 100000000) return callback(false);
 
         let player = mp.players.toArray().find( player => {
             if(player.character) {
@@ -114,13 +147,21 @@ module.exports = {
             this.addMoney(player, number, callback);
         }
     },
-    removeCash(player, number, callback) {
-        if (callback == null) return;
+    removeCash(player, number, callbackT) {
+        if (callbackT == null) return;
+        let callback = (result) => {
+            try {
+                callbackT(result);
+            }
+            catch(e) {
+                console.log(e);
+            }
+        }
         number = parseInt(number);
-        if (isNaN(number)) callback(false);
-        if (number < 0 || number > 1000000000) callback(false);
-        if (player == null) callback(false);
-        if (player.character == null) callback(false);
+        if (isNaN(number)) return callback(false);
+        if (number < 0 || number > 1000000000) return callback(false);
+        if (player == null) return callback(false);
+        if (player.character == null) return callback(false);
 
         let cash = player.character.cash;
         db.sequelize.transaction(t => {
@@ -137,12 +178,20 @@ module.exports = {
             callback(false);
         });
     },
-    removeCashById(id, number, callback) {
-        if (callback == null) return;
+    removeCashById(id, number, callbackT) {
+        if (callbackT == null) return;
+        let callback = (result) => {
+            try {
+                callbackT(result);
+            }
+            catch(e) {
+                console.log(e);
+            }
+        }
         id = parseInt(id);
         number = parseInt(number);
-        if (isNaN(number) || isNaN(id)) callback(false);
-        if (number < 0 || number > 1000000000 || id < 0 || id > 100000000) callback(false);
+        if (isNaN(number) || isNaN(id)) return callback(false);
+        if (number < 0 || number > 1000000000 || id < 0 || id > 100000000) return callback(false);
 
         let player = mp.players.toArray().find( player => {
             if(player.character) {
@@ -169,13 +218,21 @@ module.exports = {
             this.addCash(player, number, callback);
         }
     },
-    removeMoney(player, number, callback) {
-        if (callback == null) return;
+    removeMoney(player, number, callbackT) {
+        if (callbackT == null) return;
+        let callback = (result) => {
+            try {
+                callbackT(result);
+            }
+            catch(e) {
+                console.log(e);
+            }
+        }
         number = parseInt(number);
-        if (isNaN(number)) callback(false);
-        if (number < 0 || number > 1000000000) callback(false);
-        if (player == null) callback(false);
-        if (player.character == null) callback(false);
+        if (isNaN(number)) return callback(false);
+        if (number < 0 || number > 1000000000) return callback(false);
+        if (player == null) return callback(false);
+        if (player.character == null) return callback(false);
 
         let bank = player.character.bank;
         db.sequelize.transaction(t => {
@@ -192,12 +249,20 @@ module.exports = {
             callback(false);
         });
     },
-    removeMoneyById(id, number, callback) {
-        if (callback == null) return;
+    removeMoneyById(id, number, callbackT) {
+        if (callbackT == null) return;
+        let callback = (result) => {
+            try {
+                callbackT(result);
+            }
+            catch(e) {
+                console.log(e);
+            }
+        }
         id = parseInt(id);
         number = parseInt(number);
-        if (isNaN(number) || isNaN(id)) callback(false);
-        if (number < 0 || number > 1000000000 || id < 0 || id > 100000000) callback(false);
+        if (isNaN(number) || isNaN(id)) return callback(false);
+        if (number < 0 || number > 1000000000 || id < 0 || id > 100000000) return callback(false);
 
         let player = mp.players.toArray().find( player => {
             if(player.character) {
@@ -225,13 +290,21 @@ module.exports = {
         }
     },
     /// Для ироков, которые онлайн
-    moveCash(playerFrom, playerTo, number, callback) {
-        if (callback == null) return;
+    moveCash(playerFrom, playerTo, number, callbackT) {
+        if (callbackT == null) return;
+        let callback = (result) => {
+            try {
+                callbackT(result);
+            }
+            catch(e) {
+                console.log(e);
+            }
+        }
         number = parseInt(number);
-        if (isNaN(number)) callback(false);
-        if (number < 0 || number > 1000000000) callback(false);
-        if (playerFrom == null || playerTo == null) callback(false);
-        if (playerFrom.character == null || playerTo.character == null) callback(false);
+        if (isNaN(number)) return callback(false);
+        if (number < 0 || number > 1000000000) return callback(false);
+        if (playerFrom == null || playerTo == null) return callback(false);
+        if (playerFrom.character == null || playerTo.character == null) return callback(false);
 
         let cashFrom = playerFrom.character.cash;
         let cashTo = playerTo.character.cash;

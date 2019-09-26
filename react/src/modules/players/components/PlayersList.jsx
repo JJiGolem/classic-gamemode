@@ -51,7 +51,7 @@ class PlayersList extends Component {
 
     render() {
         const { players } = this.props;
-        const { search, type } = this.state;
+        const { search, type, sortedBy } = this.state;
 
         return (
             <Fragment>
@@ -66,33 +66,43 @@ class PlayersList extends Component {
                             </colgroup>
                             <thead>
                                 <tr>
-                                    <th onClick={() => { this.setState({ sortedBy: 'id' }) }}>id</th>
-                                    <th onClick={() => { this.setState({ sortedBy: 'name' }) }}>Имя</th>
-                                    <th onClick={() => { this.setState({ sortedBy: 'faction' }) }}>Организация</th>
+                                    <th onClick={() => { this.setState({ sortedBy: 'id' }) }}>id { sortedBy == 'id' && '▼' }</th>
+                                    <th onClick={() => { this.setState({ sortedBy: 'name' }) }}>Имя { sortedBy == 'name' && '▼' }</th>
+                                    <th onClick={() => { this.setState({ sortedBy: 'faction' }) }}>Организация { sortedBy == 'faction' && '▼' }</th>
                                     <th>ping</th>
                                 </tr>
                             </thead>
                         </table>
                         <div class="players_list-navigate_panel">
-                            <input onChange={this.handleChangeInput} value={search}/>
-                            <button 
+                            <span>Поиск:</span>
+                            <input onChange={this.handleChangeInput} value={search} maxLength={25}/>
+                            <div 
                                 onClick={() => this.setState({ type: 'id' })}
-                                style={{ borderColor: type === 'id' && 'yellow' }}
+                                style={{ 
+                                    borderColor: type === 'id' && 'yellow',
+                                    background: type === 'id' && 'black'
+                                }}
                             >
                                 id
-                            </button>
-                            <button 
+                            </div>
+                            <div 
                                 onClick={() => this.setState({ type: 'name' })}
-                                style={{ borderColor: type === 'name' && 'yellow' }}
+                                style={{ 
+                                    borderColor: type === 'name' && 'yellow',
+                                    background: type === 'name' && 'black'
+                                }}
                             >
                                 Имя
-                            </button>
-                            <button 
+                            </div>
+                            <div 
                                 onClick={() => this.setState({ type: 'faction' })}
-                                style={{ borderColor: type === 'faction' && 'yellow' }}
+                                style={{ 
+                                    borderColor: type === 'faction' && 'yellow',
+                                    background: type === 'faction' && 'black'
+                                }}
                             >
                                 Организация
-                            </button>
+                            </div>
                         </div>
                     </div>
                     <div class="players_list-body">

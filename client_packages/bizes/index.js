@@ -56,6 +56,7 @@ mp.events.add("biz.sell.check", (idBizT, idOrNick, costT) => {
     mp.events.callRemote("biz.sell.check", idOrNick);
 });
 mp.events.add("biz.sell.check.ans", (nick) => {
+    mp.console(nick, cost)
     mp.callCEFR("biz.sell.check.ans", [nick, cost]);
 });
 
@@ -84,4 +85,8 @@ mp.events.add("biz.order.cancel", (id) => {
 });
 mp.events.add("biz.order.complete", (resources) => {
     mp.callCEFR("biz.order.complete", [resources]);
+});
+
+mp.events.add("biz.statistics.update", (date, money) => {
+    mp.callCEFR("biz.statistics.update", [date, money]);
 });

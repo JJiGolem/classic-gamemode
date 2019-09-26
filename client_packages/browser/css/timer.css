@@ -1,0 +1,39 @@
+#timer {
+    color: #fff;
+    font-family: Ubuntu;
+    font-size: 1.6vh;
+    font-weight: bold;
+    left: 50%;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 40vh;
+}
+
+#timer img {
+    width: 6vh;
+}
+
+#timer .progress {
+    background: #000a;
+    border-radius: 15px;
+    height: 2vh;
+    margin-top: 0.5vh;
+    width: 100%;
+}
+
+#timer .progress .fill {
+    background: #ef3737;
+    border-radius: 10px;
+    height: 100%;
+    transition: width 0.5s;
+}
+
+#timer .text {
+    margin: 1vh 0;
+}
+
+#timer .time {
+    margin-top: 0.5vh;
+}

@@ -465,6 +465,8 @@ var inventory = new Vue({
         descItemName() {
             var item = this.itemDesc.item;
             if (!item) return null;
+            if (item.itemId == 15 && item.params.name) // рыба
+                return `${item.params.name}`;
             if (item.itemId == 33 && item.params.vehName) // ключи авто
                 return `Ключи от ${item.params.vehName}`;
             return this.itemsInfo[item.itemId].name;
@@ -474,6 +476,12 @@ var inventory = new Vue({
             if (!item) return null;
 
             return parseInt(this.getItemWeight(item) * 1000) / 1000;
+        },
+        havePockets() {
+            for (var index in this.equipment)
+                if (this.equipment[index].pockets) return true;
+
+            return false;
         },
     },
     methods: {
@@ -988,11 +996,11 @@ var inventory = new Vue({
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
-            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone"])) return;
+            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "playerMenu"])) return;
             if (Date.now() - self.lastShowTime < 500) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;
             if (e.keyCode > 47 && e.keyCode < 58) {
-                if (!self.enable && !self.debug) return;
+                if (!self.enable) return;
                 var num = e.keyCode - 48;
                 self.onUseHotkey(num);
             }

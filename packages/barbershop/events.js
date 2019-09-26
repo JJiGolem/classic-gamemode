@@ -1,5 +1,6 @@
 let barbershop = require('./index.js');
 let money = call('money');
+let inventory = call('inventory');
 
 module.exports = {
     "init": () => {
@@ -36,23 +37,31 @@ module.exports = {
             hairHighlightColor: player.character.hairHighlightColor,
             facialHairColor: player.character.beardColor
         }
+        let productPrice = barbershop.productPrice;
+        let multiplier = barbershop.getPriceMultiplier(id);
         let priceData = {
-            hairstylePrice: barbershop.hairstylePrice,
-            facialHairPrice: barbershop.facialHairPrice,
-            colorChangePrice: barbershop.colorChangePrice
+            hairstylePrice: barbershop.hairstyleProducts * productPrice * multiplier,
+            facialHairPrice: barbershop.facialHairProducts * productPrice * multiplier,
+            colorChangePrice: barbershop.colorChangeProducts * productPrice * multiplier
         }
         player.call('barbershop.enter', [shopData, gender, appearanceData, priceData]);
     },
     "barbershop.exit": (player) => {
         player.dimension = 0;
-        //inventory.updateAllView(player);
+        inventory.updateAllView(player);
     },
     "barbershop.hairstyle.buy": (player, hairstyleId) => {
-        let price = barbershop.hairstylePrice;
-        if (player.character.cash < price) return player.call('barbershop.hairstyle.buy.ans', [1]);
+        let barbershopId = player.currentBarbershopId;
+        if (barbershopId == null) return;
 
+        let price = barbershop.hairstyleProducts * barbershop.productPrice * barbershop.getPriceMultiplier(barbershopId);
+        if (player.character.cash < price) return player.call('barbershop.hairstyle.buy.ans', [1]);
+        let productsAvailable = barbershop.getProductsAmount(barbershopId);
+        if (barbershop.hairstyleProducts > productsAvailable) return player.call('barbershop.hairstyle.buy.ans', [3]);
         money.removeCash(player, price, function(result) {
             if (result) {
+                barbershop.removeProducts(barbershopId, barbershop.hairstyleProducts);
+                barbershop.updateCashbox(barbershopId, price);
                 player.character.hair = hairstyleId;
                 player.character.save();
                 player.setClothes(2, hairstyleId, 0, 2);
@@ -63,11 +72,17 @@ module.exports = {
         });
     },
     "barbershop.facialHair.buy": (player, index) => {
-        let price = barbershop.facialHairPrice;
+        let barbershopId = player.currentBarbershopId;
+        if (barbershopId == null) return;
+        
+        let price = barbershop.facialHairProducts * barbershop.productPrice * barbershop.getPriceMultiplier(barbershopId);
         if (player.character.cash < price) return player.call('barbershop.facialHair.buy.ans', [1]);
-
+        let productsAvailable = barbershop.getProductsAmount(barbershopId);
+        if (barbershop.facialHairProducts > productsAvailable) return player.call('barbershop.hairstyle.buy.ans', [3]);
         money.removeCash(player, price, function (result) {
             if (result) {
+                barbershop.removeProducts(barbershopId, barbershop.facialHairProducts);
+                barbershop.updateCashbox(barbershopId, price);
                 player.setHeadOverlay(1, [index, 1.0, player.character.beardColor, 0]);
                 player.character.Appearances[1].value = index;
                 player.character.Appearances[1].save();
@@ -79,11 +94,17 @@ module.exports = {
 
     },
     "barbershop.color.buy": (player, type, index) => {
-        let price = barbershop.colorChangePrice;
-        if (player.character.cash < price) return player.call('barbershop.color.buy.ans', [3]);
+        let barbershopId = player.currentBarbershopId;
+        if (barbershopId == null) return;
 
+        let price = barbershop.colorChangeProducts * barbershop.productPrice * barbershop.getPriceMultiplier(barbershopId);
+        if (player.character.cash < price) return player.call('barbershop.color.buy.ans', [3]);
+        let productsAvailable = barbershop.getProductsAmount(barbershopId);
+        if (barbershop.colorChangeProducts > productsAvailable) return player.call('barbershop.hairstyle.buy.ans', [5]);
         money.removeCash(player, price, function (result) {
             if (result) {
+                barbershop.removeProducts(barbershopId, barbershop.colorChangeProducts);
+                barbershop.updateCashbox(barbershopId, price);
                 switch (type) {
                     case 0:
                         player.setHairColor(index, player.character.hairHighlightColor);

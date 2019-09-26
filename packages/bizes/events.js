@@ -80,7 +80,9 @@ module.exports = {
             await info.save();
             player.call('biz.buy.ans', [1, player.character.name]);
             bizService.setTimer(biz);
-            player.call('phone.app.add', ["biz", bizService.getBizInfoForApp(biz)]);
+            mp.events.call('player.biz.changed', player);
+            let bizInfo = bizService.getBizInfoForApp(biz);
+            bizInfo != null && player.call('phone.app.add', ["biz", bizInfo]);
         });
     },
     "biz.sell.toGov": (player, id) => {

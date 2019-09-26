@@ -218,7 +218,7 @@
     overflow-y: auto;
 }
 
-#inventory .environment .empty {
+#inventory .environment .empty, #inventory .playerInventory .empty {
     text-align: center;
 }
 
@@ -397,6 +397,17 @@
 
 #inventory .item.dragging {
     opacity: 0.4;
+}
+
+#inventory .item .close {
+    color: #888;
+    position: absolute;
+    right: -0.8vh;
+    top: -0.8vh;
+}
+
+#inventory .item .close:hover {
+    color: #fff;
 }
 
 #inventory .item .count {

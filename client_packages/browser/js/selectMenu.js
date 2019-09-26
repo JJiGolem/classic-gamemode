@@ -3491,6 +3491,7 @@ var selectMenu = new Vue({
             "tuningMain": {
                 name: "tuningMain",
                 header: "LS Customs",
+                headerImg: "lsc.png",
                 items: [{
                         text: "Ремонт кузова",
                         values: ['$100']
@@ -3611,6 +3612,7 @@ var selectMenu = new Vue({
             "tuningColors": {
                 name: "tuningColors",
                 header: "Покраска",
+                headerImg: "lsc.png",
                 items: [{
                         text: "Основной цвет",
                         values: [],
@@ -3666,6 +3668,7 @@ var selectMenu = new Vue({
             "tuningEngine": {
                 name: "tuningEngine",
                 header: "Улучшение двигателя",
+                headerImg: "lsc.png",
                 items: [{
                         text: "Стандарт",
                         values: ['$100']
@@ -3718,6 +3721,7 @@ var selectMenu = new Vue({
             "tuningBreak": {
                 name: "tuningBreak",
                 header: "Улучшение тормозов",
+                headerImg: "lsc.png",
                 items: [{
                         text: "Стандартные тормоза",
                         values: ['$100']
@@ -3766,6 +3770,7 @@ var selectMenu = new Vue({
             "tuningTransmission": {
                 name: "tuningTransmission",
                 header: "Улучшение трансмиссии",
+                headerImg: "lsc.png",
                 items: [{
                         text: "Стандартная трансмиссия",
                         values: ['$100']
@@ -3813,6 +3818,7 @@ var selectMenu = new Vue({
             "tuningSuspension": {
                 name: "tuningTransmission",
                 header: "Улучшение трансмиссии",
+                headerImg: "lsc.png",
                 items: [{
                         text: "Стандартная подвеска",
                         values: ['$100']
@@ -3872,6 +3878,7 @@ var selectMenu = new Vue({
             "tuningArmour": {
                 name: "tuningArmour",
                 header: "Броня",
+                headerImg: "lsc.png",
                 items: [{
                         text: "Нет",
                         values: ['$100']
@@ -3928,6 +3935,7 @@ var selectMenu = new Vue({
             "tuningTurbo": {
                 name: "tuningTurbo",
                 header: "Турбонаддув",
+                headerImg: "lsc.png",
                 items: [{
                         text: "Нет",
                         values: ['$100']
@@ -3968,6 +3976,7 @@ var selectMenu = new Vue({
             "tuningDefault": {
                 name: "tuningDefault",
                 header: "",
+                headerImg: "lsc.png",
                 items: [],
                 i: 0,
                 j: 0,
@@ -4785,10 +4794,12 @@ var selectMenu = new Vue({
                         text: "Урожай",
                         values: ["Урожай А", "Урожай Б", "Урожай С"],
                     },
-                    // {
-                    //     text: "Количество",
-                    //     values: ["1 ед.", "2 ед.", "3 ед."],
-                    // },
+                    {
+                        text: "Количество",
+                        values: ["100 ед.", "200 ед.", "300 ед.", "400 ед.", "500 ед.", "600 ед.", "700 ед.", "800 ед.", "900 ед.", "1000 ед.",
+                            "1100 ед.", "1200 ед.", "1300 ед.", "1400 ед.", "1500 ед.", "1600 ед.", "1700 ед.", "1800 ед.", "1900 ед.", "2000 ед."
+                        ],
+                    },
                     {
                         text: "Купить"
                     },
@@ -4809,8 +4820,11 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Купить') {
-                            var index = this.items[0].i;
-                            mp.trigger(`callRemote`, `farms.warehouse.products.buy`, index);
+                            var data = {
+                                index: this.items[0].i,
+                                count: parseInt(this.items[1].values[this.items[1].i]),
+                            };
+                            mp.trigger(`callRemote`, `farms.warehouse.products.buy`, JSON.stringify(data));
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmProducts");
                         }
@@ -5169,6 +5183,7 @@ var selectMenu = new Vue({
             "maskShop": {
                 name: "maskShop",
                 header: "Магазин масок",
+                headerImg: "masks.png",
                 items: [],
                 i: 0,
                 j: 0,
@@ -5204,6 +5219,7 @@ var selectMenu = new Vue({
             "barbershopMain": {
                 name: "barbershopMain",
                 header: "Парикмахерская",
+                headerImg: "",
                 items: [],
                 i: 0,
                 j: 0,
@@ -5244,6 +5260,7 @@ var selectMenu = new Vue({
             "barbershopHairstyles": {
                 name: "barbershopHairstyles",
                 header: "Прически",
+                headerImg: "",
                 items: [],
                 i: 0,
                 j: 0,
@@ -5277,6 +5294,7 @@ var selectMenu = new Vue({
             "barbershopFacialHair": {
                 name: "barbershopFacialHair",
                 header: "Растительность",
+                headerImg: "",
                 items: [],
                 i: 0,
                 j: 0,
@@ -5310,19 +5328,20 @@ var selectMenu = new Vue({
             "barbershopColor": {
                 name: "barbershopColor",
                 header: "Выбор цвета",
+                headerImg: "",
                 items: [{
-                    text: 'Цвета',
-                    values: []
-                },
-                {
-                    text: 'Применить',
-                    values: ['$100']
+                        text: 'Цвета',
+                        values: []
+                    },
+                    {
+                        text: 'Применить',
+                        values: ['$100']
 
-                },
-                {
-                    text: 'Назад'
+                    },
+                    {
+                        text: 'Назад'
 
-                },
+                    },
                 ],
                 i: 0,
                 j: 0,
@@ -5535,7 +5554,15 @@ var selectMenu = new Vue({
             var maxValue = values[values.length - 1];
             var curValue = values[this.menu.items[this.menu.i].i];
             return curValue / maxValue * 100 - offset + '%';
-        }
+        },
+        headerStyles() {
+            return {
+                background: `url('img/selectMenu/headers/${this.menu.headerImg}')`,
+                backgroundSize: `contain`,
+                borderRadius: `1vh 1vh 0 0`,
+                height: `10vh`,
+            };
+        },
     },
     watch: {
         notification(val, oldVal) {
@@ -5548,8 +5575,7 @@ var selectMenu = new Vue({
             setTimeout(() => {
                 if (this.valuesType(val) == 3) { // editable
                     var itemText = this.menu.items[val].text;
-                    this.$refs[itemText].focus();
-                    // console.log("focused")
+                    if (this.$refs[itemText]) this.$refs[itemText].focus();
                 }
             }, 100);
         },
@@ -5569,7 +5595,7 @@ var selectMenu = new Vue({
     },
     mounted() {
         let self = this;
-        window.addEventListener('keyup', function(e) {
+        window.addEventListener('keydown', function(e) {
             if (!self.menu) return;
             if (busy.includes(["inventory", "chat", "terminal", "phone"])) return;
             self.onKeyUp(e);
@@ -5581,7 +5607,8 @@ var selectMenu = new Vue({
 // Для своего меню необходимо создать след. структуру (комментарии внутри):
 /*var testMenu = {
     name: "test", // название меню, необходимо для отловки событий
-    header: "Меню выбора", // заголовок меню, видимый на экране
+    // header: "Меню выбора", // заголовок меню, видимый на экране
+    headerImg: "ammunation.png",
     items: [{
             text: "Выборочный тип 1", // текст пункта меню, видимый на экране
             // если ОДНО ИЗ значений начинается с '#', то снизу появится селектор цветов

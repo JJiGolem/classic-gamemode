@@ -1,12 +1,29 @@
 "use strict";
 
+let fs = require('fs');
 
 let bizes = new Array();
-let bizInfos = new Array();
+let bizesModules = new Array();
+
+/// biz types
+/// 0 - АЗС
+/// 1 - Супермаркет
+/// 2 - 
+/// 3 - СТО
+/// 4 - Магазин одежды
+/// 5 - Магазин оружия
+/// 6 - Парикмахерская
+/// 7 - Магазин масок
+
 
 let utils;
 let timer;
 let money;
+
+/// Economic constants
+let maxProductPriceMultiplier = 2.0;
+let minProductPriceMultiplier = 1.2;
+
 
 let getBizById = function(id) {
     return bizes.find(x => x.info.id == id);
@@ -29,6 +46,7 @@ let dropBiz = function(biz, sellToGov = false) {
                 for (let j = 0; j < mp.players.length; j++) {
                     if (mp.players.at(j).character == null) continue;
                     if (characterId == mp.players.at(j).character.id) {
+                        mp.events.call('player.biz.changed', mp.players.at(j));
                         if (sellToGov) {
                             mp.players.at(j).call('biz.sell.toGov.ans', [1]);
                         } else {
@@ -60,6 +78,7 @@ let getRandomDate = function(daysNumber) {
 };
 let getBizInfoForApp = function(biz) {
     if (biz == null) return null;
+    if (bizesModules[biz.info.type] == null) return null;
     return {
         id: biz.info.id,
         name: biz.info.name,
@@ -67,65 +86,21 @@ let getBizInfoForApp = function(biz) {
         cashBox: biz.info.cashBox,
         pos: [biz.info.x, biz.info.y, biz.info.z],
         days: parseInt((biz.info.date - Date.now()) / (24 * 3600 * 1000)),
-        rent: biz.info.price * 0.01,
+        rent: biz.info.price * bizesModules[biz.info.type].rentPerDayMultiplier,
         resourcesMax: biz.info.productsMaxCount,
         resources: biz.info.productsCount,
         price: biz.info.price,
         statistics: biz.info.BizStatistics,
-        order: null
+        order: null,
+        resourcePriceMin: bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier,
+        resourcePriceMax: bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier
     };
 };
 let getResourceName = function(type) {
-    switch (type) {
-        case 0:
-            return "Топливо";
-        case 1:
-            return "Продукты";
-        case 2:
-            return "Авто";
-        case 3:
-            return "Запчасти";
-        case 4:
-            return "Одежда";
-        case 5:
-            return "Оружие и патроны";
-        default:
-            return null;
-    }
+    return bizesModules[type].business.productName;
 };
-let getTypeName = function(type, isTable = false) {
-    /// Список с расшифровкой типов бизнесов
-    if (!isTable) {
-        switch (type) {
-            case 0:
-                return "АЗС";
-            case 1:
-                return "Супермаркет";
-            case 2:
-                return "Автосалон";
-            case 3:
-                return "СТО";
-            case 4:
-                return "Магазин одежды";
-            case 5:
-                return "Магазин оружия";
-            default:
-                return null;
-        }
-    } else {
-        switch (type) {
-            case 0:
-                return "FuelStation";
-                //case 1: return ""; //24/7
-                //case 2: return "";    //CarShow
-            case 3:
-                return "CarService";
-                //case 4: return "";   //Clothes
-                //case 5: return "";   //Ammu-Nation
-            default:
-                return null;
-        }
-    }
+let getTypeName = function(type) {
+    return bizesModules[type].business.name;
 };
 let bizUpdateCashBox = async function(id, money) {
     let biz = getBizById(id);
@@ -166,6 +141,7 @@ let createOrder = async function(id, count, price) {
     let biz = getBizById(id);
     if (biz == null) return false;
     if (biz.info.productsCount + count > biz.info.productsMaxCount) return false;
+    bizesModules
     //if (price > ) проверка в модуле экономики. Входит ли цена за 1 продукт в разрешенный диапазон
     biz.info.productsOrder = count;
     biz.info.productsOrderPrice = price;
@@ -184,29 +160,58 @@ let destroyOrder = async function(id) {
 
 
 module.exports = {
+    maxProductPriceMultiplier: maxProductPriceMultiplier,
+    minProductPriceMultiplier: minProductPriceMultiplier,
+
     async init() {
         utils = call("utils");
         timer = call("timer");
         money = call("money");
 
+        for (let file of fs.readdirSync(path.dirname(__dirname))) {
+            if (file != 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname) + "/" + file + '/index.js'))
+            {
+                let objects = require('../' + file + '/index');
+                if (objects.business != null && objects.business.type != null && objects.business.name != null && objects.business.productName != null && objects.rentPerDayMultiplier != null && objects.productPrice != null) {
+                    bizesModules[objects.business.type] = call(file);
+                }
+            }
+        }
+
         console.log("[BIZES] load bizes from DB");
         let bizesInfo = await db.Models.Biz.findAll({
             include: [db.Models.BizStatistics]
         });
+        let loadedCount = 0;
         for (let i = 0; i < bizesInfo.length; i++) {
+            if (!bizesModules[bizesInfo[i].type]) continue;
             let biz = await this.addBiz(bizesInfo[i]);
             setTimer(biz);
+            loadedCount++;
         }
-        bizInfos[0] = await db.Models.FuelStation.findAll();
-        bizInfos[1] = [];
-        bizInfos[2] = [];
-        bizInfos[3] = await db.Models.CarService.findAll();
-        bizInfos[4] = [];
-        bizInfos[5] = [];
-        console.log("[BIZES] " + bizesInfo.length + " bizes loaded");
+        console.log("[BIZES] " + loadedCount + " bizes loaded");
     },
-    async createBiz() {
-
+    async createBiz(name, price, type, position) {
+        let biz = await db.Models.Biz.create({
+            name: name,
+            price: price,
+            type: type,
+            cashBox: 0,
+            productsCount: 0,
+            productsMaxCount: 100,
+            x: position.x,
+            y: position.y,
+            z: position.z
+        }, {});
+        biz = await db.Models.Biz.findOne({
+            where: {
+                id: biz.id
+            },
+            include: [db.Models.BizStatistics]
+        });
+        biz = await this.addBiz(biz);
+        setTimer(biz);
+        console.log("[BIZES] added new biz");
     },
     isHaveBiz(characterId) {
         return bizes.findIndex(x => x.info.characterId == characterId) != -1;
@@ -240,12 +245,17 @@ module.exports = {
     sellBiz(biz, cost, seller, buyer, callback) {
         biz.info.characterId = buyer.character.id;
         biz.info.characterNick = buyer.character.name;
+        biz.info.date = getRandomDate(1);
+        setTimer(biz);
         biz.info.save().then(() => {
             if (money == null) return;
             money.moveCash(buyer, seller, cost, function(result) {
                 if (result) {
                     callback(true);
-                    buyer.call('phone.app.add', ["biz", getBizInfoForApp(biz)]);
+                    mp.events.call('player.biz.changed', seller);
+                    mp.events.call('player.biz.changed', buyer);
+                    let bizInfo = getBizInfoForApp(biz);
+                    bizInfo != null && buyer.call('phone.app.add', ["biz", bizInfo]);
                 } else {
                     callback(false);
                 }
@@ -308,6 +318,16 @@ module.exports = {
 
     addProducts: addProducts,
     removeProducts: removeProducts,
+    getProductsAmount(id) {
+        let biz = getBizById(id);
+        if (biz == null) return null;
+        return biz.info.productsCount;
+    },
+    getBizPosition(id) {
+        let biz = getBizById(id);
+        if (biz == null) return null;
+        return new mp.Vector3(biz.info.x, biz.info.y, biz.info.z);
+    },
 
     createOrder: createOrder,
     destroyOrder: destroyOrder,

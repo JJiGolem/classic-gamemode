@@ -61,6 +61,7 @@ module.exports = {
         if (!phone.isExists(number)) return player.call('phone.call.start.ans', [1]);
 
         for (let i = 0; i < mp.players.length; i++) {
+            if (mp.players[i] == null) continue;
             if (mp.players[i].phone == null) continue;
             if (mp.players[i].phone.number != number) continue;
             if (mp.players[i].isTalking) return player.call('phone.call.start.ans', [2]);
@@ -133,6 +134,7 @@ module.exports = {
         if (player.phone.number == number) return;
         for (let i = 0; i < mp.players.length; i++) {
             if (player.id == i) continue;
+            if (mp.players.at(i) == null) continue;
             if (mp.players.at(i).phone == null) continue;
             if (mp.players.at(i).phone.number == number) {
                 index = mp.players.at(i).phone.PhoneDialogs.findIndex( x => x.number == player.phone.number);

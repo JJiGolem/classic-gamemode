@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {addAppDisplay, closeAppDisplay, setAppDisplay} from "../../actions/action.apps";
 import {setSellBusiness, setSellInfoBusiness, setSellStatusBusiness} from "../../actions/action.info";
 import ConfirmSell from "./ConfirmSell";
-import Header from "./Header";
+import HeaderBusinessApp from "./Header";
 
 class Sell extends Component {
     constructor(props) {
@@ -32,18 +32,18 @@ class Sell extends Component {
 
     sellBusiness() {
         const { setSell, setSellStatus, setSellInfo, addApp, business } = this.props;
-        const { userId, price } = this.state;
+        const { userId, sellPrice } = this.state;
 
         if (this.validateForm()) {
             setSell(true);
             addApp({name: 'ConfirmSell', form: <ConfirmSell />});
 
             // eslint-disable-next-line no-undef
-            mp.trigger('biz.sell.check', business.id, userId, parseInt(price));
+            mp.trigger('biz.sell.check', business.id, userId, parseInt(sellPrice));
 
-            // setTimeout(() => {
-            //     setSellInfo({nick: null, price: this.state.sellPrice})
-            // }, 1000)
+            /*setTimeout(() => {
+                setSellInfo({nick: 'Dun', price: this.state.sellPrice})
+            }, 1000)*/
         }
     }
 
@@ -156,7 +156,7 @@ class Sell extends Component {
         return (
             <Fragment>
                 <div className='back_page-phone-react'>
-                    <Header business={business}/>
+                    <HeaderBusinessApp business={business}/>
 
                     {
                         this.getContent(business)

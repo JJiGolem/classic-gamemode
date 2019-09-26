@@ -25,8 +25,6 @@ mp.events.add('characterInit.done', function() {
 
 mp.speechChanel = {};
 
-const UseAutoVolume = false;
-
 let listeners = new Array();
 let channels = {};
 
@@ -53,13 +51,7 @@ mp.speechChanel.connect = (player, channel) => {
         player.voice3d = channels[channel].use3d;
     }
 
-
-    if(UseAutoVolume) {
-        player.voiceAutoVolume = true;
-    }
-    else {
-        player.voiceVolume = 1.0;
-    }
+    player.voiceVolume = 1.0;
 }
 
 /// Отключить выбранного игрока от канала связи
@@ -76,7 +68,6 @@ mp.speechChanel.disconnect = (player, channel, isSend = false) => {
         if (listeners[index].channels.length == 0) {
             listeners.splice(index, 1);
             mp.events.callRemote("voiceChat.remove", player);
-            return;
         }
         else {
             updateCurrent(player, index);
@@ -138,10 +129,10 @@ setInterval(() => {
                     mp.players.local.position.x,  mp.players.local.position.y,  mp.players.local.position.z);
 
                 if(dist > channels[listeners[i].current].maxRange || player.dimension != mp.players.local.dimension) {
-                    mp.speechChanel.disconnect(player, listeners[i].channel);
+                    mp.speechChanel.disconnect(player, listeners[i].current);
                     i--;
                 }
-                else if(!UseAutoVolume) {
+                else {
                     player.voiceVolume = 1 - (dist / channels[listeners[i].current].maxRange);
                 }
             }

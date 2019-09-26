@@ -117,6 +117,7 @@ module.exports = {
         handler: (player, args) => {
             mp.players.forEach((current) => {
                 current.call('chat.message.push', [`!{#edffc2}${player.name} запустил рестарт сервера через ${20000 / 1000} сек.`]);
+                mp.events.call("playerQuit", current);
             });
             setTimeout(() => {
                 process.exit();
@@ -252,6 +253,33 @@ module.exports = {
         handler: (player, args) => {
             var entity = (player.vehicle) ? player.vehicle : player;
             entity.position = new mp.Vector3(parseFloat(args[0]), parseFloat(args[1]), parseFloat(args[2]));
+        }
+    },
+    "/warn": {
+        access: 3,
+        description: "Выдать варн игроку",
+        args: "[ид_игрока]:n [причина]",
+        handler: (player, args, out) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec || !rec.character) return out(`Игрок #${args[0]} не найден`, player);
+
+            args.shift();
+            var reason = args.join(" ");
+
+            rec.character.warnNumber++;
+            rec.character.warnDate = new Date();
+
+            if (rec.character.warnNumber >= admin.banWarns) { // баним игрока
+                rec.character.warnNumber = 0;
+                rec.character.warnDate = null;
+                rec.account.clearBanDate = new Date(Date.now() + admin.warnsBanDays * 24 * 60 * 60 * 1000);
+                rec.account.save();
+                mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${reason} (${admin.banWarns} варнов)`);
+            } else {
+                mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] выдал warn игроку ${rec.name}[${rec.id}]: ${reason}`);
+            }
+            rec.character.save();
+            rec.kick();
         }
     },
     "/kick": {

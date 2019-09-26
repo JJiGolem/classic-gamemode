@@ -1,9 +1,20 @@
 "use strict";
 
 let dbFuelStations;
+let bizes;
 
 module.exports = {
+    business: {
+        type: 0,
+        name: "АЗС",
+        productName: "Топливо",
+    },
+    productPrice: 1,
+    rentPerDayMultiplier: 0.01,
+    minFuelPrice: 1,
+    maxFuelPrice: 8,
     init() {
+        bizes = call('bizes');
         this.loadFuelStationsFromDB();
     },
     async loadFuelStationsFromDB() {
@@ -33,13 +44,6 @@ module.exports = {
             });
         label.isFuelStation = true;
         label.fuelStationId = station.id;
-    },
-    getFuelPriceById(id) {
-        for (let i = 0; i < dbFuelStations.length; i++) {
-            if (dbFuelStations[i].id == id) {
-                return dbFuelStations[i].fuelPrice;
-            }
-        }
     },
     parseFuelStations() {
         st.forEach((current) => {
@@ -78,4 +82,47 @@ module.exports = {
         }
         return null;
     },
+    getBizParamsById(id) {
+        let station = dbFuelStations.find(x => x.bizId == id);
+        if (!station) return;
+        let params = [
+            {
+                key: 'fuelPrice',
+                name: 'Цена топлива',
+                max: this.maxFuelPrice,
+                min: this.minFuelPrice,
+                current: station.fuelPrice
+            }
+        ]
+        return params;
+    },
+    setBizParam(id, key, value) {
+        let station = dbFuelStations.find(x => x.bizId == id);
+        if (!station) return;
+        station[key] = value;
+        station.save();
+    },
+    getProductsAmount(id) {
+        let station = dbFuelStations.find(x => x.id == id);
+        let bizId = station.bizId;
+        let products = bizes.getProductsAmount(bizId);
+        return products;
+    },
+    removeProducts(id, products) {
+        let station = dbFuelStations.find(x => x.id == id);
+        let bizId = station.bizId;
+        bizes.removeProducts(bizId, products);
+    },
+    getFuelPriceById(id) {
+        for (let i = 0; i < dbFuelStations.length; i++) {
+            if (dbFuelStations[i].id == id) {
+                return dbFuelStations[i].fuelPrice;
+            }
+        }
+    },
+    updateCashbox(id, money) {
+        let station = dbFuelStations.find(x => x.id == id);
+        let bizId = station.bizId;
+        bizes.bizUpdateCashBox(bizId, money);
+    }
 }

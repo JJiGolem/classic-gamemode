@@ -63,6 +63,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.FLOAT,
             allowNull: false
         },
+        h: {
+            type: DataTypes.FLOAT,
+            defaultValue: 0,
+            allowNull: false
+        },
         /// Статус
         status: {
             type: DataTypes.INTEGER(11),
@@ -249,6 +254,18 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             allowNull: false
         },
+        // Пригласивший персонаж
+        inviterId: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: null,
+            allowNull: true,
+        },
+        // Условия реф. промокода (0 - не выполнил, 1 - выполнил)
+        inviteCompleted: {
+            type: DataTypes.TINYINT(1),
+            defaultValue: 0,
+            allowNull: false,
+        }
     }, {
         timestamps: false
     });
@@ -283,6 +300,16 @@ module.exports = (sequelize, DataTypes) => {
         });
         model.hasOne(models.House, {
             foreignKey: "characterId",
+        });
+        model.hasOne(models.Promocode, {
+            foreignKey: "characterId",
+        });
+        model.hasOne(models.CharacterSettings, {
+            as: "settings",
+            foreignKey: "characterId",
+        });
+        model.hasOne(models.Character, {
+            foreignKey: "inviterId",
         });
         model.hasMany(models.Fine, {
             foreignKey: "recId"

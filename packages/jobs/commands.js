@@ -30,4 +30,21 @@ module.exports = {
             notifs.info(rec, `${player.name} устроил вас на работу`, job.name);
         }
     },
+    "/jexp": {
+        access: 4,
+        description: "Изменить наык работы игрока.",
+        args: "[ид_игрока]:n [ид_работы]:n [навык]:n",
+        handler: (player, args, out) => {
+            var job = jobs.getJob(args[1]);
+            if (!job) return out.error(`Работа #${args[1]} не найдена`, player);
+            var rec = mp.players.at(args[0]);
+            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+
+            var skill = jobs.getJobSkill(rec, job);
+            jobs.setJobExp(rec, skill, args[2]);
+
+            out.info(`${player.name} изменил навык ${job.name} у ${rec.name} на ${skill.exp}%`);
+            notifs.info(rec, `${player.name} изменил ваш навык на ${skill.exp}%`, job.name);
+        }
+    },
 }

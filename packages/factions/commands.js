@@ -128,7 +128,7 @@ module.exports = {
             if (!rank) return out.error(`Ранг #${args[1]} не найден`, player);
 
             out.info(`${player.name} изменил ранг ${rec.name} (${rank.rank})`);
-            factions.setRank(rec.character, rank);
+            factions.setRank(rec, rank);
         }
     },
     "/fsetammo": {

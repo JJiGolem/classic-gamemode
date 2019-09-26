@@ -12,7 +12,7 @@ module.exports = {
     },
     "characterInit.start": async (player) => {
         let charInfos = await characterInit.init(player);
-        player.call('characterInit.init', [charInfos]);
+        player.call('characterInit.init', [charInfos, player.account.slots]);
     },
     "characterInit.choose": (player, charnumber) => {
         if (charnumber == null || isNaN(charnumber)) return player.call('characterInit.choose.ans', [0]);
@@ -25,8 +25,7 @@ module.exports = {
 
             player.call('characterInit.choose.ans', [1]);
             mp.events.call('characterInit.done', player);
-        }
-        else {
+        } else {
             player.call('characterInit.choose.ans', [1]);
             characterInit.create(player);
         }
@@ -34,8 +33,8 @@ module.exports = {
     /// Разморозка игрока после выбора персоонажа
     "characterInit.done": (player) => {
         player.call('characterInit.done');
-        player.spawn(new mp.Vector3(player.character.x, player.character.y, player.character.z));
-        player.dimension = 0;
+        characterInit.spawn(player);
+        player.authTime = Date.now();
     },
     /// События создания персоонажа
     "player.joined": player => {
@@ -54,5 +53,16 @@ module.exports = {
     },
     "inventory.done": (player) => {
         player.characterInit.created && characterInit.setStartClothes(player);
+    },
+    "playerQuit": (player) => {
+        if (!player.character) return;
+
+        var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60 % 60);
+        player.character.minutes += minutes;
+        player.character.x = player.position.x;
+        player.character.y = player.position.y;
+        player.character.z = player.position.z;
+        player.character.h = player.heading;
+        player.character.save();
     },
 }

@@ -30,7 +30,7 @@
 }
 
 #playersList thead {
-    font-size: 140%;
+    font-size: 120%;
     background: rgba(252, 231, 4, 0.562);
     color: black;
 }
@@ -51,15 +51,19 @@
     border: none;
     border-bottom: 1px solid #796b10;
     color: white;
-    width: 60%;
+    width: 30%;
+    margin-right: 2%;
+    margin-left: 2%;
     outline: none;
 }
 
-.players_list-navigate_panel select {
-    background: rgba(0, 0, 0, 0.8);
+.players_list-navigate_panel div {
+    background: rgba(0, 0, 0, 0.6);
+    display: inline-block;
     color: white;
     padding: 1%;
     outline: none;
-    margin-left: 6%;
-    width: 30%;
+    margin-left: 1%;
+    width: 15%;
+    border-right: 2px solid gray;
 }
