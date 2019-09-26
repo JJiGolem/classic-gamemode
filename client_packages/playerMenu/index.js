@@ -55,6 +55,9 @@ mp.playerMenu = {
     setCompleted(completed) {
         mp.callCEFV(`playerMenu.setCompleted(${completed})`);
     },
+    setMedia(media) {
+        mp.callCEFV(`playerMenu.setMedia(${media})`);
+    },
 };
 
 mp.events.add({
@@ -99,6 +102,9 @@ mp.events.add({
     },
     "playerMenu.setCompleted": (data) => {
         mp.playerMenu.setCompleted(data.completed);
+    },
+    "playerMenu.setMedia": (data) => {
+        mp.playerMenu.setMedia(data.media);
     },
     "money.change": (cash, bank) => {
         mp.playerMenu.setCash(cash);

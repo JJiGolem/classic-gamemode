@@ -59,6 +59,10 @@
     color: #FFBBBB;
 }
 
+#player-menu .head .top-bar .social-status4 {
+    color: #FF4D4D;
+}
+
 #player-menu .head .top-bar .info .coins {
     display: flex;
     color: #FFDF29;
@@ -753,9 +757,9 @@
     margin-top: 2vh;
     height: 1vh;
 }
+
 #player-menu .settings-main .slidebar img:hover {
     filter: drop-shadow(0 0 1vh rgba(255, 223, 41, 0.5));
-
 }
 
 #player-menu .settings-main .slidebar .left {

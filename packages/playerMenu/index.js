@@ -36,6 +36,7 @@ module.exports = {
             promocode: player.character.Promocode.promocode,
             invited: player.character.Promocode.invited,
             completed: player.character.Promocode.completed,
+            media: player.character.Promocode.media,
             settings: {
                 spawn: player.character.settings.spawn,
             },
@@ -158,6 +159,12 @@ module.exports = {
             invited: player.character.Promocode.completed,
         };
         player.call(`playerMenu.setCompleted`, [data]);
+    },
+    setMedia(player) {
+        var data = {
+            media: player.character.Promocode.media,
+        };
+        player.call(`playerMenu.setMedia`, [data]);
     },
     setPromocode(player) {
         var data = {

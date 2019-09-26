@@ -217,6 +217,10 @@ let socialData = [{
         head: "Бандит",
         img: "./img/playerMenu/hat.svg"
     },
+    {
+        head: "Медиа",
+        img: "./img/playerMenu/media.svg"
+    },
 ];
 
 let statistics = [
@@ -389,6 +393,7 @@ var playerMenu = new Vue({
         name: "Jonathan Rockfall", // API: Имя игрока
         admin: 0,
         factionId: 0,
+        media: 0,
         coins: 1000, // API: СС
         dateTimer: null,
         minutesTimer: null,
@@ -403,8 +408,9 @@ var playerMenu = new Vue({
             return this.confirmation;
         },
         socialStatus() {
-            // API: социальный статус //0-гражданский/1-админ/2-госс/3-бандит
+            // API: социальный статус //0-гражданский/1-админ/2-госс/3-бандит/4-медиа
             if (this.admin) return 1;
+            if (this.media) return 4;
             if (!this.factionId) return 0;
             if (this.factionId < 8) return 2;
 
@@ -463,6 +469,7 @@ var playerMenu = new Vue({
             this.setPromocode(data.promocode);
             this.setInvited(data.invited);
             this.setCompleted(data.completed);
+            this.setMedia(data.media);
             this.setSettings(data.settings);
 
             addslotWindowData.maxSlots = data.slotsMax;
@@ -608,6 +615,9 @@ var playerMenu = new Vue({
         },
         setCompleted(val) {
             referenceData.amountCompleted = val;
+        },
+        setMedia(val) {
+            this.media = val;
         },
         setSettings(settings) {
             settingsmainWindowData.spawnSettings.currentSpawn = settings.spawn;

@@ -52,4 +52,7 @@ module.exports = {
     "player.completed.changed": (player) => {
         playerMenu.setCompleted(player);
     },
+    "player.media.changed": (player) => {
+        playerMenu.setMedia(player);
+    },
 }
