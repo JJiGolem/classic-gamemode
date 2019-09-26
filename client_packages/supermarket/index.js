@@ -1,0 +1,75 @@
+mp.events.add({
+    "supermarket.enter": (data) => {
+        setSupermarketHeaders(data.bType);
+        mp.events.call('selectMenu.show', 'supermarketMain');
+    },
+    "supermarket.exit": () => {
+        mp.events.call(`selectMenu.hide`);
+    },
+    "supermarket.phone.buy": () => {
+        mp.events.callRemote('supermarket.phone.buy');
+    },
+    "supermarket.phone.buy.ans": (ans) => {
+        mp.callCEFV('selectMenu.loader = false');
+        switch (ans) {
+            case 0:
+                mp.callCEFV(`selectMenu.notification = 'У вас уже есть телефон'`);
+                break;
+            case 1:
+                mp.events.call('prompt.show', 'Чтобы достать свой телефон, нажмите <span>↑</span>');
+                mp.callCEFV(`selectMenu.notification = 'Вы купили телефон'`);
+                break;
+            case 2:
+                mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+                break;
+            case 3:
+                mp.callCEFV(`selectMenu.notification = 'В магазине кончились продукты'`);
+                break;
+            case 4:
+                mp.callCEFV(`selectMenu.notification = Ошибка покупки'`);
+                break;
+        }
+    },
+    "supermarket.number.change": (number) => {
+        if (number.length != 6) {
+            mp.callCEFV('selectMenu.loader = false');
+            return mp.callCEFV(`selectMenu.notification = 'Номер должен содержать 6 символов'`);
+        }
+        if (/\D/g.test(number)) {
+            mp.callCEFV('selectMenu.loader = false');
+            return mp.callCEFV(`selectMenu.notification = 'Номер содержит недопустимые символы'`);
+        }
+        if (number.charAt(0) == '0') {
+            mp.callCEFV('selectMenu.loader = false');
+            return mp.callCEFV(`selectMenu.notification = 'Номер не может начинаться с 0'`);
+        }
+        mp.events.callRemote('supermarket.number.change', number);
+    },
+    "supermarket.number.change.ans": (ans, number) => {
+        mp.callCEFV('selectMenu.loader = false');
+        switch (ans) {
+            case 0:
+                mp.callCEFV(`selectMenu.notification = 'Некорректный номер'`);
+                break;
+            case 1:
+                mp.callCEFV(`selectMenu.notification = 'Ваш новый номер — ${number}'`);
+                break;
+            case 2:
+                mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+                break;
+            case 3:
+                mp.callCEFV(`selectMenu.notification = 'В магазине кончились продукты'`);
+                break;
+            case 4:
+                mp.callCEFV(`selectMenu.notification = Ошибка покупки'`);
+                break;
+        }
+    }
+});
+
+function setSupermarketHeaders(type) {
+    let img = type ? 'ltd.png' : 'supermarket.png';
+    mp.callCEFV(`selectMenu.menus["supermarketMain"].headerImg = '${img}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketMobile"].headerImg = '${img}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketNumberChange"].headerImg = '${img}'`);
+}
