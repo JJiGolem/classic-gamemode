@@ -72,7 +72,7 @@ let protectionWindowData = {
     email: "erf233423h4@324", // API: адрес почты.
     isConfirmed: 0, // API: Подверждена ли почта.
     passMessage: "изменён 4 дня назад", // API: Сообщение о последнем изменени пароля.
-    maxWaiting: 15, // API: Время блока кнопки отмены.
+    maxWaiting: 60, // API: Время блока кнопки отмены.
     changeMail(mail) {
         // TODO: Сохранить новый почтовый адрес
 
@@ -83,13 +83,14 @@ let protectionWindowData = {
     },
     sendCode() {
         // TODO: Отправить код на почту
+        mp.trigger(`callRemote`, `settings.email.confirm`);
     },
-    checkCode() {
+    checkCode(code) {
         // TODO: Проверить код
-
+        mp.trigger(`callRemote`, `settings.email.code.check`, code);
         // Если код верный
-        protectionWindowData.isConfirmed = true;
-        console.log("чекнули");
+        // protectionWindowData.isConfirmed = true;
+        // console.log("чекнули");
         // Что иначе, я хз...
     },
     changePassword(oldPass, newPass) {
@@ -1078,7 +1079,7 @@ Vue.component('player-menu-settings-protection', {
             if (!this.code)
                 return;
 
-            this.checkCode()
+            this.checkCode(this.code);
 
             this.code = '';
         },

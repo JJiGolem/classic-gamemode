@@ -1,5 +1,6 @@
 let auth = call('auth');
 let notifs = call('notifications');
+let utils = call('utils');
 
 module.exports = {
     "settings.spawn.set": (player, spawn) => {
@@ -32,6 +33,28 @@ module.exports = {
         player.account.save();
 
         notifs.success(player, `Email успешно изменен`, header);
+        mp.events.call("player.email.changed", player);
+    },
+    "settings.email.confirm": (player) => {
+        var header = `Подтверждение почты`;
+        if (player.account.confirmEmail) return notifs.error(player, `Email уже подтвержден`, header);
+
+        let code = utils.randomInteger(100000, 999999);
+        utils.sendMail(player.account.email, `Подтверждение электронной почты`, `Код подтверждения: <b>${code}</b>`);
+
+        player.confirmCode = code;
+        notifs.success(player, `Код подтверждения отправлен на ${player.account.email}`, header);
+    },
+    "settings.email.code.check": (player, code) => {
+        var header = `Подтверждение почты`;
+        if (player.account.confirmEmail) return notifs.error(player, `Email уже подтвержден`, header);
+        if (!player.confirmCode) return notifs.error(player, `Код подтверждения не найден`, header);
+        if (!code || code != player.confirmCode) return notifs.error(player, `Неверный код подтверждения`, header);
+
+        player.account.confirmEmail = 1;
+        player.account.save();
+
+        notifs.success(player, `Email успешно подтвержден`, header);
         mp.events.call("player.email.changed", player);
     },
 }
