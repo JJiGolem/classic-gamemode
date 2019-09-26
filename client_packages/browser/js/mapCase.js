@@ -293,7 +293,7 @@ Vue.component('map-case-calls', {
 });
 
 // for tests
-mapCase.type = "fib";
+/*mapCase.type = "fib";
 mapCase.show = true;
 mapCase.enable = true;
-mapCase.userName = "user"
+mapCase.userName = "user"*/
