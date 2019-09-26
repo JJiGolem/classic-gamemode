@@ -254,8 +254,8 @@ module.exports = {
 
         if (faction.ammo < fib.gunAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
-        var itemIds = [107, 99];
-        var weaponIds = ["weapon_heavysniper", "weapon_carbinerifle_mk2"];
+        var itemIds = [107, 99, 88, 46, 19, 91];
+        var weaponIds = ["weapon_heavysniper", "weapon_carbinerifle_mk2", "weapon_combatpdw", "weapon_pistol50", "weapon_stungun", "weapon_pumpshotgun_mk2"];
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
 
