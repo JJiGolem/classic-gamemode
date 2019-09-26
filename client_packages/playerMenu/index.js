@@ -58,6 +58,9 @@ mp.playerMenu = {
     setMedia(media) {
         mp.callCEFV(`playerMenu.setMedia(${media})`);
     },
+    setEmail(email, confirm = 0) {
+        mp.callCEFV(`playerMenu.setEmail('${email}', ${confirm})`);
+    },
 };
 
 mp.events.add({
@@ -105,6 +108,9 @@ mp.events.add({
     },
     "playerMenu.setMedia": (data) => {
         mp.playerMenu.setMedia(data.media);
+    },
+    "playerMenu.setEmail": (data) => {
+        mp.playerMenu.setEmail(data.email, data.confirmEmail);
     },
     "money.change": (cash, bank) => {
         mp.playerMenu.setCash(cash);

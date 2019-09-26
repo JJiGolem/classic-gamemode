@@ -70,14 +70,16 @@ let settingsmainWindowData = {
 
 let protectionWindowData = {
     email: "erf233423h4@324", // API: адрес почты.
-    isConfirmed: false, // API: Подверждена ли почта.
+    isConfirmed: 0, // API: Подверждена ли почта.
     passMessage: "изменён 4 дня назад", // API: Сообщение о последнем изменени пароля.
     maxWaiting: 15, // API: Время блока кнопки отмены.
     changeMail(mail) {
         // TODO: Сохранить новый почтовый адрес
 
-        protectionWindowData.email = mail;
-        protectionWindowData.isConfirmed = false;
+        mp.trigger(`callRemote`, `settings.email.set`, mail);
+
+        // protectionWindowData.email = mail;
+        // protectionWindowData.isConfirmed = 0;
     },
     sendCode() {
         // TODO: Отправить код на почту
@@ -474,6 +476,7 @@ var playerMenu = new Vue({
             this.setCompleted(data.completed);
             this.setMedia(data.media);
             this.setSettings(data.settings);
+            this.setEmail(data.email, data.confirmEmail);
 
             addslotWindowData.maxSlots = data.slotsMax;
         },
@@ -624,6 +627,10 @@ var playerMenu = new Vue({
         },
         setSettings(settings) {
             settingsmainWindowData.spawnSettings.currentSpawn = settings.spawn;
+        },
+        setEmail(email, confirm = 0) {
+            protectionWindowData.email = email;
+            protectionWindowData.isConfirmed = confirm;
         },
     },
     watch: {

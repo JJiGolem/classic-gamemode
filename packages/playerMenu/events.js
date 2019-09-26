@@ -58,4 +58,7 @@ module.exports = {
     "player.password.changed": (player) => {
         // TODO: синзронизация даты смены пароля
     },
+    "player.email.changed": (player) => {
+        playerMenu.setEmail(player);
+    },
 }

@@ -40,6 +40,8 @@ module.exports = {
             settings: {
                 spawn: player.character.settings.spawn,
             },
+            email: player.account.email,
+            confirmEmail: player.account.confirmEmail,
         };
         if (biz) {
             data.biz = {
@@ -171,5 +173,12 @@ module.exports = {
             promocode: player.character.Promocode.promocode,
         };
         player.call(`playerMenu.setPromocode`, [data]);
+    },
+    setEmail(player) {
+        var data = {
+            email: player.account.email,
+            confirmEmail: player.account.confirmEmail,
+        };
+        player.call(`playerMenu.setEmail`, [data]);
     },
 };

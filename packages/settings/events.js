@@ -1,4 +1,3 @@
-
 let auth = call('auth');
 let notifs = call('notifications');
 
@@ -21,5 +20,18 @@ module.exports = {
 
         notifs.success(player, `Пароль успешно изменен`, header);
         mp.events.call("player.password.changed", player);
+    },
+    "settings.email.set": (player, email) => {
+        var header = `Смена почты`;
+        if (!email || email.length > 40) return notifs.error(player, `Email должен быть менее 40 символов`, header);
+        var r = /^[0-9a-z-_\.]+\@[0-9a-z-_]{1,}\.[a-z]{1,}$/i;
+        if (!r.test(email)) return notifs.error(player, `Некорректный email`, header);
+
+        player.account.email = email;
+        player.account.confirmEmail = 0;
+        player.account.save();
+
+        notifs.success(player, `Email успешно изменен`, header);
+        mp.events.call("player.email.changed", player);
     },
 }
