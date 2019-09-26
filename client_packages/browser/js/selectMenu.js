@@ -2140,10 +2140,22 @@ var selectMenu = new Vue({
                 name: "fibGuns",
                 header: "Вооружение FIB",
                 items: [{
-                        text: "Снайпа"
+                        text: "Heavy Sniper"
                     },
                     {
-                        text: "Карабин обновленный"
+                        text: "Carbine Rifle Mk II"
+                    },
+                    {
+                        text: "Combat PDW"
+                    },
+                    {
+                        text: "Pistol .50"
+                    },
+                    {
+                        text: "Stun Gun"
+                    },
+                    {
+                        text: "Pump Shotgun Mk II"
                     },
                     {
                         text: "Вернуться"

@@ -4,21 +4,45 @@ const creatorPlayerPos = new mp.Vector3(402.8664, -996.4108, -99.00027);
 const creatorPlayerHeading = -185.0;
 
 let inventory = call('inventory');
-let notifs = call('notifs');
+let notifs = call('notifications');
 let utils = call("utils");
+let promocodes = call("promocodes");
 
 let clothesConfig = {
     0: {
-        pants: [[0, 0], [14, 0]],
+        pants: [
+            [0, 0],
+            [14, 0]
+        ],
         /// 11 / 3 / 8
-        tops: [[0, 2, 0, 0, 9, 0], [5, 1, 4, 0, 3, 0], [16, 2, 15, 0, 3, 0]],
-        shoes: [[3, 0], [1, 7]]
+        tops: [
+            [0, 2, 0, 0, 9, 0],
+            [5, 1, 4, 0, 3, 0],
+            [16, 2, 15, 0, 3, 0]
+        ],
+        shoes: [
+            [3, 0],
+            [1, 7]
+        ]
     },
     1: {
-        pants: [[1, 5], [1, 6], [5, 0], [15, 3]],
+        pants: [
+            [1, 5],
+            [1, 6],
+            [5, 0],
+            [15, 3]
+        ],
         /// 11 / 3 / 8
-        tops: [[17, 0, 5, 0, 15, 0], [1, 0, 0, 0, 15, 0], [5, 2, 5, 0, 15, 0], [34, 0, 0, 0, 15, 0]],
-        shoes: [[1, 2], [9, 2]]
+        tops: [
+            [17, 0, 5, 0, 15, 0],
+            [1, 0, 0, 0, 15, 0],
+            [5, 2, 5, 0, 15, 0],
+            [34, 0, 0, 0, 15, 0]
+        ],
+        shoes: [
+            [1, 2],
+            [9, 2]
+        ]
     }
 };
 
@@ -31,27 +55,47 @@ module.exports = {
     async init(player) {
         if (player.character != null) delete player.character;
         if (player.characters == null) {
+            var start = Date.now();
             player.characters = await db.Models.Character.findAll({
                 where: {
                     accountId: player.account.id
                 },
-                include: [
-                    {
+                include: [{
                         model: db.Models.Feature,
                     },
                     {
                         model: db.Models.Appearance,
                     },
                     db.Models.Fine,
+                    {
+                        model: db.Models.Promocode,
+                        include: db.Models.PromocodeReward,
+                    },
+                    {
+                        as: "settings",
+                        model: db.Models.CharacterSettings,
+                    },
+                    {
+                        model: db.Models.CharacterInventory,
+                        where: {
+                            parentId: null,
+                        },
+                        include: {
+                            as: "params",
+                            model: db.Models.CharacterInventoryParam,
+                        },
+                    },
                 ]
             });
+            var diff = Date.now() - start;
+            notifs.info(player, `Время выборки персонажей: ${diff} ms.`);
             player.characters.forEach(character => {
-                character.Appearances.sort( (x, y) => {
+                character.Appearances.sort((x, y) => {
                     if (x.order > y.order) return 1;
                     if (x.order < y.order) return -1;
                     if (x.order == y.order) return 0;
                 });
-                character.Features.sort( (x, y) => {
+                character.Features.sort((x, y) => {
                     if (x.order > y.order) return 1;
                     if (x.order < y.order) return -1;
                     if (x.order == y.order) return 0;
@@ -59,8 +103,11 @@ module.exports = {
             });
         }
         let charInfos = new Array();
-        for(let i = 0; i < player.characters.length; i++) {
-            charInfos.push({charInfo: player.characters[i], charClothes: null});
+        for (let i = 0; i < player.characters.length; i++) {
+            charInfos.push({
+                charInfo: player.characters[i],
+                charClothes: inventory.getView(player.characters[i].CharacterInventories),
+            });
         }
         return charInfos;
     },
@@ -85,9 +132,18 @@ module.exports = {
             chestHairColor: 0,
             Features: [],
             Appearances: [],
+            Promocode: {},
+            settings: {},
         }
-        for (let i = 0; i < 20; i++) player.character.Features.push({value: 0.0, order: i});
-        for (let i = 0; i < 11; i++) player.character.Appearances.push({value: 255, opacity: 1.0, order: i});
+        for (let i = 0; i < 20; i++) player.character.Features.push({
+            value: 0.0,
+            order: i
+        });
+        for (let i = 0; i < 11; i++) player.character.Appearances.push({
+            value: 255,
+            opacity: 1.0,
+            order: i
+        });
 
         mp.events.call('characterInit.create.init', player);
 
@@ -109,15 +165,22 @@ module.exports = {
         player.characterInfo.x = pos[0];
         player.characterInfo.y = pos[1];
         player.characterInfo.z = pos[2];
-        
+        player.characterInfo.Promocode.promocode = await promocodes.getPromocode();
+
         player.character = await db.Models.Character.create(player.characterInfo, {
-            include: [
-                {
+            include: [{
                     model: db.Models.Feature,
                 },
                 {
                     model: db.Models.Appearance,
-                }
+                },
+                {
+                    model: db.Models.Promocode,
+                },
+                {
+                    as: "settings",
+                    model: db.Models.CharacterSettings,
+                },
             ]
         });
         this.applyCharacter(player);
@@ -162,7 +225,8 @@ module.exports = {
         for (let i = 0; i < 11; i++) {
             player.setHeadOverlay(i, [player.character.Appearances[i].value,
                 player.character.Appearances[i].opacity,
-                this.colorForOverlayIdx(player, i), 0]);
+                this.colorForOverlayIdx(player, i), 0
+            ]);
         }
     },
     colorForOverlayIdx(player, index) {
@@ -190,7 +254,7 @@ module.exports = {
         return color;
     },
     getSpawn() {
-        switch(call('utils').randomInteger(0, 2)) {
+        switch (call('utils').randomInteger(0, 2)) {
             case 0:
                 return [-252.91534423828125, -338.6800231933594, 29.70627212524414];
             case 1:
@@ -248,5 +312,20 @@ module.exports = {
             //if (e) return notifs.error(player, e);
             if (e) return console.log(e);
         });
-    }
+    },
+    spawn(player) {
+        var settings = player.character.settings;
+        if (!player.character.factionId || player.house.id == -1) settings.spawn = 0;
+        switch (settings.spawn) {
+            case 0: // улица
+                player.spawn(new mp.Vector3(player.character.x, player.character.y, player.character.z));
+                player.heading = player.character.h;
+                player.dimension = 0;
+                break;
+            case 1: // дом
+                break;
+            case 2: //организация
+                break;
+        }
+    },
 };

@@ -31,6 +31,17 @@ module.exports = {
             clearWarnPrice: donate.clearWarnPrice,
             slotPrice: donate.slotPrice,
             warns: player.character.warnNumber,
+            slots: player.account.slots,
+            slotsMax: donate.slotsMax,
+            promocode: player.character.Promocode.promocode,
+            invited: player.character.Promocode.invited,
+            completed: player.character.Promocode.completed,
+            media: player.character.Promocode.media,
+            settings: {
+                spawn: player.character.settings.spawn,
+            },
+            email: player.account.email,
+            confirmEmail: player.account.confirmEmail,
         };
         if (biz) {
             data.biz = {
@@ -132,5 +143,42 @@ module.exports = {
             warns: player.character.warnNumber,
         };
         player.call(`playerMenu.setWarns`, [data]);
+    },
+    setSlots(player) {
+        var data = {
+            slots: player.account.slots,
+        };
+        player.call(`playerMenu.setSlots`, [data]);
+    },
+    setInvited(player) {
+        var data = {
+            invited: player.character.Promocode.invited,
+        };
+        player.call(`playerMenu.setInvited`, [data]);
+    },
+    setCompleted(player) {
+        var data = {
+            invited: player.character.Promocode.completed,
+        };
+        player.call(`playerMenu.setCompleted`, [data]);
+    },
+    setMedia(player) {
+        var data = {
+            media: player.character.Promocode.media,
+        };
+        player.call(`playerMenu.setMedia`, [data]);
+    },
+    setPromocode(player) {
+        var data = {
+            promocode: player.character.Promocode.promocode,
+        };
+        player.call(`playerMenu.setPromocode`, [data]);
+    },
+    setEmail(player) {
+        var data = {
+            email: player.account.email,
+            confirmEmail: player.account.confirmEmail,
+        };
+        player.call(`playerMenu.setEmail`, [data]);
     },
 };

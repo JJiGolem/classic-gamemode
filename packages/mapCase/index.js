@@ -3,6 +3,15 @@ let chat = call('chat');
 var factions = require('../factions');
 var notifs = call('notifications');
 
+var out = {
+    error(player, text) {
+        player.call(`mapCase.message.red.show`, [text]);
+    },
+    success(player, text) {
+        player.call(`mapCase.message.green.show`, [text]);
+    }
+};
+
 module.exports = {
     // Вызовы в планшете ПД
     policeCalls: [],
@@ -262,7 +271,10 @@ module.exports = {
         return true;
     },
     getNewsAd(player) {
-        if (!this.newsAds.length) return notifs.error(player, `Список объявлений пуст`);
+        if (!this.newsAds.length) {
+            player.call(`mapCase.news.ads.count.set`, [0])
+            return out.error(player, `Список объявлений пуст`);
+        }
 
         var ad = this.newsAds.shift();
         player.call(`mapCase.news.ads.show`, [ad]);

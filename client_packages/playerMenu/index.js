@@ -43,6 +43,24 @@ mp.playerMenu = {
     setWarns(warns) {
         mp.callCEFV(`playerMenu.setWarns(${warns})`);
     },
+    setSlots(slots) {
+        mp.callCEFV(`playerMenu.setSlots(${slots})`);
+    },
+    setPromocode(code) {
+        mp.callCEFV(`playerMenu.setPromocode('${code}')`);
+    },
+    setInvited(invited) {
+        mp.callCEFV(`playerMenu.setInvited(${invited})`);
+    },
+    setCompleted(completed) {
+        mp.callCEFV(`playerMenu.setCompleted(${completed})`);
+    },
+    setMedia(media) {
+        mp.callCEFV(`playerMenu.setMedia(${media})`);
+    },
+    setEmail(email, confirm = 0) {
+        mp.callCEFV(`playerMenu.setEmail('${email}', ${confirm})`);
+    },
 };
 
 mp.events.add({
@@ -75,6 +93,24 @@ mp.events.add({
     },
     "playerMenu.setWarns": (data) => {
         mp.playerMenu.setWarns(data.warns);
+    },
+    "playerMenu.setSlots": (data) => {
+        mp.playerMenu.setSlots(data.slots);
+    },
+    "playerMenu.setPromocode": (data) => {
+        mp.playerMenu.setPromocode(data.promocode);
+    },
+    "playerMenu.setInvited": (data) => {
+        mp.playerMenu.setInvited(data.invited);
+    },
+    "playerMenu.setCompleted": (data) => {
+        mp.playerMenu.setCompleted(data.completed);
+    },
+    "playerMenu.setMedia": (data) => {
+        mp.playerMenu.setMedia(data.media);
+    },
+    "playerMenu.setEmail": (data) => {
+        mp.playerMenu.setEmail(data.email, data.confirmEmail);
     },
     "money.change": (cash, bank) => {
         mp.playerMenu.setCash(cash);

@@ -195,7 +195,7 @@ module.exports = {
         if (!slot) return `Свободный слот для ${this.getInventoryItem(itemId).name} не найден`;
         if (params.sex != null && params.sex != !player.character.gender) return `Предмет противоположного пола`;
         var nextWeight = this.getCommonWeight(player) + this.getInventoryItem(itemId).weight;
-        if (nextWeight > this.maxPlayerWeight) return `Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`;
+        if (nextWeight > this.maxPlayerWeight) return `Превышение по весу (${nextWeight.toFixed(2)} из ${this.maxPlayerWeight} кг)`;
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, itemId);
             if (weapon) return `Оружие ${this.getName(itemId)} уже имеется`;
@@ -207,7 +207,7 @@ module.exports = {
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(itemId).name} не найден`);
         if (params.sex != null && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
         var nextWeight = this.getCommonWeight(player) + this.getInventoryItem(itemId).weight;
-        if (nextWeight > this.maxPlayerWeight) return callback(`Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`);
+        if (nextWeight > this.maxPlayerWeight) return callback(`Превышение по весу (${nextWeight.toFixed(2)} из ${this.maxPlayerWeight} кг)`);
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, itemId);
             if (weapon) return callback(`Оружие ${this.getName(itemId)} уже имеется`);
@@ -246,7 +246,7 @@ module.exports = {
         var params = this.getParamsValues(item);
         if (params.sex && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
         var nextWeight = this.getCommonWeight(player) + this.getItemWeight(player, item);
-        if (nextWeight > this.maxPlayerWeight) return callback(`Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`);
+        if (nextWeight > this.maxPlayerWeight) return callback(`Превышение по весу (${nextWeight.toFixed(2)} из ${this.maxPlayerWeight} кг)`);
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, item.itemId);
             if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
@@ -300,7 +300,7 @@ module.exports = {
     async addPlayerItem(player, item, parentId, pocketIndex, index) {
         // console.log(`addPlayerItem`)
         var nextWeight = this.getCommonWeight(player) + this.getItemWeight(player, item);
-        if (nextWeight > this.maxPlayerWeight) return debug(`Превышение по весу (${nextWeight} из ${this.maxPlayerWeight} кг)`);
+        if (nextWeight > this.maxPlayerWeight) return debug(`Превышение по весу (${nextWeight.toFixed(2)} из ${this.maxPlayerWeight} кг)`);
         var place = player.inventory.place;
         var params = this.getParamsValues(item);
         if (params.weaponHash) {
@@ -430,6 +430,44 @@ module.exports = {
             if (child.parentId == item.id && child.pocketIndex == pocketIndex) children.push(child);
         }
         return children;
+    },
+    getView(items) {
+        var list = {
+            "clothes": [],
+            "props": [],
+        };
+        var clothesIndexes = {
+            "2": 7,
+            "3": 9,
+            "8": 4,
+            "9": 6,
+            "13": 5
+        };
+        var propsIndexes = {
+            "6": 0,
+            "1": 1,
+            "10": 2,
+            "11": 6,
+            "12": 7
+        };
+        items.forEach(item => {
+            var params = this.getParamsValues(item);
+
+            if (clothesIndexes[item.itemId] != null) {
+                list.clothes.push([clothesIndexes[item.itemId], params.variation, params.texture]);
+            } else if (propsIndexes[item.itemId] != null) {
+                list.props.push([propsIndexes[item.itemId], params.variation, params.texture]);
+            } else if (item.itemId == 7) {
+                list.clothes.push([3, params.torso || 0, params.tTexture || 0]);
+                list.clothes.push([11, params.variation, params.texture]);
+                if (params.undershirt != null) list.clothes.push([8, params.undershirt, params.uTexture || 0]);
+                if (params.decal != null) list.clothes.push([10, params.decal, params.dTexture || 0]);
+            } else if (item.itemId == 1) {
+                if (this.masksWithHideHairs.includes(params.variation)) list.clothes.push([2, 0, 0]);
+                list.clothes.push([1, params.variation, params.texture]);
+            }
+        });
+        return list;
     },
     updateView(player, item) {
         if (player.inventory.denyUpdateView) return;

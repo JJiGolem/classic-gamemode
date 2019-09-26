@@ -32,9 +32,11 @@ mp.death = {
         this.knockTimer = setTimeout(() => {
             mp.events.callRemote(`death.spawn`);
         }, this.knockTime);
+        mp.callCEFV(`timer.start('death', ${this.knockTime})`);
     },
     stopKnockTimer() {
         clearTimeout(this.knockTimer);
+        mp.callCEFV(`timer.stop()`);
     }
 };
 

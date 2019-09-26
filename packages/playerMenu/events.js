@@ -1,3 +1,4 @@
+let notifs = call('notifications');
 let playerMenu = call('playerMenu');
 
 module.exports = {
@@ -32,5 +33,32 @@ module.exports = {
     },
     "player.warns.changed": (player) => {
         playerMenu.setWarns(player);
+    },
+    "player.slots.changed": (player) => {
+        playerMenu.setSlots(player);
+    },
+    "player.promocode.activated": (player, promocode) => {
+        var owner = mp.players.getBySqlId(promocode.characterId);
+        if (owner && owner.character) {
+            owner.character.Promocode = promocode;
+
+            playerMenu.setInvited(owner);
+            notifs.success(owner, `${player.name} активировал ваш промокод`);
+        }
+    },
+    "player.promocode.changed": (player) => {
+        playerMenu.setPromocode(player);
+    },
+    "player.completed.changed": (player) => {
+        playerMenu.setCompleted(player);
+    },
+    "player.media.changed": (player) => {
+        playerMenu.setMedia(player);
+    },
+    "player.password.changed": (player) => {
+        // TODO: синзронизация даты смены пароля
+    },
+    "player.email.changed": (player) => {
+        playerMenu.setEmail(player);
     },
 }
