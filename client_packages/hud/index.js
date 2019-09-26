@@ -31,7 +31,7 @@ mp.events.add('hud.load', () => {
             mp.events.call('hud.players.list.show', false)
         } else {
             if (!mp.busy.includes()) {
-                mp.events.callRemote('hud.players.list.load');
+                mp.events.callRemote('hud.players.list.show');
             }
         }
     });
@@ -91,13 +91,9 @@ mp.events.add('hud.players.list.load', (playersInfo) => {
 });
 
 mp.events.add('hud.players.list.add', (newPlayer) => {
-    if (playersListState) {
-        mp.callCEFR('players.add', [newPlayer]);
-    }
+    mp.callCEFR('players.add', [newPlayer]);
 });
 
 mp.events.add('hud.players.list.remove', (id) => {
-    if (playersListState) {
-        mp.callCEFR('players.remove', [id]);
-    }
+    mp.callCEFR('players.remove', [id]);
 });

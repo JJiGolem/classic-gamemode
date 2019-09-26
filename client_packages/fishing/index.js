@@ -1,6 +1,6 @@
 "use strict"
 
-mp.attachmentMngr.register("takeRod", "prop_fishing_rod_01", 26611, new mp.Vector3(0, -0.05, -0.03), new mp.Vector3(-40, 10, -50)); /// Телефон в руке
+mp.attachmentMngr.register("takeRod", "prop_fishing_rod_01", 26611, new mp.Vector3(0, -0.05, -0.03), new mp.Vector3(-40, 10, -50));
 
 let peds = [
     {
@@ -15,16 +15,44 @@ let peds = [
     }
 ];
 
+let localPlayer = mp.players.local;
+
 let isBinding = false;
 let isEnter = false;
 let isStarted = false;
 let isFetch = false;
+let isCharacter = false;
+
+let heading;
 
 mp.events.add('characterInit.done', () => {
     peds.forEach((current) => {
         mp.events.call('NPC.create', current);
-    })
+        mp.events.call('fishing.game.exit');
+    });
+
+    isCharacter = true;
 });
+
+mp.events.add('render', () => {
+    if (isCharacter) {
+        heading = localPlayer.getHeading() + 180;
+        let p = {
+            x: localPlayer.position.x + 3*Math.cos(heading),
+            y: localPlayer.position.y + 3*Math.sin(heading),
+            z: localPlayer.position.z
+        }
+  
+        if (!isEnter) {
+            if (Math.abs(mp.game.water.getWaterHeight(p.x, p.y, p.z, 0)) > 0) {
+                mp.events.call('fishing.game.menu');
+            } else {
+                bindButtons(false);
+                mp.events.call('prompt.hide');
+            }
+        }
+    }
+})
 
 mp.events.add('fishing.menu.show', () => {
    if (mp.busy.includes()) return;
@@ -66,6 +94,9 @@ mp.events.add('fishing.fish.sell.ans', (ans) => {
 
 mp.events.add('fishing.game.menu', () => {
     mp.events.call('prompt.show', 'Нажмите <span>E</span>, чтобы начать рыбачить', 'Информация');
+    // setInterval(() => {
+    //     mp.console(mp.game.water.getWaterHeight(localPlayer.position.x, localPlayer.position.y, localPlayer.position.z, 0.5));
+    // }, 2000);
     bindButtons(true);
 });
 
@@ -75,7 +106,7 @@ mp.events.add('fishing.game.enter', () => {
     mp.busy.add('fishingGame');
     playBaseAnimation(true);
     mp.utils.disablePlayerMoving(true);
-    mp.players.local.freezePosition(true);
+    localPlayer.freezePosition(true);
     mp.callCEFVN({ "fishing.show": true });
     isEnter = true;
 });
@@ -108,7 +139,7 @@ mp.events.add('fishing.game.exit', () => {
     mp.events.call('prompt.hide');
     playBaseAnimation(false);
     mp.utils.disablePlayerMoving(false);
-    mp.players.local.freezePosition(false);
+    localPlayer.freezePosition(false);
     mp.callCEFV(`fishing.clearData()`);
     mp.callCEFVN({ "fishing.show": false });
     mp.busy.remove('fishingGame');

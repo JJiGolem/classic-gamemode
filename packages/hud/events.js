@@ -11,7 +11,7 @@ module.exports = {
     "characterInit.done": (player) => {
         player.call('hud.load'); 
             
-        let factionName;
+        let factionName = '-';
         
         if (player.character.factionId != null) {
             let faction = factions.getFaction(player.character.factionId);
@@ -27,6 +27,7 @@ module.exports = {
             ping: player.ping,
             faction: factionName
         }
+
         mp.players.forEach(current => {
             current.call('hud.players.list.add', [newPlayer])
         })
@@ -37,10 +38,9 @@ module.exports = {
             current.call('hud.players.list.remove', [player.id]);
         });
     },
-    "hud.players.list.load": (player) => {
+    "hud.players.list.show": (player) => {
         if (player.character.admin > 0) {
             player.call("hud.players.list.show", [true]);
-            player.call("hud.players.list.load", [hud.getPlayers()]);
         }
     }
 }

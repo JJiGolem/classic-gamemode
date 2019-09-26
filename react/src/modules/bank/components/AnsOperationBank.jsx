@@ -15,11 +15,11 @@ class AnsOperationBank extends Component {
     getAnswer() {
         const { bank } = this.props;
 
-        if (bank.answer == 0) {
+        if (bank.answer == 1) {
+            return <BankSuccess args={bank.args}/>
+        } else {
             return <BankError />
-        } else if (bank.answer == 1) {
-            return <BankSuccess func={bank.func} args={bank.args}/>
-        }
+        } 
     }
 
     render() {

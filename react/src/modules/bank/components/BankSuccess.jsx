@@ -1,3 +1,5 @@
+/* eslint-disable no-duplicate-case */
+/* eslint-disable default-case */
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {
@@ -7,7 +9,9 @@ import {
     pushBank,
     pushPhoneBank,
     setAnswerBank,
-    transferBank
+    transferBank,
+    pushCashBoxBank,
+    popCashBoxBank
 } from "../actions/action.bank";
 
 class BankSuccess extends Component {
@@ -17,7 +21,7 @@ class BankSuccess extends Component {
     }
 
     componentDidMount() {
-        const { bank, popBank, pushBank, transferBank, payHouse, payBusiness, pushPhoneBank } = this.props;
+        const { bank, popBank, pushBank, transferBank, payHouse, payBusiness, pushPhoneBank, pushCashBoxBank, popCashBoxBank } = this.props;
 
         switch (bank.type) {
             case 'pop':
@@ -40,8 +44,16 @@ class BankSuccess extends Component {
                 payHouse(bank.args.name, bank.args.days, bank.args.money);
                 break;
 
-            case 'business':
-                payBusiness(bank.args.name, bank.args.days, bank.args.money);
+            case 'biz':
+                payBusiness(bank.args.id, bank.args.days, bank.args.money);
+                break;
+
+            case 'cashbox_push':
+                pushCashBoxBank(bank.args.id, bank.args.money);
+                break;
+                
+            case 'cashbox_pop':
+                popCashBoxBank(bank.args.id, bank.args.money);
                 break;
         }
     }
@@ -84,7 +96,9 @@ const mapDispatchToProps = dispatch => ({
     popBank: money => dispatch(popBank(money)),
     payHouse: (name, days, money) => dispatch(payHouseBank(name, days, money)),
     payBusiness: (name, days, money) => dispatch(payBusinessBank(name, days, money)),
-    pushPhoneBank: money => dispatch(pushPhoneBank(money))
+    pushPhoneBank: money => dispatch(pushPhoneBank(money)),
+    pushCashBoxBank: (id, money) => dispatch(pushCashBoxBank(id, money)),
+    popCashBoxBank: (id, money) => dispatch(popCashBoxBank(id, money)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BankSuccess);

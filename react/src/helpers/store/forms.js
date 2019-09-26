@@ -44,7 +44,13 @@ export default function forms(state = initialState, action) {
         case 'SHOW_BANK':
             return {
                 ...state,
-                bank: payload
+                bank: true
+            };
+
+        case 'CLOSE_BANK':
+            return {
+                ...state,
+                bank: false
             };
 
         case 'SHOW_PLAYERS':

@@ -13,6 +13,9 @@ module.exports = {
     "init": () => {
         fishing.init();
     },
+    "render": () => {
+        console.log(mp.game.water.getWaterHeight(player.position.x, player.position.y, player.position.z, 0.5))
+    },
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;
 
@@ -35,18 +38,9 @@ module.exports = {
         }
 
         if (shape.isFishingPlace) {
-            mp.events.call('fishing.game.menu.close', player);
             player.call('fishing.game.exit');
             player.currentColshape = null;
         }
-    },
-    "fishing.game.menu": (player) => {
-        if (!player.character) return;
-        player.call('fishing.game.menu'); 
-    },
-    "fishing.game.menu.close": (player) => {
-        if (!player.character) return;
-        player.call('fishing.game.menu.close'); 
     },
     "fishing.game.enter": (player) => {
         if (!player.character) return;
@@ -67,8 +61,8 @@ module.exports = {
 
         let zone = utils.randomInteger(10, 20);
         let speed = parseInt(health / 5);
-        weight = utils.randomInteger(1,5);
-        let time = utils.randomInteger(3,10);
+        weight = utils.randomFloat(0.3, 3, 1);
+        let time = utils.randomInteger(3, 10);
 
         timeout = setTimeout(() => {
             player.call('fishing.game.fetch', [speed, zone, weight])
