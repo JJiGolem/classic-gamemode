@@ -33,7 +33,6 @@ module.exports = {
         })
     },
     "playerQuit": (player) => {
-        console.log(player.id);
         mp.players.forEach((current) => {
             current.call("hud.setData", [{players: mp.players.length}]); /// После выхода из игры игрок какое-то время висит в пуле, возможно стоит создать таймер
             current.character.admin > 0 && current.call('hud.players.list.remove', [player.id]);
