@@ -5454,9 +5454,11 @@ var selectMenu = new Vue({
                             selectMenu.showByName('supermarketMobile');
                         }
                         if (e.itemName == 'Продукты') {
+                            return selectMenu.notification = 'Временно недоступно';
                             selectMenu.showByName('supermarketFood');
                         }
                         if (e.itemName == 'Табачные изделия') {
+                            return selectMenu.notification = 'Временно недоступно';
                             selectMenu.showByName('supermarketTobacco');
                         }
                     }
@@ -5544,6 +5546,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('supermarketMobile');
                         }
                         if (e.itemName == 'Сменить') {
+                            return selectMenu.notification = 'Временно недоступно';
                             selectMenu.loader = true;
                             let number = selectMenu.menu.items[0].values[0];
                             mp.trigger('supermarket.number.change', number);
