@@ -18,6 +18,11 @@ module.exports = {
         chocolate: 1,
         redwood: 2,
     },
+    itemIds: {
+        water: 34,
+        chocolate: 35,
+        cigarettes: 16
+    },
     async init() {
         bizes = call('bizes');
         await this.loadSupermarketsFromDB();
@@ -43,7 +48,7 @@ module.exports = {
             visible: true,
             dimension: 0
         });
-        
+
         let shape = mp.colshapes.newSphere(shop.x, shop.y, shop.z, 1.8);
         shape.isSupermarket = true;
         shape.supermarketId = shop.id;

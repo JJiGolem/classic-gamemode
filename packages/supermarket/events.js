@@ -1,5 +1,7 @@
 let supermarket = require('./index.js');
 let money = call('money');
+let inventory = call('inventory');
+
 module.exports = {
     "init": () => {
         supermarket.init();
@@ -85,15 +87,19 @@ module.exports = {
         let productsAvailable = supermarket.getProductsAmount(supermarketId);
         if (supermarket.productsConfig[productName] > productsAvailable) return player.call('supermarket.products.buy.ans', [3]);
 
-        money.removeCash(player, price, function (result) {
-            if (result) {
-                supermarket.removeProducts(supermarketId, supermarket.productsConfig[productName]);
-                supermarket.updateCashbox(supermarketId, price);
-
-                player.call('supermarket.products.buy.ans', [1]);
-            } else {
-                player.call('supermarket.products.buy.ans', [0]);
-            }
+        let itemId = supermarket.itemIds[productName];
+        let params = {};
+        inventory.addItem(player, itemId, params, (e) => {
+            if (e) return player.call('supermarket.products.buy.ans', [4, e]);
+            money.removeCash(player, price, function (result) {
+                if (result) {
+                    supermarket.removeProducts(supermarketId, supermarket.productsConfig[productName]);
+                    supermarket.updateCashbox(supermarketId, price);
+                    player.call('supermarket.products.buy.ans', [1]);
+                } else {
+                    player.call('supermarket.products.buy.ans', [0]);
+                }
+            });
         });
     },
 }

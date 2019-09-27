@@ -66,7 +66,7 @@ mp.events.add({
                 break;
         }
     },
-    "supermarket.products.buy.ans": (ans) => {
+    "supermarket.products.buy.ans": (ans, data) => {
         mp.callCEFV('selectMenu.loader = false');
         switch (ans) {
             case 0:
@@ -80,6 +80,9 @@ mp.events.add({
                 break;
             case 3:
                 mp.callCEFV(`selectMenu.notification = 'В магазине кончились продукты'`);
+                break;
+            case 4:
+                mp.callCEFV(`selectMenu.notification = '${data}'`);
                 break;
         }
     }
