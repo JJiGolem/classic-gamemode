@@ -1,6 +1,7 @@
 let supermarket = require('./index.js');
 let money = call('money');
 let inventory = call('inventory');
+let phone = call('phone');
 
 module.exports = {
     "init": () => {
@@ -45,7 +46,7 @@ module.exports = {
             }
         });
     },
-    "supermarket.number.change": (player, number) => {
+    "supermarket.number.change": async (player, number) => {
         if (number.length != 6 || /\D/g.test(number) || number.charAt(0) == '0') return player.call('supermarket.number.change.ans', [0]);
 
         let supermarketId = player.currentsupermarketId;
@@ -55,16 +56,22 @@ module.exports = {
         if (player.character.cash < price) return player.call('supermarket.number.change.ans', [2]);
         let productsAvailable = supermarket.getProductsAmount(supermarketId);
         if (supermarket.productsConfig.numberChange > productsAvailable) return player.call('supermarket.number.change.ans', [3]);
-        // смена номера todo
-        money.removeCash(player, price, function (result) {
-            if (result) {
-                supermarket.removeProducts(supermarketId, supermarket.productsConfig.numberChange);
-                supermarket.updateCashbox(supermarketId, price);
-                player.call('supermarket.number.change.ans', [1, number]);
-            } else {
-                player.call('supermarket.number.change.ans', [4]);
-            }
-        });
+
+        let changed = await phone.changeNumber(player, number);
+        if (!changed) {
+            return player.call('supermarket.number.change.ans', [5]);
+        } else {
+            money.removeCash(player, price, function (result) {
+                if (result) {
+                    supermarket.removeProducts(supermarketId, supermarket.productsConfig.numberChange);
+                    supermarket.updateCashbox(supermarketId, price);
+                    player.call('supermarket.number.change.ans', [1, number]);
+                } else {
+                    player.call('supermarket.number.change.ans', [4]);
+                }
+            });
+        }
+
     },
     "supermarket.products.buy": (player, productId) => {
         let supermarketId = player.currentsupermarketId;

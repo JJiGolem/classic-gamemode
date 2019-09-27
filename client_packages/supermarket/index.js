@@ -62,7 +62,10 @@ mp.events.add({
                 mp.callCEFV(`selectMenu.notification = 'В магазине кончились продукты'`);
                 break;
             case 4:
-                mp.callCEFV(`selectMenu.notification = Ошибка покупки'`);
+                mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
+                break;
+            case 5:
+                mp.callCEFV(`selectMenu.notification = 'Номер занят'`);
                 break;
         }
     },
