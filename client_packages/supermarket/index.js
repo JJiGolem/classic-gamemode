@@ -65,6 +65,23 @@ mp.events.add({
                 mp.callCEFV(`selectMenu.notification = Ошибка покупки'`);
                 break;
         }
+    },
+    "supermarket.products.buy.ans": (ans) => {
+        mp.callCEFV('selectMenu.loader = false');
+        switch (ans) {
+            case 0:
+                mp.callCEFV(`selectMenu.notification = Ошибка покупки'`);
+                break;
+            case 1:
+                mp.callCEFV(`selectMenu.notification = 'Вы приобрели товар'`);
+                break;
+            case 2:
+                mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+                break;
+            case 3:
+                mp.callCEFV(`selectMenu.notification = 'В магазине кончились продукты'`);
+                break;
+        }
     }
 });
 

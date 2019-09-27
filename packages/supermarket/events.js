@@ -65,23 +65,34 @@ module.exports = {
         });
     },
     "supermarket.products.buy": (player, productId) => {
-        if (player.phone) return player.call('supermarket.phone.buy.ans', [0]);
         let supermarketId = player.currentsupermarketId;
         if (supermarketId == null) return;
 
-        let price = supermarket.phoneProducts * supermarket.productPrice * supermarket.getPriceMultiplier(supermarketId);
-        if (player.character.cash < price) return player.call('supermarket.phone.buy.ans', [2]);
+        let productName;
+        switch (productId) {
+            case 0:
+                productName = 'water';
+                break;
+            case 1:
+                productName = 'chocolate';
+                break;
+            case 2:
+                productName = 'redwood';
+                break;
+        }
+        let price = supermarket.productsConfig[productName] * supermarket.productPrice * supermarket.getPriceMultiplier(supermarketId);
+        if (player.character.cash < price) return player.call('supermarket.products.buy.ans', [2]);
         let productsAvailable = supermarket.getProductsAmount(supermarketId);
-        if (supermarket.phoneProducts > productsAvailable) return player.call('supermarket.phone.buy.ans', [3]);
+        if (supermarket.productsConfig[productName] > productsAvailable) return player.call('supermarket.products.buy.ans', [3]);
 
         money.removeCash(player, price, function (result) {
             if (result) {
-                supermarket.removeProducts(supermarketId, supermarket.phoneProducts);
+                supermarket.removeProducts(supermarketId, supermarket.productsConfig[productName]);
                 supermarket.updateCashbox(supermarketId, price);
-                mp.events.call('phone.buy', player);
-                player.call('supermarket.phone.buy.ans', [1]);
+
+                player.call('supermarket.products.buy.ans', [1]);
             } else {
-                player.call('supermarket.phone.buy.ans', [4]);
+                player.call('supermarket.products.buy.ans', [0]);
             }
         });
     },

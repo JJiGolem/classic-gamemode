@@ -36,15 +36,15 @@ module.exports = {
                 color: 0,
                 shortRange: true,
             });
-        let shape = mp.colshapes.newSphere(shop.x, shop.y, shop.z, 1.8);
-
+        
         mp.markers.new(1, new mp.Vector3(shop.x, shop.y, shop.z - 0.1), 0.8,
         {
             color: shop.bType ? [69, 140, 255, 128] : [50, 168, 82, 128],
             visible: true,
             dimension: 0
         });
-
+        
+        let shape = mp.colshapes.newSphere(shop.x, shop.y, shop.z, 1.8);
         shape.isSupermarket = true;
         shape.supermarketId = shop.id;
     },
