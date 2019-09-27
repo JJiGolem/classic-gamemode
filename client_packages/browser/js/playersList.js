@@ -38,23 +38,31 @@ var playersList = new Vue({
         search: '',
         type: 'name',
         sortedBy: 'id',
-        options: [
-            { text: 'id', value: 'id' },
-            { text: 'Имя', value: 'name' },
-            { text: 'Организация', value: 'faction' }
-        ]
     },
     methods: {
         getPlayers() {
             return this.players
-                .sort((a, b) => a[this.sortedBy].toString().localeCompare(b[this.sortedBy].toString()))
-                .filter(player => player[this.type]
-                    .toString()
-                    .toLowerCase()
-                    .startsWith(this.search.toString().toLowerCase()))
+                // .sort((a, b) => a[this.sortedBy].toString().localeCompare(b[this.sortedBy].toString()))
+                // .filter(player => player[this.type]
+                //     .toString()
+                //     .toLowerCase()
+                //     .startsWith(this.search.toString().toLowerCase()))
         },
         setSortedBy(newSortedBy) {
             this.sortedBy = newSortedBy;
+        },
+        setType(newType) {
+            this.type = newType;
+        },
+        addPlayer(newPlayer) {
+            this.players.push(newPlayer);
+        },
+        removePlayer(id) {
+            let playerIndex = this.players.findIndex(player => player.id == id);
+
+            if (playerIndex !== -1) {
+                this.players.splice(playerIndex, 1);
+            }
         }
     }
 })

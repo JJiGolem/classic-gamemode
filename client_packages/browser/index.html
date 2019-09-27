@@ -30,7 +30,7 @@
     <link rel="stylesheet" type="text/css" href="css/inputWindow.css" />
     <link rel="stylesheet" type="text/css" href="css/acceptWindow.css" />
     <link rel="stylesheet" type="text/css" href="css/terminal.css" />
-    <!-- <link rel="stylesheet" type="text/css" href="css/playersList.css" /> -->
+    <link rel="stylesheet" type="text/css" href="css/playersList.css" />
     <link rel="stylesheet" type="text/css" href="css/gunLicense.css" />
     <link rel="stylesheet" type="text/css" href="css/fishing.css" />
     <link rel="stylesheet" type="text/css" href="css/captureScore.css" />
@@ -719,46 +719,51 @@
 
     <!-- ------------------------ СПИСОК ИГРОКОВ ------------------------ -->
 
-    <div v-cloak id="playersList" :class="{inactive: loader}" v-show="show">
+    <div id="playersList" v-cloak :class="{inactive: loader}" v-if="show">
         <div class="players_list-head">
             <table rules="all">
                 <colgroup>
-                    <col style="width: 10%" />
-                    <col style="width: 40%" />
-                    <col style="width: 40%" />
-                    <col style="width: 10%" />
+                    <col style="width: 10%"/>
+                    <col style="width: 40%"/>
+                    <col style="width: 40%"/>
+                    <col style="width: 10%"/>
                 </colgroup>
                 <thead>
                     <tr>
-                        <th @click="setSortedBy('id')">id</th>
-                        <th @click="setSortedBy('name')">Имя</th>
-                        <th @click="setSortedBy('faction')">Организация</th>
+                        <th @click="setSortedBy('id')">id <span v-if="sortedBy == 'id'">▼</span></th>
+                        <th @click="setSortedBy('name')">Имя <span v-if="sortedBy == 'name'">▼</span></th>
+                        <th @click="setSortedBy('faction')">Организация <span v-if="sortedBy == 'faction'">▼</span></th>
                         <th>ping</th>
                     </tr>
                 </thead>
             </table>
             <div class="players_list-navigate_panel">
+                <span>Поиск:</span>
                 <input v-model="search" />
-                <select v-model="type">
-                    <option v-for="option in options" v-bind:value="option.value">
-                        {{ option.text }}
-                    </option>
-                </select>
+                <div @click="setType('id')">
+                    id
+                </div>
+                <div @click="setType('name')">
+                    Имя
+                </div>
+                <div @click="setType('faction')">
+                    Организация
+                </div>
             </div>
         </div>
         <div class="players_list-body">
             <table rules="all">
                 <colgroup>
-                    <col style="width: 10%" />
-                    <col style="width: 40%" />
-                    <col style="width: 40%" />
-                    <col style="width: 10%" />
+                    <col style="width: 10%"/>
+                    <col style="width: 40%"/>
+                    <col style="width: 40%"/>
+                    <col style="width: 10%"/>
                 </colgroup>
                 <tbody>
-                    <tr v-for="player in players">
+                    <tr v-for="player in getPlayers()">
                         <th>{{ player.id }}</th>
                         <th>{{ player.name }}</th>
-                        <th>{{ player.faction ? player.faction: '-' }}</th>
+                        <th>{{ player.faction }}</th>
                         <th>{{ player.ping }}</th>
                     </tr>
                 </tbody>
