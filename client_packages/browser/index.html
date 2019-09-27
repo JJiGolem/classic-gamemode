@@ -37,6 +37,7 @@
     <link rel="stylesheet" type="text/css" href="css/killList.css" />
     <link rel="stylesheet" type="text/css" href="css/watermark.css" />
     <link rel="stylesheet" type="text/css" href="css/timer.css" />
+    <link rel="stylesheet" type="text/css" href="css/changelist.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -1494,6 +1495,9 @@
             </div>
         </div>
     </script>
+    <script src="js/playerMenuSvgPaths.js"></script>
+    <script src="js/playerMenu.js"></script>
+    <!-- ------------------------ МЕНЮ ИГРОКА ------------------------ -->
 
 
 
@@ -1537,14 +1541,29 @@
         <div class="time">{{ time / 1000 }} с.</div>
     </div>
 
-    <script src="js/playerMenuSvgPaths.js"></script>
-    <script src="js/playerMenu.js"></script>
-    <!-- ------------------------ МЕНЮ ИГРОКА ------------------------ -->
+    <div v-cloak id="changelist" v-if="show">
+        <div class="header">
+            <div class="arrow" @click="i++" v-if="i < list.length - 1">След</div>
+            <div class="title">
+                <div class="name">Changelist {{ list[i].id }}</div>
+                <div class="date">{{ list[i].date }}</div>
+            </div>
+            <div class="arrow" @click="i--" v-if="i > 0">Пред</div>
+        </div>
+        <div class="content">
+            <div v-for="text in list[i].features"><span class="features"><i class="fas fa-star"></i></span>{{ text }}</div>
+            <div v-for="text in list[i].fixed"><span class="fixed"><i class="fas fa-wrench"></i></span>{{ text }}</div>
+            <div v-for="text in list[i].improvements"><span class="improvements"><i class="fas fa-chart-line"></i></span>{{ text }}</div>
+            <div v-for="text in list[i].removed"><span class="removed"><i class="fas fa-trash"></i></span>{{ text }}</div>
+        </div>
+    </div>
+
 
     <!-- ------------------------ REACT ------------------------------ -->
     <script async src="build/js/build.js" type="text/javascript"></script>
     <div id="root"></div>
     <!-- ------------------------------------------------------------- -->
+    <script src="js/fontawesome.js"></script>
     <script src="js/hud.js"></script>
     <script src="js/prompt.js"></script>
     <script src="js/notifications.js"></script>
@@ -1572,6 +1591,7 @@
     <script src="js/killList.js"></script>
     <script src="js/watermark.js"></script>
     <script src="js/timer.js"></script>
+    <script src="js/changelist.js"></script>
 
 </body>
 
