@@ -69,7 +69,7 @@ module.exports = {
         return phoneNumbers.includes(number);
     },
     async changeNumber(player, newNumber) {
-        if (player.phone == null) return;
+        if (player.phone == null) return false;
         if (phoneNumbers.includes(newNumber)) return false;
         let numberIndex = phoneNumbers.findIndex( x => x == player.phone.number);
         if (numberIndex != -1) phoneNumbers[numberIndex] = newNumber;
