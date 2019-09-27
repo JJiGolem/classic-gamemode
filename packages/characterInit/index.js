@@ -113,7 +113,7 @@ module.exports = {
     },
     /// Функции создания персоонажа
     create(player) {
-        player.character = {
+        player.characterInfo = {
             accountId: player.account.id,
             name: "",
             gender: 0,
@@ -135,11 +135,11 @@ module.exports = {
             Promocode: {},
             settings: {},
         }
-        for (let i = 0; i < 20; i++) player.character.Features.push({
+        for (let i = 0; i < 20; i++) player.characterInfo.Features.push({
             value: 0.0,
             order: i
         });
-        for (let i = 0; i < 11; i++) player.character.Appearances.push({
+        for (let i = 0; i < 11; i++) player.characterInfo.Appearances.push({
             value: 255,
             opacity: 1.0,
             order: i
@@ -149,8 +149,6 @@ module.exports = {
 
         player.model = freemodeCharacters[0];
         this.applyCharacter(player);
-        player.characterInfo = player.character;
-        player.character = null;
         this.sendToCreator(player);
     },
     async save(player, fullname, charData) {
