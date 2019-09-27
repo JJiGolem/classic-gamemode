@@ -264,8 +264,8 @@ module.exports = {
         player.call(`factions.faction.set`, [character.factionId]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
-        else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
         else if (this.isFibFaction(faction)) mp.events.call(`mapCase.fib.init`, player);
+        else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
         else if (this.isNewsFaction(faction)) mp.events.call(`mapCase.news.init`, player);
 
         mp.events.call(`player.faction.changed`, player);

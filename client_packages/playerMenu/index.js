@@ -9,8 +9,6 @@
 
 mp.playerMenu = {
     init(data) {
-        debug(data);
-
         mp.callCEFV(`playerMenu.init('${JSON.stringify(data)}')`);
     },
     setFaction(data) {

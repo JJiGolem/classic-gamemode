@@ -12,7 +12,6 @@ module.exports = {
     "characterInit.done": (player) => {
         player.call(`police.wanted.set`, [player.character.wanted]);
         if (!factions.isPoliceFaction(player.character.factionId)) return;
-        // player.call(`mapCase.init`, [player.name, player.character.factionId]);
         mp.events.call(`mapCase.pd.init`, player);
 
         if (!player.character.arrestTime) return;

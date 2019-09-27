@@ -18,7 +18,10 @@ var out = {
 module.exports = {
     "init": async () => {},
     "characterInit.done": (player) => {
-        if (player.character.wanted) mapCase.addPoliceWanted(player);
+        if (player.character.wanted) {
+            mapCase.addPoliceWanted(player);
+            mapCase.addFibWanted(player);
+        }
     },
     "mapCase.pd.init": (player) => {
         player.call(`mapCase.pd.calls.add`, [mapCase.policeCalls]);
@@ -659,10 +662,15 @@ module.exports = {
     "playerQuit": (player) => {
         if (!player.character) return;
         mapCase.removePoliceCall(player.character.id);
+        mapCase.removeFibCall(player.character.id);
         mapCase.removeHospitalCall(player.character.id);
         mapCase.removeNewsAd(player.id);
-        if (player.character.wanted) mapCase.removePoliceWanted(player.character.id);
+        if (player.character.wanted) {
+            mapCase.removePoliceWanted(player.character.id);
+            mapCase.removeFibWanted(player.character.id);
+        }
         if (factions.isPoliceFaction(player.character.factionId)) mapCase.removePoliceMember(player);
+        else if (factions.isFibFaction(player.character.factionId)) mapCase.removeFibMember(player);
         else if (factions.isHospitalFaction(player.character.factionId)) mapCase.removeHospitalMember(player);
         else if (factions.isNewsFaction(player.character.factionId)) mapCase.removeNewsMember(player);
     },
