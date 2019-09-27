@@ -72,7 +72,12 @@ module.exports = {
         if (player.phone == null) return false;
         if (phoneNumbers.includes(newNumber)) return false;
         let numberIndex = phoneNumbers.findIndex( x => x == player.phone.number);
-        if (numberIndex != -1) phoneNumbers[numberIndex] = newNumber;
+        if (numberIndex != -1) {
+            phoneNumbers[numberIndex] = newNumber;
+        } 
+        else {
+            phoneNumbers.push(newNumber);
+        }
         player.phone.number = newNumber;
         await player.phone.save();
         return true;
