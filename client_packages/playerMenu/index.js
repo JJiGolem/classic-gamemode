@@ -20,6 +20,9 @@ mp.playerMenu = {
     setJob(data) {
         mp.callCEFV(`playerMenu.setJob('${JSON.stringify(data)}')`);
     },
+    setWanted(wanted) {
+        mp.callCEFV(`playerMenu.setWanted(${wanted})`);
+    },
     setBiz(biz) {
         mp.callCEFV(`playerMenu.setBiz('${JSON.stringify(biz)}')`);
     },

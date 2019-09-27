@@ -134,6 +134,7 @@ module.exports = {
     "mapCase.pd.fines.give": async (player, data) => {
         if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
         data = JSON.parse(data);
+        data.price = Math.clamp(data.price, 1, 10000);
 
         var fine = await db.Models.Fine.create({
             copId: player.character.id,
