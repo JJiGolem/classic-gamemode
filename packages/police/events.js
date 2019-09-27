@@ -469,6 +469,13 @@ module.exports = {
         notifs.success(player, `${rec.name} имеет ${rec.character.wanted} ур.`, `Розыск`);
         notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур.`, `Розыск`);
     },
+    "police.wanted.lower": (player) => {
+        if (!player.character.wanted) return;
+
+        police.setWanted(player, player.character.wanted - 1);
+
+        notifs.warning(player, `Ваш уровень розыска понизился`);
+    },
     // арестовать в КПЗ ЛСПД
     "police.cells.arrest": (player, recId) => {
         var rec = mp.players.at(recId);

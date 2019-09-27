@@ -10,6 +10,8 @@ mp.police = {
     haveCuffs: false,
     followPlayer: null,
     wanted: 0,
+    wantedTimer: null,
+    clearWantedTime: 60 * 60 * 1000, // время очищения 1 ур. розыска (ms)
 
     setCuffs(enable) {
         this.haveCuffs = enable;
@@ -19,6 +21,12 @@ mp.police = {
     },
     setWanted(val) {
         this.wanted = val;
+        mp.playerMenu.setWanted(val);
+        clearTimeout(this.wantedTimer);
+        if (!val) return;
+        this.wantedTimer = setTimeout(() => {
+            mp.events.callRemote(`police.wanted.lower`);
+        }, this.clearWantedTime);
     },
     startFollowToPlayer(playerId) {
         var player = mp.players.atRemoteId(playerId);
