@@ -86,9 +86,9 @@ mp.events.add('hud.players.list.show', (state) => {
     playersListState = state;
 });
 
-mp.events.add('hud.players.list.load', (playersInfo) => {
-    mp.callCEFR('players.load', [playersInfo]);
-});
+// mp.events.add('hud.players.list.load', (playersInfo) => {
+//     mp.callCEFR('players.load', [playersInfo]);
+// });
 
 mp.events.add('hud.players.list.add', (newPlayer) => {
     mp.callCEFR('players.add', [newPlayer]);
