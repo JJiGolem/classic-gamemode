@@ -5641,6 +5641,91 @@ var selectMenu = new Vue({
                 
                 }
             },
+            "ammunationMain": {
+                name: "ammunationMain",
+                header: "Магазин оружия",
+                headerImg: "ammunation.png",
+                items: [{
+                    text: 'Огнестрельное оружие'
+                },
+                {
+                    text: 'Боеприпасы'
+                },
+                {
+                    text: 'Закрыть'
+                },
+            ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                        if (e.itemName == 'Огнестрельное оружие') {
+                            selectMenu.showByName('ammunationFirearms');
+                        }
+                    }
+
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.show = false;
+                    }
+                
+                }
+            },
+            "ammunationFirearms": {
+                name: "ammunationFirearms",
+                header: "Огнестрельное оружие",
+                headerImg: "ammunation.png",
+                items: [{
+                    text: 'Heavy Pistol',
+                    values: ['$100']
+                },
+                {
+                    text: 'Pump Shotgun',
+                    values: ['$100']
+                },
+                {
+                    text: 'SMG',
+                    values: ['$100']
+                },
+                {
+                    text: 'Carbine Rifle',
+                    values: ['$100']
+                },
+                {
+                    text: 'Назад'
+                },
+            ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('ammunationMain');
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('ammunationMain');
+                    }
+                }
+            },
         },
         // Уведомление
         notification: null,
