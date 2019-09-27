@@ -4,6 +4,7 @@ const initialState = {
     name: 'Ilya Maxin',
     isDriver: false,
     isHave: true,
+    symbolPriceNews: 3,
     contacts: [
         {
             name: 'Влад Кузнецов',
