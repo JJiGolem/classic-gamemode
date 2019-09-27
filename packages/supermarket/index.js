@@ -11,8 +11,13 @@ module.exports = {
     minPriceMultiplier: 1.0,
     maxPriceMultiplier: 2.0,
     productPrice: 10,
-    phoneProducts: 15,
-    numberChangeProducts: 12,
+    productsConfig: {
+        phone: 15,
+        numberChange: 12,
+        water: 2,
+        chocolate: 1,
+        redwood: 2,
+    },
     async init() {
         bizes = call('bizes');
         await this.loadSupermarketsFromDB();
@@ -89,5 +94,15 @@ module.exports = {
         let shop = shops.find(x => x.id == id);
         let bizId = shop.bizId;
         bizes.bizUpdateCashBox(bizId, money);
+    },
+    getProductsConfig() {
+        return this.productsConfig;
+    },
+    getPriceConfig() {
+        let priceConfig = {}; 
+        for (let key in this.productsConfig) {
+            priceConfig[key] = this.productsConfig[key] * this.productPrice;
+        }
+        return priceConfig;
     }
 }

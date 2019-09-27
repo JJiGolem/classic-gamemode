@@ -1,6 +1,7 @@
 mp.events.add({
-    "supermarket.enter": (data) => {
+    "supermarket.enter": (data, priceConfig) => {
         setSupermarketHeaders(data.bType);
+        setPrices(priceConfig, data.priceMultiplier);
         mp.events.call('selectMenu.show', 'supermarketMain');
     },
     "supermarket.exit": () => {
@@ -74,4 +75,15 @@ function setSupermarketHeaders(type) {
     mp.callCEFV(`selectMenu.menus["supermarketNumberChange"].headerImg = '${img}'`);
     mp.callCEFV(`selectMenu.menus["supermarketFood"].headerImg = '${img}'`);
     mp.callCEFV(`selectMenu.menus["supermarketTobacco"].headerImg = '${img}'`);
+}
+
+function setPrices(config, multiplier) {
+    for (let key in config) {
+        config[key] *= multiplier;
+    }
+    mp.callCEFV(`selectMenu.menus["supermarketMobile"].items[0].values[0] = '$${config.phone}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketMobile"].items[1].values[0] = '$${config.numberChange}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketFood"].items[0].values[0] = '$${config.water}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketFood"].items[1].values[0] = '$${config.chocolate}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketTobacco"].items[0].values[0] = '$${config.redwood}'`);
 }
