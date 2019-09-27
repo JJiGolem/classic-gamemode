@@ -86,8 +86,10 @@ module.exports = {
 
         if (!player.character.wanted) {
             mapCase.removePoliceWanted(player.character.id);
+            mapCase.removeFibWanted(player.character.id);
         } else {
             mapCase.addPoliceWanted(player);
+            mapCase.addFibWanted(player);
         }
     },
     getNearCell(player) {

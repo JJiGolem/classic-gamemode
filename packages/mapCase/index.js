@@ -15,6 +15,8 @@ var out = {
 module.exports = {
     // Вызовы в планшете ПД
     policeCalls: [],
+    // Вызовы в планшете ФИБ
+    fibCalls: [],
     // Вызовы в планшете ЕМС
     hospitalCalls: [],
     // Объявления (в очереди) в планшете Ньюс
@@ -174,6 +176,81 @@ module.exports = {
             if (!factions.isPoliceFaction(rec.character.factionId)) return;
 
             rec.call(`mapCase.pd.members.remove`, [player.character.id]);
+        });
+    },
+    addFibCall(player, description) {
+        this.removeFibCall(player.character.id);
+        var call = {
+            id: player.character.id,
+            name: player.name,
+            description: description
+        };
+        this.fibCalls.push(call);
+        notifs.success(player, `Вызов отправлен`, `FIB`);
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isFibFaction(rec.character.factionId)) return;
+
+            notifs.info(rec, `Поступил вызов от ${call.name}`, `Планшет FIB`);
+            rec.call(`mapCase.fib.calls.add`, [call])
+        });
+    },
+    removeFibCall(id) {
+        var deleted = false;
+        for (var i = 0; i < this.fibCalls.length; i++) {
+            if (this.fibCalls[i].id == id) {
+                this.fibCalls.splice(i, 1);
+                i--;
+                deleted = true;
+            }
+        }
+        if (!deleted) return false;
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isFibFaction(rec.character.factionId)) return;
+
+            rec.call(`mapCase.fib.calls.remove`, [id])
+        });
+        return true;
+    },
+    acceptFibCall(id) {
+        return this.removeFibCall(id);
+    },
+    addFibWanted(player) {
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isFibFaction(rec.character.factionId)) return;
+            rec.call(`mapCase.fib.wanted.add`, [{
+                id: player.character.id,
+                name: player.name,
+                description: player.character.wantedCause || "-",
+                danger: player.character.wanted
+            }]);
+        });
+    },
+    removeFibWanted(id) {
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isFibFaction(rec.character.factionId)) return;
+            rec.call(`mapCase.fib.wanted.remove`, [id]);
+        });
+    },
+    addFibMember(player) {
+        if (!factions.isFibFaction(player.character.factionId)) return;
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isFibFaction(rec.character.factionId)) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            rec.call(`mapCase.fib.members.add`, [this.convertMembers([player])]);
+        });
+    },
+    removeFibMember(player) {
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isFibFaction(rec.character.factionId)) return;
+
+            rec.call(`mapCase.fib.members.remove`, [player.character.id]);
         });
     },
     addHospitalCall(player, description) {

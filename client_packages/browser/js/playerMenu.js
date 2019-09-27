@@ -581,6 +581,9 @@ var playerMenu = new Vue({
 
             statistics[5].value = data.jobName || "-";
         },
+        setWanted(wanted) {
+            statistics[6].value = `${wanted} зв.`;
+        },
         setSkills(data) {
             if (typeof data == 'string') data = JSON.parse(data);
 

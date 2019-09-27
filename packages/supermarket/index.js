@@ -11,8 +11,18 @@ module.exports = {
     minPriceMultiplier: 1.0,
     maxPriceMultiplier: 2.0,
     productPrice: 10,
-    phoneProducts: 15,
-    numberChangeProducts: 12,
+    productsConfig: {
+        phone: 15,
+        numberChange: 12,
+        water: 2,
+        chocolate: 1,
+        redwood: 2,
+    },
+    itemIds: {
+        water: 34,
+        chocolate: 35,
+        cigarettes: 16
+    },
     async init() {
         bizes = call('bizes');
         await this.loadSupermarketsFromDB();
@@ -31,8 +41,7 @@ module.exports = {
                 color: 0,
                 shortRange: true,
             });
-        let shape = mp.colshapes.newSphere(shop.x, shop.y, shop.z, 1.8);
-
+        
         mp.markers.new(1, new mp.Vector3(shop.x, shop.y, shop.z - 0.1), 0.8,
         {
             color: shop.bType ? [69, 140, 255, 128] : [50, 168, 82, 128],
@@ -40,6 +49,7 @@ module.exports = {
             dimension: 0
         });
 
+        let shape = mp.colshapes.newSphere(shop.x, shop.y, shop.z, 1.8);
         shape.isSupermarket = true;
         shape.supermarketId = shop.id;
     },
@@ -89,5 +99,15 @@ module.exports = {
         let shop = shops.find(x => x.id == id);
         let bizId = shop.bizId;
         bizes.bizUpdateCashBox(bizId, money);
+    },
+    getProductsConfig() {
+        return this.productsConfig;
+    },
+    getPriceConfig() {
+        let priceConfig = {}; 
+        for (let key in this.productsConfig) {
+            priceConfig[key] = this.productsConfig[key] * this.productPrice;
+        }
+        return priceConfig;
     }
 }

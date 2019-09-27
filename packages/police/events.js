@@ -12,7 +12,6 @@ module.exports = {
     "characterInit.done": (player) => {
         player.call(`police.wanted.set`, [player.character.wanted]);
         if (!factions.isPoliceFaction(player.character.factionId)) return;
-        // player.call(`mapCase.init`, [player.name, player.character.factionId]);
         mp.events.call(`mapCase.pd.init`, player);
 
         if (!player.character.arrestTime) return;
@@ -469,6 +468,13 @@ module.exports = {
 
         notifs.success(player, `${rec.name} имеет ${rec.character.wanted} ур.`, `Розыск`);
         notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур.`, `Розыск`);
+    },
+    "police.wanted.lower": (player) => {
+        if (!player.character.wanted) return;
+
+        police.setWanted(player, player.character.wanted - 1);
+
+        notifs.warning(player, `Ваш уровень розыска понизился`);
     },
     // арестовать в КПЗ ЛСПД
     "police.cells.arrest": (player, recId) => {

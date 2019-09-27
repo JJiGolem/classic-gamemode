@@ -32,7 +32,7 @@ mp.mapCasePd = {
     searchTimer: null,
     // ИД игрока, личность которого устанавливается
     searchPlayerId: null,
-    // Вреся жизни блипа подкрепления (ms)
+    // Время жизни блипа подкрепления (ms)
     emergencyBlipTime: 60000,
     // Блипы, где запросили подкрепление
     emergencyBlips: [],
@@ -116,6 +116,96 @@ mp.mapCasePd = {
         }, this.emergencyBlipTime);
     },
 };
+mp.mapCaseFib = {
+    // Время установления личности (ms)
+    searchTime: 3000,
+    // Макс. дистанция установления личности
+    searchMaxDist: 10,
+    // Таймер установления личности
+    searchTimer: null,
+    // ИД игрока, личность которого устанавливается
+    searchPlayerId: null,
+    // Время жизни блипа подкрепления (ms)
+    emergencyBlipTime: 60000,
+    // Блипы, где запросили подкрепление
+    emergencyBlips: [],
+
+    setResultData(array) {
+        for (var i = 0; i < array.length; i++) {
+            var pos = array[i].housePos;
+            array[i].num = i + 1;
+            array[i].address = mp.utils.getStreetName(pos) || "-";
+        }
+        if (typeof array == 'object') array = JSON.stringify(array);
+        mp.callCEFV(`mapCaseFIBDBResultData.setResult('${array}')`);
+    },
+    setProfileData(data) {
+        var pos = data.housePos;
+        data.property = "-";
+        if (data.housePos) data.property = mp.utils.getStreetName(pos) + `, ${data.houseId}` || "-";
+        data.pass = 2608180000 + data.id;
+        data.gender = (data.gender) ? "Ж" : "М";
+
+        if (typeof data == 'object') data = JSON.stringify(data);
+        mp.callCEFV(`mapCaseFIBProfileData.setProfileData('${data}')`);
+    },
+    addCall(calls) {
+        if (typeof calls == 'object') calls = JSON.stringify(calls);
+        mp.callCEFV(`mapCaseFIBCallsData.add('${calls}')`);
+    },
+    removeCall(id) {
+        mp.callCEFV(`mapCaseFIBCallsData.remove(${id})`);
+    },
+    addWanted(wanted) {
+        if (typeof wanted == 'object') wanted = JSON.stringify(wanted);
+        mp.callCEFV(`mapCaseFIBWantedData.add('${wanted}')`);
+    },
+    removeWanted(id) {
+        mp.callCEFV(`mapCaseFIBWantedData.remove(${id})`);
+    },
+    addMember(members) {
+        if (typeof members == 'object') members = JSON.stringify(members);
+        mp.callCEFV(`mapCaseFIBMembersData.add('${members}')`);
+    },
+    removeMember(id) {
+        mp.callCEFV(`mapCaseFIBMembersData.remove(${id})`);
+    },
+    setRanks(ranks) {
+        if (typeof ranks == 'object') ranks = JSON.stringify(ranks);
+        mp.callCEFV(`mapCaseFIBMembersData.setRanks('${ranks}')`);
+    },
+    setMemberRank(id, rank) {
+        mp.callCEFV(`mapCaseFIBMembersData.setMemberRank(${id}, ${rank})`);
+    },
+    startSearch(id) {
+        this.stopSearch();
+        var rec = mp.players.atRemoteId(id);
+        if (!id) return mp.mapCase.showRedMessage(`Игрок <span>#${id}</span> не найден`);
+        this.searchPlayerId = id;
+        this.searchTimer = setTimeout(() => {
+            mp.events.callRemote(`mapCase.fib.searchById`, id);
+            mp.mapCaseFib.stopSearch();
+        }, this.searchTime);
+    },
+    stopSearch(text = null) {
+        clearTimeout(this.searchTimer);
+        this.searchTimer = null;
+        this.searchPlayerId = null;
+        if (text) mp.mapCase.showRedMessage(text);
+    },
+    addEmergencyBlip(name, pos) {
+        var blip = mp.blips.new(133, pos, {
+            name: name,
+            color: 39
+        });
+        this.emergencyBlips.push(blip);
+        setTimeout(() => {
+            var index = this.emergencyBlips.indexOf(blip);
+            this.emergencyBlips.splice(index, 1);
+            blip.destroy();
+        }, this.emergencyBlipTime);
+    },
+};
 mp.mapCaseEms = {
     addCall(calls) {
         if (typeof calls == 'object') calls = JSON.stringify(calls);
@@ -170,6 +260,8 @@ mp.events.add("mapCase.init", (name, factionId) => {
         type = "pd";
         if (factionId == 2) mp.mapCasePd.menuHeader("LOS SANTOS<br/>POLICE DEPARTMENT");
         else mp.mapCasePd.menuHeader("BLAINE COUNTY<br/>SHERIFF DEPARTMENT");
+    } else if (mp.factions.isFibFaction(factionId)) {
+        type = "fib";
     } else if (mp.factions.isHospitalFaction(factionId)) {
         type = "ems";
     } else if (mp.factions.isNewsFaction(factionId)) {
@@ -210,6 +302,30 @@ mp.events.add("mapCase.pd.search.start", (recId) => {
     mp.mapCasePd.startSearch(recId);
 });
 
+mp.events.add("mapCase.fib.resultData.set", mp.mapCaseFib.setResultData);
+
+mp.events.add("mapCase.fib.profileData.set", mp.mapCaseFib.setProfileData);
+
+mp.events.add("mapCase.fib.calls.add", mp.mapCaseFib.addCall);
+
+mp.events.add("mapCase.fib.calls.remove", mp.mapCaseFib.removeCall);
+
+mp.events.add("mapCase.fib.wanted.add", mp.mapCaseFib.addWanted);
+
+mp.events.add("mapCase.fib.wanted.remove", mp.mapCaseFib.removeWanted);
+
+mp.events.add("mapCase.fib.members.add", mp.mapCaseFib.addMember);
+
+mp.events.add("mapCase.fib.members.remove", mp.mapCaseFib.removeMember);
+
+mp.events.add("mapCase.fib.ranks.set", mp.mapCaseFib.setRanks);
+
+mp.events.add("mapCase.fib.members.rank.set", mp.mapCaseFib.setMemberRank);
+
+mp.events.add("mapCase.fib.search.start", (recId) => {
+    mp.mapCaseFib.startSearch(recId);
+});
+
 mp.events.add("mapCase.ems.calls.add", mp.mapCaseEms.addCall);
 
 mp.events.add("mapCase.ems.calls.remove", mp.mapCaseEms.removeCall);
@@ -242,8 +358,19 @@ mp.events.add("time.main.tick", () => {
         var dist = mp.vdist(rec.position, mp.players.local.position);
         if (dist > mp.mapCasePd.searchMaxDist) return mp.mapCasePd.stopSearch(`Игрок далеко`);
     }
+    id = mp.mapCaseFib.searchPlayerId;
+    if (id) { // происходит установление личности
+        var rec = mp.players.atRemoteId(id);
+        if (!rec) return mp.mapCaseFib.stopSearch(`Игрок не найден`);
+        var dist = mp.vdist(rec.position, mp.players.local.position);
+        if (dist > mp.mapCaseFib.searchMaxDist) return mp.mapCaseFib.stopSearch(`Игрок далеко`);
+    }
 });
 
 mp.events.add("mapCase.pd.emergencyBlips.add", (name, pos) => {
     mp.mapCasePd.addEmergencyBlip(name, pos);
+});
+
+mp.events.add("mapCase.fib.emergencyBlips.add", (name, pos) => {
+    mp.mapCaseFib.addEmergencyBlip(name, pos);
 });
