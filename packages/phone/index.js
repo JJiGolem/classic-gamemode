@@ -67,5 +67,14 @@ module.exports = {
     },
     isExists(number) {
         return phoneNumbers.includes(number);
+    },
+    async changeNumber(player, newNumber) {
+        if (player.phone == null) return;
+        if (phoneNumbers.includes(newNumber)) return false;
+        let numberIndex = phoneNumbers.findIndex( x => x == player.phone.number);
+        if (numberIndex != -1) phoneNumbers[numberIndex] = newNumber;
+        player.phone.number = newNumber;
+        await player.phone.save();
+        return true;
     }
 };
