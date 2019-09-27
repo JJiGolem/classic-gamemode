@@ -1328,6 +1328,39 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "bizEconomic": {
+                name: "bizeconomic",
+                header: "Экономика бизнеса",
+                items: [{
+                        text: "Создать",
+                    },
+                    {
+                        text: "Закрыть",
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        switch (e.itemName) {
+                            case "Создать":
+                                selectMenu.show = false;
+                                break;
+                            case "Закрыть":
+                                selectMenu.show = false;
+                                break;
+                        }
+                    }
+                }
+            },
             "fuelStationMenu": {
                 name: "fuelstation",
                 header: "АЗС",
@@ -5553,12 +5586,19 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('supermarketMain');
+                        } else {
+                            selectMenu.loader = true;
+                        }
+                        if (e.itemName == 'Бутылка воды') {
+                            mp.trigger('callRemote', 'supermarket.products.buy', 0);
+                        }
+                        if (e.itemName == 'Плитка шоколада') {
+                            mp.trigger('callRemote', 'supermarket.products.buy', 1);
                         }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('supermarketMain');
                     }
-                
                 }
             },
             "supermarketTobacco": {
@@ -5588,6 +5628,11 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('supermarketMain');
+                        } else {
+                            selectMenu.loader = true;
+                        }
+                        if (e.itemName == 'Сигареты "Redwood"') {
+                            mp.trigger('callRemote', 'supermarket.products.buy', 2);
                         }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {

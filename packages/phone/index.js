@@ -57,7 +57,6 @@ module.exports = {
 
         player.call('phone.load', [{
                 isHave: player.phone != null,
-                name: player.character.name,
                 houses: houses,
                 biz: bizes,
                 contacts: player.phone != null ? (player.phone.PhoneContacts != null ? jsonPhone['PhoneContacts'] : []) : []
@@ -68,5 +67,19 @@ module.exports = {
     },
     isExists(number) {
         return phoneNumbers.includes(number);
+    },
+    async changeNumber(player, newNumber) {
+        if (player.phone == null) return false;
+        if (phoneNumbers.includes(newNumber)) return false;
+        let numberIndex = phoneNumbers.findIndex( x => x == player.phone.number);
+        if (numberIndex != -1) {
+            phoneNumbers[numberIndex] = newNumber;
+        } 
+        else {
+            phoneNumbers.push(newNumber);
+        }
+        player.phone.number = newNumber;
+        await player.phone.save();
+        return true;
     }
 };

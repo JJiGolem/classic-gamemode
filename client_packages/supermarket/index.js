@@ -1,6 +1,7 @@
 mp.events.add({
-    "supermarket.enter": (data) => {
+    "supermarket.enter": (data, priceConfig) => {
         setSupermarketHeaders(data.bType);
+        setPrices(priceConfig, data.priceMultiplier);
         mp.events.call('selectMenu.show', 'supermarketMain');
     },
     "supermarket.exit": () => {
@@ -61,7 +62,30 @@ mp.events.add({
                 mp.callCEFV(`selectMenu.notification = 'В магазине кончились продукты'`);
                 break;
             case 4:
+                mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
+                break;
+            case 5:
+                mp.callCEFV(`selectMenu.notification = 'Номер занят'`);
+                break;
+        }
+    },
+    "supermarket.products.buy.ans": (ans, data) => {
+        mp.callCEFV('selectMenu.loader = false');
+        switch (ans) {
+            case 0:
                 mp.callCEFV(`selectMenu.notification = Ошибка покупки'`);
+                break;
+            case 1:
+                mp.callCEFV(`selectMenu.notification = 'Вы приобрели товар'`);
+                break;
+            case 2:
+                mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+                break;
+            case 3:
+                mp.callCEFV(`selectMenu.notification = 'В магазине кончились продукты'`);
+                break;
+            case 4:
+                mp.callCEFV(`selectMenu.notification = '${data}'`);
                 break;
         }
     }
@@ -74,4 +98,16 @@ function setSupermarketHeaders(type) {
     mp.callCEFV(`selectMenu.menus["supermarketNumberChange"].headerImg = '${img}'`);
     mp.callCEFV(`selectMenu.menus["supermarketFood"].headerImg = '${img}'`);
     mp.callCEFV(`selectMenu.menus["supermarketTobacco"].headerImg = '${img}'`);
+}
+
+function setPrices(config, multiplier) {
+    for (let key in config) {
+        config[key] *= multiplier;
+    }
+    mp.callCEFV(`selectMenu.menus["supermarketMobile"].items[0].values[0] = '$${config.phone}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketMobile"].items[1].values[0] = '$${config.numberChange}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketNumberChange"].items[1].values[0] = '$${config.numberChange}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketFood"].items[0].values[0] = '$${config.water}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketFood"].items[1].values[0] = '$${config.chocolate}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketTobacco"].items[0].values[0] = '$${config.redwood}'`);
 }

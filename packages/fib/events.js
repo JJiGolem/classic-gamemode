@@ -9,7 +9,8 @@ module.exports = {
 
     },
     "characterInit.done": (player) => {
-
+        if (!factions.isFibFaction(player.character.factionId)) return;
+        mp.events.call(`mapCase.fib.init`, player);
     },
     "fib.storage.clothes.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад FIB`);

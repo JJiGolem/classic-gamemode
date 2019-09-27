@@ -3,60 +3,47 @@ let bizes;
 
 module.exports = {
     business: {
-        type: 1,
-        name: "Супермаркет",
-        productName: "Продукты",
+        type: 5,
+        name: "Магазин оружия",
+        productName: "Боеприпасы",
     },
     rentPerDayMultiplier: 0.01,
     minPriceMultiplier: 1.0,
     maxPriceMultiplier: 2.0,
     productPrice: 10,
-    productsConfig: {
-        phone: 15,
-        numberChange: 12,
-        water: 2,
-        chocolate: 1,
-        redwood: 2,
-    },
-    itemIds: {
-        water: 34,
-        chocolate: 35,
-        cigarettes: 16
-    },
     async init() {
         bizes = call('bizes');
-        await this.loadSupermarketsFromDB();
+        await this.loadAmmunationsFromDB();
     },
-    async loadSupermarketsFromDB() {
-        shops = await db.Models.Supermarket.findAll();
+    async loadAmmunationsFromDB() {
+        shops = await db.Models.Ammunation.findAll();
         for (var i = 0; i < shops.length; i++) {
-            this.createSupermarket(shops[i]);
+            this.createAmmunation(shops[i]);
         }
-        console.log(`[SUPERMARKET] Загружено супермаркетов: ${i}`);
+        console.log(`[AMMUNATION] Загружено магазинов оружия: ${i}`);
     },
-    createSupermarket(shop) {
-        mp.blips.new(52, new mp.Vector3(shop.x, shop.y, shop.z),
+    createAmmunation(shop) {
+        mp.blips.new(110, new mp.Vector3(shop.x, shop.y, shop.z),
             {
-                name: 'Супермаркет',
+                name: 'Магазин оружия',
                 color: 0,
                 shortRange: true,
             });
         
-        mp.markers.new(1, new mp.Vector3(shop.x, shop.y, shop.z - 0.1), 0.8,
+        mp.markers.new(1, new mp.Vector3(shop.x, shop.y, shop.z), 0.8,
         {
-            color: shop.bType ? [69, 140, 255, 128] : [50, 168, 82, 128],
+            color: [232, 46, 46, 128],
             visible: true,
             dimension: 0
         });
 
         let shape = mp.colshapes.newSphere(shop.x, shop.y, shop.z, 1.8);
-        shape.isSupermarket = true;
-        shape.supermarketId = shop.id;
+        shape.isAmmunation = true;
+        shape.ammunationId = shop.id;
     },
     getRawShopData(id) {
         let shop = shops.find(x => x.id == id);
         return {
-            bType: shop.bType,
             priceMultiplier: shop.priceMultiplier
         }
     },
@@ -100,14 +87,4 @@ module.exports = {
         let bizId = shop.bizId;
         bizes.bizUpdateCashBox(bizId, money);
     },
-    getProductsConfig() {
-        return this.productsConfig;
-    },
-    getPriceConfig() {
-        let priceConfig = {}; 
-        for (let key in this.productsConfig) {
-            priceConfig[key] = this.productsConfig[key] * this.productPrice;
-        }
-        return priceConfig;
-    }
 }

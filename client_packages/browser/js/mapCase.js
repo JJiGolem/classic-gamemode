@@ -17,6 +17,7 @@ var mapCaseData = {
     pd: mapCasePdData,
     ems: mapCaseEmsData,
     wnews: mapCaseWnewsData,
+    fib: mapCaseFIBData,
 }
 
 var mapCase = new Vue({
@@ -292,7 +293,7 @@ Vue.component('map-case-calls', {
 });
 
 // for tests
-/*mapCase.type = "pd";
+/*mapCase.type = "fib";
 mapCase.show = true;
 mapCase.enable = true;
 mapCase.userName = "user"*/

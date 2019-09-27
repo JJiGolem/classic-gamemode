@@ -113,7 +113,7 @@ module.exports = {
     },
     /// Функции создания персоонажа
     create(player) {
-        player.character = {
+        player.characterInfo = {
             accountId: player.account.id,
             name: "",
             gender: 0,
@@ -135,11 +135,11 @@ module.exports = {
             Promocode: {},
             settings: {},
         }
-        for (let i = 0; i < 20; i++) player.character.Features.push({
+        for (let i = 0; i < 20; i++) player.characterInfo.Features.push({
             value: 0.0,
             order: i
         });
-        for (let i = 0; i < 11; i++) player.character.Appearances.push({
+        for (let i = 0; i < 11; i++) player.characterInfo.Appearances.push({
             value: 255,
             opacity: 1.0,
             order: i
@@ -149,7 +149,6 @@ module.exports = {
 
         player.model = freemodeCharacters[0];
         this.applyCharacter(player);
-        player.characterInfo = player.character;
         this.sendToCreator(player);
     },
     async save(player, fullname, charData) {
@@ -195,61 +194,120 @@ module.exports = {
         player.call("characterInit.create", [true, JSON.stringify(player.characterInfo)]);
     },
     applyCharacter(player) {
-        let features = new Array();
-        player.character.Features.forEach((element) => {
-            features.push(element.value);
-        });
-        player.setCustomization(
-            player.character.gender == 0,
-
-            player.character.mother,
-            player.character.father,
-            0,
-
-            0,
-            player.character.skin,
-            0,
-
-            player.character.similarity,
-            1.0,
-            0.0,
-
-            player.character.eyeColor,
-            player.character.hairColor,
-            player.character.hairHighlightColor,
-
-            features
-        );
-
-        player.setClothes(2, player.character.hair, 0, 2);
-        for (let i = 0; i < 11; i++) {
-            player.setHeadOverlay(i, [player.character.Appearances[i].value,
-                player.character.Appearances[i].opacity,
-                this.colorForOverlayIdx(player, i), 0
-            ]);
+        if (player.character != null) {
+            let features = new Array();
+            player.character.Features.forEach((element) => {
+                features.push(element.value);
+            });
+            player.setCustomization(
+                player.character.gender == 0,
+    
+                player.character.mother,
+                player.character.father,
+                0,
+    
+                0,
+                player.character.skin,
+                0,
+    
+                player.character.similarity,
+                1.0,
+                0.0,
+    
+                player.character.eyeColor,
+                player.character.hairColor,
+                player.character.hairHighlightColor,
+    
+                features
+            );
+    
+            player.setClothes(2, player.character.hair, 0, 2);
+            for (let i = 0; i < 11; i++) {
+                player.setHeadOverlay(i, [player.character.Appearances[i].value,
+                    player.character.Appearances[i].opacity,
+                    this.colorForOverlayIdx(player, i), 0
+                ]);
+            }
+        }
+        else {
+            let features = new Array();
+            player.characterInfo.Features.forEach((element) => {
+                features.push(element.value);
+            });
+            player.setCustomization(
+                player.characterInfo.gender == 0,
+    
+                player.characterInfo.mother,
+                player.characterInfo.father,
+                0,
+    
+                0,
+                player.characterInfo.skin,
+                0,
+    
+                player.characterInfo.similarity,
+                1.0,
+                0.0,
+    
+                player.characterInfo.eyeColor,
+                player.characterInfo.hairColor,
+                player.characterInfo.hairHighlightColor,
+    
+                features
+            );
+    
+            player.setClothes(2, player.characterInfo.hair, 0, 2);
+            for (let i = 0; i < 11; i++) {
+                player.setHeadOverlay(i, [player.characterInfo.Appearances[i].value,
+                    player.characterInfo.Appearances[i].opacity,
+                    this.colorForOverlayIdx(player, i), 0
+                ]);
+            }
         }
     },
     colorForOverlayIdx(player, index) {
         let color;
-
-        switch (index) {
-            case 1:
-                color = player.character.beardColor;
-                break;
-            case 2:
-                color = player.character.eyebrowColor;
-                break;
-            case 5:
-                color = player.character.blushColor;
-                break;
-            case 8:
-                color = player.character.lipstickColor;
-                break;
-            case 10:
-                color = player.character.chestHairColor;
-                break;
-            default:
-                color = 0;
+        if (player.character != null) {
+            switch (index) {
+                case 1:
+                    color = player.character.beardColor;
+                    break;
+                case 2:
+                    color = player.character.eyebrowColor;
+                    break;
+                case 5:
+                    color = player.character.blushColor;
+                    break;
+                case 8:
+                    color = player.character.lipstickColor;
+                    break;
+                case 10:
+                    color = player.character.chestHairColor;
+                    break;
+                default:
+                    color = 0;
+            }
+        }
+        else {
+            switch (index) {
+                case 1:
+                    color = player.characterInfo.beardColor;
+                    break;
+                case 2:
+                    color = player.characterInfo.eyebrowColor;
+                    break;
+                case 5:
+                    color = player.characterInfo.blushColor;
+                    break;
+                case 8:
+                    color = player.characterInfo.lipstickColor;
+                    break;
+                case 10:
+                    color = player.characterInfo.chestHairColor;
+                    break;
+                default:
+                    color = 0;
+            }
         }
         return color;
     },
