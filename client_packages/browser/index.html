@@ -1576,7 +1576,7 @@
             <div v-for="text in list[i].removed" :title="text"><span class="removed"><i class="fas fa-trash"></i></span>{{ prettyText(text) }}</div>
         </div>
         <div class="footer">
-            <span class="likes" :class="{liked: list[i].liked}">{{ list[i].likes }} <i class="fas fa-heart"></i></span>
+            <span class="likes" :class="{liked: list[i].liked}" @click="like">{{ list[i].likes }} <i class="fas fa-heart"></i></span>
         </div>
     </div>
 
