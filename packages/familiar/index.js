@@ -57,5 +57,8 @@ module.exports = {
 
         player.call(`familiar.add`, [rec.name]);
         rec.call(`familiar.add`, [player.name]);
+
+        if (player.familiar.list.length > this.maxList) player.familiar.list.shift().destroy();
+        if (rec.familiar.list.length > this.maxList) rec.familiar.list.shift().destroy();
     },
 };
