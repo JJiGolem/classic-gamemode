@@ -41,14 +41,19 @@
 
 #changelist .content > div > span {
     align-items: center;
+    border-radius: 0.5vh;
     color: #fff;
     display: flex;
     font-size: 1.5vh;
     justify-content: center;
     /* height: 3vh; */
     margin-right: 1vh;
-    padding: 0.5vh;
+    padding: 0.7vh;
     /* width: 3vh; */
+}
+
+#changelist .content > div > span:hover {
+    background: #000;
 }
 
 #changelist .content .build {
@@ -72,7 +77,7 @@
 }
 
 #changelist .content .improvements {
-    background: #d617a9;
+    background: #ff9300;
 }
 
 #changelist .content .removed {
@@ -86,6 +91,10 @@
 }
 
 #changelist .footer .likes.liked {
+    color: red;
+}
+
+#changelist .footer .likes:not(.liked):hover {
     color: red;
 }
 

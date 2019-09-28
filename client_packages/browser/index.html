@@ -1557,12 +1557,12 @@
             <i class="arrow fas fa-long-arrow-alt-right" @click="i--" v-if="i > 0"></i>
         </div>
         <div class="content">
-            <div class="build">Сборка #{{ list[i].build }}</div>
+            <div class="build" title="Сборка"><i class="fas fa-code-branch"></i> {{ list[i].build }}</div>
             <div v-for="text in list[i].features" :title="text"><span class="features"><i class="fas fa-star"></i></span><div>{{ prettyText(text) }}</div></div>
             <br v-if="list[i].fixed.length" />
             <div v-for="text in list[i].fixed" :title="text"><span class="fixed"><i class="fas fa-wrench"></i></span>{{ prettyText(text) }}</div>
             <br v-if="list[i].improvements.length" />
-            <div v-for="text in list[i].improvements" :title="text"><span class="improvements"><i class="fas fa-chart-line"></i></span>{{ prettyText(text) }}</div>
+            <div v-for="text in list[i].improvements" :title="text"><span class="improvements"><i class="fas fa-cog"></i></span>{{ prettyText(text) }}</div>
             <br v-if="list[i].removed.length" />
             <div v-for="text in list[i].removed" :title="text"><span class="removed"><i class="fas fa-trash"></i></span>{{ prettyText(text) }}</div>
         </div>
