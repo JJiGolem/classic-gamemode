@@ -159,6 +159,8 @@
 }
 
 #auth .updates {
+    background: #0005;
+    border-radius: 1vh;
     color: #fff;
     line-height: 3vh;
     position: absolute;
