@@ -386,13 +386,6 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
-    myEventEmmiter.on('players.load', (players) => {
-        dispatch({
-            type: 'LOAD_PLAYERS',
-            payload: players
-        });
-    });
-
     myEventEmmiter.on('players.add', (player) => {
         dispatch({
             type: 'ADD_PLAYER',
@@ -402,7 +395,7 @@ export const PlayerEvents = (dispatch, getState) => {
 
     myEventEmmiter.on('players.remove', (id) => {
         dispatch({
-            type: 'ADD_PLAYER',
+            type: 'REMOVE_PLAYER',
             payload: id
         });
     });

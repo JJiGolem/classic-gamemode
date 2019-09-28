@@ -86,14 +86,12 @@ mp.events.add('hud.players.list.show', (state) => {
     playersListState = state;
 });
 
-// mp.events.add('hud.players.list.load', (playersInfo) => {
-//     mp.callCEFR('players.load', [playersInfo]);
-// });
-
 mp.events.add('hud.players.list.add', (newPlayer) => {
     mp.callCEFR('players.add', [newPlayer]);
+    // mp.callCEFV(`playersList.players.push(${newPlayer})`);
 });
 
 mp.events.add('hud.players.list.remove', (id) => {
     mp.callCEFR('players.remove', [id]);
+    // mp.callCEFV(`playersList.removePlayer(${id})`);
 });
