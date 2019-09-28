@@ -31,6 +31,8 @@ var changelist = new Vue({
                     "Убраны сообщения в чат при просмотре масок.",
                     "Из магазина масок удалены маски, не имеющие текстуры.",
                 ],
+                likes: 0,
+                liked: false,
             },
             {
                 build: 1321,
@@ -71,6 +73,8 @@ var changelist = new Vue({
 
                 ],
                 removed: [],
+                likes: 0,
+                liked: false,
             },
             {
                 build: 1456,
@@ -119,6 +123,8 @@ var changelist = new Vue({
                     'Теперь в автомастерской списываются ресурсы и добавляются деньги в кассу.',
                 ],
                 removed: [],
+                likes: 0,
+                liked: false,
             },
             {
                 build: 1471,
@@ -154,6 +160,8 @@ var changelist = new Vue({
                     'Для мафий настроены цвета шкалы бизвара, килл-листа и блипов.',
                 ],
                 removed: [],
+                likes: 0,
+                liked: false,
             },
             {
                 build: 1536,
@@ -193,6 +201,8 @@ var changelist = new Vue({
                     'Теперь супермаркеты имеют разные шапки в зависимости от типа.',
                 ],
                 removed: [],
+                likes: 0,
+                liked: false,
             },
         ],
         // Текущее обновление на экране

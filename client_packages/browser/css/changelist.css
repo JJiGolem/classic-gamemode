@@ -1,39 +1,37 @@
 #changelist {
-    background: #111a;
+    /* background: #111a; */
+    background: #000a;
+    border-radius: 1vh;
     color: #fff;
     font-family: Ubuntu;
     font-size: 2vh;
+    left: 50%;
     /* max-width: 80vh; */
     position: absolute;
     top: 50%;
-    right: 2vh;
-    transform: translate(0%, -50%);
+    transform: translate(-50%, -50%);
     width: 90vh;
     /* width: fit-content; */
 }
 
 #changelist .close {
+    font-size: 4vh;
     position: absolute;
-    right: 0.5vh;
+    right: 1.5vh;
 }
 
 #changelist .close:hover {
     color: red;
 }
 
-#changelist .close.left {
-    left: 0.5vh;
-    right: unset;
-}
-
 #changelist .content {
-    background: #000a;
-    color: #948c87;
+    /* background: #000a; */
+    color: #c5c5c5;
     height: 50vh;
     line-height: 3.5vh;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 1vh;
+    padding: 2vh 4vh;
 }
 
 #changelist .content > div {
@@ -58,7 +56,7 @@
     color: #fff5;
     font-size: 1.5vh;
     position: absolute;
-    right: 2vh;
+    left: 2vh;
 }
 
 #changelist .content .build:hover {
@@ -81,23 +79,33 @@
     background: #cd452b;
 }
 
+#changelist .footer {
+    margin-right: 2vh;
+    padding: 1vh;
+    text-align: right;
+}
+
+#changelist .footer .likes.liked {
+    color: red;
+}
+
 #changelist .header {
     align-items: center;
     display: flex;
     justify-content: space-between;
     line-height: 3.5vh;
-    padding: 1vh;
+    padding: 2vh 20vh;
 }
 
 #changelist .header .arrow {
-    background: #000a;
+    /* background: #000a; */
     /* font-family: monospace; */
-    font-size: 1.5vh;
-    padding: 0 0.5vh;
+    font-size: 5vh;
+    /* padding: 0 0.5vh; */
 }
 
 #changelist .header .arrow:hover {
-    background: #eee;
+    /* background: #eee; */
     color: #000;
 }
 
