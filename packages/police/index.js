@@ -230,4 +230,7 @@ module.exports = {
         });
         return wanted;
     },
+    getSearchPosition(pos) {
+        return pos;
+    },
 };

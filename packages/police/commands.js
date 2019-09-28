@@ -62,6 +62,14 @@ module.exports = {
             notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур.`, `Розыск`);
         }
     },
+    "/psearch": {
+        access: 6,
+        description: "Поиск преступника.",
+        args: "[ид_игрока]:n",
+        handler: (player, args, out) => {
+            mp.events.call(`police.search`, player, args[0]);
+        }
+    },
     "/pvehput": {
         access: 6,
         description: "Запихнуть игрока в авто.",

@@ -476,6 +476,16 @@ module.exports = {
 
         notifs.warning(player, `Ваш уровень розыска понизился`);
     },
+    "police.search": (player, recId) => {
+        var rec = mp.players.at(recId);
+        if (!rec) return notifs.error(player, `Игрок #${recId} не найден`);
+        if (!rec.character.wanted) return notifs.error(player, `${rec.name} не в розыске`);
+
+        var pos = police.getSearchPosition(rec.position);
+
+        player.call(`police.search.blip.create`, [rec.name, pos]);
+        notifs.success(player, `Приблизительное местоположение ${rec.name} отмечено на карте`);
+    },
     // арестовать в КПЗ ЛСПД
     "police.cells.arrest": (player, recId) => {
         var rec = mp.players.at(recId);

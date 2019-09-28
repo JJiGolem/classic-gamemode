@@ -554,4 +554,17 @@ module.exports = {
             else return out.log(`Бессмертие выключено`, player);
         }
     },
+    "/blip": {
+        description: "Создать блип.",
+        access: 1,
+        args: "[тип]:n [масштаб]:n",
+        handler: (player, args, out) => {
+            mp.blips.new(args[0], player.position, {
+                color: 1,
+                name: `blip`,
+                shortRange: 10,
+                scale: args[1]
+            })
+        }
+    },
 }
