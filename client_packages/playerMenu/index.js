@@ -59,6 +59,9 @@ mp.playerMenu = {
     setMedia(media) {
         mp.callCEFV(`playerMenu.setMedia(${media})`);
     },
+    setPasswordDate(time) {
+        mp.callCEFV(`playerMenu.setPasswordDate(${time})`);
+    },
     setEmail(email, confirm = 0) {
         mp.callCEFV(`playerMenu.setEmail('${email}', ${confirm})`);
     },
@@ -112,6 +115,9 @@ mp.events.add({
     },
     "playerMenu.setMedia": (data) => {
         mp.playerMenu.setMedia(data.media);
+    },
+    "playerMenu.setPasswordDate": (data) => {
+        mp.playerMenu.setPasswordDate(data.passwordDate);
     },
     "playerMenu.setEmail": (data) => {
         mp.playerMenu.setEmail(data.email, data.confirmEmail);

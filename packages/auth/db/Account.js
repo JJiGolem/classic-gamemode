@@ -48,6 +48,11 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: null,
             allowNull: true,
         },
+        passwordDate: {
+            type: DataTypes.DATE,
+            defaultValue: Sequelize.NOW,
+            allowNull: false
+        },
         regDate: {
             type: DataTypes.DATE,
             defaultValue: Sequelize.NOW,

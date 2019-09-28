@@ -478,6 +478,7 @@ var playerMenu = new Vue({
             this.setInvited(data.invited);
             this.setCompleted(data.completed);
             this.setMedia(data.media);
+            this.setPasswordDate(data.passwordDate);
             this.setSettings(data.settings);
             this.setEmail(data.email, data.confirmEmail);
 
@@ -631,6 +632,10 @@ var playerMenu = new Vue({
         },
         setMedia(val) {
             this.media = val;
+        },
+        setPasswordDate(time) {
+            var diff = Date.now() - time;
+            protectionWindowData.passMessage = `изменен ${parseInt(diff / 1000 / 60 / 60 / 24)} д. назад`;
         },
         setSettings(settings) {
             settingsmainWindowData.spawnSettings.currentSpawn = settings.spawn;

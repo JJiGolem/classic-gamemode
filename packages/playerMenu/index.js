@@ -42,6 +42,7 @@ module.exports = {
             },
             email: player.account.email,
             confirmEmail: player.account.confirmEmail,
+            passwordDate: player.account.passwordDate.getTime(),
         };
         if (biz) {
             data.biz = {
@@ -169,6 +170,12 @@ module.exports = {
             media: player.character.Promocode.media,
         };
         player.call(`playerMenu.setMedia`, [data]);
+    },
+    setPasswordDate(player) {
+        var data = {
+            passwordDate: player.account.passwordDate.getTime(),
+        };
+        player.call(`playerMenu.setPasswordDate`, [data]);
     },
     setPromocode(player) {
         var data = {
