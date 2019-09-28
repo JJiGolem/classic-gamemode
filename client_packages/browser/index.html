@@ -312,44 +312,12 @@
             <div class="input-prompt" v-if="prompt">{{ prompt }}</div>
 
         </div>
-        <div class="updates" style="display: none">
+        <div class="updates">
             <h3 class="header">Обновления сервера</h3>
             <div class="list">
-                <div>
-                    <div class="date">28.09.2019</div>
-                    <div class="title">Changelist 1</div>
-                </div>
-                <div>
-                    <div class="date">13.12.2019</div>
-                    <div class="title">Changelist 2</div>
-                </div>
-                <div>
-                    <div class="date">06.04.2020</div>
-                    <div class="title">Changelist 3</div>
-                </div>
-                <div>
-                    <div class="date">28.09.2019</div>
-                    <div class="title">Changelist 1</div>
-                </div>
-                <div>
-                    <div class="date">13.12.2019</div>
-                    <div class="title">Changelist 2</div>
-                </div>
-                <div>
-                    <div class="date">06.04.2020</div>
-                    <div class="title">Changelist 3</div>
-                </div>
-                <div>
-                    <div class="date">28.09.2019</div>
-                    <div class="title">Changelist 1</div>
-                </div>
-                <div>
-                    <div class="date">13.12.2019</div>
-                    <div class="title">Changelist 2</div>
-                </div>
-                <div>
-                    <div class="date">06.04.2020</div>
-                    <div class="title">Changelist 3</div>
+                <div v-for="(update, i) in updates" @click="showChangelist(updates.length - i - 1)">
+                    <div class="date">{{ update.date }}</div>
+                    <div class="title">Changelist {{ updates.length - i }}</div>
                 </div>
             </div>
         </div>
@@ -1591,7 +1559,7 @@
         <div class="close" @click="show = false">x</div>
         <div class="header">
             <i class="arrow fas fa-long-arrow-alt-left" @click="i++" v-if="i < list.length - 1"></i>
-            <div class="title">
+            <div class="title" :class="{first: i == list.length - 1}">
                 <div class="name">Changelist {{ i + 1 }}</div>
                 <div class="date" :class="{right: !i, center: i && i < list.length - 1}">{{ list[i].date }}</div>
             </div>
@@ -1625,6 +1593,7 @@
     <script src="js/infoTable.js"></script>
     <script src="js/characterInfo.js"></script>
     <script src="js/selectMenu.js"></script>
+    <script src="js/changelist.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/loader.js"></script>
     <script src="js/characterPass.js"></script>
@@ -1645,7 +1614,6 @@
     <script src="js/killList.js"></script>
     <script src="js/watermark.js"></script>
     <script src="js/timer.js"></script>
-    <script src="js/changelist.js"></script>
 
 </body>
 

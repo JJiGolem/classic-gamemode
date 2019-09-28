@@ -115,7 +115,7 @@
 
 #changelist .header .arrow:hover {
     /* background: #eee; */
-    color: #000;
+    color: #ccc;
 }
 
 #changelist .header .date.center {
@@ -127,9 +127,13 @@
 }
 
 #changelist .header .name {
-    font-family: Open Sans;
+    font-family: Montserrat;
     font-size: 3vh;
     font-weight: 900;
+}
+
+#changelist .header .title.first {
+    color: #f1d941;
 }
 
 #changelist ::-webkit-scrollbar {
