@@ -148,12 +148,19 @@ var auth = new Vue({
             this.prompt = this.emailConfirmMessages[code];
             loader.show = false;
         },
+        showChangelist(i) {
+            changelist.i = i;
+            changelist.show = true;
+        },
     },
     computed: {
         header() {
             var headers = ["Войти в аккаунт", "Создание аккаунта", "Восстановление аккаунта", "Подтверждение почты"];
             return headers[this.form];
-        }
+        },
+        updates() {
+            return changelist.list.slice().reverse();
+        },
     },
     watch: {
         prompt(val, oldVal) {
@@ -166,3 +173,6 @@ var auth = new Vue({
         },
     }
 });
+
+// for tests
+auth.show = true;

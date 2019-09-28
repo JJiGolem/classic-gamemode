@@ -8,16 +8,10 @@
 */
 
 mp.familiar = {
-    // Список знакомых
-    list: {},
+    // Список имен знакомых
+    list: [],
 
-    initList() {
-        if (!mp.storage.data.familiar) mp.storage.data.familiar = {};
-        var list = mp.storage.data.familiar;
-        if (!Array.isArray(list)) list = [];
-        var localName = mp.players.local.name;
-        if (!list[localName]) list[localName] = [];
-        list = list[localName];
+    init(list) {
         list.forEach(name => {
             var rec = mp.utils.getPlayerByName(name);
             if (rec) rec.isFamiliar = true;
@@ -41,7 +35,9 @@ mp.familiar = {
 
 mp.events.add({
     "characterInit.done": () => {
-        mp.familiar.initList();
+    },
+    "familiar.init": (list) => {
+        mp.familiar.init(list);
     },
     "familiar.add": (name) => {
         mp.familiar.add(name);
@@ -51,8 +47,9 @@ mp.events.add({
     },
     "entityStreamIn": (player) => {
         if (player.type != "player") return;
-        if (!mp.familiar.list) return;
+        if (!mp.familiar.list.length) return;
         if (!mp.familiar.list.includes(player.name)) return;
+
         player.isFamiliar = true;
     },
 });

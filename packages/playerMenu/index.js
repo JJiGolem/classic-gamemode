@@ -52,11 +52,12 @@ module.exports = {
             };
         }
         if (house) {
+            var garage = house.info.Interior.Garage;
             data.house = {
                 id: house.info.id,
                 class: house.info.Interior.class,
                 rooms: house.info.Interior.numRooms,
-                carPlaces: house.info.Interior.Garage.carPlaces,
+                carPlaces: (garage) ? garage.carPlaces : 0,
                 price: house.info.price,
             };
         }

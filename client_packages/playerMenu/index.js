@@ -23,10 +23,10 @@ mp.playerMenu = {
     setWanted(wanted) {
         mp.callCEFV(`playerMenu.setWanted(${wanted})`);
     },
-    setBiz(biz) {
+    setBiz(biz = null) {
         mp.callCEFV(`playerMenu.setBiz('${JSON.stringify(biz)}')`);
     },
-    setHouse(house) {
+    setHouse(house = null) {
         mp.callCEFV(`playerMenu.setHouse('${JSON.stringify(house)}')`);
     },
     setSkills(skills) {
