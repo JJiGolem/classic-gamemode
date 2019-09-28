@@ -3,11 +3,27 @@
     color: #fff;
     font-family: Ubuntu;
     font-size: 2vh;
+    /* max-width: 80vh; */
     position: absolute;
     top: 50%;
-    right: 1vh;
+    right: 2vh;
     transform: translate(0%, -50%);
-    width: 40vh;
+    width: 90vh;
+    /* width: fit-content; */
+}
+
+#changelist .close {
+    position: absolute;
+    right: 0.5vh;
+}
+
+#changelist .close:hover {
+    color: red;
+}
+
+#changelist .close.left {
+    left: 0.5vh;
+    right: unset;
 }
 
 #changelist .content {
@@ -31,9 +47,22 @@
     display: flex;
     font-size: 1.5vh;
     justify-content: center;
-    height: 3vh;
+    /* height: 3vh; */
     margin-right: 1vh;
-    width: 3vh;
+    padding: 0.5vh;
+    /* width: 3vh; */
+}
+
+#changelist .content .build {
+    bottom: 0;
+    color: #fff5;
+    font-size: 1.5vh;
+    position: absolute;
+    right: 1vh;
+}
+
+#changelist .content .build:hover {
+    color: #fff;
 }
 
 #changelist .content .features {
@@ -55,14 +84,14 @@
 #changelist .header {
     align-items: center;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     line-height: 3.5vh;
     padding: 1vh;
 }
 
 #changelist .header .arrow {
     background: #000a;
-    font-family: monospace;
+    /* font-family: monospace; */
     font-size: 1.5vh;
     padding: 0 0.5vh;
 }
@@ -72,8 +101,12 @@
     color: #000;
 }
 
-#changelist .header .date {
-    /* font-size: 1.5vh; */
+#changelist .header .date.center {
+    text-align: center;
+}
+
+#changelist .header .date.right {
+    text-align: right;
 }
 
 #changelist .header .name {

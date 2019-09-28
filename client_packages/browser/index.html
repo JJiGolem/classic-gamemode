@@ -1542,19 +1542,21 @@
     </div>
 
     <div v-cloak id="changelist" v-if="show">
+        <div class="close" :class="{left: !i}" @click="show = false">x</div>
         <div class="header">
             <div class="arrow" @click="i++" v-if="i < list.length - 1">След</div>
             <div class="title">
-                <div class="name">Changelist {{ list[i].id }}</div>
-                <div class="date">{{ list[i].date }}</div>
+                <div class="name">Changelist {{ i + 1 }}</div>
+                <div class="date" :class="{right: !i, center: i && i < list.length - 1}">{{ list[i].date }}</div>
             </div>
             <div class="arrow" @click="i--" v-if="i > 0">Пред</div>
         </div>
         <div class="content">
-            <div v-for="text in list[i].features"><span class="features"><i class="fas fa-star"></i></span>{{ text }}</div>
-            <div v-for="text in list[i].fixed"><span class="fixed"><i class="fas fa-wrench"></i></span>{{ text }}</div>
-            <div v-for="text in list[i].improvements"><span class="improvements"><i class="fas fa-chart-line"></i></span>{{ text }}</div>
-            <div v-for="text in list[i].removed"><span class="removed"><i class="fas fa-trash"></i></span>{{ text }}</div>
+            <div class="build">Сборка #{{ list[i].build }}</div>
+            <div v-for="text in list[i].features" :title="text"><span class="features"><i class="fas fa-star"></i></span><div>{{ prettyText(text) }}</div></div>
+            <div v-for="text in list[i].fixed" :title="text"><span class="fixed"><i class="fas fa-wrench"></i></span>{{ prettyText(text) }}</div>
+            <div v-for="text in list[i].improvements" :title="text"><span class="improvements"><i class="fas fa-chart-line"></i></span>{{ prettyText(text) }}</div>
+            <div v-for="text in list[i].removed" :title="text"><span class="removed"><i class="fas fa-trash"></i></span>{{ prettyText(text) }}</div>
         </div>
     </div>
 

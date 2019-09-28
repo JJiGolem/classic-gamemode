@@ -3,9 +3,11 @@ var changelist = new Vue({
     data: {
         // Показ на экране
         show: false,
+        // Макс. длина строки в списке
+        maxLength: 70,
         // Список обновлений
         list: [{
-                id: 1,
+                build: 1200,
                 date: "Пн, Сен 16, 2019",
                 features: [
                     "Добавлен запрет на отправку в чат пустых сообщений. (Касается и команд /do, /me. /try)",
@@ -31,9 +33,8 @@ var changelist = new Vue({
                 ],
             },
             {
-                id: 2,
+                build: 1321,
                 date: "Ср, Сен 18, 2019",
-
                 features: [
                     'Настроены аттачи ящиков с БП и медикаментами.',
                     'Настроены аттачи урожая.',
@@ -72,7 +73,7 @@ var changelist = new Vue({
                 removed: [],
             },
             {
-                id: 3,
+                build: 1456,
                 date: "Сб, Сен 21, 2019",
                 features: [
                     'Теперь при слете автомобилей удаляются ключи из инвентаря.',
@@ -120,7 +121,7 @@ var changelist = new Vue({
                 removed: [],
             },
             {
-                id: 4,
+                build: 1471,
                 date: "Вс, Сен 22, 2019",
                 features: [
                     'Добавлена возможность отправить репорт.',
@@ -155,7 +156,7 @@ var changelist = new Vue({
                 removed: [],
             },
             {
-                id: 5,
+                build: 1536,
                 date: "Пт, Сен 27, 2019",
                 features: [
                     'В донат добавлена возможность конвертировать валюту, сменить никнейм, снять предупреждение и добавить новый слот.',
@@ -196,6 +197,13 @@ var changelist = new Vue({
         ],
         // Текущее обновление на экране
         i: 0,
+    },
+    methods: {
+        prettyText(text) {
+            if (text.length > this.maxLength) return text.substring(0, this.maxLength) + "...";
+
+            return text;
+        },
     },
     mounted() {
         this.i = this.list.length - 1;
