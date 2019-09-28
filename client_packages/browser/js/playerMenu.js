@@ -639,6 +639,9 @@ var playerMenu = new Vue({
             protectionWindowData.email = email;
             protectionWindowData.isConfirmed = confirm;
         },
+        setName(name) {
+            this.name = name;
+        },
     },
     watch: {
         show(val) {

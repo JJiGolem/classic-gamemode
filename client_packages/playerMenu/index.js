@@ -62,6 +62,9 @@ mp.playerMenu = {
     setEmail(email, confirm = 0) {
         mp.callCEFV(`playerMenu.setEmail('${email}', ${confirm})`);
     },
+    setName(name) {
+        mp.callCEFV(`playerMenu.setName('${name}')`);
+    },
 };
 
 mp.events.add({
@@ -112,6 +115,9 @@ mp.events.add({
     },
     "playerMenu.setEmail": (data) => {
         mp.playerMenu.setEmail(data.email, data.confirmEmail);
+    },
+    "playerMenu.setName": (data) => {
+        mp.playerMenu.setName(data.name);
     },
     "money.change": (cash, bank) => {
         mp.playerMenu.setCash(cash);

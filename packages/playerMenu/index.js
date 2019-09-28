@@ -183,4 +183,10 @@ module.exports = {
         };
         player.call(`playerMenu.setEmail`, [data]);
     },
+    setName(player) {
+        var data = {
+            name: player.name
+        };
+        player.call(`playerMenu.setName`, [data]);
+    },
 };

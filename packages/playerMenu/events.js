@@ -61,4 +61,7 @@ module.exports = {
     "player.email.changed": (player) => {
         playerMenu.setEmail(player);
     },
+    "player.name.changed": (player) => {
+        playerMenu.setName(player);
+    },
 }
