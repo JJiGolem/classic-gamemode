@@ -4,13 +4,13 @@
     border-radius: 1vh;
     color: #fff;
     font-family: Ubuntu;
-    font-size: 2vh;
+    font-size: 1.5vh;
     left: 50%;
     /* max-width: 80vh; */
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 90vh;
+    width: 85vh;
     /* width: fit-content; */
 }
 
@@ -44,7 +44,7 @@
     border-radius: 0.5vh;
     color: #fff;
     display: flex;
-    font-size: 1.5vh;
+    font-size: 1.2vh;
     justify-content: center;
     /* height: 3vh; */
     margin-right: 1vh;

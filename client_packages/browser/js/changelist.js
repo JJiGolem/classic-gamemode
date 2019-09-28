@@ -4,7 +4,7 @@ var changelist = new Vue({
         // Показ на экране
         show: false,
         // Макс. длина строки в списке
-        maxLength: 70,
+        maxLength: 90,
         // Список обновлений
         list: [{
                 build: 1200,
