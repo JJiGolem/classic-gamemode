@@ -5673,6 +5673,9 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Огнестрельное оружие') {
                             selectMenu.showByName('ammunationFirearms');
                         }
+                        if (e.itemName == 'Боеприпасы') {
+                            selectMenu.showByName('ammunationAmmo');
+                        }
                     }
 
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
@@ -5685,25 +5688,37 @@ var selectMenu = new Vue({
                 name: "ammunationFirearms",
                 header: "Огнестрельное оружие",
                 headerImg: "ammunation.png",
-                items: [{
-                    text: 'Heavy Pistol',
-                    values: ['$100']
-                },
-                {
-                    text: 'Pump Shotgun',
-                    values: ['$100']
-                },
-                {
-                    text: 'SMG',
-                    values: ['$100']
-                },
-                {
-                    text: 'Carbine Rifle',
-                    values: ['$100']
-                },
-                {
-                    text: 'Назад'
-                },
+                items: [
+            ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('ammunationMain');
+                        } else {
+                            selectMenu.loader = true;
+                            mp.trigger('callRemote', 'ammunation.weapon.buy', item.weaponId);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('ammunationMain');
+                    }
+                }
+            },
+            "ammunationAmmo": {
+                name: "ammunationAmmo",
+                header: "Боеприпасы",
+                headerImg: "ammunation.png",
+                items: [
             ],
                 i: 0,
                 j: 0,
