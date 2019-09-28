@@ -215,7 +215,28 @@ mp.utils = {
     /// Отключить управление/движение игроку
     disablePlayerMoving(disable) {
         playerMovingDisabled = disable;
-    }
+    },
+    // Рандомное число
+    randomInteger(min, max) {
+        var rand = min - 0.5 + Math.random() * (max - min + 1);
+        rand = Math.round(rand);
+        return rand;
+    },
+    // Рандомная точка внутри сферы
+    randomSpherePoint(pos, radius) {
+        var u = Math.random();
+        var v = Math.random();
+        var theta = 2 * Math.PI * u;
+        var phi = Math.acos(2 * v - 1);
+        var x = pos.x + (radius * Math.sin(phi) * Math.cos(theta));
+        var y = pos.y + (radius * Math.sin(phi) * Math.sin(theta));
+        var z = pos.z + (radius * Math.cos(phi));
+        return {
+            x: x,
+            y: y,
+            z: z
+        };
+    },
 };
 
 

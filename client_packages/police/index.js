@@ -13,6 +13,8 @@ mp.police = {
     wantedTimer: null,
     clearWantedTime: 60 * 60 * 1000, // время очищения 1 ур. розыска (ms)
     searchRadius: 100,
+    searchTime: 2 * 60 * 1000, // время жизни блипа поиска преступника
+    searchTimer: null,
     natives: {
         SET_BLIP_SPRITE: "0xDF735600A4696DAF",
         SET_BLIP_ALPHA: "0x45FF974EEE1C8734",
@@ -44,11 +46,17 @@ mp.police = {
     },
     searchBlipCreate(name, pos) {
         this.removeSearchBlip();
+        pos = mp.utils.randomSpherePoint(pos, this.searchRadius);
         var blip = mp.game.ui.addBlipForRadius(pos.x, pos.y, 50, this.searchRadius);
         mp.game.invoke(this.natives.SET_BLIP_ALPHA, blip, 175);
         mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, 1);
 
         this.saveSearchBlip(blip);
+
+        clearTimeout(this.searchTimer);
+        this.searchTimer = setTimeout(() => {
+            this.removeSearchBlip();
+        }, this.searchTime);
     },
     saveSearchBlip(blip) {
         mp.storage.data.searchBlip = blip;
