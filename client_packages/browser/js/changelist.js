@@ -240,6 +240,9 @@ var changelist = new Vue({
                 this.list[id - 1].liked = data[id].liked;
             }
         },
+        setLikes(id, likes) {
+            this.list[id - 1].likes = likes;
+        },
     },
     mounted() {
         this.i = this.list.length - 1;

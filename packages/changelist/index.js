@@ -29,6 +29,11 @@ module.exports = {
             changelistId: changelistId,
             likeAccountId: player.account.id
         });
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            rec.call(`changelist.setLikes`, [changelistId, this.likes[changelistId].length]);
+        });
     },
     sendLikes(player) {
         var data = {};

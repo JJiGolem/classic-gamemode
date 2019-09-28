@@ -15,6 +15,9 @@ mp.changelist = {
     initLikes(data) {
         mp.callCEFV(`changelist.initLikes('${JSON.stringify(data)}')`);
     },
+    setLikes(id, likes) {
+        mp.callCEFV(`changelist.setLikes(${id}, ${likes})`);
+    },
 };
 
 mp.events.add({
@@ -23,5 +26,8 @@ mp.events.add({
     },
     "changelist.initLikes": (data) => {
         mp.changelist.initLikes(data);
+    },
+    "changelist.setLikes": (id, likes) => {
+        mp.changelist.setLikes(id, likes);
     },
 });
