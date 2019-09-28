@@ -63,7 +63,7 @@ module.exports = {
         }
     },
     "/psearch": {
-        access: 6,
+        access: 1,
         description: "Поиск преступника.",
         args: "[ид_игрока]:n",
         handler: (player, args, out) => {

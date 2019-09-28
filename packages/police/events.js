@@ -480,6 +480,8 @@ module.exports = {
         var rec = mp.players.at(recId);
         if (!rec) return notifs.error(player, `Игрок #${recId} не найден`);
         if (!rec.character.wanted) return notifs.error(player, `${rec.name} не в розыске`);
+        if (player.lastWantedSearch && Date.now() - player.lastWantedSearch < police.searchTime) return notifs.warning(player, `Ожидайте...`);
+        player.lastWantedSearch = Date.now();
 
         var pos = police.getSearchPosition(rec.position);
 
