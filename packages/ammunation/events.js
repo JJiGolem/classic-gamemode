@@ -13,7 +13,7 @@ module.exports = {
             player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} зашел в колшейп Ammo ${shape.ammunationId}`]);
             let data = ammunation.getRawShopData(id);
             let weaponsConfig = ammunation.getWeaponsConfig();
-            player.call('ammunation.enter', [data, weaponsConfig]);
+            player.call('ammunation.enter', [data, weaponsConfig, ammunation.ammoProducts]);
             player.currentAmmunationId = shape.ammunationId;
         }
     },
@@ -35,7 +35,7 @@ module.exports = {
         let productsAvailable = ammunation.getProductsAmount(ammunationId);
         if (weaponData.products > productsAvailable) return player.call('ammunation.weapon.buy.ans', [1]);
 
-        var params = {
+        let params = {
             weaponHash: mp.joaat(weaponData.gameId),
             ammo: 0
         };

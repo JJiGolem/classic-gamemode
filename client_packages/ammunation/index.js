@@ -1,5 +1,5 @@
 mp.events.add({
-    "ammunation.enter": (data, weaponsConfig) => {
+    "ammunation.enter": (data, weaponsConfig, ammoProducts) => {
         let items = [];
         for (let key in weaponsConfig) {
             let current = weaponsConfig[key];
@@ -11,6 +11,27 @@ mp.events.add({
         }
         items.push({ text: 'Назад' });
         mp.callCEFV(`selectMenu.setItems('ammunationFirearms', ${JSON.stringify(items)});`)
+        let price = data.productPrice;
+        items = [{
+            text: "Патроны - 9mm",
+            values: [`12 ед. - $${12 * ammoProducts * price}`, `24 ед. - $${24 * ammoProducts * price}`, `32 ед. - $${32 * ammoProducts * price}`],
+        },
+        {
+            text: "Патроны - 12mm",
+            values: [`8 ед. - $${8 * ammoProducts * price}`, `16 ед. - $${16 * ammoProducts * price}`, `24 ед. - $${24 * ammoProducts * price}`],
+        },
+        {
+            text: "Патроны - 5.56mm",
+            values: [`12 ед. - $${12 * ammoProducts * price}`, `24 ед. - $${24 * ammoProducts * price}`, `32 ед. - $${32 * ammoProducts * price}`],
+        },
+        {
+            text: "Патроны - 7.62mm",
+            values: [`10 ед. - $${10 * ammoProducts * price}`, `20 ед. - $${20 * ammoProducts * price}`, `30 ед. - $${30 * ammoProducts * price}`],
+        },
+        {
+            text: "Назад"
+        }];
+        mp.callCEFV(`selectMenu.setItems('ammunationAmmo', ${JSON.stringify(items)});`)
         mp.events.call('selectMenu.show', 'ammunationMain');
     },
     "ammunation.exit": () => {
