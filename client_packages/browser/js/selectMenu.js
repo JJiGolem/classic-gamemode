@@ -5685,25 +5685,7 @@ var selectMenu = new Vue({
                 name: "ammunationFirearms",
                 header: "Огнестрельное оружие",
                 headerImg: "ammunation.png",
-                items: [{
-                    text: 'Heavy Pistol',
-                    values: ['$100']
-                },
-                {
-                    text: 'Pump Shotgun',
-                    values: ['$100']
-                },
-                {
-                    text: 'SMG',
-                    values: ['$100']
-                },
-                {
-                    text: 'Carbine Rifle',
-                    values: ['$100']
-                },
-                {
-                    text: 'Назад'
-                },
+                items: [
             ],
                 i: 0,
                 j: 0,
@@ -5719,6 +5701,9 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('ammunationMain');
+                        } else {
+                            selectMenu.loader = true;
+                            mp.trigger('callRemote', 'ammunation.weapon.buy', item.weaponId);
                         }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
