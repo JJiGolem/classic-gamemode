@@ -345,4 +345,17 @@ module.exports = {
             notifs.success(player, `Прослушка с ${rec.name} снята`, header);
         }
     },
+    "fib.vehicle.plate.set": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+        var header = `Смена номера`;
+
+        var veh = mp.vehicles.at(data.vehId);
+        if (!veh) return notifs.error(player, `Авто не найдено`, header);
+        if (!veh.db || veh.db.key != "faction" || veh.db.owner != 4) return notifs.error(player, `Авто не принадлежит FIB`, header);
+        var dist = player.dist(veh.position);
+        if (dist > 3) return notifs.error(player, `Авто далеко`, header);
+
+        veh.numberPlate = data.plate;
+        notifs.success(player, `Номер изменен на ${veh.plate}`, header);
+    }
 }

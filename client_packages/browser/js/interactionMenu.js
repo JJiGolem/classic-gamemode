@@ -41,6 +41,9 @@ var interactionMenu = new Vue({
                         mp.trigger(`carservice.diagnostics.offer`);
                         mp.trigger(`interaction.menu.close`);
                     }
+                    if (item.text == 'FIB') {
+                        interactionMenu.menu = interactionMenu.menus["fib_vehicle"];
+                    }
                 }
             },
             "vehicle_inside": {
@@ -289,6 +292,18 @@ var interactionMenu = new Vue({
                     mp.trigger(`interaction.menu.close`);
                 }
             },
+            "fib_vehicle": {
+                name: "fib_vehicle",
+                items: [{
+                        text: "Номер",
+                    },
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    mp.trigger(`interactionMenu.onClick`, this.name, item.text);
+                    mp.trigger(`interaction.menu.close`);
+                }
+            },
             "hospital": {
                 name: "hospital",
                 items: [{
@@ -370,9 +385,14 @@ var interactionMenu = new Vue({
             if (!val) this.show = false;
         },
         show(val) {
-            setCursor(val);
-            if (val) busy.add("interaction", true);
-            else busy.remove("interaction", true);
+            if (val) {
+                busy.add("interaction", true);
+                setCursor(true);
+            }
+            else {
+                busy.remove("interaction", true);
+                if (!busy.includes()) setCursor(false);
+            }
         },
         faction(val) {
             if (!val) {
@@ -394,7 +414,13 @@ var interactionMenu = new Vue({
                 this.addItems("player_interaction", {
                     text: "FIB"
                 });
-            } else this.deleteItem("player_interaction", "FIB");
+                this.addItems("vehicle", {
+                    text: "FIB"
+                });
+            } else {
+                this.deleteItem("player_interaction", "FIB");
+                this.deleteItem("vehicle", "FIB");
+            }
 
             if (val == 5) { // hospital
                 this.addItems("player_interaction", {

@@ -81,6 +81,14 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
         } else if (itemName == 'В авто') {
             mp.events.callRemote(`police.vehicle.put`, entity.remoteId);
         }
+    } else if (menuName == "fib_vehicle") {
+        if (!entity) return;
+        if (entity.type != 'vehicle') return;
+
+        if (itemName == 'Номер') {
+            mp.callCEFV(`inputWindow.vehId = ${entity.remoteId}`);
+            mp.callCEFV(`inputWindow.showByName('fib_veh_plate')`);
+        }
     } else if (menuName == "hospital") {
         if (!entity) return;
         if (entity.type != 'player') return;
