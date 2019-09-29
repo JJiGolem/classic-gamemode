@@ -181,6 +181,7 @@ module.exports = {
             }
             delete params.pockets;
         }
+        if (params.clime) params.clime = JSON.parse(params.clime);
         var children = this.getChildren(items, dbItem);
         if (children.length > 0) {
             for (var i = 0; i < children.length; i++) {
@@ -271,7 +272,7 @@ module.exports = {
         var params = this.getParamsValues(item);
         var struct = [];
         for (var key in params) {
-            if (key == 'pockets') params[key] = JSON.stringify(params[key]);
+            if (key == 'pockets' || key == 'clime') params[key] = JSON.stringify(params[key]);
             struct.push({
                 key: key,
                 value: params[key]
@@ -310,7 +311,7 @@ module.exports = {
         }
         var struct = [];
         for (var key in params) {
-            if (key == 'pockets') params[key] = JSON.stringify(params[key]);
+            if (key == 'pockets' || key == 'clime') params[key] = JSON.stringify(params[key]);
             struct.push({
                 key: key,
                 value: params[key]
@@ -606,7 +607,7 @@ module.exports = {
         for (var i = 0; i < item.params.length; i++) {
             var param = item.params[i];
             params[param.key] = param.value;
-            if (param.key == 'pockets') params[param.key] = JSON.parse(params[param.key]);
+            if (param.key == 'pockets' || param.key == 'clime') params[param.key] = JSON.parse(params[param.key]);
         }
         return params;
     },
