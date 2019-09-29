@@ -9,31 +9,57 @@ import warning from '../../../imgs/phone/warning.svg';
 class EmergencyCall extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            message: ''
+        };
+
+        this.handleChangeMessage = this.handleChangeMessage.bind(this);
+    }
+
+    handleChangeMessage(e) {
+        const { message } = this.state;
+
+        this.setState({ message: e.target.value });
     }
 
     render() {
         const { closeApp } = this.props;
+        const { message } = this.state;
 
         return (
             <Fragment>
                 <div className="back_page-phone-react">
                     <HeadAppPhone title='Экстренный вызов' />
 
-                    <div style={{ textAlign: 'center', marginTop: '40%' }}>
-                        <img style={{ width: '40%' }} src={warning} />
-                        <div style={{ marginTop: '10%' }}>Выберите службу для вызова из списка</div>
+                    <div style={{ textAlign: 'center', marginTop: '25%' }}>
+                        <img style={{ width: '20%' }} src={warning} />
+                        <div style={{ marginTop: '5%' }}>Выберите службу для вызова из списка</div>
                     </div>
 
-                    <div className='house_buttons-phone-react' style={{ bottom: '4%', position: 'absolute' }}>
+                    <h2 style={{ color: '#343c47', textAlign: 'center', fontSize: '100%' }}>Причина вызова</h2>
+                    <div style={{ textAlign: 'center' }}>
+                        <textarea 
+                            style={{ border: '1px solid #343c47' }}
+                            className="news_input" 
+                            placeholder="Введите причину..."
+                            maxLength="60"
+                            rows="3"
+                            value={message}
+                            onChange={this.handleChangeMessage}
+                        >
+                        </textarea>
+                    </div>
+                    <span style={{ marginLeft: '5%' }}>{60 - message.length}/60 символов</span>
+
+                    <div className='house_buttons-phone-react' style={{ bottom: '2%', position: 'absolute' }}>
                         <div className='house_button-phone-react' onClick={() => {
-                            mp.trigger('phone');
+                            mp.trigger('callRemote', 'mapCase.pd.calls.add', message);
                             closeApp();
                         }}>
                             <div>PD</div>
                         </div>
                         <div className='house_button-phone-react' onClick={() => {
-                            mp.trigger('phone');
+                            mp.trigger('callRemote', 'mapCase.ems.calls.add', message);
                             closeApp();
                         }}>
                             <div>EMS</div>
