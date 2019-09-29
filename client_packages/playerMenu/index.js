@@ -68,6 +68,9 @@ mp.playerMenu = {
     setName(name) {
         mp.callCEFV(`playerMenu.setName('${name}')`);
     },
+    setAdmin(admin) {
+        mp.callCEFV(`playerMenu.setAdmin(${admin})`);
+    },
 };
 
 mp.events.add({
@@ -124,6 +127,9 @@ mp.events.add({
     },
     "playerMenu.setName": (data) => {
         mp.playerMenu.setName(data.name);
+    },
+    "playerMenu.setAdmin": (data) => {
+        mp.playerMenu.setAdmin(data.admin);
     },
     "money.change": (cash, bank) => {
         mp.playerMenu.setCash(cash);

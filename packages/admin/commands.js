@@ -445,6 +445,8 @@ module.exports = {
             target.character.admin = lvl;
             target.character.save();
             target.call('chat.message.push', [`!{#ffcf0d} ${player.character.name} назначил вас администратором ${lvl} уровня`]);
+
+            mp.events.call("player.admin.changed", target);
         }
     },
     "/deladmin": {
@@ -461,6 +463,8 @@ module.exports = {
             target.character.admin = 0;
             target.character.save();
             target.call('chat.message.push', [`!{#ff8819} ${player.character.name} забрал у вас права администратора`]);
+
+            mp.events.call("player.admin.changed", target);
         }
     },
     "/admins": {

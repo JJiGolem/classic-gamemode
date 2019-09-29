@@ -17,7 +17,7 @@ module.exports = {
         var data = {
             playerName: player.name,
             admin: player.character.admin,
-            factionId: player.character.id,
+            factionId: player.character.factionId,
             factionName: factionName,
             factionRank: rankName,
             jobName: jobName,
@@ -195,5 +195,11 @@ module.exports = {
             name: player.name
         };
         player.call(`playerMenu.setName`, [data]);
+    },
+    setAdmin(player) {
+        var data = {
+            admin: player.character.admin
+        };
+        player.call(`playerMenu.setAdmin`, [data]);
     },
 };

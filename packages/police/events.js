@@ -481,6 +481,7 @@ module.exports = {
         if (!rec) return notifs.error(player, `Игрок #${recId} не найден`);
         if (!rec.character.wanted) return notifs.error(player, `${rec.name} не в розыске`);
         if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник`);
+        if (rec.dimension != 0) return notifs.error(player, `${rec.name} достаточно хорошо скрыт`);
         if (player.lastWantedSearch && Date.now() - player.lastWantedSearch < police.searchTime) return notifs.warning(player, `Ожидайте...`);
         player.lastWantedSearch = Date.now();
 

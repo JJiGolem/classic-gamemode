@@ -647,6 +647,9 @@ var playerMenu = new Vue({
         setName(name) {
             this.name = name;
         },
+        setAdmin(admin) {
+            this.admin = admin;
+        },
     },
     watch: {
         show(val) {

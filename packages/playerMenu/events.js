@@ -64,4 +64,7 @@ module.exports = {
     "player.name.changed": (player) => {
         playerMenu.setName(player);
     },
+    "player.admin.changed": (player) => {
+        playerMenu.setAdmin(player);
+    },
 }
