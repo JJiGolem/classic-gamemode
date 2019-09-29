@@ -94,7 +94,7 @@ class ContactPage extends Component {
 
     render() {
 
-        const { contact } = this.props;
+        const { contact, info } = this.props;
         const { error, isDeleted } = this.state;
 
         return (
@@ -108,7 +108,7 @@ class ContactPage extends Component {
                             </svg>
                             Назад
                         </span>
-                        <span style={{ float: 'right', opacity: (isDeleted || contact.name === 'Мой номер') ? '0' : '1' }}>
+                        <span style={{ float: 'right', opacity: (isDeleted || contact.number == info.number) ? '0' : '1' }}>
                             <svg style={{float: 'right', margin: '-7% 10% 5% 0' }} xmlns="http://www.w3.org/2000/svg" width="7%" height="7%" viewBox="0 0 33.88 38.88"
                                  onClick={this.deleteContact}
                             >
@@ -124,7 +124,7 @@ class ContactPage extends Component {
                             <span>{ isDeleted ? contact.number : contact.name }</span>
                         </div>
                         <div className='panel_call_mess_contact-phone-react'>
-                            {contact.name !== 'Мой номер' && <div className='button_panel_contact-phone-react' style={{ background: '#31e15f' }} onClick={this.callContact}>
+                            {contact.number != info.number && <div className='button_panel_contact-phone-react' style={{ background: '#31e15f' }} onClick={this.callContact}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="55%" viewBox="0 0 45.327 45.748" style={{ marginTop: '7%' }}>
                                     <path data-name="2J" d="M36.868,45.748c-2.248,0-6.229-1.263-10.649-3.379-3.88-1.854-9.34-6.414-14.606-12.2S2.607,18.844,1.6,15.338C.33,12.028-.2,9.428.068,7.818.15,7.319.322,6.281,6.527.9l.082-.06A4.4,4.4,0,0,1,9.132,0,3.545,3.545,0,0,1,11.5.9c1.423,1.217,4.575,5.987,5.507,7.42.2.329,1.931,3.277.635,5.47-.6,1-1.7,3.194-2.306,4.41a54.382,54.382,0,0,0,11.645,12.14l3.954-2.14a5.894,5.894,0,0,1,2.262-.432,6.485,6.485,0,0,1,2.212.392l.337.17,8.03,5.45a4.574,4.574,0,0,1,1.544,2.911,3.675,3.675,0,0,1-1.008,2.75c-.306.339-.7.817-1.087,1.28-2.166,2.589-3.807,4.455-5.2,4.881A4.009,4.009,0,0,1,36.868,45.748ZM9.082,3.005a1.26,1.26,0,0,0-.652.223,50.407,50.407,0,0,0-5.421,5.24c-.04.551.019,2.227,1.417,5.86l.045.13c1.873,6.726,15.441,21.57,23.044,25.21,5.113,2.446,8.264,3.1,9.321,3.1a1.267,1.267,0,0,0,.308-.029c.725-.287,2.845-2.824,3.75-3.908l.027-.033.1-.118c.411-.493.765-.918,1.058-1.242.263-.3.255-.465.252-.529a1.494,1.494,0,0,0-.454-.8l-7.64-5.179a3.584,3.584,0,0,0-1.046-.157,3.238,3.238,0,0,0-.984.147l-5.44,2.959L26,33.338a56.145,56.145,0,0,1-13.666-14.22l-.448-.709.37-.76.1-.206c1.272-2.561,2.18-4.3,2.7-5.184.228-.391-.132-1.579-.594-2.34a53.2,53.2,0,0,0-4.918-6.74A.694.694,0,0,0,9.082,3.005Z" transform="translate(0 0)" fill="#fff"/>
                                 </svg>
@@ -145,7 +145,7 @@ class ContactPage extends Component {
                             </div>
 
                             {
-                                contact.name !== 'Мой номер' &&
+                                contact.number != info.number &&
                                 <div className='contact_rename-phone-react'>
                                     <span style={{ marginLeft: '5%' }}>Переименовать</span>
                                     <input className='input_rename_contact-phone-react'

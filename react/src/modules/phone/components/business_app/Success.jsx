@@ -23,7 +23,7 @@ class Success extends Component {
         const { business, setApp, sellBusiness, createOrder, closeApp, productCount, productPrice } = this.props;
 
         if (business.isSell) {
-            sellBusiness(business.name);
+            sellBusiness(business.id);
             setApp({ name: 'MainDisplay', form: <MainDisplay /> });
         } else if (business.orderStatus != null) {
             createOrder(productCount, productPrice);
@@ -100,7 +100,7 @@ const mapDispatchToProps = dispatch => ({
     setSell: flag => dispatch(setSellBusiness(flag)),
     setSellStatus: status => dispatch(setSellStatusBusiness(status)),
     setSellInfo: info => dispatch(setSellInfoBusiness(info)),
-    sellBusiness: name => dispatch(sellBusiness(name)),
+    sellBusiness: id => dispatch(sellBusiness(id)),
     createOrder: (productCount, productPrice) => dispatch(createOrderBusiness(productCount, productPrice))
 });
 

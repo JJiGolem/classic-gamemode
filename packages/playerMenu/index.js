@@ -17,7 +17,7 @@ module.exports = {
         var data = {
             playerName: player.name,
             admin: player.character.admin,
-            factionId: player.character.id,
+            factionId: player.character.factionId,
             factionName: factionName,
             factionRank: rankName,
             jobName: jobName,
@@ -42,6 +42,7 @@ module.exports = {
             },
             email: player.account.email,
             confirmEmail: player.account.confirmEmail,
+            passwordDate: player.account.passwordDate.getTime(),
         };
         if (biz) {
             data.biz = {
@@ -170,6 +171,12 @@ module.exports = {
         };
         player.call(`playerMenu.setMedia`, [data]);
     },
+    setPasswordDate(player) {
+        var data = {
+            passwordDate: player.account.passwordDate.getTime(),
+        };
+        player.call(`playerMenu.setPasswordDate`, [data]);
+    },
     setPromocode(player) {
         var data = {
             promocode: player.character.Promocode.promocode,
@@ -182,5 +189,17 @@ module.exports = {
             confirmEmail: player.account.confirmEmail,
         };
         player.call(`playerMenu.setEmail`, [data]);
+    },
+    setName(player) {
+        var data = {
+            name: player.name
+        };
+        player.call(`playerMenu.setName`, [data]);
+    },
+    setAdmin(player) {
+        var data = {
+            admin: player.character.admin
+        };
+        player.call(`playerMenu.setAdmin`, [data]);
     },
 };

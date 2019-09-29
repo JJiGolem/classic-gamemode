@@ -157,6 +157,11 @@ mp.events.add('phone.contact.remove', function (number) {
     mp.events.callRemote('phone.contact.remove', number);
 });
 
+/// Изменить мой номер
+mp.events.add('phone.contact.mine.update', function (oldNumber, newNumber) {
+    mp.callCEFR('phone.contact.mine.update', [oldNumber, newNumber]);
+});
+
 /// Передать сообщение об ошибке на телефон
 /// 1) Номера не существует
 /// 2) Абонент вне зоны действия сети

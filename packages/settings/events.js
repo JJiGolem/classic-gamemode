@@ -16,8 +16,8 @@ module.exports = {
 
 
         player.account.password = auth.hashPassword(data.newPass);
+        player.account.passwordDate = new Date();
         player.account.save();
-        // TODO: сохранять дату смены пароля в БД
 
         notifs.success(player, `Пароль успешно изменен`, header);
         mp.events.call("player.password.changed", player);

@@ -16,6 +16,11 @@ module.exports = {
     "render": () => {
         console.log(mp.game.water.getWaterHeight(player.position.x, player.position.y, player.position.z, 0.5))
     },
+    "characterInit.done": (player) => {
+        // if (inventory.getItemByItemId(player, fishing.getRodId())) {
+        //     player.call('fishing.rod.set');
+        // }
+    },
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;
 
@@ -47,6 +52,7 @@ module.exports = {
         if (!inventory.getItemByItemId(player, fishing.getRodId())) {
             notifs.error(player, "У вас нет удочки", "Ошибка");
             player.call('fishing.game.exit');
+            player.call('fishing.rod.set', [false]);
             return;
         }
 
@@ -107,5 +113,9 @@ module.exports = {
         if (!player.character) return;
 
         fishing.sellFish(player);
+    },
+    "fishing.test": (player, x, y, z, heading) => {
+        console.log(`${parseFloat(x).toFixed(1)}, ${parseFloat(y).toFixed(1)}, ${parseFloat(z).toFixed(1)}, h: ${parseFloat(heading).toFixed(1)}, cos: ${parseFloat(Math.cos(heading * Math.PI / 180.0)).toFixed(4)}, sin: ${parseFloat(Math.sin(heading * Math.PI / 180.0)).toFixed(4)}`)
+        player.position = new mp.Vector3(x, y, z);
     }
 }

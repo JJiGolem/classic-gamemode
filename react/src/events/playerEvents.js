@@ -72,6 +72,13 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
+    myEventEmmiter.on('phone.message.load', (messages, number) => {
+        dispatch({
+            type: 'LOAD_MESSAGES_TO_DIALOG',
+            payload: { messages, number }
+        });
+    });
+
     myEventEmmiter.on('phone.message.set', (message, number) => {
         dispatch({
             type: 'ADD_MESSAGE_TO_PHONE',
@@ -81,6 +88,13 @@ export const PlayerEvents = (dispatch, getState) => {
                 isMine: false,
                 isRead: false
             }
+        });
+    });
+
+    myEventEmmiter.on('phone.contact.mine.update', (oldNumber, newNumber) => {
+        dispatch({
+            type: 'UPDATE_MY_NUMBER',
+            payload: { oldNumber, newNumber }
         });
     });
 

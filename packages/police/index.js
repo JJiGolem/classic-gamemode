@@ -60,6 +60,8 @@ module.exports = {
     arrestPay: 10,
     // Время ареста за 1 ур. розыска (ms)
     arrestTime: 10000,
+    // Время, через которое можно повторно искать преступника
+    searchTime: 2 * 60 * 1000,
 
 
     setCuffs(player, cuffs) {
@@ -229,5 +231,8 @@ module.exports = {
             wanted.push(rec);
         });
         return wanted;
+    },
+    getSearchPosition(pos) {
+        return pos;
     },
 };

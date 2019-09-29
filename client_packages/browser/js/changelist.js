@@ -3,6 +3,8 @@ var changelist = new Vue({
     data: {
         // Показ на экране
         show: false,
+        // Возможности открытия по кнопке и ставить лайки
+        enable: false,
         // Макс. длина строки в списке
         maxLength: 90,
         // Список обновлений
@@ -208,15 +210,48 @@ var changelist = new Vue({
         // Текущее обновление на экране
         i: 0,
     },
+    watch: {
+        show(val) {
+            if (val) setCursor(true);
+            else if (!busy.includes()) setCursor(false);
+        }
+    },
     methods: {
         prettyText(text) {
             if (text.length > this.maxLength) return text.substring(0, this.maxLength) + "...";
 
             return text;
         },
+        like() {
+            var i = this.i;
+            if (!this.list[i]) return;
+            if (this.list[i].liked) return notifications.push(`error`, `Вы уже оценили`);
+            if (!this.enable) return notifications.push(`error`, `Вы не авторизованы`);
+
+            mp.trigger(`callRemote`, `changelist.like`, i + 1);
+            this.list[i].likes++;
+            this.list[i].liked = true;
+        },
+        initLikes(data) {
+            if (typeof data == 'string') data = JSON.parse(data);
+
+            for (var id in data) {
+                this.list[id - 1].likes = data[id].likes;
+                this.list[id - 1].liked = data[id].liked;
+            }
+        },
+        setLikes(id, likes) {
+            this.list[id - 1].likes = likes;
+        },
     },
     mounted() {
         this.i = this.list.length - 1;
+
+        window.addEventListener('keyup', (e) => {
+            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "playerMenu", "inventory"])) return;
+
+            if (e.keyCode == 114 && this.enable) this.show = !this.show;
+        });
     },
 });
 

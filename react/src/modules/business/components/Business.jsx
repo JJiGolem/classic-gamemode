@@ -79,7 +79,7 @@ class Business extends Component {
     showActionsMenu() {
         const { business } = this.props;
 
-        if (business.actions.length !== 0) {
+        if (business.actions && business.actions.length !== 0) {
             return (
                 <div className='message_back-house-react' style={{ height: '40%' }}>
                     <div className='exitEnterBusiness' name='exit'

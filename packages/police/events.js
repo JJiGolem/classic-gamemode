@@ -422,7 +422,7 @@ module.exports = {
 
         if (!rec.cuffs) {
             var cuffs = (data.cuffsSqlId) ? inventory.getItem(player, data.cuffsSqlId) : inventory.getItemByItemId(player, 28);
-            if (!cuffs) return notifs.error(player, `Необходим предмет`, `Наручники`);
+            if (!cuffs) return notifs.error(player, `Предмет '${inventory.getName(28)}' не найден`, `Наручники`);
             inventory.deleteItem(player, cuffs);
             police.setCuffs(rec, cuffs);
 
@@ -475,6 +475,20 @@ module.exports = {
         police.setWanted(player, player.character.wanted - 1);
 
         notifs.warning(player, `Ваш уровень розыска понизился`);
+    },
+    "police.search": (player, recId) => {
+        var rec = mp.players.at(recId);
+        if (!rec) return notifs.error(player, `Игрок #${recId} не найден`);
+        if (!rec.character.wanted) return notifs.error(player, `${rec.name} не в розыске`);
+        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник`);
+        if (rec.dimension != 0) return notifs.error(player, `${rec.name} достаточно хорошо скрыт`);
+        if (player.lastWantedSearch && Date.now() - player.lastWantedSearch < police.searchTime) return notifs.warning(player, `Ожидайте...`);
+        player.lastWantedSearch = Date.now();
+
+        var pos = police.getSearchPosition(rec.position);
+
+        player.call(`police.search.blip.create`, [rec.name, pos]);
+        notifs.success(player, `Приблизительное местоположение ${rec.name} отмечено на карте`);
     },
     // арестовать в КПЗ ЛСПД
     "police.cells.arrest": (player, recId) => {
