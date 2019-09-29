@@ -179,4 +179,4 @@ var auth = new Vue({
 });
 
 // for tests
-auth.show = true;
+// auth.show = true;
