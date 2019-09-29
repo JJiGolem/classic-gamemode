@@ -81,6 +81,12 @@ module.exports = {
         }
     },
     setWanted(player, wanted, cause = null) {
+        if (wanted > player.character.wanted) {
+            player.character.crimes += wanted - player.character.wanted;
+            player.character.law -= wanted - player.character.wanted;
+            mp.events.call("player.law.changed", player);
+        }
+
         player.character.wanted = wanted;
         player.character.wantedCause = cause;
         player.character.save();

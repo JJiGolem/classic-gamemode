@@ -41,7 +41,10 @@ module.exports = {
             var minutes = parseInt((Date.now() - rec.authTime) / 1000 / 60 % 60);
             notifs.info(rec, `Минуты: ${rec.character.minutes} + ${minutes}`, `PayDay`)
             rec.character.minutes += minutes;
+            rec.character.law++;
             rec.character.save();
+
+            mp.events.call("player.law.changed", rec);
         });
     },
     updateWorldTime(date) {
