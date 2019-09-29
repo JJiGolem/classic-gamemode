@@ -164,12 +164,36 @@ module.exports = {
             try {
                 pockets = JSON.parse(args.join(" "));
             } catch (e) {
-                return out.error(`Неверный формат карманов. Пример: [4,4,5,5] - два кармана размерами 4x4 и 5x5.`, player);
+                return out.error(`Неверный формат карманов.<br/>Пример: [4,4,5,5] - два кармана размерами 4x4 и 5x5.`, player);
             }
             if (pockets.length % 2 != 0) return out.error(`Количество размеров карманов должно быть четным`, player);
             el.pockets = pockets;
             el.save();
             out.info(`${player.name} изменил карманы одежды типа ${type} #${el.id} (${el.pockets})`);
+        }
+    },
+    "/clclime": {
+        access: 1,
+        description: "Изменить климат, при которой можно носить одежду.<br/>Типы:<br/>pants, shoes, tops<br/>Пример климата:<br/>[-10,10] - при ниже '-10' будет мерзнуть, а при выше '10' будет жарко.",
+        args: "[тип_одежды] [ид_одежды]:n [климат]",
+        handler: (player, args, out) => {
+            if (!["pants", "shoes", "tops"].includes(args[0])) return out.error(`Неверный тип одежды`, player);
+
+            var el = clothes.getClothes(args[0], args[1]);
+            if (!el) return out.error(`Одежда типа ${args[0]} #${args[1]} не найдена`, player);
+
+            var type = args[0];
+            args.splice(0, 2);
+            var clime;
+            try {
+                clime = JSON.parse(args.join(" "));
+            } catch (e) {
+                return out.error(`Неверный формат климата.<br/>Пример: [-10,10] - при ниже -10 будет мерзнуть, а при выше 10 будет жарко.`, player);
+            }
+            if (clime.length != 2) return out.error(`Количество температур должно быть - 2`, player);
+            el.clime = clime;
+            el.save();
+            out.info(`${player.name} изменил климат одежды типа ${type} #${el.id} (${el.clime})`);
         }
     },
 }

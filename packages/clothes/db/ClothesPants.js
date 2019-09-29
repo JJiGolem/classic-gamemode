@@ -28,6 +28,19 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('pockets', val);
             }
         },
+        clime: {
+            type: DataTypes.STRING(20),
+            allowNull: false,
+            get() {
+                var val = this.getDataValue('clime');
+                return JSON.parse(val);
+            },
+            set(val) {
+                if (typeof val == 'object') val = JSON.stringify(val);
+
+                this.setDataValue('clime', val);
+            }
+        },
         price: {
             type: DataTypes.INTEGER(11),
             allowNull: false,
