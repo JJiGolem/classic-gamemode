@@ -57,6 +57,7 @@ module.exports = {
 
         player.call('phone.load', [{
                 isHave: player.phone != null,
+                number: player.phone.number,
                 houses: houses,
                 biz: bizes,
                 contacts: player.phone != null ? (player.phone.PhoneContacts != null ? jsonPhone['PhoneContacts'] : []) : []
@@ -87,9 +88,6 @@ module.exports = {
                 await player.phone.PhoneContacts[mycontactCopyIndex].destroy();
                 player.phone.PhoneContacts.splice(mycontactCopyIndex, 1);
         }
-        let mycontactIndex = player.phone.PhoneContacts.findIndex(x => x.number == player.phone.number);
-        player.phone.PhoneContacts[mycontactIndex].number = newNumber;
-        player.phone.PhoneContacts[mycontactIndex].save();
         let oldNumber = player.phone.number;
         player.phone.number = newNumber;
         await player.phone.save();

@@ -45,6 +45,7 @@ mp.events.add("biz.actions", (action) => {
 /// Actions
 mp.events.add("biz.finance.show", (bizParameters) => {
     mp.console(`selectMenu.menu = cloneObj(selectMenu.menus["bizEconomic"]);`);
+    mp.console(JSON.stringify(bizParameters));
     bizParameters.params.forEach(param => {
         let values = new Array();
         for (let i = param.min; i < param.max; i += 0.1) {

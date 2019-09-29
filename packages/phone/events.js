@@ -42,7 +42,6 @@ module.exports = {
             PhoneContacts: [],
             PhoneDialogs: []
         };
-        player.phone.PhoneContacts.push({name: "Мой номер", number: number});
         player.phone = await db.Models.Phone.create(player.phone, {
             include: [{
                     model: db.Models.PhoneContact
