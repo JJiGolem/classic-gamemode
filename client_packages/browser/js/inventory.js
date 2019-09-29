@@ -495,6 +495,42 @@ var inventory = new Vue({
 
             return parseInt(this.getItemWeight(item) * 1000) / 1000;
         },
+        descItemParams() {
+            var item = this.itemDesc.item;
+            if (!item) return [];
+
+            var params = [{
+                    name: "Вес",
+                    value: this.descItemWeight + " кг"
+                },
+                {
+                    name: "Занимает",
+                    value: this.itemsInfo[item.itemId].width + 'x' + this.itemsInfo[item.itemId].height + " ячейки"
+                }
+            ];
+            if (item.params.health) params.push({
+                name: "Прочность",
+                value: item.params.health + "%"
+            });
+            if (item.params.count) params.push({
+                name: "Количество",
+                value: item.params.count + " ед."
+            });
+            if (item.params.pockets) params.push({
+                name: "Карманы",
+                value: item.params.pockets.length + " ед."
+            });
+            if (this.getItemsCount(item)) params.push({
+                name: "Содержит",
+                value: this.getItemsCount(item) + " предметов"
+            });
+            if (item.params.clime) params.push({
+                name: "Климат",
+                value: `от ${item.params.clime[0]}° до ${item.params.clime[1]}°`
+            });
+
+            return params;
+        },
         havePockets() {
             for (var index in this.equipment)
                 if (this.equipment[index].pockets) return true;
