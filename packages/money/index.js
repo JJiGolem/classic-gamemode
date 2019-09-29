@@ -265,7 +265,7 @@ module.exports = {
         if (number < 0 || number > 1000000000 || id < 0 || id > 100000000) return callback(false);
 
         let player = mp.players.toArray().find( player => {
-            if(player.character) {
+            if (player.character) {
                 return player.character.id == id;
             }
             else {
@@ -274,7 +274,7 @@ module.exports = {
         });
         if (player == null) {
             db.sequelize.transaction(t => {
-                return db.Models.Character.findOne({ where: {id: id} , transaction: t}).then( character => {
+                return db.Models.Character.findOne({ where: {id: id} , transaction: t}).then(character => {
                     if (character.bank < number) throw new Error();
                     character.bank = character.bank - number;
                     return character.save({transaction: t});
@@ -326,6 +326,104 @@ module.exports = {
             }
             if (cashTo != null) {
                 playerTo.character.cash = cashTo;
+            }
+            callback(false);
+        });
+    },
+    moveMoneyById(idFrom, idTo, number, callbackT) {
+        if (callbackT == null) return;
+        let callback = (result) => {
+            try {
+                callbackT(result);
+            }
+            catch(e) {
+                console.log(e);
+            }
+        }
+
+        idFrom = parseInt(idFrom);
+        idTo = parseInt(idTo);
+        number = parseInt(number);
+        if (isNaN(number) || isNaN(idFrom) || isNaN(idTo)) return callback(false);
+        if (number < 0 || number > 1000000000 || idFrom < 0 || idFrom > 100000000 || idTo < 0 || idTo > 100000000) return callback(false);
+
+        let playerFrom = mp.players.toArray().find(player => {
+            if (player.character) {
+                return player.character.id == idFrom;
+            }
+            else {
+                return false;
+            }
+        });
+        let playerTo = mp.players.toArray().find(player => {
+            if (player.character) {
+                return player.character.id == idTo;
+            }
+            else {
+                return false;
+            }
+        });
+        let bankFrom = null;
+        if (playerFrom != null && playerFrom.character != null) bankFrom = playerFrom.character.bank;
+        let bankTo = null;
+        if (playerFrom != null && playerFrom.character != null) bankTo = playerTo.character.bank;
+
+        db.sequelize.transaction(t => {
+            if ((playerFrom != null && playerFrom.character != null) && (playerTo != null && playerTo.character != null)) {
+                if (playerFrom.character.bank < number) throw new Error();
+                playerFrom.character.bank = playerFrom.character.bank - number;
+                playerTo.character.bank = playerTo.character.bank + number;
+                return Promise.all([
+                    playerFrom.character.save({transaction: t}),
+                    playerTo.character.save({transaction: t})
+                ]);
+            }
+            if ((playerFrom != null && playerFrom.character != null) && (playerTo == null || playerTo.character == null)) {
+                if (playerFrom.character.bank < number) throw new Error();
+                playerFrom.character.bank = playerFrom.character.bank - number;
+                return Promise.all([
+                    playerFrom.character.save({transaction: t}),
+                    db.Models.Character.findOne({ where: {id: idTo} , transaction: t}).then(character => {
+                        character.bank = character.bank + number;
+                        return character.save({transaction: t});
+                    })
+                ]);
+            }
+            if ((playerFrom == null || playerFrom.character == null) && (playerTo != null && playerTo.character != null)) {
+                playerTo.character.bank = playerTo.character.bank + number;
+                return Promise.all([
+                    db.Models.Character.findOne({ where: {id: idFrom} , transaction: t}).then(character => {
+                        if (character.bank < number) throw new Error();
+                        character.bank = character.bank - number;
+                        return character.save({transaction: t});
+                    }),
+                    playerTo.character.save({transaction: t})
+                ]);
+            }
+            if ((playerFrom == null || playerFrom.character == null) && (playerTo == null || playerTo.character == null)) {
+                return Promise.all([
+                    db.Models.Character.findOne({ where: {id: idFrom} , transaction: t}).then(character => {
+                        if (character.bank < number) throw new Error();
+                        character.bank = character.bank - number;
+                        return character.save({transaction: t});
+                    }),
+                    db.Models.Character.findOne({ where: {id: idTo} , transaction: t}).then(character => {
+                        character.bank = character.bank + number;
+                        return character.save({transaction: t});
+                    })
+                ]);
+            }
+            throw new Error();
+        }).then(result => {
+            playerFrom != null && playerFrom.character != null && this.changing(playerFrom);
+            playerTo != null && playerTo.character != null && this.changing(playerTo);
+            callback(true);
+        }).catch(err => {
+            if (bankFrom != null) {
+                playerFrom.character.bank = bankFrom;
+            }
+            if (bankTo != null) {
+                playerTo.character.bank = bankTo;
             }
             callback(false);
         });
