@@ -77,7 +77,7 @@ module.exports = {
             let id = parseInt(args[0]);
             if (isNaN(id)) return player.call('notifications.push.error', ["Введите данные верно", "Ошибка проверки наличных и счета"]);
             if (mp.players.at(id) == null || mp.players.at(id).character == null) return player.call('notifications.push.error', ["Игрок с данным id отсутствует на сервере или не авторизовался", "Ошибка проверки наличных и счета"]);
-            player.call('notifications.push.success', ["У игрока " + mp.players.at(id).character.cash + "$ наличными и " + mp.players.at(id).character.money + "$ на банковском счете", "Состояние наличных и счета игрока"]);
+            player.call('notifications.push.success', ["У игрока " + mp.players.at(id).character.cash + "$ наличными и " + mp.players.at(id).character.bank + "$ на банковском счете", "Состояние наличных и счета игрока"]);
         }
     },
 }
