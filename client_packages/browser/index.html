@@ -585,29 +585,9 @@
             </div>
             <div class="description">{{ itemsInfo[itemDesc.item.itemId].description }}</div>
             <div class="params">
-                <div class="param">
-                    <div class="name">Вес</div>
-                    <div class="value">{{ descItemWeight }} кг</div>
-                </div>
-                <div class="param">
-                    <div class="name">Занимает</div>
-                    <div class="value">{{ itemsInfo[itemDesc.item.itemId].width+'x'+itemsInfo[itemDesc.item.itemId].height }} ячейки</div>
-                </div>
-                <div class="param" v-if="itemDesc.item.params.health">
-                    <div class="name">Прочность</div>
-                    <div class="value">{{ itemDesc.item.params.health}}%</div>
-                </div>
-                <div class="param" v-if="itemDesc.item.params.count">
-                    <div class="name">Количество</div>
-                    <div class="value">{{ itemDesc.item.params.count}} ед.</div>
-                </div>
-                <div class="param" v-if="itemDesc.item.pockets">
-                    <div class="name">Карманы</div>
-                    <div class="value">{{ itemDesc.item.pockets.length }} ед.</div>
-                </div>
-                <div class="param" v-if="getItemsCount(itemDesc.item)">
-                    <div class="name">Содержит</div>
-                    <div class="value">{{ getItemsCount(itemDesc.item) }} предметов</div>
+                <div class="param" v-for="param in descItemParams">
+                    <div class="name">{{ param.name }}</div>
+                    <div class="value">{{ param.value }}</div>
                 </div>
             </div>
         </div>
