@@ -86,4 +86,52 @@ module.exports = {
             out.info(`${player.name} изменил класс одежды типа ${args[0]} #${args[1]} (${el.class})`);
         }
     },
+    "/claddtext": {
+        access: 1,
+        description: "Добавить текстуру одежды.<br/>Типы:<br/>bracelets, ears, glasses, hats, masks, pants, shoes, ties, tops, watches",
+        args: "[тип_одежды] [ид_одежды]:n [текстура]:n",
+        handler: (player, args, out) => {
+            if (!clothes.getTypes().includes(args[0])) return out.error(`Неверный тип одежды`, player);
+
+            var el = clothes.getClothes(args[0], args[1]);
+            if (!el) return out.error(`Одежда типа ${args[0]} #${args[1]} не найдена`, player);
+
+
+            var textures = el.textures;
+            if (textures.includes(args[2])) return out.error(`Одежда уже имеет текстуру ${args[2]}`, player);
+
+            textures.push(args[2]);
+            textures.sort((a, b) => {
+                return a - b;
+            });
+
+            el.textures = textures;
+            el.save();
+
+            out.info(`${player.name} добавил текстуру одежды типа ${args[0]} #${args[1]} (${args[2]})`);
+        }
+    },
+    "/cldeltext": {
+        access: 1,
+        description: "Удалить текстуру одежды.<br/>Типы:<br/>bracelets, ears, glasses, hats, masks, pants, shoes, ties, tops, watches",
+        args: "[тип_одежды] [ид_одежды]:n [текстура]:n",
+        handler: (player, args, out) => {
+            if (!clothes.getTypes().includes(args[0])) return out.error(`Неверный тип одежды`, player);
+
+            var el = clothes.getClothes(args[0], args[1]);
+            if (!el) return out.error(`Одежда типа ${args[0]} #${args[1]} не найдена`, player);
+
+
+            var textures = el.textures;
+            var i = textures.indexOf(args[2]);
+            if (i == -1) return out.error(`Одежда не имеет текстуру ${args[2]}`, player);
+
+            textures.splice(i, 1);
+
+            el.textures = textures;
+            el.save();
+
+            out.info(`${player.name} удалил текстуру одежды типа ${args[0]} #${args[1]} (${args[2]})`);
+        }
+    },
 }
