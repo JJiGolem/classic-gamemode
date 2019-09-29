@@ -56,5 +56,25 @@ mp.events.add({
                 mp.callCEFV(`selectMenu.notification = 'Ошибка финансовой операции'`);
                 break;
         }
+    },
+    "ammunation.ammo.buy.ans": (ans, data) => {
+        mp.callCEFV(`selectMenu.loader = false`);
+        switch (ans) {
+            case 0:
+                mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+                break;
+            case 1:
+                mp.callCEFV(`selectMenu.notification = 'В магазине кончились ресурсы'`);
+                break;
+            case 2:
+                mp.callCEFV(`selectMenu.notification = '${data}'`);
+                break;
+            case 3:
+                mp.callCEFV(`selectMenu.notification = 'Вы приобрели боеприпасы'`);
+                break;
+            case 3:
+                mp.callCEFV(`selectMenu.notification = 'Ошибка финансовой операции'`);
+                break;
+        }
     }
 });
