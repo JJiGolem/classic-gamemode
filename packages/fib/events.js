@@ -308,20 +308,21 @@ module.exports = {
             factions.setAmmo(faction, faction.ammo - fib.ammoAmmo * ammo);
         });
     },
-    "fib.spy": (player, recId) => {
+    "fib.spy": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
         var header = `Прослушка FIB`;
-        if (!factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не агент`, header);
 
-        var rec = mp.players.at(recId);
+        var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
         if (!rec) return notifs.error(player, `Гражданин не найден`, header);
         var dist = player.dist(rec.position);
         if (dist > 3) return notifs.error(player, `${rec.name} далеко`, header);
+        if (!factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не агент`, header);
 
         if (!rec.spy) {
-            var spy = inventory.getItemByItemId(player, 4);
+            var spy = (data.itemSqlId) ? inventory.getItem(player, data.itemSqlId) : inventory.getItemByItemId(player, 4);
             if (!spy) return notifs.error(player, `Предмет '${inventory.getName(4)}' не найден`, header);
 
-            // inventory.deleteItem(player, spy);
+            inventory.deleteItem(player, spy);
             rec.spy = {
                 playerId: player.id,
                 characterId: player.character.id,

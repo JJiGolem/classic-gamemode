@@ -11,6 +11,33 @@ module.exports = {
     minPriceMultiplier: 1.0,
     maxPriceMultiplier: 2.0,
     productPrice: 10,
+    ammoProducts: 1,
+    weaponsConfig: {
+        1: {
+            name: 'Combat Pistol',
+            itemId: 20,
+            gameId: 'weapon_combatpistol',
+            products: 10
+        },
+        2: {
+            name: 'SMG',
+            itemId: 48,
+            gameId: 'weapon_smg',
+            products: 10
+        },
+        3: {
+            name: 'Pump Shotgun',
+            itemId: 21,
+            gameId: 'weapon_pumpshotgun',
+            products: 10
+        },
+        4: {
+            name: 'Carbine Rifle',
+            itemId: 22,
+            gameId: 'weapon_carbinerifle',
+            products: 10
+        },
+    },
     async init() {
         bizes = call('bizes');
         await this.loadAmmunationsFromDB();
@@ -44,7 +71,8 @@ module.exports = {
     getRawShopData(id) {
         let shop = shops.find(x => x.id == id);
         return {
-            priceMultiplier: shop.priceMultiplier
+            priceMultiplier: shop.priceMultiplier,
+            productPrice: this.productPrice
         }
     },
     getBizParamsById(id) {
@@ -87,4 +115,7 @@ module.exports = {
         let bizId = shop.bizId;
         bizes.bizUpdateCashBox(bizId, money);
     },
+    getWeaponsConfig() {
+        return this.weaponsConfig;
+    }
 }

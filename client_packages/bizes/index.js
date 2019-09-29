@@ -70,7 +70,7 @@ mp.events.add("biz.sell.toGov", (id) => {
     mp.events.callRemote("biz.sell.toGov", id);
 });
 mp.events.add("biz.sell.toGov.ans", (result) => {
-    mp.callCEFR("biz.sell.toGov.ans", result);
+    mp.callCEFR("biz.sell.toGov.ans", [result]);
 });
 
 mp.events.add("biz.sell.check", (idBizT, idOrNick, costT) => {

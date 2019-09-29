@@ -445,6 +445,8 @@ module.exports = {
             target.character.admin = lvl;
             target.character.save();
             target.call('chat.message.push', [`!{#ffcf0d} ${player.character.name} назначил вас администратором ${lvl} уровня`]);
+
+            mp.events.call("player.admin.changed", target);
         }
     },
     "/deladmin": {
@@ -461,6 +463,8 @@ module.exports = {
             target.character.admin = 0;
             target.character.save();
             target.call('chat.message.push', [`!{#ff8819} ${player.character.name} забрал у вас права администратора`]);
+
+            mp.events.call("player.admin.changed", target);
         }
     },
     "/admins": {
@@ -552,6 +556,19 @@ module.exports = {
             player.call(`godmode.set`, [player.godmode]);
             if (player.godmode) return out.log(`Бессмертие включено`, player);
             else return out.log(`Бессмертие выключено`, player);
+        }
+    },
+    "/blip": {
+        description: "Создать блип.",
+        access: 1,
+        args: "[тип]:n [масштаб]:n",
+        handler: (player, args, out) => {
+            mp.blips.new(args[0], player.position, {
+                color: 1,
+                name: `blip`,
+                shortRange: 10,
+                scale: args[1]
+            })
         }
     },
 }

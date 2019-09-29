@@ -58,7 +58,7 @@
                 {{ players }}
                 /
                 {{ maxPlayers }}</p>
-            <p v-if="build">Сборка: #{{ build }}</p>
+            <p v-if="build">{{ build }} <i class="fas fa-code-branch"></i></p>
         </div>
         <div class="money">
             <div class="cash">
@@ -311,6 +311,15 @@
 
             <div class="input-prompt" v-if="prompt">{{ prompt }}</div>
 
+        </div>
+        <div class="updates">
+            <h3 class="header">Обновления сервера</h3>
+            <div class="list">
+                <div v-for="(update, i) in updates" @click="showChangelist(updates.length - i - 1)">
+                    <div class="date">{{ update.date }}</div>
+                    <div class="title">Changelist {{ updates.length - i }}</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1547,19 +1556,27 @@
     </div>
 
     <div v-cloak id="changelist" v-if="show">
+        <div class="close" @click="show = false">x</div>
         <div class="header">
-            <div class="arrow" @click="i++" v-if="i < list.length - 1">След</div>
-            <div class="title">
-                <div class="name">Changelist {{ list[i].id }}</div>
-                <div class="date">{{ list[i].date }}</div>
+            <i class="arrow fas fa-long-arrow-alt-left" @click="i++" v-if="i < list.length - 1"></i>
+            <div class="title" :class="{first: i == list.length - 1}">
+                <div class="name">Changelist {{ i + 1 }}</div>
+                <div class="date" :class="{right: !i, center: i && i < list.length - 1}">{{ list[i].date }}</div>
             </div>
-            <div class="arrow" @click="i--" v-if="i > 0">Пред</div>
+            <i class="arrow fas fa-long-arrow-alt-right" @click="i--" v-if="i > 0"></i>
         </div>
         <div class="content">
-            <div v-for="text in list[i].features"><span class="features"><i class="fas fa-star"></i></span>{{ text }}</div>
-            <div v-for="text in list[i].fixed"><span class="fixed"><i class="fas fa-wrench"></i></span>{{ text }}</div>
-            <div v-for="text in list[i].improvements"><span class="improvements"><i class="fas fa-chart-line"></i></span>{{ text }}</div>
-            <div v-for="text in list[i].removed"><span class="removed"><i class="fas fa-trash"></i></span>{{ text }}</div>
+            <div class="build" title="Сборка"><i class="fas fa-code-branch"></i> {{ list[i].build }}</div>
+            <div v-for="text in list[i].features" :title="text"><span class="features"><i class="fas fa-star"></i></span><div>{{ prettyText(text) }}</div></div>
+            <br v-if="list[i].fixed.length" />
+            <div v-for="text in list[i].fixed" :title="text"><span class="fixed"><i class="fas fa-wrench"></i></span>{{ prettyText(text) }}</div>
+            <br v-if="list[i].improvements.length" />
+            <div v-for="text in list[i].improvements" :title="text"><span class="improvements"><i class="fas fa-cog"></i></span>{{ prettyText(text) }}</div>
+            <br v-if="list[i].removed.length" />
+            <div v-for="text in list[i].removed" :title="text"><span class="removed"><i class="fas fa-trash"></i></span>{{ prettyText(text) }}</div>
+        </div>
+        <div class="footer">
+            <span class="likes" :class="{liked: list[i].liked}" @click="like">{{ list[i].likes }} <i class="fas fa-heart"></i></span>
         </div>
     </div>
 
@@ -1576,6 +1593,7 @@
     <script src="js/infoTable.js"></script>
     <script src="js/characterInfo.js"></script>
     <script src="js/selectMenu.js"></script>
+    <script src="js/changelist.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/loader.js"></script>
     <script src="js/characterPass.js"></script>
@@ -1596,7 +1614,6 @@
     <script src="js/killList.js"></script>
     <script src="js/watermark.js"></script>
     <script src="js/timer.js"></script>
-    <script src="js/changelist.js"></script>
 
 </body>
 

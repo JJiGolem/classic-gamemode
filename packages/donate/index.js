@@ -64,10 +64,10 @@ module.exports = {
         player.character.save();
 
         this.setDonate(player, player.account.donate - this.nicknamePrice);
-        notifs.success(player, `Никнейм изменен, перезайдите на сервер`, header);
+        notifs.success(player, `Никнейм персонажа изменен`, header);
         notifs.success(player, `Списано ${this.nicknamePrice} CC`, header);
         mp.events.call("player.name.changed", player);
-        player.kick();
+        // player.kick();
     },
     clearWarn(player) {
         var header = `Снятие варна`;

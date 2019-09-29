@@ -23,10 +23,10 @@ mp.playerMenu = {
     setWanted(wanted) {
         mp.callCEFV(`playerMenu.setWanted(${wanted})`);
     },
-    setBiz(biz) {
+    setBiz(biz = null) {
         mp.callCEFV(`playerMenu.setBiz('${JSON.stringify(biz)}')`);
     },
-    setHouse(house) {
+    setHouse(house = null) {
         mp.callCEFV(`playerMenu.setHouse('${JSON.stringify(house)}')`);
     },
     setSkills(skills) {
@@ -59,8 +59,17 @@ mp.playerMenu = {
     setMedia(media) {
         mp.callCEFV(`playerMenu.setMedia(${media})`);
     },
+    setPasswordDate(time) {
+        mp.callCEFV(`playerMenu.setPasswordDate(${time})`);
+    },
     setEmail(email, confirm = 0) {
         mp.callCEFV(`playerMenu.setEmail('${email}', ${confirm})`);
+    },
+    setName(name) {
+        mp.callCEFV(`playerMenu.setName('${name}')`);
+    },
+    setAdmin(admin) {
+        mp.callCEFV(`playerMenu.setAdmin(${admin})`);
     },
 };
 
@@ -110,8 +119,17 @@ mp.events.add({
     "playerMenu.setMedia": (data) => {
         mp.playerMenu.setMedia(data.media);
     },
+    "playerMenu.setPasswordDate": (data) => {
+        mp.playerMenu.setPasswordDate(data.passwordDate);
+    },
     "playerMenu.setEmail": (data) => {
         mp.playerMenu.setEmail(data.email, data.confirmEmail);
+    },
+    "playerMenu.setName": (data) => {
+        mp.playerMenu.setName(data.name);
+    },
+    "playerMenu.setAdmin": (data) => {
+        mp.playerMenu.setAdmin(data.admin);
     },
     "money.change": (cash, bank) => {
         mp.playerMenu.setCash(cash);

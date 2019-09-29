@@ -75,16 +75,17 @@ module.exports = {
                         as: "settings",
                         model: db.Models.CharacterSettings,
                     },
-                    {
-                        model: db.Models.CharacterInventory,
-                        where: {
-                            parentId: null,
-                        },
-                        include: {
-                            as: "params",
-                            model: db.Models.CharacterInventoryParam,
-                        },
-                    },
+                    // Этот инклюд тормозит выборку до 5 сек...
+                    // {
+                    //     model: db.Models.CharacterInventory,
+                    //     where: {
+                    //         parentId: null,
+                    //     },
+                    //     include: {
+                    //         as: "params",
+                    //         model: db.Models.CharacterInventoryParam,
+                    //     },
+                    // },
                 ]
             });
             var diff = Date.now() - start;
@@ -106,7 +107,8 @@ module.exports = {
         for (let i = 0; i < player.characters.length; i++) {
             charInfos.push({
                 charInfo: player.characters[i],
-                charClothes: inventory.getView(player.characters[i].CharacterInventories),
+                charClothes: null,
+                // charClothes: inventory.getView(player.characters[i].CharacterInventories),
             });
         }
         return charInfos;
@@ -201,26 +203,26 @@ module.exports = {
             });
             player.setCustomization(
                 player.character.gender == 0,
-    
+
                 player.character.mother,
                 player.character.father,
                 0,
-    
+
                 0,
                 player.character.skin,
                 0,
-    
+
                 player.character.similarity,
                 1.0,
                 0.0,
-    
+
                 player.character.eyeColor,
                 player.character.hairColor,
                 player.character.hairHighlightColor,
-    
+
                 features
             );
-    
+
             player.setClothes(2, player.character.hair, 0, 2);
             for (let i = 0; i < 11; i++) {
                 player.setHeadOverlay(i, [player.character.Appearances[i].value,
@@ -236,26 +238,26 @@ module.exports = {
             });
             player.setCustomization(
                 player.characterInfo.gender == 0,
-    
+
                 player.characterInfo.mother,
                 player.characterInfo.father,
                 0,
-    
+
                 0,
                 player.characterInfo.skin,
                 0,
-    
+
                 player.characterInfo.similarity,
                 1.0,
                 0.0,
-    
+
                 player.characterInfo.eyeColor,
                 player.characterInfo.hairColor,
                 player.characterInfo.hairHighlightColor,
-    
+
                 features
             );
-    
+
             player.setClothes(2, player.characterInfo.hair, 0, 2);
             for (let i = 0; i < 11; i++) {
                 player.setHeadOverlay(i, [player.characterInfo.Appearances[i].value,

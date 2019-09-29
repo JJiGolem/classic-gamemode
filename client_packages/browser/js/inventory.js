@@ -93,6 +93,16 @@ var inventory = new Vue({
                     }
                 }
             },*/
+            4: { // прослушка
+                'Установить': {
+                    handler(item) {
+                        var data = {
+                            itemSqlId: item.sqlId
+                        };
+                        mp.trigger(`callRemote`, `fib.spy`, JSON.stringify(data));
+                    }
+                }
+            },
             24: { // малая аптечка
                 'Вылечиться': {
                     handler(item) {
@@ -249,6 +259,14 @@ var inventory = new Vue({
         // Вайт-лист предметов, которые можно использовать в горячих клавишах
         hotkeysList: {
             // itemId: {...}
+            4: { // прослушка
+                handler(item) {
+                    var data = {
+                        itemSqlId: item.sqlId
+                    };
+                    mp.trigger(`callRemote`, `fib.spy`, JSON.stringify(data));
+                }
+            },
             24: { // малая аптечка
                 handler(item) {
                     mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
