@@ -134,4 +134,42 @@ module.exports = {
             out.info(`${player.name} удалил текстуру одежды типа ${args[0]} #${args[1]} (${args[2]})`);
         }
     },
+    "/cltorso": {
+        access: 1,
+        description: "Изменить торс одежды типа tops.",
+        args: "[ид_одежды]:n [торс]:n",
+        handler: (player, args, out) => {
+            var el = clothes.getClothes("tops", args[0]);
+            if (!el) return out.error(`Одежда типа tops #${args[0]} не найдена`, player);
+
+            el.torso = args[1];
+            el.save();
+
+            out.info(`${player.name} изменил торс одежды типа tops #${args[0]} (${el.torso})`);
+        }
+    },
+    "/clpockets": {
+        access: 1,
+        description: "Изменить карманы одежды.<br/>Типы:<br/>pants, shoes, tops<br/>Пример карманов:<br/>[2,2] - один карман размером 2x2<br/>[3,3,3,3] - два кармана размером 3x3",
+        args: "[тип_одежды] [ид_одежды]:n [карманы]",
+        handler: (player, args, out) => {
+            if (!["pants", "shoes", "tops"].includes(args[0])) return out.error(`Неверный тип одежды`, player);
+
+            var el = clothes.getClothes(args[0], args[1]);
+            if (!el) return out.error(`Одежда типа ${args[0]} #${args[1]} не найдена`, player);
+
+            var type = args[0];
+            args.splice(0, 2);
+            var pockets;
+            try {
+                pockets = JSON.parse(args.join(" "));
+            } catch (e) {
+                return out.error(`Неверный формат карманов. Пример: [4,4,5,5] - два кармана размерами 4x4 и 5x5.`, player);
+            }
+            if (pockets.length % 2 != 0) return out.error(`Количество размеров карманов должно быть четным`, player);
+            el.pockets = pockets;
+            el.save();
+            out.info(`${player.name} изменил карманы одежды типа ${type} #${el.id} (${el.pockets})`);
+        }
+    },
 }
