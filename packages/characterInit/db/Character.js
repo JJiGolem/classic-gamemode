@@ -220,6 +220,22 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('thirst', val);
             },
         },
+        // Законопослушность
+        law: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, -100, 100);
+                this.setDataValue('law', val);
+            },
+        },
+        // Количество преступлений
+        crimes: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false,
+        },
         // Уровень розыска
         wanted: {
             type: DataTypes.INTEGER(11),

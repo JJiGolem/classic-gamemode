@@ -25,6 +25,8 @@ module.exports = {
             gender: player.character.gender,
             cash: player.character.cash,
             wanted: player.character.wanted,
+            law: player.character.law,
+            crimes: player.character.crimes,
             donate: player.account.donate,
             convertCash: donate.convertCash,
             nicknamePrice: donate.nicknamePrice,
@@ -201,5 +203,11 @@ module.exports = {
             admin: player.character.admin
         };
         player.call(`playerMenu.setAdmin`, [data]);
+    },
+    setLaw(player) {
+        var data = {
+            law: player.character.law
+        };
+        player.call(`playerMenu.setLaw`, [data]);
     },
 };
