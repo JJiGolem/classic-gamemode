@@ -22,6 +22,15 @@ module.exports = (sequelize, DataTypes) => {
         textures: {
             type: DataTypes.STRING(128),
             allowNull: false,
+            get() {
+                var val = this.getDataValue('textures');
+                return JSON.parse(val);
+            },
+            set(val) {
+                if (typeof val == 'object') val = JSON.stringify(val);
+
+                this.setDataValue('textures', val);
+            }
         },
         sex: {
             type: DataTypes.TINYINT(1),
