@@ -524,6 +524,10 @@ var inventory = new Vue({
                 name: "Содержит",
                 value: this.getItemsCount(item) + " предметов"
             });
+            if (item.params.clime) params.push({
+                name: "Климат",
+                value: `от ${item.params.clime[0]}° до ${item.params.clime[1]}°`
+            });
 
             return params;
         },
