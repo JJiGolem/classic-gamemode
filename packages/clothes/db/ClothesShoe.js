@@ -19,6 +19,19 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: false,
         },
+        clime: {
+            type: DataTypes.STRING(20),
+            allowNull: false,
+            get() {
+                var val = this.getDataValue('clime');
+                return JSON.parse(val);
+            },
+            set(val) {
+                if (typeof val == 'object') val = JSON.stringify(val);
+
+                this.setDataValue('clime', val);
+            }
+        },
         textures: {
             type: DataTypes.STRING(128),
             allowNull: false,
