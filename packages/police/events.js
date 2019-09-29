@@ -426,7 +426,7 @@ module.exports = {
 
         if (!rec.cuffs) {
             var cuffs = (data.cuffsSqlId) ? inventory.getItem(player, data.cuffsSqlId) : inventory.getItemByItemId(player, 28);
-            if (!cuffs) return notifs.error(player, `Предмет '${inventory.getName(28)}' не найден`, `Наручники`);
+            if (!cuffs) return notifs.error(player, `Предмет ${inventory.getName(28)} не найден`, `Наручники`);
             inventory.deleteItem(player, cuffs);
             police.setCuffs(rec, cuffs);
 

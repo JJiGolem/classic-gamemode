@@ -324,7 +324,7 @@ module.exports = {
 
         if (!rec.spy) {
             var spy = (data.itemSqlId) ? inventory.getItem(player, data.itemSqlId) : inventory.getItemByItemId(player, 4);
-            if (!spy) return notifs.error(player, `Предмет '${inventory.getName(4)}' не найден`, header);
+            if (!spy) return notifs.error(player, `Предмет ${inventory.getName(4)} не найден`, header);
 
             inventory.deleteItem(player, spy);
             rec.spy = {
