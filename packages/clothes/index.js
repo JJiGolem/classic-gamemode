@@ -9,6 +9,7 @@ module.exports = {
             "ears": [],
             "glasses": [],
             "hats": [],
+            "masks": [],
             "pants": [],
             "shoes": [],
             "ties": [],
@@ -21,6 +22,7 @@ module.exports = {
             "ears": [],
             "glasses": [],
             "hats": [],
+            "masks": [],
             "pants": [],
             "shoes": [],
             "ties": [],
@@ -42,5 +44,13 @@ module.exports = {
         tops.forEach(el => {
             this.list[el.sex]["tops"].push(el);
         });
+    },
+    getTypes() {
+        return Object.keys(this.list[0]);
+    },
+    getClothes(type, id) {
+        var el = this.list[1][type].find(x => x.id == id);
+        if (!el) el = this.list[0][type].find(x => x.id == id);
+        return el;
     },
 };

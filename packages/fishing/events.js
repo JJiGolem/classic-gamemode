@@ -17,9 +17,9 @@ module.exports = {
         console.log(mp.game.water.getWaterHeight(player.position.x, player.position.y, player.position.z, 0.5))
     },
     "characterInit.done": (player) => {
-        if (inventory.getItemByItemId(player, fishing.getRodId())) {
-            player.call('fishing.rod.set');
-        }
+        // if (inventory.getItemByItemId(player, fishing.getRodId())) {
+        //     player.call('fishing.rod.set');
+        // }
     },
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;
