@@ -211,6 +211,28 @@ export default function info(state = initialState, action) {
                 ]
             };
 
+        case 'UPDATE_MY_NUMBER':
+            newState = { ...state };
+            let myNumberIndex = newState.contacts.findIndex(con => con.number == payload.oldNumber && con.name == 'Мой номер');
+
+            if (myNumberIndex !== -1) {
+                let deletedContacts = newState.contacts.filter(con => con.number == payload.newNumber);
+
+                if (deletedContacts.length > 0) {
+                    deletedContacts.forEach(con => {
+                        let delInd = newState.contacts.findIndex(contact => contact.number == con.number);
+
+                        if (delInd !== -1) {
+                            newState.contacts.splice(delInd, 1);
+                        }
+                    })
+                }
+                newState.contacts[myNumberIndex].number = payload.newNumber;
+                newState.number = payload.newNumber;
+            }
+
+            return newState;
+
         case 'DELETE_CONTACT':
             newState = { ...state };
             let deletedIndex = newState.contacts.findIndex(con => con.number === payload);

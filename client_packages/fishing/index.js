@@ -22,6 +22,8 @@ let isEnter = false;
 let isStarted = false;
 let isFetch = false;
 let isCharacter = false;
+let isHaveRod = false;
+let isShowPrompt = false;
 
 let heading;
 
@@ -31,27 +33,46 @@ mp.events.add('characterInit.done', () => {
         mp.events.call('fishing.game.exit');
     });
 
+    // mp.keys.bind(0x79, true, function() {
+    //     x = localPlayer.position.x + 2*Math.cos(heading * Math.PI / 180.0);
+    //     y = localPlayer.position.y + 2*Math.sin(heading * Math.PI / 180.0);
+    //     z = localPlayer.position.z;
+    //     mp.events.callRemote('fishing.test', x, y, z, heading);
+    // });
+
     isCharacter = true;
 });
 
 mp.events.add('render', () => {
     if (isCharacter) {
-        heading = localPlayer.getHeading() + 180;
+        heading = localPlayer.getHeading() + 90;
         let p = {
-            x: localPlayer.position.x + 3*Math.cos(heading),
-            y: localPlayer.position.y + 3*Math.sin(heading),
+            x: localPlayer.position.x + 20*Math.cos(heading * Math.PI / 180.0),
+            y: localPlayer.position.y + 20*Math.sin(heading * Math.PI / 180.0),
             z: localPlayer.position.z
         }
   
-        if (!isEnter) {
+        if (isHaveRod && !isEnter && !localPlayer.isInWater() 
+            && !localPlayer.isInAnyVehicle() 
+            && !localPlayer.isInAnyBoat()
+            && !localPlayer.isInAir()
+            && !localPlayer.isInAnyPlane()) {
             if (Math.abs(mp.game.water.getWaterHeight(p.x, p.y, p.z, 0)) > 0) {
+                isShowPrompt = true;
                 mp.events.call('fishing.game.menu');
             } else {
-                bindButtons(false);
-                mp.events.call('prompt.hide');
+                if (isShowPrompt) {
+                    bindButtons(false);
+                    mp.events.call('prompt.hide');
+                    isShowPrompt = false;
+                }
             }
         }
     }
+});
+
+mp.events.add('fishing.rod.set', (state) => {
+    isHaveRod = state;
 })
 
 mp.events.add('fishing.menu.show', () => {
@@ -77,6 +98,7 @@ mp.events.add('fishing.rod.buy.ans', (ans) => {
 
     if (ans == 1) {
         mp.events.call('fishing.menu.close');
+        isHaveRod = true;
     }
 });
 
@@ -93,10 +115,7 @@ mp.events.add('fishing.fish.sell.ans', (ans) => {
 });
 
 mp.events.add('fishing.game.menu', () => {
-    mp.events.call('prompt.show', 'Нажмите <span>E</span>, чтобы начать рыбачить', 'Информация');
-    // setInterval(() => {
-    //     mp.console(mp.game.water.getWaterHeight(localPlayer.position.x, localPlayer.position.y, localPlayer.position.z, 0.5));
-    // }, 2000);
+    mp.events.call('prompt.showByName', 'fishing');
     bindButtons(true);
 });
 
