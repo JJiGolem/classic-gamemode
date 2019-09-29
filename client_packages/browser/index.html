@@ -317,7 +317,7 @@
             <div class="list">
                 <div v-for="(update, i) in updates" @click="showChangelist(updates.length - i - 1)">
                     <div class="date">{{ update.date }}</div>
-                    <div class="title">Changelist {{ updates.length - i }}</div>
+                    <div class="title">Обновления #{{ updates.length - i }}</div>
                 </div>
             </div>
         </div>
@@ -1540,7 +1540,7 @@
         <div class="header">
             <i class="arrow fas fa-long-arrow-alt-left" @click="i++" v-if="i < list.length - 1"></i>
             <div class="title" :class="{first: i == list.length - 1}">
-                <div class="name">Changelist {{ i + 1 }}</div>
+                <div class="name">Обновления #{{ i + 1 }}</div>
                 <div class="date" :class="{right: !i, center: i && i < list.length - 1}">{{ list[i].date }}</div>
             </div>
             <i class="arrow fas fa-long-arrow-alt-right" @click="i--" v-if="i > 0"></i>
