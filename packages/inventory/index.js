@@ -41,6 +41,22 @@ module.exports = {
     groundItemTime: 2 * 60 * 1000,
     // Макс. дистанция до предмета, чтобы поднять его
     groundMaxDist: 2,
+    // Климат, при котором игрок может бегать голым
+    playerClime: {
+        head: [10, 25],
+        body: [20, 25],
+        legs: [20, 30],
+        feets: [25, 35],
+    },
+    // Коэффицент урона игроку от климата (чем выше, тем больше урон)
+    climeK: 0.5,
+    // Коэффиценты важности частей тела
+    climeOpacity: {
+        head: 0.1,
+        body: 0.5,
+        legs: 0.2,
+        feets: 0.2,
+    },
 
     init() {
         this.loadInventoryItemsFromDB();
@@ -1017,5 +1033,55 @@ module.exports = {
             clearTimeout(obj.destroyTimer);
             obj.destroy();
         }
+    },
+    // урон климата (если игрок одет не по погоде)
+    checkClimeDamage(player, temp, out) {
+        var clime = Object.assign({}, this.playerClime);
+
+        var hat = player.inventory.items.find(x => x.itemId == 6 && !x.parentId);
+        var top = player.inventory.items.find(x => x.itemId == 7 && !x.parentId);
+        var pants = player.inventory.items.find(x => x.itemId == 8 && !x.parentId);
+        var shoes = player.inventory.items.find(x => x.itemId == 9 && !x.parentId);
+
+        if (hat) clime.head = JSON.parse(this.getParam(hat, 'clime').value) || this.playerClime.head;
+        if (top) clime.body = JSON.parse(this.getParam(top, 'clime').value) || this.playerClime.body;
+        if (pants) clime.legs = JSON.parse(this.getParam(pants, 'clime').value) || this.playerClime.legs;
+        if (shoes) clime.feets = JSON.parse(this.getParam(shoes, 'clime').value) || this.playerClime.feets;
+
+        var damage = 0;
+
+        if (temp < clime.head[0]) {
+            damage += this.climeOpacity.head * (clime.head[0] - temp) * this.climeK;
+            out(`У вас мерзнет голова`);
+        } else if (temp > clime.head[1]) {
+            damage += this.climeOpacity.head * (temp - clime.head[1]) * this.climeK;
+            out(`У вас вспотела голова`);
+        }
+
+        if (temp < clime.body[0]) {
+            damage += this.climeOpacity.body * (clime.body[0] - temp) * this.climeK;
+            out(`У вас мерзнет тело`);
+        } else if (temp > clime.body[1]) {
+            damage += this.climeOpacity.body * (temp - clime.body[1]) * this.climeK;
+            out(`У вас вспотело тело`);
+        }
+
+        if (temp < clime.legs[0]) {
+            damage += this.climeOpacity.legs * (clime.legs[0] - temp) * this.climeK;
+            out(`У вас мерзнут ноги`);
+        } else if (temp > clime.legs[1]) {
+            damage += this.climeOpacity.legs * (temp - clime.legs[1]) * this.climeK;
+            out(`У вас вспотели ноги`);
+        }
+
+        if (temp < clime.feets[0]) {
+            damage += this.climeOpacity.feets * (clime.feets[0] - temp) * this.climeK;
+            out(`У вас мерзнут ступни`);
+        } else if (temp > clime.feets[1]) {
+            damage += this.climeOpacity.feets * (temp - clime.feets[1]) * this.climeK;
+            out(`У вас вспотели ступни`);
+        }
+
+        player.health -= damage;
     },
 };
