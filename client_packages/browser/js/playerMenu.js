@@ -124,17 +124,16 @@ let settingsMenuData = {
         },
     ],
     bottom: {
-        head: "Сбросить пароль",
-        img: playerMenuSvgPaths.refresh,
+        head: "Выход",
+        img: playerMenuSvgPaths.exit,
         handler() {
             playerMenu.showConfirmWindow(
                 "Подтверждение действия",
                 `Вы действительно хотите <br />
-                сбросить пароль?
+                отключиться от сервера?
                 `,
                 () => {
-                    // TODO: Сброс пароля
-                    console.log("Сбросили пароль");
+                    mp.trigger(`callRemote`, `playerMenu.kick`);
                 },
             );
         }
@@ -402,6 +401,7 @@ var playerMenu = new Vue({
     data: {
         show: false,
         enable: false,
+        inputFocus: false,
         lastShowTime: 0,
         menuBar: menuBar,
         socialData: socialData,
@@ -669,11 +669,20 @@ var playerMenu = new Vue({
     },
     watch: {
         show(val) {
-            setCursor(val);
             mp.trigger("blur", val, 300);
             hud.show = !val;
-            if (val) busy.add("playerMenu", true);
-            else busy.remove("playerMenu", true);
+            if (val) {
+                setCursor(true);
+                busy.add("playerMenu", true);
+                mp.trigger(`radar.display`, false);
+                mp.trigger(`chat.opacity.set`, 0)
+            }
+            else {
+                busy.remove("playerMenu", true);
+                if (!busy.includes()) setCursor(false);
+                mp.trigger(`radar.display`, true);
+                mp.trigger(`chat.opacity.set`, 1)
+            }
 
             this.lastShowTime = Date.now();
             if (!val && this.dateTimer) {
@@ -710,9 +719,10 @@ var playerMenu = new Vue({
     },
     mounted() {
         window.addEventListener('keyup', (e) => {
-            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "inventory"])) return;
+            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "inventory", "inputWindow"])) return;
             if (Date.now() - this.lastShowTime < 500) return;
             if (!this.enable) return;
+            if (this.inputFocus) return;
             if (e.keyCode == 77) this.show = !this.show;
             if (e.keyCode == 27 && this.show) this.show = false;
         });
@@ -780,6 +790,9 @@ Vue.component('player-menu-report', {
                 this.showHint = false;
             }, 5000)
         },
+        setFocus(enable) {
+            playerMenu.inputFocus = enable;
+        }
     }
 });
 
@@ -813,6 +826,9 @@ Vue.component('player-menu-help', {
 
             this.message = "";
         },
+        setFocus(enable) {
+            playerMenu.inputFocus = enable;
+        }
     },
 });
 
@@ -907,6 +923,9 @@ Vue.component('player-menu-donate-convert', {
             this.acceptConvert(this.price);
             this.price = '';
         },
+        setFocus(enable) {
+            playerMenu.inputFocus = enable;
+        }
     }
 });
 
@@ -944,6 +963,9 @@ Vue.component('player-menu-donate-changename', {
             this.acceptChange(this.firstname, this.lastname);
             this.firstname = '';
             this.lastname = '';
+        },
+        setFocus(enable) {
+            playerMenu.inputFocus = enable;
         }
     }
 });
@@ -1170,6 +1192,9 @@ Vue.component('player-menu-settings-protection', {
             if (!regex.test(event.key))
                 event.preventDefault();
         },
+        setFocus(enable) {
+            playerMenu.inputFocus = enable;
+        }
     },
     watch: {
         isConfirmed(val) {

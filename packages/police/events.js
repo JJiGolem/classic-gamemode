@@ -472,8 +472,15 @@ module.exports = {
 
         police.setWanted(rec, rec.character.wanted + 1);
 
-        notifs.success(player, `${rec.name} имеет ${rec.character.wanted} ур.`, `Розыск`);
+        // notifs.success(player, `${rec.name} имеет ${rec.character.wanted} ур.`, `Розыск`);
         notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур.`, `Розыск`);
+
+        mp.players.forEach(cop => {
+            if (!cop.character) return;
+            if (!factions.isPoliceFaction(cop.character.factionId) && !factions.isFibFaction(cop.character.factionId)) return;
+
+            notifs.warning(cop, `${player.name} выдал ${rec.character.wanted} ур. ${rec.name}`, `Розыск`);
+        });
     },
     "police.wanted.lower": (player) => {
         if (!player.character.wanted) return;
@@ -637,6 +644,7 @@ module.exports = {
     },
     "playerDeath": (player, reason, killer) => {
         if (player.cuffs) police.setCuffs(player, false);
+        if (!killer) return;
 
         // Если бандит убил бандита в гетто, то розыск не выдаем
         if (factions.isBandFaction(killer.character.factionId) && factions.isBandFaction(player.character.factionId) &&

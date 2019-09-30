@@ -189,7 +189,7 @@
         </div>
     </div>
 
-    <div v-cloak="v-cloak" id="createCharacter" @click="onClickCreateCharacter" v-if="show">
+    <div v-cloak="v-cloak" id="createCharacter" onclick="createCharacter.onClickCreateCharacter()" v-if="show">
         <div>
             <div class="plus">+</div>
             <div class="text">Создать<br />персонажа</div>
@@ -819,6 +819,7 @@
                     :placeholder="menuItems[menuItemInFocus].hint"
                     v-model="menuItems[menuItemInFocus].inputValue"
                     @keypress="menuItems[menuItemInFocus].inputCheck($event); enterHandler($event)"
+                    @focus="setFocus(true)" @blur="setFocus(false)"
                 />
             </div>
             <div class="search" @click="search()">Поиск</diV>
@@ -975,6 +976,7 @@
                     placeholder="Введите ID..."
                     v-model="inputValue"
                     @keypress="inputCheck($event); enterHandler($event)"
+                    @focus="setFocus(true)" @blur="setFocus(false)"
                 />
             </div>
             <div class="search" @click="search()">Установить личность</diV>
@@ -1026,9 +1028,9 @@
         <div class="over verification fine" @keypress="enterHandler($event)">
             <div class="header"> Выдача штрафа {{ profileData[currentMenuFocus].name}}</div>
             <div class="title">Введите причину</div>
-            <div class="input"><input placeholder="Введите причину выдачи штрафа..." v-model="causeValue"/></div>
+            <div class="input"><input placeholder="Введите причину выдачи штрафа..." v-model="causeValue" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
             <div class="title">Введите сумму штрафа</div>
-            <div class="input"><input placeholder="Введите сумму..." v-model="amountValue" @keypress="inputCheck($event)"/></div>
+            <div class="input"><input placeholder="Введите сумму..." v-model="amountValue" @keypress="inputCheck($event)" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
             <div class="btns">
                 <div class="btn" @click="give()">Выдать</div>
                 <div class="btn" @click="cancel()">Отмена</div>
@@ -1040,7 +1042,7 @@
         <div class="over verification fine" @keypress="enterHandler($event)">
             <div class="header"> Выдача розыска {{ profileData[currentMenuFocus].name}}</div>
             <div class="title">Введите причину</div>
-            <div class="input"><input placeholder="Введите причину выдачи розыска..." v-model="causeValue"/></div>
+            <div class="input"><input placeholder="Введите причину выдачи розыска..." v-model="causeValue" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
             <div class="title">Выберете степень опасности</div>
             <div class="stars" @click="setDanger()"><svg
                                 :class="{ fill: overDanger >= n }"
@@ -1185,6 +1187,7 @@
     <!-- ------------------------ МЕНЮ ИГРОКА ------------------------ -->
     <link rel="stylesheet" type="text/css" href="css/playerMenu.css" />
     <div id="player-menu" v-if="show" v-cloak>
+        <img class="logo" src="img/logo.png" />
         <div :class="['content', { blur: blurMod }]">
             <div class="head">
                 <div class="top-bar">
@@ -1224,7 +1227,7 @@
             <div class="confirmation">
                 <div class="head">{{ confirmation.head }}</div>
                 <div class="description" v-html="confirmation.description"></div>
-                <div v-if="codeMod"><input placeholder="Введите промокод..." v-model="code" /></div>
+                <div v-if="codeMod"><input placeholder="Введите промокод..." v-model="code" @focus="inputFocus = true" @blur="inputFocus = false"/></div>
                 <div class="actions">
                     <div class="btn left" @click="confirmation.acceptHandler(); confirmation = null">{{ confirmation.leftWord }}</div>
                     <div class="btn" @click="confirmation = null; codeMod = false">{{ confirmation.rightWord }}</div>
@@ -1299,7 +1302,7 @@
     <script type="text/x-template" id="player-menu-report">
         <div class="report">
             <div class="head">Задайте вопрос или оставьте жалобу на игрока указав его ID/Имя и причину жалобы</div>
-            <input placeholder="Введите вопрос или жалобу..." v-model="message" :maxlength="maxlength" @keypress.enter="send()"/>
+            <input placeholder="Введите вопрос или жалобу..." v-model="message" :maxlength="maxlength" @keypress.enter="send()" @focus="setFocus(true)" @blur="setFocus(false)" />
             <div>Осталось символов: {{ chars }}</div>
             <div class="send" @click="send()">Отправить</div>
             <div v-if="showHint" class="hint">Ваше сообщение было отправлено администрации сервера!<br />Приятной игры!</div>
@@ -1309,7 +1312,7 @@
     <script type="text/x-template" id="player-menu-help">
         <div class="report help">
             <div class="head">Введите интересующий вас вопрос:</div>
-            <input placeholder="Введите вопрос..." v-model="message" :maxlength="maxlength"/>
+            <input placeholder="Введите вопрос..." v-model="message" :maxlength="maxlength" @focus="setFocus(true)" @blur="setFocus(false)"/>
             <div class="head sec">Ответы на вопросы</div>
             <div class="messages body">
                 <div :class="['message', {focus: currentAnswer == index}]"
@@ -1370,7 +1373,7 @@
                     </div>
                     <div class="item bottom" v-if="bottom" @click="bottom.handler">
                         <div>{{bottom.head}}</div>
-                        <div><svg viewBox="0 0 20 20" ><path v-for="path in bottom.img" :d="path"/></svg></div>
+                        <div><svg viewBox="0 0 36 36" ><path v-for="path in bottom.img" :d="path"/></svg></div>
                     </div>
                 </div>
             </div>
@@ -1386,7 +1389,7 @@
             <div class="head">Конвертация валюты</div>
             <div class="hint">Конвертация валюты - это способ получить виртуальную валюту,<br />обменивая <div class="coin-logo">cc</div> на неё</div>
             <div class="hint sec">Введите число CC, которые вы бы хотели обменять</div>
-            <input placeholder="Введите число..." v-model="price" @keypress="inputCheck($event)" @keypress.enter="convert()"/>
+            <input placeholder="Введите число..." v-model="price" @keypress="inputCheck($event)" @keypress.enter="convert()" @focus="setFocus(true)" @blur="setFocus(false)" />
             <div class="equally">=</div>
             <div class="coins">{{ virtualCoins | playerMenuMoneySplit(true) }}</div>
             <div :class="['btn', {disable: !price }]" @click="convert()">Конвертировать</div>
@@ -1397,8 +1400,8 @@
         <div class="sidebar-win changename">
             <div class="head">Смена никнейма</div>
             <div class="hint">Смените никнейм для вашей новой личности</div>
-            <div class="name"><input placeholder="Введите новое имя" v-model="firstname" @keypress="inputCheck($event)" @keypress.enter="changename()" /></div>
-            <div><input placeholder="Введите новую фамилию" v-model="lastname" @keypress="inputCheck($event)" @keypress.enter="changename()" /></div>
+            <div class="name"><input placeholder="Введите новое имя" v-model="firstname" @keypress="inputCheck($event)" @keypress.enter="changename()" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
+            <div><input placeholder="Введите новую фамилию" v-model="lastname" @keypress="inputCheck($event)" @keypress.enter="changename()" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
             <div class="price">Стоимость услуги: <span>{{ price }} CC</span></div>
             <div :class="['btn', {disable: !firstname || !lastname || price > coins }]" @click="changename()">Сменить никнейм</div>
         </div>
@@ -1455,10 +1458,10 @@
                         <div :class="['info', { conf: isConfirmed }]">{{ (isConfirmed) ? 'Подтверждена' : 'Не подтверждена' }}</div>
                     </div>
                     <div v-if="changeMailMod">
-                        <input placeholder="Введите новый E-Mail" @keypress.enter="saveMail()" v-model="newEmail"/>
+                        <input placeholder="Введите новый E-Mail" @keypress.enter="saveMail()" v-model="newEmail" @focus="setFocus(true)" @blur="setFocus(false)" />
                     </div>
                     <div v-if="codeMod">
-                        <input placeholder="Введите код" v-model="code" @keypress="inputCheck($event)" @keypress.enter="confCode()"/>
+                        <input placeholder="Введите код" v-model="code" @keypress="inputCheck($event)" @keypress.enter="confCode()" @focus="setFocus(true)" @blur="setFocus(false)" >
                     </div>
                 </div>
                 <div class="actions">
@@ -1476,9 +1479,9 @@
                         {{ passMessage }}
                     </div>
                     <div v-if="changePassMod">
-                        <input type="password" placeholder="Введите старый пароль" v-model="oldPass" @keypress.enter="savePass()"/>
-                        <input type="password" placeholder="Введите новый пароль" v-model="newPass" @keypress.enter="savePass()"/>
-                        <input type="password" placeholder="Повторно новый пароль" v-model="newPass2" @keypress.enter="savePass()"/>
+                        <input type="password" placeholder="Введите старый пароль" v-model="oldPass" @keypress.enter="savePass()" @focus="setFocus(true)" @blur="setFocus(false)" />
+                        <input type="password" placeholder="Введите новый пароль" v-model="newPass" @keypress.enter="savePass()" @focus="setFocus(true)" @blur="setFocus(false)" />
+                        <input type="password" placeholder="Повторно новый пароль" v-model="newPass2" @keypress.enter="savePass()" @focus="setFocus(true)" @blur="setFocus(false)" />
                     </div>
                 </div>
                 <div class="actions">
@@ -1536,14 +1539,14 @@
     </div>
 
     <div v-cloak id="changelist" v-if="show">
-        <div class="close" @click="show = false">x</div>
+        <div class="close" onclick="changelist.show = false">x</div>
         <div class="header">
-            <i class="arrow fas fa-long-arrow-alt-left" @click="i++" v-if="i < list.length - 1"></i>
+            <i class="arrow fas fa-long-arrow-alt-left" onclick="changelist.i++" v-if="i < list.length - 1"></i>
             <div class="title" :class="{first: i == list.length - 1}">
                 <div class="name">Обновления #{{ i + 1 }}</div>
                 <div class="date" :class="{right: !i, center: i && i < list.length - 1}">{{ list[i].date }}</div>
             </div>
-            <i class="arrow fas fa-long-arrow-alt-right" @click="i--" v-if="i > 0"></i>
+            <i class="arrow fas fa-long-arrow-alt-right" onclick="changelist.i--" v-if="i > 0"></i>
         </div>
         <div class="content">
             <div class="build" title="Сборка"><i class="fas fa-code-branch"></i> {{ list[i].build }}</div>
@@ -1556,7 +1559,7 @@
             <div v-for="text in list[i].removed" :title="text"><span class="removed"><i class="fas fa-trash"></i></span>{{ prettyText(text) }}</div>
         </div>
         <div class="footer">
-            <span class="likes" :class="{liked: list[i].liked}" @click="like">{{ list[i].likes }} <i class="fas fa-heart"></i></span>
+            <span class="likes" :class="{liked: list[i].liked}" onclick="changelist.like()">{{ list[i].likes }} <i class="fas fa-heart"></i></span>
         </div>
     </div>
 

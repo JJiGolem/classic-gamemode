@@ -255,9 +255,21 @@ mp.events.add("blur", (enable, time = 1000) => {
     else mp.game.graphics.transitionFromBlurred(time);
 });
 
+// Вкл/выкл радар
+mp.events.add("radar.display", (enable) => {
+    mp.game.ui.displayRadar(enable);
+});
+
 // Вкл визуальный эффект
 mp.events.add('effect', (effect, duration) => {
     mp.game.graphics.startScreenEffect(effect, duration, false);
+});
+
+// Проиграть звук
+mp.events.add('sound', (data) => {
+    if (typeof data == 'string') data = JSON.parse(data);
+
+    mp.game.audio.playSoundFrontend(-1, data.name, data.setName, true);
 });
 
 // Установить пусть GPS на карте
@@ -269,6 +281,7 @@ mp.events.add("waypoint.set", (x, y) => {
 mp.events.add("godmode.set", (enable) => {
     mp.players.local.setInvincible(enable);
 });
+
 
 /// Отключение движения игрока
 mp.events.add('render', () => {

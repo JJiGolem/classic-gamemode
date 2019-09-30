@@ -1352,9 +1352,17 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         switch (e.itemName) {
                             case "Создать":
+                                let params = new Array();
+                                this.items.forEach(item => {
+                                    if (item.paramKey == null) return;
+                                    params.push({key: item.paramKey, value: item.values[item.i]});
+                                });
+                                params.push();
+                                mp.trigger("biz.finance.save", JSON.stringify(params));
                                 selectMenu.show = false;
                                 break;
                             case "Закрыть":
+                                mp.trigger("biz.finance.close");
                                 selectMenu.show = false;
                                 break;
                         }
@@ -2879,7 +2887,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName("bandCashCheck");
                         }
                         if (e.itemName == "Вернуться") selectMenu.showByName("bandStorage");
-                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("bandStorage");
+                    } else if (eventName == 'onBackspacePressed' && this.i != 1) selectMenu.showByName("bandStorage");
                 }
             },
             "bandCashCheck": {
@@ -3067,7 +3075,7 @@ var selectMenu = new Vue({
                 }
             },
             "mafiaPower": {
-                name: "bandPower",
+                name: "mafiaPower",
                 header: "Влияние в бизнесах",
                 items: [{
                         text: "Мафия 1",
@@ -3153,8 +3161,8 @@ var selectMenu = new Vue({
                         } else if (e.itemName == "Выписать чек") {
                             selectMenu.showByName("mafiaCashCheck");
                         }
-                        if (e.itemName == "Вернуться") selectMenu.showByName("bandStorage");
-                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("bandStorage");
+                        if (e.itemName == "Вернуться") selectMenu.showByName("mafiaStorage");
+                    } else if (eventName == 'onBackspacePressed' && this.i != 1) selectMenu.showByName("mafiaStorage");
                 }
             },
             "mafiaCashCheck": {
@@ -5464,7 +5472,7 @@ var selectMenu = new Vue({
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.show = false;
                     }
-                
+
                 }
             },
             "supermarketMobile": {
@@ -5552,7 +5560,7 @@ var selectMenu = new Vue({
                     if ((eventName == 'onBackspacePressed' && this.i != 0) || eventName == 'onEscapePressed') {
                         selectMenu.showByName('supermarketMobile');
                     }
-                
+
                 }
             },
             "supermarketFood": {
@@ -5638,7 +5646,7 @@ var selectMenu = new Vue({
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('supermarketMain');
                     }
-                
+
                 }
             },
             "ammunationMain": {
@@ -5681,7 +5689,7 @@ var selectMenu = new Vue({
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.show = false;
                     }
-                
+
                 }
             },
             "ammunationFirearms": {
@@ -5756,7 +5764,7 @@ var selectMenu = new Vue({
         loader: false,
     },
     methods: {
-        onKeyUp(e) {
+        onKeyDown(e) {
             if (!this.show || this.loader) return;
             if (e.keyCode == 38) { // UP
                 if (this.menu.i == 0) return;
@@ -5815,21 +5823,26 @@ var selectMenu = new Vue({
         // Выбран пункт меню
         onItemSelected() {
             this.menu.handler("onItemSelected");
+            mp.trigger(`selectMenu.selectSound.play`);
         },
         // Изменено значение пункта меню
         onItemValueChanged() {
             this.menu.handler("onItemValueChanged");
+            mp.trigger(`selectMenu.focusSound.play`);
         },
         // Изменен фокус пункта меню
         onItemFocusChanged() {
             this.menu.handler("onItemFocusChanged");
+            mp.trigger(`selectMenu.focusSound.play`);
         },
         // Нажата клавиша 'Назад'
         onBackspacePressed() {
             this.menu.handler("onBackspacePressed");
+            mp.trigger(`selectMenu.backSound.play`);
         },
         onEscapePressed() {
             this.menu.handler("onEscapePressed");
+            mp.trigger(`selectMenu.backSound.play`);
         },
         showByName(menuName) {
             var menu = this.menus[menuName];
@@ -5923,9 +5936,10 @@ var selectMenu = new Vue({
             var offset = 3.5; // половина от ширины шарика ползунка
             if (this.menu.items[this.menu.i].i == 0) return 0 - offset + '%';
             var values = this.menu.items[this.menu.i].values;
+            var minValue = values[0];
             var maxValue = values[values.length - 1];
             var curValue = values[this.menu.items[this.menu.i].i];
-            return curValue / maxValue * 100 - offset + '%';
+            return (curValue - minValue) / (maxValue - minValue) * 100 - offset + '%';
         },
         headerStyles() {
             return {
@@ -5946,9 +5960,10 @@ var selectMenu = new Vue({
         'menu.i': function(val) {
             setTimeout(() => {
                 if (this.valuesType(val) == 3) { // editable
+                    setCursor(true)
                     var itemText = this.menu.items[val].text;
                     if (this.$refs[itemText]) this.$refs[itemText].focus();
-                }
+                } else setCursor(false);
             }, 100);
         },
         menu(val) {
@@ -5970,7 +5985,7 @@ var selectMenu = new Vue({
         window.addEventListener('keydown', function(e) {
             if (!self.menu) return;
             if (busy.includes(["inventory", "chat", "terminal", "phone"])) return;
-            self.onKeyUp(e);
+            self.onKeyDown(e);
         });
     }
 });

@@ -4,7 +4,6 @@ let fishing = require('./index.js');
 let inventory = call('inventory');
 let notifs = call('notifications');
 let utils = require('../utils');
-let money = call('money');
 
 let weight;
 let timeout;
@@ -13,24 +12,11 @@ module.exports = {
     "init": () => {
         fishing.init();
     },
-    "render": () => {
-        console.log(mp.game.water.getWaterHeight(player.position.x, player.position.y, player.position.z, 0.5))
-    },
-    "characterInit.done": (player) => {
-        // if (inventory.getItemByItemId(player, fishing.getRodId())) {
-        //     player.call('fishing.rod.set');
-        // }
-    },
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;
 
         if (shape.isFishingPlaceMenu) {
             player.call('fishing.menu.show');
-            player.currentColshape = shape;
-        }
-
-        if (shape.isFishingPlace) {
-            player.call('fishing.game.menu');
             player.currentColshape = shape;
         }
     },
@@ -39,11 +25,6 @@ module.exports = {
 
         if (shape.isFishingPlaceMenu) {
             player.call('fishing.menu.close');
-            player.currentColshape = null;
-        }
-
-        if (shape.isFishingPlace) {
-            player.call('fishing.game.exit');
             player.currentColshape = null;
         }
     },
@@ -113,9 +94,5 @@ module.exports = {
         if (!player.character) return;
 
         fishing.sellFish(player);
-    },
-    "fishing.test": (player, x, y, z, heading) => {
-        console.log(`${parseFloat(x).toFixed(1)}, ${parseFloat(y).toFixed(1)}, ${parseFloat(z).toFixed(1)}, h: ${parseFloat(heading).toFixed(1)}, cos: ${parseFloat(Math.cos(heading * Math.PI / 180.0)).toFixed(4)}, sin: ${parseFloat(Math.sin(heading * Math.PI / 180.0)).toFixed(4)}`)
-        player.position = new mp.Vector3(x, y, z);
     }
 }

@@ -107,6 +107,10 @@ mp.events.add('chat.close', () => {
     mp.busy.remove('chat');
 });
 
+mp.events.add('chat.opacity.set', (enable) => {
+    mp.callCEFR('setOpacityChat', [enable]);
+});
+
 mp.events.add('chat.tags.add', (tagIDs) => {
     tagIDs.forEach((tagID) => {
         if (!isTagExisting(TAGS_LIST[tagID])) {

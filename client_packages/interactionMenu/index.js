@@ -115,5 +115,12 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
         } else if (itemName == 'Мешок на голову') {
 
         }
+    } else if (menuName == "news") {
+        if (!entity) return;
+        if (entity.type != 'player') return;
+
+        if (itemName == 'Эфир') {
+            mp.events.callRemote(`news.stream.member`, entity.remoteId);
+        }
     }
 });

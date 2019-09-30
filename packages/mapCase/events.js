@@ -149,6 +149,7 @@ module.exports = {
         });
         var rec = mp.players.getBySqlId(data.recId);
         if (rec) rec.character.Fines.push(fine);
+        else rec = data.recId;
 
         notifs.info(rec, `${player.name} выписал вам штраф на сумму $${fine.price} (${fine.cause})`, `Штраф`);
         var text = `Штраф на сумму <span>${fine.price}$</span><br/>выдан <span>${data.recName}</span><br/> по причине <span>${data.cause}</span>`;
@@ -159,9 +160,16 @@ module.exports = {
         data = JSON.parse(data);
 
         var rec = mp.players.getBySqlId(data.recId);
+        notifs.info(rec || data.recId, `${player.name} выдал вам ${data.wanted} ур. по причине: ${data.cause}`, `Розыск`);
         if (rec) {
             police.setWanted(rec, data.wanted, data.cause);
-            notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур. по причине: ${data.cause}`, `Розыск`);
+
+            mp.players.forEach(cop => {
+                if (!cop.character) return;
+                if (!factions.isPoliceFaction(cop.character.factionId)) return;
+
+                notifs.warning(cop, `${player.name} выдал ${rec.character.wanted} ур. ${rec.name} по причине ${data.cause}`, `Розыск`);
+            });
         } else db.Models.Character.update({
             wanted: data.wanted,
             wantedCause: data.cause
@@ -382,6 +390,7 @@ module.exports = {
         });
         var rec = mp.players.getBySqlId(data.recId);
         if (rec) rec.character.Fines.push(fine);
+        else rec = data.recId;
 
         notifs.info(rec, `${player.name} выписал вам штраф на сумму $${fine.price} (${fine.cause})`, `Штраф`);
         var text = `Штраф на сумму <span>${fine.price}$</span><br/>выдан <span>${data.recName}</span><br/> по причине <span>${data.cause}</span>`;
@@ -392,9 +401,16 @@ module.exports = {
         data = JSON.parse(data);
 
         var rec = mp.players.getBySqlId(data.recId);
+        notifs.info(rec || data.recId, `${player.name} выдал вам ${data.wanted} ур. по причине: ${data.cause}`, `Розыск`);
         if (rec) {
             police.setWanted(rec, data.wanted, data.cause);
-            notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур. по причине: ${data.cause}`, `Розыск`);
+
+            mp.players.forEach(cop => {
+                if (!cop.character) return;
+                if (!factions.isFibFaction(cop.character.factionId)) return;
+
+                notifs.warning(cop, `${player.name} выдал ${rec.character.wanted} ур. ${rec.name} по причине ${data.cause}`, `Розыск`);
+            });
         } else db.Models.Character.update({
             wanted: data.wanted,
             wantedCause: data.cause

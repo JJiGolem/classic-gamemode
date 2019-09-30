@@ -1,4 +1,5 @@
 "use strict";
+let chat = call('chat');
 let factions = call('factions');
 let inventory = call('inventory');
 let news = call('news');
@@ -168,5 +169,32 @@ module.exports = {
 
         notifs.success(player, `Форма выдана`, header);
         factions.setAmmo(faction, faction.ammo - news.clothesAmmo);
+    },
+    "news.stream": (player) => {
+        var header = `Weazel News`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!factions.isNewsFaction(player.character.factionId)) return out(`Вы не редактор`);
+        var rank = factions.getRank(player.character.factionId, news.streamRank);
+        if (player.character.factionRank < rank.id) return out(`Доступно с ранга ${rank.name}`);
+
+        news.stream(player);
+    },
+    "news.stream.member": (player, recId) => {
+        var rec = mp.players.at(recId);
+        if (!rec || !rec.character) return notifs.error(player, `Игрок не найден`);
+        if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`);
+        news.streamMember(player, rec);
+    },
+    "chat.action.say": (player, text) => {
+        news.streamHandle(player, text);
+    },
+    "playerQuit": (player) => {
+        if (!player.character) return;
+        if (!factions.isNewsFaction(player.character.factionId)) return;
+        if (news.liveStream.ownerId != player.id) return;
+
+        news.stream(player);
     },
 }
