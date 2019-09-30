@@ -119,7 +119,7 @@ module.exports = {
         // console.log(`getProfile: ${id}`)
         if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
         var character = await db.Models.Character.findByPk(id, {
-            attributes: ['id', 'name', 'gender', 'wanted', 'wantedCause'],
+            attributes: ['id', 'name', 'gender', 'wanted', 'wantedCause', 'law', 'crimes'],
             include: [db.Models.Phone, db.Models.House, db.Models.Faction, db.Models.FactionRank],
         });
         var vehicles = await db.Models.Vehicle.findAll({
