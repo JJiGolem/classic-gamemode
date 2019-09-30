@@ -30,6 +30,7 @@
     display: flex;
     justify-content: space-around;
     /* margin: 7vh 0; */
+    margin-bottom: 3vh;
 }
 
 #driverLicense .content h3 {
