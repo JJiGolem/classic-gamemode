@@ -125,7 +125,7 @@ let settingsMenuData = {
     ],
     bottom: {
         head: "Выход",
-        img: playerMenuSvgPaths.refresh,
+        img: playerMenuSvgPaths.exit,
         handler() {
             playerMenu.showConfirmWindow(
                 "Подтверждение действия",
