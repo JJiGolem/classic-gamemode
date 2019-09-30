@@ -426,5 +426,9 @@ module.exports = {
         player.call('vehicles.heading.set', [streetPlace.h]);
 
         player.vehicle.dimension = 0;
+    },
+    "vehicles.radio.set": (player, radioIndex) => {
+        if (!player.vehicle) return;
+        player.vehicle.setVariable('radioIndex', radioIndex);
     }
 }
