@@ -16,64 +16,99 @@ let peds = [
 ];
 
 let localPlayer = mp.players.local;
+let sqlId;
 
 let isBinding = false;
 let isEnter = false;
 let isStarted = false;
 let isFetch = false;
-let isCharacter = false;
 let isHaveRod = false;
 let isShowPrompt = false;
 
-let heading;
+let interval;
+let isIntervalCreated = false;
+
+const checkConditions = () => {
+    if (isHaveRod && !isEnter && !localPlayer.isInWater() 
+    && !localPlayer.isInAnyVehicle() 
+    && !localPlayer.isInAnyBoat()
+    && !localPlayer.isInAir()
+    && !localPlayer.isInAnyPlane()) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 mp.events.add('characterInit.done', () => {
     peds.forEach((current) => {
         mp.events.call('NPC.create', current);
         mp.events.call('fishing.game.exit');
     });
-
-    // mp.keys.bind(0x79, true, function() {
-    //     x = localPlayer.position.x + 2*Math.cos(heading * Math.PI / 180.0);
-    //     y = localPlayer.position.y + 2*Math.sin(heading * Math.PI / 180.0);
-    //     z = localPlayer.position.z;
-    //     mp.events.callRemote('fishing.test', x, y, z, heading);
-    // });
-
-    isCharacter = true;
 });
 
 mp.events.add('render', () => {
-    if (isCharacter) {
-        heading = localPlayer.getHeading() + 90;
-        let p = {
-            x: localPlayer.position.x + 20*Math.cos(heading * Math.PI / 180.0),
-            y: localPlayer.position.y + 20*Math.sin(heading * Math.PI / 180.0),
-            z: localPlayer.position.z
-        }
-  
-        if (isHaveRod && !isEnter && !localPlayer.isInWater() 
-            && !localPlayer.isInAnyVehicle() 
-            && !localPlayer.isInAnyBoat()
-            && !localPlayer.isInAir()
-            && !localPlayer.isInAnyPlane()) {
-            if (Math.abs(mp.game.water.getWaterHeight(p.x, p.y, p.z, 0)) > 0) {
-                isShowPrompt = true;
-                mp.events.call('fishing.game.menu');
-            } else {
-                if (isShowPrompt) {
-                    bindButtons(false);
-                    mp.events.call('prompt.hide');
-                    isShowPrompt = false;
+    if (checkConditions()) {
+        if (!isIntervalCreated) {
+            isIntervalCreated = true;
+            interval = setInterval(() => {
+                let heading = localPlayer.getHeading() + 90;
+                let point = {
+                    x: localPlayer.position.x + 20*Math.cos(heading * Math.PI / 180.0),
+                    y: localPlayer.position.y + 20*Math.sin(heading * Math.PI / 180.0),
+                    z: localPlayer.position.z
                 }
-            }
+                if (Math.abs(mp.game.water.getWaterHeight(point.x, point.y, point.z, 0)) > 0) {
+                    isShowPrompt = true;
+                    mp.events.call('fishing.game.menu');
+                } else {
+                    if (isShowPrompt) {
+                        bindButtons(false);
+                        mp.events.call('prompt.hide');
+                        isShowPrompt = false;
+                    }
+                }
+            }, 1000);
+        }
+    } else {
+        clearInterval(interval);
+        isIntervalCreated = false;
+    }
+});
+
+mp.events.add('inventory.initItems', (items) => {
+    for (let item in items) {
+        let pockets = items[item].pockets;
+        if (pockets && Object.keys(pockets).length !== 0) {
+            pockets.forEach(pocket => {
+                for (let pocketItem in pocket.items) {
+                    if (pocket.items[pocketItem].itemId == 5) {
+                        isHaveRod = true;
+                        sqlId = pocket.items[pocketItem].sqlId;
+                    }
+                }
+            });
         }
     }
 });
 
-mp.events.add('fishing.rod.set', (state) => {
-    isHaveRod = state;
-})
+mp.events.add('inventory.deleteItem', (item) => {
+    if (item == sqlId) {
+        isHaveRod = false;
+        clearInterval(interval);
+        isIntervalCreated = false;
+        bindButtons(false);
+        mp.events.call('prompt.hide');
+        isShowPrompt = false;
+    }
+});
+
+mp.events.add('inventory.addItem', (item) => {
+    if (item.itemId == 5) {
+        sqlId = item.sqlId;
+        isHaveRod = true;
+    }
+});
 
 mp.events.add('fishing.menu.show', () => {
    if (mp.busy.includes()) return;
@@ -98,7 +133,6 @@ mp.events.add('fishing.rod.buy.ans', (ans) => {
 
     if (ans == 1) {
         mp.events.call('fishing.menu.close');
-        isHaveRod = true;
     }
 });
 
