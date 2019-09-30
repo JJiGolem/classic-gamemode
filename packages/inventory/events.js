@@ -247,8 +247,17 @@ module.exports = {
         if (!count) inventory.deleteItem(player, smoke);
         else inventory.updateParam(player, smoke, 'count', count);
 
-        player.call(`effect`, ['DrugsDrivingOut', bands.drugsEffectTime]);
+        player.call(`effect`, ['DrugsDrivingOut', 10000]);
         notifs.success(player, `Вы употребили сигарету`, header);
+
+        mp.players.forEachInRange(player.position, 20, rec => {
+            rec.call(`animations.play`, [player.id, {
+                dict: "amb@code_human_wander_smoking@male@idle_a",
+                name: "idle_a",
+                speed: 1,
+                flag: 49
+            }, 8000]);
+        });
     },
     // Запрос предметов инвентаря в багажнике авто
     "vehicle.boot.items.request": (player, vehId) => {

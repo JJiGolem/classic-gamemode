@@ -10,13 +10,21 @@
 mp.animations = {
     animatorActive: false,
     animId: 0,
+    animationTimer: null,
 
-    playAnimation(player, a) {
+    playAnimation(player, a, time = null) {
         player.clearTasksImmediately();
         if (!a) return;
         mp.utils.requestAnimDict(a.dict, () => {
             player.taskPlayAnim(a.dict, a.name, a.speed, 0, -1, a.flag, 0, false, false, false);
         });
+        if (!time) return;
+        var id = player.remoteId;
+        clearTimeout(this.animationTimer);
+        this.animationTimer = setTimeout(() => {
+            var rec = mp.players.atRemoteId(id);
+            if (rec) rec.clearTasksImmediately();
+        }, time);
     },
     animator() {
         this.animatorActive = !this.animatorActive;
@@ -86,6 +94,11 @@ mp.animations = {
 mp.events.add({
     "animations.animator": () => {
         mp.animations.animator();
+    },
+    "animations.play": (playerId, a, time = null) => {
+        var player = mp.players.atRemoteId(playerId);
+        if (!player) return;
+        mp.animations.playAnimation(player, a, time);
     },
     "render": () => {
         mp.animations.render();
