@@ -5464,7 +5464,7 @@ var selectMenu = new Vue({
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.show = false;
                     }
-                
+
                 }
             },
             "supermarketMobile": {
@@ -5552,7 +5552,7 @@ var selectMenu = new Vue({
                     if ((eventName == 'onBackspacePressed' && this.i != 0) || eventName == 'onEscapePressed') {
                         selectMenu.showByName('supermarketMobile');
                     }
-                
+
                 }
             },
             "supermarketFood": {
@@ -5638,7 +5638,7 @@ var selectMenu = new Vue({
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('supermarketMain');
                     }
-                
+
                 }
             },
             "ammunationMain": {
@@ -5681,7 +5681,7 @@ var selectMenu = new Vue({
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.show = false;
                     }
-                
+
                 }
             },
             "ammunationFirearms": {
@@ -5756,7 +5756,7 @@ var selectMenu = new Vue({
         loader: false,
     },
     methods: {
-        onKeyUp(e) {
+        onKeyDown(e) {
             if (!this.show || this.loader) return;
             if (e.keyCode == 38) { // UP
                 if (this.menu.i == 0) return;
@@ -5815,21 +5815,26 @@ var selectMenu = new Vue({
         // Выбран пункт меню
         onItemSelected() {
             this.menu.handler("onItemSelected");
+            mp.trigger(`selectMenu.selectSound.play`);
         },
         // Изменено значение пункта меню
         onItemValueChanged() {
             this.menu.handler("onItemValueChanged");
+            mp.trigger(`selectMenu.focusSound.play`);
         },
         // Изменен фокус пункта меню
         onItemFocusChanged() {
             this.menu.handler("onItemFocusChanged");
+            mp.trigger(`selectMenu.focusSound.play`);
         },
         // Нажата клавиша 'Назад'
         onBackspacePressed() {
             this.menu.handler("onBackspacePressed");
+            mp.trigger(`selectMenu.backSound.play`);
         },
         onEscapePressed() {
             this.menu.handler("onEscapePressed");
+            mp.trigger(`selectMenu.backSound.play`);
         },
         showByName(menuName) {
             var menu = this.menus[menuName];
@@ -5970,7 +5975,7 @@ var selectMenu = new Vue({
         window.addEventListener('keydown', function(e) {
             if (!self.menu) return;
             if (busy.includes(["inventory", "chat", "terminal", "phone"])) return;
-            self.onKeyUp(e);
+            self.onKeyDown(e);
         });
     }
 });
