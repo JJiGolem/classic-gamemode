@@ -13,18 +13,23 @@ const DEFAULT_TEMPERATURE = 20;
 const DEFAULT_ICON = "clear-day";
 
 let weatherForecast = [];
+let customTemperature;
 
 module.exports = {
 
     getCurrentWeather() {
+        let current = {};
         if (!weather.current) {
-            let current = {};
             current.summary = DEFAULT_SUMMARY;
             current.temperature = DEFAULT_TEMPERATURE;
             current.icon = DEFAULT_ICON;
-            return current;
+        } else {
+            Object.assign(current, weather.current);
         }
-        return weather.current;
+        if (customTemperature != null) {
+            current.temperature = customTemperature;
+        }
+        return current;
     },
 
     init() {
@@ -141,13 +146,28 @@ module.exports = {
                     break;
             }
 
+            let forecast = {};
+            Object.assign(forecast, weather.current);
+            if (customTemperature != null) forecast.temperature = customTemperature; 
             mp.players.forEach((currentPlayer) => {
-                currentPlayer.call('weather.info.update', [weather.current]);
+                currentPlayer.call('weather.info.update', [forecast]);
             });
 
             setTimeout(() => { setWeather() }, (60 - now.getMinutes()) * 60 * 1000);
             console.log(`[WEATHER] Следующее обновление погоды через ${60 - now.getMinutes()} минут`);
         }
 
+    },
+    setCustomTemperature(temp) {
+        customTemperature = temp;
+        mp.players.forEach((currentPlayer) => {
+            currentPlayer.call('weather.info.update', [this.getCurrentWeather()]);
+        });
+    },
+    resetCustomTemperature() {
+        customTemperature = null;
+        mp.players.forEach((currentPlayer) => {
+            currentPlayer.call('weather.info.update', [this.getCurrentWeather()]);
+        });
     }
 }
