@@ -295,9 +295,8 @@ var interactionMenu = new Vue({
             "fib_vehicle": {
                 name: "fib_vehicle",
                 items: [{
-                        text: "Номер",
-                    },
-                ],
+                    text: "Номер",
+                }, ],
                 handler(index) {
                     var item = this.items[index];
                     mp.trigger(`interactionMenu.onClick`, this.name, item.text);
@@ -388,8 +387,7 @@ var interactionMenu = new Vue({
             if (val) {
                 busy.add("interaction", true);
                 setCursor(true);
-            }
-            else {
+            } else {
                 busy.remove("interaction", true);
                 if (!busy.includes()) setCursor(false);
             }
@@ -429,14 +427,25 @@ var interactionMenu = new Vue({
             } else this.deleteItem("player_interaction", "Hospital");
 
             if (val >= 8 && val <= 11) { // bands
+                var item = {
+                    text: "Захват"
+                };
+                interactionMenu.addItems("player_ownmenu", {
+                    text: "Захват"
+                });
 
-            }
-
+            } else interactionMenu.deleteItem("player_ownmenu", "Захват");
             if (val >= 12 && val <= 14) { // mafia
                 this.addItems("player_interaction", {
                     text: "Mafia"
                 });
-            } else this.deleteItem("player_interaction", "Mafia");
+                interactionMenu.addItems('player_ownmenu', {
+                    text: "Захват биз."
+                });
+            } else {
+                this.deleteItem("player_interaction", "Mafia");
+                interactionMenu.deleteItem('player_ownmenu', "Захват биз.");
+            }
         }
     },
 });

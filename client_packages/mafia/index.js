@@ -201,13 +201,6 @@ mp.events.add({
     "mafia.storage.info.set": (data) => {
         mp.mafia.setStorageInfo(data);
     },
-    "factions.faction.set": (factionId) => {
-        var item = {
-            text: "Захват биз."
-        };
-        if (!mp.factions.isMafiaFaction(factionId)) mp.callCEFV(`interactionMenu.deleteItem('player_ownmenu', '${item.text}')`);
-        else mp.callCEFV(`interactionMenu.addItems('player_ownmenu', '${JSON.stringify(item)}')`);
-    },
     "render": () => {
         mp.mafia.mafiaZones.forEach(blip => {
             mp.game.invoke(mp.mafia.natives.SET_BLIP_ROTATION, blip, 0);
