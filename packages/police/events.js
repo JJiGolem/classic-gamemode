@@ -1,6 +1,8 @@
 "use strict";
+var bands = require('../bands');
 var factions = require('../factions');
 var inventory = require('../inventory');
+var mafia = require('../mafia');
 var money = require('../money');
 var notifs = require('../notifications');
 var police = require('../police')
@@ -633,8 +635,22 @@ module.exports = {
         notifs.success(player, ` Лицензия изъята ${rec.name}`, header);
         notifs.info(rec, `${player.name} изъял у вас лицензию`, header);
     },
-    "playerDeath": (player) => {
+    "playerDeath": (player, reason, killer) => {
         if (player.cuffs) police.setCuffs(player, false);
+
+        // Если бандит убил бандита в гетто, то розыск не выдаем
+        if (factions.isBandFaction(killer.character.factionId) && factions.isBandFaction(player.character.factionId) &&
+            bands.isInBandZones(killer.position) && bands.isInBandZones(player.position)) return;
+
+        // Если мафия убила мафию в зоне для бизвара, то розыск не выдаем
+        if (factions.isMafiaFaction(killer.character.factionId) && factions.isMafiaFaction(player.character.factionId) &&
+            mafia.getZoneByPos(killer.position) && mafia.getZoneByPos(player.position)) return;
+
+        // Если полицейский/агент убил преступника, то розыск не выдаем
+        if ((factions.isPoliceFaction(killer.character.factionId) || factions.isFibFaction(killer.character.factionId)) &&
+            player.character.wanted) return;
+
+        police.setWanted(killer, killer.character.wanted + 1, `Убийство мирного жителя`);
     },
     "playerQuit": (player) => {
         if (!player.character) return;
