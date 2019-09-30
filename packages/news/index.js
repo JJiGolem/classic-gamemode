@@ -17,6 +17,8 @@ module.exports = {
     },
     // Дистанция прослушки эфира
     streamDist: 3,
+    // Мин. ранг, который может начать эфир
+    streamRank: 8,
 
     stream(player) {
         var header = `Эфир`;

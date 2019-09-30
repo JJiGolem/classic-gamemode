@@ -176,6 +176,8 @@ module.exports = {
             notifs.error(player, text, header);
         };
         if (!factions.isNewsFaction(player.character.factionId)) return out(`Вы не редактор`);
+        var rank = factions.getRank(player.character.factionId, news.streamRank);
+        if (player.character.factionRank < rank.id) return out(`Доступно с ранга ${rank.name}`);
 
         news.stream(player);
     },
