@@ -174,10 +174,10 @@ module.exports = {
     },
     "/clclime": {
         access: 1,
-        description: "Изменить климат, при которой можно носить одежду.<br/>Типы:<br/>pants, shoes, tops<br/>Пример климата:<br/>[-10,10] - при ниже '-10' будет мерзнуть, а при выше '10' будет жарко.",
+        description: "Изменить климат, при которой можно носить одежду.<br/>Типы:<br/>hats, pants, shoes, tops<br/>Пример климата:<br/>[-10,10] - при ниже -10 будет мерзнуть, а при выше 10 будет жарко.",
         args: "[тип_одежды] [ид_одежды]:n [климат]",
         handler: (player, args, out) => {
-            if (!["pants", "shoes", "tops"].includes(args[0])) return out.error(`Неверный тип одежды`, player);
+            if (!["hats", "pants", "shoes", "tops"].includes(args[0])) return out.error(`Неверный тип одежды`, player);
 
             var el = clothes.getClothes(args[0], args[1]);
             if (!el) return out.error(`Одежда типа ${args[0]} #${args[1]} не найдена`, player);

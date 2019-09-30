@@ -263,6 +263,14 @@ let statistics = [
         head: "Ур. розыска",
         value: "-"
     },
+    {
+        head: "Законопослушность",
+        value: "-"
+    },
+    {
+        head: "Преступления",
+        value: "-"
+    },
 ];
 
 let houseInfo = [{
@@ -549,6 +557,8 @@ var playerMenu = new Vue({
             statistics[4].value = stats.factionRank || "-";
             statistics[5].value = stats.jobName || "-";
             statistics[6].value = `${stats.wanted} зв.`;
+            statistics[7].value = stats.law;
+            statistics[8].value = stats.crimes;
 
             clearInterval(this.minutesTimer);
             this.minutesTimer = setInterval(() => {
@@ -583,7 +593,13 @@ var playerMenu = new Vue({
             statistics[5].value = data.jobName || "-";
         },
         setWanted(wanted) {
+            var oldWanted = parseInt(statistics[6].value);
             statistics[6].value = `${wanted} зв.`;
+
+            if (wanted > oldWanted) statistics[8].value += wanted - oldWanted;
+        },
+        setLaw(law) {
+            statistics[7].value = law;
         },
         setSkills(data) {
             if (typeof data == 'string') data = JSON.parse(data);

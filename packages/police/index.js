@@ -81,6 +81,12 @@ module.exports = {
         }
     },
     setWanted(player, wanted, cause = null) {
+        if (wanted > player.character.wanted) {
+            player.character.crimes += wanted - player.character.wanted;
+            player.character.law -= wanted - player.character.wanted;
+            mp.events.call("player.law.changed", player);
+        }
+
         player.character.wanted = wanted;
         player.character.wantedCause = cause;
         player.character.save();
@@ -95,7 +101,7 @@ module.exports = {
         }
     },
     getNearCell(player) {
-        return this.cells[0]; // tests
+        // return this.cells[0]; // tests
         var min = player.dist(this.cells[0]);
         var index = 0;
         for (var i = 1; i < this.cells.length; i++) {
@@ -109,7 +115,7 @@ module.exports = {
         return this.cells[index];
     },
     getNearJailCell(player) {
-        return this.jailCells[0]; // tests
+        // return this.jailCells[0]; // tests
         var min = player.dist(this.jailCells[0]);
         var index = 0;
         for (var i = 1; i < this.jailCells.length; i++) {

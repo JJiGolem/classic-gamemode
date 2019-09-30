@@ -1,6 +1,8 @@
 "use strict";
+var bands = require('../bands');
 var factions = require('../factions');
 var inventory = require('../inventory');
+var mafia = require('../mafia');
 var money = require('../money');
 var notifs = require('../notifications');
 var police = require('../police')
@@ -237,6 +239,7 @@ module.exports = {
 
         topParams.pockets = '[5,5,5,5,5,5,10,10]';
         legsParams.pockets = '[5,5,5,5,5,5,10,10]';
+        hatParams.clime = '[-5,20]';
         topParams.clime = '[-5,20]';
         legsParams.clime = '[-5,20]';
         feetsParams.clime = '[-5,20]';
@@ -425,7 +428,7 @@ module.exports = {
 
         if (!rec.cuffs) {
             var cuffs = (data.cuffsSqlId) ? inventory.getItem(player, data.cuffsSqlId) : inventory.getItemByItemId(player, 28);
-            if (!cuffs) return notifs.error(player, `Предмет '${inventory.getName(28)}' не найден`, `Наручники`);
+            if (!cuffs) return notifs.error(player, `Предмет ${inventory.getName(28)} не найден`, `Наручники`);
             inventory.deleteItem(player, cuffs);
             police.setCuffs(rec, cuffs);
 
@@ -632,8 +635,22 @@ module.exports = {
         notifs.success(player, ` Лицензия изъята ${rec.name}`, header);
         notifs.info(rec, `${player.name} изъял у вас лицензию`, header);
     },
-    "playerDeath": (player) => {
+    "playerDeath": (player, reason, killer) => {
         if (player.cuffs) police.setCuffs(player, false);
+
+        // Если бандит убил бандита в гетто, то розыск не выдаем
+        if (factions.isBandFaction(killer.character.factionId) && factions.isBandFaction(player.character.factionId) &&
+            bands.isInBandZones(killer.position) && bands.isInBandZones(player.position)) return;
+
+        // Если мафия убила мафию в зоне для бизвара, то розыск не выдаем
+        if (factions.isMafiaFaction(killer.character.factionId) && factions.isMafiaFaction(player.character.factionId) &&
+            mafia.getZoneByPos(killer.position) && mafia.getZoneByPos(player.position)) return;
+
+        // Если полицейский/агент убил преступника, то розыск не выдаем
+        if ((factions.isPoliceFaction(killer.character.factionId) || factions.isFibFaction(killer.character.factionId)) &&
+            player.character.wanted) return;
+
+        police.setWanted(killer, killer.character.wanted + 1, `Убийство мирного жителя`);
     },
     "playerQuit": (player) => {
         if (!player.character) return;

@@ -424,6 +424,14 @@ var mapCasePdProfileData = {
             title: 'Транспорт: ',
             key: 'veh'
         },
+        {
+            title: 'Законопослушность: ',
+            key: 'law'
+        },
+        {
+            title: 'Преступления: ',
+            key: 'crimes'
+        },
     ],
     setProfileData(data) {
         if (typeof data == 'string') data = JSON.parse(data);
@@ -665,6 +673,10 @@ mapCasePdProfileData.giveWanted = (cause, danger, profileData) => {
         cause: cause,
         wanted: danger
     };
+    if (danger > profileData.danger) {
+        profileData.law -= danger - profileData.danger;
+        profileData.crimes += danger - profileData.danger;
+    }
     profileData.cause = cause;
     profileData.danger = danger;
     mp.trigger(`callRemote`, `mapCase.pd.wanted.give`, JSON.stringify(data));

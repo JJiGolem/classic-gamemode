@@ -1,5 +1,3 @@
-let farms = call('farms');
-
 module.exports = (sequelize, DataTypes) => {
     const model = sequelize.define("ClothesPants", {
         id: {

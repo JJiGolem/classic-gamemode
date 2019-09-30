@@ -46,7 +46,6 @@ module.exports = {
         return result;
     },
     convertCharactersToProfileData(character, vehicles) {
-        var result = [];
         var number = (character.Phone) ? character.Phone.number : null;
         var housePos = null,
             houseId = 0;
@@ -75,6 +74,8 @@ module.exports = {
             faction: faction,
             rank: rank,
             veh: vehNames.join(", ").trim() || "-",
+            law: character.law,
+            crimes: character.crimes,
         };
     },
     convertWanted(wanted) {

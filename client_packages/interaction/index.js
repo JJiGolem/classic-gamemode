@@ -91,7 +91,7 @@ mp.events.add('interaction.menu.show', () => {
 mp.events.add('interaction.menu.close', () => {
     mp.busy.remove('interaction');
     isOpen = false;
-    mp.gui.cursor.show(false, false);
+    // mp.gui.cursor.show(false, false);
     mp.callCEFV('interactionMenu.show = false');
 });
 

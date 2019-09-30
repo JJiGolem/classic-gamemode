@@ -136,6 +136,10 @@ module.exports = {
 
         topParams.pockets = '[5,5,5,5,5,5,10,10]';
         legsParams.pockets = '[5,5,5,5,5,5,10,10]';
+        hatParams.clime = '[-5,20]';
+        topParams.clime = '[-5,20]';
+        legsParams.clime = '[-5,20]';
+        feetsParams.clime = '[-5,20]';
         topParams.name = `Рубашка ${faction.name}`;
         legsParams.name = `Брюки ${faction.name}`;
 
@@ -320,7 +324,7 @@ module.exports = {
 
         if (!rec.spy) {
             var spy = (data.itemSqlId) ? inventory.getItem(player, data.itemSqlId) : inventory.getItemByItemId(player, 4);
-            if (!spy) return notifs.error(player, `Предмет '${inventory.getName(4)}' не найден`, header);
+            if (!spy) return notifs.error(player, `Предмет ${inventory.getName(4)} не найден`, header);
 
             inventory.deleteItem(player, spy);
             rec.spy = {
@@ -341,4 +345,17 @@ module.exports = {
             notifs.success(player, `Прослушка с ${rec.name} снята`, header);
         }
     },
+    "fib.vehicle.plate.set": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+        var header = `Смена номера`;
+
+        var veh = mp.vehicles.at(data.vehId);
+        if (!veh) return notifs.error(player, `Авто не найдено`, header);
+        if (!veh.db || veh.db.key != "faction" || veh.db.owner != 4) return notifs.error(player, `Авто не принадлежит FIB`, header);
+        var dist = player.dist(veh.position);
+        if (dist > 3) return notifs.error(player, `Авто далеко`, header);
+
+        veh.numberPlate = data.plate;
+        notifs.success(player, `Номер изменен на ${veh.plate}`, header);
+    }
 }

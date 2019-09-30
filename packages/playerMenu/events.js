@@ -67,4 +67,7 @@ module.exports = {
     "player.admin.changed": (player) => {
         playerMenu.setAdmin(player);
     },
+    "player.law.changed": (player) => {
+        playerMenu.setLaw(player);
+    },
 }
