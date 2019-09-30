@@ -497,6 +497,8 @@ var inventory = new Vue({
             if (!item) return null;
             if (item.itemId == 15 && item.params.name) // рыба
                 return `${item.params.name}`;
+            if (item.itemId == 16 && item.params.name) // сигареты
+                return this.itemsInfo[item.itemId].name + " " + item.params.name;
             if (item.itemId == 33 && item.params.vehName) // ключи авто
                 return `Ключи от ${item.params.vehName}`;
             return this.itemsInfo[item.itemId].name;
@@ -1059,8 +1061,7 @@ var inventory = new Vue({
                 busy.add("inventory", true);
                 mp.trigger(`radar.display`, false);
                 mp.trigger(`chat.opacity.set`, 0);
-            }
-            else {
+            } else {
                 busy.remove("inventory", true);
                 if (!busy.includes()) setCursor(false);
                 mp.trigger(`radar.display`, true);
