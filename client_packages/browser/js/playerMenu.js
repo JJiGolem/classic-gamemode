@@ -670,11 +670,20 @@ var playerMenu = new Vue({
     },
     watch: {
         show(val) {
-            setCursor(val);
             mp.trigger("blur", val, 300);
             hud.show = !val;
-            if (val) busy.add("playerMenu", true);
-            else busy.remove("playerMenu", true);
+            if (val) {
+                setCursor(true);
+                busy.add("playerMenu", true);
+                mp.trigger(`radar.display`, false);
+                mp.trigger(`chat.opacity.set`, 0)
+            }
+            else {
+                busy.remove("playerMenu", true);
+                if (!busy.includes()) setCursor(false);
+                mp.trigger(`radar.display`, true);
+                mp.trigger(`chat.opacity.set`, 1)
+            }
 
             this.lastShowTime = Date.now();
             if (!val && this.dateTimer) {
