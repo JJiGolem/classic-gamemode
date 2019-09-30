@@ -5736,8 +5736,6 @@ var selectMenu = new Vue({
                             selectMenu.showByName('ammunationMain');
                         } else {
                             selectMenu.loader = true;
-                            mp.trigger('chat.message.push', JSON.stringify(e.itemIndex));
-                            mp.trigger('chat.message.push', JSON.stringify(e.itemValue));
                             let values = JSON.stringify([e.itemIndex, parseInt(e.itemValue)]);
                             mp.trigger('callRemote', 'ammunation.ammo.buy', values);
                         }
