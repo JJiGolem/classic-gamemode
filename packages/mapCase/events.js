@@ -106,13 +106,18 @@ module.exports = {
         var rec = mp.players.at(recId);
         if (!rec) return out.error(player, `Игрок <span>#${recId}</span> не найден`);
 
+        // TODO: Лишний запрос в БД
+        var character = await db.Models.Character.findByPk(rec.character.id, {
+            attributes: ['id', 'name', 'gender', 'wanted', 'wantedCause', 'law', 'crimes'],
+            include: [db.Models.Phone, db.Models.House, db.Models.Faction, db.Models.FactionRank],
+        });
         var vehicles = await db.Models.Vehicle.findAll({
             where: {
                 key: "owner",
                 owner: recId
             }
         });
-        var result = mapCase.convertCharactersToProfileData(rec.character, vehicles);
+        var result = mapCase.convertCharactersToProfileData(character, vehicles);
         player.call(`mapCase.pd.profileData.set`, [result]);
     },
     "mapCase.pd.getProfile": async (player, id) => {
