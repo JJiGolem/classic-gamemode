@@ -69,12 +69,14 @@ module.exports = {
         farms.farms.forEach(farm => {
             if (!farm.playerId) return;
             farm.taxBalance -= farms.tax;
+            var owner = mp.players.getBySqlId(farm.playerId) || farm.playerId;
             if (farm.taxBalance <= 0) {
                 farm.playerId = null;
                 farm.owner = null;
                 farm.balance = 0;
+
+                notifs.warning(owner, `Ферма #${farm.id} продана в штат за неуплату налогов`);
             } else if (farm.taxBalance < farms.tax * 24) {
-                var owner = mp.players.getBySqlId(farm.playerId);
                 if (owner) notifs.warning(owner, `Ферма #${farm.id} будет продана в штат менее, чем через сутки. Пополните баланс.`, `Налог на ферму`);
             }
             farm.save();
