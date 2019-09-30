@@ -402,6 +402,7 @@ var playerMenu = new Vue({
     data: {
         show: false,
         enable: false,
+        inputFocus: false,
         lastShowTime: 0,
         menuBar: menuBar,
         socialData: socialData,
@@ -713,6 +714,7 @@ var playerMenu = new Vue({
             if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "inventory"])) return;
             if (Date.now() - this.lastShowTime < 500) return;
             if (!this.enable) return;
+            if (this.inputFocus) return;
             if (e.keyCode == 77) this.show = !this.show;
             if (e.keyCode == 27 && this.show) this.show = false;
         });
@@ -780,6 +782,9 @@ Vue.component('player-menu-report', {
                 this.showHint = false;
             }, 5000)
         },
+        setFocus(enable) {
+            playerMenu.inputFocus = enable;
+        }
     }
 });
 
@@ -813,6 +818,9 @@ Vue.component('player-menu-help', {
 
             this.message = "";
         },
+        setFocus(enable) {
+            playerMenu.inputFocus = enable;
+        }
     },
 });
 
@@ -907,6 +915,9 @@ Vue.component('player-menu-donate-convert', {
             this.acceptConvert(this.price);
             this.price = '';
         },
+        setFocus(enable) {
+            playerMenu.inputFocus = enable;
+        }
     }
 });
 
@@ -944,6 +955,9 @@ Vue.component('player-menu-donate-changename', {
             this.acceptChange(this.firstname, this.lastname);
             this.firstname = '';
             this.lastname = '';
+        },
+        setFocus(enable) {
+            playerMenu.inputFocus = enable;
         }
     }
 });
@@ -1170,6 +1184,9 @@ Vue.component('player-menu-settings-protection', {
             if (!regex.test(event.key))
                 event.preventDefault();
         },
+        setFocus(enable) {
+            playerMenu.inputFocus = enable;
+        }
     },
     watch: {
         isConfirmed(val) {

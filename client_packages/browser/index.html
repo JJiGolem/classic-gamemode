@@ -1224,7 +1224,7 @@
             <div class="confirmation">
                 <div class="head">{{ confirmation.head }}</div>
                 <div class="description" v-html="confirmation.description"></div>
-                <div v-if="codeMod"><input placeholder="Введите промокод..." v-model="code" /></div>
+                <div v-if="codeMod"><input placeholder="Введите промокод..." v-model="code" @focus="inputFocus = true" @blur="inputFocus = false"/></div>
                 <div class="actions">
                     <div class="btn left" @click="confirmation.acceptHandler(); confirmation = null">{{ confirmation.leftWord }}</div>
                     <div class="btn" @click="confirmation = null; codeMod = false">{{ confirmation.rightWord }}</div>
@@ -1299,7 +1299,7 @@
     <script type="text/x-template" id="player-menu-report">
         <div class="report">
             <div class="head">Задайте вопрос или оставьте жалобу на игрока указав его ID/Имя и причину жалобы</div>
-            <input placeholder="Введите вопрос или жалобу..." v-model="message" :maxlength="maxlength" @keypress.enter="send()"/>
+            <input placeholder="Введите вопрос или жалобу..." v-model="message" :maxlength="maxlength" @keypress.enter="send()" @focus="setFocus(true)" @blur="setFocus(false)" />
             <div>Осталось символов: {{ chars }}</div>
             <div class="send" @click="send()">Отправить</div>
             <div v-if="showHint" class="hint">Ваше сообщение было отправлено администрации сервера!<br />Приятной игры!</div>
@@ -1309,7 +1309,7 @@
     <script type="text/x-template" id="player-menu-help">
         <div class="report help">
             <div class="head">Введите интересующий вас вопрос:</div>
-            <input placeholder="Введите вопрос..." v-model="message" :maxlength="maxlength"/>
+            <input placeholder="Введите вопрос..." v-model="message" :maxlength="maxlength" @focus="setFocus(true)" @blur="setFocus(false)"/>
             <div class="head sec">Ответы на вопросы</div>
             <div class="messages body">
                 <div :class="['message', {focus: currentAnswer == index}]"
@@ -1386,7 +1386,7 @@
             <div class="head">Конвертация валюты</div>
             <div class="hint">Конвертация валюты - это способ получить виртуальную валюту,<br />обменивая <div class="coin-logo">cc</div> на неё</div>
             <div class="hint sec">Введите число CC, которые вы бы хотели обменять</div>
-            <input placeholder="Введите число..." v-model="price" @keypress="inputCheck($event)" @keypress.enter="convert()"/>
+            <input placeholder="Введите число..." v-model="price" @keypress="inputCheck($event)" @keypress.enter="convert()" @focus="setFocus(true)" @blur="setFocus(false)" />
             <div class="equally">=</div>
             <div class="coins">{{ virtualCoins | playerMenuMoneySplit(true) }}</div>
             <div :class="['btn', {disable: !price }]" @click="convert()">Конвертировать</div>
@@ -1397,8 +1397,8 @@
         <div class="sidebar-win changename">
             <div class="head">Смена никнейма</div>
             <div class="hint">Смените никнейм для вашей новой личности</div>
-            <div class="name"><input placeholder="Введите новое имя" v-model="firstname" @keypress="inputCheck($event)" @keypress.enter="changename()" /></div>
-            <div><input placeholder="Введите новую фамилию" v-model="lastname" @keypress="inputCheck($event)" @keypress.enter="changename()" /></div>
+            <div class="name"><input placeholder="Введите новое имя" v-model="firstname" @keypress="inputCheck($event)" @keypress.enter="changename()" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
+            <div><input placeholder="Введите новую фамилию" v-model="lastname" @keypress="inputCheck($event)" @keypress.enter="changename()" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
             <div class="price">Стоимость услуги: <span>{{ price }} CC</span></div>
             <div :class="['btn', {disable: !firstname || !lastname || price > coins }]" @click="changename()">Сменить никнейм</div>
         </div>
@@ -1455,10 +1455,10 @@
                         <div :class="['info', { conf: isConfirmed }]">{{ (isConfirmed) ? 'Подтверждена' : 'Не подтверждена' }}</div>
                     </div>
                     <div v-if="changeMailMod">
-                        <input placeholder="Введите новый E-Mail" @keypress.enter="saveMail()" v-model="newEmail"/>
+                        <input placeholder="Введите новый E-Mail" @keypress.enter="saveMail()" v-model="newEmail" @focus="setFocus(true)" @blur="setFocus(false)" />
                     </div>
                     <div v-if="codeMod">
-                        <input placeholder="Введите код" v-model="code" @keypress="inputCheck($event)" @keypress.enter="confCode()"/>
+                        <input placeholder="Введите код" v-model="code" @keypress="inputCheck($event)" @keypress.enter="confCode()" @focus="setFocus(true)" @blur="setFocus(false)" >
                     </div>
                 </div>
                 <div class="actions">
@@ -1476,9 +1476,9 @@
                         {{ passMessage }}
                     </div>
                     <div v-if="changePassMod">
-                        <input type="password" placeholder="Введите старый пароль" v-model="oldPass" @keypress.enter="savePass()"/>
-                        <input type="password" placeholder="Введите новый пароль" v-model="newPass" @keypress.enter="savePass()"/>
-                        <input type="password" placeholder="Повторно новый пароль" v-model="newPass2" @keypress.enter="savePass()"/>
+                        <input type="password" placeholder="Введите старый пароль" v-model="oldPass" @keypress.enter="savePass()" @focus="setFocus(true)" @blur="setFocus(false)" />
+                        <input type="password" placeholder="Введите новый пароль" v-model="newPass" @keypress.enter="savePass()" @focus="setFocus(true)" @blur="setFocus(false)" />
+                        <input type="password" placeholder="Повторно новый пароль" v-model="newPass2" @keypress.enter="savePass()" @focus="setFocus(true)" @blur="setFocus(false)" />
                     </div>
                 </div>
                 <div class="actions">
