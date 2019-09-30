@@ -9,6 +9,13 @@
     z-index: 100;
 }
 
+#player-menu .logo {
+    height: 4vh;
+    position: absolute;
+    right: 4vh;
+    top: 4vh;
+}
+
 #player-menu .content {
     position: absolute;
     color: #fff;
