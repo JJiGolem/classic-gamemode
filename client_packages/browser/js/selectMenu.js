@@ -5936,9 +5936,10 @@ var selectMenu = new Vue({
             var offset = 3.5; // половина от ширины шарика ползунка
             if (this.menu.items[this.menu.i].i == 0) return 0 - offset + '%';
             var values = this.menu.items[this.menu.i].values;
+            var minValue = values[0];
             var maxValue = values[values.length - 1];
             var curValue = values[this.menu.items[this.menu.i].i];
-            return curValue / maxValue * 100 - offset + '%';
+            return (curValue - minValue) / (maxValue - minValue) * 100 - offset + '%';
         },
         headerStyles() {
             return {

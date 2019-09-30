@@ -110,6 +110,9 @@ var interactionMenu = new Vue({
                         mp.trigger(`interaction.menu.close`);
                         if (captureScore.show) return notifications.push(`error`, `Недоступно`);
                         mp.trigger(`callRemote`, `mafia.bizWar.show`);
+                    } else if (item.text == "Эфир") {
+                        mp.trigger(`interaction.menu.close`);
+                        mp.trigger(`callRemote`, `news.stream`);
                     }
                 }
             },
@@ -295,9 +298,8 @@ var interactionMenu = new Vue({
             "fib_vehicle": {
                 name: "fib_vehicle",
                 items: [{
-                        text: "Номер",
-                    },
-                ],
+                    text: "Номер",
+                }, ],
                 handler(index) {
                     var item = this.items[index];
                     mp.trigger(`interactionMenu.onClick`, this.name, item.text);
@@ -388,8 +390,7 @@ var interactionMenu = new Vue({
             if (val) {
                 busy.add("interaction", true);
                 setCursor(true);
-            }
-            else {
+            } else {
                 busy.remove("interaction", true);
                 if (!busy.includes()) setCursor(false);
             }
@@ -428,15 +429,38 @@ var interactionMenu = new Vue({
                 });
             } else this.deleteItem("player_interaction", "Hospital");
 
-            if (val >= 8 && val <= 11) { // bands
-
+            if (val == 7) { // news
+                this.addItems("player_interaction", {
+                    text: "Weazel News"
+                });
+                this.addItems("player_ownmenu", {
+                    text: "Эфир"
+                });
+            } else {
+                this.deleteItem("player_interaction", "Weazel News");
+                this.deleteItem("player_ownmenu", "Эфир");
             }
 
+            if (val >= 8 && val <= 11) { // bands
+                var item = {
+                    text: "Захват"
+                };
+                this.addItems("player_ownmenu", {
+                    text: "Захват"
+                });
+
+            } else this.deleteItem("player_ownmenu", "Захват");
             if (val >= 12 && val <= 14) { // mafia
                 this.addItems("player_interaction", {
                     text: "Mafia"
                 });
-            } else this.deleteItem("player_interaction", "Mafia");
+                this.addItems('player_ownmenu', {
+                    text: "Захват биз."
+                });
+            } else {
+                this.deleteItem("player_interaction", "Mafia");
+                this.deleteItem('player_ownmenu', "Захват биз.");
+            }
         }
     },
 });

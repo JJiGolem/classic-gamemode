@@ -183,13 +183,6 @@ mp.events.add({
     "bands.storage.info.set": (data) => {
         mp.bands.setStorageInfo(data);
     },
-    "factions.faction.set": (factionId) => {
-        var item = {
-            text: "Захват"
-        };
-        if (!mp.factions.isBandFaction(factionId)) mp.callCEFV(`interactionMenu.deleteItem('player_ownmenu', '${item.text}')`);
-        else mp.callCEFV(`interactionMenu.addItems('player_ownmenu', '${JSON.stringify(item)}')`);
-    },
     "render": () => {
         mp.bands.bandZones.forEach(blip => {
             mp.game.invoke(mp.bands.natives.SET_BLIP_ROTATION, blip, 0);
