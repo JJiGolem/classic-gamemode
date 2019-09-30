@@ -188,4 +188,11 @@ module.exports = {
     "chat.action.say": (player, text) => {
         news.streamHandle(player, text);
     },
+    "playerQuit": (player) => {
+        if (!player.character) return;
+        if (!factions.isNewsFaction(player.character.factionId)) return;
+        if (news.liveStream.ownerId != player.id) return;
+
+        news.stream(player);
+    },
 }
