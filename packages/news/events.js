@@ -179,6 +179,12 @@ module.exports = {
 
         news.stream(player);
     },
+    "news.stream.member": (player, recId) => {
+        var rec = mp.players.at(recId);
+        if (!rec || !rec.character) return notifs.error(player, `Игрок не найден`);
+        if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`);
+        news.streamMember(player, rec);
+    },
     "chat.action.say": (player, text) => {
         news.streamHandle(player, text);
     },

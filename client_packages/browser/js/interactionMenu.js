@@ -153,6 +153,8 @@ var interactionMenu = new Vue({
                         interactionMenu.menu = interactionMenu.menus["hospital"];
                     } else if (item.text == 'Mafia') {
                         interactionMenu.menu = interactionMenu.menus["mafia"];
+                    } else if (item.text == 'Weazel News') {
+                        interactionMenu.menu = interactionMenu.menus["news"];
                     }
                 }
             },
@@ -335,6 +337,18 @@ var interactionMenu = new Vue({
                     {
                         text: "Мешок на голову",
                     },
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    mp.trigger(`interaction.menu.close`);
+                    mp.trigger(`interactionMenu.onClick`, this.name, item.text);
+                }
+            },
+            "news": {
+                name: "news",
+                items: [{
+                        text: "Эфир",
+                    }
                 ],
                 handler(index) {
                     var item = this.items[index];

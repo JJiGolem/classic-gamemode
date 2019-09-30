@@ -35,6 +35,17 @@ module.exports = {
             chat.broadcast(`[Weazel News] ${player.name} начал прямой эфир`);
         }
     },
+    streamMember(player, rec) {
+        if (this.liveStream.ownerId != player.id) return notifs.error(player, `Вы не ведете прямой эфир`);
+        var i = this.liveStream.memberIds.indexOf(rec.id);
+        if (i == -1) {
+            this.liveStream.memberIds.push(rec.id);
+            chat.broadcast(`[Weazel News] ${player.name} добавил ${rec.name} в прямой эфир`);
+        } else {
+            this.liveStream.memberIds.splice(i, 1);
+            chat.broadcast(`[Weazel News] ${player.name} удалил ${rec.name} из прямого эфира`);
+        }
+    },
     streamHandle(player, text) {
         if (this.liveStream.ownerId == null) return;
 
