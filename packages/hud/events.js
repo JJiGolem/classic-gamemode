@@ -29,13 +29,18 @@ module.exports = {
         }
 
         mp.players.forEach(current => {
-            current.character.admin > 0 && current.call('hud.players.list.add', [newPlayer])
+            current.character
+            && current.character.admin > 0 
+            && current.call('hud.players.list.add', [newPlayer])
         })
     },
     "playerQuit": (player) => {
         mp.players.forEach((current) => {
             current.call("hud.setData", [{players: mp.players.length}]); /// После выхода из игры игрок какое-то время висит в пуле, возможно стоит создать таймер
-            current.id != player.id && current.character.admin > 0 && current.call('hud.players.list.remove', [player.id]);
+            current.id != player.id 
+            && current.character
+            && current.character.admin > 0 
+            && current.call('hud.players.list.remove', [player.id]);
         });
     },
     "hud.players.list.show": (player) => {
