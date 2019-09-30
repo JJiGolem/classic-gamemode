@@ -124,17 +124,16 @@ let settingsMenuData = {
         },
     ],
     bottom: {
-        head: "Сбросить пароль",
+        head: "Выход",
         img: playerMenuSvgPaths.refresh,
         handler() {
             playerMenu.showConfirmWindow(
                 "Подтверждение действия",
                 `Вы действительно хотите <br />
-                сбросить пароль?
+                отключиться от сервера?
                 `,
                 () => {
-                    // TODO: Сброс пароля
-                    console.log("Сбросили пароль");
+                    mp.trigger(`callRemote`, `playerMenu.kick`);
                 },
             );
         }

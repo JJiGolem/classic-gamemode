@@ -8,6 +8,10 @@ module.exports = {
     "jobSkillsInit.done": (player) => {
         playerMenu.setSkills(player);
     },
+    "playerMenu.kick": (player) => {
+        notifs.success(player, `До скорого! :)`);
+        player.kick();
+    },
     "player.faction.changed": (player) => {
         playerMenu.setFaction(player);
     },
