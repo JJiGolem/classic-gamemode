@@ -260,6 +260,13 @@ mp.events.add('effect', (effect, duration) => {
     mp.game.graphics.startScreenEffect(effect, duration, false);
 });
 
+// Проиграть звук
+mp.events.add('sound', (data) => {
+    if (typeof data == 'string') data = JSON.parse(data);
+
+    mp.game.audio.playSoundFrontend(-1, data.name, data.setName, true);
+});
+
 // Установить пусть GPS на карте
 mp.events.add("waypoint.set", (x, y) => {
     mp.game.ui.setNewWaypoint(x, y);
