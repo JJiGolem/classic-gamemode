@@ -332,7 +332,9 @@ module.exports = {
         let biz = getBizById(id);
         if (biz == null) return null;
         if (biz.info.characterId != charId) return null;
-        return {bizId: biz.info.id, params: bizesModules[biz.info.type].getBizParamsById(biz.info.id)};
+        let params = bizesModules[biz.info.type].getBizParamsById(biz.info.id);
+        if (params == null) return null;
+        return {bizId: biz.info.id, params: params};
     },
     setBizParameters(charId, bizParameters) {
         let biz = getBizById(bizParameters.bizId);
