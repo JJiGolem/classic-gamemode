@@ -219,7 +219,7 @@ module.exports = {
     },
     "biz.finance.save": (player, bizParameters) => {
         if (player.biz.at == null) return notifications != null && notifications.error(player, "Вы находитесь не рядом с бизнесом", "Ошибка");
-        if (bizService.setBizParameters(player.character.id, bizParameters)) {
+        if (bizService.setBizParameters(player.character.id, JSON.parse(bizParameters))) {
             notifications != null && notifications.success(player, "Экономические параметры успешно изменены", "Успешно");
         }
         else {

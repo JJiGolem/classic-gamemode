@@ -19,6 +19,7 @@ let bizesModules = new Array();
 let utils;
 let timer;
 let money;
+let notifications;
 
 /// Economic constants
 let maxProductPriceMultiplier = 2.0;
@@ -50,11 +51,13 @@ let dropBiz = function(biz, sellToGov = false) {
                         if (sellToGov) {
                             mp.players.at(j).call('biz.sell.toGov.ans', [1]);
                         } else {
+                            notifications.warning(mp.players.at(j), "Ваш бизнес отобрали за неуплату налогов", "Внимание");
                             mp.players.at(j).call('phone.app.remove', ["biz", biz.info.id]);
                         }
                         return;
                     }
                 }
+                notifications.save(characterId, "warning", "Ваш бизнес отобрали за неуплату налогов", "Внимание");
             } else {
                 console.log("[bizes] Biz dropped " + biz.info.id + ". But player didn't getmoney");
             }
@@ -167,6 +170,7 @@ module.exports = {
         utils = call("utils");
         timer = call("timer");
         money = call("money");
+        notifications = call('notifications');
 
         for (let file of fs.readdirSync(path.dirname(__dirname))) {
             if (file != 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname) + "/" + file + '/index.js'))
