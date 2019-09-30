@@ -1042,8 +1042,18 @@ var inventory = new Vue({
             setCursor(val);
             mp.trigger("blur", val, 300);
             hud.show = !val;
-            if (val) busy.add("inventory", true);
-            else busy.remove("inventory", true);
+            if (val) {
+                setCursor(true);
+                busy.add("inventory", true);
+                mp.trigger(`radar.display`, false);
+                mp.trigger(`chat.opacity.set`, 0);
+            }
+            else {
+                busy.remove("inventory", true);
+                if (!busy.includes()) setCursor(false);
+                mp.trigger(`radar.display`, true);
+                mp.trigger(`chat.opacity.set`, 1);
+            }
             this.lastShowTime = Date.now();
         },
     },
