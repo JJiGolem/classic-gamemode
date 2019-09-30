@@ -2879,7 +2879,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName("bandCashCheck");
                         }
                         if (e.itemName == "Вернуться") selectMenu.showByName("bandStorage");
-                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("bandStorage");
+                    } else if (eventName == 'onBackspacePressed' && this.i != 1) selectMenu.showByName("bandStorage");
                 }
             },
             "bandCashCheck": {
@@ -3067,7 +3067,7 @@ var selectMenu = new Vue({
                 }
             },
             "mafiaPower": {
-                name: "bandPower",
+                name: "mafiaPower",
                 header: "Влияние в бизнесах",
                 items: [{
                         text: "Мафия 1",
@@ -3153,8 +3153,8 @@ var selectMenu = new Vue({
                         } else if (e.itemName == "Выписать чек") {
                             selectMenu.showByName("mafiaCashCheck");
                         }
-                        if (e.itemName == "Вернуться") selectMenu.showByName("bandStorage");
-                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("bandStorage");
+                        if (e.itemName == "Вернуться") selectMenu.showByName("mafiaStorage");
+                    } else if (eventName == 'onBackspacePressed' && this.i != 1) selectMenu.showByName("mafiaStorage");
                 }
             },
             "mafiaCashCheck": {
@@ -5951,9 +5951,10 @@ var selectMenu = new Vue({
         'menu.i': function(val) {
             setTimeout(() => {
                 if (this.valuesType(val) == 3) { // editable
+                    setCursor(true)
                     var itemText = this.menu.items[val].text;
                     if (this.$refs[itemText]) this.$refs[itemText].focus();
-                }
+                } else setCursor(false);
             }, 100);
         },
         menu(val) {
