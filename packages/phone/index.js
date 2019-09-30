@@ -57,7 +57,7 @@ module.exports = {
 
         player.call('phone.load', [{
                 isHave: player.phone != null,
-                number: player.phone.number,
+                number: player.phone != null && player.phone.number,
                 houses: houses,
                 biz: bizes,
                 contacts: player.phone != null ? (player.phone.PhoneContacts != null ? jsonPhone['PhoneContacts'] : []) : []

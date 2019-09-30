@@ -45,11 +45,10 @@ mp.events.add("biz.actions", (action) => {
 /// Actions
 mp.events.add("biz.finance.show", (bizParameters) => {
     mp.console(`selectMenu.menu = cloneObj(selectMenu.menus["bizEconomic"]);`);
-    mp.console(JSON.stringify(bizParameters));
     bizParameters.params.forEach(param => {
         let values = new Array();
-        for (let i = param.min; i < param.max; i += 0.1) {
-            values.push(i);
+        for (let i = param.min; i < param.max + 0.1; i += 0.1) {
+            values.push(i.toFixed(1));
         }
         let index = values.findIndex(x => x == param.current);
         mp.console(`selectMenu.menu.items.unshift({
