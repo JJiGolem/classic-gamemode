@@ -3,6 +3,7 @@ let inventory = require('./index.js');
 let hospital = require('../hospital');
 let mafia = call('mafia');
 let notifs = require('../notifications');
+let satiety = call('satiety');
 
 module.exports = {
     "init": () => {
@@ -258,6 +259,52 @@ module.exports = {
                 flag: 49
             }, 8000]);
         });
+    },
+    // употребить еду
+    "inventory.item.eat.use": (player, sqlId) => {
+        var header = `Еда`;
+        var eat = inventory.getItem(player, sqlId);
+        if (!eat) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+
+        var params = inventory.getParamsValues(eat);
+        var character = player.character;
+
+        satiety.set(player, character.satiety + (params.satiety || 10), character.thirst + (params.thirst || 10));
+        notifs.success(player, `Вы съели ${inventory.getName(eat.itemId)}`, header);
+
+        mp.players.forEachInRange(player.position, 20, rec => {
+            rec.call(`animations.play`, [player.id, {
+                dict: "amb@code_human_wander_eating_donut@male@idle_a",
+                name: "idle_c",
+                speed: 1,
+                flag: 49
+            }, 7000]);
+        });
+
+        inventory.deleteItem(player, eat);
+    },
+    // употребить напиток
+    "inventory.item.drink.use": (player, sqlId) => {
+        var header = `Напиток`;
+        var drink = inventory.getItem(player, sqlId);
+        if (!drink) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+
+        var params = inventory.getParamsValues(drink);
+        var character = player.character;
+
+        satiety.set(player, character.satiety + (params.satiety || 10), character.thirst + (params.thirst || 10));
+        notifs.success(player, `Вы выпили ${inventory.getName(drink.itemId)}`, header);
+
+        mp.players.forEachInRange(player.position, 20, rec => {
+            rec.call(`animations.play`, [player.id, {
+                dict: "amb@code_human_wander_drinking_fat@female@idle_a",
+                name: "idle_c",
+                speed: 1,
+                flag: 49
+            }, 7000]);
+        });
+
+        inventory.deleteItem(player, drink);
     },
     // Запрос предметов инвентаря в багажнике авто
     "vehicle.boot.items.request": (player, vehId) => {

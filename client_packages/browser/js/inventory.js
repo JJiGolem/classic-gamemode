@@ -374,6 +374,10 @@ var inventory = new Vue({
         },
         // Огнестрельные оружия
         weaponsList: [20, 21, 22, 41, 44, 46, 47, 48, 52, 88, 89, 91, 99, 107],
+        // Еда
+        eatList: [35],
+        // Напитки
+        drinkList: [34],
         // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
         environment: [],
         // Предметы на игроке (экипировка)
@@ -541,6 +545,14 @@ var inventory = new Vue({
             if (item.params.clime) params.push({
                 name: "Климат",
                 value: `от ${item.params.clime[0]}° до ${item.params.clime[1]}°`
+            });
+            if (item.params.satiety) params.push({
+                name: "Сытость",
+                value: item.params.satiety + "%"
+            });
+            if (item.params.thirst) params.push({
+                name: "Жажда",
+                value: item.params.thirst + "%"
             });
 
             return params;
@@ -828,6 +840,26 @@ var inventory = new Vue({
                             var hash = item.params.weaponHash;
                             mp.trigger(`weapons.ammo.remove`, item.sqlId, hash.toString());
                         }
+                    };
+                } else if (this.eatList.includes(itemId)) {
+                    var handler = (item) => {
+                        mp.trigger(`callRemote`, `inventory.item.eat.use`, item.sqlId);
+                    };
+                    menu['Съесть'] = {
+                        handler: handler
+                    };
+                    this.hotkeysList[itemId] = {
+                        handler: handler
+                    };
+                } else if (this.drinkList.includes(itemId)) {
+                    var handler = (item) => {
+                        mp.trigger(`callRemote`, `inventory.item.drink.use`, item.sqlId);
+                    };
+                    menu['Выпить'] = {
+                        handler: handler
+                    };
+                    this.hotkeysList[itemId] = {
+                        handler: handler
                     };
                 }
                 menu['Выкинуть'] = {
