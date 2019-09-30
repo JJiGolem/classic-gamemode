@@ -1352,9 +1352,17 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         switch (e.itemName) {
                             case "Создать":
+                                let params = new Array();
+                                this.items.forEach(item => {
+                                    if (item.paramKey == null) return;
+                                    params.push({key: item.paramKey, value: item.values[item.i]});
+                                });
+                                params.push();
+                                mp.trigger("biz.finance.save", JSON.stringify(params));
                                 selectMenu.show = false;
                                 break;
                             case "Закрыть":
+                                mp.trigger("biz.finance.close");
                                 selectMenu.show = false;
                                 break;
                         }
