@@ -66,11 +66,14 @@ Vue.component('map-case-pd-dbSearch', {
         onClickMenuItem(mod) {
             this.menuItemInFocus = mod;
         },
-        enterHandler (e) {
+        enterHandler(e) {
             if (e.keyCode == 13 && !mapCase.loadMod) {
                 this.search();
             }
-        }
+        },
+        setFocus(enable) {
+            mapCase.inputFocus = enable;
+        },
     },
 });
 
@@ -176,11 +179,14 @@ Vue.component('map-case-pd-identification', {
             if (!regex.test(event.key))
                 event.preventDefault();
         },
-        enterHandler (e) {
+        enterHandler(e) {
             if (e.keyCode == 13 && !mapCase.loadMod) {
                 this.search();
             }
-        }
+        },
+        setFocus(enable) {
+            mapCase.inputFocus = enable;
+        },
     }
 });
 
@@ -213,11 +219,14 @@ Vue.component('map-case-pd-over-fine', {
             if (!regex.test(event.key))
                 event.preventDefault();
         },
-        enterHandler (e) {
+        enterHandler(e) {
             if (e.keyCode == 13 && !mapCase.loadMod) {
                 this.give();
             }
-        }
+        },
+        setFocus(enable) {
+            mapCase.inputFocus = enable;
+        },
     }
 
 });
@@ -258,13 +267,15 @@ Vue.component('map-case-pd-over-wanted', {
         setDanger() {
             this.danger = this.overDanger
         },
-        enterHandler (e) {
+        enterHandler(e) {
             if (e.keyCode == 13 && !mapCase.loadMod) {
                 this.give();
             }
-        }
+        },
+        setFocus(enable) {
+            mapCase.inputFocus = enable;
+        },
     }
-
 });
 
 
