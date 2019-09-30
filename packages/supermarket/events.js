@@ -78,6 +78,7 @@ module.exports = {
         if (supermarketId == null) return;
 
         let productName;
+        let brand;
         switch (productId) {
             case 0:
                 productName = 'water';
@@ -86,7 +87,8 @@ module.exports = {
                 productName = 'chocolate';
                 break;
             case 2:
-                productName = 'redwood';
+                productName = 'cigarettes';
+                brand = 'Redwood';
                 break;
         }
         let price = supermarket.productsConfig[productName] * supermarket.productPrice * supermarket.getPriceMultiplier(supermarketId);
@@ -96,6 +98,12 @@ module.exports = {
 
         let itemId = supermarket.itemIds[productName];
         let params = {};
+
+        if (productName == 'cigarettes') {
+            params.count = 20;
+            params.name = brand;
+        }
+
         inventory.addItem(player, itemId, params, (e) => {
             if (e) return player.call('supermarket.products.buy.ans', [4, e]);
             money.removeCash(player, price, function (result) {
