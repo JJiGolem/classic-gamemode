@@ -1539,14 +1539,14 @@
     </div>
 
     <div v-cloak id="changelist" v-if="show">
-        <div class="close" @click="show = false">x</div>
+        <div class="close" onclick="changelist.show = false">x</div>
         <div class="header">
-            <i class="arrow fas fa-long-arrow-alt-left" @click="i++" v-if="i < list.length - 1"></i>
+            <i class="arrow fas fa-long-arrow-alt-left" onclick="changelist.i++" v-if="i < list.length - 1"></i>
             <div class="title" :class="{first: i == list.length - 1}">
                 <div class="name">Обновления #{{ i + 1 }}</div>
                 <div class="date" :class="{right: !i, center: i && i < list.length - 1}">{{ list[i].date }}</div>
             </div>
-            <i class="arrow fas fa-long-arrow-alt-right" @click="i--" v-if="i > 0"></i>
+            <i class="arrow fas fa-long-arrow-alt-right" onclick="changelist.i--" v-if="i > 0"></i>
         </div>
         <div class="content">
             <div class="build" title="Сборка"><i class="fas fa-code-branch"></i> {{ list[i].build }}</div>
@@ -1559,7 +1559,7 @@
             <div v-for="text in list[i].removed" :title="text"><span class="removed"><i class="fas fa-trash"></i></span>{{ prettyText(text) }}</div>
         </div>
         <div class="footer">
-            <span class="likes" :class="{liked: list[i].liked}" @click="like">{{ list[i].likes }} <i class="fas fa-heart"></i></span>
+            <span class="likes" :class="{liked: list[i].liked}" onclick="changelist.like()">{{ list[i].likes }} <i class="fas fa-heart"></i></span>
         </div>
     </div>
 
