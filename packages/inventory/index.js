@@ -1043,10 +1043,10 @@ module.exports = {
         var pants = player.inventory.items.find(x => x.itemId == 8 && !x.parentId);
         var shoes = player.inventory.items.find(x => x.itemId == 9 && !x.parentId);
 
-        if (hat) clime.head = JSON.parse(this.getParam(hat, 'clime').value) || this.playerClime.head;
-        if (top) clime.body = JSON.parse(this.getParam(top, 'clime').value) || this.playerClime.body;
-        if (pants) clime.legs = JSON.parse(this.getParam(pants, 'clime').value) || this.playerClime.legs;
-        if (shoes) clime.feets = JSON.parse(this.getParam(shoes, 'clime').value) || this.playerClime.feets;
+        if (hat) clime.head = this.getParamsValues(hat).clime || this.playerClime.head;
+        if (top) clime.body = this.getParamsValues(top).clime || this.playerClime.body;
+        if (pants) clime.legs = this.getParamsValues(pants).clime || this.playerClime.legs;
+        if (shoes) clime.feets = this.getParamsValues(shoes).clime || this.playerClime.feets;
 
         var damage = 0;
 
