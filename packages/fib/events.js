@@ -356,6 +356,6 @@ module.exports = {
         if (dist > 3) return notifs.error(player, `Авто далеко`, header);
 
         veh.numberPlate = data.plate;
-        notifs.success(player, `Номер изменен на ${veh.plate}`, header);
+        notifs.success(player, `Номер изменен на ${data.plate}`, header);
     }
 }

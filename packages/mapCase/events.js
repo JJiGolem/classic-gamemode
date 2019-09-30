@@ -162,6 +162,13 @@ module.exports = {
         if (rec) {
             police.setWanted(rec, data.wanted, data.cause);
             notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур. по причине: ${data.cause}`, `Розыск`);
+
+            mp.players.forEach(cop => {
+                if (!cop.character) return;
+                if (!factions.isPoliceFaction(cop.character.factionId)) return;
+
+                notifs.warning(cop, `${player.name} выдал ${rec.character.wanted} ур. ${rec.name} по причине ${data.cause}`, `Розыск`);
+            });
         } else db.Models.Character.update({
             wanted: data.wanted,
             wantedCause: data.cause
@@ -395,6 +402,13 @@ module.exports = {
         if (rec) {
             police.setWanted(rec, data.wanted, data.cause);
             notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур. по причине: ${data.cause}`, `Розыск`);
+
+            mp.players.forEach(cop => {
+                if (!cop.character) return;
+                if (!factions.isFibFaction(cop.character.factionId)) return;
+
+                notifs.warning(cop, `${player.name} выдал ${rec.character.wanted} ур. ${rec.name} по причине ${data.cause}`, `Розыск`);
+            });
         } else db.Models.Character.update({
             wanted: data.wanted,
             wantedCause: data.cause

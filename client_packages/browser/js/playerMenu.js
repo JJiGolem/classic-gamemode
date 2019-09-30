@@ -719,7 +719,7 @@ var playerMenu = new Vue({
     },
     mounted() {
         window.addEventListener('keyup', (e) => {
-            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "inventory"])) return;
+            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "inventory", "inputWindow"])) return;
             if (Date.now() - this.lastShowTime < 500) return;
             if (!this.enable) return;
             if (this.inputFocus) return;

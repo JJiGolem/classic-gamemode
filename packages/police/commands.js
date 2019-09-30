@@ -1,3 +1,4 @@
+var factions = require('../factions');
 var notifs = require('../notifications');
 var police = require('./index');
 
@@ -58,8 +59,15 @@ module.exports = {
             if (rec.character.wanted == args[1]) return out.error(`${rec.name} уже имеет ${args[1]} ур. розыска`, player);
             police.setWanted(rec, args[1]);
 
-            notifs.success(player, `${rec.name} имеет ${rec.character.wanted} ур.`, `Розыск`);
+            // notifs.success(player, `${rec.name} имеет ${rec.character.wanted} ур.`, `Розыск`);
             notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур.`, `Розыск`);
+
+            mp.players.forEach(cop => {
+                if (!cop.character) return;
+                if (!factions.isPoliceFaction(cop.character.factionId) && !factions.isFibFaction(cop.character.factionId)) return;
+
+                notifs.warning(cop, `${player.name} выдал ${rec.character.wanted} ур. ${rec.name}`, `Розыск`);
+            });
         }
     },
     "/psearch": {

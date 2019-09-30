@@ -1060,7 +1060,7 @@ var inventory = new Vue({
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
-            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "playerMenu"])) return;
+            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "playerMenu", "inputWindow"])) return;
             if (Date.now() - self.lastShowTime < 500) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;
             if (e.keyCode > 47 && e.keyCode < 58) {
