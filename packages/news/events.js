@@ -1,4 +1,5 @@
 "use strict";
+let chat = call('chat');
 let factions = call('factions');
 let inventory = call('inventory');
 let news = call('news');
@@ -168,5 +169,17 @@ module.exports = {
 
         notifs.success(player, `Форма выдана`, header);
         factions.setAmmo(faction, faction.ammo - news.clothesAmmo);
+    },
+    "news.stream": (player) => {
+        var header = `Weazel News`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!factions.isNewsFaction(player.character.factionId)) return out(`Вы не редактор`);
+
+        news.stream(player);
+    },
+    "chat.action.say": (player, text) => {
+        news.streamHandle(player, text);
     },
 }
