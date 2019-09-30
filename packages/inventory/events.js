@@ -229,7 +229,26 @@ module.exports = {
         else inventory.updateParam(player, drugs, 'count', count);
 
         player.call(`effect`, ['DrugsDrivingOut', bands.drugsEffectTime]);
-        notifs.success(player, `Вы упротреблении наркотик`, header);
+        notifs.success(player, `Вы употребили наркотик`, header);
+    },
+    // употребить сигарету
+    "inventory.item.smoke.use": (player, sqlId) => {
+        var header = `Сигарета`;
+        var smoke = inventory.getItem(player, sqlId);
+        if (!smoke) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        var count = inventory.getParam(smoke, 'count').value;
+        if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
+        if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
+        if (mafia.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за бизнес`, header);
+
+        player.health = Math.clamp(player.health + 2, 0, 100);
+
+        count--;
+        if (!count) inventory.deleteItem(player, smoke);
+        else inventory.updateParam(player, smoke, 'count', count);
+
+        player.call(`effect`, ['DrugsDrivingOut', bands.drugsEffectTime]);
+        notifs.success(player, `Вы употребили сигарету`, header);
     },
     // Запрос предметов инвентаря в багажнике авто
     "vehicle.boot.items.request": (player, vehId) => {

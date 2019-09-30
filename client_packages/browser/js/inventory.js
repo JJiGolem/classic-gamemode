@@ -103,6 +103,13 @@ var inventory = new Vue({
                     }
                 }
             },
+            16: { // сигареты
+                'Курить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `inventory.item.smoke.use`, item.sqlId);
+                    }
+                }
+            },
             24: { // малая аптечка
                 'Вылечиться': {
                     handler(item) {
@@ -265,6 +272,11 @@ var inventory = new Vue({
                         itemSqlId: item.sqlId
                     };
                     mp.trigger(`callRemote`, `fib.spy`, JSON.stringify(data));
+                }
+            },
+            16: { // сигареты
+                handler(item) {
+                    mp.trigger(`callRemote`, `inventory.item.smoke.use`, item.sqlId);
                 }
             },
             24: { // малая аптечка
