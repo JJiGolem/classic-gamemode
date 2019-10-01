@@ -65,6 +65,13 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
+    myEventEmmiter.on('news.price', (symbolPrice) => {
+        dispatch({
+            type: 'SET_SYMBOL_PRICE_NEWS',
+            payload: symbolPrice
+        });
+    });
+
     myEventEmmiter.on('phone.message.list', (dialogs) => {
         dispatch({
             type: 'LOAD_DIALOGS',
