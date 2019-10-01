@@ -231,14 +231,20 @@ module.exports = {
         if (!count) return notifs.error(player, `Количество: 0 г.`, header);
         if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
         if (mafia.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за бизнес`, header);
-
         var i = drugs.itemId - 29;
+        if (player.lastUseDrugs) {
+            var diff = Date.now() - player.lastUseDrugs;
+            var wait = bands.drugsInterval[i];
+            if (diff < wait) return notifs.error(player, `Повторное использование доступно через ${parseInt((wait - diff) / 1000)} сек.`, header);
+        }
+
         player.health = Math.clamp(player.health + bands.drugsHealth[i], 0, 100);
 
         count--;
         if (!count) inventory.deleteItem(player, drugs);
         else inventory.updateParam(player, drugs, 'count', count);
 
+        player.lastUseDrugs = Date.now();
         player.call(`effect`, [bands.drugsEffect[i], bands.drugsEffectTime[i]]);
         notifs.success(player, `Вы употребили наркотик`, header);
 

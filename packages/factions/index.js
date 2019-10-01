@@ -296,6 +296,7 @@ module.exports = {
         else if (this.isNewsFaction(faction)) mp.events.call(`mapCase.news.init`, player);
 
         mp.events.call(`player.faction.changed`, player);
+        mp.events.call(`jobs.leave`, player);
     },
     deleteMember(player) {
         var character = player.character;
