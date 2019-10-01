@@ -83,6 +83,9 @@ mp.playerMenu = {
     setNumber(number) {
         mp.callCEFV(`playerMenu.setNumber(${number})`);
     },
+    setSpouse(spouse) {
+        mp.callCEFV(`playerMenu.setSpouse('${JSON.stringify(spouse)}')`);
+    },
 };
 
 mp.events.add({
@@ -154,6 +157,9 @@ mp.events.add({
     },
     "playerMenu.setNumber": (data) => {
         mp.playerMenu.setNumber(data.number);
+    },
+    "playerMenu.setSpouse": (data) => {
+        mp.playerMenu.setSpouse(data.spouse);
     },
     "money.change": (cash, bank) => {
         mp.playerMenu.setCash(cash);
