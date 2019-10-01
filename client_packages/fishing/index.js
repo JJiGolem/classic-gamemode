@@ -58,7 +58,8 @@ mp.events.add('render', () => {
                     y: localPlayer.position.y + 20*Math.sin(heading * Math.PI / 180.0),
                     z: localPlayer.position.z
                 }
-                if (Math.abs(mp.game.water.getWaterHeight(point.x, point.y, point.z, 0)) > 0) {
+                if (Math.abs(mp.game.water.getWaterHeight(point.x, point.y, point.z, 0)) > 0 && mp.game.gameplay.getGroundZFor3dCoord(point.x, point.y, point.z, 0.0, false) < 0) {
+                    mp.console(mp.game.gameplay.getGroundZFor3dCoord(point.x, point.y, point.z, 0.0, false));
                     isShowPrompt = true;
                     mp.events.call('fishing.game.menu');
                 } else {
