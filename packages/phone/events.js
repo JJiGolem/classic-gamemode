@@ -29,8 +29,8 @@ module.exports = {
                 }
             ]
         });
-        mp.events.call(`phoneInit.done`, player);
         phone.loadPhoneOnClient(player);
+        mp.events.call(`phoneInit.done`, player);
     },
     /// Покупка телефона
     "phone.buy": async (player) => {
