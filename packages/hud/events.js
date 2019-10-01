@@ -1,5 +1,4 @@
 var hud = require('./index.js');
-let factions = call('factions');
 
 module.exports = {
     /// Отображение онлайна в худе
@@ -10,37 +9,23 @@ module.exports = {
     },
     "characterInit.done": (player) => {
         player.call('hud.load'); 
-            
-        let factionName = '-';
         
-        if (player.character.factionId != null) {
-            let faction = factions.getFaction(player.character.factionId);
-            
-            if (faction) {
-                factionName = faction.name;
-            }
-        }
-
-        let newPlayer = {
-            id: player.id,
-            name: player.character.name,
-            ping: player.ping,
-            faction: factionName
+        if (player.character.admin > 0) {
+            player.call('hud.players.list.load', [hud.loadPlayers()]);
         }
 
         mp.players.forEach(current => {
-            current.character
-            && current.character.admin > 0 
-            && current.call('hud.players.list.add', [newPlayer])
+            if (current.character && current.id != player.id && current.character.admin > 0 ) {
+                current.call('hud.players.list.add', [hud.loadNewPlayer(player)])
+            }
         })
     },
     "playerQuit": (player) => {
         mp.players.forEach((current) => {
             current.call("hud.setData", [{players: mp.players.length}]); /// После выхода из игры игрок какое-то время висит в пуле, возможно стоит создать таймер
-            current.id != player.id 
-            && current.character
-            && current.character.admin > 0 
-            && current.call('hud.players.list.remove', [player.id]);
+            if (current.character && current.id != player.id && current.character.admin > 0 ) {
+                current.call('hud.players.list.remove', [player.id]);
+            }
         });
     },
     "hud.players.list.show": (player) => {
