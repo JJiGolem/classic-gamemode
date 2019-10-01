@@ -579,14 +579,14 @@ module.exports = {
 
         //todo broadcast to radio
     },
-    "police.vehicle.put": (player, recId, vehId) => {
+    "police.vehicle.put": (player, recId) => {
         var header = `Посадка`;
         var rec = mp.players.at(recId);
         if (!rec) return notifs.error(player, `Гражданин не найден`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} уже в авто`, header);
         if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, header);
 
-        var veh = mp.vehicles.at(vehId);
+        var veh = mp.vehicles.getNear(player);
         if (!veh) return notifs.error(player, `Авто не найдено`, header);
         var dist = player.dist(veh.position);
         if (dist > 3) return notifs.error(player, `Авто далеко`, header);
