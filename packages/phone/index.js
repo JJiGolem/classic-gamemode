@@ -78,12 +78,12 @@ module.exports = {
         let numberIndex = phoneNumbers.findIndex( x => x == player.phone.number);
         if (numberIndex != -1) {
             phoneNumbers[numberIndex] = newNumber;
-        } 
+        }
         else {
             phoneNumbers.push(newNumber);
         }
-        for (let mycontactCopyIndex = player.phone.PhoneContacts.findIndex(x => x.number == newNumber); 
-            mycontactCopyIndex != -1; 
+        for (let mycontactCopyIndex = player.phone.PhoneContacts.findIndex(x => x.number == newNumber);
+            mycontactCopyIndex != -1;
             mycontactCopyIndex = player.phone.PhoneContacts.findIndex(x => x.number == newNumber)) {
                 await player.phone.PhoneContacts[mycontactCopyIndex].destroy();
                 player.phone.PhoneContacts.splice(mycontactCopyIndex, 1);

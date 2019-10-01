@@ -278,6 +278,10 @@ let statistics = [
         head: "Зависимость от никотина",
         value: "-"
     },
+    {
+        head: "Номер",
+        value: "-"
+    },
 ];
 
 let houseInfo = [{
@@ -681,6 +685,9 @@ var playerMenu = new Vue({
         },
         setAdmin(admin) {
             this.admin = admin;
+        },
+        setNumber(number) {
+            statistics[11].value = number;
         },
     },
     watch: {

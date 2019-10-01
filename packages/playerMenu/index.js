@@ -224,4 +224,14 @@ module.exports = {
         };
         player.call(`playerMenu.setNicotine`, [data]);
     },
+    setNumber(player) {
+        var phone = player.phone;
+
+        var data = {
+            number: "-",
+        };
+        if (phone) data.number = phone.number
+
+        player.call(`playerMenu.setNumber`, [data]);
+    },
 };
