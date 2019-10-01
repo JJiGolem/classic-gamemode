@@ -413,7 +413,14 @@ var interactionMenu = new Vue({
             if (!val) {
                 this.deleteItem("player_interaction", "Организация");
                 this.deleteItem("player_interaction", "Police");
+                this.deleteItem("player_interaction", "FIB");
                 this.deleteItem("player_interaction", "Hospital");
+                this.deleteItem("player_interaction", "Weazel News");
+                this.deleteItem("player_interaction", "Mafia");
+                this.deleteItem("player_ownmenu", "Захват");
+                this.deleteItem("player_ownmenu", "Захват биз.");
+                this.deleteItem("player_ownmenu", "Эфир");
+                this.deleteItem("vehicle", "FIB");
                 return;
             }
             this.addItems("player_interaction", {
@@ -462,7 +469,6 @@ var interactionMenu = new Vue({
                 this.addItems("player_ownmenu", {
                     text: "Захват"
                 });
-
             } else this.deleteItem("player_ownmenu", "Захват");
             if (val >= 12 && val <= 14) { // mafia
                 this.addItems("player_interaction", {
