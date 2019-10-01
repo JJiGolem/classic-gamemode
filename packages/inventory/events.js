@@ -268,7 +268,7 @@ module.exports = {
         if (!count) inventory.deleteItem(player, smoke);
         else inventory.updateParam(player, smoke, 'count', count);
 
-        player.call(`effect`, ['DrugsDrivingOut', 10000]);
+        player.call(`effect`, ['FocusOut', 15000]);
         notifs.success(player, `Вы употребили сигарету`, header);
 
         mp.players.forEachInRange(player.position, 20, rec => {

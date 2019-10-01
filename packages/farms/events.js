@@ -86,7 +86,7 @@ module.exports = {
         var header = `Покупка фермы`;
         if (!player.offer || player.offer.type != "farm_sell") return notifs.error(player, `Предложение не найдено`, header);
 
-        var owner = mp.players.at(player.offer.playerId);
+        var owner = mp.players.at(player.offer.inviterId);
         var price = player.offer.price;
         delete player.offer;
         if (!owner) return notifs.error(player, `Хозяин не найден`, header);

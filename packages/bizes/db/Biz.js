@@ -15,8 +15,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         factionId: {
             type: DataTypes.INTEGER(11),
-            defaultValue: null,
-            allowNull: true
+            defaultValue: 14,
+            allowNull: false
         },
         date: {
             type: DataTypes.DATE,

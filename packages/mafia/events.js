@@ -31,6 +31,7 @@ module.exports = {
             names: factions.getMafiaFactions().map(x => x.name),
             bizCount: bizes.getBizCount(),
         };
+        if (!data.bizes.length) return notifs.error(player, `Все бизнесы захвачены`);
         player.call(`mafia.bizWar.showMenu`, [data]);
     },
     "mafia.bizWar.start": (player, bizId) => {
