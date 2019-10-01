@@ -90,6 +90,15 @@ module.exports = {
                 productName = 'cigarettes';
                 brand = 'Redwood';
                 break;
+            case 3:
+                productName = 'rope';
+                break;
+            case 4:
+                productName = 'bag';
+                break;
+            case 5:
+                productName = 'canister';
+                break;
         }
         let price = supermarket.productsConfig[productName] * supermarket.productPrice * supermarket.getPriceMultiplier(supermarketId);
         if (player.character.cash < price) return player.call('supermarket.products.buy.ans', [2]);

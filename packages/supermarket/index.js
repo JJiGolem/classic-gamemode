@@ -17,11 +17,17 @@ module.exports = {
         water: 2,
         chocolate: 1,
         cigarettes: 2,
+        canister: 10,
+        rope: 5,
+        bag: 7
     },
     itemIds: {
         water: 34,
         chocolate: 35,
-        cigarettes: 16
+        cigarettes: 16,
+        rope: 54,
+        bag: 55,
+        canister: 56,
     },
     async init() {
         bizes = call('bizes');

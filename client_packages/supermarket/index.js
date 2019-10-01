@@ -98,6 +98,7 @@ function setSupermarketHeaders(type) {
     mp.callCEFV(`selectMenu.menus["supermarketNumberChange"].headerImg = '${img}'`);
     mp.callCEFV(`selectMenu.menus["supermarketFood"].headerImg = '${img}'`);
     mp.callCEFV(`selectMenu.menus["supermarketTobacco"].headerImg = '${img}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketStuff"].headerImg = '${img}'`);
 }
 
 function setPrices(config, multiplier) {
@@ -110,4 +111,7 @@ function setPrices(config, multiplier) {
     mp.callCEFV(`selectMenu.menus["supermarketFood"].items[0].values[0] = '$${config.water}'`);
     mp.callCEFV(`selectMenu.menus["supermarketFood"].items[1].values[0] = '$${config.chocolate}'`);
     mp.callCEFV(`selectMenu.menus["supermarketTobacco"].items[0].values[0] = '$${config.cigarettes}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketStuff"].items[0].values[0] = '$${config.rope}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketStuff"].items[1].values[0] = '$${config.bag}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketStuff"].items[2].values[0] = '$${config.canister}'`);
 }
