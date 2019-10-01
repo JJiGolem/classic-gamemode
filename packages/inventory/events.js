@@ -240,6 +240,10 @@ module.exports = {
 
         player.call(`effect`, ['DrugsDrivingOut', bands.drugsEffectTime]);
         notifs.success(player, `Вы употребили наркотик`, header);
+
+        player.character.narcotism++;
+        player.character.save();
+        mp.events.call("player.narcotism.changed", player);
     },
     // употребить сигарету
     "inventory.item.smoke.use": (player, sqlId) => {
@@ -268,6 +272,10 @@ module.exports = {
                 flag: 49
             }, 8000]);
         });
+
+        player.character.nicotine++;
+        player.character.save();
+        mp.events.call("player.nicotine.changed", player);
     },
     // употребить еду
     "inventory.item.eat.use": (player, sqlId) => {

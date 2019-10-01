@@ -270,6 +270,14 @@ let statistics = [
         head: "Преступления",
         value: "-"
     },
+    {
+        head: "Наркозависимость",
+        value: "-"
+    },
+    {
+        head: "Никотинозависимость",
+        value: "-"
+    },
 ];
 
 let houseInfo = [{
@@ -559,6 +567,8 @@ var playerMenu = new Vue({
             statistics[6].value = `${stats.wanted} зв.`;
             statistics[7].value = stats.law;
             statistics[8].value = stats.crimes;
+            statistics[9].value = stats.narcotism;
+            statistics[10].value = stats.nicotine;
 
             clearInterval(this.minutesTimer);
             this.minutesTimer = setInterval(() => {
@@ -600,6 +610,12 @@ var playerMenu = new Vue({
         },
         setLaw(law) {
             statistics[7].value = law;
+        },
+        setNarcotism(narcotism) {
+            statistics[9].value = narcotism;
+        },
+        setNicotine(nicotine) {
+            statistics[10].value = nicotine;
         },
         setSkills(data) {
             if (typeof data == 'string') data = JSON.parse(data);

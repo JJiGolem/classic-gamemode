@@ -74,6 +74,12 @@ mp.playerMenu = {
     setLaw(law) {
         mp.callCEFV(`playerMenu.setLaw(${law})`);
     },
+    setNarcotism(narcotism) {
+        mp.callCEFV(`playerMenu.setNarcotism(${narcotism})`);
+    },
+    setNicotine(nicotine) {
+        mp.callCEFV(`playerMenu.setNicotine(${nicotine})`);
+    },
 };
 
 mp.events.add({
@@ -136,6 +142,12 @@ mp.events.add({
     },
     "playerMenu.setLaw": (data) => {
         mp.playerMenu.setLaw(data.law);
+    },
+    "playerMenu.setNarcotism": (data) => {
+        mp.playerMenu.setNarcotism(data.narcotism);
+    },
+    "playerMenu.setNicotine": (data) => {
+        mp.playerMenu.setNicotine(data.nicotine);
     },
     "money.change": (cash, bank) => {
         mp.playerMenu.setCash(cash);

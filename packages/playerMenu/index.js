@@ -27,6 +27,8 @@ module.exports = {
             wanted: player.character.wanted,
             law: player.character.law,
             crimes: player.character.crimes,
+            narcotism: player.character.narcotism,
+            nicotine: player.character.nicotine,
             donate: player.account.donate,
             convertCash: donate.convertCash,
             nicknamePrice: donate.nicknamePrice,
@@ -209,5 +211,17 @@ module.exports = {
             law: player.character.law
         };
         player.call(`playerMenu.setLaw`, [data]);
+    },
+    setNarcotism(player) {
+        var data = {
+            narcotism: player.character.narcotism
+        };
+        player.call(`playerMenu.setNarcotism`, [data]);
+    },
+    setNicotine(player) {
+        var data = {
+            nicotine: player.character.nicotine
+        };
+        player.call(`playerMenu.setNicotine`, [data]);
     },
 };

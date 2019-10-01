@@ -74,4 +74,10 @@ module.exports = {
     "player.law.changed": (player) => {
         playerMenu.setLaw(player);
     },
+    "player.narcotism.changed": (player) => {
+        playerMenu.setNarcotism(player);
+    },
+    "player.nicotine.changed": (player) => {
+        playerMenu.setNicotine(player);
+    },
 }
