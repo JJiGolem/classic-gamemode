@@ -108,9 +108,10 @@ module.exports = {
             if (e) return player.call('supermarket.products.buy.ans', [4, e]);
             money.removeCash(player, price, function (result) {
                 if (result) {
-                    supermarket.removeProducts(supermarketId, supermarket.productsConfig[productName]);
-                    supermarket.updateCashbox(supermarketId, price);
-                    player.call('supermarket.products.buy.ans', [1]);
+                        supermarket.removeProducts(supermarketId, supermarket.productsConfig[productName]);
+                        supermarket.updateCashbox(supermarketId, price);
+                        player.call('supermarket.products.buy.ans', [1]);
+
                 } else {
                     player.call('supermarket.products.buy.ans', [0]);
                 }

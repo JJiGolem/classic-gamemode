@@ -73,7 +73,7 @@ mp.events.add({
         mp.callCEFV('selectMenu.loader = false');
         switch (ans) {
             case 0:
-                mp.callCEFV(`selectMenu.notification = Ошибка покупки'`);
+                mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
                 break;
             case 1:
                 mp.callCEFV(`selectMenu.notification = 'Вы приобрели товар'`);
@@ -109,5 +109,5 @@ function setPrices(config, multiplier) {
     mp.callCEFV(`selectMenu.menus["supermarketNumberChange"].items[1].values[0] = '$${config.numberChange}'`);
     mp.callCEFV(`selectMenu.menus["supermarketFood"].items[0].values[0] = '$${config.water}'`);
     mp.callCEFV(`selectMenu.menus["supermarketFood"].items[1].values[0] = '$${config.chocolate}'`);
-    mp.callCEFV(`selectMenu.menus["supermarketTobacco"].items[0].values[0] = '$${config.redwood}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketTobacco"].items[0].values[0] = '$${config.cigarettes}'`);
 }

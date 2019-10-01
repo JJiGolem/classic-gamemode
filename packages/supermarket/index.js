@@ -16,7 +16,7 @@ module.exports = {
         numberChange: 12,
         water: 2,
         chocolate: 1,
-        redwood: 2,
+        cigarettes: 2,
     },
     itemIds: {
         water: 34,
