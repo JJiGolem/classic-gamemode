@@ -11,6 +11,9 @@ module.exports = {
     "phoneInit.done": (player) => {
         playerMenu.setNumber(player);
     },
+    "spouseInit.done": (player) => {
+        playerMenu.setSpouse(player);
+    },
     "playerMenu.kick": (player) => {
         notifs.success(player, `До скорого! :)`);
         player.kick();

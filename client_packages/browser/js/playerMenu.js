@@ -282,6 +282,10 @@ let statistics = [
         head: "Номер",
         value: "-"
     },
+    {
+        head: "Семейное положение",
+        value: "-"
+    },
 ];
 
 let houseInfo = [{
@@ -688,6 +692,15 @@ var playerMenu = new Vue({
         },
         setNumber(number) {
             statistics[11].value = number;
+        },
+        setSpouse(spouse) {
+            if (typeof spouse == 'string') spouse = JSON.parse(spouse);
+            if (spouse) {
+                var str = (spouse.gender)? "женат на " : "замужем за "
+                statistics[12].value = str + spouse.name;
+            } else {
+                statistics[12].value = "-";
+            }
         },
     },
     watch: {

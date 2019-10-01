@@ -234,4 +234,17 @@ module.exports = {
 
         player.call(`playerMenu.setNumber`, [data]);
     },
+    setSpouse(player) {
+        var spouse = player.spouse;
+
+        var data = {};
+        if (spouse) {
+            data.spouse = {
+                name: spouse.character.name,
+                gender: spouse.character.gender
+            };
+        }
+
+        player.call(`playerMenu.setSpouse`, [data]);
+    },
 };
