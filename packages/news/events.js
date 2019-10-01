@@ -190,8 +190,15 @@ module.exports = {
     "chat.action.say": (player, text) => {
         news.streamHandle(player, text);
     },
+    "/s": (player, text) => {
+        news.streamHandle(player, text);
+    },
     "playerQuit": (player) => {
         if (!player.character) return;
+
+        var i = news.liveStream.memberIds.indexOf(player.id);
+        if (i != -1) news.liveStream.memberIds.splice(i, 1);
+
         if (!factions.isNewsFaction(player.character.factionId)) return;
         if (news.liveStream.ownerId != player.id) return;
 
