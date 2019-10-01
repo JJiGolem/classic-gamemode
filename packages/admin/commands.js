@@ -571,4 +571,34 @@ module.exports = {
             })
         }
     },
+    "/modules": {
+        description: "Список включенных модулей на сервере.",
+        access: 1,
+        args: "",
+        handler: (player, args, out) => {
+            out.debug("soon...")
+        }
+    },
+    "/module": {
+        description: "Список команд в модуле.",
+        access: 1,
+        args: "[модуль]",
+        handler: (player, args, out) => {
+            try {
+                var commands = require(`../${args[0]}/commands`);
+                var text = `Команды модуля ${args[0]}:<br/><br/>`;
+                for (var name in commands) {
+                    var cmd = commands[name];
+                    // if (cmd.access > player.character.admin) continue;
+                    text += `<b>${name}</b> ${cmd.args} (${cmd.access} lvl.) - ${cmd.description}<br/>`;
+                }
+                var keys = Object.keys(commands);
+                text += `<br/>Всего команд: ${keys.length} шт.<br/>Введите "help [name]" или "help [level]" для ознакомления с командой`;
+                out.log(text, player);
+            } catch (e) {
+                debug(e);
+                return out.error(`Модуль ${args[0]} не найден. Список включенных модулей: /modules.`);
+            }
+        }
+    },
 }

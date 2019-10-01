@@ -141,6 +141,15 @@ module.exports = {
             var i = rec.inventory.ground.indexOf(obj);
             rec.inventory.ground.splice(i, 1);
         });
+
+        mp.players.forEachInRange(player.position, 20, rec => {
+            rec.call(`animations.play`, [player.id, {
+                dict: "anim@mp_snowball",
+                name: "pickup_snowball",
+                speed: 1,
+                flag: 1
+            }, 1500]);
+        });
     },
     // вылечиться аптечкой
     "inventory.item.med.use": (player, sqlId) => {
