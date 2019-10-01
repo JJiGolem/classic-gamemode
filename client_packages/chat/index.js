@@ -14,8 +14,7 @@ var timestamp = true;
 var isOpen = false;
 // TODO: цвета тэгов
 
-const TAGS_LIST = [
-    {
+const TAGS_LIST = [{
         id: 0,
         name: "Сказать",
         color: "#ffffff"
@@ -59,8 +58,7 @@ function setDefaultTags() {
         if (tag.id != 2) {
             availableTags.push(tag);
         }
-    }
-    )
+    })
 }
 
 mp.events.add('chat.load', () => {
@@ -70,7 +68,7 @@ mp.events.add('chat.load', () => {
     mp.callCEFR('setOpacityChat', [1.0]);
     mp.callCEFR('setTimeChat', [true]);
 
-    mp.keys.bind(0x54, true, function () {
+    mp.keys.bind(0x54, true, function() {
 
         if (mp.busy.includes()) return;
         mp.busy.add('chat');
@@ -79,7 +77,7 @@ mp.events.add('chat.load', () => {
         mp.callCEFR('setFocusChat', [true]);
     });
 
-    mp.keys.bind(0x76, true, function () {
+    mp.keys.bind(0x76, true, function() {
 
         if (mp.busy.includes()) return;
 
@@ -171,18 +169,27 @@ mp.events.add('chat.action.say', (nickname, id, message) => {
 
     message = `!{#ffffff}${nickname}[${id}]: ${message}`;
     mp.events.call('chat.message.push', message);
+
+    var player = mp.players.atRemoteId(id);
+    if (!player) return;
+    mp.animations.playAnimation(player, {
+        dict: "special_ped@baygor@monologue_3@monologue_3e",
+        name: "trees_can_talk_4",
+        speed: 1,
+        flag: 49
+    }, 3000);
 });
 
 mp.events.add('chat.action.shout', (nickname, id, message) => {
     nickname = correctName(nickname);
 
-    if (typeof (message) != "string") message = message.join(' ');
+    if (typeof(message) != "string") message = message.join(' ');
     message = `!{#ffdfa8}${nickname}[${id}] кричит: ${message}`;
     mp.events.call('chat.message.push', message);
 });
 
 mp.events.add('chat.action.walkietalkie', (nickname, id, rank, message) => { //add rank
-    if (typeof (message) != "string") message = message.join(' ');
+    if (typeof(message) != "string") message = message.join(' ');
     message = `!{#33cc66}[R] ${rank} ${nickname}[${id}]: ${message}`;
     mp.events.call('chat.message.push', message);
 });
@@ -190,7 +197,7 @@ mp.events.add('chat.action.walkietalkie', (nickname, id, rank, message) => { //a
 mp.events.add('chat.action.nonrp', (nickname, id, message) => {
     nickname = correctName(nickname);
 
-    if (typeof (message) != "string") message = message.join(' ');
+    if (typeof(message) != "string") message = message.join(' ');
     message = `!{#c6c695}(( ${nickname}[${id}]: ${message} ))`;
     mp.events.call('chat.message.push', message);
 });
@@ -198,7 +205,7 @@ mp.events.add('chat.action.nonrp', (nickname, id, message) => {
 mp.events.add('chat.action.me', (nickname, id, message) => {
     nickname = correctName(nickname);
 
-    if (typeof (message) != "string") message = message.join(' ');
+    if (typeof(message) != "string") message = message.join(' ');
     message = `!{#dd90ff}${nickname}[${id}] ${message}`;
     mp.events.call('chat.message.push', message);
 });
@@ -206,7 +213,7 @@ mp.events.add('chat.action.me', (nickname, id, message) => {
 mp.events.add('chat.action.do', (nickname, id, message) => {
     nickname = correctName(nickname);
 
-    if (typeof (message) != "string") message = message.join(' ');
+    if (typeof(message) != "string") message = message.join(' ');
     message = `!{#dd90ff}${message} (${nickname}[${id}])`;
     mp.events.call('chat.message.push', message);
 });
@@ -214,7 +221,7 @@ mp.events.add('chat.action.do', (nickname, id, message) => {
 mp.events.add('chat.action.try', (nickname, id, message, result) => {
     nickname = correctName(nickname);
 
-    if (typeof (message) != "string") message = message.join(' ');
+    if (typeof(message) != "string") message = message.join(' ');
     message = `!{#dd90ff}${nickname}[${id}] ${message} ${(result ? '!{#66cc00}[Удачно]' : '!{#ff6600}[Неудачно]')}`;
     mp.events.call('chat.message.push', message);
 });
