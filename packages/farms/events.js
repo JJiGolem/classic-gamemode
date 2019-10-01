@@ -1,4 +1,5 @@
 let carrier = call('carrier');
+let factions = call('factions');
 let farms = call('farms');
 let jobs = call('jobs');
 let money = call('money');
@@ -131,6 +132,7 @@ module.exports = {
         if (jobs.getJobSkill(player, 5).exp < farms.jobExps[index]) return notifs.error(player, `Необходимо навык ${jobs.getJob(5).name} ${farms.jobExps[index]}%`, header);
         if ((index == 1 || index == 2) && !player.character.carLicense) return notifs.error(player, `Необходимо водительское удостоверение`, header);
         if (index == 3 && !player.character.airLicense) return notifs.error(player, `Необходима лицензия на воздушный транспорт`, header);
+        if (player.character.factionId) return notifs.error(player, `Вы состоите в ${factions.getFactionName(player)}`, header);
 
         jobs.addMember(player, 5);
 
