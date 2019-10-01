@@ -8,6 +8,9 @@ module.exports = {
     "jobSkillsInit.done": (player) => {
         playerMenu.setSkills(player);
     },
+    "phoneInit.done": (player) => {
+        playerMenu.setNumber(player);
+    },
     "playerMenu.kick": (player) => {
         notifs.success(player, `До скорого! :)`);
         player.kick();
@@ -22,11 +25,9 @@ module.exports = {
         playerMenu.setJob(player);
     },
     "player.biz.changed": (player) => {
-        debug(`player.biz.changed`)
         playerMenu.setBiz(player);
     },
     "player.house.changed": (player) => {
-        debug(`player.house.changed`)
         playerMenu.setHouse(player);
     },
     "player.jobSkill.changed": (player, skill) => {
@@ -79,5 +80,9 @@ module.exports = {
     },
     "player.nicotine.changed": (player) => {
         playerMenu.setNicotine(player);
+    },
+    "player.phone.number.changed": (player) => {
+        debug(`player.phone.number.changed`)
+        playerMenu.setNumber(player);
     },
 }

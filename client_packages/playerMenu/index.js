@@ -80,6 +80,9 @@ mp.playerMenu = {
     setNicotine(nicotine) {
         mp.callCEFV(`playerMenu.setNicotine(${nicotine})`);
     },
+    setNumber(number) {
+        mp.callCEFV(`playerMenu.setNumber(${number})`);
+    },
 };
 
 mp.events.add({
@@ -148,6 +151,9 @@ mp.events.add({
     },
     "playerMenu.setNicotine": (data) => {
         mp.playerMenu.setNicotine(data.nicotine);
+    },
+    "playerMenu.setNumber": (data) => {
+        mp.playerMenu.setNumber(data.number);
     },
     "money.change": (cash, bank) => {
         mp.playerMenu.setCash(cash);
