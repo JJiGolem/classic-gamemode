@@ -220,6 +220,12 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('thirst', val);
             },
         },
+        // Наркозависимость
+        narcotism: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false,
+        },
         // Законопослушность
         law: {
             type: DataTypes.INTEGER(11),

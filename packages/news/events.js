@@ -10,6 +10,7 @@ module.exports = {
 
     },
     "characterInit.done": (player) => {
+        player.call(`callCEFR`, [`news.price`, [news.symbolPrice]]);
         if (!factions.isNewsFaction(player.character.factionId)) return;
         // player.call(`mapCase.init`, [player.name, player.character.factionId]);
         mp.events.call(`mapCase.news.init`, player);
