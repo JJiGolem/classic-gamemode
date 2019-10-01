@@ -601,4 +601,12 @@ module.exports = {
             }
         }
     },
+    "/effect": {
+        description: "Включить визуальный эффект.",
+        access: 1,
+        args: "[эффект] [продолжительность]:n",
+        handler: (player, args, out) => {
+            player.call(`effect`, args);
+        }
+    },
 }
