@@ -232,16 +232,17 @@ module.exports = {
         if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
         if (mafia.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за бизнес`, header);
 
-        player.health = Math.clamp(player.health + bands.drugsHealth, 0, 100);
+        var i = drugs.itemId - 29;
+        player.health = Math.clamp(player.health + bands.drugsHealth[i], 0, 100);
 
         count--;
         if (!count) inventory.deleteItem(player, drugs);
         else inventory.updateParam(player, drugs, 'count', count);
 
-        player.call(`effect`, ['DrugsDrivingOut', bands.drugsEffectTime]);
+        player.call(`effect`, [bands.drugsEffect[i], bands.drugsEffectTime[i]]);
         notifs.success(player, `Вы употребили наркотик`, header);
 
-        player.character.narcotism++;
+        player.character.narcotism += bands.drugsNarcotism[i];
         player.character.save();
         mp.events.call("player.narcotism.changed", player);
     },

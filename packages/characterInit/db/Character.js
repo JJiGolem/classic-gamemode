@@ -226,7 +226,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             allowNull: false,
         },
-        // Никотинозависимость
+        // Зависимость от никотина
         nicotine: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
