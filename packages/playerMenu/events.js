@@ -88,4 +88,7 @@ module.exports = {
         debug(`player.phone.number.changed`)
         playerMenu.setNumber(player);
     },
+    "player.spouse.changed": (player) => {
+        playerMenu.setSpouse(player);
+    },
 }
