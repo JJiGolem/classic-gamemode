@@ -181,7 +181,7 @@ module.exports = {
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, `Ранг организации`);
         if (!player.character.factionId) return notifs.error(player, `Вы не состоите в организации`, `Ранг организации`);
         if (rec.character.factionId != player.character.factionId) return notifs.error(player, `${rec.name} не вашей организации`, `Ранг организации`);
-        if (rec.character.factionRank >= player.character.factionRank - 1) return notifs.error(player, `Нельзя повысить до своего ранга или выше`, `Ранг организации`);
+        if (rank >= player.character.factionRank - 1) return notifs.error(player, `Нельзя повысить до своего ранга или выше`, `Ранг организации`);
         if (!factions.canGiveRank(player)) return notifs.error(player, `Недостаточно прав`, `Ранг организации`);
 
         rank = factions.getRank(player.character.factionId, rank);
