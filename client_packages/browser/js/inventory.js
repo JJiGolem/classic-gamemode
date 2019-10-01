@@ -554,6 +554,14 @@ var inventory = new Vue({
                 name: "Жажда",
                 value: item.params.thirst + "%"
             });
+            if (item.params.weaponHash) {
+                var ammoId = this.getAmmoItemId(item.itemId);
+                if (!ammoId) return params;
+                params.push({
+                    name: "Калибр",
+                    value: this.itemsInfo[ammoId].name
+                });
+            }
 
             return params;
         },
@@ -806,6 +814,14 @@ var inventory = new Vue({
                         if (it) return it;
                     }
                 }
+            }
+            return null;
+        },
+        // получить ID предмета патронов по ID предмета оружия
+        getAmmoItemId(itemId) {
+            for (var ammoId in this.mergeList) {
+                var list = this.mergeList[ammoId];
+                if (list.includes(itemId)) return parseInt(ammoId);
             }
             return null;
         },
