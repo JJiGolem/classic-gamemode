@@ -122,7 +122,7 @@ class Business extends Component {
     }
 
     getButton(name) {
-        const { blurForm, business } = this.props;
+        const { blurForm, closeBusiness } = this.props;
 
         switch (name) {
             case 'buy':
@@ -174,6 +174,7 @@ class Business extends Component {
                             onClick={() => { 
                                 // eslint-disable-next-line no-undef
                                 mp.trigger('biz.actions', 'finance');
+                                closeBusiness();
                              }}
                             onMouseOver={() => this.setState({ colorActionButton: 'black' })}
                             onMouseOut={() => this.setState({ colorActionButton: '#e1c631' })}

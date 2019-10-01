@@ -14,17 +14,37 @@ class EmergencyCall extends Component {
         };
 
         this.handleChangeMessage = this.handleChangeMessage.bind(this);
+        this.sendMessage = this.sendMessage.bind(this);
     }
 
     handleChangeMessage(e) {
         const { message } = this.state;
 
-        this.setState({ message: e.target.value });
+        this.setState({ message: e.target.value, isError: false });
+    }
+
+    sendMessage(type) {
+        const { closeApp } = this.props;
+        const { message } = this.state;
+
+        if (message) {
+            this.setState({ isError: false });
+            
+            if (type == 'pd') {
+                mp.trigger('callRemote', 'mapCase.pd.calls.add', message);
+            } else if (type == 'ems') {
+                mp.trigger('callRemote', 'mapCase.ems.calls.add', message);
+            }
+
+            closeApp();
+        } else {
+            this.setState({ isError: true });
+        }
     }
 
     render() {
         const { closeApp } = this.props;
-        const { message } = this.state;
+        const { message, isError } = this.state;
 
         return (
             <Fragment>
@@ -39,9 +59,9 @@ class EmergencyCall extends Component {
                     <h2 style={{ color: '#343c47', textAlign: 'center', fontSize: '100%' }}>Причина вызова</h2>
                     <div style={{ textAlign: 'center' }}>
                         <textarea 
-                            style={{ border: '1px solid #343c47' }}
+                            style={{ border: isError ? '1px solid red' :'1px solid #343c47' }}
                             className="news_input" 
-                            placeholder="Введите причину..."
+                            placeholder={isError ? "Вы не ввели причину!" :"Введите причину..."}
                             maxLength="60"
                             rows="3"
                             value={message}
@@ -52,16 +72,10 @@ class EmergencyCall extends Component {
                     <span style={{ marginLeft: '5%' }}>{60 - message.length}/60 символов</span>
 
                     <div className='house_buttons-phone-react' style={{ bottom: '2%', position: 'absolute' }}>
-                        <div className='house_button-phone-react' onClick={() => {
-                            mp.trigger('callRemote', 'mapCase.pd.calls.add', message);
-                            closeApp();
-                        }}>
+                        <div className='house_button-phone-react' onClick={() => this.sendMessage('pd')}>
                             <div>PD</div>
                         </div>
-                        <div className='house_button-phone-react' onClick={() => {
-                            mp.trigger('callRemote', 'mapCase.ems.calls.add', message);
-                            closeApp();
-                        }}>
+                        <div className='house_button-phone-react' onClick={() => this.sendMessage('ems')}>
                             <div>EMS</div>
                         </div>
                     </div>

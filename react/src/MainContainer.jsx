@@ -16,13 +16,13 @@ class MainContainer extends Component {
     }
 
     render() {
-        const { forms, enterMenu } = this.props;
+        const { forms, enterMenu, info } = this.props;
 
         return (
             <Fragment>
                 <Chat />
-                { <div style={{ display: !forms.phone && 'none'}}><Phone /></div>}
-                { (forms.house) && <House /> }
+                { Object.keys(info).length > 1 && <div style={{ display: (!forms.phone) && 'none' }}><Phone /></div> }
+                { forms.house && <House /> }
                 { enterMenu.isShow && <EnterMenu /> }
                 { forms.business && <Business /> }
                 { forms.bank && <Bank /> }
@@ -34,7 +34,8 @@ class MainContainer extends Component {
 
 const mapStateToProps = state => ({
     forms: state.forms,
-    enterMenu: state.enterMenu
+    enterMenu: state.enterMenu,
+    info: state.info
 });
 
 export default connect(mapStateToProps, null)(MainContainer);
