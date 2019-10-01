@@ -38,7 +38,7 @@ module.exports = {
     // Время эффекта наркотика (ms)
     drugsEffectTime: [10000, 20000, 30000, 60000],
     // Визуальный эффект
-    drugsEffect: ['DrugsDrivingOut', 'DrugsDrivingOut', 'DrugsDrivingOut', 'DrugsDrivingOut'],
+    drugsEffect: ['DrugsDrivingOut', 'RampageOut', 'DrugsMichaelAliensFightOut', 'DrugsTrevorClownsFightOut'],
     // Повторное использование наркотика
     drugsInterval: [10 * 6000, 20 * 6000, 30 * 6000, 60 * 6000],
 
