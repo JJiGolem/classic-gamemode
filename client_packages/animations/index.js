@@ -10,7 +10,7 @@
 mp.animations = {
     animatorActive: false,
     animId: 0,
-    animationTimer: null,
+    animationTimers: {},
 
     playAnimation(player, a, time = null) {
         player.clearTasksImmediately();
@@ -20,10 +20,11 @@ mp.animations = {
         });
         if (!time) return;
         var id = player.remoteId;
-        clearTimeout(this.animationTimer);
-        this.animationTimer = setTimeout(() => {
+        clearTimeout(this.animationTimers[id]);
+        this.animationTimers[id] = setTimeout(() => {
             var rec = mp.players.atRemoteId(id);
             if (rec) rec.clearTasksImmediately();
+            delete this.animationTimers[id];
         }, time);
     },
     animator() {
