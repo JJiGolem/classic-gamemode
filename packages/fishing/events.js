@@ -8,6 +8,8 @@ let utils = require('../utils');
 let weight;
 let timeout;
 
+let fish;
+
 module.exports = {
     "init": () => {
         fishing.init();
@@ -46,9 +48,11 @@ module.exports = {
         let health = inventory.getParam(rod, 'health').value;
         inventory.updateParam(player, rod, 'health', health - 5);
 
+        fish = fishing.fishesTypes[utils.randomInteger(0, fishing.fishesTypes.length - 1)];
+
         let zone = utils.randomInteger(10, 20);
         let speed = parseInt(health / 5);
-        weight = utils.randomFloat(0.3, 3, 1);
+        weight = utils.randomFloat(fish.minWeight, fish.maxWeight, 1);
         let time = utils.randomInteger(3, 10);
 
         timeout = setTimeout(() => {
@@ -60,7 +64,6 @@ module.exports = {
 
         let rod = inventory.getItemByItemId(player, fishing.getRodId());
         let health = inventory.getParam(rod, 'health').value;
-        let fish = fishing.fishesTypes[utils.randomInteger(0, fishing.fishesTypes.length - 1)];
 
         if (result) {
             inventory.addItem(player, 15, { weight: weight, name: fish.name }, (e) => {

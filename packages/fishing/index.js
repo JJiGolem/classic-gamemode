@@ -12,7 +12,6 @@ let inventory = call('inventory');
 // "amb@world_human_stand_fishing@idle_a idle_c" - быстро крутит и тянет (вытягивает рыбу)
 
 let shape;
-let place;
 let fishingPlace = {
     x: -1850.4912744140625,
     y: -1242.1881591796875,
@@ -34,20 +33,40 @@ module.exports = {
     rodPrice: 100,
     fishesTypes: [
         {
-            name: 'Карась',
+            name: 'Окунь',
             price: 10,
+            minWeight: 0.8,
+            maxWeight: 2,
+        },
+        {
+            name: 'Мальма',
+            price: 13,
+            minWeight: 0.7,
+            maxWeight: 2.1,
+        },
+        {
+            name: 'Лосось',
+            price: 17,
+            minWeight: 1.3,
+            maxWeight: 3.4,
         },
         {
             name: 'Тунец',
-            price: 15
-        },
-        {
-            name: 'Сардина',
-            price: 20
+            price: 20,
+            minWeight: 1.7,
+            maxWeight: 3.8,
         },
         {
             name: 'Скумбрия',
-            price: 25
+            price: 25,
+            minWeight: 1.2,
+            maxWeight: 1.9,
+        },
+        {
+            name: 'Сом',
+            price: 30,
+            minWeight: 2.5,
+            maxWeight: 5.3,
         },
     ],
     getRodId() {
