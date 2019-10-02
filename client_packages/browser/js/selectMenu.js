@@ -1355,7 +1355,10 @@ var selectMenu = new Vue({
                                 let params = new Array();
                                 this.items.forEach(item => {
                                     if (item.paramKey == null) return;
-                                    params.push({key: item.paramKey, value: item.values[item.i]});
+                                    params.push({
+                                        key: item.paramKey,
+                                        value: item.values[item.i]
+                                    });
                                 });
                                 params.push();
                                 mp.trigger("biz.finance.save", JSON.stringify(params));
@@ -5431,21 +5434,21 @@ var selectMenu = new Vue({
                 header: "Супермаркет",
                 headerImg: "",
                 items: [{
-                    text: 'Мобильная связь'
-                },
-                {
-                    text: 'Продукты'
-                },
-                {
-                    text: 'Табачные изделия'
-                },
-                {
-                    text: 'Прочие товары'
-                },
-                {
-                    text: 'Закрыть'
-                },
-            ],
+                        text: 'Мобильная связь'
+                    },
+                    {
+                        text: 'Продукты'
+                    },
+                    {
+                        text: 'Табачные изделия'
+                    },
+                    {
+                        text: 'Прочие товары'
+                    },
+                    {
+                        text: 'Закрыть'
+                    },
+                ],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -5486,17 +5489,17 @@ var selectMenu = new Vue({
                 header: "Мобильная связь",
                 headerImg: "",
                 items: [{
-                    text: 'Купить телефон',
-                    values: ['$100']
-                },
-                {
-                    text: 'Сменить номер телефона',
-                    values: ['$100']
-                },
-                {
-                    text: 'Назад'
-                }
-            ],
+                        text: 'Купить телефон',
+                        values: ['$100']
+                    },
+                    {
+                        text: 'Сменить номер телефона',
+                        values: ['$100']
+                    },
+                    {
+                        text: 'Назад'
+                    }
+                ],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -5530,18 +5533,18 @@ var selectMenu = new Vue({
                 header: "Смена номера",
                 headerImg: "",
                 items: [{
-                    text: 'Новый номер',
-                    type: "editable",
-                    values: [""],
-                },
-                {
-                    text: 'Сменить',
-                    values: ["$100"],
-                },
-                {
-                    text: 'Назад'
-                }
-            ],
+                        text: 'Новый номер',
+                        type: "editable",
+                        values: [""],
+                    },
+                    {
+                        text: 'Сменить',
+                        values: ["$100"],
+                    },
+                    {
+                        text: 'Назад'
+                    }
+                ],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -5573,19 +5576,18 @@ var selectMenu = new Vue({
                 name: "supermarketFood",
                 header: "Продукты",
                 headerImg: "",
-                items: [
-                {
-                    text: 'Бутылка воды',
-                    values: ["$100"],
-                },
-                {
-                    text: 'Плитка шоколада',
-                    values: ["$100"],
-                },
-                {
-                    text: 'Назад'
-                }
-            ],
+                items: [{
+                        text: 'Бутылка воды',
+                        values: ["$100"],
+                    },
+                    {
+                        text: 'Плитка шоколада',
+                        values: ["$100"],
+                    },
+                    {
+                        text: 'Назад'
+                    }
+                ],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -5619,15 +5621,14 @@ var selectMenu = new Vue({
                 name: "supermarketTobacco",
                 header: "Табачные изделия",
                 headerImg: "",
-                items: [
-                {
-                    text: 'Сигареты "Redwood"',
-                    values: ["$100"],
-                },
-                {
-                    text: 'Назад'
-                }
-            ],
+                items: [{
+                        text: 'Сигареты "Redwood"',
+                        values: ["$100"],
+                    },
+                    {
+                        text: 'Назад'
+                    }
+                ],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -5659,23 +5660,22 @@ var selectMenu = new Vue({
                 name: "supermarketStuff",
                 header: "Прочие товары",
                 headerImg: "",
-                items: [
-                {
-                    text: 'Веревка',
-                    values: ["$100"],
-                },
-                {
-                    text: 'Мешок',
-                    values: ["$100"],
-                },
-                {
-                    text: 'Канистра',
-                    values: ["$100"],
-                },
-                {
-                    text: 'Назад'
-                }
-            ],
+                items: [{
+                        text: 'Веревка',
+                        values: ["$100"],
+                    },
+                    {
+                        text: 'Мешок',
+                        values: ["$100"],
+                    },
+                    {
+                        text: 'Канистра',
+                        values: ["$100"],
+                    },
+                    {
+                        text: 'Назад'
+                    }
+                ],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -5714,15 +5714,15 @@ var selectMenu = new Vue({
                 header: "Магазин оружия",
                 headerImg: "ammunation.png",
                 items: [{
-                    text: 'Огнестрельное оружие'
-                },
-                {
-                    text: 'Боеприпасы'
-                },
-                {
-                    text: 'Закрыть'
-                },
-            ],
+                        text: 'Огнестрельное оружие'
+                    },
+                    {
+                        text: 'Боеприпасы'
+                    },
+                    {
+                        text: 'Закрыть'
+                    },
+                ],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -5756,8 +5756,7 @@ var selectMenu = new Vue({
                 name: "ammunationFirearms",
                 header: "Огнестрельное оружие",
                 headerImg: "ammunation.png",
-                items: [
-            ],
+                items: [],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -5786,8 +5785,7 @@ var selectMenu = new Vue({
                 name: "ammunationAmmo",
                 header: "Боеприпасы",
                 headerImg: "ammunation.png",
-                items: [
-            ],
+                items: [],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -5813,6 +5811,38 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "wedding": {
+                name: "wedding",
+                header: "Свадьба",
+                items: [
+                    {
+                        text: "Брак"
+                    },
+                    {
+                        text: "Развод"
+                    },
+                    {
+                        text: "Закрыть"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Брак') mp.trigger(`wedding.add.offer`);
+                        else if (e.itemName == 'Развод') mp.trigger(`callRemote`, `wedding.remove`);
+                        selectMenu.show = false;
+                    }
+                }
+            },
         },
         // Уведомление
         notification: null,
@@ -5822,6 +5852,10 @@ var selectMenu = new Vue({
         showNotifTimer: null,
         // Показ колесика загрузка
         loader: false,
+        // Макс. время показа колесика загрузки (ms)
+        loaderMaxTime: 10 * 1000,
+        // Таймер колесика загрузки
+        loaderTimer: null,
     },
     methods: {
         onKeyDown(e) {
@@ -6039,6 +6073,13 @@ var selectMenu = new Vue({
             if (val) busy.add("selectMenu", true);
             else busy.remove("selectMenu", true);
         },
+        loader(val) {
+            clearTimeout(this.loaderTimer);
+            if (!val) return;
+            this.loaderTimer = setTimeout(() => {
+                this.loader = false;
+            }, this.loaderMaxTime);
+        }
     },
     mounted() {
         let self = this;

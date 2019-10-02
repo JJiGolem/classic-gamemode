@@ -104,6 +104,9 @@ var prompt = new Vue({
             "fishing": {
                 text: "Нажмите <span>E</span>, чтобы начать рыбачить",
             },
+            "bin": {
+                text: "Нажмите <span>E</span>, чтобы покопаться в мусорке",
+            },
         },
         text: null
     },

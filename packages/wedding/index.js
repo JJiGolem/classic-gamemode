@@ -1,6 +1,12 @@
 "use strict";
 
 module.exports = {
+    // Место заключения брака
+    weddingPos: new mp.Vector3(-1680.2960205078125, -291.5504455566406, 51.88338088989258 - 1),
+
+    init() {
+        this.createWeddingMarker();
+    },
     async initSpouse(player) {
         var spouse = await db.Models.Spouse.findOne({
             where: {
@@ -30,4 +36,64 @@ module.exports = {
         }
         mp.events.call("spouseInit.done", player);
     },
+    createWeddingMarker() {
+        var pos = this.weddingPos;
+
+        var marker = mp.markers.new(1, pos, 0.5, {
+            color: [255, 67, 162, 100]
+        });
+        marker.blip = mp.blips.new(489, pos, {
+            color: 49,
+            name: "Церковь",
+            shortRange: 10,
+            scale: 1
+        });
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+        colshape.onEnter = (player) => {
+            player.call(`selectMenu.show`, [`wedding`]);
+            player.insideWedding = true;
+        };
+        colshape.onExit = (player) => {
+            player.call(`selectMenu.hide`);
+            delete player.insideWedding;
+        };
+    },
+    add(male, female) {
+        var spouse = db.Models.Spouse.build({
+            characterA: male.character.id,
+            characterB: female.character.id
+        });
+
+        male.spouse = {
+            db: spouse,
+            character: {
+                name: female.name,
+                gender: female.character.gender
+            }
+        };
+        female.spouse = {
+            db: spouse,
+            character: {
+                name: male.name,
+                gender: male.character.gender
+            }
+        };
+
+        spouse.save();
+        mp.events.call("player.spouse.changed", male);
+        mp.events.call("player.spouse.changed", female);
+    },
+    remove(player) {
+        if (!player.spouse) return;
+        var rec = mp.players.getByName(player.spouse.character.name);
+
+        player.spouse.db.destroy();
+        delete player.spouse;
+
+        mp.events.call("player.spouse.changed", player);
+        if (rec) {
+            delete rec.spouse;
+            mp.events.call("player.spouse.changed", rec);
+        }
+    }
 };

@@ -237,7 +237,9 @@ module.exports = {
     setSpouse(player) {
         var spouse = player.spouse;
 
-        var data = {};
+        var data = {
+            spouse: null
+        };
         if (spouse) {
             data.spouse = {
                 name: spouse.character.name,

@@ -267,7 +267,7 @@ module.exports = {
             args.shift();
             var reason = args.join(" ");
 
-            factions.deleteMember(rec);
+            if (rec.character.factionId) factions.deleteMember(rec);
             rec.character.warnNumber++;
             rec.character.warnDate = new Date();
 
@@ -597,7 +597,7 @@ module.exports = {
                 out.log(text, player);
             } catch (e) {
                 debug(e);
-                return out.error(`Модуль ${args[0]} не найден. Список включенных модулей: /modules.`);
+                return out.error(`Модуль ${args[0]} не найден. Список включенных модулей: /modules.`, player);
             }
         }
     },
