@@ -13,8 +13,11 @@ module.exports = {
             var diff = Date.now() - colshape.lastFindTime;
             if (diff < bins.findInterval) return notifs.error(player, `Эту мусорку уже вычистили до вас`);
         }
+        colshape.lastFindTime = Date.now();
 
         var trashInfo = bins.getRandomTrash();
+        if (!trashInfo) return notifs.error(player, `Ничего не нашли`);
+
         var name = inventory.getName(trashInfo.itemId);
         var out = (text) => {
             notifs.error(player, text, name)
@@ -25,8 +28,6 @@ module.exports = {
 
         inventory.addItem(player, trashInfo.itemId, {}, (e) => {
             if (e) out(e);
-
-            colshape.lastFindTime = Date.now();
         });
 
         notifs.success(player, `Вы нашли ${name}`, `Мусорка`);
