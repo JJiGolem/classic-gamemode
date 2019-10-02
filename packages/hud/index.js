@@ -6,29 +6,33 @@ module.exports = {
         let arrayPlayers = [];
 
         mp.players.forEach(player => {
-            let factionName = '-';
+            if (player.character) {
+                let factionName = '-';
         
-            if (player.character.factionId != null) {
-                let faction = factions.getFaction(player.character.factionId);
-                
-                if (faction) {
-                    factionName = faction.name;
+                if (player.character.factionId != null) {
+                    let faction = factions.getFaction(player.character.factionId);
+                    
+                    if (faction) {
+                        factionName = faction.name;
+                    }
                 }
-            }
 
-            let newPlayer = {
-                id: player.id,
-                name: player.character.name,
-                ping: player.ping,
-                faction: factionName
-            }
+                let newPlayer = {
+                    id: player.id,
+                    name: player.character.name,
+                    ping: player.ping,
+                    faction: factionName
+                }
 
-            arrayPlayers.push(newPlayer);
+                arrayPlayers.push(newPlayer);
+            }
         });
 
         return arrayPlayers;
     },
     loadNewPlayer(player) {
+        if (!player.character) return;
+
         let factionName = '-';
         
         if (player.character.factionId != null) {
