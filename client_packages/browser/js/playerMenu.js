@@ -797,6 +797,7 @@ Vue.component('player-menu-settings', {
     template: '#player-menu-settings',
 });
 
+var reportLastSentTime = 0;
 Vue.component('player-menu-report', {
     template: '#player-menu-report',
     data: () => ({
@@ -804,7 +805,6 @@ Vue.component('player-menu-report', {
         message: "",
         showHint: false,
         waitTime: 60 * 1000,
-        lastSentTime: 0,
     }),
     computed: {
         chars() {
@@ -814,10 +814,10 @@ Vue.component('player-menu-report', {
     methods: {
         send() {
             if (!this.message.length) return;
-            var diff = Date.now() - this.lastSentTime;
+            var diff = Date.now() - reportLastSentTime;
             if (diff < this.waitTime) return notifications.push('error', `Ожидайте ${parseInt((this.waitTime - diff) / 1000)} сек.`);
             mp.trigger(`callRemote`, `admin.report`, this.message);
-            this.lastSentTime = Date.now();
+            reportLastSentTime = Date.now();
 
             // Что ниже, оставить!
             this.message = "";

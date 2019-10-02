@@ -138,7 +138,9 @@ module.exports = {
     },
     // Поступила жалоба от игрока
     "admin.report": (player, message) => {
-        player.call('chat.message.push', [`!{#87c924}Ваш репорт:!{#ffe838} ${message}`]);
-        mp.events.call("admin.notify.all", `!{#87c924}${player.name}[${player.id}]:!{#ffe838} ${message}`);
+        var media = player.character.Promocode.media;
+        var color = (!media)? "#ffe838" : "#ff3ec8";
+        player.call('chat.message.push', [`!{#87c924}Ваш репорт:!{${color}} ${message}`]);
+        mp.events.call("admin.notify.all", `!{#87c924}${player.name}[${player.id}]:!{${color}} ${message}`);
     },
 }
