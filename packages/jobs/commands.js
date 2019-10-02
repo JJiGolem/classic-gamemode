@@ -32,7 +32,7 @@ module.exports = {
     },
     "/jexp": {
         access: 4,
-        description: "Изменить наык работы игрока.",
+        description: "Изменить навык работы игрока.",
         args: "[ид_игрока]:n [ид_работы]:n [навык]:n",
         handler: (player, args, out) => {
             var job = jobs.getJob(args[1]);

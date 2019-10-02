@@ -68,6 +68,7 @@ module.exports = {
         if (player.farm.playerId != player.character.id) return out(`Вы не хозяин фермы`);
         var rec = mp.players.at(data.playerId);
         if (!rec || !rec.character) return out(`Игрок #${data.playerId} не найден`);
+        if (rec.id == player.id) return out(`Нельзя продать самому себе`);
         if (player.dist(rec.position) > 10) return out(`${rec.name} далеко`);
 
         rec.offer = {

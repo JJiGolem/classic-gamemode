@@ -4576,7 +4576,8 @@ var selectMenu = new Vue({
                                 playerId: parseInt(this.items[0].values[0]),
                                 sum: parseInt(this.items[1].values[0]),
                             };
-                            mp.trigger(`callRemote`, `farms.sell.player`, JSON.stringify(data))
+                            mp.trigger(`callRemote`, `farms.sell.player`, JSON.stringify(data));
+                            selectMenu.show = false;
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmControlSell");
                         }
