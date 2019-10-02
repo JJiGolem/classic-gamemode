@@ -1036,6 +1036,8 @@ module.exports = {
     },
     // урон климата (если игрок одет не по погоде)
     checkClimeDamage(player, temp, out) {
+        if (player.vehicle || player.dimension) return;
+        
         var clime = Object.assign({}, this.playerClime);
 
         var hat = player.inventory.items.find(x => x.itemId == 6 && !x.parentId);
