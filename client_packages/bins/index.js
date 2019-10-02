@@ -15,6 +15,8 @@ mp.bins = {
     trashTimer: null,
     // Ищет мусор в данный момент
     finding: false,
+    // Блипы мусорок
+    blips: [],
 
     setInside(enable) {
         if (enable) mp.prompt.showByName(`bin`);
@@ -41,6 +43,23 @@ mp.bins = {
         clearTimeout(this.trashTimer);
         this.finding = false;
     },
+    showBlips(list) {
+        this.hideBlips();
+        list.forEach(el => {
+            var pos = {
+                x: el.x,
+                y: el.y,
+                z: el.z,
+            };
+            this.blips.push(mp.blips.new(1, pos));
+        });
+    },
+    hideBlips() {
+        this.blips.forEach(blip => {
+            blip.destroy();
+        })
+        this.blips = [];
+    },
 };
 
 mp.events.add({
@@ -52,4 +71,10 @@ mp.events.add({
     "bins.inside": (enable) => {
         mp.bins.setInside(enable);
     },
+    "bins.blips.show": (list) => {
+        mp.bins.showBlips(list);
+    },
+    "bins.blips.hide": () => {
+        mp.bins.hideBlips();
+    }
 });
