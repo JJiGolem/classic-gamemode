@@ -8,7 +8,7 @@ let bizesModules = new Array();
 /// biz types
 /// 0 - АЗС
 /// 1 - Супермаркет
-/// 2 - 
+/// 2 - Ферма
 /// 3 - СТО
 /// 4 - Магазин одежды
 /// 5 - Магазин оружия
@@ -351,7 +351,16 @@ module.exports = {
     },
 
     createOrder: createOrder,
+    getOrder(id) {
+        
+    },
+    dropOrder(id) {
+
+    },
     destroyOrder: destroyOrder,
+    readyOrder(id) {
+        
+    },
 
     bizesModules: bizesModules,
     dropBiz: dropBiz,

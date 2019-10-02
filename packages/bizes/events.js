@@ -1,7 +1,6 @@
 "use strict";
 
-let timer;
-let utils;
+let factions;
 let prompt;
 let money;
 let notifications;
@@ -9,8 +8,7 @@ let notifications;
 let bizService = require('./index.js');
 module.exports = {
     "init": () => {
-        timer = call("timer");
-        utils = call("utils");
+        factions = call("factions");
         prompt = call("prompt");
         money = call("money");
         notifications = call('notifications');
@@ -52,6 +50,7 @@ module.exports = {
         if (info.characterId == null) {
             player.call("biz.menu.open", [{
                 name: info.name,
+                faction: factions.getFaction(id).name,
                 type: bizService.getTypeName(info.type),
                 rent: info.price * bizService.bizesModules[info.type].rentPerDayMultiplier,
                 price: info.price,
@@ -63,6 +62,7 @@ module.exports = {
             if (player.character.id == info.characterId) actions.push('finance');
             player.call("biz.menu.open", [{
                 name: info.name,
+                faction: factions.getFaction(id).name,
                 type: bizService.getTypeName(info.type),
                 rent: info.price * bizService.bizesModules[info.type].rentPerDayMultiplier,
                 owner: info.characterNick,
