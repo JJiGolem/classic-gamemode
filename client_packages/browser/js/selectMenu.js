@@ -5843,6 +5843,74 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "clothingMain": {
+                name: "clothingMain",
+                header: "Одежда",
+                headerImg: "",
+                items: [{
+                        text: 'Браслеты'
+                    },
+                    {
+                        text: 'Серьги'
+                    },
+                    {
+                        text: 'Очки'
+                    },
+                    {
+                        text: 'Часы'
+                    },
+                    {
+                        text: 'Головные уборы'
+                    },
+                    {
+                        text: 'Тело'
+                    },
+                    {
+                        text: 'Ноги'
+                    },
+                    {
+                        text: 'Обувь'
+                    },
+                    {
+                        text: 'Закрыть'
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    // if (eventName == 'onItemSelected') {
+                    //     if (e.itemName == 'Закрыть') {
+                    //         selectMenu.show = false;
+                    //     }
+                    //     if (e.itemName == 'Мобильная связь') {
+                    //         selectMenu.showByName('supermarketMobile');
+                    //     }
+                    //     if (e.itemName == 'Продукты') {
+                    //         selectMenu.showByName('supermarketFood');
+                    //     }
+                    //     if (e.itemName == 'Табачные изделия') {
+                    //         selectMenu.showByName('supermarketTobacco');
+                    //     }
+                    //     if (e.itemName == 'Прочие товары') {
+                    //         selectMenu.showByName('supermarketStuff');
+                    //     }
+                    // }
+
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        // selectMenu.show = false;
+                        mp.trigger('clothingShop.exit');
+                    }
+
+                }
+            },
         },
         // Уведомление
         notification: null,
