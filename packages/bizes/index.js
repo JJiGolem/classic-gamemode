@@ -144,8 +144,9 @@ let createOrder = async function(id, count, price) {
     let biz = getBizById(id);
     if (biz == null) return false;
     if (biz.info.productsCount + count > biz.info.productsMaxCount) return false;
-    bizesModules
-    //if (price > ) проверка в модуле экономики. Входит ли цена за 1 продукт в разрешенный диапазон
+    let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
+    let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
+    if (price < min || price > max) return false;
     biz.info.productsOrder = count;
     biz.info.productsOrderPrice = price;
     await biz.info.save();
@@ -154,13 +155,37 @@ let createOrder = async function(id, count, price) {
 let destroyOrder = async function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
-    // if проверка взял ли дальнобой заказ
+    if (!biz.isOrderTaken) return false;
     biz.info.productsOrder = null;
     biz.info.productsOrderPrice = null;
     await biz.info.save();
     return true;
 }
-
+let getOrder = function(id) {
+    let biz = getBizById(id);
+    if (biz == null) return false;
+    if (biz.isOrderTaken) return false;
+    biz.isOrderTaken = true;
+    return true;
+}
+let dropOrder = function(id) {
+    let biz = getBizById(id);
+    if (biz == null) return false;
+    if (!biz.isOrderTaken) return false;
+    biz.isOrderTaken = false;
+    return true;
+}
+let readyOrder = async function(id) {
+    let biz = getBizById(id);
+    if (biz == null) return false;
+    if (!biz.isOrderTaken) return false;
+    biz.info.productsCount += biz.info.productsOrder;
+    biz.info.productsOrder = null;
+    biz.info.productsOrderPrice = null;
+    if (biz.info.productsCount > biz.info.productsMaxCount) biz.info.productsCount = biz.info.productsMaxCount;
+    await biz.info.save();
+    return true;
+}
 
 module.exports = {
     maxProductPriceMultiplier: maxProductPriceMultiplier,
@@ -351,16 +376,10 @@ module.exports = {
     },
 
     createOrder: createOrder,
-    getOrder(id) {
-        
-    },
-    dropOrder(id) {
-
-    },
+    getOrder: getOrder,
+    dropOrder: dropOrder,
     destroyOrder: destroyOrder,
-    readyOrder(id) {
-        
-    },
+    readyOrder: readyOrder,
 
     bizesModules: bizesModules,
     dropBiz: dropBiz,
