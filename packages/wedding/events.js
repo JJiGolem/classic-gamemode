@@ -35,7 +35,7 @@ module.exports = {
         if (player.dist(rec.position) > 5) return out(`${rec.name} далеко`);
         if (rec.spouse) return out(`${rec.name} уже состоит в браке`);
         if (player.character.gender == 1) return out(`Предложение должен сделать мужчина`);
-        if (rec.character.gender == 1) return out(`${rec.name} не женщина`);
+        if (rec.character.gender == 0) return out(`${rec.name} не женщина`);
 
         player.call(`offerDialog.show`, [`wedding_male`, {
             name: rec.name,
@@ -55,7 +55,7 @@ module.exports = {
         if (player.dist(rec.position) > 5) return out(`${rec.name} далеко`);
         if (rec.spouse) return out(`${rec.name} уже состоит в браке`);
         if (player.character.gender == 1) return out(`Предложение должен сделать мужчина`);
-        if (rec.character.gender == 1) return out(`${rec.name} не женщина`);
+        if (rec.character.gender == 0) return out(`${rec.name} не женщина`);
 
         rec.offer = {
             type: "wedding",
