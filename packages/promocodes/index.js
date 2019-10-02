@@ -1,6 +1,5 @@
 "use strict"
 
-let chat = call("chat");
 let money = call("money");
 let notifs = call("notifications");
 let utils = call("utils");
@@ -140,10 +139,10 @@ module.exports = {
                 player.character.save();
 
                 if (typeof inviter != 'number') {
-                    chat.push(inviter, `Получена награда за ${player.name} $${reward.ownerSum}`);
                     mp.events.call("player.completed.changed", inviter);
                 }
-                chat.push(player, `Получена награда за выполнение условий промокода $${reward.playerSum}`);
+                notifs.success(inviter, `Получена награда за ${player.name} $${reward.ownerSum}`);
+                notifs.success(player, `Получена награда за выполнение условий промокода $${reward.playerSum}`);
             });
         });
 
