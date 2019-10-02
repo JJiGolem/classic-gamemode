@@ -423,7 +423,8 @@ module.exports = {
         var dist = player.dist(rec.position);
         if (dist > 20) return notifs.error(player, `${rec.name} далеко`, `Наручники`);
         var character = player.character;
-        if (!factions.isPoliceFaction(character.factionId) && !factions.isFibFaction(character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Наручники`);
+        if (!factions.isPoliceFaction(character.factionId) && !factions.isFibFaction(character.factionId)
+            && !factions.isArmyFaction(character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент/армии`, `Наручники`);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, `Наручники`);
 
         if (!rec.cuffs) {
