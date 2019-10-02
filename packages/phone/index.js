@@ -92,6 +92,7 @@ module.exports = {
         player.phone.number = newNumber;
         await player.phone.save();
         player.call("phone.contact.mine.update", [oldNumber, newNumber]);
+        mp.events.call("player.phone.number.changed", player);
         return true;
     }
 };
