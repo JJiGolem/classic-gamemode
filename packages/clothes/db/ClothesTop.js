@@ -61,8 +61,25 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
         },
         torso: {
-            type: DataTypes.TINYINT(1),
+            type: DataTypes.INTEGER(11),
             allowNull: false,
+        },
+        undershirt: {
+            type: DataTypes.INTEGER(11),
+            allowNull: false,
+        },
+        uTextures: {
+            type: DataTypes.STRING(128),
+            allowNull: false,
+            get() {
+                var val = this.getDataValue('uTextures');
+                return JSON.parse(val);
+            },
+            set(val) {
+                if (typeof val == 'object') val = JSON.stringify(val);
+
+                this.setDataValue('uTextures', val);
+            }
         },
         class: {
             type: DataTypes.INTEGER(11),

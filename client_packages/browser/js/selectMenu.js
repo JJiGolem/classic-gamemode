@@ -2377,6 +2377,9 @@ var selectMenu = new Vue({
                         text: "Аптечка"
                     },
                     {
+                        text: "Наручники"
+                    },
+                    {
                         text: "Вернуться"
                     },
                 ],
