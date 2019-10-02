@@ -148,6 +148,64 @@ module.exports = {
             out.info(`${player.name} изменил торс одежды типа tops #${args[0]} (${el.torso})`);
         }
     },
+    "/clundershirt": {
+        access: 1,
+        description: "Изменить undershirt одежды типа tops.",
+        args: "[ид_одежды]:n [undershirt]:n",
+        handler: (player, args, out) => {
+            var el = clothes.getClothes("tops", args[0]);
+            if (!el) return out.error(`Одежда типа tops #${args[0]} не найдена`, player);
+
+            el.undershirt = args[1];
+            el.save();
+
+            out.info(`${player.name} изменил undershirt одежды типа tops #${args[0]} (${el.undershirt})`);
+        }
+    },
+    "/claddutext": {
+        access: 1,
+        description: "Добавить текстуру undershirt.<br/>",
+        args: "[ид_одежды]:n [текстура]:n",
+        handler: (player, args, out) => {
+            var el = clothes.getClothes("tops", args[0]);
+            if (!el) return out.error(`Одежда типа tops #${args[0]} не найдена`, player);
+
+
+            var textures = el.uTextures;
+            if (textures.includes(args[1])) return out.error(`Одежда уже имеет текстуру undershirt ${args[1]}`, player);
+
+            textures.push(args[1]);
+            textures.sort((a, b) => {
+                return a - b;
+            });
+
+            el.uTextures = textures;
+            el.save();
+
+            out.info(`${player.name} добавил текстуру undershirt одежды типа tops #${args[0]} (${args[1]})`);
+        }
+    },
+    "/cldelutext": {
+        access: 1,
+        description: "Удалить текстуру undershirt одежды.<br/>Типы:<br/>bracelets, ears, glasses, hats, masks, pants, shoes, ties, tops, watches",
+        args: "[ид_одежды]:n [текстура]:n",
+        handler: (player, args, out) => {
+            var el = clothes.getClothes("tops", args[0]);
+            if (!el) return out.error(`Одежда типа tops #${args[0]} не найдена`, player);
+
+
+            var textures = el.uTextures;
+            var i = textures.indexOf(args[1]);
+            if (i == -1) return out.error(`Одежда не имеет текстуру undershirt ${args[1]}`, player);
+
+            textures.splice(i, 1);
+
+            el.uTextures = textures;
+            el.save();
+
+            out.info(`${player.name} удалил текстуру undershirt одежды типа tops #${args[0]} (${args[1]})`);
+        }
+    },
     "/clpockets": {
         access: 1,
         description: "Изменить карманы одежды.<br/>Типы:<br/>pants, shoes, tops<br/>Пример карманов:<br/>[2,2] - один карман размером 2x2<br/>[3,3,3,3] - два кармана размером 3x3",
