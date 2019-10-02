@@ -32,6 +32,9 @@ let getBizById = function(id) {
 let getBizByCharId = function(characterId) {
     return bizes.find(x => x.info.characterId == characterId);
 };
+let getBizByPlayerPos = function(player) {
+    return bizes.find(x => player.dist(new mp.Vector3(x.info.x, x.info.y, x.info.z)) <= 10);
+}
 let dropBiz = function(biz, sellToGov = false) {
     if (biz == null) return;
     if (biz.info.characterId == null) return;
@@ -293,6 +296,7 @@ module.exports = {
     },
     getBizById: getBizById,
     getBizByCharId: getBizByCharId,
+    getBizByPlayerPos: getBizByPlayerPos,
     getTypeName: getTypeName,
     getResourceName: getResourceName,
     getRandomDate: getRandomDate,
