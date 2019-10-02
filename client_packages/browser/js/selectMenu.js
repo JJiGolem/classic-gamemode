@@ -5852,6 +5852,10 @@ var selectMenu = new Vue({
         showNotifTimer: null,
         // Показ колесика загрузка
         loader: false,
+        // Макс. время показа колесика загрузки (ms)
+        loaderMaxTime: 10 * 1000,
+        // Таймер колесика загрузки
+        loaderTimer: null,
     },
     methods: {
         onKeyDown(e) {
@@ -6069,6 +6073,13 @@ var selectMenu = new Vue({
             if (val) busy.add("selectMenu", true);
             else busy.remove("selectMenu", true);
         },
+        loader(val) {
+            clearTimeout(this.loaderTimer);
+            if (!val) return;
+            this.loaderTimer = setTimeout(() => {
+                this.loader = false;
+            }, this.loaderMaxTime);
+        }
     },
     mounted() {
         let self = this;
