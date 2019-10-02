@@ -205,7 +205,7 @@ module.exports = {
 
         if (faction.ammo < army.itemAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
-        var itemIds = [24];
+        var itemIds = [24, 28];
 
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
@@ -218,8 +218,8 @@ module.exports = {
         var params = {
             faction: character.factionId,
             owner: character.id,
-            count: 2,
         };
+        if (index == 0) params.count = 2;
 
         inventory.addItem(player, itemId, params, (e) => {
             if (e) return notifs.error(player, e, header);
