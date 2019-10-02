@@ -249,6 +249,7 @@ class Business extends Component {
                                 <span> в сутки</span>
                             </div>
                             <div>Владелец: <span>{ business.owner ? business.owner : 'нет' }</span></div>
+                            <div>Фракция: <span>{ business.faction ? business.faction : 'нет' }</span></div>
                         </div>
 
                         <div className='buttons-house-react' style={{ top: '40%' }}>

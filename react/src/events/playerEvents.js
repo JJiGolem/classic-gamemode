@@ -398,6 +398,14 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
+    myEventEmmiter.on('biz.faction', (faction) => {
+        dispatch({
+            type: 'SET_FACTION_BUSINESS',
+            payload: faction
+        });
+    });
+
+
     // ------------ БИЗНЕСЫ - КОНЕЦ -----------------
 
     myEventEmmiter.on('players.show', (flag) => {
