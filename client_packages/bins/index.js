@@ -29,6 +29,7 @@ mp.bins = {
     trashHandler() {
         if (!this.inside) return;
         if (this.finding) return;
+        if (mp.busy.includes()) return;
         mp.notify.warning(`Ищем мусор...`);
         var time = mp.utils.randomInteger(this.waitTrash[0], this.waitTrash[1]);
 
