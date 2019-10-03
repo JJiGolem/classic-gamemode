@@ -12,7 +12,7 @@ module.exports = {
         // console.log(`familiar.add: ${player.name} ${recId}`)
         var header = `Знакомство`;
         var rec = mp.players.at(recId);
-        if (!rec) return notifs.error(player, `Игрок #${recId} не найден`, header);
+        if (!rec || !rec.character) return notifs.error(player, `Игрок #${recId} не найден`, header);
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, header);
         if (familiar.have(player, rec.character.id)) return notifs.error(player, `Вы уже знакомы с ${rec.name}`, header);
 
@@ -23,7 +23,7 @@ module.exports = {
     "familiar.accept": (player, recId) => {
         var header = `Знакомство`;
         var rec = mp.players.at(recId);
-        if (!rec) return notifs.error(player, `Игрок #${recId} не найден`, header);
+        if (!rec || !rec.character) return notifs.error(player, `Игрок #${recId} не найден`, header);
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, header);
         if (familiar.have(player, rec.character.id)) return notifs.error(player, `Вы уже знакомы с ${rec.name}`, header);
 

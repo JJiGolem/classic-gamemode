@@ -90,7 +90,7 @@ module.exports = {
         var owner = mp.players.at(player.offer.inviterId);
         var price = player.offer.price;
         delete player.offer;
-        if (!owner) return notifs.error(player, `Хозяин не найден`, header);
+        if (!owner || !owner.character) return notifs.error(player, `Хозяин не найден`, header);
         if (player.dist(owner.position) > 10) return notifs.error(player, `${owner.name} далеко`, header);
         if (!owner.farm) {
             notifs.error(owner, `Вы не у фермы`, `Продажа фермы`);
@@ -117,9 +117,8 @@ module.exports = {
     "farms.sell.player.cancel": (player) => {
         if (!player.offer) return;
         var owner = mp.players.at(player.offer.playerId);
-        var price = mp.players.at(player.offer.price);
         delete player.offer;
-        if (!owner) return;
+        if (!owner || !owner.character) return;
         var header = `Покупка фермы`;
         notifs.info(player, `Предложение отклонено`, header);
         notifs.info(owner, `${player.name} отклонил предложение`, header);

@@ -88,7 +88,7 @@ module.exports = {
         args: "[ид_игрока]:n",
         handler: async (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
 
             if (!rec.character.factionId) return out.error(`${rec.name} не состоит в организации`, player);
             var faction = factions.getFaction(rec.character.factionId);
@@ -104,7 +104,7 @@ module.exports = {
         args: "[ид_игрока]:n [ид_организации]:n",
         handler: async (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
 
             var faction = factions.getFaction(args[1]);
             if (!faction) return out.error(`Организация #${args[1]} не найдена`, player);
@@ -120,7 +120,7 @@ module.exports = {
         args: "[ид_игрока]:n [ранг]:n",
         handler: async (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
 
             if (!rec.character.factionId) return out.error(`${rec.name} не состоит в организации`, player);
 

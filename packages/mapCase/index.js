@@ -372,12 +372,12 @@ module.exports = {
         // debug(this.newsAdsEdited);
         var rec = mp.players.at(ad.playerId);
         var header = factions.getFaction(7).name;
-        if (rec) notifs.success(rec, `${player.name} принял ваше объявление`, header);
+        if (rec && rec.character) notifs.success(rec, `${player.name} принял ваше объявление`, header);
     },
     cancelAd(player, ad) {
         var rec = mp.players.at(ad.playerId);
         var header = factions.getFaction(7).name;
-        if (rec) notifs.info(rec, `${player.name} отменил ваше объявление. Причина: ${ad.text}`, header);
+        if (rec && rec.character) notifs.info(rec, `${player.name} отменил ваше объявление. Причина: ${ad.text}`, header);
     },
     publicAd() {
         if (!this.newsAdsEdited.length) return;

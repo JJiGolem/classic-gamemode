@@ -137,7 +137,7 @@ module.exports = {
             clearTimeout(obj.destroyTimer);
             obj.destroy();
             var rec = mp.players.at(obj.playerId);
-            if (!rec) return;
+            if (!rec || !rec.character) return;
             var i = rec.inventory.ground.indexOf(obj);
             rec.inventory.ground.splice(i, 1);
         });
@@ -179,7 +179,7 @@ module.exports = {
         if (typeof data == 'string') data = JSON.parse(data);
         var header = `Адреналин`;
         var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
-        if (!rec) return notifs.error(player, `Гражданин не найден`, header);
+        if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         if (!rec.getVariable("knocked")) return notifs.error(player, `${rec.name} не нуждается в реанимации`, header);
         if (player.dist(rec.position) > 20) return notifs.error(player, `${rec.name} далеко`, header);
         var adrenalin = (data.itemSqlId) ? inventory.getItem(player, data.itemSqlId) : inventory.getItemByItemId(player, 26);
@@ -342,7 +342,7 @@ module.exports = {
         if (!veh.inventory) return notifs.error(player, `Авто ${veh.db.modelName} не имеет багажник`, header);
         if (veh.bootPlayerId != null) {
             var rec = mp.players.at(veh.bootPlayerId);
-            if (rec && rec.dist(veh.position) < 50) return notifs.error(player, `С багажником взаимодействует другой игрок`, header);
+            if (rec && rec.character && rec.dist(veh.position) < 50) return notifs.error(player, `С багажником взаимодействует другой игрок`, header);
         }
 
         veh.bootPlayerId = player.id;

@@ -23,7 +23,7 @@ module.exports = {
             var job = jobs.getJob(args[1]);
             if (!job) return out.error(`Работа #${args[1]} не найдена`, player);
             var rec = mp.players.at(args[0]);
-            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
 
             jobs.addMember(rec, job);
             out.info(`${player.name} устроил ${rec.name} на работу ${job.name}`);
@@ -38,7 +38,7 @@ module.exports = {
             var job = jobs.getJob(args[1]);
             if (!job) return out.error(`Работа #${args[1]} не найдена`, player);
             var rec = mp.players.at(args[0]);
-            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
 
             var skill = jobs.getJobSkill(rec, job);
             jobs.setJobExp(rec, skill, args[2]);

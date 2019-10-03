@@ -222,7 +222,7 @@ module.exports = {
     "hospital.healing.show": (player, recId) => {
         var header = `Лечение`;
         var rec = mp.players.at(recId);
-        if (!rec) return notifs.error(player, `Игрок #${recId} не найден`, header);
+        if (!rec || !rec.character) return notifs.error(player, `Игрок #${recId} не найден`, header);
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, header);
         if (!factions.isHospitalFaction(player.character.factionId)) return notifs.error(player, `Вы не медик`, header);
         if (rec.health == 100) return notifs.error(player, `${rec.name} полностью здоров`, header);
@@ -249,7 +249,7 @@ module.exports = {
         delete player.offer;
 
         var inviter = mp.players.at(offer.inviterId);
-        if (!inviter) return notifs.error(player, `Медик не найден`, header);
+        if (!inviter || !inviter.character) return notifs.error(player, `Медик не найден`, header);
         if (player.dist(inviter.position) > 10) return notifs.error(player, `${inviter.name} далеко`, header);
         if (!factions.isHospitalFaction(inviter.character.factionId)) return notifs.error(player, `${inviter.name} не медик`, header);
         if (player.health == 100) {
@@ -287,7 +287,7 @@ module.exports = {
         if (!player.offer) return;
         var inviter = mp.players.at(player.offer.inviterId);
         delete player.offer;
-        if (!inviter) return;
+        if (!inviter || !inviter.character) return;
         notifs.info(player, `Предложение отклонено`, `Лечение`);
         notifs.info(inviter, `${player.name} отклонил предложение`, `Лечение`);
     },

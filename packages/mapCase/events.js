@@ -104,7 +104,7 @@ module.exports = {
         if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
         var header = `Установление личности`;
         var rec = mp.players.at(recId);
-        if (!rec) return out.error(player, `Игрок <span>#${recId}</span> не найден`);
+        if (!rec || !rec.character) return out.error(player, `Игрок <span>#${recId}</span> не найден`);
 
         // TODO: Лишний запрос в БД
         var character = await db.Models.Character.findByPk(rec.character.id, {
@@ -348,7 +348,7 @@ module.exports = {
         if (!factions.isFibFaction(player.character.factionId)) return out.error(player, `Вы не являетесь агентом`);
         var header = `Установление личности`;
         var rec = mp.players.at(recId);
-        if (!rec) return out.error(player, `Игрок <span>#${recId}</span> не найден`);
+        if (!rec || !rec.character) return out.error(player, `Игрок <span>#${recId}</span> не найден`);
 
         // TODO: Лишний запрос в БД
         var character = await db.Models.Character.findByPk(rec.character.id, {
