@@ -230,63 +230,63 @@ let socialData = [{
     },
 ];
 
-let statistics = [
+let statistics = {
     // TODO: Заполнить структуру статистики
-    {
+    "minutes": {
         head: "Времени на сервере",
         value: "-"
     },
-    {
+    "sex": {
         head: "Пол",
         value: "-"
     },
-    {
+    "spouse": {
+        head: "Семейное положение",
+        value: "-"
+    },
+    "cash": {
         head: "Денег на руках",
         value: 0,
         color: "#0f0",
         moneyFilter: true
     },
-    {
-        head: "Организация",
-        value: "-"
-    },
-    {
-        head: "Должность",
-        value: "-"
-    },
-    {
-        head: "Работа",
-        value: "-"
-    },
-    {
-        head: "Ур. розыска",
-        value: "-"
-    },
-    {
-        head: "Законопослушность",
-        value: "-"
-    },
-    {
-        head: "Преступления",
-        value: "-"
-    },
-    {
-        head: "Наркозависимость",
-        value: "-"
-    },
-    {
-        head: "Зависимость от никотина",
-        value: "-"
-    },
-    {
+    "number": {
         head: "Номер",
         value: "-"
     },
-    {
-        head: "Семейное положение",
+    "factionName": {
+        head: "Организация",
         value: "-"
     },
-];
+    "factionRank": {
+        head: "Должность",
+        value: "-"
+    },
+    "jobName": {
+        head: "Работа",
+        value: "-"
+    },
+    "wanted": {
+        head: "Ур. розыска",
+        value: "-"
+    },
+    "law": {
+        head: "Законопослушность",
+        value: "-"
+    },
+    "crimes": {
+        head: "Преступления",
+        value: "-"
+    },
+    "narcotism": {
+        head: "Наркозависимость",
+        value: "-"
+    },
+    "nicotine": {
+        head: "Зависимость от никотина",
+        value: "-"
+    },
+};
 
 let houseInfo = [{
         head: "Номер",
@@ -566,22 +566,22 @@ var playerMenu = new Vue({
         },
         setStatistics(stats) {
             if (typeof stats == 'string') stats = JSON.parse(stats);
-            statistics[0].value = `${stats.minutes} мин`;
-            statistics[1].value = ["Мужской", "Женский"][stats.gender];
-            statistics[2].value = stats.cash;
-            statistics[3].value = stats.factionName || "-";
-            statistics[4].value = stats.factionRank || "-";
-            statistics[5].value = stats.jobName || "-";
-            statistics[6].value = `${stats.wanted} зв.`;
-            statistics[7].value = stats.law;
-            statistics[8].value = stats.crimes;
-            statistics[9].value = stats.narcotism;
-            statistics[10].value = stats.nicotine;
+            statistics["minutes"].value = `${stats.minutes} мин`;
+            statistics["sex"].value = ["Мужской", "Женский"][stats.gender];
+            statistics["cash"].value = stats.cash;
+            statistics["factionName"].value = stats.factionName || "-";
+            statistics["factionRank"].value = stats.factionRank || "-";
+            statistics["jobName"].value = stats.jobName || "-";
+            statistics["wanted"].value = `${stats.wanted} зв.`;
+            statistics["law"].value = stats.law;
+            statistics["crimes"].value = stats.crimes;
+            statistics["narcotism"].value = stats.narcotism;
+            statistics["nicotine"].value = stats.nicotine;
 
             clearInterval(this.minutesTimer);
             this.minutesTimer = setInterval(() => {
-                var minutes = parseInt(statistics[0].value) + 1;
-                statistics[0].value = `${minutes} мин`;
+                var minutes = parseInt(statistics["minutes"].value) + 1;
+                statistics["minutes"].value = `${minutes} мин`;
             }, 60000);
         },
         setDonatePrice(data) {
@@ -597,33 +597,33 @@ var playerMenu = new Vue({
             if (typeof data == 'string') data = JSON.parse(data);
 
             this.factionId = data.factionId;
-            statistics[3].value = data.factionName || "-";
-            statistics[4].value = data.factionRank || "-";
+            statistics["factionName"].value = data.factionName || "-";
+            statistics["factionRank"].value = data.factionRank || "-";
         },
         setFactionRank(data) {
             if (typeof data == 'string') data = JSON.parse(data);
 
-            statistics[4].value = data.factionRank || "-";
+            statistics["factionRank"].value = data.factionRank || "-";
         },
         setJob(data) {
             if (typeof data == 'string') data = JSON.parse(data);
 
-            statistics[5].value = data.jobName || "-";
+            statistics["jobName"].value = data.jobName || "-";
         },
         setWanted(wanted) {
             var oldWanted = parseInt(statistics[6].value);
-            statistics[6].value = `${wanted} зв.`;
+            statistics["wanted"].value = `${wanted} зв.`;
 
             if (wanted > oldWanted) statistics[8].value += wanted - oldWanted;
         },
         setLaw(law) {
-            statistics[7].value = law;
+            statistics["law"].value = law;
         },
         setNarcotism(narcotism) {
-            statistics[9].value = narcotism;
+            statistics["narcotism"].value = narcotism;
         },
         setNicotine(nicotine) {
-            statistics[10].value = nicotine;
+            statistics["nicotine"].value = nicotine;
         },
         setSkills(data) {
             if (typeof data == 'string') data = JSON.parse(data);
@@ -650,7 +650,7 @@ var playerMenu = new Vue({
             else prompt.show(`Навык '${skill.head}' понизился до ${skill.value}%`);
         },
         setCash(cash) {
-            statistics[2].value = cash;
+            statistics["cash"].value = cash;
         },
         setDonate(donate) {
             this.coins = donate;
@@ -691,15 +691,15 @@ var playerMenu = new Vue({
             this.admin = admin;
         },
         setNumber(number) {
-            statistics[11].value = number;
+            statistics["number"].value = number;
         },
         setSpouse(spouse) {
             if (typeof spouse == 'string') spouse = JSON.parse(spouse);
             if (spouse) {
                 var str = (spouse.gender)? "женат на " : "замужем за "
-                statistics[12].value = str + spouse.name;
+                statistics["spouse"].value = str + spouse.name;
             } else {
-                statistics[12].value = "-";
+                statistics["spouse"].value = "-";
             }
         },
     },

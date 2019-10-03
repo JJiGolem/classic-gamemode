@@ -108,7 +108,7 @@ module.exports = {
                 boxType = "ammo";
             } else if (player.hasAttachment("medicinesBox")) {
                 boxType = "medicines";
-            } else if (this.isBandFaction(player.character.factionId)) {
+            } else if (this.isBandFaction(player.character.factionId) && this.isArmyFaction(faction)) {
                 if (faction.ammo < this.ammoBox) return notifs.error(player, `Склад пустой`, `Склад ${faction.name}`);
                 player.addAttachment("ammoBox");
                 this.setAmmo(faction, faction.ammo - this.ammoBox);
@@ -509,5 +509,11 @@ module.exports = {
         var text = `${faction.ammo} из ${faction.maxAmmo}\n${faction.medicines} из ${faction.maxMedicines}`;
         var label = this.getWarehouse(faction.id).label;
         label.text = text;
-    }
+    },
+    addCash(faction, count) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+
+        faction.cash += count;
+        faction.save();
+    },
 };
