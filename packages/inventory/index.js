@@ -1,7 +1,5 @@
 "use strict";
 
-let factions = call('factions');
-
 module.exports = {
     // Макс. вес предметов, переносимый игроком
     maxPlayerWeight: 30,
@@ -857,7 +855,7 @@ module.exports = {
             });
         });
         // у всех шкафов организаций
-        factions.holders.forEach(holder => {
+        call('factions').factions.holders.forEach(holder => {
             for (var characterId in holder.inventory.items) {
                 var list = holder.inventory.items[characterId];
                 if (!list.length) return;

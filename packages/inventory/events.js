@@ -402,6 +402,7 @@ module.exports = {
     },
     // Удаление предметов в шкафу организации
     "faction.holder.items.remove": (player) => {
+        if (!player.character.factionId) return;
         var holder = factions.getHolder(player.character.factionId);
         delete holder.inventory.items[player.character.id];
     },
