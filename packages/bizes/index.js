@@ -20,10 +20,12 @@ let utils;
 let timer;
 let money;
 let notifications;
+let factions;
 
 /// Economic constants
 let maxProductPriceMultiplier = 2.0;
 let minProductPriceMultiplier = 1.2;
+let factionPayMultiplier = 0.01;
 
 
 let getBizById = function(id) {
@@ -111,18 +113,31 @@ let getTypeName = function(type) {
 let bizUpdateCashBox = async function(id, money) {
     let biz = getBizById(id);
     if (biz == null) return;
-    biz.info.cashBox += money;
+    let factionMoney = 0;
+    if (biz.info.factionId != null && factions != null) {
+        factionMoney = money * factionPayMultiplier;
+        if (factionMoney < 1) {
+            if (factionMoney * 10 >= 5) factionMoney = 1;
+            else factionMoney = 0;
+        }
+        else {
+            factionMoney = parseInt(factionMoney);
+        }
+        factions.addCash(biz.info.factionId, factionMoney);
+    }
+    let bizMoney = money - factionMoney;
+    biz.info.cashBox += bizMoney;
     let currentDay = biz.info.BizStatistics.find(x => x.date.toLocaleDateString() == new Date().toLocaleDateString());
     if (currentDay == null) {
         currentDay = {
             bizId: biz.info.id,
             date: new Date(),
-            money: money
+            money: bizMoney
         }
         currentDay = await db.Models.BizStatistics.create(currentDay);
         biz.info.BizStatistics.unshift(currentDay);
     } else {
-        currentDay.money += money;
+        currentDay.money += bizMoney;
         currentDay.save();
     }
     biz.info.save();
@@ -193,12 +208,14 @@ let readyOrder = async function(id) {
 module.exports = {
     maxProductPriceMultiplier: maxProductPriceMultiplier,
     minProductPriceMultiplier: minProductPriceMultiplier,
+    factionPayMultiplier: factionPayMultiplier,
 
     async init() {
         utils = call("utils");
         timer = call("timer");
         money = call("money");
         notifications = call('notifications');
+        factions = call("factions");
 
         for (let file of fs.readdirSync(path.dirname(__dirname))) {
             if (file != 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname) + "/" + file + '/index.js'))

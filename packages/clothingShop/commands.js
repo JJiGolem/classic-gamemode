@@ -42,5 +42,42 @@ module.exports = {
                 });
             });
         }
+    },
+    '/setclshape': {
+        args: '[id]',
+        description: 'Учстановить колшейп магазина одежды',
+        access: 6,
+        handler: async (player, args, out) => {
+                let id = parseInt(args[0]);
+                let shape = mp.colshapes.toArray().find(x => x.clothingShopId === id);
+
+                if (!shape) return out.error('Магазин не найден', player);
+
+                shape.destroy();
+
+                let shop = await db.Models.ClothingShop.findOne({
+                    where: {
+                        id: id
+                    }
+                });
+
+                await shop.update({
+                    x: player.position.x,
+                    y: player.position.y,
+                    z: player.position.z - 1.3
+                });
+
+                shape = mp.colshapes.newSphere(shop.x, shop.y, shop.z, 1.8);
+                shape.isClothingShop = true;
+                shape.clothingShopId = id;
+
+                mp.markers.new(1, new mp.Vector3(shop.x, shop.y, shop.z - 0.1), 0.8,
+                {
+                    color: [50, 168, 82, 128],
+                    visible: true,
+                    dimension: 0
+                });
+            
+        }
     }
 }
