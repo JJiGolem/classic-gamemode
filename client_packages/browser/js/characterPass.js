@@ -5,6 +5,7 @@ var characterPass = new Vue({
         header: "Паспорт гражданина",
         fName: "Alexander",
         sName: "Woodman",
+        spouse: "Danil Dunhill",
         regDate: "03/08/2019",
         sex: 0,
         number: 3940123342,
@@ -24,6 +25,11 @@ var characterPass = new Vue({
         },
         prettyNumber() {
             return getPaddingNumber(this.number, 10);
+        },
+        prettySpouse() {
+            if (!this.spouse) return "-";
+            var str = (this.sex)? "замужем за " : "женат на ";
+            return str + this.spouse;
         },
     }
 });

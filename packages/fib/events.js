@@ -9,7 +9,8 @@ module.exports = {
 
     },
     "characterInit.done": (player) => {
-
+        if (!factions.isFibFaction(player.character.factionId)) return;
+        mp.events.call(`mapCase.fib.init`, player);
     },
     "fib.storage.clothes.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад FIB`);
@@ -135,6 +136,10 @@ module.exports = {
 
         topParams.pockets = '[5,5,5,5,5,5,10,10]';
         legsParams.pockets = '[5,5,5,5,5,5,10,10]';
+        hatParams.clime = '[-5,20]';
+        topParams.clime = '[-5,20]';
+        legsParams.clime = '[-5,20]';
+        feetsParams.clime = '[-5,20]';
         topParams.name = `Рубашка ${faction.name}`;
         legsParams.name = `Брюки ${faction.name}`;
 
@@ -254,8 +259,8 @@ module.exports = {
 
         if (faction.ammo < fib.gunAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
-        var itemIds = [107, 99];
-        var weaponIds = ["weapon_heavysniper", "weapon_carbinerifle_mk2"];
+        var itemIds = [107, 99, 88, 46, 19, 91];
+        var weaponIds = ["weapon_heavysniper", "weapon_carbinerifle_mk2", "weapon_combatpdw", "weapon_pistol50", "weapon_stungun", "weapon_pumpshotgun_mk2"];
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
 
@@ -307,20 +312,21 @@ module.exports = {
             factions.setAmmo(faction, faction.ammo - fib.ammoAmmo * ammo);
         });
     },
-    "fib.spy": (player, recId) => {
+    "fib.spy": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
         var header = `Прослушка FIB`;
-        if (!factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не агент`, header);
 
-        var rec = mp.players.at(recId);
+        var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
         if (!rec) return notifs.error(player, `Гражданин не найден`, header);
         var dist = player.dist(rec.position);
         if (dist > 3) return notifs.error(player, `${rec.name} далеко`, header);
+        if (!factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не агент`, header);
 
         if (!rec.spy) {
-            var spy = inventory.getItemByItemId(player, 4);
-            if (!spy) return notifs.error(player, `Предмет '${inventory.getName(4)}' не найден`, header);
+            var spy = (data.itemSqlId) ? inventory.getItem(player, data.itemSqlId) : inventory.getItemByItemId(player, 4);
+            if (!spy) return notifs.error(player, `Предмет ${inventory.getName(4)} не найден`, header);
 
-            // inventory.deleteItem(player, spy);
+            inventory.deleteItem(player, spy);
             rec.spy = {
                 playerId: player.id,
                 characterId: player.character.id,
@@ -339,4 +345,17 @@ module.exports = {
             notifs.success(player, `Прослушка с ${rec.name} снята`, header);
         }
     },
+    "fib.vehicle.plate.set": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+        var header = `Смена номера`;
+
+        var veh = mp.vehicles.at(data.vehId);
+        if (!veh) return notifs.error(player, `Авто не найдено`, header);
+        if (!veh.db || veh.db.key != "faction" || veh.db.owner != 4) return notifs.error(player, `Авто не принадлежит FIB`, header);
+        var dist = player.dist(veh.position);
+        if (dist > 3) return notifs.error(player, `Авто далеко`, header);
+
+        veh.numberPlate = data.plate;
+        notifs.success(player, `Номер изменен на ${data.plate}`, header);
+    }
 }

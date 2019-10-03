@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 import moment from 'moment';
 import 'moment/locale/ru';
 
@@ -117,7 +118,6 @@ const inittialState = [
 
 export default function dialogs(state = inittialState, action) {
     const { type, payload } = action;
-    const DIALOG_SIZE = 100;
     var newState;
 
     switch(type) {
@@ -158,26 +158,14 @@ export default function dialogs(state = inittialState, action) {
             newState = [ ...state ];
 
             if(ind !== -1) {
-                if(state[ind].PhoneMessages.length < DIALOG_SIZE) {
-                    newState[ind].PhoneMessages.push(
-                        {
-                            text: payload.text,
-                            date: Date.now(),
-                            isMine: payload.isMine,
-                            isRead: payload.isRead
-                        });
-                    return newState;
-                } else {
-                    newState[ind].PhoneMessages.splice(0, 1);
-                    newState[ind].PhoneMessages.push(
-                        {
-                            text: payload.text,
-                            date: Date.now(),
-                            isMine: payload.isMine,
-                            isRead: payload.isRead
-                        });
-                    return newState;
-                }
+                newState[ind].PhoneMessages.push(
+                    {
+                        text: payload.text,
+                        date: Date.now(),
+                        isMine: payload.isMine,
+                        isRead: payload.isRead
+                    });
+                return newState;
             } else {
                 newState.push({
                     name: '',
@@ -194,6 +182,16 @@ export default function dialogs(state = inittialState, action) {
             }
 
             newState.isSorted = false;
+
+            return newState;
+
+        case 'LOAD_MESSAGES_TO_DIALOG':
+            newState = { ...state };
+            let loadDialogIndex = newState.findIndex(dialog => dialog.number == payload.number);
+            
+            if (loadDialogIndex !== -1) {
+                payload.messages.concat(newState[loadDialogIndex].PhoneMessages);
+            }
 
             return newState;
 

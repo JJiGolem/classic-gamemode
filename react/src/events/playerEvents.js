@@ -65,10 +65,24 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
+    myEventEmmiter.on('news.price', (symbolPrice) => {
+        dispatch({
+            type: 'SET_SYMBOL_PRICE_NEWS',
+            payload: symbolPrice
+        });
+    });
+
     myEventEmmiter.on('phone.message.list', (dialogs) => {
         dispatch({
             type: 'LOAD_DIALOGS',
             payload: dialogs
+        });
+    });
+
+    myEventEmmiter.on('phone.message.load', (messages, number) => {
+        dispatch({
+            type: 'LOAD_MESSAGES_TO_DIALOG',
+            payload: { messages, number }
         });
     });
 
@@ -81,6 +95,13 @@ export const PlayerEvents = (dispatch, getState) => {
                 isMine: false,
                 isRead: false
             }
+        });
+    });
+
+    myEventEmmiter.on('phone.contact.mine.update', (oldNumber, newNumber) => {
+        dispatch({
+            type: 'UPDATE_MY_NUMBER',
+            payload: { oldNumber, newNumber }
         });
     });
 
@@ -366,15 +387,24 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
-    myEventEmmiter.on('biz.buy.ans', (ans, owner) => {
+    myEventEmmiter.on('biz.buy.ans', (ans, owner, actions) => {
         dispatch({
             type: 'ANS_BUY_BUSINESS',
             payload: {
                 answer: ans,
-                owner: owner
+                owner: owner,
+                actions: actions
             }
         });
     });
+
+    myEventEmmiter.on('biz.faction', (faction) => {
+        dispatch({
+            type: 'SET_FACTION_BUSINESS',
+            payload: faction
+        });
+    });
+
 
     // ------------ БИЗНЕСЫ - КОНЕЦ -----------------
 
@@ -401,8 +431,108 @@ export const PlayerEvents = (dispatch, getState) => {
 
     myEventEmmiter.on('players.remove', (id) => {
         dispatch({
-            type: 'ADD_PLAYER',
+            type: 'REMOVE_PLAYER',
             payload: id
+        });
+    });
+
+    myEventEmmiter.on('bank.show', (bankInfo) => {
+        dispatch({
+            type: 'SHOW_BANK',
+            payload: bankInfo
+        });
+    });
+
+    myEventEmmiter.on('bank.close', () => {
+        dispatch({
+            type: 'CLOSE_BANK'
+        });
+    });
+
+    myEventEmmiter.on('bank.push.ans', (result) => {
+        dispatch({
+            type: 'SET_ANSWER_BANK',
+            payload: {
+                type: 'push',
+                answer: result
+            }
+        });
+    });
+
+    myEventEmmiter.on('bank.pop.ans', (result) => {
+        dispatch({
+            type: 'SET_ANSWER_BANK',
+            payload: {
+                type: 'pop',
+                answer: result
+            }
+        });
+    });
+
+    myEventEmmiter.on('bank.phone.push.ans', (result) => {
+        dispatch({
+            type: 'SET_ANSWER_BANK',
+            payload: {
+                type: 'phone',
+                answer: result
+            }
+        });
+    });
+
+    myEventEmmiter.on('bank.house.push.ans', (result) => {
+        dispatch({
+            type: 'SET_ANSWER_BANK',
+            payload: {
+                type: 'house',
+                answer: result
+            }
+        });
+    });
+
+    myEventEmmiter.on('bank.biz.push.ans', (result) => {
+        dispatch({
+            type: 'SET_ANSWER_BANK',
+            payload: {
+                type: 'biz',
+                answer: result
+            }
+        });
+    });
+
+    myEventEmmiter.on('bank.biz.cashbox.push.ans', (result) => {
+        dispatch({
+            type: 'SET_ANSWER_BANK',
+            payload: {
+                type: 'cashbox_push',
+                answer: result
+            }
+        });
+    });
+
+    myEventEmmiter.on('bank.biz.cashbox.pop.ans', (result) => {
+        dispatch({
+            type: 'SET_ANSWER_BANK',
+            payload: {
+                type: 'cashbox_pop',
+                answer: result
+            }
+        });
+    });
+
+    myEventEmmiter.on('bank.transfer.ask.ans', (nick) => {
+        dispatch({
+            type: 'SET_ASK_ANSWER_BANK',
+            payload: nick
+        });
+    });
+
+    myEventEmmiter.on('bank.transfer.ans', (result) => {
+        dispatch({
+            type: 'SET_ANSWER_BANK',
+            payload: {
+                type: 'transfer',
+                answer: result
+            }
         });
     });
 };

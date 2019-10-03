@@ -45,11 +45,8 @@ module.exports = {
                     if (rec.health <= 0) return notifs.warning(rec, `Вы умерли!`, "Жажда");
                     if (rec.health < 30) return notifs.warning(rec, `Вы погибаете! Срочно выпейте напиток!`, "Жажда");
                 }
-                character.satiety -= this.satietyDec;
-                character.thirst -= this.thirstDec;
-                character.save();
-                player.call("inventory.setSatiety", [character.satiety])
-                player.call("inventory.setThirst", [character.thirst]);
+
+                this.set(rec, character.satiety - this.satietyDec, character.thirst - this.thirstDec);
             } catch (err) {
                 console.log(err.stack);
             }
@@ -61,4 +58,12 @@ module.exports = {
         delete this.timers[player.id];
         console.log(`[SATIETY] Таймер для ${player.name} остановлен`);
     },
+    set(player, satiety, thirst) {
+        var character = player.character;
+        character.satiety = satiety;
+        character.thirst = thirst;
+        character.save();
+        player.call("inventory.setSatiety", [character.satiety])
+        player.call("inventory.setThirst", [character.thirst]);
+    }
 };

@@ -215,7 +215,28 @@ mp.utils = {
     /// Отключить управление/движение игроку
     disablePlayerMoving(disable) {
         playerMovingDisabled = disable;
-    }
+    },
+    // Рандомное число
+    randomInteger(min, max) {
+        var rand = min - 0.5 + Math.random() * (max - min + 1);
+        rand = Math.round(rand);
+        return rand;
+    },
+    // Рандомная точка внутри сферы
+    randomSpherePoint(pos, radius) {
+        var u = Math.random();
+        var v = Math.random();
+        var theta = 2 * Math.PI * u;
+        var phi = Math.acos(2 * v - 1);
+        var x = pos.x + (radius * Math.sin(phi) * Math.cos(theta));
+        var y = pos.y + (radius * Math.sin(phi) * Math.sin(theta));
+        var z = pos.z + (radius * Math.cos(phi));
+        return {
+            x: x,
+            y: y,
+            z: z
+        };
+    },
 };
 
 
@@ -234,9 +255,21 @@ mp.events.add("blur", (enable, time = 1000) => {
     else mp.game.graphics.transitionFromBlurred(time);
 });
 
+// Вкл/выкл радар
+mp.events.add("radar.display", (enable) => {
+    mp.game.ui.displayRadar(enable);
+});
+
 // Вкл визуальный эффект
 mp.events.add('effect', (effect, duration) => {
     mp.game.graphics.startScreenEffect(effect, duration, false);
+});
+
+// Проиграть звук
+mp.events.add('sound', (data) => {
+    if (typeof data == 'string') data = JSON.parse(data);
+
+    mp.game.audio.playSoundFrontend(-1, data.name, data.setName, true);
 });
 
 // Установить пусть GPS на карте
@@ -248,6 +281,7 @@ mp.events.add("waypoint.set", (x, y) => {
 mp.events.add("godmode.set", (enable) => {
     mp.players.local.setInvincible(enable);
 });
+
 
 /// Отключение движения игрока
 mp.events.add('render', () => {

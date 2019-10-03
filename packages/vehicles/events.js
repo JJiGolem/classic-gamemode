@@ -32,11 +32,17 @@ module.exports = {
             player.call('vehicles.speedometer.max.update', [vehicle.properties.maxFuel]);
             player.call('vehicles.speedometer.sync');
             clearInterval(player.indicatorsUpdateTimer);
+
+            let playerId = player.id;
+            let characterId = player.character.id;
             player.indicatorsUpdateTimer = setInterval(() => {
                 try {
+                    let target = mp.players.at(playerId);
+                    if (!target || !target.character || target.character.id != characterId) return clearInterval(player.indicatorsUpdateTimer);
                     player.call('vehicles.speedometer.fuel.update', [Math.ceil(vehicle.fuel)]);
                 } catch (err) {
                     console.log(err);
+                    clearInterval(player.indicatorsUpdateTimer);
                 }
             }, 1000);
         }
@@ -420,5 +426,9 @@ module.exports = {
         player.call('vehicles.heading.set', [streetPlace.h]);
 
         player.vehicle.dimension = 0;
+    },
+    "vehicles.radio.set": (player, radioIndex) => {
+        if (!player.vehicle) return;
+        player.vehicle.setVariable('radioIndex', radioIndex);
     }
 }

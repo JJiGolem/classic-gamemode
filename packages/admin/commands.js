@@ -2,6 +2,7 @@
 var vehicles = call("vehicles");
 let notify = call('notifications');
 let admin = call('admin');
+let factions = call('factions');
 
 module.exports = {
 
@@ -266,6 +267,7 @@ module.exports = {
             args.shift();
             var reason = args.join(" ");
 
+            if (rec.character.factionId) factions.deleteMember(rec);
             rec.character.warnNumber++;
             rec.character.warnDate = new Date();
 
@@ -443,6 +445,8 @@ module.exports = {
             target.character.admin = lvl;
             target.character.save();
             target.call('chat.message.push', [`!{#ffcf0d} ${player.character.name} назначил вас администратором ${lvl} уровня`]);
+
+            mp.events.call("player.admin.changed", target);
         }
     },
     "/deladmin": {
@@ -459,6 +463,8 @@ module.exports = {
             target.character.admin = 0;
             target.character.save();
             target.call('chat.message.push', [`!{#ff8819} ${player.character.name} забрал у вас права администратора`]);
+
+            mp.events.call("player.admin.changed", target);
         }
     },
     "/admins": {
@@ -550,6 +556,57 @@ module.exports = {
             player.call(`godmode.set`, [player.godmode]);
             if (player.godmode) return out.log(`Бессмертие включено`, player);
             else return out.log(`Бессмертие выключено`, player);
+        }
+    },
+    "/blip": {
+        description: "Создать блип.",
+        access: 1,
+        args: "[тип]:n [масштаб]:n",
+        handler: (player, args, out) => {
+            mp.blips.new(args[0], player.position, {
+                color: 1,
+                name: `blip`,
+                shortRange: 10,
+                scale: args[1]
+            })
+        }
+    },
+    "/modules": {
+        description: "Список включенных модулей на сервере.",
+        access: 1,
+        args: "",
+        handler: (player, args, out) => {
+            out.debug("soon...")
+        }
+    },
+    "/module": {
+        description: "Список команд в модуле.",
+        access: 1,
+        args: "[модуль]",
+        handler: (player, args, out) => {
+            try {
+                var commands = require(`../${args[0]}/commands`);
+                var text = `Команды модуля ${args[0]}:<br/><br/>`;
+                for (var name in commands) {
+                    var cmd = commands[name];
+                    // if (cmd.access > player.character.admin) continue;
+                    text += `<b>${name}</b> ${cmd.args} (${cmd.access} lvl.) - ${cmd.description}<br/>`;
+                }
+                var keys = Object.keys(commands);
+                text += `<br/>Всего команд: ${keys.length} шт.<br/>Введите "help [name]" или "help [level]" для ознакомления с командой`;
+                out.log(text, player);
+            } catch (e) {
+                debug(e);
+                return out.error(`Модуль ${args[0]} не найден. Список включенных модулей: /modules.`, player);
+            }
+        }
+    },
+    "/effect": {
+        description: "Включить визуальный эффект.",
+        access: 1,
+        args: "[эффект] [продолжительность]:n",
+        handler: (player, args, out) => {
+            player.call(`effect`, args);
         }
     },
 }

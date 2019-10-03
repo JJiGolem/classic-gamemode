@@ -39,6 +39,11 @@ module.exports = {
             2: [4],
             3: [4],
             6: [2, 3, 6],
+            // банды
+            8: [8],
+            9: [9],
+            10: [10],
+            11: [11],
             // мафии
             12: [8, 9, 10, 11, 12],
             13: [8, 9, 10, 11, 13],
@@ -264,6 +269,7 @@ module.exports = {
         player.call(`factions.faction.set`, [character.factionId]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
+        else if (this.isFibFaction(faction)) mp.events.call(`mapCase.fib.init`, player);
         else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
         else if (this.isNewsFaction(faction)) mp.events.call(`mapCase.news.init`, player);
 
@@ -290,14 +296,17 @@ module.exports = {
         player.call(`factions.faction.set`, [character.factionId]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
+        else if (this.isFibFaction(faction)) mp.events.call(`mapCase.fib.init`, player);
         else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
         else if (this.isNewsFaction(faction)) mp.events.call(`mapCase.news.init`, player);
 
         mp.events.call(`player.faction.changed`, player);
+        if (player.character.job) mp.events.call(`jobs.leave`, player);
     },
     deleteMember(player) {
         var character = player.character;
         if (this.isPoliceFaction(character.factionId)) require('../mapCase').removePoliceMember(player);
+        else if (this.isFibFaction(character.factionId)) require('../mapCase').removeFibMember(player);
         else if (this.isHospitalFaction(character.factionId)) require('../mapCase').removeHospitalMember(player);
         else if (this.isNewsFaction(character.factionId)) require('../mapCase').removeNewsMember(player);
         this.fullDeleteItems(character.id, character.factionId);
@@ -331,6 +340,7 @@ module.exports = {
 
         var type = "";
         if (this.isPoliceFaction(character.factionId)) type = "pd";
+        else if (this.isFibFaction(character.factionId)) type = "fib";
         else if (this.isHospitalFaction(character.factionId)) type = "ems";
         else if (this.isNewsFaction(character.factionId)) type = "news";
         if (!type) return;

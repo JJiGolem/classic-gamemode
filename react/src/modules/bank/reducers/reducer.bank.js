@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 const initialState = {
     isLoading: true,
 };
@@ -5,9 +6,9 @@ const initialState = {
 export default function bank(state = initialState, action) {
     const { type, payload } = action;
     const { cash, money, phoneMoney } = state;
-    var newState;
 
     switch (type) {
+        case 'SHOW_BANK':
         case 'LOAD_BANK_INFO':
             return payload;
 

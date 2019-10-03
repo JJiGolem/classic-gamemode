@@ -1,17 +1,17 @@
 "use strict";
 
-let timer;
-let utils;
+let factions;
 let prompt;
 let money;
+let notifications;
 
 let bizService = require('./index.js');
 module.exports = {
     "init": () => {
-        timer = call("timer");
-        utils = call("utils");
+        factions = call("factions");
         prompt = call("prompt");
         money = call("money");
+        notifications = call('notifications');
         bizService.init();
     },
     "player.joined": (player) => {
@@ -22,6 +22,12 @@ module.exports = {
             sellingBizId: null,
             sellingBizCost: null
         };
+    },
+    "player.name.changed": (player) => {
+        let biz = bizService.getBizByCharId(player.character.id);
+        if(biz != null) {
+            biz.info.characterNick = player.character.name;
+        }
     },
     "playerEnterColshape": (player, shape) => {
         if (!shape.isBiz) return;
@@ -40,23 +46,27 @@ module.exports = {
         if (biz == null) return;
         let info = biz.info;
         if (prompt != null) prompt.hide(player);
+        let actions = [];
         if (info.characterId == null) {
             player.call("biz.menu.open", [{
                 name: info.name,
+                faction: factions.getFaction(id).name,
                 type: bizService.getTypeName(info.type),
-                rent: info.price * 0.01, // biz.type[${info.type}].rent из модуля экономики
+                rent: info.price * bizService.bizesModules[info.type].rentPerDayMultiplier,
                 price: info.price,
-                actions: ['finance'],
+                actions: actions,
                 pos: [info.x, info.y, info.z]
             }]);
         }
         else {
+            if (player.character.id == info.characterId) actions.push('finance');
             player.call("biz.menu.open", [{
                 name: info.name,
+                faction: factions.getFaction(id).name,
                 type: bizService.getTypeName(info.type),
-                rent: info.price * 0.01, // biz.type[${info.type}].rent из модуля экономики
+                rent: info.price * bizService.bizesModules[info.type].rentPerDayMultiplier,
                 owner: info.characterNick,
-                actions: ['finance'],
+                actions: actions,
                 pos: [info.x, info.y, info.z]
             }]);
         }
@@ -78,9 +88,14 @@ module.exports = {
             info.characterNick = player.character.name;
             info.date = bizService.getRandomDate(1);
             await info.save();
-            player.call('biz.buy.ans', [1, player.character.name]);
+
+            let actions = [];
+            if (player.character.id == info.characterId) actions.push('finance');
+            player.call('biz.buy.ans', [1, player.character.name, actions]);
+
             bizService.setTimer(biz);
             mp.events.call('player.biz.changed', player);
+
             let bizInfo = bizService.getBizInfoForApp(biz);
             bizInfo != null && player.call('phone.app.add', ["biz", bizInfo]);
         });
@@ -191,5 +206,24 @@ module.exports = {
     },
     "biz.order.cancel": (player) => {
 
+    },
+    "biz.actions": (player, action) => {
+        switch(action) {
+            case 'finance':
+                if (player.biz.at == null) return notifications != null && notifications.error(player, "Вы находитесь не рядом с бизнесом", "Ошибка");
+                let bizParameters = bizService.getBizParameters(player.character.id, player.biz.at);
+                if (bizParameters == null) return notifications != null && notifications.error(player, "Экономические параметры бизнеса недоступны", "Ошибка");
+                player.call("biz.finance.show", [bizParameters]);
+                break;
+        }
+    },
+    "biz.finance.save": (player, bizParameters) => {
+        if (player.biz.at == null) return notifications != null && notifications.error(player, "Вы находитесь не рядом с бизнесом", "Ошибка");
+        if (bizService.setBizParameters(player.character.id, JSON.parse(bizParameters))) {
+            notifications != null && notifications.success(player, "Экономические параметры успешно изменены", "Успешно");
+        }
+        else {
+            notifications != null && notifications.error(player, "Экономические параметры бизнеса недоступны", "Ошибка");
+        }
     },
 }

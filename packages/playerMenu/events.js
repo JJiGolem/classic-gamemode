@@ -8,6 +8,16 @@ module.exports = {
     "jobSkillsInit.done": (player) => {
         playerMenu.setSkills(player);
     },
+    "phoneInit.done": (player) => {
+        playerMenu.setNumber(player);
+    },
+    "spouseInit.done": (player) => {
+        playerMenu.setSpouse(player);
+    },
+    "playerMenu.kick": (player) => {
+        notifs.success(player, `До скорого! :)`);
+        player.kick();
+    },
     "player.faction.changed": (player) => {
         playerMenu.setFaction(player);
     },
@@ -18,11 +28,9 @@ module.exports = {
         playerMenu.setJob(player);
     },
     "player.biz.changed": (player) => {
-        debug(`player.biz.changed`)
         playerMenu.setBiz(player);
     },
     "player.house.changed": (player) => {
-        debug(`player.house.changed`)
         playerMenu.setHouse(player);
     },
     "player.jobSkill.changed": (player, skill) => {
@@ -51,5 +59,36 @@ module.exports = {
     },
     "player.completed.changed": (player) => {
         playerMenu.setCompleted(player);
+    },
+    "player.media.changed": (player) => {
+        playerMenu.setMedia(player);
+    },
+    "player.password.changed": (player) => {
+        playerMenu.setPasswordDate(player);
+    },
+    "player.email.changed": (player) => {
+        playerMenu.setEmail(player);
+    },
+    "player.name.changed": (player) => {
+        playerMenu.setName(player);
+    },
+    "player.admin.changed": (player) => {
+        playerMenu.setAdmin(player);
+    },
+    "player.law.changed": (player) => {
+        playerMenu.setLaw(player);
+    },
+    "player.narcotism.changed": (player) => {
+        playerMenu.setNarcotism(player);
+    },
+    "player.nicotine.changed": (player) => {
+        playerMenu.setNicotine(player);
+    },
+    "player.phone.number.changed": (player) => {
+        debug(`player.phone.number.changed`)
+        playerMenu.setNumber(player);
+    },
+    "player.spouse.changed": (player) => {
+        playerMenu.setSpouse(player);
     },
 }

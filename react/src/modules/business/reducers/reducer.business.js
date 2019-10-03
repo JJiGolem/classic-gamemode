@@ -27,7 +27,8 @@ export default function business(state = initialState, action) {
             const newStateBuy = { ...state };
             newStateBuy.answerBuy = payload.answer;
             if (payload.answer == 1) {
-                newStateBuy.owner = payload.owner
+                newStateBuy.owner = payload.owner;
+                newStateBuy.actions = payload.actions;
             }
             newStateBuy.isLoading = false;
             return newStateBuy;

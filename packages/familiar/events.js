@@ -1,3 +1,4 @@
+let familiar = call('familiar');
 let notifs = call('notifications');
 
 module.exports = {
@@ -5,7 +6,7 @@ module.exports = {
 
     },
     "characterInit.done": (player) => {
-
+        familiar.initList(player);
     },
     "familiar.add": (player, recId) => {
         // console.log(`familiar.add: ${player.name} ${recId}`)
@@ -13,6 +14,7 @@ module.exports = {
         var rec = mp.players.at(recId);
         if (!rec) return notifs.error(player, `Игрок #${recId} не найден`, header);
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, header);
+        if (familiar.have(player, rec.character.id)) return notifs.error(player, `Вы уже знакомы с ${rec.name}`, header);
 
         rec.call(`offerDialog.show`, ["familiar", {
             playerId: player.id
@@ -23,11 +25,29 @@ module.exports = {
         var rec = mp.players.at(recId);
         if (!rec) return notifs.error(player, `Игрок #${recId} не найден`, header);
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, header);
+        if (familiar.have(player, rec.character.id)) return notifs.error(player, `Вы уже знакомы с ${rec.name}`, header);
 
-        player.call(`familiar.add`, [rec.name]);
-        rec.call(`familiar.add`, [player.name]);
+        familiar.add(player, rec);
 
         notifs.success(player, `${rec.name} ваш новый знакомый`, header);
         notifs.success(rec, `${player.name} ваш новый знакомый`, header);
+
+        var time = 5000;
+        mp.players.forEachInRange(player.position, 20, current => {
+            current.call(`animations.play`, [player.id, {
+                dict: "mp_ped_interaction",
+                name: "handshake_guy_a",
+                speed: 1,
+                flag: 1
+            }, time]);
+        });
+        mp.players.forEachInRange(rec.position, 20, current => {
+            current.call(`animations.play`, [rec.id, {
+                dict: "mp_ped_interaction",
+                name: "handshake_guy_a",
+                speed: 1,
+                flag: 1
+            }, time]);
+        });
     },
 };

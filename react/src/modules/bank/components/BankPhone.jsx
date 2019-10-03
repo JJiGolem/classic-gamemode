@@ -1,7 +1,8 @@
+/* eslint-disable no-undef */
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {closeBankPage} from "../actions/action.bankPages";
-import {pushPhoneBank} from "../actions/action.bank";
+import {setArgsBank, setLoadingBank} from "../actions/action.bank";
 
 class BankPhone extends Component {
     constructor(props) {
@@ -44,12 +45,12 @@ class BankPhone extends Component {
 
     pushPhoneMoney() {
         const { pushPhoneMoney } = this.state;
-        const { pushPhoneBank, closePage } = this.props;
+        const { setArgs, setLoading } = this.props;
 
         if (this.validateForm()) {
-            pushPhoneBank(parseInt(pushPhoneMoney));
-            this.setState({ pushPhoneMoney: '' })
-            //closePage();
+            setArgs({ money: parseInt(pushPhoneMoney) });
+            setLoading(true);
+            mp.trigger('bank.phone.push', parseInt(pushPhoneMoney));
         }
     }
 
@@ -108,7 +109,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     closePage: () => dispatch(closeBankPage()),
-    pushPhoneBank: money => dispatch(pushPhoneBank(money))
+    setArgs: args => dispatch(setArgsBank(args)),
+    setLoading: flag => dispatch(setLoadingBank(flag)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BankPhone);

@@ -22,6 +22,8 @@ let changenameWindowData = {
     price: 120, // API: Стоимостть смены никнейма.
     acceptChange(firstname, lastname) {
         // TODO: Смена никнейма;
+        firstname = firstname[0].toUpperCase() + firstname.toLowerCase().substring(1, 20);
+        lastname = lastname[0].toUpperCase() + lastname.toLowerCase().substring(1, 20);
         var name = firstname + " " + lastname;
         mp.trigger(`callRemote`, `donate.nickname.set`, name);
         // playerMenu.coins -= 120;
@@ -70,32 +72,38 @@ let settingsmainWindowData = {
 
 let protectionWindowData = {
     email: "erf233423h4@324", // API: адрес почты.
-    isConfirmed: false, // API: Подверждена ли почта.
+    isConfirmed: 0, // API: Подверждена ли почта.
     passMessage: "изменён 4 дня назад", // API: Сообщение о последнем изменени пароля.
-    maxWaiting: 15, // API: Время блока кнопки отмены.
+    maxWaiting: 60, // API: Время блока кнопки отмены.
     changeMail(mail) {
         // TODO: Сохранить новый почтовый адрес
 
-        protectionWindowData.email = mail;
-        protectionWindowData.isConfirmed = false;
+        mp.trigger(`callRemote`, `settings.email.set`, mail);
+
+        // protectionWindowData.email = mail;
+        // protectionWindowData.isConfirmed = 0;
     },
     sendCode() {
         // TODO: Отправить код на почту
+        mp.trigger(`callRemote`, `settings.email.confirm`);
     },
-    checkCode() {
+    checkCode(code) {
         // TODO: Проверить код
-
+        mp.trigger(`callRemote`, `settings.email.code.check`, code);
         // Если код верный
-        protectionWindowData.isConfirmed = true;
-        console.log("чекнули");
+        // protectionWindowData.isConfirmed = true;
+        // console.log("чекнули");
         // Что иначе, я хз...
     },
     changePassword(oldPass, newPass) {
         // TODO: Сменить пароль
-
-        //Хз если старый не совпал...
-        console.log("Сменили пароль");
-        protectionWindowData.passMessage = "изменён сегодня";
+        var data = {
+            oldPass: oldPass,
+            newPass: newPass
+        };
+        mp.trigger(`callRemote`, `settings.password.set`, JSON.stringify(data));
+        // console.log("Сменили пароль");
+        // protectionWindowData.passMessage = "изменён сегодня";
     }
 }
 
@@ -116,17 +124,16 @@ let settingsMenuData = {
         },
     ],
     bottom: {
-        head: "Сбросить пароль",
-        img: playerMenuSvgPaths.refresh,
+        head: "Выход",
+        img: playerMenuSvgPaths.exit,
         handler() {
             playerMenu.showConfirmWindow(
                 "Подтверждение действия",
                 `Вы действительно хотите <br />
-                сбросить пароль?
+                отключиться от сервера?
                 `,
                 () => {
-                    // TODO: Сброс пароля
-                    console.log("Сбросили пароль");
+                    mp.trigger(`callRemote`, `playerMenu.kick`);
                 },
             );
         }
@@ -217,6 +224,10 @@ let socialData = [{
         head: "Бандит",
         img: "./img/playerMenu/hat.svg"
     },
+    {
+        head: "Медиа",
+        img: "./img/playerMenu/media.svg"
+    },
 ];
 
 let statistics = [
@@ -249,6 +260,30 @@ let statistics = [
     },
     {
         head: "Ур. розыска",
+        value: "-"
+    },
+    {
+        head: "Законопослушность",
+        value: "-"
+    },
+    {
+        head: "Преступления",
+        value: "-"
+    },
+    {
+        head: "Наркозависимость",
+        value: "-"
+    },
+    {
+        head: "Зависимость от никотина",
+        value: "-"
+    },
+    {
+        head: "Номер",
+        value: "-"
+    },
+    {
+        head: "Семейное положение",
         value: "-"
     },
 ];
@@ -382,6 +417,7 @@ var playerMenu = new Vue({
     data: {
         show: false,
         enable: false,
+        inputFocus: false,
         lastShowTime: 0,
         menuBar: menuBar,
         socialData: socialData,
@@ -389,6 +425,7 @@ var playerMenu = new Vue({
         name: "Jonathan Rockfall", // API: Имя игрока
         admin: 0,
         factionId: 0,
+        media: 0,
         coins: 1000, // API: СС
         dateTimer: null,
         minutesTimer: null,
@@ -403,8 +440,9 @@ var playerMenu = new Vue({
             return this.confirmation;
         },
         socialStatus() {
-            // API: социальный статус //0-гражданский/1-админ/2-госс/3-бандит
+            // API: социальный статус //0-гражданский/1-админ/2-госс/3-бандит/4-медиа
             if (this.admin) return 1;
+            if (this.media) return 4;
             if (!this.factionId) return 0;
             if (this.factionId < 8) return 2;
 
@@ -463,7 +501,10 @@ var playerMenu = new Vue({
             this.setPromocode(data.promocode);
             this.setInvited(data.invited);
             this.setCompleted(data.completed);
+            this.setMedia(data.media);
+            this.setPasswordDate(data.passwordDate);
             this.setSettings(data.settings);
+            this.setEmail(data.email, data.confirmEmail);
 
             addslotWindowData.maxSlots = data.slotsMax;
         },
@@ -532,6 +573,10 @@ var playerMenu = new Vue({
             statistics[4].value = stats.factionRank || "-";
             statistics[5].value = stats.jobName || "-";
             statistics[6].value = `${stats.wanted} зв.`;
+            statistics[7].value = stats.law;
+            statistics[8].value = stats.crimes;
+            statistics[9].value = stats.narcotism;
+            statistics[10].value = stats.nicotine;
 
             clearInterval(this.minutesTimer);
             this.minutesTimer = setInterval(() => {
@@ -565,6 +610,21 @@ var playerMenu = new Vue({
 
             statistics[5].value = data.jobName || "-";
         },
+        setWanted(wanted) {
+            var oldWanted = parseInt(statistics[6].value);
+            statistics[6].value = `${wanted} зв.`;
+
+            if (wanted > oldWanted) statistics[8].value += wanted - oldWanted;
+        },
+        setLaw(law) {
+            statistics[7].value = law;
+        },
+        setNarcotism(narcotism) {
+            statistics[9].value = narcotism;
+        },
+        setNicotine(nicotine) {
+            statistics[10].value = nicotine;
+        },
         setSkills(data) {
             if (typeof data == 'string') data = JSON.parse(data);
 
@@ -585,6 +645,7 @@ var playerMenu = new Vue({
             var oldExp = skill.value;
             skill.value = data.exp;
 
+            if (parseInt(skill.value) == parseInt(oldExp)) return;
             if (parseInt(skill.value) > parseInt(oldExp)) prompt.show(`Навык '${skill.head}' повысился до ${skill.value}%`);
             else prompt.show(`Навык '${skill.head}' понизился до ${skill.value}%`);
         },
@@ -609,17 +670,55 @@ var playerMenu = new Vue({
         setCompleted(val) {
             referenceData.amountCompleted = val;
         },
+        setMedia(val) {
+            this.media = val;
+        },
+        setPasswordDate(time) {
+            var diff = Date.now() - time;
+            protectionWindowData.passMessage = `изменен ${parseInt(diff / 1000 / 60 / 60 / 24)} д. назад`;
+        },
         setSettings(settings) {
             settingsmainWindowData.spawnSettings.currentSpawn = settings.spawn;
+        },
+        setEmail(email, confirm = 0) {
+            protectionWindowData.email = email;
+            protectionWindowData.isConfirmed = confirm;
+        },
+        setName(name) {
+            this.name = name;
+        },
+        setAdmin(admin) {
+            this.admin = admin;
+        },
+        setNumber(number) {
+            statistics[11].value = number;
+        },
+        setSpouse(spouse) {
+            if (typeof spouse == 'string') spouse = JSON.parse(spouse);
+            if (spouse) {
+                var str = (spouse.gender)? "женат на " : "замужем за "
+                statistics[12].value = str + spouse.name;
+            } else {
+                statistics[12].value = "-";
+            }
         },
     },
     watch: {
         show(val) {
-            setCursor(val);
             mp.trigger("blur", val, 300);
             hud.show = !val;
-            if (val) busy.add("playerMenu", true);
-            else busy.remove("playerMenu", true);
+            if (val) {
+                setCursor(true);
+                busy.add("playerMenu", true);
+                mp.trigger(`radar.display`, false);
+                mp.trigger(`chat.opacity.set`, 0)
+            }
+            else {
+                busy.remove("playerMenu", true);
+                if (!busy.includes()) setCursor(false);
+                mp.trigger(`radar.display`, true);
+                mp.trigger(`chat.opacity.set`, 1)
+            }
 
             this.lastShowTime = Date.now();
             if (!val && this.dateTimer) {
@@ -656,9 +755,10 @@ var playerMenu = new Vue({
     },
     mounted() {
         window.addEventListener('keyup', (e) => {
-            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "inventory"])) return;
+            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "inventory", "inputWindow"])) return;
             if (Date.now() - this.lastShowTime < 500) return;
             if (!this.enable) return;
+            if (this.inputFocus) return;
             if (e.keyCode == 77) this.show = !this.show;
             if (e.keyCode == 27 && this.show) this.show = false;
         });
@@ -697,6 +797,7 @@ Vue.component('player-menu-settings', {
     template: '#player-menu-settings',
 });
 
+var reportLastSentTime = 0;
 Vue.component('player-menu-report', {
     template: '#player-menu-report',
     data: () => ({
@@ -704,7 +805,6 @@ Vue.component('player-menu-report', {
         message: "",
         showHint: false,
         waitTime: 60 * 1000,
-        lastSentTime: 0,
     }),
     computed: {
         chars() {
@@ -714,10 +814,10 @@ Vue.component('player-menu-report', {
     methods: {
         send() {
             if (!this.message.length) return;
-            var diff = Date.now() - this.lastSentTime;
+            var diff = Date.now() - reportLastSentTime;
             if (diff < this.waitTime) return notifications.push('error', `Ожидайте ${parseInt((this.waitTime - diff) / 1000)} сек.`);
             mp.trigger(`callRemote`, `admin.report`, this.message);
-            this.lastSentTime = Date.now();
+            reportLastSentTime = Date.now();
 
             // Что ниже, оставить!
             this.message = "";
@@ -726,6 +826,9 @@ Vue.component('player-menu-report', {
                 this.showHint = false;
             }, 5000)
         },
+        setFocus(enable) {
+            playerMenu.inputFocus = enable;
+        }
     }
 });
 
@@ -759,6 +862,9 @@ Vue.component('player-menu-help', {
 
             this.message = "";
         },
+        setFocus(enable) {
+            playerMenu.inputFocus = enable;
+        }
     },
 });
 
@@ -853,6 +959,9 @@ Vue.component('player-menu-donate-convert', {
             this.acceptConvert(this.price);
             this.price = '';
         },
+        setFocus(enable) {
+            playerMenu.inputFocus = enable;
+        }
     }
 });
 
@@ -890,6 +999,9 @@ Vue.component('player-menu-donate-changename', {
             this.acceptChange(this.firstname, this.lastname);
             this.firstname = '';
             this.lastname = '';
+        },
+        setFocus(enable) {
+            playerMenu.inputFocus = enable;
         }
     }
 });
@@ -1058,7 +1170,7 @@ Vue.component('player-menu-settings-protection', {
             if (!this.code)
                 return;
 
-            this.checkCode()
+            this.checkCode(this.code);
 
             this.code = '';
         },
@@ -1116,6 +1228,9 @@ Vue.component('player-menu-settings-protection', {
             if (!regex.test(event.key))
                 event.preventDefault();
         },
+        setFocus(enable) {
+            playerMenu.inputFocus = enable;
+        }
     },
     watch: {
         isConfirmed(val) {

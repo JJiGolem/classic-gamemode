@@ -134,11 +134,11 @@ module.exports = {
 
         var itemIds = [29, 30, 31, 32];
         data.index = Math.clamp(data.index, 0, itemIds.length - 1);
-        var price = bands.drugsPrice * data.count;
+        var price = bands.drugsPrice[data.index] * data.count;
         var power = bands.getPowerBand(faction.id);
         // стоимость зависит от уровня влияния
         price -= parseInt(price * power);
-        price = Math.clamp(price, bands.drugsPriceMin * data.count, price);
+        price = Math.clamp(price, bands.drugsPriceMin[data.index] * data.count, price);
         if (character.cash < price) return notifs.error(player, `Необходимо $${price}`, header);
 
         // inventory.fullDeleteItemsByParams(itemIds[index], ["faction", "owner"], [character.factionId, character.id]);

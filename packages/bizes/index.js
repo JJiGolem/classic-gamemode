@@ -8,7 +8,7 @@ let bizesModules = new Array();
 /// biz types
 /// 0 - АЗС
 /// 1 - Супермаркет
-/// 2 - 
+/// 2 - Ферма
 /// 3 - СТО
 /// 4 - Магазин одежды
 /// 5 - Магазин оружия
@@ -19,6 +19,7 @@ let bizesModules = new Array();
 let utils;
 let timer;
 let money;
+let notifications;
 
 /// Economic constants
 let maxProductPriceMultiplier = 2.0;
@@ -31,6 +32,9 @@ let getBizById = function(id) {
 let getBizByCharId = function(characterId) {
     return bizes.find(x => x.info.characterId == characterId);
 };
+let getBizByPlayerPos = function(player) {
+    return bizes.find(x => player.dist(new mp.Vector3(x.info.x, x.info.y, x.info.z)) <= 10);
+}
 let dropBiz = function(biz, sellToGov = false) {
     if (biz == null) return;
     if (biz.info.characterId == null) return;
@@ -50,11 +54,13 @@ let dropBiz = function(biz, sellToGov = false) {
                         if (sellToGov) {
                             mp.players.at(j).call('biz.sell.toGov.ans', [1]);
                         } else {
+                            notifications.warning(mp.players.at(j), "Ваш бизнес отобрали за неуплату налогов", "Внимание");
                             mp.players.at(j).call('phone.app.remove', ["biz", biz.info.id]);
                         }
                         return;
                     }
                 }
+                notifications.save(characterId, "warning", "Ваш бизнес отобрали за неуплату налогов", "Внимание");
             } else {
                 console.log("[bizes] Biz dropped " + biz.info.id + ". But player didn't getmoney");
             }
@@ -141,8 +147,9 @@ let createOrder = async function(id, count, price) {
     let biz = getBizById(id);
     if (biz == null) return false;
     if (biz.info.productsCount + count > biz.info.productsMaxCount) return false;
-    bizesModules
-    //if (price > ) проверка в модуле экономики. Входит ли цена за 1 продукт в разрешенный диапазон
+    let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
+    let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
+    if (price < min || price > max) return false;
     biz.info.productsOrder = count;
     biz.info.productsOrderPrice = price;
     await biz.info.save();
@@ -151,13 +158,37 @@ let createOrder = async function(id, count, price) {
 let destroyOrder = async function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
-    // if проверка взял ли дальнобой заказ
+    if (!biz.isOrderTaken) return false;
     biz.info.productsOrder = null;
     biz.info.productsOrderPrice = null;
     await biz.info.save();
     return true;
 }
-
+let getOrder = function(id) {
+    let biz = getBizById(id);
+    if (biz == null) return false;
+    if (biz.isOrderTaken) return false;
+    biz.isOrderTaken = true;
+    return true;
+}
+let dropOrder = function(id) {
+    let biz = getBizById(id);
+    if (biz == null) return false;
+    if (!biz.isOrderTaken) return false;
+    biz.isOrderTaken = false;
+    return true;
+}
+let readyOrder = async function(id) {
+    let biz = getBizById(id);
+    if (biz == null) return false;
+    if (!biz.isOrderTaken) return false;
+    biz.info.productsCount += biz.info.productsOrder;
+    biz.info.productsOrder = null;
+    biz.info.productsOrderPrice = null;
+    if (biz.info.productsCount > biz.info.productsMaxCount) biz.info.productsCount = biz.info.productsMaxCount;
+    await biz.info.save();
+    return true;
+}
 
 module.exports = {
     maxProductPriceMultiplier: maxProductPriceMultiplier,
@@ -167,6 +198,7 @@ module.exports = {
         utils = call("utils");
         timer = call("timer");
         money = call("money");
+        notifications = call('notifications');
 
         for (let file of fs.readdirSync(path.dirname(__dirname))) {
             if (file != 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname) + "/" + file + '/index.js'))
@@ -264,6 +296,7 @@ module.exports = {
     },
     getBizById: getBizById,
     getBizByCharId: getBizByCharId,
+    getBizByPlayerPos: getBizByPlayerPos,
     getTypeName: getTypeName,
     getResourceName: getResourceName,
     getRandomDate: getRandomDate,
@@ -328,7 +361,30 @@ module.exports = {
         if (biz == null) return null;
         return new mp.Vector3(biz.info.x, biz.info.y, biz.info.z);
     },
+    getBizParameters(charId, id) {
+        let biz = getBizById(id);
+        if (biz == null) return null;
+        if (biz.info.characterId != charId) return null;
+        let params = bizesModules[biz.info.type].getBizParamsById(biz.info.id);
+        if (params == null) return null;
+        return {bizId: biz.info.id, params: params};
+    },
+    setBizParameters(charId, bizParameters) {
+        let biz = getBizById(bizParameters.bizId);
+        if (biz == null) return false;
+        if (biz.info.characterId != charId) return false;
+        bizParameters.params.forEach(param => {
+            bizesModules[biz.info.type].setBizParam(bizParameters.bizId, param.key, param.value);
+        });
+        return true;
+    },
 
     createOrder: createOrder,
+    getOrder: getOrder,
+    dropOrder: dropOrder,
     destroyOrder: destroyOrder,
+    readyOrder: readyOrder,
+
+    bizesModules: bizesModules,
+    dropBiz: dropBiz,
 }

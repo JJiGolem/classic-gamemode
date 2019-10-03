@@ -1,13 +1,11 @@
 // Основной игровой худ - погода, деньги, онлайн
-"use strict"
-
 let factions = call('factions');
 
 module.exports = {
-    getPlayers() {
-        let outputArray = [];
-        
-        mp.players.forEach((player, id) => {
+    loadPlayers() {
+        let arrayPlayers = [];
+
+        mp.players.forEach(player => {
             if (player.character) {
                 let factionName = '-';
         
@@ -19,19 +17,39 @@ module.exports = {
                     }
                 }
 
-                outputArray.push(
-                    {
-                        id: player.id,
-                        name: player.character.name,
-                        ping: player.ping,
-                        faction: factionName
-                    }
-                );
+                let newPlayer = {
+                    id: player.id,
+                    name: player.character.name,
+                    ping: player.ping,
+                    faction: factionName
+                }
+
+                arrayPlayers.push(newPlayer);
             }
         });
 
-        console.log(outputArray);
+        return arrayPlayers;
+    },
+    loadNewPlayer(player) {
+        if (!player.character) return;
 
-        return outputArray;
+        let factionName = '-';
+        
+        if (player.character.factionId != null) {
+            let faction = factions.getFaction(player.character.factionId);
+            
+            if (faction) {
+                factionName = faction.name;
+            }
+        }
+
+        let newPlayer = {
+            id: player.id,
+            name: player.character.name,
+            ping: player.ping,
+            faction: factionName
+        }
+
+        return newPlayer;
     }
-}
+};

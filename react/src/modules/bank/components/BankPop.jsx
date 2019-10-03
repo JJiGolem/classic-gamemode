@@ -1,7 +1,8 @@
+/* eslint-disable no-undef */
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {closeBankPage} from "../actions/action.bankPages";
-import {popBank} from "../actions/action.bank";
+import {setArgsBank, setLoadingBank} from "../actions/action.bank";
 
 class BankPop extends Component {
     constructor(props) {
@@ -44,11 +45,12 @@ class BankPop extends Component {
 
     popMoney() {
         const { popMoney } = this.state;
-        const { popBank, closePage } = this.props;
+        const { setArgs, setLoading } = this.props;
 
         if (this.validateForm()) {
-            popBank(parseInt(popMoney));
-            closePage();
+            setArgs({ money: parseInt(popMoney) });
+            setLoading(true);
+            mp.trigger('bank.pop', parseInt(popMoney));
         }
     }
 
@@ -93,7 +95,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     closePage: () => dispatch(closeBankPage()),
-    popBank: money => dispatch(popBank(money))
+    setArgs: args => dispatch(setArgsBank(args)),
+    setLoading: flag => dispatch(setLoadingBank(flag)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BankPop);

@@ -12,7 +12,6 @@ let inventory = call('inventory');
 // "amb@world_human_stand_fishing@idle_a idle_c" - быстро крутит и тянет (вытягивает рыбу)
 
 let shape;
-let place;
 let fishingPlace = {
     x: -1850.4912744140625,
     y: -1242.1881591796875,
@@ -27,51 +26,47 @@ let fishingPlace = {
 
 const ROD_ID = 5;
 
-let fishesTypes = [
-    {
-        name: 'Карась',
-        price: 10
-    },
-    {
-        name: 'Окунь',
-        price: 15
-    },
-    {
-        name: 'Сардина',
-        price: 20
-    },
-    {
-        name: 'Скумбрия',
-        price: 25
-    },
-];
-
-const getFishPrice = name => {
-    return fishesTypes.find(fish => fish.name == name).price;
-}
-
 module.exports = {
     init() {
         this.createFishingMenuPlace();
-        this.createFishingPlaces();
     },
     rodPrice: 100,
     fishesTypes: [
         {
-            name: 'Карась',
-            price: 10,
-        },
-        {
             name: 'Окунь',
-            price: 15
+            price: 10,
+            minWeight: 0.8,
+            maxWeight: 2,
         },
         {
-            name: 'Сардина',
-            price: 20
+            name: 'Мальма',
+            price: 13,
+            minWeight: 0.7,
+            maxWeight: 2.1,
+        },
+        {
+            name: 'Лосось',
+            price: 17,
+            minWeight: 1.3,
+            maxWeight: 3.4,
+        },
+        {
+            name: 'Тунец',
+            price: 20,
+            minWeight: 1.7,
+            maxWeight: 3.8,
         },
         {
             name: 'Скумбрия',
-            price: 25
+            price: 25,
+            minWeight: 1.2,
+            maxWeight: 1.9,
+        },
+        {
+            name: 'Сом',
+            price: 30,
+            minWeight: 2.5,
+            maxWeight: 5.3,
         },
     ],
     getRodId() {
@@ -95,19 +90,6 @@ module.exports = {
         shape = mp.colshapes.newSphere(fishingPlace.marker.x, fishingPlace.marker.y, fishingPlace.marker.z + 1, 1.2);
         shape.pos = new mp.Vector3(fishingPlace.marker.x, fishingPlace.marker.y, fishingPlace.marker.z);
         shape.isFishingPlaceMenu = true;
-    },
-    createFishingPlaces() {
-        mp.markers.new(1, new mp.Vector3(-1854.7, -1246, 7.4), 0.4, 
-        {
-            direction: new mp.Vector3(-1854.7, -1246, 8.61),
-            rotation: 0,
-            color: [255, 0, 0, 200],
-            visible: true,
-            dimension: 0
-        });
-        place = mp.colshapes.newSphere(-1854.7, -1246, 9.61, 2);
-        place.pos = new mp.Vector3(-1854.7, -1246, 8.61);
-        place.isFishingPlace = true;
     },
     async buyRod(player) {
         money.removeCash(player, this.rodPrice,  (result) => { 
@@ -135,9 +117,8 @@ module.exports = {
             fishes.forEach(fish => {
                 let fishName = inventory.getParam(fish, 'name').value;
                 let fishWeight = inventory.getParam(fish, 'weight').value;
-                let fishPrice = fishesTypes.find(fish => fish.name == fishName).price;
+                let fishPrice = this.fishesTypes.find(fish => fish.name == fishName).price;
                 sum += fishPrice * fishWeight;
-                console.log(`${fishName}, ${fishWeight}, ${fishPrice}, ${sum}`);
             });
 
             sum = parseInt(sum);

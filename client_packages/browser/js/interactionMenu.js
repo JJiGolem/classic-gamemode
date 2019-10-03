@@ -41,6 +41,9 @@ var interactionMenu = new Vue({
                         mp.trigger(`carservice.diagnostics.offer`);
                         mp.trigger(`interaction.menu.close`);
                     }
+                    if (item.text == 'FIB') {
+                        interactionMenu.menu = interactionMenu.menus["fib_vehicle"];
+                    }
                 }
             },
             "vehicle_inside": {
@@ -107,6 +110,9 @@ var interactionMenu = new Vue({
                         mp.trigger(`interaction.menu.close`);
                         if (captureScore.show) return notifications.push(`error`, `Недоступно`);
                         mp.trigger(`callRemote`, `mafia.bizWar.show`);
+                    } else if (item.text == "Эфир") {
+                        mp.trigger(`interaction.menu.close`);
+                        mp.trigger(`callRemote`, `news.stream`);
                     }
                 }
             },
@@ -141,10 +147,14 @@ var interactionMenu = new Vue({
                         interactionMenu.menu = interactionMenu.menus["faction"];
                     } else if (item.text == 'Police') {
                         interactionMenu.menu = interactionMenu.menus["police"];
+                    } else if (item.text == 'FIB') {
+                        interactionMenu.menu = interactionMenu.menus["fib"];
                     } else if (item.text == 'Hospital') {
                         interactionMenu.menu = interactionMenu.menus["hospital"];
                     } else if (item.text == 'Mafia') {
                         interactionMenu.menu = interactionMenu.menus["mafia"];
+                    } else if (item.text == 'Weazel News') {
+                        interactionMenu.menu = interactionMenu.menus["news"];
                     }
                 }
             },
@@ -260,6 +270,44 @@ var interactionMenu = new Vue({
                     mp.trigger(`interaction.menu.close`);
                 }
             },
+            "fib": {
+                name: "fib",
+                items: [{
+                        text: "Наручники",
+                    },
+                    {
+                        text: "Розыск",
+                    },
+                    {
+                        text: "Арест",
+                    },
+                    {
+                        text: "Следование",
+                    },
+                    {
+                        text: "Прослушка",
+                    },
+                    {
+                        text: "В авто",
+                    },
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    mp.trigger(`interactionMenu.onClick`, this.name, item.text);
+                    mp.trigger(`interaction.menu.close`);
+                }
+            },
+            "fib_vehicle": {
+                name: "fib_vehicle",
+                items: [{
+                    text: "Номер",
+                }, ],
+                handler(index) {
+                    var item = this.items[index];
+                    mp.trigger(`interactionMenu.onClick`, this.name, item.text);
+                    mp.trigger(`interaction.menu.close`);
+                }
+            },
             "hospital": {
                 name: "hospital",
                 items: [{
@@ -289,6 +337,18 @@ var interactionMenu = new Vue({
                     {
                         text: "Мешок на голову",
                     },
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    mp.trigger(`interaction.menu.close`);
+                    mp.trigger(`interactionMenu.onClick`, this.name, item.text);
+                }
+            },
+            "news": {
+                name: "news",
+                items: [{
+                        text: "Эфир",
+                    }
                 ],
                 handler(index) {
                     var item = this.items[index];
@@ -341,15 +401,26 @@ var interactionMenu = new Vue({
             if (!val) this.show = false;
         },
         show(val) {
-            setCursor(val);
-            if (val) busy.add("interaction", true);
-            else busy.remove("interaction", true);
+            if (val) {
+                busy.add("interaction", true);
+                setCursor(true);
+            } else {
+                busy.remove("interaction", true);
+                if (!busy.includes()) setCursor(false);
+            }
         },
         faction(val) {
             if (!val) {
                 this.deleteItem("player_interaction", "Организация");
                 this.deleteItem("player_interaction", "Police");
+                this.deleteItem("player_interaction", "FIB");
                 this.deleteItem("player_interaction", "Hospital");
+                this.deleteItem("player_interaction", "Weazel News");
+                this.deleteItem("player_interaction", "Mafia");
+                this.deleteItem("player_ownmenu", "Захват");
+                this.deleteItem("player_ownmenu", "Захват биз.");
+                this.deleteItem("player_ownmenu", "Эфир");
+                this.deleteItem("vehicle", "FIB");
                 return;
             }
             this.addItems("player_interaction", {
@@ -360,19 +431,56 @@ var interactionMenu = new Vue({
                     text: "Police"
                 });
             } else this.deleteItem("player_interaction", "Police");
+
+            if (val == 4) { // fib
+                this.addItems("player_interaction", {
+                    text: "FIB"
+                });
+                this.addItems("vehicle", {
+                    text: "FIB"
+                });
+            } else {
+                this.deleteItem("player_interaction", "FIB");
+                this.deleteItem("vehicle", "FIB");
+            }
+
             if (val == 5) { // hospital
                 this.addItems("player_interaction", {
                     text: "Hospital"
                 });
             } else this.deleteItem("player_interaction", "Hospital");
-            if (val >= 8 && val <= 11) { // bands
 
+            if (val == 7) { // news
+                this.addItems("player_interaction", {
+                    text: "Weazel News"
+                });
+                this.addItems("player_ownmenu", {
+                    text: "Эфир"
+                });
+            } else {
+                this.deleteItem("player_interaction", "Weazel News");
+                this.deleteItem("player_ownmenu", "Эфир");
             }
+
+            if (val >= 8 && val <= 11) { // bands
+                var item = {
+                    text: "Захват"
+                };
+                this.addItems("player_ownmenu", {
+                    text: "Захват"
+                });
+            } else this.deleteItem("player_ownmenu", "Захват");
             if (val >= 12 && val <= 14) { // mafia
                 this.addItems("player_interaction", {
                     text: "Mafia"
                 });
-            } else this.deleteItem("player_interaction", "Mafia");
+                this.addItems('player_ownmenu', {
+                    text: "Захват биз."
+                });
+            } else {
+                this.deleteItem("player_interaction", "Mafia");
+                this.deleteItem('player_ownmenu', "Захват биз.");
+            }
         }
     },
 });

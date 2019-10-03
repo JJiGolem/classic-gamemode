@@ -47,6 +47,8 @@ module.exports = {
         if (player.account.donate < this.nicknamePrice) return out(`Необходимо ${this.nicknamePrice} CC`);
 
         // TODO: check nickname
+        let reg = /^[A-z]{2,15} [A-z]{2,15}$/;
+        if (!reg.test(name)) return out(`Имя и фамилия должны состоять из 2-15 латинских букв каждое`);
 
         var character = await db.Models.Character.findOne({
             attributes: ["id"],
@@ -57,13 +59,15 @@ module.exports = {
 
         if (character) return out(`Никнейм ${name} занят`);
 
+        player.name = name;
         player.character.name = name;
         player.character.save();
 
         this.setDonate(player, player.account.donate - this.nicknamePrice);
-        notifs.success(player, `Никнейм изменен, перезайдите на сервер`, header);
+        notifs.success(player, `Никнейм персонажа изменен`, header);
         notifs.success(player, `Списано ${this.nicknamePrice} CC`, header);
-        player.kick();
+        mp.events.call("player.name.changed", player);
+        // player.kick();
     },
     clearWarn(player) {
         var header = `Снятие варна`;

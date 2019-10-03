@@ -93,6 +93,23 @@ var inventory = new Vue({
                     }
                 }
             },*/
+            4: { // прослушка
+                'Установить': {
+                    handler(item) {
+                        var data = {
+                            itemSqlId: item.sqlId
+                        };
+                        mp.trigger(`callRemote`, `fib.spy`, JSON.stringify(data));
+                    }
+                }
+            },
+            16: { // сигареты
+                'Курить': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `inventory.item.smoke.use`, item.sqlId);
+                    }
+                }
+            },
             24: { // малая аптечка
                 'Вылечиться': {
                     handler(item) {
@@ -249,6 +266,19 @@ var inventory = new Vue({
         // Вайт-лист предметов, которые можно использовать в горячих клавишах
         hotkeysList: {
             // itemId: {...}
+            4: { // прослушка
+                handler(item) {
+                    var data = {
+                        itemSqlId: item.sqlId
+                    };
+                    mp.trigger(`callRemote`, `fib.spy`, JSON.stringify(data));
+                }
+            },
+            16: { // сигареты
+                handler(item) {
+                    mp.trigger(`callRemote`, `inventory.item.smoke.use`, item.sqlId);
+                }
+            },
             24: { // малая аптечка
                 handler(item) {
                     mp.trigger(`callRemote`, `inventory.item.med.use`, item.sqlId);
@@ -343,7 +373,11 @@ var inventory = new Vue({
             40: [22, 99],
         },
         // Огнестрельные оружия
-        weaponsList: [20, 21, 22, 41, 44, 47, 48, 52, 89, 99, 107],
+        weaponsList: [20, 21, 22, 41, 44, 46, 47, 48, 52, 88, 89, 91, 99, 107],
+        // Еда
+        eatList: [35],
+        // Напитки
+        drinkList: [34],
         // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
         environment: [],
         // Предметы на игроке (экипировка)
@@ -467,6 +501,8 @@ var inventory = new Vue({
             if (!item) return null;
             if (item.itemId == 15 && item.params.name) // рыба
                 return `${item.params.name}`;
+            if (item.itemId == 16 && item.params.name) // сигареты
+                return this.itemsInfo[item.itemId].name + " " + item.params.name;
             if (item.itemId == 33 && item.params.vehName) // ключи авто
                 return `Ключи от ${item.params.vehName}`;
             return this.itemsInfo[item.itemId].name;
@@ -476,6 +512,58 @@ var inventory = new Vue({
             if (!item) return null;
 
             return parseInt(this.getItemWeight(item) * 1000) / 1000;
+        },
+        descItemParams() {
+            var item = this.itemDesc.item;
+            if (!item) return [];
+
+            var params = [{
+                    name: "Вес",
+                    value: this.descItemWeight + " кг"
+                },
+                {
+                    name: "Занимает",
+                    value: this.itemsInfo[item.itemId].width + 'x' + this.itemsInfo[item.itemId].height + " ячейки"
+                }
+            ];
+            if (item.params.health) params.push({
+                name: "Прочность",
+                value: item.params.health + "%"
+            });
+            if (item.params.count) params.push({
+                name: "Количество",
+                value: item.params.count + " ед."
+            });
+            if (item.params.pockets) params.push({
+                name: "Карманы",
+                value: item.params.pockets.length + " ед."
+            });
+            if (this.getItemsCount(item)) params.push({
+                name: "Содержит",
+                value: this.getItemsCount(item) + " предметов"
+            });
+            if (item.params.clime) params.push({
+                name: "Климат",
+                value: `от ${item.params.clime[0]}° до ${item.params.clime[1]}°`
+            });
+            if (item.params.satiety) params.push({
+                name: "Сытость",
+                value: item.params.satiety + "%"
+            });
+            if (item.params.thirst) params.push({
+                name: "Жажда",
+                value: item.params.thirst + "%"
+            });
+            if (item.params.weaponHash) {
+                var ammoId = this.getAmmoItemId(item.itemId);
+                if (!ammoId) return params;
+                params.push({
+                    name: "Калибр",
+                    value: this.itemsInfo[ammoId].name
+                });
+            }
+
+            return params;
         },
         havePockets() {
             for (var index in this.equipment)
@@ -729,6 +817,14 @@ var inventory = new Vue({
             }
             return null;
         },
+        // получить ID предмета патронов по ID предмета оружия
+        getAmmoItemId(itemId) {
+            for (var ammoId in this.mergeList) {
+                var list = this.mergeList[ammoId];
+                if (list.includes(itemId)) return parseInt(ammoId);
+            }
+            return null;
+        },
         notify(message) {
             // console.log("[Inventory] " + message);
             notifications.push(`info`, message, `[Inventory]`);
@@ -760,6 +856,26 @@ var inventory = new Vue({
                             var hash = item.params.weaponHash;
                             mp.trigger(`weapons.ammo.remove`, item.sqlId, hash.toString());
                         }
+                    };
+                } else if (this.eatList.includes(itemId)) {
+                    var handler = (item) => {
+                        mp.trigger(`callRemote`, `inventory.item.eat.use`, item.sqlId);
+                    };
+                    menu['Съесть'] = {
+                        handler: handler
+                    };
+                    this.hotkeysList[itemId] = {
+                        handler: handler
+                    };
+                } else if (this.drinkList.includes(itemId)) {
+                    var handler = (item) => {
+                        mp.trigger(`callRemote`, `inventory.item.drink.use`, item.sqlId);
+                    };
+                    menu['Выпить'] = {
+                        handler: handler
+                    };
+                    this.hotkeysList[itemId] = {
+                        handler: handler
                     };
                 }
                 menu['Выкинуть'] = {
@@ -988,15 +1104,24 @@ var inventory = new Vue({
             setCursor(val);
             mp.trigger("blur", val, 300);
             hud.show = !val;
-            if (val) busy.add("inventory", true);
-            else busy.remove("inventory", true);
+            if (val) {
+                setCursor(true);
+                busy.add("inventory", true);
+                mp.trigger(`radar.display`, false);
+                mp.trigger(`chat.opacity.set`, 0);
+            } else {
+                busy.remove("inventory", true);
+                if (!busy.includes()) setCursor(false);
+                mp.trigger(`radar.display`, true);
+                mp.trigger(`chat.opacity.set`, 1);
+            }
             this.lastShowTime = Date.now();
         },
     },
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
-            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "playerMenu"])) return;
+            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "playerMenu", "inputWindow"])) return;
             if (Date.now() - self.lastShowTime < 500) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;
             if (e.keyCode > 47 && e.keyCode < 58) {

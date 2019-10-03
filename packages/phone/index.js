@@ -57,7 +57,7 @@ module.exports = {
 
         player.call('phone.load', [{
                 isHave: player.phone != null,
-                name: player.character.name,
+                number: player.phone != null && player.phone.number,
                 houses: houses,
                 biz: bizes,
                 contacts: player.phone != null ? (player.phone.PhoneContacts != null ? jsonPhone['PhoneContacts'] : []) : []
@@ -68,5 +68,31 @@ module.exports = {
     },
     isExists(number) {
         return phoneNumbers.includes(number);
+    },
+    async changeNumber(player, newNumber) {
+        if (player.phone == null) return false;
+        if (newNumber.length == 0) return false;
+        if (player.phone.number == newNumber) return false;
+        if (phoneNumbers.includes(newNumber)) return false;
+
+        let numberIndex = phoneNumbers.findIndex( x => x == player.phone.number);
+        if (numberIndex != -1) {
+            phoneNumbers[numberIndex] = newNumber;
+        }
+        else {
+            phoneNumbers.push(newNumber);
+        }
+        for (let mycontactCopyIndex = player.phone.PhoneContacts.findIndex(x => x.number == newNumber);
+            mycontactCopyIndex != -1;
+            mycontactCopyIndex = player.phone.PhoneContacts.findIndex(x => x.number == newNumber)) {
+                await player.phone.PhoneContacts[mycontactCopyIndex].destroy();
+                player.phone.PhoneContacts.splice(mycontactCopyIndex, 1);
+        }
+        let oldNumber = player.phone.number;
+        player.phone.number = newNumber;
+        await player.phone.save();
+        player.call("phone.contact.mine.update", [oldNumber, newNumber]);
+        mp.events.call("player.phone.number.changed", player);
+        return true;
     }
 };

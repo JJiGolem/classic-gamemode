@@ -13,10 +13,8 @@ let allowed = [ /// Список разрешенных social club'ов
     "1d1ssarik",
     "Stanger__W",
     "Spros_mono",
-    "Shum219", // brazgin
     "SashaDolgopolov", // dolgopolov
     "Nensi_Pnf", // nensi
-    "RussianOfficer34", // мики рейс даниил
     "artik2135456", // фракнки гаспаро саша
     "MarcusBallevardo", // чед черри
     "cyrax63", // захар курупт
@@ -27,7 +25,6 @@ let allowed = [ /// Список разрешенных social club'ов
     "ScarlyS2", // roma
     "QayRey", // юля
     "..Exi..",
-    "Demidov_Edgar",
     "LLlBabPa",
     "Edward_Melano",
     "stefano_adderio", //adderio

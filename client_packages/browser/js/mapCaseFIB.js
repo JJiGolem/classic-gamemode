@@ -66,7 +66,7 @@ Vue.component('map-case-fib-dbSearch', {
         onClickMenuItem(mod) {
             this.menuItemInFocus = mod;
         },
-        enterHandler (e) {
+        enterHandler(e) {
             if (e.keyCode == 13 && !mapCase.loadMod) {
                 this.search();
             }
@@ -176,7 +176,7 @@ Vue.component('map-case-fib-identification', {
             if (!regex.test(event.key))
                 event.preventDefault();
         },
-        enterHandler (e) {
+        enterHandler(e) {
             if (e.keyCode == 13 && !mapCase.loadMod) {
                 this.search();
             }
@@ -213,7 +213,7 @@ Vue.component('map-case-fib-over-fine', {
             if (!regex.test(event.key))
                 event.preventDefault();
         },
-        enterHandler (e) {
+        enterHandler(e) {
             if (e.keyCode == 13 && !mapCase.loadMod) {
                 this.give();
             }
@@ -258,7 +258,7 @@ Vue.component('map-case-fib-over-wanted', {
         setDanger() {
             this.danger = this.overDanger
         },
-        enterHandler (e) {
+        enterHandler(e) {
             if (e.keyCode == 13 && !mapCase.loadMod) {
                 this.give();
             }
@@ -423,6 +423,14 @@ var mapCaseFIBProfileData = {
             title: 'Транспорт: ',
             key: 'veh'
         },
+        {
+            title: 'Законопослушность: ',
+            key: 'law'
+        },
+        {
+            title: 'Преступления: ',
+            key: 'crimes'
+        },
     ],
     setProfileData(data) {
         if (typeof data == 'string') data = JSON.parse(data);
@@ -567,49 +575,49 @@ var mapCaseFIBData = {
 
 //Функция, срабатывающая при принятии вызова
 //data - данные о вызове
-mapCasePdCallsData.accept = (data) => {
-    mp.trigger(`callRemote`, `mapCase.pd.calls.accept`, data.id);
+mapCaseFIBCallsData.accept = (data) => {
+    mp.trigger(`callRemote`, `mapCase.fib.calls.accept`, data.id);
 }
 
 
 //Функция, срабатывающая при поиске профиля по id
 //id - значение из input
 mapCaseFIBIdentificationData.searchById = (id) => {
-    mp.trigger(`mapCase.pd.search.start`, id);
+    mp.trigger(`mapCase.fib.search.start`, id);
 }
 
 
 //Функция, срабатывающая при запросе профиля по записи из списка
 //data - данные из записи
 mapCaseFIBData.getProfile = (data) => {
-    mp.trigger(`callRemote`, `mapCase.pd.getProfile`, data.id)
+    mp.trigger(`callRemote`, `mapCase.fib.getProfile`, data.id)
 }
 
 
 //Функция, срабатывающая при нажатии на Экстренный вызова+
 mapCaseFIBData.emergencyCall = () => {
-    mp.trigger(`callRemote`, `mapCase.pd.emergency.call`);
+    mp.trigger(`callRemote`, `mapCase.fib.emergency.call`);
 };
 
 
 //Функция, срабатывающая при поиске в базе данных по номеру телефона
 //value - значение из input
 mapCaseFIBDBSearchData.searchByPhone = (value) => {
-    mp.trigger(`callRemote`, `mapCase.pd.searchByPhone`, value);
+    mp.trigger(`callRemote`, `mapCase.fib.searchByPhone`, value);
 };
 
 
 //Функция, срабатывающая при поиске в базе данных по имени
 //value - значение из input
 mapCaseFIBDBSearchData.searchByName = (value) => {
-    mp.trigger(`callRemote`, `mapCase.pd.searchByName`, value);
+    mp.trigger(`callRemote`, `mapCase.fib.searchByName`, value);
 };
 
 
 //Функция, срабатывающая при поиске в базе данных по номеру машины
 //value - значение из input
 mapCaseFIBDBSearchData.searchByCar = (value) => {
-    mp.trigger(`callRemote`, `mapCase.pd.searchByCar`, value);
+    mp.trigger(`callRemote`, `mapCase.fib.searchByCar`, value);
 };
 
 
@@ -620,7 +628,7 @@ mapCaseFIBMembersData.setRanks(["Старший Сержант", "Альпака
 //Функция, срабатывающая при увольнение сотрудника
 //data - данные о сотруднике из записи в списке
 mapCaseFIBMembersData.dismiss = (data) => {
-    mp.trigger(`callRemote`, `mapCase.pd.members.uval`, data.id);
+    mp.trigger(`callRemote`, `mapCase.fib.members.uval`, data.id);
 }
 
 
@@ -629,7 +637,7 @@ mapCaseFIBMembersData.dismiss = (data) => {
 mapCaseFIBMembersData.lowerRank = (data) => {
     if (data.rank <= 1)
         return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет мин. ранг - ${mapCaseFIBMembersData.ranks[data.rank - 1]}`);
-    mp.trigger(`callRemote`, `mapCase.pd.rank.lower`, data.id);
+    mp.trigger(`callRemote`, `mapCase.fib.rank.lower`, data.id);
 }
 
 
@@ -638,7 +646,7 @@ mapCaseFIBMembersData.lowerRank = (data) => {
 mapCaseFIBMembersData.raiseRank = (data) => {
     if (data.rank >= mapCaseFIBMembersData.ranks.length)
         return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет макс. ранг - ${mapCaseFIBMembersData.ranks[data.rank - 1]}`);
-    mp.trigger(`callRemote`, `mapCase.pd.rank.raise`, data.id);
+    mp.trigger(`callRemote`, `mapCase.fib.rank.raise`, data.id);
 }
 
 
@@ -651,7 +659,7 @@ mapCaseFIBProfileData.giveFine = (cause, amount, profileData) => {
         cause: cause,
         price: amount
     };
-    mp.trigger(`callRemote`, `mapCase.pd.fines.give`, JSON.stringify(data));
+    mp.trigger(`callRemote`, `mapCase.fib.fines.give`, JSON.stringify(data));
 }
 
 
@@ -664,9 +672,13 @@ mapCaseFIBProfileData.giveWanted = (cause, danger, profileData) => {
         cause: cause,
         wanted: danger
     };
+    if (danger > profileData.danger) {
+        profileData.law -= danger - profileData.danger;
+        profileData.crimes += danger - profileData.danger;
+    }
     profileData.cause = cause;
     profileData.danger = danger;
-    mp.trigger(`callRemote`, `mapCase.pd.wanted.give`, JSON.stringify(data));
+    mp.trigger(`callRemote`, `mapCase.fib.wanted.give`, JSON.stringify(data));
 }
 
 //mapCasePdIdentificationData.waitingTime = 5;

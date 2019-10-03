@@ -220,6 +220,34 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('thirst', val);
             },
         },
+        // Наркозависимость
+        narcotism: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false,
+        },
+        // Зависимость от никотина
+        nicotine: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false,
+        },
+        // Законопослушность
+        law: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, -100, 100);
+                this.setDataValue('law', val);
+            },
+        },
+        // Количество преступлений
+        crimes: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false,
+        },
         // Уровень розыска
         wanted: {
             type: DataTypes.INTEGER(11),
@@ -235,7 +263,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             defaultValue: null,
             set(val) {
-                if (!val) this.setDataValue('wantedCause', '-');
+                if (!val) val = "-";
+
+                this.setDataValue("wantedCause", val);
             }
         },
         // Оставшееся время ареста
@@ -313,6 +343,9 @@ module.exports = (sequelize, DataTypes) => {
         });
         model.hasMany(models.Fine, {
             foreignKey: "recId"
+        });
+        model.hasMany(models.CharacterInventory, {
+            foreignKey: "playerId"
         });
     };
     return model;

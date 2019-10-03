@@ -123,6 +123,10 @@ module.exports = {
 
         topParams.pockets = '[5,5,5,5,5,5,10,10]';
         legsParams.pockets = '[5,5,5,5,5,5,10,10]';
+        hatParams.clime = '[-5,20]';
+        topParams.clime = '[-5,20]';
+        legsParams.clime = '[-5,20]';
+        feetsParams.clime = '[-5,20]';
         topParams.name = `Рубашка ${faction.name}`;
         legsParams.name = `Брюки ${faction.name}`;
 
@@ -201,7 +205,7 @@ module.exports = {
 
         if (faction.ammo < army.itemAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
-        var itemIds = [24];
+        var itemIds = [24, 28];
 
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
@@ -214,8 +218,8 @@ module.exports = {
         var params = {
             faction: character.factionId,
             owner: character.id,
-            count: 2,
         };
+        if (index == 0) params.count = 2;
 
         inventory.addItem(player, itemId, params, (e) => {
             if (e) return notifs.error(player, e, header);

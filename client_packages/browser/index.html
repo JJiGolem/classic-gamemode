@@ -37,6 +37,7 @@
     <link rel="stylesheet" type="text/css" href="css/killList.css" />
     <link rel="stylesheet" type="text/css" href="css/watermark.css" />
     <link rel="stylesheet" type="text/css" href="css/timer.css" />
+    <link rel="stylesheet" type="text/css" href="css/changelist.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -57,7 +58,7 @@
                 {{ players }}
                 /
                 {{ maxPlayers }}</p>
-            <p v-if="build">Сборка: #{{ build }}</p>
+            <p v-if="build">{{ build }} <i class="fas fa-code-branch"></i></p>
         </div>
         <div class="money">
             <div class="cash">
@@ -188,7 +189,7 @@
         </div>
     </div>
 
-    <div v-cloak="v-cloak" id="createCharacter" @click="onClickCreateCharacter" v-if="show">
+    <div v-cloak="v-cloak" id="createCharacter" onclick="createCharacter.onClickCreateCharacter()" v-if="show">
         <div>
             <div class="plus">+</div>
             <div class="text">Создать<br />персонажа</div>
@@ -311,6 +312,15 @@
             <div class="input-prompt" v-if="prompt">{{ prompt }}</div>
 
         </div>
+        <div class="updates">
+            <h3 class="header">Обновления сервера</h3>
+            <div class="list">
+                <div v-for="(update, i) in updates" @click="showChangelist(updates.length - i - 1)">
+                    <div class="date">{{ update.date }}</div>
+                    <div class="title">Обновления #{{ updates.length - i }}</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div v-cloak="v-cloak" id="loader" class="lds-css ng-scope" v-if="show">
@@ -328,6 +338,8 @@
                 <div class="value">{{ fullname }}</div>
                 <div class="label">Гражданство</div>
                 <div class="value">UNITED STATED OF AMERICA</div>
+                <div class="label">Семейное положение</div>
+                <div class="value">{{ prettySpouse }}</div>
                 <div class="label">Дата получения</div>
                 <div class="value">{{ regDate }}</div>
             </div>
@@ -575,29 +587,9 @@
             </div>
             <div class="description">{{ itemsInfo[itemDesc.item.itemId].description }}</div>
             <div class="params">
-                <div class="param">
-                    <div class="name">Вес</div>
-                    <div class="value">{{ descItemWeight }} кг</div>
-                </div>
-                <div class="param">
-                    <div class="name">Занимает</div>
-                    <div class="value">{{ itemsInfo[itemDesc.item.itemId].width+'x'+itemsInfo[itemDesc.item.itemId].height }} ячейки</div>
-                </div>
-                <div class="param" v-if="itemDesc.item.params.health">
-                    <div class="name">Прочность</div>
-                    <div class="value">{{ itemDesc.item.params.health}}%</div>
-                </div>
-                <div class="param" v-if="itemDesc.item.params.count">
-                    <div class="name">Количество</div>
-                    <div class="value">{{ itemDesc.item.params.count}} ед.</div>
-                </div>
-                <div class="param" v-if="itemDesc.item.pockets">
-                    <div class="name">Карманы</div>
-                    <div class="value">{{ itemDesc.item.pockets.length }} ед.</div>
-                </div>
-                <div class="param" v-if="getItemsCount(itemDesc.item)">
-                    <div class="name">Содержит</div>
-                    <div class="value">{{ getItemsCount(itemDesc.item) }} предметов</div>
+                <div class="param" v-for="param in descItemParams">
+                    <div class="name">{{ param.name }}</div>
+                    <div class="value">{{ param.value }}</div>
                 </div>
             </div>
         </div>
@@ -719,46 +711,51 @@
 
     <!-- ------------------------ СПИСОК ИГРОКОВ ------------------------ -->
 
-    <div v-cloak id="playersList" :class="{inactive: loader}" v-show="show">
+    <div id="playersList" v-cloak :class="{inactive: loader}" v-if="show">
         <div class="players_list-head">
             <table rules="all">
                 <colgroup>
-                    <col style="width: 10%" />
-                    <col style="width: 40%" />
-                    <col style="width: 40%" />
-                    <col style="width: 10%" />
+                    <col style="width: 10%"/>
+                    <col style="width: 40%"/>
+                    <col style="width: 40%"/>
+                    <col style="width: 10%"/>
                 </colgroup>
                 <thead>
                     <tr>
-                        <th @click="setSortedBy('id')">id</th>
-                        <th @click="setSortedBy('name')">Имя</th>
-                        <th @click="setSortedBy('faction')">Организация</th>
+                        <th @click="setSortedBy('id')">id <span v-if="sortedBy == 'id'">▼</span></th>
+                        <th @click="setSortedBy('name')">Имя <span v-if="sortedBy == 'name'">▼</span></th>
+                        <th @click="setSortedBy('faction')">Организация <span v-if="sortedBy == 'faction'">▼</span></th>
                         <th>ping</th>
                     </tr>
                 </thead>
             </table>
             <div class="players_list-navigate_panel">
+                <span>Поиск:</span>
                 <input v-model="search" />
-                <select v-model="type">
-                    <option v-for="option in options" v-bind:value="option.value">
-                        {{ option.text }}
-                    </option>
-                </select>
+                <div @click="setType('id')">
+                    id
+                </div>
+                <div @click="setType('name')">
+                    Имя
+                </div>
+                <div @click="setType('faction')">
+                    Организация
+                </div>
             </div>
         </div>
         <div class="players_list-body">
             <table rules="all">
                 <colgroup>
-                    <col style="width: 10%" />
-                    <col style="width: 40%" />
-                    <col style="width: 40%" />
-                    <col style="width: 10%" />
+                    <col style="width: 10%"/>
+                    <col style="width: 40%"/>
+                    <col style="width: 40%"/>
+                    <col style="width: 10%"/>
                 </colgroup>
                 <tbody>
-                    <tr v-for="player in players">
+                    <tr v-for="player in getPlayers()">
                         <th>{{ player.id }}</th>
                         <th>{{ player.name }}</th>
-                        <th>{{ player.faction ? player.faction: '-' }}</th>
+                        <th>{{ player.faction }}</th>
                         <th>{{ player.ping }}</th>
                     </tr>
                 </tbody>
@@ -824,6 +821,7 @@
                     :placeholder="menuItems[menuItemInFocus].hint"
                     v-model="menuItems[menuItemInFocus].inputValue"
                     @keypress="menuItems[menuItemInFocus].inputCheck($event); enterHandler($event)"
+                    @focus="setFocus(true)" @blur="setFocus(false)"
                 />
             </div>
             <div class="search" @click="search()">Поиск</diV>
@@ -980,6 +978,7 @@
                     placeholder="Введите ID..."
                     v-model="inputValue"
                     @keypress="inputCheck($event); enterHandler($event)"
+                    @focus="setFocus(true)" @blur="setFocus(false)"
                 />
             </div>
             <div class="search" @click="search()">Установить личность</diV>
@@ -1031,9 +1030,9 @@
         <div class="over verification fine" @keypress="enterHandler($event)">
             <div class="header"> Выдача штрафа {{ profileData[currentMenuFocus].name}}</div>
             <div class="title">Введите причину</div>
-            <div class="input"><input placeholder="Введите причину выдачи штрафа..." v-model="causeValue"/></div>
+            <div class="input"><input placeholder="Введите причину выдачи штрафа..." v-model="causeValue" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
             <div class="title">Введите сумму штрафа</div>
-            <div class="input"><input placeholder="Введите сумму..." v-model="amountValue" @keypress="inputCheck($event)"/></div>
+            <div class="input"><input placeholder="Введите сумму..." v-model="amountValue" @keypress="inputCheck($event)" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
             <div class="btns">
                 <div class="btn" @click="give()">Выдать</div>
                 <div class="btn" @click="cancel()">Отмена</div>
@@ -1045,7 +1044,7 @@
         <div class="over verification fine" @keypress="enterHandler($event)">
             <div class="header"> Выдача розыска {{ profileData[currentMenuFocus].name}}</div>
             <div class="title">Введите причину</div>
-            <div class="input"><input placeholder="Введите причину выдачи розыска..." v-model="causeValue"/></div>
+            <div class="input"><input placeholder="Введите причину выдачи розыска..." v-model="causeValue" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
             <div class="title">Выберете степень опасности</div>
             <div class="stars" @click="setDanger()"><svg
                                 :class="{ fill: overDanger >= n }"
@@ -1190,6 +1189,7 @@
     <!-- ------------------------ МЕНЮ ИГРОКА ------------------------ -->
     <link rel="stylesheet" type="text/css" href="css/playerMenu.css" />
     <div id="player-menu" v-if="show" v-cloak>
+        <img class="logo" src="img/logo.png" />
         <div :class="['content', { blur: blurMod }]">
             <div class="head">
                 <div class="top-bar">
@@ -1229,7 +1229,7 @@
             <div class="confirmation">
                 <div class="head">{{ confirmation.head }}</div>
                 <div class="description" v-html="confirmation.description"></div>
-                <div v-if="codeMod"><input placeholder="Введите промокод..." v-model="code" /></div>
+                <div v-if="codeMod"><input placeholder="Введите промокод..." v-model="code" @focus="inputFocus = true" @blur="inputFocus = false"/></div>
                 <div class="actions">
                     <div class="btn left" @click="confirmation.acceptHandler(); confirmation = null">{{ confirmation.leftWord }}</div>
                     <div class="btn" @click="confirmation = null; codeMod = false">{{ confirmation.rightWord }}</div>
@@ -1256,7 +1256,7 @@
                         <div>{{ record.head }}</div>
                         <div :style="record"><span>{{ record.value | playerMenuMoneySplit(record.moneyFilter) }}</span></div>
                     </div>
-                    <div class="info" :if="houseInfo.length">
+                    <div class="info" v-if="!houseInfo.length">
                         He приобретён
                     </div>
                 </div>
@@ -1268,7 +1268,7 @@
                         <div>{{ record.head }}</div>
                         <div :style="record"><span>{{ record.value | playerMenuMoneySplit(record.moneyFilter) }}</span></div>
                     </div>
-                    <div class="info" :f="businessInfo.length">
+                    <div class="info" v-if="!businessInfo.length">
                         He приобретён
                     </div>
                 </div>
@@ -1304,7 +1304,7 @@
     <script type="text/x-template" id="player-menu-report">
         <div class="report">
             <div class="head">Задайте вопрос или оставьте жалобу на игрока указав его ID/Имя и причину жалобы</div>
-            <input placeholder="Введите вопрос или жалобу..." v-model="message" :maxlength="maxlength" @keypress.enter="send()"/>
+            <input placeholder="Введите вопрос или жалобу..." v-model="message" :maxlength="maxlength" @keypress.enter="send()" @focus="setFocus(true)" @blur="setFocus(false)" />
             <div>Осталось символов: {{ chars }}</div>
             <div class="send" @click="send()">Отправить</div>
             <div v-if="showHint" class="hint">Ваше сообщение было отправлено администрации сервера!<br />Приятной игры!</div>
@@ -1314,7 +1314,7 @@
     <script type="text/x-template" id="player-menu-help">
         <div class="report help">
             <div class="head">Введите интересующий вас вопрос:</div>
-            <input placeholder="Введите вопрос..." v-model="message" :maxlength="maxlength"/>
+            <input placeholder="Введите вопрос..." v-model="message" :maxlength="maxlength" @focus="setFocus(true)" @blur="setFocus(false)"/>
             <div class="head sec">Ответы на вопросы</div>
             <div class="messages body">
                 <div :class="['message', {focus: currentAnswer == index}]"
@@ -1375,7 +1375,7 @@
                     </div>
                     <div class="item bottom" v-if="bottom" @click="bottom.handler">
                         <div>{{bottom.head}}</div>
-                        <div><svg viewBox="0 0 20 20" ><path v-for="path in bottom.img" :d="path"/></svg></div>
+                        <div><svg viewBox="0 0 36 36" ><path v-for="path in bottom.img" :d="path"/></svg></div>
                     </div>
                 </div>
             </div>
@@ -1391,7 +1391,7 @@
             <div class="head">Конвертация валюты</div>
             <div class="hint">Конвертация валюты - это способ получить виртуальную валюту,<br />обменивая <div class="coin-logo">cc</div> на неё</div>
             <div class="hint sec">Введите число CC, которые вы бы хотели обменять</div>
-            <input placeholder="Введите число..." v-model="price" @keypress="inputCheck($event)" @keypress.enter="convert()"/>
+            <input placeholder="Введите число..." v-model="price" @keypress="inputCheck($event)" @keypress.enter="convert()" @focus="setFocus(true)" @blur="setFocus(false)" />
             <div class="equally">=</div>
             <div class="coins">{{ virtualCoins | playerMenuMoneySplit(true) }}</div>
             <div :class="['btn', {disable: !price }]" @click="convert()">Конвертировать</div>
@@ -1402,8 +1402,8 @@
         <div class="sidebar-win changename">
             <div class="head">Смена никнейма</div>
             <div class="hint">Смените никнейм для вашей новой личности</div>
-            <div class="name"><input placeholder="Введите новое имя" v-model="firstname" @keypress="inputCheck($event)" @keypress.enter="changename()" /></div>
-            <div><input placeholder="Введите новую фамилию" v-model="lastname" @keypress="inputCheck($event)" @keypress.enter="changename()" /></div>
+            <div class="name"><input placeholder="Введите новое имя" v-model="firstname" @keypress="inputCheck($event)" @keypress.enter="changename()" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
+            <div><input placeholder="Введите новую фамилию" v-model="lastname" @keypress="inputCheck($event)" @keypress.enter="changename()" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
             <div class="price">Стоимость услуги: <span>{{ price }} CC</span></div>
             <div :class="['btn', {disable: !firstname || !lastname || price > coins }]" @click="changename()">Сменить никнейм</div>
         </div>
@@ -1460,10 +1460,10 @@
                         <div :class="['info', { conf: isConfirmed }]">{{ (isConfirmed) ? 'Подтверждена' : 'Не подтверждена' }}</div>
                     </div>
                     <div v-if="changeMailMod">
-                        <input placeholder="Введите новый E-Mail" @keypress.enter="saveMail()" v-model="newEmail"/>
+                        <input placeholder="Введите новый E-Mail" @keypress.enter="saveMail()" v-model="newEmail" @focus="setFocus(true)" @blur="setFocus(false)" />
                     </div>
                     <div v-if="codeMod">
-                        <input placeholder="Введите код" v-model="code" @keypress="inputCheck($event)" @keypress.enter="confCode()"/>
+                        <input placeholder="Введите код" v-model="code" @keypress="inputCheck($event)" @keypress.enter="confCode()" @focus="setFocus(true)" @blur="setFocus(false)" >
                     </div>
                 </div>
                 <div class="actions">
@@ -1481,9 +1481,9 @@
                         {{ passMessage }}
                     </div>
                     <div v-if="changePassMod">
-                        <input type="password" placeholder="Введите старый пароль" v-model="oldPass" @keypress.enter="savePass()"/>
-                        <input type="password" placeholder="Введите новый пароль" v-model="newPass" @keypress.enter="savePass()"/>
-                        <input type="password" placeholder="Повторно новый пароль" v-model="newPass2" @keypress.enter="savePass()"/>
+                        <input type="password" placeholder="Введите старый пароль" v-model="oldPass" @keypress.enter="savePass()" @focus="setFocus(true)" @blur="setFocus(false)" />
+                        <input type="password" placeholder="Введите новый пароль" v-model="newPass" @keypress.enter="savePass()" @focus="setFocus(true)" @blur="setFocus(false)" />
+                        <input type="password" placeholder="Повторно новый пароль" v-model="newPass2" @keypress.enter="savePass()" @focus="setFocus(true)" @blur="setFocus(false)" />
                     </div>
                 </div>
                 <div class="actions">
@@ -1494,6 +1494,9 @@
             </div>
         </div>
     </script>
+    <script src="js/playerMenuSvgPaths.js"></script>
+    <script src="js/playerMenu.js"></script>
+    <!-- ------------------------ МЕНЮ ИГРОКА ------------------------ -->
 
 
 
@@ -1537,14 +1540,37 @@
         <div class="time">{{ time / 1000 }} с.</div>
     </div>
 
-    <script src="js/playerMenuSvgPaths.js"></script>
-    <script src="js/playerMenu.js"></script>
-    <!-- ------------------------ МЕНЮ ИГРОКА ------------------------ -->
+    <div v-cloak id="changelist" v-if="show">
+        <div class="close" onclick="changelist.show = false">x</div>
+        <div class="header">
+            <i class="arrow fas fa-long-arrow-alt-left" onclick="changelist.i++" v-if="i < list.length - 1"></i>
+            <div class="title" :class="{first: i == list.length - 1}">
+                <div class="name">Обновления #{{ i + 1 }}</div>
+                <div class="date" :class="{right: !i, center: i && i < list.length - 1}">{{ list[i].date }}</div>
+            </div>
+            <i class="arrow fas fa-long-arrow-alt-right" onclick="changelist.i--" v-if="i > 0"></i>
+        </div>
+        <div class="content">
+            <div class="build" title="Сборка"><i class="fas fa-code-branch"></i> {{ list[i].build }}</div>
+            <div v-for="text in list[i].features" :title="text"><span class="features"><i class="fas fa-star"></i></span><div>{{ prettyText(text) }}</div></div>
+            <br v-if="list[i].fixed.length" />
+            <div v-for="text in list[i].fixed" :title="text"><span class="fixed"><i class="fas fa-wrench"></i></span>{{ prettyText(text) }}</div>
+            <br v-if="list[i].improvements.length" />
+            <div v-for="text in list[i].improvements" :title="text"><span class="improvements"><i class="fas fa-cog"></i></span>{{ prettyText(text) }}</div>
+            <br v-if="list[i].removed.length" />
+            <div v-for="text in list[i].removed" :title="text"><span class="removed"><i class="fas fa-trash"></i></span>{{ prettyText(text) }}</div>
+        </div>
+        <div class="footer">
+            <span class="likes" :class="{liked: list[i].liked}" onclick="changelist.like()">{{ list[i].likes }} <i class="fas fa-heart"></i></span>
+        </div>
+    </div>
+
 
     <!-- ------------------------ REACT ------------------------------ -->
     <script async src="build/js/build.js" type="text/javascript"></script>
     <div id="root"></div>
     <!-- ------------------------------------------------------------- -->
+    <script src="js/fontawesome.js"></script>
     <script src="js/hud.js"></script>
     <script src="js/prompt.js"></script>
     <script src="js/notifications.js"></script>
@@ -1552,6 +1578,7 @@
     <script src="js/infoTable.js"></script>
     <script src="js/characterInfo.js"></script>
     <script src="js/selectMenu.js"></script>
+    <script src="js/changelist.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/loader.js"></script>
     <script src="js/characterPass.js"></script>

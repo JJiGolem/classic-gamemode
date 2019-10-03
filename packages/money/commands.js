@@ -9,10 +9,11 @@ module.exports = {
             let id = parseInt(args[0]);
             let number = parseInt(args[1]);
             if (isNaN(id)|| isNaN(number)) return player.call('notifications.push.error', ["Введите данные верно", "Ошибка передачи денег"]);
-            if (mp.players.at(id) == null) return player.call('notifications.push.error', ["Игрок с данным id отсутствует на сервере", "Ошибка передачи денег"]);
+            if (mp.players.at(id) == null || mp.players.at(id).character == null) return player.call('notifications.push.error', ["Игрок с данным id отсутствует на сервере или не авторизовался", "Ошибка передачи денег"]);
             if (number < 0 || number > 100000000) return player.call('notifications.push.error', ["Введите сумму для передачи верно", "Ошибка передачи денег"]);
             money.addCash(mp.players.at(id), number, function(result) {
                 if (!result) return player.call('notifications.push.error', ["По неизвестным причинам", "Ошибка передачи денег"]);
+                player.call('notifications.push.success', ["Вы выдали " + number + "$ наличными", "Выдача денежных средств"]);
                 mp.players.at(id).call('notifications.push.success', ["Вам дали " + number + "$ наличными", "Получены денежные средства"]);
             });
         }
@@ -25,10 +26,11 @@ module.exports = {
             let id = parseInt(args[0]);
             let number = parseInt(args[1]);
             if (isNaN(id)|| isNaN(number)) return player.call('notifications.push.error', ["Введите данные верно", "Ошибка пополнения счета"]);
-            if (mp.players.at(id) == null) return player.call('notifications.push.error', ["Игрок с данным id отсутствует на сервере", "Ошибка пополнения счета"]);
+            if (mp.players.at(id) == null || mp.players.at(id).character == null) return player.call('notifications.push.error', ["Игрок с данным id отсутствует на сервере или не авторизовался", "Ошибка пополнения счета"]);
             if (number < 0 || number > 100000000) return player.call('notifications.push.error', ["Введите сумму для передачи верно", "Ошибка пополнения счета"]);
             money.addMoney(mp.players.at(id), number, function(result) {
                 if (!result) return player.call('notifications.push.error', ["По неизвестным причинам", "Ошибка пополнения счета"]);
+                player.call('notifications.push.success', ["Вы перевели " + number + "$ на счет", "Выдача денежных средств"]);
                 mp.players.at(id).call('notifications.push.success', ["Вам перевели " + number + "$ на счет", "Получены денежные средства"]);
             });
         }
@@ -41,10 +43,11 @@ module.exports = {
             let id = parseInt(args[0]);
             let number = parseInt(args[1]);
             if (isNaN(id)|| isNaN(number)) return player.call('notifications.push.error', ["Введите данные верно", "Ошибка снятия денег"]);
-            if (mp.players.at(id) == null) return player.call('notifications.push.error', ["Игрок с данным id отсутствует на сервере", "Ошибка снятия денег"]);
+            if (mp.players.at(id) == null || mp.players.at(id).character == null) return player.call('notifications.push.error', ["Игрок с данным id отсутствует на сервере или не авторизовался", "Ошибка снятия денег"]);
             if (number < 0 || number > 100000000) return player.call('notifications.push.error', ["Введите сумму для снятия верно", "Ошибка снятия денег"]);
             money.removeCash(mp.players.at(id), number, function(result) {
                 if (!result) return player.call('notifications.push.error', ["По неизвестным причинам", "Ошибка снятия денег"]);
+                player.call('notifications.push.success', ["Вы отобрали " + number + "$ наличными", "Отъем денежных средств"]);
                 mp.players.at(id).call('notifications.push.success', ["У вас отобрали " + number + "$ наличными", "Потеряны денежные средства"]);
             });
         }
@@ -57,12 +60,24 @@ module.exports = {
             let id = parseInt(args[0]);
             let number = parseInt(args[1]);
             if (isNaN(id)|| isNaN(number)) return player.call('notifications.push.error', ["Введите данные верно", "Ошибка снятия со счета"]);
-            if (mp.players.at(id) == null) return player.call('notifications.push.error', ["Игрок с данным id отсутствует на сервере", "Ошибка снятия со счета"]);
+            if (mp.players.at(id) == null || mp.players.at(id).character == null) return player.call('notifications.push.error', ["Игрок с данным id отсутствует на сервере или не авторизовался", "Ошибка снятия со счета"]);
             if (number < 0 || number > 100000000) return player.call('notifications.push.error', ["Введите сумму для снятия верно", "Ошибка снятия со счета"]);
             money.removeMoney(mp.players.at(id), number, function(result) {
                 if (!result) return player.call('notifications.push.error', ["По неизвестным причинам", "Ошибка снятия со счета"]);
-                mp.players.at(id).call('notifications.push.success', ["У вас сняли " + number + "$ со счета", "Получены денежные средства"]);
+                player.call('notifications.push.success', ["Вы сняли " + number + "$ со счета", "Отъем денежных средств"]);
+                mp.players.at(id).call('notifications.push.success', ["У вас сняли " + number + "$ со счета", "Потеряны денежные средства"]);
             });
+        }
+    },
+    "/checkmoney": {
+        access: 6,
+        description: "Проверить наличные и счет",
+        args: "[id]:n",
+        handler: (player, args) => {
+            let id = parseInt(args[0]);
+            if (isNaN(id)) return player.call('notifications.push.error', ["Введите данные верно", "Ошибка проверки наличных и счета"]);
+            if (mp.players.at(id) == null || mp.players.at(id).character == null) return player.call('notifications.push.error', ["Игрок с данным id отсутствует на сервере или не авторизовался", "Ошибка проверки наличных и счета"]);
+            player.call('notifications.push.success', ["У игрока " + mp.players.at(id).character.cash + "$ наличными и " + mp.players.at(id).character.bank + "$ на банковском счете", "Состояние наличных и счета игрока"]);
         }
     },
 }

@@ -3,6 +3,7 @@ let inventory = require('./index.js');
 let hospital = require('../hospital');
 let mafia = call('mafia');
 let notifs = require('../notifications');
+let satiety = call('satiety');
 
 module.exports = {
     "init": () => {
@@ -140,6 +141,15 @@ module.exports = {
             var i = rec.inventory.ground.indexOf(obj);
             rec.inventory.ground.splice(i, 1);
         });
+
+        mp.players.forEachInRange(player.position, 20, rec => {
+            rec.call(`animations.play`, [player.id, {
+                dict: "anim@mp_snowball",
+                name: "pickup_snowball",
+                speed: 1,
+                flag: 1
+            }, 1500]);
+        });
     },
     // вылечиться аптечкой
     "inventory.item.med.use": (player, sqlId) => {
@@ -221,15 +231,104 @@ module.exports = {
         if (!count) return notifs.error(player, `Количество: 0 г.`, header);
         if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
         if (mafia.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за бизнес`, header);
+        var i = drugs.itemId - 29;
+        if (player.lastUseDrugs) {
+            var diff = Date.now() - player.lastUseDrugs;
+            var wait = bands.drugsInterval[i];
+            if (diff < wait) return notifs.error(player, `Повторное использование доступно через ${parseInt((wait - diff) / 1000)} сек.`, header);
+        }
 
-        player.health = Math.clamp(player.health + bands.drugsHealth, 0, 100);
+        player.health = Math.clamp(player.health + bands.drugsHealth[i], 0, 100);
 
         count--;
         if (!count) inventory.deleteItem(player, drugs);
         else inventory.updateParam(player, drugs, 'count', count);
 
-        player.call(`effect`, ['DrugsDrivingOut', bands.drugsEffectTime]);
-        notifs.success(player, `Вы упротреблении наркотик`, header);
+        player.lastUseDrugs = Date.now();
+        player.call(`effect`, [bands.drugsEffect[i], bands.drugsEffectTime[i]]);
+        notifs.success(player, `Вы употребили наркотик`, header);
+
+        player.character.narcotism += bands.drugsNarcotism[i];
+        player.character.save();
+        mp.events.call("player.narcotism.changed", player);
+    },
+    // употребить сигарету
+    "inventory.item.smoke.use": (player, sqlId) => {
+        var header = `Сигарета`;
+        var smoke = inventory.getItem(player, sqlId);
+        if (!smoke) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        var count = inventory.getParam(smoke, 'count').value;
+        if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
+        if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
+        if (mafia.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за бизнес`, header);
+
+        player.health = Math.clamp(player.health + 2, 0, 100);
+
+        count--;
+        if (!count) inventory.deleteItem(player, smoke);
+        else inventory.updateParam(player, smoke, 'count', count);
+
+        player.call(`effect`, ['FocusOut', 15000]);
+        notifs.success(player, `Вы употребили сигарету`, header);
+
+        mp.players.forEachInRange(player.position, 20, rec => {
+            rec.call(`animations.play`, [player.id, {
+                dict: "amb@code_human_wander_smoking@male@idle_a",
+                name: "idle_a",
+                speed: 1,
+                flag: 49
+            }, 8000]);
+        });
+
+        player.character.nicotine++;
+        player.character.save();
+        mp.events.call("player.nicotine.changed", player);
+    },
+    // употребить еду
+    "inventory.item.eat.use": (player, sqlId) => {
+        var header = `Еда`;
+        var eat = inventory.getItem(player, sqlId);
+        if (!eat) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+
+        var params = inventory.getParamsValues(eat);
+        var character = player.character;
+
+        satiety.set(player, character.satiety + (params.satiety || 10), character.thirst + (params.thirst || 10));
+        notifs.success(player, `Вы съели ${inventory.getName(eat.itemId)}`, header);
+
+        mp.players.forEachInRange(player.position, 20, rec => {
+            rec.call(`animations.play`, [player.id, {
+                dict: "amb@code_human_wander_eating_donut@male@idle_a",
+                name: "idle_c",
+                speed: 1,
+                flag: 49
+            }, 7000]);
+        });
+
+        inventory.deleteItem(player, eat);
+    },
+    // употребить напиток
+    "inventory.item.drink.use": (player, sqlId) => {
+        var header = `Напиток`;
+        var drink = inventory.getItem(player, sqlId);
+        if (!drink) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+
+        var params = inventory.getParamsValues(drink);
+        var character = player.character;
+
+        satiety.set(player, character.satiety + (params.satiety || 10), character.thirst + (params.thirst || 10));
+        notifs.success(player, `Вы выпили ${inventory.getName(drink.itemId)}`, header);
+
+        mp.players.forEachInRange(player.position, 20, rec => {
+            rec.call(`animations.play`, [player.id, {
+                dict: "amb@code_human_wander_drinking_fat@female@idle_a",
+                name: "idle_c",
+                speed: 1,
+                flag: 49
+            }, 7000]);
+        });
+
+        inventory.deleteItem(player, drink);
     },
     // Запрос предметов инвентаря в багажнике авто
     "vehicle.boot.items.request": (player, vehId) => {

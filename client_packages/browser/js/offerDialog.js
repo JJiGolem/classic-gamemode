@@ -225,6 +225,34 @@ var offerDialog = new Vue({
                     mp.trigger(`callRemote`, `mafia.power.sell.cancel`);
                 },
             },
+            "wedding_male": {
+                text: `Вы хотите сделать Swifty Swift предложение?`,
+                recId: null,
+                on(values) {
+                    this.recId = values.recId;
+                    this.text = `Вы хотите сделать ${values.name} предложение?`;
+                },
+                yes() {
+                    mp.trigger(`callRemote`, `wedding.add`, this.recId);
+                },
+                no() {},
+                ignore() {},
+            },
+            "wedding_female": {
+                text: `Carter Slade предлагает вам выйти замуж`,
+                on(values) {
+                    this.text = `${values.name} предлагает вам выйти замуж`;
+                },
+                yes() {
+                    mp.trigger(`callRemote`, `wedding.add.accept`, this.recId);
+                },
+                no() {
+                    mp.trigger(`callRemote`, `wedding.add.cancel`, this.recId);
+                },
+                ignore() {
+                    mp.trigger(`callRemote`, `wedding.add.cancel`, this.recId);
+                },
+            },
         },
         dialog: null,
         timeout: null,

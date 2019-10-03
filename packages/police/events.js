@@ -1,6 +1,8 @@
 "use strict";
+var bands = require('../bands');
 var factions = require('../factions');
 var inventory = require('../inventory');
+var mafia = require('../mafia');
 var money = require('../money');
 var notifs = require('../notifications');
 var police = require('../police')
@@ -12,7 +14,6 @@ module.exports = {
     "characterInit.done": (player) => {
         player.call(`police.wanted.set`, [player.character.wanted]);
         if (!factions.isPoliceFaction(player.character.factionId)) return;
-        // player.call(`mapCase.init`, [player.name, player.character.factionId]);
         mp.events.call(`mapCase.pd.init`, player);
 
         if (!player.character.arrestTime) return;
@@ -238,6 +239,10 @@ module.exports = {
 
         topParams.pockets = '[5,5,5,5,5,5,10,10]';
         legsParams.pockets = '[5,5,5,5,5,5,10,10]';
+        hatParams.clime = '[-5,20]';
+        topParams.clime = '[-5,20]';
+        legsParams.clime = '[-5,20]';
+        feetsParams.clime = '[-5,20]';
         topParams.name = `Рубашка ${faction.name}`;
         legsParams.name = `Брюки ${faction.name}`;
 
@@ -418,12 +423,13 @@ module.exports = {
         var dist = player.dist(rec.position);
         if (dist > 20) return notifs.error(player, `${rec.name} далеко`, `Наручники`);
         var character = player.character;
-        if (!factions.isPoliceFaction(character.factionId) && !factions.isFibFaction(character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Наручники`);
+        if (!factions.isPoliceFaction(character.factionId) && !factions.isFibFaction(character.factionId)
+            && !factions.isArmyFaction(character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент/армии`, `Наручники`);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, `Наручники`);
 
         if (!rec.cuffs) {
             var cuffs = (data.cuffsSqlId) ? inventory.getItem(player, data.cuffsSqlId) : inventory.getItemByItemId(player, 28);
-            if (!cuffs) return notifs.error(player, `Необходим предмет`, `Наручники`);
+            if (!cuffs) return notifs.error(player, `Предмет ${inventory.getName(28)} не найден`, `Наручники`);
             inventory.deleteItem(player, cuffs);
             police.setCuffs(rec, cuffs);
 
@@ -467,8 +473,36 @@ module.exports = {
 
         police.setWanted(rec, rec.character.wanted + 1);
 
-        notifs.success(player, `${rec.name} имеет ${rec.character.wanted} ур.`, `Розыск`);
+        // notifs.success(player, `${rec.name} имеет ${rec.character.wanted} ур.`, `Розыск`);
         notifs.info(rec, `${player.name} выдал вам ${rec.character.wanted} ур.`, `Розыск`);
+
+        mp.players.forEach(cop => {
+            if (!cop.character) return;
+            if (!factions.isPoliceFaction(cop.character.factionId) && !factions.isFibFaction(cop.character.factionId)) return;
+
+            notifs.warning(cop, `${player.name} выдал ${rec.character.wanted} ур. ${rec.name}`, `Розыск`);
+        });
+    },
+    "police.wanted.lower": (player) => {
+        if (!player.character.wanted) return;
+
+        police.setWanted(player, player.character.wanted - 1);
+
+        notifs.warning(player, `Ваш уровень розыска понизился`);
+    },
+    "police.search": (player, recId) => {
+        var rec = mp.players.at(recId);
+        if (!rec) return notifs.error(player, `Игрок #${recId} не найден`);
+        if (!rec.character.wanted) return notifs.error(player, `${rec.name} не в розыске`);
+        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник`);
+        if (rec.dimension != 0) return notifs.error(player, `${rec.name} достаточно хорошо скрыт`);
+        if (player.lastWantedSearch && Date.now() - player.lastWantedSearch < police.searchTime) return notifs.warning(player, `Ожидайте...`);
+        player.lastWantedSearch = Date.now();
+
+        var pos = police.getSearchPosition(rec.position);
+
+        player.call(`police.search.blip.create`, [rec.name, pos]);
+        notifs.success(player, `Приблизительное местоположение ${rec.name} отмечено на карте`);
     },
     // арестовать в КПЗ ЛСПД
     "police.cells.arrest": (player, recId) => {
@@ -546,14 +580,14 @@ module.exports = {
 
         //todo broadcast to radio
     },
-    "police.vehicle.put": (player, recId, vehId) => {
+    "police.vehicle.put": (player, recId) => {
         var header = `Посадка`;
         var rec = mp.players.at(recId);
         if (!rec) return notifs.error(player, `Гражданин не найден`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} уже в авто`, header);
         if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, header);
 
-        var veh = mp.vehicles.at(vehId);
+        var veh = mp.vehicles.getNear(player);
         if (!veh) return notifs.error(player, `Авто не найдено`, header);
         var dist = player.dist(veh.position);
         if (dist > 3) return notifs.error(player, `Авто далеко`, header);
@@ -609,8 +643,23 @@ module.exports = {
         notifs.success(player, ` Лицензия изъята ${rec.name}`, header);
         notifs.info(rec, `${player.name} изъял у вас лицензию`, header);
     },
-    "playerDeath": (player) => {
+    "playerDeath": (player, reason, killer) => {
         if (player.cuffs) police.setCuffs(player, false);
+        if (!killer) return;
+
+        // Если бандит убил бандита в гетто, то розыск не выдаем
+        if (factions.isBandFaction(killer.character.factionId) && factions.isBandFaction(player.character.factionId) &&
+            bands.isInBandZones(killer.position) && bands.isInBandZones(player.position)) return;
+
+        // Если мафия убила мафию в зоне для бизвара, то розыск не выдаем
+        if (factions.isMafiaFaction(killer.character.factionId) && factions.isMafiaFaction(player.character.factionId) &&
+            mafia.getZoneByPos(killer.position) && mafia.getZoneByPos(player.position)) return;
+
+        // Если полицейский/агент убил преступника, то розыск не выдаем
+        if ((factions.isPoliceFaction(killer.character.factionId) || factions.isFibFaction(killer.character.factionId)) &&
+            player.character.wanted) return;
+
+        police.setWanted(killer, killer.character.wanted + 1, `Убийство мирного жителя`);
     },
     "playerQuit": (player) => {
         if (!player.character) return;

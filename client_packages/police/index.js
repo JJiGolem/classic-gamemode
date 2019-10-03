@@ -10,6 +10,16 @@ mp.police = {
     haveCuffs: false,
     followPlayer: null,
     wanted: 0,
+    wantedTimer: null,
+    clearWantedTime: 60 * 60 * 1000, // время очищения 1 ур. розыска (ms)
+    searchRadius: 100,
+    searchTime: 2 * 60 * 1000, // время жизни блипа поиска преступника
+    searchTimer: null,
+    natives: {
+        SET_BLIP_SPRITE: "0xDF735600A4696DAF",
+        SET_BLIP_ALPHA: "0x45FF974EEE1C8734",
+        SET_BLIP_COLOUR: "0x03D7FB09E75D6B7E",
+    },
 
     setCuffs(enable) {
         this.haveCuffs = enable;
@@ -19,6 +29,12 @@ mp.police = {
     },
     setWanted(val) {
         this.wanted = val;
+        mp.playerMenu.setWanted(val);
+        clearTimeout(this.wantedTimer);
+        if (!val) return;
+        this.wantedTimer = setTimeout(() => {
+            mp.events.callRemote(`police.wanted.lower`);
+        }, this.clearWantedTime);
     },
     startFollowToPlayer(playerId) {
         var player = mp.players.atRemoteId(playerId);
@@ -28,9 +44,35 @@ mp.police = {
     stopFollowToPlayer() {
         this.followPlayer = null;
     },
+    searchBlipCreate(name, pos) {
+        this.removeSearchBlip();
+        pos = mp.utils.randomSpherePoint(pos, this.searchRadius);
+        var blip = mp.game.ui.addBlipForRadius(pos.x, pos.y, 50, this.searchRadius);
+        mp.game.invoke(this.natives.SET_BLIP_ALPHA, blip, 175);
+        mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, 1);
+
+        this.saveSearchBlip(blip);
+
+        clearTimeout(this.searchTimer);
+        this.searchTimer = setTimeout(() => {
+            this.removeSearchBlip();
+        }, this.searchTime);
+    },
+    saveSearchBlip(blip) {
+        mp.storage.data.searchBlip = blip;
+    },
+    removeSearchBlip() {
+        if (!mp.storage.data.searchBlip) return;
+
+        mp.game.ui.removeBlip(mp.storage.data.searchBlip);
+        delete mp.storage.data.searchBlip;
+    },
 };
 
 mp.events.add({
+    "characterInit.done": () => {
+        mp.police.removeSearchBlip();
+    },
     "police.cuffs.set": (enable) => {
         mp.police.setCuffs(enable);
     },
@@ -46,6 +88,9 @@ mp.events.add({
     },
     "police.follow.stop": () => {
         mp.police.stopFollowToPlayer();
+    },
+    "police.search.blip.create": (name, pos) => {
+        mp.police.searchBlipCreate(name, pos);
     },
     "time.main.tick": () => {
         if (mp.police.followPlayer) {

@@ -1,4 +1,4 @@
-var houseService = require('./index.js');
+let houseService = require('./index.js');
 module.exports = {
     "/ho": {
         access: 6,

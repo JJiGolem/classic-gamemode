@@ -122,7 +122,7 @@ module.exports = {
                     if (!fibAgent.character) return delete currentPlayer.spy;
                     if (fibAgent.character.id != currentPlayer.spy.characterId) return delete currentPlayer.spy;
 
-                    var dist = parseInt(player.dist(currentPlayer.position));
+                    var dist = parseInt(fibAgent.dist(currentPlayer.position));
                     if (dist > 100) {
                         fibAgent.call('chat.action.say', [player.name, player.id, `* сигнал потерян *`]);
                         return delete currentPlayer.spy;

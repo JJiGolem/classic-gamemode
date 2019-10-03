@@ -40,3 +40,7 @@ mp.callCEFVN = function (object) {
         browser.execute(`${objectKey} = ${JSON.stringify(object[objectKey])}`);
     }
 }
+
+mp.events.add({
+    "callCEFR": mp.callCEFR
+});

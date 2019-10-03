@@ -11,6 +11,7 @@ module.exports = {
         mp.players.getByName = this.getPlayerByName;
         mp.players.getNear = this.getNearPlayer;
         mp.vehicles.getBySqlId = this.getVehicleBySqlId;
+        mp.vehicles.getNear = this.getNearVehicle;
     },
     /// Отправка писем на почту
     sendMail(to, subject, message) {
@@ -38,6 +39,11 @@ module.exports = {
         var rand = min - 0.5 + Math.random() * (max - min + 1);
         rand = Math.round(rand);
         return rand;
+    },
+    randomFloat(min, max, number) {
+        // number - количество знаков после запятой
+        let rand = min + Math.random() * (max - min);
+        return parseFloat(rand).toFixed(number);
     },
     getPointsOnInterval(point1, point2, step) {
         var vectorX = point2.x - point1.x;
@@ -117,5 +123,18 @@ module.exports = {
             }
         });
         return result;
+    },
+    getNearVehicle(player) {
+        var nearVehicle;
+        var minDist = 99999;
+        mp.vehicles.forEach((veh) => {
+            if (veh.id == player.id) return;
+            var distance = player.dist(veh.position);
+            if (distance < minDist) {
+                nearVehicle = veh;
+                minDist = distance;
+            }
+        });
+        return nearVehicle;
     },
 };

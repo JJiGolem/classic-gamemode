@@ -14,7 +14,7 @@ module.exports = {
         player.isTalking = false;
     },
     'playerQuit': player => {
-        
+
     },
     /// Загрузка телефона после выбора персоонажа
     'characterInit.done': async (player) => {
@@ -30,6 +30,7 @@ module.exports = {
             ]
         });
         phone.loadPhoneOnClient(player);
+        mp.events.call(`phoneInit.done`, player);
     },
     /// Покупка телефона
     "phone.buy": async (player) => {
@@ -42,7 +43,6 @@ module.exports = {
             PhoneContacts: [],
             PhoneDialogs: []
         };
-        player.phone.PhoneContacts.push({name: "Мой номер", number: number});
         player.phone = await db.Models.Phone.create(player.phone, {
             include: [{
                     model: db.Models.PhoneContact
@@ -129,7 +129,7 @@ module.exports = {
             let result = await newMessage.save();
             player.phone.PhoneDialogs[index].PhoneMessages.push(result);
         }
-        
+
         /// Работа с получателем
         if (player.phone.number == number) return;
         for (let i = 0; i < mp.players.length; i++) {
@@ -172,7 +172,7 @@ module.exports = {
         if (!isChanged) return;
         await db.Models.PhoneMessage.update({
                 isRead: true
-            }, 
+            },
             {
                 where: {
                     phoneDialogId: player.phone.PhoneDialogs[index].id

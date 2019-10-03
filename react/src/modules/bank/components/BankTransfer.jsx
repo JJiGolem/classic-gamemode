@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {addBankPage, closeBankPage} from "../actions/action.bankPages";
@@ -69,15 +70,18 @@ class BankTransfer extends Component {
     }
 
     transferMoney() {
-        const { transferMoney } = this.state;
+        const { transferMoney, user } = this.state;
         const { setLoading, addPage } = this.props;
 
         if (this.validateForm()) {
-            addPage(<BankConfirmTransfer />);
+            addPage(<BankConfirmTransfer money={transferMoney} number={user}/>);
             setLoading(true);
-            setTimeout(() => {
-                this.props.setAskAnswer({ nick: 'Dun Hill', number: 2662, money: 2600 });
-            }, 1000)
+
+            mp.trigger('bank.transfer.ask', parseInt(user), parseInt(transferMoney));
+
+            // setTimeout(() => {
+            //     this.props.setAskAnswer({ nick: 'Dun Hill', number: 2662, money: 2600 });
+            // }, 1000)
         }
     }
 

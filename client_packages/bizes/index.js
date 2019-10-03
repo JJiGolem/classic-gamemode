@@ -38,16 +38,52 @@ mp.events.add("biz.buy.ans", (ans, owner) => {
 });
 
 mp.events.add("biz.actions", (action) => {
-    mp.chat.debug("BIZ actions opened");
+    mp.events.callRemote("biz.actions", action);
 });
 
+
+/// Actions
+let bizId = null;
+mp.events.add("biz.finance.show", (bizParameters) => {
+    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["bizEconomic"]);`);
+    bizParameters.params.forEach(param => {
+        let values = new Array();
+        for (let i = param.min; i < param.max + 0.1; i += 0.1) {
+            values.push(i.toFixed(1));
+        }
+        let index = values.findIndex(x => x == param.current);
+        mp.callCEFV(`selectMenu.menu.items.unshift({
+            paramKey: "${param.key}",
+            text: "${param.name}",
+            values: [${values}],
+            i: ${index},
+            min: "${param.min.toFixed(1)}",
+            max: "${param.max.toFixed(1)}",
+        });`);
+    });
+    bizId = bizParameters.bizId;
+    mp.callCEFV(`selectMenu.show = true`);
+});
+mp.events.add("biz.finance.save", (params) => {
+    if (bizId != null) {
+        let bizParameters = {
+            bizId: bizId,
+            params: JSON.parse(params)
+        }
+        bizId = null;
+        mp.events.callRemote("biz.finance.save", JSON.stringify(bizParameters));
+    }
+});
+mp.events.add("biz.finance.close", () => {
+    bizId = null;
+});
 
 /// Phone app events
 mp.events.add("biz.sell.toGov", (id) => {
     mp.events.callRemote("biz.sell.toGov", id);
 });
 mp.events.add("biz.sell.toGov.ans", (result) => {
-    mp.callCEFR("biz.sell.toGov.ans", result);
+    mp.callCEFR("biz.sell.toGov.ans", [result]);
 });
 
 mp.events.add("biz.sell.check", (idBizT, idOrNick, costT) => {

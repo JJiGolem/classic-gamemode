@@ -92,7 +92,7 @@ export const setOrderStatusBusiness = status => ({
    payload: status
 });
 
-export const sellBusiness = name => ({
+export const sellBusiness = id => ({
     type: 'SELL_BUSINESS',
-    payload: name
+    payload: id
 });

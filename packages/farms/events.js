@@ -1,4 +1,5 @@
 let carrier = call('carrier');
+let factions = call('factions');
 let farms = call('farms');
 let jobs = call('jobs');
 let money = call('money');
@@ -67,6 +68,7 @@ module.exports = {
         if (player.farm.playerId != player.character.id) return out(`Вы не хозяин фермы`);
         var rec = mp.players.at(data.playerId);
         if (!rec || !rec.character) return out(`Игрок #${data.playerId} не найден`);
+        if (rec.id == player.id) return out(`Нельзя продать самому себе`);
         if (player.dist(rec.position) > 10) return out(`${rec.name} далеко`);
 
         rec.offer = {
@@ -85,7 +87,7 @@ module.exports = {
         var header = `Покупка фермы`;
         if (!player.offer || player.offer.type != "farm_sell") return notifs.error(player, `Предложение не найдено`, header);
 
-        var owner = mp.players.at(player.offer.playerId);
+        var owner = mp.players.at(player.offer.inviterId);
         var price = player.offer.price;
         delete player.offer;
         if (!owner) return notifs.error(player, `Хозяин не найден`, header);
@@ -131,6 +133,7 @@ module.exports = {
         if (jobs.getJobSkill(player, 5).exp < farms.jobExps[index]) return notifs.error(player, `Необходимо навык ${jobs.getJob(5).name} ${farms.jobExps[index]}%`, header);
         if ((index == 1 || index == 2) && !player.character.carLicense) return notifs.error(player, `Необходимо водительское удостоверение`, header);
         if (index == 3 && !player.character.airLicense) return notifs.error(player, `Необходима лицензия на воздушный транспорт`, header);
+        if (player.character.factionId) return notifs.error(player, `Вы состоите в ${factions.getFactionName(player)}`, header);
 
         jobs.addMember(player, 5);
 

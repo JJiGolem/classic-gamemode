@@ -9,8 +9,6 @@
 
 mp.playerMenu = {
     init(data) {
-        debug(data);
-
         mp.callCEFV(`playerMenu.init('${JSON.stringify(data)}')`);
     },
     setFaction(data) {
@@ -22,10 +20,13 @@ mp.playerMenu = {
     setJob(data) {
         mp.callCEFV(`playerMenu.setJob('${JSON.stringify(data)}')`);
     },
-    setBiz(biz) {
+    setWanted(wanted) {
+        mp.callCEFV(`playerMenu.setWanted(${wanted})`);
+    },
+    setBiz(biz = null) {
         mp.callCEFV(`playerMenu.setBiz('${JSON.stringify(biz)}')`);
     },
-    setHouse(house) {
+    setHouse(house = null) {
         mp.callCEFV(`playerMenu.setHouse('${JSON.stringify(house)}')`);
     },
     setSkills(skills) {
@@ -54,6 +55,36 @@ mp.playerMenu = {
     },
     setCompleted(completed) {
         mp.callCEFV(`playerMenu.setCompleted(${completed})`);
+    },
+    setMedia(media) {
+        mp.callCEFV(`playerMenu.setMedia(${media})`);
+    },
+    setPasswordDate(time) {
+        mp.callCEFV(`playerMenu.setPasswordDate(${time})`);
+    },
+    setEmail(email, confirm = 0) {
+        mp.callCEFV(`playerMenu.setEmail('${email}', ${confirm})`);
+    },
+    setName(name) {
+        mp.callCEFV(`playerMenu.setName('${name}')`);
+    },
+    setAdmin(admin) {
+        mp.callCEFV(`playerMenu.setAdmin(${admin})`);
+    },
+    setLaw(law) {
+        mp.callCEFV(`playerMenu.setLaw(${law})`);
+    },
+    setNarcotism(narcotism) {
+        mp.callCEFV(`playerMenu.setNarcotism(${narcotism})`);
+    },
+    setNicotine(nicotine) {
+        mp.callCEFV(`playerMenu.setNicotine(${nicotine})`);
+    },
+    setNumber(number) {
+        mp.callCEFV(`playerMenu.setNumber(${number})`);
+    },
+    setSpouse(spouse) {
+        mp.callCEFV(`playerMenu.setSpouse('${JSON.stringify(spouse)}')`);
     },
 };
 
@@ -99,6 +130,36 @@ mp.events.add({
     },
     "playerMenu.setCompleted": (data) => {
         mp.playerMenu.setCompleted(data.completed);
+    },
+    "playerMenu.setMedia": (data) => {
+        mp.playerMenu.setMedia(data.media);
+    },
+    "playerMenu.setPasswordDate": (data) => {
+        mp.playerMenu.setPasswordDate(data.passwordDate);
+    },
+    "playerMenu.setEmail": (data) => {
+        mp.playerMenu.setEmail(data.email, data.confirmEmail);
+    },
+    "playerMenu.setName": (data) => {
+        mp.playerMenu.setName(data.name);
+    },
+    "playerMenu.setAdmin": (data) => {
+        mp.playerMenu.setAdmin(data.admin);
+    },
+    "playerMenu.setLaw": (data) => {
+        mp.playerMenu.setLaw(data.law);
+    },
+    "playerMenu.setNarcotism": (data) => {
+        mp.playerMenu.setNarcotism(data.narcotism);
+    },
+    "playerMenu.setNicotine": (data) => {
+        mp.playerMenu.setNicotine(data.nicotine);
+    },
+    "playerMenu.setNumber": (data) => {
+        mp.playerMenu.setNumber(data.number);
+    },
+    "playerMenu.setSpouse": (data) => {
+        mp.playerMenu.setSpouse(data.spouse);
     },
     "money.change": (cash, bank) => {
         mp.playerMenu.setCash(cash);

@@ -5,6 +5,7 @@ import {setCall, setCallStatus, startMyCall} from "../actions/action.info";
 import {addAppDisplay, closeAppDisplay, setAppDisplay} from "../actions/action.apps";
 import {connect} from "react-redux";
 import DialogPage from "./DialogPage";
+import EmergencyCall from './EmergencyCall';
 import {addDialog} from "../actions/action.dialogs";
 
 class DialingNumber extends Component {
@@ -41,6 +42,10 @@ class DialingNumber extends Component {
         if (inputNumber) {
             let contact = info.contacts.find(cont => cont.number === inputNumber);
 
+            if (inputNumber == '911') {
+                return addApp({ name: 'EmergencyCall', form: <EmergencyCall /> });
+            }
+
             if (contact) {
                 outputNumber = contact.name;
             } else {
@@ -69,6 +74,10 @@ class DialingNumber extends Component {
 
         if (inputNumber) {
             let dialogIndex = dialogs.findIndex(d => d.number === inputNumber);
+
+            if (inputNumber == '911') {
+                return addApp({ name: 'EmergencyCall', form: <EmergencyCall /> })
+            }
 
             if (dialogIndex === -1) {
                 let dialog = { name: '', number: inputNumber };

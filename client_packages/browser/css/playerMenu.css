@@ -9,6 +9,13 @@
     z-index: 100;
 }
 
+#player-menu .logo {
+    height: 4vh;
+    position: absolute;
+    right: 4vh;
+    top: 4vh;
+}
+
 #player-menu .content {
     position: absolute;
     color: #fff;
@@ -57,6 +64,10 @@
 
 #player-menu .head .top-bar .social-status3 {
     color: #FFBBBB;
+}
+
+#player-menu .head .top-bar .social-status4 {
+    color: #FF4D4D;
 }
 
 #player-menu .head .top-bar .info .coins {
@@ -753,9 +764,9 @@
     margin-top: 2vh;
     height: 1vh;
 }
+
 #player-menu .settings-main .slidebar img:hover {
     filter: drop-shadow(0 0 1vh rgba(255, 223, 41, 0.5));
-
 }
 
 #player-menu .settings-main .slidebar .left {
@@ -766,6 +777,11 @@
     transform: rotate(-90deg);
 }
 
+#player-menu .protection {
+    display: grid;
+    grid-template-rows: repeat(4, min-content);
+}
+
 #player-menu .protection .head {
     margin-bottom: 2vh;
 }
@@ -773,7 +789,7 @@
 #player-menu .protection .record {
     display: grid;
     grid-template-columns: 1fr 30vh 1fr;
-    height: fit-content;
+    /*min-height: 11vh;*/
 }
 
 #player-menu .protection .record .title {

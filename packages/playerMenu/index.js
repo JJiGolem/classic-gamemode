@@ -17,7 +17,7 @@ module.exports = {
         var data = {
             playerName: player.name,
             admin: player.character.admin,
-            factionId: player.character.id,
+            factionId: player.character.factionId,
             factionName: factionName,
             factionRank: rankName,
             jobName: jobName,
@@ -25,6 +25,10 @@ module.exports = {
             gender: player.character.gender,
             cash: player.character.cash,
             wanted: player.character.wanted,
+            law: player.character.law,
+            crimes: player.character.crimes,
+            narcotism: player.character.narcotism,
+            nicotine: player.character.nicotine,
             donate: player.account.donate,
             convertCash: donate.convertCash,
             nicknamePrice: donate.nicknamePrice,
@@ -36,9 +40,13 @@ module.exports = {
             promocode: player.character.Promocode.promocode,
             invited: player.character.Promocode.invited,
             completed: player.character.Promocode.completed,
+            media: player.character.Promocode.media,
             settings: {
                 spawn: player.character.settings.spawn,
             },
+            email: player.account.email,
+            confirmEmail: player.account.confirmEmail,
+            passwordDate: player.account.passwordDate.getTime(),
         };
         if (biz) {
             data.biz = {
@@ -49,11 +57,12 @@ module.exports = {
             };
         }
         if (house) {
+            var garage = house.info.Interior.Garage;
             data.house = {
                 id: house.info.id,
                 class: house.info.Interior.class,
                 rooms: house.info.Interior.numRooms,
-                carPlaces: house.info.Interior.Garage.carPlaces,
+                carPlaces: (garage) ? garage.carPlaces : 0,
                 price: house.info.price,
             };
         }
@@ -98,11 +107,12 @@ module.exports = {
 
         var data = {};
         if (house) {
+            var garage = house.info.Interior.Garage;
             data.house = {
                 id: house.info.id,
                 class: house.info.Interior.class,
                 rooms: house.info.Interior.numRooms,
-                carPlaces: house.info.Interior.Garage.carPlaces,
+                carPlaces: (garage) ? garage.carPlaces : 0,
                 price: house.info.price,
             };
         }
@@ -159,10 +169,84 @@ module.exports = {
         };
         player.call(`playerMenu.setCompleted`, [data]);
     },
+    setMedia(player) {
+        var data = {
+            media: player.character.Promocode.media,
+        };
+        player.call(`playerMenu.setMedia`, [data]);
+    },
+    setPasswordDate(player) {
+        var data = {
+            passwordDate: player.account.passwordDate.getTime(),
+        };
+        player.call(`playerMenu.setPasswordDate`, [data]);
+    },
     setPromocode(player) {
         var data = {
             promocode: player.character.Promocode.promocode,
         };
         player.call(`playerMenu.setPromocode`, [data]);
+    },
+    setEmail(player) {
+        var data = {
+            email: player.account.email,
+            confirmEmail: player.account.confirmEmail,
+        };
+        player.call(`playerMenu.setEmail`, [data]);
+    },
+    setName(player) {
+        var data = {
+            name: player.name
+        };
+        player.call(`playerMenu.setName`, [data]);
+    },
+    setAdmin(player) {
+        var data = {
+            admin: player.character.admin
+        };
+        player.call(`playerMenu.setAdmin`, [data]);
+    },
+    setLaw(player) {
+        var data = {
+            law: player.character.law
+        };
+        player.call(`playerMenu.setLaw`, [data]);
+    },
+    setNarcotism(player) {
+        var data = {
+            narcotism: player.character.narcotism
+        };
+        player.call(`playerMenu.setNarcotism`, [data]);
+    },
+    setNicotine(player) {
+        var data = {
+            nicotine: player.character.nicotine
+        };
+        player.call(`playerMenu.setNicotine`, [data]);
+    },
+    setNumber(player) {
+        var phone = player.phone;
+
+        var data = {
+            number: "-",
+        };
+        if (phone) data.number = phone.number
+
+        player.call(`playerMenu.setNumber`, [data]);
+    },
+    setSpouse(player) {
+        var spouse = player.spouse;
+
+        var data = {
+            spouse: null
+        };
+        if (spouse) {
+            data.spouse = {
+                name: spouse.character.name,
+                gender: spouse.character.gender
+            };
+        }
+
+        player.call(`playerMenu.setSpouse`, [data]);
     },
 };

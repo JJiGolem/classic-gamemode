@@ -18,6 +18,14 @@ var inputWindow = new Vue({
                 leftWord: `Продать`,
                 rightWord: `Отменить`
             },
+            "fib_veh_plate": {
+                name: `fib_veh_plate`,
+                header: `Смена номера авто`,
+                hint: `Введите номер`,
+                inputHint: `Номер`,
+                leftWord: `Сменить`,
+                rightWord: `Отменить`
+            },
         },
     },
     computed: {},
@@ -53,6 +61,16 @@ var inputWindow = new Vue({
                 this.show = false;
                 mp.trigger(`callRemote`, `mafia.power.sell`, JSON.stringify(data));
             }
+            if (this.name == 'fib_veh_plate') {
+                if (!this.value.length) return notifications.push(`error`, `Введите номер`);
+                if (this.value.length > 8) return notifications.push(`error`, `Не более 8 символов`);
+                var data = {
+                    vehId: this.vehId,
+                    plate: this.value,
+                };
+                this.show = false;
+                mp.trigger(`callRemote`, `fib.vehicle.plate.set`, JSON.stringify(data));
+            }
         },
         decline() {
             if (this.name == 'money_giving') {
@@ -70,11 +88,21 @@ var inputWindow = new Vue({
             if (this.name == 'mafia_power_sell') {
                 this.show = false;
             }
+            if (this.name == 'fib_veh_plate') {
+                this.show = false;
+            }
         },
     },
     watch: {
         show(val) {
-            setCursor(val);
+            if (val) {
+                busy.add("inputWindow", true);
+                setCursor(true);
+            }
+            else {
+                busy.remove("inputWindow", true);
+                if (!busy.includes()) setCursor(false);
+            }
         }
     },
 });

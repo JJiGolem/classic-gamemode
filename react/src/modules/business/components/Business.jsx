@@ -79,7 +79,7 @@ class Business extends Component {
     showActionsMenu() {
         const { business } = this.props;
 
-        if (business.actions.length !== 0) {
+        if (business.actions && business.actions.length !== 0) {
             return (
                 <div className='message_back-house-react' style={{ height: '40%' }}>
                     <div className='exitEnterBusiness' name='exit'
@@ -112,8 +112,17 @@ class Business extends Component {
         }
     }
 
-    getButton(name) {
+    showActions() {
         const { blurForm, business } = this.props;
+
+        if (!business.isBlur) {
+            this.setState({ isActionsMenu: true });
+            blurForm(true);
+        }
+    }
+
+    getButton(name) {
+        const { blurForm, closeBusiness } = this.props;
 
         switch (name) {
             case 'buy':
@@ -146,10 +155,7 @@ class Business extends Component {
 
             case 'actions':
                 return (
-                    <div className='button-house-react' onClick={() => {
-                        business.answerBuy === null && this.setState({ isActionsMenu: true });
-                        blurForm(true)
-                    }}
+                    <div className='button-house-react' onClick={this.showActions.bind(this)}
                          onMouseOver={() => this.setState({ colorActions: 'black' })}
                          onMouseOut={() => this.setState({ colorActions: '#e1c631' })}
                     >
@@ -168,6 +174,7 @@ class Business extends Component {
                             onClick={() => { 
                                 // eslint-disable-next-line no-undef
                                 mp.trigger('biz.actions', 'finance');
+                                closeBusiness();
                              }}
                             onMouseOver={() => this.setState({ colorActionButton: 'black' })}
                             onMouseOut={() => this.setState({ colorActionButton: '#e1c631' })}
@@ -196,6 +203,7 @@ class Business extends Component {
             return (
                 <Fragment>
                     { this.getButton('buy') }
+                    { this.getButton('actions') }
                 </Fragment>
             )
         }
@@ -241,6 +249,7 @@ class Business extends Component {
                                 <span> в сутки</span>
                             </div>
                             <div>Владелец: <span>{ business.owner ? business.owner : 'нет' }</span></div>
+                            <div>Фракция: <span>{ business.faction ? business.faction : 'нет' }</span></div>
                         </div>
 
                         <div className='buttons-house-react' style={{ top: '40%' }}>
@@ -305,7 +314,7 @@ class Business extends Component {
                     <div className='business_form-react'>
                         { Object.keys(business).length > 0 ? this.getForm() : this.getLoader() }
                         { business.answerBuy !== null && this.getMessage(business.answerBuy) }
-                        { business.answerBuy === null && isActionsMenu && this.showActionsMenu() }
+                        { isActionsMenu && this.showActionsMenu() }
                         { isConfirm && this.showConfirmBuy() }
                     </div>
                 }

@@ -101,6 +101,12 @@ var prompt = new Vue({
             "bizWar_defender_lose": {
                 text: "Влияние вашей мафии уменьшилось, потеряна крыша над бизнесом",
             },
+            "fishing": {
+                text: "Нажмите <span>E</span>, чтобы начать рыбачить",
+            },
+            "bin": {
+                text: "Нажмите <span>E</span>, чтобы покопаться в мусорке",
+            },
         },
         text: null
     },

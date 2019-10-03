@@ -41,6 +41,22 @@ module.exports = {
     groundItemTime: 2 * 60 * 1000,
     // Макс. дистанция до предмета, чтобы поднять его
     groundMaxDist: 2,
+    // Климат, при котором игрок может бегать голым
+    playerClime: {
+        head: [10, 25],
+        body: [20, 25],
+        legs: [20, 30],
+        feets: [25, 35],
+    },
+    // Коэффицент урона игроку от климата (чем выше, тем больше урон)
+    climeK: 0.5,
+    // Коэффиценты важности частей тела
+    climeOpacity: {
+        head: 0.1,
+        body: 0.5,
+        legs: 0.2,
+        feets: 0.2,
+    },
 
     init() {
         this.loadInventoryItemsFromDB();
@@ -181,6 +197,7 @@ module.exports = {
             }
             delete params.pockets;
         }
+        if (params.clime) params.clime = JSON.parse(params.clime);
         var children = this.getChildren(items, dbItem);
         if (children.length > 0) {
             for (var i = 0; i < children.length; i++) {
@@ -271,7 +288,7 @@ module.exports = {
         var params = this.getParamsValues(item);
         var struct = [];
         for (var key in params) {
-            if (key == 'pockets') params[key] = JSON.stringify(params[key]);
+            if (key == 'pockets' || key == 'clime') params[key] = JSON.stringify(params[key]);
             struct.push({
                 key: key,
                 value: params[key]
@@ -310,7 +327,7 @@ module.exports = {
         }
         var struct = [];
         for (var key in params) {
-            if (key == 'pockets') params[key] = JSON.stringify(params[key]);
+            if (key == 'pockets' || key == 'clime') params[key] = JSON.stringify(params[key]);
             struct.push({
                 key: key,
                 value: params[key]
@@ -430,6 +447,44 @@ module.exports = {
             if (child.parentId == item.id && child.pocketIndex == pocketIndex) children.push(child);
         }
         return children;
+    },
+    getView(items) {
+        var list = {
+            "clothes": [],
+            "props": [],
+        };
+        var clothesIndexes = {
+            "2": 7,
+            "3": 9,
+            "8": 4,
+            "9": 6,
+            "13": 5
+        };
+        var propsIndexes = {
+            "6": 0,
+            "1": 1,
+            "10": 2,
+            "11": 6,
+            "12": 7
+        };
+        items.forEach(item => {
+            var params = this.getParamsValues(item);
+
+            if (clothesIndexes[item.itemId] != null) {
+                list.clothes.push([clothesIndexes[item.itemId], params.variation, params.texture]);
+            } else if (propsIndexes[item.itemId] != null) {
+                list.props.push([propsIndexes[item.itemId], params.variation, params.texture]);
+            } else if (item.itemId == 7) {
+                list.clothes.push([3, params.torso || 0, params.tTexture || 0]);
+                list.clothes.push([11, params.variation, params.texture]);
+                if (params.undershirt != null) list.clothes.push([8, params.undershirt, params.uTexture || 0]);
+                if (params.decal != null) list.clothes.push([10, params.decal, params.dTexture || 0]);
+            } else if (item.itemId == 1) {
+                if (this.masksWithHideHairs.includes(params.variation)) list.clothes.push([2, 0, 0]);
+                list.clothes.push([1, params.variation, params.texture]);
+            }
+        });
+        return list;
     },
     updateView(player, item) {
         if (player.inventory.denyUpdateView) return;
@@ -568,7 +623,7 @@ module.exports = {
         for (var i = 0; i < item.params.length; i++) {
             var param = item.params[i];
             params[param.key] = param.value;
-            if (param.key == 'pockets') params[param.key] = JSON.parse(params[param.key]);
+            if (param.key == 'pockets' || param.key == 'clime') params[param.key] = JSON.parse(params[param.key]);
         }
         return params;
     },
@@ -978,5 +1033,57 @@ module.exports = {
             clearTimeout(obj.destroyTimer);
             obj.destroy();
         }
+    },
+    // урон климата (если игрок одет не по погоде)
+    checkClimeDamage(player, temp, out) {
+        if (player.vehicle || player.dimension) return;
+        
+        var clime = Object.assign({}, this.playerClime);
+
+        var hat = player.inventory.items.find(x => x.itemId == 6 && !x.parentId);
+        var top = player.inventory.items.find(x => x.itemId == 7 && !x.parentId);
+        var pants = player.inventory.items.find(x => x.itemId == 8 && !x.parentId);
+        var shoes = player.inventory.items.find(x => x.itemId == 9 && !x.parentId);
+
+        if (hat) clime.head = this.getParamsValues(hat).clime || this.playerClime.head;
+        if (top) clime.body = this.getParamsValues(top).clime || this.playerClime.body;
+        if (pants) clime.legs = this.getParamsValues(pants).clime || this.playerClime.legs;
+        if (shoes) clime.feets = this.getParamsValues(shoes).clime || this.playerClime.feets;
+
+        var damage = 0;
+
+        if (temp < clime.head[0]) {
+            damage += this.climeOpacity.head * (clime.head[0] - temp) * this.climeK;
+            out(`У вас мерзнет голова`);
+        } else if (temp > clime.head[1]) {
+            damage += this.climeOpacity.head * (temp - clime.head[1]) * this.climeK;
+            out(`У вас вспотела голова`);
+        }
+
+        if (temp < clime.body[0]) {
+            damage += this.climeOpacity.body * (clime.body[0] - temp) * this.climeK;
+            out(`У вас мерзнет тело`);
+        } else if (temp > clime.body[1]) {
+            damage += this.climeOpacity.body * (temp - clime.body[1]) * this.climeK;
+            out(`У вас вспотело тело`);
+        }
+
+        if (temp < clime.legs[0]) {
+            damage += this.climeOpacity.legs * (clime.legs[0] - temp) * this.climeK;
+            out(`У вас мерзнут ноги`);
+        } else if (temp > clime.legs[1]) {
+            damage += this.climeOpacity.legs * (temp - clime.legs[1]) * this.climeK;
+            out(`У вас вспотели ноги`);
+        }
+
+        if (temp < clime.feets[0]) {
+            damage += this.climeOpacity.feets * (clime.feets[0] - temp) * this.climeK;
+            out(`У вас мерзнут ступни`);
+        } else if (temp > clime.feets[1]) {
+            damage += this.climeOpacity.feets * (temp - clime.feets[1]) * this.climeK;
+            out(`У вас вспотели ступни`);
+        }
+
+        player.health -= damage;
     },
 };

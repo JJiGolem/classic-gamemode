@@ -28,13 +28,19 @@ module.exports = {
     // Наркопритон
     drugsStashMarker: null,
     // Цена за 1 г. нарко в наркопритоне (0% влияния в гетто)
-    drugsPrice: 100,
+    drugsPrice: [20, 40, 60, 120],
     // Мин. цена 1 г. нарко в наркопритоне (100% влияния в гетто)
-    drugsPriceMin: 30,
-    // Прибавляемое кол-во здоровья от упротребления 1 г. нарко
-    drugsHealth: 30,
+    drugsPriceMin: [10, 20, 30, 60],
+    // Прибавляемое кол-во здоровья от употребления 1 г. нарко
+    drugsHealth: [10, 20, 30, 60],
+    // Прибавляемое кол-во наркозависимости от употребления 1 г. нарко
+    drugsNarcotism: [1, 2, 3, 6],
     // Время эффекта наркотика (ms)
-    drugsEffectTime: 30000,
+    drugsEffectTime: [10000, 20000, 30000, 60000],
+    // Визуальный эффект
+    drugsEffect: ['DrugsDrivingOut', 'RampageOut', 'DrugsMichaelAliensFightOut', 'DrugsTrevorClownsFightOut'],
+    // Повторное использование наркотика
+    drugsInterval: [10 * 6000, 20 * 6000, 30 * 6000, 60 * 6000],
 
     init() {
         factions = call('factions');

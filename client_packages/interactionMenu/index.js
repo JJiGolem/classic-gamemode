@@ -58,6 +58,37 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
         } else if (itemName == 'Изъять') {
             mp.events.callRemote(`police.licenses.gun.take`, entity.remoteId);
         }
+    } else if (menuName == "fib") {
+        if (!entity) return;
+        if (entity.type != 'player') return;
+
+        if (itemName == 'Наручники') {
+            var data = {
+                recId: entity.remoteId
+            };
+            mp.events.callRemote(`police.cuffs`, JSON.stringify(data));
+        } else if (itemName == 'Розыск') {
+            mp.events.callRemote(`police.wanted`, entity.remoteId);
+        } else if (itemName == 'Арест') {
+            mp.events.callRemote(`police.jail.arrest`, entity.remoteId);
+        } else if (itemName == 'Следование') {
+            mp.events.callRemote(`police.follow`, entity.remoteId);
+        } else if (itemName == 'Прослушка') {
+            var data = {
+                recId: entity.remoteId
+            };
+            mp.events.callRemote(`fib.spy`, JSON.stringify(data));
+        } else if (itemName == 'В авто') {
+            mp.events.callRemote(`police.vehicle.put`, entity.remoteId);
+        }
+    } else if (menuName == "fib_vehicle") {
+        if (!entity) return;
+        if (entity.type != 'vehicle') return;
+
+        if (itemName == 'Номер') {
+            mp.callCEFV(`inputWindow.vehId = ${entity.remoteId}`);
+            mp.callCEFV(`inputWindow.showByName('fib_veh_plate')`);
+        }
     } else if (menuName == "hospital") {
         if (!entity) return;
         if (entity.type != 'player') return;
@@ -83,6 +114,13 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
 
         } else if (itemName == 'Мешок на голову') {
 
+        }
+    } else if (menuName == "news") {
+        if (!entity) return;
+        if (entity.type != 'player') return;
+
+        if (itemName == 'Эфир') {
+            mp.events.callRemote(`news.stream.member`, entity.remoteId);
         }
     }
 });

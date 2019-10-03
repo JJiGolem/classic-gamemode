@@ -24,7 +24,7 @@ var timer = new Vue({
         },
     },
     methods: {
-        show(name, time) {
+        start(name, time) {
             if (!this.timers[name]) return;
 
             this.time = time;
@@ -34,13 +34,16 @@ var timer = new Vue({
             this.updateTimer = setInterval(() => {
                 this.time -= 1000;
                 if (this.time < 0) {
-                    clearInterval(this.updateTimer);
-                    this.timer = null;
+                    this.stop();
                 }
             }, 1000);
-        }
+        },
+        stop() {
+            clearInterval(this.updateTimer);
+            this.timer = null;
+        },
     }
 });
 
 // for tests
-// timer.show("death", 180000);
+// timer.start("death", 180000);

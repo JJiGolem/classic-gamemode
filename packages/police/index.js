@@ -60,6 +60,8 @@ module.exports = {
     arrestPay: 10,
     // Время ареста за 1 ур. розыска (ms)
     arrestTime: 10000,
+    // Время, через которое можно повторно искать преступника
+    searchTime: 2 * 60 * 1000,
 
 
     setCuffs(player, cuffs) {
@@ -79,6 +81,12 @@ module.exports = {
         }
     },
     setWanted(player, wanted, cause = null) {
+        if (wanted > player.character.wanted) {
+            player.character.crimes += wanted - player.character.wanted;
+            player.character.law -= wanted - player.character.wanted;
+            mp.events.call("player.law.changed", player);
+        }
+
         player.character.wanted = wanted;
         player.character.wantedCause = cause;
         player.character.save();
@@ -86,12 +94,14 @@ module.exports = {
 
         if (!player.character.wanted) {
             mapCase.removePoliceWanted(player.character.id);
+            mapCase.removeFibWanted(player.character.id);
         } else {
             mapCase.addPoliceWanted(player);
+            mapCase.addFibWanted(player);
         }
     },
     getNearCell(player) {
-        return this.cells[0]; // tests
+        // return this.cells[0]; // tests
         var min = player.dist(this.cells[0]);
         var index = 0;
         for (var i = 1; i < this.cells.length; i++) {
@@ -105,7 +115,7 @@ module.exports = {
         return this.cells[index];
     },
     getNearJailCell(player) {
-        return this.jailCells[0]; // tests
+        // return this.jailCells[0]; // tests
         var min = player.dist(this.jailCells[0]);
         var index = 0;
         for (var i = 1; i < this.jailCells.length; i++) {
@@ -227,5 +237,8 @@ module.exports = {
             wanted.push(rec);
         });
         return wanted;
+    },
+    getSearchPosition(pos) {
+        return pos;
     },
 };
