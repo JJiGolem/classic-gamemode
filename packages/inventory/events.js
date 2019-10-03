@@ -42,6 +42,7 @@ module.exports = {
                 item.save();
             } else { // игрок взял предмет из окруж. среды
                 var i = player.inventory.place.items.findIndex(x => x.id == data.sqlId);
+                if (i == -1) return notifs.error(player, `Предмет #${data.sqlId} в среде не найден. Сообщите разработчикам CRP. :)`, `Код 1`);
                 var item = player.inventory.place.items[i];
                 inventory.addPlayerItem(player, item, data.placeSqlId, data.pocketI, data.index);
                 item.destroy();
@@ -53,6 +54,7 @@ module.exports = {
                 inventory.deleteItem(player, item);
             } else { // предмет уже находится в окруж. среде
                 item = player.inventory.place.items.find(x => x.id == data.sqlId);
+                if (!item) return notifs.error(player, `Предмет #${data.sqlId} в среде не найден. Сообщите разработчикам CRP. :)`, `Код 2`);
                 item.pocketIndex = data.pocketI;
                 item.index = data.index;
                 item.save();
@@ -380,17 +382,11 @@ module.exports = {
         var header = `Шкаф ${faction.name}`;
         var holder = factions.getHolder(faction.id);
 
-        // if (holder.playerId != null) {
-        //     var rec = mp.players.at(holder.playerId);
-        //     if (rec && rec.character && rec.dist(holder.position) < 50) return notifs.error(player, `Со шкафом взаимодействует другой игрок`, header);
-        // }
         var items = holder.inventory.items[player.character.id];
         if (!items) return notifs.error(player, `У вас нет личного шкафа`, header);
 
-        // holder.playerId = player.id;
-
         var place = {
-            sqlId: -faction.id,
+            sqlId: -player.character.id,
             header: header,
             pockets: inventory.getEnvironmentClientPockets(items, "Faction"),
         };
@@ -402,11 +398,7 @@ module.exports = {
     // Запрос на очищение предметов в шкафу организации
     "faction.holder.items.clear": (player, faction) => {
         player.inventory.place = {};
-
-        // if (veh && player.id == veh.bootPlayerId) {
-        player.call(`inventory.deleteEnvironmentPlace`, [-faction.id]);
-        // delete veh.bootPlayerId;
-        // }
+        player.call(`inventory.deleteEnvironmentPlace`, [-player.character.id]);
     },
     // Удаление предметов в шкафу организации
     "faction.holder.items.remove": (player) => {

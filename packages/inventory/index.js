@@ -183,7 +183,6 @@ module.exports = {
             ]
         });
         holder.inventory.items[player.character.id] = dbItems;
-
         console.log(`[INVENTORY] Для ${player.name} загружены предметы организации (${dbItems.length} шт.)`);
     },
     convertServerToClientItems(dbItems) {
@@ -325,7 +324,10 @@ module.exports = {
             parentId: null,
             params: struct,
         };
-        conf[place.type.toLowerCase() + "Id"] = -place.sqlId;
+        var key;
+        if (place.type == "Vehicle") key = "vehicleId";
+        else if (place.type == "Faction") key = "playerId";
+        conf[key] = -place.sqlId;
         var table = `${place.type}Inventory`;
         var newItem = db.Models[table].build(conf, {
             include: [{
