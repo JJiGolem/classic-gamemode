@@ -350,6 +350,7 @@ module.exports = {
         var key;
         if (place.type == "Vehicle") key = "vehicleId";
         else if (place.type == "Faction") key = "playerId";
+        else if (place.type == "House") key = "houseId";
         conf[key] = -place.sqlId;
         var table = `${place.type}Inventory`;
         var newItem = db.Models[table].build(conf, {

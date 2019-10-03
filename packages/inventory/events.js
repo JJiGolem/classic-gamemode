@@ -2,6 +2,7 @@ let bands = call('bands');
 let factions = call('factions');
 let inventory = require('./index.js');
 let hospital = require('../hospital');
+let houses = call('houses');
 let mafia = call('mafia');
 let notifs = require('../notifications');
 let satiety = call('satiety');
@@ -436,10 +437,12 @@ module.exports = {
     },
     // Запрос на очищение предметов в шкафу дома
     "house.holder.items.clear": (player, holder) => {
-        player.call(`inventory.deleteEnvironmentPlace`, [player.inventory.place.sqlId]);
         player.inventory.place = {};
 
-        delete holder.playerId;
+        if (player.id == holder.playerId) {
+            player.call(`inventory.deleteEnvironmentPlace`, [-holder.houseInfo.id]);
+            delete holder.playerId;
+        }
     },
     "player.faction.changed": (player) => {
         mp.events.call("faction.holder.items.destroy", player);
@@ -460,9 +463,16 @@ module.exports = {
         mp.events.call("faction.holder.items.remove", player);
         if (!player.inventory) return;
 
-        if (!player.inventory.place || player.inventory.place.type != "Vehicle") return;
-        var veh = mp.vehicles.getBySqlId(-player.inventory.place.sqlId);
-        if (!veh) return;
-        delete veh.bootPlayerId;
+        if (player.inventory.place) {
+            if (player.inventory.place.type == "Vehicle") {
+                var veh = mp.vehicles.getBySqlId(-player.inventory.place.sqlId);
+                if (!veh) return;
+                delete veh.bootPlayerId;
+            } else if (player.inventory.place.type == "House") {
+                var holder = houses.getHouseById(-player.inventory.place.sqlId).holder;
+                if (!holder) return;
+                delete holder.playerId;
+            }
+        }
     },
 };
