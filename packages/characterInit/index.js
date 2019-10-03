@@ -4,6 +4,7 @@ const creatorPlayerPos = new mp.Vector3(402.8664, -996.4108, -99.00027);
 const creatorPlayerHeading = -185.0;
 
 let houses = call('houses');
+let factions = call('factions');
 let inventory = call('inventory');
 let notifs = call('notifications');
 let utils = call("utils");
@@ -231,8 +232,7 @@ module.exports = {
                     this.colorForOverlayIdx(player, i), 0
                 ]);
             }
-        }
-        else {
+        } else {
             let features = new Array();
             player.characterInfo.Features.forEach((element) => {
                 features.push(element.value);
@@ -290,8 +290,7 @@ module.exports = {
                 default:
                     color = 0;
             }
-        }
-        else {
+        } else {
             switch (index) {
                 case 1:
                     color = player.characterInfo.beardColor;
@@ -376,7 +375,9 @@ module.exports = {
     },
     spawn(player) {
         var settings = player.character.settings;
-        if (settings.spawn == 1 && player.house.id == -1) settings.spawn = 0;
+        var house = houses.getHouseByCharId(player.character.id).info;
+
+        if (settings.spawn == 1 && !house) settings.spawn = 0;
         if (settings.spawn == 2 && !player.character.factionId) settings.spawn = 0;
         switch (settings.spawn) {
             case 0: // улица
@@ -385,12 +386,14 @@ module.exports = {
                 player.dimension = 0;
                 break;
             case 1: // дом
-                var house = houses.getHouseByCharId(player.character.id).info;
                 var pos = new mp.Vector3(house.Interior.x, house.Interior.y, house.Interior.z);
                 player.spawn(pos);
                 player.dimension = house.id;
                 break;
             case 2: //организация
+                var pos = factions.getMarker(player.character.factionId).position;
+                player.spawn(pos);
+                player.dimension = 0;
                 break;
         }
     },
