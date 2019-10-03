@@ -121,7 +121,14 @@ export default function info(state = initialState, action) {
         case 'LOAD_INFO_TO_PHONE':
             return {
                 ...state,
-                ...payload
+                ...payload,
+                contacts: [
+                    ...payload.contacts,
+                    {
+                        name: 'Мой номер',
+                        number: payload.number
+                    }
+                ]
             };
 
         case 'SET_SYMBOL_PRICE_NEWS':
