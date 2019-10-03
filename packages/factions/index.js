@@ -16,6 +16,8 @@ module.exports = {
     warehouses: [],
     // Маркеры выдачи предметов организаций
     storages: [],
+    // Маркеры шкафов организаций
+    holders: [],
     // Склад нескончаемых боеприпасов (навешен blip)
     ammoWarehouse: null,
     // Склад нескончаемых медикаментов (навешен blip)
@@ -78,6 +80,7 @@ module.exports = {
             this.createFactionMarker(faction);
             this.createWarehouseMarker(faction);
             this.createStorageMarker(faction);
+            this.createHolderMarker(faction);
         }
     },
     createFactionMarker(faction) {
@@ -160,6 +163,28 @@ module.exports = {
         };
         storage.colshape = colshape;
     },
+    createHolderMarker(faction) {
+        var pos = new mp.Vector3(faction.hX, faction.hY, faction.hZ - 1);
+
+        var holder = mp.markers.new(1, pos, 0.5, {
+            color: [0, 187, 255, 70]
+        });
+        holder.inventory = {
+            items: {}, // предметов игроков в шкафе
+        };
+        this.holders.push(holder);
+
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+        colshape.onEnter = (player) => {
+            if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
+
+            mp.events.call("faction.holder.items.request", player, faction);
+        };
+        colshape.onExit = (player) => {
+            mp.events.call("faction.holder.items.clear", player, faction);
+        };
+        holder.colshape = colshape;
+    },
     createAmmoWarehouseMarker() {
         var pos = new mp.Vector3(211.51, -3091.53, 7.01 - 1);
 
@@ -218,6 +243,9 @@ module.exports = {
     },
     getStorage(id) {
         return this.storages[id - 1];
+    },
+    getHolder(id) {
+        return this.holders[id - 1];
     },
     getBlip(id) {
         return this.blips[id - 1];

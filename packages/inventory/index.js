@@ -162,6 +162,30 @@ module.exports = {
 
         // console.log(`[INVENTORY] Для авто ${vehicle.db.modelName} загружены предметы (${dbItems.length} шт.)`);
     },
+    async initFactionInventory(player, holder) {
+        holder.inventory.items[player.character.id] = []; // предметы
+
+        var dbItems = await db.Models.FactionInventory.findAll({
+            where: {
+                playerId: player.character.id
+            },
+            order: [
+                ['parentId', 'ASC']
+            ],
+            include: [{
+                    model: db.Models.FactionInventoryParam,
+                    as: "params"
+                },
+                {
+                    model: db.Models.InventoryItem,
+                    as: "item"
+                }
+            ]
+        });
+        holder.inventory.items[player.character.id] = dbItems;
+
+        console.log(`[INVENTORY] Для ${player.name} загружены предметы организации (${dbItems.length} шт.)`);
+    },
     convertServerToClientItems(dbItems) {
         // console.log("convertServerToClientItems");
         var clientItems = {};
@@ -957,12 +981,37 @@ module.exports = {
         }
         return list;
     },
-    getVehicleClientPockets(dbItems) {
-        var pockets = [{
-            cols: 18,
-            rows: 20,
-            items: {}
-        }, ];
+    getPocketsByType(type) {
+        switch (type) {
+            case "Vehicle":
+                return [{
+                    cols: 18,
+                    rows: 20,
+                    items: {}
+                }, ];
+            case "Faction":
+                return [{
+                        cols: 8,
+                        rows: 9,
+                        items: {}
+                    },
+                    {
+                        cols: 8,
+                        rows: 9,
+                        items: {}
+                    },
+                    {
+                        cols: 16,
+                        rows: 5,
+                        items: {}
+                    },
+                ];
+        }
+
+        return [];
+    },
+    getEnvironmentClientPockets(dbItems, type) {
+        var pockets = this.getPocketsByType(type);
         for (var i = 0; i < dbItems.length; i++) {
             var dbItem = dbItems[i];
             if (dbItem.parentId) continue;
