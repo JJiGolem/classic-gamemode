@@ -509,5 +509,11 @@ module.exports = {
         var text = `${faction.ammo} из ${faction.maxAmmo}\n${faction.medicines} из ${faction.maxMedicines}`;
         var label = this.getWarehouse(faction.id).label;
         label.text = text;
-    }
+    },
+    addCash(faction, count) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+
+        faction.cash += count;
+        faction.save();
+    },
 };
