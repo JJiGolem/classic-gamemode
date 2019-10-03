@@ -2377,6 +2377,9 @@ var selectMenu = new Vue({
                         text: "Аптечка"
                     },
                     {
+                        text: "Наручники"
+                    },
+                    {
                         text: "Вернуться"
                     },
                 ],
@@ -4576,7 +4579,8 @@ var selectMenu = new Vue({
                                 playerId: parseInt(this.items[0].values[0]),
                                 sum: parseInt(this.items[1].values[0]),
                             };
-                            mp.trigger(`callRemote`, `farms.sell.player`, JSON.stringify(data))
+                            mp.trigger(`callRemote`, `farms.sell.player`, JSON.stringify(data));
+                            selectMenu.show = false;
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmControlSell");
                         }
@@ -5841,6 +5845,74 @@ var selectMenu = new Vue({
                         else if (e.itemName == 'Развод') mp.trigger(`callRemote`, `wedding.remove`);
                         selectMenu.show = false;
                     }
+                }
+            },
+            "clothingMain": {
+                name: "clothingMain",
+                header: "Одежда",
+                headerImg: "",
+                items: [{
+                        text: 'Браслеты'
+                    },
+                    {
+                        text: 'Серьги'
+                    },
+                    {
+                        text: 'Очки'
+                    },
+                    {
+                        text: 'Часы'
+                    },
+                    {
+                        text: 'Головные уборы'
+                    },
+                    {
+                        text: 'Тело'
+                    },
+                    {
+                        text: 'Ноги'
+                    },
+                    {
+                        text: 'Обувь'
+                    },
+                    {
+                        text: 'Закрыть'
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    // if (eventName == 'onItemSelected') {
+                    //     if (e.itemName == 'Закрыть') {
+                    //         selectMenu.show = false;
+                    //     }
+                    //     if (e.itemName == 'Мобильная связь') {
+                    //         selectMenu.showByName('supermarketMobile');
+                    //     }
+                    //     if (e.itemName == 'Продукты') {
+                    //         selectMenu.showByName('supermarketFood');
+                    //     }
+                    //     if (e.itemName == 'Табачные изделия') {
+                    //         selectMenu.showByName('supermarketTobacco');
+                    //     }
+                    //     if (e.itemName == 'Прочие товары') {
+                    //         selectMenu.showByName('supermarketStuff');
+                    //     }
+                    // }
+
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        // selectMenu.show = false;
+                        mp.trigger('clothingShop.exit');
+                    }
+
                 }
             },
         },

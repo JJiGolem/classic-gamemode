@@ -468,6 +468,14 @@ module.exports = {
         var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60 % 60);
         if (minutes < this.payMins) return notifs.warning(player, `Зарплата не получена из-за низкой активности`, faction.name);
 
+        if (this.isBandFaction(faction) || this.isMafiaFaction(faction)) {
+            if (faction.cash < pay) return notifs.error(player, `В общаке недостаточно средств для получения зарплаты`, faction.name);
+
+            // TODO: не многовато запросов в БД получится?
+            faction.cash -= pay;
+            faction.save();
+        }
+
         money.addMoney(player, pay, (res) => {
             if (!res) return console.log(`[factions] Ошибка выдачи ЗП для ${player.name}`);
             notifs.info(player, `Зарплата: $${pay}`, faction.name);

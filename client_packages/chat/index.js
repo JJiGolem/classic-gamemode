@@ -171,7 +171,7 @@ mp.events.add('chat.action.say', (nickname, id, message) => {
     mp.events.call('chat.message.push', message);
 
     var player = mp.players.atRemoteId(id);
-    if (!player) return;
+    if (!player || player.vehicle) return;
     mp.animations.playAnimation(player, {
         dict: "special_ped@baygor@monologue_3@monologue_3e",
         name: "trees_can_talk_4",
