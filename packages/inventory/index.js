@@ -1,5 +1,7 @@
 "use strict";
 
+let factions = call('factions');
+
 module.exports = {
     // Макс. вес предметов, переносимый игроком
     maxPlayerWeight: 30,
@@ -853,6 +855,23 @@ module.exports = {
                     rec.call(`inventory.deleteEnvironmentItem`, [item.id]);
                 }
             });
+        });
+        // у всех шкафов организаций
+        factions.holders.forEach(holder => {
+            for (var characterId in holder.inventory.items) {
+                var list = holder.inventory.items[characterId];
+                if (!list.length) return;
+                var items = this.getItemsByParams(list, itemIds, keys, values);
+                if (!items.length) return;
+                items.forEach(item => {
+                    item.destroy();
+                    var i = list.indexOf(item);
+                    if (i != -1) list.splice(i, 1);
+                });
+                mp.players.forEachInRange(holder.position, 5, (rec) => {
+                    mp.events.call("faction.holder.items.clear", rec);
+                });
+            }
         });
         // предметы на земле
         mp.objects.forEach((obj) => {
