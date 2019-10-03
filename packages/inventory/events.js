@@ -408,7 +408,7 @@ module.exports = {
     },
     // Уничтожение предметов в шкафу организациий
     "faction.holder.items.destroy": (player) => {
-        factions.destroyHolderItems(player);
+        // factions.destroyHolderItems(player);
     },
     "player.faction.changed": (player) => {
         mp.events.call("faction.holder.items.destroy", player);

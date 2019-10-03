@@ -77,7 +77,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: false
         },
-    }, 
+        holder: {
+            type: DataTypes.TINYINT(1),
+            defaultValue: 0,
+            allowNull: false
+        },
+    },
     {
         timestamps: false
     });

@@ -26,6 +26,12 @@ var prompt = new Vue({
             "vehicle_items_boot": {
                 text: "Нажмите <span>I</span> для того, чтобы взаимодействовать с содержимым багажника"
             },
+            "faction_items_holder": {
+                text: "Нажмите <span>I</span> для того, чтобы взаимодействовать с содержимым шкафа организации"
+            },
+            "house_items_holder": {
+                text: "Нажмите <span>I</span> для того, чтобы взаимодействовать с содержимым шкафа дома"
+            },
             "carshow_control": {
                 text: "Нажмите <span>Esc</span> для того, чтобы выйти из автосалона"
             },
@@ -106,9 +112,6 @@ var prompt = new Vue({
             },
             "bin": {
                 text: "Нажмите <span>E</span>, чтобы покопаться в мусорке",
-            },
-            "faction_items_holder": {
-                text: "Нажмите <span>I</span> для того, чтобы взаимодействовать с содержимым шкафа"
             },
         },
         text: null

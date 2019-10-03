@@ -15,8 +15,7 @@ let changeBlip = function(house) {
     if (house.blip == null) return;
     if (house.info.characterId != null) {
         house.blip.color = 1;
-    }
-    else {
+    } else {
         house.blip.color = 2;
     }
 };
@@ -44,19 +43,17 @@ let dropHouse = function(house, sellToGov) {
                             mp.events.call('player.house.changed', mp.players.at(j));
                             if (sellToGov) {
                                 mp.players.at(j).call('house.sell.toGov.ans', [1]);
-                            }
-                            else {
+                            } else {
                                 mp.players.at(j).call('phone.app.remove', ["house", house.info.id]);
                             }
                             return;
                         }
                     }
-                }
-                else {
+                } else {
                     console.log("[HOUSES] House dropped " + house.info.id + ". But player didn't getmoney");
                 }
-            });        
-        }); 
+            });
+        });
     } catch (error) {
         console.log("[ERROR] " + error);
     }
@@ -68,16 +65,17 @@ module.exports = {
         vehicles = call('vehicles');
         carmarket = call('carmarket');
         timer = call("timer");
-        utils= call("utils");
+        utils = call("utils");
 
         console.log("[HOUSES] load houses from DB");
         let infoHouses = await db.Models.House.findAll({
-            include: [{ model: db.Models.Interior,
-                    include: [{ model: db.Models.Garage,
-                        include: [db.Models.GaragePlace]
-                    }]
-                }
-            ]
+            include: [{
+                model: db.Models.Interior,
+                include: [{
+                    model: db.Models.Garage,
+                    include: [db.Models.GaragePlace]
+                }]
+            }]
         });
         for (let i = 0; i < infoHouses.length; i++) {
             let house = this.addHouse(infoHouses[i]);
@@ -99,12 +97,18 @@ module.exports = {
     initHouseAdding(player) {
         let interiorsClasses = new Array();
         for (let i = 0; i < interiors.length; i++) {
-            interiorsClasses.push({id: interiors[i].id, class: interiors[i].class});
+            interiorsClasses.push({
+                id: interiors[i].id,
+                class: interiors[i].class
+            });
         }
 
         let garagesIdCarPlaces = new Array();
         for (let i = 0; i < garages.length; i++) {
-            garagesIdCarPlaces.push({id: garages[i].id, carPlaces: garages[i].carPlaces});
+            garagesIdCarPlaces.push({
+                id: garages[i].id,
+                carPlaces: garages[i].carPlaces
+            });
         }
 
         player.call('house.add.init', [interiorsClasses, garagesIdCarPlaces]);
@@ -126,23 +130,25 @@ module.exports = {
             carZ: houseInfo.carZ,
             carAngle: houseInfo.carAngle,
         }, {
-            include: [{ model: db.Models.Interior,
-                    include: [{ model: db.Models.Garage,
-                        include: [db.Models.GaragePlace]
-                    }]
-                }
-            ]
+            include: [{
+                model: db.Models.Interior,
+                include: [{
+                    model: db.Models.Garage,
+                    include: [db.Models.GaragePlace]
+                }]
+            }]
         });
         house = await db.Models.House.findOne({
             where: {
                 id: house.id
             },
-            include: [{ model: db.Models.Interior,
-                    include: [{ model: db.Models.Garage,
-                        include: [db.Models.GaragePlace]
-                    }]
-                }
-            ]
+            include: [{
+                model: db.Models.Interior,
+                include: [{
+                    model: db.Models.Garage,
+                    include: [db.Models.GaragePlace]
+                }]
+            }]
         });
         this.addHouse(house);
         this.setTimer(houses.length - 1);
@@ -224,8 +230,7 @@ module.exports = {
         let houseBlipColor;
         if (houseInfo.characterId == null) {
             houseBlipColor = 2;
-        }
-        else {
+        } else {
             houseBlipColor = 1;
         }
 
@@ -244,15 +249,19 @@ module.exports = {
                 dimension: dimension
             });
         }
-        
+
+        var holder = null;
+        if (houseInfo.holder) {
+            holder = this.createHolderMarker(houseInfo);
+        }
+
         let enterColshape = mp.colshapes.newTube(houseInfo.pickupX, houseInfo.pickupY, houseInfo.pickupZ, 2.0, 1.0, 0);
         let exitColshape = mp.colshapes.newSphere(houseInfo.Interior.exitX, houseInfo.Interior.exitY, houseInfo.Interior.exitZ, 1.0, dimension);
         let exitGarageColshape = null;
         if (houseInfo.Interior.Garage != null) {
             exitGarageColshape = mp.colshapes.newSphere(houseInfo.Interior.Garage.exitX, houseInfo.Interior.Garage.exitY, houseInfo.Interior.Garage.exitZ, 1.0, dimension);
         }
-        let blip = mp.blips.new(40, new mp.Vector3(houseInfo.pickupX, houseInfo.pickupY, houseInfo.pickupZ),
-        {
+        let blip = mp.blips.new(40, new mp.Vector3(houseInfo.pickupX, houseInfo.pickupY, houseInfo.pickupZ), {
             shortRange: true,
             dimension: 0,
             color: houseBlipColor
@@ -272,13 +281,13 @@ module.exports = {
         if (exitGarageColshape != null) exitGarageColshape.place = 2;
 
         houses.push({
-                enter: enterColshape,
-                exit: exitColshape,
-                exitGarage: exitGarageColshape,
-                blip: blip,
-                info: houseInfo
-            }
-        );
+            enter: enterColshape,
+            exit: exitColshape,
+            exitGarage: exitGarageColshape,
+            blip: blip,
+            info: houseInfo,
+            holder: holder,
+        });
         return houses[houses.length - 1];
     },
     updateHouse(house) {
@@ -300,20 +309,20 @@ module.exports = {
         house.timer = timer.add(async function() {
             dropHouse(house);
         }, house.info.date.getTime() - new Date().getTime());
-    },  
+    },
     dropHouse: dropHouse,
     changeBlip: changeBlip,
     getHouseById(id) {
-        return houses.find( x => {
+        return houses.find(x => {
             if (x == null) return false;
             return x.info.id == id;
         });
     },
     getHouseByCharId(id) {
-        return houses.find( x => x.info.characterId == id);
+        return houses.find(x => x.info.characterId == id);
     },
     isHaveHouse(id) {
-        return houses.findIndex( x => x.info.characterId == id) != -1;
+        return houses.findIndex(x => x.info.characterId == id) != -1;
     },
     getHouseInfoForApp(house) {
         let info = house.info;
@@ -347,7 +356,7 @@ module.exports = {
                         numRooms: house.info.Interior.numRooms,
                         garage: house.info.Interior.Garage != null,
                         carPlaces: house.info.Interior.Garage != null ? house.info.Interior.Garage.carPlaces : 1,
-                        rent:  house.info.price * house.info.Interior.rent,
+                        rent: house.info.price * house.info.Interior.rent,
                         isOpened: house.info.isOpened,
                         improvements: new Array(),
                         price: house.info.price,
@@ -355,12 +364,11 @@ module.exports = {
                         pos: [house.info.pickupX, house.info.pickupY, house.info.pickupZ]
                     }]);
                     vehicles != null && vehicles.setPlayerCarPlaces(buyer);
-                }
-                else {
+                } else {
                     callback(false);
                 }
-            });        
-        }); 
+            });
+        });
     },
     getHouseCarPlaces(id) {
         let house = this.getHouseByCharId(id).info;
@@ -376,7 +384,7 @@ module.exports = {
 
         let garage = house.Interior.Garage;
         if (garage == null) return garagePlaces;
-        
+
         house.Interior.Garage.GaragePlaces.forEach(place => {
             garagePlaces.push({
                 x: place.x,
@@ -387,5 +395,35 @@ module.exports = {
             });
         });
         return garagePlaces;
-    }
+    },
+    createHolderMarker(house) {
+        var interior = house.Interior;
+        var pos = new mp.Vector3(interior.hX, interior.hY, interior.hZ - 1);
+
+        var holder = mp.markers.new(1, pos, 0.5, {
+            color: [0, 187, 255, 70],
+            dimension: house.id,
+        });
+        holder.inventory = {
+            items: {}, // предметов игроков в шкафе
+        };
+        holder.houseInfo = house;
+
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, holder.dimension);
+        colshape.onEnter = (player) => {
+            // TODO: может быть проверка на владельца
+            // if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
+
+            player.call("prompt.showByName", [`house_items_holder`]);
+            mp.events.call("house.holder.items.request", player, holder);
+        };
+        colshape.onExit = (player) => {
+            player.call(`prompt.hide`);
+            mp.events.call("house.holder.items.clear", holder);
+        };
+        holder.colshape = colshape;
+
+        return holder;
+    },
+
 };

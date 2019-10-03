@@ -3,6 +3,7 @@ const freemodeCharacters = [mp.joaat("mp_m_freemode_01"), mp.joaat("mp_f_freemod
 const creatorPlayerPos = new mp.Vector3(402.8664, -996.4108, -99.00027);
 const creatorPlayerHeading = -185.0;
 
+let houses = call('houses');
 let inventory = call('inventory');
 let notifs = call('notifications');
 let utils = call("utils");
@@ -375,7 +376,8 @@ module.exports = {
     },
     spawn(player) {
         var settings = player.character.settings;
-        if (!player.character.factionId || player.house.id == -1) settings.spawn = 0;
+        if (settings.spawn == 1 && player.house.id == -1) settings.spawn = 0;
+        if (settings.spawn == 2 && !player.character.factionId) settings.spawn = 0;
         switch (settings.spawn) {
             case 0: // улица
                 player.spawn(new mp.Vector3(player.character.x, player.character.y, player.character.z));
@@ -383,6 +385,10 @@ module.exports = {
                 player.dimension = 0;
                 break;
             case 1: // дом
+                var house = houses.getHouseByCharId(player.character.id).info;
+                var pos = new mp.Vector3(house.Interior.x, house.Interior.y, house.Interior.z);
+                player.spawn(pos);
+                player.dimension = house.id;
                 break;
             case 2: //организация
                 break;
