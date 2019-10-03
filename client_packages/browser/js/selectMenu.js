@@ -1545,15 +1545,15 @@ var selectMenu = new Vue({
                 items: [{
                         text: "Раздевалка",
                     },
-                    // {
-                    //     text: "Снаряжение"
-                    // },
-                    // {
-                    //     text: "Вооружение"
-                    // },
-                    // {
-                    //     text: "Патроны"
-                    // },
+                    {
+                        text: "Снаряжение"
+                    },
+                    {
+                        text: "Вооружение"
+                    },
+                    {
+                        text: "Патроны"
+                    },
                     {
                         text: "Закрыть"
                     },
@@ -1572,12 +1572,12 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Раздевалка') {
                             selectMenu.showByName("governmentClothes");
-                            // } else if (e.itemName == 'Снаряжение') {
-                            // selectMenu.showByName("lspdItems");
-                            // } else if (e.itemName == 'Вооружение') {
-                            // selectMenu.showByName("lspdGuns");
-                            // } else if (e.itemName == 'Патроны') {
-                            // selectMenu.showByName("lspdAmmo");
+                            } else if (e.itemName == 'Снаряжение') {
+                            selectMenu.showByName("governmentItems");
+                            } else if (e.itemName == 'Вооружение') {
+                            selectMenu.showByName("governmentGuns");
+                            } else if (e.itemName == 'Патроны') {
+                            selectMenu.showByName("governmentAmmo");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
@@ -1627,6 +1627,36 @@ var selectMenu = new Vue({
                             selectMenu.show = false;
                             mp.trigger(`callRemote`, `government.storage.clothes.take`, e.itemIndex);
                         }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("governmentStorage");
+                }
+            },
+            "governmentItems": {
+                name: "governmentItems",
+                header: "Снаряжение Government",
+                items: [{
+                        text: "Аптечка"
+                    },
+                    {
+                        text: "Наручники",
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Вернуться") selectMenu.showByName("governmentStorage");
+                        else mp.trigger(`callRemote`, `government.storage.items.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("governmentStorage");
                 }
             },

@@ -167,4 +167,37 @@ module.exports = {
         notifs.success(player, `Форма выдана`, header);
         factions.setAmmo(faction, faction.ammo - government.clothesAmmo);
     },
+    "government.storage.items.take": (player, index) => {
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Government`);
+        if (!factions.isGovernmentFaction(player.character.factionId)) return notifs.error(player, `Вы не охрана`, `Склад Government`);
+
+        var character = player.character;
+        var faction = factions.getFaction(character.factionId);
+        var header = `Склад ${faction.name}`;
+
+        if (faction.ammo < government.itemAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
+
+        var itemIds = [24, 28];
+
+        index = Math.clamp(index, 0, itemIds.length - 1);
+        var itemId = itemIds[index];
+
+        var itemName = inventory.getInventoryItem(itemId).name;
+        // var items = inventory.getArrayByItemId(player, itemId);
+        // if (items.length > 0) return notifs.error(player, `Вы уже имеете ${itemName}`, header);
+
+        // inventory.fullDeleteItemsByParams(itemId, ["faction", "owner"], [character.factionId, character.id]);
+        var params = {
+            faction: character.factionId,
+            owner: character.id,
+        };
+        if (index == 0) params.count = 2;
+
+        inventory.addItem(player, itemId, params, (e) => {
+            if (e) return notifs.error(player, e, header);
+
+            notifs.success(player, `Вам выданы ${itemName}`, header);
+            factions.setAmmo(faction, faction.ammo - government.itemAmmo);
+        });
+    },
 }
