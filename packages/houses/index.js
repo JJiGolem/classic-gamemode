@@ -4,6 +4,7 @@ let houses = new Array();
 let interiors = new Array();
 let garages = new Array();
 
+let inventory;
 let money;
 let vehicles;
 let carmarket;
@@ -61,6 +62,7 @@ let dropHouse = function(house, sellToGov) {
 
 module.exports = {
     async init() {
+        inventory = call('inventory');
         money = call('money');
         vehicles = call('vehicles');
         carmarket = call('carmarket');
@@ -253,6 +255,7 @@ module.exports = {
         var holder = null;
         if (houseInfo.holder) {
             holder = this.createHolderMarker(houseInfo);
+            inventory.initHouseInventory(holder);
         }
 
         let enterColshape = mp.colshapes.newTube(houseInfo.pickupX, houseInfo.pickupY, houseInfo.pickupZ, 2.0, 1.0, 0);
@@ -405,7 +408,7 @@ module.exports = {
             dimension: house.id,
         });
         holder.inventory = {
-            items: {}, // предметов игроков в шкафе
+            items: [], // предметы в шкафу
         };
         holder.houseInfo = house;
 
@@ -419,7 +422,7 @@ module.exports = {
         };
         colshape.onExit = (player) => {
             player.call(`prompt.hide`);
-            mp.events.call("house.holder.items.clear", holder);
+            mp.events.call("house.holder.items.clear", player, holder);
         };
         holder.colshape = colshape;
 

@@ -94,6 +94,10 @@ module.exports = (sequelize, DataTypes) => {
         model.belongsTo(models.Interior, {
             foreignKey: "interiorId"
         });
+        model.hasMany(models.HouseInventory, {
+            as: "items",
+            foreignKey: "houseId"
+		});
     };
     return model;
 };

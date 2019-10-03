@@ -410,6 +410,37 @@ module.exports = {
     "faction.holder.items.destroy": (player) => {
         // factions.destroyHolderItems(player);
     },
+    // Запрос предметов инвентаря в шкафу дома
+    "house.holder.items.request": (player, holder) => {
+        var header = `Шкаф`;
+
+        var items = holder.inventory.items;
+        if (!items) return notifs.error(player, `Шкаф сломан`, header); // где-то баг, если выполнится вдруг
+
+        if (holder.playerId != null) {
+            var rec = mp.players.at(holder.playerId);
+            if (rec && rec.character && rec.dist(holder.position) < 5) return notifs.error(player, `Со шкафом взаимодействует другой игрок`, header);
+        }
+
+        holder.playerId = player.id;
+
+        var place = {
+            sqlId: -holder.houseInfo.id,
+            header: header,
+            pockets: inventory.getEnvironmentClientPockets(items, "House"),
+        };
+        player.inventory.place.sqlId = place.sqlId;
+        player.inventory.place.type = "House";
+        player.inventory.place.items = items;
+        player.call(`inventory.addEnvironmentPlace`, [place]);
+    },
+    // Запрос на очищение предметов в шкафу дома
+    "house.holder.items.clear": (player, holder) => {
+        player.call(`inventory.deleteEnvironmentPlace`, [player.inventory.place.sqlId]);
+        player.inventory.place = {};
+
+        delete holder.playerId;
+    },
     "player.faction.changed": (player) => {
         mp.events.call("faction.holder.items.destroy", player);
         mp.events.call("faction.holder.items.clear", player);

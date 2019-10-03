@@ -185,6 +185,29 @@ module.exports = {
         holder.inventory.items[player.character.id] = dbItems;
         console.log(`[INVENTORY] Для ${player.name} загружены предметы организации (${dbItems.length} шт.)`);
     },
+    async initHouseInventory(holder) {
+        holder.inventory.items = []; // предметы
+
+        var dbItems = await db.Models.HouseInventory.findAll({
+            where: {
+                houseId: holder.houseInfo.id
+            },
+            order: [
+                ['parentId', 'ASC']
+            ],
+            include: [{
+                    model: db.Models.HouseInventoryParam,
+                    as: "params"
+                },
+                {
+                    model: db.Models.InventoryItem,
+                    as: "item"
+                }
+            ]
+        });
+        holder.inventory.items = dbItems;
+        console.log(`[INVENTORY] Для дома #${holder.houseInfo.id} загружены предметы (${dbItems.length} шт.)`);
+    },
     convertServerToClientItems(dbItems) {
         // console.log("convertServerToClientItems");
         var clientItems = {};
@@ -1009,6 +1032,23 @@ module.exports = {
                     items: {}
                 }, ];
             case "Faction":
+                return [{
+                        cols: 8,
+                        rows: 9,
+                        items: {}
+                    },
+                    {
+                        cols: 8,
+                        rows: 9,
+                        items: {}
+                    },
+                    {
+                        cols: 16,
+                        rows: 5,
+                        items: {}
+                    },
+                ];
+            case "House":
                 return [{
                         cols: 8,
                         rows: 9,
