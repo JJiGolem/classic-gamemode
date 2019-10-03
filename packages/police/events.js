@@ -423,8 +423,7 @@ module.exports = {
         var dist = player.dist(rec.position);
         if (dist > 20) return notifs.error(player, `${rec.name} далеко`, `Наручники`);
         var character = player.character;
-        if (!factions.isPoliceFaction(character.factionId) && !factions.isFibFaction(character.factionId)
-            && !factions.isArmyFaction(character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент/армии`, `Наручники`);
+        if (!police.cuffsFactions.includes(character.factionId)) return notifs.error(player, `Нет прав для использования`, `Наручники`);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, `Наручники`);
 
         if (!rec.cuffs) {
@@ -451,8 +450,7 @@ module.exports = {
     "police.follow": (player, recId) => {
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Следование`);
-        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Следование`);
-
+        if (!police.cuffsFactions.includes(player.character.factionId)) return notifs.error(player, `Нет прав для использования`, `Наручники`);
         if (!rec.isFollowing) {
             if (!rec.cuffs) return notifs.error(player, `${rec.name} не в наручниках`, `Следование`);
             rec.isFollowing = true;
@@ -510,11 +508,6 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Арест`);
         if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции`, `Арест`);
 
-        if (rec.arrestTime > 0) {
-            console.log("stopArrest")
-            // rec.utils.clearArrest();
-            // return rec.utils.info(`${player.name} выпустил Вас на свободу`);
-        }
         if (!rec.character.wanted) return notifs.error(player, `${rec.name} не преступник`, `Арест`);
 
         var cell = police.getNearCell(player);
@@ -545,7 +538,7 @@ module.exports = {
     // арестовать в тюрьму за городом
     "police.jail.arrest": (player, recId) => {
         var rec = mp.players.at(recId);
-        if (!rec  || !rec.character) return notifs.error(player, `Гражданин не найден`, `Арест`);
+        if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Арест`);
         if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Арест`);
 
         if (rec.arrestTime > 0) {
@@ -585,7 +578,7 @@ module.exports = {
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} уже в авто`, header);
-        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, header);
+        if (!police.cuffsFactions.includes(player.character.factionId)) return notifs.error(player, `Нет прав`, header);
 
         var veh = mp.vehicles.getNear(player);
         if (!veh) return notifs.error(player, `Авто не найдено`, header);
@@ -611,7 +604,7 @@ module.exports = {
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         if (!rec.vehicle) return notifs.error(player, `${rec.name} не в авто`, header);
-        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, header);
+        if (!police.cuffsFactions.includes(player.character.factionId)) return notifs.error(player, `Нет прав`, header);
 
         rec.removeFromVehicle();
         notifs.success(player, `${rec.name} высажен из авто`, header);
