@@ -855,7 +855,7 @@ module.exports = {
             });
         });
         // у всех шкафов организаций
-        call('factions').factions.holders.forEach(holder => {
+        call('factions').holders.forEach(holder => {
             for (var characterId in holder.inventory.items) {
                 var list = holder.inventory.items[characterId];
                 if (!list.length) return;
