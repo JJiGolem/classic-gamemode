@@ -375,7 +375,7 @@ module.exports = {
     },
     spawn(player) {
         var settings = player.character.settings;
-        var house = houses.getHouseByCharId(player.character.id).info;
+        var house = houses.getHouseByCharId(player.character.id);
 
         if (settings.spawn == 1 && !house) settings.spawn = 0;
         if (settings.spawn == 2 && !player.character.factionId) settings.spawn = 0;
@@ -386,9 +386,9 @@ module.exports = {
                 player.dimension = 0;
                 break;
             case 1: // дом
-                var pos = new mp.Vector3(house.Interior.x, house.Interior.y, house.Interior.z);
+                var pos = new mp.Vector3(house.info.Interior.x, house.info.Interior.y, house.info.Interior.z);
                 player.spawn(pos);
-                player.dimension = house.id;
+                player.dimension = house.info.id;
                 break;
             case 2: //организация
                 var pos = factions.getMarker(player.character.factionId).position;
