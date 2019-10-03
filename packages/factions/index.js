@@ -178,9 +178,11 @@ module.exports = {
         colshape.onEnter = (player) => {
             if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
 
+            player.call("prompt.showByName", [`faction_items_holder`]);
             mp.events.call("faction.holder.items.request", player, faction);
         };
         colshape.onExit = (player) => {
+            player.call(`prompt.hide`);
             mp.events.call("faction.holder.items.clear", player);
         };
         holder.colshape = colshape;
