@@ -147,7 +147,7 @@ module.exports = {
         var rank = factions.getRank(player.character.factionId, mafia.bizWarRank);
         if (player.character.factionRank < rank.id) return out(`Доступно с ранга ${rank.name}`);
         var rec = mp.players.at(data.recId);
-        if (!rec) return out(`Игрок #${data.recId} не найден`);
+        if (!rec || !rec.character) return out(`Игрок #${data.recId} не найден`);
         if (player.dist(rec.position) > 10) return out(`${rec.name} далеко`);
         if (!factions.isMafiaFaction(rec.character.factionId)) return out(`${rec.name} не член мафии`);
         if (rec.character.factionRank < rank.id) return out(`${rec.name} еще мал для таких сделок`);
@@ -179,7 +179,7 @@ module.exports = {
         delete player.offer;
 
         var seller = mp.players.at(offer.playerId);
-        if (!seller) return out(`Мафиозник не найден`);
+        if (!seller || !seller.character) return out(`Мафиозник не найден`);
         if (player.dist(seller.position) > 10) return out(`${seller.name} далеко`);
         if (player.character.cash < offer.sum) return out(`Необходимо $${sum}`);
 
@@ -202,7 +202,7 @@ module.exports = {
         if (!player.offer) return;
         var inviter = mp.players.at(player.offer.playerId);
         delete player.offer;
-        if (!inviter) return;
+        if (!inviter || !inviter.character) return;
         notifs.info(player, `Предложение отклонено`);
         notifs.info(inviter, `${player.name} отклонил предложение`);
     },

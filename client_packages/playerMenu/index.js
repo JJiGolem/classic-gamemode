@@ -23,6 +23,9 @@ mp.playerMenu = {
     setWanted(wanted) {
         mp.callCEFV(`playerMenu.setWanted(${wanted})`);
     },
+    setFines(fines) {
+        mp.callCEFV(`playerMenu.setFines(${fines})`);
+    },
     setBiz(biz = null) {
         mp.callCEFV(`playerMenu.setBiz('${JSON.stringify(biz)}')`);
     },
@@ -145,6 +148,9 @@ mp.events.add({
     },
     "playerMenu.setAdmin": (data) => {
         mp.playerMenu.setAdmin(data.admin);
+    },
+    "playerMenu.setFines": (data) => {
+        mp.playerMenu.setFines(data.fines);
     },
     "playerMenu.setLaw": (data) => {
         mp.playerMenu.setLaw(data.law);

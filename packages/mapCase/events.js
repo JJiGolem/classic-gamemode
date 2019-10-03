@@ -104,7 +104,7 @@ module.exports = {
         if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
         var header = `Установление личности`;
         var rec = mp.players.at(recId);
-        if (!rec) return out.error(player, `Игрок <span>#${recId}</span> не найден`);
+        if (!rec || !rec.character) return out.error(player, `Игрок <span>#${recId}</span> не найден`);
 
         // TODO: Лишний запрос в БД
         var character = await db.Models.Character.findByPk(rec.character.id, {
@@ -148,8 +148,10 @@ module.exports = {
             price: data.price
         });
         var rec = mp.players.getBySqlId(data.recId);
-        if (rec) rec.character.Fines.push(fine);
-        else rec = data.recId;
+        if (rec) {
+            rec.character.Fines.push(fine);
+            mp.events.call("player.fines.changed", rec);
+        } else rec = data.recId;
 
         notifs.info(rec, `${player.name} выписал вам штраф на сумму $${fine.price} (${fine.cause})`, `Штраф`);
         var text = `Штраф на сумму <span>${fine.price}$</span><br/>выдан <span>${data.recName}</span><br/> по причине <span>${data.cause}</span>`;
@@ -346,7 +348,7 @@ module.exports = {
         if (!factions.isFibFaction(player.character.factionId)) return out.error(player, `Вы не являетесь агентом`);
         var header = `Установление личности`;
         var rec = mp.players.at(recId);
-        if (!rec) return out.error(player, `Игрок <span>#${recId}</span> не найден`);
+        if (!rec || !rec.character) return out.error(player, `Игрок <span>#${recId}</span> не найден`);
 
         // TODO: Лишний запрос в БД
         var character = await db.Models.Character.findByPk(rec.character.id, {
@@ -389,8 +391,10 @@ module.exports = {
             price: data.price
         });
         var rec = mp.players.getBySqlId(data.recId);
-        if (rec) rec.character.Fines.push(fine);
-        else rec = data.recId;
+        if (rec) {
+            rec.character.Fines.push(fine);
+            mp.events.call("player.fines.changed", rec);
+        } else rec = data.recId;
 
         notifs.info(rec, `${player.name} выписал вам штраф на сумму $${fine.price} (${fine.cause})`, `Штраф`);
         var text = `Штраф на сумму <span>${fine.price}$</span><br/>выдан <span>${data.recName}</span><br/> по причине <span>${data.cause}</span>`;

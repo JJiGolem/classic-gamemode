@@ -823,7 +823,7 @@ module.exports = {
                 if (i != -1) veh.inventory.items.splice(i, 1);
                 if (veh.bootPlayerId != null) {
                     var rec = mp.players.at(veh.bootPlayerId);
-                    if (!rec) return;
+                    if (!rec || !rec.character) return;
                     rec.call(`inventory.deleteEnvironmentItem`, [item.id]);
                 }
             });
@@ -871,7 +871,7 @@ module.exports = {
                 clearTimeout(obj.destroyTimer);
                 obj.destroy();
                 var rec = mp.players.at(obj.playerId);
-                if (!rec) return;
+                if (!rec || !rec.character) return;
                 var i = rec.inventory.ground.indexOf(obj);
                 if (i != -1) rec.inventory.ground.splice(i, 1);
             }
@@ -1037,7 +1037,7 @@ module.exports = {
     // урон климата (если игрок одет не по погоде)
     checkClimeDamage(player, temp, out) {
         if (player.vehicle || player.dimension) return;
-        
+
         var clime = Object.assign({}, this.playerClime);
 
         var hat = player.inventory.items.find(x => x.itemId == 6 && !x.parentId);

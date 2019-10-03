@@ -145,6 +145,8 @@ var interactionMenu = new Vue({
 
                     } else if (item.text == 'Организация') {
                         interactionMenu.menu = interactionMenu.menus["faction"];
+                    } else if (item.text == 'Government') {
+                        interactionMenu.menu = interactionMenu.menus["government"];
                     } else if (item.text == 'Police') {
                         interactionMenu.menu = interactionMenu.menus["police"];
                     } else if (item.text == 'FIB') {
@@ -220,6 +222,27 @@ var interactionMenu = new Vue({
                     {
                         text: "Ранг",
                     }
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    mp.trigger(`interactionMenu.onClick`, this.name, item.text);
+                    mp.trigger(`interaction.menu.close`);
+                }
+            },
+            "government": {
+                name: "government",
+                items: [{
+                        text: "Наручники",
+                    },
+                    {
+                        text: "Освобождение",
+                    },
+                    {
+                        text: "Следование",
+                    },
+                    {
+                        text: "В авто",
+                    },
                 ],
                 handler(index) {
                     var item = this.items[index];
@@ -412,6 +435,7 @@ var interactionMenu = new Vue({
         faction(val) {
             if (!val) {
                 this.deleteItem("player_interaction", "Организация");
+                this.deleteItem("player_interaction", "Government");
                 this.deleteItem("player_interaction", "Police");
                 this.deleteItem("player_interaction", "FIB");
                 this.deleteItem("player_interaction", "Hospital");
@@ -426,6 +450,14 @@ var interactionMenu = new Vue({
             this.addItems("player_interaction", {
                 text: "Организация"
             });
+
+            if (val == 1) { // government
+                this.addItems("player_interaction", {
+                    text: "Government"
+                });
+            } else this.deleteItem("player_interaction", "Government");
+
+
             if (val == 2 || val == 3) { // police
                 this.addItems("player_interaction", {
                     text: "Police"

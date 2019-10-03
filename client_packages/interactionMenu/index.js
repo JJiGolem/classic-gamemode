@@ -31,6 +31,22 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
         } else if (itemName == 'Ранг') {
             mp.events.callRemote(`factions.giverank.show`, entity.remoteId);
         }
+    } else if (menuName == "government") {
+        if (!entity) return;
+        if (entity.type != 'player') return;
+
+        if (itemName == 'Наручники') {
+            var data = {
+                recId: entity.remoteId
+            };
+            mp.events.callRemote(`police.cuffs`, JSON.stringify(data));
+        } else if (itemName == 'Освобождение') {
+            mp.events.callRemote(`police.follow`, entity.remoteId);
+        } else if (itemName == 'Следование') {
+            mp.events.callRemote(`police.follow`, entity.remoteId);
+        } else if (itemName == 'В авто') {
+            mp.events.callRemote(`police.vehicle.put`, entity.remoteId);
+        }
     } else if (menuName == "police") {
         if (!entity) return;
         if (entity.type != 'player') return;

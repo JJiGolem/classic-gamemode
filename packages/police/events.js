@@ -419,11 +419,11 @@ module.exports = {
     "police.cuffs": (player, data) => {
         if (typeof data == 'string') data = JSON.parse(data);
         var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
-        if (!rec) return notifs.error(player, `Гражданин не найден`, `Наручники`);
+        if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Наручники`);
         var dist = player.dist(rec.position);
         if (dist > 20) return notifs.error(player, `${rec.name} далеко`, `Наручники`);
         var character = player.character;
-        if (!factions.isPoliceFaction(character.factionId) && !factions.isFibFaction(character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Наручники`);
+        if (!police.cuffsFactions.includes(character.factionId)) return notifs.error(player, `Нет прав для использования`, `Наручники`);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, `Наручники`);
 
         if (!rec.cuffs) {
@@ -449,9 +449,8 @@ module.exports = {
     },
     "police.follow": (player, recId) => {
         var rec = mp.players.at(recId);
-        if (!rec) return notifs.error(player, `Гражданин не найден`, `Следование`);
-        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Следование`);
-
+        if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Следование`);
+        if (!police.cuffsFactions.includes(player.character.factionId)) return notifs.error(player, `Нет прав для использования`, `Наручники`);
         if (!rec.isFollowing) {
             if (!rec.cuffs) return notifs.error(player, `${rec.name} не в наручниках`, `Следование`);
             rec.isFollowing = true;
@@ -467,7 +466,7 @@ module.exports = {
     },
     "police.wanted": (player, recId) => {
         var rec = mp.players.at(recId);
-        if (!rec) return notifs.error(player, `Гражданин не найден`, `Следование`);
+        if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Следование`);
         if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Следование`);
 
         police.setWanted(rec, rec.character.wanted + 1);
@@ -491,7 +490,7 @@ module.exports = {
     },
     "police.search": (player, recId) => {
         var rec = mp.players.at(recId);
-        if (!rec) return notifs.error(player, `Игрок #${recId} не найден`);
+        if (!rec || !rec.character) return notifs.error(player, `Игрок #${recId} не найден`);
         if (!rec.character.wanted) return notifs.error(player, `${rec.name} не в розыске`);
         if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник`);
         if (rec.dimension != 0) return notifs.error(player, `${rec.name} достаточно хорошо скрыт`);
@@ -506,14 +505,9 @@ module.exports = {
     // арестовать в КПЗ ЛСПД
     "police.cells.arrest": (player, recId) => {
         var rec = mp.players.at(recId);
-        if (!rec) return notifs.error(player, `Гражданин не найден`, `Арест`);
+        if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Арест`);
         if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции`, `Арест`);
 
-        if (rec.arrestTime > 0) {
-            console.log("stopArrest")
-            // rec.utils.clearArrest();
-            // return rec.utils.info(`${player.name} выпустил Вас на свободу`);
-        }
         if (!rec.character.wanted) return notifs.error(player, `${rec.name} не преступник`, `Арест`);
 
         var cell = police.getNearCell(player);
@@ -544,7 +538,7 @@ module.exports = {
     // арестовать в тюрьму за городом
     "police.jail.arrest": (player, recId) => {
         var rec = mp.players.at(recId);
-        if (!rec) return notifs.error(player, `Гражданин не найден`, `Арест`);
+        if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Арест`);
         if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Арест`);
 
         if (rec.arrestTime > 0) {
@@ -582,9 +576,9 @@ module.exports = {
     "police.vehicle.put": (player, recId) => {
         var header = `Посадка`;
         var rec = mp.players.at(recId);
-        if (!rec) return notifs.error(player, `Гражданин не найден`, header);
+        if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} уже в авто`, header);
-        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, header);
+        if (!police.cuffsFactions.includes(player.character.factionId)) return notifs.error(player, `Нет прав`, header);
 
         var veh = mp.vehicles.getNear(player);
         if (!veh) return notifs.error(player, `Авто не найдено`, header);
@@ -608,9 +602,9 @@ module.exports = {
     "police.vehicle.remove": (player, recId) => {
         var header = `Высадка`;
         var rec = mp.players.at(recId);
-        if (!rec) return notifs.error(player, `Гражданин не найден`, header);
+        if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         if (!rec.vehicle) return notifs.error(player, `${rec.name} не в авто`, header);
-        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, header);
+        if (!police.cuffsFactions.includes(player.character.factionId)) return notifs.error(player, `Нет прав`, header);
 
         rec.removeFromVehicle();
         notifs.success(player, `${rec.name} высажен из авто`, header);
@@ -619,7 +613,7 @@ module.exports = {
     "police.licenses.gun.give": (player, recId) => {
         var header = `Лицензия на оружие`;
         var rec = mp.players.at(recId);
-        if (!rec) return notifs.error(player, `Гражданин не найден`, header);
+        if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         var character = rec.character;
         if (character.gunLicenseDate) return notifs.error(player, `${rec.name} уже имеет лицензию`, header);
 
@@ -632,7 +626,7 @@ module.exports = {
     "police.licenses.gun.take": (player, recId) => {
         var header = `Лицензия на оружие`;
         var rec = mp.players.at(recId);
-        if (!rec) return notifs.error(player, `Гражданин не найден`, header);
+        if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         var character = rec.character;
         if (!character.gunLicenseDate) return notifs.error(player, `${rec.name} не имеет лицензию`, header);
 

@@ -1545,15 +1545,15 @@ var selectMenu = new Vue({
                 items: [{
                         text: "Раздевалка",
                     },
-                    // {
-                    //     text: "Снаряжение"
-                    // },
-                    // {
-                    //     text: "Вооружение"
-                    // },
-                    // {
-                    //     text: "Патроны"
-                    // },
+                    {
+                        text: "Снаряжение"
+                    },
+                    {
+                        text: "Вооружение"
+                    },
+                    {
+                        text: "Патроны"
+                    },
                     {
                         text: "Закрыть"
                     },
@@ -1572,12 +1572,12 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Раздевалка') {
                             selectMenu.showByName("governmentClothes");
-                            // } else if (e.itemName == 'Снаряжение') {
-                            // selectMenu.showByName("lspdItems");
-                            // } else if (e.itemName == 'Вооружение') {
-                            // selectMenu.showByName("lspdGuns");
-                            // } else if (e.itemName == 'Патроны') {
-                            // selectMenu.showByName("lspdAmmo");
+                            } else if (e.itemName == 'Снаряжение') {
+                            selectMenu.showByName("governmentItems");
+                            } else if (e.itemName == 'Вооружение') {
+                            selectMenu.showByName("governmentGuns");
+                            } else if (e.itemName == 'Патроны') {
+                            selectMenu.showByName("governmentAmmo");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
@@ -1627,6 +1627,116 @@ var selectMenu = new Vue({
                             selectMenu.show = false;
                             mp.trigger(`callRemote`, `government.storage.clothes.take`, e.itemIndex);
                         }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("governmentStorage");
+                }
+            },
+            "governmentItems": {
+                name: "governmentItems",
+                header: "Снаряжение Government",
+                items: [{
+                        text: "Аптечка"
+                    },
+                    {
+                        text: "Наручники",
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Вернуться") selectMenu.showByName("governmentStorage");
+                        else mp.trigger(`callRemote`, `government.storage.items.take`, e.itemIndex);
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("governmentStorage");
+                }
+            },
+            "governmentGuns": {
+                name: "governmentGuns",
+                header: "Вооружение Government",
+                items: [{
+                        text: "Stun Gun"
+                    },
+                    {
+                        text: "Heavy Pistol"
+                    },
+                    {
+                        text: "Assault SMG"
+                    },
+                    {
+                        text: "Advanced Rifle"
+                    },
+                    {
+                        text: "Bullpup Shotgun"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == "Вернуться") selectMenu.showByName("governmentStorage");
+                        else mp.trigger(`callRemote`, `government.storage.guns.take`, e.itemIndex);
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("governmentStorage");
+                }
+            },
+            "governmentAmmo": {
+                name: "governmentAmmo",
+                header: "Патроны Government",
+                items: [{
+                        text: "Патроны - 9mm",
+                        values: ["12 ед.", "24 ед.", "32 ед."],
+                    },
+                    {
+                        text: "Патроны - 12mm",
+                        values: ["8 ед.", "16 ед.", "24 ед."],
+                    },
+                    {
+                        text: "Патроны - 5.56mm",
+                        values: ["12 ед.", "24 ед.", "32 ед."],
+                    },
+                    {
+                        text: "Патроны - 7.62mm",
+                        values: ["10 ед.", "20 ед.", "30 ед."],
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        var values = JSON.stringify([e.itemIndex, parseInt(e.itemValue)]);
+                        if (e.itemName == "Вернуться") selectMenu.showByName("governmentStorage");
+                        else mp.trigger(`callRemote`, `government.storage.ammo.take`, values);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("governmentStorage");
                 }
             },
@@ -2375,6 +2485,9 @@ var selectMenu = new Vue({
                 header: "Снаряжение ARMY",
                 items: [{
                         text: "Аптечка"
+                    },
+                    {
+                        text: "Наручники"
                     },
                     {
                         text: "Вернуться"

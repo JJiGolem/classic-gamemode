@@ -27,7 +27,7 @@ module.exports = {
         args: "[ид_игрока]:n [минуты]:n",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
             var mins = Math.clamp(args[1], 1, 60 * 12); // 12 суток макс.
 
             notifs.info(rec, `${player.name} посадил вас на ${mins} минут`, `КПЗ`);
@@ -41,7 +41,7 @@ module.exports = {
         args: "[ид_игрока]:n [минуты]:n",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
             var mins = Math.clamp(args[1], 1, 60 * 12); // 12 суток макс.
 
             notifs.info(rec, `${player.name} посадил вас на ${mins} минут`, `Тюрьма`);
@@ -55,7 +55,7 @@ module.exports = {
         args: "[ид_игрока]:n [розыск]:n",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
             if (rec.character.wanted == args[1]) return out.error(`${rec.name} уже имеет ${args[1]} ур. розыска`, player);
             police.setWanted(rec, args[1]);
 

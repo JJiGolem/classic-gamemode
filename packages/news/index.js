@@ -52,7 +52,7 @@ module.exports = {
         if (this.liveStream.ownerId == null) return;
 
         var owner = mp.players.at(this.liveStream.ownerId);
-        if (!owner) return this.liveStream.ownerId = null;
+        if (!owner || !owner.character) return this.liveStream.ownerId = null;
         if (!this.liveStream.memberIds.includes(player.id)) return;
         if (player.dist(owner.position) > this.streamDist) return;
 

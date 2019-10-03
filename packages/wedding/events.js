@@ -31,7 +31,7 @@ module.exports = {
         if (player.spouse) return out(`Вы уже состоите в браке`);
 
         var rec = mp.players.at(recId);
-        if (!rec) return out(`Игрок #${recId} не найден`);
+        if (!rec || !rec.character) return out(`Игрок #${recId} не найден`);
         if (player.dist(rec.position) > 5) return out(`${rec.name} далеко`);
         if (rec.spouse) return out(`${rec.name} уже состоит в браке`);
         if (player.character.gender == 1) return out(`Предложение должен сделать мужчина`);
@@ -51,7 +51,7 @@ module.exports = {
         if (player.spouse) return out(`Вы уже состоите в браке`);
 
         var rec = mp.players.at(recId);
-        if (!rec) return out(`Игрок #${recId} не найден`);
+        if (!rec || !rec.character) return out(`Игрок #${recId} не найден`);
         if (player.dist(rec.position) > 5) return out(`${rec.name} далеко`);
         if (rec.spouse) return out(`${rec.name} уже состоит в браке`);
         if (player.character.gender == 1) return out(`Предложение должен сделать мужчина`);
@@ -74,7 +74,7 @@ module.exports = {
         if (player.spouse) return out(`Вы уже состоите в браке`);
         if (!player.offer || player.offer.type != "wedding") return out(`Предложение не найдено`);
         var rec = mp.players.at(player.offer.playerId);
-        if (!rec) return out(`Игрок #${recId} не найден`);
+        if (!rec || !rec.character) return out(`Игрок #${recId} не найден`);
         if (player.dist(rec.position) > 5) return out(`${rec.name} далеко`);
         if (rec.spouse) return out(`${rec.name} уже состоит в браке`);
 
@@ -85,7 +85,7 @@ module.exports = {
     "wedding.add.cancel": (player, recId) => {
         if (!player.offer || player.offer.type != "wedding") return;
         var rec = mp.players.at(player.offer.playerId);
-        if (rec) notifs.warning(rec, `${player.name} отклонила предложение руки и сердца`);
+        if (rec || !rec.character) notifs.warning(rec, `${player.name} отклонила предложение руки и сердца`);
         delete player.offer;
     },
 };

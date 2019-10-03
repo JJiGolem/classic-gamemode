@@ -108,7 +108,7 @@ module.exports = {
                 boxType = "ammo";
             } else if (player.hasAttachment("medicinesBox")) {
                 boxType = "medicines";
-            } else if (this.isBandFaction(player.character.factionId)) {
+            } else if (this.isBandFaction(player.character.factionId) && this.isArmyFaction(faction)) {
                 if (faction.ammo < this.ammoBox) return notifs.error(player, `Склад пустой`, `Склад ${faction.name}`);
                 player.addAttachment("ammoBox");
                 this.setAmmo(faction, faction.ammo - this.ammoBox);
@@ -468,6 +468,14 @@ module.exports = {
         var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60 % 60);
         if (minutes < this.payMins) return notifs.warning(player, `Зарплата не получена из-за низкой активности`, faction.name);
 
+        if (this.isBandFaction(faction) || this.isMafiaFaction(faction)) {
+            if (faction.cash < pay) return notifs.error(player, `В общаке недостаточно средств для получения зарплаты`, faction.name);
+
+            // TODO: не многовато запросов в БД получится?
+            faction.cash -= pay;
+            faction.save();
+        }
+
         money.addMoney(player, pay, (res) => {
             if (!res) return console.log(`[factions] Ошибка выдачи ЗП для ${player.name}`);
             notifs.info(player, `Зарплата: $${pay}`, faction.name);
@@ -501,5 +509,11 @@ module.exports = {
         var text = `${faction.ammo} из ${faction.maxAmmo}\n${faction.medicines} из ${faction.maxMedicines}`;
         var label = this.getWarehouse(faction.id).label;
         label.text = text;
-    }
+    },
+    addCash(faction, count) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+
+        faction.cash += count;
+        faction.save();
+    },
 };

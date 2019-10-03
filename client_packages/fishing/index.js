@@ -43,8 +43,8 @@ const checkConditions = () => {
 mp.events.add('characterInit.done', () => {
     peds.forEach((current) => {
         mp.events.call('NPC.create', current);
-        mp.events.call('fishing.game.exit');
     });
+    mp.events.call('fishing.game.exit');
 });
 
 mp.events.add('render', () => {
@@ -59,7 +59,6 @@ mp.events.add('render', () => {
                     z: localPlayer.position.z
                 }
                 if (Math.abs(mp.game.water.getWaterHeight(point.x, point.y, point.z, 0)) > 0 && mp.game.gameplay.getGroundZFor3dCoord(point.x, point.y, point.z, 0.0, false) < 0) {
-                    mp.console(mp.game.gameplay.getGroundZFor3dCoord(point.x, point.y, point.z, 0.0, false));
                     isShowPrompt = true;
                     mp.events.call('fishing.game.menu');
                 } else {
@@ -181,6 +180,7 @@ mp.events.add('fishing.game.end', (result) => {
     playBaseAnimation(true);
     mp.events.callRemote('fishing.game.end', result);
     setTimeout(() => {
+        isStarted = false;
         mp.callCEFV(`fishing.clearData();`);
         mp.callCEFVN({ "fishing.isStarted": false });
     }, 1500);
@@ -238,9 +238,6 @@ let fishingEnd = () => {
     if (isEnter && isStarted && isFetch) {
         mp.callCEFV(`fishing.endFishing();`);
         isFetch = false;
-        setTimeout(() => {
-            isStarted = false;
-        }, 1500);
     }
 }
 

@@ -7,7 +7,7 @@ module.exports = {
         args: "[ид_игрока]:n [ид_предмета]:n",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            if (!rec) return out.error(player, `Игрок #${args[0]} не найден`);
+            if (!rec || !rec.character) return out.error(player, `Игрок #${args[0]} не найден`);
             inventory.deleteItem(rec, args[1]);
         }
     },
@@ -17,7 +17,7 @@ module.exports = {
         args: "[ид_игрока]:n",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
             inventory.addItem(rec, 1, {
                 variation: 1,
                 texture: 0,
@@ -94,7 +94,7 @@ module.exports = {
         args: "[ид_игрока]:n",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
             inventory.clearItems(rec);
             out.info(`Инвентарь ${rec.name} очищен`, player);
         }
