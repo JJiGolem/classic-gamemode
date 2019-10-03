@@ -181,7 +181,7 @@ module.exports = {
             mp.events.call("faction.holder.items.request", player, faction);
         };
         colshape.onExit = (player) => {
-            mp.events.call("faction.holder.items.clear", player, faction);
+            mp.events.call("faction.holder.items.clear", player);
         };
         holder.colshape = colshape;
     },

@@ -396,7 +396,7 @@ module.exports = {
         player.call(`inventory.addEnvironmentPlace`, [place]);
     },
     // Запрос на очищение предметов в шкафу организации
-    "faction.holder.items.clear": (player, faction) => {
+    "faction.holder.items.clear": (player) => {
         player.inventory.place = {};
         player.call(`inventory.deleteEnvironmentPlace`, [-player.character.id]);
     },
@@ -411,6 +411,7 @@ module.exports = {
     },
     "player.faction.changed": (player) => {
         mp.events.call("faction.holder.items.destroy", player);
+        mp.events.call("faction.holder.items.clear", player);
         mp.events.call("faction.holder.items.init", player);
     },
     "death.spawn": (player) => {
