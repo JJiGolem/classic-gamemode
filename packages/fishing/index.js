@@ -27,48 +27,57 @@ let fishingPlace = {
 const ROD_ID = 5;
 
 module.exports = {
-    init() {
+    async init() {
         this.createFishingMenuPlace();
+
+        this.fishes = await db.Models.Fish.findAll();
     },
     rodPrice: 100,
-    fishesTypes: [
-        {
-            name: 'Окунь',
-            price: 10,
-            minWeight: 0.8,
-            maxWeight: 2,
-        },
-        {
-            name: 'Мальма',
-            price: 13,
-            minWeight: 0.7,
-            maxWeight: 2.1,
-        },
-        {
-            name: 'Лосось',
-            price: 17,
-            minWeight: 1.3,
-            maxWeight: 3.4,
-        },
-        {
-            name: 'Тунец',
-            price: 20,
-            minWeight: 1.7,
-            maxWeight: 3.8,
-        },
-        {
-            name: 'Скумбрия',
-            price: 25,
-            minWeight: 1.2,
-            maxWeight: 1.9,
-        },
-        {
-            name: 'Сом',
-            price: 30,
-            minWeight: 2.5,
-            maxWeight: 5.3,
-        },
-    ],
+    fishes: [],
+    // fishesTypes: [
+    //     {
+    //         name: 'Окунь',
+    //         price: 10,
+    //         minWeight: 0.8,
+    //         maxWeight: 2,
+    //         // chance: 0.9
+    //     },
+    //     {
+    //         name: 'Мальма',
+    //         price: 13,
+    //         minWeight: 0.7,
+    //         maxWeight: 2.1,
+    //         // chance: 0.7
+    //     },
+    //     {
+    //         name: 'Лосось',
+    //         price: 17,
+    //         minWeight: 1.3,
+    //         maxWeight: 3.4,
+    //         // chance: 0.5
+    //     },
+    //     {
+    //         name: 'Тунец',
+    //         price: 20,
+    //         minWeight: 1.7,
+    //         maxWeight: 3.8,
+    //         // chance: 0.4
+    //     },
+    //     {
+    //         name: 'Скумбрия',
+    //         price: 25,
+    //         minWeight: 1.2,
+    //         maxWeight: 1.9,
+    //         // chance: 0.2
+    //     },
+    //     {
+    //         name: 'Сом',
+    //         price: 30,
+    //         minWeight: 2.5,
+    //         maxWeight: 5.3,
+    //         // chance: 0.1
+    //     },
+    // ],
     getRodId() {
         return ROD_ID;
     },
@@ -117,7 +126,7 @@ module.exports = {
             fishes.forEach(fish => {
                 let fishName = inventory.getParam(fish, 'name').value;
                 let fishWeight = inventory.getParam(fish, 'weight').value;
-                let fishPrice = this.fishesTypes.find(fish => fish.name == fishName).price;
+                let fishPrice = this.fishes.find(fish => fish.name == fishName).price;
                 sum += fishPrice * fishWeight;
             });
 

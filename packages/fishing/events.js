@@ -41,14 +41,14 @@ module.exports = {
 
         player.call('fishing.game.enter');
     },
-    "fishing.game.start": (player) => {
+    "fishing.game.start": async (player) => {
         if (!player.character) return;
 
         let rod = inventory.getItemByItemId(player, fishing.getRodId());
         let health = inventory.getParam(rod, 'health').value;
         inventory.updateParam(player, rod, 'health', health - 5);
 
-        fish = fishing.fishesTypes[utils.randomInteger(0, fishing.fishesTypes.length - 1)];
+        fish = fishing.fishes[utils.randomInteger(0, fishing.fishes.length - 1)];
 
         let zone = utils.randomInteger(10, 20);
         let speed = parseInt(health / 5);
