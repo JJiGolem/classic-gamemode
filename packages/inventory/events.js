@@ -405,6 +405,14 @@ module.exports = {
         var holder = factions.getHolder(player.character.factionId);
         delete holder.inventory.items[player.character.id];
     },
+    // Уничтожение предметов в шкафу организациий
+    "faction.holder.items.destroy": (player) => {
+        factions.destroyHolderItems(player);
+    },
+    "player.faction.changed": (player) => {
+        mp.events.call("faction.holder.items.destroy", player);
+        mp.events.call("faction.holder.items.init", player);
+    },
     "death.spawn": (player) => {
         if (!player.character) return;
         var weapons = inventory.getArrayWeapons(player);

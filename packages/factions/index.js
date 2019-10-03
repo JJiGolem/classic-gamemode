@@ -544,4 +544,17 @@ module.exports = {
         faction.cash += count;
         faction.save();
     },
+    destroyHolderItems(player) {
+        var count = 0;
+        this.holders.forEach(holder => {
+            var items = holder.inventory.items[player.character.id];
+            if (!items) return;
+            count += items.length;
+            items.forEach(item => item.destroy());
+            delete holder.inventory.items[player.character.id];
+        });
+
+        if (!count) return;
+        notifs.warning(player, `Предмет из шкафа потеряны (${count} шт.)`, `Организация`);
+    },
 };
