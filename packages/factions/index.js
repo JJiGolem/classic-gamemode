@@ -108,7 +108,7 @@ module.exports = {
                 boxType = "ammo";
             } else if (player.hasAttachment("medicinesBox")) {
                 boxType = "medicines";
-            } else if (this.isBandFaction(player.character.factionId)) {
+            } else if (this.isBandFaction(player.character.factionId) && this.isArmyFaction(faction)) {
                 if (faction.ammo < this.ammoBox) return notifs.error(player, `Склад пустой`, `Склад ${faction.name}`);
                 player.addAttachment("ammoBox");
                 this.setAmmo(faction, faction.ammo - this.ammoBox);
