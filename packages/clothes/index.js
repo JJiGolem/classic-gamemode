@@ -80,4 +80,25 @@ module.exports = {
         if (!el) el = this.list[0][type].find(x => x.id == id);
         return el;
     },
+    getClientList() {
+        var clientList = {};
+        for (var sex in this.list) {
+            clientList[sex] = {};
+            for (var type in this.list[sex]) {
+                clientList[sex][type] = [];
+                var list = this.list[sex][type];
+                if (!list.length) continue;
+                var keys = Object.keys(list[0].dataValues);
+                list.forEach(el => {
+                    var obj = {};
+                    keys.forEach(key => {
+                        obj[key] = el[key];
+                    });
+                    clientList[sex][type].push(obj);
+                });
+            }
+        }
+
+        return clientList;
+    },
 };
