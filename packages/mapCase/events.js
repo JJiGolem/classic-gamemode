@@ -148,8 +148,10 @@ module.exports = {
             price: data.price
         });
         var rec = mp.players.getBySqlId(data.recId);
-        if (rec) rec.character.Fines.push(fine);
-        else rec = data.recId;
+        if (rec) {
+            rec.character.Fines.push(fine);
+            mp.events.call("player.fines.changed", rec);
+        } else rec = data.recId;
 
         notifs.info(rec, `${player.name} выписал вам штраф на сумму $${fine.price} (${fine.cause})`, `Штраф`);
         var text = `Штраф на сумму <span>${fine.price}$</span><br/>выдан <span>${data.recName}</span><br/> по причине <span>${data.cause}</span>`;
@@ -389,8 +391,10 @@ module.exports = {
             price: data.price
         });
         var rec = mp.players.getBySqlId(data.recId);
-        if (rec) rec.character.Fines.push(fine);
-        else rec = data.recId;
+        if (rec) {
+            rec.character.Fines.push(fine);
+            mp.events.call("player.fines.changed", rec);
+        } else rec = data.recId;
 
         notifs.info(rec, `${player.name} выписал вам штраф на сумму $${fine.price} (${fine.cause})`, `Штраф`);
         var text = `Штраф на сумму <span>${fine.price}$</span><br/>выдан <span>${data.recName}</span><br/> по причине <span>${data.cause}</span>`;

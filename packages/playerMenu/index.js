@@ -25,6 +25,7 @@ module.exports = {
             gender: player.character.gender,
             cash: player.character.cash,
             wanted: player.character.wanted,
+            fines: player.character.Fines.length,
             law: player.character.law,
             crimes: player.character.crimes,
             narcotism: player.character.narcotism,
@@ -249,4 +250,11 @@ module.exports = {
 
         player.call(`playerMenu.setSpouse`, [data]);
     },
+    setFines(player) {
+        var data = {
+            fines: player.character.Fines.length
+        };
+
+        player.call(`playerMenu.setFines`, [data]);
+    }
 };

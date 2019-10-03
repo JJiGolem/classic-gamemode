@@ -278,6 +278,10 @@ let statistics = {
         head: "Преступления",
         value: "-"
     },
+    "fines": {
+        head: "Штрафы",
+        value: "-"
+    },
     "narcotism": {
         head: "Наркозависимость",
         value: "-"
@@ -575,6 +579,7 @@ var playerMenu = new Vue({
             statistics["wanted"].value = `${stats.wanted} зв.`;
             statistics["law"].value = stats.law;
             statistics["crimes"].value = stats.crimes;
+            statistics["fines"].value = stats.fines;
             statistics["narcotism"].value = stats.narcotism;
             statistics["nicotine"].value = stats.nicotine;
 
@@ -611,10 +616,13 @@ var playerMenu = new Vue({
             statistics["jobName"].value = data.jobName || "-";
         },
         setWanted(wanted) {
-            var oldWanted = parseInt(statistics[6].value);
+            var oldWanted = parseInt(statistics["wanted"].value);
             statistics["wanted"].value = `${wanted} зв.`;
 
-            if (wanted > oldWanted) statistics[8].value += wanted - oldWanted;
+            if (wanted > oldWanted) statistics["crimes"].value += wanted - oldWanted;
+        },
+        setFines(fines) {
+            statistics["fines"].value = fines;
         },
         setLaw(law) {
             statistics["law"].value = law;
