@@ -200,6 +200,41 @@ module.exports = {
             factions.setAmmo(faction, faction.ammo - government.itemAmmo);
         });
     },
+    "government.storage.guns.take": (player, index) => {
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Government`);
+        if (!factions.isGovernmentFaction(player.character.factionId)) return notifs.error(player, `Вы не служите`, `Склад Government`);
+
+        var character = player.character;
+        var faction = factions.getFaction(character.factionId);
+        var header = `Склад ${faction.name}`;
+
+        if (faction.ammo < government.gunAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
+
+        var itemIds = [19, 80, 87, 100, 93];
+        var weaponIds = ["weapon_stungun", "weapon_heavypistol", "weapon_assaultsmg", "weapon_advancedrifle", "weapon_bullpupshotgun"];
+        index = Math.clamp(index, 0, itemIds.length - 1);
+        var itemId = itemIds[index];
+
+        var gunName = inventory.getInventoryItem(itemId).name;
+        var guns = inventory.getArrayByItemId(player, itemId);
+
+        if (guns.length > 0) return notifs.error(player, `Вы уже имеете ${gunName}`, header);
+
+        inventory.fullDeleteItemsByParams(itemId, ["faction", "owner"], [character.factionId, character.id]);
+        var params = {
+            weaponHash: mp.joaat(weaponIds[index]),
+            ammo: 0,
+            faction: character.factionId,
+            owner: character.id
+        };
+
+        inventory.addItem(player, itemId, params, (e) => {
+            if (e) return notifs.error(player, e, header);
+
+            notifs.success(player, `Вам выдано оружие ${gunName}`, header);
+            factions.setAmmo(faction, faction.ammo - government.gunAmmo);
+        });
+    },
     "government.storage.ammo.take": (player, values) => {
         values = JSON.parse(values);
         var index = values[0];

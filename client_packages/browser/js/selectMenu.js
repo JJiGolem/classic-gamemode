@@ -1664,7 +1664,19 @@ var selectMenu = new Vue({
                 name: "governmentGuns",
                 header: "Вооружение Government",
                 items: [{
-                        text: "TODO"
+                        text: "Stun Gun"
+                    },
+                    {
+                        text: "Heavy Pistol"
+                    },
+                    {
+                        text: "Assault SMG"
+                    },
+                    {
+                        text: "Advanced Rifle"
+                    },
+                    {
+                        text: "Bullpup Shotgun"
                     },
                     {
                         text: "Вернуться"
