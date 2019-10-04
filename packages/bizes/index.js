@@ -123,7 +123,9 @@ let bizUpdateCashBox = async function(id, money) {
         else {
             factionMoney = parseInt(factionMoney);
         }
-        factions.addCash(biz.info.factionId, factionMoney);
+        if (factionMoney > 0) {
+            factions.addCash(biz.info.factionId, factionMoney);
+        }
     }
     let bizMoney = money - factionMoney;
     biz.info.cashBox += bizMoney;
