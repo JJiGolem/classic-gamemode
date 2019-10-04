@@ -297,6 +297,10 @@ let houseInfo = [{
         value: "-",
     },
     {
+        head: "Улица",
+        value: "-",
+    },
+    {
         head: "Класс",
         value: "-",
     },
@@ -544,6 +548,10 @@ var playerMenu = new Vue({
                 houseInfo = [{
                         head: "Номер",
                         value: house.id,
+                    },
+                    {
+                        head: "Улица",
+                        value: house.street,
                     },
                     {
                         head: "Класс",

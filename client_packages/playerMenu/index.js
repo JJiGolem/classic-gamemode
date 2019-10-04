@@ -9,6 +9,7 @@
 
 mp.playerMenu = {
     init(data) {
+        if (data.house) data.house.street = mp.utils.getStreetName(data.house.pos)
         mp.callCEFV(`playerMenu.init('${JSON.stringify(data)}')`);
     },
     setFaction(data) {
@@ -30,6 +31,7 @@ mp.playerMenu = {
         mp.callCEFV(`playerMenu.setBiz('${JSON.stringify(biz)}')`);
     },
     setHouse(house = null) {
+        if (house) house.street = mp.utils.getStreetName(house.pos);
         mp.callCEFV(`playerMenu.setHouse('${JSON.stringify(house)}')`);
     },
     setSkills(skills) {

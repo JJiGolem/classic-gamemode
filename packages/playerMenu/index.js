@@ -61,6 +61,7 @@ module.exports = {
             var garage = house.info.Interior.Garage;
             data.house = {
                 id: house.info.id,
+                pos: house.enter.marker.position,
                 class: house.info.Interior.class,
                 rooms: house.info.Interior.numRooms,
                 carPlaces: (garage) ? garage.carPlaces : 0,
@@ -111,6 +112,7 @@ module.exports = {
             var garage = house.info.Interior.Garage;
             data.house = {
                 id: house.info.id,
+                pos: house.enter.marker.position,
                 class: house.info.Interior.class,
                 rooms: house.info.Interior.numRooms,
                 carPlaces: (garage) ? garage.carPlaces : 0,
