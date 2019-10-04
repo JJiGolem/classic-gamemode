@@ -132,6 +132,8 @@ module.exports = {
         }
         if (topParams.undershirt == -1) delete topParams.undershirt;
         if (topParams.uTexture == -1) delete topParams.uTexture;
+        if (topParams.decal == -1) delete topParams.decal;
+        if (topParams.dTexture == -1) delete topParams.dTexture;
         if (topParams.tTexture == -1) delete topParams.tTexture;
 
         hatParams.faction = faction.id;

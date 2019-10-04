@@ -851,7 +851,10 @@ module.exports = {
     },
     // Полное удаление предметов инвентаря с сервера
     fullDeleteItemsByParams(itemIds, keys, values) {
-        // debug(`fullDeleteItemsByParams`)
+        debug(`fullDeleteItemsByParams`)
+        debug(itemIds)
+        debug(keys)
+        debug(values)
         if (itemIds && !Array.isArray(itemIds)) itemIds = [itemIds];
         if (!Array.isArray(keys)) keys = [keys];
         if (!Array.isArray(values)) values = [values];
