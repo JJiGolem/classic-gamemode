@@ -645,6 +645,7 @@
     padding-bottom: 1.3vh;
     margin: 2vh auto 0 auto;
     width: fit-content;
+    height: fit-content;
 }
 
 #player-menu .sidebar-win .btn:hover {
@@ -697,16 +698,30 @@
     color: #34DE3B;
 }
 
+#player-menu .settings-main {
+    display: grid;
+    grid-template-rows: min-content min-content 1fr;
+}
+
 #player-menu .settings-main .head {
     margin-bottom: 2vh;
+}
+
+#player-menu .settings-main .body {
+    overflow-y: auto;
+    margin-top: 0;
+    max-height: 33.9vh;
+}
+
+#player-menu .settings-main .btn {
+    margin-top: 0.5vh;
 }
 
 #player-menu .sidebar-win .record {
     background-color: rgba(0, 0, 0, 0.3);
     width: 75vh;
     border-radius: 1.7vh;
-    margin: auto;
-    margin-bottom: 1vh;
+    margin: 0.2vh auto 0.65vh auto;
 }
 
 #player-menu .settings-main .record {
@@ -789,7 +804,7 @@
 #player-menu .protection .record {
     display: grid;
     grid-template-columns: 1fr 30vh 1fr;
-    /*min-height: 11vh;*/
+    min-height: 11vh;
 }
 
 #player-menu .protection .record .title {
@@ -818,8 +833,13 @@
 }
 
 #player-menu .protection .record .body {
-    margin: 3vh 0;
-    height: 5vh;
+    /*margin: 3vh 0 2.4vh 0;
+    height: 5vh;*/
+    height: min-content;
+    margin: 0;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 #player-menu .protection .record .actions {
@@ -858,9 +878,15 @@
     margin: 0;
 }
 
+#player-menu .protection .record.pass {
+    /*min-height: 4vh;
+    padding: 2vh 0;*/
+}
+
 #player-menu .protection .record.pass .body {
     height: fit-content;
     font-size: 1.7vh;
+    padding: 1vh 0 2vh 0;
 }
 
 #player-menu .protection .record.pass input {

@@ -18,6 +18,8 @@ var mapCaseData = {
     ems: mapCaseEmsData,
     wnews: mapCaseWnewsData,
     fib: mapCaseFIBData,
+    ng: mapCaseNgData,
+    gover: mapCaseGoverData,
 }
 
 var mapCase = new Vue({
@@ -93,10 +95,18 @@ var mapCase = new Vue({
                 loadCount: 0
             };
 
+            if (this.loadInterval)
+                clearInterval(this.loadInterval);
+
             this.loadInterval = setInterval(() => {
+
                 if (this.loadMod.loadCount % 2 == 0)
                     this.loadMod.waitingTime--;
-
+                if ((this.loadMod.waitingTime < 0 || !this.loadMod.waitingTime) && this.loadMod.loadCount > 18) {
+                    this.hideLoad();
+                    this.showRedMessage("Непредвиденная ошибка сервера");
+                    return;
+                }
                 this.loadMod.loadCount++;
             }, 500);
 
@@ -295,7 +305,7 @@ Vue.component('map-case-calls', {
 });
 
 // for tests
-/*mapCase.type = "fib";
+/*mapCase.type = "gover";
 mapCase.show = true;
 mapCase.enable = true;
 mapCase.userName = "user"*/

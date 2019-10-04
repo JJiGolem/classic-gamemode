@@ -793,6 +793,8 @@
     <link rel="stylesheet" type="text/css" href="css/mapCasePd.css" />
     <link rel="stylesheet" type="text/css" href="css/mapCaseFIB.css" />
     <link rel="stylesheet" type="text/css" href="css/mapCaseEms.css" />
+    <link rel="stylesheet" type="text/css" href="css/mapCaseNg.css" />
+    <link rel="stylesheet" type="text/css" href="css/mapCaseGover.css" />
     <link rel="stylesheet" type="text/css" href="css/mapCaseWNews.css" />
 
     <script type="text/x-template" id="map-case-pd-dbSearch">
@@ -990,12 +992,18 @@
             <div class="title">Профиль</div>
             <div class="body">
                 <div class="name">{{ profileData[currentMenuFocus].name }} <span>ID: {{ profileData[currentMenuFocus].id}}</span></div>
-                <div class="stars"><svg :class="{ fill: profileData[currentMenuFocus].danger >= n }" v-for="n in 5" viewBox="0 0 14 14"><path :d="star"/></svg></div>
-                <div>
-                    <div class="record" v-for="record in infoList" :key="record.key">{{ record.title }}<span>{{ profileData[currentMenuFocus][record.key] }}</span></div>
+                <div v-if="profileData[currentMenuFocus].danger" class="danger">
+                    <div class="stars"><svg :class="{ fill: profileData[currentMenuFocus].danger >= n }" v-for="n in 5" viewBox="0 0 14 14"><path :d="star"/></svg></div>
+                    <div class="cause">{{ profileData[currentMenuFocus].cause }}</div>
                 </div>
-                <div class="cause">Причина:<br />{{ profileData[currentMenuFocus].cause }}</div>
+                <div class="data-head">Информация о гражданине</div>
+                <div class="data">
+                    <div class="wrap">
+                        <div class="record" v-for="record in infoList" :key="record.key">{{ record.title }}<span>{{ profileData[currentMenuFocus][record.key] }}</span></div>
+                    </div>
+                </div>
                 <div class="footer">
+                    <div v-if="profileData[currentMenuFocus].danger" class="btn" @click="showOnMap()"><img src="img/mapCase/radar.svg"/></div>
                     <div class="btn" @click="showOverWindow('fine')"><img src="img/mapCase/receipt.svg"/></div>
                     <div class="btn" @click="showOverWindow('wanted')"><img src="img/mapCase/handcuffs.svg"/></div>
                 </div>
@@ -1143,6 +1151,8 @@
     <script src="js/mapCaseFIB.js"></script>
     <script src="js/mapCaseEms.js"></script>
     <script src="js/mapCaseWNews.js"></script>
+    <script src="js/mapCaseNg.js"></script>
+    <script src="js/mapCaseGover.js"></script>
     <script src="js/mapCase.js"></script>
     <!-- ------------------------ ПЛАНШЕТ ПД ------------------------ -->
 
@@ -1432,18 +1442,19 @@
 
     <script type="text/x-template" id="player-menu-settings-main">
         <div class="sidebar-win settings-main">
-            <div class="head">Общие настройки</div>{{ watcher }}
-            <div class="record">
-                <div class="title">Место спавна</div>
-                <div class="slidebar val">
-                    <img class="left" src="img/playerMenu/help-arrow.svg" @click="left()"/>
-                    <div class="value">{{ spawnSettings.spawnsPull[localCurrentSpawn] }}</div>
-                    <img class="right" src="img/playerMenu/help-arrow.svg" @click="right()"/>
+            <div class="head">Общие настройки</div>
+            <div class="body">
+                <div class="record" v-for="(record, key) in localSettings">
+                    <div class="title">{{ record.head }}</div>
+                    <div v-if="record.type == 'scroll'" class="slidebar val">
+                        <img class="left" src="img/playerMenu/help-arrow.svg" @click="left(key)"/>
+                        <div class="value">{{ record.pull[record.value] }}</div>
+                        <img class="right" src="img/playerMenu/help-arrow.svg" @click="right(key)"/>
+                    </div>
+                    <div v-if="record.type == 'range'" class="val">
+                        <input type="range" min="0" v-model="record.value"/>
+                    </div>
                 </div>
-            </div>
-            <div class="record">
-                <div class="title">Громкость микрофона</div>
-                <div class="val"><input type="range" min="0" v-model="localMicroVolume"/></div>
             </div>
             <div :class="['btn', {disable: noChanges }]" @click="save()">Сохранить</div>
         </div>

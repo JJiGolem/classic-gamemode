@@ -150,6 +150,10 @@ Vue.component('map-case-pd-profile', {
         star: mapCaseSvgPaths.dangerStar,
     }),
     methods: {
+        showOnMap() {
+            // TODO: Показать претупника на карте.
+            mapCase.showGreenMessage ("test");
+        },
         showOverWindow(winName) {
             mapCase.currentOverWindow = `map-case-${mapCase.type}-over-${winName}`;
         },
