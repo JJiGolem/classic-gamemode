@@ -291,6 +291,7 @@ module.exports = {
     setLeader(faction, player) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         var character = player.character;
+        var oldVal = character.factionId;
         character.factionId = faction.id;
         character.factionRank = this.getMaxRank(faction).id;
         character.save();
@@ -303,7 +304,7 @@ module.exports = {
         else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
         else if (this.isNewsFaction(faction)) mp.events.call(`mapCase.news.init`, player);
 
-        mp.events.call(`player.faction.changed`, player);
+        mp.events.call(`player.faction.changed`, player, oldVal);
     },
     setBlip(faction, type, color) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
@@ -318,6 +319,7 @@ module.exports = {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         var character = player.character;
         if (character.factionId) this.fullDeleteItems(character.id, character.factionId);
+        var oldVal = character.factionId;
         character.factionId = faction.id;
         character.factionRank = this.getMinRank(faction).id;
         character.save();
@@ -330,7 +332,7 @@ module.exports = {
         else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
         else if (this.isNewsFaction(faction)) mp.events.call(`mapCase.news.init`, player);
 
-        mp.events.call(`player.faction.changed`, player);
+        mp.events.call(`player.faction.changed`, player, oldVal);
         if (player.character.job) mp.events.call(`jobs.leave`, player);
     },
     deleteMember(player) {
@@ -340,6 +342,7 @@ module.exports = {
         else if (this.isHospitalFaction(character.factionId)) require('../mapCase').removeHospitalMember(player);
         else if (this.isNewsFaction(character.factionId)) require('../mapCase').removeNewsMember(player);
         this.fullDeleteItems(character.id, character.factionId);
+        var oldVal = character.factionId;
         character.factionId = null;
         character.factionRank = null;
         character.save();
@@ -348,7 +351,7 @@ module.exports = {
         player.call(`factions.faction.set`, [null]);
         player.call(`mapCase.enable`, [false]);
 
-        mp.events.call(`player.faction.changed`, player);
+        mp.events.call(`player.faction.changed`, player, oldVal);
     },
     getMembers(player) {
         var members = [];

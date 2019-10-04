@@ -207,6 +207,10 @@ module.exports = {
         notifs.info(player, `Предложение отклонено`);
         notifs.info(inviter, `${player.name} отклонил предложение`);
     },
+    "player.faction.changed": (player, oldVal) => {
+        if (!mafia.inWar(oldVal)) return;
+        player.call(`mafia.bizWar.stop`);
+    },
     "playerDeath": (player, reason, killer) => {
         // killer = player; // for tests
         if (!killer || !killer.character) return;
