@@ -114,7 +114,7 @@ let bizUpdateCashBox = async function(id, money) {
     let biz = getBizById(id);
     if (biz == null) return;
     let factionMoney = 0;
-    if (biz.info.factionId != null && factions != null) {
+    if (biz.info.factionId != null && factions != null && money > 0) {
         factionMoney = money * factionPayMultiplier;
         if (factionMoney < 1) {
             if (factionMoney * 10 >= 5) factionMoney = 1;
