@@ -158,6 +158,12 @@ let removeProducts = async function(id, count) {
     if (biz.info.productsCount < count) return false;
     biz.info.productsCount -= count;
     await biz.info.save();
+    if (biz.info.characterId == null && biz.info.productsCount < biz.info.productsMaxCount / 2) {
+        let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
+        let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
+        let countOrder = biz.info.productsMaxCount -  biz.info.productsCount;
+        if (!await createOrder(id, countOrder, parseInt(((max + min) / 2) * countOrder))) console.log("[BIZES] Auto creating order error");
+    }
     return true;
 };
 let createOrder = async function(id, count, price) {
@@ -168,7 +174,7 @@ let createOrder = async function(id, count, price) {
     let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
     if (price < min || price > max) return false;
     biz.info.productsOrder = count;
-    biz.info.productsOrderPrice = price;
+    biz.info.productsOrderPrice = parseInt(price * count);
     await biz.info.save();
     return true;
 }
