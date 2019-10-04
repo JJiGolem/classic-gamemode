@@ -150,6 +150,7 @@ module.exports = {
         if (!rec || !rec.character) return out(`Игрок #${data.recId} не найден`);
         if (player.dist(rec.position) > 10) return out(`${rec.name} далеко`);
         if (!factions.isMafiaFaction(rec.character.factionId)) return out(`${rec.name} не член мафии`);
+        rank = factions.getRank(rec.character.factionId, mafia.bizWarRank);
         if (rec.character.factionRank < rank.id) return out(`${rec.name} еще мал для таких сделок`);
         if (player.character.factionId == rec.character.factionId) return out(`${rec.name} в вашей мафии`);
 
