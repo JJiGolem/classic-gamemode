@@ -155,6 +155,10 @@ module.exports = {
             player.call(`prompt.show`, [`Влияние вашей банды снизило цену на ${parseInt(power * 100)}%`]);
         });
     },
+    "player.faction.changed": (player, oldVal) => {
+        if (!bands.inWar(oldVal)) return;
+        player.call(`bands.capture.stop`);
+    },
     "playerDeath": (player, reason, killer) => {
         // killer = player; // for tests
         if (!killer || !killer.character) return;
