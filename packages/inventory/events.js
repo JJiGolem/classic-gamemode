@@ -422,6 +422,7 @@ module.exports = {
             var rec = mp.players.at(holder.playerId);
             if (rec && rec.character && rec.dist(holder.position) < 5) return notifs.error(player, `Со шкафом взаимодействует другой игрок`, header);
         }
+        if (player.character.id != holder.houseInfo.characterId) return notifs.error(player, `Вы не являетесь владельцем дома`, header);
 
         holder.playerId = player.id;
 
