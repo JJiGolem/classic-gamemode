@@ -299,7 +299,9 @@ module.exports = {
         player.setVariable("factionId", character.factionId);
         player.call(`factions.faction.set`, [character.factionId]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
-        if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
+        if (this.isGovernmentFaction(faction)) mp.events.call(`mapCase.gover.init`, player);
+        else if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
+        else if (this.isArmyFaction(faction)) mp.events.call(`mapCase.army.init`, player);
         else if (this.isFibFaction(faction)) mp.events.call(`mapCase.fib.init`, player);
         else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
         else if (this.isNewsFaction(faction)) mp.events.call(`mapCase.news.init`, player);
@@ -327,8 +329,10 @@ module.exports = {
         player.setVariable("factionId", character.factionId);
         player.call(`factions.faction.set`, [character.factionId]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
-        if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
+        if (this.isGovernmentFaction(faction)) mp.events.call(`mapCase.gover.init`, player);
+        else if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
         else if (this.isFibFaction(faction)) mp.events.call(`mapCase.fib.init`, player);
+        else if (this.isArmyFaction(faction)) mp.events.call(`mapCase.army.init`, player);
         else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
         else if (this.isNewsFaction(faction)) mp.events.call(`mapCase.news.init`, player);
 
@@ -337,8 +341,10 @@ module.exports = {
     },
     deleteMember(player) {
         var character = player.character;
-        if (this.isPoliceFaction(character.factionId)) require('../mapCase').removePoliceMember(player);
+        if (this.isGovernmentFaction(character.factionId)) require('../mapCase').removeGoverMember(player);
+        else if (this.isPoliceFaction(character.factionId)) require('../mapCase').removePoliceMember(player);
         else if (this.isFibFaction(character.factionId)) require('../mapCase').removeFibMember(player);
+        else if (this.isArmyFaction(character.factionId)) require('../mapCase').removeArmyMember(player);
         else if (this.isHospitalFaction(character.factionId)) require('../mapCase').removeHospitalMember(player);
         else if (this.isNewsFaction(character.factionId)) require('../mapCase').removeNewsMember(player);
         this.fullDeleteItems(character.id, character.factionId);
@@ -372,8 +378,10 @@ module.exports = {
         mp.events.call("player.factionRank.changed", player);
 
         var type = "";
-        if (this.isPoliceFaction(character.factionId)) type = "pd";
+        if (this.isGovernmentFaction(character.factionId)) type = "gover";
+        else if (this.isPoliceFaction(character.factionId)) type = "pd";
         else if (this.isFibFaction(character.factionId)) type = "fib";
+        else if (this.isArmyFaction(character.factionId)) type = "army";
         else if (this.isHospitalFaction(character.factionId)) type = "ems";
         else if (this.isNewsFaction(character.factionId)) type = "news";
         if (!type) return;

@@ -7,7 +7,11 @@ var notifs = require('../notifications');
 
 module.exports = {
     "init": () => {},
-    "characterInit.done": (player) => {},
+    "characterInit.done": (player) => {
+        if (!factions.isArmyFaction(player.character.factionId)) return;
+        // player.call(`mapCase.init`, [player.name, player.character.factionId]);
+        mp.events.call(`mapCase.army.init`, player);
+    },
     "army.storage.clothes.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Army`);
         if (!factions.isArmyFaction(player.character.factionId)) return notifs.error(player, `Вы не служите`, `Склад Army`);

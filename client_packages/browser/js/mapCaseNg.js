@@ -87,7 +87,7 @@ mapCaseNgMembersData.setRanks(["Старший медик", "Альпака", "�
 //Функция, срабатывающая при увольнение сотрудника
 //data - данные о сотруднике из записи в списке
 mapCaseNgMembersData.dismiss = (data) => {
-    mp.trigger(`callRemote`, `mapCase.ng.members.uval`, data.id);
+    mp.trigger(`callRemote`, `mapCase.army.members.uval`, data.id);
 }
 
 
@@ -96,7 +96,7 @@ mapCaseNgMembersData.dismiss = (data) => {
 mapCaseNgMembersData.lowerRank = (data) => {
     if (data.rank <= 1)
         return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет мин. ранг - ${mapCaseNgMembersData.ranks[data.rank - 1]}`);
-    mp.trigger(`callRemote`, `mapCase.ng.rank.lower`, data.id);
+    mp.trigger(`callRemote`, `mapCase.army.rank.lower`, data.id);
 }
 
 
@@ -105,7 +105,7 @@ mapCaseNgMembersData.lowerRank = (data) => {
 mapCaseNgMembersData.raiseRank = (data) => {
     if (data.rank >= mapCaseNgMembersData.ranks.length)
         return mapCase.showRedMessage(`<span>${data.name}</span><br /> имеет макс. ранг - ${mapCaseNgMembersData.ranks[data.rank - 1]}`);
-    mp.trigger(`callRemote`, `mapCase.ng.rank.raise`, data.id);
+    mp.trigger(`callRemote`, `mapCase.army.rank.raise`, data.id);
 }
 
 

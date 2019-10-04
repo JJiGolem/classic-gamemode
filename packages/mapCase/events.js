@@ -23,6 +23,67 @@ module.exports = {
             mapCase.addFibWanted(player);
         }
     },
+    "mapCase.gover.init": (player) => {
+        var ranks = factions.getRankNames(player.character.factionId);
+        player.call(`mapCase.gover.ranks.set`, [ranks]);
+
+        var members = factions.getMembers(player);
+        members = mapCase.convertMembers(members);
+        player.call(`mapCase.gover.members.add`, [members]);
+        mapCase.addGoverMember(player);
+    },
+    "mapCase.gover.rank.raise": (player, recId) => {
+        if (!factions.isGovernmentFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
+        if (!factions.canGiveRank(player)) return out.error(player, `Недостаточно прав`);
+        var header = `Повышение`;
+        var rec = mp.players.getBySqlId(recId);
+        if (!rec) return out.error(player, `Игрок #${recId} оффлайн`);
+        if (rec.id == player.id) return out.error(player, `Нельзя повысить себя`, header);
+        if (rec.character.factionRank >= player.character.factionRank - 1) return out.error(`Недостаточно прав для повышения ${rec.name}`);
+        var max = factions.getMaxRank(rec.character.factionId);
+        if (rec.character.factionRank >= max.id) return out.error(player, `${rec.name} имеет макс. ранг`);
+
+        var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank + 1);
+        factions.setRank(rec, rank.rank);
+        var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
+
+        notifs.success(rec, `${player.name} повысил вас до ${rankName}`, header);
+        var text = `<span>${rec.name}</span><br /> был повышен до ранга ${rankName}`;
+        out.success(player, text);
+    },
+    "mapCase.gover.rank.lower": (player, recId) => {
+        if (!factions.isGovernmentFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
+        if (!factions.canGiveRank(player)) return out.error(player, `Недостаточно прав`);
+        var header = `Понижение`;
+        var rec = mp.players.getBySqlId(recId);
+        if (!rec) return out.error(player, `Игрок #${recId} оффлайн`, header);
+        if (rec.id == player.id) return out.error(player, `Нельзя понизить себя`, header);
+        if (rec.character.factionRank >= player.character.factionRank) return out.error(`Недостаточно прав для понижения ${rec.name}`);
+        var min = factions.getMinRank(rec.character.factionId);
+        if (rec.character.factionRank <= min.id) return out.error(player, `${rec.name} имеет мин. ранг`);
+
+        var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank - 1);
+        factions.setRank(rec, rank.rank);
+        var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
+
+        notifs.success(rec, `${player.name} понизил вас до ${rankName}`, header);
+        var text = `<span>${rec.name}</span><br /> был понижен до ранга ${rankName}`;
+        out.success(player, text);
+    },
+    "mapCase.gover.members.uval": (player, recId) => {
+        if (!factions.isGovernmentFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
+        if (!factions.canUval(player)) return out.error(player, `Недостаточно прав`);
+        var header = `Увольнение`;
+        var rec = mp.players.getBySqlId(recId);
+        if (!rec) return out.error(player, `Игрок #${recId} оффлайн`);
+        if (rec.id == player.id) return out.error(player, `Нельзя уволить себя`, header);
+        if (rec.character.factionRank >= player.character.factionRank) return out.error(`Недостаточно прав для увольнения ${rec.name}`);
+
+        factions.deleteMember(rec);
+        notifs.info(rec, `${player.name} уволил вас`, header);
+        var text = `<span>${rec.name}</span><br /> был уволен`;
+        out.success(player, text);
+    },
     "mapCase.pd.init": (player) => {
         player.call(`mapCase.pd.calls.add`, [mapCase.policeCalls]);
 
@@ -266,6 +327,67 @@ module.exports = {
             rec.call(`mapCase.pd.emergencyBlips.add`, [player.name, player.position]);
         });
         out.success(player, `Сработал экстренный вызов`);
+    },
+    "mapCase.army.init": (player) => {
+        var ranks = factions.getRankNames(player.character.factionId);
+        player.call(`mapCase.army.ranks.set`, [ranks]);
+
+        var members = factions.getMembers(player);
+        members = mapCase.convertMembers(members);
+        player.call(`mapCase.army.members.add`, [members]);
+        mapCase.addArmyMember(player);
+    },
+    "mapCase.army.rank.raise": (player, recId) => {
+        if (!factions.isArmyFaction(player.character.factionId)) return out.error(player, `Вы не являетесь военным`);
+        if (!factions.canGiveRank(player)) return out.error(player, `Недостаточно прав`);
+        var header = `Повышение`;
+        var rec = mp.players.getBySqlId(recId);
+        if (!rec) return out.error(player, `Игрок #${recId} оффлайн`);
+        if (rec.id == player.id) return out.error(player, `Нельзя повысить себя`, header);
+        if (rec.character.factionRank >= player.character.factionRank - 1) return out.error(`Недостаточно прав для повышения ${rec.name}`);
+        var max = factions.getMaxRank(rec.character.factionId);
+        if (rec.character.factionRank >= max.id) return out.error(player, `${rec.name} имеет макс. ранг`);
+
+        var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank + 1);
+        factions.setRank(rec, rank.rank);
+        var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
+
+        notifs.success(rec, `${player.name} повысил вас до ${rankName}`, header);
+        var text = `<span>${rec.name}</span><br /> был повышен до ранга ${rankName}`;
+        out.success(player, text);
+    },
+    "mapCase.army.rank.lower": (player, recId) => {
+        if (!factions.isArmyFaction(player.character.factionId)) return out.error(player, `Вы не являетесь военным`);
+        if (!factions.canGiveRank(player)) return out.error(player, `Недостаточно прав`);
+        var header = `Понижение`;
+        var rec = mp.players.getBySqlId(recId);
+        if (!rec) return out.error(player, `Игрок #${recId} оффлайн`, header);
+        if (rec.id == player.id) return out.error(player, `Нельзя понизить себя`, header);
+        if (rec.character.factionRank >= player.character.factionRank) return out.error(`Недостаточно прав для понижения ${rec.name}`);
+        var min = factions.getMinRank(rec.character.factionId);
+        if (rec.character.factionRank <= min.id) return out.error(player, `${rec.name} имеет мин. ранг`);
+
+        var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank - 1);
+        factions.setRank(rec, rank.rank);
+        var rankName = factions.getRankById(rec.character.factionId, rec.character.factionRank).name;
+
+        notifs.success(rec, `${player.name} понизил вас до ${rankName}`, header);
+        var text = `<span>${rec.name}</span><br /> был понижен до ранга ${rankName}`;
+        out.success(player, text);
+    },
+    "mapCase.army.members.uval": (player, recId) => {
+        if (!factions.isArmyFaction(player.character.factionId)) return out.error(player, `Вы не являетесь военным`);
+        if (!factions.canUval(player)) return out.error(player, `Недостаточно прав`);
+        var header = `Увольнение`;
+        var rec = mp.players.getBySqlId(recId);
+        if (!rec) return out.error(player, `Игрок #${recId} оффлайн`);
+        if (rec.id == player.id) return out.error(player, `Нельзя уволить себя`, header);
+        if (rec.character.factionRank >= player.character.factionRank) return out.error(`Недостаточно прав для увольнения ${rec.name}`);
+
+        factions.deleteMember(rec);
+        notifs.info(rec, `${player.name} уволил вас`, header);
+        var text = `<span>${rec.name}</span><br /> был уволен`;
+        out.success(player, text);
     },
     "mapCase.fib.init": (player) => {
         player.call(`mapCase.fib.calls.add`, [mapCase.fibCalls]);
@@ -700,8 +822,10 @@ module.exports = {
             mapCase.removePoliceWanted(player.character.id);
             mapCase.removeFibWanted(player.character.id);
         }
-        if (factions.isPoliceFaction(player.character.factionId)) mapCase.removePoliceMember(player);
+        if (factions.isGovernmentFaction(player.character.factionId)) mapCase.removeGoverMember(player);
+        else if (factions.isPoliceFaction(player.character.factionId)) mapCase.removePoliceMember(player);
         else if (factions.isFibFaction(player.character.factionId)) mapCase.removeFibMember(player);
+        else if (factions.isArmyFaction(player.character.factionId)) mapCase.removeArmyMember(player);
         else if (factions.isHospitalFaction(player.character.factionId)) mapCase.removeHospitalMember(player);
         else if (factions.isNewsFaction(player.character.factionId)) mapCase.removeNewsMember(player);
     },
