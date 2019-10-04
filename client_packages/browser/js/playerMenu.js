@@ -333,6 +333,10 @@ let businessInfo = [{
         value: 0,
     },
     {
+        head: "Улица",
+        value: "-",
+    },
+    {
         head: "Гос. стоимость",
         value: 0,
         color: "#0f0",
@@ -530,6 +534,10 @@ var playerMenu = new Vue({
                     {
                         head: "Номер",
                         value: biz.id,
+                    },
+                    {
+                        head: "Улица",
+                        value: biz.street,
                     },
                     {
                         head: "Гос. стоимость",

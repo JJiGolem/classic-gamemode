@@ -9,7 +9,8 @@
 
 mp.playerMenu = {
     init(data) {
-        if (data.house) data.house.street = mp.utils.getStreetName(data.house.pos)
+        if (data.house) data.house.street = mp.utils.getStreetName(data.house.pos);
+        if (data.biz) data.biz.street = mp.utils.getStreetName(data.biz.pos);
         mp.callCEFV(`playerMenu.init('${JSON.stringify(data)}')`);
     },
     setFaction(data) {
@@ -28,6 +29,7 @@ mp.playerMenu = {
         mp.callCEFV(`playerMenu.setFines(${fines})`);
     },
     setBiz(biz = null) {
+        if (biz) biz.street = mp.utils.getStreetName(biz.pos);
         mp.callCEFV(`playerMenu.setBiz('${JSON.stringify(biz)}')`);
     },
     setHouse(house = null) {

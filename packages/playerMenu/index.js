@@ -52,6 +52,7 @@ module.exports = {
         if (biz) {
             data.biz = {
                 id: biz.info.id,
+                pos: bizes.getBizPosition(biz.info.id),
                 type: biz.info.type,
                 name: biz.info.name,
                 price: biz.info.price,
@@ -97,6 +98,7 @@ module.exports = {
         if (biz) {
             data.biz = {
                 id: biz.info.id,
+                pos: bizes.getBizPosition(biz.info.id),
                 type: biz.info.type,
                 name: biz.info.name,
                 price: biz.info.price,
