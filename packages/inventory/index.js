@@ -775,8 +775,8 @@ module.exports = {
         var y = (index - x) / cols;
         if (x >= cols || y >= rows) return null;
         return {
-            x: x,
-            y: y
+            x: Math.clamp(x, 0, cols - 1),
+            y: Math.clamp(y, 0, rows - 1),
         };
     },
     xyToIndex(rows, cols, coord) {
