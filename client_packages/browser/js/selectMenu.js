@@ -5031,8 +5031,10 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Загрузка') {
+                            selectMenu.show = false;
                             mp.trigger(`callRemote`, `farms.soilsWarehouse.take`);
                         } else if (e.itemName == 'Продажа') {
+                            selectMenu.show = false;
                             mp.trigger(`callRemote`, `farms.soilsWarehouse.sell`);
                         } else if (e.itemName == 'О складе') {
                             selectMenu.showByName("farmSoilsWarehouseInfo");
