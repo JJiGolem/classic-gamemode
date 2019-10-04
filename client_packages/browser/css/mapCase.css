@@ -182,6 +182,7 @@
     margin-left: -1px;
     margin-top: -1px;
     color: #fff;
+    display: grid;
 }
 
 #map-case .menu .header .menu-top {
