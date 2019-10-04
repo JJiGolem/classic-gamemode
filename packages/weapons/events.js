@@ -20,9 +20,9 @@ module.exports = {
             if (newVal == null) return;
             if (newVal > params.ammo) {
                 terminal.log(`[weapons.ammo.sync] ${player.name} имеет на клиенте ${newVal} патрон, на сервере ${params.ammo} (weapon: ${params.weaponHash})`);
-                notifs.error(player, `Вы были кикнуты по подозрению в читерстве`, `Античит`);
-                player.kick();
-                return;
+                // notifs.error(player, `Вы были кикнуты по подозрению в читерстве`, `Античит`);
+                // player.kick();
+                // return;
             }
             newVal = Math.clamp(newVal, 0, 1000);
             inventory.updateParam(player, item, 'ammo', newVal);

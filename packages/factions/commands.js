@@ -4,7 +4,7 @@ let notifs = require('../notifications');
 module.exports = {
     "/flist": {
         description: "Посмотреть список организаций.",
-        access: 6,
+        access: 1,
         args: "",
         handler: (player, args, out) => {
             var text = "ID) Имя [бп] [макс. бп] [мед] [макс. мед] | блип | цвет_блипа<br/>";
@@ -17,7 +17,7 @@ module.exports = {
     },
     "/ftp": {
         description: "Телепортироваться к организации.",
-        access: 5,
+        access: 1,
         args: "[ид_организации]:n",
         handler: (player, args, out) => {
             var marker = factions.getMarker(args[0]);

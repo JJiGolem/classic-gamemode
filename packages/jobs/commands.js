@@ -24,6 +24,7 @@ module.exports = {
             if (!job) return out.error(`Работа #${args[1]} не найдена`, player);
             var rec = mp.players.at(args[0]);
             if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
+            if (rec.character.factionId) return out.error(`${rec.name} состоит в организации`, player);
 
             jobs.addMember(rec, job);
             out.info(`${player.name} устроил ${rec.name} на работу ${job.name}`);
