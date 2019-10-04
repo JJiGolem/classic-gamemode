@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = {
-
+    /// text должен начинаться с [${moduleName}], для понимания источника логов
     log(player, text) {
         var data = {};
         if (typeof player == 'string') text = player;
