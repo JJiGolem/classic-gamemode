@@ -349,6 +349,8 @@ module.exports = {
             var rec = mp.players.at(veh.bootPlayerId);
             if (rec && rec.character && rec.dist(veh.position) < 50) return notifs.error(player, `С багажником взаимодействует другой игрок`, header);
         }
+        if (veh.db.key == 'private' && veh.db.owner != player.character.id) return notifs.error(player, `Вы не являетесь владельцем авто`, header);
+        if (veh.db.key == 'faction' && veh.db.owner != player.character.factionId) return notifs.error(player, `Вы не состоите в ${factions.getFaction(veh.db.owner).name}`, header);
 
         veh.bootPlayerId = player.id;
 
