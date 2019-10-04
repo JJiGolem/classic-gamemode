@@ -91,6 +91,9 @@ mp.bands = {
             this.captureFactions = [];
         }, time * 1000);
     },
+    stopCapture() {
+        mp.callCEFV(`captureScore.show = false`);
+    },
     setCaptureScore(bandId, score) {
         mp.callCEFV(`captureScore.setScore(${bandId}, ${score})`);
     },
@@ -173,6 +176,9 @@ mp.events.add({
     },
     "bands.capture.start": (bandId, enemyBandId, time, bandScore = 0, enemyBandScore = 0) => {
         mp.bands.startCapture(bandId, enemyBandId, time, bandScore, enemyBandScore);
+    },
+    "bands.capture.stop": () => {
+        mp.bands.stopCapture();
     },
     "bands.capture.score.set": (bandId, score) => {
         mp.bands.setCaptureScore(bandId, score);
