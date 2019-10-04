@@ -1,5 +1,6 @@
 let bins = call('bins');
 let inventory = call('inventory');
+let money = call('money');
 let notifs = call('notifications');
 
 module.exports = {
@@ -31,5 +32,24 @@ module.exports = {
         });
 
         notifs.success(player, `Вы нашли ${name}`, `Мусорка`);
-    }
+    },
+    "bins.trash.sell": (player) => {
+        var header = `Сдача мусора`;
+        if (!player.insideDumb) return notifs.error(player, `Вы не у свалки`, header);
+
+        var trashIds = bins.trashesInfo.map(x => x.itemId);
+        var items = inventory.getArrayByItemId(player, trashIds);
+        if (!items.length) return notifs.error(player, `Вы не имеете мусор`, header);
+        var pay = 0;
+        items.forEach(item => {
+            var price = bins.trashesInfo.find(x => x.itemId == item.itemId).price;
+            pay += price;
+            inventory.deleteItem(player, item);
+        });
+        money.addCash(player, pay, (res) => {
+            if (!res) notifs.error(player, `Ошибка начисления наличных`, header);
+        });
+
+        notifs.success(player, `Мусор сдан на переработку`, header);
+    },
 };

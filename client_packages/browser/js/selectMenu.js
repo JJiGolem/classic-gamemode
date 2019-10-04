@@ -6025,6 +6025,34 @@ var selectMenu = new Vue({
 
                 }
             },
+            "dump": {
+                name: "dump",
+                header: "Свалка",
+                items: [
+                    {
+                        text: "Сдать мусор"
+                    },
+                    {
+                        text: "Закрыть"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Сдать мусор') mp.trigger(`callRemote`, `bins.trash.sell`);
+                        selectMenu.show = false;
+                    }
+                }
+            },
         },
         // Уведомление
         notification: null,
