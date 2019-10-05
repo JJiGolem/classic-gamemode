@@ -6,50 +6,116 @@ let clothesList = {
     "bracelets": [],
     "ears": [],
     "glasses": [],
+    "watches": [],
+    "ties": [],
     "hats": [],
+    "tops": [],
     "pants": [],
     "shoes": [],
-    "ties": [],
-    "tops": [],
-    "watches": [],
+}
+let shopClass;
+// let currentItem = {
+//     group: 0,
+//     index: 0,
+//     textureIndex: 0
+// };
+
+let input = {
+    clothes: {
+        4: {
+            drawable: 0,
+            texture: 0
+        },
+        6: {
+            drawable: 0,
+            texture: 0
+        },
+        7: {
+            drawable: 0,
+            texture: 0
+        },
+        11: {
+            drawable: 0,
+            texture: 0
+        },
+        3: {
+            drawable: 0,
+            texture: 0
+        },
+        8: {
+            drawable: 0,
+            texture: 0
+        },
+    },
+    props: {
+        7: {
+            drawable: 0,
+            texture: 0
+        },
+        2: {
+            drawable: 0,
+            texture: 0
+        },
+        1: {
+            drawable: 0,
+            texture: 0
+        },
+        0: {
+            drawable: 0,
+            texture: 0
+        },
+        6: {
+            drawable: 0,
+            texture: 0
+        },
+    }
 }
 
 let clothesInfo = {
     "bracelets": {
-        prop: 0,
-        menuName: 'Bracelets'
+        prop: 7,
+        menuName: 'Bracelets',
+        name: 'Браслеты'
     },
     "ears": {
         prop: 2,
-        menuName: 'Ears'
+        menuName: 'Ears',
+        name: 'Серьги'
     },
     "glasses": {
         prop: 1,
-        menuName: 'Glasses'
+        menuName: 'Glasses',
+        name: 'Очки'
     },
     "hats": {
         prop: 0,
-        menuName: 'Hats'
+        menuName: 'Hats',
+        name: 'Головные уборы'
     },
     "pants": {
         component: 4,
-        menuName: 'Pants'
+        menuName: 'Pants',
+        name: 'Ноги'
     },
     "shoes": {
         component: 6,
-        menuName: 'Shoes'
+        menuName: 'Shoes',
+        name: 'Обувь'
     },
     "ties": {
         component: 7,
-        menuName: 'Ties'
+        menuName: 'Ties',
+        name: 'Галстуки'
     },
     "tops": {
         component: 11,
-        menuName: 'Tops'
+        menuName: 'Tops',
+        name: 'Тело'
     },
     "watches": {
         prop: 6,
-        menuName: 'Watches'
+        menuName: 'Watches',
+        name: 'Часы'
     },
 }
 
@@ -60,15 +126,16 @@ let rotation = {
 
 mp.events.add({
     'clothingShop.enter': (shopData) => {
+        getInputClothes();
         bindKeys(true);
         setHeaders(shopData.bType);
         mp.events.call('hud.enable', false);
         mp.game.ui.displayRadar(false);
         mp.callCEFR('setOpacityChat', [0.0]);
-        mp.console(JSON.stringify(clothesList));
-        mp.chat.debug(clothesList.length);
         mp.utils.cam.create(shopData.camera.x, shopData.camera.y, shopData.camera.z, shopData.pos.x, shopData.pos.y, shopData.pos.z, 42);
         mp.callCEFV('loader.show = false');
+        shopClass = shopData.class;
+        initMainMenu();
         mp.events.call('selectMenu.show', 'clothingMain');
         player.position = new mp.Vector3(shopData.pos.x, shopData.pos.y, shopData.pos.z);
         if (!playerIsFrozen) {
@@ -112,7 +179,17 @@ mp.events.add({
         mp.utils.disablePlayerMoving(true);
         player.freezePosition(true);
         playerIsFrozen = true;
-    }
+    },
+    'clothingShop.item.set': (group, index, textureIndex) => {
+        // currentItem.group = group;
+        // currentItem.index = index;
+        // currentItem.textureIndex = textureIndex;
+
+        let sortedList = clothesList[group].filter(x => x.class == shopClass);
+        let item = sortedList[index];
+        setClothes(group, item, textureIndex);
+    },
+    'clothingShop.inputClothes.set': setInputClothes
 });
 
 
@@ -150,7 +227,6 @@ function stopRotationRight() {
 
 function setHeaders(type) {
     let img;
-    mp.chat.debug(type);
     switch (type) {
         case 0:
             img = 'binco';
@@ -165,9 +241,87 @@ function setHeaders(type) {
             img = 'ponsonbys';
             break;
     }
-    ['Main'].forEach(name => mp.callCEFV(`selectMenu.menus["clothing${name}"].headerImg = '${img}.png'`));
+    ['Main', 'Tops'].forEach(name => mp.callCEFV(`selectMenu.menus["clothing${name}"].headerImg = '${img}.png'`));
 }
 
-function initClothingShopMenu() {
+function initMainMenu() {
+    let items = [];
+    for (let key in clothesList) {
+        let sortedList = clothesList[key].filter(x => x.class == shopClass);
+        if (sortedList.length > 0) {
+            items.push({
+                text: clothesInfo[key].name
+            });
+            initSubMenu(key, sortedList);
+        }
+    }
+    items.push({
+        text: 'Закрыть'
+    });
+    mp.callCEFV(`selectMenu.setItems('clothingMain', ${JSON.stringify(items)});`)
+    mp.callCEFV(`selectMenu.menus["clothingMain"].i = 0`);
+    mp.callCEFV(`selectMenu.menus["clothingMain"].j = 0`);
+}
 
+function initSubMenu(key, list) {
+    let items = [];
+    let menuName = clothesInfo[key].menuName;
+    list.forEach((current) => {
+        let values = [];
+        for (let i = 0; i < current.textures.length; i++) {
+            values.push(`№${i + 1}`);
+        }
+        items.push({
+            text: `${current.name} [$${current.price}]`,
+            values: values
+        });
+    })
+    items.push({
+        text: 'Назад'
+    });
+    mp.callCEFV(`selectMenu.setItems('clothing${menuName}', ${JSON.stringify(items)});`)
+    mp.callCEFV(`selectMenu.menus["clothing${menuName}"].i = 0`);
+    mp.callCEFV(`selectMenu.menus["clothing${menuName}"].j = 0`);
+}
+
+function setClothes(group, item, textureIndex) {
+    let info = clothesInfo[group];
+
+    if (group == 'tops') {
+        player.setComponentVariation(3, item.torso, 0, 0);
+        player.setComponentVariation(8, item.undershirt, 0, 0);
+    }
+
+    if (info.component != null) {
+        player.setComponentVariation(info.component, item.variation, item.textures[textureIndex], 0);
+    } else {
+        player.setPropIndex(info.prop, item.variation, item.textures[textureIndex], true);
+    }
+}
+
+function getInputClothes() {
+    for (let key in input.clothes) {
+        key = parseInt(key);
+        input.clothes[key].drawable = player.getDrawableVariation(key);
+        input.clothes[key].texture = player.getTextureVariation(key);
+    }
+    for (let key in input.props) {
+        key = parseInt(key);
+        input.props[key].drawable = player.getPropIndex(key);
+        input.props[key].texture = player.getPropTextureIndex(key);
+    }
+}
+
+function setInputClothes() {
+    for (let key in input.clothes) {
+        let item = input.clothes[key];
+        key = parseInt(key);
+        player.setComponentVariation(key, item.drawable, item.texture, 0);
+    }
+    for (let key in input.props) {
+        let item = input.props[key];
+        key = parseInt(key);
+        player.setPropIndex(key, item.drawable, item.texture, true);
+        if (item.drawable == -1) player.clearProp(key);
+    }
 }

@@ -248,6 +248,7 @@ module.exports = {
                                 player.call('carshow.car.buy.ans', [6, carToBuy]);
                             }
 
+                            inventory.fullDeleteItemsByParams(33, 'vehId', veh.db.id);
                             // выдача ключей в инвентарь
                             inventory.addItem(player, 33, {
                                 owner: player.character.id,

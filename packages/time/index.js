@@ -5,6 +5,7 @@ var jobs = require('../jobs');
 var notifs = require('../notifications');
 
 let CUSTOM_TIME;
+let ticks = 0;
 
 module.exports = {
     init() {
@@ -15,7 +16,8 @@ module.exports = {
         var lastPayDayHour = new Date().getHours();
         setInterval(() => {
             try {
-                mp.events.call(`time.main.tick`);
+                ticks++;
+                mp.events.call(`time.main.tick`, ticks);
                 var date = new Date();
                 this.updateWorldTime(date);
                 if (date.getMinutes() >= 0 && date.getMinutes() <= 3 && date.getHours() != lastPayDayHour) {
