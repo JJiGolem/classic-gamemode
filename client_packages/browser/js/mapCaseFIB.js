@@ -147,6 +147,10 @@ Vue.component('map-case-fib-profile', {
         star: mapCaseSvgPaths.dangerStar,
     }),
     methods: {
+        showOnMap() {
+            // TODO: Показать претупника на карте.
+            mp.trigger(`callRemote`, `mapCase.pd.wanted.search`, this.profileData.dbSearch.id);
+        },
         showOverWindow(winName) {
             mapCase.currentOverWindow = `map-case-${mapCase.type}-over-${winName}`;
         },
@@ -430,6 +434,10 @@ var mapCaseFIBProfileData = {
         {
             title: 'Преступления: ',
             key: 'crimes'
+        },
+        {
+            title: 'Штрафы: ',
+            key: 'fines'
         },
     ],
     setProfileData(data) {

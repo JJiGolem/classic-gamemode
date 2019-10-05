@@ -227,6 +227,8 @@ module.exports = {
         }
         if (topParams.undershirt == -1) delete topParams.undershirt;
         if (topParams.uTexture == -1) delete topParams.uTexture;
+        if (topParams.decal == -1) delete topParams.decal;
+        if (topParams.dTexture == -1) delete topParams.dTexture;
         if (topParams.tTexture == -1) delete topParams.tTexture;
 
         hatParams.faction = faction.id;
@@ -488,20 +490,6 @@ module.exports = {
 
         notifs.warning(player, `Ваш уровень розыска понизился`);
     },
-    "police.search": (player, recId) => {
-        var rec = mp.players.at(recId);
-        if (!rec || !rec.character) return notifs.error(player, `Игрок #${recId} не найден`);
-        if (!rec.character.wanted) return notifs.error(player, `${rec.name} не в розыске`);
-        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник`);
-        if (rec.dimension != 0) return notifs.error(player, `${rec.name} достаточно хорошо скрыт`);
-        if (player.lastWantedSearch && Date.now() - player.lastWantedSearch < police.searchTime) return notifs.warning(player, `Ожидайте...`);
-        player.lastWantedSearch = Date.now();
-
-        var pos = police.getSearchPosition(rec.position);
-
-        player.call(`police.search.blip.create`, [rec.name, pos]);
-        notifs.success(player, `Приблизительное местоположение ${rec.name} отмечено на карте`);
-    },
     // арестовать в КПЗ ЛСПД
     "police.cells.arrest": (player, recId) => {
         var rec = mp.players.at(recId);
@@ -531,7 +519,7 @@ module.exports = {
         money.addCash(player, police.arrestPay, (res) => {
             if (!res) return console.log(`[police] Ошибка выдачи ЗП за арест ${player.name}`);
             notifs.info(player, `+ $${police.arrestPay}`, `Бонус`);
-        });
+        }, `Арест игрока ${rec.name} в КПЗ`);
 
         //todo broadcast to radio
     },
@@ -569,7 +557,7 @@ module.exports = {
         money.addCash(player, police.arrestPay, (res) => {
             if (!res) return console.log(`[police] Ошибка выдачи ЗП за арест ${player.name}`);
             notifs.info(player, `+ $${police.arrestPay}`, `Бонус`);
-        });
+        }, `Арест игрока ${rec.name} в тюрьму`);
 
         //todo broadcast to radio
     },

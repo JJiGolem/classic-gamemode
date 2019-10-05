@@ -16,6 +16,8 @@ module.exports = {
     warehouses: [],
     // Маркеры выдачи предметов организаций
     storages: [],
+    // Маркеры шкафов организаций
+    holders: [],
     // Склад нескончаемых боеприпасов (навешен blip)
     ammoWarehouse: null,
     // Склад нескончаемых медикаментов (навешен blip)
@@ -78,6 +80,7 @@ module.exports = {
             this.createFactionMarker(faction);
             this.createWarehouseMarker(faction);
             this.createStorageMarker(faction);
+            this.createHolderMarker(faction);
         }
     },
     createFactionMarker(faction) {
@@ -160,6 +163,30 @@ module.exports = {
         };
         storage.colshape = colshape;
     },
+    createHolderMarker(faction) {
+        var pos = new mp.Vector3(faction.hX, faction.hY, faction.hZ - 1);
+
+        var holder = mp.markers.new(1, pos, 0.5, {
+            color: [0, 187, 255, 70]
+        });
+        holder.inventory = {
+            items: {}, // предметов игроков в шкафе
+        };
+        this.holders.push(holder);
+
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+        colshape.onEnter = (player) => {
+            if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
+
+            player.call("prompt.showByName", [`faction_items_holder`]);
+            mp.events.call("faction.holder.items.request", player, faction);
+        };
+        colshape.onExit = (player) => {
+            player.call(`prompt.hide`);
+            mp.events.call("faction.holder.items.clear", player);
+        };
+        holder.colshape = colshape;
+    },
     createAmmoWarehouseMarker() {
         var pos = new mp.Vector3(211.51, -3091.53, 7.01 - 1);
 
@@ -219,6 +246,9 @@ module.exports = {
     getStorage(id) {
         return this.storages[id - 1];
     },
+    getHolder(id) {
+        return this.holders[id - 1];
+    },
     getBlip(id) {
         return this.blips[id - 1];
     },
@@ -261,6 +291,7 @@ module.exports = {
     setLeader(faction, player) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         var character = player.character;
+        var oldVal = character.factionId;
         character.factionId = faction.id;
         character.factionRank = this.getMaxRank(faction).id;
         character.save();
@@ -268,12 +299,14 @@ module.exports = {
         player.setVariable("factionId", character.factionId);
         player.call(`factions.faction.set`, [character.factionId]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
-        if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
+        if (this.isGovernmentFaction(faction)) mp.events.call(`mapCase.gover.init`, player);
+        else if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
+        else if (this.isArmyFaction(faction)) mp.events.call(`mapCase.army.init`, player);
         else if (this.isFibFaction(faction)) mp.events.call(`mapCase.fib.init`, player);
         else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
         else if (this.isNewsFaction(faction)) mp.events.call(`mapCase.news.init`, player);
 
-        mp.events.call(`player.faction.changed`, player);
+        mp.events.call(`player.faction.changed`, player, oldVal);
     },
     setBlip(faction, type, color) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
@@ -288,6 +321,7 @@ module.exports = {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         var character = player.character;
         if (character.factionId) this.fullDeleteItems(character.id, character.factionId);
+        var oldVal = character.factionId;
         character.factionId = faction.id;
         character.factionRank = this.getMinRank(faction).id;
         character.save();
@@ -295,21 +329,26 @@ module.exports = {
         player.setVariable("factionId", character.factionId);
         player.call(`factions.faction.set`, [character.factionId]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
-        if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
+        if (this.isGovernmentFaction(faction)) mp.events.call(`mapCase.gover.init`, player);
+        else if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
         else if (this.isFibFaction(faction)) mp.events.call(`mapCase.fib.init`, player);
+        else if (this.isArmyFaction(faction)) mp.events.call(`mapCase.army.init`, player);
         else if (this.isHospitalFaction(faction)) mp.events.call(`mapCase.ems.init`, player);
         else if (this.isNewsFaction(faction)) mp.events.call(`mapCase.news.init`, player);
 
-        mp.events.call(`player.faction.changed`, player);
+        mp.events.call(`player.faction.changed`, player, oldVal);
         if (player.character.job) mp.events.call(`jobs.leave`, player);
     },
     deleteMember(player) {
         var character = player.character;
-        if (this.isPoliceFaction(character.factionId)) require('../mapCase').removePoliceMember(player);
+        if (this.isGovernmentFaction(character.factionId)) require('../mapCase').removeGoverMember(player);
+        else if (this.isPoliceFaction(character.factionId)) require('../mapCase').removePoliceMember(player);
         else if (this.isFibFaction(character.factionId)) require('../mapCase').removeFibMember(player);
+        else if (this.isArmyFaction(character.factionId)) require('../mapCase').removeArmyMember(player);
         else if (this.isHospitalFaction(character.factionId)) require('../mapCase').removeHospitalMember(player);
         else if (this.isNewsFaction(character.factionId)) require('../mapCase').removeNewsMember(player);
         this.fullDeleteItems(character.id, character.factionId);
+        var oldVal = character.factionId;
         character.factionId = null;
         character.factionRank = null;
         character.save();
@@ -318,7 +357,7 @@ module.exports = {
         player.call(`factions.faction.set`, [null]);
         player.call(`mapCase.enable`, [false]);
 
-        mp.events.call(`player.faction.changed`, player);
+        mp.events.call(`player.faction.changed`, player, oldVal);
     },
     getMembers(player) {
         var members = [];
@@ -339,8 +378,10 @@ module.exports = {
         mp.events.call("player.factionRank.changed", player);
 
         var type = "";
-        if (this.isPoliceFaction(character.factionId)) type = "pd";
+        if (this.isGovernmentFaction(character.factionId)) type = "gover";
+        else if (this.isPoliceFaction(character.factionId)) type = "pd";
         else if (this.isFibFaction(character.factionId)) type = "fib";
+        else if (this.isArmyFaction(character.factionId)) type = "army";
         else if (this.isHospitalFaction(character.factionId)) type = "ems";
         else if (this.isNewsFaction(character.factionId)) type = "news";
         if (!type) return;
@@ -479,7 +520,7 @@ module.exports = {
         money.addMoney(player, pay, (res) => {
             if (!res) return console.log(`[factions] Ошибка выдачи ЗП для ${player.name}`);
             notifs.info(player, `Зарплата: $${pay}`, faction.name);
-        });
+        }, `Зарплата организации ${faction.name}`);
     },
     fullDeleteItems(owner, faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
@@ -515,5 +556,18 @@ module.exports = {
 
         faction.cash += count;
         faction.save();
+    },
+    destroyHolderItems(player) {
+        var count = 0;
+        this.holders.forEach(holder => {
+            var items = holder.inventory.items[player.character.id];
+            if (!items) return;
+            count += items.length;
+            items.forEach(item => item.destroy());
+            delete holder.inventory.items[player.character.id];
+        });
+
+        if (!count) return;
+        notifs.warning(player, `Предмет из шкафа потеряны (${count} шт.)`, `Организация`);
     },
 };

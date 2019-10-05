@@ -62,7 +62,9 @@ mp.utils = {
     //  Иниц. анимации
     requestAnimDict(dict, callback) {
         mp.game.streaming.requestAnimDict(dict);
+        var start = Date.now();
         while (!mp.game.streaming.hasAnimDictLoaded(dict)) {
+            if (Date.now() - start > 2000) break;
             mp.game.wait(0);
         }
         callback();

@@ -50,7 +50,7 @@ module.exports = {
         if (info.characterId == null) {
             player.call("biz.menu.open", [{
                 name: info.name,
-                faction: factions.getFaction(id).name,
+                faction: info.factionId != null ? factions && factions.getFaction(info.factionId).name : "",
                 type: bizService.getTypeName(info.type),
                 rent: info.price * bizService.bizesModules[info.type].rentPerDayMultiplier,
                 price: info.price,
@@ -62,7 +62,7 @@ module.exports = {
             if (player.character.id == info.characterId) actions.push('finance');
             player.call("biz.menu.open", [{
                 name: info.name,
-                faction: factions.getFaction(id).name,
+                faction: info.factionId != null ? factions && factions.getFaction(info.factionId).name : "",
                 type: bizService.getTypeName(info.type),
                 rent: info.price * bizService.bizesModules[info.type].rentPerDayMultiplier,
                 owner: info.characterNick,

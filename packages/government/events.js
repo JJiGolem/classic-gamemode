@@ -9,7 +9,9 @@ module.exports = {
 
     },
     "characterInit.done": (player) => {
-
+        if (!factions.isGovernmentFaction(player.character.factionId)) return;
+        // player.call(`mapCase.init`, [player.name, player.character.factionId]);
+        mp.events.call(`mapCase.gover.init`, player);
     },
     "government.storage.clothes.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Government`);

@@ -1,4 +1,6 @@
 let bizService = require('./index.js');
+let notifications = call('notifications');
+
 module.exports = {
     "/createbiz": {
         access: 6,
@@ -15,7 +17,6 @@ module.exports = {
         handler: (player, args) => {
             let biz = getBizByPlayerPos(player);
             if (biz == null) {
-                let notifications = call('notifications');
                 if (notifications != null) notifications.error(player, "Подойдите ближе к бизнесу", "Ошибка");
                 return;
             }
@@ -32,7 +33,6 @@ module.exports = {
         handler: (player, args) => {
             let biz = getBizByPlayerPos(player);
             if (biz == null) {
-                let notifications = call('notifications');
                 if (notifications != null) notifications.error(player, "Подойдите ближе к бизнесу", "Ошибка");
                 return;
             }
@@ -46,6 +46,22 @@ module.exports = {
         handler: (player, args) => {
             let position = bizService.getBizPosition(parseInt(args[0]));
             if (position) player.position = position;
+        }
+    },
+    "/getbizid": {
+        access: 1,
+        description: "Получить id бизнеса в колшейпе которого находится игрок",
+        args: "",
+        handler: (player, args) => {
+            if (notifications != null) {
+                let biz = getBizByPlayerPos(player);
+                if (biz == null) {
+                    return notifications.error(player, "Подойдите ближе к бизнесу", "Ошибка");
+                }
+                else {
+                    return notifications.info(player, "Вы находитесь у бизнеса с id " + biz.info.id, "Бизнес");
+                } 
+            }
         }
     },
 }

@@ -4,7 +4,7 @@ let notifs = require('../notifications');
 module.exports = {
     "/flist": {
         description: "Посмотреть список организаций.",
-        access: 6,
+        access: 1,
         args: "",
         handler: (player, args, out) => {
             var text = "ID) Имя [бп] [макс. бп] [мед] [макс. мед] | блип | цвет_блипа<br/>";
@@ -17,7 +17,7 @@ module.exports = {
     },
     "/ftp": {
         description: "Телепортироваться к организации.",
-        access: 5,
+        access: 1,
         args: "[ид_организации]:n",
         handler: (player, args, out) => {
             var marker = factions.getMarker(args[0]);
@@ -238,24 +238,8 @@ module.exports = {
             warehouse.label.position = pos;
 
             var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
-            colshape.onEnter = (player) => {
-                var boxType = "";
-                if (player.hasAttachment("ammoBox")) {
-                    boxType = "ammo";
-                } else if (player.hasAttachment("medicinesBox")) {
-                    boxType = "medicines";
-                } else return;
-
-                if (!factions.canFillWarehouse(player, boxType, faction))
-                    return notifs.error(player, `Нет прав для пополнения`, `Склад ${faction.name}`);
-
-                player.call("factions.insideFactionWarehouse", [true, boxType]);
-                player.insideFactionWarehouse = faction;
-            };
-            colshape.onExit = (player) => {
-                player.call("factions.insideFactionWarehouse", [false]);
-                delete player.insideFactionWarehouse;
-            };
+            colshape.onEnter = warehouse.colshape.onEnter;
+            colshape.onExit = warehouse.colshape.onExit;
             warehouse.colshape = colshape;
 
 
@@ -282,18 +266,39 @@ module.exports = {
             storage.position = pos;
 
             var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
-            colshape.onEnter = (player) => {
-                if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
-                player.call("factions.storage.showMenu", [faction.id]);
-                player.insideFactionWarehouse = faction.id;
-            };
-            colshape.onExit = (player) => {
-                player.call("selectMenu.hide");
-                delete player.insideFactionWarehouse;
-            };
+            colshape.onEnter = storage.colshape.onEnter;
+            colshape.onExit = storage.colshape.onExit;
             storage.colshape = colshape;
 
             out.info(`${player.name} изменил позицию выдачи предметов у организации ${faction.name}`);
+        }
+    },
+    "/fsetholderpos": {
+        description: "Изменить позицию шкафа организации. Позиция берется от игрока.",
+        access: 6,
+        args: "[ид_организации]:n",
+        handler: (player, args, out) => {
+            var faction = factions.getFaction(args[0]);
+            if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
+
+            var pos = player.position;
+            faction.hX = pos.x;
+            faction.hY = pos.y;
+            faction.hZ = pos.z;
+            faction.save();
+            pos.z -= 1;
+
+            var holder = factions.getHolder(faction.id);
+            holder.colshape.destroy();
+            holder.position = pos;
+
+            var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+            colshape.onEnter = holder.colshape.onEnter;
+            colshape.onExit = holder.colshape.onExit;
+
+            holder.colshape = colshape;
+
+            out.info(`${player.name} изменил позицию шкафа у организации ${faction.name}`);
         }
     },
     "/franks": {

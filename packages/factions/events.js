@@ -231,7 +231,7 @@ module.exports = {
 
             faction.cash += offer.sum;
             faction.save();
-        });
+        }, `Чек на пополнение общака ${faction.name}`);
 
         notifs.success(player, `Вы пополнили общак ${faction.name}`, header);
         var rec = mp.players.at(offer.playerId);

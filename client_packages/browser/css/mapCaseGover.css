@@ -1,0 +1,19 @@
+
+#map-case .gover .verification .btns .btn:hover {
+    background-color: #65A7CC;
+    box-shadow: 0 0 10px rgba(101, 167, 204, 0.5);
+}
+
+#map-case .gover .menu .header,
+#map-case .gover .menu .menu-body .menu-item.focus,
+#map-case .gover .menu .menu-body .menu-item:hover,
+#map-case .gover .window .table .tbody .record .btn,
+#map-case .gover .window .members .action-modal .btn:hover {
+    background-color: #65A7CC;
+}
+
+#map-case .gover .window .table .tbody .record:hover,
+#map-case .gover .window .table .tbody .record.focus {
+    background-color: #65A7CC;
+    color: #fff;
+}

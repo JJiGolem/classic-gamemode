@@ -132,6 +132,8 @@ module.exports = {
         }
         if (topParams.undershirt == -1) delete topParams.undershirt;
         if (topParams.uTexture == -1) delete topParams.uTexture;
+        if (topParams.decal == -1) delete topParams.decal;
+        if (topParams.dTexture == -1) delete topParams.dTexture;
         if (topParams.tTexture == -1) delete topParams.tTexture;
 
         hatParams.faction = faction.id;
@@ -280,8 +282,8 @@ module.exports = {
                 player.health = Math.clamp(player.health + offer.health, 1, 100);
                 notifs.success(inviter, `${player.name} вылечился`, header);
                 notifs.success(player, `${inviter.name} вас вылечил`, header);
-            });
-        });
+            }, `Вылечил игрока ${player.name}`);
+        }, `Вылечился медиком ${inviter.name}`);
     },
     "hospital.healing.cancel": (player) => {
         if (!player.offer) return;

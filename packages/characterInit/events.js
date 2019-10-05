@@ -59,10 +59,12 @@ module.exports = {
 
         var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60 % 60);
         player.character.minutes += minutes;
-        player.character.x = player.position.x;
-        player.character.y = player.position.y;
-        player.character.z = player.position.z;
-        player.character.h = player.heading;
+        if (!player.dimension) {
+            player.character.x = player.position.x;
+            player.character.y = player.position.y;
+            player.character.z = player.position.z;
+            player.character.h = player.heading;
+        }
         player.character.save();
     },
 }

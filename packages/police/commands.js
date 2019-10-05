@@ -70,14 +70,6 @@ module.exports = {
             });
         }
     },
-    "/psearch": {
-        access: 1,
-        description: "Поиск преступника.",
-        args: "[ид_игрока]:n",
-        handler: (player, args, out) => {
-            mp.events.call(`police.search`, player, args[0]);
-        }
-    },
     "/pvehput": {
         access: 6,
         description: "Запихнуть игрока в авто.",

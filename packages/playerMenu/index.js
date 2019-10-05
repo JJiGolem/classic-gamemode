@@ -52,6 +52,7 @@ module.exports = {
         if (biz) {
             data.biz = {
                 id: biz.info.id,
+                pos: bizes.getBizPosition(biz.info.id),
                 type: biz.info.type,
                 name: biz.info.name,
                 price: biz.info.price,
@@ -61,6 +62,7 @@ module.exports = {
             var garage = house.info.Interior.Garage;
             data.house = {
                 id: house.info.id,
+                pos: house.enter.marker.position,
                 class: house.info.Interior.class,
                 rooms: house.info.Interior.numRooms,
                 carPlaces: (garage) ? garage.carPlaces : 0,
@@ -96,6 +98,7 @@ module.exports = {
         if (biz) {
             data.biz = {
                 id: biz.info.id,
+                pos: bizes.getBizPosition(biz.info.id),
                 type: biz.info.type,
                 name: biz.info.name,
                 price: biz.info.price,
@@ -111,6 +114,7 @@ module.exports = {
             var garage = house.info.Interior.Garage;
             data.house = {
                 id: house.info.id,
+                pos: house.enter.marker.position,
                 class: house.info.Interior.class,
                 rooms: house.info.Interior.numRooms,
                 carPlaces: (garage) ? garage.carPlaces : 0,
