@@ -48,9 +48,9 @@ module.exports = {
                 shortRange: true,
             });
         
-        mp.markers.new(1, new mp.Vector3(shop.x, shop.y, shop.z - 0.1), 0.8,
+        mp.markers.new(1, new mp.Vector3(shop.x, shop.y, shop.z - 0.05), 0.8,
         {
-            color: shop.bType ? [69, 140, 255, 128] : [50, 168, 82, 128],
+            color: [245, 167, 66, 200],
             visible: true,
             dimension: 0
         });
@@ -75,6 +75,7 @@ module.exports = {
             },
             bType: shop.bType,
             priceMultiplier: shop.priceMultiplier,
+            class: shop.class
         }
     },
     getBizParamsById(id) {

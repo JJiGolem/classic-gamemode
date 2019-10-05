@@ -76,6 +76,7 @@ module.exports = {
             veh: vehNames.join(", ").trim() || "-",
             law: character.law,
             crimes: character.crimes,
+            fines: character.Fines.length,
         };
     },
     convertWanted(wanted) {
@@ -161,6 +162,24 @@ module.exports = {
             rec.call(`mapCase.pd.wanted.remove`, [id]);
         });
     },
+    addGoverMember(player) {
+        if (!factions.isGovernmentFaction(player.character.factionId)) return;
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isGovernmentFaction(rec.character.factionId)) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            rec.call(`mapCase.gover.members.add`, [this.convertMembers([player])]);
+        });
+    },
+    removeGoverMember(player) {
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isGovernmentFaction(rec.character.factionId)) return;
+
+            rec.call(`mapCase.gover.members.remove`, [player.character.id]);
+        });
+    },
     addPoliceMember(player) {
         if (!factions.isPoliceFaction(player.character.factionId)) return;
         mp.players.forEach((rec) => {
@@ -177,6 +196,24 @@ module.exports = {
             if (!factions.isPoliceFaction(rec.character.factionId)) return;
 
             rec.call(`mapCase.pd.members.remove`, [player.character.id]);
+        });
+    },
+    addArmyMember(player) {
+        if (!factions.isArmyFaction(player.character.factionId)) return;
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isArmyFaction(rec.character.factionId)) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            rec.call(`mapCase.army.members.add`, [this.convertMembers([player])]);
+        });
+    },
+    removeArmyMember(player) {
+        mp.players.forEach((rec) => {
+            if (!rec.character) return;
+            if (!factions.isArmyFaction(rec.character.factionId)) return;
+
+            rec.call(`mapCase.army.members.remove`, [player.character.id]);
         });
     },
     addFibCall(player, description) {
@@ -372,12 +409,12 @@ module.exports = {
         // debug(this.newsAdsEdited);
         var rec = mp.players.at(ad.playerId);
         var header = factions.getFaction(7).name;
-        if (rec) notifs.success(rec, `${player.name} принял ваше объявление`, header);
+        if (rec && rec.character) notifs.success(rec, `${player.name} принял ваше объявление`, header);
     },
     cancelAd(player, ad) {
         var rec = mp.players.at(ad.playerId);
         var header = factions.getFaction(7).name;
-        if (rec) notifs.info(rec, `${player.name} отменил ваше объявление. Причина: ${ad.text}`, header);
+        if (rec && rec.character) notifs.info(rec, `${player.name} отменил ваше объявление. Причина: ${ad.text}`, header);
     },
     publicAd() {
         if (!this.newsAdsEdited.length) return;

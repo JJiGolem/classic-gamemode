@@ -103,7 +103,7 @@ module.exports = {
     },
     "factions.invite.show": (player, recId) => {
         var rec = mp.players.at(recId);
-        if (!rec) return notifs.error(player, `Игрок #${recId} не найден`, `Приглашение`);
+        if (!rec || !rec.character) return notifs.error(player, `Игрок #${recId} не найден`, `Приглашение`);
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, `Приглашение`);
         if (rec.character.factionId) return notifs.error(player, `${rec.name} уже в организации`, `Приглашение`);
         if (!player.character.factionId) return notifs.error(player, `Вы не состоите в организации`, `Приглашение`);
@@ -124,7 +124,7 @@ module.exports = {
 
         var inviter = mp.players.at(player.offer.inviterId);
         delete player.offer;
-        if (!inviter) return notifs.error(player, `Пригласивший не найден`, `Приглашение`);
+        if (!inviter || !inviter.character) return notifs.error(player, `Пригласивший не найден`, `Приглашение`);
         if (player.dist(inviter.position) > 10) return notifs.error(player, `${inviter.name} далеко`, `Приглашение`);
         if (player.character.factionId) return notifs.error(player, `Вы уже в организации`, `Приглашение`);
         if (!inviter.character.factionId) return notifs.error(player, `${inviter.name} не состоит в организации`, `Приглашение`);
@@ -140,13 +140,13 @@ module.exports = {
         if (!player.offer) return;
         var inviter = mp.players.at(player.offer.inviterId);
         delete player.offer;
-        if (!inviter) return;
+        if (!inviter || !inviter.character) return;
         notifs.info(player, `Предложение отклонено`, `Организация`);
         notifs.info(inviter, `${player.name} отклонил предложение`, `Организация`);
     },
     "factions.uval": (player, recId) => {
         var rec = mp.players.at(recId);
-        if (!rec) return notifs.error(player, `Игрок #${recId} не найден`, `Увольнение`);
+        if (!rec || !rec.character) return notifs.error(player, `Игрок #${recId} не найден`, `Увольнение`);
         if (!player.character.factionId) return notifs.error(player, `Вы не состоите в организации`, `Увольнение`);
         if (rec.character.factionId != player.character.factionId) return notifs.error(player, `${rec.name} не вашей организации`, `Увольнение`);
         if (player.character.factionRank <= rec.character.factionRank) return notifs.error(player, `${rec.name} должен иметь ниже ранг`, `Увольнение`);
@@ -158,7 +158,7 @@ module.exports = {
     },
     "factions.giverank.show": (player, recId) => {
         var rec = mp.players.at(recId);
-        if (!rec) return notifs.error(player, `Игрок #${recId} не найден`, `Ранг организации`);
+        if (!rec || !rec.character) return notifs.error(player, `Игрок #${recId} не найден`, `Ранг организации`);
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, `Ранг организации`);
         if (!player.character.factionId) return notifs.error(player, `Вы не состоите в организации`, `Ранг организации`);
         if (rec.character.factionId != player.character.factionId) return notifs.error(player, `${rec.name} не вашей организации`, `Ранг организации`);
@@ -177,7 +177,7 @@ module.exports = {
         var rank = values[1];
 
         var rec = mp.players.at(recId);
-        if (!rec) return notifs.error(player, `Игрок #${recId} не найден`, `Ранг организации`);
+        if (!rec || !rec.character) return notifs.error(player, `Игрок #${recId} не найден`, `Ранг организации`);
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, `Ранг организации`);
         if (!player.character.factionId) return notifs.error(player, `Вы не состоите в организации`, `Ранг организации`);
         if (rec.character.factionId != player.character.factionId) return notifs.error(player, `${rec.name} не вашей организации`, `Ранг организации`);
@@ -202,7 +202,7 @@ module.exports = {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, header);
         if (player.id == data.playerId) return notifs.error(player, `Нельзя предложить самому себе`, header);
         var rec = mp.players.at(data.playerId);
-        if (!rec) return notifs.error(player, `Игрок #${data.playerId} не найден`, header);
+        if (!rec || !rec.character) return notifs.error(player, `Игрок #${data.playerId} не найден`, header);
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, header);
         var faction = factions.getFaction(player.character.factionId);
 
@@ -231,18 +231,18 @@ module.exports = {
 
             faction.cash += offer.sum;
             faction.save();
-        });
+        }, `Чек на пополнение общака ${faction.name}`);
 
         notifs.success(player, `Вы пополнили общак ${faction.name}`, header);
         var rec = mp.players.at(offer.playerId);
-        if (!rec || player.dist(rec.position) > 50) return;
+        if (!rec || !rec.character || player.dist(rec.position) > 50) return;
         notifs.success(rec, `${player.name} пополнил общак на сумму $${offer.sum}`, header);
     },
     "factions.cash.offer.cancel": (player) => {
         if (!player.offer) return;
         var inviter = mp.players.at(player.offer.playerId);
         delete player.offer;
-        if (!inviter) return;
+        if (!inviter || !inviter.character) return;
         notifs.info(player, `Предложение отклонено`, `Чек`);
         notifs.info(inviter, `${player.name} отклонил предложение`, `Чек`);
     },

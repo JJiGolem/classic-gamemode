@@ -22,11 +22,20 @@ module.exports = {
         notifs.success(player, `Пароль успешно изменен`, header);
         mp.events.call("player.password.changed", player);
     },
-    "settings.email.set": (player, email) => {
+    "settings.email.set": async (player, email) => {
         var header = `Смена почты`;
         if (!email || email.length > 40) return notifs.error(player, `Email должен быть менее 40 символов`, header);
         var r = /^[0-9a-z-_\.]+\@[0-9a-z-_]{1,}\.[a-z]{1,}$/i;
         if (!r.test(email)) return notifs.error(player, `Некорректный email`, header);
+
+        var exists = await db.Models.Account.findOne({
+            attributes: ['id'],
+            where: {
+                email: email,
+                confirmEmail: 1
+            }
+        });
+        if (exists != null) return notifs.error(player, `Email ${email} занят`, header);
 
         player.account.email = email;
         player.account.confirmEmail = 0;
@@ -35,9 +44,18 @@ module.exports = {
         notifs.success(player, `Email успешно изменен`, header);
         mp.events.call("player.email.changed", player);
     },
-    "settings.email.confirm": (player) => {
+    "settings.email.confirm": async (player) => {
         var header = `Подтверждение почты`;
         if (player.account.confirmEmail) return notifs.error(player, `Email уже подтвержден`, header);
+
+        var exists = await db.Models.Account.findOne({
+            attributes: ['id'],
+            where: {
+                email: player.account.email,
+                confirmEmail: 1
+            }
+        });
+        if (exists != null) return notifs.error(player, `Email ${email} занят`, header);
 
         let code = utils.randomInteger(100000, 999999);
         utils.sendMail(player.account.email, `Подтверждение электронной почты`, `Код подтверждения: <b>${code}</b>`);

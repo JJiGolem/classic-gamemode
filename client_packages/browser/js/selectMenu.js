@@ -5031,8 +5031,10 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Загрузка') {
+                            selectMenu.show = false;
                             mp.trigger(`callRemote`, `farms.soilsWarehouse.take`);
                         } else if (e.itemName == 'Продажа') {
+                            selectMenu.show = false;
                             mp.trigger(`callRemote`, `farms.soilsWarehouse.sell`);
                         } else if (e.itemName == 'О складе') {
                             selectMenu.showByName("farmSoilsWarehouseInfo");
@@ -6023,6 +6025,34 @@ var selectMenu = new Vue({
                         mp.trigger('clothingShop.exit');
                     }
 
+                }
+            },
+            "dump": {
+                name: "dump",
+                header: "Свалка",
+                items: [
+                    {
+                        text: "Сдать мусор"
+                    },
+                    {
+                        text: "Закрыть"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Сдать мусор') mp.trigger(`callRemote`, `bins.trash.sell`);
+                        selectMenu.show = false;
+                    }
                 }
             },
         },

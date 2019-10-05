@@ -262,7 +262,7 @@ module.exports = {
         args: "[ид_игрока]:n [причина]",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            if (!rec || !rec.character) return out(`Игрок #${args[0]} не найден`, player);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
 
             args.shift();
             var reason = args.join(" ");

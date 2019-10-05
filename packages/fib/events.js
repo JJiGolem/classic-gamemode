@@ -317,7 +317,7 @@ module.exports = {
         var header = `Прослушка FIB`;
 
         var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
-        if (!rec) return notifs.error(player, `Гражданин не найден`, header);
+        if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         var dist = player.dist(rec.position);
         if (dist > 3) return notifs.error(player, `${rec.name} далеко`, header);
         if (!factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не агент`, header);

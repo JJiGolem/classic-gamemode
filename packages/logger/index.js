@@ -2,14 +2,18 @@
 
 module.exports = {
 
-    log(player, text) {
-        var data = {};
-        if (typeof player == 'string') text = player;
-        else {
-            data.characterId = player.character.id,
-            data.playerId = player.id
+    log(text, moduleName = null, player = null) {
+        var data = {
+            text: text
+        };
+        if (moduleName) data.module = moduleName;
+        if (player) {
+            if (typeof player == 'number') data.characterId = player;
+            else {
+                data.characterId = player.character.id,
+                data.playerId = player.id;
+            }
         }
-        data.text = text;
 
         db.Models.Log.create(data);
     }

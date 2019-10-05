@@ -1,9 +1,12 @@
+let animations = call('animations');
+
 module.exports = {
     "/anim": {
         access: 1,
         description: "Проиграть анимацию.",
         args: "[dict] [name] [speed]:n [flag]:n",
-        handler: (player, args) => {
+        handler: (player, args, out) => {
+            if (!animations.has(args[0], args[1])) return out.error(`Анимация не найдена`, player);
             mp.events.call('animations.play', player, args[0], args[1], args[2], args[3]);
         }
     },

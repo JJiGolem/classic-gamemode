@@ -109,6 +109,9 @@ mp.mafia = {
             this.bizWarFactions = [];
         }, time * 1000);
     },
+    stopBizWar() {
+        mp.callCEFV(`captureScore.show = false`);
+    },
     setBizWarScore(mafiaId, score) {
         mp.callCEFV(`captureScore.setScore(${mafiaId}, ${score})`);
     },
@@ -191,6 +194,9 @@ mp.events.add({
     },
     "mafia.bizWar.start": (mafiaId, enemymafiaId, time, mafiacore = 0, enemymafiacore = 0) => {
         mp.mafia.startBizWar(mafiaId, enemymafiaId, time, mafiacore, enemymafiacore);
+    },
+    "mafia.bizWar.stop": () => {
+        mp.mafia.stopBizWar();
     },
     "mafia.bizWar.score.set": (mafiaId, score) => {
         mp.mafia.setBizWarScore(mafiaId, score);

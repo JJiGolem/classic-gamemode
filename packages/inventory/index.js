@@ -162,6 +162,52 @@ module.exports = {
 
         // console.log(`[INVENTORY] Для авто ${vehicle.db.modelName} загружены предметы (${dbItems.length} шт.)`);
     },
+    async initFactionInventory(player, holder) {
+        holder.inventory.items[player.character.id] = []; // предметы
+
+        var dbItems = await db.Models.FactionInventory.findAll({
+            where: {
+                playerId: player.character.id
+            },
+            order: [
+                ['parentId', 'ASC']
+            ],
+            include: [{
+                    model: db.Models.FactionInventoryParam,
+                    as: "params"
+                },
+                {
+                    model: db.Models.InventoryItem,
+                    as: "item"
+                }
+            ]
+        });
+        holder.inventory.items[player.character.id] = dbItems;
+        console.log(`[INVENTORY] Для ${player.name} загружены предметы организации (${dbItems.length} шт.)`);
+    },
+    async initHouseInventory(holder) {
+        holder.inventory.items = []; // предметы
+
+        var dbItems = await db.Models.HouseInventory.findAll({
+            where: {
+                houseId: holder.houseInfo.id
+            },
+            order: [
+                ['parentId', 'ASC']
+            ],
+            include: [{
+                    model: db.Models.HouseInventoryParam,
+                    as: "params"
+                },
+                {
+                    model: db.Models.InventoryItem,
+                    as: "item"
+                }
+            ]
+        });
+        holder.inventory.items = dbItems;
+        console.log(`[INVENTORY] Для дома #${holder.houseInfo.id} загружены предметы (${dbItems.length} шт.)`);
+    },
     convertServerToClientItems(dbItems) {
         // console.log("convertServerToClientItems");
         var clientItems = {};
@@ -301,7 +347,11 @@ module.exports = {
             parentId: null,
             params: struct,
         };
-        conf[place.type.toLowerCase() + "Id"] = -place.sqlId;
+        var key;
+        if (place.type == "Vehicle") key = "vehicleId";
+        else if (place.type == "Faction") key = "playerId";
+        else if (place.type == "House") key = "houseId";
+        conf[key] = -place.sqlId;
         var table = `${place.type}Inventory`;
         var newItem = db.Models[table].build(conf, {
             include: [{
@@ -725,8 +775,8 @@ module.exports = {
         var y = (index - x) / cols;
         if (x >= cols || y >= rows) return null;
         return {
-            x: x,
-            y: y
+            x: Math.clamp(x, 0, cols - 1),
+            y: Math.clamp(y, 0, rows - 1),
         };
     },
     xyToIndex(rows, cols, coord) {
@@ -801,7 +851,10 @@ module.exports = {
     },
     // Полное удаление предметов инвентаря с сервера
     fullDeleteItemsByParams(itemIds, keys, values) {
-        // debug(`fullDeleteItemsByParams`)
+        debug(`fullDeleteItemsByParams`)
+        debug(itemIds)
+        debug(keys)
+        debug(values)
         if (itemIds && !Array.isArray(itemIds)) itemIds = [itemIds];
         if (!Array.isArray(keys)) keys = [keys];
         if (!Array.isArray(values)) values = [values];
@@ -823,10 +876,33 @@ module.exports = {
                 if (i != -1) veh.inventory.items.splice(i, 1);
                 if (veh.bootPlayerId != null) {
                     var rec = mp.players.at(veh.bootPlayerId);
-                    if (!rec) return;
+                    if (!rec || !rec.character) return;
                     rec.call(`inventory.deleteEnvironmentItem`, [item.id]);
                 }
             });
+        });
+        // у всех шкафов организаций
+        call('factions').holders.forEach(holder => {
+            for (var characterId in holder.inventory.items) {
+                var list = holder.inventory.items[characterId];
+                debug(`list`)
+                debug(list)
+                if (!list.length) return;
+                var items = this.getItemsByParams(list, itemIds, keys, values);
+                debug(`items`)
+                debug(items)
+                if (!items.length) return;
+                items.forEach(item => {
+                    item.destroy();
+                    var i = list.indexOf(item);
+                    debug(`i`)
+                    debug(i)
+                    if (i != -1) list.splice(i, 1);
+                });
+                mp.players.forEachInRange(holder.position, 5, (rec) => {
+                    mp.events.call("faction.holder.items.clear", rec);
+                });
+            }
         });
         // предметы на земле
         mp.objects.forEach((obj) => {
@@ -871,7 +947,7 @@ module.exports = {
                 clearTimeout(obj.destroyTimer);
                 obj.destroy();
                 var rec = mp.players.at(obj.playerId);
-                if (!rec) return;
+                if (!rec || !rec.character) return;
                 var i = rec.inventory.ground.indexOf(obj);
                 if (i != -1) rec.inventory.ground.splice(i, 1);
             }
@@ -957,12 +1033,54 @@ module.exports = {
         }
         return list;
     },
-    getVehicleClientPockets(dbItems) {
-        var pockets = [{
-            cols: 18,
-            rows: 20,
-            items: {}
-        }, ];
+    getPocketsByType(type) {
+        switch (type) {
+            case "Vehicle":
+                return [{
+                    cols: 18,
+                    rows: 20,
+                    items: {}
+                }, ];
+            case "Faction":
+                return [{
+                        cols: 8,
+                        rows: 9,
+                        items: {}
+                    },
+                    {
+                        cols: 8,
+                        rows: 9,
+                        items: {}
+                    },
+                    {
+                        cols: 16,
+                        rows: 5,
+                        items: {}
+                    },
+                ];
+            case "House":
+                return [{
+                        cols: 8,
+                        rows: 9,
+                        items: {}
+                    },
+                    {
+                        cols: 8,
+                        rows: 9,
+                        items: {}
+                    },
+                    {
+                        cols: 16,
+                        rows: 5,
+                        items: {}
+                    },
+                ];
+        }
+
+        return [];
+    },
+    getEnvironmentClientPockets(dbItems, type) {
+        var pockets = this.getPocketsByType(type);
         for (var i = 0; i < dbItems.length; i++) {
             var dbItem = dbItems[i];
             if (dbItem.parentId) continue;
@@ -1037,7 +1155,7 @@ module.exports = {
     // урон климата (если игрок одет не по погоде)
     checkClimeDamage(player, temp, out) {
         if (player.vehicle || player.dimension) return;
-        
+
         var clime = Object.assign({}, this.playerClime);
 
         var hat = player.inventory.items.find(x => x.itemId == 6 && !x.parentId);

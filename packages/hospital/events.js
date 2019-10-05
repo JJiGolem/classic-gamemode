@@ -132,6 +132,8 @@ module.exports = {
         }
         if (topParams.undershirt == -1) delete topParams.undershirt;
         if (topParams.uTexture == -1) delete topParams.uTexture;
+        if (topParams.decal == -1) delete topParams.decal;
+        if (topParams.dTexture == -1) delete topParams.dTexture;
         if (topParams.tTexture == -1) delete topParams.tTexture;
 
         hatParams.faction = faction.id;
@@ -222,7 +224,7 @@ module.exports = {
     "hospital.healing.show": (player, recId) => {
         var header = `Лечение`;
         var rec = mp.players.at(recId);
-        if (!rec) return notifs.error(player, `Игрок #${recId} не найден`, header);
+        if (!rec || !rec.character) return notifs.error(player, `Игрок #${recId} не найден`, header);
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, header);
         if (!factions.isHospitalFaction(player.character.factionId)) return notifs.error(player, `Вы не медик`, header);
         if (rec.health == 100) return notifs.error(player, `${rec.name} полностью здоров`, header);
@@ -249,7 +251,7 @@ module.exports = {
         delete player.offer;
 
         var inviter = mp.players.at(offer.inviterId);
-        if (!inviter) return notifs.error(player, `Медик не найден`, header);
+        if (!inviter || !inviter.character) return notifs.error(player, `Медик не найден`, header);
         if (player.dist(inviter.position) > 10) return notifs.error(player, `${inviter.name} далеко`, header);
         if (!factions.isHospitalFaction(inviter.character.factionId)) return notifs.error(player, `${inviter.name} не медик`, header);
         if (player.health == 100) {
@@ -280,14 +282,14 @@ module.exports = {
                 player.health = Math.clamp(player.health + offer.health, 1, 100);
                 notifs.success(inviter, `${player.name} вылечился`, header);
                 notifs.success(player, `${inviter.name} вас вылечил`, header);
-            });
-        });
+            }, `Вылечил игрока ${player.name}`);
+        }, `Вылечился медиком ${inviter.name}`);
     },
     "hospital.healing.cancel": (player) => {
         if (!player.offer) return;
         var inviter = mp.players.at(player.offer.inviterId);
         delete player.offer;
-        if (!inviter) return;
+        if (!inviter || !inviter.character) return;
         notifs.info(player, `Предложение отклонено`, `Лечение`);
         notifs.info(inviter, `${player.name} отклонил предложение`, `Лечение`);
     },

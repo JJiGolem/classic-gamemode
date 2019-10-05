@@ -562,6 +562,14 @@ var inventory = new Vue({
                     value: this.itemsInfo[ammoId].name
                 });
             }
+            if (item.params.owner) params.push({
+                name: "Владелец",
+                value: `#${item.params.owner}`
+            });
+            if (item.params.faction) params.push({
+                name: "Организация",
+                value: `#${item.params.faction}`
+            });
 
             return params;
         },

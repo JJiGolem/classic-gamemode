@@ -47,7 +47,7 @@ module.exports = {
             notifs.success(player, `Товар куплен за $${price}`, header);
             player.call(`selectMenu.loader`, [false]);
             // player.call(`selectMenu.hide`);
-        });
+        }, `Покупка товара на складе грузоперевозок`);
     },
     "carrier.load.products.sell": (player) => {
         var header = `Списание товара`;
@@ -70,7 +70,7 @@ module.exports = {
             notifs.success(player, `Товар списан за $${price}`, header);
             player.call(`selectMenu.loader`, [false]);
             // player.call(`selectMenu.hide`);
-        });
+        }, `Списание товара на складе грузоперевозок`);
     },
     "carrier.vehicle.buy": (player) => {
         var header = `Аренда грузовика`;
@@ -91,7 +91,7 @@ module.exports = {
                 characterId: player.character.id,
             };
             player.call(`prompt.waitShowByName`, [`carrier_job`]);
-        });
+        }, `Аренда грузовика для грузоперевозок`);
         notifs.success(player, `Удачной работы!`, header);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {

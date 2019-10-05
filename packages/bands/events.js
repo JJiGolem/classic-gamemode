@@ -100,7 +100,7 @@ module.exports = {
 
             faction.cash += sum;
             faction.save();
-        });
+        }, `Пополнение общака ${faction.name}`);
 
         notifs.success(player, `Пополнено на $${sum}`, header);
     },
@@ -118,7 +118,7 @@ module.exports = {
 
             faction.cash -= sum;
             faction.save();
-        });
+        }, `Снятие из общака ${faction.name}`);
 
         notifs.success(player, `Снято $${sum}`, header);
     },
@@ -147,13 +147,17 @@ module.exports = {
         };
         money.removeCash(player, price, (res) => {
             if (!res) return notifs.error(player, `Ошибка списания наличных`, header);
-        });
+        }, `Покупка нарко в притоне`);
         inventory.addItem(player, itemIds[data.index], params, (e) => {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вы приобрели ${inventory.getInventoryItem(itemIds[data.index]).name} (${data.count} г.)`, header);
             player.call(`prompt.show`, [`Влияние вашей банды снизило цену на ${parseInt(power * 100)}%`]);
         });
+    },
+    "player.faction.changed": (player, oldVal) => {
+        if (!bands.inWar(oldVal)) return;
+        player.call(`bands.capture.stop`);
     },
     "playerDeath": (player, reason, killer) => {
         // killer = player; // for tests

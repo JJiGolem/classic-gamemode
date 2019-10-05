@@ -30,8 +30,11 @@ mp.bins = {
         if (!this.inside) return;
         if (this.finding) return;
         if (mp.busy.includes()) return;
+        var player = mp.players.local;
+        if (player.vehicle) return;
         mp.notify.warning(`Ищем мусор...`);
         var time = mp.utils.randomInteger(this.waitTrash[0], this.waitTrash[1]);
+        mp.events.callRemote(`animations.playById`, 542);
 
         this.stopFinding();
         this.trashTimer = setTimeout(() => {
@@ -42,6 +45,9 @@ mp.bins = {
     },
     stopFinding() {
         clearTimeout(this.trashTimer);
+        if (this.finding) {
+            mp.events.callRemote(`animations.stop`);
+        }
         this.finding = false;
     },
     showBlips(list) {

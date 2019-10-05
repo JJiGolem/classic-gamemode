@@ -36,6 +36,36 @@ module.exports = {
         }
         mp.events.call("spouseInit.done", player);
     },
+    async getSpouseName(player) {
+        if (typeof player == 'number') {
+            var spouse = await db.Models.Spouse.findOne({
+                where: {
+                    [Op.or]: {
+                        characterA: player,
+                        characterB: player
+                    }
+                },
+                include: [{
+                        as: "characterOne",
+                        model: db.Models.Character,
+                        attributes: ['name', 'gender']
+                    },
+                    {
+                        as: "characterTwo",
+                        model: db.Models.Character,
+                        attributes: ['name', 'gender']
+                    }
+                ],
+            });
+
+            if (!spouse) return null;
+            if (spouse.characterA == player) return spouse.characterTwo.name;
+            else return spouse.characterOne.name;
+        } else {
+            if (!player.spouse) return null;
+            return player.spouse.character.name;
+        }
+    },
     createWeddingMarker() {
         var pos = this.weddingPos;
 

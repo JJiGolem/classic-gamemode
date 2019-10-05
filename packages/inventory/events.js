@@ -1,6 +1,8 @@
 let bands = call('bands');
+let factions = call('factions');
 let inventory = require('./index.js');
 let hospital = require('../hospital');
+let houses = call('houses');
 let mafia = call('mafia');
 let notifs = require('../notifications');
 let satiety = call('satiety');
@@ -16,6 +18,7 @@ module.exports = {
         player.call("inventory.setSatiety", [player.character.satiety]);
         player.call("inventory.setThirst", [player.character.thirst]);
         inventory.initPlayerItemsInfo(player);
+        mp.events.call("faction.holder.items.init", player);
         await inventory.initPlayerInventory(player);
         mp.events.call("inventory.done", player);
     },
@@ -40,6 +43,7 @@ module.exports = {
                 item.save();
             } else { // игрок взял предмет из окруж. среды
                 var i = player.inventory.place.items.findIndex(x => x.id == data.sqlId);
+                if (i == -1) return notifs.error(player, `Предмет #${data.sqlId} в среде не найден. Сообщите разработчикам CRP. :)`, `Код 1`);
                 var item = player.inventory.place.items[i];
                 inventory.addPlayerItem(player, item, data.placeSqlId, data.pocketI, data.index);
                 item.destroy();
@@ -51,6 +55,7 @@ module.exports = {
                 inventory.deleteItem(player, item);
             } else { // предмет уже находится в окруж. среде
                 item = player.inventory.place.items.find(x => x.id == data.sqlId);
+                if (!item) return notifs.error(player, `Предмет #${data.sqlId} в среде не найден. Сообщите разработчикам CRP. :)`, `Код 2`);
                 item.pocketIndex = data.pocketI;
                 item.index = data.index;
                 item.save();
@@ -137,7 +142,7 @@ module.exports = {
             clearTimeout(obj.destroyTimer);
             obj.destroy();
             var rec = mp.players.at(obj.playerId);
-            if (!rec) return;
+            if (!rec || !rec.character) return;
             var i = rec.inventory.ground.indexOf(obj);
             rec.inventory.ground.splice(i, 1);
         });
@@ -179,7 +184,7 @@ module.exports = {
         if (typeof data == 'string') data = JSON.parse(data);
         var header = `Адреналин`;
         var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
-        if (!rec) return notifs.error(player, `Гражданин не найден`, header);
+        if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         if (!rec.getVariable("knocked")) return notifs.error(player, `${rec.name} не нуждается в реанимации`, header);
         if (player.dist(rec.position) > 20) return notifs.error(player, `${rec.name} далеко`, header);
         var adrenalin = (data.itemSqlId) ? inventory.getItem(player, data.itemSqlId) : inventory.getItemByItemId(player, 26);
@@ -342,15 +347,17 @@ module.exports = {
         if (!veh.inventory) return notifs.error(player, `Авто ${veh.db.modelName} не имеет багажник`, header);
         if (veh.bootPlayerId != null) {
             var rec = mp.players.at(veh.bootPlayerId);
-            if (rec && rec.dist(veh.position) < 50) return notifs.error(player, `С багажником взаимодействует другой игрок`, header);
+            if (rec && rec.character && rec.dist(veh.position) < 50) return notifs.error(player, `С багажником взаимодействует другой игрок`, header);
         }
+        if (veh.db.key == 'private' && veh.db.owner != player.character.id) return notifs.error(player, `Вы не являетесь владельцем авто`, header);
+        if (veh.db.key == 'faction' && veh.db.owner != player.character.factionId) return notifs.error(player, `Вы не состоите в ${factions.getFaction(veh.db.owner).name}`, header);
 
         veh.bootPlayerId = player.id;
 
         var place = {
             sqlId: -veh.db.id,
             header: veh.db.modelName,
-            pockets: inventory.getVehicleClientPockets(veh.inventory.items),
+            pockets: inventory.getEnvironmentClientPockets(veh.inventory.items, "Vehicle"),
         };
         player.inventory.place.sqlId = place.sqlId;
         player.inventory.place.type = "Vehicle";
@@ -367,6 +374,84 @@ module.exports = {
             delete veh.bootPlayerId;
         }
     },
+    // Иниц. предметов инвентаря в шкафу организации
+    "faction.holder.items.init": (player) => {
+        if (!player.character.factionId) return;
+        var holder = factions.getHolder(player.character.factionId);
+        inventory.initFactionInventory(player, holder);
+    },
+    // Запрос предметов инвентаря в шкафу организации
+    "faction.holder.items.request": (player, faction) => {
+        var header = `Шкаф ${faction.name}`;
+        var holder = factions.getHolder(faction.id);
+
+        var items = holder.inventory.items[player.character.id];
+        if (!items) return notifs.error(player, `У вас нет личного шкафа`, header);
+
+        var place = {
+            sqlId: -player.character.id,
+            header: header,
+            pockets: inventory.getEnvironmentClientPockets(items, "Faction"),
+        };
+        player.inventory.place.sqlId = place.sqlId;
+        player.inventory.place.type = "Faction";
+        player.inventory.place.items = items;
+        player.call(`inventory.addEnvironmentPlace`, [place]);
+    },
+    // Запрос на очищение предметов в шкафу организации
+    "faction.holder.items.clear": (player) => {
+        player.inventory.place = {};
+        player.call(`inventory.deleteEnvironmentPlace`, [-player.character.id]);
+    },
+    // Удаление предметов в шкафу организации
+    "faction.holder.items.remove": (player) => {
+        if (!player.character.factionId) return;
+        var holder = factions.getHolder(player.character.factionId);
+        delete holder.inventory.items[player.character.id];
+    },
+    // Уничтожение предметов в шкафу организациий
+    "faction.holder.items.destroy": (player) => {
+        // factions.destroyHolderItems(player);
+    },
+    // Запрос предметов инвентаря в шкафу дома
+    "house.holder.items.request": (player, holder) => {
+        var header = `Шкаф`;
+
+        var items = holder.inventory.items;
+        if (!items) return notifs.error(player, `Шкаф сломан`, header); // где-то баг, если выполнится вдруг
+
+        if (holder.playerId != null) {
+            var rec = mp.players.at(holder.playerId);
+            if (rec && rec.character && rec.dist(holder.position) < 5) return notifs.error(player, `Со шкафом взаимодействует другой игрок`, header);
+        }
+        if (player.character.id != holder.houseInfo.characterId) return notifs.error(player, `Вы не являетесь владельцем дома`, header);
+
+        holder.playerId = player.id;
+
+        var place = {
+            sqlId: -holder.houseInfo.id,
+            header: header,
+            pockets: inventory.getEnvironmentClientPockets(items, "House"),
+        };
+        player.inventory.place.sqlId = place.sqlId;
+        player.inventory.place.type = "House";
+        player.inventory.place.items = items;
+        player.call(`inventory.addEnvironmentPlace`, [place]);
+    },
+    // Запрос на очищение предметов в шкафу дома
+    "house.holder.items.clear": (player, holder) => {
+        player.inventory.place = {};
+
+        if (player.id == holder.playerId) {
+            player.call(`inventory.deleteEnvironmentPlace`, [-holder.houseInfo.id]);
+            delete holder.playerId;
+        }
+    },
+    "player.faction.changed": (player) => {
+        mp.events.call("faction.holder.items.destroy", player);
+        mp.events.call("faction.holder.items.clear", player);
+        mp.events.call("faction.holder.items.init", player);
+    },
     "death.spawn": (player) => {
         if (!player.character) return;
         var weapons = inventory.getArrayWeapons(player);
@@ -377,10 +462,20 @@ module.exports = {
         notifs.warning(player, `Вы потеряли оружие`, `Инвентарь`);
     },
     "playerQuit": (player) => {
-        if (!player.character || !player.character.inventory) return;
-        if (!player.inventory.place || player.inventory.place.type != "Vehicle") return;
-        var veh = mp.vehicles.getBySqlId(-player.inventory.place.sqlId);
-        if (!veh) return;
-        delete veh.bootPlayerId;
+        if (!player.character) return;
+        mp.events.call("faction.holder.items.remove", player);
+        if (!player.inventory) return;
+
+        if (player.inventory.place) {
+            if (player.inventory.place.type == "Vehicle") {
+                var veh = mp.vehicles.getBySqlId(-player.inventory.place.sqlId);
+                if (!veh) return;
+                delete veh.bootPlayerId;
+            } else if (player.inventory.place.type == "House") {
+                var holder = houses.getHouseById(-player.inventory.place.sqlId).holder;
+                if (!holder) return;
+                delete holder.playerId;
+            }
+        }
     },
 };

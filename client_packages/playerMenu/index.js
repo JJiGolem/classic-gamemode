@@ -9,6 +9,8 @@
 
 mp.playerMenu = {
     init(data) {
+        if (data.house) data.house.street = mp.utils.getStreetName(data.house.pos);
+        if (data.biz) data.biz.street = mp.utils.getStreetName(data.biz.pos);
         mp.callCEFV(`playerMenu.init('${JSON.stringify(data)}')`);
     },
     setFaction(data) {
@@ -23,10 +25,15 @@ mp.playerMenu = {
     setWanted(wanted) {
         mp.callCEFV(`playerMenu.setWanted(${wanted})`);
     },
+    setFines(fines) {
+        mp.callCEFV(`playerMenu.setFines(${fines})`);
+    },
     setBiz(biz = null) {
+        if (biz) biz.street = mp.utils.getStreetName(biz.pos);
         mp.callCEFV(`playerMenu.setBiz('${JSON.stringify(biz)}')`);
     },
     setHouse(house = null) {
+        if (house) house.street = mp.utils.getStreetName(house.pos);
         mp.callCEFV(`playerMenu.setHouse('${JSON.stringify(house)}')`);
     },
     setSkills(skills) {
@@ -145,6 +152,9 @@ mp.events.add({
     },
     "playerMenu.setAdmin": (data) => {
         mp.playerMenu.setAdmin(data.admin);
+    },
+    "playerMenu.setFines": (data) => {
+        mp.playerMenu.setFines(data.fines);
     },
     "playerMenu.setLaw": (data) => {
         mp.playerMenu.setLaw(data.law);

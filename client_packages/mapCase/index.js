@@ -23,6 +23,22 @@ mp.mapCase = {
         mp.callCEFV(`mapCase.showRedMessage('${text}')`);
     },
 };
+mp.mapCaseGover = {
+    addMember(members) {
+        if (typeof members == 'object') members = JSON.stringify(members);
+        mp.callCEFV(`mapCaseGoverMembersData.add('${members}')`);
+    },
+    removeMember(id) {
+        mp.callCEFV(`mapCaseGoverMembersData.remove(${id})`);
+    },
+    setRanks(ranks) {
+        if (typeof ranks == 'object') ranks = JSON.stringify(ranks);
+        mp.callCEFV(`mapCaseGoverMembersData.setRanks('${ranks}')`);
+    },
+    setMemberRank(id, rank) {
+        mp.callCEFV(`mapCaseGoverMembersData.setMemberRank(${id}, ${rank})`);
+    },
+};
 mp.mapCasePd = {
     // Время установления личности (ms)
     searchTime: 15 * 1000,
@@ -54,6 +70,8 @@ mp.mapCasePd = {
         data.property = "-";
         if (data.housePos) data.property = mp.utils.getStreetName(pos) + `, ${data.houseId}` || "-";
         data.pass = 2608180000 + data.id;
+        if (!data.spouse) data.spouse = "-";
+        else data.spouse = ((data.gender)? "замужем за " : "женат на ") + data.spouse;
         data.gender = (data.gender) ? "Ж" : "М";
 
         if (typeof data == 'object') data = JSON.stringify(data);
@@ -116,6 +134,22 @@ mp.mapCasePd = {
         }, this.emergencyBlipTime);
     },
 };
+mp.mapCaseArmy = {
+    addMember(members) {
+        if (typeof members == 'object') members = JSON.stringify(members);
+        mp.callCEFV(`mapCaseNgMembersData.add('${members}')`);
+    },
+    removeMember(id) {
+        mp.callCEFV(`mapCaseNgMembersData.remove(${id})`);
+    },
+    setRanks(ranks) {
+        if (typeof ranks == 'object') ranks = JSON.stringify(ranks);
+        mp.callCEFV(`mapCaseNgMembersData.setRanks('${ranks}')`);
+    },
+    setMemberRank(id, rank) {
+        mp.callCEFV(`mapCaseNgMembersData.setMemberRank(${id}, ${rank})`);
+    },
+};
 mp.mapCaseFib = {
     // Время установления личности (ms)
     searchTime: 15 * 1000,
@@ -144,6 +178,8 @@ mp.mapCaseFib = {
         data.property = "-";
         if (data.housePos) data.property = mp.utils.getStreetName(pos) + `, ${data.houseId}` || "-";
         data.pass = 2608180000 + data.id;
+        if (!data.spouse) data.spouse = "-";
+        else data.spouse = ((data.gender)? "замужем за " : "женат на ") + data.spouse;
         data.gender = (data.gender) ? "Ж" : "М";
 
         if (typeof data == 'object') data = JSON.stringify(data);
@@ -256,12 +292,16 @@ mp.mapCaseNews = {
 mp.events.add("mapCase.init", (name, factionId) => {
     mp.mapCase.enable(false);
     var type = "";
-    if (mp.factions.isPoliceFaction(factionId)) {
+    if (mp.factions.isGovernmentFaction(factionId)) {
+        type = "gover";
+    } else if (mp.factions.isPoliceFaction(factionId)) {
         type = "pd";
         if (factionId == 2) mp.mapCasePd.menuHeader("LOS SANTOS<br/>POLICE DEPARTMENT");
         else mp.mapCasePd.menuHeader("BLAINE COUNTY<br/>SHERIFF DEPARTMENT");
     } else if (mp.factions.isFibFaction(factionId)) {
         type = "fib";
+    } else if (mp.factions.isArmyFaction(factionId)) {
+        type = "ng";
     } else if (mp.factions.isHospitalFaction(factionId)) {
         type = "ems";
     } else if (mp.factions.isNewsFaction(factionId)) {
@@ -276,7 +316,15 @@ mp.events.add("mapCase.enable", mp.mapCase.enable);
 
 mp.events.add("mapCase.message.green.show", mp.mapCase.showGreenMessage);
 
-mp.events.add("mapCase.message.red.show", mp.mapCase.showRedMessage)
+mp.events.add("mapCase.message.red.show", mp.mapCase.showRedMessage);
+
+mp.events.add("mapCase.gover.members.add", mp.mapCaseGover.addMember);
+
+mp.events.add("mapCase.gover.members.remove", mp.mapCaseGover.removeMember);
+
+mp.events.add("mapCase.gover.ranks.set", mp.mapCaseGover.setRanks);
+
+mp.events.add("mapCase.gover.members.rank.set", mp.mapCaseGover.setMemberRank);
 
 mp.events.add("mapCase.pd.resultData.set", mp.mapCasePd.setResultData);
 
@@ -301,6 +349,14 @@ mp.events.add("mapCase.pd.members.rank.set", mp.mapCasePd.setMemberRank);
 mp.events.add("mapCase.pd.search.start", (recId) => {
     mp.mapCasePd.startSearch(recId);
 });
+
+mp.events.add("mapCase.army.members.add", mp.mapCaseArmy.addMember);
+
+mp.events.add("mapCase.army.members.remove", mp.mapCaseArmy.removeMember);
+
+mp.events.add("mapCase.army.ranks.set", mp.mapCaseArmy.setRanks);
+
+mp.events.add("mapCase.army.members.rank.set", mp.mapCaseArmy.setMemberRank);
 
 mp.events.add("mapCase.fib.resultData.set", mp.mapCaseFib.setResultData);
 

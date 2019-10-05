@@ -59,22 +59,78 @@ let settingsmainWindowData = {
         spawnsPull: ["Улица", "Дом", "Организация"], // API: Варианты спавна.
         currentSpawn: 1, // API: Индекс варианта спавна.
     },
-    saveChanges(microVolume, currentSpawn) {
+
+    settingsList: {
+        spawn: {
+            type: 'scroll',
+            head: 'Место спавна',
+            pull: ["Улица", "Дом", "Организация"],
+            value: 1,
+        },
+        microVolume: {
+            type: 'range',
+            head: 'Громкость микрофона',
+            value: 20,
+        },
+        spawn1: {
+            type: 'scroll',
+            head: 'Место спавна',
+            pull: ["Улица", "Дом", "Организация"],
+            value: 1,
+        },
+        spawn2: {
+            type: 'scroll',
+            head: 'Место спавна',
+            pull: ["Улица", "Дом", "Организация"],
+            value: 1,
+        },
+        spawn3: {
+            type: 'scroll',
+            head: 'Место спавна',
+            pull: ["Улица", "Дом", "Организация"],
+            value: 1,
+        },
+        spawn4: {
+            type: 'scroll',
+            head: 'Место спавна',
+            pull: ["Улица", "Дом", "Организация"],
+            value: 1,
+        },
+        spawn5: {
+            type: 'scroll',
+            head: 'Место спавна',
+            pull: ["Улица", "Дом", "Организация"],
+            value: 1,
+        },
+    },
+
+    saveChanges(modifiedSettings) {
         // TODO: Сохранение изменений;
 
-        mp.trigger(`callRemote`, `settings.spawn.set`, currentSpawn);
+        console.log(modifiedSettings);
+        for (key in modifiedSettings) {
+            this.settingsList[key].value = modifiedSettings[key];
+        }
+
+        /*mp.trigger(`callRemote`, `settings.spawn.set`, currentSpawn);
 
         settingsmainWindowData.microVolume = microVolume;
         settingsmainWindowData.spawnSettings.currentSpawn = currentSpawn;
-        console.log(microVolume, currentSpawn);
+        console.log(microVolume, currentSpawn);*/
     }
 }
 
 let protectionWindowData = {
     email: "erf233423h4@324", // API: адрес почты.
-    isConfirmed: 0, // API: Подверждена ли почта.
+    isConfirmed: false, // API: Подверждена ли почта.
     passMessage: "изменён 4 дня назад", // API: Сообщение о последнем изменени пароля.
     maxWaiting: 60, // API: Время блока кнопки отмены.
+
+    codeMod: false,
+    wating: '',
+    intervalId: null,
+    seconds: 0,
+
     changeMail(mail) {
         // TODO: Сохранить новый почтовый адрес
 
@@ -278,6 +334,10 @@ let statistics = {
         head: "Преступления",
         value: "-"
     },
+    "fines": {
+        head: "Штрафы",
+        value: "-"
+    },
     "narcotism": {
         head: "Наркозависимость",
         value: "-"
@@ -290,6 +350,10 @@ let statistics = {
 
 let houseInfo = [{
         head: "Номер",
+        value: "-",
+    },
+    {
+        head: "Улица",
         value: "-",
     },
     {
@@ -323,6 +387,10 @@ let businessInfo = [{
     {
         head: "Номер",
         value: 0,
+    },
+    {
+        head: "Улица",
+        value: "-",
     },
     {
         head: "Гос. стоимость",
@@ -524,6 +592,10 @@ var playerMenu = new Vue({
                         value: biz.id,
                     },
                     {
+                        head: "Улица",
+                        value: biz.street,
+                    },
+                    {
                         head: "Гос. стоимость",
                         value: biz.price,
                         color: "#0f0",
@@ -540,6 +612,10 @@ var playerMenu = new Vue({
                 houseInfo = [{
                         head: "Номер",
                         value: house.id,
+                    },
+                    {
+                        head: "Улица",
+                        value: house.street,
                     },
                     {
                         head: "Класс",
@@ -575,6 +651,7 @@ var playerMenu = new Vue({
             statistics["wanted"].value = `${stats.wanted} зв.`;
             statistics["law"].value = stats.law;
             statistics["crimes"].value = stats.crimes;
+            statistics["fines"].value = stats.fines;
             statistics["narcotism"].value = stats.narcotism;
             statistics["nicotine"].value = stats.nicotine;
 
@@ -611,10 +688,13 @@ var playerMenu = new Vue({
             statistics["jobName"].value = data.jobName || "-";
         },
         setWanted(wanted) {
-            var oldWanted = parseInt(statistics[6].value);
+            var oldWanted = parseInt(statistics["wanted"].value);
             statistics["wanted"].value = `${wanted} зв.`;
 
-            if (wanted > oldWanted) statistics[8].value += wanted - oldWanted;
+            if (wanted > oldWanted) statistics["crimes"].value += wanted - oldWanted;
+        },
+        setFines(fines) {
+            statistics["fines"].value = fines;
         },
         setLaw(law) {
             statistics["law"].value = law;
@@ -1067,42 +1147,64 @@ Vue.component('player-menu-settings-main', {
     template: "#player-menu-settings-main",
     props: {
         currentWindow: String,
-        microVolume: Number,
-        spawnSettings: Object,
+        settingsList: Object,
+        /*microVolume: Number,
+        spawnSettings: Object,*/
         saveChanges: Function,
     },
     data: () => ({
-        localMicroVolume: 0,
-        localCurrentSpawn: 0,
+        /*localMicroVolume: 0,
+        localCurrentSpawn: 0,*/
+        localSettings: {},
+        modifiedSettings: {},
     }),
     computed: {
+        /*localSettings() {
+            let locSet = {};
+            for (key in this.settingsList) {
+                locSet[key] = {...this.settingsList[key]}
+            }
+            return locSet;
+        },*/
         watcher() {
             this.localMicroVolume = this.microVolume;
             this.localCurrentSpawn = this.spawnSettings.currentSpawn;
         },
         noChanges() {
-            return this.localMicroVolume == this.microVolume &&
-                this.localCurrentSpawn == this.spawnSettings.currentSpawn;
+            let keys = Object.keys(this.localSettings);
+            this.modifiedSettings = {};
+            for (let i = 0; i < keys.length; i++) {
+                if (this.settingsList[keys[i]].value != this.localSettings[keys[i]].value) {
+                    this.modifiedSettings[keys[i]] = this.localSettings[keys[i]].value;
+                }
+            }
+
+            return !Object.keys(this.modifiedSettings).length;
         }
     },
     methods: {
         save() {
             if (this.noChanges) return;
 
-            this.saveChanges(parseInt(this.localMicroVolume), this.localCurrentSpawn);
+            this.saveChanges(this.modifiedSettings);
         },
-        right() {
-            let val = this.localCurrentSpawn;
-            let len = this.spawnSettings.spawnsPull.length;
+        right(key) {
+            let val = this.localSettings[key].value;
+            let len = this.localSettings[key].pull.length;
 
-            this.localCurrentSpawn = (val == len - 1) ? 0 : ++val;
+            this.localSettings[key].value = (val == len - 1) ? 0 : ++val;
         },
-        left() {
-            let val = this.localCurrentSpawn;
-            let len = this.spawnSettings.spawnsPull.length;
+        left(key) {
+            let val = this.localSettings[key].value;
+            let len = this.localSettings[key].pull.length;
 
-            this.localCurrentSpawn = (val == 0) ? len - 1 : --val;
+            this.localSettings[key].value = (val == 0) ? len - 1 : --val;
         }
+    },
+    mounted() {
+        this.localsSettings = {};
+        for (key in settingsmainWindowData.settingsList)
+            this.$set(this.localSettings, key, {...settingsmainWindowData.settingsList[key]});
     }
 });
 
@@ -1117,19 +1219,22 @@ Vue.component('player-menu-settings-protection', {
         changePassword: Function,
         sendCode: Function,
         checkCode: Function,
+        codeMod: Boolean,
+        waiting: String,
+        seconds: Number,
     },
     data: () => ({
         newEmail: '',
         code: '',
         changeMailMod: false,
         changePassMod: false,
-        codeMod: false,
+        //codeMod: false,
         oldPass: '',
         newPass: '',
         newPass2: '',
-        waiting: '',
+        //waiting: '',
 
-        seconds: 0,
+        //seconds: 0,
 
         //maxWaiting: 10,
         intervalId: null,
@@ -1189,16 +1294,16 @@ Vue.component('player-menu-settings-protection', {
             this.changePassMod = false;
         },
         localsendCode() {
-            this.codeMod = true;
-            this.waiting = `(${this.maxWaiting})`;
-            this.seconds = 0;
-            this.intervalId = setInterval(() => {
-                this.waiting = `(${this.maxWaiting - ++this.seconds})`;
+            protectionWindowData.codeMod = true;
+            protectionWindowData.waiting = `(${this.maxWaiting})`;
+            protectionWindowData.seconds = 0;
+            protectionWindowData.intervalId = setInterval(() => {
+                protectionWindowData.waiting = `(${this.maxWaiting - ++protectionWindowData.seconds})`;
 
-                if (this.seconds > this.maxWaiting) {
-                    this.waiting = '';
-                    clearInterval(this.intervalId);
-                    this.intervalId = null;
+                if (protectionWindowData.seconds > this.maxWaiting) {
+                    protectionWindowData.waiting = '';
+                    clearInterval(protectionWindowData.intervalId);
+                    protectionWindowData.intervalId = null;
                 }
 
             }, 1000);
@@ -1210,10 +1315,10 @@ Vue.component('player-menu-settings-protection', {
             this.passCancel();
         },
         cancel() {
-            if (this.intervalId)
+            if (protectionWindowData.intervalId)
                 return;
             this.changeMailMod = false;
-            this.codeMod = false;
+            protectionWindowData.codeMod = false;
             this.code = '';
             this.newEmail = '';
         },
@@ -1234,15 +1339,18 @@ Vue.component('player-menu-settings-protection', {
     },
     watch: {
         isConfirmed(val) {
-            if (val) this.codeMod = false;
+            if (val) protectionWindowData.codeMod = false;
             this.code = '';
 
-            if (this.intervalId)
-                clearInterval(this.intervalId);
-            this.intervalId = null;
-            this.waiting = '';
+            if (protectionWindowData.intervalId)
+                clearInterval(protectionWindowData.intervalId);
+            protectionWindowData.intervalId = null;
+            protectionWindowData.waiting = '';
         }
-    }
+    },
+    /*destroyed () {
+        alert(32);
+    }*/
 });
 
 // playerMenu.show = true;

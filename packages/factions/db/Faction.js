@@ -96,7 +96,19 @@ module.exports = (sequelize, DataTypes) => {
         sZ: {
             type: DataTypes.FLOAT,
             allowNull: false
-        }
+        },
+        hX: {
+            type: DataTypes.FLOAT,
+            allowNull: false
+        },
+        hY: {
+            type: DataTypes.FLOAT,
+            allowNull: false
+        },
+        hZ: {
+            type: DataTypes.FLOAT,
+            allowNull: false
+        },
     }, {
         timestamps: false
     });

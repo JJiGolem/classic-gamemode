@@ -35,7 +35,7 @@ module.exports = {
             if (!res) return out(`Ошибка начисления на банк`);
 
             this.setDonate(player, player.account.donate - donate);
-        });
+        }, `Донат за ${donate} CC`);
 
         notifs.success(player, `Списано ${donate} CC`, header);
     },

@@ -114,7 +114,7 @@ module.exports = {
 
             faction.cash += sum;
             faction.save();
-        });
+        }, `Пополнение общака ${faction.name}`);
 
         notifs.success(player, `Пополнено на $${sum}`, header);
     },
@@ -132,7 +132,7 @@ module.exports = {
 
             faction.cash -= sum;
             faction.save();
-        });
+        }, `Снятие с общака ${faction.name}`);
 
         notifs.success(player, `Снято $${sum}`, header);
     },
@@ -147,9 +147,10 @@ module.exports = {
         var rank = factions.getRank(player.character.factionId, mafia.bizWarRank);
         if (player.character.factionRank < rank.id) return out(`Доступно с ранга ${rank.name}`);
         var rec = mp.players.at(data.recId);
-        if (!rec) return out(`Игрок #${data.recId} не найден`);
+        if (!rec || !rec.character) return out(`Игрок #${data.recId} не найден`);
         if (player.dist(rec.position) > 10) return out(`${rec.name} далеко`);
         if (!factions.isMafiaFaction(rec.character.factionId)) return out(`${rec.name} не член мафии`);
+        rank = factions.getRank(rec.character.factionId, mafia.bizWarRank);
         if (rec.character.factionRank < rank.id) return out(`${rec.name} еще мал для таких сделок`);
         if (player.character.factionId == rec.character.factionId) return out(`${rec.name} в вашей мафии`);
 
@@ -179,7 +180,7 @@ module.exports = {
         delete player.offer;
 
         var seller = mp.players.at(offer.playerId);
-        if (!seller) return out(`Мафиозник не найден`);
+        if (!seller || !seller.character) return out(`Мафиозник не найден`);
         if (player.dist(seller.position) > 10) return out(`${seller.name} далеко`);
         if (player.character.cash < offer.sum) return out(`Необходимо $${sum}`);
 
@@ -192,8 +193,8 @@ module.exports = {
                 if (!res) return notifs.error(seller, `Ошибка начисления наличных`, header);
 
                 bizes.setFactionId(offer.bizId, player.character.factionId);
-            });
-        });
+            }, `Продажа крыши бизнеса #${biz.info.id} игроку ${player.name}`);
+        }, `Покупка крыши бизнеса #${biz.info.id} у игрока ${seller.name}`);
 
         notifs.success(seller, `Крыша ${biz.info.name} продана`, header);
         notifs.success(player, `Крыша ${biz.info.name} куплена`, header);
@@ -202,9 +203,13 @@ module.exports = {
         if (!player.offer) return;
         var inviter = mp.players.at(player.offer.playerId);
         delete player.offer;
-        if (!inviter) return;
+        if (!inviter || !inviter.character) return;
         notifs.info(player, `Предложение отклонено`);
         notifs.info(inviter, `${player.name} отклонил предложение`);
+    },
+    "player.faction.changed": (player, oldVal) => {
+        if (!mafia.inWar(oldVal)) return;
+        player.call(`mafia.bizWar.stop`);
     },
     "playerDeath": (player, reason, killer) => {
         // killer = player; // for tests

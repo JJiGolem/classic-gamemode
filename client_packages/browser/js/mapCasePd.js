@@ -150,6 +150,10 @@ Vue.component('map-case-pd-profile', {
         star: mapCaseSvgPaths.dangerStar,
     }),
     methods: {
+        showOnMap() {
+            // TODO: Показать претупника на карте.
+            mp.trigger(`callRemote`, `mapCase.pd.wanted.search`, this.profileData.dbSearch.id);
+        },
         showOverWindow(winName) {
             mapCase.currentOverWindow = `map-case-${mapCase.type}-over-${winName}`;
         },
@@ -412,6 +416,10 @@ var mapCasePdProfileData = {
             key: 'gender'
         },
         {
+            title: 'Семейное положение: ',
+            key: 'spouse'
+        },
+        {
             title: 'Недвижимость: ',
             key: 'property'
         },
@@ -442,6 +450,10 @@ var mapCasePdProfileData = {
         {
             title: 'Преступления: ',
             key: 'crimes'
+        },
+        {
+            title: 'Штрафы: ',
+            key: 'fines'
         },
     ],
     setProfileData(data) {

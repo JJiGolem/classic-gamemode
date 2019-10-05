@@ -91,4 +91,7 @@ module.exports = {
     "player.spouse.changed": (player) => {
         playerMenu.setSpouse(player);
     },
+    "player.fines.changed": (player) => {
+        playerMenu.setFines(player);
+    },
 }

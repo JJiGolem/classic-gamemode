@@ -25,6 +25,7 @@ module.exports = {
             gender: player.character.gender,
             cash: player.character.cash,
             wanted: player.character.wanted,
+            fines: player.character.Fines.length,
             law: player.character.law,
             crimes: player.character.crimes,
             narcotism: player.character.narcotism,
@@ -51,6 +52,7 @@ module.exports = {
         if (biz) {
             data.biz = {
                 id: biz.info.id,
+                pos: bizes.getBizPosition(biz.info.id),
                 type: biz.info.type,
                 name: biz.info.name,
                 price: biz.info.price,
@@ -60,6 +62,7 @@ module.exports = {
             var garage = house.info.Interior.Garage;
             data.house = {
                 id: house.info.id,
+                pos: house.enter.marker.position,
                 class: house.info.Interior.class,
                 rooms: house.info.Interior.numRooms,
                 carPlaces: (garage) ? garage.carPlaces : 0,
@@ -95,6 +98,7 @@ module.exports = {
         if (biz) {
             data.biz = {
                 id: biz.info.id,
+                pos: bizes.getBizPosition(biz.info.id),
                 type: biz.info.type,
                 name: biz.info.name,
                 price: biz.info.price,
@@ -110,6 +114,7 @@ module.exports = {
             var garage = house.info.Interior.Garage;
             data.house = {
                 id: house.info.id,
+                pos: house.enter.marker.position,
                 class: house.info.Interior.class,
                 rooms: house.info.Interior.numRooms,
                 carPlaces: (garage) ? garage.carPlaces : 0,
@@ -249,4 +254,11 @@ module.exports = {
 
         player.call(`playerMenu.setSpouse`, [data]);
     },
+    setFines(player) {
+        var data = {
+            fines: player.character.Fines.length
+        };
+
+        player.call(`playerMenu.setFines`, [data]);
+    }
 };
