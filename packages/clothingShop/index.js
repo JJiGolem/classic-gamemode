@@ -75,6 +75,7 @@ module.exports = {
             },
             bType: shop.bType,
             priceMultiplier: shop.priceMultiplier,
+            class: shop.class
         }
     },
     getBizParamsById(id) {
