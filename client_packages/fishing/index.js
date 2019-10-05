@@ -29,15 +29,11 @@ let interval;
 let isIntervalCreated = false;
 
 const checkConditions = () => {
-    if (isHaveRod && !isEnter && !localPlayer.isInWater() 
+    return (!mp.busy.includes() && isHaveRod && !isEnter && !localPlayer.isInWater() 
     && !localPlayer.isInAnyVehicle() 
     && !localPlayer.isInAnyBoat()
     && !localPlayer.isInAir()
-    && !localPlayer.isInAnyPlane()) {
-        return true;
-    } else {
-        return false;
-    }
+    && !localPlayer.isInAnyPlane())
 }
 
 mp.events.add('characterInit.done', () => {
