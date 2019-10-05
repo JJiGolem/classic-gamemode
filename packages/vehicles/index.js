@@ -19,6 +19,9 @@ let breakdownConfig = {
 let houses;
 
 module.exports = {
+    // Время простоя авто, после которого оно будет заспавнено (ms) - точность ~0-5 мин
+    vehWaitSpawn: 20 * 60 * 1000,
+
     async init() {
         houses = call('houses');
         await this.loadVehiclePropertiesFromDB();
@@ -299,7 +302,9 @@ module.exports = {
                 let veh = dbPrivate[0];
                 if (dbPrivate[0].parkingDate == null) {
                     let now = new Date();
-                    dbPrivate[0].update({ parkingDate: now });
+                    dbPrivate[0].update({
+                        parkingDate: now
+                    });
                 }
                 mp.events.call('parkings.vehicle.add', veh);
                 mp.events.call('parkings.notify', player, veh, 0);
@@ -565,4 +570,9 @@ module.exports = {
         var items = inventory.getItemsByParams(player.inventory.items, 33, ['vehId', 'owner'], [vehicle.db.id, vehicle.db.owner]);
         return items.length > 0;
     },
+    // Получить всех игроков в авто
+    getOccupants(vehicle) {
+        // TODO: Обойти баги рейджа через проверку на player.vehicle в радиусе авто
+        return vehicle.getOccupants();
+    }
 }

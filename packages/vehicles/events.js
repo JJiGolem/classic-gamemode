@@ -2,6 +2,7 @@
 var vehicles = require('./index.js')
 var inventory = call('inventory');
 var notifs = call('notifications');
+var utils = call('utils');
 
 let money = call('money');
 module.exports = {
@@ -55,6 +56,7 @@ module.exports = {
         if (player.indicatorsUpdateTimer) {
             clearInterval(player.indicatorsUpdateTimer);
         }
+        if (player.vehicle) player.vehicle.lastPlayerTime = Date.now();
     },
     "vehicleDeath": (vehicle) => {
         vehicles.respawnVehicle(vehicle);
@@ -67,6 +69,8 @@ module.exports = {
         player.call('vehicles.speedometer.show', [false]);
         player.call('vehicles.garage', [false]);
         player.call('prompt.hide');
+
+        vehicle.lastPlayerTime = Date.now();
     },
     "playerStartExitVehicle": (player) => {
         if (player.vehicle.engine) player.vehicle.engine = true;
@@ -91,7 +95,7 @@ module.exports = {
             player.vehicle.setVariable("engine", true);
             player.call('prompt.hide');
             if (player.vehicle.key == 'private') {
-            vehicles.generateBreakdowns(player.vehicle);
+                vehicles.generateBreakdowns(player.vehicle);
             }
             mp.events.call('vehicles.breakdowns.init', player);
         }
@@ -436,5 +440,32 @@ module.exports = {
     "vehicles.radio.set": (player, radioIndex) => {
         if (!player.vehicle) return;
         player.vehicle.setVariable('radioIndex', radioIndex);
-    }
+    },
+    "time.main.tick": (ticks) => {
+        if (ticks % 5) return;
+
+        var start = new Date();;
+        mp.vehicles.forEach(veh => {
+            if (!veh.db) return;
+            if (!veh.lastPlayerTime) return;
+            if (veh.db.key == 'private') return;
+            if (start.getTime() - veh.lastPlayerTime < vehicles.vehWaitSpawn) return;
+            if (vehicles.getOccupants(veh).length) return;
+
+            var spawnPos = new mp.Vector3(veh.db.x, veh.db.y, veh.db.z);
+            var vehPos = veh.position;
+            var dist = utils.dist(spawnPos, vehPos);
+            if (dist > 10) {
+                veh.repair();
+                veh.position = spawnPos;
+                veh.rotation = new mp.Vector3(0, 0, veh.db.h);
+                veh.setVariable("heading", veh.db.h);
+                delete veh.lastPlayerTime;
+            }
+        });
+        var diff = Date.now() - start.getTime();
+        debug(`time now: ${new Date()}`)
+        debug(`free vehicles was spawned: ${diff} ms`)
+        debug(`all vehicles: ${mp.vehicles.length}`)
+    },
 }
