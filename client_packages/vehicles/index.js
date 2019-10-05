@@ -322,6 +322,10 @@ mp.events.addDataHandler("sirenLights", (entity) => {
     entity.setSiren(sirenLights);
 });
 
+mp.events.addDataHandler("heading", (entity, value) => {
+    if (value != null) entity.setHeading(value);
+});
+
 mp.events.add('entityStreamIn', (entity) => {
     if (entity.type == 'vehicle') {
         let left = entity.getVariable("leftTurnSignal") || false;
@@ -349,6 +353,9 @@ mp.events.add('entityStreamIn', (entity) => {
 
         entity.setSiren(sirenLights);
         entity.setSirenSound(sirenSound);
+
+        var rotation = entity.getVariable("rotation");
+        if (rotation) entity.setRotation(rotation);
     }
 });
 
