@@ -145,12 +145,14 @@ module.exports = {
     "vehicles.hood": (player, vehicleId, state) => {
         let vehicle = mp.vehicles.at(vehicleId);
         if (!vehicle) return;
+        if (vehicle.db.key == 'private' && !vehicles.haveKeys(player, vehicle)) return notifs.error(player, `Вы не имеете ключи`, vehicle.properties.name);
 
         vehicle.setVariable("hood", state);
     },
     "vehicles.trunk": (player, vehicleId, state) => {
         let vehicle = mp.vehicles.at(vehicleId);
         if (!vehicle) return;
+        if (vehicle.db.key == 'private' && !vehicles.haveKeys(player, vehicle)) return notifs.error(player, `Вы не имеете ключи`, vehicle.properties.name);
 
         vehicle.setVariable("trunk", state);
 
@@ -169,7 +171,8 @@ module.exports = {
         if (!vehicle) return;
         // TEMP
         if (vehicle.key != 'private') return player.call('notifications.push.error', ['Это не ваше т/с', 'Ошибка']);
-        if (vehicle.owner != player.character.id) return player.call('notifications.push.error', ['Это не ваше т/с', 'Транспорт']);
+        // if (vehicle.owner != player.character.id) return player.call('notifications.push.error', ['Это не ваше т/с', 'Транспорт']);
+        if (!vehicles.haveKeys(player, vehicle)) return notifs.error(player, `Вы не имеете ключи`, vehicle.properties.name);
 
         let state = vehicle.locked;
         if (state) {
