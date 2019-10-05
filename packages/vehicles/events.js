@@ -381,6 +381,7 @@ module.exports = {
                         price: props.price // todo isOnParking TODO !!!!!!!!!!!!!!!!!!!!!
                     });
 
+                    inventory.fullDeleteItemsByParams(33, 'vehId', vehId);
                     // выдача ключей в инвентарь
                     inventory.addItem(target, 33, {
                         owner: target.character.id,
@@ -392,7 +393,7 @@ module.exports = {
                         }]);
                     });
                     // удаление ключей у продавца
-                    inventory.deleteByParams(seller, 33, 'vehId', vehId);
+                    // inventory.deleteByParams(seller, 33, 'vehId', vehId);
 
                     delete target.sellCarTargetOffer;
                     delete seller.sellCarSenderOffer;
