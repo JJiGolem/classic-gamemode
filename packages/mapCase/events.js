@@ -1,12 +1,14 @@
 "use strict";
-var chat = require('../chat');
-var factions = require('../factions');
-var mapCase = require('./index');
+let chat = require('../chat');
+let factions = require('../factions');
+let mapCase = require('./index');
 let money = call('money');
 let news = call('news');
-var notifs = require('../notifications');
-var police = require('../police');
-var utils = require('../utils');
+let notifs = require('../notifications');
+let police = require('../police');
+let utils = require('../utils');
+let wedding = call('wedding');
+
 var out = {
     error(player, text) {
         player.call(`mapCase.message.red.show`, [text]);
@@ -15,6 +17,7 @@ var out = {
         player.call(`mapCase.message.green.show`, [text]);
     }
 };
+
 module.exports = {
     "init": async () => {},
     "characterInit.done": (player) => {
@@ -195,6 +198,7 @@ module.exports = {
             }
         });
         var result = mapCase.convertCharactersToProfileData(character, vehicles);
+        result.spouse = await wedding.getSpouseName(id);
         player.call(`mapCase.pd.profileData.set`, [result]);
     },
     "mapCase.pd.fines.give": async (player, data) => {
@@ -514,6 +518,7 @@ module.exports = {
             }
         });
         var result = mapCase.convertCharactersToProfileData(character, vehicles);
+        result.spouse = await wedding.getSpouseName(id);
         player.call(`mapCase.fib.profileData.set`, [result]);
     },
     "mapCase.fib.fines.give": async (player, data) => {

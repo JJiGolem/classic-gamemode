@@ -416,6 +416,10 @@ var mapCasePdProfileData = {
             key: 'gender'
         },
         {
+            title: 'Семейное положение: ',
+            key: 'spouse'
+        },
+        {
             title: 'Недвижимость: ',
             key: 'property'
         },
