@@ -14,11 +14,62 @@ let clothesList = {
     "shoes": [],
 }
 let shopClass;
-let currentItem = {
-    group: 0,
-    index: 0,
-    textureIndex: 0
-};
+// let currentItem = {
+//     group: 0,
+//     index: 0,
+//     textureIndex: 0
+// };
+
+let input = {
+    clothes: {
+        4: {
+            drawable: 0,
+            texture: 0
+        },
+        6: {
+            drawable: 0,
+            texture: 0
+        },
+        7: {
+            drawable: 0,
+            texture: 0
+        },
+        11: {
+            drawable: 0,
+            texture: 0
+        },
+        3: {
+            drawable: 0,
+            texture: 0
+        },
+        8: {
+            drawable: 0,
+            texture: 0
+        },
+    },
+    props: {
+        7: {
+            drawable: 0,
+            texture: 0
+        },
+        2: {
+            drawable: 0,
+            texture: 0
+        },
+        1: {
+            drawable: 0,
+            texture: 0
+        },
+        0: {
+            drawable: 0,
+            texture: 0
+        },
+        6: {
+            drawable: 0,
+            texture: 0
+        },
+    }
+}
 
 let clothesInfo = {
     "bracelets": {
@@ -75,13 +126,12 @@ let rotation = {
 
 mp.events.add({
     'clothingShop.enter': (shopData) => {
+        getInputClothes();
         bindKeys(true);
         setHeaders(shopData.bType);
         mp.events.call('hud.enable', false);
         mp.game.ui.displayRadar(false);
         mp.callCEFR('setOpacityChat', [0.0]);
-        mp.console(JSON.stringify(clothesList));
-        mp.chat.debug(clothesList.length);
         mp.utils.cam.create(shopData.camera.x, shopData.camera.y, shopData.camera.z, shopData.pos.x, shopData.pos.y, shopData.pos.z, 42);
         mp.callCEFV('loader.show = false');
         shopClass = shopData.class;
@@ -131,14 +181,15 @@ mp.events.add({
         playerIsFrozen = true;
     },
     'clothingShop.item.set': (group, index, textureIndex) => {
-        currentItem.group = group;
-        currentItem.index = index;
-        currentItem.textureIndex = textureIndex;
+        // currentItem.group = group;
+        // currentItem.index = index;
+        // currentItem.textureIndex = textureIndex;
 
         let sortedList = clothesList[group].filter(x => x.class == shopClass);
         let item = sortedList[index];
         setClothes(group, item, textureIndex);
-    }
+    },
+    'clothingShop.inputClothes.set': setInputClothes
 });
 
 
@@ -176,7 +227,6 @@ function stopRotationRight() {
 
 function setHeaders(type) {
     let img;
-    mp.chat.debug(type);
     switch (type) {
         case 0:
             img = 'binco';
@@ -246,5 +296,32 @@ function setClothes(group, item, textureIndex) {
         player.setComponentVariation(info.component, item.variation, item.textures[textureIndex], 0);
     } else {
         player.setPropIndex(info.prop, item.variation, item.textures[textureIndex], true);
+    }
+}
+
+function getInputClothes() {
+    for (let key in input.clothes) {
+        key = parseInt(key);
+        input.clothes[key].drawable = player.getDrawableVariation(key);
+        input.clothes[key].texture = player.getTextureVariation(key);
+    }
+    for (let key in input.props) {
+        key = parseInt(key);
+        input.props[key].drawable = player.getPropIndex(key);
+        input.props[key].texture = player.getPropTextureIndex(key);
+    }
+}
+
+function setInputClothes() {
+    for (let key in input.clothes) {
+        let item = input.clothes[key];
+        key = parseInt(key);
+        player.setComponentVariation(key, item.drawable, item.texture, 0);
+    }
+    for (let key in input.props) {
+        let item = input.props[key];
+        key = parseInt(key);
+        player.setPropIndex(key, item.drawable, item.texture, true);
+        if (item.drawable == -1) player.clearProp(key);
     }
 }

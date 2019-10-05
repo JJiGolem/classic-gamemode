@@ -6150,30 +6150,39 @@ var selectMenu = new Vue({
                             mp.trigger('clothingShop.exit');
                         }
                         if (e.itemName == 'Тело') {
+                            mp.trigger('clothingShop.item.set', 'tops', 0, 0);
                             selectMenu.showByName('clothingTops');
                         }
                         if (e.itemName == 'Браслеты') {
+                            mp.trigger('clothingShop.item.set', 'bracelets', 0, 0);
                             selectMenu.showByName('clothingBracelets');
                         }
                         if (e.itemName == 'Серьги') {
+                            mp.trigger('clothingShop.item.set', 'ears', 0, 0);
                             selectMenu.showByName('clothingEars');
                         }
                         if (e.itemName == 'Очки') {
+                            mp.trigger('clothingShop.item.set', 'glasses', 0, 0);
                             selectMenu.showByName('clothingGlasses');
                         }
                         if (e.itemName == 'Часы') {
+                            mp.trigger('clothingShop.item.set', 'watches', 0, 0);
                             selectMenu.showByName('clothingWatches');
                         }
                         if (e.itemName == 'Галстуки') {
+                            mp.trigger('clothingShop.item.set', 'ties', 0, 0);
                             selectMenu.showByName('clothingTies');
                         }
                         if (e.itemName == 'Головные уборы') {
+                            mp.trigger('clothingShop.item.set', 'hats', 0, 0);
                             selectMenu.showByName('clothingHats');
                         }
                         if (e.itemName == 'Ноги') {
+                            mp.trigger('clothingShop.item.set', 'pants', 0, 0);
                             selectMenu.showByName('clothingPants');
                         }
                         if (e.itemName == 'Обувь') {
+                            mp.trigger('clothingShop.item.set', 'shoes', 0, 0);
                             selectMenu.showByName('clothingShoes');
                         }
                     }
@@ -6212,12 +6221,14 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('clothingMain');
+                            mp.trigger('clothingShop.inputClothes.set');
                         } else {
                             mp.trigger('clothingShop.item.buy', 'tops', e.itemIndex, e.valueIndex);
                         }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
-                        mp.trigger('clothingShop.exit');
+                        selectMenu.showByName('clothingMain');
+                        mp.trigger('clothingShop.inputClothes.set');
                     }
 
                 }
@@ -6250,12 +6261,14 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('clothingMain');
+                            mp.trigger('clothingShop.inputClothes.set');
                         } else {
                             mp.trigger('clothingShop.item.buy', 'bracelets', e.itemIndex, e.valueIndex);
                         }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('clothingMain');
+                        mp.trigger('clothingShop.inputClothes.set');
                     }
 
                 }
@@ -6288,12 +6301,14 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('clothingMain');
+                            mp.trigger('clothingShop.inputClothes.set');
                         } else {
                             mp.trigger('clothingShop.item.buy', 'ears', e.itemIndex, e.valueIndex);
                         }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('clothingMain');
+                        mp.trigger('clothingShop.inputClothes.set');
                     }
                 }
             },
@@ -6325,12 +6340,14 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('clothingMain');
+                            mp.trigger('clothingShop.inputClothes.set');
                         } else {
                             mp.trigger('clothingShop.item.buy', 'glasses', e.itemIndex, e.valueIndex);
                         }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('clothingMain');
+                        mp.trigger('clothingShop.inputClothes.set');
                     }
                 }
             },
@@ -6362,12 +6379,14 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('clothingMain');
+                            mp.trigger('clothingShop.inputClothes.set');
                         } else {
                             mp.trigger('clothingShop.item.buy', 'watches', e.itemIndex, e.valueIndex);
                         }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('clothingMain');
+                        mp.trigger('clothingShop.inputClothes.set');
                     }
                 }
             },
@@ -6399,12 +6418,14 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('clothingMain');
+                            mp.trigger('clothingShop.inputClothes.set');
                         } else {
                             mp.trigger('clothingShop.item.buy', 'ties', e.itemIndex, e.valueIndex);
                         }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('clothingMain');
+                        mp.trigger('clothingShop.inputClothes.set');
                     }
                 }
             },
@@ -6436,12 +6457,14 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('clothingMain');
+                            mp.trigger('clothingShop.inputClothes.set');
                         } else {
                             mp.trigger('clothingShop.item.buy', 'hats', e.itemIndex, e.valueIndex);
                         }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('clothingMain');
+                        mp.trigger('clothingShop.inputClothes.set');
                     }
                 }
             },
@@ -6473,12 +6496,14 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('clothingMain');
+                            mp.trigger('clothingShop.inputClothes.set');
                         } else {
                             mp.trigger('clothingShop.item.buy', 'pants', e.itemIndex, e.valueIndex);
                         }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('clothingMain');
+                        mp.trigger('clothingShop.inputClothes.set');
                     }
                 }
             },
@@ -6510,12 +6535,14 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('clothingMain');
+                            mp.trigger('clothingShop.inputClothes.set');
                         } else {
                             mp.trigger('clothingShop.item.buy', 'shoes', e.itemIndex, e.valueIndex);
                         }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('clothingMain');
+                        mp.trigger('clothingShop.inputClothes.set');
                     }
                 }
             },
