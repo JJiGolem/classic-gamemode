@@ -5963,33 +5963,7 @@ var selectMenu = new Vue({
                 name: "clothingMain",
                 header: "Одежда",
                 headerImg: "",
-                items: [{
-                        text: 'Браслеты'
-                    },
-                    {
-                        text: 'Серьги'
-                    },
-                    {
-                        text: 'Очки'
-                    },
-                    {
-                        text: 'Часы'
-                    },
-                    {
-                        text: 'Головные уборы'
-                    },
-                    {
-                        text: 'Тело'
-                    },
-                    {
-                        text: 'Ноги'
-                    },
-                    {
-                        text: 'Обувь'
-                    },
-                    {
-                        text: 'Закрыть'
-                    },
+                items: [
                 ],
                 i: 0,
                 j: 0,
@@ -6002,29 +5976,378 @@ var selectMenu = new Vue({
                         itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
                         valueIndex: item.i,
                     };
-                    // if (eventName == 'onItemSelected') {
-                    //     if (e.itemName == 'Закрыть') {
-                    //         selectMenu.show = false;
-                    //     }
-                    //     if (e.itemName == 'Мобильная связь') {
-                    //         selectMenu.showByName('supermarketMobile');
-                    //     }
-                    //     if (e.itemName == 'Продукты') {
-                    //         selectMenu.showByName('supermarketFood');
-                    //     }
-                    //     if (e.itemName == 'Табачные изделия') {
-                    //         selectMenu.showByName('supermarketTobacco');
-                    //     }
-                    //     if (e.itemName == 'Прочие товары') {
-                    //         selectMenu.showByName('supermarketStuff');
-                    //     }
-                    // }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Закрыть') {
+                            mp.trigger('clothingShop.exit');
+                        }
+                        if (e.itemName == 'Тело') {
+                            selectMenu.showByName('clothingTops');
+                        }
+                        if (e.itemName == 'Браслеты') {
+                            selectMenu.showByName('clothingBracelets');
+                        }
+                        if (e.itemName == 'Серьги') {
+                            selectMenu.showByName('clothingEars');
+                        }
+                        if (e.itemName == 'Очки') {
+                            selectMenu.showByName('clothingGlasses');
+                        }
+                        if (e.itemName == 'Часы') {
+                            selectMenu.showByName('clothingWatches');
+                        }
+                        if (e.itemName == 'Галстуки') {
+                            selectMenu.showByName('clothingTies');
+                        }
+                        if (e.itemName == 'Головные уборы') {
+                            selectMenu.showByName('clothingHats');
+                        }
+                        if (e.itemName == 'Ноги') {
+                            selectMenu.showByName('clothingPants');
+                        }
+                        if (e.itemName == 'Обувь') {
+                            selectMenu.showByName('clothingShoes');
+                        }
+                    }
 
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
-                        // selectMenu.show = false;
                         mp.trigger('clothingShop.exit');
                     }
 
+                }
+            },
+            "clothingTops": {
+                name: "clothingTops",
+                header: "Тело",
+                headerImg: "",
+                items: [
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('clothingShop.item.set', 'tops', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onItemValueChanged') {
+                        mp.trigger('clothingShop.item.set', 'tops', e.itemIndex, e.valueIndex);
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('clothingMain');
+                        } else {
+                            mp.trigger('clothingShop.item.buy', 'tops', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        mp.trigger('clothingShop.exit');
+                    }
+
+                }
+            },
+            "clothingBracelets": {
+                name: "clothingBracelets",
+                header: "Браслеты",
+                headerImg: "",
+                items: [
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('clothingShop.item.set', 'bracelets', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onItemValueChanged') {
+                        mp.trigger('clothingShop.item.set', 'bracelets', e.itemIndex, e.valueIndex);
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('clothingMain');
+                        } else {
+                            mp.trigger('clothingShop.item.buy', 'bracelets', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('clothingMain');
+                    }
+
+                }
+            },
+            "clothingEars": {
+                name: "clothingEars",
+                header: "Серьги",
+                headerImg: "",
+                items: [
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('clothingShop.item.set', 'ears', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onItemValueChanged') {
+                        mp.trigger('clothingShop.item.set', 'ears', e.itemIndex, e.valueIndex);
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('clothingMain');
+                        } else {
+                            mp.trigger('clothingShop.item.buy', 'ears', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('clothingMain');
+                    }
+                }
+            },
+            "clothingGlasses": {
+                name: "clothingGlasses",
+                header: "Очки",
+                headerImg: "",
+                items: [
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('clothingShop.item.set', 'glasses', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onItemValueChanged') {
+                        mp.trigger('clothingShop.item.set', 'glasses', e.itemIndex, e.valueIndex);
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('clothingMain');
+                        } else {
+                            mp.trigger('clothingShop.item.buy', 'glasses', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('clothingMain');
+                    }
+                }
+            },
+            "clothingWatches": {
+                name: "clothingWatches",
+                header: "Часы",
+                headerImg: "",
+                items: [
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('clothingShop.item.set', 'watches', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onItemValueChanged') {
+                        mp.trigger('clothingShop.item.set', 'watches', e.itemIndex, e.valueIndex);
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('clothingMain');
+                        } else {
+                            mp.trigger('clothingShop.item.buy', 'watches', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('clothingMain');
+                    }
+                }
+            },
+            "clothingTies": {
+                name: "clothingTies",
+                header: "Галстуки",
+                headerImg: "",
+                items: [
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('clothingShop.item.set', 'ties', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onItemValueChanged') {
+                        mp.trigger('clothingShop.item.set', 'ties', e.itemIndex, e.valueIndex);
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('clothingMain');
+                        } else {
+                            mp.trigger('clothingShop.item.buy', 'ties', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('clothingMain');
+                    }
+                }
+            },
+            "clothingHats": {
+                name: "clothingHats",
+                header: "Головные уборы",
+                headerImg: "",
+                items: [
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('clothingShop.item.set', 'hats', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onItemValueChanged') {
+                        mp.trigger('clothingShop.item.set', 'hats', e.itemIndex, e.valueIndex);
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('clothingMain');
+                        } else {
+                            mp.trigger('clothingShop.item.buy', 'hats', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('clothingMain');
+                    }
+                }
+            },
+            "clothingPants": {
+                name: "clothingPants",
+                header: "Ноги",
+                headerImg: "",
+                items: [
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('clothingShop.item.set', 'pants', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onItemValueChanged') {
+                        mp.trigger('clothingShop.item.set', 'pants', e.itemIndex, e.valueIndex);
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('clothingMain');
+                        } else {
+                            mp.trigger('clothingShop.item.buy', 'pants', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('clothingMain');
+                    }
+                }
+            },
+            "clothingShoes": {
+                name: "clothingShoes",
+                header: "Обувь",
+                headerImg: "",
+                items: [
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('clothingShop.item.set', 'shoes', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onItemValueChanged') {
+                        mp.trigger('clothingShop.item.set', 'shoes', e.itemIndex, e.valueIndex);
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('clothingMain');
+                        } else {
+                            mp.trigger('clothingShop.item.buy', 'shoes', e.itemIndex, e.valueIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('clothingMain');
+                    }
                 }
             },
             "dump": {
