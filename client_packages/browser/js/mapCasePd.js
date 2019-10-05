@@ -152,7 +152,7 @@ Vue.component('map-case-pd-profile', {
     methods: {
         showOnMap() {
             // TODO: Показать претупника на карте.
-            mapCase.showGreenMessage ("test");
+            mp.trigger(`callRemote`, `mapCase.pd.wanted.search`, this.profileData.dbSearch.id);
         },
         showOverWindow(winName) {
             mapCase.currentOverWindow = `map-case-${mapCase.type}-over-${winName}`;

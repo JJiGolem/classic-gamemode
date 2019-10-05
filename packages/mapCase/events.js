@@ -218,6 +218,20 @@ module.exports = {
         var text = `Штраф на сумму <span>${fine.price}$</span><br/>выдан <span>${data.recName}</span><br/> по причине <span>${data.cause}</span>`;
         out.success(player, text);
     },
+    "mapCase.pd.wanted.search": (player, characterId) => {
+        var rec = mp.players.getBySqlId(characterId);
+        if (!rec || !rec.character) return out.error(player, `Персонаж #${characterId} оффлайн`);
+        if (!rec.character.wanted) return out.error(player, `${rec.name} не в розыске`);
+        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return out.error(player, `Вы не сотрудник`);
+        if (rec.dimension != 0) return out.error(player, `${rec.name} достаточно хорошо скрыт`);
+        if (player.lastWantedSearch && Date.now() - player.lastWantedSearch < police.searchTime) return out.error(player, `Ожидайте...`);
+        player.lastWantedSearch = Date.now();
+
+        var pos = police.getSearchPosition(rec.position);
+
+        player.call(`police.search.blip.create`, [rec.name, pos]);
+        out.success(player, `Приблизительное местоположение ${rec.name} отмечено на карте`);
+    },
     "mapCase.pd.wanted.give": (player, data) => {
         if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
         data = JSON.parse(data);
