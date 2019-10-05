@@ -447,6 +447,10 @@ var mapCasePdProfileData = {
             title: 'Преступления: ',
             key: 'crimes'
         },
+        {
+            title: 'Штрафы: ',
+            key: 'fines'
+        },
     ],
     setProfileData(data) {
         if (typeof data == 'string') data = JSON.parse(data);

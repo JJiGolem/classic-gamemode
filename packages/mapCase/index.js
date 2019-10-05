@@ -76,6 +76,7 @@ module.exports = {
             veh: vehNames.join(", ").trim() || "-",
             law: character.law,
             crimes: character.crimes,
+            fines: character.Fines.length,
         };
     },
     convertWanted(wanted) {
