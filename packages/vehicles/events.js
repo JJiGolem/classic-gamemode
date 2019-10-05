@@ -1,6 +1,7 @@
 "use strict";
 var vehicles = require('./index.js')
 var inventory = call('inventory');
+var notifs = call('notifications');
 
 let money = call('money');
 module.exports = {
@@ -84,6 +85,7 @@ module.exports = {
             player.call('vehicles.engine.toggle', [false]);
             player.vehicle.setVariable("engine", false);
         } else {
+            if (player.vehicle.key == 'private' && !vehicles.haveKeys(player, player.vehicle)) return notifs.error(player, `Вы не имеете ключи`, player.vehicle.properties.name);
             player.vehicle.engine = true;
             player.call('vehicles.engine.toggle', [true]);
             player.vehicle.setVariable("engine", true);

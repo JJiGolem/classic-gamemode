@@ -559,5 +559,10 @@ module.exports = {
                 h: veh.h
             });
         }
-    }
+    },
+    // Имеет ли игрок ключи от авто
+    haveKeys(player, vehicle) {
+        var items = inventory.getItemsByParams(player.inventory.items, 33, ['vehId', 'owner'], [vehicle.db.id, vehicle.db.owner]);
+        return items.length > 0;
+    },
 }
