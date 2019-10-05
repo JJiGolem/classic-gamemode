@@ -46,6 +46,21 @@ const initialState = {
     //                 name: 'Шкаф',
     //                 price: 150,
     //                 isBuyed: false,
+    //             },
+    //             {
+    //                 name: 'Кровать',
+    //                 price: 200,
+    //                 isBuyed: false,
+    //             },
+    //             {
+    //                 name: 'Дверь',
+    //                 price: 200,
+    //                 isBuyed: true,
+    //             },
+    //             {
+    //                 name: 'Кресло',
+    //                 price: 200,
+    //                 isBuyed: false,
     //             }
     //         ]
     //     }
@@ -359,6 +374,30 @@ export default function info(state = initialState, action) {
                     newState.biz[0].statistics.pop();
                 }
                 newState.biz[0].statistics.unshift(payload);
+            }
+
+            return newState;
+
+        case 'BUY_IMPROVEMENT_HOUSE_ANS':
+            return {
+                ...state,
+                houses: [
+                    ...state.houses,
+                    state.houses[0] = {
+                        ...state.houses[0],
+                        buyStatus: payload
+                    }
+                ]
+            }
+
+        case 'BUY_IMPROVEMENT_HOUSE':
+            newState = { ...state };
+            let improvIndex = newState.houses[0].improvements.findIndex(imp => imp.name == payload);
+
+            if (improvIndex !== -1) {
+                newState.houses[0].improvements[improvIndex].isBuyed = true;
+                newState.houses[0].buyStatus = null;
+                newState.houses[0].isSell = false;
             }
 
             return newState;

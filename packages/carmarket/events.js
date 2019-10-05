@@ -56,7 +56,8 @@ module.exports = {
                 carmarket.sellCar(player.vehicle);
                 player.call('carmarket.car.sell.ans', [3, price]);
                 // удаление ключей
-                inventory.deleteByParams(player, 33, 'vehId', vehicleId);
+                // inventory.deleteByParams(player, 33, 'vehId', vehicleId);
+                inventory.fullDeleteItemsByParams(33, 'vehId', vehicleId);
             } else {
                 console.log(`${player.name} не смог продать авто на рынке (addcash error)`)
                 player.call('carmarket.car.sell.ans', [2]);
@@ -116,6 +117,7 @@ module.exports = {
         money.removeCash(player, price, function(result) {
             if (result) {
 
+                inventory.fullDeleteItemsByParams(33, 'vehId', params.vehId);
                 // выдача ключей в инвентарь
                 inventory.addItem(player, 33, params, (e) => {
                     if (e) player.call('carmarket.car.buy.ans', [5, {

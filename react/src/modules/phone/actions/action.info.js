@@ -96,3 +96,13 @@ export const sellBusiness = id => ({
     type: 'SELL_BUSINESS',
     payload: id
 });
+
+export const buyImprovementHouse = name => ({
+    type: 'BUY_IMPROVEMENT_HOUSE',
+    payload: name
+});
+
+export const setBuyStatusHouse = status => ({
+    type: 'BUY_IMPROVEMENT_HOUSE_ANS',
+    payload: status
+});

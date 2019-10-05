@@ -851,10 +851,6 @@ module.exports = {
     },
     // Полное удаление предметов инвентаря с сервера
     fullDeleteItemsByParams(itemIds, keys, values) {
-        debug(`fullDeleteItemsByParams`)
-        debug(itemIds)
-        debug(keys)
-        debug(values)
         if (itemIds && !Array.isArray(itemIds)) itemIds = [itemIds];
         if (!Array.isArray(keys)) keys = [keys];
         if (!Array.isArray(values)) values = [values];
@@ -885,18 +881,12 @@ module.exports = {
         call('factions').holders.forEach(holder => {
             for (var characterId in holder.inventory.items) {
                 var list = holder.inventory.items[characterId];
-                debug(`list`)
-                debug(list)
                 if (!list.length) return;
                 var items = this.getItemsByParams(list, itemIds, keys, values);
-                debug(`items`)
-                debug(items)
                 if (!items.length) return;
                 items.forEach(item => {
                     item.destroy();
                     var i = list.indexOf(item);
-                    debug(`i`)
-                    debug(i)
                     if (i != -1) list.splice(i, 1);
                 });
                 mp.players.forEachInRange(holder.position, 5, (rec) => {

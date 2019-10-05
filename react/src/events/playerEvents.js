@@ -165,6 +165,13 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
+    myEventEmmiter.on('house.improvements.buy.ans', (ans) => {
+        dispatch({
+            type: 'BUY_IMPROVEMENT_HOUSE_ANS',
+            payload: ans
+        });
+    });
+
     // ------------ ТЕЛЕФОН (ДОМ) - КОНЕЦ -----------------
 
     // ------------ ТЕЛЕФОН (БИЗНЕС) -----------------

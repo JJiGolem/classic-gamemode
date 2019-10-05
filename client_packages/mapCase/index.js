@@ -70,6 +70,8 @@ mp.mapCasePd = {
         data.property = "-";
         if (data.housePos) data.property = mp.utils.getStreetName(pos) + `, ${data.houseId}` || "-";
         data.pass = 2608180000 + data.id;
+        if (!data.spouse) data.spouse = "-";
+        else data.spouse = ((data.gender)? "замужем за " : "женат на ") + data.spouse;
         data.gender = (data.gender) ? "Ж" : "М";
 
         if (typeof data == 'object') data = JSON.stringify(data);
@@ -176,6 +178,8 @@ mp.mapCaseFib = {
         data.property = "-";
         if (data.housePos) data.property = mp.utils.getStreetName(pos) + `, ${data.houseId}` || "-";
         data.pass = 2608180000 + data.id;
+        if (!data.spouse) data.spouse = "-";
+        else data.spouse = ((data.gender)? "замужем за " : "женат на ") + data.spouse;
         data.gender = (data.gender) ? "Ж" : "М";
 
         if (typeof data == 'object') data = JSON.stringify(data);
