@@ -187,14 +187,15 @@ module.exports = {
 
         mp.vehicles.forEach((veh) => {
             if (veh.key == 'private' && veh.owner == id) {
+                inventory.fullDeleteItemsByParams(33, 'vehId', veh.db.id);
                 if (player) {
-                    console.log(veh);
+                    // console.log(veh);
                     clearInterval(veh.fuelTimer);
                     veh.destroy();
                     vehicles.removeVehicleFromPlayerVehicleList(player, veh.sqlId);
                     vehicles.removeVehicleFromCarPlace(player, veh);
 
-                    inventory.deleteByParams(player, 33, 'vehId', veh.db.id);
+                    // inventory.deleteByParams(player, 33, 'vehId', veh.db.id);
                 } else inventory.deleteByParams(id, 33, 'vehId', veh.db.id);
             }
         })

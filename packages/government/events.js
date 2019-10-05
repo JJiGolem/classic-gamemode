@@ -1,12 +1,13 @@
 "use strict";
-var government = require('../government');
-var factions = require('../factions');
-var inventory = require('../inventory');
-var notifs = require('../notifications');
+let government = require('../government');
+let factions = require('../factions');
+let inventory = require('../inventory');
+let money = call('money');
+let notifs = require('../notifications');
 
 module.exports = {
     "init": () => {
-
+        government.init();
     },
     "characterInit.done": (player) => {
         if (!factions.isGovernmentFaction(player.character.factionId)) return;
@@ -264,5 +265,61 @@ module.exports = {
             notifs.success(player, `Вам выданы ${inventory.getInventoryItem(itemIds[index]).name} (${ammo} ед.)`, header);
             factions.setAmmo(faction, faction.ammo - government.ammoAmmo * ammo);
         });
+    },
+    "government.service.fines.pay": (player, index) => {
+        var fines = player.character.Fines;
+        var header = `Оплата штрафа`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!fines.length) return out(`У вас нет штрафов`);
+        index = Math.clamp(index, 0, fines.length - 1);
+        var fine = fines[index];
+        if (player.character.cash < fine.price) return out(`Необходимо $${fine.price}`);
+
+        money.removeCash(player, fine.price, (res) => {
+            if (!res) return out(`Ошибка списания наличных`);
+
+            fine.destroy();
+            fines.splice(index, 1);
+            mp.events.call("player.fines.changed", player);
+        }, `Оплата штрафа от офицера #${fine.copId}`);
+
+        notifs.success(player, `Штраф #${fine.id} оплачен`, header);
+    },
+    "government.service.keys.veh.restore": (player, index) => {
+        var vehicles = player.vehicleList;
+        var header = `Восстановление ключей`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!vehicles.length) return out(`У вас нет авто`);
+        index = Math.clamp(index, 0, vehicles.length - 1);
+        var veh = vehicles[index];
+        var price = government.restoreVehKeysPrice;
+        if (player.character.cash < price) return out(`Необходимо $${price}`);
+
+        var items = inventory.getItemsByParams(player.inventory.items, 33, 'vehId', veh.id);
+        if (items.length) return out(`Вы уже имеете ключи от ${veh.name}`);
+
+        var params = {
+            owner: player.character.id,
+            vehId: veh.id,
+            vehName: veh.name
+        };
+        var cant = inventory.cantAdd(player, 33, params);
+        if (cant) return out(cant);
+
+        money.removeCash(player, price, (res) => {
+            if (!res) return out(`Ошибка списания наличных`);
+
+            inventory.fullDeleteItemsByParams(33, 'vehId', veh.id);
+            // выдача ключей в инвентарь
+            inventory.addItem(player, 33, params, (e) => {
+                if (e) out(e);
+            });
+        }, `Восстановление ключей от ${veh.name} (#${veh.id})`);
+
+        notifs.success(player, `Ключи от ${veh.name} восстановлены`, header);
     },
 }
