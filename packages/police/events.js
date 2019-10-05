@@ -533,7 +533,7 @@ module.exports = {
         money.addCash(player, police.arrestPay, (res) => {
             if (!res) return console.log(`[police] Ошибка выдачи ЗП за арест ${player.name}`);
             notifs.info(player, `+ $${police.arrestPay}`, `Бонус`);
-        });
+        }, `Арест игрока ${rec.name} в КПЗ`);
 
         //todo broadcast to radio
     },
@@ -571,7 +571,7 @@ module.exports = {
         money.addCash(player, police.arrestPay, (res) => {
             if (!res) return console.log(`[police] Ошибка выдачи ЗП за арест ${player.name}`);
             notifs.info(player, `+ $${police.arrestPay}`, `Бонус`);
-        });
+        }, `Арест игрока ${rec.name} в тюрьму`);
 
         //todo broadcast to radio
     },

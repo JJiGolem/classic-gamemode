@@ -88,19 +88,13 @@ module.exports = {
         var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60 % 60) + player.character.minutes;
         if (minutes > this.completedMinutes) return out(`Вы уже проиграли более ${this.completedMinutes} минут`);
 
-        var reward = promocode.PromocodeReward;
-        money.addMoney(player, reward.playerSum, (res) => {
-            if (!res) return out(`Ошибка начисления в банк`);
+        player.character.inviterId = promocode.characterId;
+        player.character.save();
 
-            player.character.inviterId = promocode.characterId;
-            player.character.save();
+        promocode.invited++;
+        promocode.save();
 
-            promocode.invited++;
-            promocode.save();
-
-            mp.events.call("player.promocode.activated", player, promocode);
-        });
-
+        mp.events.call("player.promocode.activated", player, promocode);
         notifs.success(player, `Промокод активирован`, header);
     },
     async check(player) {
@@ -143,8 +137,8 @@ module.exports = {
                 }
                 notifs.success(inviter, `Получена награда за ${player.name} $${reward.ownerSum}`);
                 notifs.success(player, `Получена награда за выполнение условий промокода $${reward.playerSum}`);
-            });
-        });
+            }, `Награда за приглашенного игрока ${player.name}`);
+        }, `Награда за выполнение условий промокода ${(typeof inviter == 'number')? inviter : inviter.name}`);
 
     },
 };

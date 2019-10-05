@@ -520,7 +520,7 @@ module.exports = {
         money.addMoney(player, pay, (res) => {
             if (!res) return console.log(`[factions] Ошибка выдачи ЗП для ${player.name}`);
             notifs.info(player, `Зарплата: $${pay}`, faction.name);
-        });
+        }, `Зарплата организации ${faction.name}`);
     },
     fullDeleteItems(owner, faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);

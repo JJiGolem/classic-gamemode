@@ -114,7 +114,7 @@ module.exports = {
 
             faction.cash += sum;
             faction.save();
-        });
+        }, `Пополнение общака ${faction.name}`);
 
         notifs.success(player, `Пополнено на $${sum}`, header);
     },
@@ -132,7 +132,7 @@ module.exports = {
 
             faction.cash -= sum;
             faction.save();
-        });
+        }, `Снятие с общака ${faction.name}`);
 
         notifs.success(player, `Снято $${sum}`, header);
     },
@@ -193,8 +193,8 @@ module.exports = {
                 if (!res) return notifs.error(seller, `Ошибка начисления наличных`, header);
 
                 bizes.setFactionId(offer.bizId, player.character.factionId);
-            });
-        });
+            }, `Продажа крыши бизнеса #${biz.info.id} игроку ${player.name}`);
+        }, `Покупка крыши бизнеса #${biz.info.id} у игрока ${seller.name}`);
 
         notifs.success(seller, `Крыша ${biz.info.name} продана`, header);
         notifs.success(player, `Крыша ${biz.info.name} куплена`, header);

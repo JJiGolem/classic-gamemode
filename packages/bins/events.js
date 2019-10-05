@@ -48,7 +48,7 @@ module.exports = {
         });
         money.addCash(player, pay, (res) => {
             if (!res) notifs.error(player, `Ошибка начисления наличных`, header);
-        });
+        }, `Сдача мусора на свалке`);
 
         notifs.success(player, `Мусор сдан на переработку`, header);
     },

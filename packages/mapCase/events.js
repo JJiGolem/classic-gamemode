@@ -732,7 +732,7 @@ module.exports = {
         if (player.character.cash < price) return notifs.error(player, `Необходимо $${price}`, header);
         money.removeCash(player, price, (res) => {
             if (!res) return notifs.error(player, `Ошибка списания наличных`, header);
-        });
+        }, `Отправка объявления`);
 
         mapCase.addNewsAd(player, text, price);
         return notifs.success(player, `Объявление отправлено`, header);
@@ -748,7 +748,7 @@ module.exports = {
         var pay = parseInt(Math.clamp(ad.price, 0, 200) * news.adPayK);
         money.addMoney(player, pay, (res) => {
             if (!res) return notifs.error(player, `Ошибка начисления на банк`, `Принятие объявления`);
-        });
+        }, `Принятие объявления`);
         mapCase.acceptAd(player, ad);
         out.success(player, `Объявление отредактировано`);
     },

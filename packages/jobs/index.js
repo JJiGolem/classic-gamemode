@@ -82,7 +82,7 @@ module.exports = {
             notifs.info(player, `Зарплата: $${player.character.pay}`, `Работа`);
             player.character.pay = 0;
             player.character.save();
-        });
+        }, `Зарплата работ`);
     },
     clearJobApps(player) {
         if (!player.character) return;

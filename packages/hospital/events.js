@@ -282,8 +282,8 @@ module.exports = {
                 player.health = Math.clamp(player.health + offer.health, 1, 100);
                 notifs.success(inviter, `${player.name} вылечился`, header);
                 notifs.success(player, `${inviter.name} вас вылечил`, header);
-            });
-        });
+            }, `Вылечил игрока ${player.name}`);
+        }, `Вылечился медиком ${inviter.name}`);
     },
     "hospital.healing.cancel": (player) => {
         if (!player.offer) return;
