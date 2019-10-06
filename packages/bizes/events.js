@@ -201,11 +201,14 @@ module.exports = {
         player.biz.sellingBizId = null;
         player.biz.sellingBizCost = null;
     },
-    "biz.order.add": (player) => {
-        
+    "biz.order.add": async (player, id, productCount, productPrice) => {
+        let biz = bizService.getBizById(id);
+        if (biz.info.characterId != player.character.id) return player.call("biz.order.ans", [0]);
+        if (biz.info.cashBox < parseInt(productPrice * productCount)) return player.call("biz.order.ans", [2]);
+        player.call("biz.order.ans", [await bizService.createOrder(biz, productCount, productPrice)]);
     },
-    "biz.order.cancel": (player) => {
-
+    "biz.order.cancel": async (player, id) => {
+        await bizService.destroyOrder(id);
     },
     "biz.actions": (player, action) => {
         switch(action) {

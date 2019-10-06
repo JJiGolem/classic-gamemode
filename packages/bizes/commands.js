@@ -63,29 +63,32 @@ module.exports = {
         access: 6,
         description: "Установить кол-во ресурсов бизнеса",
         args: "[id]:n [amount]:n",
-        handler: (player, args, out) => {
+        handler: async (player, args, out) => {
             let biz = bizService.getBizById(args[0]);
             if (biz == null) {
                 return out.error("Бизнеса с таким id не существует", player);
             }
             biz.info.productsCount = args[1];
-            biz.info.save();
+            await biz.info.save();
+            out.info("Кол-во ресурсов устаовлено", player);
         }
     },
     "/fillbizprod": {
         access: 6,
         description: "Заполнить склад всем бизнесам",
         args: "",
-        handler: (player, args) => {
-            bizService.fillAllBizesProducts();
+        handler: async (player, args, out) => {
+            await bizService.fillAllBizesProducts();
+            out.info("Склады всех бизнесов заполнены", player);
         }
     },
     "/setbiztypemaxprod": {
         access: 6,
         description: "Установить размер склада всем бизнесам заданного типа",
         args: "[type]:n [amount]:n",
-        handler: (player, args) => {
-            bizService.setBizesTypeMaxProducts(args[0], args[1]);
+        handler: async (player, args) => {
+            await bizService.setBizesTypeMaxProducts(args[0], args[1]);
+            out.info("Размер склада всем бизнесам заданного типа установлен", player);
         }
     },
     "/getbizinfo": {
