@@ -12,13 +12,15 @@ module.exports = {
     "init": () => {
         inventory.init();
     },
-    "characterInit.done": async (player) => {
+    "auth.done": (player) => {
+        inventory.initPlayerItemsInfo(player);
         player.call("inventory.setMaxPlayerWeight", [inventory.maxPlayerWeight]);
         player.call("inventory.setMergeList", [inventory.mergeList]);
         player.call("inventory.registerWeaponAttachments", [inventory.bodyList[9], inventory.getWeaponModels()]);
+    },
+    "characterInit.done": async (player) => {
         player.call("inventory.setSatiety", [player.character.satiety]);
         player.call("inventory.setThirst", [player.character.thirst]);
-        inventory.initPlayerItemsInfo(player);
         mp.events.call("faction.holder.items.init", player);
         await inventory.initPlayerInventory(player);
         mp.events.call("inventory.done", player);
