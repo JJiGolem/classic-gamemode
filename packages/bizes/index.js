@@ -414,4 +414,19 @@ module.exports = {
 
     bizesModules: bizesModules,
     dropBiz: dropBiz,
+
+    fillAllBizesProducts() {
+        bizes.forEach(biz => {
+            biz.info.productsCount = biz.info.productsMaxCount;
+            biz.info.save();
+        });
+    },
+    setBizesTypeMaxProducts(type, amount) {
+        bizes.forEach(biz => {
+            if (biz.info.type == type) {
+                biz.info.productsMaxCount = amount;
+                biz.info.save();
+            }
+        });
+    },
 }

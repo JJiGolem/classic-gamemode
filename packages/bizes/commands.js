@@ -69,7 +69,7 @@ module.exports = {
         description: "Установить кол-во ресурсов бизнеса",
         args: "[id]:n [amount]:n",
         handler: (player, args) => {
-            let biz = bizService.getBizById(player);
+            let biz = bizService.getBizById(args[0]);
             if (biz == null) {
                 if (notifications != null) notifications.error(player, "Бизнеса с таким id не существует", "Ошибка");
                 return;
@@ -78,26 +78,18 @@ module.exports = {
     },
     "/fillbizprod": {
         access: 6,
-        description: "Установить максимальное ол-во ресурсов всем бизнесам",
+        description: "Заполнить склад всем бизнесам",
         args: "",
         handler: (player, args) => {
-            let biz = bizService.getBizByPlayerPos(player);
-            if (biz == null) {
-                if (notifications != null) notifications.error(player, "Подойдите ближе к бизнесу", "Ошибка");
-                return;
-            }
+            bizService.fillAllBizesProducts();
         }
     },
     "/setbiztypemaxprod": {
         access: 6,
-        description: "Установить максимальное ол-во ресурсов всем бизнесам",
+        description: "Установить размер склада всем бизнесам заданного типа",
         args: "[type]:n [amount]:n",
         handler: (player, args) => {
-            let biz = bizService.getBizByPlayerPos(player);
-            if (biz == null) {
-                if (notifications != null) notifications.error(player, "Подойдите ближе к бизнесу", "Ошибка");
-                return;
-            }
+            bizService.setBizesTypeMaxProducts();
         }
     },
 }
