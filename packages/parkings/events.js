@@ -22,7 +22,6 @@ module.exports = {
         parkings.addVehicleToParking(veh);
     },
     "parkings.vehicle.get": (player, parkingId) => {
-        console.log(parkingId);
         parkings.spawnParkingVehicle(player, parkingId);
     },
     "playerQuit": (player) => {
@@ -34,11 +33,16 @@ module.exports = {
 
         let props = vehicles.setVehiclePropertiesByModel(vehicle.modelName);
         let parking = parkings.getParkingInfoById(vehicle.parkingId);
-
+        
         switch (type) {
             case 0:
-                player.call('chat.message.push', [`!{#80c102}Ваш транспорт !{#009eec}${props.name} !{#80c102}доставлен на парковку !{#009eec}${parking.name}`]);
+                player.call('chat.message.push', [`!{#80c102}Транспорт !{#009eec}${props.name} !{#80c102}доставлен на парковку !{#009eec}${parking.name}`]);
+                player.call('chat.message.push', [`!{#80c102} Парковка отмечена на карте !{#e485e6}розовым`]);
                 break;
         }
     },
+    "auth.done": (player) => {
+        if (!parkings.parkingBlips) return;
+        player.call('parkings.blips.init', [parkings.parkingBlips]);
+    }
 }

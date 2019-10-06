@@ -154,6 +154,7 @@ module.exports = {
             if (!houses.isHaveHouse(owner.character.id)) {
                 mp.events.call('parkings.vehicle.add', veh);
                 veh.destroy();
+                owner.call('chat.message.push', ['!{#ffcb5c}Транспорт доставлен на парковку, отмеченную на карте !{#e485e6}розовым']);
                 return;
             }
             if (veh.carPlaceIndex == null || !veh.hasOwnProperty('carPlaceIndex')) {
