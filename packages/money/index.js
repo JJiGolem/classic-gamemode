@@ -312,7 +312,7 @@ module.exports = {
         }
     },
     /// Для ироков, которые онлайн
-    moveCash(playerFrom, playerTo, number, callbackT, reason = "") {
+    moveCash(playerFrom, playerTo, number, callbackT, reasonFrom = "", reasonTo = "") {
         if (callbackT == null) return;
         let callback = (result) => {
             try {
@@ -341,8 +341,8 @@ module.exports = {
         }).then(result => {
             this.changing(playerFrom);
             this.changing(playerTo);
-            logger.log(`${number} remove cash to | ${reason}`, "money", playerFrom);
-            logger.log(`${number} add cash to | ${reason}`, "money", playerTo);
+            logger.log(`${number} remove cash to | ${reasonFrom}`, "money", playerFrom);
+            logger.log(`${number} add cash to | ${reasonTo}`, "money", playerTo);
             callback(true);
         }).catch(err => {
             if (cashFrom != null) {
@@ -354,7 +354,7 @@ module.exports = {
             callback(false);
         });
     },
-    moveMoneyById(idFrom, idTo, number, callbackT, reason = "") {
+    moveMoneyById(idFrom, idTo, number, callbackT, reasonFrom = "", reasonTo = "") {
         if (callbackT == null) return;
         let callback = (result) => {
             try {
@@ -441,8 +441,8 @@ module.exports = {
         }).then(result => {
             playerFrom != null && playerFrom.character != null && this.changing(playerFrom);
             playerTo != null && playerTo.character != null && this.changing(playerTo);
-            (playerFrom != null && playerFrom.character != null) ? logger.log(`${number} remove money to | ${reason}`, "money", playerFrom) : logger.log(`${number} remove money to | ${reason}`, "money", idFrom);
-            (playerTo != null && playerTo.character != null) ? logger.log(`${number} add money to | ${reason}`, "money", playerTo) : logger.log(`${number} add money to | ${reason}`, "money", idTo);
+            (playerFrom != null && playerFrom.character != null) ? logger.log(`${number} remove money to | ${reasonFrom}`, "money", playerFrom) : logger.log(`${number} remove money to | ${reasonFrom}`, "money", idFrom);
+            (playerTo != null && playerTo.character != null) ? logger.log(`${number} add money to | ${reasonTo}`, "money", playerTo) : logger.log(`${number} add money to | ${reasonTo}`, "money", idTo);
             callback(true);
         }).catch(err => {
             if (bankFrom != null) {

@@ -66,7 +66,7 @@ let dropBiz = function(biz, sellToGov = false) {
             } else {
                 console.log("[bizes] Biz dropped " + biz.info.id + ". But player didn't getmoney");
             }
-        });
+        }, sellToGov ? `Sell biz with id ${info.id} to goverment` : `Drop biz with id ${info.id}`);
     });
 };
 let setTimer = function(biz) {
@@ -316,7 +316,7 @@ module.exports = {
                 } else {
                     callback(false);
                 }
-            });
+            }, `Buy biz with id ${info.id} from ${seller.character.id}`, `Sell biz with id ${info.id} to ${buyer.character.id}`);
         });
     },
     getBizById: getBizById,
