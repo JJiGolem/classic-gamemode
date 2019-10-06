@@ -361,7 +361,7 @@ module.exports = {
             case 56: // канистра
                 if (data.index == 0) { // заправить авто
                     if (player.vehicle) return out(`Недоступно в авто`);
-                    var veh = mp.vehicles.getNear(player, 5);
+                    var veh = mp.vehicles.getNear(player, 2);
                     if (!veh) return out(`Подойдите к авто`);
 
                     var params = inventory.getParamsValues(item);
@@ -386,7 +386,11 @@ module.exports = {
                     var products = fuelstations.getProductsAmount(biz.info.id);
                     if (!products) return out(`На АЗС нет топлива`);
 
-                    var fuel = Math.clamp(products, 1, params.max - params.litres);
+                    var playerWeight = inventory.getCommonWeight(player);
+                    var maxFuel = Math.min(params.max - params.litres, parseInt(inventory.maxPlayerWeight - playerWeight));
+                    var fuel = Math.clamp(products, 1, maxFuel);
+                    var nextWeight = inventory.getCommonWeight(player) + fuel;
+                    if (nextWeight > inventory.maxPlayerWeight) return out(`Превышение по весу (${nextWeight.toFixed(2)} из ${inventory.maxPlayerWeight} кг)`);
 
                     var price = fuelstations.getFuelPriceById(biz.info.id) * fuel;
                     if (player.character.cash < price) return out(`Необходимо $${price}`);
