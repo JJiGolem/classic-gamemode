@@ -14,10 +14,9 @@ module.exports = {
             if (number < 0 || number > 100000000) return player.call('notifications.push.error', ["Введите сумму для передачи верно", "Ошибка передачи денег"]);
             money.addCash(mp.players.at(id), number, function(result) {
                 if (!result) return player.call('notifications.push.error', ["По неизвестным причинам", "Ошибка передачи денег"]);
-                logger.log(player, `[MONEY] ${number} add cash from | Админская команда`);
                 player.call('notifications.push.success', ["Вы выдали " + number + "$ наличными", "Выдача денежных средств"]);
                 mp.players.at(id).call('notifications.push.success', ["Вам дали " + number + "$ наличными", "Получены денежные средства"]);
-            });
+            }, `Admin command used by ${player.character.id}`);
         }
     },
     "/addmoney": {
@@ -32,10 +31,9 @@ module.exports = {
             if (number < 0 || number > 100000000) return player.call('notifications.push.error', ["Введите сумму для передачи верно", "Ошибка пополнения счета"]);
             money.addMoney(mp.players.at(id), number, function(result) {
                 if (!result) return player.call('notifications.push.error', ["По неизвестным причинам", "Ошибка пополнения счета"]);
-                logger.log(player, `[MONEY] ${number} add money from | Админская команда`);
                 player.call('notifications.push.success', ["Вы перевели " + number + "$ на счет", "Выдача денежных средств"]);
                 mp.players.at(id).call('notifications.push.success', ["Вам перевели " + number + "$ на счет", "Получены денежные средства"]);
-            });
+            }, `Admin command used by ${player.character.id}`);
         }
     },
     "/removecash": {
@@ -50,10 +48,9 @@ module.exports = {
             if (number < 0 || number > 100000000) return player.call('notifications.push.error', ["Введите сумму для снятия верно", "Ошибка снятия денег"]);
             money.removeCash(mp.players.at(id), number, function(result) {
                 if (!result) return player.call('notifications.push.error', ["По неизвестным причинам", "Ошибка снятия денег"]);
-                logger.log(player, `[MONEY] ${number} remove cash from | Админская команда`);
                 player.call('notifications.push.success', ["Вы отобрали " + number + "$ наличными", "Отъем денежных средств"]);
                 mp.players.at(id).call('notifications.push.success', ["У вас отобрали " + number + "$ наличными", "Потеряны денежные средства"]);
-            });
+            }, `Admin command used by ${player.character.id}`);
         }
     },
     "/removemoney": {
@@ -68,10 +65,9 @@ module.exports = {
             if (number < 0 || number > 100000000) return player.call('notifications.push.error', ["Введите сумму для снятия верно", "Ошибка снятия со счета"]);
             money.removeMoney(mp.players.at(id), number, function(result) {
                 if (!result) return player.call('notifications.push.error', ["По неизвестным причинам", "Ошибка снятия со счета"]);
-                logger.log(player, `[MONEY] ${number} remove money from | Админская команда`);
                 player.call('notifications.push.success', ["Вы сняли " + number + "$ со счета", "Отъем денежных средств"]);
                 mp.players.at(id).call('notifications.push.success', ["У вас сняли " + number + "$ со счета", "Потеряны денежные средства"]);
-            });
+            }, `Admin command used by ${player.character.id}`);
         }
     },
     "/checkmoney": {
