@@ -46,6 +46,7 @@ mp.discord.update('Classic Roleplay | Alpha', 'classic-rp.ru');
 /// Массив, которые показывает "занят" ли игрок. Для примера, если занят, не может быть открыт чат или телефон и т.п.
 mp.busy = {};
 mp.busy.list = new Array();
+mp.busy.mouses = new Array();
 /// В данный массив добавляется название модуля, которым занят игрок, если игрок освобождается от данного модуля, то название модуля удаляется из массива
 /// Название модуля записывать маленькими буквами, модули которые учитывают занятость(вписать свои):
 /// LIST
@@ -59,10 +60,14 @@ mp.busy.list = new Array();
 /// economy
 /// END LIST
 /// Добавить модуль (true - операция провшла успешно, false - такой модуль уже содержится в массиве)
-mp.busy.add = function(name, nocef = false) {
+mp.busy.add = function(name, mouse = false, nocef = false) {
     if (!nocef) mp.callCEFV(`busy.add('${name}')`);
     if (mp.busy.list.includes(name)) return false;
     mp.busy.list.push(name);
+    if (mouse) {
+        mp.busy.mouses.push(name);
+        mp.gui.cursor.show(true, true);
+    }
     return true;
 }
 /// Содержит ли массив данный модуль
@@ -89,6 +94,10 @@ mp.busy.remove = function(name, nocef = false) {
     if (!nocef) mp.callCEFV(`busy.remove('${name}')`);
     let index = mp.busy.list.findIndex(x => x == name);
     index != -1 && mp.busy.list.splice(index, 1);
+    
+    let mouseIndex = mp.busy.mouses.findIndex(x => x == name);
+    mouseIndex != -1 && mp.busy.mouses.splice(mouseIndex, 1);
+    if (mp.busy.mouses.length == 0) mp.gui.cursor.show(false, false);
 }
 
 mp.events.add("busy.add", mp.busy.add);
