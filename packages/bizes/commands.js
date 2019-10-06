@@ -15,7 +15,7 @@ module.exports = {
         description: "Обновить информацию о бизнесе",
         args: "[name]:s [price]:n [type]:n",
         handler: (player, args) => {
-            let biz = getBizByPlayerPos(player);
+            let biz = bizService.getBizByPlayerPos(player);
             if (biz == null) {
                 if (notifications != null) notifications.error(player, "Подойдите ближе к бизнесу", "Ошибка");
                 return;
@@ -31,7 +31,7 @@ module.exports = {
         description: "Установить влияние мафии на бизнес",
         args: "[factionId]:n",
         handler: (player, args) => {
-            let biz = getBizByPlayerPos(player);
+            let biz = bizService.getBizByPlayerPos(player);
             if (biz == null) {
                 if (notifications != null) notifications.error(player, "Подойдите ближе к бизнесу", "Ошибка");
                 return;
@@ -54,13 +54,49 @@ module.exports = {
         args: "",
         handler: (player, args) => {
             if (notifications != null) {
-                let biz = getBizByPlayerPos(player);
+                let biz = bizService.getBizByPlayerPos(player);
                 if (biz == null) {
                     return notifications.error(player, "Подойдите ближе к бизнесу", "Ошибка");
                 }
                 else {
                     return notifications.info(player, "Вы находитесь у бизнеса с id " + biz.info.id, "Бизнес");
                 } 
+            }
+        }
+    },
+    "/setbizprod": {
+        access: 6,
+        description: "Установить кол-во ресурсов бизнеса",
+        args: "[id]:n [amount]:n",
+        handler: (player, args) => {
+            let biz = bizService.getBizById(player);
+            if (biz == null) {
+                if (notifications != null) notifications.error(player, "Бизнеса с таким id не существует", "Ошибка");
+                return;
+            }
+        }
+    },
+    "/fillbizprod": {
+        access: 6,
+        description: "Установить максимальное ол-во ресурсов всем бизнесам",
+        args: "",
+        handler: (player, args) => {
+            let biz = bizService.getBizByPlayerPos(player);
+            if (biz == null) {
+                if (notifications != null) notifications.error(player, "Подойдите ближе к бизнесу", "Ошибка");
+                return;
+            }
+        }
+    },
+    "/setbiztypemaxprod": {
+        access: 6,
+        description: "Установить максимальное ол-во ресурсов всем бизнесам",
+        args: "[type]:n [amount]:n",
+        handler: (player, args) => {
+            let biz = bizService.getBizByPlayerPos(player);
+            if (biz == null) {
+                if (notifications != null) notifications.error(player, "Подойдите ближе к бизнесу", "Ошибка");
+                return;
             }
         }
     },
