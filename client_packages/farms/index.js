@@ -283,7 +283,6 @@ mp.events.add({
         mp.keys.bind(69, true, () => { // E
             mp.farms.takeCropHandler();
         });
-        mp.farms.registerAttachments();
     },
     "farms.jobType.set": (val) => {
         mp.farms.setJobType(val);
@@ -325,3 +324,5 @@ mp.events.addDataHandler("trunk", (vehicle, value) => {
 
     mp.events.callRemote(`farms.vehicle.products.put`, vehicle.remoteId);
 });
+
+mp.farms.registerAttachments();

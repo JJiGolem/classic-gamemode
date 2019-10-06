@@ -5,19 +5,22 @@ let hospital = require('../hospital');
 let houses = call('houses');
 let mafia = call('mafia');
 let notifs = require('../notifications');
+let police = call('police');
 let satiety = call('satiety');
 
 module.exports = {
     "init": () => {
         inventory.init();
     },
-    "characterInit.done": async (player) => {
+    "auth.done": (player) => {
+        inventory.initPlayerItemsInfo(player);
         player.call("inventory.setMaxPlayerWeight", [inventory.maxPlayerWeight]);
         player.call("inventory.setMergeList", [inventory.mergeList]);
         player.call("inventory.registerWeaponAttachments", [inventory.bodyList[9], inventory.getWeaponModels()]);
+    },
+    "characterInit.done": async (player) => {
         player.call("inventory.setSatiety", [player.character.satiety]);
         player.call("inventory.setThirst", [player.character.thirst]);
-        inventory.initPlayerItemsInfo(player);
         mp.events.call("faction.holder.items.init", player);
         await inventory.initPlayerInventory(player);
         mp.events.call("inventory.done", player);
@@ -334,6 +337,28 @@ module.exports = {
         });
 
         inventory.deleteItem(player, drink);
+    },
+    // использовать предмет инвентаря
+    "inventory.item.use": (player, data) => {
+        debug(`item.use`)
+        debug(data)
+        data = JSON.parse(data);
+
+        var item = inventory.getItem(player, data.sqlId);
+        if (!item) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+
+        var header = inventory.getName(item.itemId);
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var character = player.character;
+
+        switch (item.itemId) {
+            case 55: // мешок
+                break;
+            case 56: // канистра
+                break;
+        }
     },
     // Запрос предметов инвентаря в багажнике авто
     "vehicle.boot.items.request": (player, vehId) => {

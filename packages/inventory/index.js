@@ -89,7 +89,7 @@ module.exports = {
     // Отправка общей информации о предметах игроку
     initPlayerItemsInfo(player) {
         player.call(`inventory.setItemsInfo`, [this.clientInventoryItems]);
-        console.log(`[INVENTORY] Для игрока ${player.character.name} загружена общая информация о предметах`);
+        console.log(`[INVENTORY] Для аккаунта ${player.account.login} загружена общая информация о предметах`);
     },
     // Отправка общей информации о предмете
     updateItemInfo(item) {

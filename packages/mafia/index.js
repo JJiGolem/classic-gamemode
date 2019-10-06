@@ -248,4 +248,13 @@ module.exports = {
 
         player.call(`mafia.storage.info.set`, [data]);
     },
+    setBag(player, bag) {
+        if (bag) {
+            player.bag = bag;
+            player.addAttachment("headBag");
+        } else {
+            player.addAttachment("headBag", true);
+            delete player.bag;
+        }
+    },
 };

@@ -15,7 +15,7 @@ module.exports = {
         description: "Обновить информацию о бизнесе",
         args: "[name]:s [price]:n [type]:n",
         handler: (player, args) => {
-            let biz = getBizByPlayerPos(player);
+            let biz = bizService.getBizByPlayerPos(player);
             if (biz == null) {
                 if (notifications != null) notifications.error(player, "Подойдите ближе к бизнесу", "Ошибка");
                 return;
@@ -31,7 +31,7 @@ module.exports = {
         description: "Установить влияние мафии на бизнес",
         args: "[factionId]:n",
         handler: (player, args) => {
-            let biz = getBizByPlayerPos(player);
+            let biz = bizService.getBizByPlayerPos(player);
             if (biz == null) {
                 if (notifications != null) notifications.error(player, "Подойдите ближе к бизнесу", "Ошибка");
                 return;
@@ -54,7 +54,7 @@ module.exports = {
         args: "",
         handler: (player, args) => {
             if (notifications != null) {
-                let biz = getBizByPlayerPos(player);
+                let biz = bizService.getBizByPlayerPos(player);
                 if (biz == null) {
                     return notifications.error(player, "Подойдите ближе к бизнесу", "Ошибка");
                 }
@@ -62,6 +62,34 @@ module.exports = {
                     return notifications.info(player, "Вы находитесь у бизнеса с id " + biz.info.id, "Бизнес");
                 } 
             }
+        }
+    },
+    "/setbizprod": {
+        access: 6,
+        description: "Установить кол-во ресурсов бизнеса",
+        args: "[id]:n [amount]:n",
+        handler: (player, args) => {
+            let biz = bizService.getBizById(args[0]);
+            if (biz == null) {
+                if (notifications != null) notifications.error(player, "Бизнеса с таким id не существует", "Ошибка");
+                return;
+            }
+        }
+    },
+    "/fillbizprod": {
+        access: 6,
+        description: "Заполнить склад всем бизнесам",
+        args: "",
+        handler: (player, args) => {
+            bizService.fillAllBizesProducts();
+        }
+    },
+    "/setbiztypemaxprod": {
+        access: 6,
+        description: "Установить размер склада всем бизнесам заданного типа",
+        args: "[type]:n [amount]:n",
+        handler: (player, args) => {
+            bizService.setBizesTypeMaxProducts();
         }
     },
 }

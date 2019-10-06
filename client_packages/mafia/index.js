@@ -179,6 +179,12 @@ mp.mafia = {
         var cash = JSON.stringify([`$${data.cash}`]);
         mp.callCEFV(`selectMenu.setItemValues('mafiaCash', 'Баланс', '${cash}')`);
     },
+    registerAttachments() {
+        // мешок на голове
+        mp.attachmentMngr.register("headBag", "prop_cs_sack_01", 65068, new mp.Vector3(0.02, 0, 0),
+            new mp.Vector3(90, -90, 10)
+        );
+    }
 };
 
 mp.events.add({
@@ -218,6 +224,8 @@ mp.events.add({
         mp.mafia.createPlayerBlip(player);
     },
 });
+
+mp.mafia.registerAttachments();
 
 // for tests
 // mp.players.local.destroyBlip();
