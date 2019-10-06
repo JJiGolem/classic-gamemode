@@ -979,7 +979,10 @@ var selectMenu = new Vue({
                     },
                     {
                         text: "Купить"
-                    }
+                    },
+                    {
+                        text: "Выход"
+                    },
                 ],
                 i: 0, // индекс выбранного пункта
                 j: 0, // индекс первого видимого пункта
@@ -1006,6 +1009,9 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Купить') {
                             mp.trigger(`carshow.car.buy`);
+                        }
+                        if (e.itemName == 'Выход') {
+                            mp.trigger(`carshow.list.close`);
                         }
                     }
                     if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
@@ -4047,6 +4053,7 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Назад') {
                             mp.trigger('tuning.menu.show');
                         } else {
+                            if (item.values[0] == 'уст.') return selectMenu.notification = 'Этот элемент уже установлен';
                             let index = e.itemIndex - 1;
                             mp.trigger('tuning.buy', 11, index);
                         }
@@ -4096,6 +4103,7 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Назад') {
                             mp.trigger('tuning.menu.show');
                         } else {
+                            if (item.values[0] == 'уст.') return selectMenu.notification = 'Этот элемент уже установлен';
                             let index = e.itemIndex - 1;
                             mp.trigger('tuning.buy', 12, index);
                         }
@@ -4145,6 +4153,7 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Назад') {
                             mp.trigger('tuning.menu.show');
                         } else {
+                            if (item.values[0] == 'уст.') return selectMenu.notification = 'Этот элемент уже установлен';
                             let index = e.itemIndex - 1;
                             mp.trigger('tuning.buy', 13, index);
                         }
@@ -4204,6 +4213,7 @@ var selectMenu = new Vue({
                             mp.trigger('tuning.menu.show');
                             mp.trigger('tuning.params.set')
                         } else {
+                            if (item.values[0] == 'уст.') return selectMenu.notification = 'Этот элемент уже установлен';
                             let index = e.itemIndex - 1;
                             mp.trigger('tuning.buy', 15, index);
                         }
@@ -4261,6 +4271,7 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Назад') {
                             mp.trigger('tuning.menu.show');
                         } else {
+                            if (item.values[0] == 'уст.') return selectMenu.notification = 'Этот элемент уже установлен';
                             let index = e.itemIndex - 1;
                             mp.trigger('tuning.buy', 16, index);
                         }
@@ -4302,6 +4313,7 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Назад') {
                             mp.trigger('tuning.menu.show');
                         } else {
+                            if (item.values[0] == 'уст.') return selectMenu.notification = 'Этот элемент уже установлен';
                             let index = e.itemIndex - 1;
                             mp.trigger('tuning.buy', 18, index);
                         }
@@ -4337,6 +4349,7 @@ var selectMenu = new Vue({
                             mp.trigger('tuning.menu.show');
                             mp.trigger('tuning.params.set')
                         } else {
+                            if (item.values[0] == 'уст.') return selectMenu.notification = 'Этот элемент уже установлен';
                             let index = e.itemIndex - 1;
                             mp.trigger('tuning.buy', -1, index);
                         }

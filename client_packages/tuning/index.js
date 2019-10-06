@@ -217,6 +217,10 @@ mp.events.add('tuning.defaultMenu.show', (modName) => {
     mp.callCEFV(`selectMenu.setItems('tuningDefault', ${JSON.stringify(items)});`)
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["tuningDefault"])`);
     mp.callCEFV(`selectMenu.menu.header = '${data.name}'`);
+
+    let setIndex = mp.players.local.vehicle.getMod(data.modType) + 1;
+    mp.callCEFV(`selectMenu.menu.items[${setIndex}].values = ['уст.']`);
+
     mp.callCEFV(`selectMenu.show = true`);
 });
 
@@ -330,6 +334,13 @@ mp.events.add('tuning.buy.ans', (ans, mod, index) => {
     switch (ans) {
         case 0:
             tuningParams[mod].current = index;
+            mp.callCEFV(`count = -1;
+            selectMenu.menu.items.forEach((item) => {
+                if (item.values[0] == 'уст.') mp.trigger('tuning.item.update', '${mod}', count)
+                count++;
+            });
+            `);
+            mp.callCEFV(`selectMenu.menu.items[${index + 1}].values = ['уст.']`);
             vehicle.setMod(tuningParams[mod].modType, tuningParams[mod].current);
             mp.callCEFV(`selectMenu.notification = 'Элемент тюнинга установлен'`);
             break;
@@ -346,6 +357,11 @@ mp.events.add('tuning.buy.ans', (ans, mod, index) => {
             mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
             break;
     }
+});
+
+
+mp.events.add('tuning.item.update', (mod, index) => {
+    mp.callCEFV(`selectMenu.menu.items[${index + 1}].values = ['$${calculatePrice(tuningParams[mod].modType, index)}']`);
 });
 
 mp.events.add('render', () => {
@@ -445,6 +461,8 @@ function setMenuPrices(modType, lastIndex) {
     for (let i = -1; i <= lastIndex; i++) {
         mp.callCEFV(`selectMenu.menu.items[${i + 1}].values = ['$${calculatePrice(modType, i)}']`);
     }
+    let setIndex = mp.players.local.vehicle.getMod(modType) + 1;
+    mp.callCEFV(`selectMenu.menu.items[${setIndex}].values = ['уст.']`);
 }
 
 function initPrices(info) {
