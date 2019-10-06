@@ -69,7 +69,7 @@ module.exports = {
     },
     "/fsetleader": {
         description: "Сменить лидера организации.",
-        access: 6,
+        access: 1,
         args: "[ид_игрока]:n [ид_организации]:n",
         handler: async (player, args, out) => {
             var faction = factions.getFaction(args[1]);
@@ -84,7 +84,7 @@ module.exports = {
     },
     "/fuval": {
         description: "Уволить игрока из организации.",
-        access: 6,
+        access: 1,
         args: "[ид_игрока]:n",
         handler: async (player, args, out) => {
             var rec = mp.players.at(args[0]);
@@ -133,7 +133,7 @@ module.exports = {
     },
     "/fsetammo": {
         description: "Изменить количество боеприпасов на складе организации.",
-        access: 6,
+        access: 1,
         args: "[ид_организации]:n [боеприпасы]:n",
         handler: (player, args, out) => {
             var faction = factions.getFaction(args[0]);
