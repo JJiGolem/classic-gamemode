@@ -1,4 +1,5 @@
 "use strict";
+let logger = call('logger');
 let notifs = require('../notifications');
 
 module.exports = {
@@ -96,5 +97,6 @@ module.exports = {
             if (!rec.character) return;
             if (this.haveAccess(rec)) rec.call(`terminal.push`, [type, text]);
         });
+        logger.log(`[${type}] ${text}`, `terminal`);
     },
 };
