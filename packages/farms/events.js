@@ -367,8 +367,9 @@ module.exports = {
         veh.setVariable("label", `${count} из 600 ед.`);
 
         var points = farms.getFillingPoints(field);
-        routes.checkpointData.scale = 4;
-        routes.start(player, points, () => {
+        var data = Object.assign({}, routes.defaultCheckpointData);
+        data.scale = 4;
+        routes.start(player, data, points, () => {
             var veh = player.vehicle;
             if (!veh || !veh.db || veh.db.key != "farm") {
                 notifs.error(player, `Необходимо находиться в тракторе`, header);
@@ -458,8 +459,13 @@ module.exports = {
         veh.soils.count = count;
 
         var points = farms.getPilotPoints(farm);
-        routes.checkpointData.scale = 4;
-        routes.start(player, points, () => {
+        points.forEach(x => x.z += 3);
+        var data = Object.assign({}, routes.defaultCheckpointData);
+        data.type = 6;
+        data.scale = 8;
+        data.color = [46, 224, 255, 100];
+        data.isMarker = true;
+        routes.start(player, data, points, () => {
             var veh = player.vehicle;
             if (!veh || !veh.db || veh.db.key != "farm") {
                 notifs.error(player, `Необходимо находиться в самолете`, header);
