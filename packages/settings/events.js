@@ -1,14 +1,19 @@
 let auth = call('auth');
 let notifs = call('notifications');
+let settings = call('settings');
 let utils = call('utils');
 
 module.exports = {
-    "settings.set": (player, settings) => {
-        settings = JSON.parse(settings);
-        for (var key in settings) {
-            player.character.settings[key] = settings[key];
+    "characterInit.done": (player) => {
+        settings.apply(player);
+    },
+    "settings.set": (player, modified) => {
+        modified = JSON.parse(modified);
+        for (var key in modified) {
+            player.character.settings[key] = modified[key];
         }
         player.character.settings.save();
+        settings.apply(player);
     },
     "settings.password.set": (player, data) => {
         data = JSON.parse(data);

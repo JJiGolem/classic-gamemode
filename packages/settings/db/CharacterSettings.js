@@ -1,6 +1,8 @@
 "use strict";
 const Sequelize = require('sequelize');
 
+let settings = call('settings');
+
 module.exports = (sequelize, DataTypes) => {
     const model = sequelize.define("CharacterSettings", {
         id: {
@@ -46,13 +48,21 @@ module.exports = (sequelize, DataTypes) => {
         walking: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
-            allowNull: false
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, settings.walkingCount - 1);
+                this.setDataValue('walking', val);
+            },
         },
         // Эмоция
         mood: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
-            allowNull: false
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, settings.moodCount - 1);
+                this.setDataValue('mood', val);
+            },
         },
     }, {
         timestamps: false

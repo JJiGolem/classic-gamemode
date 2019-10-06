@@ -101,10 +101,7 @@ let settingsmainWindowData = {
     saveChanges(modifiedSettings) {
         // TODO: Сохранение изменений;
 
-        console.log(modifiedSettings);
-        for (key in modifiedSettings) {
-            this.settingsList[key].value = modifiedSettings[key];
-        }
+        playerMenu.setSettings(modifiedSettings);
         mp.trigger(`callRemote`, `settings.set`, JSON.stringify(modifiedSettings));
         /*mp.trigger(`callRemote`, `settings.spawn.set`, currentSpawn);
 
@@ -756,6 +753,8 @@ var playerMenu = new Vue({
                 if (!settingsmainWindowData.settingsList[key]) continue;
 
                 settingsmainWindowData.settingsList[key].value = settings[key];
+                if (key == 'chatTimestamp') mp.events.call("setTimeChat", !!settings[key]);
+                else if (key == 'nicknames') mp.trigger(`nametags.show`, !!settings[key]);
             }
         },
         setEmail(email, confirm = 0) {
