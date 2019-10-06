@@ -255,6 +255,16 @@ var inventory = new Vue({
                     }
                 }
             },
+            55: { // мешок
+                'Надеть на голову': {
+                    handler(item) {
+                        var data = {
+                            bagSqlId: item.sqlId
+                        };
+                        mp.trigger(`callRemote`, `mafia.bag`, JSON.stringify(data));
+                    }
+                }
+            },
         },
         // Вайт-лист предметов, которые можно надеть
         bodyList: {
@@ -368,6 +378,14 @@ var inventory = new Vue({
                         cuffsSqlId: item.sqlId
                     };
                     mp.trigger(`callRemote`, `mafia.cuffs`, JSON.stringify(data));
+                }
+            },
+            55: { // мешок
+                handler(item) {
+                    var data = {
+                        bagSqlId: item.sqlId
+                    };
+                    mp.trigger(`callRemote`, `mafia.bag`, JSON.stringify(data));
                 }
             },
         },

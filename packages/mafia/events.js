@@ -213,8 +213,8 @@ module.exports = {
         if (typeof data == 'string') data = JSON.parse(data);
         var header = `Веревка`;
         var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
-        rec = player;
-        if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
+        // rec = player; // for tests
+        if (!rec || !rec.character) return notifs.error(player, `Игрок не найден`, header);
         var dist = player.dist(rec.position);
         if (dist > 20) return notifs.error(player, `${rec.name} далеко`, `Наручники`);
         var character = player.character;
@@ -241,6 +241,43 @@ module.exports = {
             police.setCuffs(rec, null);
             delete rec.isFollowing;
             rec.call(`police.follow.stop`);
+        }
+    },
+    // снять/надеть мешок на голову
+    "mafia.bag": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+        var header = `Мешок`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
+        // rec = player; // for tests
+
+        if (!rec || !rec.character) return out(`Игрок не найден`);
+        var dist = player.dist(rec.position);
+        if (dist > 20) return out(`${rec.name} далеко`);
+        var character = player.character;
+        if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
+        if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, header);
+
+        if (!rec.bag) {
+            var bag = (data.bagSqlId) ? inventory.getItem(player, data.bagSqlId) : inventory.getItemByItemId(player, 55);
+            if (!bag) return out(`Предмет ${inventory.getName(55)} не найден`);
+            inventory.deleteItem(player, bag);
+            mafia.setBag(rec, bag);
+
+            notifs.info(rec, `${player.name} надел на вас мешок`, header);
+            notifs.success(player, `${rec.name} с мешком на голове`, header);
+        } else {
+            if (rec.bag.itemId != 55) return out(`${rec.name} имеет на голове ${inventory.getName(rec.bag.itemId)}`);
+            inventory.addOldItem(player, rec.bag, (e) => {
+                if (e) return out(player, e, header);
+            });
+
+            notifs.info(rec, `${player.name} снял с вас мешок`, header);
+            notifs.info(player, `${rec.name} без мешка на голове`, header);
+
+            mafia.setBag(rec, null);
         }
     },
     "player.faction.changed": (player, oldVal) => {
