@@ -67,13 +67,13 @@ let dropBiz = function(biz, sellToGov = false) {
             } else {
                 console.log("[bizes] Biz dropped " + biz.info.id + ". But player didn't getmoney");
             }
-        }, sellToGov ? `Sell biz with id ${info.id} to goverment` : `Drop biz with id ${info.id}`);
+        }, sellToGov ? `Продажа бизнеса #${info.id} государству` : `Слет бизнеса #${info.id}`);
     });
 };
 let setTimer = function(biz) {
     if (biz == null) return;
     if (biz.info.characterId == null) return;
-    if (biz.info.date == null) return dropBiz(id);
+    if (biz.info.date == null) return dropBiz(biz);
     if (biz.info.date.getTime() - new Date().getTime() <= 10000) return dropBiz(biz);
     biz.timer != null && timer.remove(biz.timer);
     biz.timer = timer.add(async function() {
@@ -318,7 +318,7 @@ module.exports = {
                 } else {
                     callback(false);
                 }
-            }, `Buy biz with id ${biz.info.id} from ${seller.character.id}`, `Sell biz with id ${biz.info.id} to ${buyer.character.id}`);
+            }, `Покупка бизнеса #${biz.info.id} у персонажа #${seller.character.id}`, `Продажа бизнеса #${biz.info.id} персонажу #${buyer.character.id}`);
         });
     },
     getBizById: getBizById,

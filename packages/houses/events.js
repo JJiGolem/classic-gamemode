@@ -128,7 +128,7 @@ module.exports = {
             
             player.call('phone.app.add', ["house", housesService.getHouseInfoForApp(house)]);
             vehicles != null && vehicles.setPlayerCarPlaces(player);
-        }, `Buy house with id ${info.id} from goverment`);
+        }, `Покупка дома #${info.id} у государства`);
     },
     /// Phone app events
     "house.lock": (player, id, isOpened) => {
