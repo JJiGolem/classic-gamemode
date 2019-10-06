@@ -98,7 +98,7 @@ module.exports = {
 
             let bizInfo = bizService.getBizInfoForApp(biz);
             bizInfo != null && player.call('phone.app.add', ["biz", bizInfo]);
-        }, `Buy biz with id ${info.id} from goverment`);
+        }, `Покупка бизнеса #${info.id} у государства`);
     },
     "biz.sell.toGov": (player, id) => {
         if (money == null) return player.call('biz.sell.toGov.ans', [0]);
