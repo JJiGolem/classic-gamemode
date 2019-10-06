@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
 
-import {addMessageToPhone, deleteDialog, readDialogMessages} from '../actions/action.dialogs';
+import {addMessageToPhone, deleteDialog, readDialogMessages, loadMessagesToDialog} from '../actions/action.dialogs';
 import {addAppDisplay, closeAppDisplay} from "../actions/action.apps";
 
 const styles = {
@@ -16,10 +16,12 @@ class DialogPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            inputMessage: ''
+            inputMessage: '',
+            isShowLoad: true
         };
 
         this.handleChangeMessage = this.handleChangeMessage.bind(this);
+        this.loadMessages = this.loadMessages.bind(this);
     }
 
     componentDidMount() {
@@ -32,7 +34,9 @@ class DialogPage extends Component {
     }
 
     componentDidUpdate() {
+        const { isShowLoad } = this.state;
         const objDiv = this.refList;
+
         objDiv.scrollTop = objDiv.scrollHeight;
     }
 
@@ -58,6 +62,7 @@ class DialogPage extends Component {
             // eslint-disable-next-line no-undef
             mp.trigger('phone.message.send', inputMessage, dialog.number);
             this.setState({ inputMessage: '' });
+            // this.refList.scrollTop = this.refList.scrollHeight + 300;
         }
     }
 
@@ -71,37 +76,63 @@ class DialogPage extends Component {
         return true;
     }
 
+    loadMessages() {
+        const { loadMessages, dialog } = this.props;
+
+        // loadMessages(dialog.number, [
+        //     {
+        //         text: 'kiii',
+        //         isRead: true,
+        //         isMine: true
+        //     },
+        //     {
+        //         text: 'etttt',
+        //         isRead: true,
+        //         isMine: false
+        //     },
+        //     {
+        //         text: 'aw',
+        //         isRead: true,
+        //         isMine: true
+        //     },
+        // ])
+    }
+
     getMessages(number) {
         const { dialogs } = this.props;
+        const { isShowLoad } = this.state;
 
         let messages = dialogs.find(d => d.number === number).PhoneMessages;
 
         if (messages.length !== 0) {
             return (
-                messages.map((message, index) => (
-                    <div>
-                        {
-                            (index === 0 || (message.date && (new Date(message.date).toDateString() !== new Date(messages[index - 1].date).toDateString()))) &&
-                            <div className='date_messages_block-phone-react'>
-                                { new Date(message.date).toLocaleDateString('ru-RU') }
+                <Fragment>
+                    { isShowLoad && <div className="messages_load_phone-react" onClick={this.loadMessages}>Загрузить еще</div> }
+                    { messages.map((message, index) => (
+                            <div>
+                                {
+                                    (index === 0 || (message.date && (new Date(message.date).toDateString() !== new Date(messages[index - 1].date).toDateString()))) &&
+                                    <div className='date_messages_block-phone-react'>
+                                        { new Date(message.date).toLocaleDateString('ru-RU') }
+                                    </div>
+                                }
+                                <div className={message.isMine ? 'my_message_block-phone-react' : 'him_message_block-phone-react'} style={ !this.isValid(message.text) ? styles : {}}>
+                                    <span key={index*100} className={message.isMine ? 'my_message-phone-react' : 'him_message-phone-react'}>
+                                        {message.text}
+                                    </span>
+                                </div>
+                                {
+                                    message.date &&
+                                    <div
+                                        className='time_message_block-phone-react'
+                                        style={{ float: message.isMine ? 'right' : 'left', marginLeft: !message.isMine && '-3%' }}
+                                    >
+                                        { this.getTimeMessage(message.date) }
+                                    </div>
+                                }
                             </div>
-                        }
-                        <div className={message.isMine ? 'my_message_block-phone-react' : 'him_message_block-phone-react'} style={ !this.isValid(message.text) ? styles : {}}>
-                            <span key={index*100} className={message.isMine ? 'my_message-phone-react' : 'him_message-phone-react'}>
-                                {message.text}
-                            </span>
-                        </div>
-                        {
-                            message.date &&
-                            <div
-                                className='time_message_block-phone-react'
-                                style={{ float: message.isMine ? 'right' : 'left', marginLeft: !message.isMine && '-3%' }}
-                            >
-                                { this.getTimeMessage(message.date) }
-                            </div>
-                        }
-                    </div>
-                ))
+                        ))}
+                </Fragment>
             )
         }
     }
@@ -130,12 +161,13 @@ class DialogPage extends Component {
     render() {
 
         const { dialog } = this.props;
+        const { isShowLoad } = this.state;
 
         return (
             <Fragment>
                 <div className="back_page-phone-react">
                     <div className="head_app-phone-react">
-                        <div style={{ float: 'left', margin: '6% 0 0 10%', display: 'inline-block', width: '21%' }}
+                        <div style={{ float: 'left', margin: '6% 0 0 10%', display: 'inline-block', width: '23%' }}
                              onClick={this.back.bind(this)}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="11%" height="6%" viewBox="0 0 18.812 35.125">
                                 <path id="_6A" data-name="6A" d="M17.311,35.125a1.5,1.5,0,0,0,1.069-2.553L3.6,17.562,18.38,2.552a1.5,1.5,0,1,0-2.137-2.1L.431,16.51a1.5,1.5,0,0,0,0,2.1L16.243,34.677a1.5,1.5,0,0,0,1.068.448" transform="translate(0 0)" fill="#fff"/>
@@ -146,6 +178,8 @@ class DialogPage extends Component {
                             { dialog.name ? dialog.name : dialog.number }
                         </div>
                     </div>
+
+                    
 
                     <div className='messages_list-phone-react' ref={(list) => {this.refList = list}}>
                         {this.getMessages(dialog.number)}
@@ -181,7 +215,8 @@ const mapDispatchToProps = dispatch => ({
     closeApp: () => dispatch(closeAppDisplay()),
     addApp: app => dispatch(addAppDisplay(app)),
     deleteDialog: number => dispatch(deleteDialog(number)),
-    readDialog: number => dispatch(readDialogMessages(number))
+    readDialog: number => dispatch(readDialogMessages(number)),
+    loadMessages: (number, messages) => dispatch(loadMessagesToDialog(number, messages))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DialogPage);

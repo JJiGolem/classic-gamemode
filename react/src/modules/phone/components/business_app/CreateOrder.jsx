@@ -19,6 +19,7 @@ class CreateOrder extends Component {
         this.getContent = this.getContent.bind(this);
         this.handleChangeInput = this.handleChangeInput.bind(this);
         this.createOrder = this.createOrder.bind(this);
+        this.validatePrice = this.validatePrice.bind(this);
     }
 
     validateCount(count) {
@@ -37,8 +38,10 @@ class CreateOrder extends Component {
     }
 
     validatePrice(price) {
+        const { business } = this.props;
+
         if (price) {
-            if (!isNaN(price) && parseInt(price) <= 25 && parseInt(price) >= 5) {
+            if (!isNaN(price) && parseInt(price) <= business.resourcePriceMax && parseInt(price) >= business.resourcePriceMin) {
                 this.setState({ errorPrice: '' });
                 return true;
             } else {
