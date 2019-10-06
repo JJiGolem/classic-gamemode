@@ -6223,6 +6223,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('clothingMain');
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
+                            selectMenu.loader = true;
                             mp.trigger('clothingShop.item.buy', 'tops', e.itemIndex, e.valueIndex);
                         }
                     }
@@ -6263,6 +6264,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('clothingMain');
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
+                            selectMenu.loader = true;
                             mp.trigger('clothingShop.item.buy', 'bracelets', e.itemIndex, e.valueIndex);
                         }
                     }
@@ -6303,6 +6305,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('clothingMain');
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
+                            selectMenu.loader = true;
                             mp.trigger('clothingShop.item.buy', 'ears', e.itemIndex, e.valueIndex);
                         }
                     }
@@ -6342,6 +6345,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('clothingMain');
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
+                            selectMenu.loader = true;
                             mp.trigger('clothingShop.item.buy', 'glasses', e.itemIndex, e.valueIndex);
                         }
                     }
@@ -6381,6 +6385,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('clothingMain');
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
+                            selectMenu.loader = true;
                             mp.trigger('clothingShop.item.buy', 'watches', e.itemIndex, e.valueIndex);
                         }
                     }
@@ -6420,6 +6425,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('clothingMain');
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
+                            selectMenu.loader = true;
                             mp.trigger('clothingShop.item.buy', 'ties', e.itemIndex, e.valueIndex);
                         }
                     }
@@ -6459,6 +6465,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('clothingMain');
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
+                            selectMenu.loader = true;
                             mp.trigger('clothingShop.item.buy', 'hats', e.itemIndex, e.valueIndex);
                         }
                     }
@@ -6498,6 +6505,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('clothingMain');
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
+                            selectMenu.loader = true;
                             mp.trigger('clothingShop.item.buy', 'pants', e.itemIndex, e.valueIndex);
                         }
                     }
@@ -6537,6 +6545,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('clothingMain');
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
+                            selectMenu.loader = true;
                             mp.trigger('clothingShop.item.buy', 'shoes', e.itemIndex, e.valueIndex);
                         }
                     }

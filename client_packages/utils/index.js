@@ -107,6 +107,16 @@ mp.utils = {
         mp.game.object.doorControl(-550347177, -1145.898, -1991.144, 14.18357, false, 0.0, 0.0, 0.0); /// LSC Greenwich
         mp.game.object.doorControl(-822900180, 1174.656, 2644.159, 40.50673, false, 0.0, 0.0, 0.0); /// LSC Route 68 1)
         mp.game.object.doorControl(-822900180, 1182.307, 2644.166, 40.50784, false, 0.0, 0.0, 0.0); /// LSC Route 68 2)
+        mp.game.object.doorControl(-1922281023, -715.6154, -157.2561, 37.67493, false, 0.0, 0.0, 0.0); /// Ponsonbys Portola Drive 1)
+        mp.game.object.doorControl(-1922281023, -716.6755, -155.42, 37.67493, false, 0.0, 0.0, 0.0); /// Ponsonbys Portola Drive 2)
+        mp.game.object.doorControl(-1922281023, -1456.201, -233.3682, 50.05648, false, 0.0, 0.0, 0.0); /// Ponsonbys Morningwood 1)
+        mp.game.object.doorControl(-1922281023, -1454.782, -231.7927, 50.05649, false, 0.0, 0.0, 0.0); /// Ponsonbys Morningwood 2)
+        mp.game.object.doorControl(-1922281023, -156.439, -304.4294, 39.99308, false, 0.0, 0.0, 0.0); /// Ponsonbys Rockford Plaza 1)
+        mp.game.object.doorControl(-1922281023, -157.1293, -306.4341, 39.99308, false, 0.0, 0.0, 0.0); /// Ponsonbys Rockford Plaza 2)
+        mp.game.object.doorControl(1780022985, -1201.435, -776.8566, 17.99184, false, 0.0, 0.0, 0.0); /// Sub Urban Prosperity Street Promenade
+        mp.game.object.doorControl(1780022985, 127.8201, -211.8274, 55.22751, false, 0.0, 0.0, 0.0); /// Sub Urban Hawick Avenue
+        mp.game.object.doorControl(1780022985, 617.2458, 2751.022, 42.75777, false, 0.0, 0.0, 0.0); /// Sub Urban Route 68
+        mp.game.object.doorControl(1780022985, -3167.75, 1055.536, 21.53288, false, 0.0, 0.0, 0.0); /// Sub Urban Chumash Plaza
 
     },
     /// Загрузка IPL

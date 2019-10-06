@@ -10,7 +10,7 @@ module.exports = {
     rentPerDayMultiplier: 0.01,
     minPriceMultiplier: 1.0,
     maxPriceMultiplier: 2.0,
-    productPrice: 10,
+    productPrice: 20,
     itemIds: {
         "bracelets": 12,
         "ears": 10,
@@ -124,7 +124,7 @@ module.exports = {
     calculateProductsNeeded(price) {
         switch (price) {
             case price < 100:
-                return 5;
+                return 3;
             default:
                 return parseInt(price / this.productPrice);
         }
