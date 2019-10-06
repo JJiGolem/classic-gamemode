@@ -844,7 +844,7 @@ module.exports = {
             }
         }
 
-        return weight;
+        return +weight.toFixed(3);
     },
     getCommonWeight(player) {
         var bodyItems = player.inventory.items.filter(x => !x.parentId);

@@ -480,7 +480,7 @@
             <div class="container" v-for="place in environment" v-bind:key="place.header">
                 <div class="header" @click="place.showPockets = !place.showPockets" :class="{hidden: !place.showPockets}">
                     <div class="title">{{ place.header }} {{ (debug)? place.sqlId : "" }}</div>
-                    <div>{{ getPlaceWeight(place).toFixed(1) }} кг</div>
+                    <div>{{ +getPlaceWeight(place).toFixed(1) }} кг</div>
                 </div>
                 <div class="pockets" v-show="place.showPockets">
                     <div class="items" v-for="pocket in place.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
@@ -524,12 +524,12 @@
         <div class="playerInventory">
             <div class="header">
                 <div class="title">Инвентарь</div>
-                <div>Тяжесть {{ playerWeight.toFixed(1) }}%</div>
+                <div>Тяжесть {{ +playerWeight.toFixed(1) }}%</div>
             </div>
             <div class="container" v-for="item in equipment" v-if="item.pockets">
                 <div class="header" @click="item.showPockets = !item.showPockets" :class="{hidden: !item.showPockets}">
                     <div class="title">{{ item.params.name || itemsInfo[item.itemId].name }}</div>
-                    <div>{{ getPlaceWeight(item).toFixed(1) }} кг</div>
+                    <div>{{ +getPlaceWeight(item).toFixed(1) }} кг</div>
                 </div>
                 <div class="pockets" v-show="item.showPockets">
                     <div class="items" v-for="pocket in item.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
@@ -1295,7 +1295,7 @@
                             :key="index">
                                 <div class="skill" v-for="skill in skills" v-if="skill">
                                     <div>{{ skill.head }}</div>
-                                    <div :class="['val', { paint: skill.value == 100 }]">{{ skill.value }}%</div>
+                                    <div :class="['val', { paint: skill.value == 100 }]">{{ +skill.value.toFixed(2) }}%</div>
                                     <div class="progress"><div :style="{width: (skill.value) ? skill.value+'%': '1vh'}"></div></div>
                                 </div>
                         </div>

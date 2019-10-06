@@ -848,7 +848,7 @@ var inventory = new Vue({
                 var pocket = place.pockets[i];
                 weight += this.getItemWeight(Object.values(pocket.items));
             }
-            return weight;
+            return +weight.toFixed(3);
         },
         getItemWeight(items, weight = 0) {
             if (!Array.isArray(items)) items = [items];
@@ -868,7 +868,7 @@ var inventory = new Vue({
                 }
             }
 
-            return weight;
+            return +weight.toFixed(3);
         },
         indexToXY(rows, cols, index) {
             if (!rows || !cols) return null;
