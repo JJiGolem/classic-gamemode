@@ -22,6 +22,38 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('spawn', val);
             },
         },
+        // Время в чате
+        chatTimestamp: {
+            type: DataTypes.TINYINT(1),
+            defaultValue: 0,
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, 1);
+                this.setDataValue('chatTimestamp', val);
+            },
+        },
+        // Ники над головой
+        nicknames: {
+            type: DataTypes.TINYINT(1),
+            defaultValue: 1,
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, 1);
+                this.setDataValue('nicknames', val);
+            },
+        },
+        // Походка
+        walking: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false
+        },
+        // Эмоция
+        mood: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false
+        },
     }, {
         timestamps: false
     });
