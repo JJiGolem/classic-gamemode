@@ -5021,6 +5021,7 @@ var selectMenu = new Vue({
                                 field: this.items[0].i,
                                 grain: this.items[1].i,
                             };
+                            selectMenu.show = false;
                             mp.trigger(`callRemote`, `farms.warehouse.grains.take`, JSON.stringify(data));
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmGrains");
@@ -5052,6 +5053,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Продать') {
+                            selectMenu.show = false;
                             mp.trigger(`callRemote`, `farms.warehouse.grains.sell`);
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmGrains");
@@ -5119,6 +5121,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Выгрузить') {
+                            selectMenu.show = false;
                             mp.trigger(`callRemote`, `farms.warehouse.products.fill`);
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmProducts");
@@ -5164,6 +5167,7 @@ var selectMenu = new Vue({
                                 index: this.items[0].i,
                                 count: parseInt(this.items[1].values[this.items[1].i]),
                             };
+                            selectMenu.show = false;
                             mp.trigger(`callRemote`, `farms.warehouse.products.buy`, JSON.stringify(data));
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmProducts");

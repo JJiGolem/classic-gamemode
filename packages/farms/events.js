@@ -332,6 +332,7 @@ module.exports = {
             };
             veh.setVariable(`label`, `${data.count} из ${max} ед.`);
             farm[key] -= data.count;
+            farm.balance += price;
             farm.save();
         }, `Загрузка урожая на ферме #${farm.id}`);
 
