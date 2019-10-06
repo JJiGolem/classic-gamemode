@@ -11,24 +11,17 @@ module.exports = {
     minPriceMultiplier: 1.0,
     maxPriceMultiplier: 2.0,
     productPrice: 10,
-    // productsConfig: {
-    //     phone: 15,
-    //     numberChange: 12,
-    //     water: 2,
-    //     chocolate: 1,
-    //     cigarettes: 2,
-    //     canister: 10,
-    //     rope: 5,
-    //     bag: 7
-    // },
-    // itemIds: {
-    //     water: 34,
-    //     chocolate: 35,
-    //     cigarettes: 16,
-    //     rope: 54,
-    //     bag: 55,
-    //     canister: 56,
-    // },
+    itemIds: {
+        "bracelets": 12,
+        "ears": 10,
+        "glasses": 1,
+        "watches": 11,
+        "ties": 2,
+        "hats": 6,
+        "tops": 7,
+        "pants": 8,
+        "shoes": 9,
+    },
     async init() {
         bizes = call('bizes');
         await this.loadShopsFromDB();
@@ -47,13 +40,13 @@ module.exports = {
                 color: 0,
                 shortRange: true,
             });
-        
+
         mp.markers.new(1, new mp.Vector3(shop.x, shop.y, shop.z - 0.05), 0.8,
-        {
-            color: [245, 167, 66, 200],
-            visible: true,
-            dimension: 0
-        });
+            {
+                color: [245, 167, 66, 200],
+                visible: true,
+                dimension: 0
+            });
 
         let shape = mp.colshapes.newSphere(shop.x, shop.y, shop.z, 1.8);
         shape.isClothingShop = true;
@@ -122,10 +115,18 @@ module.exports = {
         return this.productsConfig;
     },
     getPriceConfig() {
-        let priceConfig = {}; 
+        let priceConfig = {};
         for (let key in this.productsConfig) {
             priceConfig[key] = this.productsConfig[key] * this.productPrice;
         }
         return priceConfig;
+    },
+    calculateProductsNeeded(price) {
+        switch (price) {
+            case price < 100:
+                return 5;
+            default:
+                return parseInt(price / this.productPrice);
+        }
     }
 }
