@@ -860,6 +860,10 @@ var inventory = new Vue({
                 if (item.params.weight) weight += item.params.weight;
                 if (item.params.count) weight += (item.params.count - 1) * info.weight;
                 if (item.params.litres) weight += item.params.litres;
+                if (item.params.weaponHash && item.params.ammo) {
+                    var ammoId = this.getAmmoItemId(item.itemId);
+                    if (ammoId) weight += this.itemsInfo[ammoId].weight * item.params.ammo;
+                }
                 if (item.pockets) {
                     for (var key in item.pockets) {
                         var pocket = item.pockets[key];
