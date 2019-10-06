@@ -5,6 +5,7 @@ let hospital = require('../hospital');
 let houses = call('houses');
 let mafia = call('mafia');
 let notifs = require('../notifications');
+let police = call('police');
 let satiety = call('satiety');
 
 module.exports = {
@@ -334,6 +335,28 @@ module.exports = {
         });
 
         inventory.deleteItem(player, drink);
+    },
+    // использовать предмет инвентаря
+    "inventory.item.use": (player, data) => {
+        debug(`item.use`)
+        debug(data)
+        data = JSON.parse(data);
+
+        var item = inventory.getItem(player, data.sqlId);
+        if (!item) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+
+        var header = inventory.getName(item.itemId);
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var character = player.character;
+
+        switch (item.itemId) {
+            case 55: // мешок
+                break;
+            case 56: // канистра
+                break;
+        }
     },
     // Запрос предметов инвентаря в багажнике авто
     "vehicle.boot.items.request": (player, vehId) => {

@@ -4,6 +4,7 @@ let factions = call('factions');
 let inventory = call('inventory');
 let money = call('money');
 let notifs = call('notifications');
+let police = call('police');
 
 module.exports = {
     "init": () => {
@@ -206,6 +207,41 @@ module.exports = {
         if (!inviter || !inviter.character) return;
         notifs.info(player, `Предложение отклонено`);
         notifs.info(inviter, `${player.name} отклонил предложение`);
+    },
+    // снять/надеть веревку
+    "mafia.cuffs": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+        var header = `Веревка`;
+        var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
+        rec = player;
+        if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
+        var dist = player.dist(rec.position);
+        if (dist > 20) return notifs.error(player, `${rec.name} далеко`, `Наручники`);
+        var character = player.character;
+        if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
+        if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, header);
+
+        if (!rec.cuffs) {
+            var cuffs = (data.cuffsSqlId) ? inventory.getItem(player, data.cuffsSqlId) : inventory.getItemByItemId(player, 54);
+            if (!cuffs) return notifs.error(player, `Предмет ${inventory.getName(54)} не найден`, header);
+            inventory.deleteItem(player, cuffs);
+            police.setCuffs(rec, cuffs);
+
+            notifs.info(rec, `${player.name} связал вас`, header);
+            notifs.success(player, `${rec.name} связан`, header);
+        } else {
+            if (rec.cuffs.itemId != 54) return notifs.error(player, `${rec.name} был обездижен с помощью ${inventory.getName(rec.cuffs.itemId)}`, header);
+            inventory.addOldItem(player, rec.cuffs, (e) => {
+                if (e) return notifs.error(player, e, header);
+            });
+
+            notifs.info(rec, `${player.name} развязал вас`, header);
+            notifs.info(player, `${rec.name} развязан`, header);
+
+            police.setCuffs(rec, null);
+            delete rec.isFollowing;
+            rec.call(`police.follow.stop`);
+        }
     },
     "player.faction.changed": (player, oldVal) => {
         if (!mafia.inWar(oldVal)) return;

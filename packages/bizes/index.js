@@ -73,7 +73,7 @@ let dropBiz = function(biz, sellToGov = false) {
 let setTimer = function(biz) {
     if (biz == null) return;
     if (biz.info.characterId == null) return;
-    if (biz.info.date == null) return dropBiz(id);
+    if (biz.info.date == null) return dropBiz(biz);
     if (biz.info.date.getTime() - new Date().getTime() <= 10000) return dropBiz(biz);
     biz.timer != null && timer.remove(biz.timer);
     biz.timer = timer.add(async function() {
