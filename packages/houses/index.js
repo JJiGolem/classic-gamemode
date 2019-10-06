@@ -56,7 +56,7 @@ let dropHouse = function(house, sellToGov) {
                 } else {
                     console.log("[HOUSES] House dropped " + house.info.id + ". But player didn't getmoney");
                 }
-            }, sellToGov ? `Sell house with id ${house.info.id} to goverment` : `Drop house with id ${house.info.id}`);
+            }, sellToGov ? `Продажа дома #${house.info.id} государству` : `Слет дома #${house.info.id}`);
         });
     } catch (error) {
         console.log("[ERROR] " + error);
@@ -375,7 +375,7 @@ module.exports = {
                 } else {
                     callback(false);
                 }
-            }, `Buy biz with id ${house.info.id} from ${seller.character.id}`, `Sell biz with id ${house.info.id} to ${buyer.character.id}`);
+            }, `Покупка дома #${house.info.id} у персонажа #${seller.character.id}`, `Продажа дома #${house.info.id} персонажу #${buyer.character.id}`);
         });
     },
     getHouseCarPlaces(id) {

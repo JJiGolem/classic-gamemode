@@ -979,7 +979,10 @@ var selectMenu = new Vue({
                     },
                     {
                         text: "Купить"
-                    }
+                    },
+                    {
+                        text: "Выход"
+                    },
                 ],
                 i: 0, // индекс выбранного пункта
                 j: 0, // индекс первого видимого пункта
@@ -1006,6 +1009,9 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Купить') {
                             mp.trigger(`carshow.car.buy`);
+                        }
+                        if (e.itemName == 'Выход') {
+                            mp.trigger(`carshow.list.close`);
                         }
                     }
                     if (eventName == 'onEscapePressed' || eventName == 'onBackspacePressed') {
@@ -4047,6 +4053,7 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Назад') {
                             mp.trigger('tuning.menu.show');
                         } else {
+                            if (item.values[0] == 'уст.') return selectMenu.notification = 'Этот элемент уже установлен';
                             let index = e.itemIndex - 1;
                             mp.trigger('tuning.buy', 11, index);
                         }
@@ -4096,6 +4103,7 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Назад') {
                             mp.trigger('tuning.menu.show');
                         } else {
+                            if (item.values[0] == 'уст.') return selectMenu.notification = 'Этот элемент уже установлен';
                             let index = e.itemIndex - 1;
                             mp.trigger('tuning.buy', 12, index);
                         }
@@ -4145,6 +4153,7 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Назад') {
                             mp.trigger('tuning.menu.show');
                         } else {
+                            if (item.values[0] == 'уст.') return selectMenu.notification = 'Этот элемент уже установлен';
                             let index = e.itemIndex - 1;
                             mp.trigger('tuning.buy', 13, index);
                         }
@@ -4204,6 +4213,7 @@ var selectMenu = new Vue({
                             mp.trigger('tuning.menu.show');
                             mp.trigger('tuning.params.set')
                         } else {
+                            if (item.values[0] == 'уст.') return selectMenu.notification = 'Этот элемент уже установлен';
                             let index = e.itemIndex - 1;
                             mp.trigger('tuning.buy', 15, index);
                         }
@@ -4261,6 +4271,7 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Назад') {
                             mp.trigger('tuning.menu.show');
                         } else {
+                            if (item.values[0] == 'уст.') return selectMenu.notification = 'Этот элемент уже установлен';
                             let index = e.itemIndex - 1;
                             mp.trigger('tuning.buy', 16, index);
                         }
@@ -4302,6 +4313,7 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Назад') {
                             mp.trigger('tuning.menu.show');
                         } else {
+                            if (item.values[0] == 'уст.') return selectMenu.notification = 'Этот элемент уже установлен';
                             let index = e.itemIndex - 1;
                             mp.trigger('tuning.buy', 18, index);
                         }
@@ -4337,6 +4349,7 @@ var selectMenu = new Vue({
                             mp.trigger('tuning.menu.show');
                             mp.trigger('tuning.params.set')
                         } else {
+                            if (item.values[0] == 'уст.') return selectMenu.notification = 'Этот элемент уже установлен';
                             let index = e.itemIndex - 1;
                             mp.trigger('tuning.buy', -1, index);
                         }
@@ -5021,6 +5034,7 @@ var selectMenu = new Vue({
                                 field: this.items[0].i,
                                 grain: this.items[1].i,
                             };
+                            selectMenu.show = false;
                             mp.trigger(`callRemote`, `farms.warehouse.grains.take`, JSON.stringify(data));
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmGrains");
@@ -5052,6 +5066,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Продать') {
+                            selectMenu.show = false;
                             mp.trigger(`callRemote`, `farms.warehouse.grains.sell`);
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmGrains");
@@ -5119,6 +5134,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Выгрузить') {
+                            selectMenu.show = false;
                             mp.trigger(`callRemote`, `farms.warehouse.products.fill`);
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmProducts");
@@ -5164,6 +5180,7 @@ var selectMenu = new Vue({
                                 index: this.items[0].i,
                                 count: parseInt(this.items[1].values[this.items[1].i]),
                             };
+                            selectMenu.show = false;
                             mp.trigger(`callRemote`, `farms.warehouse.products.buy`, JSON.stringify(data));
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmProducts");
@@ -6223,6 +6240,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('clothingMain');
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
+                            selectMenu.loader = true;
                             mp.trigger('clothingShop.item.buy', 'tops', e.itemIndex, e.valueIndex);
                         }
                     }
@@ -6263,6 +6281,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('clothingMain');
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
+                            selectMenu.loader = true;
                             mp.trigger('clothingShop.item.buy', 'bracelets', e.itemIndex, e.valueIndex);
                         }
                     }
@@ -6303,6 +6322,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('clothingMain');
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
+                            selectMenu.loader = true;
                             mp.trigger('clothingShop.item.buy', 'ears', e.itemIndex, e.valueIndex);
                         }
                     }
@@ -6342,6 +6362,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('clothingMain');
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
+                            selectMenu.loader = true;
                             mp.trigger('clothingShop.item.buy', 'glasses', e.itemIndex, e.valueIndex);
                         }
                     }
@@ -6381,6 +6402,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('clothingMain');
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
+                            selectMenu.loader = true;
                             mp.trigger('clothingShop.item.buy', 'watches', e.itemIndex, e.valueIndex);
                         }
                     }
@@ -6420,6 +6442,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('clothingMain');
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
+                            selectMenu.loader = true;
                             mp.trigger('clothingShop.item.buy', 'ties', e.itemIndex, e.valueIndex);
                         }
                     }
@@ -6459,6 +6482,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('clothingMain');
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
+                            selectMenu.loader = true;
                             mp.trigger('clothingShop.item.buy', 'hats', e.itemIndex, e.valueIndex);
                         }
                     }
@@ -6498,6 +6522,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('clothingMain');
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
+                            selectMenu.loader = true;
                             mp.trigger('clothingShop.item.buy', 'pants', e.itemIndex, e.valueIndex);
                         }
                     }
@@ -6537,6 +6562,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName('clothingMain');
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
+                            selectMenu.loader = true;
                             mp.trigger('clothingShop.item.buy', 'shoes', e.itemIndex, e.valueIndex);
                         }
                     }
@@ -6801,7 +6827,7 @@ var selectMenu = new Vue({
             });
         },
         show(val) {
-            if (val) busy.add("selectMenu", true);
+            if (val) busy.add("selectMenu", false, true);
             else busy.remove("selectMenu", true);
         },
         loader(val) {

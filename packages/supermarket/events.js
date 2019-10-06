@@ -111,6 +111,9 @@ module.exports = {
         if (productName == 'cigarettes') {
             params.count = 20;
             params.name = brand;
+        } else if (productName == 'canister') {
+            params.litres = 0;
+            params.max = 20;
         }
 
         inventory.addItem(player, itemId, params, (e) => {

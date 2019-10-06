@@ -8,7 +8,7 @@ let bizesModules = new Array();
 /// biz types
 /// 0 - АЗС
 /// 1 - Супермаркет
-/// 2 - Ферма
+/// 2 - 
 /// 3 - СТО
 /// 4 - Магазин одежды
 /// 5 - Магазин оружия
@@ -67,13 +67,13 @@ let dropBiz = function(biz, sellToGov = false) {
             } else {
                 console.log("[bizes] Biz dropped " + biz.info.id + ". But player didn't getmoney");
             }
-        }, sellToGov ? `Sell biz with id ${info.id} to goverment` : `Drop biz with id ${info.id}`);
+        }, sellToGov ? `Продажа бизнеса #${info.id} государству` : `Слет бизнеса #${info.id}`);
     });
 };
 let setTimer = function(biz) {
     if (biz == null) return;
     if (biz.info.characterId == null) return;
-    if (biz.info.date == null) return dropBiz(id);
+    if (biz.info.date == null) return dropBiz(biz);
     if (biz.info.date.getTime() - new Date().getTime() <= 10000) return dropBiz(biz);
     biz.timer != null && timer.remove(biz.timer);
     biz.timer = timer.add(async function() {
@@ -163,21 +163,20 @@ let removeProducts = async function(id, count) {
         let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
         let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
         let countOrder = biz.info.productsMaxCount -  biz.info.productsCount;
-        if (!await createOrder(id, countOrder, parseInt(((max + min) / 2) * countOrder))) console.log("[BIZES] Auto creating order error");
+        if (await createOrder(biz, countOrder, parseInt(((max + min) / 2) * countOrder)) != 1) console.log("[BIZES] Auto creating order error");
     }
     return true;
 };
-let createOrder = async function(id, count, price) {
-    let biz = getBizById(id);
-    if (biz == null) return false;
-    if (biz.info.productsCount + count > biz.info.productsMaxCount) return false;
+let createOrder = async function(biz, count, price) {
+    if (biz == null) return 0;
+    if (biz.info.productsCount + count > biz.info.productsMaxCount) return 3;
     let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
     let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
-    if (price < min || price > max) return false;
+    if (price < min || price > max) return 0;
     biz.info.productsOrder = count;
     biz.info.productsOrderPrice = parseInt(price * count);
     await biz.info.save();
-    return true;
+    return 1;
 }
 let destroyOrder = async function(id) {
     let biz = getBizById(id);
@@ -211,6 +210,8 @@ let readyOrder = async function(id) {
     biz.info.productsOrderPrice = null;
     if (biz.info.productsCount > biz.info.productsMaxCount) biz.info.productsCount = biz.info.productsMaxCount;
     await biz.info.save();
+    let player = mp.players.toArray().find(x => x.character.id == biz.info.characterId);
+    //if (player != null) player.call();
     return true;
 }
 
@@ -318,7 +319,7 @@ module.exports = {
                 } else {
                     callback(false);
                 }
-            }, `Buy biz with id ${biz.info.id} from ${seller.character.id}`, `Sell biz with id ${biz.info.id} to ${buyer.character.id}`);
+            }, `Покупка бизнеса #${biz.info.id} у персонажа #${seller.character.id}`, `Продажа бизнеса #${biz.info.id} персонажу #${buyer.character.id}`);
         });
     },
     getBizById: getBizById,
@@ -414,4 +415,21 @@ module.exports = {
 
     bizesModules: bizesModules,
     dropBiz: dropBiz,
+
+    async fillAllBizesProducts() {
+        for (let index = 0; index < bizes.length; index++) {
+            const biz = bizes[index];
+            biz.info.productsCount = biz.info.productsMaxCount;
+            await biz.info.save();
+            
+        }
+    },
+    async setBizesTypeMaxProducts(type, amount) {
+        for (let index = 0; index < bizes.length; index++) {
+            if (biz.info.type != type) continue;
+            const biz = bizes[index];
+            biz.info.productsMaxCount = amount;
+            await biz.info.save();
+        }
+    },
 }

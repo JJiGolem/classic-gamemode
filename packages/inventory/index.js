@@ -89,7 +89,7 @@ module.exports = {
     // Отправка общей информации о предметах игроку
     initPlayerItemsInfo(player) {
         player.call(`inventory.setItemsInfo`, [this.clientInventoryItems]);
-        console.log(`[INVENTORY] Для игрока ${player.character.name} загружена общая информация о предметах`);
+        console.log(`[INVENTORY] Для аккаунта ${player.account.login} загружена общая информация о предметах`);
     },
     // Отправка общей информации о предмете
     updateItemInfo(item) {
@@ -833,7 +833,8 @@ module.exports = {
             weight += info.weight;
             var params = this.getParamsValues(item);
             if (params.weight) weight += params.weight;
-            if (params.count) weight += params.count * info.weight;
+            if (params.count) weight += (params.count - 1) * info.weight;
+            if (params.litres) weight += params.litres;
             var children = this.getChildren(player.inventory.items, item);
             if (children.length) {
                 for (var j = 0; j < children.length; j++) {
@@ -843,7 +844,7 @@ module.exports = {
             }
         }
 
-        return weight;
+        return +weight.toFixed(3);
     },
     getCommonWeight(player) {
         var bodyItems = player.inventory.items.filter(x => !x.parentId);

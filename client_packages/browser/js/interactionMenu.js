@@ -370,9 +370,8 @@ var interactionMenu = new Vue({
             "news": {
                 name: "news",
                 items: [{
-                        text: "Эфир",
-                    }
-                ],
+                    text: "Эфир",
+                }],
                 handler(index) {
                     var item = this.items[index];
                     mp.trigger(`interaction.menu.close`);
@@ -424,13 +423,8 @@ var interactionMenu = new Vue({
             if (!val) this.show = false;
         },
         show(val) {
-            if (val) {
-                busy.add("interaction", true);
-                setCursor(true);
-            } else {
-                busy.remove("interaction", true);
-                if (!busy.includes()) setCursor(false);
-            }
+            if (val) busy.add("interaction", true, true);
+            else busy.remove("interaction", true);
         },
         faction(val) {
             if (!val) {

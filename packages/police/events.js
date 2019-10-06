@@ -437,6 +437,7 @@ module.exports = {
             notifs.info(rec, `${player.name} задержал вас`, `Наручники`);
             notifs.success(player, `${rec.name} задержан`, `Наручники`);
         } else {
+            if (rec.cuffs.itemId != 28) return notifs.error(player, `${rec.name} был обездижен с помощью ${inventory.getName(rec.cuffs.itemId)}`, `Наручники`);
             inventory.addOldItem(player, rec.cuffs, (e) => {
                 if (e) return notifs.error(player, e, `Наручники`);
             });

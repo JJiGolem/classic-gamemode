@@ -7,6 +7,7 @@ var houses = call("houses");
 const PARKING_PRICE = 2; /// цена парковки за час
 
 module.exports = {
+    parkingBlips: [],
     async init() {
         await this.loadParkingsFromDB();
     },
@@ -27,15 +28,24 @@ module.exports = {
         }
         for (var i = 0; i < dbParkings.length; i++) {
             this.createParking(dbParkings[i]);
+            this.parkingBlips.push({
+                id: dbParkings[i].id,
+                x: dbParkings[i].x,
+                y: dbParkings[i].y,
+                z: dbParkings[i].z,
+            });
         }
+        mp.players.forEach((current) => {
+            current.call('parkings.blips.init', [this.parkingBlips]);
+        });
         console.log(`[PARKINGS] Загружено парковок: ${i}`);
     },
     createParking(parking) {
-        mp.blips.new(267, new mp.Vector3(parking.x, parking.y, parking.z),
-            {
-                name: "Подземная парковка",
-                shortRange: true,
-            });
+        // mp.blips.new(267, new mp.Vector3(parking.x, parking.y, parking.z),
+        //     {
+        //         name: "Подземная парковка",
+        //         shortRange: true,
+        //     });
         mp.markers.new(1, new mp.Vector3(parking.x, parking.y, parking.z), 2,
             {
                 direction: new mp.Vector3(parking.x, parking.y, parking.z),
@@ -59,6 +69,9 @@ module.exports = {
         label.parkingId = parking.id;
     },
     addVehicleToParking(veh) {
+        let owner = mp.players.toArray().find(x => x.character && x.character.id == veh.owner);
+        if (!owner) return;
+        owner.call('parkings.blips.private.set', [veh.parkingId]);
         if (!veh.parkingDate) {
             let now = new Date();
             veh.parkingDate = now;
@@ -81,13 +94,14 @@ module.exports = {
                 let date = parkingVehicles[i].parkingDate;
                 let now = new Date();
                 let hours = parseInt((now - date) / (1000 * 60 * 60));
-                console.log(hours);
                 player.call('chat.message.push', [`!{#80c102} Вы забрали транспорт с парковки за !{#009eec}$${hours * PARKING_PRICE}`]);
                 player.call('notifications.push.success', ["Вы забрали т/с с парковки", "Успешно"]);
                 parkingVehicles[i].x = parkings[index].carX;
                 parkingVehicles[i].y = parkings[index].carY;
                 parkingVehicles[i].z = parkings[index].carZ;
                 parkingVehicles[i].h = parkings[index].carH;
+
+                player.call('parkings.blips.private.clear');
 
                 parkingVehicles[i].parkingDate = null;
                 if (parkingVehicles[i].db) {

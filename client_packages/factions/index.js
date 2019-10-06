@@ -104,13 +104,7 @@ mp.factions = {
         mp.callCEFV(`interactionMenu.faction = ${factionId}`);
         mp.events.call("mapCase.init", mp.players.local.name, factionId);
     },
-};
-
-mp.events.add({
-    "characterInit.done": () => {
-        mp.keys.bind(69, true, () => {
-            mp.factions.boxHandler();
-        }); // E
+    registerAttachments() {
         // коробка с боеприпасами в руках
         mp.attachmentMngr.register("ammoBox", "prop_box_ammo04a", 11363, new mp.Vector3(0.05, 0, -0.25),
             new mp.Vector3(-15, 100, 95), {
@@ -131,6 +125,14 @@ mp.events.add({
             },
             true
         );
+    },
+};
+
+mp.events.add({
+    "characterInit.done": () => {
+        mp.keys.bind(69, true, () => {
+            mp.factions.boxHandler();
+        }); // E
     },
     "factions.insideWarehouse": (inside, type) => {
         mp.factions.insideWarehouse(inside, type);
@@ -166,3 +168,5 @@ mp.events.addDataHandler("trunk", (vehicle, value) => {
         mp.events.callRemote(`factions.vehicle.products.take`, vehicle.remoteId);
     }
 });
+
+mp.factions.registerAttachments();

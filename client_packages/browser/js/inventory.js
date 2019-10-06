@@ -245,6 +245,46 @@ var inventory = new Vue({
                     }
                 }
             },
+            54: { // веревка
+                'Связать': {
+                    handler(item) {
+                        var data = {
+                            cuffsSqlId: item.sqlId
+                        };
+                        mp.trigger(`callRemote`, `mafia.cuffs`, JSON.stringify(data));
+                    }
+                }
+            },
+            55: { // мешок
+                'Надеть на голову': {
+                    handler(item) {
+                        var data = {
+                            bagSqlId: item.sqlId
+                        };
+                        mp.trigger(`callRemote`, `mafia.bag`, JSON.stringify(data));
+                    }
+                }
+            },
+            56: { // канистра
+                'Заправить': {
+                    handler(item) {
+                        var data = {
+                            sqlId: item.sqlId,
+                            index: 0
+                        };
+                        mp.trigger(`callRemote`, `inventory.item.use`, JSON.stringify(data));
+                    }
+                },
+                'Пополнить': {
+                    handler(item) {
+                        var data = {
+                            sqlId: item.sqlId,
+                            index: 1
+                        };
+                        mp.trigger(`callRemote`, `inventory.item.use`, JSON.stringify(data));
+                    }
+                },
+            },
         },
         // Вайт-лист предметов, которые можно надеть
         bodyList: {
@@ -350,6 +390,31 @@ var inventory = new Vue({
             40: {
                 handler(item) {
                     mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
+                }
+            },
+            54: { // веревка
+                handler(item) {
+                    var data = {
+                        cuffsSqlId: item.sqlId
+                    };
+                    mp.trigger(`callRemote`, `mafia.cuffs`, JSON.stringify(data));
+                }
+            },
+            55: { // мешок
+                handler(item) {
+                    var data = {
+                        bagSqlId: item.sqlId
+                    };
+                    mp.trigger(`callRemote`, `mafia.bag`, JSON.stringify(data));
+                }
+            },
+            56: { // канистра
+                handler(item) {
+                    var data = {
+                        sqlId: item.sqlId,
+                        index: (item.params.litres)? 0 : 1
+                    };
+                    mp.trigger(`callRemote`, `inventory.item.use`, JSON.stringify(data));
                 }
             },
         },
@@ -570,6 +635,14 @@ var inventory = new Vue({
                 name: "Организация",
                 value: `#${item.params.faction}`
             });
+            if (item.params.litres != null) params.push({
+                name: "Топливо",
+                value: `${item.params.litres} л.`
+            });
+            if (item.params.max) params.push({
+                name: "Вместимость",
+                value: `${item.params.max} л.`
+            });
 
             return params;
         },
@@ -775,7 +848,7 @@ var inventory = new Vue({
                 var pocket = place.pockets[i];
                 weight += this.getItemWeight(Object.values(pocket.items));
             }
-            return weight;
+            return +weight.toFixed(3);
         },
         getItemWeight(items, weight = 0) {
             if (!Array.isArray(items)) items = [items];
@@ -785,7 +858,8 @@ var inventory = new Vue({
                 // if (!info) return weight;
                 weight += info.weight;
                 if (item.params.weight) weight += item.params.weight;
-                if (item.params.count) weight += item.params.count * info.weight;
+                if (item.params.count) weight += (item.params.count - 1) * info.weight;
+                if (item.params.litres) weight += item.params.litres;
                 if (item.pockets) {
                     for (var key in item.pockets) {
                         var pocket = item.pockets[key];
@@ -794,7 +868,7 @@ var inventory = new Vue({
                 }
             }
 
-            return weight;
+            return +weight.toFixed(3);
         },
         indexToXY(rows, cols, index) {
             if (!rows || !cols) return null;
@@ -1109,17 +1183,14 @@ var inventory = new Vue({
             if (!val) this.show = false;
         },
         show(val) {
-            setCursor(val);
             mp.trigger("blur", val, 300);
             hud.show = !val;
             if (val) {
-                setCursor(true);
-                busy.add("inventory", true);
+                busy.add("inventory", true, true);
                 mp.trigger(`radar.display`, false);
                 mp.trigger(`chat.opacity.set`, 0);
             } else {
                 busy.remove("inventory", true);
-                if (!busy.includes()) setCursor(false);
                 mp.trigger(`radar.display`, true);
                 mp.trigger(`chat.opacity.set`, 1);
             }

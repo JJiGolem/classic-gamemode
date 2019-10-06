@@ -14,6 +14,7 @@ let clothesList = {
     "shoes": [],
 }
 let shopClass;
+let priceMultiplier;
 // let currentItem = {
 //     group: 0,
 //     index: 0,
@@ -127,6 +128,7 @@ let rotation = {
 mp.events.add({
     'clothingShop.enter': (shopData) => {
         getInputClothes();
+        player.setComponentVariation(1, 0, 0, 0); /// убираем маску
         bindKeys(true);
         setHeaders(shopData.bType);
         mp.events.call('hud.enable', false);
@@ -135,6 +137,7 @@ mp.events.add({
         mp.utils.cam.create(shopData.camera.x, shopData.camera.y, shopData.camera.z, shopData.pos.x, shopData.pos.y, shopData.pos.z, 42);
         mp.callCEFV('loader.show = false');
         shopClass = shopData.class;
+        priceMultiplier = shopData.priceMultiplier;
         initMainMenu();
         mp.events.call('selectMenu.show', 'clothingMain');
         player.position = new mp.Vector3(shopData.pos.x, shopData.pos.y, shopData.pos.z);
@@ -158,7 +161,7 @@ mp.events.add({
         player.freezePosition(false);
         mp.utils.disablePlayerMoving(false);
 
-        //mp.events.callRemote('clothingShop.exit');
+        mp.events.callRemote('clothingShop.exit');
     },
     'render': () => {
         if (rotation.left) player.setHeading(player.getHeading() - 2);
@@ -189,7 +192,35 @@ mp.events.add({
         let item = sortedList[index];
         setClothes(group, item, textureIndex);
     },
-    'clothingShop.inputClothes.set': setInputClothes
+    'clothingShop.inputClothes.set': setInputClothes,
+    'clothingShop.item.buy': (group, index, textureIndex) => {
+        let sortedList = clothesList[group].filter(x => x.class == shopClass);
+        let item = sortedList[index];
+        mp.events.callRemote('clothingShop.item.buy', group, item.id, textureIndex);
+    },
+    'clothingShop.item.buy.ans': (ans, data) => {
+        mp.callCEFV(`selectMenu.loader = false`);
+        switch (ans) {
+            case 0:
+                mp.callCEFV(`selectMenu.notification = 'Предмет добавлен в инвентарь'`);
+                break;
+            case 1:
+                mp.callCEFV(`selectMenu.notification = 'Предмет не найден'`);
+                break;
+            case 2:
+                mp.callCEFV(`selectMenu.notification = '${data}'`);
+                break;
+            case 4:
+                mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+                break;
+            case 5:
+                mp.callCEFV(`selectMenu.notification = 'Ошибка финансовой операции'`);
+                break;
+            case 6:
+                mp.callCEFV(`selectMenu.notification = 'В магазине кончилась одежда'`);
+                break;
+        }
+    }
 });
 
 
@@ -241,7 +272,8 @@ function setHeaders(type) {
             img = 'ponsonbys';
             break;
     }
-    ['Main', 'Tops'].forEach(name => mp.callCEFV(`selectMenu.menus["clothing${name}"].headerImg = '${img}.png'`));
+    ['Main', 'Tops', 'Bracelets', 'Ears', 'Glasses', 'Watches', 'Ties', 'Hats', 'Pants', 'Shoes']
+    .forEach(name => mp.callCEFV(`selectMenu.menus["clothing${name}"].headerImg = '${img}.png'`));
 }
 
 function initMainMenu() {
@@ -272,7 +304,7 @@ function initSubMenu(key, list) {
             values.push(`№${i + 1}`);
         }
         items.push({
-            text: `${current.name} [$${current.price}]`,
+            text: `${current.name} [$${current.price*priceMultiplier}]`,
             values: values
         });
     })

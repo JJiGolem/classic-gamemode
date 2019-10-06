@@ -95,14 +95,8 @@ var inputWindow = new Vue({
     },
     watch: {
         show(val) {
-            if (val) {
-                busy.add("inputWindow", true);
-                setCursor(true);
-            }
-            else {
-                busy.remove("inputWindow", true);
-                if (!busy.includes()) setCursor(false);
-            }
+            if (val) busy.add("inputWindow", true, true);
+            else busy.remove("inputWindow", true);
         }
     },
 });
