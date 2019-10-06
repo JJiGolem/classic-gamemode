@@ -19,4 +19,16 @@ module.exports = {
             out.info(`${player.name} добавил ТП-маркер ${JSON.stringify(posA)} => ${JSON.stringify(posB)}`);
         }
     },
+    "/tpmarkdel": {
+        description: "Удалить маркер для телепорта.",
+        access: 3,
+        args: "",
+        handler: (player, args, out) => {
+            var marker = markers.getNearTpMarker(player.position);
+            if (!marker) return out.error(`Маркер поблизости не найден`, player);
+
+            markers.removeTpMarker(marker.id);
+            out.info(`${player.name} удалил ТП-маркер #${marker.db.id}`);
+        }
+    },
 }

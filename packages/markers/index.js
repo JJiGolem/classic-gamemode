@@ -10,7 +10,7 @@ module.exports = {
 
         list.forEach(el => this.createTpMarker(el));
 
-        console.log(`[MARKERS] TP-маркеры загружены (${list.length} шт.)`);
+        console.log(`[MARKERS] ТП-маркеры загружены (${list.length} шт.)`);
     },
     createTpMarker(el) {
         var posA = new mp.Vector3(el.x, el.y, el.z);
@@ -28,6 +28,7 @@ module.exports = {
         markerA.h = posA.h;
         markerA.db = el;
         markerA.target = markerB;
+
         markerB.h = posB.h;
         markerB.db = el;
         markerB.target = markerA;
@@ -67,6 +68,9 @@ module.exports = {
             if (player.lastTpMarkerId == colshapeB.marker.id) return;
             delete player.lastTpMarkerId;
         };
+
+        markerA.colshape = colshapeA;
+        markerB.colshape = colshapeB;
     },
     async addTpMarker(posA, posB) {
         var el = await db.Models.TpMarker.create({
@@ -82,4 +86,22 @@ module.exports = {
 
         this.createTpMarker(el);
     },
+    removeTpMarker(id) {
+        var marker = mp.markers.at(id);
+
+        marker.db.destroy();
+        marker.colshape.destroy();
+        marker.target.colshape.destroy();
+        marker.target.destroy();
+        marker.destroy();
+    },
+    getNearTpMarker(pos) {
+        var result = null;
+        mp.markers.forEachInRange(pos, 2, marker => {
+            if (marker.target) result = marker;
+        });
+
+        return result;
+    }
+
 };
