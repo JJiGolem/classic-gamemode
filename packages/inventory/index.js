@@ -833,7 +833,7 @@ module.exports = {
             weight += info.weight;
             var params = this.getParamsValues(item);
             if (params.weight) weight += params.weight;
-            if (params.count) weight += params.count * info.weight;
+            if (params.count) weight += (params.count - 1) * info.weight;
             if (params.litres) weight += params.litres;
             var children = this.getChildren(player.inventory.items, item);
             if (children.length) {
