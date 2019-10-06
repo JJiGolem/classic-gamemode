@@ -128,6 +128,7 @@ let rotation = {
 mp.events.add({
     'clothingShop.enter': (shopData) => {
         getInputClothes();
+        player.setComponentVariation(1, 0, 0, 0); /// убираем маску
         bindKeys(true);
         setHeaders(shopData.bType);
         mp.events.call('hud.enable', false);
