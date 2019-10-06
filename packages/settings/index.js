@@ -1,5 +1,6 @@
 "use strict";
 
+let mood = call('mood');
 let walking = call('walking');
 
 module.exports = {
@@ -9,8 +10,7 @@ module.exports = {
     moodCount: 7,
 
     apply(player) {
-        var mood = player.character.settings.mood;
-
         walking.set(player, player.character.settings.walking);
+        mood.set(player, player.character.settings.mood);
     }
 };
