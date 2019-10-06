@@ -9,8 +9,8 @@ module.exports = {
     // Кол-во эмоций
     moodCount: 7,
 
-    apply(player) {
-        walking.set(player, player.character.settings.walking);
-        mood.set(player, player.character.settings.mood);
+    apply(player, modified = null) {
+        if (modified.walking != null) walking.set(player, player.character.settings.walking);
+        if (modified.mood != null) mood.set(player, player.character.settings.mood);
     }
 };
