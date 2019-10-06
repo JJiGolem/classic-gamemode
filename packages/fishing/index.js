@@ -116,7 +116,7 @@ module.exports = {
                 player.call('fishing.rod.buy.ans', [0]);
                 notifs.error(player, "Недостаточно денег", "Ошибка");
             }
-        });
+        }, `Buy fishing rod by player with id ${player.id}`);
     },
     async sellFish(player) {
         let fishes = inventory.getArrayByItemId(player, 15);
@@ -141,7 +141,7 @@ module.exports = {
                     player.call('fishing.fish.sell.ans', [0]);
                     return notifs.error(player, 'Ошибка', 'Продажа');
                 }
-            })
+            }, `Sell fish by player with id ${player.id}`)
         } else {
             player.call('fishing.fish.sell.ans', [0]);
             return notifs.error(player, 'У вас нет рыбы', 'Ошибка');

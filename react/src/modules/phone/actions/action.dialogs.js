@@ -26,3 +26,8 @@ export const readDialogMessages = number => ({
     type: 'READ_DIALOG_MESSAGES',
     payload: number
 });
+
+export const loadMessagesToDialog = (number, messages) => ({
+    type: 'LOAD_MESSAGES_TO_DIALOG',
+    payload: { number, messages }
+})

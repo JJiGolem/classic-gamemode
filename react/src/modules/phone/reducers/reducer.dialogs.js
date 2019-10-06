@@ -1,8 +1,4 @@
 /* eslint-disable default-case */
-import moment from 'moment';
-import 'moment/locale/ru';
-
-moment.locale('ru');
 const inittialState = [
     {
         name: 'Данила',
@@ -186,11 +182,11 @@ export default function dialogs(state = inittialState, action) {
             return newState;
 
         case 'LOAD_MESSAGES_TO_DIALOG':
-            newState = { ...state };
+            newState = [ ...state ];
             let loadDialogIndex = newState.findIndex(dialog => dialog.number == payload.number);
             
             if (loadDialogIndex !== -1) {
-                payload.messages.concat(newState[loadDialogIndex].PhoneMessages);
+                newState[loadDialogIndex].PhoneMessages = payload.messages.concat(newState[loadDialogIndex].PhoneMessages);
             }
 
             return newState;

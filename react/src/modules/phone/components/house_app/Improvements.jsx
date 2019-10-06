@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import { closeAppDisplay, addAppDisplay } from "../../actions/action.apps";
@@ -30,6 +31,7 @@ class Improvements extends Component {
                         <div className={index == activeIndex ? "house_improvement_block_active-react" : "house_improvement_block-react"} 
                             onClick={() => {
                                 if (index == activeIndex && !improvement.isBuyed) {
+                                    mp.trigger('house.improvements.buy', improvement.type);
                                     setSell(true);
                                     addApp({ name: 'AnsBuy', form: <AnsBuy name={improvement.name}/> });
                                 } else {
