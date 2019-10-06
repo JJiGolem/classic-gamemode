@@ -26,6 +26,7 @@ let factions;
 let maxProductPriceMultiplier = 2.0;
 let minProductPriceMultiplier = 1.2;
 let factionPayMultiplier = 0.01;
+let dropBizMultiplier = 0.6;
 
 
 let getBizById = function(id) {
@@ -46,7 +47,7 @@ let dropBiz = function(biz, sellToGov = false) {
     biz.info.date = null;
     biz.info.save().then(() => {
         if (money == null) return console.log("[bizes] Biz dropped " + biz.info.id + ". But player didn't getmoney");
-        money.addMoneyById(characterId, biz.info.price * 0.6, function(result) {
+        money.addMoneyById(characterId, biz.info.price * dropBizMultiplier, function(result) {
             if (result) {
                 console.log("[bizes] Biz dropped " + biz.info.id);
                 for (let j = 0; j < mp.players.length; j++) {
@@ -217,6 +218,7 @@ module.exports = {
     maxProductPriceMultiplier: maxProductPriceMultiplier,
     minProductPriceMultiplier: minProductPriceMultiplier,
     factionPayMultiplier: factionPayMultiplier,
+    dropBizMultiplier: dropBizMultiplier,
 
     async init() {
         utils = call("utils");
@@ -316,7 +318,7 @@ module.exports = {
                 } else {
                     callback(false);
                 }
-            }, `Buy biz with id ${info.id} from ${seller.character.id}`, `Sell biz with id ${info.id} to ${buyer.character.id}`);
+            }, `Buy biz with id ${biz.info.id} from ${seller.character.id}`, `Sell biz with id ${biz.info.id} to ${buyer.character.id}`);
         });
     },
     getBizById: getBizById,
