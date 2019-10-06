@@ -150,7 +150,6 @@ var mapCase = new Vue({
             this.menuFocus = Object.keys(this.certainData.menuBody)[0];
         },
         show(val) {
-            setCursor(val);
             mp.trigger("blur", val, 300);
             if (val) busy.add("mapCase", true, true);
             else busy.remove("mapCase", true);

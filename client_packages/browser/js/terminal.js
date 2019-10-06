@@ -97,7 +97,6 @@ var terminal = new Vue({
                     this.$refs["input"].focus();
                 }, 100);
             } else busy.remove("terminal", true);
-            setCursor(val);
         },
     },
     mounted() {
