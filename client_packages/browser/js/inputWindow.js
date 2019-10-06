@@ -96,7 +96,7 @@ var inputWindow = new Vue({
     watch: {
         show(val) {
             if (val) {
-                busy.add("inputWindow", true);
+                busy.add("inputWindow", true, true);
                 setCursor(true);
             }
             else {

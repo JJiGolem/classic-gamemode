@@ -789,7 +789,7 @@ var playerMenu = new Vue({
             hud.show = !val;
             if (val) {
                 setCursor(true);
-                busy.add("playerMenu", true);
+                busy.add("playerMenu", true, true);
                 mp.trigger(`radar.display`, false);
                 mp.trigger(`chat.opacity.set`, 0)
             }

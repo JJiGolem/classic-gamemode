@@ -1188,7 +1188,7 @@ var inventory = new Vue({
             hud.show = !val;
             if (val) {
                 setCursor(true);
-                busy.add("inventory", true);
+                busy.add("inventory", true, true);
                 mp.trigger(`radar.display`, false);
                 mp.trigger(`chat.opacity.set`, 0);
             } else {

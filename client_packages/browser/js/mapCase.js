@@ -152,7 +152,7 @@ var mapCase = new Vue({
         show(val) {
             setCursor(val);
             mp.trigger("blur", val, 300);
-            if (val) busy.add("mapCase", true);
+            if (val) busy.add("mapCase", true, true);
             else busy.remove("mapCase", true);
             this.lastShowTime = Date.now();
             if (!val && this.timerId) {

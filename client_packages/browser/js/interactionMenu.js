@@ -425,7 +425,7 @@ var interactionMenu = new Vue({
         },
         show(val) {
             if (val) {
-                busy.add("interaction", true);
+                busy.add("interaction", true, true);
                 setCursor(true);
             } else {
                 busy.remove("interaction", true);
