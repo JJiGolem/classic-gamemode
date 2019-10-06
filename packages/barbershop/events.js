@@ -78,7 +78,7 @@ module.exports = {
         let price = barbershop.facialHairProducts * barbershop.productPrice * barbershop.getPriceMultiplier(barbershopId);
         if (player.character.cash < price) return player.call('barbershop.facialHair.buy.ans', [1]);
         let productsAvailable = barbershop.getProductsAmount(barbershopId);
-        if (barbershop.facialHairProducts > productsAvailable) return player.call('barbershop.hairstyle.buy.ans', [3]);
+        if (barbershop.facialHairProducts > productsAvailable) return player.call('barbershop.facialHair.buy.ans', [3]);
         money.removeCash(player, price, function (result) {
             if (result) {
                 barbershop.removeProducts(barbershopId, barbershop.facialHairProducts);
@@ -100,7 +100,7 @@ module.exports = {
         let price = barbershop.colorChangeProducts * barbershop.productPrice * barbershop.getPriceMultiplier(barbershopId);
         if (player.character.cash < price) return player.call('barbershop.color.buy.ans', [3]);
         let productsAvailable = barbershop.getProductsAmount(barbershopId);
-        if (barbershop.colorChangeProducts > productsAvailable) return player.call('barbershop.hairstyle.buy.ans', [5]);
+        if (barbershop.colorChangeProducts > productsAvailable) return player.call('barbershop.color.buy.ans', [5]);
         money.removeCash(player, price, function (result) {
             if (result) {
                 barbershop.removeProducts(barbershopId, barbershop.colorChangeProducts);
