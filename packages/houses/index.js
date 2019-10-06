@@ -11,6 +11,9 @@ let carmarket;
 let timer;
 let utils;
 
+/// Economic constants
+let dropHouseMultiplier = 0.6;
+
 /// Функции модуля системы домов
 let changeBlip = function(house) {
     if (house.blip == null) return;
@@ -35,7 +38,7 @@ let dropHouse = function(house, sellToGov) {
             carmarket != null && carmarket.sellAllCharacterVehicles(characterId);
 
             /// Зачисление средств игроку
-            money.addMoneyById(characterId, house.info.price * 0.6, function(result) {
+            money.addMoneyById(characterId, house.info.price * dropHouseMultiplier, function(result) {
                 if (result) {
                     console.log("[HOUSES] House dropped " + house.info.id);
                     for (let j = 0; j < mp.players.length; j++) {
@@ -53,7 +56,7 @@ let dropHouse = function(house, sellToGov) {
                 } else {
                     console.log("[HOUSES] House dropped " + house.info.id + ". But player didn't getmoney");
                 }
-            });
+            }, sellToGov ? `Sell house with id ${house.info.id} to goverment` : `Drop house with id ${house.info.id}`);
         });
     } catch (error) {
         console.log("[ERROR] " + error);
@@ -61,6 +64,8 @@ let dropHouse = function(house, sellToGov) {
 };
 
 module.exports = {
+    dropHouseMultiplier: dropHouseMultiplier,
+
     async init() {
         inventory = call('inventory');
         money = call('money');
@@ -370,7 +375,7 @@ module.exports = {
                 } else {
                     callback(false);
                 }
-            });
+            }, `Buy biz with id ${house.info.id} from ${seller.character.id}`, `Sell biz with id ${house.info.id} to ${buyer.character.id}`);
         });
     },
     getHouseCarPlaces(id) {
