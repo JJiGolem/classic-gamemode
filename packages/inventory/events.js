@@ -1,12 +1,16 @@
 let bands = call('bands');
+let bizes = call('bizes');
 let factions = call('factions');
+let fuelstations = call('fuelstations');
 let inventory = require('./index.js');
 let hospital = require('../hospital');
 let houses = call('houses');
 let mafia = call('mafia');
+let money = call('money');
 let notifs = require('../notifications');
 let police = call('police');
 let satiety = call('satiety');
+let vehicles = call('vehicles');
 
 module.exports = {
     "init": () => {
@@ -354,9 +358,49 @@ module.exports = {
         var character = player.character;
 
         switch (item.itemId) {
-            case 55: // мешок
-                break;
             case 56: // канистра
+                if (data.index == 0) { // заправить авто
+                    if (player.vehicle) return out(`Недоступно в авто`);
+                    var veh = mp.vehicles.getNear(player, 5);
+                    if (!veh) return out(`Подойдите к авто`);
+
+                    var params = inventory.getParamsValues(item);
+                    if (!params.litres) return out(`Канистра пустая`);
+
+                    var vehName = veh.properties.name;
+                    if (veh.fuel >= veh.properties.maxFuel) return out(`Авто ${vehName} имеет полный бак`);
+
+                    var fuel = Math.clamp(params.litres, 1, veh.properties.maxFuel - veh.fuel);
+
+                    vehicles.addFuel(veh, fuel);
+                    inventory.updateParam(player, item, 'litres', params.litres - fuel);
+
+                    notifs.success(player, `Авто ${vehName} заправлено на ${fuel} л.`, header);
+                } else if (data.index == 1) { // пополнить канистру
+                    var biz = bizes.getBizByPlayerPos(player);
+                    if (!biz || biz.info.type != 0) return out(`Вы не у АЗС`);
+
+                    var params = inventory.getParamsValues(item);
+                    if (params.litres == params.max) return out(`Канистра полная`);
+
+                    var products = fuelstations.getProductsAmount(biz.info.id);
+                    if (!products) return out(`На АЗС нет топлива`);
+
+                    var fuel = Math.clamp(products, 1, params.max - params.litres);
+
+                    var price = fuelstations.getFuelPriceById(biz.info.id) * fuel;
+                    if (player.character.cash < price) return out(`Необходимо $${price}`);
+
+                    money.removeCash(player, price, (res) => {
+                        if (!res) return out(`Ошибка списания наличных`);
+
+                        fuelstations.removeProducts(biz.info.id, fuel);
+                        fuelstations.updateCashbox(biz.info.id, price);
+                        inventory.updateParam(player, item, 'litres', params.litres + fuel);
+                    }, `Заправка канистры на АЗС #${biz.info.id}`);
+
+                    notifs.success(player, `Канистра заправлена на ${fuel} л.`, header);
+                }
                 break;
         }
     },

@@ -265,6 +265,26 @@ var inventory = new Vue({
                     }
                 }
             },
+            56: { // канистра
+                'Заправить': {
+                    handler(item) {
+                        var data = {
+                            sqlId: item.sqlId,
+                            index: 0
+                        };
+                        mp.trigger(`callRemote`, `inventory.item.use`, JSON.stringify(data));
+                    }
+                },
+                'Пополнить': {
+                    handler(item) {
+                        var data = {
+                            sqlId: item.sqlId,
+                            index: 1
+                        };
+                        mp.trigger(`callRemote`, `inventory.item.use`, JSON.stringify(data));
+                    }
+                },
+            },
         },
         // Вайт-лист предметов, которые можно надеть
         bodyList: {
@@ -386,6 +406,15 @@ var inventory = new Vue({
                         bagSqlId: item.sqlId
                     };
                     mp.trigger(`callRemote`, `mafia.bag`, JSON.stringify(data));
+                }
+            },
+            56: { // канистра
+                handler(item) {
+                    var data = {
+                        sqlId: item.sqlId,
+                        index: (item.params.litres)? 0 : 1
+                    };
+                    mp.trigger(`callRemote`, `inventory.item.use`, JSON.stringify(data));
                 }
             },
         },
@@ -605,6 +634,14 @@ var inventory = new Vue({
             if (item.params.faction) params.push({
                 name: "Организация",
                 value: `#${item.params.faction}`
+            });
+            if (item.params.litres != null) params.push({
+                name: "Топливо",
+                value: `${item.params.litres} л.`
+            });
+            if (item.params.max) params.push({
+                name: "Вместимость",
+                value: `${item.params.max} л.`
             });
 
             return params;
