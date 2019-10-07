@@ -76,6 +76,8 @@ const initialState = {
     //         rent: 50,
     //         resourcesMax: 2000,
     //         resources: 228,
+    //         resourcePriceMin: 10,
+    //         resourcePriceMax: 50,
     //         price: 112000,
     //         statistics: [
     //             {

@@ -91,7 +91,7 @@ class DialogPage extends Component {
         const { loadMessages, dialog } = this.props;
 
         this.setState({ isLoad: true });
-        mp.trigger('phone.messages.load', dialog.number);
+        mp.trigger('phone.message.load', dialog.number);
 
         // loadMessages(dialog.number, [
         //     {
