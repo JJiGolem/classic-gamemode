@@ -178,6 +178,14 @@ module.exports = {
         player.call("farms.jobType.set", [null]);
         player.call("routes.checkpoints.destroy");
         notifs.success(player, `Удачного дня!`, header);
+        if ([2,3].includes(player.farmJob.type)) {
+            // тракторы с зерном и самолеты с удобрением, которые загрузил игрок
+            var vehicles = mp.vehicles.toArray().filter(x => x.key == 'farm' && x.products && x.products.playerId == player.id);
+            vehicles.forEach(veh => {
+                veh.setVariable("label", null);
+                delete veh.products;
+            });
+        }
 
         delete player.farmJob;
         jobs.deleteMember(player);
@@ -254,7 +262,7 @@ module.exports = {
             player.addAttachment("farmProductC", true);
             prodType = 3;
         } else return notifs.error(player, `Соберите урожай на поле`, header);
-        if (veh.products && veh.products.type != prodType) return notifs.error(player, `Неверный типа урожая`, header);
+        if (veh.products && veh.products.type != prodType) return notifs.error(player, `Неверный тип урожая`, header);
         if (veh.products && veh.products.count >= 200) return notifs.error(player, `Пикап заполнен`, header);
         farms.addVehicleProducts(veh, prodType);
 
@@ -364,6 +372,7 @@ module.exports = {
         if (!veh.products) veh.products = {};
         veh.products.type = data.grain + 1;
         veh.products.count = count;
+        veh.products.playerId = player.id;
         veh.setVariable("label", `${count} из 600 ед.`);
 
         var points = farms.getFillingPoints(field);
@@ -630,6 +639,9 @@ module.exports = {
         farm.save();
         notifs.success(player, `Зарплата $${farm[key]} установлена`, header);
         player.call(`selectMenu.hide`);
+    },
+    "death.spawn": (player) => {
+        if (player.farmJob) mp.events.call("farms.job.stop", player);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;
