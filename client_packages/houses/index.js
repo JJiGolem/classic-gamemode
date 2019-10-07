@@ -128,7 +128,7 @@ mp.events.add('house.add.init', (interiorsClassesT) => {
 });
 mp.events.add('house.add.open', () => {
     if (mp.busy.includes()) return;
-    if (!mp.busy.add('house.add')) return;
+    if (!mp.busy.add('house.add', false)) return;
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["houseAddMenu"]);`);
     mp.callCEFV(`selectMenu.show = true`);
 });
@@ -294,7 +294,7 @@ mp.events.add('house.add.init', (temp, garagesIdCarPlacesT) => {
 });
 mp.events.add('house.add.interior.open', () => {
     if (mp.busy.includes()) return;
-    if (!mp.busy.add('house.add')) return;
+    if (!mp.busy.add('house.add', false)) return;
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["houseAddInteriorMenu"]);`);
     mp.callCEFV(`selectMenu.show = true`);
 });
@@ -419,7 +419,7 @@ enterMarkerAngle = null;
 let id = 0;
 mp.events.add('house.add.garage.open', () => {
     if (mp.busy.includes()) return;
-    if (!mp.busy.add('house.add')) return;
+    if (!mp.busy.add('house.add', false)) return;
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["houseAddGarageMenu"]);`);
     mp.callCEFV(`selectMenu.show = true`);
 });

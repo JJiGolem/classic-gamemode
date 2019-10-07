@@ -193,7 +193,6 @@ let showPhone = () => {
     if (mp.police.haveCuffs) return;
     if (!mp.busy.add('phone')) return;
     mp.callCEFR('phone.show', [true]);
-    mp.gui.cursor.show(true, true);
     playCallAnimation(false);
     playHoldAnimation(true);
 }
@@ -202,7 +201,6 @@ let hidePhone = () => {
     if (!mp.busy.includes('phone')) return;
 
     mp.callCEFR('phone.show', [false]);
-    mp.gui.cursor.show(false, false);
     mp.busy.remove('phone');
     playHoldAnimation(false);
     playCallAnimation(false);
