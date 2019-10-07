@@ -702,4 +702,8 @@ module.exports = {
             notifs.info(player, `Удобрение в самолете: ${count} из 200 ед.`, header);
         }
     },
+    "playerQuit": (player) => {
+        if (!player.character) return;
+        if (player.farmJob) farms.pay(player);
+    },
 };

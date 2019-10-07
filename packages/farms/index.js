@@ -1,6 +1,7 @@
 "use strict";
 
 let inventory = call('inventory');
+let money = call('money');
 let utils = call('utils');
 
 module.exports = {
@@ -619,4 +620,23 @@ module.exports = {
             obj.count += objSoils;
         });
     },
+    pay(player) {
+        if (!player.farmJob || !player.farmJob.pay) return;
+
+        var farm = player.farmJob.farm;
+        if (farm.playerId) {
+            if (farm.balance < player.farmJob.pay) return;
+            else {
+                farm.balance -= player.farmJob.pay;
+                farm.save();
+                money.addCash(player, player.farmJob.pay, (res) => {
+                    if (!res) return;
+                }, `Зарплата на ферме #${farm.id}`);
+            }
+        } else {
+            money.addCash(player, player.farmJob.pay, (res) => {
+                if (!res) return;
+            }, `Зарплата на ферме #${farm.id} без владельца`);
+        }
+    }
 };
