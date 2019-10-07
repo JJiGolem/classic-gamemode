@@ -356,6 +356,9 @@ mp.events.add('entityStreamIn', (entity) => {
 
         var rotation = entity.getVariable("rotation");
         if (rotation) entity.setRotation(rotation);
+
+        entity.setDoorBreakable(4, false); // hood
+        entity.setDoorBreakable(5, false); // trunk
     }
 });
 
