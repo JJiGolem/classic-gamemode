@@ -81,8 +81,7 @@ mp.events.add('hud.players.list.show', (state) => {
     } else {
         mp.busy.remove('playersList');
     }
-
-    mp.gui.cursor.show(state, state);
+    
     playersListState = state;
 });
 
