@@ -45,4 +45,5 @@ module.exports = {
             player.call("house.add.garage.open", []);
         }
     },
+    /// Менять интерьер
 }

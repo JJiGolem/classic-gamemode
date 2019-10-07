@@ -16,12 +16,10 @@ mp.events.add("biz.menu.open", (info) => {
     info.area = mp.game.ui.getLabelText(mp.game.zone.getNameOfZone(info.pos[0], info.pos[1], info.pos[2]));
     mp.callCEFR("biz.load", [info]);
     mp.callCEFR("biz.menu", []);
-    mp.gui.cursor.show(true, true);
 });
 
 mp.events.add("biz.menu.close", (fromServer) => {
     mp.busy.remove("biz.info");
-    mp.gui.cursor.show(false, false);
     if (fromServer) {
         mp.callCEFR("biz.menu.close", []);
     }
@@ -33,8 +31,8 @@ mp.events.add("biz.menu.close", (fromServer) => {
 mp.events.add("biz.buy", () => {
     mp.events.callRemote("biz.buy");
 });
-mp.events.add("biz.buy.ans", (ans, owner) => {
-    mp.callCEFR("biz.buy.ans", [ans, owner]);
+mp.events.add("biz.buy.ans", (ans, owner, actions) => {
+    mp.callCEFR("biz.buy.ans", [ans, owner, actions]);
 });
 
 mp.events.add("biz.actions", (action) => {

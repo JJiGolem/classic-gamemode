@@ -2,7 +2,7 @@
 
 mp.events.add("economy.show", (data) => {
     if (mp.busy.includes()) return;
-    if (!mp.busy.add('economy')) return;
+    if (!mp.busy.add('economy', false)) return;
     let items = "";
     JSON.parse(data).forEach(element => {
         items += `{

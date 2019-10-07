@@ -3,6 +3,8 @@
 module.exports = {
     // Место заключения брака
     weddingPos: new mp.Vector3(-1680.2960205078125, -291.5504455566406, 51.88338088989258 - 1),
+    // Цена брака
+    weddingPrice: 500,
 
     init() {
         this.createWeddingMarker();
