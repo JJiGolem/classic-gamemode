@@ -40,7 +40,17 @@ class PlayersList extends Component {
 
         return (
             players
-                .sort((a, b) => a[sortedBy].toString().localeCompare(b[sortedBy].toString()))
+                .sort((a, b) => {
+                    if (sortedBy == 'id') {
+                        return a[sortedBy] - b[sortedBy];
+                    } else {
+                        if (a[sortedBy].toLowerCase() < b[sortedBy].toLowerCase()) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    }
+                })
                 .filter(player => player[type]
                     .toString()
                     .toLowerCase()
