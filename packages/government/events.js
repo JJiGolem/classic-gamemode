@@ -136,8 +136,8 @@ module.exports = {
         masksParams.faction = faction.id;
         glassesParams.faction = faction.id;
 
-        topParams.pockets = '[5,5,5,5,5,5,10,10]';
-        legsParams.pockets = '[5,5,5,5,5,5,10,10]';
+        topParams.pockets = '[5,5,5,5,10,5]';
+        legsParams.pockets = '[5,5,5,5,10,5]';
         hatParams.clime = '[-5,20]';
         topParams.clime = '[-5,20]';
         legsParams.clime = '[-5,20]';
