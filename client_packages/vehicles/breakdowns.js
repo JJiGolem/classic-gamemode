@@ -2,7 +2,7 @@ let breakdowns = {
     engineState: 0,
     steeringState: 0,
     fuelState: 0,
-    brakeState: 2
+    brakeState: 0
 }
 
 let engineState;
@@ -10,9 +10,6 @@ let steeringState;
 let fuelState;
 let brakeState;
 
-mp.keys.bind(0x72, true, function () {
-    mp.events.call('vehicles.breakdowns.init', breakdowns);
-});
 
 mp.events.add('playerLeaveVehicle', () => {
     stopBrakeTimer();
