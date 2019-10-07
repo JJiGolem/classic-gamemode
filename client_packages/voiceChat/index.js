@@ -4,7 +4,7 @@ mp.voiceChat.muted = true;
 mp.events.add('characterInit.done', function() {
     mp.keys.bind(0x4E, true, function() {		// N
         if (mp.busy.includes(['chat', 'terminal'])) return;
-        if (!mp.busy.add('voicechat')) return;
+        if (!mp.busy.add('voicechat', false)) return;
         mp.voiceChat.muted = false;
         mp.callCEFV("hud.voice = true");
 	});
