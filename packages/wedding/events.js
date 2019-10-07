@@ -36,6 +36,7 @@ module.exports = {
         if (rec.spouse) return out(`${rec.name} уже состоит в браке`);
         if (player.character.gender == 1) return out(`Предложение должен сделать мужчина`);
         if (rec.character.gender == 0) return out(`${rec.name} не женщина`);
+        if (player.character.cash < wedding.weddingPrice) return out(`Необходимо $${wedding.weddingPrice}`);
 
         player.call(`offerDialog.show`, [`wedding_male`, {
             name: rec.name,
@@ -56,6 +57,7 @@ module.exports = {
         if (rec.spouse) return out(`${rec.name} уже состоит в браке`);
         if (player.character.gender == 1) return out(`Предложение должен сделать мужчина`);
         if (rec.character.gender == 0) return out(`${rec.name} не женщина`);
+        if (player.character.cash < wedding.weddingPrice) return out(`Необходимо $${wedding.weddingPrice}`);
 
         rec.offer = {
             type: "wedding",
@@ -77,8 +79,14 @@ module.exports = {
         if (!rec || !rec.character) return out(`Игрок #${recId} не найден`);
         if (player.dist(rec.position) > 5) return out(`${rec.name} далеко`);
         if (rec.spouse) return out(`${rec.name} уже состоит в браке`);
+        if (rec.character.cash < wedding.weddingPrice) return notifs.error(rec, `Необходимо $${wedding.weddingPrice}`, header);
 
-        wedding.add(rec, player);
+        money.removeCash(rec, wedding.weddingPrice, (res) => {
+            if (!res) return notifs.error(rec, `Ошибка списания наличных`, header);
+
+            wedding.add(rec, player);
+        }, `Заключение брака с ${player.name}`);
+
         notifs.success(player, `${rec.name} теперь ваш муж`, header);
         notifs.success(rec, `${player.name} теперь ваша жена`, header);
     },
