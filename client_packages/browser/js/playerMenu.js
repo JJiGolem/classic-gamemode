@@ -67,51 +67,42 @@ let settingsmainWindowData = {
             pull: ["Улица", "Дом", "Организация"],
             value: 1,
         },
-        microVolume: {
-            type: 'range',
-            head: 'Громкость микрофона',
-            value: 20,
-        },
-        spawn1: {
+        // microVolume: {
+        //     type: 'range',
+        //     head: 'Громкость микрофона',
+        //     value: 20,
+        // },
+        chatTimestamp: {
             type: 'scroll',
-            head: 'Место спавна',
-            pull: ["Улица", "Дом", "Организация"],
-            value: 1,
+            head: 'Время в чате',
+            pull: ["Выкл", "Вкл"],
+            value: 0,
         },
-        spawn2: {
+        nicknames: {
             type: 'scroll',
-            head: 'Место спавна',
-            pull: ["Улица", "Дом", "Организация"],
-            value: 1,
+            head: 'Никнеймы',
+            pull: ["Выкл", "Вкл"],
+            value: 0,
         },
-        spawn3: {
+        walking: {
             type: 'scroll',
-            head: 'Место спавна',
-            pull: ["Улица", "Дом", "Организация"],
-            value: 1,
+            head: 'Походка',
+            pull: ["Обычная", "Храбрая", "Уверенная", "Гангстер", "Быстрая", "Грустная", "Крылатая"],
+            value: 0,
         },
-        spawn4: {
+        mood: {
             type: 'scroll',
-            head: 'Место спавна',
-            pull: ["Улица", "Дом", "Организация"],
-            value: 1,
-        },
-        spawn5: {
-            type: 'scroll',
-            head: 'Место спавна',
-            pull: ["Улица", "Дом", "Организация"],
-            value: 1,
+            head: 'Эмоция',
+            pull: ["Обычный", "Угрюмый", "Сердитый", "Счастливый", "Счастливый", "Стресс", "Надутый"],
+            value: 0,
         },
     },
 
     saveChanges(modifiedSettings) {
         // TODO: Сохранение изменений;
 
-        console.log(modifiedSettings);
-        for (key in modifiedSettings) {
-            this.settingsList[key].value = modifiedSettings[key];
-        }
-
+        playerMenu.setSettings(modifiedSettings);
+        mp.trigger(`callRemote`, `settings.set`, JSON.stringify(modifiedSettings));
         /*mp.trigger(`callRemote`, `settings.spawn.set`, currentSpawn);
 
         settingsmainWindowData.microVolume = microVolume;
@@ -758,7 +749,13 @@ var playerMenu = new Vue({
             protectionWindowData.passMessage = `изменен ${parseInt(diff / 1000 / 60 / 60 / 24)} д. назад`;
         },
         setSettings(settings) {
-            settingsmainWindowData.spawnSettings.currentSpawn = settings.spawn;
+            for (var key in settings) {
+                if (!settingsmainWindowData.settingsList[key]) continue;
+
+                settingsmainWindowData.settingsList[key].value = settings[key];
+                if (key == 'chatTimestamp') mp.events.call("setTimeChat", !!settings[key]);
+                else if (key == 'nicknames') mp.trigger(`nametags.show`, !!settings[key]);
+            }
         },
         setEmail(email, confirm = 0) {
             protectionWindowData.email = email;

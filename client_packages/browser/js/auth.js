@@ -172,7 +172,7 @@ var auth = new Vue({
             }, self.promptShowTime);
         },
         show(val) {
-            if (val) busy.add("auth", true);
+            if (val) busy.add("auth", true, true);
             else busy.remove("auth", true);
         },
     }

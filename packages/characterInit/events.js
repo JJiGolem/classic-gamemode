@@ -1,6 +1,7 @@
 "use strict";
 /// Модуль выбора и создания персоонажа
 let characterInit = require("./index.js");
+let logger = call("logger");
 let utils = call("utils");
 
 module.exports = {
@@ -35,6 +36,7 @@ module.exports = {
         player.call('characterInit.done');
         characterInit.spawn(player);
         player.authTime = Date.now();
+        logger.log(`Авторизовал персонажа`, "characterInit", player);
     },
     /// События создания персоонажа
     "player.joined": player => {
@@ -66,5 +68,6 @@ module.exports = {
             player.character.h = player.heading;
         }
         player.character.save();
+        logger.log(`Деавторизовал персонажа`, "characterInit", player);
     },
 }

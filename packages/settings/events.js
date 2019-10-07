@@ -1,11 +1,19 @@
 let auth = call('auth');
 let notifs = call('notifications');
+let settings = call('settings');
 let utils = call('utils');
 
 module.exports = {
-    "settings.spawn.set": (player, spawn) => {
-        player.character.settings.spawn = spawn;
+    "characterInit.done": (player) => {
+        settings.apply(player, player.character.settings);
+    },
+    "settings.set": (player, modified) => {
+        modified = JSON.parse(modified);
+        for (var key in modified) {
+            player.character.settings[key] = modified[key];
+        }
         player.character.settings.save();
+        settings.apply(player, modified);
     },
     "settings.password.set": (player, data) => {
         data = JSON.parse(data);

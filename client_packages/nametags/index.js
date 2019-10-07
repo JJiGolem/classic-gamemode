@@ -73,3 +73,9 @@ mp.keys.bind(0x75, true, function () { /// Включение/отключени
         showNametags = true
     }
 });
+
+mp.events.add({
+    "nametags.show": (val) => {
+        showNametags = val;
+    },
+});

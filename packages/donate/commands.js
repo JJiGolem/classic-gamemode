@@ -10,7 +10,7 @@ module.exports = {
             var rec = mp.players.at(args[0]);
             if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
 
-            donate.setDonate(rec, rec.account.donate + args[1]);
+            donate.setDonate(rec, rec.account.donate + args[1], `Выдано администратором ${player.name}`);
 
             out.info(`${player.name} выдал ${args[1]} CC ${rec.name}`);
             notifs.success(rec, `${player.name} выдал вам ${args[1]} CC`);
