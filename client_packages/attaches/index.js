@@ -142,6 +142,7 @@ mp.events.add("render", () => {
         if (player.isJumping() || player.isShooting() || player.isSwimming() || player.isFalling()) {
             mp.attachmentMngr.removeLocal(id);
             mp.attachmentMngr.removeFor(player, id);
+            mp.notify.error(`Вы уронили груз`);
         }
     }
 });
