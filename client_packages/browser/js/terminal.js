@@ -82,7 +82,7 @@ var terminal = new Vue({
         },
         saveCmd(text) {
             this.savedCmds.unshift(text);
-            if (this.savedCmds.length > this.maxCmdsCount) this.savedCmds.shift();
+            if (this.savedCmds.length > this.maxCmdsCount) this.savedCmds.pop();
         },
     },
     watch: {
