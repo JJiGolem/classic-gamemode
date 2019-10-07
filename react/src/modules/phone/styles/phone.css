@@ -487,6 +487,25 @@
     font-size: 95%;
 }
 
+.not_read_phone-react {
+    position: absolute;
+    width: 5%;
+    background: #343c47;
+    color: white;
+    font-size: 110%;
+    padding: 3.5% 5.2%;
+    text-align: center;
+    border-radius: 50px;
+    bottom: 15%;
+    right: 10%;
+    transition: .2s ease-in-out;
+    animation: show-react .1s ease-in-out;
+}
+
+.not_read_phone-react:hover {
+    background: #232931;
+}
+
 #button_send_message-phone-react {
     position: absolute;
     left: 80%;
