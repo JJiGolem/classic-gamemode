@@ -681,7 +681,7 @@
 .ico_button_house-phone-react {
     position: absolute;
     left: 8%;
-    margin-top: -1%;
+    /* margin-top: -1%; */
     width: 10%;
 }
 
