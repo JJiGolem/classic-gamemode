@@ -148,13 +148,13 @@ mp.utils = {
         return veh.getOffsetFromInWorldCoords(0, -bootDist - 1, 0);
     },
     // Получить ближ. игрока
-    getNearPlayer(pos) {
+    getNearPlayer(pos, range = 10) {
         var nearPlayer;
         var minDist = 99999;
         mp.players.forEachInStreamRange((rec) => {
             if (rec == mp.players.local) return;
             var distance = mp.vdist(pos, rec.position);
-            if (distance < minDist) {
+            if (distance < minDist && distance < range) {
                 nearPlayer = rec;
                 minDist = distance;
             }

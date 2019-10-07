@@ -124,7 +124,7 @@ module.exports = {
         });
         return result;
     },
-    getNearVehicle(player, range) {
+    getNearVehicle(player, range = 10) {
         var nearVehicle;
         var minDist = 99999;
         mp.vehicles.forEach((veh) => {
