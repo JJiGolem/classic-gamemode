@@ -29,4 +29,26 @@ module.exports = {
         });
         return logs;
     },
+    async loadLogIds(playerId, date) {
+        var logs = await db.Models.Log.findAll({
+            where: {
+                playerId: playerId,
+                date: {
+                    [Op.gte]: date,
+                    [Op.lt]: new Date(date.getTime() + 24 * 60 * 60 * 1000)
+                },
+                text: {
+                    [Op.or]: [{
+                            [Op.like]: '%Авторизовал персонажа%'
+                        },
+                        {
+                            [Op.like]: '%Деавторизовал персонажа%'
+                        }
+                    ],
+                }
+            }
+        });
+
+        return logs;
+    },
 };

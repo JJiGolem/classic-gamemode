@@ -25,4 +25,23 @@ module.exports = {
             out.log(text, player);
         }
     },
+    "/logids": {
+        access: 6,
+        description: "Посмотреть игроков, которые заходили под ID. Формат даты: ГГГГ-ММ-ДД",
+        args: "[ид_игрока]:n [дата]",
+        handler: async (player, args, out) => {
+            var date = new Date(args[1]);
+            if (date == "Invalid Date") return out.error(`Неверная дата ${args[0]}`, player);
+
+            var logs = await logger.loadLogIds(args[0], date);
+            if (!logs.length) return out.error(`Логи не найдены`, player);
+
+            var text = `Логи (${date.toDateString()}):<br/>`;
+            logs.forEach(log => {
+                text += `[ID: ${log.characterId}] ${log.text} ${log.date.toTimeString()}<br/>`;
+            });
+
+            out.log(text, player);
+        }
+    },
 }
