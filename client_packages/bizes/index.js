@@ -31,8 +31,8 @@ mp.events.add("biz.menu.close", (fromServer) => {
 mp.events.add("biz.buy", () => {
     mp.events.callRemote("biz.buy");
 });
-mp.events.add("biz.buy.ans", (ans, owner) => {
-    mp.callCEFR("biz.buy.ans", [ans, owner]);
+mp.events.add("biz.buy.ans", (ans, owner, actions) => {
+    mp.callCEFR("biz.buy.ans", [ans, owner, actions]);
 });
 
 mp.events.add("biz.actions", (action) => {
