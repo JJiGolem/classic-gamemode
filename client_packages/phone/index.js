@@ -14,7 +14,6 @@ mp.events.add('phone.load', function (phoneInfo, phoneDialogs, apps) {
     phoneInfo.biz.forEach(currentBiz => {
         currentBiz.area = mp.game.ui.getLabelText(mp.game.zone.getNameOfZone(currentBiz.pos[0], currentBiz.pos[1], currentBiz.pos[2]));
     });
-    mp.console(JSON.stringify(phoneInfo));
     mp.callCEFR('phone.load', [phoneInfo]);
     mp.callCEFR('phone.message.list', [phoneDialogs]);
     apps.forEach(app => {
