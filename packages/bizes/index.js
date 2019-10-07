@@ -88,6 +88,8 @@ let getRandomDate = function(daysNumber) {
 let getBizInfoForApp = function(biz) {
     if (biz == null) return null;
     if (bizesModules[biz.info.type] == null) return null;
+    let minMultiplier = bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
+    let maxMultiplier = bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
     return {
         id: biz.info.id,
         name: biz.info.name,
@@ -101,8 +103,8 @@ let getBizInfoForApp = function(biz) {
         price: biz.info.price,
         statistics: biz.info.BizStatistics,
         order: null,
-        resourcePriceMin: bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier,
-        resourcePriceMax: bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier
+        resourcePriceMin: bizesModules[biz.info.type].productPrice * minMultiplier,
+        resourcePriceMax: bizesModules[biz.info.type].productPrice * maxMultiplier
     };
 };
 let getResourceName = function(type) {

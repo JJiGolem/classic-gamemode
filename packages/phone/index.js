@@ -46,6 +46,7 @@ module.exports = {
             let biz = bizService.getBizByCharId(player.character.id);
             if (biz != null) {
                 let bizInfo = bizService.getBizInfoForApp(biz);
+                console.log(bizInfo);
                 bizes = bizInfo != null ? [bizInfo] : [];
             }
         }
