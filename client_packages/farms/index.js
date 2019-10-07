@@ -238,11 +238,12 @@ mp.farms = {
             true
         );
     },
-    isCropping() {
-        return mp.players.local.hasAttachment("farmTrowel");
+    isCropping(player) {
+        if (!player) player = mp.players.local;
+        return player.hasAttachment("farmTrowel");
     },
-    hasProduct() {
-        var player = mp.players.local;
+    hasProduct(player) {
+        if (!player) player = mp.players.local;
         var names = ["farmProductA", "farmProductB", "farmProductC"];
         for (var i = 0; i < names.length; i++) {
             if (player.hasAttachment(names[i])) return true;

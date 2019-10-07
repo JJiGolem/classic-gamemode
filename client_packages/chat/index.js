@@ -150,6 +150,21 @@ function correctName(name) {
     return name;
 }
 
+function playChatAnimation(id) {
+    var player = mp.players.atRemoteId(id);
+    if (!player || player.vehicle || player.getVariable("knocked")) return;
+    if (mp.farms.hasProduct(player)) return;
+    if (mp.farms.isCropping(player)) return;
+    if (mp.factions.hasBox(player)) return;
+
+    mp.animations.playAnimation(player, {
+        dict: "special_ped@baygor@monologue_3@monologue_3e",
+        name: "trees_can_talk_4",
+        speed: 1,
+        flag: 49
+    }, 3000);
+}
+
 mp.events.add('chat.message.get', (type, message) => {
     if (message == "/timestamp") {
         if (timestamp) {
@@ -170,14 +185,7 @@ mp.events.add('chat.action.say', (nickname, id, message) => {
     message = `!{#ffffff}${nickname}[${id}]: ${message}`;
     mp.events.call('chat.message.push', message);
 
-    var player = mp.players.atRemoteId(id);
-    if (!player || player.vehicle || player.getVariable("knocked")) return;
-    mp.animations.playAnimation(player, {
-        dict: "special_ped@baygor@monologue_3@monologue_3e",
-        name: "trees_can_talk_4",
-        speed: 1,
-        flag: 49
-    }, 3000);
+    playChatAnimation(id);
 });
 
 mp.events.add('chat.action.shout', (nickname, id, message) => {

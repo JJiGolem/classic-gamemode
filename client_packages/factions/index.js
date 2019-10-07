@@ -34,8 +34,8 @@ mp.factions = {
             mp.events.callRemote("factions.warehouse.putBox");
         }
     },
-    hasBox() {
-        var player = mp.players.local;
+    hasBox(player) {
+        if (!player) player = mp.players.local;
         var names = ["ammoBox", "medicinesBox"];
         for (var i = 0; i < names.length; i++) {
             if (player.hasAttachment(names[i])) return true;
