@@ -91,13 +91,12 @@ var terminal = new Vue({
         },
         show(val) {
             if (val) {
-                busy.add("terminal", true);
+                busy.add("terminal", true, true);
                 this.inputText = "";
                 setTimeout(() => {
                     this.$refs["input"].focus();
                 }, 100);
             } else busy.remove("terminal", true);
-            setCursor(val);
         },
     },
     mounted() {

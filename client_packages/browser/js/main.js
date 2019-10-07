@@ -38,10 +38,10 @@ function debug(text) {
 
 var busy = {
     list: [],
-    add(name, client = false) {
+    add(name, mouse = true, client = false) {
         if (this.list.includes(name)) return false;
         this.list.push(name);
-        if (client) mp.trigger('busy.add', name, true);
+        if (client) mp.trigger('busy.add', name, mouse, true);
         return true;
     },
     includes(name) {

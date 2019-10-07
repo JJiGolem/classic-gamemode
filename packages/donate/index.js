@@ -1,5 +1,6 @@
 "use strict";
 
+let logger = call('logger');
 let money = call('money');
 let notifs = call('notifications');
 
@@ -15,12 +16,16 @@ module.exports = {
     // Макс. кол-во слотов
     slotsMax: 3,
 
-    setDonate(player, donate) {
+    setDonate(player, donate, reason = "") {
         donate = parseInt(donate);
 
+        var oldVal = player.account.donate;
         player.account.donate = donate;
         player.account.save();
         mp.events.call("player.donate.changed", player);
+        var diff = donate - oldVal;
+        if (diff > 0) diff = "+" + diff;
+        logger.log(`${diff} CC | ${reason}`, `donate`, player);
     },
     convert(player, donate) {
         donate = parseInt(donate);
@@ -31,11 +36,12 @@ module.exports = {
         };
         if (player.account.donate < donate) return out(`Необходимо ${donate} CC`);
 
-        money.addMoney(player, donate * this.convertCash, (res) => {
+        var cash = donate * this.convertCash;
+        money.addMoney(player, cash, (res) => {
             if (!res) return out(`Ошибка начисления на банк`);
 
-            this.setDonate(player, player.account.donate - donate);
-        }, `Донат за ${donate} CC`);
+            this.setDonate(player, player.account.donate - donate, `Конвертация валюты $${cash}`);
+        }, `Конвертация валюты за ${donate} CC`);
 
         notifs.success(player, `Списано ${donate} CC`, header);
     },
@@ -59,11 +65,12 @@ module.exports = {
 
         if (character) return out(`Никнейм ${name} занят`);
 
+        var oldName = player.name;
         player.name = name;
         player.character.name = name;
         player.character.save();
 
-        this.setDonate(player, player.account.donate - this.nicknamePrice);
+        this.setDonate(player, player.account.donate - this.nicknamePrice, `Смена ника ${oldName}=>${player.name}`);
         notifs.success(player, `Никнейм персонажа изменен`, header);
         notifs.success(player, `Списано ${this.nicknamePrice} CC`, header);
         mp.events.call("player.name.changed", player);
@@ -81,7 +88,7 @@ module.exports = {
         player.character.save();
         mp.events.call("player.warns.changed", player);
 
-        this.setDonate(player, player.account.donate - this.clearWarnPrice);
+        this.setDonate(player, player.account.donate - this.clearWarnPrice, `Снятие варна`);
         notifs.success(player, `Варн снят`, header);
         notifs.success(player, `Списано ${this.clearWarnPrice} CC`, header);
     },
@@ -97,7 +104,7 @@ module.exports = {
         player.account.save();
         mp.events.call("player.slots.changed", player);
 
-        this.setDonate(player, player.account.donate - this.slotPrice);
+        this.setDonate(player, player.account.donate - this.slotPrice, `Добавление слота персонажа`);
         notifs.success(player, `Добавлен новый слот`, header);
         notifs.success(player, `Списано ${this.slotPrice} CC`, header);
     },

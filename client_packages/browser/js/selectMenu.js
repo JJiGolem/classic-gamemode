@@ -6827,7 +6827,7 @@ var selectMenu = new Vue({
             });
         },
         show(val) {
-            if (val) busy.add("selectMenu", true);
+            if (val) busy.add("selectMenu", false, true);
             else busy.remove("selectMenu", true);
         },
         loader(val) {

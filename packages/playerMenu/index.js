@@ -42,9 +42,7 @@ module.exports = {
             invited: player.character.Promocode.invited,
             completed: player.character.Promocode.completed,
             media: player.character.Promocode.media,
-            settings: {
-                spawn: player.character.settings.spawn,
-            },
+            settings: player.character.settings.dataValues,
             email: player.account.email,
             confirmEmail: player.account.confirmEmail,
             passwordDate: player.account.passwordDate.getTime(),

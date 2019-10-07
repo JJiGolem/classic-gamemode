@@ -367,8 +367,8 @@ var changelist = new Vue({
     },
     watch: {
         show(val) {
-            if (val) setCursor(true);
-            else if (!busy.includes()) setCursor(false);
+            if (val) busy.add("changelist", true, true)
+            else busy.remove("changelist", true);
         }
     },
     methods: {

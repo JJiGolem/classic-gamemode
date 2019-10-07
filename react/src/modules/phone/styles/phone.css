@@ -407,9 +407,9 @@
 }
 
 .messages_list-phone-react {
-    height: 70%;
+    height: 77%;
     /*position: absolute;*/
-    margin-top: 21%;
+    margin-top: 19.5%;
     overflow-y: auto;
     word-wrap: normal;
     overflow-x: hidden;
@@ -475,7 +475,7 @@
 .input_message-phone-react {
     position: absolute;
     left: 5%;
-    margin-top: 10%;
+    margin-top: 0%;
     width: 63%;
     resize: none;
     outline: none;
@@ -490,11 +490,11 @@
 #button_send_message-phone-react {
     position: absolute;
     left: 80%;
-    margin-top: 10%;
+    margin-top: 0%;
     background: #ececec;
     border: none;
     border-radius: 10px;
-    padding: 5%;
+    padding: 4%;
     width: 15%;
     height: 10%;
     outline: none;
@@ -506,8 +506,30 @@
 }
 
 .ico_but_send_message {
-    width: 100%;
+    width: 85%;
     height: 100%;
+}
+
+.messages_load_phone-react {
+    /* position: absolute; */
+    width: 100%;
+    /* height: 5%; */
+    text-align: center;
+    /* margin-top: 19%; */
+    /* margin-left: -1%; */
+    background: #31363873;
+    z-index: 10;
+    color: white;
+    padding: 2%;
+    /* border-radius: 20px; */
+    box-sizing: border-box;
+    /* box-shadow: #858585 0px 1px 5px; */
+    animation: .1s ease-in-out show-react;
+    transition: .2s ease-in-out;
+}
+
+.messages_load_phone-react:hover {
+    background: #313638a9;
 }
 
 .create_dialog-phone-react {
@@ -659,7 +681,7 @@
 .ico_button_house-phone-react {
     position: absolute;
     left: 8%;
-    margin-top: -1%;
+    /* margin-top: -1%; */
     width: 10%;
 }
 

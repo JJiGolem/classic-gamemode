@@ -291,12 +291,12 @@ var offerDialog = new Vue({
             }
         });
     },
-    // watch: {
-    //     dialog(val) {
-    //         if (val) setCursor(true);
-    //         else setCursor(false);
-    //     }
-    // },
+    watch: {
+        dialog(val) {
+            if (val) busy.add("offerDialog", false, true);
+            else busy.remove("offerDialog", true);
+        }
+    },
 });
 
 // for tests

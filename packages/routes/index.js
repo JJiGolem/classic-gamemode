@@ -1,6 +1,15 @@
 "use strict";
 
 module.exports = {
+    // Настройки чекпоинта по-умолчанию
+    defaultCheckpointData: {
+        type: 1,
+        position: null,
+        scale: 1,
+        direction: null,
+        color: [255, 255, 255, 100],
+        isMarker: false,
+    },
     // Настройки чекпоинта
     checkpointData: {
         type: 1,
@@ -8,9 +17,12 @@ module.exports = {
         scale: 1,
         direction: null,
         color: [255, 255, 255, 100],
+        isMarker: false,
     },
 
-    start(player, points, valid, end) {
+
+    start(player, data, points, valid, end) {
+        this.checkpointData = (data)? data : this.defaultCheckpointData;
         player.route = {
             i: 0,
             points: points,
