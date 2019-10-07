@@ -1338,7 +1338,7 @@ var selectMenu = new Vue({
                 name: "bizeconomic",
                 header: "Экономика бизнеса",
                 items: [{
-                        text: "Создать",
+                        text: "Сохранить",
                     },
                     {
                         text: "Закрыть",
@@ -1357,7 +1357,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         switch (e.itemName) {
-                            case "Создать":
+                            case "Сохранить":
                                 let params = new Array();
                                 this.items.forEach(item => {
                                     if (item.paramKey == null) return;
@@ -1375,6 +1375,10 @@ var selectMenu = new Vue({
                                 selectMenu.show = false;
                                 break;
                         }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        mp.trigger("biz.finance.close");
+                        selectMenu.show = false;
                     }
                 }
             },
