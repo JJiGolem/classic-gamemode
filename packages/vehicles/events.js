@@ -454,7 +454,7 @@ module.exports = {
 
             var spawnPos = new mp.Vector3(veh.db.x, veh.db.y, veh.db.z);
             var vehPos = veh.position;
-            var dist = utils.dist(spawnPos, vehPos);
+            var dist = utils.vdist(spawnPos, vehPos);
             if (dist > 10) {
                 veh.repair();
                 veh.position = spawnPos;

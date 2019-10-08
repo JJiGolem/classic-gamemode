@@ -94,6 +94,9 @@ module.exports = {
         }, `Аренда грузовика для грузоперевозок`);
         notifs.success(player, `Удачной работы!`, header);
     },
+    "bizes.orders.created": (biz) => {
+        carrier.addBizOrder(biz);
+    },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;
         if (vehicle.db.key != "job") return;

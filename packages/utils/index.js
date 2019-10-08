@@ -137,7 +137,7 @@ module.exports = {
         });
         return nearVehicle;
     },
-    dist(posA, posB) {
+    vdist(posA, posB) {
         return (posA.x - posB.x) * (posA.x - posB.x) + (posA.y - posB.y) * (posA.y - posB.y) + (posA.z - posB.z) * (posA.z - posB.z);
     }
 };

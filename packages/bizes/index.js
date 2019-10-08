@@ -8,7 +8,7 @@ let bizesModules = new Array();
 /// biz types
 /// 0 - АЗС
 /// 1 - Супермаркет
-/// 2 - 
+/// 2 -
 /// 3 - СТО
 /// 4 - Магазин одежды
 /// 5 - Магазин оружия
@@ -177,6 +177,7 @@ let createOrder = async function(biz, count, price) {
     if (price < min || price > max) return 0;
     biz.info.productsOrder = count;
     biz.info.productsOrderPrice = parseInt(price * count);
+    mp.events.call("bizes.orders.created", biz);
     await biz.info.save();
     return 1;
 }
@@ -423,7 +424,7 @@ module.exports = {
             const biz = bizes[index];
             biz.info.productsCount = biz.info.productsMaxCount;
             await biz.info.save();
-            
+
         }
     },
     async setBizesTypeMaxProducts(type, amount) {

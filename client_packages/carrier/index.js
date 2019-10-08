@@ -29,12 +29,30 @@ mp.carrier = {
         mp.events.call('NPC.create', pedInfo);
     },
     setLoadInfo(data) {
+        this.initBizOrdersInfo(data);
+
         var price = [`$${data.productPrice}`];
         var sell = [`-${Math.ceil((1 - data.productSellK) * 100)}%`];
 
         mp.callCEFV(`selectMenu.setProp('carrierLoadFarms', 'farms', '${JSON.stringify(data.farms)}')`);
         mp.callCEFV(`selectMenu.setItemValues('carrierLoadProducts', 'Купить', '${JSON.stringify(price)}')`);
         mp.callCEFV(`selectMenu.setItemValues('carrierLoadProducts', 'Списать', '${JSON.stringify(sell)}')`);
+        mp.callCEFV(`selectMenu.showByName('carrierLoad')`);
+    },
+    initBizOrdersInfo(data) {
+
+        var items = [];
+        data.bizOrders.forEach(order => {
+            items.push({
+                text: order.bizName,
+                values: [`${order.prodCount} ед.`],
+            });
+        });
+        items.push({
+            text: `Вернуться`
+        });
+        mp.callCEFV(`selectMenu.setItems('carrierLoadBizOrders', '${JSON.stringify(items)}')`);
+        mp.callCEFV(`selectMenu.setProp('carrierLoadBizOrders', 'bizOrders', '${JSON.stringify(data.bizOrders)}')`);
     },
 };
 

@@ -704,6 +704,9 @@ module.exports = {
     },
     "playerQuit": (player) => {
         if (!player.character) return;
-        if (player.farmJob) farms.pay(player);
+        if (player.farmJob) {
+            farms.pay(player);
+            delete player.farmJob;
+        }
     },
 };

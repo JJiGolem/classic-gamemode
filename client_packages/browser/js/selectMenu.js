@@ -1778,12 +1778,10 @@ var selectMenu = new Vue({
                         if (e.itemName == "Оплата штрафов") {
                             if (!selectMenu.menus["governmentServiceFines"].fines.length) return selectMenu.notification = `Вы не имеете штрафы`;
                             selectMenu.showByName("governmentServiceFines");
-                        }
-                        else if (e.itemName == "Восстановление ключей") {
+                        } else if (e.itemName == "Восстановление ключей") {
                             if (selectMenu.menus["governmentServiceVehKeys"].items.length <= 1) return selectMenu.notification = `Вы не имеете авто`;
                             selectMenu.showByName("governmentServiceVehKeys");
-                        }
-                        else selectMenu.show = false;
+                        } else selectMenu.show = false;
                     }
                 }
             },
@@ -1836,8 +1834,7 @@ var selectMenu = new Vue({
             "governmentServiceFine": {
                 name: "governmentServiceFine",
                 header: "Оплата",
-                items: [
-                    {
+                items: [{
                         text: "Штраф",
                         values: ["ID: 999"]
                     },
@@ -5275,6 +5272,9 @@ var selectMenu = new Vue({
                         text: "Товар",
                     },
                     {
+                        text: "Заказы",
+                    },
+                    {
                         text: "Закрыть"
                     },
                 ],
@@ -5294,6 +5294,8 @@ var selectMenu = new Vue({
                             selectMenu.showByName("carrierLoadWarehouses");
                         } else if (e.itemName == 'Товар') {
                             selectMenu.showByName("carrierLoadProducts");
+                        } else if (e.itemName == 'Заказы') {
+                            selectMenu.showByName("carrierLoadBizOrders");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
@@ -5305,9 +5307,6 @@ var selectMenu = new Vue({
                 header: "Склады",
                 items: [{
                         text: "Фермы",
-                    },
-                    {
-                        text: "Бизнесы"
                     },
                     {
                         text: "Вернуться"
@@ -5327,9 +5326,6 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Фермы') {
                             selectMenu.showByName("carrierLoadFarms");
-                        } else if (e.itemName == 'Бизнесы') {
-                            // selectMenu.showByName("carrierLoadBizs");
-                            notifications.push(`warning`, `In development...`)
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("carrierLoad");
                         }
@@ -5402,25 +5398,94 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') {
-                            selectMenu.showByName("carrierLoad");
+                            selectMenu.showByName("carrierLoadWarehouses");
                         }
                     } else if (eventName == 'onItemValueChanged') {
                         if (e.itemName == 'Ферма') {
                             // this.update();
                         }
                     } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("carrierLoadWarehouses");
+                }
+            },
+            "carrierLoadBizOrders": {
+                name: "carrierLoadBizOrders",
+                header: "Заказы бизнесов",
+                items: [{
+                        text: "Бизнес 1",
+                        values: [`999 ед.`]
+                    },
+                    {
+                        text: "Бизнес 2",
+                        values: [`999 ед.`]
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                bizOrders: [],
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("carrierLoad");
+                        } else {
+                            debug("a")
+                            var order = this.bizOrders[e.itemIndex];
+                            debug(order)
+                            var items = selectMenu.menus["carrierLoadBizOrder"].items;
+                            items[0].values[0] = order.bizName;
+                            items[1].values[0] = order.ownerName;
+                            items[2].values[0] = order.prodName;
+                            items[3].values[0] = order.prodCount + " ед.";
+                            items[4].values[0] = "$" + order.orderPrice;
+                            items[5].values[0] = order.distance + " м.";
+                            // TODO: set buy price
+                            selectMenu.showByName("carrierLoadBizOrder");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
                         selectMenu.showByName("carrierLoad");
                 }
             },
-            "carrierLoadBizs": {
-                name: "carrierLoadBizs",
-                header: "Бизнесы",
+            "carrierLoadBizOrder": {
+                name: "carrierLoadBizOrder",
+                header: "Заказ бизнеса",
                 items: [{
                         text: "Бизнес",
-                        values: ["ID: 1", "ID: 2"],
+                        values: ["АЗС на Грув"],
                     },
                     {
-                        text: "Выбрать"
+                        text: "Владелец",
+                        values: ["Carter Slade"]
+                    },
+                    {
+                        text: "Товар",
+                        values: ["Топливо"],
+                    },
+                    {
+                        text: "Количество",
+                        values: ["999 ед."],
+                    },
+                    {
+                        text: "Сумма",
+                        values: ["$999"],
+                    },
+                    {
+                        text: "Расстояние",
+                        values: ["999 м."],
+                    },
+                    {
+                        text: "Принять",
+                        values: ["$111"],
                     },
                     {
                         text: "Вернуться"
@@ -6153,8 +6218,7 @@ var selectMenu = new Vue({
                 name: "clothingMain",
                 header: "Одежда",
                 headerImg: "",
-                items: [
-                ],
+                items: [],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -6218,8 +6282,7 @@ var selectMenu = new Vue({
                 name: "clothingTops",
                 header: "Тело",
                 headerImg: "",
-                items: [
-                ],
+                items: [],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -6259,8 +6322,7 @@ var selectMenu = new Vue({
                 name: "clothingBracelets",
                 header: "Браслеты",
                 headerImg: "",
-                items: [
-                ],
+                items: [],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -6300,8 +6362,7 @@ var selectMenu = new Vue({
                 name: "clothingEars",
                 header: "Серьги",
                 headerImg: "",
-                items: [
-                ],
+                items: [],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -6340,8 +6401,7 @@ var selectMenu = new Vue({
                 name: "clothingGlasses",
                 header: "Очки",
                 headerImg: "",
-                items: [
-                ],
+                items: [],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -6380,8 +6440,7 @@ var selectMenu = new Vue({
                 name: "clothingWatches",
                 header: "Часы",
                 headerImg: "",
-                items: [
-                ],
+                items: [],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -6420,8 +6479,7 @@ var selectMenu = new Vue({
                 name: "clothingTies",
                 header: "Галстуки",
                 headerImg: "",
-                items: [
-                ],
+                items: [],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -6460,8 +6518,7 @@ var selectMenu = new Vue({
                 name: "clothingHats",
                 header: "Головные уборы",
                 headerImg: "",
-                items: [
-                ],
+                items: [],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -6500,8 +6557,7 @@ var selectMenu = new Vue({
                 name: "clothingPants",
                 header: "Ноги",
                 headerImg: "",
-                items: [
-                ],
+                items: [],
                 i: 0,
                 j: 0,
                 handler(eventName) {
@@ -6540,8 +6596,7 @@ var selectMenu = new Vue({
                 name: "clothingShoes",
                 header: "Обувь",
                 headerImg: "",
-                items: [
-                ],
+                items: [],
                 i: 0,
                 j: 0,
                 handler(eventName) {

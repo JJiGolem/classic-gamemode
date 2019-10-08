@@ -1,14 +1,14 @@
 "use strict";
 
+let bizes = call('bizes');
 let farms = call('farms');
 let jobs = call('jobs');
 let notifs = call('notifications');
+let utils = call('utils');
 
 module.exports = {
     // Место мониторинга складов бизнесов/ферм и заказа товара
     loadPos: new mp.Vector3(925.46, -1563.99, 30.83 - 1),
-    // Цена за 1 ед. товара/зерна
-    productPrice: 4,
     // Цена за 1 ед. товара/зерна
     productPrice: 4,
     // Вместимость грузовика
@@ -21,6 +21,8 @@ module.exports = {
     vehPrice: 100,
     // Опыт за доставку товара
     exp: 0.05,
+    // Заказы бизнесов
+    bizOrders: [],
 
     init() {
         this.createLoadMarker();
@@ -33,7 +35,6 @@ module.exports = {
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z + 2, 2);
         colshape.onEnter = (player) => {
             if (player.character.job != 4) return notifs.error(player, `Отказано в доступе`, `Склад`);
-            player.call(`selectMenu.show`, [`carrierLoad`]);
             player.call(`carrier.load.info.set`, [this.getLoadData()]);
             player.carrierLoad = marker;
         };
@@ -52,6 +53,7 @@ module.exports = {
     getLoadData() {
         var data = {
             farms: [],
+            bizOrders: this.bizOrders,
             productPrice: this.productPrice,
             productSellK: this.productSellK,
         };
@@ -70,5 +72,30 @@ module.exports = {
     getProductsMax(player) {
         var skill = jobs.getJobSkill(player, 4);
         return parseInt(this.productsMax + skill.exp * this.skillProducts);
+    },
+    addBizOrder(biz) {
+        var vdistance = utils.vdist(this.loadPos, new mp.Vector3(biz.info.x, biz.info.y, biz.info.z));
+        var order = {
+            bizId: biz.info.id,
+            bizName: biz.info.name,
+            ownerName: biz.info.characterNick,
+            prodName: bizes.getTypeName(biz.info.type),
+            prodCount: biz.info.productsOrder,
+            orderPrice: biz.info.productsOrderPrice,
+            distance: +Math.sqrt(vdistance).toFixed(1),
+        };
+        // TODO: remove dublicate orders
+        // TODO: broadcast all carriers
+        this.bizOrders.push(order);
+    },
+    removeBizOrder(bizId) {
+        var list = this.bizOrders;
+        for (var i = 0; i < list.length; i++) {
+            var order = list[i];
+            if (order.bizId != bizId) continue;
+            list.splice(i, 1);
+            i--;
+        }
+        // TODO: broadcast all carriers
     },
 };
