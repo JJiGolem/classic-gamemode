@@ -178,7 +178,7 @@ var interactionMenu = new Vue({
                     },
                     {
                         text: "Лиц. на оружие",
-                        icon: "doc.png"
+                        icon: "gun.svg"
                     }
                 ],
                 handler(index) {
@@ -217,12 +217,15 @@ var interactionMenu = new Vue({
                 name: "faction",
                 items: [{
                         text: "Пригласить",
+                        icon: "invite.svg"
                     },
                     {
                         text: "Уволить",
+                        icon: "uval.svg"
                     },
                     {
                         text: "Ранг",
+                        icon: "rank.svg"
                     }
                 ],
                 handler(index) {
@@ -235,15 +238,19 @@ var interactionMenu = new Vue({
                 name: "government",
                 items: [{
                         text: "Наручники",
+                        icon: "cuffs.svg"
                     },
                     {
                         text: "Освобождение",
+                        icon: "freedom.svg"
                     },
                     {
                         text: "Следование",
+                        icon: "follow.svg"
                     },
                     {
                         text: "В авто",
+                        icon: "vehicle.svg"
                     },
                 ],
                 handler(index) {
@@ -256,21 +263,27 @@ var interactionMenu = new Vue({
                 name: "police",
                 items: [{
                         text: "Наручники",
+                        icon: "cuffs.svg"
                     },
                     {
                         text: "Розыск",
+                        icon: "wanted.svg"
                     },
                     {
                         text: "Арест",
+                        icon: "arrest.svg"
                     },
                     {
                         text: "Следование",
+                        icon: "follow.svg"
                     },
                     {
                         text: "Лиц. на оружие",
+                        icon: "gun.svg"
                     },
                     {
                         text: "В авто",
+                        icon: "vehicle.svg"
                     },
                 ],
                 handler(index) {
@@ -299,21 +312,27 @@ var interactionMenu = new Vue({
                 name: "fib",
                 items: [{
                         text: "Наручники",
+                        icon: "cuffs.svg"
                     },
                     {
                         text: "Розыск",
+                        icon: "wanted.svg"
                     },
                     {
                         text: "Арест",
+                        icon: "arrest.svg"
                     },
                     {
                         text: "Следование",
+                        icon: "follow.svg"
                     },
                     {
                         text: "Прослушка",
+                        icon: "headphones.svg"
                     },
                     {
                         text: "В авто",
+                        icon: "vehicle.svg"
                     },
                 ],
                 handler(index) {
@@ -337,9 +356,11 @@ var interactionMenu = new Vue({
                 name: "hospital",
                 items: [{
                         text: "Лечить",
+                        icon: "heal.svg"
                     },
                     {
                         text: "Реанимировать",
+                        icon: "reanimate.svg"
                     },
                 ],
                 handler(index) {
@@ -352,12 +373,15 @@ var interactionMenu = new Vue({
                 name: "army",
                 items: [{
                         text: "Наручники",
+                        icon: "cuffs.svg"
                     },
                     {
                         text: "Следование",
+                        icon: "follow.svg"
                     },
                     {
                         text: "В авто",
+                        icon: "vehicle.svg"
                     },
                 ],
                 handler(index) {
@@ -370,6 +394,7 @@ var interactionMenu = new Vue({
                 name: "news",
                 items: [{
                     text: "Эфир",
+                    icon: "stream.svg"
                 }],
                 handler(index) {
                     var item = this.items[index];
@@ -381,15 +406,19 @@ var interactionMenu = new Vue({
                 name: "mafia",
                 items: [{
                         text: "Продать крышу",
+                        icon: "roof.svg"
                     },
                     {
                         text: "Связать",
+                        icon: "rope.svg"
                     },
                     {
                         text: "Вести",
+                        icon: "follow.svg"
                     },
                     {
                         text: "Мешок на голову",
+                        icon: "hide.svg"
                     },
                 ],
                 handler(index) {
@@ -404,7 +433,7 @@ var interactionMenu = new Vue({
     methods: {
         imgSrc(index) {
             var item = this.menu.items[index];
-            var icon = item.icon || "default.png";
+            var icon = item.icon || "default.svg";
             return "img/interactionMenu/" + icon;
         },
         onClick(index) {
@@ -463,28 +492,33 @@ var interactionMenu = new Vue({
                 return;
             }
             this.addItems("player_interaction", {
-                text: "Организация"
+                text: "Организация",
+                icon: "faction.svg"
             });
 
             if (val == 1) { // government
                 this.addItems("player_interaction", {
-                    text: "Government"
+                    text: "Government",
+                    icon: "government.svg"
                 });
             } else this.deleteItem("player_interaction", "Government");
 
 
             if (val == 2 || val == 3) { // police
                 this.addItems("player_interaction", {
-                    text: "Police"
+                    text: "Police",
+                    icon: "police.svg"
                 });
             } else this.deleteItem("player_interaction", "Police");
 
             if (val == 4) { // fib
                 this.addItems("player_interaction", {
-                    text: "FIB"
+                    text: "FIB",
+                    icon: "fib.svg"
                 });
                 this.addItems("vehicle", {
-                    text: "FIB"
+                    text: "FIB",
+                    icon: "fib.svg"
                 });
             } else {
                 this.deleteItem("player_interaction", "FIB");
@@ -493,22 +527,26 @@ var interactionMenu = new Vue({
 
             if (val == 5) { // hospital
                 this.addItems("player_interaction", {
-                    text: "Hospital"
+                    text: "Hospital",
+                    icon: "hospital.svg"
                 });
             } else this.deleteItem("player_interaction", "Hospital");
 
             if (val == 6) { // army
                 this.addItems("player_interaction", {
-                    text: "Army"
+                    text: "Army",
+                    icon: "army.svg"
                 });
             } else this.deleteItem("player_interaction", "Army");
 
             if (val == 7) { // news
                 this.addItems("player_interaction", {
-                    text: "Weazel News"
+                    text: "Weazel News",
+                    icon: "news.svg"
                 });
                 this.addItems("player_ownmenu", {
-                    text: "Эфир"
+                    text: "Эфир",
+                    icon: "stream.svg"
                 });
             } else {
                 this.deleteItem("player_interaction", "Weazel News");
@@ -517,18 +555,19 @@ var interactionMenu = new Vue({
 
             if (val >= 8 && val <= 11) { // bands
                 var item = {
-                    text: "Захват"
+                    text: "Захват",
+                    icon: "war.svg"
                 };
-                this.addItems("player_ownmenu", {
-                    text: "Захват"
-                });
+                this.addItems("player_ownmenu", item);
             } else this.deleteItem("player_ownmenu", "Захват");
             if (val >= 12 && val <= 14) { // mafia
                 this.addItems("player_interaction", {
-                    text: "Mafia"
+                    text: "Mafia",
+                    icon: "mafia.svg"
                 });
                 this.addItems('player_ownmenu', {
-                    text: "Захват биз."
+                    text: "Захват биз.",
+                    icon: "war.svg"
                 });
             } else {
                 this.deleteItem("player_interaction", "Mafia");
