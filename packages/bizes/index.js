@@ -195,7 +195,8 @@ let getOrder = function(id) {
     if (biz == null) return false;
     if (biz.isOrderTaken) return false;
     biz.isOrderTaken = true;
-    // TODO: Dunhill sync with phone?
+    let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
+    player != null && player.call("biz.order.take", [true]);
     return true;
 }
 let dropOrder = function(id) {
