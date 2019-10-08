@@ -21,6 +21,7 @@ let timer;
 let money;
 let notifications;
 let factions;
+let carrier;
 
 /// Economic constants
 let maxProductPriceMultiplier = 2.0;
@@ -188,7 +189,7 @@ let createOrder = async function(biz, count, price) {
     if (price < min || price > max) return 0;
     biz.info.productsOrder = count;
     biz.info.productsOrderPrice = parseInt(price * count);
-    mp.events.call("bizes.orders.created", biz);
+    carrier != null && carrier.addBizOrder(biz);
     await biz.info.save();
     return 1;
 }
@@ -198,6 +199,7 @@ let destroyOrder = async function(id) {
     if (!biz.isOrderTaken) return false;
     biz.info.productsOrder = null;
     biz.info.productsOrderPrice = null;
+    carrier != null && carrier.removeBizOrder(biz.info.id);
     await biz.info.save();
     return true;
 }
@@ -220,12 +222,6 @@ let dropOrder = function(id) {
     return true;
 }
 let readyOrder = async function(id) {
-
-    // from Carter for Dunhill:
-    // TODO: пополнить склад бизнеса
-    // TODO: отнять от кассы бизнеса productsOrderPrice
-    // TODO: обновить инфу в телефоне владельца бизнеса
-
     let biz = getBizById(id);
     if (biz == null) return false;
     if (!biz.isOrderTaken) return false;
@@ -258,6 +254,7 @@ module.exports = {
         money = call("money");
         notifications = call('notifications');
         factions = call("factions");
+        carrier = call("carrier");
 
         for (let file of fs.readdirSync(path.dirname(__dirname))) {
             if (file != 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname) + "/" + file + '/index.js'))

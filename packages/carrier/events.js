@@ -148,9 +148,6 @@ module.exports = {
     "bizes.done": () => {
         carrier.initBizOrders();
     },
-    "bizes.orders.created": (biz) => {
-        carrier.addBizOrder(biz);
-    },
     "death.spawn": (player) => {
         if (!player.character || player.character.job != 4) return;
         carrier.dropBizOrder(player);
