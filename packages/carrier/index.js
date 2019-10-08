@@ -147,6 +147,25 @@ module.exports = {
         this.jobBroadcast(`Вернулся заказ для бизнеса ${order.bizName}`);
         bizes.dropOrder(order.bizId);
     },
+    readyBizOrder(player, veh) {
+        var order = veh.products.bizOrder;
+        var biz = bizes.getBizById(order.bizId);
+
+        var max = biz.info.productsMaxCount - biz.info.productsCount;
+        var count = Math.clamp(order.prodCount, 1, max);
+
+        bizes.readyOrder(order.bizId);
+
+        delete veh.products;
+        veh.setVariable("label", null);
+
+        player.character.pay += order.orderPrice;
+        player.character.save();
+
+        jobs.addJobExp(player, this.exp);
+
+        notifs.success(player, `Заказ выполнен (+$${order.orderPrice})`, order.bizName);
+    },
     jobBroadcast(text) {
         mp.players.forEach(rec => {
             if (!rec.character || rec.character.job != 4) return;

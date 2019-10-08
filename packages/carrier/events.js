@@ -132,6 +132,17 @@ module.exports = {
         if (!player.character || player.character.job != 4) return;
         carrier.dropBizOrder(player);
     },
+    "playerEnterColshape": (player, colshape) => {
+        if (!colshape.isBiz) return;
+        if (!player.character || player.character.job != 4) return;
+        var veh = player.vehicle;
+
+        if (!veh || !veh.db || veh.db.key != "job") return;
+        if (veh.db.owner != 4 || !veh.products || !veh.products.bizOrder) return;
+        if (colshape.bizId != veh.products.bizOrder.bizId) return;
+
+        carrier.readyBizOrder(player, veh);
+    },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;
         if (vehicle.db.key != "job") return;

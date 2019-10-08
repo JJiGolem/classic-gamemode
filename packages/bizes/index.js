@@ -220,6 +220,12 @@ let dropOrder = function(id) {
     return true;
 }
 let readyOrder = async function(id) {
+
+    // from Carter for Dunhill:
+    // TODO: пополнить склад бизнеса
+    // TODO: отнять от кассы бизнеса productsOrderPrice
+    // TODO: обновить инфу в телефоне владельца бизнеса
+
     let biz = getBizById(id);
     if (biz == null) return false;
     if (!biz.isOrderTaken) return false;
