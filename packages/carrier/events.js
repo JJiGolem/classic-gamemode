@@ -145,4 +145,8 @@ module.exports = {
         if (vehicle.driver.characterId != characterId) return out(`Грузовик арендован другим игроком`);
         if (vehicle.products) return notifs.info(player, `Загружено: ${vehicle.products.name}`, `Товар`);
     },
+    "playerQuit": (player) => {
+        if (!player.character || player.character.job != 4) return;
+        carrier.dropBizOrder(player);
+    },
 }

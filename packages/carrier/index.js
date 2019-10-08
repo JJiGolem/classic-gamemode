@@ -112,7 +112,8 @@ module.exports = {
         var pos = bizes.getBizPosition(order.bizId);
 
         veh.products = {
-            bizOrder: order
+            bizOrder: order,
+            playerId: player.id,
         };
         veh.setVariable("label", `${order.prodCount} из ${this.getProductsMax(player)} ед.`);
 
@@ -121,6 +122,23 @@ module.exports = {
         notifs.success(player, `Заказ принят`, order.bizName);
         this.jobBroadcast(`Взят заказ для бизнеса ${order.bizName}`);
         bizes.getOrder(order.bizId);
+    },
+    dropBizOrder(player) {
+        mp.vehicles.forEach(veh => {
+            if (!veh.db || veh.db.key != "job" || veh.db.owner != 4) return;
+            if (!veh.products || !veh.products.bizOrder) return;
+            if (veh.products.playerId != player.id) return;
+
+            var order = veh.products.bizOrder;
+
+            this.removeBizOrder(order.bizId);
+            this.bizOrders.push(order);
+
+            delete veh.products;
+            veh.setVariable("label", null);
+
+            this.jobBroadcast(`Вернулся заказ для бизнеса ${order.bizName}`);
+        });
     },
     jobBroadcast(text) {
         mp.players.forEach(rec => {
