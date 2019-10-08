@@ -1,8 +1,9 @@
 "use strict";
 
 mp.events.add('bank.show', (info) => {
+    if (mp.busy.includes()) return;
+    if (!mp.busy.add("bank")) return;
     mp.callCEF('bank.show', [info]);
-    mp.busy.add('bank');
 });
 mp.events.add('bank.close', (fromServer) => {
     if (fromServer) {
