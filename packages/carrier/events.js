@@ -153,4 +153,7 @@ module.exports = {
         if (!player.character || player.character.job != 4) return;
         carrier.dropBizOrder(player);
     },
+    "vehicle.respawned": (veh) => {
+        carrier.dropBizOrderByVeh(veh);
+    },
 }

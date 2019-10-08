@@ -203,6 +203,7 @@ let dropOrder = function(id) {
     if (biz == null) return false;
     if (!biz.isOrderTaken) return false;
     biz.isOrderTaken = false;
+    // TODO: Dunhill sync with phone?
     return true;
 }
 let readyOrder = async function(id) {

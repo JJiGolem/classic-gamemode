@@ -461,6 +461,7 @@ module.exports = {
                 veh.rotation = new mp.Vector3(0, 0, veh.db.h);
                 veh.setVariable("heading", veh.db.h);
                 delete veh.lastPlayerTime;
+                mp.events.call("vehicle.respawned", veh);
             }
         });
         var diff = Date.now() - start.getTime();

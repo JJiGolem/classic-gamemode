@@ -129,16 +129,23 @@ module.exports = {
             if (!veh.products || !veh.products.bizOrder) return;
             if (veh.products.playerId != player.id) return;
 
-            var order = veh.products.bizOrder;
-
-            this.removeBizOrder(order.bizId);
-            this.bizOrders.push(order);
-
-            delete veh.products;
-            veh.setVariable("label", null);
-
-            this.jobBroadcast(`Вернулся заказ для бизнеса ${order.bizName}`);
+            this.dropBizOrderByVeh(veh);
         });
+    },
+    dropBizOrderByVeh(veh) {
+        if (!veh.db || veh.db.key != "job" || veh.db.owner != 4) return;
+        if (!veh.products || !veh.products.bizOrder) return;
+
+        var order = veh.products.bizOrder;
+
+        this.removeBizOrder(order.bizId);
+        this.bizOrders.push(order);
+
+        delete veh.products;
+        veh.setVariable("label", null);
+
+        this.jobBroadcast(`Вернулся заказ для бизнеса ${order.bizName}`);
+        bizes.dropOrder(order.bizId);
     },
     jobBroadcast(text) {
         mp.players.forEach(rec => {
