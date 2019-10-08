@@ -73,6 +73,10 @@ module.exports = {
         var skill = jobs.getJobSkill(player, 4);
         return parseInt(this.productsMax + skill.exp * this.skillProducts);
     },
+    initBizOrders() {
+        var list = bizes.getOrderBizes();
+        list.forEach(biz => this.addBizOrder(biz));
+    },
     addBizOrder(biz) {
         var vdistance = utils.vdist(this.loadPos, new mp.Vector3(biz.info.x, biz.info.y, biz.info.z));
         var order = {

@@ -252,6 +252,7 @@ module.exports = {
             setTimer(biz);
             loadedCount++;
         }
+        mp.events.call("bizesInit.done");
         console.log("[BIZES] " + loadedCount + " bizes loaded");
     },
     async createBiz(name, price, type, position) {
@@ -374,6 +375,15 @@ module.exports = {
             }
         });
         return nearBiz;
+    },
+    // получить бизнесы с заказами
+    getOrderBizes() {
+        var list = [];
+        bizes.forEach(biz => {
+            if (!biz.info.productsOrder || !biz.info.productsOrderPrice) return;
+            list.push(biz);
+        });
+        return list;
     },
     setTimer: setTimer,
     /// Функция пополняющая кассу биза

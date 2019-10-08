@@ -94,6 +94,9 @@ module.exports = {
         }, `Аренда грузовика для грузоперевозок`);
         notifs.success(player, `Удачной работы!`, header);
     },
+    "bizesInit.done": () => {
+        carrier.initBizOrders();
+    },
     "bizes.orders.created": (biz) => {
         carrier.addBizOrder(biz);
     },
