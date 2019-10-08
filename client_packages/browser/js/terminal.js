@@ -83,7 +83,7 @@ var terminal = new Vue({
         saveCmd(text) {
             this.savedCmds.unshift(text);
             if (this.savedCmds.length > this.maxCmdsCount) this.savedCmds.pop();
-            mp.trigger(`terminal.saveCmd`, text);
+            mp.trigger(`terminal.saveCmd`, JSON.stringify(text).slice(1, -1));
         },
         initSavedCmds(cmds) {
             if (typeof cmds == 'string') cmds = JSON.parse(cmds);

@@ -67,7 +67,7 @@ let dropBiz = function(biz, sellToGov = false) {
             } else {
                 console.log("[bizes] Biz dropped " + biz.info.id + ". But player didn't getmoney");
             }
-        }, sellToGov ? `Продажа бизнеса #${info.id} государству` : `Слет бизнеса #${info.id}`);
+        }, sellToGov ? `Продажа бизнеса #${biz.info.id} государству` : `Слет бизнеса #${biz.info.id}`);
     });
 };
 let setTimer = function(biz) {
@@ -446,6 +446,7 @@ module.exports = {
         bizParameters.params.forEach(param => {
             bizesModules[biz.info.type].setBizParam(bizParameters.bizId, param.key, param.value);
         });
+        mp.events.call("biz.finance.save.done", biz.info.id, biz.info.type);
         return true;
     },
 
