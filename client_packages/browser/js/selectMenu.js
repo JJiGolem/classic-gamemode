@@ -5449,7 +5449,8 @@ var selectMenu = new Vue({
                             items[3].values[0] = order.prodCount + " ед.";
                             items[4].values[0] = "$" + order.orderPrice;
                             items[5].values[0] = order.distance + " м.";
-                            // TODO: set buy price
+                            items[6].values[0] = "$" + (order.prodCount * order.prodPrice);
+
                             selectMenu.showByName("carrierLoadBizOrder");
                         }
                     } else if (eventName == 'onBackspacePressed')

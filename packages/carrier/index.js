@@ -85,6 +85,7 @@ module.exports = {
             ownerName: biz.info.characterNick,
             prodName: bizes.getTypeName(biz.info.type),
             prodCount: biz.info.productsOrder,
+            prodPrice: this.productPrice,
             orderPrice: biz.info.productsOrderPrice,
             distance: +Math.sqrt(vdistance).toFixed(1),
         };
