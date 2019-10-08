@@ -12,10 +12,28 @@ let activeClientModules = new Array();
 /// Подключение функций любого существующего, включенного модуля
 /// Если модуль существует, возвращаются его функции (те что в module.exports, в index.js)
 /// Если модуль не существует возвращается null
+/// Если модуль существует, но отключен, то вернется объект с пустыми переменными и функциями с флагом isIgnored = true
 /// Важно перед каждым использованием модуля  проверять подключился ли он!
 /// Использовать после события init во избежание ошибок
 global.call = (moduleName) => {
-    if(!fs.existsSync(path.dirname(__dirname)+ "/" + moduleName + "/index.js") || ignoreModules.includes(moduleName)) return null;
+    if (!fs.existsSync(path.dirname(__dirname)+ "/" + moduleName + "/index.js")) return null;
+    if (ignoreModules.includes(moduleName)) {
+        let requireObject = require(path.dirname(__dirname)+ "/" + moduleName + "/index.js");
+        let newObject = {
+            /// Флаг, который говорит о том, что модуль отключен
+            isIgnored: true,
+        };
+        for (const key in requireObject) {
+            const element = requireObject[key];
+            if (typeof element === "function") {
+                newObject[key] = () => {};
+            }
+            else {
+                newObject[key] = {};
+            }
+        }
+        return newObject;
+    }
     return require(path.dirname(__dirname)+ "/" + moduleName + "/index.js");
 }
 
