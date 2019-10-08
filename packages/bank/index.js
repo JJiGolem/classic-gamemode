@@ -22,4 +22,13 @@ module.exports = {
         }
         player.call("bank.show", [bankInfo]);
     },
+    async createBank(position) {
+        let bank = await db.Models.Bank.create({
+            x: position.x,
+            y: position.y,
+            z: position.z
+        }, {});
+        await this.addBank(bank);
+        console.log("[BANK] added new bank");
+    }
 }
