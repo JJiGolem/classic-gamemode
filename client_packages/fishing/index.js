@@ -109,13 +109,13 @@ mp.events.add('inventory.addItem', (item) => {
 mp.events.add('fishing.menu.show', () => {
    if (mp.busy.includes()) return;
 
-   mp.busy.add('fishingMenu');
+   mp.busy.add('fishing.menu', false);
    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["fishingMenu"])`);
    mp.callCEFV(`selectMenu.show = true`);
 });
 
 mp.events.add('fishing.menu.close', () => {
-    mp.busy.remove('fishingMenu');
+    mp.busy.remove('fishing.menu');
     mp.callCEFV(`selectMenu.show = false`);
 });
 
