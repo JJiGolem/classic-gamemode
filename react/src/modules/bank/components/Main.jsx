@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 
@@ -19,6 +20,7 @@ class Main extends Component {
 
         if (!bank.isLoading) {
             showBank(false);
+            mp.trigger('bank.menu.close');
         }
     }
 
