@@ -107,6 +107,17 @@ let getBizInfoForApp = function(biz) {
         resourcePriceMax: bizesModules[biz.info.type].productPrice * maxMultiplier
     };
 };
+let getBizInfoForBank = function(biz) {
+    if (biz == null) return null;
+    if (bizesModules[biz.info.type] == null) return null;
+    return {
+        id: biz.info.id,
+        type: getTypeName(biz.info.type),
+        cashBox: biz.info.cashBox,
+        days: parseInt((biz.info.date - Date.now()) / (24 * 3600 * 1000)),
+        rent: biz.info.price * bizesModules[biz.info.type].rentPerDayMultiplier,
+    };
+};
 let getResourceName = function(type) {
     return bizesModules[type].business.productName;
 };
@@ -344,6 +355,7 @@ module.exports = {
     getResourceName: getResourceName,
     getRandomDate: getRandomDate,
     getBizInfoForApp: getBizInfoForApp,
+    getBizInfoForBank: getBizInfoForBank,
     getBizesFactionIds() {
         return bizes.map((elem) => elem.info.factionId);
     },

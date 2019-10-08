@@ -348,6 +348,15 @@ module.exports = {
             pos: [info.pickupX, info.pickupY, info.pickupZ]
         };
     },
+    getHouseInfoForBank(house) {
+        if (house == null) return null;
+        return {
+            id: house.info.id,
+            class: house.info.Interior.class,
+            rent: house.info.price * house.info.Interior.rent,
+            days: parseInt((house.info.date.getTime() - new Date().getTime()) / (24 * 60 * 60 * 1000))
+        };
+    },
     sellHouse(house, cost, seller, buyer, callback) {
         house.info.characterId = buyer.character.id;
         house.info.characterNick = buyer.character.name;

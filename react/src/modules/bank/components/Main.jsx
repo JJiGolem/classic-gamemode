@@ -14,29 +14,6 @@ class Main extends Component {
         this.getInfoPanel = this.getInfoPanel.bind(this);
     }
 
-    componentWillMount() {
-        const { loadInfo } = this.props;
-
-        let info = {
-            cash: 150471,
-            money: 2300,
-            number: 23,
-            phoneMoney: null,
-            name: 'Dun Hill',
-            /*houses: [
-                {
-                    name: 228,
-                    class: 'Люкс',
-                    rent: 350,
-                    days: 4
-                }
-            ],
-            biz: [],*/
-        };
-
-        loadInfo(info);
-    }
-
     exitBank() {
         const { showBank, bank } = this.props;
 
