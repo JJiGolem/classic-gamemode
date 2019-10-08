@@ -128,6 +128,10 @@ module.exports = {
     "bizes.orders.created": (biz) => {
         carrier.addBizOrder(biz);
     },
+    "death.spawn": (player) => {
+        if (!player.character || player.character.job != 4) return;
+        carrier.dropBizOrder(player);
+    },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;
         if (vehicle.db.key != "job") return;
