@@ -446,7 +446,7 @@ module.exports = {
         bizParameters.params.forEach(param => {
             bizesModules[biz.info.type].setBizParam(bizParameters.bizId, param.key, param.value);
         });
-        mp.events.call("biz.finance.save.done", biz.info.id);
+        mp.events.call("biz.finance.save.done", biz.info.id, biz.info.type);
         return true;
     },
 
