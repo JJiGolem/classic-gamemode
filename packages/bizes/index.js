@@ -195,6 +195,7 @@ let getOrder = function(id) {
     if (biz == null) return false;
     if (biz.isOrderTaken) return false;
     biz.isOrderTaken = true;
+    // TODO: Dunhill sync with phone?
     return true;
 }
 let dropOrder = function(id) {

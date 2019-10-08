@@ -77,6 +77,9 @@ module.exports = {
         var list = bizes.getOrderBizes();
         list.forEach(biz => this.addBizOrder(biz));
     },
+    getBizOrder(bizId) {
+        return this.bizOrders.find(x => x.bizId == bizId);
+    },
     addBizOrder(biz) {
         var vdistance = utils.vdist(this.loadPos, new mp.Vector3(biz.info.x, biz.info.y, biz.info.z));
         var order = {
@@ -89,8 +92,8 @@ module.exports = {
             orderPrice: biz.info.productsOrderPrice,
             distance: +Math.sqrt(vdistance).toFixed(1),
         };
-        // TODO: remove dublicate orders
-        // TODO: broadcast all carriers
+        this.removeBizOrder(order.bizId);
+        this.jobBroadcast(`Поступил заказ для бизнеса ${order.bizName}`);
         this.bizOrders.push(order);
     },
     removeBizOrder(bizId) {
@@ -102,5 +105,28 @@ module.exports = {
             i--;
         }
         // TODO: broadcast all carriers
+    },
+    takeBizOrder(player, veh, order) {
+        if (typeof order == 'number') order = this.getBizOrder(order);
+
+        var pos = bizes.getBizPosition(order.bizId);
+
+        veh.products = {
+            bizOrder: order
+        };
+        veh.setVariable("label", `${order.prodCount} из ${this.getProductsMax(player)} ед.`);
+
+        this.removeBizOrder(order.bizId);
+        player.call("waypoint.set", [pos.x, pos.y]);
+        notifs.success(player, `Заказ принят`, order.bizName);
+        this.jobBroadcast(`Взят заказ для бизнеса ${order.bizName}`);
+        bizes.getOrder(order.bizId);
+    },
+    jobBroadcast(text) {
+        mp.players.forEach(rec => {
+            if (!rec.character || rec.character.job != 4) return;
+
+            notifs.info(rec, text, `Грузоперевозчики`);
+        });
     },
 };

@@ -28,6 +28,7 @@ module.exports = {
         var veh = player.vehicle;
         if (!veh || !veh.db || veh.db.key != "job" || veh.db.owner != 4) return out(`Не в грузовике`);
         if (player.character.job != 4) return out(`Не на работе`);
+        if (veh.products && veh.products.bizOrder) return out(`Отмените заказ`);
         if (veh.products && veh.products.count) return out(`Товар уже загружен`);
         var max = carrier.getProductsMax(player);
         if (data.count > max) return out(`Ваш навык не позволяет загрузить более ${max} ед.`);
@@ -59,6 +60,7 @@ module.exports = {
         var veh = player.vehicle;
         if (!veh || !veh.db || veh.db.key != "job" || veh.db.owner != 4) return out(`Не в грузовике`);
         if (player.character.job != 4) return out(`Не на работе`);
+        if (veh.products && veh.products.bizOrder) return out(`Отмените заказ`);
         if (!veh.products || !veh.products.count) return out(`Грузовик пустой`);
 
         var price = parseInt(veh.products.count * carrier.productPrice * carrier.productSellK);
@@ -93,6 +95,32 @@ module.exports = {
             player.call(`prompt.waitShowByName`, [`carrier_job`]);
         }, `Аренда грузовика для грузоперевозок`);
         notifs.success(player, `Удачной работы!`, header);
+    },
+    "carrier.load.orders.take": (player, bizId) => {
+        var header = `Принятие заказа`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.carrierLoad) return out(`Далеко от склада`);
+        var veh = player.vehicle;
+        if (!veh || !veh.db || veh.db.key != "job" || veh.db.owner != 4) return out(`Не в грузовике`);
+        if (player.character.job != 4) return out(`Не на работе`);
+        if (veh.products && veh.products.count) return out(`Товар уже загружен`);
+        if (veh.products && veh.products.bizOrder) return out(`Вы уже взяли заказ`);
+
+        var order = carrier.getBizOrder(bizId);
+        if (!order) return out(`Заказ просрочен`);
+
+        var max = carrier.getProductsMax(player);
+        if (order.prodCount > max) return out(`Ваш навык не позволяет загрузить более ${max} ед.`);
+        var price = order.prodCount * order.prodPrice;
+        if (player.character.cash < price) return out(`Необходимо $${price}`);
+
+        carrier.takeBizOrder(player, veh, order);
+
+        money.removeCash(player, price, (res) => {
+            if (!res) return out(`Ошибка списания наличных`);
+        }, `Взятие заказа бизнеса #${bizId} на складе грузоперевозок`);
     },
     "bizesInit.done": () => {
         carrier.initBizOrders();

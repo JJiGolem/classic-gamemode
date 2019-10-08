@@ -5295,6 +5295,8 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Товар') {
                             selectMenu.showByName("carrierLoadProducts");
                         } else if (e.itemName == 'Заказы') {
+                            var orders = selectMenu.menus["carrierLoadBizOrders"].bizOrders;
+                            if (!orders.length) return selectMenu.notification = "Список заказов пуст";
                             selectMenu.showByName("carrierLoadBizOrders");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
@@ -5439,9 +5441,7 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("carrierLoad");
                         } else {
-                            debug("a")
                             var order = this.bizOrders[e.itemIndex];
-                            debug(order)
                             var items = selectMenu.menus["carrierLoadBizOrder"].items;
                             items[0].values[0] = order.bizName;
                             items[1].values[0] = order.ownerName;
@@ -5451,6 +5451,7 @@ var selectMenu = new Vue({
                             items[5].values[0] = order.distance + " м.";
                             items[6].values[0] = "$" + (order.prodCount * order.prodPrice);
 
+                            selectMenu.setProp("carrierLoadBizOrder", "bizId", order.bizId);
                             selectMenu.showByName("carrierLoadBizOrder");
                         }
                     } else if (eventName == 'onBackspacePressed')
@@ -5494,6 +5495,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                bizId: null,
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -5505,10 +5507,13 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') {
-                            selectMenu.showByName("carrierLoad");
+                            selectMenu.showByName("carrierLoadBizOrders");
+                        } else if (e.itemName == 'Принять') {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `carrier.load.orders.take`, this.bizId);
                         }
                     } else if (eventName == 'onBackspacePressed')
-                        selectMenu.showByName("carrierLoad");
+                        selectMenu.showByName("carrierLoadBizOrders");
                 }
             },
             "carrierLoadProducts": {
