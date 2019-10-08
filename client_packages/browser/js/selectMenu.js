@@ -5614,6 +5614,41 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "carrierCropUnload": {
+                name: "carrierCropUnload",
+                header: "Продажа урожая",
+                items: [{
+                        text: "Цена за 1 ед.",
+                        values: [`$9999`]
+                    },
+                    {
+                        text: "Продать"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Продать') {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `carrier.cropUnload.sell`);
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
             "maskShop": {
                 name: "maskShop",
                 header: "Магазин масок",

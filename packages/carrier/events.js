@@ -122,6 +122,29 @@ module.exports = {
             if (!res) return out(`Ошибка списания наличных`);
         }, `Взятие заказа бизнеса #${bizId} на складе грузоперевозок`);
     },
+    "carrier.cropUnload.sell": (player) => {
+        var header = `Продажа урожая`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.cropUnloadMarker) return out(`Вы не у склада`);
+        if (player.character.job != 4) return out(`Вы не ${jobs.getJobName(player)}`);
+        if (!player.vehicle) return out(`Вы не в авто`);
+        var veh = player.vehicle;
+        if (!veh.db || veh.db.key != "job" || veh.db.owner != 4) return out(`Вы не в грузовике`);
+        if (veh.products && veh.products.bizOrder) return out(`Отмените заказ`);
+        if (!veh.products || !veh.products.count) return out(`Грузовик пустой`);
+        if (!["productA", "productB"].includes(veh.products.type)) return out(`Неверный тип урожая`);
+
+        var price = carrier.cropPrice * veh.products.count;
+        player.character.pay += price;
+        player.character.save();
+
+        delete veh.products;
+        veh.setVariable("label", null);
+
+        notifs.success(player, `Урожай продан (+$${price})`, header);
+    },
     "bizesInit.done": () => {
         carrier.initBizOrders();
     },

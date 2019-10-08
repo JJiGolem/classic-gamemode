@@ -9,6 +9,8 @@ let utils = call('utils');
 module.exports = {
     // Место мониторинга складов бизнесов/ферм и заказа товара
     loadPos: new mp.Vector3(925.46, -1563.99, 30.83 - 1),
+    // Место разгрузки урожая
+    cropUnloadPos: new mp.Vector3(90.33, 6333.52, 31.23 - 1),
     // Цена за 1 ед. товара/зерна
     productPrice: 4,
     // Вместимость грузовика
@@ -23,9 +25,12 @@ module.exports = {
     exp: 0.05,
     // Заказы бизнесов
     bizOrders: [],
+    // Цена урожая при продаже
+    cropPrice: 1,
 
     init() {
         this.createLoadMarker();
+        this.createCropUnloadMarker();
     },
     createLoadMarker() {
         var pos = this.loadPos;
@@ -50,6 +55,29 @@ module.exports = {
             scale: 1
         });
     },
+    createCropUnloadMarker() {
+        var pos = this.cropUnloadPos;
+        var marker = mp.markers.new(1, pos, 3, {
+            color: [255, 187, 0, 70]
+        });
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z + 2, 2);
+        colshape.onEnter = (player) => {
+            if (player.character.job != 4) return notifs.error(player, `Отказано в доступе`, `Склад`);
+            player.call(`carrier.cropUnload.info.set`, [this.getCropUnloadData()]);
+            player.cropUnloadMarker = marker;
+        };
+        colshape.onExit = (player) => {
+            player.call(`selectMenu.hide`);
+            delete player.cropUnloadMarker;
+        };
+        marker.colshape = colshape;
+        mp.blips.new(85, pos, {
+            color: 1,
+            name: `Урожай`,
+            shortRange: 10,
+            scale: 1
+        });
+    },
     getLoadData() {
         var data = {
             farms: [],
@@ -67,6 +95,12 @@ module.exports = {
                 soilPrice: farm.soilPrice,
             });
         });
+        return data;
+    },
+    getCropUnloadData() {
+        var data = {
+            cropPrice: this.cropPrice
+        };
         return data;
     },
     getProductsMax(player) {

@@ -39,6 +39,12 @@ mp.carrier = {
         mp.callCEFV(`selectMenu.setItemValues('carrierLoadProducts', 'Списать', '${JSON.stringify(sell)}')`);
         mp.callCEFV(`selectMenu.showByName('carrierLoad')`);
     },
+    setCropUnloadInfo(data) {
+        var price = [`$${data.cropPrice}`];
+
+        mp.callCEFV(`selectMenu.setItemValues('carrierCropUnload', 'Цена за 1 ед.', '${JSON.stringify(price)}')`);
+        mp.callCEFV(`selectMenu.showByName('carrierCropUnload')`);
+    },
     initBizOrdersInfo(data) {
 
         var items = [];
@@ -62,6 +68,9 @@ mp.events.add({
     },
     "carrier.load.info.set": (data) => {
         mp.carrier.setLoadInfo(data);
+    },
+    "carrier.cropUnload.info.set": (data) => {
+        mp.carrier.setCropUnloadInfo(data);
     },
     "carrier.jobshape.enter": () => {
         mp.events.call(`selectMenu.show`, `carrierJob`);
