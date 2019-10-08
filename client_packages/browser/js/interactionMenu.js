@@ -153,10 +153,12 @@ var interactionMenu = new Vue({
                         interactionMenu.menu = interactionMenu.menus["fib"];
                     } else if (item.text == 'Hospital') {
                         interactionMenu.menu = interactionMenu.menus["hospital"];
-                    } else if (item.text == 'Mafia') {
-                        interactionMenu.menu = interactionMenu.menus["mafia"];
+                    } else if (item.text == 'Army') {
+                        interactionMenu.menu = interactionMenu.menus["army"];
                     } else if (item.text == 'Weazel News') {
                         interactionMenu.menu = interactionMenu.menus["news"];
+                    } else if (item.text == 'Mafia') {
+                        interactionMenu.menu = interactionMenu.menus["mafia"];
                     }
                 }
             },
@@ -346,6 +348,35 @@ var interactionMenu = new Vue({
                     mp.trigger(`interaction.menu.close`);
                 }
             },
+            "army": {
+                name: "army",
+                items: [{
+                        text: "Наручники",
+                    },
+                    {
+                        text: "Следование",
+                    },
+                    {
+                        text: "В авто",
+                    },
+                ],
+                handler(index) {
+                    var item = this.items[index];
+                    mp.trigger(`interaction.menu.close`);
+                    mp.trigger(`interactionMenu.onClick`, this.name, item.text);
+                }
+            },
+            "news": {
+                name: "news",
+                items: [{
+                    text: "Эфир",
+                }],
+                handler(index) {
+                    var item = this.items[index];
+                    mp.trigger(`interaction.menu.close`);
+                    mp.trigger(`interactionMenu.onClick`, this.name, item.text);
+                }
+            },
             "mafia": {
                 name: "mafia",
                 items: [{
@@ -361,17 +392,6 @@ var interactionMenu = new Vue({
                         text: "Мешок на голову",
                     },
                 ],
-                handler(index) {
-                    var item = this.items[index];
-                    mp.trigger(`interaction.menu.close`);
-                    mp.trigger(`interactionMenu.onClick`, this.name, item.text);
-                }
-            },
-            "news": {
-                name: "news",
-                items: [{
-                    text: "Эфир",
-                }],
                 handler(index) {
                     var item = this.items[index];
                     mp.trigger(`interaction.menu.close`);
@@ -433,6 +453,7 @@ var interactionMenu = new Vue({
                 this.deleteItem("player_interaction", "Police");
                 this.deleteItem("player_interaction", "FIB");
                 this.deleteItem("player_interaction", "Hospital");
+                this.deleteItem("player_interaction", "Army");
                 this.deleteItem("player_interaction", "Weazel News");
                 this.deleteItem("player_interaction", "Mafia");
                 this.deleteItem("player_ownmenu", "Захват");
@@ -475,6 +496,12 @@ var interactionMenu = new Vue({
                     text: "Hospital"
                 });
             } else this.deleteItem("player_interaction", "Hospital");
+
+            if (val == 6) { // army
+                this.addItems("player_interaction", {
+                    text: "Army"
+                });
+            } else this.deleteItem("player_interaction", "Army");
 
             if (val == 7) { // news
                 this.addItems("player_interaction", {

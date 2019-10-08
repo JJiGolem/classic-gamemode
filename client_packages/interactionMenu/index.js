@@ -117,6 +117,27 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
             };
             mp.events.callRemote(`inventory.item.adrenalin.use`, JSON.stringify(data));
         }
+    } else if (menuName == "army") {
+        if (!entity) return;
+        if (entity.type != 'player') return;
+
+        if (itemName == 'Наручники') {
+            var data = {
+                recId: entity.remoteId
+            };
+            mp.events.callRemote(`police.cuffs`, JSON.stringify(data));
+        } else if (itemName == 'Следование') {
+            mp.events.callRemote(`police.follow`, entity.remoteId);
+        } else if (itemName == 'В авто') {
+            mp.events.callRemote(`police.vehicle.put`, entity.remoteId);
+        }
+    } else if (menuName == "news") {
+        if (!entity) return;
+        if (entity.type != 'player') return;
+
+        if (itemName == 'Эфир') {
+            mp.events.callRemote(`news.stream.member`, entity.remoteId);
+        }
     } else if (menuName == "mafia") {
         if (!entity) return;
         if (entity.type != 'player') return;
@@ -130,13 +151,6 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
 
         } else if (itemName == 'Мешок на голову') {
 
-        }
-    } else if (menuName == "news") {
-        if (!entity) return;
-        if (entity.type != 'player') return;
-
-        if (itemName == 'Эфир') {
-            mp.events.callRemote(`news.stream.member`, entity.remoteId);
         }
     }
 });
