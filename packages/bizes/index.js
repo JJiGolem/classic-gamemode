@@ -212,13 +212,20 @@ let readyOrder = async function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
     if (!biz.isOrderTaken) return false;
-    biz.info.productsCount += biz.info.productsOrder;
+    let addedProducts = 0;
+    if (biz.info.productsCount + biz.info.productsOrder > biz.info.productsMaxCount) {
+        addedProducts = biz.info.productsMaxCount - biz.info.productsCount;
+        biz.info.productsCount = biz.info.productsMaxCount;
+    }
+    else {
+        addedProducts = biz.info.productsOrder;
+        biz.info.productsCount += biz.info.productsOrder;
+    }
     biz.info.productsOrder = null;
     biz.info.productsOrderPrice = null;
-    if (biz.info.productsCount > biz.info.productsMaxCount) biz.info.productsCount = biz.info.productsMaxCount;
     await biz.info.save();
-    let player = mp.players.toArray().find(x => x.character.id == biz.info.characterId);
-    //if (player != null) player.call();
+    let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
+    player != null && player.call("biz.order.complete", [addedProducts]);
     return true;
 }
 

@@ -42,17 +42,20 @@ function showTorso(state) {
             localPlayer.setComponentVariation(3, 15, 0, 2);
             localPlayer.setComponentVariation(8, 15, 0, 2);
             localPlayer.setComponentVariation(11, 15, 0, 2);
-        } else {
+        } 
+        else {
             localPlayer.setComponentVariation(3, 15, 0, 2);
             localPlayer.setComponentVariation(8, 2, 0, 2);
             localPlayer.setComponentVariation(11, 18, 0, 2);
         }
-    } else {
+    } 
+    else {
         if (charData.gender == 0) {
             localPlayer.setComponentVariation(3, 0, 0, 2);
             localPlayer.setComponentVariation(8, 15, 0, 2);
             localPlayer.setComponentVariation(11, 0, 0, 2);
-        } else {
+        } 
+        else {
             localPlayer.setComponentVariation(3, 0, 0, 2);
             localPlayer.setComponentVariation(8, 2, 0, 2);
             localPlayer.setComponentVariation(11, 0, 0, 2);
@@ -68,7 +71,8 @@ function setDefWear() {
         localPlayer.setComponentVariation(11, 0, 0, 2);
         localPlayer.setComponentVariation(6, 1, 0, 2);
         localPlayer.setComponentVariation(4, 0, 0, 2);
-    } else {
+    } 
+    else {
         localPlayer.setComponentVariation(3, 0, 0, 2);
         localPlayer.setComponentVariation(8, 2, 0, 2);
         localPlayer.setComponentVariation(11, 0, 0, 2);
@@ -192,7 +196,8 @@ mp.events.add("characterInit.create", (active, rawCharData) => {
         
         mp.callCEFV(`selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];`);
         mp.callCEFV(`selectMenu.show = true`);
-    } else {
+    }
+     else {
         mp.gui.cursor.show(false, false);
         mp.events.callRemote('characterInit.create.exit');
     }

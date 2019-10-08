@@ -217,7 +217,8 @@ function playHoldAnimation(state, timeout) { /// Анимация держани
             mp.events.callRemote('animations.play', 'amb@code_human_wander_texting@male@base', 'static', 1, 49);
             mp.attachmentMngr.addLocal("takePhone");
         }, timeout);
-    } else {
+    }
+    else {
         mp.attachmentMngr.removeLocal("takePhone");
     }
 }
@@ -228,7 +229,8 @@ function playCallAnimation(state) { /// Анимация разговора
         mp.attachmentMngr.removeLocal("takePhone");
         mp.events.callRemote('animations.play', 'amb@code_human_wander_mobile@male@base', 'static', 1, 49);
         mp.attachmentMngr.addLocal("callPhone");
-    } else {
+    } 
+    else {
         mp.attachmentMngr.removeLocal("callPhone");
     }
 }

@@ -84,7 +84,8 @@ mp.busy.includes = function(name) {
     else {
         if (name == null) {
             return mp.busy.list.length != 0;
-        } else {
+        } 
+        else {
             return mp.busy.list.includes(name);
         }
     }
