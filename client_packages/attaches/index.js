@@ -124,6 +124,11 @@ mp.events.add("entityStreamIn", (entity) => {
     if (entity.__attachments) {
         mp.attachmentMngr.initFor(entity);
     }
+
+    entity.hasAttachment = (name) => {
+        if (!entity.__attachmentObjects) return false;
+        return entity.__attachmentObjects.hasOwnProperty(mp.game.joaat(name));
+    };
 });
 
 mp.events.add("entityStreamOut", (entity) => {
