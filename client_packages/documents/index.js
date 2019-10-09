@@ -119,7 +119,17 @@ mp.events.add('documents.list', () => {
 });
 
 mp.events.add('documents.showTo', (type) => {
-    let target = mp.getCurrentInteractionEntity();
+    let target;
+    let personal = mp.getPersonalInteractionEntity();
+    if (personal) {
+        target = personal;
+    } else {
+        target = mp.getCurrentInteractionEntity();
+    }
+    
+    if (!target) return;
+    if (target.type != 'player') return;
+
     switch (type) {
         case "carPass":
             mp.events.call('documents.carPass.list');
@@ -163,7 +173,13 @@ mp.events.add('documents.carPass.list.show', (list) => {
 mp.events.add('documents.carPass.list.choose', (plate) => {
     for (let i = 0; i < carPassList.length; i++) {
         if (carPassList[i].plate == plate) {
-            let target = mp.getCurrentInteractionEntity();
+            let target;
+            let personal = mp.getPersonalInteractionEntity();
+            if (personal) {
+                target = personal;
+            } else {
+                target = mp.getCurrentInteractionEntity();
+            }
             if (target.type != 'player') return;
             mp.events.callRemote('documents.offer', "carPass", target.remoteId, JSON.stringify(carPassList[i]));
         }

@@ -5,6 +5,7 @@ const defaultLeft = 50;
 const vehicleLeft = 60;
 
 let currentInteractionEntity;
+let personalInteractionEntity;
 let currentVehicle;
 let isOpen = false;
 
@@ -12,6 +13,10 @@ let occupantsToEject = [];
 
 mp.getCurrentInteractionEntity = () => {
     return currentInteractionEntity;
+}
+
+mp.getPersonalInteractionEntity = () => {
+    return personalInteractionEntity;
 }
 
 mp.getDefaultInteractionLeft = () => {
@@ -110,6 +115,7 @@ mp.events.add('interaction.menu.show', () => {
 });
 
 mp.events.add('interaction.menu.close', () => {
+    //if (personalInteractionEntity) personalInteractionEntity = null;
     mp.busy.remove('interaction');
     isOpen = false;
     // mp.gui.cursor.show(false, false);
@@ -125,11 +131,13 @@ mp.events.add('characterInit.done', () => { /// E
         if (mp.busy.includes()) return;
         if (isOpen) return mp.events.call('interaction.menu.close');;
 
-
         let veh = mp.players.local.getVehicleIsTryingToEnter();
         if (veh) return;
 
         if (mp.players.local.vehicle) return;
+
+        personalInteractionEntity = null;
+
         //getClosestPlayer(mp.players.local.position);
         //currentInteractionEntity = getClosestVehicle(mp.players.local.position);
         currentInteractionEntity = getClosestPlayerOrVehicle(mp.players.local.position);
@@ -168,13 +176,13 @@ mp.events.add('characterInit.done', () => { /// E
         if (isOpen) return mp.events.call('interaction.menu.close');;
 
         if (!mp.players.local.vehicle) {
-            currentInteractionEntity = mp.players.local;
+            personalInteractionEntity = mp.players.local;
             mp.callCEFV(`interactionMenu.left = ${defaultLeft}`);
             mp.callCEFV('interactionMenu.menu = interactionMenu.menus["player_ownmenu"]');
             mp.events.call('interaction.menu.show');
         } else if (mp.players.local.vehicle.getPedInSeat(-1) == mp.players.local.handle) {
-            currentInteractionEntity = mp.players.local.vehicle;
-            if (!currentInteractionEntity) return;
+            personalInteractionEntity = mp.players.local.vehicle;
+            if (!personalInteractionEntity) return;
 
             mp.callCEFV(`interactionMenu.left = ${vehicleLeft}`);
             mp.callCEFV('interactionMenu.menu = cloneObj(interactionMenu.menus["vehicle_inside"])');
@@ -185,7 +193,7 @@ mp.events.add('characterInit.done', () => { /// E
                     icon: "default.png"
                 });`);
             }
-            let vehClass = currentInteractionEntity.getClass();
+            let vehClass = personalInteractionEntity.getClass();
             if (vehClass == 18) {
                 mp.callCEFV(`interactionMenu.menu.items.push({
                     text: "Звук сирены",
@@ -231,9 +239,9 @@ mp.events.add('render', () => {
 });
 
 mp.events.add('interaction.ejectlist.get', () => {
-    if (!currentInteractionEntity) return;
+    if (!personalInteractionEntity) return;
     try {
-        mp.events.callRemote('vehicles.ejectlist.get', currentInteractionEntity.remoteId);
+        mp.events.callRemote('vehicles.ejectlist.get', personalInteractionEntity.remoteId);
     } catch (err) {
     }
 });
@@ -255,8 +263,8 @@ mp.events.add('interaction.ejectlist.show', (list) => {
 });
 
 mp.events.add('interaction.eject', (index) => {
-    if (!currentInteractionEntity) return;
-    if (currentInteractionEntity.type != 'vehicle') return;
+    if (!personalInteractionEntity) return;
+    if (personalInteractionEntity.type != 'vehicle') return;
     let playerToEject = occupantsToEject[index];
     mp.events.callRemote('vehicles.eject', JSON.stringify(playerToEject));
 });
