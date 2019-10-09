@@ -247,7 +247,7 @@ module.exports = {
         notifs.info(inviter, `${player.name} отклонил предложение`, `Чек`);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
-        if (seat != -1 || vehicle.key != 'faction' || !player.character.factionId) return;
+        if (seat != -1 || vehicle.key != 'faction') return;
         if (player.character.factionId != vehicle.owner) {
             notifs.error(player, `Вы не состоите в организации`, factions.getFaction(vehicle.owner).name);
             player.removeFromVehicle();
