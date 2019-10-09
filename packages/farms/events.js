@@ -633,7 +633,7 @@ module.exports = {
         if (player.farm.playerId != player.character.id) return out(`Вы не хозяин фермы`);
         var key = ["pay", "farmerPay", "tractorPay", "pilotPay"][data.job];
         var farm = player.farm;
-        if (data.sum < 0 || data.sum > farms.payMax) return out(`Не более $${data.sum}`);
+        if (data.sum < 0 || data.sum > farms.payMax) return out(`Не более $${farms.payMax}`);
 
         farm[key] = data.sum;
         farm.save();
