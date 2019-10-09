@@ -203,9 +203,17 @@ module.exports = {
     setFuel(vehicle, litres) {
         if (litres < 1) return;
         vehicle.fuel = litres;
+        if (vehicle.db) {
+            vehicle.db.fuel = litres;
+            vehicle.db.save();
+        }
     },
     addFuel(vehicle, litres) {
         if (litres < 1) return;
+        if (vehicle.db) {
+            vehicle.db.fuel = vehicle.fuel + litres;
+            vehicle.db.save();
+        }
         vehicle.fuel = vehicle.fuel + litres;
     },
     setVehiclePropertiesByModel(modelName) {
