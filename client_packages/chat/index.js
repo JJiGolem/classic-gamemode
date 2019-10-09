@@ -71,9 +71,8 @@ mp.events.add('chat.load', () => {
     mp.keys.bind(0x54, true, function() {
 
         if (mp.busy.includes()) return;
-        mp.busy.add('chat');
+        mp.busy.add('chat', true);
         isOpen = true;
-        mp.gui.cursor.show(true, true);
         mp.callCEFR('setFocusChat', [true]);
     });
 
@@ -100,7 +99,6 @@ mp.events.add('chat.load', () => {
 
 mp.events.add('chat.close', () => {
     mp.callCEFR('setFocusChat', [false]);
-    mp.gui.cursor.show(false, false);
     isOpen = false;
     mp.busy.remove('chat');
 });

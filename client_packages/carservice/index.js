@@ -72,7 +72,7 @@ mp.events.add('characterInit.done', () => {
 
 mp.events.add('carservice.jobshape.enter', () => {
     if (mp.busy.includes()) return;
-    mp.busy.add('carservice.jobshape');
+    mp.busy.add('carservice.jobshape', false);
     mp.events.callRemote('carservice.jobshape.enter');
 });
 
@@ -133,7 +133,7 @@ mp.events.add('carservice.diagnostics.offer', () => {
 
 
 mp.events.add('carservice.diagnostics.preparation', (vehId) => {
-    mp.busy.add('carservice.mechanicProcess');
+    mp.busy.add('carservice.mechanicProcess', false);
     carServiceControlsToDisable = true;
 
     let vehicle = mp.vehicles.atRemoteId(vehId);
@@ -210,8 +210,7 @@ function getRepairAnimType(vehicle) {
 }
 
 mp.events.add('carservice.check.show', (data) => {
-    mp.busy.add('carservice.check');
-    mp.gui.cursor.show(true, true);
+    mp.busy.add('carservice.check', true);
     mp.game.graphics.transitionToBlurred(500);
     mp.callCEFV(`check.records = []`);
 
@@ -255,7 +254,6 @@ mp.events.add('carservice.check.show', (data) => {
 
 mp.events.add('carservice.check.close', () => {
     mp.busy.remove('carservice.check');
-    mp.gui.cursor.show(false, false);
     mp.game.graphics.transitionFromBlurred(500);
     mp.callCEFV('check.show = false')
 });

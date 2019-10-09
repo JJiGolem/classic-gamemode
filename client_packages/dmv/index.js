@@ -18,7 +18,7 @@ mp.events.add('characterInit.done', () => {
 });
 
 mp.events.add('dmv.menu.show', (config) => {
-    mp.busy.add('dmv.menu');
+    mp.busy.add('dmv.menu', false);
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["dmvMenu"])`);
 
     let i = 0;

@@ -5,7 +5,7 @@ let route = {
 let checkpoints = [];
 
 mp.events.add('routecreator.show', () => {
-    mp.busy.add('routecreator');
+    mp.busy.add('routecreator', false);
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["routeCreator"])`);
     mp.callCEFV(`selectMenu.show = true`);
 });

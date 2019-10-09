@@ -27,7 +27,7 @@ mp.events.add('carshow.list.show', (inputList, inputInfo) => {
     mp.game.ui.displayRadar(false);
     mp.callCEFR('setOpacityChat', [0.0]);
     controlsDisabled = true;
-    mp.busy.add('carshow');
+    mp.busy.add('carshow', false);
     mp.prompt.showByName('carshow_control');
 
     list = inputList;

@@ -41,8 +41,7 @@ mp.events.add('fuelstations.menu.close', () => {
 mp.events.add('fuelstations.fill.litres.show', () => {
     mp.events.call('fuelstations.menu.close');
     //if (mp.busy.includes()) return;
-    mp.busy.add('fuelstations.litres');
-    mp.gui.cursor.show(true, true);
+    mp.busy.add('fuelstations.litres', true);
     mp.callCEFV(`inputWindow.name = 'fuelstations_litres';
 inputWindow.header = "Заправка";
 inputWindow.hint = "Введите количество литров";
@@ -53,7 +52,6 @@ inputWindow.show = true;
 });
 
 mp.events.add('fuelstations.fill.litres.close', () => {
-    mp.gui.cursor.show(false, false);
     mp.callCEFV(`inputWindow.show = false;`);
     mp.busy.remove('fuelstations.litres');
 });

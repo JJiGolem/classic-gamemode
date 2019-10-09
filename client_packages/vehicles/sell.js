@@ -15,8 +15,7 @@ mp.events.add('vehicles.enter.private', (isPrivate) => {
 
 
 mp.events.add('vehicles.sell.show', () => {
-    mp.busy.add('vehicle_sell');
-    mp.gui.cursor.show(true, true);
+    mp.busy.add('vehicle_sell', true);
     mp.callCEFV(`inputWindow.name = 'carsell_id';
 inputWindow.header = "Продажа транспорта";
 inputWindow.hint = "Введите ID покупателя";
@@ -29,7 +28,6 @@ inputWindow.show = true;
 
 mp.events.add('vehicles.sell.close', () => {
     mp.busy.remove('vehicle_sell');
-    mp.gui.cursor.show(false, false);
     mp.callCEFV(`inputWindow.show = false`);
 });
 
@@ -98,11 +96,10 @@ mp.events.add('vehicles.sell.send.ans', (ans, data) => {
             mp.notify.error('Игрок далеко', 'Ошибка');
             break;
         case 5:
-            mp.gui.cursor.show(true, true);
             mp.callCEFV(`acceptWindow.header = 'Вы действительно хотите продать т/с "${data.vehicleName}" игроку ${data.targetName} за $${data.price}?';`);
             mp.callCEFV(`acceptWindow.name = 'carsell';`);
             mp.callCEFV(`acceptWindow.show = true;`);
-            mp.busy.add('vehicle_seller_accept');
+            mp.busy.add('vehicle_seller_accept', true);
             break;
     }
 
@@ -110,7 +107,7 @@ mp.events.add('vehicles.sell.send.ans', (ans, data) => {
 
 mp.events.add('vehicles.sell.target.final', (ans, data) => {
     mp.callCEFV('loader.show = false');
-    mp.gui.cursor.show(false, false);
+    // mp.gui.cursor.show(false, false);
     switch (ans) {
         case 0:
             mp.notify.error('Недостаточно денег', 'Ошибка');
@@ -133,7 +130,7 @@ mp.events.add('vehicles.sell.target.final', (ans, data) => {
 
 mp.events.add('vehicles.sell.seller.final', (ans) => {
 
-    mp.gui.cursor.show(false, false);
+    // mp.gui.cursor.show(false, false);
     switch (ans) {
         case 0:
             mp.notify.error('У покупателя недостаточно денег', 'Ошибка');
@@ -156,11 +153,11 @@ mp.events.add('vehicles.sell.seller.accept', (accept) => {
         //mp.callCEFV('loader.show = true');
         mp.events.callRemote('vehicles.sell.seller.accept', JSON.stringify(carSellData));
         mp.callCEFV(`acceptWindow.show = false;`);
-        mp.gui.cursor.show(false, false);
+        //mp.gui.cursor.show(false, false);
     } else {
         carSellData.id = null;
         carSellData.price = null;
         mp.callCEFV(`acceptWindow.show = false;`);
-        mp.gui.cursor.show(false, false);
+        //mp.gui.cursor.show(false, false);
     }
 });

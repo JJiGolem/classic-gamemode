@@ -108,9 +108,8 @@ function getClosestPlayerOrVehicle(pos) {
 }
 
 mp.events.add('interaction.menu.show', () => {
-    mp.busy.add('interaction');
+    mp.busy.add('interaction', true);
     isOpen = true;
-    mp.gui.cursor.show(true, true);
     mp.callCEFV('interactionMenu.show = true');
 });
 
@@ -118,7 +117,6 @@ mp.events.add('interaction.menu.close', () => {
     //if (personalInteractionEntity) personalInteractionEntity = null;
     mp.busy.remove('interaction');
     isOpen = false;
-    // mp.gui.cursor.show(false, false);
     mp.callCEFV('interactionMenu.show = false');
 });
 
@@ -275,8 +273,7 @@ mp.events.add('interaction.money.show', () => {
 
     let playerName = currentInteractionEntity.name;
     if (!playerName) return;
-    mp.busy.add('money_giving');
-    mp.gui.cursor.show(true, true);
+    mp.busy.add('money_giving', true);
     mp.callCEFV(`inputWindow.name = 'money_giving';
 inputWindow.header = "Передача денег ${playerName}";
 inputWindow.hint = "Введите сумму от $1 до $500";
@@ -288,7 +285,6 @@ inputWindow.show = true;
 });
 mp.events.add('interaction.money.close', () => {
     mp.callCEFV(`inputWindow.show = false`);
-    mp.gui.cursor.show(false, false);
     mp.busy.remove('money_giving');
 });
 

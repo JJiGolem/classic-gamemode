@@ -25,7 +25,7 @@ mp.events.add('characterInit.done', () => {
 
 
 mp.events.add('busdriver.jobmenu.show', (state) => {
-    mp.busy.add('busdriver.jobmenu');
+    mp.busy.add('busdriver.jobmenu', false);
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["busJobMenu"])`);
     switch (state) {
         case 0:
@@ -45,22 +45,20 @@ mp.events.add('busdriver.jobmenu.close', () => {
 });
 
 mp.events.add('busdriver.rent.show', (price) => {
-    mp.gui.cursor.show(true, true);
     mp.callCEFV(`acceptWindow.header = 'Вы хотите арендовать автобус за $${price}?';`);
     mp.callCEFV(`acceptWindow.name = 'bus_rent';`);
     mp.callCEFV(`acceptWindow.show = true;`);
-    mp.busy.add('bus_rent');
+    mp.busy.add('bus_rent', true);
 });
 
 mp.events.add('busdriver.rent.close', () => {
-    mp.gui.cursor.show(false, false);
     mp.callCEFV(`acceptWindow.show = false;`);
     mp.busy.remove('bus_rent');
 });
 
 
 mp.events.add('busdriver.menu.show', (data) => {
-    mp.busy.add('busdriver.menu');
+    mp.busy.add('busdriver.menu', false);
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["busMenu"])`);
     routesAvailable = data;
     let names = [];

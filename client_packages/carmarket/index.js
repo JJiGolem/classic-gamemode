@@ -19,7 +19,7 @@ mp.keys.bind(0x45, true, () => {
 });
 
 mp.events.add('carmarket.sellmenu.show', () => {
-    mp.busy.add('carmarket.sellmenu');
+    mp.busy.add('carmarket.sellmenu', false);
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["carMarketSellMenu"])`);
     mp.callCEFV(`selectMenu.show = true`);
 });
@@ -56,7 +56,7 @@ mp.events.add('carmarket.sellmenu.close', () => {
 
 mp.events.add('carmarket.buymenu.show', (data) => {
     if (!data) return;
-    mp.busy.add('carmarket.buymenu');
+    mp.busy.add('carmarket.buymenu', false);
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["carMarketBuyMenu"])`);
     if (mp.players.local.vehicle) mp.players.local.vehicle.freezePosition(true);
     mp.callCEFV(`carSpecifications.body = {
