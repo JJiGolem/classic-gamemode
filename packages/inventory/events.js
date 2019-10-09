@@ -378,12 +378,15 @@ module.exports = {
                     notifs.success(player, `Авто ${vehName} заправлено на ${fuel} л.`, header);
                 } else if (data.index == 1) { // пополнить канистру
                     var biz = bizes.getBizByPlayerPos(player);
-                    if (!biz || biz.info.type != 0) return out(`Вы не у АЗС`);
+                    if (!biz || biz.info.type != 0) return out(`Вы не у бизнеса`);
+
+                    if (!player.currentColshape || player.currentColshape.fuelStationId == null) return out(`Вы не у АЗС`);
+                    var fuelStationId = player.currentColshape.fuelStationId;
 
                     var params = inventory.getParamsValues(item);
                     if (params.litres == params.max) return out(`Канистра полная`);
 
-                    var products = fuelstations.getProductsAmount(biz.info.id);
+                    var products = fuelstations.getProductsAmount(fuelStationId);
                     if (!products) return out(`На АЗС нет топлива`);
 
                     var playerWeight = inventory.getCommonWeight(player);
@@ -392,7 +395,7 @@ module.exports = {
                     var nextWeight = inventory.getCommonWeight(player) + fuel;
                     if (nextWeight > inventory.maxPlayerWeight) return out(`Превышение по весу (${nextWeight.toFixed(2)} из ${inventory.maxPlayerWeight} кг)`);
 
-                    var price = fuelstations.getFuelPriceById(biz.info.id) * fuel;
+                    var price = fuelstations.getFuelPriceById(fuelStationId) * fuel;
                     if (player.character.cash < price) return out(`Необходимо $${price}`);
 
                     money.removeCash(player, price, (res) => {
