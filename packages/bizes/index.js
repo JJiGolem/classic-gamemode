@@ -458,7 +458,7 @@ module.exports = {
 
     async fillAllBizesProducts() {
         for (let index = 0; index < bizes.length; index++) {
-            const biz = bizes[index];
+            let biz = bizes[index];
             biz.info.productsCount = biz.info.productsMaxCount;
             await biz.info.save();
 
@@ -466,8 +466,8 @@ module.exports = {
     },
     async setBizesTypeMaxProducts(type, amount) {
         for (let index = 0; index < bizes.length; index++) {
-            if (biz.info.type != type) continue;
-            const biz = bizes[index];
+            let biz = bizes[index];
+            if (bizes.info.type != type) continue;
             biz.info.productsMaxCount = amount;
             await biz.info.save();
         }
