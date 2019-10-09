@@ -93,6 +93,9 @@ mp.playerMenu = {
     setSpouse(spouse) {
         mp.callCEFV(`playerMenu.setSpouse('${JSON.stringify(spouse)}')`);
     },
+    setFamiliar(count) {
+        mp.callCEFV(`playerMenu.setFamiliar(${count})`);
+    },
 };
 
 mp.events.add({
