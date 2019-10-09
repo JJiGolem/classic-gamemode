@@ -34,11 +34,18 @@ function getClosestVehicle(pos, range = MAX_RANGE) {
     mp.vehicles.forEachInStreamRange((veh) => {
         let distToVeh = vdist(pos, veh.position);
         if (distToVeh < range) {
-            let distToHood = vdist(pos, mp.utils.getHoodPosition(veh));
-            let distToBoot = vdist(pos, mp.utils.getBootPosition(veh));
-            let finalDist = Math.min(distToVeh, distToHood, distToBoot);
+            let hoodPos = mp.utils.getHoodPosition(veh);
+            let bootPos = mp.utils.getBootPosition(veh);
+            let distToHood = vdist(pos, hoodPos);
+            let distToBoot = vdist(pos, bootPos);
+            let vehArray = [{ pos: veh.position, dist: distToVeh }, { pos: hoodPos, dist: distToHood }, { pos: bootPos, dist: distToBoot }];
+            let final = getFinalPosition(vehArray);
+            let finalDist = final.minDist;
+            let minPos = final.minPos;
+            //let finalDist = Math.min(distToVeh, distToHood, distToBoot);
             if (finalDist < minDist && finalDist < INTERACTION_RANGE) {
                 closestVehicle = veh;
+                closestVehicle.minPos = minPos;
                 minDist = finalDist;
             }
         }
@@ -63,6 +70,20 @@ function getClosestPlayer(pos, range = INTERACTION_RANGE) {
     return closestPlayer;
 }
 
+function getFinalPosition(vehArray) {
+    let minDist = vehArray[0].dist;
+    let minPos = vehArray[0].pos;
+    for (let i = 0; i < vehArray.length; i++) {
+        if (vehArray[i].dist < minDist) {
+            minDist = vehArray[i].dist;
+            minPos = vehArray[i].pos;
+        }
+    }
+    return {
+        minDist: minDist,
+        minPos: minPos
+    };
+}
 
 function getClosestPlayerOrVehicle(pos) {
     var closestPlayer = getClosestPlayer(pos);
@@ -75,7 +96,7 @@ function getClosestPlayerOrVehicle(pos) {
     }
     var distToPlayer = vdist(pos, closestPlayer.position);
 
-    var distToVehicle = vdist(pos, closestVehicle.position);
+    var distToVehicle = vdist(pos, closestVehicle.minPos);
     if (distToPlayer <= distToVehicle) {
         return closestPlayer;
     } else return closestVehicle;
@@ -178,8 +199,26 @@ mp.events.add('characterInit.done', () => { /// E
 
 
 mp.events.add('render', () => {
+    currentInteractionEntity = getClosestPlayerOrVehicle(mp.players.local.position);
     if (!currentInteractionEntity) return;
     try {
+        let entity = currentInteractionEntity;
+        let position;
+        if (entity.type == "vehicle") {
+            position = entity.minPos;
+        } else {
+            position = entity.position;
+        }
+        if (!mp.players.local.vehicle) {
+            mp.game.graphics.drawText("E", [position.x, position.y, position.z], { 
+                font: 4, 
+                color: [255, 255, 255, 185], 
+                scale: [0.7, 0.7], 
+                outline: false,
+                centre: true
+              });
+        }
+          
         let dist = vdist(mp.players.local.position, currentInteractionEntity.position);
         if (dist > MAX_RANGE) {
             currentInteractionEntity = null;

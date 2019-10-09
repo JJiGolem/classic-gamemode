@@ -149,7 +149,7 @@ module.exports = {
     "vehicles.hood": (player, vehicleId, state) => {
         let vehicle = mp.vehicles.at(vehicleId);
         if (!vehicle) return;
-        if (vehicle.db.key == 'private' && !vehicles.haveKeys(player, vehicle)) return notifs.error(player, `Вы не имеете ключи`, vehicle.properties.name);
+        if (vehicle.key == 'private' && !vehicles.haveKeys(player, vehicle)) return notifs.error(player, `Вы не имеете ключи`, vehicle.properties.name);
 
         vehicle.setVariable("hood", state);
     },
