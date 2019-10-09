@@ -702,6 +702,14 @@ module.exports = {
             notifs.info(player, `Удобрение в самолете: ${count} из 200 ед.`, header);
         }
     },
+    "vehicle.respawned": (veh) => {
+        if (veh.key != "farm" || !veh.products) return;
+        var jobId = farms.getJobTypeByVehModel(veh.modelName);
+        if (jobId == 2 || jobId == 3) {
+            delete veh.products;
+            veh.setVariable("label", null);
+        }
+    },
     "playerQuit": (player) => {
         if (!player.character) return;
         if (player.farmJob) {
