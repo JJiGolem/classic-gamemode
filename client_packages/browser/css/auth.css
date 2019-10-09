@@ -176,6 +176,7 @@
 
 #auth .updates .list {
     height: 20vh;
+    margin-bottom: 2vh;
     overflow-y: auto;
 }
 
