@@ -423,7 +423,7 @@ module.exports = {
         var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Наручники`);
         var dist = player.dist(rec.position);
-        if (dist > 20) return notifs.error(player, `${rec.name} далеко`, `Наручники`);
+        if (dist > 20 && data.recId == null) return notifs.error(player, `${rec.name} далеко`, `Наручники`);
         var character = player.character;
         if (!police.cuffsFactions.includes(character.factionId)) return notifs.error(player, `Нет прав для использования`, `Наручники`);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, `Наручники`);

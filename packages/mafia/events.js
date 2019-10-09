@@ -216,7 +216,7 @@ module.exports = {
         // rec = player; // for tests
         if (!rec || !rec.character) return notifs.error(player, `Игрок не найден`, header);
         var dist = player.dist(rec.position);
-        if (dist > 20) return notifs.error(player, `${rec.name} далеко`, `Наручники`);
+        if (dist > 20 && data.recId == null) return notifs.error(player, `${rec.name} далеко`, header);
         var character = player.character;
         if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, header);
