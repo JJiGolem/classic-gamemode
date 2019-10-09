@@ -99,4 +99,9 @@ module.exports = {
 
         return clientList;
     },
+    updateClientList() {
+        mp.players.forEach((current) => {
+            current.hasValidClothesData = false;
+        });
+    }
 };

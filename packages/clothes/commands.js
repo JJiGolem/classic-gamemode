@@ -254,4 +254,13 @@ module.exports = {
             out.info(`${player.name} изменил климат одежды типа ${type} #${el.id} (${el.clime})`);
         }
     },
+    '/clupdatelist': {
+        args: '',
+        description: 'Обновить список одежды для клиентов',
+        access: 6,
+        handler: (player, args, out) => {
+            clothes.updateClientList();
+            out.info('Список одежды обновлен', player);
+        }
+    }
 }
