@@ -66,13 +66,13 @@ mp.events.add('render', (nametags) => {
     })
 })
 
-mp.keys.bind(0x75, true, function () { /// Включение/отключение ников на F6
+/*mp.keys.bind(0x75, true, function () { /// Включение/отключение ников на F6
     if (showNametags) {
         showNametags = false;
     } else {
         showNametags = true
     }
-});
+});*/
 
 mp.events.add({
     "nametags.show": (val) => {

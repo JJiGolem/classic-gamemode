@@ -10,7 +10,6 @@ mp.chat = {
 
 
 var chatOpacity = 1.0;
-var timestamp = true;
 var isOpen = false;
 // TODO: цвета тэгов
 
@@ -164,16 +163,6 @@ function playChatAnimation(id) {
 }
 
 mp.events.add('chat.message.get', (type, message) => {
-    if (message == "/timestamp") {
-        if (timestamp) {
-            mp.callCEFR('setTimeChat', [false]);
-            timestamp = false;
-        } else {
-            mp.callCEFR('setTimeChat', [true]);
-            timestamp = true;
-        }
-        return;
-    }
     mp.events.callRemote('chat.message.get', type, message);
 });
 

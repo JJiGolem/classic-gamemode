@@ -313,6 +313,10 @@ let statistics = {
         head: "Работа",
         value: "-"
     },
+    "familiar": {
+        head: "Знакомые",
+        value: "-"
+    },
     "wanted": {
         head: "Ур. розыска",
         value: "-"
@@ -778,6 +782,9 @@ var playerMenu = new Vue({
             } else {
                 statistics["spouse"].value = "-";
             }
+        },
+        setFamiliar(count) {
+            statistics["familiar"].value = count;
         },
     },
     watch: {

@@ -17,12 +17,16 @@ mp.familiar = {
             if (rec) rec.isFamiliar = true;
         });
         this.list = list;
+
+        mp.playerMenu.setFamiliar(this.list.length);
     },
     add(name) {
         if (this.list.includes(name)) return mp.notify.error(`Вы уже знаете ${name}`, `Знакомство`);
         this.list.push(name);
         var rec = mp.utils.getPlayerByName(name);
         if (rec) rec.isFamiliar = true;
+
+        mp.playerMenu.setFamiliar(this.list.length);
     },
     remove(name) {
         var i = this.list.indexOf(name);
@@ -30,6 +34,8 @@ mp.familiar = {
         this.list.splice(i, 1);
         var rec = mp.utils.getPlayerByName(name);
         if (rec) delete rec.isFamiliar;
+
+        mp.playerMenu.setFamiliar(this.list.length);
     },
 };
 

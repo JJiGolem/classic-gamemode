@@ -1,3 +1,4 @@
+let money = call('money');
 let notifs = call('notifications');
 let wedding = call('wedding');
 
