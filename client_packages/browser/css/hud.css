@@ -41,11 +41,23 @@
 }
 
 #hud .server-online {
-    background: linear-gradient(to right, #0000, rgb(0, 0, 0, 0.6));
     right: 2vh;
-    padding: 1vh;
     text-align: right;
     top: 2vh;
+}
+
+#hud .server-online .content {
+    background: linear-gradient(to right, #0000, rgb(0, 0, 0, 0.6));
+    padding: 1vh;
+}
+
+#hud .server-online .wanted {
+    right: 2vh;
+}
+
+#hud .server-online .wanted img {
+    height: 2vh;
+    margin-top: 1vh;
 }
 
 #hud .server-online p {
