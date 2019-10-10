@@ -114,6 +114,11 @@ module.exports = {
         } else if (productName == 'canister') {
             params.litres = 0;
             params.max = 20;
+        } else if (productName == 'water') {
+            params.thirst = 20;
+        } else if (productName == 'chocolate') {
+            params.satiety = 15;
+            params.thirst = -5;
         }
 
         inventory.addItem(player, itemId, params, (e) => {
@@ -123,7 +128,6 @@ module.exports = {
                         supermarket.removeProducts(supermarketId, supermarket.productsConfig[productName]);
                         supermarket.updateCashbox(supermarketId, price);
                         player.call('supermarket.products.buy.ans', [1]);
-
                 } else {
                     player.call('supermarket.products.buy.ans', [0]);
                 }
