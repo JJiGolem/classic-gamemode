@@ -3,7 +3,7 @@ import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 
 import '../styles/bank.css';
-import {loadBankInfo, showBank} from "../actions/action.bank";
+import {loadBankInfo, closeBank} from "../actions/action.bank";
 import BankMenu from "./BankMenu";
 import AnsOperationBank from "./AnsOperationBank";
 
@@ -16,11 +16,11 @@ class Main extends Component {
     }
 
     exitBank() {
-        const { showBank, bank } = this.props;
+        const { closeBank, bank } = this.props;
 
         if (!bank.isLoading) {
-            showBank(false);
-            mp.trigger('bank.menu.close');
+            closeBank();
+            mp.trigger('bank.close');
         }
     }
 
@@ -126,7 +126,7 @@ class Main extends Component {
         return (
             <div className='main-form-bank'>
                 { Object.keys(bank).length > 1 ? this.getForm() : this.getLoader() }
-                { bank.answer !== null && <AnsOperationBank /> }
+                { Object.keys(bank).length > 1 && bank.answer != null && <AnsOperationBank /> }
             </div>
         );
     }
@@ -139,7 +139,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     loadInfo: info => dispatch(loadBankInfo(info)),
-    showBank: flag => dispatch(showBank(flag))
+    closeBank: () => dispatch(closeBank())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

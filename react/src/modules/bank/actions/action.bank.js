@@ -1,6 +1,5 @@
-export const showBank = flag => ({
-    type: 'SHOW_BANK',
-    payload: flag
+export const closeBank = () => ({
+    type: 'CLOSE_BANK'
 });
 
 export const loadBankInfo = info => ({

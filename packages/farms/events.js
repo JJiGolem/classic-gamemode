@@ -633,7 +633,7 @@ module.exports = {
         if (player.farm.playerId != player.character.id) return out(`Вы не хозяин фермы`);
         var key = ["pay", "farmerPay", "tractorPay", "pilotPay"][data.job];
         var farm = player.farm;
-        if (data.sum < 0 || data.sum > farms.payMax) return out(`Не более $${data.sum}`);
+        if (data.sum < 0 || data.sum > farms.payMax) return out(`Не более $${farms.payMax}`);
 
         farm[key] = data.sum;
         farm.save();
@@ -700,6 +700,14 @@ module.exports = {
             var count = vehicle.soils.count;
 
             notifs.info(player, `Удобрение в самолете: ${count} из 200 ед.`, header);
+        }
+    },
+    "vehicle.respawned": (veh) => {
+        if (veh.key != "farm" || !veh.products) return;
+        var jobId = farms.getJobTypeByVehModel(veh.modelName);
+        if (jobId == 2 || jobId == 3) {
+            delete veh.products;
+            veh.setVariable("label", null);
         }
     },
     "playerQuit": (player) => {

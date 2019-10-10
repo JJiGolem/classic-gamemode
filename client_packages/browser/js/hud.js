@@ -4,6 +4,7 @@ var hud = new Vue({
         players: 0,
         maxPlayers: 1000,
         build: 0,
+        wanted: 0,
         cash: 0,
         bank: 0,
         time: new Date().toTimeString().replace(/(\d{2}:\d{2}).*/, '$1'),
@@ -29,3 +30,6 @@ var hud = new Vue({
         setInterval(this.updateTime, 1000);
     },
 });
+
+// for tets
+// hud.show = true;

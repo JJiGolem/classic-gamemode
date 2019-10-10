@@ -31,6 +31,7 @@ mp.police = {
         this.wanted = val;
         mp.playerMenu.setWanted(val);
         clearTimeout(this.wantedTimer);
+        mp.callCEFV(`hud.wanted = ${val}`);
         if (!val) return;
         this.wantedTimer = setTimeout(() => {
             mp.events.callRemote(`police.wanted.lower`);
