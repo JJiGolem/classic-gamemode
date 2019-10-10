@@ -177,6 +177,12 @@ module.exports = {
         }
         if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
         if (mafia.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за бизнес`, header);
+        if (player.lastUseMed) {
+            var diff = Date.now() - player.lastUseMed;
+            var wait = 2 * 60 * 1000;
+            if (diff < wait) return notifs.error(player, `Повторное использование доступно через ${parseInt((wait - diff) / 1000)} сек.`, header);
+        }
+        player.lastUseMed = Date.now();
 
         player.health = Math.clamp(player.health + hospital.medHealth, 0, hospital.medMaxHealth);
 
@@ -225,6 +231,12 @@ module.exports = {
         }
         if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
         if (mafia.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за бизнес`, header);
+        if (player.lastUsePatch) {
+            var diff = Date.now() - player.lastUsePatch;
+            var wait = 2 * 60 * 1000;
+            if (diff < wait) return notifs.error(player, `Повторное использование доступно через ${parseInt((wait - diff) / 1000)} сек.`, header);
+        }
+        player.lastUsePatch = Date.now();
 
         player.health = Math.clamp(player.health + hospital.patchHealth, 0, hospital.medMaxHealth);
 
@@ -249,6 +261,7 @@ module.exports = {
             var wait = bands.drugsInterval[i];
             if (diff < wait) return notifs.error(player, `Повторное использование доступно через ${parseInt((wait - diff) / 1000)} сек.`, header);
         }
+        player.lastUseDrugs = Date.now();
 
         player.health = Math.clamp(player.health + bands.drugsHealth[i], 0, 100);
 
@@ -256,7 +269,6 @@ module.exports = {
         if (!count) inventory.deleteItem(player, drugs);
         else inventory.updateParam(player, drugs, 'count', count);
 
-        player.lastUseDrugs = Date.now();
         player.call(`effect`, [bands.drugsEffect[i], bands.drugsEffectTime[i]]);
         notifs.success(player, `Вы употребили наркотик`, header);
 
@@ -273,6 +285,12 @@ module.exports = {
         if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
         if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
         if (mafia.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за бизнес`, header);
+        if (player.lastUseSmoke) {
+            var diff = Date.now() - player.lastUseSmoke;
+            var wait = 2 * 60 * 1000;
+            if (diff < wait) return notifs.error(player, `Повторное использование доступно через ${parseInt((wait - diff) / 1000)} сек.`, header);
+        }
+        player.lastUseSmoke = Date.now();
 
         player.health = Math.clamp(player.health + 2, 0, 100);
 
