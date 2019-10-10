@@ -441,8 +441,18 @@ module.exports = {
         }).then(result => {
             playerFrom != null && playerFrom.character != null && this.changing(playerFrom);
             playerTo != null && playerTo.character != null && this.changing(playerTo);
-            (playerFrom != null && playerFrom.character != null) ? logger.log(`${number} remove money to | ${reasonFrom}`, "money", playerFrom) : logger.log(`${number} remove money to | ${reasonFrom}`, "money", idFrom);
-            (playerTo != null && playerTo.character != null) ? logger.log(`${number} add money to | ${reasonTo}`, "money", playerTo) : logger.log(`${number} add money to | ${reasonTo}`, "money", idTo);
+            if (playerFrom != null && playerFrom.character != null) {
+                logger.log(`${number} remove money to | ${reasonFrom}`, "money", playerFrom);
+            }
+            else {
+                logger.log(`${number} remove money to | ${reasonFrom}`, "money", idFrom);
+            } 
+            if(playerTo != null && playerTo.character != null) {
+                logger.log(`${number} add money to | ${reasonTo}`, "money", playerTo);
+            }
+            else {
+                logger.log(`${number} add money to | ${reasonTo}`, "money", idTo);
+            }
             callback(true);
         }).catch(err => {
             if (bankFrom != null) {

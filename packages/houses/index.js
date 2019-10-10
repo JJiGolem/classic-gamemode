@@ -161,7 +161,7 @@ module.exports = {
         this.setTimer(houses.length - 1);
         console.log("[HOUSES] added new house");
     },
-    removeHouse(id, player) {
+    async removeHouse(id, player) {
         let house = this.getHouseById(id);
         if (house.info.characterId != null) {
             if (player != null) player.call('notifications.push.error', ["Нельзя удалить дом у которого есть владелец", "Ошибка"]);
@@ -180,7 +180,7 @@ module.exports = {
             house.exitGarage.marker.destroy();
         }
         house.blip.destroy();
-        house.info.destroy();
+        await house.info.destroy();
 
         let houseIndex = houses.findIndex(x => x.info.id == id);
         houseIndex != -1 && houses.splice(houseIndex, 1);
@@ -329,6 +329,9 @@ module.exports = {
     getHouseByCharId(id) {
         return houses.find(x => x.info.characterId == id);
     },
+    getDateDays(date) {
+        return parseInt((date.getTime() - new Date().getTime()) / (24 * 60 * 60 * 1000));
+    },
     isHaveHouse(id) {
         return houses.findIndex(x => x.info.characterId == id) != -1;
     },
@@ -344,7 +347,7 @@ module.exports = {
             isOpened: info.isOpened,
             improvements: new Array(),
             price: info.price,
-            days: parseInt((info.date.getTime() - new Date().getTime()) / (24 * 60 * 60 * 1000)),
+            days: this.getDateDays(info.date),
             pos: [info.pickupX, info.pickupY, info.pickupZ]
         };
     },
@@ -354,7 +357,7 @@ module.exports = {
             id: house.info.id,
             class: house.info.Interior.class,
             rent: house.info.price * house.info.Interior.rent,
-            days: parseInt((house.info.date.getTime() - new Date().getTime()) / (24 * 60 * 60 * 1000))
+            days: this.getDateDays(house.info.date)
         };
     },
     sellHouse(house, cost, seller, buyer, callback) {
@@ -377,7 +380,7 @@ module.exports = {
                         isOpened: house.info.isOpened,
                         improvements: new Array(),
                         price: house.info.price,
-                        days: parseInt((house.info.date.getTime() - new Date().getTime()) / (24 * 60 * 60 * 1000)),
+                        days: this.getDateDays(house.info.date),
                         pos: [house.info.pickupX, house.info.pickupY, house.info.pickupZ]
                     }]);
                     vehicles != null && vehicles.setPlayerCarPlaces(buyer);
