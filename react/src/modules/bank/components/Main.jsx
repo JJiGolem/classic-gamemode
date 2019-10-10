@@ -20,7 +20,7 @@ class Main extends Component {
 
         if (!bank.isLoading) {
             showBank(false);
-            mp.trigger('bank.menu.close');
+            mp.trigger('bank.close');
         }
     }
 
