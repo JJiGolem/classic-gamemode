@@ -126,7 +126,7 @@ class Main extends Component {
         return (
             <div className='main-form-bank'>
                 { Object.keys(bank).length > 1 ? this.getForm() : this.getLoader() }
-                { bank.answer != null && <AnsOperationBank /> }
+                { Object.keys(bank).length > 1 && bank.answer != null && <AnsOperationBank /> }
             </div>
         );
     }
