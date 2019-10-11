@@ -43,7 +43,7 @@ module.exports = {
         if (!item) return player.call('clothingShop.item.buy.ans', [1]);
 
         let products = clothingShop.calculateProductsNeeded(item.price);
-        let price = item.price * clothingShop.getPriceMultiplier(shopId);
+        let price = parseInt(item.price * clothingShop.getPriceMultiplier(shopId));
         if (player.character.cash < price) return player.call('clothingShop.item.buy.ans', [4]);
         let productsAvailable = clothingShop.getProductsAmount(shopId);
         if (products > productsAvailable) return player.call('clothingShop.item.buy.ans', [6]);
