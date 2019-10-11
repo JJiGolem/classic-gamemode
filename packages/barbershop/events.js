@@ -69,7 +69,7 @@ module.exports = {
             } else {
                 player.call('barbershop.hairstyle.buy.ans', [2]);
             }
-        });
+        }, `Смена прически на #${hairstyleId}`);
     },
     "barbershop.facialHair.buy": (player, index) => {
         let barbershopId = player.currentBarbershopId;
@@ -90,7 +90,7 @@ module.exports = {
             } else {
                 player.call('barbershop.facialHair.buy.ans', [2]);
             }
-        });
+        }, `Смена бороды на #${index}`);
 
     },
     "barbershop.color.buy": (player, type, index) => {
@@ -128,6 +128,6 @@ module.exports = {
             } else {
                 player.call('barbershop.color.buy.ans', [4]);
             }
-        });
+        }, `Смена цвета растительности типа #${type} на #${index}`);
     }
 }
