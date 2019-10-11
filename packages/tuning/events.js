@@ -61,7 +61,7 @@ module.exports = {
             } else {
                 player.call('tuning.colors.set.ans', [4]);
             }
-        });
+        }, `Смена цвета т/с ${vehicle.properties.name} в LSC (#${primary} | #${secondary})`);
     },
     "tuning.buy": (player, type, index) => {
         let vehicle = player.vehicle;
@@ -80,7 +80,7 @@ module.exports = {
             } else {
                 player.call('tuning.buy.ans', [4]);
             }
-        });
+        }, `Покупка тюнинга т/с ${vehicle.properties.name} в LSC (type #${type} | index #${index})`);
 
     },
     "tuning.repair": (player) => {
@@ -97,6 +97,6 @@ module.exports = {
             } else {
                 player.call('tuning.repair.ans', [4]);
             }
-        });
+        }, `Ремонт т/с ${vehicle.properties.name} в LSC`);
     }
 }

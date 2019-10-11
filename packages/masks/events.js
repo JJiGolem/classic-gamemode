@@ -50,7 +50,7 @@ module.exports = {
                     player.call('masks.buy.ans', [5]);
                     console.log(`[MASKS] Маска добавлена в инвентарь ${player.name}, но деньги не сняты`);
                 }
-            });
+            }, `Покупка маски (ID #${maskId} | Texture #${textureId})`);
         });
     }
 }

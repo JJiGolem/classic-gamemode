@@ -159,7 +159,7 @@ module.exports = {
                         } else {
                             driver.call('notifications.push.error', ['Ошибка зачисления денег', 'Такси']);
                         }
-                    });
+                    }, `Оплата поездки в такси клиентом #${client.character.id}`);
                 } catch (err) {
                     console.log(err);
                 }
@@ -167,7 +167,7 @@ module.exports = {
                 client.call('notifications.push.error', ['Вы не смогли оплатить поездку', 'Такси']);
                 driver.call('notifications.push.error', ['Клиент не смог оплатить поездку', 'Такси']);
             }
-        });
+        }, `Оплата поездки в такси водителю #${driver.character.id}`);
         delete driver.taxiDriverDestination;
         delete client.taxiClientDestination;
     },
@@ -238,7 +238,7 @@ module.exports = {
                 player.call('notifications.push.error', ['Ошибка аренды', 'Такси']);
                 if (player.vehicle) player.removeFromVehicle();
             }
-        });
+        }, `Аренда такси`);
 
     },
     "playerExitVehicle": (player, vehicle) => {

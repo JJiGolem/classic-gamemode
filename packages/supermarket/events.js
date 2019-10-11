@@ -44,7 +44,7 @@ module.exports = {
             } else {
                 player.call('supermarket.phone.buy.ans', [4]);
             }
-        });
+        }, `Покупка телефона`);
     },
     "supermarket.number.change": async (player, number) => {
         if (number.length != 6 || /\D/g.test(number) || number.charAt(0) == '0') return player.call('supermarket.number.change.ans', [0]);
@@ -69,7 +69,7 @@ module.exports = {
                 } else {
                     player.call('supermarket.number.change.ans', [4]);
                 }
-            });
+            }, `Смена номера телефона на ${number}`);
         }
 
     },
@@ -131,7 +131,7 @@ module.exports = {
                 } else {
                     player.call('supermarket.products.buy.ans', [0]);
                 }
-            });
+            }, `Покупка в 24/7 ${productName}`);
         });
     },
 }
