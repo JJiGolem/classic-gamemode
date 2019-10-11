@@ -376,6 +376,7 @@ module.exports = {
         });
     },
     spawn(player) {
+        if (player.character.arrestTime) return; // заспавнит модуль [police]
         var settings = player.character.settings;
         var house = houses.getHouseByCharId(player.character.id);
 
