@@ -577,7 +577,9 @@ module.exports = {
         access: 1,
         args: "",
         handler: (player, args, out) => {
-            out.debug("soon...")
+            activeServerModules.forEach(moduleName => {
+                out.debug(moduleName);
+            });
         }
     },
     "/module": {
