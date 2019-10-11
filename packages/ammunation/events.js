@@ -52,7 +52,7 @@ module.exports = {
                 } else {
                     player.call('ammunation.weapon.buy.ans', [4]);
                 }
-            });
+            }, `Покупка оружия ${weaponData.name}`);
         });
     },
     "ammunation.ammo.buy": (player, values) => {
@@ -84,7 +84,7 @@ module.exports = {
                 } else {
                     player.call('ammunation.ammo.buy.ans', [4]);
                 }
-            });
+            }, `Покупка боеприпасов с itemId #${itemIds[ammoIndex]} (${ammoCount} шт.)`);
         });
     }
 }
