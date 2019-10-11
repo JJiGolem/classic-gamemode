@@ -209,7 +209,7 @@ module.exports = {
             } else {
                 console.log(`Ошибка начисления денег за авто, слетевшее в гос для игрока с ID ${id}`);
             }
-        });
+        }, `Слет автомобилей в гос после слета дома`);
     },
     getPriceConfig() {
         return PRICE_CONFIG;

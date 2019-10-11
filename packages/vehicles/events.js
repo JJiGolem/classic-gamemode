@@ -414,7 +414,7 @@ module.exports = {
                     delete target.sellCarTargetOffer;
                     delete seller.sellCarSenderOffer;
                 }
-            });
+            }, `Покупка/продажа т/с ${vehicle.properties.name} (#${vehicle.sqlId}) с рук`);
         } else {
             delete target.sellCarTargetOffer;
             delete seller.sellCarSenderOffer;
