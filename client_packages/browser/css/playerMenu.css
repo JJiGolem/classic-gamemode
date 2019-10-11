@@ -141,7 +141,7 @@
 
 #player-menu .head .line {
     margin: 1vh 0 2vh 0;
-    height: 2px;
+    height: 0.2vh;
     background-color: rgba(255, 255, 255, 0.4);
 }
 
@@ -241,13 +241,13 @@
 }
 
 #player-menu .body .character .body .record {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 0.1vh solid rgba(255, 255, 255, 0.3);
     display: grid;
     grid-template-columns: 1fr max-content;
     font-size: 1.7vh;
     margin-top: 1.3vh;
     padding-bottom: 0.5vh;
-    height: 1.9vh;
+    height: 2vh;
 }
 
 #player-menu .body .character .body .record span {
