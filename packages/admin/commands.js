@@ -434,7 +434,7 @@ module.exports = {
         description: "Назначить игрока администратором",
         access: 5,
         args: "[ID] [Уровень администрирования]",
-        handler: (player, args) => {
+        handler: (player, args, out) => {
             let lvl = parseInt(args[1]);
             let id = parseInt(args[0]);
 
@@ -444,6 +444,7 @@ module.exports = {
             if (lvl >= player.character.admin /*|| target.character.admin > player.character.admin*/ ) return player.call('notifications.push.error', [`Недостаточно прав`, 'Ошибка'])
             target.character.admin = lvl;
             target.character.save();
+            out.info(`${player.name} назначил ${target.name} администратором ${lvl} уровня`);
             target.call('chat.message.push', [`!{#ffcf0d} ${player.character.name} назначил вас администратором ${lvl} уровня`]);
 
             mp.events.call("player.admin.changed", target);
@@ -453,7 +454,7 @@ module.exports = {
         description: "Снять админку с игрока",
         access: 5,
         args: "[ID]",
-        handler: (player, args) => {
+        handler: (player, args, out) => {
             let id = parseInt(args[0]);
 
             if (isNaN(id) || id < 0) return;
@@ -463,7 +464,7 @@ module.exports = {
             target.character.admin = 0;
             target.character.save();
             target.call('chat.message.push', [`!{#ff8819} ${player.character.name} забрал у вас права администратора`]);
-
+            out.info(`${player.name} забрал у ${target.name} права администратора`);
             mp.events.call("player.admin.changed", target);
         }
     },
