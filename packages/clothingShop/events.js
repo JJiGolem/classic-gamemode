@@ -72,7 +72,7 @@ module.exports = {
                     } else {
                         player.call('clothingShop.item.buy.ans', [5]);
                     }
-                });
+                }, `Покупка одежды ${group}. Variation #${itemId}. Texture #${textureIndex}`);
             });
         }
 };

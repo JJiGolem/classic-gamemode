@@ -172,7 +172,6 @@ module.exports = {
                             var carPlate = vehicles.generateVehiclePlate();
                             let parking = parkings.getClosestParkingId(player);
                             let parkingInfo = parkings.getParkingInfoById(parking);
-                            console.log(parkingInfo);
 
                             let now = new Date();
 
@@ -269,7 +268,7 @@ module.exports = {
                         player.call('carshow.car.buy.ans', [3]);
 
                     }
-                });
+                }, `Покупка в автосалоне т/с ${carToBuy.vehiclePropertyModel}`);
 
             }
         }
