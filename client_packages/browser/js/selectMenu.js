@@ -6860,14 +6860,6 @@ var selectMenu = new Vue({
             Vue.set(menu, propName, propValue);
             if (menu.update) menu.update();
         },
-        // open() {
-        //     this.menu.i = 0; // TEMP, нужно разобраться, почему i/j остаются прежними при закрытии/открытии меню
-        //     this.menu.j = 0;
-        //     this.show = true;
-        // },
-        // close() {
-        //     this.menu = null;
-        // }
     },
     computed: {
         items() {
