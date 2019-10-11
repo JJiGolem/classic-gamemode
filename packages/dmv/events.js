@@ -53,7 +53,7 @@ module.exports = {
             } else {
                 player.call('dmv.license.buy.ans', [3]);
             }
-        });
+        }, `Покупка лицензии ${lic}`);
 
     }
 }

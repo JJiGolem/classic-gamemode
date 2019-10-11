@@ -25,6 +25,6 @@ module.exports = {
                 player.call('interaction.money.ans', [3]);
                 console.log('error');
             }
-        });
+        }, `Передача денег на руки от игрока #${player.character.id} игроку #${target.character.id}`);
     }
 }
