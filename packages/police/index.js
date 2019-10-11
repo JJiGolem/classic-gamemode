@@ -133,9 +133,7 @@ module.exports = {
     startCellArrest(player, cell, time) {
         if (player.vehicle) player.removeFromVehicle();
         if (player.cuffs) this.setCuffs(player, null);
-        if (player.character.wanted) player.character.update({
-            wanted: 0
-        });
+        if (player.character.wanted) this.setWanted(player, 0);
         if (player.character.arrestTime != time) player.character.update({
             arrestTime: time
         });
@@ -184,9 +182,7 @@ module.exports = {
         console.log(`startJailArrest: ${player.name}`)
         if (player.vehicle) player.removeFromVehicle();
         if (player.cuffs) this.setCuffs(player, false);
-        if (player.character.wanted) player.character.update({
-            wanted: 0
-        });
+        if (player.character.wanted) this.setWanted(player, 0);
         if (player.character.arrestTime != time) player.character.update({
             arrestTime: time
         });

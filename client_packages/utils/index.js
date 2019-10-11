@@ -118,6 +118,11 @@ mp.utils = {
         mp.game.object.doorControl(1780022985, 617.2458, 2751.022, 42.75777, false, 0.0, 0.0, 0.0); /// Sub Urban Route 68
         mp.game.object.doorControl(1780022985, -3167.75, 1055.536, 21.53288, false, 0.0, 0.0, 0.0); /// Sub Urban Chumash Plaza
 
+        // Bolingbroke
+        mp.game.object.doorControl(741314661, 1844.998, 2597.482, 44.63626, true, 0.0, 0.0, 0.0);
+        mp.game.object.doorControl(741314661, 1818.543, 2597.482, 44.60749, true, 0.0, 0.0, 0.0);
+        mp.game.object.doorControl(741314661, 1806.939, 2616.975, 44.60093, true, 0.0, 0.0, 0.0);
+
     },
     /// Загрузка IPL
     requestIpls() {
