@@ -52,6 +52,7 @@ let dropBiz = function(biz, sellToGov = false) {
     biz.info.characterId = null;
     biz.info.characterNick = null;
     biz.info.date = null;
+    biz.info.cashBox = 0;
     biz.info.save().then(() => {
         if (money == null) return console.log("[bizes] Biz dropped " + biz.info.id + ". But player didn't getmoney");
         money.addMoneyById(characterId, biz.info.price * dropBizMultiplier, function(result) {
@@ -119,6 +120,7 @@ let getBizInfoForBank = function(biz) {
     if (bizesModules[biz.info.type] == null) return null;
     return {
         id: biz.info.id,
+        name: biz.info.name,
         type: getTypeName(biz.info.type),
         cashBox: biz.info.cashBox,
         days: getDateDays(biz.info.date),
@@ -263,8 +265,7 @@ module.exports = {
         carrier = call("carrier");
 
         for (let file of fs.readdirSync(path.dirname(__dirname))) {
-            if (file != 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname) + "/" + file + '/index.js'))
-            {
+            if (file != 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname) + "/" + file + '/index.js')) {
                 let objects = require('../' + file + '/index');
                 if (objects.business != null && objects.business.type != null && objects.business.name != null && objects.business.productName != null && objects.rentPerDayMultiplier != null && objects.productPrice != null) {
                     bizesModules[objects.business.type] = call(file);
@@ -340,6 +341,7 @@ module.exports = {
     sellBiz(biz, cost, seller, buyer, callback) {
         biz.info.characterId = buyer.character.id;
         biz.info.characterNick = buyer.character.name;
+        biz.info.cashBox = 0;
         biz.info.date = getRandomDate(1);
         setTimer(biz);
         biz.info.save().then(() => {
