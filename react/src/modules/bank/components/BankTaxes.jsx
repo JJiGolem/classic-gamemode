@@ -22,72 +22,76 @@ class BankTaxes extends Component {
 
     incrementHouseDays() {
         const { houseDays } = this.state;
-        const { bank, info } = this.props;
+        const { bank } = this.props;
 
-        if ((houseDays < 30 - info.houses[0].days) && ((houseDays + 1)*info.houses[0].rent <= bank.money)) {
+        if ((houseDays < 30 - bank.houses[0].days) && ((houseDays + 1)*bank.houses[0].rent <= bank.money)) {
             this.setState({ houseDays: houseDays + 1 });
         }
     }
 
     decrementHouseDays() {
         const { houseDays } = this.state;
-        const { bank, info } = this.props;
+        const { bank } = this.props;
 
-        if ((houseDays > 0) && ((houseDays - 1)*info.houses[0].rent <= bank.money)) {
+        if ((houseDays > 0) && ((houseDays - 1)*bank.houses[0].rent <= bank.money)) {
             this.setState({ houseDays: houseDays - 1 });
         }
     }
 
     payHouse() {
         const { houseDays } = this.state;
-        const { info, setLoading, setArgs } = this.props;
+        const { bank, setLoading, setArgs } = this.props;
 
-        setArgs({ money: parseInt(info.houses[0].rent*houseDays), name: info.houses[0].name, days: parseInt(houseDays) });
-        setLoading(true);
-        mp.trigger('bank.house.push', info.houses[0].name, parseInt(houseDays));
-        this.setState({ houseDays: 0 });
+        if (houseDays > 0) {
+            setArgs({ money: parseInt(bank.houses[0].rent*houseDays), name: bank.houses[0].name, days: parseInt(houseDays) });
+            setLoading(true);
+            mp.trigger('bank.house.push', bank.houses[0].name, parseInt(houseDays));
+            this.setState({ houseDays: 0 });
+        }
     }
 
     incrementBizDays() {
         const { bizDays } = this.state;
-        const { bank, info } = this.props;
+        const { bank } = this.props;
 
-        if ((bizDays < 30 - info.biz[0].days) && ((bizDays + 1)*info.biz[0].rent <= bank.money)) {
+        if ((bizDays < 30 - bank.biz[0].days) && ((bizDays + 1)*bank.biz[0].rent <= bank.money)) {
             this.setState({ bizDays: bizDays + 1 });
         }
     }
 
     decrementBizDays() {
         const { bizDays } = this.state;
-        const { bank, info } = this.props;
+        const { bank } = this.props;
 
-        if ((bizDays > 0) && ((bizDays - 1)*info.biz[0].rent <= bank.money)) {
+        if ((bizDays > 0) && ((bizDays - 1)*bank.biz[0].rent <= bank.money)) {
             this.setState({ bizDays: bizDays - 1 });
         }
     }
 
     payBiz() {
         const { bizDays } = this.state;
-        const { info, setLoading, setArgs } = this.props;
+        const { setLoading, setArgs } = this.props;
 
-        setArgs({ money: parseInt(info.biz[0].rent*bizDays), id: info.biz[0].id, days: parseInt(bizDays) });
-        setLoading(true);
-        mp.trigger('bank.biz.push', info.biz[0].id, parseInt(bizDays));
-        this.setState({ bizDays: 0 });
+        if (bizDays > 0) {
+            setArgs({ money: parseInt(bank.biz[0].rent*bizDays), id: bank.biz[0].id, days: parseInt(bizDays) });
+            setLoading(true);
+            mp.trigger('bank.biz.push', bank.biz[0].id, parseInt(bizDays));
+            this.setState({ bizDays: 0 });
+        }
     }
 
     getPayHouseForm() {
-        const { bank, info } = this.props;
+        const { bank } = this.props;
         const { houseDays } = this.state;
 
-        if (info.houses.length > 0) {
+        if (bank.houses.length > 0) {
             return (
                 <div style={{ textAlign: 'left' }}>
                     <div className='taxes_info-bank-react'>
-                        <div>Номер дома: { info.houses[0].name }</div>
-                        <div>Класс: { info.houses[0].class }</div>
-                        <div>Квартплата: ${ info.houses[0].rent }/день</div>
-                        <div>Оплачено: { info.houses[0].days }/30</div>
+                        <div>Номер дома: { bank.houses[0].name }</div>
+                        <div>Класс: { bank.houses[0].class }</div>
+                        <div>Квартплата: ${ bank.houses[0].rent }/день</div>
+                        <div>Оплачено: { bank.houses[0].days }/30</div>
                         <div style={{ marginTop: '5%' }}>Выберете количество дней для оплаты:</div>
                         <div style={{ textAlign: 'center', marginTop: '5%' }}>
                             <span className='button_taxes-bank-react' onClick={this.decrementHouseDays} style={{ padding: '1% 5.5% 3% 5.5%' }}>-</span>
@@ -118,17 +122,17 @@ class BankTaxes extends Component {
     }
 
     getPayBusinessForm() {
-        const { bank, info } = this.props;
+        const { bank } = this.props;
         const { bizDays } = this.state;
 
-        if (info.biz.length > 0) {
+        if (bank.biz.length > 0) {
             return (
                 <div style={{ textAlign: 'left' }}>
                     <div className='taxes_info-bank-react'>
-                        <div>Название: { info.biz[0].name }</div>
-                        <div>Тип: { info.biz[0].type }</div>
-                        <div>Налог: ${ info.biz[0].rent }/день</div>
-                        <div>Оплачено: { info.biz[0].days }/30</div>
+                        <div>Название: { bank.biz[0].name }</div>
+                        <div>Тип: { bank.biz[0].type }</div>
+                        <div>Налог: ${ bank.biz[0].rent }/день</div>
+                        <div>Оплачено: { bank.biz[0].days }/30</div>
                         <div style={{ marginTop: '5%' }}>Выберете количество дней для оплаты:</div>
                         <div style={{ textAlign: 'center', marginTop: '5%' }}>
                             <span className='button_taxes-bank-react' onClick={this.decrementBizDays} style={{ padding: '1% 5.5% 3% 5.5%' }}>-</span>
@@ -189,8 +193,7 @@ class BankTaxes extends Component {
 }
 
 const mapStateToProps = state => ({
-    bank: state.bank,
-    info: state.info
+    bank: state.bank
 });
 
 const mapDispatchToProps = dispatch => ({
