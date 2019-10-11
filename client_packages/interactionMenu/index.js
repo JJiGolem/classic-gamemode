@@ -41,7 +41,7 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
             };
             mp.events.callRemote(`police.cuffs`, JSON.stringify(data));
         } else if (itemName == 'Освобождение') {
-            mp.events.callRemote(`police.follow`, entity.remoteId);
+            mp.events.callRemote(`government.unarrest.offer`, entity.remoteId);
         } else if (itemName == 'Следование') {
             mp.events.callRemote(`police.follow`, entity.remoteId);
         } else if (itemName == 'В авто') {

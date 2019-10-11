@@ -59,11 +59,15 @@ module.exports = {
     // Бонус ЗП за арест
     arrestPay: 10,
     // Время ареста за 1 ур. розыска (ms)
-    arrestTime: 10000,
+    arrestTime: 15 * 60 * 1000,
     // Время, через которое можно повторно искать преступника
     searchTime: 2 * 60 * 1000,
     // Организации, которые могут использовать наручники
     cuffsFactions: [1, 2, 3, 4, 6],
+    // Стоимость освобождения игрока за 1 ур. розыска (ms)
+    unarrestPrice: 1000,
+    // Процент адвокату за освобождение (от 0.00 до 1.00)
+    unarrestPayK: 0.05,
 
 
     setCuffs(player, cuffs) {
@@ -162,17 +166,8 @@ module.exports = {
                     clearTimeout(player.cellArrestTimer);
                     return;
                 }
-                delete rec.cellArrestTimer;
-                rec.call(`inventory.enable`, [true]);
 
-                rec.position = this.cellExit;
-                rec.heading = this.cellExit.h;
-
-                rec.character.arrestTime = 0;
-                rec.character.arrestType = 0;
-                rec.character.save();
-
-                notifs.success(rec, `Вы выпущены на свободу`, `Арест`);
+                this.stopCellArrest(rec);
             } catch (err) {
                 console.log(err.stack);
             }
@@ -226,6 +221,24 @@ module.exports = {
                 console.log(err.stack);
             }
         }, time);
+    },
+    stopCellArrest(player) {
+        clearTimeout(player.cellArrestTimer);
+        delete player.cellArrestTimer;
+        player.call(`inventory.enable`, [true]);
+
+        player.position = this.cellExit;
+        player.heading = this.cellExit.h;
+
+        player.character.arrestTime = 0;
+        player.character.arrestType = 0;
+        player.character.save();
+
+        notifs.success(player, `Вы выпущены на свободу`, `Арест`);
+    },
+    getUnarrestPrice(time) {
+        var wanted = Math.ceil(time / this.arrestTime);
+        return wanted * this.unarrestPrice;
     },
     getWanted() {
         var wanted = [];

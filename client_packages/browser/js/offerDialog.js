@@ -253,6 +253,23 @@ var offerDialog = new Vue({
                     mp.trigger(`callRemote`, `wedding.add.cancel`, this.recId);
                 },
             },
+            "unarrest": {
+                text: `Carter Slade предлагает вас освободить`,
+                price: 999,
+                on(values) {
+                    this.text = `${values.name} предлагает вас освободить`;
+                    this.price = values.price;
+                },
+                yes() {
+                    mp.trigger(`callRemote`, `government.unarrest.accept`);
+                },
+                no() {
+                    mp.trigger(`callRemote`, `government.unarrest.cancel`);
+                },
+                ignore() {
+                    mp.trigger(`callRemote`, `government.unarrest.cancel`);
+                },
+            },
         },
         dialog: null,
         timeout: null,

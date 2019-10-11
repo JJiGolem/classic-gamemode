@@ -4,6 +4,7 @@ let factions = require('../factions');
 let inventory = require('../inventory');
 let money = call('money');
 let notifs = require('../notifications');
+let police = call('police');
 
 module.exports = {
     "init": () => {
@@ -321,5 +322,61 @@ module.exports = {
         }, `Восстановление ключей от ${veh.name} (#${veh.id})`);
 
         notifs.success(player, `Ключи от ${veh.name} восстановлены`, header);
+    },
+    "government.unarrest.offer": (player, recId) => {
+        var header = `Освобождение`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var rec = mp.players.at(recId);
+        if (!rec || !rec.character) return out(`Игрок #${recId} не найден`);
+        if (!rec.character.arrestTime) return out(`${rec.name} не отбывает срок`);
+
+        var price = police.getUnarrestPrice(rec.character.arrestTime);
+
+        rec.offer = {
+            type: "unarrest",
+            playerId: player.id
+        };
+        rec.call(`offerDialog.show`, [`unarrest`, {
+            name: player.name,
+            price: price
+        }]);
+    },
+    "government.unarrest.accept": (player) => {
+        var header = `Освобождение`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var offer = player.offer;
+        delete player.offer;
+        if (!offer || offer.type != "unarrest") return out(`Предложение не найдено`);
+        var rec = mp.players.at(offer.playerId);
+        if (!rec || !rec.character) return out(`Игрок #${recId} не найден`);
+        if (!player.character.arrestTime) return out(`Вы не отбываете срок`);
+
+        var price = police.getUnarrestPrice(player.character.arrestTime);
+        if (player.character.cash < price) return out(`Необходимо $${price}`);
+
+        money.removeCash(player, price, (res) => {
+            if (!res) return out(`Ошибка списания наличных`);
+
+            police.stopCellArrest(player);
+
+            notifs.success(rec, `${player.name} на свободе`, header);
+            notifs.success(player, `${rec.name} освободил вас`, header);
+
+            var pay = parseInt(price * police.unarrestPayK);
+
+            money.addCash(rec, pay, (res) => {
+                if (!res) return notifs.error(rec, `Ошибка начисления наличных`, header);
+            }, `Освобождение заключенного ${player.name}`);
+        }, `Освобождение через адвоката ${rec.name}`);
+    },
+    "government.unarrest.cancel": (player, recId) => {
+        if (!player.offer || player.offer.type != "unarrest") return;
+        var rec = mp.players.at(player.offer.playerId);
+        if (rec && rec.character) notifs.warning(rec, `${player.name} отклонил предложение`);
+        delete player.offer;
     },
 }

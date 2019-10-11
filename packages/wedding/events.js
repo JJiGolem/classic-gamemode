@@ -73,10 +73,12 @@ module.exports = {
         var out = (text) => {
             notifs.error(player, text, header);
         };
+        var offer = player.offer;
+        delete player.offer;
         if (!player.insideWedding) return out(`Вы не у церкви`);
         if (player.spouse) return out(`Вы уже состоите в браке`);
-        if (!player.offer || player.offer.type != "wedding") return out(`Предложение не найдено`);
-        var rec = mp.players.at(player.offer.playerId);
+        if (!offer || offer.type != "wedding") return out(`Предложение не найдено`);
+        var rec = mp.players.at(offer.playerId);
         if (!rec || !rec.character) return out(`Игрок #${recId} не найден`);
         if (player.dist(rec.position) > 5) return out(`${rec.name} далеко`);
         if (rec.spouse) return out(`${rec.name} уже состоит в браке`);
@@ -94,7 +96,7 @@ module.exports = {
     "wedding.add.cancel": (player, recId) => {
         if (!player.offer || player.offer.type != "wedding") return;
         var rec = mp.players.at(player.offer.playerId);
-        if (rec || !rec.character) notifs.warning(rec, `${player.name} отклонила предложение руки и сердца`);
+        if (rec && rec.character) notifs.warning(rec, `${player.name} отклонила предложение руки и сердца`);
         delete player.offer;
     },
 };
