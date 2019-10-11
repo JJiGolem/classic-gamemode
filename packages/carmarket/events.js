@@ -42,7 +42,13 @@ module.exports = {
         if (player.vehicle.key != 'private' || player.vehicle.owner != player.character.id) return player.call('carmarket.car.sell.ans', [0]);
 
         let price = (player.vehicle.properties.price * PRICE_CONFIG.SELL).toFixed();
-        console.log(price);
+       
+        let info = {
+            name: player.vehicle.properties.name,
+            id: player.vehicle.sqlId,
+            plate: player.vehicle.plate
+        }
+
         money.addCash(player, price, function(result) {
             if (result) {
                 try {
@@ -62,7 +68,7 @@ module.exports = {
                 console.log(`${player.name} не смог продать авто на рынке (addcash error)`)
                 player.call('carmarket.car.sell.ans', [2]);
             }
-        });
+        }, `Продажа на авторынке т/с ${info.name} (ID ${info.id} | PLATE ${info.plate})`);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (vehicle.key == 'market' && seat == -1) {
@@ -113,6 +119,11 @@ module.exports = {
             text: cant
         }]);
 
+        let info = {
+            name: player.vehicle.properties.name,
+            id: player.vehicle.sqlId,
+            plate: player.vehicle.plate
+        }
 
         money.removeCash(player, price, function(result) {
             if (result) {
@@ -155,11 +166,12 @@ module.exports = {
                     parkingDate: veh.parkingDate
                 });
 
+
                 player.call('carmarket.car.buy.ans', [2, carInfo]);
                 mp.events.call('vehicles.engine.toggle', player);
             } else {
                 player.call('carmarket.car.buy.ans', [1]);
             }
-        });
+        }, `Покупка на авторынке т/с ${info.name} (ID ${info.id} | PLATE ${info.plate})`);
     }
 }

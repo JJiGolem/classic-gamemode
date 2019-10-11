@@ -86,7 +86,7 @@ module.exports = {
                 player.call('busdriver.rent.ans', [1]);
                 if (player.vehicle) player.removeFromVehicle();
             }
-        });
+        }, `Аренда автобуса`);
 
     },
     "busdriver.route.start": (player, routeId, price) => {
@@ -144,7 +144,7 @@ module.exports = {
                 player.removeFromVehicle();
                 return;
             }
-
+            // Возможно стоит начислять в ЗП
             money.moveCash(player, driver, price, function (result) {
                 if (result) {
                     notify.success(driver, `+$${price} за пассажира`, `Автобус`);
@@ -153,7 +153,7 @@ module.exports = {
                     notify.error(player, 'Ошибка оплаты');
                     player.removeFromVehicle();
                 }
-            })
+            }, `Деньги за пассажира в автобусе`);
         }
     },
     "busdriver.checkpoint.entered": (player) => {
