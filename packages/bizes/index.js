@@ -39,6 +39,12 @@ let getBizByCharId = function(characterId) {
 let getBizByPlayerPos = function(player) {
     return bizes.find(x => player.dist(new mp.Vector3(x.info.x, x.info.y, x.info.z)) <= 10);
 }
+let getDateDays = function(date) {
+    return parseInt((date.getTime() - new Date().getTime()) / (24 * 60 * 60 * 1000));
+};
+let getBizRent = function(biz) {
+    return biz.info.price * bizesModules[biz.info.type].rentPerDayMultiplier;
+};
 let dropBiz = function(biz, sellToGov = false) {
     if (biz == null) return;
     if (biz.info.characterId == null) return;
@@ -97,8 +103,8 @@ let getBizInfoForApp = function(biz) {
         type: getTypeName(biz.info.type),
         cashBox: biz.info.cashBox,
         pos: [biz.info.x, biz.info.y, biz.info.z],
-        days: parseInt((biz.info.date - Date.now()) / (24 * 3600 * 1000)),
-        rent: biz.info.price * bizesModules[biz.info.type].rentPerDayMultiplier,
+        days: getDateDays(biz.info.date),
+        rent: getBizRent(biz),
         resourcesMax: biz.info.productsMaxCount,
         resources: biz.info.productsCount,
         price: biz.info.price,
@@ -115,8 +121,8 @@ let getBizInfoForBank = function(biz) {
         id: biz.info.id,
         type: getTypeName(biz.info.type),
         cashBox: biz.info.cashBox,
-        days: parseInt((biz.info.date - Date.now()) / (24 * 3600 * 1000)),
-        rent: biz.info.price * bizesModules[biz.info.type].rentPerDayMultiplier,
+        days: getDateDays(biz.info.date),
+        rent: getBizRent(biz),
     };
 };
 let getResourceName = function(type) {
@@ -359,6 +365,8 @@ module.exports = {
     getRandomDate: getRandomDate,
     getBizInfoForApp: getBizInfoForApp,
     getBizInfoForBank: getBizInfoForBank,
+    getDateDays: getDateDays,
+    getBizRent: getBizRent,
     getBizesFactionIds() {
         return bizes.map((elem) => elem.info.factionId);
     },
