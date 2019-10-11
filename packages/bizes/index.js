@@ -283,7 +283,7 @@ module.exports = {
             setTimer(biz);
             loadedCount++;
         }
-        mp.events.call("bizes.done");
+        mp.events.call("biz.done");
         console.log("[BIZES] " + loadedCount + " bizes loaded");
     },
     async createBiz(name, price, type, position) {
