@@ -301,4 +301,11 @@ module.exports = {
     "army.capture.start": (player) => {
         army.startCapture(player);
     },
+    "player.faction.changed": (player, oldVal) => {
+        if (!factions.isArmyFaction(oldVal)) return;
+        if (!army.inWar(player)) return;
+
+        player.call(`army.capture.stop`);
+        delete player.armyTeamId;
+    },
 }

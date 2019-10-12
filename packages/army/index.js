@@ -100,18 +100,19 @@ module.exports = {
         var header = `Учения`;
         mp.players.forEach(rec => {
             if (!rec.character) return;
-            var factionId = rec.character.factionId;
-            if (!factions.isArmyFaction(factionId)) return;
+            if (!factions.isArmyFaction(rec.character.factionId)) return;
+            if (!this.inWar(rec)) return;
 
-            if (factionId == winTeamId) {
-                var str = (war.teamA.id == winTeamId) ? 'attack' : 'defender';
+            if (rec.armyTeamId == winTeamId) {
+                var str = (this.war.teamA.id == winTeamId) ? 'attack' : 'defender';
                 rec.call(`prompt.showByName`, [`army_capture_${str}_win`]);
                 notifs.success(rec, `Ваша команда победила`, header);
-            } else if (factionId == loseTeamId) {
-                var str = (war.teamA.id == loseTeamId) ? 'attack' : 'defender';
+            } else if (rec.armyTeamId == loseTeamId) {
+                var str = (this.war.teamA.id == loseTeamId) ? 'attack' : 'defender';
                 rec.call(`prompt.showByName`, [`army_capture_${str}_lose`]);
                 notifs.error(rec, `Ваша команда проиграла`, header);
             }
+            delete rec.armyTeamId;
         });
 
         this.lastWarTime = Date.now();
@@ -144,5 +145,8 @@ module.exports = {
         var teamB = players.slice(teamA.length);
 
         return [teamA, teamB];
+    },
+    inWar(player) {
+        return [1, 2].includes(player.armyTeamId);
     },
 };

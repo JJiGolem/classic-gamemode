@@ -48,6 +48,12 @@ mp.army = {
 
         this.createCaptureZone(pos);
     },
+    stopCapture() {
+        this.removePlayerBlips();
+        this.captureTeams = [];
+        this.destroyCaptureZone();
+        mp.callCEFV(`captureScore.show = false`);
+    },
     createCaptureZone(pos) {
         this.destroyCaptureZone();
         var blip = mp.game.ui.addBlipForRadius(pos.x, pos.y, 50, 100);
@@ -65,9 +71,6 @@ mp.army = {
     },
     saveBlip(blip) {
         mp.storage.data.armyCaptureZone = blip;
-    },
-    stopCapture() {
-        mp.callCEFV(`captureScore.show = false`);
     },
     createPlayerBlip(player) {
         if (!this.captureTeams.length) return;
@@ -105,6 +108,9 @@ mp.army = {
 mp.events.add({
     "army.capture.start": (teamAId, teamBId, time, teamAScore = 0, teamBScore = 0, pos = null, teamAIds = [], teamBIds = []) => {
         mp.army.startCapture(teamAId, teamBId, time, teamAScore, teamBScore, pos, teamAIds, teamBIds);
+    },
+    "army.capture.stop": () => {
+        mp.army.stopCapture();
     },
     "render": () => {
         var blip = mp.army.captureZone;
