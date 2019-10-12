@@ -83,6 +83,18 @@ var prompt = new Vue({
             "carrier_job": {
                 text: "Загрузите товар в грузовик и доставьте на ферму или бизнес. Следите за ценами, чтобы заработать больше."
             },
+            "army_capture_attack_win": {
+                text: "Ваша команда победила в захвате",
+            },
+            "army_capture_attack_lose": {
+                text: "Ваша команда проиграла в захвате",
+            },
+            "army_capture_defender_win": {
+                text: "Ваша команда победила в обороне",
+            },
+            "army_capture_defender_lose": {
+                text: "Ваша команда проиграла в обороне",
+            },
             "capture_attack_win": {
                 text: "Влияние вашей группировки увеличилось",
             },

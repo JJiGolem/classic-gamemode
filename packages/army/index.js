@@ -49,10 +49,12 @@ module.exports = {
             return out(`Учение доступно с ${this.captureInterval[0]} до ${this.captureInterval[1]} ч.`);
 
         var teams = this.getTeams(player.position);
+        var teamAIds = teams[0].map(x => x.id);
+        var teamBIds = teams[1].map(x => x.id);
         debug(`teamA`);
-        debug(teams[0].map(x => x.id));
+        debug(teamAIds);
         debug(`teamB`);
-        debug(teams[1].map(x => x.id));
+        debug(teamBIds);
 
         this.war = {
             teamA: {
@@ -75,13 +77,45 @@ module.exports = {
         }, this.warTime);
 
         teams[0].forEach(rec => {
-            rec.call(`army.capture.start`, [this.war.teamA.id, this.war.teamB.id, this.warTime / 1000, 0, 0, this.war.pos]);
+            rec.armyTeamId = this.war.teamA.id;
+            rec.call(`army.capture.start`, [this.war.teamA.id, this.war.teamB.id, this.warTime / 1000, 0, 0, this.war.pos, teamAIds, teamBIds]);
             notifs.success(rec, `Ваша команда начала нападение`, header);
         });
         teams[1].forEach(rec => {
-            rec.call(`army.capture.start`, [this.war.teamB.id, this.war.teamA.id, this.warTime / 1000, 0, 0, this.war.pos]);
+            rec.armyTeamId = this.war.teamB.id;
+            rec.call(`army.capture.start`, [this.war.teamB.id, this.war.teamA.id, this.warTime / 1000, 0, 0, this.war.pos, teamAIds, teamBIds]);
             notifs.success(rec, `Ваша команда обороняется`, header);
         });
+    },
+    stopCapture() {
+        if (!this.war) return;
+
+        var winTeamId = this.war.teamA.id;
+        var loseTeamId = this.war.teamB.id;
+        if (this.war.teamB.score > this.war.teamA.score) {
+            winTeamId = this.war.teamB.id;
+            loseTeamId = this.war.teamA.id;
+        }
+
+        var header = `Учения`;
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            var factionId = rec.character.factionId;
+            if (!factions.isArmyFaction(factionId)) return;
+
+            if (factionId == winTeamId) {
+                var str = (war.teamA.id == winTeamId) ? 'attack' : 'defender';
+                rec.call(`prompt.showByName`, [`army_capture_${str}_win`]);
+                notifs.success(rec, `Ваша команда победила`, header);
+            } else if (factionId == loseTeamId) {
+                var str = (war.teamA.id == loseTeamId) ? 'attack' : 'defender';
+                rec.call(`prompt.showByName`, [`army_capture_${str}_lose`]);
+                notifs.error(rec, `Ваша команда проиграла`, header);
+            }
+        });
+
+        this.lastWarTime = Date.now();
+        this.war = null;
     },
     getTeams(pos) {
         var players = [];

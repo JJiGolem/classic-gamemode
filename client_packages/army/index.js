@@ -28,21 +28,22 @@ mp.army = {
         _SET_BLIP_SHOW_HEADING_INDICATOR: "0x5FBCA48327B914DF",
     },
     captureTimer: null,
-    captureFactions: [],
+    captureTeams: [],
     captureZone: null,
 
 
-    startCapture(teamAId, teamBId, time, teamAScore = 0, teamBScore = 0, pos) {
+    startCapture(teamAId, teamBId, time, teamAScore = 0, teamBScore = 0, pos = [], teamAIds = [], teamBIds = []) {
         time = parseInt(time);
         mp.callCEFV(`captureScore.start(${teamAId}, ${teamBId}, ${time}, ${teamAScore}, ${teamBScore})`);
         clearTimeout(this.captureTimer);
         this.removePlayerBlips();
-        this.captureFactions = [teamAId, teamBId];
+        this.captureTeams = [teamAId, teamBId];
 
-        this.createPlayerBlips();
+        this.createPlayerBlips(teamAIds, teamBIds);
         this.captureTimer = setTimeout(() => {
             this.removePlayerBlips();
-            this.captureFactions = [];
+            this.captureTeams = [];
+            this.destroyCaptureZone();
         }, time * 1000);
 
         this.createCaptureZone(pos);
@@ -69,33 +70,41 @@ mp.army = {
         mp.callCEFV(`captureScore.show = false`);
     },
     createPlayerBlip(player) {
-        if (!this.captureFactions.length) return;
+        if (!this.captureTeams.length) return;
         if (player.remoteId == mp.players.local.remoteId) return;
-        var factionId = player.getVariable("factionId");
-        if (!this.captureFactions.includes(factionId)) return;
+        var teamId = player.armyTeamId;
+        if (!this.captureTeams.includes(teamId)) return;
         player.createBlip(1);
         mp.game.invoke(this.natives._SET_BLIP_SHOW_HEADING_INDICATOR, player.blip, true);
-        mp.game.invoke(this.natives.SET_BLIP_COLOUR, player.blip, this.colors[factionId]);
+        mp.game.invoke(this.natives.SET_BLIP_COLOUR, player.blip, this.colors[teamId]);
     },
-    createPlayerBlips() {
-        // debug(`createPlayerBlips`)
-        mp.players.forEach(rec => {
+    createPlayerBlips(teamAIds, teamBIds) {
+        teamAIds.forEach(id => {
+            var rec = mp.players.atRemoteId(id);
+            if (!rec) return;
+            rec.armyTeamId = 1;
+            this.createPlayerBlip(rec);
+        });
+        teamBIds.forEach(id => {
+            var rec = mp.players.atRemoteId(id);
+            if (!rec) return;
+            rec.armyTeamId = 2;
             this.createPlayerBlip(rec);
         });
     },
     removePlayerBlips() {
         mp.players.forEach(rec => {
-            var factionId = rec.getVariable("factionId");
-            if (!mp.factions.isArmyFaction(factionId)) return;
+            var teamId = rec.armyTeamId;
+            if (teamId == null) return;
             rec.destroyBlip();
+            delete rec.armyTeamId;
         });
     },
 };
 
 mp.events.add({
-    "army.capture.start": (teamAId, teamBId, time, teamAScore = 0, teamBScore = 0, pos) => {
-        debug(pos)
-        mp.army.startCapture(teamAId, teamBId, time, teamAScore, teamBScore, pos);
+    "army.capture.start": (teamAId, teamBId, time, teamAScore = 0, teamBScore = 0, pos = null, teamAIds = [], teamBIds = []) => {
+        mp.army.startCapture(teamAId, teamBId, time, teamAScore, teamBScore, pos, teamAIds, teamBIds);
     },
     "render": () => {
         var blip = mp.army.captureZone;
