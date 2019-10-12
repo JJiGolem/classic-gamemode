@@ -577,9 +577,18 @@ module.exports = {
         access: 1,
         args: "",
         handler: (player, args, out) => {
+            var text = `Список включенных модулей:<br/>`
             activeServerModules.forEach(moduleName => {
-                out.debug(moduleName);
+                try {
+                    var commands = require(`../${moduleName}/commands`);
+                    var count = Object.keys(commands).length;
+                    text += `${moduleName} (${count} команд)<br/>`;
+                } catch (e) {
+                    text += `${moduleName}<br/>`;
+                }
             });
+            text += `<br/>Всего модулей: ${activeServerModules.length} шт.`;
+            out.log(text, player);
         }
     },
     "/module": {
