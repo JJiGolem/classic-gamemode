@@ -58,4 +58,7 @@ module.exports = {
 
         chat.broadcast(`!{#bd7aff}[WN] ${player.name}: ${text}`);
     },
+    isInStream(player) {
+        return this.liveStream.ownerId == player.id || this.liveStream.memberIds.includes(player.id);
+    },
 };
