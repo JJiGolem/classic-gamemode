@@ -306,6 +306,7 @@ module.exports = {
         player.call(`mafia.bizWar.stop`);
     },
     "playerDeath": (player, reason, killer) => {
+        if (player.bag) mafia.setBag(player, false);
         // killer = player; // for tests
         if (!killer || !killer.character) return;
         if (!player.character) return;
