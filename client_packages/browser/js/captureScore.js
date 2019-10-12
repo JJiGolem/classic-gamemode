@@ -33,9 +33,11 @@ var captureScore = new Vue({
     },
     computed: {
         leftImgSrc() {
+            if (this.leftBandId < 8 || this.leftBandId > 11) return null;
             return `img/captureScore/${this.leftBandId}.svg`;
         },
         rightImgSrc() {
+            if (this.rightBandId < 8 || this.rightBandId > 11) return null;
             return `img/captureScore/${this.rightBandId}.svg`;
         },
         progressWidth() {
