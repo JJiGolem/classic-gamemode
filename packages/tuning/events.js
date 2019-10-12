@@ -13,7 +13,7 @@ module.exports = {
             if (!player.vehicle.tuning || player.vehicle.properties.vehType != 0) return player.call('prompt.show', ['Этот транспорт нельзя модифицировать']);
             let occupants = player.vehicle.getOccupants();
             if (occupants.length > 1) return player.call('prompt.show', ['Нельзя тюнинговать транспорт с пассажирами']);
-            
+
             player.call('tuning.fadeOut');
             let customs = tuning.getCustomsDataById(shape.customsId);
             player.vehicle.dimension = player.id + 1;
@@ -29,6 +29,14 @@ module.exports = {
             player.call('vehicles.engine.toggle', [false]);
             player.vehicle.setVariable("engine", false);
             player.vehicle.isBeingTuned = true;
+
+            // TODO: from Carter: test bugfix with vehicle dimension
+            mp.players.forEach(rec => {
+                if (!rec.character) return;
+                if (rec.dimension != player.vehicle.dimension) return;
+
+                rec.dimension = 0;
+            });
         }
     },
     "tuning.end": (player, id) => {
