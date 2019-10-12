@@ -556,3 +556,24 @@ mp.events.add('house.add.garage.create', () => {
         rotation: null,
     }
 });
+
+
+let blips = new Array();
+mp.events.add("house.blip.create", (blipsInfo) => {
+    blipsInfo.forEach(blipInfo => {
+        let info = blipInfo.info; 
+        let specialColor = blipInfo.specialColor;
+        let blip = mp.blips.new(40, new mp.Vector3(info.x, info.y, info.z),
+        {
+            shortRange: true,
+            color: !specialColor ? info.color : specialColor,
+        });
+        blips[info.id] = blip;
+    });
+});
+mp.events.add("house.blip.color", (id, color) => {
+    blips[id].setColour(color);
+});
+mp.events.add("house.blip.destroy", (id) => {
+    blips[id].destroy();
+});
