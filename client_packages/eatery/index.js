@@ -1,6 +1,6 @@
 mp.events.add({
     "eatery.enter": (data, priceConfig) => {
-        // setSupermarketHeaders(data.bType);
+        setHeaders(data.bType);
         setPrices(priceConfig, data.priceMultiplier);
         mp.events.call('selectMenu.show', 'eateryMain');
     },
@@ -39,4 +39,32 @@ function setPrices(config, multiplier) {
     mp.callCEFV(`selectMenu.menus["eateryMain"].items[2].values[0] = '$${config.pizza}'`);
     mp.callCEFV(`selectMenu.menus["eateryMain"].items[3].values[0] = '$${config.chips}'`);
     mp.callCEFV(`selectMenu.menus["eateryMain"].items[4].values[0] = '$${config.pizza}'`);
+}
+
+function setHeaders(type) {
+    let img;
+    switch (type) {
+        case 0:
+            img = 'bishop';
+            break;
+        case 1:
+            img = 'burger';
+            break;
+        case 2:
+            img = 'chihua';
+            break;
+        case 3:
+            img = 'cluckin';
+            break;
+        case 4:
+            img = 'hornys';
+            break;
+        case 5:
+            img = 'taco';
+            break;
+        case 6:
+            img = 'upnatom';
+            break;
+    }
+    mp.callCEFV(`selectMenu.menus["eateryMain"].headerImg = '${img}.png'`);
 }
