@@ -392,6 +392,10 @@ module.exports = {
                 var pos = new mp.Vector3(house.info.Interior.x, house.info.Interior.y, house.info.Interior.z);
                 player.spawn(pos);
                 player.dimension = house.info.id;
+                player.house = {
+                    id: house.info.id,
+                    place: 1
+                };
                 break;
             case 2: //организация
                 var pos = factions.getMarker(player.character.factionId).position;

@@ -6,6 +6,7 @@ let garages = new Array();
 
 let inventory;
 let money;
+let notifications;
 let vehicles;
 let carmarket;
 let timer;
@@ -48,11 +49,13 @@ let dropHouse = function(house, sellToGov) {
                             if (sellToGov) {
                                 mp.players.at(j).call('house.sell.toGov.ans', [1]);
                             } else {
+                                notifications.warning(mp.players.at(j), "Ваш дом отобрали за неуплату налогов", "Внимание");
                                 mp.players.at(j).call('phone.app.remove', ["house", house.info.id]);
                             }
                             return;
                         }
                     }
+                    notifications.save(characterId, "warning", "Ваш дом отобрали за неуплату налогов", "Внимание");
                 } else {
                     console.log("[HOUSES] House dropped " + house.info.id + ". But player didn't getmoney");
                 }
@@ -69,6 +72,7 @@ module.exports = {
     async init() {
         inventory = call('inventory');
         money = call('money');
+        notifications = call('notifications');
         vehicles = call('vehicles');
         carmarket = call('carmarket');
         timer = call("timer");
