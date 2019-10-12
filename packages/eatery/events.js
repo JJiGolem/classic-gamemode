@@ -24,4 +24,54 @@ module.exports = {
             player.call('eatery.exit');
         }
     },
+    "eatery.products.buy": (player, productId) => {
+        let eateryId = player.currentEateryId;
+        if (eateryId == null) return;
+
+        let productName;
+        switch (productId) {
+            case 0:
+                productName = 'hamburger';
+                break;
+            case 1:
+                productName = 'pizza';
+                break;
+            case 2:
+                productName = 'hotdog';
+                break;
+            case 3:
+                productName = 'chips';
+                break;
+            case 4:
+                productName = 'cola';
+                break;
+        }
+        let price = eatery.productsConfig[productName] * eatery.productPrice * eatery.getPriceMultiplier(eateryId);
+        if (player.character.cash < price) return player.call('eatery.products.buy.ans', [2]);
+        let productsAvailable = eatery.getProductsAmount(eateryId);
+        if (eatery.productsConfig[productName] > productsAvailable) return player.call('eatery.products.buy.ans', [3]);
+
+        let itemId = eatery.itemIds[productName];
+        let params = {};
+
+        // if (productName == 'water') {
+        //     params.thirst = 20;
+        // } else if (productName == 'chocolate') {
+        //     params.satiety = 15;
+        //     params.thirst = -5;
+        // }
+
+        inventory.addItem(player, itemId, params, (e) => {
+            if (e) return player.call('eatery.products.buy.ans', [4, e]);
+            money.removeCash(player, price, function (result) {
+                if (result) {
+                        eatery.removeProducts(eateryId, eatery.productsConfig[productName]);
+                        eatery.updateCashbox(eateryId, price);
+                        player.call('eatery.products.buy.ans', [1]);
+                } else {
+                    player.call('eatery.products.buy.ans', [0]);
+                }
+            }, `Покупка в закусочной ${productName}`);
+        });
+    },
 }
