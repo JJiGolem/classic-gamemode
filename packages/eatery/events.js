@@ -54,12 +54,22 @@ module.exports = {
         let itemId = eatery.itemIds[productName];
         let params = {};
 
-        // if (productName == 'water') {
-        //     params.thirst = 20;
-        // } else if (productName == 'chocolate') {
-        //     params.satiety = 15;
-        //     params.thirst = -5;
-        // }
+        if (productName == 'hamburger') {
+            params.satiety = 50;
+            params.thirst = -10;
+        } else if (productName == 'pizza') {
+            params.satiety = 40;
+            params.thirst = -5;
+        } else if (productName == 'hotdog') {
+            params.satiety = 45;
+            params.thirst = -10;
+        } else if (productName == 'chips') {
+            params.satiety = 20;
+            params.thirst = -5;
+        } else if (productName == 'cola') {
+            params.satiety = 5;
+            params.thirst = 30;
+        }
 
         inventory.addItem(player, itemId, params, (e) => {
             if (e) return player.call('eatery.products.buy.ans', [4, e]);
