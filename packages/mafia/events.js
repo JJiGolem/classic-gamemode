@@ -280,6 +280,27 @@ module.exports = {
             mafia.setBag(rec, null);
         }
     },
+    "mafia.follow": (player, recId) => {
+        var header = `Следование`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var rec = mp.players.at(recId);
+        if (!rec || !rec.character) return out(`Гражданин не найден`);
+        if (!factions.isMafiaFaction(player.character.factionId)) return out(`Нет прав для использования`);
+        if (!rec.isFollowing) {
+            if (!rec.cuffs || rec.cuffs.itemId != 54) return out(`${rec.name} не связан`);
+            rec.isFollowing = true;
+            rec.call(`mafia.follow.start`, [player.id]);
+            notifs.success(player, `${rec.name} следует за вами`, header);
+            notifs.info(rec, `Вы следуете за ${player.name}`, header);
+        } else {
+            delete rec.isFollowing;
+            rec.call(`mafia.follow.stop`);
+            notifs.success(player, `${rec.name} не следует за вами`, header);
+            notifs.info(rec, `Вы не следуете за ${player.name}`, header);
+        }
+    },
     "player.faction.changed": (player, oldVal) => {
         if (!mafia.inWar(oldVal)) return;
         player.call(`mafia.bizWar.stop`);
