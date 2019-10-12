@@ -1,5 +1,5 @@
 "use strict";
-var bands = call('bands');
+var bands = require('../bands');
 var inventory = call('inventory');
 var mafia = call('mafia');
 var money = require('../money')
