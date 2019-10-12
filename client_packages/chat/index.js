@@ -153,6 +153,7 @@ function playChatAnimation(id) {
     if (mp.farms.hasProduct(player)) return;
     if (mp.farms.isCropping(player)) return;
     if (mp.factions.hasBox(player)) return;
+    if (player.getVariable("cuffs")) return;
 
     mp.animations.playAnimation(player, {
         dict: "special_ped@baygor@monologue_3@monologue_3e",
