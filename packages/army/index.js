@@ -49,62 +49,96 @@ module.exports = {
             return out(`Учение доступно с ${this.captureInterval[0]} до ${this.captureInterval[1]} ч.`);
 
         var teams = this.getTeams(player.position);
+        var teamAIds = teams[0].map(x => x.id);
+        var teamBIds = teams[1].map(x => x.id);
         debug(`teamA`);
-        debug(teams[0].map(x => x.id));
+        debug(teamAIds);
         debug(`teamB`);
-        debug(teams[1].map(x => x.id));
+        debug(teamBIds);
 
-        notifs.warning(player, "in development...")
-        return;
-
-
-        var enemyFaction = factions.getFaction(zone.factionId);
-        this.wars[zone.id] = {
-            band: {
-                id: faction.id,
+        this.war = {
+            teamA: {
+                id: 1,
                 score: 0,
             },
-            enemyBand: {
-                id: zone.factionId,
+            teamB: {
+                id: 2,
                 score: 0,
             },
-            startTime: Date.now()
+            startTime: Date.now(),
+            pos: player.position
         };
         setTimeout(() => {
             try {
-                this.stopCapture(zone);
+                this.stopCapture();
             } catch (e) {
                 console.log(e);
             }
         }, this.warTime);
+
+        teams[0].forEach(rec => {
+            rec.armyTeamId = this.war.teamA.id;
+            rec.call(`army.capture.start`, [this.war.teamA.id, this.war.teamB.id, this.warTime / 1000, 0, 0, this.war.pos, teamAIds, teamBIds]);
+            notifs.success(rec, `Ваша команда начала нападение`, header);
+        });
+        teams[1].forEach(rec => {
+            rec.armyTeamId = this.war.teamB.id;
+            rec.call(`army.capture.start`, [this.war.teamB.id, this.war.teamA.id, this.warTime / 1000, 0, 0, this.war.pos, teamAIds, teamBIds]);
+            notifs.success(rec, `Ваша команда обороняется`, header);
+        });
+    },
+    stopCapture() {
+        if (!this.war) return;
+
+        var winTeamId = this.war.teamA.id;
+        var loseTeamId = this.war.teamB.id;
+        if (this.war.teamB.score > this.war.teamA.score) {
+            winTeamId = this.war.teamB.id;
+            loseTeamId = this.war.teamA.id;
+        }
+
+        var header = `Учения`;
         mp.players.forEach(rec => {
             if (!rec.character) return;
             var factionId = rec.character.factionId;
-            rec.call(`bands.bandZones.flash`, [zone.id, true]);
-            if (!factionId) return;
-            if (!factions.isBandFaction(factionId)) return;
-            if (factionId == faction.id) {
-                rec.call(`bands.capture.start`, [factionId, zone.factionId, this.warTime / 1000]);
-                notifs.success(rec, `Ваша банда напала на ${enemyFaction.name}`, header);
-            } else if (factionId == zone.factionId) {
-                rec.call(`bands.capture.start`, [zone.factionId, faction.id, this.warTime / 1000]);
-                notifs.info(rec, `На вашу территорию напала банда ${faction.name}`, header);
+            if (!factions.isArmyFaction(factionId)) return;
+
+            if (factionId == winTeamId) {
+                var str = (war.teamA.id == winTeamId) ? 'attack' : 'defender';
+                rec.call(`prompt.showByName`, [`army_capture_${str}_win`]);
+                notifs.success(rec, `Ваша команда победила`, header);
+            } else if (factionId == loseTeamId) {
+                var str = (war.teamA.id == loseTeamId) ? 'attack' : 'defender';
+                rec.call(`prompt.showByName`, [`army_capture_${str}_lose`]);
+                notifs.error(rec, `Ваша команда проиграла`, header);
             }
         });
+
+        this.lastWarTime = Date.now();
+        this.war = null;
     },
     getTeams(pos) {
-        var members = {};
+        var players = [];
         mp.players.forEachInRange(pos, 100, (rec) => {
             if (!rec.character) return;
             if (!factions.isArmyFaction(rec.character.factionId)) return;
 
-            var dist = rec.dist(pos);
-            members[dist] = rec;
+            players.push(rec);
         });
-        var players = Object.values(members);
 
         debug(`players`)
         debug(players.map(x => x.id));
+
+        players.sort((recA, recB) => {
+            var distA = recA.dist(pos);
+            var distB = recB.dist(pos);
+
+            return distA - distB;
+        });
+
+        debug(`sorted players`)
+        debug(players.map(x => x.id));
+
 
         var teamA = players.slice(0, Math.ceil(players.length / 2));
         var teamB = players.slice(teamA.length);

@@ -2,6 +2,8 @@ var killList = new Vue({
     el: "#killList",
     data: {
         colors: {
+            1: "#00b500",
+            2: "#da30ff",
             8: "#00b500",
             9: "#da30ff",
             10: "#fff629",
