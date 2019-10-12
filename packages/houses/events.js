@@ -18,6 +18,7 @@ module.exports = {
         };
     },
     "characterInit.done": (player) => {
+        housesService.loadBlips(player);
         if (player.character.admin < 5) return;
         housesService.initHouseAdding(player);
     },
