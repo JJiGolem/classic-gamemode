@@ -1,6 +1,7 @@
 "use strict";
 var factions = require('../factions');
 var chat = require('./index');
+let news = call('news');
 
 module.exports = {
 
@@ -54,41 +55,34 @@ module.exports = {
             if (message == '((') return mp.events.call('/me', player, 'сильно расстроился');
 
             switch (type) {
-                case 0:
-                    {
-                        mp.events.call('chat.action.say', player, message);
-                        break;
-                    }
-                case 1:
-                    {
-                        mp.events.call('/s', player, message);
-                        break;
-                    }
-                case 2:
-                    {
-                        mp.events.call('/r', player, message);
-                        break;
-                    }
-                case 3:
-                    {
-                        mp.events.call('/n', player, message);
-                        break;
-                    }
-                case 4:
-                    {
-                        mp.events.call('/me', player, message);
-                        break;
-                    }
-                case 5:
-                    {
-                        mp.events.call('/do', player, message);
-                        break;
-                    }
-                case 6:
-                    {
-                        mp.events.call('/try', player, message);
-                        break;
-                    }
+                case 0: {
+                    mp.events.call('chat.action.say', player, message);
+                    break;
+                }
+                case 1: {
+                    mp.events.call('/s', player, message);
+                    break;
+                }
+                case 2: {
+                    mp.events.call('/r', player, message);
+                    break;
+                }
+                case 3: {
+                    mp.events.call('/n', player, message);
+                    break;
+                }
+                case 4: {
+                    mp.events.call('/me', player, message);
+                    break;
+                }
+                case 5: {
+                    mp.events.call('/do', player, message);
+                    break;
+                }
+                case 6: {
+                    mp.events.call('/try', player, message);
+                    break;
+                }
             }
         }
     },
@@ -112,8 +106,13 @@ module.exports = {
     },
 
     "chat.action.say": (player, message) => {
+        var playerInStream = news.isInStream(player);
+
         mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
+                // Тот, кто участвует в эфире Weazel News, не слышит себя в чате
+                if (playerInStream && currentPlayer.id == player.id) return;
+
                 currentPlayer.call('chat.action.say', [player.name, player.id, message]);
 
                 if (currentPlayer.spy) { // если на игроке установлена прослушка
@@ -135,8 +134,13 @@ module.exports = {
     },
 
     "/s": (player, message) => {
+        var playerInStream = news.isInStream(player);
+
         mp.players.forEachInRange(player.position, 20, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
+                // Тот, кто участвует в эфире Weazel News, не слышит себя в чате
+                if (playerInStream && currentPlayer.id == player.id) return;
+
                 currentPlayer.call('chat.action.shout', [player.name, player.id, message]);
 
                 if (currentPlayer.spy) { // если на игроке установлена прослушка
