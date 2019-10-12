@@ -298,4 +298,7 @@ module.exports = {
             factions.setAmmo(faction, faction.ammo - army.ammoAmmo * ammo);
         });
     },
+    "army.capture.start": (player) => {
+        army.startCapture(player);
+    },
 }
