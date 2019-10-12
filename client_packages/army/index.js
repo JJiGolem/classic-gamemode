@@ -63,7 +63,6 @@ mp.army = {
         mp.storage.data.armyCaptureZone = null;
     },
     saveBlip(blip) {
-        if (!mp.storage.data.armyCaptureZone) return;
         mp.storage.data.armyCaptureZone = blip;
     },
     stopCapture() {
@@ -97,6 +96,10 @@ mp.events.add({
     "army.capture.start": (teamAId, teamBId, time, teamAScore = 0, teamBScore = 0, pos) => {
         debug(pos)
         mp.army.startCapture(teamAId, teamBId, time, teamAScore, teamBScore, pos);
+    },
+    "render": () => {
+        var blip = mp.army.captureZone;
+        if (blip) mp.game.invoke(mp.bands.natives.SET_BLIP_ROTATION, blip, 0);
     },
 });
 
