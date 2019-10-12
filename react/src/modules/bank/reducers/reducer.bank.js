@@ -49,12 +49,34 @@ export default function bank(state = initialState, action) {
             };
 
         case 'PAY_HOUSE_BANK':
+            const newStateHouse = {
+                ...state,
+                money: money - payload.money,  
+            };
+
+            newStateHouse.houses[0].days += payload.days;
+
+            return newStateHouse;
+
         case 'PAY_BUSINESS_BANK':
+                const newStateBiz = {
+                    ...state,
+                    money: money - payload.money,  
+                };
+    
+                newStateBiz.biz[0].days += payload.days;
+    
+                return newStateBiz;
+
         case 'PUSH_CASHBOX_BANK':
-            return {
+            const newStateCashBoxPush = {
                 ...state,
                 money: money - payload.money
             };
+
+            newStateCashBoxPush.biz[0].cashBox += payload.money;
+
+            return newStateCashBoxPush;
 
         case 'SET_ANSWER_BANK':
             return  {
@@ -78,10 +100,14 @@ export default function bank(state = initialState, action) {
             };
 
         case 'POP_CASHBOX_BANK':
-            return {
+            const newStateCashBoxPop = {
                 ...state,
-                money: money + payload.money
-            }
+                money: money - payload.money
+            };
+
+            newStateCashBoxPop.biz[0].cashBox -= payload.money;
+
+            return newStateCashBoxPop;
     }
 
     return state;

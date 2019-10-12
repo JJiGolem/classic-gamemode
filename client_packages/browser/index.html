@@ -1326,7 +1326,7 @@
 
     <script type="text/x-template" id="player-menu-report">
         <div class="report">
-            <div class="head">Задайте вопрос или оставьте жалобу на игрока указав его ID/Имя и причину жалобы</div>
+            <div class="head">Задайте вопрос или оставьте жалобу на игрока, указав его ID и причину жалобы</div>
             <input placeholder="Введите вопрос или жалобу..." v-model="message" :maxlength="maxlength" @keypress.enter="send()" @focus="setFocus(true)" @blur="setFocus(false)" />
             <div>Осталось символов: {{ chars }}</div>
             <div class="send" @click="send()">Отправить</div>
@@ -1367,11 +1367,11 @@
                 </div>
                 <div class="record">
                     <div class="circle"><img src="img/playerMenu/clock.svg" /></div>
-                    <div class="text">А также пробыть на нашем сервере 10 часов</div>
+                    <div class="text">А также отыграть на нашем сервере 10 часов</div>
                 </div>
                 <div class="record">
                     <div class="circle"><img src="img/playerMenu/smile.svg" /></div>
-                    <div>По достижению онлайна 10 часов, вам и вашему другу<br />начисляется игровая валюта</div>
+                    <div>По достижении онлайна 10 часов вам и вашему другу<br />будет начислена игровая валюта</div>
                 </div>
             </div>
             <div class="right">
