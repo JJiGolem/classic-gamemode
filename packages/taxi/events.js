@@ -149,6 +149,7 @@ module.exports = {
         console.log(`водитель ${driver.name} привез игрока ${client.name} за $${price}`);
 
         client.call('taxi.client.destination.reach');
+        // todo добавить комиссию с водителя
         money.removeCash(client, price, function (result) {
             if (result) {
                 client.call('notifications.push.success', ['Вы оплатили поездку', 'Такси']);

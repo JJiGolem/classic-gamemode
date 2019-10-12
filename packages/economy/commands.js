@@ -9,14 +9,12 @@ module.exports = {
         description: "Посмотреть все экономические факторы",
         args: "",
         handler: (player, args) => {
-            if (args[0] == null) {
-                player.call('economy.show', [JSON.stringify(economy.getAll())]);
-            }
-            else {
-                let info = economy.getByModuleName(args[0]);
-                if (info.length == 0) return notifs != null && notifs.error(player, "Такого модуля не существует", "Ошибка");
-                player.call('economy.show', [JSON.stringify(info)]);
-            }
+            let infoArray = new Array();
+            activeServerModules.forEach(moduleName => {
+                let info = economy.getByModuleName(moduleName);
+                infoArray.push({name: moduleName, info: info});
+            });
+            player.call('economy.show', [JSON.stringify(infoArray)]);
         }
     },
 }

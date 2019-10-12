@@ -354,7 +354,7 @@ module.exports = {
     getHouseInfoForBank(house) {
         if (house == null) return null;
         return {
-            id: house.info.id,
+            name: house.info.id,
             class: house.info.Interior.class,
             rent: house.info.price * house.info.Interior.rent,
             days: this.getDateDays(house.info.date)
