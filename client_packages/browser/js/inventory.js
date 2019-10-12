@@ -1076,7 +1076,10 @@ var inventory = new Vue({
         // ******************  [ Hotkeys ] ******************
         bindHotkey(itemSqlId, key) {
             var item = this.getItem(itemSqlId);
-            if (!item) return this.notify(`Предмет должен находиться в инвентаре`);
+            if (!item) {
+                this.unbindHotkey(key);
+                return this.notify(`Предмет должен находиться в инвентаре`);
+            }
             this.clearHotkeys(item);
             Vue.set(this.hotkeys, key, item);
             mp.trigger(`inventory.saveHotkey`, itemSqlId, key);
