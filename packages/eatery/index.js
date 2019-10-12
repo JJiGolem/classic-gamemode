@@ -111,5 +111,8 @@ module.exports = {
             priceConfig[key] = this.productsConfig[key] * this.productPrice;
         }
         return priceConfig;
+    },
+    addShopToList(shop) {
+        shops.push(shop);
     }
 }

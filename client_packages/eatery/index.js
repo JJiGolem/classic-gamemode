@@ -7,6 +7,26 @@ mp.events.add({
     "eatery.exit": () => {
         mp.events.call(`selectMenu.hide`);
     },
+    "eatery.products.buy.ans": (ans, data) => {
+        mp.callCEFV('selectMenu.loader = false');
+        switch (ans) {
+            case 0:
+                mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
+                break;
+            case 1:
+                mp.callCEFV(`selectMenu.notification = 'Вы приобрели товар'`);
+                break;
+            case 2:
+                mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+                break;
+            case 3:
+                mp.callCEFV(`selectMenu.notification = 'В закусочной кончились продукты'`);
+                break;
+            case 4:
+                mp.callCEFV(`selectMenu.notification = '${data}'`);
+                break;
+        }
+    }
 });
 
 

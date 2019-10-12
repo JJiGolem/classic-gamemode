@@ -6744,12 +6744,21 @@ var selectMenu = new Vue({
                         } else {
                             selectMenu.loader = true;
                         }
-                        // if (e.itemName == 'Бутылка воды') {
-                        //     mp.trigger('callRemote', 'supermarket.products.buy', 0);
-                        // }
-                        // if (e.itemName == 'Плитка шоколада') {
-                        //     mp.trigger('callRemote', 'supermarket.products.buy', 1);
-                        // }
+                        if (e.itemName == 'Гамбургер') {
+                            mp.trigger('callRemote', 'eatery.products.buy', 0);
+                        }
+                        if (e.itemName == 'Хот-дог') {
+                            mp.trigger('callRemote', 'eatery.products.buy', 1);
+                        }
+                        if (e.itemName == 'Кусок пиццы') {
+                            mp.trigger('callRemote', 'eatery.products.buy', 2);
+                        }
+                        if (e.itemName == 'Пачка чипсов') {
+                            mp.trigger('callRemote', 'eatery.products.buy', 3);
+                        }
+                        if (e.itemName == 'Банка колы') {
+                            mp.trigger('callRemote', 'eatery.products.buy', 4);
+                        }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.show = false;
