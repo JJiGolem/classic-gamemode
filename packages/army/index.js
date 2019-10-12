@@ -93,18 +93,27 @@ module.exports = {
         });
     },
     getTeams(pos) {
-        var members = {};
+        var players = [];
         mp.players.forEachInRange(pos, 100, (rec) => {
             if (!rec.character) return;
             if (!factions.isArmyFaction(rec.character.factionId)) return;
 
-            var dist = rec.dist(pos);
-            members[dist] = rec;
+            players.push(rec);
         });
-        var players = Object.values(members);
 
         debug(`players`)
         debug(players.map(x => x.id));
+
+        players.sort((recA, recB) => {
+            var distA = recA.dist(pos);
+            var distB = recB.dist(pos);
+
+            return distA - distB;
+        });
+
+        debug(`sorted players`)
+        debug(players.map(x => x.id));
+
 
         var teamA = players.slice(0, Math.ceil(players.length / 2));
         var teamB = players.slice(teamA.length);
