@@ -54,42 +54,33 @@ module.exports = {
         debug(`teamB`);
         debug(teams[1].map(x => x.id));
 
-        notifs.warning(player, "in development...")
-        return;
-
-
-        var enemyFaction = factions.getFaction(zone.factionId);
-        this.wars[zone.id] = {
-            band: {
-                id: faction.id,
+        this.war = {
+            teamA: {
+                id: 1,
                 score: 0,
             },
-            enemyBand: {
-                id: zone.factionId,
+            teamB: {
+                id: 2,
                 score: 0,
             },
-            startTime: Date.now()
+            startTime: Date.now(),
+            pos: player.position
         };
         setTimeout(() => {
             try {
-                this.stopCapture(zone);
+                this.stopCapture();
             } catch (e) {
                 console.log(e);
             }
         }, this.warTime);
-        mp.players.forEach(rec => {
-            if (!rec.character) return;
-            var factionId = rec.character.factionId;
-            rec.call(`bands.bandZones.flash`, [zone.id, true]);
-            if (!factionId) return;
-            if (!factions.isBandFaction(factionId)) return;
-            if (factionId == faction.id) {
-                rec.call(`bands.capture.start`, [factionId, zone.factionId, this.warTime / 1000]);
-                notifs.success(rec, `Ваша банда напала на ${enemyFaction.name}`, header);
-            } else if (factionId == zone.factionId) {
-                rec.call(`bands.capture.start`, [zone.factionId, faction.id, this.warTime / 1000]);
-                notifs.info(rec, `На вашу территорию напала банда ${faction.name}`, header);
-            }
+
+        teams[0].forEach(rec => {
+            rec.call(`army.capture.start`, [this.war.teamA.id, this.war.teamB.id, this.warTime / 1000, 0, 0, this.war.pos]);
+            notifs.success(rec, `Ваша команда начала нападение`, header);
+        });
+        teams[1].forEach(rec => {
+            rec.call(`army.capture.start`, [this.war.teamB.id, this.war.teamA.id, this.warTime / 1000, 0, 0, this.war.pos]);
+            notifs.success(rec, `Ваша команда обороняется`, header);
         });
     },
     getTeams(pos) {
