@@ -308,4 +308,19 @@ module.exports = {
         player.call(`army.capture.stop`);
         delete player.armyTeamId;
     },
+    "playerDeath": (player, reason, killer) => {
+        // killer = player; // for tests
+        if (!killer || !killer.character) return;
+        if (!player.character) return;
+        if (!player.character.factionId) return;
+        if (!factions.isArmyFaction(player.character.factionId)) return;
+        if (!army.inWar(player)) return;
+        if (player.getVariable("knocked")) return;
+        if (!killer.character.factionId) return;
+        if (!factions.isArmyFaction(killer.character.factionId)) return;
+        if (!army.inWar(killer)) return;
+        if (killer.armyTeamId == player.armyTeamId) return;
+
+        army.giveScore(killer, player, reason);
+    },
 }

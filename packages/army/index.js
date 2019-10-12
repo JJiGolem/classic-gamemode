@@ -12,8 +12,6 @@ module.exports = {
     lastWarTime: 0,
     // Время отдыха между учениями (ms)
     waitWarTime: 20 * 60 * 1000,
-    // Повторное участие в учении после убийства
-    reveangeKill: false,
     // Время прохождения учения (ms)
     warTime: 5 * 60 * 1000,
     // Промежуток часов, в который можно начать учение
@@ -148,5 +146,35 @@ module.exports = {
     },
     inWar(player) {
         return [1, 2].includes(player.armyTeamId);
+    },
+    giveScore(player, enemy, reason) {
+        var teamId, score;
+        var war = this.war;
+
+        if (player.armyTeamId == war.teamA.id) {
+            war.teamA.score++;
+            teamId = war.teamA.id;
+            score = war.teamA.score;
+        } else if (player.armyTeamId == war.teamB.id) {
+            war.teamB.score++;
+            teamId = war.teamB.id;
+            score = war.teamB.score;
+        }
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            var factionId = rec.character.factionId;
+            if (!factions.isArmyFaction(factionId)) return;
+            if (!this.inWar(rec)) return;
+
+            rec.call(`army.capture.killList.log`, [{
+                name: enemy.name,
+                teamId: enemy.armyTeamId
+            }, {
+                name: player.name,
+                teamId: player.armyTeamId
+            }, reason.toString()]);
+            rec.call(`army.capture.score.set`, [teamId, score]);
+        });
     },
 };

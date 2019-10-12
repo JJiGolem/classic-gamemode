@@ -72,6 +72,30 @@ mp.army = {
     saveBlip(blip) {
         mp.storage.data.armyCaptureZone = blip;
     },
+    setCaptureScore(teamId, score) {
+        mp.callCEFV(`captureScore.setScore(${teamId}, ${score})`);
+    },
+    logKill(target, killer, reason) {
+        reason = parseInt(reason);
+        // if (killer)
+        //     debug(`[KILL-LIST] ${killer.name} killed ${target.name} with reason ${reason}`)
+        // else
+        //     debug(`[KILL-LIST] ${target.name} сам себя with reason ${reason}`)
+
+
+        if (typeof target == 'object') target = JSON.stringify(target);
+        if (typeof killer == 'object') killer = JSON.stringify(killer);
+        // самоубийство
+        if (reason == 3452007600) return mp.callCEFV(`killList.add('${target}')`);
+        // на авто
+        if (reason == 2741846334) return mp.callCEFV(`killList.add('${target}', '${killer}', 'car')`);
+        // рукопашка
+        if (reason == 2725352035) return mp.callCEFV(`killList.add('${target}', '${killer}', 'hand')`);
+
+        // огнестрел, либо что-то еще? :D
+        var name = mp.weapons.getWeaponName(reason);
+        mp.callCEFV(`killList.add('${target}', '${killer}', '${name}')`);
+    },
     createPlayerBlip(player) {
         if (!this.captureTeams.length) return;
         if (player.remoteId == mp.players.local.remoteId) return;
@@ -111,6 +135,12 @@ mp.events.add({
     },
     "army.capture.stop": () => {
         mp.army.stopCapture();
+    },
+    "army.capture.score.set": (teamId, score) => {
+        mp.army.setCaptureScore(teamId, score);
+    },
+    "army.capture.killList.log": (target, killer, reason) => {
+        mp.army.logKill(target, killer, reason);
     },
     "render": () => {
         var blip = mp.army.captureZone;
