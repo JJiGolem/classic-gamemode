@@ -80,7 +80,7 @@ class BankTransfer extends Component {
             mp.trigger('bank.transfer.ask', parseInt(user), parseInt(transferMoney));
 
             // setTimeout(() => {
-            //     this.props.setAskAnswer({ nick: 'Dun Hill', number: 2662, money: 2600 });
+            //     this.props.setAskAnswer(null);
             // }, 1000)
         }
     }
@@ -139,7 +139,7 @@ const mapDispatchToProps = dispatch => ({
     closePage: () => dispatch(closeBankPage()),
     addPage: page => dispatch(addBankPage(page)),
     setLoading: flag => dispatch(setLoadingBank(flag)),
-    setAskAnswer: askAnswer => dispatch(setAskAnswerBank(askAnswer))
+    setAskAnswer: nick => dispatch(setAskAnswerBank(nick))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BankTransfer);

@@ -220,7 +220,7 @@ class DialogPage extends Component {
                         {this.getMessages(dialog.number)}
                     </div>
 
-                    { dialog.PhoneMessages.some(message => !message.isRead) 
+                    { dialog.PhoneMessages && dialog.PhoneMessages.some(message => !message.isRead) 
                         && this.refList
                         && this.refList.scrollTop !== this.refList.scrollHeight 
                         && this.getNotReadMessages() }

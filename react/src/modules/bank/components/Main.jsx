@@ -19,7 +19,7 @@ class Main extends Component {
     //     this.props.loadInfo({
     //         number: '1223',
     //         cash: 223123,
-    //         money: 1222,
+    //         money: 400,
     //         name: 'Immanuel Swift',
     //         houses: [
     //             {
@@ -85,7 +85,7 @@ class Main extends Component {
                     <div className='info_panel_field-bank-react'>
                         ${ bank.money.toLocaleString('ru-RU') }
                         <div>
-                            На счету
+                            На счете
                             <svg xmlns="http://www.w3.org/2000/svg" width="15%" height="15%" viewBox="0 0 25.524 17.016">
                                 <g id="Group_46" data-name="Group 46" transform="translate(0 -85.333)">
                                     <path id="Path_55" data-name="Path 55" d="M365.326,277.333h-1.063a1.6,1.6,0,0,0-1.6,1.6v1.063a1.6,1.6,0,0,0,1.6,1.6h1.063a1.6,1.6,0,0,0,1.6-1.6v-1.063A1.6,1.6,0,0,0,365.326,277.333Zm.532,2.659a.532.532,0,0,1-.532.532h-1.063a.532.532,0,0,1-.532-.532v-1.063a.532.532,0,0,1,.532-.532h1.063a.532.532,0,0,1,.532.532Z" transform="translate(-344.587 -182.429)" fill="#fff"/>

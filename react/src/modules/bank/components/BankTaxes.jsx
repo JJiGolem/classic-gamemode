@@ -93,13 +93,41 @@ class BankTaxes extends Component {
                         <div>Квартплата: ${ bank.houses[0].rent }/день</div>
                         <div>Оплачено: { bank.houses[0].days }/30</div>
                         <div style={{ marginTop: '5%' }}>Выберете количество дней для оплаты:</div>
-                        <div style={{ textAlign: 'center', marginTop: '5%' }}>
-                            <span className='button_taxes-bank-react' onClick={this.decrementHouseDays} style={{ padding: '1% 5.5% 3% 5.5%' }}>-</span>
+                        <div style={{ textAlign: 'center', marginTop: '5%',  }}>
+                            <span 
+                                className='button_taxes-bank-react' 
+                                onClick={this.decrementHouseDays} 
+                                style={{ 
+                                    padding: '1% 5.5% 3% 5.5%',
+                                    color: houseDays == 0 && 'gray',
+                                    borderColor: houseDays == 0 && 'gray',
+                                    background: houseDays == 0 && 'transparent'
+                                }}
+                            >
+                                -
+                            </span>
                             <span>{ houseDays }</span>
-                            <span className='button_taxes-bank-react' onClick={this.incrementHouseDays}>+</span>
+                            <span 
+                                title={ ((houseDays >= 30 - bank.houses[0].days) || ((houseDays + 1)*bank.houses[0].rent > bank.money)) && "Недостаточно денег на счете"}
+                                className='button_taxes-bank-react' 
+                                onClick={this.incrementHouseDays}
+                                style={{ 
+                                    color: ((houseDays >= 30 - bank.houses[0].days) || ((houseDays + 1)*bank.houses[0].rent > bank.money)) && 'gray',
+                                    borderColor: ((houseDays >= 30 - bank.houses[0].days) || ((houseDays + 1)*bank.houses[0].rent > bank.money)) && 'gray',
+                                    background: ((houseDays >= 30 - bank.houses[0].days) || ((houseDays + 1)*bank.houses[0].rent > bank.money)) && 'transparent'
+                                }}
+                            >
+                                +
+                            </span>
                         </div>
                         <div style={{ textAlign: 'center', marginTop: '7%' }}>
-                            <button className='button_pay_taxes-bank-react' onClick={this.payHouse}>Оплатить</button>
+                            {
+                                houseDays > 0
+                                ? <button className='button_pay_taxes-bank-react' onClick={this.payHouse}>
+                                    Оплатить
+                                  </button>
+                                : <span>Количество дней не выбрано</span>
+                            }
                         </div>
                     </div>
                 </div>
@@ -134,13 +162,41 @@ class BankTaxes extends Component {
                         <div>Налог: ${ bank.biz[0].rent }/день</div>
                         <div>Оплачено: { bank.biz[0].days }/30</div>
                         <div style={{ marginTop: '5%' }}>Выберете количество дней для оплаты:</div>
-                        <div style={{ textAlign: 'center', marginTop: '5%' }}>
-                            <span className='button_taxes-bank-react' onClick={this.decrementBizDays} style={{ padding: '1% 5.5% 3% 5.5%' }}>-</span>
+                        <div style={{ textAlign: 'center', marginTop: '5%',  }}>
+                            <span 
+                                className='button_taxes-bank-react' 
+                                onClick={this.decrementBizDays} 
+                                style={{ 
+                                    padding: '1% 5.5% 3% 5.5%',
+                                    color: bizDays == 0 && 'gray',
+                                    borderColor: bizDays == 0 && 'gray',
+                                    background: bizDays == 0 && 'transparent'
+                                }}
+                            >
+                                -
+                            </span>
                             <span>{ bizDays }</span>
-                            <span className='button_taxes-bank-react' onClick={this.incrementBizDays}>+</span>
+                            <span 
+                                title={ ((bizDays >= 30 - bank.biz[0].days) || ((bizDays + 1)*bank.biz[0].rent > bank.money)) && "Недостаточно денег на счете"}
+                                className='button_taxes-bank-react' 
+                                onClick={this.incrementBizDays}
+                                style={{ 
+                                    color: ((bizDays >= 30 - bank.biz[0].days) || ((bizDays + 1)*bank.biz[0].rent > bank.money)) && 'gray',
+                                    borderColor: ((bizDays >= 30 - bank.biz[0].days) || ((bizDays + 1)*bank.biz[0].rent > bank.money)) && 'gray',
+                                    background: ((bizDays >= 30 - bank.biz[0].days) || ((bizDays + 1)*bank.biz[0].rent > bank.money)) && 'transparent'
+                                }}
+                            >
+                                +
+                            </span>
                         </div>
                         <div style={{ textAlign: 'center', marginTop: '7%' }}>
-                            <button className='button_pay_taxes-bank-react' onClick={this.payBiz}>Оплатить</button>
+                            {
+                                bizDays > 0
+                                ? <button className='button_pay_taxes-bank-react' onClick={this.payBiz}>
+                                    Оплатить
+                                  </button>
+                                : <span>Количество дней не выбрано</span>
+                            }
                         </div>
                     </div>
                 </div>
