@@ -628,7 +628,7 @@ module.exports = {
     },
     "playerDeath": (player, reason, killer) => {
         if (player.cuffs) police.setCuffs(player, false);
-        if (!killer) return;
+        if (!killer || killer.id == player.id) return;
 
         // Если бандит убил бандита в гетто, то розыск не выдаем
         if (factions.isBandFaction(killer.character.factionId) && factions.isBandFaction(player.character.factionId) &&
