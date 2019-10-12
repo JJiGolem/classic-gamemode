@@ -1,4 +1,5 @@
 "use strict";
+var army = require('../army');
 var bands = require('../bands');
 var factions = require('../factions');
 var inventory = require('../inventory');
@@ -637,6 +638,9 @@ module.exports = {
         // Если мафия убила мафию в зоне для бизвара, то розыск не выдаем
         if (factions.isMafiaFaction(killer.character.factionId) && factions.isMafiaFaction(player.character.factionId) &&
             mafia.getZoneByPos(killer.position) && mafia.getZoneByPos(player.position)) return;
+
+        // Если убийство на учениях армии
+        if (army.inWar(killer) && army.inWar(player)) return;
 
         // Если полицейский/агент убил преступника, то розыск не выдаем
         if ((factions.isPoliceFaction(killer.character.factionId) || factions.isFibFaction(killer.character.factionId)) &&
