@@ -6699,6 +6699,63 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "eateryMain": {
+                name: "eateryMain",
+                header: "Закусочная",
+                headerImg: "",
+                items: [{
+                        text: 'Гамбургер',
+                        values: ["$100"],
+                    },
+                    {
+                        text: 'Хот-дог',
+                        values: ["$100"],
+                    },
+                    {
+                        text: 'Кусок пиццы',
+                        values: ["$100"],
+                    },
+                    {
+                        text: 'Пачка чипсов',
+                        values: ["$100"],
+                    },
+                    {
+                        text: 'Банка колы',
+                        values: ["$100"],
+                    },
+                    {
+                        text: 'Закрыть'
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        } else {
+                            selectMenu.loader = true;
+                        }
+                        // if (e.itemName == 'Бутылка воды') {
+                        //     mp.trigger('callRemote', 'supermarket.products.buy', 0);
+                        // }
+                        // if (e.itemName == 'Плитка шоколада') {
+                        //     mp.trigger('callRemote', 'supermarket.products.buy', 1);
+                        // }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.show = false;
+                    }
+                }
+            },
         },
         // Уведомление
         notification: null,
