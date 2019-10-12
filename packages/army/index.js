@@ -12,8 +12,6 @@ module.exports = {
     lastWarTime: 0,
     // Время отдыха между учениями (ms)
     waitWarTime: 20 * 60 * 1000,
-    // Повторное участие в учении после убийства
-    reveangeKill: false,
     // Время прохождения учения (ms)
     warTime: 5 * 60 * 1000,
     // Промежуток часов, в который можно начать учение
@@ -100,18 +98,19 @@ module.exports = {
         var header = `Учения`;
         mp.players.forEach(rec => {
             if (!rec.character) return;
-            var factionId = rec.character.factionId;
-            if (!factions.isArmyFaction(factionId)) return;
+            if (!factions.isArmyFaction(rec.character.factionId)) return;
+            if (!this.inWar(rec)) return;
 
-            if (factionId == winTeamId) {
-                var str = (war.teamA.id == winTeamId) ? 'attack' : 'defender';
+            if (rec.armyTeamId == winTeamId) {
+                var str = (this.war.teamA.id == winTeamId) ? 'attack' : 'defender';
                 rec.call(`prompt.showByName`, [`army_capture_${str}_win`]);
                 notifs.success(rec, `Ваша команда победила`, header);
-            } else if (factionId == loseTeamId) {
-                var str = (war.teamA.id == loseTeamId) ? 'attack' : 'defender';
+            } else if (rec.armyTeamId == loseTeamId) {
+                var str = (this.war.teamA.id == loseTeamId) ? 'attack' : 'defender';
                 rec.call(`prompt.showByName`, [`army_capture_${str}_lose`]);
                 notifs.error(rec, `Ваша команда проиграла`, header);
             }
+            delete rec.armyTeamId;
         });
 
         this.lastWarTime = Date.now();
@@ -144,5 +143,38 @@ module.exports = {
         var teamB = players.slice(teamA.length);
 
         return [teamA, teamB];
+    },
+    inWar(player) {
+        return [1, 2].includes(player.armyTeamId);
+    },
+    giveScore(player, enemy, reason) {
+        var teamId, score;
+        var war = this.war;
+
+        if (player.armyTeamId == war.teamA.id) {
+            war.teamA.score++;
+            teamId = war.teamA.id;
+            score = war.teamA.score;
+        } else if (player.armyTeamId == war.teamB.id) {
+            war.teamB.score++;
+            teamId = war.teamB.id;
+            score = war.teamB.score;
+        }
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            var factionId = rec.character.factionId;
+            if (!factions.isArmyFaction(factionId)) return;
+            if (!this.inWar(rec)) return;
+
+            rec.call(`army.capture.killList.log`, [{
+                name: enemy.name,
+                factionId: enemy.armyTeamId
+            }, {
+                name: player.name,
+                factionId: player.armyTeamId
+            }, reason.toString()]);
+            rec.call(`army.capture.score.set`, [teamId, score]);
+        });
     },
 };
