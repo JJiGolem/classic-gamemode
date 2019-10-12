@@ -3,6 +3,7 @@ var parkings = [];
 var parkingVehicles = []; /// автомобили на парковке
 var vehicles = call("vehicles");
 var houses = call("houses");
+let money = call('money');
 
 const PARKING_PRICE = 2; /// цена парковки за час
 
@@ -85,44 +86,55 @@ module.exports = {
         parkingVehicles.push(veh);
     },
     spawnParkingVehicle(player, parkingId) {
-
+        let vehicleFound;
+        let foundIndex;
         for (var i = 0; i < parkingVehicles.length; i++) {
             if ((parkingVehicles[i].owner == player.character.id) && (parkingId == parkingVehicles[i].parkingId)) {
-
-                let index = this.findParkingIndexById(parkingVehicles[i].parkingId);
-                // TODO Проверки на деньги и снятие денег
-                let date = parkingVehicles[i].parkingDate;
-                let now = new Date();
-                let hours = parseInt((now - date) / (1000 * 60 * 60));
-                player.call('chat.message.push', [`!{#80c102} Вы забрали транспорт с парковки за !{#009eec}$${hours * PARKING_PRICE}`]);
-                player.call('notifications.push.success', ["Вы забрали т/с с парковки", "Успешно"]);
-                parkingVehicles[i].x = parkings[index].carX;
-                parkingVehicles[i].y = parkings[index].carY;
-                parkingVehicles[i].z = parkings[index].carZ;
-                parkingVehicles[i].h = parkings[index].carH;
-
-                player.call('parkings.blips.private.clear');
-
-                parkingVehicles[i].parkingDate = null;
-                if (parkingVehicles[i].db) {
-                    parkingVehicles[i].db.update({
-                        parkingDate: null
-                    });
-                } else {
-                    parkingVehicles[i].update({
-                        parkingDate: null
-                    });
-                }
-                if (!parkingVehicles[i].sqlId) {
-                    vehicles.spawnVehicle(parkingVehicles[i], 0);
-                } else {
-                    vehicles.spawnVehicle(parkingVehicles[i], 1);
-                }
-                parkingVehicles.splice(i, 1);
-                return;
+                vehicleFound = parkingVehicles[i];
+                foundIndex = i;
             }
         }
-        player.call('notifications.push.error', ["На парковке нет вашего т/c", "Ошибка"]);
+
+        if (!vehicleFound) return player.call('notifications.push.error', ["На парковке нет вашего т/c", "Ошибка"]);
+
+        let index = this.findParkingIndexById(vehicleFound.parkingId);
+        let date = vehicleFound.parkingDate;
+        let now = new Date();
+        let hours = parseInt((now - date) / (1000 * 60 * 60));
+        let price = hours * PARKING_PRICE;
+        if (player.character.cash < price) return player.call('notifications.push.error', [`Требуется $${price}`, "Ошибка"]);
+
+        money.removeCash(player, price, function(result) {
+            if (result) {
+                player.call('chat.message.push', [`!{#80c102} Вы забрали транспорт с парковки за !{#009eec}$${price}`]);
+                player.call('notifications.push.success', ["Вы забрали т/с с парковки", "Успешно"]);
+                vehicleFound.x = parkings[index].carX;
+                vehicleFound.y = parkings[index].carY;
+                vehicleFound.z = parkings[index].carZ;
+                vehicleFound.h = parkings[index].carH;
+        
+                player.call('parkings.blips.private.clear');
+        
+                vehicleFound.parkingDate = null;
+                if (vehicleFound.db) {
+                    vehicleFound.db.update({
+                        parkingDate: null
+                    });
+                } else {
+                    vehicleFound.update({
+                        parkingDate: null
+                    });
+                }
+                if (!vehicleFound.sqlId) {
+                    vehicles.spawnVehicle(vehicleFound, 0);
+                } else {
+                    vehicles.spawnVehicle(vehicleFound, 1);
+                }
+                parkingVehicles.splice(foundIndex, 1);
+            } else {
+                player.call('notifications.push.error', [`Не удалось забрать т/с`, "Ошибка"]);
+            }
+        }, `Взятие т/с ${vehicleFound.modelName} с парковки`);
     },
     findParkingIndexById(id) {
         for (var i = 0; i < parkings.length; i++) {
