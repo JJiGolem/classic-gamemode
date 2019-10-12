@@ -12,7 +12,7 @@ var killList = new Vue({
             13: "#cbae8c",
             14: "#0b0b0b",
         },
-        maxCount: 10,
+        maxCount: 5,
         types: ["car", "hand"],
         list: [],
     },
