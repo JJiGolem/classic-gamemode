@@ -3,8 +3,8 @@ var captureScore = new Vue({
     data: {
         show: false,
         colors: {
-            1: "#00b500",
-            2: "#da30ff",
+            1: "#e13b3b",
+            2: "#00b500",
             8: "#00b500",
             9: "#da30ff",
             10: "#fff629",
@@ -14,8 +14,8 @@ var captureScore = new Vue({
             14: "#0b0b0b",
         },
         names: {
-            1: "Army A",
-            2: "Army B",
+            1: "Attack Army",
+            2: "Defense Army",
             8: "The Families",
             9: "The Ballas",
             10: "Los Santos Vagos",

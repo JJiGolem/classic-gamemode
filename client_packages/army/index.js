@@ -10,8 +10,8 @@
 mp.army = {
     // Цвета блипов (teamId: blipColor)
     colors: {
-        1: 2,
-        2: 27,
+        1: 1,
+        2: 2,
     },
     // Нативки
     natives: {

@@ -169,10 +169,10 @@ module.exports = {
 
             rec.call(`army.capture.killList.log`, [{
                 name: enemy.name,
-                teamId: enemy.armyTeamId
+                factionId: enemy.armyTeamId
             }, {
                 name: player.name,
-                teamId: player.armyTeamId
+                factionId: player.armyTeamId
             }, reason.toString()]);
             rec.call(`army.capture.score.set`, [teamId, score]);
         });
