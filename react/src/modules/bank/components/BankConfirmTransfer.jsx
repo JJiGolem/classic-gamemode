@@ -41,7 +41,7 @@ class BankConfirmTransfer extends Component {
                     <div className='info_block_confirm-bank-react'>
                         <div>Получатель: { bank.askAnswer }</div>
                         <div>Номер счета: { this.props.number }</div>
-                        <div>Сумма перевода: { this.props.money }$</div>
+                        <div>Сумма перевода: ${ this.props.money }</div>
                     </div>
                     <div className='buttons_panel-bank-react'>
                         <button className='button_panel-bank-react' onClick={this.back.bind(this)}>

@@ -216,7 +216,7 @@ module.exports = {
         // rec = player; // for tests
         if (!rec || !rec.character) return notifs.error(player, `Игрок не найден`, header);
         var dist = player.dist(rec.position);
-        if (dist > 20 && data.recId == null) return notifs.error(player, `${rec.name} далеко`, header);
+        if (dist > 20 && data.recId != null) return notifs.error(player, `${rec.name} далеко`, header);
         var character = player.character;
         if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, header);
@@ -255,7 +255,7 @@ module.exports = {
 
         if (!rec || !rec.character) return out(`Игрок не найден`);
         var dist = player.dist(rec.position);
-        if (dist > 20) return out(`${rec.name} далеко`);
+        if (dist > 20 && data.recId != null) return out(`${rec.name} далеко`);
         var character = player.character;
         if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, header);
@@ -278,6 +278,27 @@ module.exports = {
             notifs.info(player, `${rec.name} без мешка на голове`, header);
 
             mafia.setBag(rec, null);
+        }
+    },
+    "mafia.follow": (player, recId) => {
+        var header = `Следование`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var rec = mp.players.at(recId);
+        if (!rec || !rec.character) return out(`Гражданин не найден`);
+        if (!factions.isMafiaFaction(player.character.factionId)) return out(`Нет прав для использования`);
+        if (!rec.isFollowing) {
+            if (!rec.cuffs || rec.cuffs.itemId != 54) return out(`${rec.name} не связан`);
+            rec.isFollowing = true;
+            rec.call(`mafia.follow.start`, [player.id]);
+            notifs.success(player, `${rec.name} следует за вами`, header);
+            notifs.info(rec, `Вы следуете за ${player.name}`, header);
+        } else {
+            delete rec.isFollowing;
+            rec.call(`mafia.follow.stop`);
+            notifs.success(player, `${rec.name} не следует за вами`, header);
+            notifs.info(rec, `Вы не следуете за ${player.name}`, header);
         }
     },
     "player.faction.changed": (player, oldVal) => {

@@ -62,7 +62,7 @@ export const setAnswerBank = answer => ({
     payload: answer
 });
 
-export const setAskAnswerBank = askAnswer => ({
+export const setAskAnswerBank = nick => ({
     type: 'SET_ASK_ANSWER_BANK',
-    payload: askAnswer
+    payload: nick
 });

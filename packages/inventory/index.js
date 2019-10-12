@@ -43,8 +43,8 @@ module.exports = {
     groundMaxDist: 2,
     // Климат, при котором игрок может бегать голым
     playerClime: {
-        head: [10, 25],
-        body: [20, 25],
+        head: [10, 30],
+        body: [20, 30],
         legs: [20, 30],
         feets: [25, 35],
     },
