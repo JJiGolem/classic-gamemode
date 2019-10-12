@@ -1268,7 +1268,7 @@
                 <div class="body">
                     <div class="record" v-for="record in statistics">
                         <div>{{ record.head }}</div>
-                        <div :style="record"><span>{{ record.value | playerMenuMoneySplit(record.moneyFilter) }}</span></div>
+                        <div :style="record"><span>{{ record.value | playerMenuMoneySplit(record.moneyFilter) | prettyMinutes(record.minutesFilter) }}</span></div>
                     </div>
                 </div>
             </div>
