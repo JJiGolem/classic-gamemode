@@ -161,9 +161,9 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Игрок #${recId} не найден`, `Ранг организации`);
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, `Ранг организации`);
         if (!player.character.factionId) return notifs.error(player, `Вы не состоите в организации`, `Ранг организации`);
+        if (!factions.canGiveRank(player)) return notifs.error(player, `Недостаточно прав`, `Ранг организации`);
         if (rec.character.factionId != player.character.factionId) return notifs.error(player, `${rec.name} не вашей организации`, `Ранг организации`);
         if (rec.character.factionRank >= player.character.factionRank) return notifs.error(player, `Нельзя повысить до своего ранга или выше`, `Ранг организации`);
-        if (!factions.canGiveRank(player)) return notifs.error(player, `Недостаточно прав`, `Ранг организации`);
 
         var faction = factions.getFaction(player.character.factionId);
         var rank = factions.getRankById(faction, rec.character.factionRank);
@@ -180,9 +180,9 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Игрок #${recId} не найден`, `Ранг организации`);
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, `Ранг организации`);
         if (!player.character.factionId) return notifs.error(player, `Вы не состоите в организации`, `Ранг организации`);
+        if (!factions.canGiveRank(player)) return notifs.error(player, `Недостаточно прав`, `Ранг организации`);
         if (rec.character.factionId != player.character.factionId) return notifs.error(player, `${rec.name} не вашей организации`, `Ранг организации`);
         if (rec.character.factionRank >= player.character.factionRank) return notifs.error(player, `Недоступно для ${rec.name}`, `Ранг организации`);
-        if (!factions.canGiveRank(player)) return notifs.error(player, `Недостаточно прав`, `Ранг организации`);
 
         rank = factions.getRank(player.character.factionId, rank);
         if (rank.id > rec.character.factionRank) {
@@ -298,6 +298,7 @@ module.exports = {
             player.call(`selectMenu.notification`, [text]);
         };
         if (!player.character.factionId) return out(`Вы не состоите в организации`);
+        if (!factions.canGiveRank(player)) return out(`Недостаточно прав`);
 
         var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getBySqlId(data.sqlId);
         var character = null;
@@ -308,8 +309,7 @@ module.exports = {
             character = rec.character;
         }
         if (character.factionId != player.character.factionId) return out(`${character.name} не вашей организации`);
-        if (character.factionRank >= player.character.factionRank) return out(`Недоступно для ${rec.name}`);
-        if (!factions.canGiveRank(player)) return out(`Недостаточно прав`);
+        if (character.factionRank >= player.character.factionRank) return out(`Недоступно для ${character.name}`);
 
         var rank = factions.getRank(player.character.factionId, data.rank);
         if (rank.id > character.factionRank) {
@@ -320,7 +320,7 @@ module.exports = {
             notifs.info(rec, `${player.name} понизил вас до ${rank.name}`, `Понижение`);
             out(`${character.name} понижен до ${rank.name}`);
         }
-        factions.setRank(rec, rank);
+        factions.setOfflineRank(rec, player.character.factionId, rank);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (seat != -1 || vehicle.key != 'faction') return;

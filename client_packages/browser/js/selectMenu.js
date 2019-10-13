@@ -1684,7 +1684,7 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Установить') {
                             var data = {
-                                rank: this.items[1].i
+                                rank: this.items[1].i + 1
                             };
                             if (this.member.id != null) data.recId = this.member.id;
                             else if (this.member.sqlId != null) data.sqlId = this.member.sqlId;

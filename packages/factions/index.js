@@ -395,6 +395,18 @@ module.exports = {
             rec.call(`mapCase.${type}.members.rank.set`, [character.id, rank]);
         });
     },
+    setOfflineRank(characterId, factionId, rank) {
+        if (typeof rank == 'number') rank = this.getRank(factionId, rank);
+
+        db.Models.Character.update({
+            factionRank: rank.id
+        }, {
+            where: {
+                id: characterId,
+                factionId: factionId
+            }
+        });
+    },
     isGovernmentFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         return faction && faction.id == 1;
