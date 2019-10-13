@@ -201,6 +201,10 @@ mp.events.add({
     },
 });
 
+mp.events.addDataHandler("factionId", (player, value) => {
+    if (player.type == "player") player.destroyBlip();
+});
+
 // for tests
 // mp.players.local.destroyBlip();
 // mp.players.local.createBlip(1);

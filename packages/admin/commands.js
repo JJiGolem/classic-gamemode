@@ -315,7 +315,7 @@ module.exports = {
     "/clothes": {
         access: 3,
         description: "Выдача тестовой одежды",
-        args: "[тип] [текстура] [вариация]",
+        args: "[тип] [вариация] [текстура]",
         handler: (player, args) => {
             player.setClothes(parseInt(args[0]), parseInt(args[1]), parseInt(args[2]), 0);
         }

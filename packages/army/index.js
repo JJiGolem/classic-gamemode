@@ -1,7 +1,7 @@
 "use strict";
 
-let factions = call('factions');
-let notifs = call('notifications');
+let factions;
+let notifs;
 
 module.exports = {
     // Мин. ранг, который может начать учения
@@ -27,6 +27,10 @@ module.exports = {
     // Кол-во боеприпасов, списываемое за выдачу патронов
     ammoAmmo: 1,
 
+    init() {
+        factions = call('factions');
+        notifs = call('notifications');
+    },
     startCapture(player) {
         var header = `Учения`;
         var out = (text) => {

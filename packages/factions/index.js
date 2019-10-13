@@ -1,5 +1,5 @@
 "use strict";
-var bands = call('bands');
+var bands = require('../bands');
 var inventory = call('inventory');
 var mafia = call('mafia');
 var money = require('../money')
@@ -40,7 +40,7 @@ module.exports = {
         "ammo": {
             2: [4],
             3: [4],
-            6: [2, 3, 6],
+            6: [1, 2, 3, 6],
             // банды
             8: [8],
             9: [9],
@@ -131,11 +131,12 @@ module.exports = {
         warehouse.colshape = colshape;
 
         var pos = warehouse.position;
-        pos.z += 2;
-        warehouse.label = mp.labels.new(`${faction.ammo} из ${faction.maxAmmo}\n${faction.medicines} из ${faction.maxMedicines}`,
+        pos.z += 1.5;
+        warehouse.label = mp.labels.new(`~y~Боеприпасы:\n~w~${faction.ammo} из ${faction.maxAmmo}\n~b~Медикаменты:\n~w~${faction.medicines} из ${faction.maxMedicines}`,
             pos, {
-                los: true,
-                drawDistanse: 10,
+                los: false,
+                font: 0,
+                drawDistance: 10,
             });
         this.warehouses.push(warehouse);
     },
@@ -547,7 +548,7 @@ module.exports = {
         this.updateWarehosueLabel(faction);
     },
     updateWarehosueLabel(faction) {
-        var text = `${faction.ammo} из ${faction.maxAmmo}\n${faction.medicines} из ${faction.maxMedicines}`;
+        var text = `~y~Боеприпасы:\n~w~${faction.ammo} из ${faction.maxAmmo}\n~b~Медикаменты:\n~w~${faction.medicines} из ${faction.maxMedicines}`;
         var label = this.getWarehouse(faction.id).label;
         label.text = text;
     },
