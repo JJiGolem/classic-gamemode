@@ -27,7 +27,9 @@ module.exports = {
         }
     },
     "/housechangeprice": {
+        description: "Обновить интерьер у дома",
         access: 5,
+        args: "[id]:n [цена дома]:n",
         handler: (player, args) => {
             if (isNaN(parseInt(args[0])) || isNaN(parseInt(args[1]))) return;
             houseService.changePrice(parseInt(args[0]), parseInt(args[1]));
@@ -45,5 +47,13 @@ module.exports = {
             player.call("house.add.garage.open", []);
         }
     },
-    /// Менять интерьер
+    "/housechangeint": {
+        description: "Обновить интерьер у дома",
+        access: 5,
+        args: "[id]:n [interiorId]:n",
+        handler: (player, args, out) => {
+            if (isNaN(parseInt(args[0])) || isNaN(parseInt(args[1]))) return;
+            houseService.changeInterior(parseInt(args[0]), parseInt(args[1]));
+        }
+    },
 }

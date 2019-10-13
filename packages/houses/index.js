@@ -236,6 +236,14 @@ module.exports = {
         await house.info.save();
         if (player != null) player.call('notifications.push.success', ["Вы изменили цену у дома с id " + id + " на " + price, "Успешно"]);
     },
+    async changeInterior(id, interiorId) {
+        let house = this.getHouseById(id);
+        if (house == null) return;
+        if (house.info.characterId != null) return;
+        house.info.interiorId = interiorId;
+        await house.info.save();
+        if (player != null) player.call('notifications.push.success', ["Вы изменили интерьер у дома с id " + id + " на " + price, "Успешно"]);
+    },
     async createInterior(player, interiorInfo) {
         let interior = await db.Models.Interior.create({
             garageId: interiorInfo.garageId,
