@@ -1549,6 +1549,146 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "factionControl": {
+                name: "factionControl",
+                header: "Организация",
+                items: [{
+                        text: "Состав онлайн"
+                    },
+                    {
+                        text: "Состав оффлайн"
+                    },
+                    {
+                        text: "Закрыть"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Закрыть') selectMenu.show = false;
+                        else {
+                            selectMenu.loader = true;
+                            mp.trigger(`callRemote`, `factions.control.members.online.show`);
+                        }
+                    }
+                }
+            },
+            "factionControlMembers": {
+                name: "factionControlMembers",
+                header: "Состав",
+                items: [{
+                        text: "Dunhill"
+                    },
+                    {
+                        text: "Carter"
+                    },
+                    {
+                        text: "Swift"
+                    },
+                    {
+                        text: "Вернуться"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                rankNames: [],
+                members: [],
+                init(data) {
+                    if (typeof data == 'string') data = JSON.parse(data);
+
+                    var items = [];
+                    data.members.forEach(member => {
+                        items.push({
+                            text: member.name
+                        });
+                    });
+                    items.push({
+                        text: "Вернуться"
+                    });
+                    this.items = items;
+
+                    this.rankNames = data.rankNames;
+                    this.members = data.members;
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControl");
+                        else {
+                            selectMenu.menus["factionControlMember"].init(this.members[e.itemIndex], this.rankNames);
+                            selectMenu.showByName("factionControlMember");
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControl");
+                }
+            },
+            "factionControlMember": {
+                name: "factionControlMember",
+                header: "Сотрудник",
+                items: [{
+                        text: "Имя",
+                        values: [`Dunhill`]
+                    },
+                    {
+                        text: "Ранг",
+                        values: ['Ранг 1', 'Ранг 2', 'Ранг 3', 'Ранг 4', 'Ранг 5', 'Ранг 6'],
+                        i: 0,
+                    },
+                    {
+                        text: "Установить"
+                    },
+                    {
+                        text: "Уволить"
+                    },
+                    {
+                        text: "Вернуться"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                member: null,
+                init(member, rankNames) {
+                    debug(member.rank)
+                    this.items[0].values[0] = member.name;
+                    this.items[1].values = rankNames;
+                    this.items[1].i = member.rank - 1;
+
+                    this.member = member;
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Установить') {
+                            var values = [this.member.id, this.items[1].i];
+                            mp.trigger(`callRemote`, `factions.giverank.set`, JSON.stringify(values));
+                        } else if (e.itemName == 'Уволить') {
+                            mp.trigger(`callRemote`, `factions.uval`, this.member.id);
+                        } else if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlMembers");
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlMembers");
+                }
+            },
             "governmentStorage": {
                 name: "governmentStorage",
                 header: "Склад Government",
@@ -6965,6 +7105,8 @@ var selectMenu = new Vue({
             this.showNotifTimer = setTimeout(() => {
                 this.notification = null;
             }, this.showNotifTime);
+
+            if (val) this.loader = false;
         },
         'menu.i': function(val) {
             setTimeout(() => {
@@ -6983,6 +7125,8 @@ var selectMenu = new Vue({
                 if (item.j == null) Vue.set(item, 'j', 0);
                 if (!item.values) Vue.set(item, 'values', [""]);
             });
+
+            this.loader = false;
         },
         show(val) {
             if (val) busy.add("selectMenu", false, true);

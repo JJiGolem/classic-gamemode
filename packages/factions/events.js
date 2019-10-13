@@ -246,6 +246,24 @@ module.exports = {
         notifs.info(player, `Предложение отклонено`, `Чек`);
         notifs.info(inviter, `${player.name} отклонил предложение`, `Чек`);
     },
+    "factions.control.members.online.show": (player) => {
+        var out = (text) => {
+            player.call(`selectMenu.notification`, [text]);
+        };
+        if (!player.character.factionId) return out(`Вы не состоите в организации`);
+        var members = factions.getMembers(player).map(x => {
+            return {
+                id: x.id,
+                name: x.name,
+                rank: factions.getRankById(x.character.factionId, x.character.factionRank).rank,
+            }
+        });
+
+        player.call(`factions.control.players.show`, [{
+            members: members,
+            rankNames: factions.getRankNames(player.character.factionId),
+        }]);
+    },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (seat != -1 || vehicle.key != 'faction') return;
         if (player.character.factionId != vehicle.owner) {
