@@ -1,18 +1,26 @@
 let houseService = require('./index.js');
+
 module.exports = {
-    "/ho": {
-        access: 6,
+    "/gotohouse": {
+        description: "Переместиться к дому",
+        args: "[id]:n",
+        access: 4,
         handler: (player, args) => {
-            player.spawn(new mp.Vector3(-29.178926467895508, -1849.4302978515625, 25.81756591796875));
+            let house = houseService.getHouseById(args[0]);
+            player.position = new mp.Vector3(house.spawnX, house.spawnY, house.spawnZ);
         }
     },
     "/houseadd": {
+        description: "Создать дом",
+        args: "",
         access: 5,
         handler: (player, args) => {
             player.call("house.add.open", []);
         }
     },
     "/housedrop": {
+        description: "Продать дом",
+        args: "[id]:n",
         access: 5,
         handler: (player, args) => {
             if (isNaN(parseInt(args[0]))) return;
@@ -36,12 +44,16 @@ module.exports = {
         }
     },
     "/interioradd": {
+        description: "Добавить интерьер",
+        args: "",
         access: 5,
         handler: (player, args) => {
             player.call("house.add.interior.open", []);
         }
     },
     "/garageadd": {
+        description: "Добавить гараж",
+        args: "",
         access: 5,
         handler: (player, args) => {
             player.call("house.add.garage.open", []);
