@@ -1575,9 +1575,12 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Закрыть') selectMenu.show = false;
-                        else {
+                        else if (e.itemName == 'Состав онлайн') {
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.members.online.show`);
+                        } else if (e.itemName == 'Состав оффлайн') {
+                            selectMenu.loader = true;
+                            mp.trigger(`callRemote`, `factions.control.members.offline.show`);
                         }
                     }
                 }
@@ -1663,7 +1666,6 @@ var selectMenu = new Vue({
                 j: 0,
                 member: null,
                 init(member, rankNames) {
-                    debug(member.rank)
                     this.items[0].values[0] = member.name;
                     this.items[1].values = rankNames;
                     this.items[1].i = member.rank - 1;
@@ -1681,8 +1683,12 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Установить') {
-                            var values = [this.member.id, this.items[1].i];
-                            mp.trigger(`callRemote`, `factions.giverank.set`, JSON.stringify(values));
+                            var data = {
+                                rank: this.items[1].i
+                            };
+                            if (this.member.id != null) data.recId = this.member.id;
+                            else if (this.member.sqlId != null) data.sqlId = this.member.sqlId;
+                            mp.trigger(`callRemote`, `factions.control.members.ranks.set`, JSON.stringify(data));
                         } else if (e.itemName == 'Уволить') {
                             mp.trigger(`callRemote`, `factions.uval`, this.member.id);
                         } else if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlMembers");
