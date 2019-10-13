@@ -36,8 +36,8 @@ module.exports = {
             if (veh.products.type != "ammo") return notifs.error(player, `Авто содержит другой тип товара`, header);
             veh.products.count = Math.clamp(veh.products.count + factions.ammoBox, 0, factions.ammoVehMax);
             veh.setVariable("label", `${veh.products.count} из ${factions.ammoVehMax} ед.`);
-            if (veh.products.count == factions.ammoVehMax) return notifs.warning(player, `Багажник заполнен`, header);
             player.addAttachment("ammoBox", true);
+            if (veh.products.count == factions.ammoVehMax) return notifs.warning(player, `Багажник заполнен`, header);
         } else if (player.hasAttachment("medicinesBox")) {
             if (!factions.medicinesVehModels.includes(model)) return notifs.error(player, `Авто не предназначено для перевоза медикаментов`, header);
             if (!veh.products) veh.products = {
@@ -47,8 +47,8 @@ module.exports = {
             if (veh.products.type != "medicines") return notifs.error(player, `Авто содержит другой тип товара`, header);
             veh.products.count = Math.clamp(veh.products.count + factions.medicinesBox, 0, factions.medicinesVehMax);
             veh.setVariable("label", `${veh.products.count} из ${factions.medicinesVehMax} ед.`);
-            if (veh.products.count == factions.medicinesVehMax) return notifs.warning(player, `Багажник заполнен`, header);
             player.addAttachment("medicinesBox", true);
+            if (veh.products.count == factions.medicinesVehMax) return notifs.warning(player, `Багажник заполнен`, header);
         }
     },
     "factions.vehicle.products.take": (player, vehId) => {
@@ -161,9 +161,9 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Игрок #${recId} не найден`, `Ранг организации`);
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, `Ранг организации`);
         if (!player.character.factionId) return notifs.error(player, `Вы не состоите в организации`, `Ранг организации`);
+        if (!factions.canGiveRank(player)) return notifs.error(player, `Недостаточно прав`, `Ранг организации`);
         if (rec.character.factionId != player.character.factionId) return notifs.error(player, `${rec.name} не вашей организации`, `Ранг организации`);
         if (rec.character.factionRank >= player.character.factionRank) return notifs.error(player, `Нельзя повысить до своего ранга или выше`, `Ранг организации`);
-        if (!factions.canGiveRank(player)) return notifs.error(player, `Недостаточно прав`, `Ранг организации`);
 
         var faction = factions.getFaction(player.character.factionId);
         var rank = factions.getRankById(faction, rec.character.factionRank);
@@ -180,9 +180,9 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Игрок #${recId} не найден`, `Ранг организации`);
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, `Ранг организации`);
         if (!player.character.factionId) return notifs.error(player, `Вы не состоите в организации`, `Ранг организации`);
+        if (!factions.canGiveRank(player)) return notifs.error(player, `Недостаточно прав`, `Ранг организации`);
         if (rec.character.factionId != player.character.factionId) return notifs.error(player, `${rec.name} не вашей организации`, `Ранг организации`);
         if (rec.character.factionRank >= player.character.factionRank) return notifs.error(player, `Недоступно для ${rec.name}`, `Ранг организации`);
-        if (!factions.canGiveRank(player)) return notifs.error(player, `Недостаточно прав`, `Ранг организации`);
 
         rank = factions.getRank(player.character.factionId, rank);
         if (rank.id > rec.character.factionRank) {
@@ -245,6 +245,82 @@ module.exports = {
         if (!inviter || !inviter.character) return;
         notifs.info(player, `Предложение отклонено`, `Чек`);
         notifs.info(inviter, `${player.name} отклонил предложение`, `Чек`);
+    },
+    "factions.control.members.online.show": (player) => {
+        var out = (text) => {
+            player.call(`selectMenu.notification`, [text]);
+        };
+        if (!player.character.factionId) return out(`Вы не состоите в организации`);
+        var members = factions.getMembers(player).map(x => {
+            return {
+                id: x.id,
+                name: x.name,
+                rank: factions.getRankById(x.character.factionId, x.character.factionRank).rank,
+            }
+        });
+
+        player.call(`factions.control.players.show`, [{
+            members: members,
+            rankNames: factions.getRankNames(player.character.factionId),
+        }]);
+    },
+    "factions.control.members.offline.show": async (player) => {
+        var out = (text) => {
+            player.call(`selectMenu.notification`, [text]);
+        };
+        if (!player.character.factionId) return out(`Вы не состоите в организации`);
+
+        var members = await db.Models.Character.findAll({
+            attributes: ['id', 'name', 'factionId', 'factionRank'],
+            where: {
+                factionId: player.character.factionId
+            }
+        });
+        members = members.map(x => {
+            return {
+                sqlId: x.id,
+                name: x.name,
+                rank: factions.getRankById(x.factionId, x.factionRank).rank,
+            };
+        });
+
+        player.call(`factions.control.players.show`, [{
+            members: members,
+            rankNames: factions.getRankNames(player.character.factionId),
+        }]);
+    },
+    "factions.control.members.ranks.set": async (player, data) => {
+        debug(`ranks.set:`)
+        debug(data)
+        if (typeof data == 'string') data = JSON.parse(data);
+
+        var out = (text) => {
+            player.call(`selectMenu.notification`, [text]);
+        };
+        if (!player.character.factionId) return out(`Вы не состоите в организации`);
+        if (!factions.canGiveRank(player)) return out(`Недостаточно прав`);
+
+        var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getBySqlId(data.sqlId);
+        var character = null;
+        if (!rec || !rec.character) { // игрок оффлайн
+            character = await db.Models.Character.findByPk(data.sqlId);
+            rec = data.sqlId;
+        } else {
+            character = rec.character;
+        }
+        if (character.factionId != player.character.factionId) return out(`${character.name} не вашей организации`);
+        if (character.factionRank >= player.character.factionRank) return out(`Недоступно для ${character.name}`);
+
+        var rank = factions.getRank(player.character.factionId, data.rank);
+        if (rank.id > character.factionRank) {
+            if (rank.id >= player.character.factionRank) return out(`Нельзя повысить до своего ранга или выше`);
+            notifs.info(rec, `${player.name} повысил вас до ${rank.name}`, `Повышение`);
+            out(`${character.name} повышен до ${rank.name}`);
+        } else {
+            notifs.info(rec, `${player.name} понизил вас до ${rank.name}`, `Понижение`);
+            out(`${character.name} понижен до ${rank.name}`);
+        }
+        factions.setOfflineRank(rec, player.character.factionId, rank);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (seat != -1 || vehicle.key != 'faction') return;

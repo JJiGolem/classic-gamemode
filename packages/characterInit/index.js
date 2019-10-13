@@ -70,7 +70,8 @@ module.exports = {
                 where: {
                     accountId: player.account.id
                 },
-                include: [{
+                include: [
+                    {
                         model: db.Models.Feature,
                     },
                     {
@@ -85,16 +86,16 @@ module.exports = {
                         as: "settings",
                         model: db.Models.CharacterSettings,
                     },
-                    // Этот инклюд тормозит выборку до 5 сек...
                     // {
                     //     model: db.Models.CharacterInventory,
                     //     where: {
                     //         parentId: null,
                     //     },
-                    //     include: {
-                    //         as: "params",
-                    //         model: db.Models.CharacterInventoryParam,
-                    //     },
+                    //     // Этот инклюд тормозит выборку до 5 сек...
+                    //     // include: [{
+                    //     //     as: "params",
+                    //     //     model: db.Models.CharacterInventoryParam,
+                    //     // }],
                     // },
                 ]
             });

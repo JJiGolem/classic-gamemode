@@ -305,7 +305,7 @@ mp.events.add("waypoint.set", (x, y) => {
 
 // Бессмертие
 mp.events.add("godmode.set", (enable) => {
-    mp.players.local.setInvincible(enable);
+    mp.players.local.setProofs(enable, enable, enable, enable, enable, enable, enable, enable);
 });
 
 

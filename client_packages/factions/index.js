@@ -71,6 +71,12 @@ mp.factions = {
             mp.callCEFV(`selectMenu.showByName('mafiaStorage')`);
         }
     },
+    showMembersSelectMenu(data) {
+        // debug(`showMembersSelectMenu`)
+        // debug(data)
+        mp.callCEFV(`selectMenu.menus['factionControlMembers'].init('${JSON.stringify(data)}')`);
+        mp.callCEFV(`selectMenu.showByName('factionControlMembers')`);
+    },
     isGovernmentFaction(factionId) {
         return factionId == 1;
     },
@@ -146,6 +152,9 @@ mp.events.add({
     },
     "factions.faction.set": (val) => {
         mp.factions.setFaction(val);
+    },
+    "factions.control.players.show": (data) => {
+        mp.factions.showMembersSelectMenu(data);
     },
     "playerEnterVehicleBoot": (player, vehicle) => {
         if (mp.factions.hasBox()) {
