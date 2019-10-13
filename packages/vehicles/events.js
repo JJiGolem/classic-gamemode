@@ -455,7 +455,8 @@ module.exports = {
             var spawnPos = new mp.Vector3(veh.db.x, veh.db.y, veh.db.z);
             var vehPos = veh.position;
             var dist = utils.vdist(spawnPos, vehPos);
-            if (dist > 10) {
+            var isDead = vehicles.isDead(veh);
+            if (dist > 10 || isDead) {
                 veh.repair();
                 veh.position = spawnPos;
                 veh.rotation = new mp.Vector3(0, 0, veh.db.h);
