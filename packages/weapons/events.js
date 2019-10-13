@@ -33,6 +33,7 @@ module.exports = {
         var header = `Разрядка оружия`
         var weapon = inventory.getItem(player, sqlId);
         if (!weapon) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        if (!weapon.parentId) return notifs.error(player, `Оружие должно находиться не на теле`, header);
         var ammoId = weapons.getAmmoItemId(weapon.itemId);
         var name = inventory.getName(weapon.itemId);
         if (!ammoId) return notifs.error(player, `Тип патронов для ${name} не найден`, header);
@@ -66,6 +67,7 @@ module.exports = {
         if (!params.count) return notifs.error(player, `Патронов: 0 ед.`, header);
         if (!weapon) weapon = weapons.getWeaponByAmmoId(player, ammo.itemId);
         if (!weapon) return notifs.error(player, `Подходящее оружие не найдено`, header);
+        if (!weapon.parentId) return notifs.error(player, `Оружие должно находиться не на теле`, header);
         if (weapons.getAmmoItemId(weapon.itemId) != ammo.itemId) return notifs.error(player, `Неверный тип патронов`, header);
 
         var name = inventory.getName(weapon.itemId);
@@ -82,6 +84,7 @@ module.exports = {
         var header = `Зарядка оружия`;
         var weapon = inventory.getItem(player, sqlId);
         if (!weapon) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        if (!weapon.parentId) return notifs.error(player, `Оружие должно находиться не на теле`, header);
         var ammoId = weapons.getAmmoItemId(weapon.itemId);
         var name = inventory.getName(weapon.itemId);
         if (!ammoId) return notifs.error(player, `Тип патронов для ${name} не найден`, header);
