@@ -41,8 +41,12 @@ module.exports = {
         access: 5,
         args: "[id]:n [цена дома]:n",
         handler: (player, args) => {
-            if (isNaN(parseInt(args[0])) || isNaN(parseInt(args[1]))) return;
-            houseService.changePrice(parseInt(args[0]), parseInt(args[1]));
+            if (isNaN(parseInt(args[0])) || isNaN(parseInt(args[1]))) return player.call('notifications.push.error', ["Введите аргументы верно", "Ошибка"]);
+            if (!houseService.changePrice(parseInt(args[0]), parseInt(args[1]))) {
+                player.call('notifications.push.error', ["Ошибка изменения интерьера", "Ошибка"]);
+                return;
+            }
+            player.call('notifications.push.success', ["Вы изменили цену у дома с id " + args[0] + " на " + args[1], "Успешно"]);
         }
     },
     "/interioradd": {
@@ -66,8 +70,12 @@ module.exports = {
         access: 5,
         args: "[id]:n [interiorId]:n",
         handler: (player, args, out) => {
-            if (isNaN(parseInt(args[0])) || isNaN(parseInt(args[1]))) return;
-            houseService.changeInterior(parseInt(args[0]), parseInt(args[1]));
+            if (isNaN(parseInt(args[0])) || isNaN(parseInt(args[1]))) return player.call('notifications.push.error', ["Введите аргументы верно", "Ошибка"]);
+            if (!houseService.changeInterior(parseInt(args[0]), parseInt(args[1]))) {
+                player.call('notifications.push.error', ["Ошибка изменения интерьера", "Ошибка"]);
+                return;
+            }
+            player.call('notifications.push.success', ["Вы изменили интерьер у дома с id " + args[0] + " на " + args[1], "Успешно"]);
         }
     },
 }
