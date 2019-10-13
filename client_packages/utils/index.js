@@ -117,7 +117,16 @@ mp.utils = {
         mp.game.object.doorControl(1780022985, 127.8201, -211.8274, 55.22751, false, 0.0, 0.0, 0.0); /// Sub Urban Hawick Avenue
         mp.game.object.doorControl(1780022985, 617.2458, 2751.022, 42.75777, false, 0.0, 0.0, 0.0); /// Sub Urban Route 68
         mp.game.object.doorControl(1780022985, -3167.75, 1055.536, 21.53288, false, 0.0, 0.0, 0.0); /// Sub Urban Chumash Plaza
-
+        mp.game.object.doorControl(-8873588, 842.7685, -1024.539, 28.34478, false, 0.0, 0.0, 0.0); /// Ammu Nation Vespucci Boulevard Doors 1)
+        mp.game.object.doorControl(97297972, 845.3694, -1024.539, 28.34478, false, 0.0, 0.0, 0.0); /// Ammu Nation Vespucci Boulevard Doors 2)
+        mp.game.object.doorControl(-8873588, -662.6415, -944.3256, 21.97915, false, 0.0, 0.0, 0.0); /// Ammu Nation Lindsay Circus Doors 1)
+        mp.game.object.doorControl(97297972, -665.2424, -944.3256, 21.97915, false, 0.0, 0.0, 0.0); /// Ammu Nation Lindsay Circus Doors 2)
+        mp.game.object.doorControl(-8873588, 810.5769, -2148.27, 29.76892, false, 0.0, 0.0, 0.0); /// Ammu Nation Popular Street Doors 1)
+        mp.game.object.doorControl(97297972, 813.1779, -2148.27, 29.76892, false, 0.0, 0.0, 0.0); /// Ammu Nation Popular Street Doors 2)
+        mp.game.object.doorControl(-8873588, 18.572, -1115.495, 29.94694, false, 0.0, 0.0, 0.0); /// Ammu Nation Adams Apple Doors 1)
+        mp.game.object.doorControl(97297972, 16.12787, -1114.606, 29.94694, false, 0.0, 0.0, 0.0); /// Ammu Nation Adams Apple Doors 2)
+        mp.game.object.doorControl(-8873588, 243.8379, -46.52324, 70.09098, false, 0.0, 0.0, 0.0); /// Ammu Nation Vinewood Plaza Doors 1)
+        mp.game.object.doorControl(97297972, 244.7275, -44.07911, 70.09098, false, 0.0, 0.0, 0.0); /// Ammu Nation Vinewood Plaza Doors 2)
         // Bolingbroke
         mp.game.object.doorControl(741314661, 1844.998, 2597.482, 44.63626, true, 0.0, 0.0, 0.0);
         mp.game.object.doorControl(741314661, 1818.543, 2597.482, 44.60749, true, 0.0, 0.0, 0.0);

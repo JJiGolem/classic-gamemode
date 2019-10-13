@@ -37,6 +37,24 @@ module.exports = {
             gameId: 'weapon_carbinerifle',
             products: 10
         },
+        5: {
+            name: 'Micro SMG',
+            itemId: 47,
+            gameId: 'weapon_microsmg',
+            products: 10
+        },
+        6: {
+            name: 'Machine Pistol',
+            itemId: 89,
+            gameId: 'weapon_machinepistol',
+            products: 10
+        },
+        7: {
+            name: 'Compact Rifle',
+            itemId: 52,
+            gameId: 'weapon_compactrifle',
+            products: 10
+        },
     },
     async init() {
         bizes = call('bizes');
