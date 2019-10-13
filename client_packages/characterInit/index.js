@@ -4,7 +4,7 @@ require("characterInit/characterCreate.js");
 const freemodeCharacters = [mp.game.joaat("mp_m_freemode_01"), mp.game.joaat("mp_f_freemode_01")];
 
 let charNum;
-//let charClothes = new Array();
+let charClothes = new Array();
 let charInfos = new Array();
 
 let peds = new Array();
@@ -42,7 +42,7 @@ mp.events.add('characterInit.init', (characters, slots) => {
         charNum = characters.length;
         for (let i = 0; i < characters.length; i++) {
             charInfos.push(characters[i].charInfo);
-            //charClothes.push(characters[i].charClothes);
+            charClothes.push(characters[i].charClothes);
         }
     }
     if (!isBinding){
@@ -117,7 +117,7 @@ let createPeds = function() {
     creatorTimer = setTimeout(async () => {
         for (let i = 0; i < charNum; i++) {
             setCharCustom(i);
-            //setCharClothes(i);
+            setCharClothes(i);
 
             let x = (camPos[0] + i * pedDist * sinPedRot) + camDist * sinCamRot;
             let y = (camPos[1] + i * pedDist * cosPedRot) + camDist * cosCamRot;
@@ -227,10 +227,10 @@ let choose = function() {
 
 let setCharClothes = function(indexPed) {
     if (charClothes.length <= indexPed) return;
-    for (let i = 0; i < charClothes[indexPed].length; i++) {
-        for (let j = 6; j < charClothes[indexPed][i].length; j++) {
-            mp.players.local.setComponentVariation(charClothes[indexPed][i][j][0], charClothes[indexPed][i][j][1], charClothes[indexPed][i][j][2], charClothes[indexPed][i][j][3]);
-        }
+    let clothes = charClothes[indexPed].clothes;
+    let props = charClothes[indexPed].props;
+    for (let i = 0; i < clothes.length; i++) {
+        mp.players.local.setComponentVariation(clothes[i][0], clothes[i][1], clothes[i][2], 0);
     }
 };
 
