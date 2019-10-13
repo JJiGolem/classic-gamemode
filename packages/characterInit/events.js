@@ -5,6 +5,9 @@ let logger = call("logger");
 let utils = call("utils");
 
 module.exports = {
+    "init": () => {
+        characterInit.moduleInit();
+    },
     "auth.done": (player) => {
         player.characterInit = {
             created: false,
