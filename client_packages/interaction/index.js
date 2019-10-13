@@ -228,7 +228,7 @@ mp.events.add('render', () => {
         }
           
         let dist = vdist(mp.players.local.position, position);
-        if (dist > INTERACTION_RANGE) {
+        if (dist > INTERACTION_RANGE && !personalInteractionEntity) {
             currentInteractionEntity = null;
             mp.events.call('interaction.menu.close');
             mp.events.call('interaction.money.close'); // to be tested
