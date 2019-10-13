@@ -36,8 +36,8 @@ module.exports = {
             if (veh.products.type != "ammo") return notifs.error(player, `Авто содержит другой тип товара`, header);
             veh.products.count = Math.clamp(veh.products.count + factions.ammoBox, 0, factions.ammoVehMax);
             veh.setVariable("label", `${veh.products.count} из ${factions.ammoVehMax} ед.`);
-            if (veh.products.count == factions.ammoVehMax) return notifs.warning(player, `Багажник заполнен`, header);
             player.addAttachment("ammoBox", true);
+            if (veh.products.count == factions.ammoVehMax) return notifs.warning(player, `Багажник заполнен`, header);
         } else if (player.hasAttachment("medicinesBox")) {
             if (!factions.medicinesVehModels.includes(model)) return notifs.error(player, `Авто не предназначено для перевоза медикаментов`, header);
             if (!veh.products) veh.products = {
@@ -47,8 +47,8 @@ module.exports = {
             if (veh.products.type != "medicines") return notifs.error(player, `Авто содержит другой тип товара`, header);
             veh.products.count = Math.clamp(veh.products.count + factions.medicinesBox, 0, factions.medicinesVehMax);
             veh.setVariable("label", `${veh.products.count} из ${factions.medicinesVehMax} ед.`);
-            if (veh.products.count == factions.medicinesVehMax) return notifs.warning(player, `Багажник заполнен`, header);
             player.addAttachment("medicinesBox", true);
+            if (veh.products.count == factions.medicinesVehMax) return notifs.warning(player, `Багажник заполнен`, header);
         }
     },
     "factions.vehicle.products.take": (player, vehId) => {
