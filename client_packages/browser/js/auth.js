@@ -39,6 +39,8 @@ var auth = new Vue({
     },
     methods: {
         authAccountHandler() {
+            if (loader.show == true) return;
+            
             this.prompt = "";
             if (!this.loginOrEmail) {
                 this.prompt = "Введите логин или email";
@@ -56,11 +58,11 @@ var auth = new Vue({
                 return;
             }
 
+            loader.show = true;
             mp.trigger("auth.login", JSON.stringify({
                 loginOrEmail: this.loginOrEmail,
                 password: this.password
             }));
-            loader.show = true;
         },
         regAccountHandler(emailCode) {
             if (!this.login) {
@@ -136,6 +138,7 @@ var auth = new Vue({
         showLoginResult(code) {
             if (!this.loginMessages[code]) return;
             this.prompt = this.loginMessages[code];
+            if (code == 7) auth.show = false;
             loader.show = false;
         },
         showRegisterResult(code) {

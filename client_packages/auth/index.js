@@ -21,7 +21,6 @@ mp.events.add('auth.login', (data) => {
 /// Результат входа в аккаунт
 mp.events.add('auth.login.result', result => {
     mp.callCEFV(`auth.showLoginResult(${result})`);
-    result == 7 && mp.callCEFV(`auth.show = false;`);
 });
 
 /// Регистрация аккаунта
