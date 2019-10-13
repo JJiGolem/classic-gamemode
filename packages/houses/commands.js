@@ -6,8 +6,10 @@ module.exports = {
         args: "[id]:n",
         access: 4,
         handler: (player, args) => {
-            let house = houseService.getHouseById(args[0]);
-            player.position = new mp.Vector3(house.spawnX, house.spawnY, house.spawnZ);
+            let house = houseService.getHouseById(parseInt(args[0]));
+            if (house == null) return;
+            let info = house.info;
+            player.position = new mp.Vector3(info.spawnX, info.spawnY, info.spawnZ);
         }
     },
     "/houseadd": {
