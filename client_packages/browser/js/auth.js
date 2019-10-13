@@ -147,7 +147,7 @@ var auth = new Vue({
             if (!this.registerMessages[code]) return;
             this.prompt = this.registerMessages[code];
             if (code == 9) // открывается панель, на которой нужно предложить пользователю подтвердить почту
-            // там можно либо не подтверждать и вызывать mp.trigger('auth.email.confirm', 0);
+            // там можно либо не подтверждать и вызывать mp.trigger('auth.email.confirm', answer);
             // где 0 - не согласился подтвердить
             // 1 - согласился подтвердить
             // в случае если пользователь согласился подвтердить почту, 
