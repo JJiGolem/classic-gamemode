@@ -72,6 +72,7 @@ mp.factions = {
         }
     },
     showMembersSelectMenu(data) {
+        // debug(`showMembersSelectMenu`)
         // debug(data)
         mp.callCEFV(`selectMenu.menus['factionControlMembers'].init('${JSON.stringify(data)}')`);
         mp.callCEFV(`selectMenu.showByName('factionControlMembers')`);

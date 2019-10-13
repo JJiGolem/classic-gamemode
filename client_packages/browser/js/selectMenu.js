@@ -1617,7 +1617,7 @@ var selectMenu = new Vue({
                     items.push({
                         text: "Вернуться"
                     });
-                    this.items = items;
+                    selectMenu.setItems('factionControlMembers', items);
 
                     this.rankNames = data.rankNames;
                     this.members = data.members;
