@@ -9,7 +9,6 @@ module.exports = {
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;
         if (shape.isClothingShop) {
-            player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} зашел в колшейп CS ${shape.clothingShopId}`]);
             player.currentClothingShopId = shape.clothingShopId;
             player.dimension = player.id + 1;
             if (player.hasValidClothesData) {
