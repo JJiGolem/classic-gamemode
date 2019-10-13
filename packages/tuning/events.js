@@ -16,7 +16,7 @@ module.exports = {
 
             player.call('tuning.fadeOut');
             let customs = tuning.getCustomsDataById(shape.customsId);
-            player.vehicle.dimension = player.id + 1;
+            player.vehicle.dimension = player.id + 10000;
             player.vehicle.position = new mp.Vector3(customs.tuneX, customs.tuneY, customs.tuneZ);
             player.call('vehicles.heading.set', [customs.tuneH])
             let primary = player.vehicle.color1;
