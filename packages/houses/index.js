@@ -42,7 +42,7 @@ let createBlip = function(house) {
                 player.call("house.blip.create", [[{info: house.blip, specialColor: 3}]]);
             }
             else {
-                player.call("house.blip.create", [{info: house.blip}]);
+                player.call("house.blip.create", [[{info: house.blip}]]);
             }
         }
     });
@@ -228,13 +228,52 @@ module.exports = {
         if (player != null) player.call('notifications.push.success', ["Вы удалили дом с id " + id, "Успешно"]);
     },
     async changePrice(id, price) {
-        if (price <= 0) return;
+        if (price <= 0) return false;
         let house = this.getHouseById(id);
-        if (house == null) return;
-        if (house.info.characterId != null) return;
+        if (house == null) return false;
+        if (house.info.characterId != null) return false;
         house.info.price = price;
         await house.info.save();
-        if (player != null) player.call('notifications.push.success', ["Вы изменили цену у дома с id " + id + " на " + price, "Успешно"]);
+        return true;
+    },
+    async changeInterior(id, interiorId) {
+        let house = this.getHouseById(id);
+        if (house == null) return false;
+        if (house.info.characterId != null) return false;
+
+        house.enter.destroy();
+        house.enter.marker.destroy();
+        house.exit.destroy();
+        house.exit.marker.destroy();
+        if (house.exitGarage != null) {
+            house.exitGarage.destroy();
+            house.exitGarage.marker.destroy();
+        }
+        house.blip.destroy();
+        let info = house.info;
+        let houseIndex = houses.findIndex(x => x.info.id == id);
+        houseIndex != -1 && houses.splice(houseIndex, 1);
+
+        info.interiorId = interiorId;
+        await info.save();
+        info = await db.Models.House.findOne({
+            where: {
+                id: info.id
+            },
+            include: [{
+                model: db.Models.Interior,
+                include: [{
+                    model: db.Models.Garage,
+                    include: [db.Models.GaragePlace]
+                }]
+            }]
+        });
+        
+        house = this.addHouse(info);
+        this.setTimer(house);
+
+        
+        return true;
     },
     async createInterior(player, interiorInfo) {
         let interior = await db.Models.Interior.create({
