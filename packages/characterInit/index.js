@@ -3,12 +3,12 @@ const freemodeCharacters = [mp.joaat("mp_m_freemode_01"), mp.joaat("mp_f_freemod
 const creatorPlayerPos = new mp.Vector3(402.8664, -996.4108, -99.00027);
 const creatorPlayerHeading = -185.0;
 
-let houses = call('houses');
-let factions = call('factions');
-let inventory = call('inventory');
-let notifs = call('notifications');
-let utils = call("utils");
-let promocodes = call("promocodes");
+let houses;
+let factions;
+let inventory;
+let notifs;
+let utils;
+let promocodes;
 
 let clothesConfig = {
     0: {
@@ -54,6 +54,14 @@ const SHOES_ID = 9;
 
 /// Функции модуля выбора и создания персоонажа
 module.exports = {
+    moduleInit() {
+        houses = call('houses');
+        factions = call('factions');
+        inventory = call('inventory');
+        notifs = call('notifications');
+        utils = call("utils");
+        promocodes = call("promocodes");
+    },
     async init(player) {
         if (player.character != null) delete player.character;
         if (player.characters == null) {
@@ -90,6 +98,19 @@ module.exports = {
                     // },
                 ]
             });
+            for (let i = 0; i < player.characters.length; i++) {
+                player.characters[i].CharacterInventories = await db.Models.CharacterInventory.findAll({
+                    where: {
+                        parentId: null,
+                        playerId: player.characters[i].id
+                    },
+                    include: {
+                        as: "params",
+                        model: db.Models.CharacterInventoryParam,
+                    },
+                });
+            }
+
             var diff = Date.now() - start;
             notifs.info(player, `Время выборки персонажей: ${diff} ms.`);
             player.characters.forEach(character => {
@@ -109,8 +130,7 @@ module.exports = {
         for (let i = 0; i < player.characters.length; i++) {
             charInfos.push({
                 charInfo: player.characters[i],
-                charClothes: null,
-                // charClothes: inventory.getView(player.characters[i].CharacterInventories),
+                charClothes: inventory.getView(player.characters[i].CharacterInventories),
             });
         }
         return charInfos;
