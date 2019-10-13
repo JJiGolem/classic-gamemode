@@ -86,18 +86,30 @@ module.exports = {
                         model: db.Models.CharacterSettings,
                     },
                     // Этот инклюд тормозит выборку до 5 сек...
-                    {
-                        model: db.Models.CharacterInventory,
-                        where: {
-                            parentId: null,
-                        },
-                        include: {
-                            as: "params",
-                            model: db.Models.CharacterInventoryParam,
-                        },
-                    },
+                    // {
+                    //     model: db.Models.CharacterInventory,
+                    //     where: {
+                    //         parentId: null,
+                    //     },
+                    //     include: {
+                    //         as: "params",
+                    //         model: db.Models.CharacterInventoryParam,
+                    //     },
+                    // },
                 ]
             });
+            for (let i = 0; i < player.characters.length; i++) {
+                player.characters[i].CharacterInventories = await db.Models.CharacterInventory.findAll({
+                    where: {
+                        parentId: null,
+                        playerId: player.characters[i].id
+                    },
+                    include: {
+                        as: "params",
+                        model: db.Models.CharacterInventoryParam,
+                    },
+                });
+            }
 
             var diff = Date.now() - start;
             notifs.info(player, `Время выборки персонажей: ${diff} ms.`);
