@@ -6,7 +6,9 @@ var money = require('../money');
 var notifs = require('../notifications');
 
 module.exports = {
-    "init": () => {},
+    "init": () => {
+        army.init();
+    },
     "characterInit.done": (player) => {
         if (!factions.isArmyFaction(player.character.factionId)) return;
         // player.call(`mapCase.init`, [player.name, player.character.factionId]);
