@@ -32,7 +32,7 @@ mp.events.add('auth.register.result', (result, data) => {
     mp.callCEFV(`auth.showRegisterResult(${result})`);
 
     //temp
-    result == 9 && mp.events.call('auth.email.confirm', 0);
+    //result == 9 && mp.events.call('auth.email.confirm', 0);
 });
 
 /// Запрос на отправку кода подтверждения почты
@@ -47,5 +47,4 @@ mp.events.add('auth.email.confirm.code', (code) => {
 /// Ответ проверки почты
 mp.events.add('auth.email.confirm.result', (result) => {
     mp.callCEFV(`auth.showEmailConfirmResult(${result})`);
-    result == 1 && mp.callCEFV(`auth.show = false;`);
 });
