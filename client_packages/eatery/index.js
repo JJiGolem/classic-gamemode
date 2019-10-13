@@ -38,7 +38,7 @@ function setPrices(config, multiplier) {
     mp.callCEFV(`selectMenu.menus["eateryMain"].items[1].values[0] = '$${config.hotdog}'`);
     mp.callCEFV(`selectMenu.menus["eateryMain"].items[2].values[0] = '$${config.pizza}'`);
     mp.callCEFV(`selectMenu.menus["eateryMain"].items[3].values[0] = '$${config.chips}'`);
-    mp.callCEFV(`selectMenu.menus["eateryMain"].items[4].values[0] = '$${config.pizza}'`);
+    mp.callCEFV(`selectMenu.menus["eateryMain"].items[4].values[0] = '$${config.cola}'`);
 }
 
 function setHeaders(type) {
