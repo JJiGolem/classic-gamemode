@@ -39,7 +39,7 @@ module.exports = {
     "/housechangeprice": {
         description: "Обновить интерьер у дома",
         access: 5,
-        args: "[id]:n [цена дома]:n",
+        args: "[id]:n [цена_дома]:n",
         handler: (player, args) => {
             if (isNaN(parseInt(args[0])) || isNaN(parseInt(args[1]))) return player.call('notifications.push.error', ["Введите аргументы верно", "Ошибка"]);
             if (!houseService.changePrice(parseInt(args[0]), parseInt(args[1]))) {
