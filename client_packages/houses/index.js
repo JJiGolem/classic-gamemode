@@ -291,11 +291,15 @@ let garagesIdCarPlaces = new Array();
 mp.events.add('house.add.init', (temp, garagesIdCarPlacesT) => {
     garagesIdCarPlaces = garagesIdCarPlacesT;
     let garagesIdCarPlacesNames = new Array();
+    let garagesIds = new Array();
     garagesIdCarPlacesNames.push("Нет гаража");
+    garagesIds.push(null);
     for (let i = 0; i < garagesIdCarPlacesT.length; i++) {
         garagesIdCarPlacesNames.push(`id:${garagesIdCarPlacesT[i].id} places:${garagesIdCarPlacesT[i].carPlaces}`);
+        garagesIds.push(garagesIdCarPlacesT[i].id);
     }
     mp.callCEFV(`selectMenu.menus["houseAddInteriorMenu"].items[0].values = ${JSON.stringify(garagesIdCarPlacesNames)};`);
+    mp.callCEFV(`selectMenu.menus["houseAddInteriorMenu"].garagesIds = ${JSON.stringify(garagesIds)};`);
 });
 mp.events.add('house.add.interior.open', () => {
     if (mp.busy.includes()) return;
@@ -371,7 +375,7 @@ mp.events.add('house.add.interior.holder', () => {
         });
     mp.callCEFV(`selectMenu.menu.items[6].values = ["BLUE"];`);
 });
-mp.events.add('house.add.interior.create', (garageIndex, className, numRooms, rent) => {
+mp.events.add('house.add.interior.create', (garageId, className, numRooms, rent) => {
     garageIndex = parseInt(garageIndex);
     if (isNaN(garageIndex)) return mp.notify.error("Ошибка в выборе гаража", "Ошибка");
     if (className == "" || className == null) return mp.notify.error("Введите название класса жилья корректно", "Ошибка");
@@ -383,7 +387,7 @@ mp.events.add('house.add.interior.create', (garageIndex, className, numRooms, re
     if (enterMarker == null) return mp.notify.error("Создайте вход в интерьер", "Ошибка");
     if (holderMarker == null) return mp.notify.error("Создайте шкаф в интерьере", "Ошибка");
 
-    addInteriorInfo.garageId = garageIndex == 0 ? null : interiorsClasses[garageIndex - 1].id;
+    addInteriorInfo.garageId = garageId;
     addInteriorInfo.class = className;
     addInteriorInfo.numRooms = numRooms;
     addInteriorInfo.rent =  rent;
@@ -417,7 +421,7 @@ mp.events.add('house.add.interior.create', (garageIndex, className, numRooms, re
         y: null,
         z: null,
         rotation: null,
-        
+
         hX: null,
         hY: null,
         hZ: null

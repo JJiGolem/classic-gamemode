@@ -1201,6 +1201,7 @@ var selectMenu = new Vue({
             "houseAddInteriorMenu": {
                 name: "houseaddinterior",
                 header: "Добавление интерьера",
+                garagesIds: [],
                 items: [{
                         text: "Выберите гараж",
                         values: [''],
@@ -1266,7 +1267,7 @@ var selectMenu = new Vue({
                                 mp.trigger("house.add.interior.holder");
                                 break;
                             case "Создать":
-                                mp.trigger("house.add.interior.create", this.items[0].i, this.items[1].values[0], this.items[2].values[0], this.items[3].values[0]);
+                                mp.trigger("house.add.interior.create", selectMenu.menus["houseAddInteriorMenu"].garagesIds[this.items[0].i], this.items[1].values[0], this.items[2].values[0], this.items[3].values[0]);
                                 break;
                             case "Закрыть":
                                 mp.trigger("house.add.interior.close");
