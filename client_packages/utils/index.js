@@ -142,6 +142,8 @@ mp.utils = {
         mp.game.streaming.requestIpl("ex_dt1_02_office_02b");
         /// Трейлер Тревора
         mp.game.streaming.requestIpl("TrevorsTrailerTidy");
+        /// Пентхаус
+        mp.game.streaming.requestIpl("vw_casino_penthouse");
     },
     // Получить позицию капота авто
     getHoodPosition(veh) {
