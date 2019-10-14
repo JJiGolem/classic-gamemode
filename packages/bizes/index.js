@@ -58,20 +58,19 @@ let dropBiz = function(biz, sellToGov = false) {
         money.addMoneyById(characterId, biz.info.price * dropBizMultiplier, function(result) {
             if (result) {
                 console.log("[bizes] Biz dropped " + biz.info.id);
-                for (let j = 0; j < mp.players.length; j++) {
-                    if (mp.players.at(j).character == null) continue;
-                    if (characterId == mp.players.at(j).character.id) {
-                        mp.events.call('player.biz.changed', mp.players.at(j));
-                        if (sellToGov) {
-                            mp.players.at(j).call('biz.sell.toGov.ans', [1]);
-                        } else {
-                            notifications.warning(mp.players.at(j), "Ваш бизнес отобрали за неуплату налогов", "Внимание");
-                            mp.players.at(j).call('phone.app.remove', ["biz", biz.info.id]);
-                        }
-                        return;
+                let player = mp.players.toArray().find(x => x.character != null && characterId == x.character.id);
+                if (player != null) {
+                    mp.events.call('player.biz.changed', player);
+                    if (sellToGov) {
+                        player.call('biz.sell.toGov.ans', [1]);
+                    } else {
+                        notifications.warning(player, "Ваш бизнес отобрали за неуплату налогов", "Внимание");
+                        player.call('phone.app.remove', ["biz", biz.info.id]);
                     }
                 }
-                notifications.save(characterId, "warning", "Ваш бизнес отобрали за неуплату налогов", "Внимание");
+                else {
+                    notifications.save(characterId, "warning", "Ваш бизнес отобрали за неуплату налогов", "Внимание");
+                }
             } else {
                 console.log("[bizes] Biz dropped " + biz.info.id + ". But player didn't getmoney");
             }

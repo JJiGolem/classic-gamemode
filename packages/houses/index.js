@@ -78,20 +78,19 @@ let dropHouse = function(house, sellToGov) {
             money.addMoneyById(characterId, house.info.price * dropHouseMultiplier, function(result) {
                 if (result) {
                     console.log("[HOUSES] House dropped " + house.info.id);
-                    for (let j = 0; j < mp.players.length; j++) {
-                        if (mp.players.at(j).character == null) continue;
-                        if (characterId == mp.players.at(j).character.id) {
-                            mp.events.call('player.house.changed', mp.players.at(j));
-                            if (sellToGov) {
-                                mp.players.at(j).call('house.sell.toGov.ans', [1]);
-                            } else {
-                                notifications.warning(mp.players.at(j), "Ваш дом отобрали за неуплату налогов", "Внимание");
-                                mp.players.at(j).call('phone.app.remove', ["house", house.info.id]);
-                            }
-                            return;
+                    let player = mp.players.toArray().find(x => x.character != null && characterId == x.character.id);
+                    if (player != null) {
+                        mp.events.call('player.house.changed', player);
+                        if (sellToGov) {
+                            player.call('house.sell.toGov.ans', [1]);
+                        } else {
+                            notifications.warning(player, "Ваш дом отобрали за неуплату налогов", "Внимание");
+                            player.call('phone.app.remove', ["house", house.info.id]);
                         }
                     }
-                    notifications.save(characterId, "warning", "Ваш дом отобрали за неуплату налогов", "Внимание");
+                    else {
+                        notifications.save(characterId, "warning", "Ваш дом отобрали за неуплату налогов", "Внимание");
+                    }
                 } else {
                     console.log("[HOUSES] House dropped " + house.info.id + ". But player didn't getmoney");
                 }
