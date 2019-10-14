@@ -70,12 +70,13 @@ module.exports = {
         accountNumber = parseInt(accountNumber);
         if (isNaN(accountNumber)) return player.call("bank.transfer.ask.ans", [null]);
         if (player.character.id == accountNumber) return player.call("bank.transfer.ask.ans", [null]);
-        let nick = await db.Models.Character.findOne({
+        let character = await db.Models.Character.findOne({
             where: {
                 id: accountNumber
             }
         });
-        player.call("bank.transfer.ask.ans", [nick]);
+        if (character == null) return player.call("bank.transfer.ask.ans", [null]);
+        player.call("bank.transfer.ask.ans", [character.name]);
     },
     "bank.transfer": (player, number, accountNumber) => {
         number = parseInt(number);
