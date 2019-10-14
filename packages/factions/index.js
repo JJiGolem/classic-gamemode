@@ -360,6 +360,13 @@ module.exports = {
 
         mp.events.call(`player.faction.changed`, player, oldVal);
     },
+    deleteOfflineMember(character) {
+        this.fullDeleteItems(character.id, character.factionId);
+
+        character.factionId = null;
+        character.factionRank = null;
+        character.save();
+    },
     getMembers(player) {
         var members = [];
         mp.players.forEach((rec) => {
@@ -395,17 +402,11 @@ module.exports = {
             rec.call(`mapCase.${type}.members.rank.set`, [character.id, rank]);
         });
     },
-    setOfflineRank(characterId, factionId, rank) {
+    setOfflineRank(character, rank) {
         if (typeof rank == 'number') rank = this.getRank(factionId, rank);
 
-        db.Models.Character.update({
-            factionRank: rank.id
-        }, {
-            where: {
-                id: characterId,
-                factionId: factionId
-            }
-        });
+        character.factionRank = rank.id;
+        character.save();
     },
     isGovernmentFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);

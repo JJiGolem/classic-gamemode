@@ -2,13 +2,28 @@ let dev = call('dev');
 
 module.exports = {
     "/eval": {
-        description: "Выполнить код.",
+        description: "Выполнить код на сервере.",
         access: 6,
         args: "[code]",
         handler: (player, args, out) => {
             var code = args.join(" ");
             out.log(code);
             out.log(eval(code));
+        }
+    },
+    "/evalcl": {
+        description: "Выполнить код на клиенте игрока.",
+        access: 6,
+        args: "[ид_игрока]:n [code]",
+        handler: (player, args, out) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+
+            args.shift();
+            var code = args.join(" ");
+
+            out.log(`${rec.name} (client) <= ${code}`, player);
+            rec.call(`dev.eval`, [code, player.id]);
         }
     },
     "/build": {

@@ -1699,7 +1699,11 @@ var selectMenu = new Vue({
                             else if (this.member.sqlId != null) data.sqlId = this.member.sqlId;
                             mp.trigger(`callRemote`, `factions.control.members.ranks.set`, JSON.stringify(data));
                         } else if (e.itemName == 'Уволить') {
-                            mp.trigger(`callRemote`, `factions.uval`, this.member.id);
+                            var data = {};
+                            if (this.member.id != null) data.recId = this.member.id;
+                            else if (this.member.sqlId != null) data.sqlId = this.member.sqlId;
+
+                            mp.trigger(`callRemote`, `factions.control.members.uval`, JSON.stringify(data));
                         } else if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlMembers");
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlMembers");
                 }

@@ -290,8 +290,6 @@ module.exports = {
         }]);
     },
     "factions.control.members.ranks.set": async (player, data) => {
-        debug(`ranks.set:`)
-        debug(data)
         if (typeof data == 'string') data = JSON.parse(data);
 
         var out = (text) => {
@@ -303,7 +301,9 @@ module.exports = {
         var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getBySqlId(data.sqlId);
         var character = null;
         if (!rec || !rec.character) { // игрок оффлайн
-            character = await db.Models.Character.findByPk(data.sqlId);
+            character = await db.Models.Character.findByPk(data.sqlId, {
+                attributes: ['id', 'name', 'factionId', 'factionRank'],
+            });
             rec = data.sqlId;
         } else {
             character = rec.character;
@@ -320,7 +320,37 @@ module.exports = {
             notifs.info(rec, `${player.name} понизил вас до ${rank.name}`, `Понижение`);
             out(`${character.name} понижен до ${rank.name}`);
         }
-        factions.setOfflineRank(rec, player.character.factionId, rank);
+
+        if (typeof rec == 'number') factions.setOfflineRank(character, rank);
+        else factions.setRank(rec, rank);
+    },
+    "factions.control.members.uval": async (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+        var out = (text) => {
+            player.call(`selectMenu.notification`, [text]);
+        };
+        if (!player.character.factionId) return out(`Вы не состоите в организации`);
+        if (!factions.canUval(player)) return out(`Недостаточно прав`);
+
+        var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getBySqlId(data.sqlId);
+        var character = null;
+        if (!rec || !rec.character) { // игрок оффлайн
+            character = await db.Models.Character.findByPk(data.sqlId, {
+                attributes: ['id', 'name', 'factionId', 'factionRank'],
+            });
+            rec = data.sqlId;
+        } else {
+            character = rec.character;
+        }
+
+        if (character.factionId != player.character.factionId) return out(`${character.name} не вашей организации`);
+        if (player.character.factionRank <= character.factionRank) return out(`${character.name} должен иметь ниже ранг`);
+
+        if (typeof rec == 'number') factions.deleteOfflineMember(character);
+        else factions.deleteMember(rec);
+
+        out(`${character.name} уволен`);
+        notifs.info(rec, `${player.name} вас уволил`, `Организация`);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (seat != -1 || vehicle.key != 'faction') return;
