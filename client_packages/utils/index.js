@@ -147,31 +147,6 @@ mp.utils = {
         mp.game.streaming.requestIpl("vw_casino_garage");
         mp.game.streaming.requestIpl("vw_casino_carpark");
         mp.game.streaming.requestIpl("vw_casino_penthouse");
-        /// Online Apartments
-        mp.game.streaming.requestIpl("apa_v_mp_h_01_a");
-        mp.game.streaming.requestIpl("apa_v_mp_h_01_c");
-        mp.game.streaming.requestIpl("apa_v_mp_h_01_b");
-        mp.game.streaming.requestIpl("apa_v_mp_h_02_a");
-        mp.game.streaming.requestIpl("apa_v_mp_h_02_c");
-        mp.game.streaming.requestIpl("apa_v_mp_h_02_b");
-        mp.game.streaming.requestIpl("apa_v_mp_h_03_a");
-        mp.game.streaming.requestIpl("apa_v_mp_h_03_c");
-        mp.game.streaming.requestIpl("apa_v_mp_h_03_b");
-        mp.game.streaming.requestIpl("apa_v_mp_h_04_a");
-        mp.game.streaming.requestIpl("apa_v_mp_h_04_c");
-        mp.game.streaming.requestIpl("apa_v_mp_h_04_b");
-        mp.game.streaming.requestIpl("apa_v_mp_h_05_a");
-        mp.game.streaming.requestIpl("apa_v_mp_h_05_c");
-        mp.game.streaming.requestIpl("apa_v_mp_h_05_b");
-        mp.game.streaming.requestIpl("apa_v_mp_h_06_a");
-        mp.game.streaming.requestIpl("apa_v_mp_h_06_c");
-        mp.game.streaming.requestIpl("apa_v_mp_h_06_b");
-        mp.game.streaming.requestIpl("apa_v_mp_h_07_a");
-        mp.game.streaming.requestIpl("apa_v_mp_h_07_c");
-        mp.game.streaming.requestIpl("apa_v_mp_h_07_b");
-        mp.game.streaming.requestIpl("apa_v_mp_h_08_a");
-        mp.game.streaming.requestIpl("apa_v_mp_h_08_c");
-        mp.game.streaming.requestIpl("apa_v_mp_h_08_b");
     },
     // Получить позицию капота авто
     getHoodPosition(veh) {
