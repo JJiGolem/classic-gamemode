@@ -40,7 +40,7 @@ var auth = new Vue({
     methods: {
         authAccountHandler() {
             if (loader.show == true) return;
-            
+
             this.prompt = "";
             if (!this.loginOrEmail) {
                 this.prompt = "Введите логин или email";
@@ -150,7 +150,7 @@ var auth = new Vue({
             // там можно либо не подтверждать и вызывать mp.trigger('auth.email.confirm', answer);
             // где 0 - не согласился подтвердить
             // 1 - согласился подтвердить
-            // в случае если пользователь согласился подвтердить почту, 
+            // в случае если пользователь согласился подвтердить почту,
             // то должно открыться окно ввода пароля из письма, отправленного на электронную почту
             // После чего пользователь вводит пароль из письма и ты вызываешь mp.trigger('auth.email.confirm.code', code);
             // и тебе приходит ответ `auth.showEmailConfirmResult(${result})`

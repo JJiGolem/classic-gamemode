@@ -172,17 +172,23 @@ module.exports = {
         if (killer.character.factionId == player.character.factionId) return;
         if (!bands.inWar(killer.character.factionId)) return;
 
+        if (!bands.isInBandZones(player.position)) return;
+        if (!bands.isInBandZones(killer.position)) return;
+        /*
+        // Засчитывать килл только в зоне капта
         var zone = bands.getZoneByPos(player.position);
         if (!zone) return;
         if (!bands.wars[zone.id]) return;
 
         var killerZone = bands.getZoneByPos(killer.position);
         if (!killerZone) return;
-        if (zone.id != killerZone.id) return;
+        if (zone.id != killerZone.id) return;*/
+
+        var zoneId = Object.keys(bands.wars)[0];
 
         player.lastWarDeathTime = Date.now();
 
         bands.checkReveangeKill(killer);
-        bands.giveScore(killer, player, reason, zone);
+        bands.giveScore(killer, player, reason, zoneId);
     },
 };
