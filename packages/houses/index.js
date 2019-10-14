@@ -433,7 +433,7 @@ module.exports = {
             numRooms: info.Interior.numRooms,
             garage: info.Interior.Garage != null,
             carPlaces: info.Interior.Garage != null ? info.Interior.Garage.carPlaces : 1,
-            rent: info.price * info.Interior.rent,
+            rent: this.getRent(house),
             isOpened: info.isOpened,
             improvements: new Array(),
             price: info.price,
@@ -446,9 +446,12 @@ module.exports = {
         return {
             name: house.info.id,
             class: house.info.Interior.class,
-            rent: house.info.price * house.info.Interior.rent,
+            rent: this.getRent(house),
             days: this.getDateDays(house.info.date)
         };
+    },
+    getRent(house) {
+        return parseInt(house.info.price * house.info.Interior.rent);
     },
     sellHouse(house, cost, seller, buyer, callback) {
         house.info.characterId = buyer.character.id;
@@ -466,7 +469,7 @@ module.exports = {
                         numRooms: house.info.Interior.numRooms,
                         garage: house.info.Interior.Garage != null,
                         carPlaces: house.info.Interior.Garage != null ? house.info.Interior.Garage.carPlaces : 1,
-                        rent: house.info.price * house.info.Interior.rent,
+                        rent: this.getRent(house),
                         isOpened: house.info.isOpened,
                         improvements: new Array(),
                         price: house.info.price,

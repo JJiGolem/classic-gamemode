@@ -31,7 +31,8 @@ module.exports = {
     "playerEnterColshape": (player, shape) => {
         if (!shape.isHouse) return;
         player.house.place = shape.place;
-        let info = housesService.getHouseById(shape.hId).info;
+        let house = housesService.getHouseById(shape.hId)
+        let info = house.info;
         /// На улице
         if (shape.place == 0) {
             let houseInfo = {};
@@ -43,7 +44,7 @@ module.exports = {
                     numRooms: info.Interior.numRooms,
                     garage: info.Interior.Garage != null,
                     carPlaces: info.Interior.Garage != null ? info.Interior.Garage.carPlaces : 1,
-                    rent: info.price * info.Interior.rent,
+                    rent: housesService.getRent(house),
                     price: info.price,
                     pos: [info.pickupX, info.pickupY, info.pickupZ]
                 };
@@ -55,7 +56,7 @@ module.exports = {
                     numRooms: info.Interior.numRooms,
                     garage: info.Interior.Garage != null,
                     carPlaces: info.Interior.Garage != null ? info.Interior.Garage.carPlaces : 1,
-                    rent: info.price * info.Interior.rent,
+                    rent: housesService.getRent(house),
                     owner: info.characterNick,
                     pos: [info.pickupX, info.pickupY, info.pickupZ]
                 };
