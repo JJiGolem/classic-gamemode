@@ -278,9 +278,14 @@ let addInteriorInfo = {
     y: null,
     z: null,
     rotation: null,
+    /// Holder pos
+    hX: null,
+    hY: null,
+    hZ: null
 };
 let exitMarker;
 enterMarker = null;
+let holderMarker;
 let enterMarkerAngle;
 let garagesIdCarPlaces = new Array();
 mp.events.add('house.add.init', (temp, garagesIdCarPlacesT) => {
@@ -349,6 +354,23 @@ mp.events.add('house.add.interior.enter', () => {
     });
     mp.callCEFV(`selectMenu.menu.items[4].values = ["RED"];`);
 });
+mp.events.add('house.add.interior.holder', () => {
+    if (mp.players.local.vehicle) return mp.notify.error("Покиньте авто", "Ошибка");
+    addInteriorInfo.hX = mp.players.local.position.x;
+    addInteriorInfo.hY = mp.players.local.position.y;
+    addInteriorInfo.hZ = mp.players.local.position.z;
+
+    if (holderMarker != null) holderMarker.destroy();
+    holderMarker = mp.markers.new(0, new mp.Vector3(addInteriorInfo.hX, addInteriorInfo.hY, addInteriorInfo.hZ), 1,
+        {
+            direction: new mp.Vector3(0, 0, 0),
+            rotation: new mp.Vector3(0, 0, 0),
+            color: [0, 0, 255, 255],
+            visible: true,
+            dimension: 0
+        });
+    mp.callCEFV(`selectMenu.menu.items[6].values = ["BLUE"];`);
+});
 mp.events.add('house.add.interior.create', (garageIndex, className, numRooms, rent) => {
     garageIndex = parseInt(garageIndex);
     if (isNaN(garageIndex)) return mp.notify.error("Ошибка в выборе гаража", "Ошибка");
@@ -391,6 +413,9 @@ mp.events.add('house.add.interior.create', (garageIndex, className, numRooms, re
         y: null,
         z: null,
         rotation: null,
+        hX: null,
+        hY: null,
+        hZ: null
     };
 });
 

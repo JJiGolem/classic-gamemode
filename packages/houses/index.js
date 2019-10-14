@@ -280,6 +280,9 @@ module.exports = {
             y: interiorInfo.y,
             z: interiorInfo.z,
             rotation: interiorInfo.rotation,
+            hX: interiorInfo.hX,
+            hY: interiorInfo.hY,
+            hZ: interiorInfo.hZ
         });
         interiors.push(interior);
         this.initHouseAdding(player);

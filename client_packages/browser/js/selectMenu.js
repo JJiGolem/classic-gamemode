@@ -1232,6 +1232,11 @@ var selectMenu = new Vue({
                         i: 0,
                     },
                     {
+                        text: "Поставить шкаф в интерьере",
+                        values: ['No'],
+                        i: 0,
+                    },
+                    {
                         text: "Создать",
                     },
                     {
@@ -1256,6 +1261,9 @@ var selectMenu = new Vue({
                                 break;
                             case "Поставить выход из интерьера":
                                 mp.trigger("house.add.interior.exit");
+                                break;
+                            case "Поставить шкаф в интерьере":
+                                mp.trigger("house.add.interior.holder");
                                 break;
                             case "Создать":
                                 mp.trigger("house.add.interior.create", this.items[0].i, this.items[1].values[0], this.items[2].values[0], this.items[3].values[0]);
