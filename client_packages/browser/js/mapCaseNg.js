@@ -47,7 +47,7 @@ var mapCaseNgWindowsData = {
 }
 
 var mapCaseNgData =  {
-    menuHeader: 'NATIONAL<br />GUARD',
+    menuHeader: 'UNITED STATES<br />ARMY',
     menuTitle: "Добро пожаловать,",
     menuHeaderImg: "img/mapCase/menu-header-ng.svg",
     windowsData: mapCaseNgWindowsData,

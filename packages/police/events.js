@@ -1,4 +1,5 @@
 "use strict";
+var army = require('../army');
 var bands = require('../bands');
 var factions = require('../factions');
 var inventory = require('../inventory');
@@ -424,7 +425,7 @@ module.exports = {
         var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Наручники`);
         var dist = player.dist(rec.position);
-        if (dist > 20 && data.recId == null) return notifs.error(player, `${rec.name} далеко`, `Наручники`);
+        if (dist > 20 && data.recId != null) return notifs.error(player, `${rec.name} далеко`, `Наручники`);
         var character = player.character;
         if (!police.cuffsFactions.includes(character.factionId)) return notifs.error(player, `Нет прав для использования`, `Наручники`);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, `Наручники`);
@@ -628,7 +629,7 @@ module.exports = {
     },
     "playerDeath": (player, reason, killer) => {
         if (player.cuffs) police.setCuffs(player, false);
-        if (!killer) return;
+        if (!killer || killer.id == player.id) return;
 
         // Если бандит убил бандита в гетто, то розыск не выдаем
         if (factions.isBandFaction(killer.character.factionId) && factions.isBandFaction(player.character.factionId) &&
@@ -637,6 +638,9 @@ module.exports = {
         // Если мафия убила мафию в зоне для бизвара, то розыск не выдаем
         if (factions.isMafiaFaction(killer.character.factionId) && factions.isMafiaFaction(player.character.factionId) &&
             mafia.getZoneByPos(killer.position) && mafia.getZoneByPos(player.position)) return;
+
+        // Если убийство на учениях армии
+        if (army.inWar(killer) && army.inWar(player)) return;
 
         // Если полицейский/агент убил преступника, то розыск не выдаем
         if ((factions.isPoliceFaction(killer.character.factionId) || factions.isFibFaction(killer.character.factionId)) &&

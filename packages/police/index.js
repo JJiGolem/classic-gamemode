@@ -77,6 +77,7 @@ module.exports = {
             player.setClothes(7, index, 0, 0);
             player.cuffs = cuffs;
             player.call("police.cuffs.set", [true])
+            player.setVariable("cuffs", true);
         } else {
             player.playAnimation("special_ped@tonya@intro", 'idle', 1, 49);
             player.setClothes(7, 0, 0, 0);
@@ -84,6 +85,7 @@ module.exports = {
             player.call("police.cuffs.set", [false])
             delete player.isFollowing;
             player.call("police.follow.stop");
+            player.setVariable("cuffs", null);
         }
     },
     setWanted(player, wanted, cause = null) {

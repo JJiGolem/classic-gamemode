@@ -6,6 +6,7 @@ let garages = new Array();
 
 let inventory;
 let money;
+let notifications;
 let vehicles;
 let carmarket;
 let timer;
@@ -22,6 +23,42 @@ let changeBlip = function(house) {
     } else {
         house.blip.color = 2;
     }
+    mp.players.forEach(player => {
+        if (player && player.character) {
+            if (player.character.id == house.info.characterId) 
+            {
+                player.call("house.blip.color", [house.blip.id, 3]);
+            }
+            else {
+                player.call("house.blip.color", [house.blip.id, house.blip.color]);
+            }
+        }
+    });
+};
+let createBlip = function(house) {
+    mp.players.forEach(player => {
+        if (player && player.character) {
+            if (player.character.id == house.info.characterId) {
+                player.call("house.blip.create", [[{info: house.blip, specialColor: 3}]]);
+            }
+            else {
+                player.call("house.blip.create", [[{info: house.blip}]]);
+            }
+        }
+    });
+};
+let loadBlips = function (player) {
+    let blipsInfo = new Array();
+    houses.forEach(house => {
+        if (!house) return;
+        if (player.character.id == house.info.characterId) {
+            blipsInfo.push({info: house.blip, specialColor: 3});
+        }
+        else {
+            blipsInfo.push({info: house.blip});
+        }
+    });
+    player.call("house.blip.create", [blipsInfo]);
 };
 let dropHouse = function(house, sellToGov) {
     try {
@@ -48,11 +85,13 @@ let dropHouse = function(house, sellToGov) {
                             if (sellToGov) {
                                 mp.players.at(j).call('house.sell.toGov.ans', [1]);
                             } else {
+                                notifications.warning(mp.players.at(j), "Ваш дом отобрали за неуплату налогов", "Внимание");
                                 mp.players.at(j).call('phone.app.remove', ["house", house.info.id]);
                             }
                             return;
                         }
                     }
+                    notifications.save(characterId, "warning", "Ваш дом отобрали за неуплату налогов", "Внимание");
                 } else {
                     console.log("[HOUSES] House dropped " + house.info.id + ". But player didn't getmoney");
                 }
@@ -69,6 +108,7 @@ module.exports = {
     async init() {
         inventory = call('inventory');
         money = call('money');
+        notifications = call('notifications');
         vehicles = call('vehicles');
         carmarket = call('carmarket');
         timer = call("timer");
@@ -136,14 +176,6 @@ module.exports = {
             carY: houseInfo.carY,
             carZ: houseInfo.carZ,
             carAngle: houseInfo.carAngle,
-        }, {
-            include: [{
-                model: db.Models.Interior,
-                include: [{
-                    model: db.Models.Garage,
-                    include: [db.Models.GaragePlace]
-                }]
-            }]
         });
         house = await db.Models.House.findOne({
             where: {
@@ -157,8 +189,8 @@ module.exports = {
                 }]
             }]
         });
-        this.addHouse(house);
-        this.setTimer(houses.length - 1);
+        house = this.addHouse(house);
+        this.setTimer(house);
         console.log("[HOUSES] added new house");
     },
     async removeHouse(id, player) {
@@ -188,15 +220,55 @@ module.exports = {
         if (player != null) player.call('notifications.push.success', ["Вы удалили дом с id " + id, "Успешно"]);
     },
     async changePrice(id, price) {
-        if (price <= 0) return;
+        if (price <= 0) return false;
         let house = this.getHouseById(id);
-        if (house == null) return;
-        if (house.info.characterId != null) return;
+        if (house == null) return false;
+        if (house.info.characterId != null) return false;
         house.info.price = price;
         await house.info.save();
-        if (player != null) player.call('notifications.push.success', ["Вы изменили цену у дома с id " + id + " на " + price, "Успешно"]);
+        return true;
+    },
+    async changeInterior(id, interiorId) {
+        let house = this.getHouseById(id);
+        if (house == null) return false;
+        if (house.info.characterId != null) return false;
+
+        house.enter.destroy();
+        house.enter.marker.destroy();
+        house.exit.destroy();
+        house.exit.marker.destroy();
+        if (house.exitGarage != null) {
+            house.exitGarage.destroy();
+            house.exitGarage.marker.destroy();
+        }
+        house.blip.destroy();
+        let info = house.info;
+        let houseIndex = houses.findIndex(x => x.info.id == id);
+        houseIndex != -1 && houses.splice(houseIndex, 1);
+
+        info.interiorId = interiorId;
+        await info.save();
+        info = await db.Models.House.findOne({
+            where: {
+                id: info.id
+            },
+            include: [{
+                model: db.Models.Interior,
+                include: [{
+                    model: db.Models.Garage,
+                    include: [db.Models.GaragePlace]
+                }]
+            }]
+        });
+        
+        house = this.addHouse(info);
+        this.setTimer(house);
+
+        
+        return true;
     },
     async createInterior(player, interiorInfo) {
+        console.log(interiorInfo);
         let interior = await db.Models.Interior.create({
             garageId: interiorInfo.garageId,
             class: interiorInfo.class,
@@ -209,6 +281,9 @@ module.exports = {
             y: interiorInfo.y,
             z: interiorInfo.z,
             rotation: interiorInfo.rotation,
+            hX: interiorInfo.hX,
+            hY: interiorInfo.hY,
+            hZ: interiorInfo.hZ
         });
         interiors.push(interior);
         this.initHouseAdding(player);
@@ -269,11 +344,27 @@ module.exports = {
         if (houseInfo.Interior.Garage != null) {
             exitGarageColshape = mp.colshapes.newSphere(houseInfo.Interior.Garage.exitX, houseInfo.Interior.Garage.exitY, houseInfo.Interior.Garage.exitZ, 1.0, dimension);
         }
-        let blip = mp.blips.new(40, new mp.Vector3(houseInfo.pickupX, houseInfo.pickupY, houseInfo.pickupZ), {
-            shortRange: true,
-            dimension: 0,
-            color: houseBlipColor
+        let blip = {
+            id: houseInfo.id,
+            color: houseBlipColor,
+            x: houseInfo.pickupX,
+            y: houseInfo.pickupY,
+            z: houseInfo.pickupZ,
+            destroy() {
+                mp.players.forEach(player => {
+                    player.call("house.blip.destroy", [this.id]);
+                });
+            }
+        };
+        createBlip({
+            blip: blip,
+            info: houseInfo
         });
+        // let blip = mp.blips.new(40, new mp.Vector3(houseInfo.pickupX, houseInfo.pickupY, houseInfo.pickupZ), {
+        //     shortRange: true,
+        //     dimension: 0,
+        //     color: houseBlipColor
+        // });
 
         enterColshape.marker = enterMarker;
         exitColshape.marker = exitMarker;
@@ -446,4 +537,6 @@ module.exports = {
         return holder;
     },
 
+
+    loadBlips: loadBlips,
 };

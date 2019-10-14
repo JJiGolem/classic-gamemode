@@ -220,7 +220,7 @@ mp.events.add('render', () => {
         if (!mp.players.local.vehicle) {
             mp.game.graphics.drawText("E", [position.x, position.y, position.z], { 
                 font: 4, 
-                color: isOpen ? [252, 224, 81, 185] : [255, 255, 255, 185], 
+                color: isOpen && !personalInteractionEntity ? [252, 224, 81, 185] : [255, 255, 255, 185], 
                 scale: [0.5, 0.5], 
                 outline: false,
                 centre: true
@@ -228,7 +228,7 @@ mp.events.add('render', () => {
         }
           
         let dist = vdist(mp.players.local.position, position);
-        if (dist > INTERACTION_RANGE) {
+        if (dist > INTERACTION_RANGE && !personalInteractionEntity) {
             currentInteractionEntity = null;
             mp.events.call('interaction.menu.close');
             mp.events.call('interaction.money.close'); // to be tested

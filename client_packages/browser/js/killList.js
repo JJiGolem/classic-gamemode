@@ -2,6 +2,8 @@ var killList = new Vue({
     el: "#killList",
     data: {
         colors: {
+            1: "#e13b3b",
+            2: "#00b500",
             8: "#00b500",
             9: "#da30ff",
             10: "#fff629",
@@ -10,7 +12,7 @@ var killList = new Vue({
             13: "#cbae8c",
             14: "#0b0b0b",
         },
-        maxCount: 10,
+        maxCount: 5,
         types: ["car", "hand"],
         list: [],
     },

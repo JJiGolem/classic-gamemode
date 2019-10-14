@@ -43,8 +43,8 @@ module.exports = {
     groundMaxDist: 2,
     // Климат, при котором игрок может бегать голым
     playerClime: {
-        head: [10, 25],
-        body: [20, 25],
+        head: [10, 30],
+        body: [20, 30],
         legs: [20, 30],
         feets: [25, 35],
     },
@@ -1149,7 +1149,7 @@ module.exports = {
     },
     // урон климата (если игрок одет не по погоде)
     checkClimeDamage(player, temp, out) {
-        if (player.vehicle || player.dimension) return;
+        if (player.vehicle || player.dimension || player.godmode) return;
 
         var clime = Object.assign({}, this.playerClime);
 

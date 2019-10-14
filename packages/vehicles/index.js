@@ -583,5 +583,9 @@ module.exports = {
     getOccupants(vehicle) {
         // TODO: Обойти баги рейджа через проверку на player.vehicle в радиусе авто
         return vehicle.getOccupants();
-    }
+    },
+    // Убито ли авто
+    isDead(vehicle) {
+        return !vehicle.engineHealth || !vehicle.bodyHealth || vehicle.dead;
+    },
 }

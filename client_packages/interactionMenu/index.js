@@ -146,11 +146,17 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
             mp.callCEFV(`inputWindow.playerId = ${entity.remoteId}`);
             mp.callCEFV(`inputWindow.showByName('mafia_power_sell')`);
         } else if (itemName == 'Связать') {
-
+            var data = {
+                recId: entity.remoteId
+            };
+            mp.events.callRemote(`mafia.cuffs`, JSON.stringify(data));
         } else if (itemName == 'Вести') {
-
+            mp.events.callRemote(`mafia.follow`, entity.remoteId);
         } else if (itemName == 'Мешок на голову') {
-
+            var data = {
+                recId: entity.remoteId
+            };
+            mp.events.callRemote(`mafia.bag`, JSON.stringify(data));
         }
     }
 });

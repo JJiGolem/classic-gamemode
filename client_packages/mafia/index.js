@@ -34,6 +34,7 @@ mp.mafia = {
     flashColor: 1,
     bizWarTimer: null,
     bizWarFactions: [],
+    followPlayer: null,
 
 
     initMafiaZones(zones) {
@@ -184,7 +185,15 @@ mp.mafia = {
         mp.attachmentMngr.register("headBag", "prop_cs_sack_01", 65068, new mp.Vector3(0.02, 0, 0),
             new mp.Vector3(90, -90, 10)
         );
-    }
+    },
+    startFollowToPlayer(playerId) {
+        var player = mp.players.atRemoteId(playerId);
+        if (!player) return;
+        this.followPlayer = player;
+    },
+    stopFollowToPlayer() {
+        this.followPlayer = null;
+    },
 };
 
 mp.events.add({
@@ -210,6 +219,12 @@ mp.events.add({
     "mafia.bizWar.killList.log": (target, killer, reason) => {
         mp.mafia.logKill(target, killer, reason);
     },
+    "mafia.follow.start": (playerId) => {
+        mp.mafia.startFollowToPlayer(playerId);
+    },
+    "mafia.follow.stop": () => {
+        mp.mafia.stopFollowToPlayer();
+    },
     "mafia.storage.info.set": (data) => {
         mp.mafia.setStorageInfo(data);
     },
@@ -217,6 +232,21 @@ mp.events.add({
         mp.mafia.mafiaZones.forEach(blip => {
             mp.game.invoke(mp.mafia.natives.SET_BLIP_ROTATION, blip, 0);
         });
+    },
+    "time.main.tick": () => {
+        if (mp.mafia.followPlayer) {
+            var pos = mp.mafia.followPlayer.position;
+            var localPos = mp.players.local.position;
+            var dist = mp.game.system.vdist(pos.x, pos.y, pos.z, localPos.x, localPos.y, localPos.z);
+            if (dist > 30) {
+                mp.mafia.followPlayer = null;
+                return;
+            }
+            var speed = 3;
+            if (dist < 10) speed = 2;
+            if (dist < 5) speed = 1;
+            mp.players.local.taskFollowNavMeshToCoord(pos.x, pos.y, pos.z, speed, -1, 1, true, 0);
+        }
     },
     "entityStreamIn": (player) => {
         if (player.type != "player") return;

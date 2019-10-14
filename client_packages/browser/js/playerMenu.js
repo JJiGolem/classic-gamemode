@@ -4,6 +4,16 @@ Vue.filter("playerMenuMoneySplit", (value, thisFilter) => {
     return value.replace(/(\d)(?=(\d{3})+(\D|$))/g, '$1 ') + " $";
 });
 
+Vue.filter("prettyMinutes", (value, thisFilter) => {
+    if (!thisFilter) return value;
+
+    var hours = parseInt(value / 60);
+    if (!hours) return `${value} мин.`;
+
+    var minutes = value % 60;
+    return `${hours} ч ${minutes} мин`;
+});
+
 function playerMenuMoneySplit(value) {
     value = value + '';
     return value.replace(/(\d)(?=(\d{3})+(\D|$))/g, '$1 ');
@@ -281,7 +291,8 @@ let statistics = {
     // TODO: Заполнить структуру статистики
     "minutes": {
         head: "Времени на сервере",
-        value: "-"
+        value: "-",
+        minutesFilter: true,
     },
     "sex": {
         head: "Пол",
@@ -637,7 +648,7 @@ var playerMenu = new Vue({
         },
         setStatistics(stats) {
             if (typeof stats == 'string') stats = JSON.parse(stats);
-            statistics["minutes"].value = `${stats.minutes} мин`;
+            statistics["minutes"].value = stats.minutes;
             statistics["sex"].value = ["Мужской", "Женский"][stats.gender];
             statistics["cash"].value = stats.cash;
             statistics["factionName"].value = stats.factionName || "-";
@@ -652,8 +663,7 @@ var playerMenu = new Vue({
 
             clearInterval(this.minutesTimer);
             this.minutesTimer = setInterval(() => {
-                var minutes = parseInt(statistics["minutes"].value) + 1;
-                statistics["minutes"].value = `${minutes} мин`;
+                statistics["minutes"].value++;
             }, 60000);
         },
         setDonatePrice(data) {

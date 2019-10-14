@@ -65,7 +65,6 @@ module.exports = {
     getZone(id) {
         return this.mafiaZones[id];
     },
-
     init() {
         factions = call('factions');
     },

@@ -102,6 +102,13 @@ var interactionMenu = new Vue({
                     if (item.text == 'Мои документы') {
                         mp.trigger(`documents.list`);
                         //mp.trigger(`interaction.menu.close`);
+                    } else if (item.text == "Организация") {
+                        mp.trigger(`interaction.menu.close`);
+                        selectMenu.showByName("factionControl");
+                    } else if (item.text == "Учения") {
+                        mp.trigger(`interaction.menu.close`);
+                        if (captureScore.show) return notifications.push(`error`, `Недоступно`);
+                        mp.trigger(`callRemote`, `army.capture.start`);
                     } else if (item.text == "Захват") {
                         mp.trigger(`interaction.menu.close`);
                         if (captureScore.show) return notifications.push(`error`, `Недоступно`);
@@ -485,6 +492,8 @@ var interactionMenu = new Vue({
                 this.deleteItem("player_interaction", "Army");
                 this.deleteItem("player_interaction", "Weazel News");
                 this.deleteItem("player_interaction", "Mafia");
+                this.deleteItem("player_ownmenu", "Организация");
+                this.deleteItem("player_ownmenu", "Учения");
                 this.deleteItem("player_ownmenu", "Захват");
                 this.deleteItem("player_ownmenu", "Захват биз.");
                 this.deleteItem("player_ownmenu", "Эфир");
@@ -492,6 +501,10 @@ var interactionMenu = new Vue({
                 return;
             }
             this.addItems("player_interaction", {
+                text: "Организация",
+                icon: "faction.svg"
+            });
+            this.addItems("player_ownmenu", {
                 text: "Организация",
                 icon: "faction.svg"
             });
@@ -537,7 +550,14 @@ var interactionMenu = new Vue({
                     text: "Army",
                     icon: "army.svg"
                 });
-            } else this.deleteItem("player_interaction", "Army");
+                this.addItems('player_ownmenu', {
+                    text: "Учения",
+                    icon: "war.svg"
+                });
+            } else {
+                this.deleteItem("player_interaction", "Army");
+                this.deleteItem("player_ownmenu", "Учения");
+            }
 
             if (val == 7) { // news
                 this.addItems("player_interaction", {

@@ -3,12 +3,12 @@ const freemodeCharacters = [mp.joaat("mp_m_freemode_01"), mp.joaat("mp_f_freemod
 const creatorPlayerPos = new mp.Vector3(402.8664, -996.4108, -99.00027);
 const creatorPlayerHeading = -185.0;
 
-let houses = call('houses');
-let factions = call('factions');
-let inventory = call('inventory');
-let notifs = call('notifications');
-let utils = call("utils");
-let promocodes = call("promocodes");
+let houses;
+let factions;
+let inventory;
+let notifs;
+let utils;
+let promocodes;
 
 let clothesConfig = {
     0: {
@@ -54,6 +54,14 @@ const SHOES_ID = 9;
 
 /// Функции модуля выбора и создания персоонажа
 module.exports = {
+    moduleInit() {
+        houses = call('houses');
+        factions = call('factions');
+        inventory = call('inventory');
+        notifs = call('notifications');
+        utils = call("utils");
+        promocodes = call("promocodes");
+    },
     async init(player) {
         if (player.character != null) delete player.character;
         if (player.characters == null) {
@@ -62,7 +70,8 @@ module.exports = {
                 where: {
                     accountId: player.account.id
                 },
-                include: [{
+                include: [
+                    {
                         model: db.Models.Feature,
                     },
                     {
@@ -77,19 +86,32 @@ module.exports = {
                         as: "settings",
                         model: db.Models.CharacterSettings,
                     },
-                    // Этот инклюд тормозит выборку до 5 сек...
                     // {
                     //     model: db.Models.CharacterInventory,
                     //     where: {
                     //         parentId: null,
                     //     },
-                    //     include: {
-                    //         as: "params",
-                    //         model: db.Models.CharacterInventoryParam,
-                    //     },
+                    //     // Этот инклюд тормозит выборку до 5 сек...
+                    //     // include: [{
+                    //     //     as: "params",
+                    //     //     model: db.Models.CharacterInventoryParam,
+                    //     // }],
                     // },
                 ]
             });
+            for (let i = 0; i < player.characters.length; i++) {
+                player.characters[i].CharacterInventories = await db.Models.CharacterInventory.findAll({
+                    where: {
+                        parentId: null,
+                        playerId: player.characters[i].id
+                    },
+                    include: {
+                        as: "params",
+                        model: db.Models.CharacterInventoryParam,
+                    },
+                });
+            }
+
             var diff = Date.now() - start;
             notifs.info(player, `Время выборки персонажей: ${diff} ms.`);
             player.characters.forEach(character => {
@@ -109,8 +131,7 @@ module.exports = {
         for (let i = 0; i < player.characters.length; i++) {
             charInfos.push({
                 charInfo: player.characters[i],
-                charClothes: null,
-                // charClothes: inventory.getView(player.characters[i].CharacterInventories),
+                charClothes: inventory.getView(player.characters[i].CharacterInventories),
             });
         }
         return charInfos;
@@ -392,6 +413,10 @@ module.exports = {
                 var pos = new mp.Vector3(house.info.Interior.x, house.info.Interior.y, house.info.Interior.z);
                 player.spawn(pos);
                 player.dimension = house.info.id;
+                player.house = {
+                    id: house.info.id,
+                    place: 1
+                };
                 break;
             case 2: //организация
                 var pos = factions.getMarker(player.character.factionId).position;

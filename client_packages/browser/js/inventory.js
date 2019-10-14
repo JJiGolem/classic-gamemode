@@ -440,9 +440,9 @@ var inventory = new Vue({
         // Огнестрельные оружия
         weaponsList: [19, 20, 21, 22, 41, 44, 46, 47, 48, 52, 80, 87, 88, 89, 91, 93, 99, 100, 107],
         // Еда
-        eatList: [35],
+        eatList: [35, 126, 127, 128, 129],
         // Напитки
-        drinkList: [34],
+        drinkList: [34, 130],
         // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
         environment: [],
         // Предметы на игроке (экипировка)
@@ -1076,7 +1076,10 @@ var inventory = new Vue({
         // ******************  [ Hotkeys ] ******************
         bindHotkey(itemSqlId, key) {
             var item = this.getItem(itemSqlId);
-            if (!item) return this.notify(`Предмет должен находиться в инвентаре`);
+            if (!item) {
+                this.unbindHotkey(key);
+                return this.notify(`Предмет должен находиться в инвентаре`);
+            }
             this.clearHotkeys(item);
             Vue.set(this.hotkeys, key, item);
             mp.trigger(`inventory.saveHotkey`, itemSqlId, key);

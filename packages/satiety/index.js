@@ -31,6 +31,7 @@ module.exports = {
                     delete this.timers[playerId];
                     return 0;
                 }
+                if (rec.godmode) return;
                 var character = rec.character;
 
                 if (character.satiety <= 0) {

@@ -7,11 +7,21 @@ module.exports = (sequelize, DataTypes) => {
         },
         name: {
             type: DataTypes.STRING(128),
-            allowNull: false
+            allowNull: false,
+            get() {
+                var value = this.getDataValue('name');
+                if (typeof value == 'string') value = value.replace(/(["'])/g, "\\$1");
+                return value;
+            },
         },
         description: {
             type: DataTypes.TEXT,
-            allowNull: false
+            allowNull: false,
+            get() {
+                var value = this.getDataValue('description');
+                if (typeof value == 'string') value = value.replace(/(["'])/g, "\\$1");
+                return value;
+            },
         },
         height: {
             type: DataTypes.INTEGER(11),

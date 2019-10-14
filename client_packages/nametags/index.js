@@ -32,10 +32,11 @@ mp.events.add('render', (nametags) => {
 
             y -= scale * (0.005 * (screenRes.y / 1080));
             var playerName = (player.isFamiliar)? `${player.name} (${player.remoteId})` : `ID: ${player.remoteId}`;
+            var nameColor = player.nameColor || [255, 255, 255, 255];
             mp.game.graphics.drawText(playerName, [x, y],
                 {
                     font: FONT,
-                    color: [255, 255, 255, 255],
+                    color: nameColor,
                     scale: [SIZE, SIZE],
                     outline: true
                 });

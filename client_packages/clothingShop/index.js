@@ -169,10 +169,8 @@ mp.events.add({
     },
     'clothingShop.list.get': (key, list) => {
         clothesList[key] = list;
-        mp.chat.debug(`${key} get. Length ${list.length}`);
         clothesLoaded++;
         if (clothesLoaded == 9) {
-            mp.chat.debug(`data received`);
             clothesLoaded = 0;
             mp.events.callRemote('clothingShop.enter');
         }

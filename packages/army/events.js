@@ -6,7 +6,9 @@ var money = require('../money');
 var notifs = require('../notifications');
 
 module.exports = {
-    "init": () => {},
+    "init": () => {
+        army.init();
+    },
     "characterInit.done": (player) => {
         if (!factions.isArmyFaction(player.character.factionId)) return;
         // player.call(`mapCase.init`, [player.name, player.character.factionId]);
@@ -297,5 +299,30 @@ module.exports = {
             notifs.success(player, `Вам выданы ${inventory.getInventoryItem(itemIds[index]).name} (${ammo} ед.)`, header);
             factions.setAmmo(faction, faction.ammo - army.ammoAmmo * ammo);
         });
+    },
+    "army.capture.start": (player) => {
+        army.startCapture(player);
+    },
+    "player.faction.changed": (player, oldVal) => {
+        if (!factions.isArmyFaction(oldVal)) return;
+        if (!army.inWar(player)) return;
+
+        player.call(`army.capture.stop`);
+        delete player.armyTeamId;
+    },
+    "playerDeath": (player, reason, killer) => {
+        // killer = player; // for tests
+        if (!killer || !killer.character) return;
+        if (!player.character) return;
+        if (!player.character.factionId) return;
+        if (!factions.isArmyFaction(player.character.factionId)) return;
+        if (!army.inWar(player)) return;
+        if (player.getVariable("knocked")) return;
+        if (!killer.character.factionId) return;
+        if (!factions.isArmyFaction(killer.character.factionId)) return;
+        if (!army.inWar(killer)) return;
+        if (killer.armyTeamId == player.armyTeamId) return;
+
+        army.giveScore(killer, player, reason);
     },
 }

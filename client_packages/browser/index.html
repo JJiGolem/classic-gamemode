@@ -64,9 +64,9 @@
             </div>
             <div class="wanted" v-if="wanted">
                 <img src="img/hud/star.svg" :style="{opacity: (wanted < 5)? 0.2 : 1}" />
-                <img src="img/hud/star.svg"  :style="{opacity: (wanted < 4)? 0.2 : 1}"/>
-                <img src="img/hud/star.svg"  :style="{opacity: (wanted < 3)? 0.2 : 1}"/>
-                <img src="img/hud/star.svg"  :style="{opacity: (wanted < 2)? 0.2 : 1}"/>
+                <img src="img/hud/star.svg" :style="{opacity: (wanted < 4)? 0.2 : 1}" />
+                <img src="img/hud/star.svg" :style="{opacity: (wanted < 3)? 0.2 : 1}" />
+                <img src="img/hud/star.svg" :style="{opacity: (wanted < 2)? 0.2 : 1}" />
                 <img src="img/hud/star.svg" />
             </div>
         </div>
@@ -1268,7 +1268,7 @@
                 <div class="body">
                     <div class="record" v-for="record in statistics">
                         <div>{{ record.head }}</div>
-                        <div :style="record"><span>{{ record.value | playerMenuMoneySplit(record.moneyFilter) }}</span></div>
+                        <div :style="record"><span>{{ record.value | playerMenuMoneySplit(record.moneyFilter) | prettyMinutes(record.minutesFilter) }}</span></div>
                     </div>
                 </div>
             </div>
@@ -1526,11 +1526,11 @@
 
     <div v-cloak id="captureScore" v-if="isShow">
         <div class="header">
-            <img :src="leftImgSrc" />
+            <img v-if="leftImgSrc" :src="leftImgSrc" />
             <span :style="{color: colors[leftBandId]}">{{ names[leftBandId] }}</span>
             <span class="vs">vs.</span>
             <span :style="{color: colors[rightBandId]}">{{ names[rightBandId] }}</span>
-            <img :src="rightImgSrc" />
+            <img v-if="rightImgSrc" :src="rightImgSrc" />
 
             <div class="progress" :style="{background: colors[rightBandId]}">
                 <div class="fill" :style="{width: progressWidth+'%', background: colors[leftBandId]}"></div>

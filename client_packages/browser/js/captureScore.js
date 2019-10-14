@@ -3,6 +3,8 @@ var captureScore = new Vue({
     data: {
         show: false,
         colors: {
+            1: "#e13b3b",
+            2: "#00b500",
             8: "#00b500",
             9: "#da30ff",
             10: "#fff629",
@@ -12,6 +14,8 @@ var captureScore = new Vue({
             14: "#0b0b0b",
         },
         names: {
+            1: "Attack Army",
+            2: "Defense Army",
             8: "The Families",
             9: "The Ballas",
             10: "Los Santos Vagos",
@@ -29,9 +33,11 @@ var captureScore = new Vue({
     },
     computed: {
         leftImgSrc() {
+            if (this.leftBandId < 8 || this.leftBandId > 11) return null;
             return `img/captureScore/${this.leftBandId}.svg`;
         },
         rightImgSrc() {
+            if (this.rightBandId < 8 || this.rightBandId > 11) return null;
             return `img/captureScore/${this.rightBandId}.svg`;
         },
         progressWidth() {
