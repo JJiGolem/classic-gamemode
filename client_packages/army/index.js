@@ -13,6 +13,11 @@ mp.army = {
         1: 1,
         2: 2,
     },
+    // Цвета ников (teamId: nameColor)
+    nameColors: {
+        1: [255, 59, 59, 255],
+        2: [0, 181, 0, 255],
+    },
     // Нативки
     natives: {
         _GET_BLIP_INFO_ID_ITERATOR: "0x186E5D252FA50E7D",
@@ -104,6 +109,7 @@ mp.army = {
         player.createBlip(1);
         mp.game.invoke(this.natives._SET_BLIP_SHOW_HEADING_INDICATOR, player.blip, true);
         mp.game.invoke(this.natives.SET_BLIP_COLOUR, player.blip, this.colors[teamId]);
+        player.nameColor = this.nameColors[teamId];
     },
     createPlayerBlips(teamAIds, teamBIds) {
         teamAIds.forEach(id => {
@@ -125,6 +131,7 @@ mp.army = {
             if (teamId == null) return;
             rec.destroyBlip();
             delete rec.armyTeamId;
+            delete rec.nameColor;
         });
     },
 };
