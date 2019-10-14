@@ -269,7 +269,6 @@ module.exports = {
     },
     async createInterior(player, interiorInfo) {
         console.log(interiorInfo);
-        interiorInfo = JSON.parse(interiorInfo);
         let interior = await db.Models.Interior.create({
             garageId: interiorInfo.garageId,
             class: interiorInfo.class,
