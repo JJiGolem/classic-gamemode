@@ -263,6 +263,15 @@ mp.utils = {
             z: z
         };
     },
+    // Вкл/выкл коллизии у сущности
+    setNoCollision(entity, enable) {
+        entity.setNoCollision(mp.players.local.handle, enable);
+        mp.players.local.setNoCollision(entity.handle, enable);
+        mp.vehicles.forEach(veh => {
+            entity.setNoCollision(veh.handle, enable);
+            veh.setNoCollision(entity.handle, enable);
+        });
+    },
 };
 
 

@@ -205,6 +205,10 @@ mp.events.add("playerExitVehicleBoot", (player, vehicle) => {
 mp.events.add("time.main.tick", () => {
     var value = mp.players.local.getArmour();
     mp.inventory.setArmour(value);
+
+    mp.objects.forEach(obj => {
+        if (obj.getVariable("groundItem")) mp.utils.setNoCollision(obj, true);
+    });
 });
 
 mp.events.addDataHandler("trunk", (vehicle, value) => {
