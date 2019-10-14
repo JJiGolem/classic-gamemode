@@ -1,10 +1,17 @@
 "use strict";
 
 let dev = call('dev');
+let terminal = call('terminal');
 
 module.exports = {
     "init": () => {
         dev.init();
+    },
+    "dev.eval.result": (player, result, recId) => {
+        var rec = mp.players.at(recId);
+        if (!rec || !rec.character || !rec.character.admin) return;
+
+        terminal.log(`${player.name} (client) => ${result}`, rec);
     },
     "characterInit.done": (player) => {
         if (!dev.showBuild) return;
