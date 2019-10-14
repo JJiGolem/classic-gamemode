@@ -381,6 +381,7 @@ mp.events.add('house.add.interior.create', (garageIndex, className, numRooms, re
     if (isNaN(rent)) return mp.notify.error("Введите аренду корректно", "Ошибка");
     if (exitMarker == null) return mp.notify.error("Создайте выход из интерьера", "Ошибка");
     if (enterMarker == null) return mp.notify.error("Создайте вход в интерьер", "Ошибка");
+    if (holderMarker == null) return mp.notify.error("Создайте шкаф в интерьере", "Ошибка");
 
     addInteriorInfo.garageId = garageIndex == 0 ? null : interiorsClasses[garageIndex - 1].id;
     addInteriorInfo.class = className;
@@ -395,6 +396,9 @@ mp.events.add('house.add.interior.create', (garageIndex, className, numRooms, re
 
     enterMarkerAngle.destroy();
     enterMarkerAngle = null;
+
+    holderMarker.destroy();
+    holderMarker = null;
 
     mp.busy.remove('house.add');
     mp.callCEFV(`selectMenu.show = false`);
@@ -413,6 +417,7 @@ mp.events.add('house.add.interior.create', (garageIndex, className, numRooms, re
         y: null,
         z: null,
         rotation: null,
+        
         hX: null,
         hY: null,
         hZ: null
