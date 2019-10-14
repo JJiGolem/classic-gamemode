@@ -267,7 +267,6 @@ module.exports = {
         return true;
     },
     async createInterior(player, interiorInfo) {
-        console.log(interiorInfo);
         let interior = await db.Models.Interior.create({
             garageId: interiorInfo.garageId,
             class: interiorInfo.class,
