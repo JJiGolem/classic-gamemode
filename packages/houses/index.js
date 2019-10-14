@@ -176,14 +176,6 @@ module.exports = {
             carY: houseInfo.carY,
             carZ: houseInfo.carZ,
             carAngle: houseInfo.carAngle,
-        }, {
-            include: [{
-                model: db.Models.Interior,
-                include: [{
-                    model: db.Models.Garage,
-                    include: [db.Models.GaragePlace]
-                }]
-            }]
         });
         house = await db.Models.House.findOne({
             where: {
