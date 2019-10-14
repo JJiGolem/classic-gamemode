@@ -602,6 +602,7 @@ mp.events.add("house.blip.create", (blipsInfo) => {
             shortRange: true,
             color: !specialColor ? info.color : specialColor,
         });
+        if (blips[info.id] != null && mp.blips.exists(blips[info.id])) blips[info.id].destroy();
         blips[info.id] = blip;
     });
 });
@@ -609,5 +610,6 @@ mp.events.add("house.blip.color", (id, color) => {
     blips[id].setColour(color);
 });
 mp.events.add("house.blip.destroy", (id) => {
+    if (!mp.blips.exists(blips[id])) return;
     blips[id].destroy();
 });
