@@ -66,6 +66,7 @@ mp.events.add("characterInit.done", () => {
     mp.players.local.freezePosition(false);
     mp.game.ui.displayRadar(true);
     mp.game.ui.displayHud(true);
+    mp.utils.disablePlayerMoving(false);
 
     mp.game.controls.disableControlAction(1, 199, false);    //ESC
 
