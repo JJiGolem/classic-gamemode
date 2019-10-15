@@ -476,7 +476,7 @@ module.exports = {
     async setBizesTypeMaxProducts(type, amount) {
         for (let index = 0; index < bizes.length; index++) {
             let biz = bizes[index];
-            if (bizes.info.type != type) continue;
+            if (biz.info.type != type) continue;
             biz.info.productsMaxCount = amount;
             await biz.info.save();
         }
