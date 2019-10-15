@@ -179,6 +179,7 @@ var mapCase = new Vue({
         let self = this;
         window.addEventListener('keyup', function(e) {
             if (busy.includes(["chat", "terminal", "inventory", "playerMenu", "phone", "inputWindow"])) return;
+            if (selectMenu.isEditing) return;
             if (Date.now() - self.lastShowTime < 500) return;
             if (self.inputFocus) return;
             if (e.keyCode == 80 && self.enable) self.show = !self.show; // P
