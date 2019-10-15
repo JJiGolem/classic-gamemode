@@ -29,6 +29,19 @@ module.exports = {
             biz.info.save();
         }
     },
+    "/updatebizprice": {
+        access: 6,
+        description: "Обновить цену на бизнес",
+        args: "[price]:n",
+        handler: (player, args, out) => {
+            let biz = bizService.getBizByPlayerPos(player);
+            if (biz == null) {
+                return out.error("Подойдите ближе к бизнесу", player);
+            }
+            biz.info.price = parseInt(args[0]);
+            biz.info.save();
+        }
+    },
     "/setbizfaction": {
         access: 5,
         description: "Установить влияние мафии на бизнес",
