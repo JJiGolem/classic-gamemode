@@ -71,6 +71,9 @@
                 <img src="img/hud/star.svg" />
             </div>
         </div>
+        <div class="keys">
+            <div v-for="key in keys"><span v-html="key.key"></span>{{ key.name }}</div>
+        </div>
         <div class="money">
             <div class="cash">
                 <img src="img/hud/cash.svg" />
