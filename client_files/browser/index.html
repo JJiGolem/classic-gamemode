@@ -38,6 +38,7 @@
     <link rel="stylesheet" type="text/css" href="css/watermark.css" />
     <link rel="stylesheet" type="text/css" href="css/timer.css" />
     <link rel="stylesheet" type="text/css" href="css/changelist.css" />
+    <link rel="stylesheet" type="text/css" href="css/modal.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -1591,6 +1592,11 @@
         </div>
     </div>
 
+    <div v-cloak id="modal" v-if="show && modal">
+        <div class="close" @click="show = false">X</div>
+        <div class="header">{{ modal.header }}</div>
+        <div class="content" v-html="modal.content"></div>
+    </div>
 
     <!-- ------------------------ REACT ------------------------------ -->
     <script async src="build/js/build.js" type="text/javascript"></script>
@@ -1625,6 +1631,7 @@
     <script src="js/killList.js"></script>
     <script src="js/watermark.js"></script>
     <script src="js/timer.js"></script>
+    <script src="js/modal.js"></script>
 
 </body>
 
