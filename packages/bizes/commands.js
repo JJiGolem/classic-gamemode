@@ -12,15 +12,33 @@ module.exports = {
     "/updatebiz": {
         access: 6,
         description: "Обновить информацию о бизнесе",
-        args: "[name]:s [price]:n [type]:n",
+        args: "[price]:n [type]:n [name]:s",
         handler: (player, args, out) => {
             let biz = bizService.getBizByPlayerPos(player);
             if (biz == null) {
                 return out.error("Подойдите ближе к бизнесу", player);
             }
-            biz.info.name = args[0];
-            biz.info.price = parseInt(args[1]);
-            biz.info.type = parseInt(args[2]);
+            let name = "";
+            for (let i = 2; i < args.length; i++) {
+                name += args[i];
+                if (i < args.length - 1) name += " ";
+            }
+            biz.info.name = name;
+            biz.info.price = parseInt(args[0]);
+            biz.info.type = parseInt(args[1]);
+            biz.info.save();
+        }
+    },
+    "/updatebizprice": {
+        access: 6,
+        description: "Обновить цену на бизнес",
+        args: "[price]:n",
+        handler: (player, args, out) => {
+            let biz = bizService.getBizByPlayerPos(player);
+            if (biz == null) {
+                return out.error("Подойдите ближе к бизнесу", player);
+            }
+            biz.info.price = parseInt(args[0]);
             biz.info.save();
         }
     },
@@ -86,7 +104,7 @@ module.exports = {
         access: 6,
         description: "Установить размер склада всем бизнесам заданного типа",
         args: "[type]:n [amount]:n",
-        handler: async (player, args) => {
+        handler: async (player, args, out) => {
             await bizService.setBizesTypeMaxProducts(args[0], args[1]);
             out.info("Размер склада всем бизнесам заданного типа установлен", player);
         }

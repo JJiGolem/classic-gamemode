@@ -470,4 +470,29 @@ module.exports = {
         debug(`free vehicles was spawned: ${diff} ms`)
         debug(`all vehicles: ${mp.vehicles.length}`)
     },
+    "vehicles.props.add": async (player, data) => {
+        console.log(data);
+        data = JSON.parse(data);
+        try {
+            let prop = await db.Models.VehicleProperties.create({
+                model: data.model,
+                name: data.name,
+                vehType: data.type,
+                price: data.price,
+                maxFuel: data.maxFuel,
+                consumption: data.consumption
+            });
+            if (data.isAvailable) {
+                await db.Models.CarList.create({
+                    carShowId: data.carShowId,
+                    vehiclePropertyModel: data.model,
+                    percentage: data.percentage
+                });
+                player.call('notifications.push.success', ['Т/с добавлено']);
+            }
+        } catch (err) {
+            console.log(err.message);
+            player.call('notifications.push.error', [`${err.message.slice(0, 50)}...`, `Ошибка`]);
+        }
+    }
 }

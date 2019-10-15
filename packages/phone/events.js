@@ -60,15 +60,20 @@ module.exports = {
         if (player.isTalking) return player.call('phone.call.start.ans', [2]);
         if (!phone.isExists(number)) return player.call('phone.call.start.ans', [1]);
 
-        for (let i = 0; i < mp.players.length; i++) {
-            if (mp.players[i] == null) continue;
-            if (mp.players[i].phone == null) continue;
-            if (mp.players[i].phone.number != number) continue;
-            if (mp.players[i].isTalking) return player.call('phone.call.start.ans', [2]);
-            player.isTalking = true;
-            return mp.players[i].call('phone.call.in', [player.phone.number, player.id]);
+        let calledPlayer = mp.players.toArray().find(x => x.phone != null && x.phone.number == number);
+        if (calledPlayer != null) {
+            if (calledPlayer.isTalking) {
+                player.call('phone.call.start.ans', [2]);
+            }
+            else {
+                player.isTalking = true;
+                calledPlayer.call('phone.call.in', [player.phone.number, player.id]);
+            }
+
         }
-        player.call('phone.call.start.ans', [4]);
+        else {
+            player.call('phone.call.start.ans', [4]);
+        }
     },
     /// Ответ на начало звонка игроку
     'phone.call.ans': (player, ans, callerId) => {
@@ -132,28 +137,26 @@ module.exports = {
 
         /// Работа с получателем
         if (player.phone.number == number) return;
-        for (let i = 0; i < mp.players.length; i++) {
-            if (player.id == i) continue;
-            if (mp.players.at(i) == null) continue;
-            if (mp.players.at(i).phone == null) continue;
-            if (mp.players.at(i).phone.number == number) {
-                index = mp.players.at(i).phone.PhoneDialogs.findIndex( x => x.number == player.phone.number);
-                if (index == -1) {
-                    let newDialog = db.Models.PhoneDialog.build({phoneId: mp.players.at(i).phone.id, number: player.phone.number, PhoneMessages: [
-                        {isMine: false, text: message, isRead: false, date: Date.now()}
-                    ]}, { include: [db.Models.PhoneMessage]});
-                    let result = await newDialog.save();
-                    mp.players.at(i).phone.PhoneDialogs.push(result);
-                }
-                else {
-                    let newMessage = db.Models.PhoneMessage.build({phoneDialogId: mp.players.at(i).phone.PhoneDialogs[index].id, isMine: false, text: message, isRead: false, date: Date.now()});
-                    let result = await newMessage.save();
-                    mp.players.at(i).phone.PhoneDialogs[index].PhoneMessages.push(result);
-                }
-                return mp.players.at(i).call('phone.message.set', [message, player.phone.number]);
+        let getterPlayer = mp.players.toArray().find(x => x.id != player.id && x.phone != null && x.phone.number == number);
+        if (getterPlayer != null) {
+            index = getterPlayer.phone.PhoneDialogs.findIndex( x => x.number == player.phone.number);
+            if (index == -1) {
+                let newDialog = db.Models.PhoneDialog.build({phoneId: getterPlayer.phone.id, number: player.phone.number, PhoneMessages: [
+                    {isMine: false, text: message, isRead: false, date: Date.now()}
+                ]}, { include: [db.Models.PhoneMessage]});
+                let result = await newDialog.save();
+                getterPlayer.phone.PhoneDialogs.push(result);
             }
+            else {
+                let newMessage = db.Models.PhoneMessage.build({phoneDialogId: getterPlayer.phone.PhoneDialogs[index].id, isMine: false, text: message, isRead: false, date: Date.now()});
+                let result = await newMessage.save();
+                getterPlayer.phone.PhoneDialogs[index].PhoneMessages.push(result);
+            }
+            getterPlayer.call('phone.message.set', [message, player.phone.number]);
         }
-        player.call('phone.error', [2]);
+        else {
+            player.call('phone.error', [2]);
+        }
     },
     'phone.dialog.read': async (player, dialogNumber) => {
         if (player == null) return;

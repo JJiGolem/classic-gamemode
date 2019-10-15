@@ -154,4 +154,12 @@ module.exports = {
 
         },
     },
+    "/addveh": {
+        access: 6,
+        description: "Добавить хар-ки авто (+ в автосалон)",
+        args: ``,
+        handler: (player, args, out) => {
+            player.call('vehicles.add.menu.show');
+        }
+    }
 }

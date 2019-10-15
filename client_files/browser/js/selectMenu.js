@@ -6924,6 +6924,87 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "vehiclePropAdd": {
+                name: "eateryMain",
+                header: "Добавление т/с",
+                items: [{
+                        text: 'Модель',
+                        type: "editable"
+                    },
+                    {
+                        text: 'Название т/с',
+                        type: "editable"
+                    },
+                    {
+                        text: 'Тип т/с',
+                        values: ["0 (авто)", "1 (мото)", "2 (вело)"],
+                    },
+                    {
+                        text: 'Цена',
+                        type: "editable"
+                    },
+                    {
+                        text: 'Объем бака',
+                        type: "editable"
+                    },
+                    {
+                        text: 'Расход в минуту',
+                        type: "editable"
+                    },
+                    {
+                        text: 'Наличие в автосалоне',
+                        values: ["0 (нет)", "1 (есть)"],
+                    },
+                    {
+                        text: 'ID салона',
+                        values: ["1 (премиум)", "2 (эконом)", "3 (средний)", "4 (мото)", "5 (вело)"],
+                    },
+                    {
+                        text: 'Коэф. выпадения (1-1000)',
+                        type: "editable"
+                    },
+                    {
+                        text: 'Добавить',
+                    },
+                    {
+                        text: 'Закрыть'
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                        if (e.itemName == 'Добавить') {
+                            let data = {
+                                model: this.items[0].values[0],
+                                name: this.items[1].values[0],
+                                type: parseInt(this.items[2].values[this.items[2].i]),
+                                price: parseInt(this.items[3].values[0]),
+                                maxFuel: parseInt(this.items[4].values[0]),
+                                consumption: parseInt(this.items[5].values[0]),
+                                isAvailable: parseInt(this.items[6].values[this.items[6].i]),
+                                carShowId: parseInt(this.items[7].values[this.items[7].i]),
+                                percentage: parseInt(this.items[8].values[0]),
+                            }
+                            mp.trigger('callRemote', 'vehicles.props.add', JSON.stringify(data));
+                        }
+                    }
+                    if (eventName == 'onEscapePressed') {
+                        selectMenu.show = false;
+                    }
+                }
+            },
         },
         // Уведомление
         notification: null,
@@ -7116,6 +7197,9 @@ var selectMenu = new Vue({
                 borderRadius: `1vh 1vh 0 0`,
                 height: `10vh`,
             };
+        },
+        isEditing() {
+            return this.menu && this.valuesType(this.menu.i) == 3;
         },
     },
     watch: {

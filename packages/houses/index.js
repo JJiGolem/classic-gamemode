@@ -78,20 +78,19 @@ let dropHouse = function(house, sellToGov) {
             money.addMoneyById(characterId, house.info.price * dropHouseMultiplier, function(result) {
                 if (result) {
                     console.log("[HOUSES] House dropped " + house.info.id);
-                    for (let j = 0; j < mp.players.length; j++) {
-                        if (mp.players.at(j).character == null) continue;
-                        if (characterId == mp.players.at(j).character.id) {
-                            mp.events.call('player.house.changed', mp.players.at(j));
-                            if (sellToGov) {
-                                mp.players.at(j).call('house.sell.toGov.ans', [1]);
-                            } else {
-                                notifications.warning(mp.players.at(j), "Ваш дом отобрали за неуплату налогов", "Внимание");
-                                mp.players.at(j).call('phone.app.remove', ["house", house.info.id]);
-                            }
-                            return;
+                    let player = mp.players.toArray().find(x => x.character != null && characterId == x.character.id);
+                    if (player != null) {
+                        mp.events.call('player.house.changed', player);
+                        if (sellToGov) {
+                            player.call('house.sell.toGov.ans', [1]);
+                        } else {
+                            notifications.warning(player, "Ваш дом отобрали за неуплату налогов", "Внимание");
+                            player.call('phone.app.remove', ["house", house.info.id]);
                         }
                     }
-                    notifications.save(characterId, "warning", "Ваш дом отобрали за неуплату налогов", "Внимание");
+                    else {
+                        notifications.save(characterId, "warning", "Ваш дом отобрали за неуплату налогов", "Внимание");
+                    }
                 } else {
                     console.log("[HOUSES] House dropped " + house.info.id + ". But player didn't getmoney");
                 }
@@ -268,7 +267,6 @@ module.exports = {
         return true;
     },
     async createInterior(player, interiorInfo) {
-        console.log(interiorInfo);
         let interior = await db.Models.Interior.create({
             garageId: interiorInfo.garageId,
             class: interiorInfo.class,
@@ -434,7 +432,7 @@ module.exports = {
             numRooms: info.Interior.numRooms,
             garage: info.Interior.Garage != null,
             carPlaces: info.Interior.Garage != null ? info.Interior.Garage.carPlaces : 1,
-            rent: info.price * info.Interior.rent,
+            rent: this.getRent(house),
             isOpened: info.isOpened,
             improvements: new Array(),
             price: info.price,
@@ -447,9 +445,12 @@ module.exports = {
         return {
             name: house.info.id,
             class: house.info.Interior.class,
-            rent: house.info.price * house.info.Interior.rent,
+            rent: this.getRent(house),
             days: this.getDateDays(house.info.date)
         };
+    },
+    getRent(house) {
+        return parseInt(house.info.price * house.info.Interior.rent);
     },
     sellHouse(house, cost, seller, buyer, callback) {
         house.info.characterId = buyer.character.id;
@@ -467,7 +468,7 @@ module.exports = {
                         numRooms: house.info.Interior.numRooms,
                         garage: house.info.Interior.Garage != null,
                         carPlaces: house.info.Interior.Garage != null ? house.info.Interior.Garage.carPlaces : 1,
-                        rent: house.info.price * house.info.Interior.rent,
+                        rent: this.getRent(house),
                         isOpened: house.info.isOpened,
                         improvements: new Array(),
                         price: house.info.price,
