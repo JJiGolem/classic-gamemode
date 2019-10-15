@@ -11,7 +11,7 @@ exports = {
     create(x, y, z, toX, toY, toZ, fov) {
         mp.console("create");
         mp.console(JSON.stringify({x: x, y: y, z: z, toX: toX, toY: toY, toZ: toZ, fov: fov}));
-        
+
         selectedCam = 0;
         cams[selectedCam].setCoord(x, y, z);
         cams[selectedCam].pointAtCoord(toX, toY, toZ);
@@ -42,5 +42,16 @@ exports = {
         if (fov) cams[newSelected].setFov(fov);
         cams[newSelected].setActiveWithInterp(cams[selectedCam].handle, time, 0, 0);
         selectedCam = newSelected;
-    }
+    },
+    /// Телепорт камеры
+    tpTo(x, y, z, toX, toY, toZ, fov) {
+        if (selectedCam == null) return;
+
+        mp.console("tpTo");
+        mp.console(JSON.stringify({x: x, y: y, z: z, toX: toX, toY: toY, toZ: toZ, fov: fov}));
+
+        cams[selectedCam].setCoord(x, y, z);
+        cams[selectedCam].pointAtCoord(toX, toY, toZ);
+        if (fov) cams[selectedCam].setFov(fov);
+    },
 }
