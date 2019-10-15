@@ -45,7 +45,17 @@ module.exports = {
                 );
             
                 fs.writeFileSync(path.resolve(__dirname, PATHS.finalPath, 'browser', 'js', file), result.getObfuscatedCode());
-            })
+            });
+
+            let indexBrowserResult = obfuscator.obfuscate(
+                fs.readFileSync(path.resolve(__dirname, PATHS.finalPath, 'browser', 'index.js'), 'utf8').toString(),
+                {
+                    compact: true,
+                    controlFlowFlattening: true
+                }
+            );
+
+            fs.writeFileSync(path.resolve(__dirname, PATHS.finalPath, 'browser', 'index.js'), indexBrowserResult.getObfuscatedCode());            
             
             let indexResult = obfuscator.obfuscate(
                 fs.readFileSync(path.resolve(__dirname, PATHS.finalPath, 'index.js'), 'utf8').toString(),
