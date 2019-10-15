@@ -104,7 +104,7 @@ module.exports = {
         access: 6,
         description: "Установить размер склада всем бизнесам заданного типа",
         args: "[type]:n [amount]:n",
-        handler: async (player, args) => {
+        handler: async (player, args, out) => {
             await bizService.setBizesTypeMaxProducts(args[0], args[1]);
             out.info("Размер склада всем бизнесам заданного типа установлен", player);
         }
