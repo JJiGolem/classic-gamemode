@@ -7198,6 +7198,9 @@ var selectMenu = new Vue({
                 height: `10vh`,
             };
         },
+        isEditing() {
+            return this.menu && this.valuesType(this.menu.i) == 3;
+        },
     },
     watch: {
         notification(val, oldVal) {
