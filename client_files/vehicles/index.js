@@ -554,3 +554,7 @@ mp.events.add('render', () => {
         }
     });
 });
+
+mp.events.add('vehicles.add.menu.show', () => {
+    mp.events.call('selectMenu.show', 'vehiclePropAdd');
+});
