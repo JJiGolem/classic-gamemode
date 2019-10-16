@@ -703,19 +703,31 @@ var inventory = new Vue({
         },
         itemMouseHandler(item, e) {
             var rect = document.getElementById('inventory').getBoundingClientRect();
+            var descEl = document.getElementsByClassName('item-desc')[0];
+            var descRect = (descEl)? descEl.getBoundingClientRect() : null;
             var handlers = {
                 'mouseenter': (e) => {
                     this.itemDesc.item = item;
-                    this.itemDesc.x = (e.screenX - rect.x) + 15;
-                    this.itemDesc.y = (e.screenY - rect.y) + 15;
+                    var x = (e.screenX - rect.x) + 15;
+                    var y = (e.screenY - rect.y) + 15;
+
+                    if (descRect && e.screenX + descRect.width > window.innerWidth) x -= descRect.width;
+                    if (descRect && e.screenY + descRect.height > window.innerHeight) y -= descRect.height;
+                    this.itemDesc.x = x;
+                    this.itemDesc.y = y;
                 },
                 'mouseleave': (e) => {
                     this.itemDesc.item = null;
                 },
                 'mousemove': (e) => {
+                    var x = (e.screenX - rect.x) + 15;
+                    var y = (e.screenY - rect.y) + 15;
+
+                    if (descRect && e.screenX + descRect.width > window.innerWidth) x -= descRect.width;
+                    if (descRect && e.screenY + descRect.height > window.innerHeight) y -= descRect.height;
                     this.itemDesc.item = item;
-                    this.itemDesc.x = (e.screenX - rect.x) + 15;
-                    this.itemDesc.y = (e.screenY - rect.y) + 15;
+                    this.itemDesc.x = x;
+                    this.itemDesc.y = y;
                 },
                 'contextmenu': (e) => {
                     this.itemMenu.item = item;
