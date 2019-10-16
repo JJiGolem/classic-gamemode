@@ -18,7 +18,7 @@
     transform: translate(0, -50%);
 }
 
-#hud .keys > div {
+#hud .keys>div {
     align-items: center;
     display: flex;
     justify-content: space-between;
@@ -26,12 +26,16 @@
 }
 
 #hud span {
+    align-items: center;
     background: #fffa;
     border-radius: 0.5vh;
     box-shadow: 0px 3px 0.7vh #000;
     color: #000;
+    display: flex;
+    height: 2.5vh;
+    justify-content: center;
     margin-right: 1vh;
-    padding: 0.5vh 1vh;
+    width: 2.5vh;
 }
 
 #hud .logo {
