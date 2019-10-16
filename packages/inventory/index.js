@@ -89,10 +89,10 @@ module.exports = {
     // Отправка общей информации о настройках инвентаря игроку
     initInventoryConfig(player) {
         player.call(`inventory.setItemsInfo`, [this.clientInventoryItems]);
-        player.call("inventory.setMaxPlayerWeight", [inventory.maxPlayerWeight]);
-        player.call("inventory.setMergeList", [inventory.mergeList]);
-        player.call("inventory.setBlackList", [inventory.blackList]);
-        player.call("inventory.registerWeaponAttachments", [inventory.bodyList[9], inventory.getWeaponModels()]);
+        player.call("inventory.setMaxPlayerWeight", [this.maxPlayerWeight]);
+        player.call("inventory.setMergeList", [this.mergeList]);
+        player.call("inventory.setBlackList", [this.blackList]);
+        player.call("inventory.registerWeaponAttachments", [this.bodyList[9], this.getWeaponModels()]);
         console.log(`[INVENTORY] Для аккаунта ${player.account.login} загружена общая информация о настройках инвентаря`);
     },
     // Отправка общей информации о предмете

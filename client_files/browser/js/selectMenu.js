@@ -4553,7 +4553,8 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'О ферме') {
                             selectMenu.showByName("farmInfo");
                         } else if (e.itemName == 'Помощь') {
-
+                            selectMenu.show = false;
+                            modal.showByName("farm_help");
                         } else if (e.itemName == 'Купить') {
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `farms.buy`);

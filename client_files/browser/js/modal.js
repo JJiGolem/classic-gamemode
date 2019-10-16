@@ -52,6 +52,19 @@ var modal = new Vue({
         },
         modal: null,
     },
+    watch: {
+        show(val) {
+            if (val) busy.add("modal", true, true);
+            else busy.remove("modal", true);
+        },
+    },
+    methods: {
+        showByName(name) {
+            if (!this.modals[name]) return;
+            this.modal = this.modals[name];
+            this.show = true;
+        }
+    },
 });
 
 // for tests
