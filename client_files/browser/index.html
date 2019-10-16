@@ -270,7 +270,7 @@
                     <input type="password" v-model="password" v-on:keyup.enter="authAccountHandler" />
                     <img class="ic-password" src="img/auth/password.png" />
                 </label>
-                <a class="recoveryAccountBtn" @click="form = 2">Забыли пароль?</a>
+                <a v-show="!recoveryCompleted" class="recoveryAccountBtn" @click="form = 2">Забыли пароль?</a>
                 <a class="regAccountBtn" @click="form = 1">Создать аккаунт</a>
                 <button @click="authAccountHandler">Далее</button>
             </div>
@@ -295,19 +295,19 @@
                 <button @click="regAccountHandler(-1)">Далее</button>
             </div>
             <div class="recoveryAccount" v-if="form == 2">
-                <label>Логин или Email
+                <label v-show="!recoveryCodeSent && !recoveryCodeConfirmed">Логин или Email
                     <input type="text" v-model="loginOrEmail" v-on:keyup.enter="recoveryAccountHandler" autofocus />
                     <img class="ic-login" src="img/auth/login.png" />
                 </label>
-                <label style="display: none">Код подтверждения
+                <label v-show="recoveryCodeSent">Код подтверждения
                     <input type="text" v-model="code" v-on:keyup.enter="recoveryAccountHandler" />
                     <img class="ic-password" src="img/auth/password.png" />
                 </label>
-                <label style="display: none">Пароль
+                <label v-show="recoveryCodeConfirmed">Пароль
                     <input type="text" v-model="password" v-on:keyup.enter="recoveryAccountHandler" />
-                    <!-- <img class="ic-password" src="img/auth/password.png" /> -->
+                    <img class="ic-password" src="img/auth/password.png" />
                 </label>
-                <label style="display: none">Повторите пароль
+                <label v-show="recoveryCodeConfirmed">Повторите пароль
                     <input type="text" v-model="password2" v-on:keyup.enter="recoveryAccountHandler" />
                     <!-- <img class="ic-password" src="img/auth/password.png" /> -->
                 </label>

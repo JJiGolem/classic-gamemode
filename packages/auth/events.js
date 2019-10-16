@@ -172,5 +172,83 @@ module.exports = {
             /// Код подтверждения неверный
             player.call('auth.email.confirm.result', [0]);
         }
-    }
+    },
+    "auth.recovery": async (player, loginOrEmail) => {
+        if (!loginOrEmail || loginOrEmail.length == 0) {
+            /// Заполните поле логина или почты!
+            return player.call('auth.recovery.result', [0]);
+        }
+
+        let regLogin = /^[0-9a-z_\.-]{5,20}$/i;
+        let regEmail = /^[0-9a-z-_\.]+\@[0-9a-z-_]{1,}\.[a-z]{1,}$/i;
+        if (!regLogin.test(loginOrEmail) && !regEmail.test(loginOrEmail)) {
+            /// Некорректное значение логина или почты!
+            return player.call('auth.recovery.result', [1]);
+        }
+
+        let account = await db.Models.Account.findOne({
+            where: {
+                [Op.or]: {
+                    login: loginOrEmail,
+                    [Op.and]: {
+                        email: loginOrEmail,
+                        confirmEmail: 1
+                    }
+                },
+            },
+        });
+
+        if (!account) {
+            /// Неверный логин или пароль
+            return player.call('auth.recovery.result', [2]);
+        }
+
+        let code = utils.randomInteger(100000, 999999);
+        utils.sendMail(account.email, `Восстановление аккаунта`, `Код подтверждения: <b>${code}</b>`);
+        player.recovery = {
+            code: code,
+            account: account,
+            access: false,
+            attempts: 0,
+            attemptsMax: 5,
+        };
+
+        // код отправлен
+        player.call('auth.recovery.result', [3]);
+    },
+    "auth.recovery.confirm": (player, code) => {
+        code = parseInt(code);
+        if (player.recovery.code != code) {
+            player.recovery.attempts++;
+            if (player.recovery.attempts >= player.recovery.attemptsMax) {
+                // Превышено количество попыток
+                player.call('auth.recovery.result', [9]);
+                player.kick();
+                return;
+            }
+            /// Неверный код подтверждения
+            return player.call('auth.recovery.result', [4]);
+        }
+        delete player.recovery.code;
+        player.recovery.access = true;
+
+        // код подтвержден
+        player.call('auth.recovery.result', [5]);
+    },
+    "auth.recovery.password": (player, password) => {
+        /// Пароль должен состоять из 6-20 символов!
+        if (!password || password.length < 6 || password.length > 20) return player.call('auth.recovery.result', [6]);
+        if (!player.recovery.access) {
+            // Подтвердите код
+            return player.call('auth.recovery.result', [7]);
+        }
+
+
+        player.recovery.account.password = auth.hashPassword(password);
+        player.recovery.account.save();
+        delete player.recovery;
+
+        // Аккаунт восстановлен
+        player.call('auth.recovery.result', [8]);
+    },
 };

@@ -35,7 +35,22 @@ var auth = new Vue({
         ],
         emailConfirmMessages: ["Код подтверждения неверный!",
             "Подтверждение почты прошло успешно",
-            "На данный момент подтвердить почту невозможно"],
+            "На данный момент подтвердить почту невозможно"
+        ],
+        recoveryMessages: ["Заполните поле логина или почты!",
+            "Некорректное значение логина или почты!",
+            "Аккаунт не найден",
+            null,
+            "Неверный код подтверждения",
+            null,
+            "Пароль должен состоять из 6-20 символов!",
+            "Подтвердите код",
+            "Аккаунт восстановлен",
+            null,
+        ],
+        recoveryCodeSent: false,
+        recoveryCodeConfirmed: false,
+        recoveryCompleted: false,
     },
     methods: {
         authAccountHandler() {
@@ -123,6 +138,40 @@ var auth = new Vue({
             }));
         },
         recoveryAccountHandler() {
+            if (this.recoveryCodeSent) {
+                if (!this.code) {
+                    this.prompt = "Введите код";
+                    return;
+                }
+
+                loader.show = true;
+                mp.trigger(`callRemote`, `auth.recovery.confirm`, this.code);
+                return;
+            }
+            if (this.recoveryCodeConfirmed) {
+                if (!this.password.length) {
+                    this.prompt = "Введите пароль";
+                    return;
+                }
+
+                if (!this.password2.length) {
+                    this.prompt = "Повторите пароль";
+                    return;
+                }
+                if (this.password.length < 6 || this.password.length > 20) {
+                    this.prompt = "Пароль должен содержать от 6 до 20 символов";
+                    return;
+                }
+                if (this.password2 != this.password) {
+                    this.prompt = "Пароли не совпадают";
+                    return;
+                }
+
+                loader.show = true;
+                mp.trigger(`callRemote`, `auth.recovery.password`, this.password);
+                return;
+            }
+
             if (!this.loginOrEmail) {
                 this.prompt = "Введите логин или Email";
                 return;
@@ -134,8 +183,8 @@ var auth = new Vue({
                 return;
             }
 
-            // mp.trigger("recoveryAccount", loginOrEmail);
-            // TODO: call event
+            loader.show = true;
+            mp.trigger("callRemote", `auth.recovery`, this.loginOrEmail);
         },
         showLoginResult(code) {
             if (!this.loginMessages[code]) return;
@@ -147,21 +196,51 @@ var auth = new Vue({
             if (!this.registerMessages[code]) return;
             this.prompt = this.registerMessages[code];
             if (code == 9) // открывается панель, на которой нужно предложить пользователю подтвердить почту
-            // там можно либо не подтверждать и вызывать mp.trigger('auth.email.confirm', answer);
-            // где 0 - не согласился подтвердить
-            // 1 - согласился подтвердить
-            // в случае если пользователь согласился подвтердить почту,
-            // то должно открыться окно ввода пароля из письма, отправленного на электронную почту
-            // После чего пользователь вводит пароль из письма и ты вызываешь mp.trigger('auth.email.confirm.code', code);
-            // и тебе приходит ответ `auth.showEmailConfirmResult(${result})`
+                // там можно либо не подтверждать и вызывать mp.trigger('auth.email.confirm', answer);
+                // где 0 - не согласился подтвердить
+                // 1 - согласился подтвердить
+                // в случае если пользователь согласился подвтердить почту,
+                // то должно открыться окно ввода пароля из письма, отправленного на электронную почту
+                // После чего пользователь вводит пароль из письма и ты вызываешь mp.trigger('auth.email.confirm.code', code);
+                // и тебе приходит ответ `auth.showEmailConfirmResult(${result})`
 
-            loader.show = false;
+                loader.show = false;
         },
         showEmailConfirmResult(code) {
             if (!this.emailConfirmMessages[code]) return;
             this.prompt = this.emailConfirmMessages[code];
             if (result == 1) auth.show = false;
             loader.show = false;
+        },
+        showRecoveryResult(code) {
+            loader.show = false;
+            // код был отправлен на почту
+            if (code == 3) {
+                this.recoveryCodeSent = true;
+                return;
+            }
+            // код был подтвержден
+            if (code == 5) {
+                this.recoveryCodeSent = false;
+                this.recoveryCodeConfirmed = true;
+                return;
+            }
+            // аккаунт восстановлен
+            if (code == 8) {
+                this.recoveryCodeConfirmed = false;
+                this.recoveryCompleted = true;
+                this.form = 0;
+            }
+            // превышено количество попыток
+            if (code == 9) {
+                this.show = false;
+                notifications.push('error', "Превышено количество попыток (вы были кикнуты)");
+                return;
+            }
+
+            if (!this.recoveryMessages[code]) return;
+            this.prompt = this.recoveryMessages[code];
+            // if (result == 1) auth.show = false;
         },
         showChangelist(i) {
             changelist.i = i;
