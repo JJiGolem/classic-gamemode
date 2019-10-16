@@ -14,11 +14,10 @@ require('babel-core').transform("code", {
 require('babel-polyfill');
 
 let entry = {
-    // babelPolyfill: 'babel-polyfill',
-    clientside: ['babel-polyfill']
+    babelPolyfill: 'babel-polyfill'
 };
 
-let ignoreModules = ['base', 'utils', 'browser'];
+let ignoreModules = ['browser'];
 
 const copyPath = './client_build';
 const basePath = './client_files';
@@ -47,17 +46,17 @@ function copyFiles() {
         forceDelete: true
     });
 
-    // fs.readdirSync(`${finalPath}/browser/js`).forEach(file => {
-    //     let result = obfuscator.obfuscate(
-    //         fs.readFileSync(`${finalPath}/browser/js/${file}`, 'utf8').toString(),
-    //         {
-    //             compact: true,
-    //             controlFlowFlattening: true
-    //         }
-    //     );
+    fs.readdirSync(`${finalPath}/browser/js`).forEach(file => {
+        let result = obfuscator.obfuscate(
+            fs.readFileSync(`${finalPath}/browser/js/${file}`, 'utf8').toString(),
+            {
+                compact: true,
+                controlFlowFlattening: true
+            }
+        );
 
-    //     fs.writeFileSync(`${finalPath}/browser/js/${file}`, result.getObfuscatedCode());
-    // })
+        fs.writeFileSync(`${finalPath}/browser/js/${file}`, result.getObfuscatedCode());
+    })
 
     fs.copyFileSync(`${basePath}/index.js`, `${finalPath}/index.js`);
 
@@ -90,20 +89,12 @@ function getEntry() {
     copyFiles();
 
     fs.readdirSync(copyPath).forEach(async dir => {
-        if (fs.lstatSync(path.resolve(copyPath, dir)).isDirectory() ) {
-            if (!ignoreModules.includes(dir)) {
-                fs.readdirSync(path.resolve(copyPath, dir)).forEach(async file => {
-                    await rewriteFile(dir, file);
-                });
+        if (fs.lstatSync(path.resolve(copyPath, dir)).isDirectory() && !ignoreModules.includes(dir)) {
+            fs.readdirSync(path.resolve(copyPath, dir)).forEach(async file => {
+                await rewriteFile(dir, file);
+            });
 
-                entry.clientside.push(`${copyPath}/${dir}/index.js`);
-            } else if (dir != 'browser') {
-                fs.readdirSync(path.resolve(copyPath, dir)).forEach(async file => {
-                    await rewriteFile(dir, file);
-                });
-
-                entry[`${dir}/index`] = `${copyPath}/${dir}/index.js`;
-            }
+            entry[`${dir}/index`] = `${copyPath}/${dir}/index.js`;
         }
     });
 
