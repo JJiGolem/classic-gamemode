@@ -1,12 +1,3 @@
-"use strict";
-
-
-/*
-    Модуль инвентаря.
-
-    created 30.07.19 by Carter Slade
-*/
-
 mp.inventory = {
     groundMaxDist: 2,
     lastArmour: 0,

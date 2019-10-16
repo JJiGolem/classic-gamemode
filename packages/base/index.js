@@ -45,11 +45,11 @@ global.debug = (text) => {
     require('../terminal').debug(text);
 }
 
-if (isBuild) {
-    require('../../scripts/prod').build();
-} else {
-    require('../../scripts/dev').compile();
-}
+// if (isBuild) {
+//     require('../../scripts/prod').build();
+// } else {
+//     require('../../scripts/dev').compile();
+// }
 
 /// Вызов подключения к БД, подключение всех модулей и вызов их инициализации
 /// Должен быть ниже объявления глобальных функций, что бы они успели загрузииться

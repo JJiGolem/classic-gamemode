@@ -1,5 +1,5 @@
-let client = require('./taxi/client.js');
-let driver = require('./taxi/driver.js');
+let client = require('taxi/client.js');
+let driver = require('taxi/driver.js');
 
 
 let peds = [{
