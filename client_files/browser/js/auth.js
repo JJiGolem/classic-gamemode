@@ -146,6 +146,7 @@ var auth = new Vue({
 
                 loader.show = true;
                 mp.trigger(`callRemote`, `auth.recovery.confirm`, this.code);
+                this.code = '';
                 return;
             }
             if (this.recoveryCodeConfirmed) {
