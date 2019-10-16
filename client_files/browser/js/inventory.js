@@ -779,6 +779,19 @@ var inventory = new Vue({
                         (place.sqlId < 0 && this.getItemsCount(item) > 0) ||
                         (place.sqlId > 0 && nextWeight > this.maxPlayerWeight) ||
                         (this.blackList[place.itemId] && this.blackList[place.itemId].includes(item.itemId));
+
+                    if (place.sqlId == item.sqlId) {
+                        this.itemNotif.text = "Нельзя положить предмет внутрь себя";
+                    } else if (place.itemId == item.itemId) {
+                        this.itemNotif.text = "Нельзя положить предмет внутрь предмета такого же типа";
+                    } else if ((place.sqlId < 0 && this.getItemsCount(item) > 0)) {
+                        this.itemNotif.text = "Освободите вещь";
+                    } else if ((place.sqlId > 0 && nextWeight > this.maxPlayerWeight)) {
+                        this.itemNotif.text = `Превышение по весу ${nextWeight} из ${this.maxPlayerWeight} кг`;
+                    } else if ((this.blackList[place.itemId] && this.blackList[place.itemId].includes(item.itemId))) {
+                        this.itemNotif.text = `Нельзя положить ${this.itemsInfo[item.itemId].name} в ${this.itemsInfo[place.itemId].name}`;
+                    } else this.itemNotif.text = null;
+
                     for (var x = 0; x < w; x++) {
                         for (var y = 0; y < h; y++) {
                             var i = this.xyToIndex(pocket.rows, pocket.cols, {
