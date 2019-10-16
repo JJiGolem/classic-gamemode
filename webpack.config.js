@@ -14,8 +14,8 @@ require('babel-core').transform("code", {
 require('babel-polyfill');
 
 let entry = {
-    babelPolyfill: 'babel-polyfill',
-    clientside: []
+    // babelPolyfill: 'babel-polyfill',
+    clientside: ['babel-polyfill']
 };
 
 let ignoreModules = ['base', 'utils', 'browser'];
@@ -47,17 +47,17 @@ function copyFiles() {
         forceDelete: true
     });
 
-    fs.readdirSync(`${finalPath}/browser/js`).forEach(file => {
-        let result = obfuscator.obfuscate(
-            fs.readFileSync(`${finalPath}/browser/js/${file}`, 'utf8').toString(),
-            {
-                compact: true,
-                controlFlowFlattening: true
-            }
-        );
+    // fs.readdirSync(`${finalPath}/browser/js`).forEach(file => {
+    //     let result = obfuscator.obfuscate(
+    //         fs.readFileSync(`${finalPath}/browser/js/${file}`, 'utf8').toString(),
+    //         {
+    //             compact: true,
+    //             controlFlowFlattening: true
+    //         }
+    //     );
 
-        fs.writeFileSync(`${finalPath}/browser/js/${file}`, result.getObfuscatedCode());
-    })
+    //     fs.writeFileSync(`${finalPath}/browser/js/${file}`, result.getObfuscatedCode());
+    // })
 
     fs.copyFileSync(`${basePath}/index.js`, `${finalPath}/index.js`);
 
