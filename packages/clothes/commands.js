@@ -16,7 +16,7 @@ module.exports = {
                 text += Object.values(el.dataValues).join(" | ") + "<br/>";
             });
 
-            out.log(text, player);
+            out.log(text.replace(/(["'])/g, "\\$1"), player);
         }
     },
     "/clname": {

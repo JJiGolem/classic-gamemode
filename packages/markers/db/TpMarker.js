@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.FLOAT,
             allowNull: false
         },
+        d: {
+            type: DataTypes.INTEGER(11),
+            allowNull: false
+        },
         tpX: {
             type: DataTypes.FLOAT,
             allowNull: false
@@ -37,12 +41,16 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.FLOAT,
             allowNull: false
         },
+        tpD: {
+            type: DataTypes.INTEGER(11),
+            allowNull: false
+        },
     }, {
         timestamps: false
     });
 
     model.associate = (models) => {
-        
+
     };
 
     return model;

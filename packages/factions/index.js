@@ -132,7 +132,7 @@ module.exports = {
 
         var pos = warehouse.position;
         pos.z += 1.5;
-        warehouse.label = mp.labels.new(`~y~Боеприпасы:\n~w~${faction.ammo} из ${faction.maxAmmo}\n~b~Медикаменты:\n~w~${faction.medicines} из ${faction.maxMedicines}`,
+        warehouse.label = mp.labels.new(this.getWarehouseLabelText(faction),
             pos, {
                 los: false,
                 font: 0,
@@ -363,6 +363,27 @@ module.exports = {
     deleteOfflineMember(character) {
         this.fullDeleteItems(character.id, character.factionId);
 
+        db.Models.CharacterInventory.destroy({
+            where: {
+                playerId: character.id
+            },
+            include: {
+                model: db.Models.CharacterInventoryParam,
+                where: {
+                    [Op.or]: [
+                        {
+                            key: "owner",
+                            value: character.id
+                        },
+                        {
+                            key: "faction",
+                            value: character.factionId
+                        }
+                    ]
+                }
+            }
+        });
+
         character.factionId = null;
         character.factionRank = null;
         character.save();
@@ -561,9 +582,14 @@ module.exports = {
         this.updateWarehosueLabel(faction);
     },
     updateWarehosueLabel(faction) {
-        var text = `~y~Боеприпасы:\n~w~${faction.ammo} из ${faction.maxAmmo}\n~b~Медикаменты:\n~w~${faction.medicines} из ${faction.maxMedicines}`;
+        var text = this.getWarehouseLabelText(faction);
         var label = this.getWarehouse(faction.id).label;
         label.text = text;
+    },
+    getWarehouseLabelText(faction) {
+        var text = `~y~Боеприпасы:\n~w~${faction.ammo} из ${faction.maxAmmo}`;
+        if (faction.maxMedicines) text += `\n~b~Медикаменты:\n~w~${faction.medicines} из ${faction.maxMedicines}`;
+        return text;
     },
     addCash(faction, count) {
         if (typeof faction == 'number') faction = this.getFaction(faction);

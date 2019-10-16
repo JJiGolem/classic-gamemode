@@ -35,6 +35,11 @@ mp.events.add('auth.register.result', (result, data) => {
     //result == 9 && mp.events.call('auth.email.confirm', 0);
 });
 
+// Результат восстановление аккаунта
+mp.events.add('auth.recovery.result', (result) => {
+    mp.callCEFV(`auth.showRecoveryResult(${result})`);
+});
+
 /// Запрос на отправку кода подтверждения почты
 mp.events.add('auth.email.confirm', (state) => {
     mp.events.callRemote('auth.email.confirm', state == 1);

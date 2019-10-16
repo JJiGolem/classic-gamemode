@@ -56,18 +56,6 @@
     background: #000;
 }
 
-#changelist .content .build {
-    bottom: 0;
-    color: #fff5;
-    font-size: 1.5vh;
-    position: absolute;
-    left: 2vh;
-}
-
-#changelist .content .build:hover {
-    color: #fff;
-}
-
 #changelist .content .features {
     background: #309aec;
 }
@@ -85,9 +73,18 @@
 }
 
 #changelist .footer {
-    margin-right: 2vh;
+    display: flex;
+    justify-content: space-between;
     padding: 1vh;
-    text-align: right;
+}
+
+#changelist .footer .build {
+    color: #fff5;
+    font-size: 1.5vh;
+}
+
+#changelist .footer .build:hover {
+    color: #fff;
 }
 
 #changelist .footer .likes.liked {

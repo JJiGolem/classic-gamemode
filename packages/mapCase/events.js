@@ -173,7 +173,7 @@ module.exports = {
         // TODO: Лишний запрос в БД
         var character = await db.Models.Character.findByPk(rec.character.id, {
             attributes: ['id', 'name', 'gender', 'wanted', 'wantedCause', 'law', 'crimes'],
-            include: [db.Models.Phone, db.Models.House, db.Models.Faction, db.Models.FactionRank],
+            include: [db.Models.Phone, db.Models.House, db.Models.Faction, db.Models.FactionRank, db.Models.Fine],
         });
         var vehicles = await db.Models.Vehicle.findAll({
             where: {
@@ -493,7 +493,7 @@ module.exports = {
         // TODO: Лишний запрос в БД
         var character = await db.Models.Character.findByPk(rec.character.id, {
             attributes: ['id', 'name', 'gender', 'wanted', 'wantedCause', 'law', 'crimes'],
-            include: [db.Models.Phone, db.Models.House, db.Models.Faction, db.Models.FactionRank],
+            include: [db.Models.Phone, db.Models.House, db.Models.Faction, db.Models.FactionRank, db.Models.Fine],
         });
         var vehicles = await db.Models.Vehicle.findAll({
             where: {

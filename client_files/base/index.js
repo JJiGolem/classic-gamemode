@@ -80,12 +80,10 @@ mp.busy.includes = function(name) {
             }
         }
         return false;
-    }
-    else {
+    } else {
         if (name == null) {
             return mp.busy.list.length != 0;
-        }
-        else {
+        } else {
             return mp.busy.list.includes(name);
         }
     }
@@ -101,8 +99,13 @@ mp.busy.remove = function(name, nocef = false) {
     if (mp.busy.mouses.length == 0) mp.gui.cursor.show(false, false);
 }
 
-mp.events.add("busy.add", mp.busy.add);
-mp.events.add("busy.remove", mp.busy.remove);
+mp.events.add({
+    "busy.add": mp.busy.add,
+    "busy.remove": mp.busy.remove,
+    "time.main.tick": () => {
+        if (mp.busy.mouses.length && !mp.gui.cursor.visible) mp.gui.cursor.show(true, true);
+    }
+});
 
 /// 2)
 /// ...

@@ -11,6 +11,32 @@
     position: absolute;
 }
 
+#hud .keys {
+    font-weight: bold;
+    right: 2vh;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+#hud .keys>div {
+    align-items: center;
+    display: flex;
+    margin-bottom: 1vh;
+}
+
+#hud span {
+    align-items: center;
+    background: #fff7;
+    border-radius: 0.5vh;
+    box-shadow: 0px 3px 0 #0005;
+    color: #000;
+    display: flex;
+    height: 2.5vh;
+    justify-content: center;
+    margin-right: 1vh;
+    width: 2.75vh;
+}
+
 #hud .logo {
     width: 7vh;
 }

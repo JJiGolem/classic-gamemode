@@ -446,7 +446,7 @@ module.exports = {
             target.character.save();
             out.info(`${player.name} назначил ${target.name} администратором ${lvl} уровня`);
             target.call('chat.message.push', [`!{#ffcf0d} ${player.character.name} назначил вас администратором ${lvl} уровня`]);
-
+            target.call('admin.set', [lvl]);
             mp.events.call("player.admin.changed", target);
         }
     },
@@ -463,6 +463,7 @@ module.exports = {
             if (player.character.admin < target.character.admin) return player.call('notifications.push.error', [`Недостаточно прав`, 'Ошибка'])
             target.character.admin = 0;
             target.character.save();
+            target.call('admin.set', [0]);
             target.call('chat.message.push', [`!{#ff8819} ${player.character.name} забрал у вас права администратора`]);
             out.info(`${player.name} забрал у ${target.name} права администратора`);
             mp.events.call("player.admin.changed", target);

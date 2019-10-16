@@ -153,4 +153,10 @@ module.exports = {
         player.call('chat.message.push', [`!{#87c924}Ваш репорт:!{${color}} ${message}`]);
         mp.events.call("admin.notify.all", `!{#87c924}${player.name}[${player.id}]:!{${color}} ${message}`);
     },
+    "characterInit.done": (player) => {
+        let level = player.character.admin;
+        if (level > 0) {
+           player.call('admin.set', [level]);
+        }
+    },
 }
