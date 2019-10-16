@@ -588,4 +588,7 @@ module.exports = {
     isDead(vehicle) {
         return !vehicle.engineHealth || !vehicle.bodyHealth || vehicle.dead;
     },
+    getVehiclePropertiesList() {
+        return dbVehicleProperties;
+    }
 }
