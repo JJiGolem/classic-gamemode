@@ -28,9 +28,10 @@ function copyFiles() {
         fs.mkdirSync(copyPath);
     }
 
-    rimraf.sync(finalPath);
-    
     if (!fs.existsSync(finalPath)) {
+        fs.mkdirSync(finalPath);
+    } else {
+        rimraf.sync(finalPath);
         fs.mkdirSync(finalPath);
     }
 
@@ -71,19 +72,6 @@ function copyFiles() {
     fs.writeFileSync(`${finalPath}/index.js`, indexResult.getObfuscatedCode());
 }
 
-function buildBrowser(scriptsBuild) {
-    if (scriptsBuild) {
-        fs.readdirSync(path.resolve(copyPath, 'browser', 'js')).forEach(file => {
-            let extension = path.extname(file);
-            let fileName = path.basename(file, extension);
-            
-            entry[`browser/js/${fileName}`] = `${copyPath}/browser/js/${file}`;
-        });
-    }
-
-    entry[`browser/index`] = `${copyPath}/browser/index.js`;
-}
-
 function getEntry() {
 
     copyFiles();
@@ -97,8 +85,6 @@ function getEntry() {
             entry[`${dir}/index`] = `${copyPath}/${dir}/index.js`;
         }
     });
-
-    buildBrowser(false);
 
     return entry;
 }

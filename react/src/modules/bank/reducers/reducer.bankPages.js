@@ -22,6 +22,9 @@ export default function bankPages(state = initialState, action) {
             }
 
             return newState;
+
+        case 'CLOSE_BANK':
+            return [];
     }
 
     return state;
