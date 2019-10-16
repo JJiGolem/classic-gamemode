@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             get() {
                 var value = this.getDataValue('name');
+                value = value.replace(/(\\)/g, "");
                 return value.replace(/(["'])/g, "\\$1");
             }
         },
