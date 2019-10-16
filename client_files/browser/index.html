@@ -610,6 +610,9 @@
                 </div>
             </div>
         </div>
+        <div class="item-notif" v-if="itemNotif.text" :style="{left: itemNotif.x + 'px', top: itemNotif.y + 'px'}">
+            {{ itemNotif.text }}
+        </div>
         <div class="item-menu" v-if="itemMenu.item && !itemDrag.item" :style="{left: itemMenu.x + 'px', top: itemMenu.y + 'px'}">
             <div class="menu-item" v-for="(value, key) in itemsMenu[itemMenu.item.itemId]" @click="value.handler(itemMenu.item)">
                 {{ key }}

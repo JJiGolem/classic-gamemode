@@ -469,6 +469,12 @@ var inventory = new Vue({
             x: 0,
             y: 0
         },
+        // Уведомление инвентаря
+        itemNotif: {
+            text: null,
+            x: 0,
+            y: 0
+        },
         // Показ меню предмета на экране
         itemMenu: {
             item: null,
@@ -651,6 +657,12 @@ var inventory = new Vue({
                 if (this.equipment[index].pockets) return true;
 
             return false;
+        },
+        notifPos() {
+            return {
+                x: window.screenX,
+                y: window.screenY
+            };
         },
     },
     methods: {
@@ -1239,6 +1251,13 @@ var inventory = new Vue({
 
                 self.itemDrag.x = e.screenX - rect.x - itemDiv.offsetWidth / 2;
                 self.itemDrag.y = e.screenY - rect.y - itemDiv.offsetHeight / 2;
+
+                if (self.itemNotif.text) {
+                    var rect = document.getElementById('inventory').getBoundingClientRect();
+
+                    self.itemNotif.x = e.screenX - rect.x + 15;
+                    self.itemNotif.y = e.screenY - rect.y + 15;
+                }
             }
         });
         window.addEventListener('mouseup', function(e) {
@@ -1280,6 +1299,7 @@ var inventory = new Vue({
 
             self.itemDrag.item = null;
             self.itemDrag.div = null;
+            self.itemNotif.text = null;
             columns.placeSqlId = null;
             columns.pocketI = null;
             columns.columns = {};
