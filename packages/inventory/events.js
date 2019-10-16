@@ -17,11 +17,7 @@ module.exports = {
         inventory.init();
     },
     "auth.done": (player) => {
-        inventory.initPlayerItemsInfo(player);
-        player.call("inventory.setMaxPlayerWeight", [inventory.maxPlayerWeight]);
-        player.call("inventory.setMergeList", [inventory.mergeList]);
-        player.call("inventory.setBlackList", [inventory.blackList]);
-        player.call("inventory.registerWeaponAttachments", [inventory.bodyList[9], inventory.getWeaponModels()]);
+        inventory.initInventoryConfig(player);
     },
     "characterInit.done": async (player) => {
         player.call("inventory.setSatiety", [player.character.satiety]);

@@ -207,6 +207,10 @@
     width: 7vh;
 }
 
+#inventory .container.drag {
+    opacity: 0.6;
+}
+
 #inventory .container .item {
     border: 1px solid #fff4;
     background-color: #fff1;
