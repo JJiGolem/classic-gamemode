@@ -277,6 +277,23 @@ mp.utils = {
             veh.setNoCollision(entity.handle, enable);
         });
     },
+    // Очистить внешний вид игрока
+    clearAllView(player, hair) {
+        var gender = (mp.game.joaat("mp_m_freemode_01") == player.model) ? 0 : 1; // 0 - муж, 1 - жен
+        player.setComponentVariation(7, 0, 0, 0);
+        player.setComponentVariation(5, 0, 0, 0);
+        player.setComponentVariation(9, 0, 0, 0);
+        player.setComponentVariation(3, 15, 0, 0);
+        player.setComponentVariation(11, (!gender) ? 15 : 18, 0, 0);
+        player.setComponentVariation(8, (!gender) ? 15 : 3, 0, 0);
+        player.setComponentVariation(10, 0, 0, 0);
+        player.setComponentVariation(4, (!gender) ? 18 : 17, (!gender) ? 2 : 0, 0);
+        player.setComponentVariation(6, (!gender) ? 34 : 35, 0, 0);
+        player.setComponentVariation(2, hair, 0, 0);
+        player.setComponentVariation(1, 0, 0, 0);
+
+        player.clearAllProps();
+    },
 };
 
 

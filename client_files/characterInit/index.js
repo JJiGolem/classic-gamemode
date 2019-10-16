@@ -228,10 +228,14 @@ let choose = function() {
 
 let setCharClothes = function(indexPed) {
     if (charClothes.length <= indexPed) return;
+    mp.utils.clearAllView(mp.players.local, charInfos[indexPed].hair); // раздеваем игрока полностью
     let clothes = charClothes[indexPed].clothes;
     let props = charClothes[indexPed].props;
     for (let i = 0; i < clothes.length; i++) {
         mp.players.local.setComponentVariation(clothes[i][0], clothes[i][1], clothes[i][2], 0);
+    }
+    for (let i = 0; i < props.length; i++) {
+        mp.players.local.setPropIndex(props[i][0], props[i][1], props[i][2], false);
     }
 };
 

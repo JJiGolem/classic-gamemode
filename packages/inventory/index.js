@@ -508,7 +508,7 @@ module.exports = {
             "3": 9,
             "8": 4,
             "9": 6,
-            "13": 5
+            "13": 5,
         };
         var propsIndexes = {
             "6": 0,
@@ -529,7 +529,7 @@ module.exports = {
                 list.clothes.push([11, params.variation, params.texture]);
                 if (params.undershirt != null) list.clothes.push([8, params.undershirt, params.uTexture || 0]);
                 if (params.decal != null) list.clothes.push([10, params.decal, params.dTexture || 0]);
-            } else if (item.itemId == 1) {
+            } else if (item.itemId == 14) {
                 if (this.masksWithHideHairs.includes(params.variation)) list.clothes.push([2, 0, 0]);
                 list.clothes.push([1, params.variation, params.texture]);
             }
