@@ -14,10 +14,11 @@ require('babel-core').transform("code", {
 require('babel-polyfill');
 
 let entry = {
-    babelPolyfill: 'babel-polyfill'
+    babelPolyfill: 'babel-polyfill',
+    clientside: []
 };
 
-let ignoreModules = ['browser'];
+let ignoreModules = ['base', 'utils', 'browser'];
 
 const copyPath = './client_build';
 const basePath = './client_files';
@@ -89,12 +90,20 @@ function getEntry() {
     copyFiles();
 
     fs.readdirSync(copyPath).forEach(async dir => {
-        if (fs.lstatSync(path.resolve(copyPath, dir)).isDirectory() && !ignoreModules.includes(dir)) {
-            fs.readdirSync(path.resolve(copyPath, dir)).forEach(async file => {
-                await rewriteFile(dir, file);
-            });
+        if (fs.lstatSync(path.resolve(copyPath, dir)).isDirectory() ) {
+            if (!ignoreModules.includes(dir)) {
+                fs.readdirSync(path.resolve(copyPath, dir)).forEach(async file => {
+                    await rewriteFile(dir, file);
+                });
 
-            entry[`${dir}/index`] = `${copyPath}/${dir}/index.js`;
+                entry.clientside.push(`${copyPath}/${dir}/index.js`);
+            } else if (dir != 'browser') {
+                fs.readdirSync(path.resolve(copyPath, dir)).forEach(async file => {
+                    await rewriteFile(dir, file);
+                });
+
+                entry[`${dir}/index`] = `${copyPath}/${dir}/index.js`;
+            }
         }
     });
 

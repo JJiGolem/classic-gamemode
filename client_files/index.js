@@ -8,8 +8,10 @@ require('browser');
 
 /// Автоподключение клиентских модулей
 mp.events.add('init', (activeModules) => {
-    activeModules.forEach(moduleName => {
-        require(moduleName);
-    });
+    // activeModules.forEach(moduleName => {
+    //     require(moduleName);
+    // });
+
+    require('./clientside.js');
     mp.events.callRemote('player.joined');
 });
