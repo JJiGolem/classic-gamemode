@@ -412,7 +412,7 @@ var inventory = new Vue({
                 handler(item) {
                     var data = {
                         sqlId: item.sqlId,
-                        index: (item.params.litres)? 0 : 1
+                        index: (item.params.litres) ? 0 : 1
                     };
                     mp.trigger(`callRemote`, `inventory.item.use`, JSON.stringify(data));
                 }
@@ -716,7 +716,7 @@ var inventory = new Vue({
         itemMouseHandler(item, e) {
             var rect = document.getElementById('inventory').getBoundingClientRect();
             var descEl = document.getElementsByClassName('item-desc')[0];
-            var descRect = (descEl)? descEl.getBoundingClientRect() : null;
+            var descRect = (descEl) ? descEl.getBoundingClientRect() : null;
             var handlers = {
                 'mouseenter': (e) => {
                     this.itemDesc.item = item;
@@ -732,14 +732,14 @@ var inventory = new Vue({
                     this.itemDesc.item = null;
                 },
                 'mousemove': (e) => {
-                    var x = (e.screenX - rect.x) + 15;
-                    var y = (e.screenY - rect.y) + 15;
+                    var x = e.screenX + 15;
+                    var y = e.screenY + 15;
 
-                    if (descRect && e.screenX + descRect.width > window.innerWidth) x -= descRect.width;
-                    if (descRect && e.screenY + descRect.height > window.innerHeight) y -= descRect.height;
                     this.itemDesc.item = item;
-                    this.itemDesc.x = x;
-                    this.itemDesc.y = y;
+                    if (descRect && x + descRect.width > window.innerWidth) x = window.innerWidth - descRect.width;
+                    if (descRect && y + descRect.height > window.innerHeight) y = window.innerHeight - descRect.height;
+                    this.itemDesc.x = x - rect.x;
+                    this.itemDesc.y = y - rect.y;
                 },
                 'contextmenu': (e) => {
                     this.itemMenu.item = item;
