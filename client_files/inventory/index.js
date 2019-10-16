@@ -209,8 +209,8 @@ mp.events.add("time.main.tick", () => {
 });
 
 mp.events.addDataHandler("trunk", (vehicle, value) => {
-    if (nearBootVehicleId == null) return;
-    if (nearBootVehicleId != vehicle.remoteId) return;
+    if (mp.moduleVehicles.nearBootVehicleId == null) return;
+    if (mp.moduleVehicles.nearBootVehicleId != vehicle.remoteId) return;
     if (value) {
         mp.events.callRemote(`vehicle.boot.items.request`, vehicle.remoteId);
         mp.prompt.showByName("vehicle_items_boot");
