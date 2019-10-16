@@ -27,6 +27,10 @@ mp.inventory = {
         if (typeof list == 'object') list = JSON.stringify(list);
         mp.callCEFV(`inventory.setMergeList('${list}')`);
     },
+    setBlackList(list) {
+        if (typeof list == 'object') list = JSON.stringify(list);
+        mp.callCEFV(`inventory.setBlackList('${list}')`);
+    },
     addItem(item, pocket, index, parent) {
         if (typeof item == 'object') item = JSON.stringify(item);
         mp.callCEFV(`inventory.addItem('${item}', ${pocket}, ${index}, ${parent})`);
@@ -149,6 +153,8 @@ mp.events.add("inventory.setItemsInfo", mp.inventory.setItemsInfo);
 mp.events.add("inventory.setItemInfo", mp.inventory.setItemInfo);
 
 mp.events.add("inventory.setMergeList", mp.inventory.setMergeList);
+
+mp.events.add("inventory.setBlackList", mp.inventory.setBlackList);
 
 mp.events.add("inventory.deleteItem", mp.inventory.deleteItem);
 

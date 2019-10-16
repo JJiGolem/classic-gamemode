@@ -456,7 +456,7 @@ var inventory = new Vue({
         // Жажда игрока
         thirst: 0,
         // Режим отладки
-        debug: true,
+        debug: false,
         // Показ инвентаря на экране
         show: false,
         // Возможность использования инвентаря
@@ -781,9 +781,9 @@ var inventory = new Vue({
                         (this.blackList[place.itemId] && this.blackList[place.itemId].includes(item.itemId));
 
                     if (place.sqlId == item.sqlId) {
-                        this.itemNotif.text = "Нельзя положить предмет внутрь себя";
+                        this.itemNotif.text = `Предмет не может быть размещен в своем кармане`;
                     } else if (place.itemId == item.itemId) {
-                        this.itemNotif.text = "Нельзя положить предмет внутрь предмета такого же типа";
+                        this.itemNotif.text = `Предмет не может быть размещен в предмете такого же типа`;
                     } else if ((place.sqlId < 0 && this.getItemsCount(item) > 0)) {
                         this.itemNotif.text = "Освободите вещь";
                     } else if ((place.sqlId > 0 && nextWeight > this.maxPlayerWeight)) {
@@ -1022,6 +1022,10 @@ var inventory = new Vue({
         setMergeList(list) {
             if (typeof list == 'string') list = JSON.parse(list);
             Vue.set(this, 'mergeList', list);
+        },
+        setBlackList(list) {
+            if (typeof list == 'string') list = JSON.parse(list);
+            Vue.set(this, 'blackList', list);
         },
         setBodyList(index, list) {
             if (typeof list == 'string') list = JSON.parse(list);
