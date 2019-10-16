@@ -469,6 +469,12 @@ var inventory = new Vue({
             x: 0,
             y: 0
         },
+        // Уведомление инвентаря
+        itemNotif: {
+            text: null,
+            x: 0,
+            y: 0
+        },
         // Показ меню предмета на экране
         itemMenu: {
             item: null,
@@ -652,6 +658,12 @@ var inventory = new Vue({
 
             return false;
         },
+        notifPos() {
+            return {
+                x: window.screenX,
+                y: window.screenY
+            };
+        },
     },
     methods: {
         // ******************  [ Private ] ******************
@@ -703,19 +715,31 @@ var inventory = new Vue({
         },
         itemMouseHandler(item, e) {
             var rect = document.getElementById('inventory').getBoundingClientRect();
+            var descEl = document.getElementsByClassName('item-desc')[0];
+            var descRect = (descEl)? descEl.getBoundingClientRect() : null;
             var handlers = {
                 'mouseenter': (e) => {
                     this.itemDesc.item = item;
-                    this.itemDesc.x = (e.screenX - rect.x) + 15;
-                    this.itemDesc.y = (e.screenY - rect.y) + 15;
+                    var x = (e.screenX - rect.x) + 15;
+                    var y = (e.screenY - rect.y) + 15;
+
+                    if (descRect && e.screenX + descRect.width > window.innerWidth) x -= descRect.width;
+                    if (descRect && e.screenY + descRect.height > window.innerHeight) y -= descRect.height;
+                    this.itemDesc.x = x;
+                    this.itemDesc.y = y;
                 },
                 'mouseleave': (e) => {
                     this.itemDesc.item = null;
                 },
                 'mousemove': (e) => {
+                    var x = (e.screenX - rect.x) + 15;
+                    var y = (e.screenY - rect.y) + 15;
+
+                    if (descRect && e.screenX + descRect.width > window.innerWidth) x -= descRect.width;
+                    if (descRect && e.screenY + descRect.height > window.innerHeight) y -= descRect.height;
                     this.itemDesc.item = item;
-                    this.itemDesc.x = (e.screenX - rect.x) + 15;
-                    this.itemDesc.y = (e.screenY - rect.y) + 15;
+                    this.itemDesc.x = x;
+                    this.itemDesc.y = y;
                 },
                 'contextmenu': (e) => {
                     this.itemMenu.item = item;
@@ -1227,6 +1251,13 @@ var inventory = new Vue({
 
                 self.itemDrag.x = e.screenX - rect.x - itemDiv.offsetWidth / 2;
                 self.itemDrag.y = e.screenY - rect.y - itemDiv.offsetHeight / 2;
+
+                if (self.itemNotif.text) {
+                    var rect = document.getElementById('inventory').getBoundingClientRect();
+
+                    self.itemNotif.x = e.screenX - rect.x + 15;
+                    self.itemNotif.y = e.screenY - rect.y + 15;
+                }
             }
         });
         window.addEventListener('mouseup', function(e) {
@@ -1268,6 +1299,7 @@ var inventory = new Vue({
 
             self.itemDrag.item = null;
             self.itemDrag.div = null;
+            self.itemNotif.text = null;
             columns.placeSqlId = null;
             columns.pocketI = null;
             columns.columns = {};

@@ -537,6 +537,17 @@
     width: 100%;
 }
 
+#inventory .item-notif {
+    background: #111e;
+    box-shadow: none;
+    font-size: 2vh;
+    height: fit-content;
+    /* max-height: 40vh; */
+    /* overflow-y: auto; */
+    position: absolute;
+    width: fit-content;
+}
+
 #inventory .items {
     border: 1px solid #555;
     display: grid;
