@@ -15,7 +15,7 @@ let allowed = [ /// Список разрешенных social club'ов
     "Spros_mono",
     "SashaDolgopolov", // dolgopolov
     "Nensi_Pnf", // nensi
-    "artik2135456", // фракнки гаспаро саша
+    "_Deadly0_", // фракнки гаспаро саша
     "MarcusBallevardo", // чед черри
     "cyrax63", // захар курупт
     "ImMoRTaL981", // slage
