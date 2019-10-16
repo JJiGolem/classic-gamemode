@@ -17,6 +17,36 @@ var hud = new Vue({
         show: false,
         showOnline: true,
         leftWeather: 300,
+        keys: [
+            {
+                key: "I",
+                name: "Инвентарь",
+            },
+            {
+                key: "T",
+                name: "Чат",
+            },
+            {
+                key: "P",
+                name: "Планшет",
+            },
+            {
+                key: "<i class='fas fa-arrow-up'></i>",
+                name: "Телефон",
+            },
+            {
+                key: "N",
+                name: "Войс",
+            },
+            {
+                key: "M",
+                name: "Меню",
+            },
+            {
+                key: "F3",
+                name: "Обновления",
+            },
+        ],
     },
     methods: {
         updateTime() {

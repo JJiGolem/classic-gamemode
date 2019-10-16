@@ -71,6 +71,9 @@
                 <img src="img/hud/star.svg" />
             </div>
         </div>
+        <div class="keys">
+            <div v-for="key in keys"><span v-html="key.key"></span>{{ key.name }}</div>
+        </div>
         <div class="money">
             <div class="cash">
                 <img src="img/hud/cash.svg" />
@@ -267,7 +270,7 @@
                     <input type="password" v-model="password" v-on:keyup.enter="authAccountHandler" />
                     <img class="ic-password" src="img/auth/password.png" />
                 </label>
-                <a class="recoveryAccountBtn" @click="form = 2">Забыли пароль?</a>
+                <a v-show="!recoveryCompleted" class="recoveryAccountBtn" @click="form = 2">Забыли пароль?</a>
                 <a class="regAccountBtn" @click="form = 1">Создать аккаунт</a>
                 <button @click="authAccountHandler">Далее</button>
             </div>
@@ -292,19 +295,19 @@
                 <button @click="regAccountHandler(-1)">Далее</button>
             </div>
             <div class="recoveryAccount" v-if="form == 2">
-                <label>Логин или Email
+                <label v-show="!recoveryCodeSent && !recoveryCodeConfirmed">Логин или Email
                     <input type="text" v-model="loginOrEmail" v-on:keyup.enter="recoveryAccountHandler" autofocus />
                     <img class="ic-login" src="img/auth/login.png" />
                 </label>
-                <label style="display: none">Код подтверждения
+                <label v-show="recoveryCodeSent">Код подтверждения
                     <input type="text" v-model="code" v-on:keyup.enter="recoveryAccountHandler" />
                     <img class="ic-password" src="img/auth/password.png" />
                 </label>
-                <label style="display: none">Пароль
+                <label v-show="recoveryCodeConfirmed">Пароль
                     <input type="text" v-model="password" v-on:keyup.enter="recoveryAccountHandler" />
-                    <!-- <img class="ic-password" src="img/auth/password.png" /> -->
+                    <img class="ic-password" src="img/auth/password.png" />
                 </label>
-                <label style="display: none">Повторите пароль
+                <label v-show="recoveryCodeConfirmed">Повторите пароль
                     <input type="text" v-model="password2" v-on:keyup.enter="recoveryAccountHandler" />
                     <!-- <img class="ic-password" src="img/auth/password.png" /> -->
                 </label>
@@ -1576,7 +1579,6 @@
             <i class="arrow fas fa-long-arrow-alt-right" onclick="changelist.i--" v-if="i > 0"></i>
         </div>
         <div class="content">
-            <div class="build" title="Сборка"><i class="fas fa-code-branch"></i> {{ list[i].build }}</div>
             <div v-for="text in list[i].features" :title="text"><span class="features"><i class="fas fa-star"></i></span>
                 <div>{{ prettyText(text) }}</div>
             </div>
@@ -1588,7 +1590,8 @@
             <div v-for="text in list[i].removed" :title="text"><span class="removed"><i class="fas fa-trash"></i></span>{{ prettyText(text) }}</div>
         </div>
         <div class="footer">
-            <span class="likes" :class="{liked: list[i].liked}" onclick="changelist.like()">{{ list[i].likes }} <i class="fas fa-heart"></i></span>
+            <div class="build" title="Сборка"><i class="fas fa-code-branch"></i> {{ list[i].build }}</div>
+            <div v-show="enable" class="likes" :class="{liked: list[i].liked}" onclick="changelist.like()">{{ list[i].likes }} <i class="fas fa-heart"></i></div>
         </div>
     </div>
 

@@ -190,6 +190,7 @@ mp.events.add("characterInit.create", (active, rawCharData) => {
         binding(true);
         charData = JSON.parse(rawCharData);
         mp.gui.cursor.show(true, false);
+        mp.utils.disablePlayerMoving(true);
 
         camInit();
         applyTorsoCamera();
