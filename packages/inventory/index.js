@@ -48,7 +48,7 @@ module.exports = {
         legs: [20, 30],
         feets: [25, 35],
     },
-    // Коэффицент урона игроку от климата (чем выше, тем больше урон)
+    // Коэффицент урона игроку от климата (чем выше, тем больше урон) (при холоде -ХП, при жаре -жажда)
     climeK: 0.5,
     // Коэффиценты важности частей тела
     climeOpacity: {
@@ -1163,13 +1163,14 @@ module.exports = {
         if (pants) clime.legs = this.getParamsValues(pants).clime || this.playerClime.legs;
         if (shoes) clime.feets = this.getParamsValues(shoes).clime || this.playerClime.feets;
 
-        var damage = 0;
+        var damage = 0,
+            thirst = 0;
 
         if (temp < clime.head[0]) {
             damage += this.climeOpacity.head * (clime.head[0] - temp) * this.climeK;
             out(`У вас мерзнет голова`);
         } else if (temp > clime.head[1]) {
-            damage += this.climeOpacity.head * (temp - clime.head[1]) * this.climeK;
+            thirst += this.climeOpacity.head * (temp - clime.head[1]) * this.climeK;
             out(`У вас вспотела голова`);
         }
 
@@ -1177,7 +1178,7 @@ module.exports = {
             damage += this.climeOpacity.body * (clime.body[0] - temp) * this.climeK;
             out(`У вас мерзнет тело`);
         } else if (temp > clime.body[1]) {
-            damage += this.climeOpacity.body * (temp - clime.body[1]) * this.climeK;
+            thirst += this.climeOpacity.body * (temp - clime.body[1]) * this.climeK;
             out(`У вас вспотело тело`);
         }
 
@@ -1185,7 +1186,7 @@ module.exports = {
             damage += this.climeOpacity.legs * (clime.legs[0] - temp) * this.climeK;
             out(`У вас мерзнут ноги`);
         } else if (temp > clime.legs[1]) {
-            damage += this.climeOpacity.legs * (temp - clime.legs[1]) * this.climeK;
+            thirst += this.climeOpacity.legs * (temp - clime.legs[1]) * this.climeK;
             out(`У вас вспотели ноги`);
         }
 
@@ -1193,11 +1194,12 @@ module.exports = {
             damage += this.climeOpacity.feets * (clime.feets[0] - temp) * this.climeK;
             out(`У вас мерзнут ступни`);
         } else if (temp > clime.feets[1]) {
-            damage += this.climeOpacity.feets * (temp - clime.feets[1]) * this.climeK;
+            thirst += this.climeOpacity.feets * (temp - clime.feets[1]) * this.climeK;
             out(`У вас вспотели ступни`);
         }
 
         player.health -= damage;
+        call("satiety").set(player, player.character.satiety, player.character.thirst - thirst);
     },
     // получить ID предмета патронов по ID предмета оружия
     getAmmoItemId(itemId) {
