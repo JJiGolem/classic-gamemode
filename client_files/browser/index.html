@@ -514,8 +514,8 @@
         <div class="equipment">
             <div class="header">
                 <div class="title">Экипировка</div>
-                <img src="img/inventory/satiety.png" /><span class="satiety" :style="{color: valueColor(satiety)}">{{ satiety }}%</span>
-                <img src="img/inventory/thirst.png" /><span class="thirst" :style="{color: valueColor(thirst)}">{{ thirst }}%</span>
+                <img src="img/inventory/satiety.png" /><span class="satiety" :style="{color: valueColor(satiety)}">{{ Math.ceil(satiety) }}%</span>
+                <img src="img/inventory/thirst.png" /><span class="thirst" :style="{color: valueColor(thirst)}">{{ Math.ceil(thirst) }}%</span>
                 <!-- <div>Голод <span class="satiety">{{ satiety }}</span>%</div> -->
                 <!-- <div>Жажда <span class="thirst">{{ thirst }}</span>%</div> -->
             </div>
