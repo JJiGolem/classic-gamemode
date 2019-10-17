@@ -376,7 +376,7 @@ module.exports = {
             case 56: // канистра
                 if (data.index == 0) { // заправить авто
                     if (player.vehicle) return out(`Недоступно в авто`);
-                    var veh = mp.vehicles.getNear(player, 2);
+                    var veh = mp.vehicles.getNear(player, 50);
                     if (!veh) return out(`Подойдите к авто`);
 
                     var params = inventory.getParamsValues(item);
