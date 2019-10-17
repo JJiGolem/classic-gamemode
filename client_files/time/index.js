@@ -11,9 +11,15 @@ mp.time = {
         setInterval(() => {
             mp.events.call("time.main.tick");
         }, 1000);
-    }
+    },
+    startMinuteTimer() {
+        setInterval(() => {
+            mp.events.call("time.minute.tick");
+        }, 60000);
+    },
 };
 
 mp.events.add("characterInit.done", () => {
     mp.time.startMainTimer();
+    mp.time.startMinuteTimer();
 });

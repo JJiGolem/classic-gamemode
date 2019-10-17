@@ -108,7 +108,7 @@ module.exports = {
         return RESPAWN_TIMEOUT;
     },
     calculateComission(player) {
-        let skill = jobs.getJobSkill(player, 2);
+        let skill = jobs.getJobSkill(player, 2).exp;
         let defaultComission = 0.3;
         return +(defaultComission - 0.25 * (skill / 100)).toFixed(2);
     }

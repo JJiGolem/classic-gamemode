@@ -165,12 +165,12 @@ let setInfo = function() {
             name: "${charInfo.name}",
             cash: ${charInfo.cash},
             bank: ${charInfo.bank},
-            status: "${charInfo.admin == 0 ? (charInfo.status == 0 ? "Обычный" : "Премиум") : "Администратор"}",
-            hours: ${parseInt(charInfo.minutes / 60)},
-            faction: "Cooming Soon",
-            job: "Cooming Soon",
-            house: "Cooming Soon",
-            biz: "Cooming Soon",
+            status: "${charInfo.status}",
+            hours: ${charInfo.hours},
+            faction: "${charInfo.faction}",
+            job: "${charInfo.job}",
+            house: "${charInfo.house}",
+            biz: "${charInfo.biz}",
             warns: ${charInfo.warnNumber}
         });`);
     });

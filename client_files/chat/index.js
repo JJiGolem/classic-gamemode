@@ -164,6 +164,7 @@ function playChatAnimation(id) {
 }
 
 mp.events.add('chat.message.get', (type, message) => {
+    mp.afk.action();
     mp.events.callRemote('chat.message.get', type, message);
 });
 

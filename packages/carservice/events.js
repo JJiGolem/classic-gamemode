@@ -1,6 +1,7 @@
 let carservice = require('./index.js');
 
 let money = call('money');
+let jobs = call('jobs');
 
 let DEFAULT_PRODUCTS = carservice.defaultProducts;
 let DEFAULT_DIAGNOSTICS_PRODUCTS = DEFAULT_PRODUCTS.DIAGNOSTICS;
@@ -306,12 +307,17 @@ module.exports = {
                     console.log(target.repairPrice);
                     carservice.repairVehicle(vehicle);
                     let salary = parseInt(target.repairPrice * salaryMultiplier);
+                    let bonus = carservice.calculateBonus(player);
                     let income = target.repairPrice - salary;
                     carservice.removeProducts(serviceId, target.repairProducts); /// Снятие продуктов
                     carservice.updateCashbox(serviceId, income); /// Начисление денег за ремонт
-                    money.addMoney(mechanic, salary, function (result) {
+                    jobs.addJobExp(mechanic, 0.05);
+                    money.addMoney(mechanic, parseInt(salary * (1 + bonus)), function (result) {
                         if (result) {
                             mechanic.call('notifications.push.success', [`К зарплате добавлено $${salary}`, 'Автомастерская']);
+                            if (bonus) {
+                                mechanic.call('notifications.push.info', [`Премия за навык механика составила ${bonus*100}%`, 'Автомастерская']);
+                            }
                         } else {
                             mechanic.call('notifications.push.error', [`Ошибка выдачи зарплаты`, 'Автомастерская']);
                             console.log(`Ошибка выдачи зарплаты за починку ${mechanic.name}`);
