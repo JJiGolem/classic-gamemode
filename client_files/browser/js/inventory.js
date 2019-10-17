@@ -1081,7 +1081,7 @@ var inventory = new Vue({
         },
         setItemParam(item, key, value) {
             if (typeof item == 'number') item = this.getItem(item);
-            if (!item) return this.notify(`setItemParam: Предмет ${item} не найден`);
+            if (!item) return /*this.notify(`setItemParam: Предмет ${item} не найден`)*/;
             if (!isNaN(value)) value = parseFloat(value);
             Vue.set(item.params, key, value);
         },
