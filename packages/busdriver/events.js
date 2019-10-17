@@ -159,9 +159,10 @@ module.exports = {
     "busdriver.checkpoint.entered": (player) => {
         if (!player.vehicle) return;
         if (player.vehicle.busDriverId != player.id) return;
+        
         let bonus = bus.calculateBonus(player);
-        console.log(bonus);
-        player.character.pay += player.busRoute.salary;
+        let salary = parseInt(player.busRoute.salary * (1 + bonus));
+        player.character.pay += salary;
         player.busPointsToSave++;
         if (player.busPointsToSave % 10 == 0) {
             player.character.save();
