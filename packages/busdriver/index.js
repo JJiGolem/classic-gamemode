@@ -113,8 +113,6 @@ module.exports = {
     },
     calculateBonus(player) {
         let skill = jobs.getJobSkill(player, 3).exp;
-        console.log(`skill ${skill}`);
-        console.log(`skill / 100 ${skill / 100}`);
         return +(skill / 100).toFixed(2);
     }
 }
