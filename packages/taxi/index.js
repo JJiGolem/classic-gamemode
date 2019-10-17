@@ -26,7 +26,6 @@ module.exports = {
         vehicles = call("vehicles");
         jobs = call("jobs");
         this.createTaxiStation();
-        this.calculateComission();
     },
     createTaxiStation() {
         mp.blips.new(198, new mp.Vector3(taxiStation.x, taxiStation.y, taxiStation.z),
@@ -109,7 +108,7 @@ module.exports = {
         return RESPAWN_TIMEOUT;
     },
     calculateComission(player) {
-        let skill = jobs.getJobSkill(player);
+        let skill = jobs.getJobSkill(player, 2);
         let defaultComission = 0.3;
         return +(defaultComission - 0.25 * (skill / 100)).toFixed(2);
     }

@@ -2,6 +2,7 @@ let bus = require('./index.js');
 let money = call('money');
 let vehicles = call('vehicles');
 let notify = call('notifications');
+let jobs = call('jobs');
 
 module.exports = {
     "init": () => {
@@ -144,7 +145,6 @@ module.exports = {
                 player.removeFromVehicle();
                 return;
             }
-            // Возможно стоит начислять в ЗП
             money.moveCash(player, driver, price, function (result) {
                 if (result) {
                     notify.success(driver, `+$${price} за пассажира`, `Автобус`);
@@ -159,12 +159,14 @@ module.exports = {
     "busdriver.checkpoint.entered": (player) => {
         if (!player.vehicle) return;
         if (player.vehicle.busDriverId != player.id) return;
-
+        let bonus = bus.calculateBonus(player);
+        console.log(bonus);
         player.character.pay += player.busRoute.salary;
         player.busPointsToSave++;
         if (player.busPointsToSave % 10 == 0) {
             player.character.save();
-            console.log('save');
+            jobs.addJobExp(player, 0.05);
+            console.log('add skill');
         }
         console.log(player.character.pay);
         let timeout;
