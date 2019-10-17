@@ -142,12 +142,12 @@ module.exports = {
                     name: player.characters[i].name,
                     cash: player.characters[i].cash,
                     bank: player.characters[i].bank,
-                    status: player.characters[i].admin == 0 ? (player.characters[i].status == 0 ? "Обычный" : "Премиум") : "Администратор",
+                    status: this.getSocialStatus(player.characters[i]),
                     hours: parseInt(player.characters[i].minutes / 60),
                     faction: factionName ? factionName : "Нет",
                     job: jobName ? jobName : "Нет",
-                    house: house ? `${house.Interior.class}(${house.id})` : "Нет",
-                    biz: biz ? `${biz.name}` : "Нет",
+                    house: house ? `${house.info.Interior.class}(№${house.info.id})` : "Нет",
+                    biz: biz ? `${biz.info.name}` : "Нет",
                     warns: player.characters[i].warnNumber,
                     hair: player.characters[i].hair,
                     hairColor: player.characters[i].hairColor,
@@ -465,5 +465,13 @@ module.exports = {
                 player.dimension = 0;
                 break;
         }
+    },
+    getSocialStatus(character) {
+        if (character.admin) return "Администратор";
+        if (character.media) return "Медиа";
+        if (!character.factionId) return "Обычный";
+        if (character.factionId < 8) return "Госслужащий";
+
+        return "Бандит";
     },
 };
