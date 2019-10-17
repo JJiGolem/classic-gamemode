@@ -30,7 +30,6 @@ mp.carrier = {
     },
     setLoadInfo(data) {
         this.initBizOrdersInfo(data);
-
         var price = [`$${data.productPrice}`];
         var sell = [`-${Math.ceil((1 - data.productSellK) * 100)}%`];
 
