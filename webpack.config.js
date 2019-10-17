@@ -13,9 +13,9 @@ require('babel-core').transform("code", {
 
 require('babel-polyfill');
 
-let entry = {
-    babelPolyfill: 'babel-polyfill'
-};
+let entry = {};
+
+let DATE_CHANGE = null;
 
 let ignoreModules = ['browser'];
 
@@ -28,11 +28,12 @@ function copyFiles() {
         fs.mkdirSync(copyPath);
     }
 
-    if (!fs.existsSync(finalPath)) {
-        fs.mkdirSync(finalPath);
+    if (fs.existsSync(finalPath)) {
+        DATE_CHANGE = fs.statSync(path.resolve(__dirname, finalPath, '.listcache')).mtime
     } else {
-        rimraf.sync(finalPath);
         fs.mkdirSync(finalPath);
+        DATE_CHANGE = 0;
+        entry.babelPolyfill = 'babel-polyfill';
     }
 
     if (!fs.existsSync(`./client_packages/browser`)) {
@@ -76,16 +77,32 @@ function getEntry() {
 
     copyFiles();
 
-    fs.readdirSync(copyPath).forEach(async dir => {
-        if (fs.lstatSync(path.resolve(copyPath, dir)).isDirectory() && !ignoreModules.includes(dir)) {
-            fs.readdirSync(path.resolve(copyPath, dir)).forEach(async file => {
-                await rewriteFile(dir, file);
-            });
+    console.log(DATE_CHANGE);
 
-            entry[`${dir}/index`] = `${copyPath}/${dir}/index.js`;
+    fs.readdirSync(copyPath).forEach(dir => {
+        if (fs.lstatSync(path.resolve(copyPath, dir)).isDirectory() && !ignoreModules.includes(dir)) {
+            let directory = fs.readdirSync(path.resolve(__dirname, copyPath, dir));
+            let isChange = false;
+
+            directory.forEach(file => {
+                if (fs.statSync(path.resolve(__dirname, basePath, dir, file)).mtime > DATE_CHANGE) {
+                    console.log(`${dir}/${file}: `, fs.statSync(path.resolve(__dirname, basePath, dir, file)).mtime);
+
+                    isChange = true;
+                }
+            })
+
+            if (isChange) {
+                directory.forEach(file => {
+                    rewriteFile(dir, file);
+                });
+
+                entry[`${dir}/index`] = `${copyPath}/${dir}/index.js`;
+            }
         }
     });
 
+    console.log(entry);
     return entry;
 }
 
