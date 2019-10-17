@@ -120,7 +120,7 @@ module.exports = {
             bizId: biz.info.id,
             bizName: biz.info.name,
             ownerName: biz.info.characterNick,
-            prodName: bizes.getTypeName(biz.info.type),
+            prodName: bizes.getResourceName(biz.info.type),
             prodCount: biz.info.productsOrder,
             prodPrice: this.productPrice,
             orderPrice: biz.info.productsOrderPrice,
