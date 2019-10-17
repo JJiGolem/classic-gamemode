@@ -19,7 +19,8 @@ module.exports = {
         cigarettes: 2,
         canister: 10,
         rope: 5,
-        bag: 7
+        bag: 7,
+        duffleBag: 30
     },
     itemIds: {
         water: 34,
@@ -28,6 +29,7 @@ module.exports = {
         rope: 54,
         bag: 55,
         canister: 56,
+        duffleBag: 13
     },
     async init() {
         bizes = call('bizes');
