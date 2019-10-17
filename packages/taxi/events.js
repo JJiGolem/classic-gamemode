@@ -1,6 +1,7 @@
 let taxi = require('./index.js');
 let money = call('money');
 let vehicles = call('vehicles');
+let jobs = call('jobs');
 
 module.exports = {
     "init": () => {
@@ -149,14 +150,18 @@ module.exports = {
         console.log(`водитель ${driver.name} привез игрока ${client.name} за $${price}`);
 
         client.call('taxi.client.destination.reach');
-        // todo добавить комиссию с водителя
+       
+        let commission = taxi.calculateComission(driver);
         money.removeCash(client, price, function (result) {
             if (result) {
                 client.call('notifications.push.success', ['Вы оплатили поездку', 'Такси']);
+                jobs.addJobExp(driver, 0.05);
                 try {
-                    money.addMoney(driver, price, function (result) {
+                    money.addMoney(driver, parseInt((1 - commission) * price), function (result) {
                         if (result) {
-                            driver.call('notifications.push.success', ['Деньги зачислены на счет', 'Такси']);
+                            driver.call('notifications.push.success', ['Деньги зачислены на счет', 'Такси']); // возможно лишнее
+                            driver.call('notifications.push.info', [`Комиссия Cuber составила ${100*commission}%`, 'Такси']);
+                            driver.call('notifications.push.info', [`Комиссия уменьшается с увеличением навыка таксиста`, 'Такси']);
                         } else {
                             driver.call('notifications.push.error', ['Ошибка зачисления денег', 'Такси']);
                         }
