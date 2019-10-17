@@ -19,13 +19,24 @@ let DATE_CHANGE = null;
 
 let ignoreModules = ['browser'];
 
-const copyPath = './client_build';
+const buildPath = './client_build';
 const basePath = './client_files';
 const finalPath = './client_packages';
 
-function copyFiles() {
-    if (!fs.existsSync(copyPath)) {
-        fs.mkdirSync(copyPath);
+function copyFile(copyPath) {
+
+    let finalPath = copyPath.toString().replace('client_files', 'client_packages');
+
+    if (fs.existsSync(finalPath)) {
+        fs.unlinkSync(finalPath);
+    }
+
+    fs.copyFileSync(copyPath, finalPath);
+}
+
+function copyOnlyChangedFiles() {
+    if (!fs.existsSync(buildPath)) {
+        fs.mkdirSync(buildPath);
     }
 
     if (fs.existsSync(finalPath)) {
@@ -36,28 +47,29 @@ function copyFiles() {
         entry.babelPolyfill = 'babel-polyfill';
     }
 
+    wrench.copyDirSyncRecursive(basePath, buildPath, {
+        forceDelete: true
+    });
+
     if (!fs.existsSync(`./client_packages/browser`)) {
         fs.mkdirSync(`./client_packages/browser`);
+        wrench.copyDirSyncRecursive(`${basePath}/browser`, `${finalPath}/browser`, {
+            forceDelete: true
+        });
     }
 
-    wrench.copyDirSyncRecursive(basePath, copyPath, {
-        forceDelete: true
-    });
-
-    wrench.copyDirSyncRecursive(`${basePath}/browser`, `${finalPath}/browser`, {
-        forceDelete: true
-    });
-
-    fs.readdirSync(`${finalPath}/browser/js`).forEach(file => {
-        let result = obfuscator.obfuscate(
-            fs.readFileSync(`${finalPath}/browser/js/${file}`, 'utf8').toString(),
-            {
-                compact: true,
-                controlFlowFlattening: true
-            }
-        );
-
-        fs.writeFileSync(`${finalPath}/browser/js/${file}`, result.getObfuscatedCode());
+    fs.readdirSync(`${basePath}/browser/js`).forEach(file => {
+        if (fs.statSync(path.resolve(__dirname, basePath, 'browser', 'js', file)).mtime > DATE_CHANGE) {
+            let result = obfuscator.obfuscate(
+                fs.readFileSync(`${basePath}/browser/js/${file}`, 'utf8').toString(),
+                {
+                    compact: true,
+                    controlFlowFlattening: true
+                }
+            );
+    
+            fs.writeFileSync(`${finalPath}/browser/js/${file}`, result.getObfuscatedCode());
+        }
     })
 
     fs.copyFileSync(`${basePath}/index.js`, `${finalPath}/index.js`);
@@ -75,13 +87,13 @@ function copyFiles() {
 
 function getEntry() {
 
-    copyFiles();
+    copyOnlyChangedFiles();
 
     console.log(DATE_CHANGE);
 
-    fs.readdirSync(copyPath).forEach(dir => {
-        if (fs.lstatSync(path.resolve(copyPath, dir)).isDirectory() && !ignoreModules.includes(dir)) {
-            let directory = fs.readdirSync(path.resolve(__dirname, copyPath, dir));
+    fs.readdirSync(buildPath).forEach(dir => {
+        if (fs.lstatSync(path.resolve(buildPath, dir)).isDirectory() && !ignoreModules.includes(dir)) {
+            let directory = fs.readdirSync(path.resolve(__dirname, buildPath, dir));
             let isChange = false;
 
             directory.forEach(file => {
@@ -97,7 +109,7 @@ function getEntry() {
                     rewriteFile(dir, file);
                 });
 
-                entry[`${dir}/index`] = `${copyPath}/${dir}/index.js`;
+                entry[`${dir}/index`] = `${buildPath}/${dir}/index.js`;
             }
         }
     });
@@ -107,7 +119,7 @@ function getEntry() {
 }
 
 function rewriteFile(dir, file) {
-    let content = fs.readFileSync(path.resolve(__dirname, copyPath, dir, file), 'utf8').toString();
+    let content = fs.readFileSync(path.resolve(__dirname, buildPath, dir, file), 'utf8').toString();
 
     let regImport = new RegExp(dir + '\/', 'g');
     let regExport = new RegExp(`exports`, 'g');
@@ -120,7 +132,7 @@ function rewriteFile(dir, file) {
 
     content = content.replace(regExport, 'module.exports');
 
-    fs.writeFileSync(path.resolve(copyPath, dir, file), content);
+    fs.writeFileSync(path.resolve(buildPath, dir, file), content);
 }
 
 let config = {
