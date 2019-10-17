@@ -66,13 +66,14 @@ function copyBrowser() {
         if (fs.lstatSync(path.resolve(__dirname, PATHS.basePath, 'browser', dir)).isDirectory()) {
             if (dir == 'js' || dir == 'css') {
                 copyJsOrCss(dir);
-            } else if (dir == 'build') {
-                copyReact();
-            } else if (dir == 'fonts') {
-                copyFonts();
-            } else if (dir == 'img') {
-                copyImg();
             }
+            // } else if (dir == 'build') {
+            //     copyReact();
+            // } else if (dir == 'fonts') {
+            //     copyFonts();
+            // } else if (dir == 'img') {
+            //     copyImg();
+            // }
         } else {
             if (fs.statSync(path.resolve(__dirname, PATHS.basePath, 'browser', dir)).mtime > this.dateChange) {
                 console.log(`browser/${dir}`, fs.statSync(path.resolve(__dirname, PATHS.basePath, 'browser', dir)).mtime)
@@ -113,12 +114,12 @@ function copyFonts() {
 function copyImg() {
     fs.readdirSync(path.resolve(__dirname, PATHS.basePath, 'browser', 'img')).forEach(dir => {
         fs.readdirSync(path.resolve(__dirname, PATHS.basePath, 'browser', 'fonts', dir)).forEach(file => {
-            if (fs.statSync(path.resolve(__dirname, PATHS.basePath, 'browser', 'fonts', dir, file)).mtime > this.dateChange) {
-                wrench.copyDirSyncRecursive(path.resolve(__dirname, PATHS.basePath, 'browser', 'fonts', dir), 
-                    path.resolve(__dirname, PATHS.finalPath, 'browser', 'fonts', dir),
-                    { forceDelete: true }
-                );
-            }
+            // if (fs.statSync(path.resolve(__dirname, PATHS.basePath, 'browser', 'fonts', dir, file)).mtime > this.dateChange) {
+            //     wrench.copyDirSyncRecursive(path.resolve(__dirname, PATHS.basePath, 'browser', 'fonts', dir), 
+            //         path.resolve(__dirname, PATHS.finalPath, 'browser', 'fonts', dir),
+            //         { forceDelete: true }
+            //     );
+            // }
         });
     });
 }
