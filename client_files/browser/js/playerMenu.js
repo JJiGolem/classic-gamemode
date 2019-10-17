@@ -94,6 +94,12 @@ let settingsmainWindowData = {
             pull: ["Выкл", "Вкл"],
             value: 0,
         },
+        hudKeys: {
+            type: 'scroll',
+            head: 'Подсказки кнопок',
+            pull: ["Выкл", "Вкл"],
+            value: 0,
+        },
         walking: {
             type: 'scroll',
             head: 'Походка',
@@ -769,6 +775,7 @@ var playerMenu = new Vue({
                 settingsmainWindowData.settingsList[key].value = settings[key];
                 if (key == 'chatTimestamp') mp.events.call("setTimeChat", !!settings[key]);
                 else if (key == 'nicknames') mp.trigger(`nametags.show`, !!settings[key]);
+                else if (key == 'hudKeys') hud.keysShow = !!settings[key];
             }
         },
         setEmail(email, confirm = 0) {
