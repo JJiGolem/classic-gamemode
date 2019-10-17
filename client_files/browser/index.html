@@ -71,7 +71,7 @@
                 <img src="img/hud/star.svg" />
             </div>
         </div>
-        <div class="keys">
+        <div v-show="keysShow" class="keys">
             <div v-for="key in keys"><span v-html="key.key"></span>{{ key.name }}</div>
         </div>
         <div class="money">
@@ -541,7 +541,7 @@
                 <div class="title">Инвентарь</div>
                 <div>Тяжесть {{ +playerWeight.toFixed(1) }}%</div>
             </div>
-            <div class="container" v-for="item in equipment" v-if="item.pockets">
+            <div class="container" v-for="item in equipment" v-if="item.pockets" :class="{drag: itemDrag.item && itemDrag.item.sqlId == item.sqlId}">
                 <div class="header" @click="item.showPockets = !item.showPockets" :class="{hidden: !item.showPockets}">
                     <div class="title">{{ item.params.name || itemsInfo[item.itemId].name }}</div>
                     <div>{{ +getPlaceWeight(item).toFixed(1) }} кг</div>

@@ -207,6 +207,10 @@
     width: 7vh;
 }
 
+#inventory .container.drag {
+    opacity: 0.6;
+}
+
 #inventory .container .item {
     border: 1px solid #fff4;
     background-color: #fff1;
@@ -540,12 +544,12 @@
 #inventory .item-notif {
     background: #111e;
     box-shadow: none;
-    font-size: 2vh;
+    font-size: 1.5vh;
     height: fit-content;
-    /* max-height: 40vh; */
-    /* overflow-y: auto; */
+    padding: 0.5vh;
     position: absolute;
     width: fit-content;
+    z-index: 1;
 }
 
 #inventory .items {

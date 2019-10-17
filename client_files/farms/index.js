@@ -319,8 +319,8 @@ mp.events.addDataHandler("farmProductsState", (vehicle) => {
 
 mp.events.addDataHandler("trunk", (vehicle, value) => {
     if (!value) return;
-    if (nearBootVehicleId == null) return;
-    if (nearBootVehicleId != vehicle.remoteId) return;
+    if (mp.moduleVehicles.nearBootVehicleId == null) return;
+    if (mp.moduleVehicles.nearBootVehicleId != vehicle.remoteId) return;
     if (!mp.farms.hasProduct()) return;
 
     mp.events.callRemote(`farms.vehicle.products.put`, vehicle.remoteId);

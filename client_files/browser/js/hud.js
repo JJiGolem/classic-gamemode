@@ -17,6 +17,7 @@ var hud = new Vue({
         show: false,
         showOnline: true,
         leftWeather: 300,
+        keysShow: false,
         keys: [
             {
                 key: "I",

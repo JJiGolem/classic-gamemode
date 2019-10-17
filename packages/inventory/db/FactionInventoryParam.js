@@ -15,7 +15,10 @@ module.exports = (sequelize, DataTypes) => {
             get() {
                 var value = this.getDataValue('value');
                 if (!isNaN(value)) value = parseFloat(value);
-                if (typeof value == 'string') value = value.replace(/(["'])/g, "\\$1");
+                if (typeof value == 'string') {
+                    value = value.replace(/(\\)/g, "");
+                    value = value.replace(/(["'])/g, "\\$1");
+                }
                 return value;
             }
         },

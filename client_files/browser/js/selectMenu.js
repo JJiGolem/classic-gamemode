@@ -4553,7 +4553,8 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'О ферме') {
                             selectMenu.showByName("farmInfo");
                         } else if (e.itemName == 'Помощь') {
-
+                            selectMenu.show = false;
+                            modal.showByName("farm_help");
                         } else if (e.itemName == 'Купить') {
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `farms.buy`);
@@ -6015,6 +6016,9 @@ var selectMenu = new Vue({
                         text: 'Табачные изделия'
                     },
                     {
+                        text: 'Сумки'
+                    },
+                    {
                         text: 'Прочие товары'
                     },
                     {
@@ -6044,6 +6048,9 @@ var selectMenu = new Vue({
                         }
                         if (e.itemName == 'Табачные изделия') {
                             selectMenu.showByName('supermarketTobacco');
+                        }
+                        if (e.itemName == 'Сумки') {
+                            selectMenu.showByName('supermarketBags');
                         }
                         if (e.itemName == 'Прочие товары') {
                             selectMenu.showByName('supermarketStuff');
@@ -6220,6 +6227,52 @@ var selectMenu = new Vue({
                         }
                         if (e.itemName == 'Сигареты "Redwood"') {
                             mp.trigger('callRemote', 'supermarket.products.buy', 2);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('supermarketMain');
+                    }
+
+                }
+            },
+            "supermarketBags": {
+                name: "supermarketBags",
+                header: "Сумки",
+                headerImg: "",
+                items: [{
+                        text: 'Зеленая сумка',
+                        values: ["$100"],
+                    },
+                    {
+                        text: 'Черная сумка',
+                        values: ["$100"],
+                    },
+                    {
+                        text: 'Назад'
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('supermarketMain');
+                        } else {
+                            selectMenu.loader = true;
+                        }
+                        if (e.itemName == 'Зеленая сумка') {
+                            mp.trigger('callRemote', 'supermarket.products.buy', 6);
+                        }
+                        if (e.itemName == 'Черная сумка') {
+                            mp.trigger('callRemote', 'supermarket.products.buy', 7);
                         }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {

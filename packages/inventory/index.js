@@ -86,10 +86,14 @@ module.exports = {
             weight: item.weight
         };
     },
-    // Отправка общей информации о предметах игроку
-    initPlayerItemsInfo(player) {
+    // Отправка общей информации о настройках инвентаря игроку
+    initInventoryConfig(player) {
         player.call(`inventory.setItemsInfo`, [this.clientInventoryItems]);
-        console.log(`[INVENTORY] Для аккаунта ${player.account.login} загружена общая информация о предметах`);
+        player.call("inventory.setMaxPlayerWeight", [this.maxPlayerWeight]);
+        player.call("inventory.setMergeList", [this.mergeList]);
+        player.call("inventory.setBlackList", [this.blackList]);
+        player.call("inventory.registerWeaponAttachments", [this.bodyList[9], this.getWeaponModels()]);
+        console.log(`[INVENTORY] Для аккаунта ${player.account.login} загружена общая информация о настройках инвентаря`);
     },
     // Отправка общей информации о предмете
     updateItemInfo(item) {

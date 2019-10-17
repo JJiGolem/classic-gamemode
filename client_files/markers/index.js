@@ -7,7 +7,7 @@
     created 13.10.19 by Carter Slade
 */
 
-mp.customMarkers = {
+mp.moduleMarkers = {
     drawRadius: 30,
 };
 
@@ -15,7 +15,7 @@ mp.events.add({
     "time.main.tick": () => {
         mp.markers.forEach(marker => {
             var pos = mp.players.local.position;
-            marker.visible = !(mp.vdist(pos, marker.position) > mp.customMarkers.drawRadius);
+            marker.visible = !(mp.vdist(pos, marker.position) > mp.moduleMarkers.drawRadius);
         });
     }
 });

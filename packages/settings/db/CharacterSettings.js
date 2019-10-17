@@ -44,6 +44,16 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('nicknames', val);
             },
         },
+        // Подсказки кнопок на экране
+        hudKeys: {
+            type: DataTypes.TINYINT(1),
+            defaultValue: 1,
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, 1);
+                this.setDataValue('hudKeys', val);
+            },
+        },
         // Походка
         walking: {
             type: DataTypes.INTEGER(11),

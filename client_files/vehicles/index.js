@@ -366,7 +366,7 @@ mp.events.add('vehicles.lock', () => {
     let veh = mp.getCurrentInteractionEntity();
     if (!veh) return;
     if (veh.type != 'vehicle') return;
-    if (nearBootVehicleId != null || nearHoodVehicleId != null)
+    if (mp.moduleVehicles.nearBootVehicleId != null || mp.moduleVehicles.nearHoodVehicleId != null)
         return mp.notify.error(`Необходимо находиться у двери`, `Авто`);
     mp.events.callRemote('vehicles.lock', veh.remoteId);
 })
@@ -375,7 +375,7 @@ mp.events.add('vehicles.hood', () => {
     let veh = mp.getCurrentInteractionEntity();
     if (!veh) return;
     if (veh.type != 'vehicle') return;
-    if (nearHoodVehicleId == null || nearHoodVehicleId != veh.remoteId)
+    if (mp.moduleVehicles.nearHoodVehicleId == null || mp.moduleVehicles.nearHoodVehicleId != veh.remoteId)
         return mp.notify.error(`Необходимо находиться у капота`, `Авто`);
 
     if (veh.getVariable("hood")) {
@@ -389,7 +389,7 @@ mp.events.add('vehicles.trunk', () => {
     let veh = mp.getCurrentInteractionEntity();
     if (!veh) return;
     if (veh.type != 'vehicle') return;
-    if (nearBootVehicleId == null || nearBootVehicleId != veh.remoteId)
+    if (mp.moduleVehicles.nearBootVehicleId == null || mp.moduleVehicles.nearBootVehicleId != veh.remoteId)
         return mp.notify.error(`Необходимо находиться у багажника`, `Авто`);
 
     if (veh.getVariable("trunk")) {
@@ -461,43 +461,46 @@ mp.events.add("time.main.tick", () => {
         var bootPos = mp.utils.getBootPosition(entity);
         var distToBoot = mp.vdist(mp.players.local.position, bootPos);
         if (distToBoot < 1) {
-            if (nearBootVehicleId == null) {
-                nearBootVehicleId = entity.remoteId;
+            if (mp.moduleVehicles.nearBootVehicleId == null) {
+                mp.moduleVehicles.nearBootVehicleId = entity.remoteId;
                 mp.events.call("playerEnterVehicleBoot", mp.players.local, entity);
             }
         } else {
-            if (nearBootVehicleId != null) {
-                mp.events.call("playerExitVehicleBoot", mp.players.local, mp.vehicles.atRemoteId(nearBootVehicleId));
-                nearBootVehicleId = null;
+            if (mp.moduleVehicles.nearBootVehicleId != null) {
+                mp.events.call("playerExitVehicleBoot", mp.players.local, mp.vehicles.atRemoteId(mp.moduleVehicles.nearBootVehicleId));
+                mp.moduleVehicles.nearBootVehicleId = null;
             }
         }
 
         var hoodPos = mp.utils.getHoodPosition(entity);
         var distToHood = mp.vdist(mp.players.local.position, hoodPos);
         if (distToHood < 1) {
-            if (nearHoodVehicleId == null) {
-                nearHoodVehicleId = entity.remoteId;
+            if (mp.moduleVehicles.nearHoodVehicleId == null) {
+                mp.moduleVehicles.nearHoodVehicleId = entity.remoteId;
                 mp.events.call("playerEnterVehicleHood", mp.players.local, entity);
             }
         } else {
-            if (nearHoodVehicleId != null) {
-                mp.events.call("playerExitVehicleHood", mp.players.local, mp.vehicles.atRemoteId(nearHoodVehicleId));
-                nearHoodVehicleId = null;
+            if (mp.moduleVehicles.nearHoodVehicleId != null) {
+                mp.events.call("playerExitVehicleHood", mp.players.local, mp.vehicles.atRemoteId(mp.moduleVehicles.nearHoodVehicleId));
+                mp.moduleVehicles.nearHoodVehicleId = null;
             }
         }
     } else {
-        if (nearBootVehicleId != null) {
-            mp.events.call("playerExitVehicleBoot", mp.players.local, mp.vehicles.atRemoteId(nearBootVehicleId));
-            nearBootVehicleId = null;
+        if (mp.moduleVehicles.nearBootVehicleId != null) {
+            mp.events.call("playerExitVehicleBoot", mp.players.local, mp.vehicles.atRemoteId(mp.moduleVehicles.nearBootVehicleId));
+            mp.moduleVehicles.nearBootVehicleId = null;
         }
-        if (nearHoodVehicleId != null) {
-            mp.events.call("playerExitVehicleHood", mp.players.local, mp.vehicles.atRemoteId(nearHoodVehicleId));
-            nearHoodVehicleId = null;
+        if (mp.moduleVehicles.nearHoodVehicleId != null) {
+            mp.events.call("playerExitVehicleHood", mp.players.local, mp.vehicles.atRemoteId(mp.moduleVehicles.nearHoodVehicleId));
+            mp.moduleVehicles.nearHoodVehicleId = null;
         }
     }
 });
-var nearBootVehicleId = null,
-    nearHoodVehicleId = null;
+
+mp.moduleVehicles = {
+    nearBootVehicleId: null,
+    nearHoodVehicleId: null
+}
 
 mp.events.add({
     "playerEnterVehicleBoot": (player, vehicle) => {
@@ -523,8 +526,8 @@ mp.events.add({
 });
 
 mp.events.addDataHandler("hood", (vehicle, value) => {
-    if (nearHoodVehicleId == null) return;
-    if (nearHoodVehicleId != vehicle.remoteId) return;
+    if (mp.moduleVehicles.nearHoodVehicleId == null) return;
+    if (mp.moduleVehicles.nearHoodVehicleId != vehicle.remoteId) return;
     if (value) mp.prompt.showByName("vehicle_close_hood");
     else mp.prompt.showByName("vehicle_open_hood");
 });

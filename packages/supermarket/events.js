@@ -79,6 +79,7 @@ module.exports = {
 
         let productName;
         let brand;
+        let bagColor;
         switch (productId) {
             case 0:
                 productName = 'water';
@@ -98,6 +99,14 @@ module.exports = {
                 break;
             case 5:
                 productName = 'canister';
+                break;
+            case 6:
+                productName = 'duffleBag';
+                bagColor = 'green';
+                break;
+            case 7:
+                productName = 'duffleBag';
+                bagColor = 'black';
                 break;
         }
         let price = supermarket.productsConfig[productName] * supermarket.productPrice * supermarket.getPriceMultiplier(supermarketId);
@@ -119,6 +128,11 @@ module.exports = {
         } else if (productName == 'chocolate') {
             params.satiety = 15;
             params.thirst = -5;
+        } else if (productName == 'duffleBag') {
+            params.sex = !player.character.gender;
+            params.pockets = '[2,2,6,5,2,3,6,6,12,10]';
+            params.texture = 0;
+            bagColor == 'green' ? params.variation = 41 : params.variation = 45;
         }
 
         inventory.addItem(player, itemId, params, (e) => {

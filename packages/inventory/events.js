@@ -17,10 +17,7 @@ module.exports = {
         inventory.init();
     },
     "auth.done": (player) => {
-        inventory.initPlayerItemsInfo(player);
-        player.call("inventory.setMaxPlayerWeight", [inventory.maxPlayerWeight]);
-        player.call("inventory.setMergeList", [inventory.mergeList]);
-        player.call("inventory.registerWeaponAttachments", [inventory.bodyList[9], inventory.getWeaponModels()]);
+        inventory.initInventoryConfig(player);
     },
     "characterInit.done": async (player) => {
         player.call("inventory.setSatiety", [player.character.satiety]);
@@ -379,7 +376,7 @@ module.exports = {
             case 56: // канистра
                 if (data.index == 0) { // заправить авто
                     if (player.vehicle) return out(`Недоступно в авто`);
-                    var veh = mp.vehicles.getNear(player, 2);
+                    var veh = mp.vehicles.getNear(player, 50);
                     if (!veh) return out(`Подойдите к авто`);
 
                     var params = inventory.getParamsValues(item);

@@ -412,7 +412,7 @@ var inventory = new Vue({
                 handler(item) {
                     var data = {
                         sqlId: item.sqlId,
-                        index: (item.params.litres)? 0 : 1
+                        index: (item.params.litres) ? 0 : 1
                     };
                     mp.trigger(`callRemote`, `inventory.item.use`, JSON.stringify(data));
                 }
@@ -456,7 +456,7 @@ var inventory = new Vue({
         // Жажда игрока
         thirst: 0,
         // Режим отладки
-        debug: true,
+        debug: false,
         // Показ инвентаря на экране
         show: false,
         // Возможность использования инвентаря
@@ -716,7 +716,7 @@ var inventory = new Vue({
         itemMouseHandler(item, e) {
             var rect = document.getElementById('inventory').getBoundingClientRect();
             var descEl = document.getElementsByClassName('item-desc')[0];
-            var descRect = (descEl)? descEl.getBoundingClientRect() : null;
+            var descRect = (descEl) ? descEl.getBoundingClientRect() : null;
             var handlers = {
                 'mouseenter': (e) => {
                     this.itemDesc.item = item;
@@ -732,14 +732,14 @@ var inventory = new Vue({
                     this.itemDesc.item = null;
                 },
                 'mousemove': (e) => {
-                    var x = (e.screenX - rect.x) + 15;
-                    var y = (e.screenY - rect.y) + 15;
+                    var x = e.screenX + 15;
+                    var y = e.screenY + 15;
 
-                    if (descRect && e.screenX + descRect.width > window.innerWidth) x -= descRect.width;
-                    if (descRect && e.screenY + descRect.height > window.innerHeight) y -= descRect.height;
                     this.itemDesc.item = item;
-                    this.itemDesc.x = x;
-                    this.itemDesc.y = y;
+                    if (descRect && x + descRect.width > window.innerWidth) x = window.innerWidth - descRect.width;
+                    if (descRect && y + descRect.height > window.innerHeight) y = window.innerHeight - descRect.height;
+                    this.itemDesc.x = x - rect.x;
+                    this.itemDesc.y = y - rect.y;
                 },
                 'contextmenu': (e) => {
                     this.itemMenu.item = item;
@@ -779,6 +779,19 @@ var inventory = new Vue({
                         (place.sqlId < 0 && this.getItemsCount(item) > 0) ||
                         (place.sqlId > 0 && nextWeight > this.maxPlayerWeight) ||
                         (this.blackList[place.itemId] && this.blackList[place.itemId].includes(item.itemId));
+
+                    if (place.sqlId == item.sqlId) {
+                        this.itemNotif.text = `Предмет не может быть размещен в своем кармане`;
+                    } else if (place.itemId == item.itemId) {
+                        this.itemNotif.text = `Предмет не может быть размещен в предмете такого же типа`;
+                    } else if ((place.sqlId < 0 && this.getItemsCount(item) > 0)) {
+                        this.itemNotif.text = "Освободите вещь";
+                    } else if ((place.sqlId > 0 && nextWeight > this.maxPlayerWeight)) {
+                        this.itemNotif.text = `Превышение по весу ${nextWeight} из ${this.maxPlayerWeight} кг`;
+                    } else if ((this.blackList[place.itemId] && this.blackList[place.itemId].includes(item.itemId))) {
+                        this.itemNotif.text = `Нельзя положить ${this.itemsInfo[item.itemId].name} в ${this.itemsInfo[place.itemId].name}`;
+                    } else this.itemNotif.text = null;
+
                     for (var x = 0; x < w; x++) {
                         for (var y = 0; y < h; y++) {
                             var i = this.xyToIndex(pocket.rows, pocket.cols, {
@@ -1010,6 +1023,10 @@ var inventory = new Vue({
             if (typeof list == 'string') list = JSON.parse(list);
             Vue.set(this, 'mergeList', list);
         },
+        setBlackList(list) {
+            if (typeof list == 'string') list = JSON.parse(list);
+            Vue.set(this, 'blackList', list);
+        },
         setBodyList(index, list) {
             if (typeof list == 'string') list = JSON.parse(list);
             Vue.set(this.bodyList, index, list);
@@ -1064,7 +1081,7 @@ var inventory = new Vue({
         },
         setItemParam(item, key, value) {
             if (typeof item == 'number') item = this.getItem(item);
-            if (!item) return this.notify(`setItemParam: Предмет ${item} не найден`);
+            if (!item) return /*this.notify(`setItemParam: Предмет ${item} не найден`)*/;
             if (!isNaN(value)) value = parseFloat(value);
             Vue.set(item.params, key, value);
         },
