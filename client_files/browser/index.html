@@ -71,7 +71,7 @@
                 <img src="img/hud/star.svg" />
             </div>
         </div>
-        <div v-show="keysShow" class="keys">
+        <div v-show="keysShow && !selectMenu.show" class="keys">
             <div v-for="key in keys"><span v-html="key.key"></span>{{ key.name }}</div>
         </div>
         <div class="money">
