@@ -14,12 +14,14 @@ mp.events.add('init', (activeModules) => {
         require(moduleName);
     });
 
+    initDone = true;
     if (browserLoaded && initDone) {
         mp.events.callRemote('player.joined');
     }
 });
 
 mp.events.add('browserDomReady', (browser) => {
+    browserLoaded = true;
     if (browserLoaded && initDone) {
         mp.events.callRemote('player.joined');
     }
