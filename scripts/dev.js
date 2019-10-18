@@ -56,11 +56,11 @@ function copyFile(copyPath) {
 function copyOnlyChangedFiles(currentPath) {
     fs.readdirSync(currentPath).forEach(item => {
         let updatedPath = path.resolve(currentPath, item);
-        let finalPahDir = updatedPath.replace('client_files', 'client_packages');
-        if (!fs.existsSync(finalPahDir)) {
-            fs.mkdirSync(finalPahDir)
-        }
         if (fs.lstatSync(updatedPath).isDirectory()) {
+            let finalPahDir = updatedPath.replace('client_files', 'client_packages');
+            if (!fs.existsSync(finalPahDir)) {
+                fs.mkdirSync(finalPahDir)
+            }
             copyOnlyChangedFiles(updatedPath);
         } else {
             files.push(updatedPath);
