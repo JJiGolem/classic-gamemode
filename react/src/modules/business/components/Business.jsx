@@ -174,6 +174,8 @@ class Business extends Component {
                             onClick={() => { 
                                 // eslint-disable-next-line no-undef
                                 mp.trigger('biz.actions', 'finance');
+                                // eslint-disable-next-line no-undef
+                                mp.trigger('biz.menu.close');
                                 closeBusiness();
                              }}
                             onMouseOver={() => this.setState({ colorActionButton: 'black' })}
