@@ -4,33 +4,14 @@ const wrench = require('wrench');
 const rimraf = require('rimraf');
 const PATHS = require('./paths');
 
+let changedFiles = [];
+let files = [];
+
+let DATE_CHANGE = null;
+
 function copyAllFiles() {
     fs.mkdirSync(path.resolve(__dirname, PATHS.finalPath));
     wrench.copyDirSyncRecursive(path.resolve(__dirname, PATHS.basePath), path.resolve(__dirname, PATHS.finalPath), { forceDelete: true });
-}
-
-function deleteUnusedBrowserFiles() {
-    fs.readdirSync(path.resolve(__dirname, PATHS.finalPath, 'browser')).forEach(dir => {
-        if (fs.lstatSync(path.resolve(__dirname, PATHS.finalPath, 'browser', dir)).isDirectory()) {
-            let directory = fs.readdirSync(path.resolve(__dirname, PATHS.finalPath, 'browser', dir));
-
-            directory.forEach(file => {
-                if (!fs.existsSync(path.resolve(__dirname, PATHS.basePath, 'browser', dir, file))) {
-                    rimraf.sync(path.resolve(__dirname, PATHS.finalPath, 'browser', dir, file));
-                }
-            });
-
-            directory = fs.readdirSync(path.resolve(__dirname, PATHS.finalPath, 'browser', dir));
-
-            if (directory.length === 0) {
-                rimraf.sync(path.resolve(__dirname, PATHS.finalPath, 'browser', dir));
-            }
-        } else {
-            if (!fs.existsSync(path.resolve(__dirname, PATHS.basePath, 'browser', dir))) {
-                rimraf.sync(path.resolve(__dirname, PATHS.finalPath, 'browser', dir));
-            }
-        }
-    });
 }
 
 function deleteUnusedFiles() {
@@ -51,7 +32,7 @@ function deleteUnusedFiles() {
                     rimraf.sync(path.resolve(__dirname, PATHS.finalPath, dir));
                 }
             } else {
-                deleteUnusedBrowserFiles();
+                
             }
         } else {
             if (!fs.existsSync(path.resolve(__dirname, PATHS.basePath, dir))) {
@@ -61,118 +42,58 @@ function deleteUnusedFiles() {
     });
 }
 
-function copyBrowser() {
-    fs.readdirSync(path.resolve(__dirname, PATHS.basePath, 'browser')).forEach(dir => {
-        if (fs.lstatSync(path.resolve(__dirname, PATHS.basePath, 'browser', dir)).isDirectory()) {
-            if (dir == 'js' || dir == 'css') {
-                copyJsOrCss(dir);
+function copyFile(copyPath) {
+
+    let finalPath = copyPath.toString().replace('client_files', 'client_packages');
+
+    if (fs.existsSync(finalPath)) {
+        fs.unlinkSync(finalPath);
+    }
+
+    fs.copyFileSync(copyPath, finalPath);
+}
+
+function copyOnlyChangedFiles(currentPath) {
+    fs.readdirSync(currentPath).forEach(item => {
+        let updatedPath = path.resolve(currentPath, item);
+        if (fs.lstatSync(updatedPath).isDirectory()) {
+            let finalPahDir = updatedPath.replace('client_files', 'client_packages');
+            if (!fs.existsSync(finalPahDir)) {
+                fs.mkdirSync(finalPahDir)
             }
-            // } else if (dir == 'build') {
-            //     copyReact();
-            // } else if (dir == 'fonts') {
-            //     copyFonts();
-            // } else if (dir == 'img') {
-            //     copyImg();
-            // }
+            copyOnlyChangedFiles(updatedPath);
         } else {
-            if (fs.statSync(path.resolve(__dirname, PATHS.basePath, 'browser', dir)).mtime > this.dateChange) {
-                console.log(`browser/${dir}`, fs.statSync(path.resolve(__dirname, PATHS.basePath, 'browser', dir)).mtime)
-                let content = fs.readFileSync(path.resolve(__dirname, PATHS.basePath, 'browser', dir), 'utf8');
-
-                fs.writeFileSync(path.resolve(__dirname, PATHS.finalPath, 'browser', dir), content);
+            files.push(updatedPath);
+            if (fs.statSync(updatedPath).mtime > DATE_CHANGE) {
+                changedFiles.push(updatedPath);
+                copyFile(updatedPath);
             }
         }
     });
-}
-
-function copyJsOrCss(dir) {
-    fs.readdirSync(path.resolve(__dirname, PATHS.basePath, 'browser', dir)).forEach(file => {
-        if (fs.statSync(path.resolve(__dirname, PATHS.basePath, 'browser', dir, file)).mtime > this.dateChange) {
-            let content = fs.readFileSync(path.resolve(__dirname, PATHS.basePath, 'browser', dir, file), 'utf8');
-            fs.writeFileSync(path.resolve(__dirname, PATHS.finalPath, 'browser', dir, file), content);
-        }
-    });
-}
-
-function copyReact() {
-
-}
-
-function copyFonts() {
-    fs.readdirSync(path.resolve(__dirname, PATHS.basePath, 'browser', 'fonts')).forEach(dir => {
-        fs.readdirSync(path.resolve(__dirname, PATHS.basePath, 'browser', 'fonts', dir)).forEach(file => {
-            if (fs.statSync(path.resolve(__dirname, PATHS.basePath, 'browser', 'fonts', dir, file)).mtime > this.dateChange) {
-                wrench.copyDirSyncRecursive(path.resolve(__dirname, PATHS.basePath, 'browser', 'fonts', dir), 
-                    path.resolve(__dirname, PATHS.finalPath, 'browser', 'fonts', dir),
-                    { forceDelete: true }
-                );
-            }
-        });
-    });
-}
-
-function copyImg() {
-    fs.readdirSync(path.resolve(__dirname, PATHS.basePath, 'browser', 'img')).forEach(dir => {
-        fs.readdirSync(path.resolve(__dirname, PATHS.basePath, 'browser', 'fonts', dir)).forEach(file => {
-            // if (fs.statSync(path.resolve(__dirname, PATHS.basePath, 'browser', 'fonts', dir, file)).mtime > this.dateChange) {
-            //     wrench.copyDirSyncRecursive(path.resolve(__dirname, PATHS.basePath, 'browser', 'fonts', dir), 
-            //         path.resolve(__dirname, PATHS.finalPath, 'browser', 'fonts', dir),
-            //         { forceDelete: true }
-            //     );
-            // }
-        });
-    });
-}
-
-function copyOnlyChangedFiles() {
-    this.dateChange = fs.statSync(path.resolve(__dirname, PATHS.finalPath, '.listcache')).mtime;
-
-    fs.readdirSync(path.resolve(__dirname, PATHS.basePath)).forEach(dir => {
-        if (dir != 'browser') {
-            if (fs.lstatSync(path.resolve(__dirname, PATHS.basePath, dir)).isDirectory()) {
-                fs.readdirSync(path.resolve(__dirname, PATHS.basePath, dir)).forEach(file => {
-                    if (fs.statSync(path.resolve(__dirname, PATHS.basePath, dir, file)).mtime > this.dateChange) {
-                        console.log(`${dir}/${file}`, fs.statSync(path.resolve(__dirname, PATHS.basePath, dir, file)).mtime)
-                        let content = fs.readFileSync(path.resolve(__dirname, PATHS.basePath, dir, file), 'utf8');
-
-                        if (!fs.existsSync(path.resolve(__dirname, PATHS.finalPath, dir))) {
-                            fs.mkdirSync(path.resolve(__dirname, PATHS.finalPath, dir));
-                        }
-
-                        fs.writeFileSync(path.resolve(__dirname, PATHS.finalPath, dir, file), content);
-                    }
-                })
-            } else {
-                if (fs.statSync(path.resolve(__dirname, PATHS.basePath, dir)).mtime > this.dateChange) {
-                    let content = fs.readFileSync(path.resolve(__dirname, PATHS.basePath, dir), 'utf8');
-
-                    fs.writeFileSync(path.resolve(__dirname, PATHS.finalPath, dir), content);
-                }
-            }
-        } else {
-            copyBrowser();
-        }
-    });
-    
-    /// Удаление файлов из client_packages, которых уже нет в client_files
-    deleteUnusedFiles();
 }
 
 module.exports = {
     compile() {
+        let startTime = new Date();
         console.log('START COPY CLIENT-SIDE');
 
         try {
             if (!fs.existsSync(path.resolve(__dirname, PATHS.finalPath))) {
                 copyAllFiles();
             } else {
-                copyOnlyChangedFiles();
+                DATE_CHANGE = fs.statSync(path.resolve(__dirname, PATHS.finalPath, '.listcache')).mtime;
+                copyOnlyChangedFiles(path.resolve(__dirname, PATHS.basePath));
+                
+                /// Удаление файлов из client_packages, которых уже нет в client_files
+                deleteUnusedFiles();
             }
 
-            console.log('END COPY CLIENT-SIDE | SUCCESS');
+            let endTime = new Date();
+            console.log('END COPY CLIENT-SIDE | SUCCESS | CHANGED : ' + changedFiles.length + ' FILES');
+            console.log('TIME: ', endTime - startTime + ' ms');
         } catch (e) {
             console.log('ERROR COPY CLIENT-SIDE: ' + e);
         }
     },
-    dateChange: null
+    dateChange: DATE_CHANGE
 };

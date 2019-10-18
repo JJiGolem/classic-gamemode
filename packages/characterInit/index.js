@@ -4,7 +4,9 @@ const creatorPlayerPos = new mp.Vector3(402.8664, -996.4108, -99.00027);
 const creatorPlayerHeading = -185.0;
 
 let houses;
+let bizes;
 let factions;
+let jobs;
 let inventory;
 let notifs;
 let utils;
@@ -56,11 +58,13 @@ const SHOES_ID = 9;
 module.exports = {
     moduleInit() {
         houses = call('houses');
+        bizes = call('bizes');
         factions = call('factions');
         inventory = call('inventory');
         notifs = call('notifications');
         utils = call("utils");
         promocodes = call("promocodes");
+        jobs = call('jobs');
     },
     async init(player) {
         if (player.character != null) delete player.character;
@@ -129,8 +133,39 @@ module.exports = {
         }
         let charInfos = new Array();
         for (let i = 0; i < player.characters.length; i++) {
+            let house = houses.getHouseByCharId(player.characters[i].id);
+            let biz = bizes.getBizByCharId(player.characters[i].id);
+            let factionName = factions.getFactionNameById(player.characters[i].factionId);
+            let jobName = jobs.getJobNameById(player.characters[i].job);
             charInfos.push({
-                charInfo: player.characters[i],
+                charInfo: {
+                    name: player.characters[i].name,
+                    cash: player.characters[i].cash,
+                    bank: player.characters[i].bank,
+                    status: this.getSocialStatus(player.characters[i]),
+                    hours: parseInt(player.characters[i].minutes / 60),
+                    faction: factionName ? factionName : "Нет",
+                    job: jobName ? jobName : "Нет",
+                    house: house ? `${house.info.Interior.class}(№${house.info.id})` : "Нет",
+                    biz: biz ? `${biz.info.name}` : "Нет",
+                    warns: player.characters[i].warnNumber,
+                    hair: player.characters[i].hair,
+                    hairColor: player.characters[i].hairColor,
+                    hairHighlightColor: player.characters[i].hairHighlightColor,
+                    eyeColor: player.characters[i].eyeColor,
+                    beardColor: player.characters[i].beardColor,
+                    eyebrowColor: player.characters[i].eyebrowColor,
+                    blushColor: player.characters[i].blushColor,
+                    lipstickColor: player.characters[i].lipstickColor,
+                    chestHairColor: player.characters[i].chestHairColor,
+                    gender: player.characters[i].gender,
+                    mother: player.characters[i].mother,
+                    father: player.characters[i].father,
+                    skin: player.characters[i].skin,
+                    similarity: player.characters[i].similarity,
+                    Appearances: player.characters[i].Appearances,
+                    Features: player.characters[i].Features,
+                },
                 charClothes: inventory.getView(player.characters[i].CharacterInventories),
             });
         }
@@ -430,5 +465,13 @@ module.exports = {
                 player.dimension = 0;
                 break;
         }
+    },
+    getSocialStatus(character) {
+        if (character.admin) return "Администратор";
+        if (character.media) return "Медиа";
+        if (!character.factionId) return "Обычный";
+        if (character.factionId < 8) return "Госслужащий";
+
+        return "Бандит";
     },
 };

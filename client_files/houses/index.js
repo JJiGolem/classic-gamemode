@@ -14,7 +14,7 @@ mp.events.add('house.menu', (houseInfo) => {
 
 mp.events.add('house.menu.close', (isServer) => {
     if (isServer) mp.callCEFR('house.menu.close', []);
-    mp.busy.remove('house.add');
+    mp.busy.remove('house.info');
 });
 
 mp.events.add('house.menu.enter', (place, isHaveGarage) => {

@@ -257,6 +257,11 @@ module.exports = {
         if (!player.character.factionId) return null;
         return this.getFaction(player.character.factionId).name;
     },
+    getFactionNameById(factionId) {
+        let faction = this.getFaction(factionId);
+        if (faction == null) return null;
+        return faction.name;
+    },
     getRank(faction, rank) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         return faction.ranks[rank - 1];

@@ -94,4 +94,9 @@ module.exports = {
         if (!player.character.job) return null;
         return this.getJob(player.character.job).name;
     },
+    getJobNameById(jobId) {
+        let job = this.getJob(jobId);
+        if (job == null) return null;
+        return job.name;
+    },
 }
