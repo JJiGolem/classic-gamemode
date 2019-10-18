@@ -312,6 +312,77 @@ module.exports = {
             target.kick("kicked");
         }
     },
+    "/ban": {
+        access: 4,
+        description: "Забанить игрока.",
+        args: "[ид_игрока]:n [дни]:n [причина]",
+        handler: (player, args) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
+
+            var days = Math.clamp(args[1], 1, 30);
+            args.splice(0, 2);
+
+            mp.events.call('admin.notify.players', `!{#db5e4a}[A] Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${args.join(" ")} `);
+
+            rec.account.clearBanDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+            rec.account.save();
+            rec.kick();
+        }
+    },
+    "/banoff": {
+        access: 4,
+        description: "Забанить игрока оффлайн.",
+        args: "[имя] [фамилия] [дни]:n [причина]",
+        handler: async (player, args, out) => {
+            var name = `${args[0]} ${args[1]}`;
+            var days = Math.clamp(args[2], 1, 30);
+            args.splice(0, 3);
+            var reason = args.join(" ");
+
+            var character = await db.Models.Character.findOne({
+                where: {
+                    name: name
+                },
+                include: db.Models.Account
+            });
+            if (!character) return out.error(`Персонаж ${name} не найден`, player);
+
+            character.Account.clearBanDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+            character.Account.save();
+
+            var rec = mp.players.getByName(name);
+            if (rec) {
+                mp.events.call('admin.notify.players', `!{#db5e4a}[A] Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${reason} `);
+                rec.kick();
+            }
+
+            out.info(`${player.name} забанил ${name} оффлайн на ${days} дней: ${reason}`);
+        }
+    },
+    "/permban": {
+        access: 5,
+        description: "Забанить игрока перманентно (Account + IP + Social Club + Client Serial).",
+        args: "[ид_игрока]:n [причина]",
+        handler: async (player, args, out) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
+
+            args.shift();
+            mp.events.call('admin.notify.players', `!{#db5e4a}[A] Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${args.join(" ")} (PERMANENT)`);
+
+            db.Models.Ban.create({
+                ip: rec.ip,
+                socialClub: rec.socialClub,
+                serial: rec.serial,
+                reason: args.join(" ")
+            });
+
+            rec.account.clearBanDate = new Date(Date.now() + 30 * 365 * 24 * 60 * 60 * 1000);
+            rec.account.save();
+            rec.kick();
+        }
+    },
     "/clothes": {
         access: 3,
         description: "Выдача тестовой одежды",
