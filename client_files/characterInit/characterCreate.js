@@ -6,34 +6,14 @@ const localPlayer = mp.players.local;
 
 let charData;
 
-let headCreatorCamera;
-let creatorCamera;
-function camInit() {
-    let mainCamera = {
-        camera: new mp.Vector3(localPlayer.position.x, localPlayer.position.y - 0.55, localPlayer.position.z + 0.675),
-        cameraLookAt: new mp.Vector3(localPlayer.position.x, localPlayer.position.y, localPlayer.position.z + 0.675)
-    };
-    headCreatorCamera = mp.cameras.new("headCamera", mainCamera.camera, new mp.Vector3(0, 0, 0), 45);
-    headCreatorCamera.pointAtCoord(mainCamera.cameraLookAt);
-
-
-    let torsoCamera;
-    torsoCamera = {
-        camera: new mp.Vector3(localPlayer.position.x, localPlayer.position.y - 1.25, localPlayer.position.z + 0.5),
-        cameraLookAt: new mp.Vector3(localPlayer.position.x, localPlayer.position.y, localPlayer.position.z + 0.5)
-    };
-    creatorCamera = mp.cameras.new("creatorCamera", torsoCamera.camera, new mp.Vector3(0, 0, 0), 45);
-    creatorCamera.pointAtCoord(torsoCamera.cameraLookAt);
-}
-
 function applyTorsoCamera() {
-    creatorCamera.setActive(true);
-    headCreatorCamera.setActive(false);
+    mp.utils.cam.moveTo(localPlayer.position.x, localPlayer.position.y - 1.25, localPlayer.position.z + 0.5,
+        localPlayer.position.x, localPlayer.position.y, localPlayer.position.z + 0.5, 500, 45);
 }
 
-function applyMainCamera() { 
-    headCreatorCamera.setActive(true);
-    creatorCamera.setActive(false);
+function applyHeadCamera() { 
+    mp.utils.cam.moveTo(localPlayer.position.x, localPlayer.position.y - 0.55, localPlayer.position.z + 0.675,
+        localPlayer.position.x, localPlayer.position.y, localPlayer.position.z + 0.675, 500, 45);
 }
 
 function showTorso(state) {
@@ -192,13 +172,13 @@ mp.events.add("characterInit.create", (active, rawCharData) => {
         mp.gui.cursor.show(true, false);
         mp.utils.disablePlayerMoving(true);
 
-        camInit();
-        applyTorsoCamera();
+        mp.utils.cam.tpTo(localPlayer.position.x, localPlayer.position.y - 1.25, localPlayer.position.z + 0.5,
+            localPlayer.position.x, localPlayer.position.y, localPlayer.position.z + 0.5, 45);
         
         mp.callCEFV(`selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];`);
         mp.callCEFV(`selectMenu.show = true`);
     }
-     else {
+    else {
         mp.gui.cursor.show(false, false);
         mp.events.callRemote('characterInit.create.exit');
     }
@@ -207,7 +187,7 @@ mp.events.add("characterInit.create", (active, rawCharData) => {
 mp.events.add("characterInit.create.head", (active) => {
     showTorso(false);
     if (active) {
-        applyMainCamera();
+        applyHeadCamera();
     }
     else {
         applyTorsoCamera();
@@ -388,7 +368,7 @@ for (let i = 0; i < Data.faceFeaturesNames.length; i++) {
     if ('characterInit.create.setNoseBroken' == eventName) {
         mp.events.add(eventName, value => {
             value = 20 - value;
-            applyMainCamera();
+            applyHeadCamera();
             showTorso(false);
             value = parseInt(value);
             const valueScale = value * FACE_FETURE_STEP - 1;
@@ -400,7 +380,7 @@ for (let i = 0; i < Data.faceFeaturesNames.length; i++) {
     }
     else {
         mp.events.add(eventName, value => {
-            applyMainCamera();
+            applyHeadCamera();
             showTorso(false);
             value = parseInt(value);
             const valueScale = value * FACE_FETURE_STEP - 1;
@@ -421,7 +401,7 @@ for (let i = 0; i < Data.headOverlays.length; i++) {
             showTorso(true);
         }
         else {
-            applyMainCamera();
+            applyHeadCamera();
             showTorso(false);
         }
         value = parseInt(value);
