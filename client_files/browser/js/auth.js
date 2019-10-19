@@ -75,7 +75,7 @@ var auth = new Vue({
 
             loader.show = true;
             mp.trigger("auth.login", JSON.stringify({
-                loginOrEmail: this.loginOrEmail,
+                loginOrEmail: this.loginOrEmail.toLowerCase(),
                 password: this.password
             }));
         },
@@ -131,7 +131,7 @@ var auth = new Vue({
 
             loader.show = true;
             mp.trigger("auth.register", JSON.stringify({
-                login: this.login,
+                login: this.login.toLowerCase(),
                 email: this.email,
                 password: this.password,
                 emailCode: emailCode

@@ -15,14 +15,14 @@ mp.events.add('init', (activeModules) => {
     });
 
     initDone = true;
-    if (browserLoaded && initDone) {
+    if (browserLoaded) {
         mp.events.callRemote('player.joined');
     }
 });
 
 mp.events.add('browserDomReady', (browser) => {
     browserLoaded = true;
-    if (browserLoaded && initDone) {
+    if (initDone) {
         mp.events.callRemote('player.joined');
     }
 });
