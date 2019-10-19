@@ -1,13 +1,13 @@
-/* body {
-   background-image: url('https://cdn11.bigcommerce.com/s-xiguxu0y8i/images/stencil/1280x1280/products/114/378/2881263-gtav_pc_igg1_011_full__07509.1542844205.jpg?c=2&imbypass=on');
-   background-size: cover;
-   font-family: monospace, sans-serif;
-   font-size: 1.4vh;
-   margin: 0;
-   overflow: hidden;
-   padding: 0;
-   user-select: none;
-} */
+/* body {*/
+/*   background-image: url('https://cdn11.bigcommerce.com/s-xiguxu0y8i/images/stencil/1280x1280/products/114/378/2881263-gtav_pc_igg1_011_full__07509.1542844205.jpg?c=2&imbypass=on');*/
+/*   background-size: cover;*/
+/*   font-family: monospace, sans-serif;*/
+/*   font-size: 1.4vh;*/
+/*   margin: 0;*/
+/*   overflow: hidden;*/
+/*   padding: 0;*/
+/*   user-select: none;*/
+/*}*/
 
 ::-webkit-scrollbar-button {
     background-image:url('');

@@ -32,7 +32,7 @@ class Main extends Component {
     //         biz: [
     //             {
     //                 id: 3,
-    //                 name: `"У дома"`,
+    //                 name: `"У дома твоей мамы в деревне"`,
     //                 type: 'Оружейный магазин',
     //                 rent: 500,
     //                 days: 30,

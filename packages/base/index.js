@@ -2,6 +2,8 @@
 /// Базовый модуль, отвечающий за загрузку остальных модулей, так же выполняет основные сервисные функции
 let fs = require('fs');
 let path = require('path');
+let exec = require('exec');
+let childProcess = require('child_process');
 
 const isBuild = mp.config.isBuild;
 
@@ -47,6 +49,8 @@ global.debug = (text) => {
 
 if (!isBuild) {
     require('../../scripts/dev').compile();
+} else {
+    childProcess.execSync('npm run build');
 }
 
 /// Вызов подключения к БД, подключение всех модулей и вызов их инициализации

@@ -287,7 +287,14 @@ export default function info(state = initialState, action) {
         case 'ORDER_COMPLETE_BUSINESS':
             newState = { ...state };
             newState.biz[0].resources += payload;
-            newState.biz[0].order = null;
+
+            if ((newState.biz[0].order.productsCount - payload) > 0) {
+                newState.biz[0].order.productsCount -= payload;
+                newState.biz[0].order.productsPrice = parseInt((1 - payload/newState.biz[0].order.productsCount) * newState.biz[0].order.productsPrice)
+            } else {
+                newState.biz[0].order = null;
+            }
+
             return newState;
 
         case 'SELL_BUSINESS':
@@ -363,6 +370,12 @@ export default function info(state = initialState, action) {
             if (indPopCash !== -1) {
                 newState.biz[indPopCash].cashBox -= payload.money;
             }
+
+            return newState;
+
+        case 'UPDATE_CASHBOX_BUSINESS':
+            newState = { ...state };
+            newState.biz[0].cashBox = money;
 
             return newState;
 

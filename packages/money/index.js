@@ -20,6 +20,7 @@ module.exports = {
     /// number - количество средств
     /// callback - функция колбека, которая вызовется по завершению работы или в случае ошибки
     addCash(player, number, callbackT, reason = "") {
+        if (typeof player == 'number') return this.addCashById(player, number, callbackT, reason);
         if (callbackT == null) return;
         let callback = (result) => {
             try {
@@ -90,11 +91,11 @@ module.exports = {
             });
         }
         else {
-            this.addCash(player, number, callback);
+            this.addCash(player, number, callback, reason);
         }
     },
     addMoney(player, number, callbackT, reason = "") {
-        if (typeof player == 'number') return this.addMoneyById(player, number, callbackT);
+        if (typeof player == 'number') return this.addMoneyById(player, number, callbackT, reason);
         if (callbackT == null) return;
         let callback = (result) => {
             try {
@@ -162,10 +163,11 @@ module.exports = {
             });
         }
         else {
-            this.addMoney(player, number, callback);
+            this.addMoney(player, number, callback, reason);
         }
     },
     removeCash(player, number, callbackT, reason = "") {
+        if (typeof player == 'number') return this.removeCashById(player, number, callbackT, reason);
         if (callbackT == null) return;
         let callback = (result) => {
             try {
@@ -235,10 +237,11 @@ module.exports = {
             });
         }
         else {
-            this.addCash(player, number, callback);
+            this.removeCash(player, number, callback, reason);
         }
     },
     removeMoney(player, number, callbackT, reason = "") {
+        if (typeof player == 'number') return this.removeMoneyById(player, number, callbackT, reason);
         if (callbackT == null) return;
         let callback = (result) => {
             try {
@@ -308,7 +311,7 @@ module.exports = {
             });
         }
         else {
-            this.addCash(player, number, callback);
+            this.removeMoney(player, number, callback, reason);
         }
     },
     /// Для ироков, которые онлайн
@@ -390,7 +393,7 @@ module.exports = {
         let bankFrom = null;
         if (playerFrom != null && playerFrom.character != null) bankFrom = playerFrom.character.bank;
         let bankTo = null;
-        if (playerFrom != null && playerFrom.character != null) bankTo = playerTo.character.bank;
+        if (playerTo != null && playerTo.character != null) bankTo = playerTo.character.bank;
 
         db.sequelize.transaction(t => {
             if ((playerFrom != null && playerFrom.character != null) && (playerTo != null && playerTo.character != null)) {

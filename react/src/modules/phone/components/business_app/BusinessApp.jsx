@@ -67,6 +67,7 @@ class BusinessApp extends Component {
 }
 
 const mapStateToProps = state => ({
+    info: state.info,
     business: state.info.biz[0]
 });
 

@@ -75,7 +75,7 @@ var auth = new Vue({
 
             loader.show = true;
             mp.trigger("auth.login", JSON.stringify({
-                loginOrEmail: this.loginOrEmail,
+                loginOrEmail: this.loginOrEmail.toLowerCase(),
                 password: this.password
             }));
         },
@@ -131,7 +131,7 @@ var auth = new Vue({
 
             loader.show = true;
             mp.trigger("auth.register", JSON.stringify({
-                login: this.login,
+                login: this.login.toLowerCase(),
                 email: this.email,
                 password: this.password,
                 emailCode: emailCode
@@ -196,7 +196,8 @@ var auth = new Vue({
         showRegisterResult(code) {
             if (!this.registerMessages[code]) return;
             this.prompt = this.registerMessages[code];
-            if (code == 9) // открывается панель, на которой нужно предложить пользователю подтвердить почту
+            if (code == 9) {
+                // открывается панель, на которой нужно предложить пользователю подтвердить почту
                 // там можно либо не подтверждать и вызывать mp.trigger('auth.email.confirm', answer);
                 // где 0 - не согласился подтвердить
                 // 1 - согласился подтвердить
@@ -204,8 +205,9 @@ var auth = new Vue({
                 // то должно открыться окно ввода пароля из письма, отправленного на электронную почту
                 // После чего пользователь вводит пароль из письма и ты вызываешь mp.trigger('auth.email.confirm.code', code);
                 // и тебе приходит ответ `auth.showEmailConfirmResult(${result})`
+            }
 
-                loader.show = false;
+            loader.show = false;
         },
         showEmailConfirmResult(code) {
             if (!this.emailConfirmMessages[code]) return;

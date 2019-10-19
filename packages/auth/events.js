@@ -6,14 +6,29 @@ let notifs = call("notifications");
 
 module.exports = {
     /// Заморозка игрока перед авторизацией
-    'player.joined': (player) => {
+    'player.joined': async (player) => {
         player.dimension = player.id;
+        var ban = await db.Models.Ban.findOne({
+            where: {
+                [Op.or]: {
+                    ip: player.id,
+                    socialClub: player.socialClub,
+                    serial: player.serial,
+                }
+            }
+        });
+        if (ban) {
+            player.notify(`Вы заблокированы! (${ban.reason || "-"})`);
+            player.kick();
+            return;
+        }
+
         player.call('auth.init', []);
     },
     'auth.login': async (player, data) => {
         //  data = '{"loginOrEmail":"Carter", "password":"123123"}';
         data = JSON.parse(data);
-
+        data.loginOrEmail = data.loginOrEmail.toLowerCase();
         if (!data.loginOrEmail || data.loginOrEmail.length == 0) {
             /// Заполните поле логина или почты!
             return player.call('auth.login.result', [0]);
@@ -31,6 +46,7 @@ module.exports = {
             return player.call('auth.login.result', [2]);
         }
 
+        // TODO
         // let ban = await db.Models.IpBan.findOne({
         //     where: {
         //         ip: player.ip
@@ -90,6 +106,7 @@ module.exports = {
     'auth.register': async (player, data) => {
         // data = '{"login":"Carter","email":"test@mail.ru","password":"123123","emailCode":-1}';
         data = JSON.parse(data);
+        data.login = data.login.toLowerCase();
 
         /// Вы уже зарегистрировали учетную запись!
         if (player.accountRegistrated) return player.call('auth.register.result', [0]);

@@ -72,6 +72,6 @@ mp.events.addDataHandler("knocked", (player, knocked) => {
         if (knocked) {
             mp.notify.info(`Ожидайте медиков в течение ${mp.death.knockTime / 1000} сек.`, `Здоровье`);
             mp.death.startKnockTimer();
-        } else(mp.death.stopKnockTimer());
+        } else mp.death.stopKnockTimer();
     }
 });

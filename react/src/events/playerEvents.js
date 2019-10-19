@@ -225,6 +225,13 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
+    myEventEmmiter.on('biz.cashbox.update', (money) => {
+        dispatch({
+            type: 'UPDATE_CASHBOX_BUSINESS',
+            payload: money
+        });
+    });
+
     // ------------ ТЕЛЕФОН (БИЗНЕС) - КОНЕЦ -----------------
 
     // ------------ ТЕЛЕФОН (ТАКСИ) -----------------

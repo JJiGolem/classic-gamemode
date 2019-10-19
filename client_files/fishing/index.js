@@ -25,12 +25,12 @@ let isFetch = false;
 let isHaveRod = false;
 let isShowPrompt = false;
 
-let interval;
+let intervalFishing;
 let isIntervalCreated = false;
 
 const checkConditions = () => {
-    return (!mp.busy.includes() && isHaveRod && !isEnter && !localPlayer.isInWater() 
-    && !localPlayer.isInAnyVehicle() 
+    return (!mp.busy.includes() && isHaveRod && !isEnter && !localPlayer.isInWater()
+    && !localPlayer.isInAnyVehicle()
     && !localPlayer.isInAnyBoat()
     && !localPlayer.isInAir()
     && !localPlayer.isInAnyPlane())
@@ -44,10 +44,12 @@ mp.events.add('characterInit.done', () => {
 });
 
 mp.events.add('render', () => {
+    // TODO: waiting for bugfix...
+
     if (checkConditions()) {
         if (!isIntervalCreated) {
             isIntervalCreated = true;
-            interval = setInterval(() => {
+            intervalFishing = setInterval(() => {
                 let heading = localPlayer.getHeading() + 90;
                 let point = {
                     x: localPlayer.position.x + 20*Math.cos(heading * Math.PI / 180.0),
@@ -67,8 +69,10 @@ mp.events.add('render', () => {
             }, 1000);
         }
     } else {
-        clearInterval(interval);
-        isIntervalCreated = false;
+        if (isIntervalCreated) {
+            clearInterval(intervalFishing);
+            isIntervalCreated = false;
+        }
     }
 });
 
@@ -91,7 +95,7 @@ mp.events.add('inventory.initItems', (items) => {
 mp.events.add('inventory.deleteItem', (item) => {
     if (item == sqlId) {
         isHaveRod = false;
-        clearInterval(interval);
+        clearInterval(intervalFishing);
         isIntervalCreated = false;
         bindButtons(false);
         mp.events.call('prompt.hide');
@@ -283,4 +287,3 @@ function playFetchAnimation(state, timeout) { /// Анимация вытяги�
         mp.events.callRemote('animations.stop');
     }
 }
-

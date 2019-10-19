@@ -5,6 +5,8 @@
 require('base');
 require('utils');
 require('browser');
+let browserLoaded = false;
+let initDone = false;
 
 /// Автоподключение клиентских модулей
 mp.events.add('init', (activeModules) => {
@@ -12,5 +14,15 @@ mp.events.add('init', (activeModules) => {
         require(moduleName);
     });
 
-    mp.events.callRemote('player.joined');
+    initDone = true;
+    if (browserLoaded) {
+        mp.events.callRemote('player.joined');
+    }
+});
+
+mp.events.add('browserDomReady', (browser) => {
+    browserLoaded = true;
+    if (initDone) {
+        mp.events.callRemote('player.joined');
+    }
 });

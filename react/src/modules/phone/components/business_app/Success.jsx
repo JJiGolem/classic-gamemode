@@ -26,7 +26,7 @@ class Success extends Component {
             sellBusiness(business.id);
             setApp({ name: 'MainDisplay', form: <MainDisplay /> });
         } else if (business.orderStatus != null) {
-            createOrder(productCount, productPrice);
+            createOrder(productCount, parseInt(productCount * productPrice));
             closeApp();
         }
     }
