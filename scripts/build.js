@@ -62,7 +62,10 @@ function obfuscateBrowserScripts() {
         }
     });
 
-    obfuscateFile(path.resolve(__dirname, PATHS.basePath, 'browser', 'index.js'));
+    if (fs.statSync(path.resolve(__dirname, PATHS.basePath, 'browser', 'index.js')).mtime > DATE_CHANGE) {
+        changedFiles.push('browser/js/' + file);
+        obfuscateFile(path.resolve(__dirname, PATHS.basePath, 'browser', 'index.js'));
+    }
 }
 
 
@@ -144,8 +147,6 @@ function getEntry() {
 
             directory.forEach(file => {
                 if (fs.statSync(path.resolve(__dirname, PATHS.basePath, dir, file)).mtime > DATE_CHANGE) {
-                    console.log(`${dir}/${file}: `, fs.statSync(path.resolve(__dirname, PATHS.basePath, dir, file)).mtime);
-
                     isChange = true;
                 }
             })
@@ -175,7 +176,8 @@ if (Object.keys(entry).length > 0) {
         console.log('CHANGED FILES: ', changedFiles.length);
         changedFiles.forEach(file => {
             console.log(file);
-        })
+        });
+
     });
 } else {
     if (fs.existsSync(path.resolve(__dirname, PATHS.buildPath))) {
@@ -186,4 +188,38 @@ if (Object.keys(entry).length > 0) {
         console.log(file);
     });
     console.log('Webpack не был запущен, поскольку изменений в клиентских файлах, кроме браузера, нет');
+}
+
+module.exports = {
+    build(callback) {
+        copyOnlyChangedFiles();
+        getEntry();
+
+        if (Object.keys(entry).length > 0) {
+            config.entry = entry;
+            let compiler = webpack(config);
+
+            compiler.run((err, stats) => {
+                if (err) console.log(err);
+
+                console.log('CHANGED FILES: ', changedFiles.length);
+                changedFiles.forEach(file => {
+                    console.log(file);
+                });
+
+                callback();
+            });
+        } else {
+            if (fs.existsSync(path.resolve(__dirname, PATHS.buildPath))) {
+                rimraf.sync(path.resolve(__dirname, PATHS.buildPath));
+            }
+            console.log('CHANGED FILES: ', changedFiles.length);
+            changedFiles.forEach(file => {
+                console.log(file);
+            });
+            console.log('Webpack не был запущен, поскольку изменений в клиентских файлах, кроме браузера, нет');
+
+            callback();
+        }
+    }
 }
