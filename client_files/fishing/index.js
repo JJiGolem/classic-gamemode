@@ -26,9 +26,6 @@ const checkConditions = () => {
 }
 
 mp.events.add('characterInit.done', () => {
-    peds.forEach((current) => {
-        mp.events.call('NPC.create', current);
-    });
     mp.events.call('fishing.game.exit');
 });
 
@@ -47,6 +44,10 @@ mp.events.add('fishing.fishers.init', (fishers) => {
                 defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
             }
         );
+    });
+
+    peds.forEach((current) => {
+        mp.events.call('NPC.create', current);
     });
 })
 

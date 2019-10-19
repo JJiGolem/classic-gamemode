@@ -224,11 +224,7 @@ export default function info(state = initialState, action) {
 
         case 'SELL_HOUSE':
             const newStateSell = { ...state };
-            let houseIndex = newStateSell.houses.findIndex(house => house.name === payload);
-
-            if (houseIndex !== -1) {
-                newStateSell.houses.splice(houseIndex, 1);
-            }
+            newStateSell.houses.length = 0;
 
             return newStateSell;
 
@@ -380,16 +376,11 @@ export default function info(state = initialState, action) {
             return newState;
 
         case 'BUY_IMPROVEMENT_HOUSE_ANS':
-            return {
-                ...state,
-                houses: [
-                    ...state.houses,
-                    state.houses[0] = {
-                        ...state.houses[0],
-                        buyStatus: payload
-                    }
-                ]
-            }
+            newState = { ...state };
+
+            newState.houses[0].buyStatus = payload;
+
+            return newState;
 
         case 'BUY_IMPROVEMENT_HOUSE':
             newState = { ...state };
