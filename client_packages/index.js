@@ -1,1 +1,0 @@
-require('gamemode/index.js');

@@ -1,0 +1,299 @@
+
+#map-case .pd .verification .btns .btn:hover {
+    background-color: #1861F3;
+    box-shadow: 0 0 10px rgba(24, 97, 243, 0.5);
+}
+
+#map-case .pd .menu .header {
+    background-color: #1861F3;
+}
+
+#map-case .pd .menu .menu-body .menu-item.focus,
+#map-case .pd .menu .menu-body .menu-item:hover {
+    background-color: #1861F3;
+}
+
+#map-case .pd .menu .menu-body .menu-item div {
+    pointer-events: none;
+}
+
+#map-case .pd .window .dbSearch {
+    width: 60%;
+    margin: 3vh auto;
+    text-align: center;
+    width: 80%;
+}
+
+#map-case .pd .window .dbSearch .logo img {
+    height: 10vh;
+}
+
+#map-case .pd .window .identification .logo img {
+    height: 14vh;
+}
+
+#map-case .pd .window .dbSearch .title {
+    font-size: 1.9vh;
+    font-weight: bold;
+    color: #202020;
+    margin: 1vh 0;
+}
+
+#map-case .pd .window .dbSearch .dbSearch-menu {
+    display: grid;
+    grid-template-columns: min-content 1fr min-content 1fr min-content;
+
+    color: #B0B0B0;
+    white-space: nowrap;
+    font-size: 1.2vh;
+    line-height: 2.3vh;
+}
+
+#map-case .pd .window .dbSearch .dbSearch-menu .focus {
+    color: #1861F3;
+}
+
+#map-case .pd .window .dbSearch .dbSearch-menu .focus .line {
+    background-color: #1861F3;
+    height: 1px;
+}
+
+#map-case .pd .window .dbSearch .dbSearch-menu .main-line {
+    margin-top: -1px;
+    background-color: #C9C9C9;
+    grid-column: 1/6;
+    grid-row: 2/3;
+    height: 1px;
+}
+
+#map-case .pd .window .dbSearch .input input {
+    width: 90%;
+    height: 3vh;
+    font-size: 1.5vh;
+    outline: none;
+    border-radius: 0.8vh;
+    border: 1px solid #CECECE;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+    margin-top: 1vh;
+    color: #7C7C7C;
+    padding: 0 1vh;
+}
+
+#map-case .pd .window .dbSearch .search {
+    background-color: #1861F3;
+    margin: 1vh auto;
+    font-size: 1.6vh;
+    color: #fff;
+    height: 4vh;
+    width: 12vh;
+    border-radius: 2vh;
+    line-height: 4.1vh;
+    box-shadow: 0 0 5px rgba(24, 97, 243, 0.15);
+}
+
+#map-case .pd .window .dbSearch .search:hover {
+    box-shadow: 0 2px 10px rgba(24, 97, 243, 0.5);
+}
+
+#map-case .pd .window .table .tbody .record .btn {
+    background-color: #1861F3;
+}
+
+#map-case .pd .window .table .tbody .record:hover,
+#map-case .pd .window .table .tbody .record.focus {
+    background-color: #1861F3;
+    color: #fff;
+}
+
+#map-case .pd .window .wanted .table .head {
+    grid-template-columns: 4fr 10fr 15vh 8fr;
+}
+
+#map-case .pd .window .wanted .table .tbody .record {
+    grid-template-columns: 4fr 10fr 15vh 8fr;
+}
+
+#map-case .pd .body .board .table .tbody .record .stars svg {
+    stroke: #1861F3;
+}
+
+#map-case .pd .body .board .table .tbody .record .stars svg.fill {
+    fill: #1861F3;
+}
+
+#map-case .pd .window .table .tbody .record:hover .stars svg {
+    stroke: #fff;
+}
+
+#map-case .pd .window .table .tbody .record:hover .stars svg.fill {
+    fill: #fff;
+}
+
+#map-case .pd .window .members .action-modal .btn:hover {
+    background-color: #1861F3;
+}
+
+#map-case .pd .window .identification .search {
+    width: 20vh;
+}
+
+#map-case .pd .window .dbResult .table .head {
+    grid-template-columns: 4fr 10fr 15vh 8fr;
+}
+
+#map-case .pd .window .dbResult .table .tbody .record {
+    grid-template-columns: 4fr 10fr 15vh 8fr;
+}
+
+#map-case .pd .window .profile .title {
+    font-size: 1.8vh;
+    font-weight: bold;
+    margin: 0 0 1vh 3vh;
+}
+
+/*#map-case .window .profile .body {
+    color: #202020;
+    display: grid;
+    grid-template-columns: fit-content fit-content 1fr;
+    grid-template-rows: max-content 1fr;
+    height: 38vh;
+    margin: 0 auto;
+    width: 95%;
+    background-color: #fff;
+    border: 1px solid #CECECE;
+    border-radius: 1vh;
+    overflow: hidden;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+}*/
+
+/*#map-case .pd .window .profile .body .name {
+    font-weight: bold;
+    font-size: 2.3vh;
+    margin: 2vh 0 0 2vh;
+}*/
+
+#map-case .pd .window .profile .body .name span {
+    color: #777777;
+    font-size: 1.3vh;
+    white-space: nowrap;
+}
+
+/*#map-case .pd .window .profile .body .stars {
+    text-align: right;
+    margin: 2vh 2vh 0 0;
+}*/
+
+#map-case .pd .window .profile .body .stars svg {
+    stroke: #1861F3;
+    width: 2.3vh;
+    fill: none;
+    margin-left: 0.3vh;
+}
+
+#map-case .pd .window .profile .body .stars svg.fill {
+    fill: #1861F3;
+}
+
+/*#map-case .pd .window .profile .body .record {
+    margin: 1vh 0 1vh 3vh;
+    line-height: 1.9vh;
+}*/
+
+#map-case .pd .window .profile .body .record span {
+    font-weight: bold;
+}
+
+/*#map-case .pd .window .profile .body .cause {
+    text-align: right;
+    font-weight: bold;
+    font-size: 1.2vh;
+    line-height: 1.4vh;
+    margin-right: 2vh;
+}*/
+
+/*#map-case .pd .window .profile .body .footer {
+    grid-column: 1/3;
+    display: flex;
+    margin: auto;
+}*/
+
+#map-case .pd .window .profile .body .footer .btn {
+    background-color: #1861F3;
+    margin: 1vh;
+    height: 6vh;
+    width: 6vh;
+    border-radius: 100%;
+}
+
+#map-case .pd .window .profile .body .footer .btn:hover {
+    box-shadow: 0 0 10px rgba(24, 97, 243, 0.5);
+}
+
+#map-case .pd .window .profile .body .footer .btn img {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 60%;
+}
+
+#map-case .pd .window .back {
+    background-color: #1861F3;
+}
+
+#map-case .pd .window .back:hover {
+    box-shadow: 0 0 10px rgba(24, 97, 243, 0.5);
+}
+
+#map-case .pd .over {
+    width: 48%;
+}
+
+#map-case .pd .over .header {
+    font-size: 1.6vh;
+    font-weight: bold;
+    margin: 0 3vh;
+    text-align: center;
+}
+
+#map-case .pd .over .title {
+    text-align: left;
+    font-size: 1.5vh;
+    margin: 2vh 0 0.5vh 2.5vh;
+}
+
+#map-case .pd .over .input {
+    text-align: center;
+}
+
+#map-case .pd .over input {
+    width: 70%;
+    border: 1px solid #CECECE;
+    border-radius: 0.3vh;
+    background-color: #F3F3F3;
+    outline: none;
+    height: 3vh;
+    padding: 0 2vh;
+    font-size: 1.5vh;
+    color: #585858
+}
+
+#map-case .pd .over .btns {
+    margin-top: 2vh;
+}
+
+#map-case .pd .over .btn {
+    width:  16vh;
+    margin: 0 1.5vh;
+}
+
+#map-case .pd .over .stars svg {
+    height: 3vh;
+    fill: none;
+    stroke: #1861F3;
+    margin: 0 0.2vh;
+}
+
+#map-case .pd .over .stars svg.fill {
+    fill: #1861F3;
+}

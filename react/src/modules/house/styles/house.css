@@ -1,0 +1,195 @@
+.house_form-react {
+    position: absolute;
+    font-family: main-font;
+    width: 60vh;
+    height: 33vh;
+    background: rgba(0, 0, 0, 0.51);
+    border-radius: 15px;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    max-width: 1500px;
+    max-height: 1000px;
+    min-width: 300px;
+    min-height: 150px;
+    animation: show-react .1s ease-in-out;
+}
+
+.enter_menu-house-react {
+    position: absolute;
+    font-family: main-font;
+    width: 30vh;
+    height: 15vh;
+    background: rgba(21, 21, 21, 0.68);
+    border-radius: 15px;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    max-width: 750px;
+    max-height: 500px;
+    min-width: 150px;
+    min-height: 75px;
+    padding: 1%;
+    text-align: center;
+    animation: show-react .1s ease-in-out;
+}
+
+.header-house-react {
+    background: rgb(225, 210, 27);
+    border-radius: 15px 15px 0 0;
+    color: black;
+    padding: 2% 3% 2% 5%;
+    font-size: 120%;
+}
+
+.main_page-house-react {
+    padding: 0 0 2% 5%;
+    font-size: 100%;
+}
+
+.label-house-react {
+    color: white;
+    font-size: 160%;
+    margin-top: 1.5%;
+    display: inline-block;
+    position: absolute;
+}
+
+.block_price-house-react {
+    display: inline-block;
+    width: 35%;
+    float: right;
+    background: rgba(24, 24, 23, 0.58);
+    color: white;
+    font-size: 130%;
+    padding: 2%;
+}
+
+.info-house-react {
+    margin-top: 12%;
+    font-size: 120%;
+    width: 50%;
+    display: inline-block;
+}
+
+.info-house-react div {
+    color: #e1c631;
+    margin-bottom: 3%;
+}
+
+.info-house-react span {
+    color: white;
+    margin-left: 2%;
+}
+
+.buttons-house-react {
+    position: absolute;
+    top: 30%;
+    right: 3%;
+    width: 50%;
+    height: 50%;
+    text-align: center;
+    /*background: #343c47;*/
+}
+
+.button-house-react {
+    width: 35%;
+    /*height: 75%;*/
+    border: 1px solid rgba(116, 116, 115, 0.7);
+    margin: 5% 0 0 5%;
+    color: white;
+    text-align: center;
+    display: inline-block;
+    border-radius: 10px;
+    transition: .1s ease-in-out;
+    font-size: 100%;
+    padding: 5% 2%;
+}
+
+.button-house-react div {
+    margin-bottom: 7%;
+}
+
+.button-house-react:hover {
+    background: #e1c631;
+    color: black;
+    fill: black;
+    border-color: #e1c631;
+}
+
+.exitHouse, .exitEnterHouse {
+    position: absolute;
+    right: 2%;
+    top: 7%;
+    width: 5%;
+    height: 3%;
+    opacity: 0.5;
+}
+.exitHouse:hover, .exitEnterHouse:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+.exitHouse:before, .exitHouse:after {
+    position: absolute;
+    left: 5%;
+    content: ' ';
+    height: 20%;
+    width: 100%;
+    background-color: rgb(46, 44, 44);
+}
+
+.exitEnterHouse:before, .exitEnterHouse:after {
+    position: absolute;
+    left: 5%;
+    content: ' ';
+    height: 30%;
+    width: 100%;
+    background-color: rgb(181, 181, 181);
+}
+.exitHouse:before, .exitEnterHouse:before {
+    transform: rotate(45deg);
+}
+.exitHouse:after, .exitEnterHouse:after {
+    transform: rotate(-45deg);
+}
+
+.message_back-house-react {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    width: 50%;
+    height: 30%;
+    background: rgba(21, 21, 21, 0.68);
+    color: white;
+    text-align: center;
+    padding: 5%;
+    border-radius: 10px;
+    animation: show-react .1s ease-in-out;
+}
+
+.message_back-house-react button {
+    background: transparent;
+    outline: none;
+    padding: 5%;
+    width: 30%;
+    color: white;
+    border: 1px solid #7f7f7f;
+    border-radius: 10px;
+    margin-left: 10%;
+    margin-top: 10%;
+    transition: .1s ease-in-out;
+    font-size: 100%;
+}
+
+.message_back-house-react button:hover {
+    color: black;
+    background: #e1c631;
+    border-color: #e1c631;
+}

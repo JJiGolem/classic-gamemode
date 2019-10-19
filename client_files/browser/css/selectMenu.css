@@ -1,0 +1,266 @@
+#selectMenu {
+    color: #fff;
+    font-family: Chalet-LondonNineteenSixty;
+    font-size: 1.6vh;
+    min-width: 40vh;
+    position: absolute;
+    right: 2vh;
+    top: 30%;
+    width: 40vh;
+}
+
+#selectMenu.inactive {
+    color: #aaa;
+}
+
+#selectMenu.inactive .header {
+    color: #aaa;
+    filter: blur(2px);
+}
+
+#selectMenu.inactive .content {
+    filter: blur(2px);
+}
+
+#selectMenu.inactive .content .item.selected {
+    background: #796b10;
+}
+
+#selectMenu.inactive .selector {
+    filter: blur(2px);
+}
+
+#selectMenu .arrow {
+    background-image: url('../img/selectMenu/arrow-off.png');
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: center;
+    background-size: contain;
+    height: 1.5vh;
+    width: 1.5vh;
+}
+
+#selectMenu .arrow.active {
+    background-image: url('../img/selectMenu/arrow.png');
+}
+
+#selectMenu .arr-down {
+    margin: auto;
+}
+
+#selectMenu .arr-left {
+    transform: rotate(90deg);
+}
+
+#selectMenu .arr-right {
+    transform: rotate(-90deg);
+}
+
+#selectMenu .arr-up {
+    transform: rotate(180deg);
+    margin: auto;
+}
+
+#selectMenu .color-type {
+    /* background: blue; */
+    border-radius: 0.5vh;;
+    height: 1.8vh;
+    width: 1.8vh;
+}
+
+#selectMenu .content {
+    background: rgb(0, 0, 0, 0.6);
+    border-radius: 0 0 1vh 1vh;
+    padding: 1vh 0;
+}
+
+#selectMenu .content .item {
+    border-bottom: 1px solid #444;
+    display: flex;
+    justify-content: space-between;
+    padding: 1vh 2vh;
+}
+
+#selectMenu .content .item.selected {
+    background: #f1d941;
+    border-radius: 0.7vh;
+    color: #000;
+}
+
+#selectMenu .content .items {
+    padding: 1vh 0;
+}
+
+#selectMenu .content .items .button {
+    width: 100%;
+}
+
+#selectMenu .content .items .value img {
+    width: 1.5vh;
+}
+
+#selectMenu .header {
+    color: #f1d941;
+    background: rgb(0, 0, 0, 0.6);
+    border-radius: 1vh 1vh 0 0;
+    font-size: 2.7vh;
+    font-weight: bold;
+    padding-top: 2vh;
+    text-align: center;
+}
+
+#selectMenu .notification {
+    align-items: center;
+    background: rgb(0, 0, 0, 0.6);
+    border-radius: 1vh;
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5vh;
+    padding: 1vh;
+    text-align: center;
+}
+
+#selectMenu .selector {
+    align-items: center;
+    background: rgb(0, 0, 0, 0.6);
+    border-radius: 1vh;
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5vh;
+    padding: 1vh;
+}
+
+#selectMenu .selector.select-color > div {
+    border: 1px solid #0000;
+    height: 2vh;
+    margin: 0 0.4vh;
+    width: 2vh;
+}
+
+#selectMenu .selector.select-color > div:not(.arrow) {
+    opacity: 0.5;
+}
+
+#selectMenu .selector.select-color > div.active:not(.arrow) {
+    border: 1px solid #f1d941;
+    opacity: 1;
+}
+
+#selectMenu .selector.select-number > div {
+    color: #fff;
+}
+
+#selectMenu .selector.select-number .progress {
+    align-items: center;
+    background: #fff;
+    display: flex;
+    height: 0.3vh;
+    width: 65%;
+}
+
+#selectMenu .selector.select-number .progress .fill {
+    background: #f1d941;
+    border-radius: 1vh;
+    height: 1.3vh;
+    position: relative;
+    width: 7%;
+}
+
+#selectMenu .selector > div {
+    color: #888;
+    text-align: center;
+    width: 33%;
+}
+
+#selectMenu .selector > div:nth-child(2) {
+    color: #fff;
+    font-weight: bold;
+}
+
+#selectMenu .textField {
+    align-items: center;
+    background: rgb(0, 0, 0, 0.6);
+    border-radius: 1vh;
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5vh;
+    padding: 1vh;
+}
+
+#selectMenu .textField input {
+    background: none;
+    border: none;
+    border-bottom: 1px solid #fff;
+    color: #fff;
+    font-family: Chalet-LondonNineteenSixty;
+    font-size: 1.6vh;
+    outline: none;
+    width: 90%;
+}
+
+/* Колесо загрузки в меню выбора */
+#selectMenu .loader {
+    left: 45%;
+    position: absolute;
+    top: 40%;
+}
+
+#selectMenu .loader .lds-rolling {
+    position: absolute;
+    animation: login 1s ease-in-out;
+}
+
+#selectMenu .loader .lds-rolling div,
+#selectMenu .loader .lds-rolling div:after {
+    position: absolute;
+    width: 5vh;
+    height: 5vh;
+    border: 1vh solid #ffdf29;
+    border-top-color: transparent;
+    border-radius: 50%;
+}
+
+#selectMenu .loader .lds-rolling div {
+    -webkit-animation: lds-rolling 1.2s linear infinite;
+    animation: lds-rolling 1.2s linear infinite;
+    top: 45%;
+    left: 45%;
+}
+
+#selectMenu .loader .lds-rolling div:after {
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+#selectMenu .loader .lds-rolling {
+    width: 5vh !important;
+    height: 5vh !important;
+    -webkit-transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
+    transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
+}
+
+/* Анимация */
+
+@keyframes lds-rolling {
+    0% {
+        -webkit-transform: translate(-50%, -50%) rotate(0deg);
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: translate(-50%, -50%) rotate(360deg);
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@-webkit-keyframes lds-rolling {
+    0% {
+        -webkit-transform: translate(-50%, -50%) rotate(0deg);
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: translate(-50%, -50%) rotate(360deg);
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}

@@ -1,0 +1,24 @@
+#prompt {
+    background: rgb(0, 0, 0, 0.6);
+    border-radius: 0px;
+    color: white;
+    font-family: "Chalet-LondonNineteenSixty";
+    position: absolute;
+    right: 2vh;
+    top: 3vh;
+    max-width: 32vh;
+    word-break: break-word;
+}
+
+#prompt .text {
+    padding: 1vh;
+    text-align: center;
+}
+
+#prompt span {
+    background: #fffd;
+    border-radius: 5px;
+    color: #000;
+    font-weight: bold;
+    padding: 0.2vh 0.5vh;
+}

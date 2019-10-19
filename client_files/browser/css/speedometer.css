@@ -1,0 +1,169 @@
+#speedometer {
+    background: linear-gradient(to bottom, #0000, rgb(0, 0, 0, 0.6));
+    /* background: #000; */
+    border-radius: 20vh 20vh 0 0;
+    bottom: 7vh;
+    color: #fff;
+    font-family: Montserrat;
+    height: 20vh;
+    position: absolute;
+    right: 2vh;
+    width: 42vh;
+}
+
+#speedometer b {
+    background: #000;
+}
+
+#speedometer.noActive {
+    color: #7778!important;
+}
+
+#speedometer.noActive svg {
+    filter: drop-shadow(0 0 0 #000)!important;
+}
+
+#speedometer.noActive svg path {
+    fill: #7778!important;
+}
+
+#speedometer .scale {
+    position: absolute;
+    height: 95%;
+    width: 90%;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+#speedometer .scale path {
+    fill: #fff;
+    fill-rule: evenodd;
+}
+
+#speedometer .scale .fill {
+    fill: #ff2929;
+}
+
+#speedometer .red {
+    fill: #f00!important;
+    filter: drop-shadow(0 0 5px #f00);
+}
+
+#speedometer .green {
+    fill: #0f0!important;
+    filter: drop-shadow(0 0 5px #0f0);
+}
+
+#speedometer .yellow {
+    fill: #f1d941!important;
+    filter: drop-shadow(0 0 5px #f1d941);
+}
+
+#speedometer .white {
+    fill: white!important;
+    filter: drop-shadow(0 0 5px white);
+}
+
+#speedometer .content {
+    position: relative;
+    width: 60%;
+    margin-top: 22%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr 1fr 1fr;
+    grid-template-rows: 3vh 3vh 1vh 3vh;
+    grid-gap: 1px;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+#speedometer .content svg {
+    position: relative;
+    left: 50%;
+    fill: #7778;
+    transform: translate(-50%);
+    height: 90%;
+    width: 90%;
+}
+
+#speedometer .content .speed {
+    grid-row: 1/3;
+    grid-column: 3/4;
+    font-size: 4.8vh;
+    line-height: 3.6vh;
+    text-align: center;
+}
+
+#speedometer .content .speed .value {
+    font-weight: bold;
+}
+
+#speedometer .content .speed .unit {
+    font-size: 1.5vh;
+    font-weight: none;
+}
+
+#speedometer .headlights {
+    grid-row: 2/3;
+    grid-column: 1/2;
+    top: 10%;
+}
+
+#speedometer .headlights svg {
+    top: 10%;
+}
+
+#speedometer .lock {
+    grid-row: 2/3;
+    grid-column: 2/3;
+}
+
+#speedometer .lock svg {
+    height: 85%!important;
+    width: 85%!important;
+}
+
+#speedometer .fuel {
+    grid-row: 2/3;
+    grid-column: 4/5;
+}
+
+#speedometer .fuel-unit {
+    grid-row: 3/4;
+    grid-column: 4/5;
+    font-size: 1.3vh;
+    text-align: center;
+}
+
+#speedometer .danger {
+    grid-row: 2/3;
+    grid-column: 5/6;
+}
+
+#speedometer .left-arrow {
+    grid-row: 4/5;
+    grid-column: 1/2;
+}
+
+#speedometer .right-arrow {
+    grid-row: 4/5;
+    grid-column: 5/6;
+    left: 60%!important;
+}
+
+#speedometer .right-arrow svg {
+    left: 60%!important;
+}
+
+#speedometer .bottom-panel {
+    grid-row: 4/5;
+    grid-column: 3/4;
+    grid-template-columns: 20% 5fr;
+    display: grid;
+    white-space: nowrap;
+    text-align: center;
+}
+
+#speedometer .bottom-panel .road-perspective {
+    margin-left: -20%;
+    height: 50%;
+}

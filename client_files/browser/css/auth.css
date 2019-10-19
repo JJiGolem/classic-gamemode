@@ -1,0 +1,219 @@
+#auth {
+    background: #111d;
+    font-family: 'Chalet-LondonNineteenSixty';
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
+#auth button {
+    background: #f1d941;
+    border: none;
+    border-radius: 2px;
+    color: #444;
+    font-family: 'Chalet-LondonNineteenSixty';
+    font-size: 1.5vh;
+    padding: 0.5vh 1vh;
+    position: relative;
+    right: -18.7vh;
+    outline: none;
+}
+
+#auth button:hover {
+    color: #111;
+    background: #f1d941dd;
+}
+
+#auth button:active {
+    color: #fff;
+    background: #f1d941dd;
+}
+
+#auth input {
+    background: none;
+    border: none;
+    border-bottom: 2px solid #aaa;
+    color: #ddd;
+    font-family: 'Chalet-LondonNineteenSixty';
+    font-size: 1.6vh;
+    outline: none;
+    margin-bottom: 1.5vh;
+    width: 100%;
+}
+
+#auth input:focus {
+    border-color: #fff;
+}
+
+#auth label {
+    color: #fffd;
+    font-size: 1.2vh;
+    margin-bottom: 0.2vh;
+}
+
+#auth label img {
+    height: 1.7vh;
+    position: absolute;
+}
+
+#auth .authAccount label .ic-login {
+    top: 11%;
+    right: 0;
+}
+
+#auth label .ic-password {
+    top: 49%;
+    right: 0;
+}
+
+#auth .authAccount, #auth .regAccount, #auth .recoveryAccount, #auth .confirmEmail {
+    left: 12%;
+    position: relative;
+    width: 74%;
+}
+
+#auth .confirmEmail button {
+    right: -22vh;
+}
+
+#auth .confirmEmail label .ic-password {
+    top: 18%;
+    right: 0;
+}
+
+#auth .content {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 50vh;
+}
+
+#auth .content .header {
+    color: #fff;
+    font-size: 2.4vh;
+    margin-bottom: 3vh;
+    margin-top: 1vh;
+    text-align: center;
+}
+
+#auth .input-prompt {
+    background: #0007;
+    border-radius: 4px;
+    color: #fff;
+    padding: 1vh;
+    position: absolute;
+    width: 20vh;
+    text-align: center;
+    top: 8vh;
+    left: -23vh;
+}
+
+#auth .logo {
+    height: 6vh;
+}
+
+#auth .recoveryAccount label .ic-login {
+    top: 19%;
+    right: 0;
+}
+
+#auth .recoveryAccount label .ic-password {
+    top: 13%;
+    right: 0;
+}
+
+#auth .recoveryAccountBtn {
+    bottom: 2.7vh;
+    color: #777;
+    font-size: 1.2vh;
+    position: absolute;
+}
+
+#auth .recoveryAccountBtn:hover {
+    color: #ddd;
+}
+
+#auth .regAccount label .ic-email {
+    top: 29%;
+    right: 0;
+}
+
+#auth .regAccount label .ic-login {
+    top: 7%;
+    right: 0;
+}
+
+#auth .regAccount label .ic-password2 {
+    top: 73%;
+    right: 0;
+}
+
+#auth .regAccountBtn, #auth .authAccountBtn, #auth .confirmEmailBtn {
+    color: #fff;
+    font-weight: bold;
+}
+
+#auth .regAccountBtn:hover, #auth .authAccountBtn:hover, #auth .confirmEmailBtn:hover {
+    color: #fffd;
+}
+
+#auth .updates {
+    background: #0005;
+    border-radius: 1vh;
+    color: #fff;
+    line-height: 3vh;
+    position: absolute;
+    right: 10vh;
+    top: 50%;
+    transform: translate(0%, -50%);
+    width: 37vh;
+}
+
+#auth .updates .header {
+    text-align: center;
+}
+
+#auth .updates .list {
+    height: 20vh;
+    margin-bottom: 2vh;
+    overflow-y: auto;
+}
+
+#auth .updates .list>div {
+    display: flex;
+    justify-content: space-around;
+}
+
+#auth .updates .list>div:hover {
+    color: #ccc;
+}
+
+#auth .updates .list>div:first-child {
+    color: #f1d941;
+}
+
+#auth .updates .list>div .date {
+    margin-right: 2vh;
+    text-align: right;
+    width: 12vh;
+}
+
+#auth .updates .list>div .title {
+    font-weight: bold;
+}
+
+#auth ::-webkit-scrollbar {
+    width: 0.5vh;
+}
+
+#auth ::-webkit-scrollbar-thumb {
+    /* border-width: 1px 1px 1px 2px; */
+    /* border-color: #222; */
+    background-color: #f1d941;
+}
+
+#auth ::-webkit-scrollbar-track {
+    background-color: #000;
+    /* box-shadow: 0px 0px 3px #000 inset; */
+}

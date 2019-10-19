@@ -1,0 +1,88 @@
+#gunLicense {
+    background: #faefef;
+    background-image: url(../img/gunLicense/bg.png);
+    background-size: cover;
+    border-radius: 2vh;
+    box-shadow: 0 1vh 1vh #0008;
+    font-family: Montserrat;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 50vh;
+}
+
+#gunLicense .close {
+    font-family: monospace;
+    font-size: 3vh;
+    position: absolute;
+    right: 3vh;
+    top: 0.5vh;
+}
+
+#gunLicense .content {
+    font-size: 2vh;
+    line-height: 4.2vh;
+    padding: 1.8vh 4.5vh;
+}
+
+#gunLicense .content .date {
+    border: 1px solid #000;
+    display: flex;
+    justify-content: space-between;
+    margin-left: 3vh;
+    margin-top: 1vh;
+    padding: 0.5vh 2vh;
+    width: 60%;
+}
+
+#gunLicense .content .date .key {
+    font-weight: bold;
+}
+
+#gunLicense .content .name {
+    font-size: 3vh;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#gunLicense .content .number {
+    color: #2e2e2e;
+    font-size: 3vh;
+    font-weight: bold;
+    margin-right: -2vh;
+    text-align: right;
+}
+
+#gunLicense .content .sex {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 1.5vh;
+    width: 35%;
+}
+
+#gunLicense .content .sex .key {
+    font-weight: bold;
+}
+
+#gunLicense .close:hover {
+    color: red;
+}
+
+#gunLicense .header {
+    font-size: 2.2vh;
+    font-weight: bold;
+    margin: 1.8vh auto;
+    text-align: center;
+    text-transform: uppercase;
+    width: 69%;
+}
+
+#gunLicense .line {
+    background-image: linear-gradient(to right, black 35%, rgba(255, 255, 255, 0) 0%);
+    background-position: bottom;
+    background-size: 2vh 1px;
+    background-repeat: repeat-x;
+    height: 1px;
+    width: 100%;
+}

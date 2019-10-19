@@ -1,0 +1,27 @@
+@font-face {
+    font-family: Ubuntu;
+    src: url("../fonts/Ubuntu/Ubuntu.ttf");
+    font-style: normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: Montserrat;
+    src: url("../fonts/Montserrat/Montserrat.ttf");
+    font-style: normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Chalet-LondonNineteenSixty';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Chalet-LondonNineteenSixty'), url('../fonts/Chalet/Chalet-LondonNineteenSixty.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Chalet-ParisNineteenSixty';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Chalet-LondonNineteenSixty'), url('../fonts/Chalet/Chalet-ParisNineteenSixty.otf') format('opentype');
+}

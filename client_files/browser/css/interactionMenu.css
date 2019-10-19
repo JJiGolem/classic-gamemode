@@ -1,0 +1,40 @@
+#interactionMenu {
+    color: #fff;
+    position: absolute;
+    text-transform: uppercase;
+    font-family: Montserrat;
+    left: 80vw;
+    top: 50vh;
+    transform: rotateY(-10deg) rotateX(0) translateZ(0);
+    z-index: 100;
+}
+
+#interactionMenu .icon {
+    align-items: center;
+    display: flex;
+    pointer-events: none;
+    padding: 0.5vh;
+}
+
+#interactionMenu .icon img {
+    height: 1.8vh;
+    width: 1.8vh;
+}
+
+#interactionMenu .interaction_item {
+    background: #0007;
+    border-radius: 5px;
+    display: flex;
+    margin-bottom: 0.5vh;
+    width: 20vh;
+}
+
+#interactionMenu .interaction_item:hover {
+    background: linear-gradient(to right, #0007 -40%, #f1d941aa);
+    box-shadow: 0 0 10px #0007;
+}
+
+#interactionMenu .text {
+    padding: 0.7vh 1vh;
+    pointer-events: none;
+}

@@ -1,0 +1,63 @@
+#carPass {
+    background: #e7dccf;
+    background-image: url(../img/carPass/bg.png);
+    background-size: cover;
+    border-radius: 1vh;
+    box-shadow: 0px 0px 10px #0008;
+    font-family: Montserrat;
+    left: 50%;
+    padding: 0.5vh;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 50vh;
+}
+
+#carPass .close {
+    font-size: 2vh;
+    position: absolute;
+    right: 1vh;
+}
+
+#carPass .close:hover {
+    color: red;
+}
+
+#carPass .content {
+    display: flex;
+    justify-content: space-around;
+    margin: 2vh 0;
+}
+
+#carPass .content .infoA {
+    width: fit-content;
+}
+
+#carPass .content .infoB {
+    text-align: right;
+    width: 15vh;
+}
+
+#carPass .header {
+    text-align: center;
+    font-size: 1.5vh;
+    font-weight: bold;
+}
+
+#carPass .label {
+    text-transform: uppercase;
+}
+
+#carPass .number {
+    bottom: 6vh;
+    font-family: monospace;
+    font-size: 3vh;
+    opacity: 0.6;
+    position: absolute;
+    right: 6vh;
+}
+
+#carPass .value {
+    font-weight: bold;
+    margin-bottom: 1vh;
+}
