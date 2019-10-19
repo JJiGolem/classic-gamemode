@@ -215,7 +215,7 @@ let destroyOrder = async function(id) {
 let getOrder = function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
-    if (biz.isOrderTaken) return false;
+    if (biz.isOrderTaken) return true;
     biz.isOrderTaken = true;
     let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
     player != null && player.call("biz.order.take", [true]);
@@ -224,7 +224,7 @@ let getOrder = function(id) {
 let dropOrder = function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
-    if (!biz.isOrderTaken) return false;
+    if (!biz.isOrderTaken) return true;
     biz.isOrderTaken = false;
     let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
     player != null && player.call("biz.order.take", [false]);
