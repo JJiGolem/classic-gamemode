@@ -231,4 +231,16 @@ mp.events.add({
             delete player.testAttach;
         }
     },
+    "time.main.tick": () => {
+        var player = mp.players.local;
+        for (let id of player.__attachments) {
+            let attInfo = mp.attachmentMngr.attachments[id];
+            var a  = attInfo.anim;
+            if (!a) continue;
+            if (player.isPlayingAnim(a.dict, a.name, 3)) return;
+            mp.utils.requestAnimDict(a.dict, () => {
+                player.taskPlayAnim(a.dict, a.name, a.speed, 0, -1, a.flag, 0, false, false, false);
+            });
+        }
+    },
 });
