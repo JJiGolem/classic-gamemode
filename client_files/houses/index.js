@@ -54,9 +54,15 @@ mp.events.add('house.enter.ans', (isInfoPanel, pos, rot) => {
 mp.events.add('house.buy', () => {
     mp.events.callRemote('house.buy');
 });
-
 mp.events.add('house.buy.ans', (ans, ownerName) => {
     mp.callCEFR('house.buy.ans', [ans, ownerName]);
+});
+
+mp.events.add('house.improvements.buy', (type) => {
+    mp.events.callRemote('house.improvements.buy', type);
+});
+mp.events.add('house.improvements.buy.ans', (ans) => {
+    mp.callCEFR('house.improvements.buy.ans', [ans]);
 });
 
 

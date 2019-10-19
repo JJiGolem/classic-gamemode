@@ -125,6 +125,7 @@ mp.events.add('playerLeaveVehicle', () => {
 });
 mp.events.add('characterInit.done', () => { /// E
     mp.keys.bind(0x45, true, function () {
+        if (mp.game.ui.isPauseMenuActive()) return;
         if (isOpen) mp.busy.remove('interaction');
         if (mp.busy.includes()) return;
         if (isOpen) return mp.events.call('interaction.menu.close');;
@@ -169,6 +170,7 @@ mp.events.add('characterInit.done', () => { /// E
     });
 
     mp.keys.bind(0x4C, true, function () { /// L
+        if (mp.game.ui.isPauseMenuActive()) return;
         if (isOpen) mp.busy.remove('interaction');
         if (mp.busy.includes()) return;
         if (isOpen) return mp.events.call('interaction.menu.close');;

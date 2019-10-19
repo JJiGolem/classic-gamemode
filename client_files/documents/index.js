@@ -97,6 +97,7 @@ mp.events.add('documents.close', (type, data) => {
 });
 
 mp.keys.bind(0x1B, false, function () {
+    if (mp.game.ui.isPauseMenuActive()) return;
     if (!isOpen) return;
     mp.events.call('documents.close');
 });

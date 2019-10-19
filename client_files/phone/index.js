@@ -188,6 +188,7 @@ let bindButtons = (state) => {
 }
 
 let showPhone = () => {
+    if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
     if (mp.police.haveCuffs) return;
     var player = mp.players.local;
@@ -205,6 +206,7 @@ let showPhone = () => {
 }
 
 let hidePhone = () => {
+    if (mp.game.ui.isPauseMenuActive()) return;
     if (!mp.busy.includes('phone')) return;
 
     mp.callCEFR('phone.show', [false]);
