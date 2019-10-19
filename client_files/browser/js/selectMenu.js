@@ -1562,10 +1562,10 @@ var selectMenu = new Vue({
                 name: "factionControl",
                 header: "Организация",
                 items: [{
-                        text: "Состав онлайн"
+                        text: "Онлайн состав"
                     },
                     {
-                        text: "Состав оффлайн"
+                        text: "Полный состав"
                     },
                     {
                         text: "Закрыть"
@@ -1584,10 +1584,10 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Закрыть') selectMenu.show = false;
-                        else if (e.itemName == 'Состав онлайн') {
+                        else if (e.itemName == 'Онлайн состав') {
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.members.online.show`);
-                        } else if (e.itemName == 'Состав оффлайн') {
+                        } else if (e.itemName == 'Полный состав') {
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.members.offline.show`);
                         }

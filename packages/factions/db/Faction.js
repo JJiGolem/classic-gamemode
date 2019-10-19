@@ -109,6 +109,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.FLOAT,
             allowNull: false
         },
+        // мин. ранг, который может брать БП/Мед со своего склада
+        ammoRank: {
+            type: DataTypes.INTEGER(11),
+            allowNull: false,
+            defaultValue: 5,
+        },
     }, {
         timestamps: false
     });

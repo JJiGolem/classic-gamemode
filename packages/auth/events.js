@@ -6,8 +6,23 @@ let notifs = call("notifications");
 
 module.exports = {
     /// Заморозка игрока перед авторизацией
-    'player.joined': (player) => {
+    'player.joined': async (player) => {
         player.dimension = player.id;
+        var ban = await db.Models.Ban.findOne({
+            where: {
+                [Op.or]: {
+                    ip: player.id,
+                    socialClub: player.socialClub,
+                    serial: player.serial,
+                }
+            }
+        });
+        if (ban) {
+            player.notify(`Вы заблокированы! (${ban.reason || "-"})`);
+            player.kick();
+            return;
+        }
+
         player.call('auth.init', []);
     },
     'auth.login': async (player, data) => {

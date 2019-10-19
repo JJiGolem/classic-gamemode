@@ -29,8 +29,8 @@ let interval;
 let isIntervalCreated = false;
 
 const checkConditions = () => {
-    return (!mp.busy.includes() && isHaveRod && !isEnter && !localPlayer.isInWater() 
-    && !localPlayer.isInAnyVehicle() 
+    return (!mp.busy.includes() && isHaveRod && !isEnter && !localPlayer.isInWater()
+    && !localPlayer.isInAnyVehicle()
     && !localPlayer.isInAnyBoat()
     && !localPlayer.isInAir()
     && !localPlayer.isInAnyPlane())
@@ -44,32 +44,34 @@ mp.events.add('characterInit.done', () => {
 });
 
 mp.events.add('render', () => {
-    if (checkConditions()) {
-        if (!isIntervalCreated) {
-            isIntervalCreated = true;
-            interval = setInterval(() => {
-                let heading = localPlayer.getHeading() + 90;
-                let point = {
-                    x: localPlayer.position.x + 20*Math.cos(heading * Math.PI / 180.0),
-                    y: localPlayer.position.y + 20*Math.sin(heading * Math.PI / 180.0),
-                    z: localPlayer.position.z
-                }
-                if (Math.abs(mp.game.water.getWaterHeight(point.x, point.y, point.z, 0)) > 0 && mp.game.gameplay.getGroundZFor3dCoord(point.x, point.y, point.z, 0.0, false) < 0) {
-                    isShowPrompt = true;
-                    mp.events.call('fishing.game.menu');
-                } else {
-                    if (isShowPrompt) {
-                        bindButtons(false);
-                        mp.events.call('prompt.hide');
-                        isShowPrompt = false;
-                    }
-                }
-            }, 1000);
-        }
-    } else {
-        clearInterval(interval);
-        isIntervalCreated = false;
-    }
+    // TODO: waiting for bugfix...
+
+    // if (checkConditions()) {
+    //     if (!isIntervalCreated) {
+    //         isIntervalCreated = true;
+    //         interval = setInterval(() => {
+    //             let heading = localPlayer.getHeading() + 90;
+    //             let point = {
+    //                 x: localPlayer.position.x + 20*Math.cos(heading * Math.PI / 180.0),
+    //                 y: localPlayer.position.y + 20*Math.sin(heading * Math.PI / 180.0),
+    //                 z: localPlayer.position.z
+    //             }
+    //             if (Math.abs(mp.game.water.getWaterHeight(point.x, point.y, point.z, 0)) > 0 && mp.game.gameplay.getGroundZFor3dCoord(point.x, point.y, point.z, 0.0, false) < 0) {
+    //                 isShowPrompt = true;
+    //                 mp.events.call('fishing.game.menu');
+    //             } else {
+    //                 if (isShowPrompt) {
+    //                     bindButtons(false);
+    //                     mp.events.call('prompt.hide');
+    //                     isShowPrompt = false;
+    //                 }
+    //             }
+    //         }, 1000);
+    //     }
+    // } else {
+    //     clearInterval(interval);
+    //     isIntervalCreated = false;
+    // }
 });
 
 mp.events.add('inventory.initItems', (items) => {
@@ -283,4 +285,3 @@ function playFetchAnimation(state, timeout) { /// Анимация вытяги�
         mp.events.callRemote('animations.stop');
     }
 }
-
