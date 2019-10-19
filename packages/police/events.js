@@ -379,7 +379,7 @@ module.exports = {
         inventory.fullDeleteItemsByParams(itemId, ["faction", "owner"], [character.factionId, character.id]);
         var params = {
             weaponHash: mp.joaat(weaponIds[index]),
-            ammo: 30,
+            ammo: 0,
             faction: character.factionId,
             owner: character.id
         };
