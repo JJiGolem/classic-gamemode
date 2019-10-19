@@ -17,20 +17,14 @@ function copyAllFiles() {
 function deleteUnusedFiles(currentPath) {
     fs.readdirSync(currentPath).forEach(item => {
         let updatePath = path.resolve(currentPath, item);
+        let baseCurrentPath = updatePath.replace('client_packages', 'client_files');
 
-        if (fs.lstatSync(updatePath).isDirectory()) {
-            let directory = fs.readdirSync(updatePath);
-
-            if (directory.length > 0) {
-                deleteUnusedFiles(updatePath)
-            } else {
-                fs.rmdirSync(updatePath);
+        if (fs.existsSync(baseCurrentPath)) {
+            if (fs.lstatSync(updatePath).isDirectory()) {
+                deleteUnusedFiles(updatePath);
             }
-        } else {
-            let baseCurrentPath = updatePath.replace('client_packages', 'client_files');
-            if (!fs.existsSync(baseCurrentPath)) {
-                fs.unlinkSync(updatePath);
-            }
+        } else if (item != '.listcache') {
+           rimraf.sync(updatePath);
         }
     });
 }
@@ -57,7 +51,7 @@ function copyOnlyChangedFiles(currentPath) {
             copyOnlyChangedFiles(updatedPath);
         } else {
             files.push(updatedPath);
-            if (fs.statSync(updatedPath).mtime > DATE_CHANGE) {
+            if (fs.statSync(updatedPath).mtime > DATE_CHANGE || !fs.existsSync(updatedPath.replace('client_files', 'client_packages'))) {
                 changedFiles.push(updatedPath);
                 copyFile(updatedPath);
             }

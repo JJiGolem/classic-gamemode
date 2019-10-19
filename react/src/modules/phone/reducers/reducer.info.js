@@ -366,6 +366,12 @@ export default function info(state = initialState, action) {
 
             return newState;
 
+        case 'UPDATE_CASHBOX_BUSINESS':
+            newState = { ...state };
+            newState.biz[0].cashBox = money;
+
+            return newState;
+
         case 'UPDATE_STATISTICS_BUSINESS':
             newState = { ...state };
             let dayIndex = newState.biz[0].statistics.findIndex(day => day.date == payload.date);

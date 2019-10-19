@@ -23,6 +23,21 @@ const buildPath = './client_build';
 const basePath = './client_files';
 const finalPath = './client_packages';
 
+function deleteUnusedFiles(currentPath) {
+    fs.readdirSync(currentPath).forEach(item => {
+        let updatePath = path.resolve(currentPath, item);
+        let baseCurrentPath = updatePath.replace('client_packages', 'client_files');
+
+        if (fs.existsSync(baseCurrentPath)) {
+            if (fs.lstatSync(updatePath).isDirectory()) {
+                deleteUnusedFiles(updatePath);
+            }
+        } else if (item != '.listcache') {
+           rimraf.sync(updatePath);
+        }
+    });
+}
+
 function copyFile(copyPath) {
 
     let finalPath = copyPath.toString().replace('client_files', 'client_packages');
@@ -54,6 +69,8 @@ function obfuscateBrowserScripts() {
             obfuscateFile(path.resolve(__dirname, basePath, 'browser', 'js', file))
         }
     });
+
+    obfuscateFile(path.resolve(__dirname, basePath, 'browser', 'index.js'));
 }
 
 
@@ -85,7 +102,7 @@ function copyOnlyChangedFiles() {
         if (fs.existsSync(path.resolve(__dirname, finalPath, '.listcache'))) {
             DATE_CHANGE = fs.statSync(path.resolve(__dirname, finalPath, '.listcache')).mtime
         } else {
-            DATE_CHANGE = 0;
+            return console.log('.listcache не найден, перезапустите сервер');
         }
     } else {
         fs.mkdirSync(finalPath);
@@ -105,6 +122,8 @@ function copyOnlyChangedFiles() {
     if (fs.statSync(path.resolve(__dirname, basePath, 'index.js')).mtime > DATE_CHANGE) {
         obfuscateFile(path.resolve(__dirname, basePath, 'index.js'));
     }
+
+    deleteUnusedFiles(path.resolve(__dirname, finalPath));
 }
 
 function getEntry() {
@@ -134,8 +153,16 @@ function getEntry() {
         }
     });
 
-    console.log(entry);
-    return entry;
+    if (Object.keys(entry).length !== 0) {
+        return entry;
+    } else {
+        if (fs.existsSync(buildPath)) {
+            rimraf.sync(buildPath);
+        }
+
+
+        console.log("Нет измененных клиентских файлов (кроме браузера)");
+    }
 }
 
 function rewriteFile(dir, file) {

@@ -1,16 +1,14 @@
 const webpack = require('webpack');
 const config = require('../webpack.config');
-const Plugin = require('./plugin');
+const path = require('path');
+const fs = require('fs');
 
-module.exports = {
-    async run(callback) {
-        config.plugins.push(new Plugin(callback))
-        let compiler = webpack(config);
+let entry = {};
 
-        await compiler.run((err, stats) => {
-            console.log('run build');
 
-            // callback();
-        })
-    }
-}
+
+let compiler = webpack(config);
+
+compiler.run((err, stats) => {
+    
+});
