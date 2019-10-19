@@ -39,7 +39,7 @@ module.exports = {
         player.call('characterInit.done');
         characterInit.spawn(player);
         player.authTime = Date.now();
-        logger.log(`Авторизовал персонажа`, "characterInit", player);
+        logger.log(`Авторизовал персонажа (IP: ${player.ip})`, "characterInit", player);
     },
     /// События создания персоонажа
     "player.joined": player => {
@@ -71,6 +71,10 @@ module.exports = {
             player.character.h = player.heading;
         }
         player.character.save();
+
+        player.account.lastIp = player.ip;
+        player.account.lastDate = new Date();
+        player.account.save();
         logger.log(`Деавторизовал персонажа`, "characterInit", player);
     },
 }
