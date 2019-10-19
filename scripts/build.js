@@ -12,6 +12,7 @@ let entry = {};
 let DATE_CHANGE = null;
 
 let ignoreModules = ['browser'];
+let changedFiles = [];
 
 function deleteUnusedFiles(currentPath) {
     fs.readdirSync(currentPath).forEach(item => {
@@ -56,7 +57,8 @@ function obfuscateFile(filePath) {
 function obfuscateBrowserScripts() {
     fs.readdirSync(path.resolve(__dirname, PATHS.basePath, 'browser', 'js')).forEach(file => {
         if (fs.statSync(path.resolve(__dirname, PATHS.basePath, 'browser', 'js', file)).mtime > DATE_CHANGE) {
-            obfuscateFile(path.resolve(__dirname, PATHS.basePath, 'browser', 'js', file))
+            changedFiles.push('browser/js/' + file);
+            obfuscateFile(path.resolve(__dirname, PATHS.basePath, 'browser', 'js', file));
         }
     });
 
@@ -76,6 +78,7 @@ function copyChangedBrowserFiles(currentPath) {
                 copyChangedBrowserFiles(updatedPath);
             } else {
                 if (fs.statSync(updatedPath).mtime > DATE_CHANGE) {
+                    changedFiles.push(updatedPath);
                     copyFile(updatedPath);
                 }
             }
@@ -116,18 +119,32 @@ function copyOnlyChangedFiles() {
     deleteUnusedFiles(path.resolve(__dirname, PATHS.finalPath));
 }
 
+function rewriteFile(dir, file) {
+    let content = fs.readFileSync(path.resolve(__dirname, PATHS.buildPath, dir, file), 'utf8').toString();
+
+    let regImport = new RegExp(dir + '\/', 'g');
+    let regExport = new RegExp(`exports`, 'g');
+
+    if (dir != 'tuning') {
+        content = content.replace(regImport, `./`);
+    } else {
+        content = content.replace('carshow/', '../carshow/')
+    }
+
+    content = content.replace(regExport, 'module.exports');
+
+    fs.writeFileSync(path.resolve(__dirname, PATHS.buildPath, dir, file), content);
+}
+
 function getEntry() {
-
-    copyOnlyChangedFiles();
-
-    fs.readdirSync(PATHS.buildPath).forEach(dir => {
-        if (fs.lstatSync(path.resolve(PATHS.buildPath, dir)).isDirectory() && !ignoreModules.includes(dir)) {
+    fs.readdirSync(path.resolve(__dirname, PATHS.buildPath)).forEach(dir => {
+        if (fs.lstatSync(path.resolve(__dirname, PATHS.buildPath, dir)).isDirectory() && !ignoreModules.includes(dir)) {
             let directory = fs.readdirSync(path.resolve(__dirname, PATHS.buildPath, dir));
             let isChange = false;
 
             directory.forEach(file => {
-                if (fs.statSync(path.resolve(__dirname, basePath, dir, file)).mtime > DATE_CHANGE) {
-                    console.log(`${dir}/${file}: `, fs.statSync(path.resolve(__dirname, basePath, dir, file)).mtime);
+                if (fs.statSync(path.resolve(__dirname, PATHS.basePath, dir, file)).mtime > DATE_CHANGE) {
+                    console.log(`${dir}/${file}: `, fs.statSync(path.resolve(__dirname, PATHS.basePath, dir, file)).mtime);
 
                     isChange = true;
                 }
@@ -138,12 +155,14 @@ function getEntry() {
                     rewriteFile(dir, file);
                 });
 
-                entry[`${dir}/index`] = `${PATHS.buildPath}/${dir}/index.js`;
+                changedFiles.push(`${dir}/index.js`);
+                entry[`${dir}/index`] = `./client_build/${dir}/index.js`;
             }
         }
     });
 }
 
+copyOnlyChangedFiles();
 getEntry();
 
 if (Object.keys(entry).length > 0) {
@@ -151,8 +170,20 @@ if (Object.keys(entry).length > 0) {
     let compiler = webpack(config);
 
     compiler.run((err, stats) => {
-        console.log('webpack run');
+        if (err) console.log(err);
+
+        console.log('CHANGED FILES: ', changedFiles.length);
+        changedFiles.forEach(file => {
+            console.log(file);
+        })
     });
 } else {
-    console.log('Webpack не был запущен, посколько узменений в клиентских файлах, кроме браузера, нет');
+    if (fs.existsSync(path.resolve(__dirname, PATHS.buildPath))) {
+        rimraf.sync(path.resolve(__dirname, PATHS.buildPath));
+    }
+    console.log('CHANGED FILES: ', changedFiles.length);
+    changedFiles.forEach(file => {
+        console.log(file);
+    });
+    console.log('Webpack не был запущен, поскольку изменений в клиентских файлах, кроме браузера, нет');
 }
