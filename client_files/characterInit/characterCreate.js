@@ -176,6 +176,7 @@ mp.events.add("characterInit.create", (active, rawCharData) => {
             localPlayer.position.x, localPlayer.position.y, localPlayer.position.z + 0.5, 45);
         
         mp.callCEFV(`selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];`);
+        mp.callCEFV(`selectMenu.menus["characterCreateViewMenu"].items = cloneObj(selectMenu.menus["characterCreateViewMenu"].defaultItemsMale);`);
         mp.callCEFV(`selectMenu.show = true`);
     }
     else {
@@ -196,16 +197,11 @@ mp.events.add("characterInit.create.head", (active) => {
 
 mp.events.add('characterInit.create.exit', () => {
     mp.events.callRemote('characterInit.create.exit');
-    mp.events.callRemote('characterInit.start');
+    //mp.events.callRemote('characterInit.start');
 });
 
 mp.events.add('characterInit.create.reset', () => {
-    if (charData.gender == 0) {
-        charData.similarity = 1;
-    }
-    else {
-        charData.similarity = 0;
-    }
+    charData.gender = 0;
     charData.mother = 21;
     charData.father = 0;
     charData.skin = 0;
