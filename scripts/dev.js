@@ -14,29 +14,22 @@ function copyAllFiles() {
     wrench.copyDirSyncRecursive(path.resolve(__dirname, PATHS.basePath), path.resolve(__dirname, PATHS.finalPath), { forceDelete: true });
 }
 
-function deleteUnusedFiles() {
-    fs.readdirSync(path.resolve(__dirname, PATHS.finalPath)).forEach(dir => {
-        if (fs.lstatSync(path.resolve(__dirname, PATHS.finalPath, dir)).isDirectory()) {
-            if (dir != 'browser') {
-                let directory = fs.readdirSync(path.resolve(__dirname, PATHS.finalPath, dir));
+function deleteUnusedFiles(currentPath) {
+    fs.readdirSync(currentPath).forEach(item => {
+        let updatePath = path.resolve(currentPath, item);
 
-                directory.forEach(file => {
-                    if (!fs.existsSync(path.resolve(__dirname, PATHS.basePath, dir, file))) {
-                        rimraf.sync(path.resolve(__dirname, PATHS.finalPath, dir, file));
-                    }
-                });
+        if (fs.lstatSync(updatePath).isDirectory()) {
+            let directory = fs.readdirSync(updatePath);
 
-                directory = fs.readdirSync(path.resolve(__dirname, PATHS.finalPath, dir));
-
-                if (directory.length === 0) {
-                    rimraf.sync(path.resolve(__dirname, PATHS.finalPath, dir));
-                }
+            if (directory.length > 0) {
+                deleteUnusedFiles(updatePath)
             } else {
-                
+                fs.rmdirSync(updatePath);
             }
         } else {
-            if (!fs.existsSync(path.resolve(__dirname, PATHS.basePath, dir))) {
-                rimraf.sync(path.resolve(__dirname, PATHS.finalPath, dir));
+            let baseCurrentPath = updatePath.replace('client_packages', 'client_files');
+            if (!fs.existsSync(baseCurrentPath)) {
+                fs.unlinkSync(updatePath);
             }
         }
     });
@@ -81,11 +74,14 @@ module.exports = {
             if (!fs.existsSync(path.resolve(__dirname, PATHS.finalPath))) {
                 copyAllFiles();
             } else {
-                DATE_CHANGE = fs.statSync(path.resolve(__dirname, PATHS.finalPath, '.listcache')).mtime;
-                copyOnlyChangedFiles(path.resolve(__dirname, PATHS.basePath));
-                
-                /// Удаление файлов из client_packages, которых уже нет в client_files
-                deleteUnusedFiles();
+                if (fs.existsSync(path.resolve(__dirname, PATHS.finalPath, '.listcache'))) {
+                    DATE_CHANGE = fs.statSync(path.resolve(__dirname, PATHS.finalPath, '.listcache')).mtime;
+                    copyOnlyChangedFiles(path.resolve(__dirname, PATHS.basePath));
+                    /// Удаление файлов из client_packages, которых уже нет в client_files
+                    deleteUnusedFiles(path.resolve(__dirname, PATHS.finalPath));
+                } else {
+                    throw new Error(".listcache не найден. Перезапустите сервер.");
+                }
             }
 
             let endTime = new Date();

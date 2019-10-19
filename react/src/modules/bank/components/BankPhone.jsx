@@ -61,7 +61,7 @@ class BankPhone extends Component {
         return (
             <Fragment>
                 <div className='page_title-bank-react'>
-                    Ппоплонение счета телефона
+                    Пополонение счета телефона
                 </div>
 
                 <div className='push_block-bank-react'>

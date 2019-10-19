@@ -15,33 +15,33 @@ class Main extends Component {
         this.getInfoPanel = this.getInfoPanel.bind(this);
     }
 
-    // componentWillMount() {
-    //     this.props.loadInfo({
-    //         number: '1223',
-    //         cash: 223123,
-    //         money: 400,
-    //         name: 'Immanuel Swift',
-    //         houses: [
-    //             {
-    //                 name: 25,
-    //                 class: 'Люкс',
-    //                 rent: 290,
-    //                 days: 13
-    //             }
-    //         ], // если нет, то []
-    //         biz: [
-    //             {
-    //                 id: 3,
-    //                 name: `"У дома"`,
-    //                 type: 'Оружейный магазин',
-    //                 rent: 500,
-    //                 days: 30,
-    //                 cashBox: 448448
-    //             }
-    //         ], // если нет, то []
-    //         phoneMoney: 21 // если нет, то null
-    //     });
-    // }
+    componentWillMount() {
+        this.props.loadInfo({
+            number: '1223',
+            cash: 223123,
+            money: 400,
+            name: 'Immanuel Swift',
+            houses: [
+                {
+                    name: 25,
+                    class: 'Люкс',
+                    rent: 290,
+                    days: 13
+                }
+            ], // если нет, то []
+            biz: [
+                {
+                    id: 3,
+                    name: `"У дома твоей мамы в деревне"`,
+                    type: 'Оружейный магазин',
+                    rent: 500,
+                    days: 30,
+                    cashBox: 448448
+                }
+            ], // если нет, то []
+            phoneMoney: 21 // если нет, то null
+        });
+    }
 
     exitBank() {
         const { closeBank, bank } = this.props;
