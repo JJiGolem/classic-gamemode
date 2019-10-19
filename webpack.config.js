@@ -34,15 +34,63 @@ function copyFile(copyPath) {
     fs.copyFileSync(copyPath, finalPath);
 }
 
+function obfuscateFile(filePath) {
+    let finalFilePath = filePath.toString().replace('client_files', 'client_packages');
+
+    let result = obfuscator.obfuscate(
+    fs.readFileSync(filePath, 'utf8').toString(),
+        {
+            compact: true,
+            controlFlowFlattening: true
+        }
+    );
+
+    fs.writeFileSync(finalFilePath, result.getObfuscatedCode());
+}
+
+function obfuscateBrowserScripts() {
+    fs.readdirSync(path.resolve(__dirname, basePath, 'browser', 'js')).forEach(file => {
+        if (fs.statSync(path.resolve(__dirname, basePath, 'browser', 'js', file)).mtime > DATE_CHANGE) {
+            obfuscateFile(path.resolve(__dirname, basePath, 'browser', 'js', file))
+        }
+    });
+}
+
+
+function copyChangedBrowserFiles(currentPath) {
+    fs.readdirSync(currentPath).forEach(item => {
+        if (item != 'js' && item != 'index.js') {
+            let updatedPath = path.resolve(currentPath, item);
+            if (fs.lstatSync(updatedPath).isDirectory()) {
+                let finalPahDir = updatedPath.replace('client_files', 'client_packages');
+                if (!fs.existsSync(finalPahDir)) {
+                    fs.mkdirSync(finalPahDir)
+                }
+                copyChangedBrowserFiles(updatedPath);
+            } else {
+                if (fs.statSync(updatedPath).mtime > DATE_CHANGE) {
+                    copyFile(updatedPath);
+                }
+            }
+        }
+    });
+}
+
 function copyOnlyChangedFiles() {
     if (!fs.existsSync(buildPath)) {
         fs.mkdirSync(buildPath);
     }
 
     if (fs.existsSync(finalPath)) {
-        DATE_CHANGE = fs.statSync(path.resolve(__dirname, finalPath, '.listcache')).mtime
+        if (fs.existsSync(path.resolve(__dirname, finalPath, '.listcache'))) {
+            DATE_CHANGE = fs.statSync(path.resolve(__dirname, finalPath, '.listcache')).mtime
+        } else {
+            DATE_CHANGE = 0;
+        }
     } else {
         fs.mkdirSync(finalPath);
+        fs.mkdirSync(path.resolve(__dirname, finalPath, 'browser'));
+        fs.mkdirSync(path.resolve(__dirname, finalPath, 'browser', 'js'));
         DATE_CHANGE = 0;
         entry.babelPolyfill = 'babel-polyfill';
     }
@@ -51,45 +99,17 @@ function copyOnlyChangedFiles() {
         forceDelete: true
     });
 
-    if (!fs.existsSync(`./client_packages/browser`)) {
-        fs.mkdirSync(`./client_packages/browser`);
-        wrench.copyDirSyncRecursive(`${basePath}/browser`, `${finalPath}/browser`, {
-            forceDelete: true
-        });
+    obfuscateBrowserScripts();
+    copyChangedBrowserFiles(path.resolve(__dirname, basePath, 'browser'));
+
+    if (fs.statSync(path.resolve(__dirname, basePath, 'index.js')).mtime > DATE_CHANGE) {
+        obfuscateFile(path.resolve(__dirname, basePath, 'index.js'));
     }
-
-    fs.readdirSync(`${basePath}/browser/js`).forEach(file => {
-        if (fs.statSync(path.resolve(__dirname, basePath, 'browser', 'js', file)).mtime > DATE_CHANGE) {
-            let result = obfuscator.obfuscate(
-                fs.readFileSync(`${basePath}/browser/js/${file}`, 'utf8').toString(),
-                {
-                    compact: true,
-                    controlFlowFlattening: true
-                }
-            );
-    
-            fs.writeFileSync(`${finalPath}/browser/js/${file}`, result.getObfuscatedCode());
-        }
-    })
-
-    fs.copyFileSync(`${basePath}/index.js`, `${finalPath}/index.js`);
-
-    let indexResult = obfuscator.obfuscate(
-        fs.readFileSync(`${finalPath}/index.js`, 'utf8').toString(),
-        {
-            compact: true,
-            controlFlowFlattening: true
-        }
-    );
-
-    fs.writeFileSync(`${finalPath}/index.js`, indexResult.getObfuscatedCode());
 }
 
 function getEntry() {
 
     copyOnlyChangedFiles();
-
-    console.log(DATE_CHANGE);
 
     fs.readdirSync(buildPath).forEach(dir => {
         if (fs.lstatSync(path.resolve(buildPath, dir)).isDirectory() && !ignoreModules.includes(dir)) {
