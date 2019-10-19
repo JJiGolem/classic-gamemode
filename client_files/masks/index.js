@@ -8,6 +8,7 @@ mp.events.add('masks.shop.shape', (enter) => {
 
 mp.keys.bind(0x45, true, () => {
     if (isInMaskShop) {
+        if (mp.game.ui.isPauseMenuActive()) return;
         if (mp.busy.includes()) return;
         mp.events.callRemote('masks.shop.enter');
     }

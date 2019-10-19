@@ -11,6 +11,7 @@ mp.events.add('carmarket.colshape.leave', () => {
 });
 
 mp.keys.bind(0x45, true, () => {
+    if (mp.game.ui.isPauseMenuActive()) return;
     if (isInCarMarketColshape) {
         if (!mp.players.local.vehicle) return;
         if (mp.players.local.vehicle.getPedInSeat(-1) != mp.players.local.handle) return;

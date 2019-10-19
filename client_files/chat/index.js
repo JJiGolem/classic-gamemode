@@ -68,7 +68,7 @@ mp.events.add('chat.load', () => {
     mp.callCEFR('setTimeChat', [true]);
 
     mp.keys.bind(0x54, true, function() {
-
+        if (mp.game.ui.isPauseMenuActive()) return;
         if (mp.busy.includes()) return;
         mp.busy.add('chat', true);
         isOpen = true;
@@ -76,7 +76,7 @@ mp.events.add('chat.load', () => {
     });
 
     mp.keys.bind(0x76, true, function() {
-
+        if (mp.game.ui.isPauseMenuActive()) return;
         if (mp.busy.includes()) return;
 
         if (isOpen) return;
