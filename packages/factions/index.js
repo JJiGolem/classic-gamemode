@@ -338,6 +338,12 @@ module.exports = {
         faction.blipColor = color;
         faction.save();
     },
+    setAmmoRank(faction, rank) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+
+        faction.ammoRank = rank;
+        faction.save();
+    },
     addMember(faction, player) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         var character = player.character;
