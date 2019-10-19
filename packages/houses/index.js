@@ -105,9 +105,11 @@ let dropHouse = function(house, sellToGov) {
 let improvementBuyed = function(house, type) {
     switch(type) {
         case "holder":
-            //TODO
-            //Инициализация шкафа
-            //При перезагрузке серва шкаф как будет загружаться?
+            let holder = null;
+            if (houseInfo.holder) {
+                holder = this.createHolderMarker(house.info);
+                inventory.initHouseInventory(holder);
+            }
             break;
     }
 };
@@ -274,7 +276,10 @@ module.exports = {
         
         house = this.addHouse(info);
         this.setTimer(house);
-
+        /// Инициализация улучшений
+        if (house.info.holder) {
+            improvementBuyed(house, "holder");
+        }
         
         return true;
     },
@@ -342,11 +347,6 @@ module.exports = {
             });
         }
 
-        var holder = null;
-        if (houseInfo.holder) {
-            holder = this.createHolderMarker(houseInfo);
-            inventory.initHouseInventory(holder);
-        }
 
         let enterColshape = mp.colshapes.newTube(houseInfo.pickupX, houseInfo.pickupY, houseInfo.pickupZ, 2.0, 1.0, 0);
         let exitColshape = mp.colshapes.newSphere(houseInfo.Interior.exitX, houseInfo.Interior.exitY, houseInfo.Interior.exitZ, 1.0, dimension);
