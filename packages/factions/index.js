@@ -592,7 +592,8 @@ module.exports = {
         label.text = text;
     },
     getWarehouseLabelText(faction) {
-        var text = `~y~Боеприпасы:\n~w~${faction.ammo} из ${faction.maxAmmo}`;
+        var text = ``;
+        if (faction.maxAmmo) text += `~y~Боеприпасы:\n~w~${faction.ammo} из ${faction.maxAmmo}`;
         if (faction.maxMedicines) text += `\n~b~Медикаменты:\n~w~${faction.medicines} из ${faction.maxMedicines}`;
         return text;
     },
