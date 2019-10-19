@@ -39,6 +39,10 @@ mp.events.add("biz.actions", (action) => {
     mp.events.callRemote("biz.actions", action);
 });
 
+mp.events.add("biz.cashbox.update", (number) => {
+    mp.callCEFR("biz.cashbox.update", [number]);
+});
+
 
 /// Actions
 let bizId = null;
