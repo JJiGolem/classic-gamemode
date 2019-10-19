@@ -383,6 +383,27 @@ module.exports = {
             rec.kick();
         }
     },
+    "/unban": {
+        access: 5,
+        description: "Разбанить игрока.",
+        args: "[имя] [фамилия]",
+        handler: async (player, args, out) => {
+            var name = args.join(" ");
+            var character = await db.Models.Character.findOne({
+                where: {
+                    name: name
+                },
+                include: db.Models.Account
+            });
+            if (!character) return out.error(`Персонаж ${name} не найден`, player);
+            if (!character.Account.clearBanDate) return out.error(`Персонаж ${name} не имеет бан`, player);
+
+            character.Account.clearBanDate = null;
+            character.Account.save();
+
+            out.info(`${player.name} разбанил ${name}`);
+        }
+    },
     "/clothes": {
         access: 3,
         description: "Выдача тестовой одежды",
