@@ -22,7 +22,7 @@ class AnsBuy extends Component {
         }
         else if (status == 1) {
             closeApp();
-            addApp({ name: 'SuccessBuy', form: <Success name={this.props.name}/> });
+            addApp({ name: 'SuccessBuy', form: <Success type={this.props.type}/> });
         }
         else if (status == 2) {
             closeApp();

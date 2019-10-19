@@ -14,9 +14,9 @@ class SuccessBuy extends Component {
     }
 
     back() {
-        const { closeApp, name, buyImprovement } = this.props;
+        const { closeApp, type, buyImprovement } = this.props;
 
-        buyImprovement(name)
+        buyImprovement(type)
         closeApp();
     }
 
@@ -63,7 +63,7 @@ const mapDispatchToProps = dispatch => ({
     closeApp: app => dispatch(closeAppDisplay(app)),
     setSell: flag => dispatch(setSellHouse(flag)),
     setBuyStatus: status => dispatch(setBuyStatusHouse(status)),
-    buyImprovement: name => dispatch(buyImprovementHouse(name)),
+    buyImprovement: type => dispatch(buyImprovementHouse(type)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SuccessBuy);

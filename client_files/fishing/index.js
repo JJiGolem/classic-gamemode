@@ -2,18 +2,7 @@
 
 mp.attachmentMngr.register("takeRod", "prop_fishing_rod_01", 26611, new mp.Vector3(0, -0.05, -0.03), new mp.Vector3(-40, 10, -50));
 
-let peds = [
-    {
-        model: "cs_old_man2",
-        position: {
-            x: -1849.6412744140625,
-            y: -1241.2181591796875,
-            z: 8.615778923034668,
-        },
-        heading: 140.2574462890625,
-        defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
-    }
-];
+let peds = [];
 
 let localPlayer = mp.players.local;
 let sqlId;
@@ -43,9 +32,25 @@ mp.events.add('characterInit.done', () => {
     mp.events.call('fishing.game.exit');
 });
 
-mp.events.add('render', () => {
-    // TODO: waiting for bugfix...
+mp.events.add('fishing.fishers.init', (fishers) => {
+    debug(fishers);
+    fishers.forEach(fisher => {
+        peds.push(
+            {
+                model: "cs_old_man2",
+                position: {
+                    x: fisher.x,
+                    y: fisher.y,
+                    z: fisher.z,
+                },
+                heading: fisher.heading,
+                defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
+            }
+        );
+    });
+})
 
+mp.events.add('render', () => {
     if (checkConditions()) {
         if (!isIntervalCreated) {
             isIntervalCreated = true;

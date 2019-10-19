@@ -33,7 +33,7 @@ class Improvements extends Component {
                                 if (index == activeIndex && !improvement.isBuyed) {
                                     mp.trigger('house.improvements.buy', improvement.type);
                                     setSell(true);
-                                    addApp({ name: 'AnsBuy', form: <AnsBuy name={improvement.name}/> });
+                                    addApp({ name: 'AnsBuy', form: <AnsBuy type={improvement.type}/> });
                                 } else {
                                     this.setState({ activeIndex: index });
                                 }
@@ -42,7 +42,7 @@ class Improvements extends Component {
                             <span className="house_improvement_name-react" style={{ fontSize: '120%' }}>{ improvement.name }</span><br/>
                             { improvement.isBuyed 
                                 ? <span style={{ color: '#47a80f' }}>Улучшение куплено</span>
-                                : <span style={{ color: '#ed000096' }}>Купить за ${ improvement.price }</span>
+                                : <span style={{ color: '#47a80f' }}>Купить за ${ improvement.price }</span>
                             }
                         </div>
                     ))
@@ -139,7 +139,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     closeApp: () => dispatch(closeAppDisplay()),
     addApp: app => dispatch(addAppDisplay(app)),
-    setSell: flag => dispatch(setSellHouse(flag))
+    setSell: flag => dispatch(setSellHouse(flag)),
+    
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Improvements);

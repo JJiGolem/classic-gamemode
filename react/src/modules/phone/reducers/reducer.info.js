@@ -39,27 +39,13 @@ const initialState = {
     //         improvements: [
     //             {
     //                 name: 'Сигнализация',
+    //
     //                 price: 300,
     //                 isBuyed: true,
     //             },
     //             {
     //                 name: 'Шкаф',
     //                 price: 150,
-    //                 isBuyed: false,
-    //             },
-    //             {
-    //                 name: 'Кровать',
-    //                 price: 200,
-    //                 isBuyed: false,
-    //             },
-    //             {
-    //                 name: 'Дверь',
-    //                 price: 200,
-    //                 isBuyed: true,
-    //             },
-    //             {
-    //                 name: 'Кресло',
-    //                 price: 200,
     //                 isBuyed: false,
     //             }
     //         ]
@@ -407,7 +393,7 @@ export default function info(state = initialState, action) {
 
         case 'BUY_IMPROVEMENT_HOUSE':
             newState = { ...state };
-            let improvIndex = newState.houses[0].improvements.findIndex(imp => imp.name == payload);
+            let improvIndex = newState.houses[0].improvements.findIndex(imp => imp.type == payload);
 
             if (improvIndex !== -1) {
                 newState.houses[0].improvements[improvIndex].isBuyed = true;
