@@ -50,7 +50,7 @@ global.debug = (text) => {
 if (!isBuild) {
     require('../../scripts/dev').compile();
 } else {
-    childProcess.execSync('npm run test');
+    childProcess.execSync('npm run build');
 }
 
 /// Вызов подключения к БД, подключение всех модулей и вызов их инициализации
