@@ -102,7 +102,7 @@ let dropHouse = function(house, sellToGov) {
     }
 };
 
-let improvementBuyed = function(house, type) {
+let improvementLoad = function(house, type) {
     switch(type) {
         case "holder":
             let holder = null;
@@ -110,6 +110,7 @@ let improvementBuyed = function(house, type) {
                 holder = this.createHolderMarker(house.info);
                 inventory.initHouseInventory(holder);
             }
+            house.info.holder = holder;
             break;
     }
 };
@@ -278,7 +279,7 @@ module.exports = {
         this.setTimer(house);
         /// Инициализация улучшений
         if (house.info.holder) {
-            improvementBuyed(house, "holder");
+            improvementLoad(house, "holder");
         }
         
         return true;
@@ -395,7 +396,7 @@ module.exports = {
             exitGarage: exitGarageColshape,
             blip: blip,
             info: houseInfo,
-            holder: holder,
+            holder: null
         });
         return houses[houses.length - 1];
     },
@@ -507,7 +508,7 @@ module.exports = {
             if (result) {
                 house.info.holder = true;
                 await house.info.save();
-                improvementBuyed(house, type);
+                improvementLoad(house, type);
             }
             callback(result);
         }, `Покупка улучшения "${type}" для дома #${house.info.id}`)
