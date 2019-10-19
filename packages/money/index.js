@@ -167,6 +167,7 @@ module.exports = {
         }
     },
     removeCash(player, number, callbackT, reason = "") {
+        if (typeof player == 'number') return this.removeCashById(player, number, callbackT, reason);
         if (callbackT == null) return;
         let callback = (result) => {
             try {
@@ -236,10 +237,11 @@ module.exports = {
             });
         }
         else {
-            this.addCash(player, number, callback);
+            this.removeCash(player, number, callback, reason);
         }
     },
     removeMoney(player, number, callbackT, reason = "") {
+        if (typeof player == 'number') return this.removeMoneyById(player, number, callbackT, reason);
         if (callbackT == null) return;
         let callback = (result) => {
             try {
@@ -309,7 +311,7 @@ module.exports = {
             });
         }
         else {
-            this.addCash(player, number, callback);
+            this.removeMoney(player, number, callback, reason);
         }
     },
     /// Для ироков, которые онлайн
@@ -391,7 +393,7 @@ module.exports = {
         let bankFrom = null;
         if (playerFrom != null && playerFrom.character != null) bankFrom = playerFrom.character.bank;
         let bankTo = null;
-        if (playerFrom != null && playerFrom.character != null) bankTo = playerTo.character.bank;
+        if (playerTo != null && playerTo.character != null) bankTo = playerTo.character.bank;
 
         db.sequelize.transaction(t => {
             if ((playerFrom != null && playerFrom.character != null) && (playerTo != null && playerTo.character != null)) {
