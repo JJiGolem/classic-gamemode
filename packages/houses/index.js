@@ -102,6 +102,12 @@ let dropHouse = function(house, sellToGov) {
     }
 };
 
+let improvementBuyed = function(house, type) {
+    //TODO
+    //Инициализация шкафа
+    //При перезагрузке серва шкаф как будет загружаться?
+};
+
 module.exports = {
     dropHouseMultiplier: dropHouseMultiplier,
     holderImprovmentMultiplier: holderImprovmentMultiplier,
@@ -497,6 +503,7 @@ module.exports = {
             if (result) {
                 house.info.holder = true;
                 await house.info.save();
+                improvementBuyed(house, type);
             }
             callback(result);
         }, `Покупка улучшения "${type}" для дома #${house.info.id}`)
