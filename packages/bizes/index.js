@@ -164,7 +164,8 @@ let bizUpdateCashBox = async function(id, money) {
         currentDay.money += bizMoney;
         currentDay.save();
     }
-    biz.info.save();
+    await biz.info.save();
+    player.call("biz.cashbox.update", [biz.info.cashBox]);
 };
 let addProducts = async function(id, count) {
     let biz = getBizById(id);
