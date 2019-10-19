@@ -103,9 +103,13 @@ let dropHouse = function(house, sellToGov) {
 };
 
 let improvementBuyed = function(house, type) {
-    //TODO
-    //Инициализация шкафа
-    //При перезагрузке серва шкаф как будет загружаться?
+    switch(type) {
+        case "holder":
+            //TODO
+            //Инициализация шкафа
+            //При перезагрузке серва шкаф как будет загружаться?
+            break;
+    }
 };
 
 module.exports = {
