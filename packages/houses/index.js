@@ -436,7 +436,7 @@ module.exports = {
             carPlaces: info.Interior.Garage != null ? info.Interior.Garage.carPlaces : 1,
             rent: this.getRent(house),
             isOpened: info.isOpened,
-            improvements: [{name: 'Шкаф', type: 'holder', price: house.info.price * holderImprovmentMultiplier, isBuyed: false}],
+            improvements: [{name: 'Шкаф', type: 'holder', price: this.getImprovmentPrice('holder', house.info.price), isBuyed: info.holder}],
             price: info.price,
             days: this.getDateDays(info.date),
             pos: [info.pickupX, info.pickupY, info.pickupZ]
@@ -483,6 +483,23 @@ module.exports = {
                 }
             }, `Покупка дома #${house.info.id} у персонажа #${seller.character.id}`, `Продажа дома #${house.info.id} персонажу #${buyer.character.id}`);
         });
+    },
+    getImprovmentPrice(type, housePrice) {
+        switch(type) {
+            case "holder":
+                return housePrice * holderImprovmentMultiplier;
+            default:
+                return null;
+        }
+    },
+    buyImprovments(player, house, type, callback) {
+        money.removeMoney(player, this.getImprovmentPrice(type, house.info.price), async function(result) {
+            if (result) {
+                house.info.holder = true;
+                await house.info.save();
+            }
+            callback(result);
+        }, `Покупка улучшения "${type}" для дома #${house.info.id}`)
     },
     getHouseCarPlaces(id) {
         let house = this.getHouseByCharId(id).info;
