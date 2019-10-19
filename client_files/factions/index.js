@@ -137,6 +137,7 @@ mp.factions = {
 mp.events.add({
     "characterInit.done": () => {
         mp.keys.bind(69, true, () => {
+            if (mp.game.ui.isPauseMenuActive()) return;
             mp.factions.boxHandler();
         }); // E
     },

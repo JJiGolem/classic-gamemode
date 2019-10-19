@@ -14,6 +14,7 @@ let utils;
 
 /// Economic constants
 let dropHouseMultiplier = 0.6;
+let holderImprovmentMultiplier = 0.01;
 
 /// Функции модуля системы домов
 let changeBlip = function(house) {
@@ -78,7 +79,7 @@ let dropHouse = function(house, sellToGov) {
             money.addMoneyById(characterId, house.info.price * dropHouseMultiplier, function(result) {
                 if (result) {
                     console.log("[HOUSES] House dropped " + house.info.id);
-                    let player = mp.players.toArray().find(x => x.character != null && characterId == x.character.id);
+                    let player = mp.players.toArray().find(x => x != null && x.character != null && characterId == x.character.id);
                     if (player != null) {
                         mp.events.call('player.house.changed', player);
                         if (sellToGov) {
@@ -103,6 +104,7 @@ let dropHouse = function(house, sellToGov) {
 
 module.exports = {
     dropHouseMultiplier: dropHouseMultiplier,
+    holderImprovmentMultiplier: holderImprovmentMultiplier,
 
     async init() {
         inventory = call('inventory');
@@ -434,7 +436,7 @@ module.exports = {
             carPlaces: info.Interior.Garage != null ? info.Interior.Garage.carPlaces : 1,
             rent: this.getRent(house),
             isOpened: info.isOpened,
-            improvements: new Array(),
+            improvements: [{name: 'Шкаф', type: 'holder', price: house.info.price * holderImprovmentMultiplier, isBuyed: false}],
             price: info.price,
             days: this.getDateDays(info.date),
             pos: [info.pickupX, info.pickupY, info.pickupZ]

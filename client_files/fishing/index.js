@@ -219,6 +219,7 @@ let bindButtons = (state) => {
 }
 
 let fishingEnter = () => {
+    if (mp.game.ui.isPauseMenuActive()) return;
     if (!isEnter) {
         mp.events.callRemote('fishing.game.enter');
         mp.events.call('prompt.hide');
@@ -226,6 +227,7 @@ let fishingEnter = () => {
 }
 
 let fishingStart = () => {
+    if (mp.game.ui.isPauseMenuActive()) return;
     if (isEnter && !isStarted) {
         playWaitAnimation(true);
         mp.callCEFVN({ "fishing.isStarted": true });
@@ -235,6 +237,7 @@ let fishingStart = () => {
 }
 
 let fishingEnd = () => {
+    if (mp.game.ui.isPauseMenuActive()) return;
     if (isEnter && isStarted && isFetch) {
         mp.callCEFV(`fishing.endFishing();`);
         isFetch = false;
@@ -242,6 +245,7 @@ let fishingEnd = () => {
 }
 
 let fishingExit = () => {
+    if (mp.game.ui.isPauseMenuActive()) return;
     if (!isFetch) {
         mp.events.call('fishing.game.exit');
         isEnter = false;

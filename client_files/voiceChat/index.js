@@ -3,13 +3,15 @@
 mp.voiceChat.muted = true;
 mp.events.add('characterInit.done', function() {
     mp.keys.bind(0x4E, true, function() {		// N
+        if (mp.game.ui.isPauseMenuActive()) return;
         if (mp.busy.includes(['chat', 'terminal'])) return;
         if (!mp.busy.add('voicechat', false)) return;
         mp.voiceChat.muted = false;
         mp.callCEFV("hud.voice = true");
 	});
 
-	mp.keys.bind(0x4E, false, function() {		// N
+    mp.keys.bind(0x4E, false, function() {		// N
+        if (mp.game.ui.isPauseMenuActive()) return;
         mp.voiceChat.muted = true;
         mp.callCEFV("hud.voice = false");
 		mp.busy.remove('voicechat');

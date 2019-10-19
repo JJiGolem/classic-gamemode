@@ -178,6 +178,7 @@ let setInfo = function() {
 };
 
 let chooseLeft = function() {
+    if (mp.game.ui.isPauseMenuActive()) return;
     if (currentCharacter > 0) {
         currentCharacter--;
     }
@@ -198,6 +199,7 @@ let chooseLeft = function() {
 };
 
 let chooseRight = function() {
+    if (mp.game.ui.isPauseMenuActive()) return;
     if (currentCharacter < charNum) {
         currentCharacter++;
     }
@@ -217,6 +219,7 @@ let chooseRight = function() {
 };
 
 let choose = function() {
+    if (mp.game.ui.isPauseMenuActive()) return;
     if(isBinding) {
         binding(false);
         isBinding = false;
