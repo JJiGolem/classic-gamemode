@@ -190,6 +190,14 @@ let bindButtons = (state) => {
 let showPhone = () => {
     if (mp.busy.includes()) return;
     if (mp.police.haveCuffs) return;
+    var player = mp.players.local;
+    if (player.getVariable("knocked")) return;
+    if (!player.getHealth()) return;
+    if (mp.farms.hasProduct(player)) return;
+    if (mp.farms.isCropping(player)) return;
+    if (mp.factions.hasBox(player)) return;
+    if (player.getVariable("cuffs")) return;
+
     if (!mp.busy.add('phone')) return;
     mp.callCEFR('phone.show', [true]);
     playCallAnimation(false);
@@ -229,7 +237,7 @@ function playCallAnimation(state) { /// Анимация разговора
         mp.attachmentMngr.removeLocal("takePhone");
         mp.events.callRemote('animations.play', 'amb@code_human_wander_mobile@male@base', 'static', 1, 49);
         mp.attachmentMngr.addLocal("callPhone");
-    } 
+    }
     else {
         mp.attachmentMngr.removeLocal("callPhone");
     }
