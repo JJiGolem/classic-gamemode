@@ -417,8 +417,8 @@ module.exports = {
                     money.removeCash(player, price, (res) => {
                         if (!res) return out(`Ошибка списания наличных`);
 
-                        fuelstations.removeProducts(biz.info.id, fuel);
-                        fuelstations.updateCashbox(biz.info.id, price);
+                        fuelstations.removeProducts(fuelStationId, fuel);
+                        fuelstations.updateCashbox(fuelStationId, price);
                         inventory.updateParam(player, item, 'litres', params.litres + fuel);
                     }, `Заправка канистры на АЗС #${biz.info.id}`);
 
