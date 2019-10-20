@@ -14,10 +14,8 @@ class BankTaxes extends Component {
 
         this.incrementHouseDays = this.incrementHouseDays.bind(this);
         this.decrementHouseDays = this.decrementHouseDays.bind(this);
-        this.payHouse = this.payHouse.bind(this);
         this.incrementBizDays = this.incrementBizDays.bind(this);
         this.decrementBizDays = this.decrementBizDays.bind(this);
-        this.payBiz = this.payBiz.bind(this);
     }
 
     incrementHouseDays() {
@@ -68,7 +66,7 @@ class BankTaxes extends Component {
 
     payBiz() {
         const { bizDays } = this.state;
-        const { setLoading, setArgs } = this.props;
+        const { setLoading, setArgs, bank } = this.props;
 
         setArgs({ money: parseInt(bank.biz[0].rent*bizDays), id: bank.biz[0].id, days: parseInt(bizDays) });
         setLoading(true);
@@ -120,7 +118,7 @@ class BankTaxes extends Component {
                             <div style={{ textAlign: 'center', marginTop: '7%' }}>
                                 {
                                     houseDays > 0
-                                        ? <button className='button_pay_taxes-bank-react' onClick={this.payHouse}>
+                                        ? <button className='button_pay_taxes-bank-react' onClick={this.payHouse.bind(this)}>
                                             Оплатить
                                         </button>
                                         : <span>Количество дней не выбрано</span>
@@ -191,7 +189,7 @@ class BankTaxes extends Component {
                             <div style={{ textAlign: 'center', marginTop: '7%' }}>
                                 {
                                     bizDays > 0
-                                        ? <button className='button_pay_taxes-bank-react' onClick={this.payBiz}>
+                                        ? <button className='button_pay_taxes-bank-react' onClick={this.payBiz.bind(this)}>
                                             Оплатить
                                         </button>
                                         : <span>Количество дней не выбрано</span>

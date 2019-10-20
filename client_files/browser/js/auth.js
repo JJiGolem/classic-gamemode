@@ -187,6 +187,15 @@ var auth = new Vue({
             loader.show = true;
             mp.trigger("callRemote", `auth.recovery`, this.loginOrEmail);
         },
+        confirmEmailHandler(confirm) {
+            if (!confirm) {
+                mp.trigger(`callRemote`, `auth.email.confirm`, 0);
+                this.show = false;
+            }
+            else mp.trigger(`callRemote`, `auth.email.confirm.code`, this.code);
+
+            this.loader = true;
+        },
         showLoginResult(code) {
             if (!this.loginMessages[code]) return;
             this.prompt = this.loginMessages[code];
@@ -197,6 +206,8 @@ var auth = new Vue({
             if (!this.registerMessages[code]) return;
             this.prompt = this.registerMessages[code];
             if (code == 9) {
+                this.form = 3;
+                mp.trigger(`callRemote`, `auth.email.confirm`, 1);
                 // открывается панель, на которой нужно предложить пользователю подтвердить почту
                 // там можно либо не подтверждать и вызывать mp.trigger('auth.email.confirm', answer);
                 // где 0 - не согласился подтвердить
@@ -212,7 +223,7 @@ var auth = new Vue({
         showEmailConfirmResult(code) {
             if (!this.emailConfirmMessages[code]) return;
             this.prompt = this.emailConfirmMessages[code];
-            if (result == 1) auth.show = false;
+            if (code == 1) this.show = false;
             loader.show = false;
         },
         showRecoveryResult(code) {
