@@ -282,6 +282,13 @@ module.exports = {
         var text = `Вы приняли вызов от <br/><span>${rec.name}</span>`;
         out.success(player, text);
         player.call(`waypoint.set`, [rec.position.x, rec.position.y]);
+
+        mp.players.forEach(_rec => {
+            if (!_rec.character) return;
+            if (_rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(_rec, `${player.name} принял вызов ${rec.name}`, header);
+        });
     },
     "mapCase.pd.rank.raise": (player, recId) => {
         if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
@@ -587,6 +594,13 @@ module.exports = {
         var text = `Вы приняли вызов от <br/><span>${rec.name}</span>`;
         out.success(player, text);
         player.call(`waypoint.set`, [rec.position.x, rec.position.y]);
+
+        mp.players.forEach(_rec => {
+            if (!_rec.character) return;
+            if (_rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(_rec, `${player.name} принял вызов ${rec.name}`, header);
+        });
     },
     "mapCase.fib.rank.raise": (player, recId) => {
         if (!factions.isFibFaction(player.character.factionId)) return out.error(player, `Вы не являетесь агентом`);
@@ -682,6 +696,13 @@ module.exports = {
         var text = `Вы приняли вызов от <br/><span>${rec.name}</span>`;
         out.success(player, text);
         player.call(`waypoint.set`, [rec.position.x, rec.position.y]);
+
+        mp.players.forEach(_rec => {
+            if (!_rec.character) return;
+            if (_rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(_rec, `${player.name} принял вызов ${rec.name}`, header);
+        }); 
     },
     "mapCase.ems.rank.raise": (player, recId) => {
         if (!factions.isHospitalFaction(player.character.factionId)) return out.error(player, `Вы не являетесь медиком`);
