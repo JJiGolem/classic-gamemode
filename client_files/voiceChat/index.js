@@ -60,6 +60,7 @@ mp.speechChanel.connect = (player, channel) => {
 mp.speechChanel.disconnect = (player, channel, isSend = false) => {
     if (player == null) return;
     let index = listeners.findIndex( x => x.playerId == player.remoteId);
+    console.log(listeners);
     if (channel == null) {
         index != -1 && listeners.splice(index, 1);
     }
