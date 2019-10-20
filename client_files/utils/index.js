@@ -294,6 +294,21 @@ mp.utils = {
 
         player.clearAllProps();
     },
+    // Получить координаты waypoint
+    getWaypointCoord() {
+        let waypoint = mp.game.invoke('0x1DD1F58F493F1DA5');
+        let blipIterator = mp.game.invoke('0x186E5D252FA50E7D');
+        let firstInfoId = mp.game.invoke('0x1BEDE233E6CD2A1F', blipIterator);
+        let nextInfoId = mp.game.invoke('0x14F96AA50D6FBEA7', blipIterator);
+        for (let i = firstInfoId; mp.game.invoke('0xA6DB27D19ECBB7DA', i) != 0; i = nextInfoId) {
+            if (mp.game.invoke('0xBE9B0959FFD0779B', i) == 4) {
+                var coord = mp.game.ui.getBlipInfoIdCoord(i);
+                coord.z = mp.game.gameplay.getGroundZFor3dCoord(coord.x, coord.y, 1000, 0, true);
+                return coord;
+            };
+        };
+        return null;
+    },
 };
 
 
