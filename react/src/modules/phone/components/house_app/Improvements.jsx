@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import { closeAppDisplay, addAppDisplay } from "../../actions/action.apps";
 import HeaderHouseApp from "./HeaderHouseApp";
 import AnsBuy from "./AnsBuy";
-import { setSellHouse } from '../../actions/action.info';
+import { disableHomePhone } from '../../actions/action.info';
 
 class Improvements extends Component {
     constructor(props) {
@@ -18,7 +18,7 @@ class Improvements extends Component {
     }
 
     getImprovements() {
-        const { house, addApp, setSell } = this.props;
+        const { house, addApp, disableHome } = this.props;
         const { activeIndex, startIndex } = this.state;
 
         if (house.improvements.length)
@@ -32,7 +32,7 @@ class Improvements extends Component {
                             onClick={() => {
                                 if (index == activeIndex && !improvement.isBuyed) {
                                     mp.trigger('house.improvements.buy', improvement.type);
-                                    setSell(true);
+                                    disableHome(true);
                                     addApp({ name: 'AnsBuy', form: <AnsBuy type={improvement.type}/> });
                                 } else {
                                     this.setState({ activeIndex: index });
@@ -139,7 +139,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     closeApp: () => dispatch(closeAppDisplay()),
     addApp: app => dispatch(addAppDisplay(app)),
-    setSell: flag => dispatch(setSellHouse(flag)),
+    disableHome: state => dispatch(disableHomePhone(state)),
     
 });
 

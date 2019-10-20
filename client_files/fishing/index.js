@@ -2,7 +2,48 @@
 
 mp.attachmentMngr.register("takeRod", "prop_fishing_rod_01", 26611, new mp.Vector3(0, -0.05, -0.03), new mp.Vector3(-40, 10, -50));
 
-let peds = [];
+let peds = [
+    {
+        model: "cs_old_man2",
+        position: {
+            x: -1593.1,
+            y: 5202.9,
+            z: 4.3,
+        },
+        heading: 294.5,
+        defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
+    },
+    {
+        model: "cs_old_man2",
+        position: {
+            x: 712.6,
+            y: 4099.5,
+            z: 35.8,
+        },
+        heading: 0,
+        defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
+    },
+    {
+        model: "cs_old_man2",
+        position: {
+            x: -1633.6,
+            y: -1120.9,
+            z: 2.4,
+        },
+        heading: 224.7,
+        defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
+    },
+    {
+        model: "cs_old_man2",
+        position: {
+            x: -426.5,
+            y: 6355.8,
+            z: 13.3,
+        },
+        heading: 33.14,
+        defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
+    }
+];
 
 let localPlayer = mp.players.local;
 let sqlId;
@@ -27,29 +68,33 @@ const checkConditions = () => {
 
 mp.events.add('characterInit.done', () => {
     mp.events.call('fishing.game.exit');
-});
-
-mp.events.add('fishing.fishers.init', (fishers) => {
-    debug(fishers);
-    fishers.forEach(fisher => {
-        peds.push(
-            {
-                model: "cs_old_man2",
-                position: {
-                    x: fisher.x,
-                    y: fisher.y,
-                    z: fisher.z,
-                },
-                heading: fisher.heading,
-                defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
-            }
-        );
-    });
 
     peds.forEach((current) => {
         mp.events.call('NPC.create', current);
     });
-})
+});
+
+// mp.events.add('fishing.fishers.init', (fishers) => {
+//     debug(fishers);
+//     fishers.forEach(fisher => {
+//         peds.push(
+            // {
+            //     model: "cs_old_man2",
+            //     position: {
+            //         x: fisher.x,
+            //         y: fisher.y,
+            //         z: fisher.z,
+            //     },
+            //     heading: fisher.heading,
+            //     defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
+            // }
+//         );
+//     });
+
+//     peds.forEach((current) => {
+//         mp.events.call('NPC.create', current);
+//     });
+// })
 
 mp.events.add('render', () => {
     if (checkConditions()) {
