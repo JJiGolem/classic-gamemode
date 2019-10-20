@@ -22,7 +22,7 @@ module.exports = {
     },
     "playerQuit": (player) => {
         mp.players.forEach((current) => {
-            current.call("hud.setData", [{players: mp.players.length}]); /// После выхода из игры игрок какое-то время висит в пуле, возможно стоит создать таймер
+            current.call("hud.setData", [{players: mp.players.length - 1}]); /// После выхода из игры игрок какое-то время висит в пуле, возможно стоит создать таймер
             if (current.character && current.id != player.id && current.character.admin > 0 ) {
                 current.call('hud.players.list.remove', [player.id]);
             }
