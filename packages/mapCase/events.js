@@ -19,7 +19,9 @@ var out = {
 };
 
 module.exports = {
-    "init": async () => {},
+    "init": async () => {
+        inited(__dirname);
+    },
     "characterInit.done": (player) => {
         if (player.character.wanted) {
             mapCase.addPoliceWanted(player);

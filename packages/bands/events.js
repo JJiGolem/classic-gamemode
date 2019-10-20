@@ -7,6 +7,7 @@ let notifs = call('notifications');
 module.exports = {
     "init": () => {
         bands.init();
+        inited(__dirname);
     },
     "characterInit.done": (player) => {
         player.call(`bands.bandZones.init`, [bands.convertToClientBandZones()]);

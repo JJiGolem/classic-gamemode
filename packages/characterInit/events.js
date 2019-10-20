@@ -7,6 +7,7 @@ let utils = call("utils");
 module.exports = {
     "init": () => {
         characterInit.moduleInit();
+        inited(__dirname);
     },
     "auth.done": (player) => {
         player.characterInit = {

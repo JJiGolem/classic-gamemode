@@ -12,6 +12,7 @@ let entry = {};
 let DATE_CHANGE = null;
 
 let ignoreModules = ['browser'];
+let ignoreFiles = [ '.listcache', 'babelPolyfill.js' ];
 let changedFiles = [];
 
 function deleteUnusedFiles(currentPath) {
@@ -23,7 +24,7 @@ function deleteUnusedFiles(currentPath) {
             if (fs.lstatSync(updatePath).isDirectory()) {
                 deleteUnusedFiles(updatePath);
             }
-        } else if (item != '.listcache') {
+        } else if (!ignoreFiles.includes(item)) {
            rimraf.sync(updatePath);
         }
     });
@@ -63,7 +64,7 @@ function obfuscateBrowserScripts() {
     });
 
     if (fs.statSync(path.resolve(__dirname, PATHS.basePath, 'browser', 'index.js')).mtime > DATE_CHANGE) {
-        changedFiles.push('browser/js/' + file);
+        changedFiles.push('browser/js/index.js');
         obfuscateFile(path.resolve(__dirname, PATHS.basePath, 'browser', 'index.js'));
     }
 }
@@ -71,7 +72,7 @@ function obfuscateBrowserScripts() {
 
 function copyChangedBrowserFiles(currentPath) {
     fs.readdirSync(currentPath).forEach(item => {
-        if (item != 'js' && item != 'index.js') {
+        if (!currentPath.includes('browser/js') && item != 'index.js') {
             let updatedPath = path.resolve(currentPath, item);
             if (fs.lstatSync(updatedPath).isDirectory()) {
                 let finalPahDir = updatedPath.replace('client_files', 'client_packages');

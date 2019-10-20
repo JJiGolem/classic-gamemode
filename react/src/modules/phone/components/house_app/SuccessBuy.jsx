@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {closeAppDisplay} from "../../actions/action.apps";
-import {setSellHouse, buyImprovementHouse, setBuyStatusHouse} from "../../actions/action.info";
+import {disableHomePhone, buyImprovementHouse, setBuyStatusHouse} from "../../actions/action.info";
 import MainDisplay from "../MainDisplay";
 import HeaderHouseApp from "./HeaderHouseApp";
 
@@ -13,10 +13,16 @@ class SuccessBuy extends Component {
         this.back = this.back.bind(this);
     }
 
-    back() {
-        const { closeApp, type, buyImprovement } = this.props;
+    componentDidMount() {
+        const { type, buyImprovement, disableHome } = this.props;
 
-        buyImprovement(type)
+        buyImprovement(type);
+        disableHome(false);
+    }
+
+    back() {
+        const { closeApp } = this.props;
+
         closeApp();
     }
 
@@ -61,7 +67,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     closeApp: app => dispatch(closeAppDisplay(app)),
-    setSell: flag => dispatch(setSellHouse(flag)),
+    disableHome: state => dispatch(disableHomePhone(state)),
     setBuyStatus: status => dispatch(setBuyStatusHouse(status)),
     buyImprovement: type => dispatch(buyImprovementHouse(type)),
 });

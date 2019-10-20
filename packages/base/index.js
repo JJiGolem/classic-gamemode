@@ -42,6 +42,24 @@ global.call = (moduleName) => {
     return require(path.dirname(__dirname)+ "/" + moduleName + "/index.js");
 }
 
+/// Функция, которая вызвается модулем, для указания того, что он инициализирован
+global.inited = (dirname) => {
+    let path = dirname.split("\\");
+    mp.events.call('inited', path[path.length - 1]);
+}
+
+let modulesToLoad = [];
+let playersJoinPool = [];
+
+mp.events.add('inited', (moduleName) => {
+    modulesToLoad.splice(modulesToLoad.findIndex(x => x == moduleName), 1);
+    if (modulesToLoad.length == 0) {
+        playersJoinPool.forEach(player => {
+            player.call('init', [activeClientModules]);
+        });
+    }
+});
+
 // Дебаг
 global.debug = (text) => {
     require('../terminal').debug(text);
@@ -58,8 +76,12 @@ if (!isBuild) {
 db.connect(function() {
     fs.readdirSync(path.dirname(__dirname)).forEach(file => {
         if (!ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname)+ "/" + file + "/events.js")) {
-            mp.events.add(require('../' + file + '/events'));
+            let events = require('../' + file + '/events');
+            mp.events.add(events);
             activeServerModules.push(file);
+            if (events["init"] != null) {
+                modulesToLoad.push(file);
+            }
         } 
     });
 
@@ -70,12 +92,15 @@ db.connect(function() {
     mp.events.call('init');
 });
 
+
 mp.events.add('playerJoin', (player) => {
+    if (modulesToLoad.length != 0) return playersJoinPool.push(player);
     player.call('init', [activeClientModules]);
 });
 
 /// Main events list
 /// init - загрузка всех моделей и событий всех модулей закончена
+/// inited(moduleName) - модуль сообщает о том, что он инициализирован
 /// economy.done - загрузка экономических показателей окончена
 /// economy.updated - экономические показатели обновлены
 /// player.joined - пользователь подключен

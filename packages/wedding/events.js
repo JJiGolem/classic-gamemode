@@ -5,6 +5,7 @@ let wedding = call('wedding');
 module.exports = {
     "init": () => {
         wedding.init();
+        inited(__dirname);
     },
     "characterInit.done": (player) => {
         wedding.initSpouse(player);

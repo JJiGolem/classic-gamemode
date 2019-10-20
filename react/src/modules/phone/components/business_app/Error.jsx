@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {closeAppDisplay} from "../../actions/action.apps";
-import {setSellBusiness, setSellInfoBusiness, setSellStatusBusiness} from "../../actions/action.info";
+import { setSellInfoBusiness, setSellStatusBusiness, disableHomePhone} from "../../actions/action.info";
 import Header from "./Header";
 
 class Error extends Component {
@@ -13,9 +13,9 @@ class Error extends Component {
     }
 
     back() {
-        const { setSell, setSellInfo, setSellStatus, closeApp } = this.props;
+        const { setSellInfo, setSellStatus, closeApp, disableHome } = this.props;
 
-        setSell(false);
+        disableHome(false);
         setSellInfo(null);
         setSellStatus(null);
         closeApp();
@@ -60,7 +60,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     closeApp: () => dispatch(closeAppDisplay()),
-    setSell: flag => dispatch(setSellBusiness(flag)),
+    disableHome: state => dispatch(disableHomePhone(state)),
     setSellStatus: status => dispatch(setSellStatusBusiness(status)),
     setSellInfo: info => dispatch(setSellInfoBusiness(info)),
 });

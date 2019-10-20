@@ -9,6 +9,7 @@ module.exports = {
     /// Событие инициализации сервера
     "init": () => {
         phone.init();
+        inited(__dirname);
     },
     'player.joined': player => {
         player.isTalking = false;

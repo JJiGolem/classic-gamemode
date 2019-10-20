@@ -7,6 +7,7 @@ let jobs = call('jobs');
 module.exports = {
     "init": () => {
         bus.init();
+        inited(__dirname);
     },
     "busdriver.employment": (player) => {
         if (player.character.job == 3) {

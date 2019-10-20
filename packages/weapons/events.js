@@ -8,6 +8,7 @@ let weapons = call('weapons');
 module.exports = {
     "init": () => {
         weapons.init();
+        inited(__dirname);
     },
     "weapons.ammo.sync": (player, data) => {
         data = JSON.parse(data);

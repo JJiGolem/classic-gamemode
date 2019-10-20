@@ -7,6 +7,7 @@ const MASK_ID = 14;
 module.exports = {
     "init": () => {
         masks.init();
+        inited(__dirname);
     },
     "masks.shop.enter": (player) => {
         let list = masks.getRawMaskList();

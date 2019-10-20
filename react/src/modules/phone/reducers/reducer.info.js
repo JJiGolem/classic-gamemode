@@ -39,7 +39,7 @@ const initialState = {
     //         improvements: [
     //             {
     //                 name: 'Сигнализация',
-    //
+    
     //                 price: 300,
     //                 isBuyed: true,
     //             },
@@ -134,6 +134,12 @@ export default function info(state = initialState, action) {
                 ]
             };
 
+        case 'DISABLE_HOME_PHONE':
+            return {
+                ...state,
+                isDisabled: payload
+            }
+
         case 'SET_SYMBOL_PRICE_NEWS':
             return {
                 ...state,
@@ -207,11 +213,6 @@ export default function info(state = initialState, action) {
             newState.houses[0].isOpened = !newState.houses[0].isOpened;
             return newState;
 
-        case 'SET_SELL_HOUSE':
-            newState = {  ...state };
-            newState.houses[0].isSell = payload;
-            return  newState;
-
         case 'SET_SELL_STATUS_HOUSE':
             newState = { ...state };
             newState.houses[0].sellStatus = payload;
@@ -227,11 +228,6 @@ export default function info(state = initialState, action) {
             newStateSell.houses.length = 0;
 
             return newStateSell;
-
-        case 'SET_SELL_BUSINESS':
-            newState = {  ...state };
-            newState.biz[0].isSell = payload;
-            return  newState;
 
         case 'SET_SELL_STATUS_BUSINESS':
             newState = { ...state };
@@ -389,7 +385,6 @@ export default function info(state = initialState, action) {
             if (improvIndex !== -1) {
                 newState.houses[0].improvements[improvIndex].isBuyed = true;
                 newState.houses[0].buyStatus = null;
-                newState.houses[0].isSell = false;
             }
 
             return newState;
