@@ -4,6 +4,7 @@ let money = call('money');
 module.exports = {
     "init": () => {
         dmv.init();
+        inited(__dirname);
     },
     "dmv.license.buy": (player, id) => {
         let price;

@@ -13,6 +13,7 @@ let fish;
 module.exports = {
     "init": () => {
         fishing.init();
+        inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;

@@ -6,6 +6,7 @@ let phone = call('phone');
 module.exports = {
     "init": () => {
         supermarket.init();
+        inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;

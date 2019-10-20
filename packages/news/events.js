@@ -7,7 +7,7 @@ let notifs = call('notifications');
 
 module.exports = {
     "init": () => {
-
+        inited(__dirname);
     },
     "characterInit.done": (player) => {
         player.call(`callCEFR`, [`news.price`, [news.symbolPrice]]);

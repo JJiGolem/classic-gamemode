@@ -13,6 +13,7 @@ module.exports = {
         money = call("money");
         notifications = call('notifications');
         bizService.init();
+        inited(__dirname);
     },
     "player.joined": (player) => {
         player.biz = {

@@ -9,6 +9,7 @@ let police = call('police');
 module.exports = {
     "init": () => {
         government.init();
+        inited(__dirname);
     },
     "characterInit.done": (player) => {
         if (!factions.isGovernmentFaction(player.character.factionId)) return;

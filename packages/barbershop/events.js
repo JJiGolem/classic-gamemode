@@ -5,6 +5,7 @@ let inventory = call('inventory');
 module.exports = {
     "init": () => {
         barbershop.init();
+        inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;

@@ -3,7 +3,7 @@ let notifs = call('notifications');
 
 module.exports = {
     "init": () => {
-
+        inited(__dirname);
     },
     "characterInit.done": (player) => {
         familiar.initList(player);

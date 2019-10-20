@@ -8,6 +8,7 @@ let money = call('money');
 module.exports = {
     "init": () => {
         vehicles.init();
+        inited(__dirname);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         player.call('vehicles.garage', [vehicle.isInGarage]);

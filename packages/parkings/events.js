@@ -3,6 +3,7 @@ var vehicles = call('vehicles');
 module.exports = {
     "init": () => {
         parkings.init();
+        inited(__dirname);
     },
     "vehicleDeath": (vehicle) => {
         if (vehicle.key == "private") vehicle.parkingId = parkings.getClosestParkingId(vehicle);

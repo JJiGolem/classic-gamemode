@@ -10,7 +10,7 @@ var police = require('../police')
 
 module.exports = {
     "init": () => {
-
+        inited(__dirname);
     },
     "characterInit.done": (player) => {
         player.call(`police.wanted.set`, [player.character.wanted]);

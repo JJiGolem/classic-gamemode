@@ -4,8 +4,9 @@ let whitelist = require('./index.js');
 let allowed = whitelist.getAllowed();
 
 module.exports = {
-    "init": () => {
-        whitelist.init();
+    "init": async () => {
+        await whitelist.init();
+        inited(__dirname);
     },
     "player.joined": (player) => {
         if (!whitelist.isEnabled()) return;
