@@ -17,7 +17,7 @@ module.exports = {
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;
 
-        if (shape.isFishingPlaceMenu) {
+        if (shape.isFisher) {
             player.call('fishing.menu.show');
             player.currentColshape = shape;
         }
@@ -25,7 +25,7 @@ module.exports = {
     "playerExitColshape": (player, shape) => {
         if (!player.character) return;
 
-        if (shape.isFishingPlaceMenu) {
+        if (shape.isFisher) {
             player.call('fishing.menu.close');
             player.currentColshape = null;
         }

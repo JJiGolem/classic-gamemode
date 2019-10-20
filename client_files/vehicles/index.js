@@ -280,6 +280,13 @@ mp.keys.bind(0x28, true, () => {
     }
 });
 
+mp.keys.bind(87, true, () => { // W
+    var player = mp.players.local;
+    if (!player.autopilot || !player.vehicle) return;
+    delete player.autopilot;
+    player.clearTasks();
+    mp.notify.info("Автопилот деактивирован");
+});
 
 mp.events.addDataHandler("leftTurnSignal", (entity) => {
     var player = mp.players.local;
@@ -495,6 +502,23 @@ mp.events.add("time.main.tick", () => {
             mp.moduleVehicles.nearHoodVehicleId = null;
         }
     }
+
+    var player = mp.players.local;
+    if (player.autopilot && player.vehicle) {
+        var coord = mp.utils.getWaypointCoord();
+        if (!coord) {
+            delete player.autopilot;
+            player.clearTasks();
+            mp.notify.info("Автопилот деактивирован");
+        } else {
+            var dist = mp.vdist(player.position, coord);
+            if (dist < 50 && coord.z - player.position.z > 2) {
+                delete player.autopilot;
+                player.clearTasks();
+                mp.notify.info("Вы прибыли на место", "Автопилот");
+            }
+        }
+    }
 });
 
 mp.moduleVehicles = {
@@ -560,4 +584,21 @@ mp.events.add('render', () => {
 
 mp.events.add('vehicles.add.menu.show', () => {
     mp.events.call('selectMenu.show', 'vehiclePropAdd');
+});
+
+mp.events.add('vehicles.autopilot', () => {
+    var player = mp.players.local;
+    var veh = player.vehicle;
+    if (!veh) return mp.notify.error("Вы не в авто");
+    var pos = mp.utils.getWaypointCoord();
+    if (!pos) return mp.notify.warning("Укажите точку на карте");
+
+    var speed = 25;
+    var drivingStyle = 1074528293;
+    var stopRange = 50;
+
+    player.autopilot = true;
+    player.taskVehicleDriveToCoordLongrange(veh.handle, pos.x, pos.y, pos.z + 2, speed, drivingStyle, stopRange);
+    mp.notify.success("Автопилот активирован");
+    mp.prompt.showByName("vehicle_autopilot");
 });

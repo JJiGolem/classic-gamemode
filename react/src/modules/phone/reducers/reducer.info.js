@@ -39,27 +39,13 @@ const initialState = {
     //         improvements: [
     //             {
     //                 name: 'Сигнализация',
+    //
     //                 price: 300,
     //                 isBuyed: true,
     //             },
     //             {
     //                 name: 'Шкаф',
     //                 price: 150,
-    //                 isBuyed: false,
-    //             },
-    //             {
-    //                 name: 'Кровать',
-    //                 price: 200,
-    //                 isBuyed: false,
-    //             },
-    //             {
-    //                 name: 'Дверь',
-    //                 price: 200,
-    //                 isBuyed: true,
-    //             },
-    //             {
-    //                 name: 'Кресло',
-    //                 price: 200,
     //                 isBuyed: false,
     //             }
     //         ]
@@ -238,11 +224,7 @@ export default function info(state = initialState, action) {
 
         case 'SELL_HOUSE':
             const newStateSell = { ...state };
-            let houseIndex = newStateSell.houses.findIndex(house => house.name === payload);
-
-            if (houseIndex !== -1) {
-                newStateSell.houses.splice(houseIndex, 1);
-            }
+            newStateSell.houses.length = 0;
 
             return newStateSell;
 
@@ -394,20 +376,15 @@ export default function info(state = initialState, action) {
             return newState;
 
         case 'BUY_IMPROVEMENT_HOUSE_ANS':
-            return {
-                ...state,
-                houses: [
-                    ...state.houses,
-                    state.houses[0] = {
-                        ...state.houses[0],
-                        buyStatus: payload
-                    }
-                ]
-            }
+            newState = { ...state };
+
+            newState.houses[0].buyStatus = payload;
+
+            return newState;
 
         case 'BUY_IMPROVEMENT_HOUSE':
             newState = { ...state };
-            let improvIndex = newState.houses[0].improvements.findIndex(imp => imp.name == payload);
+            let improvIndex = newState.houses[0].improvements.findIndex(imp => imp.type == payload);
 
             if (improvIndex !== -1) {
                 newState.houses[0].improvements[improvIndex].isBuyed = true;

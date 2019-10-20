@@ -217,7 +217,7 @@
             <div class="arrow arr-up" :class="{active: menu.j > 0}"></div>
             <div class="items">
                 <div class="item" v-for="(item, index) in items" v-show="isItemShow(index)" :class="{selected: index == menu.i}">
-                    <div class="name" :class="{button: item.location}" :style="{'text-align': item.location}">{{ item.text }}</div>
+                    <div class="name" :class="{button: item.location}" :style="{'text-align': item.location}">{{ item.text.replace(/(\\)/g, "") }}</div>
                     <div class="value" v-if="item.values && valuesType(index) != 1">
                         {{ item.values[item.i] }}
                         <img :src="(menu.i != index)? 'img/selectMenu/edit.png' : 'img/selectMenu/edit-selected.png'" v-if="valuesType(index) == 3" />
@@ -1259,7 +1259,7 @@
             <div class="confirmation">
                 <div class="head">{{ confirmation.head }}</div>
                 <div class="description" v-html="confirmation.description"></div>
-                <div v-if="codeMod"><input placeholder="Введите промокод..." v-model="code" @focus="inputFocus = true" @blur="inputFocus = false" /></div>
+                <div v-if="codeMod"><input placeholder="Введите промокод..." @keypress.enter="confirmation.acceptHandler(); confirmation = null" v-model="code" @focus="inputFocus = true" @blur="inputFocus = false" /></div>
                 <div class="actions">
                     <div class="btn left" @click="confirmation.acceptHandler(); confirmation = null">{{ confirmation.leftWord }}</div>
                     <div class="btn" @click="confirmation = null; codeMod = false">{{ confirmation.rightWord }}</div>

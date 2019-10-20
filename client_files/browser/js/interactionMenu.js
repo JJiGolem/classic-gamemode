@@ -55,7 +55,11 @@ var interactionMenu = new Vue({
                     {
                         text: "Вытолкнуть",
                         icon: "eject.png"
-                    }
+                    },
+                    {
+                        text: "Автопилот",
+                        icon: "gps.svg"
+                    },
                 ],
                 handler(index) {
                     var item = this.items[index];
@@ -74,6 +78,10 @@ var interactionMenu = new Vue({
                     if (item.text == 'Продать Т/С') {
                         mp.trigger(`interaction.menu.close`);
                         mp.trigger(`vehicles.sell.show`);
+                    }
+                    if (item.text == 'Автопилот') {
+                        mp.trigger(`vehicles.autopilot`);
+                        mp.trigger(`interaction.menu.close`);
                     }
                 }
             },
