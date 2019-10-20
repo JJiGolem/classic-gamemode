@@ -74,6 +74,7 @@ module.exports = {
         var pos = new mp.Vector3(bin.x, bin.y, bin.z);
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
+            if (player.vehicle) return;
             player.call("bins.inside", [true]);
             player.insideBin = colshape;
         };
@@ -98,6 +99,7 @@ module.exports = {
         });
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
+            if (player.vehicle) return;
             player.call(`selectMenu.show`, [`dump`]);
             player.insideDumb = true;
         };

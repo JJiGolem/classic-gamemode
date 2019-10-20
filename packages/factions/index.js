@@ -107,6 +107,7 @@ module.exports = {
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
+            if (player.vehicle) return;
             var boxType = "";
             if (player.hasAttachment("ammoBox")) {
                 boxType = "ammo";
@@ -165,6 +166,7 @@ module.exports = {
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
+            if (player.vehicle) return;
             if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
 
             if (this.isBandFaction(faction.id)) bands.sendStorageInfo(player);
@@ -192,6 +194,7 @@ module.exports = {
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
+            if (player.vehicle) return;
             if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
 
             player.call("prompt.showByName", [`faction_items_holder`]);
@@ -217,6 +220,7 @@ module.exports = {
         });
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
+            if (player.vehicle) return;
             if (!this.isArmyFaction(player.character.factionId) &&
                 !this.isMafiaFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, `Склад боеприпасов`);
             player.call("factions.insideWarehouse", [true, "ammo"]);
@@ -241,6 +245,7 @@ module.exports = {
         });
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 2.5);
         colshape.onEnter = (player) => {
+            if (player.vehicle) return;
             if (!this.isHospitalFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, `Склад медикаментов`);
             player.call("factions.insideWarehouse", [true, "medicines"]);
             player.insideWarehouse = true;
