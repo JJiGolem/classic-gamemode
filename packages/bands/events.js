@@ -104,6 +104,13 @@ module.exports = {
         }, `Пополнение общака ${faction.name}`);
 
         notifs.success(player, `Пополнено на $${sum}`, header);
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(rec, `${player.name} пополнил на $${sum}`, header);
+        });
     },
     "bands.storage.cash.take": (player, sum) => {
         sum = Math.clamp(sum, 0, 1000000);
@@ -123,6 +130,13 @@ module.exports = {
         }, `Снятие из общака ${faction.name}`);
 
         notifs.success(player, `Снято $${sum}`, header);
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(rec, `${player.name} снял $${sum}`, header);
+        });
     },
     "bands.drugsStash.drugs.buy": (player, data) => {
         data = JSON.parse(data);
