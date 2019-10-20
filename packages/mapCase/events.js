@@ -285,7 +285,8 @@ module.exports = {
 
         mp.players.forEach(_rec => {
             if (!_rec.character) return;
-            if (_rec.character.factionId != player.character.factionId) return;
+            var id = _rec.character.factionId;
+            if (!factions.isPoliceFaction(id) && !factions.isFibFaction(id)) return;
 
             notifs.info(_rec, `${player.name} принял вызов ${rec.name}`, header);
         });
