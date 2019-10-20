@@ -3,6 +3,7 @@ let money = call('money');
 module.exports = {
     "init": () => {
         tuning.init();
+        inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
         if (shape.isCustoms) {

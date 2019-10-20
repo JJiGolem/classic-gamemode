@@ -68,7 +68,7 @@ mp.events.add('chat.load', () => {
     mp.callCEFR('setTimeChat', [true]);
 
     mp.keys.bind(0x54, true, function() {
-
+        if (mp.game.ui.isPauseMenuActive()) return;
         if (mp.busy.includes()) return;
         mp.busy.add('chat', true);
         isOpen = true;
@@ -76,7 +76,7 @@ mp.events.add('chat.load', () => {
     });
 
     mp.keys.bind(0x76, true, function() {
-
+        if (mp.game.ui.isPauseMenuActive()) return;
         if (mp.busy.includes()) return;
 
         if (isOpen) return;
@@ -150,6 +150,7 @@ function correctName(name) {
 function playChatAnimation(id) {
     var player = mp.players.atRemoteId(id);
     if (!player || player.vehicle || player.getVariable("knocked")) return;
+    if (!player.getHealth()) return;
     if (mp.farms.hasProduct(player)) return;
     if (mp.farms.isCropping(player)) return;
     if (mp.factions.hasBox(player)) return;

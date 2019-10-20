@@ -49,10 +49,18 @@ var selectMenu = new Vue({
                     };
                     if (eventName == "onItemValueChanged" && e.itemName == "Пол") {
                         selectMenu.menus["characterCreateMainMenu"].items[0].i = e.valueIndex;
+                        /// Возвращение наследственности к базовому виду
+                        selectMenu.menus["characterCreateParentsMenu"].items[0].i = 0;
+                        selectMenu.menus["characterCreateParentsMenu"].items[1].i = 0;
                         selectMenu.menus["characterCreateParentsMenu"].items[2].i = e.valueIndex == 0 ? 0 : 4;
+                        selectMenu.menus["characterCreateParentsMenu"].items[3].i = 0;
+                        /// Возвращение внешности к базовому виду
+                        let menu = selectMenu.menus["characterCreateViewMenu"];
+                        menu.items = (e.valueIndex == 0) ? cloneObj(menu.defaultItemsMale) : cloneObj(menu.defaultItemsFemale);
+
                         mp.trigger('characterInit.create.setGender', e.valueIndex);
                     }
-                    if (eventName == "onEscapePressed") {
+                    if (eventName == "onEscapePressed" || eventName == 'onBackspacePressed') {
                         selectMenu.menu = selectMenu.menus["characterCreateExitMenu"];
                     }
                     if (eventName == "onItemSelected") {
@@ -61,20 +69,17 @@ var selectMenu = new Vue({
                                 selectMenu.menu = selectMenu.menus["characterCreateParentsMenu"];
                                 break;
                             case "Внешность":
-                                var sex = selectMenu.menus["characterCreateMainMenu"].items[0].i;
-                                var menu = selectMenu.menus["characterCreateViewMenu"];
-                                menu.items = (sex == 0) ? menu.itemsMale : menu.itemsFemale;
-                                selectMenu.menu = menu;
+                                selectMenu.menu = selectMenu.menus["characterCreateViewMenu"];
                                 break;
                             case "Сохранить и продолжить":
                                 mp.trigger('characterInit.create.continue');
                                 selectMenu.menu = selectMenu.menus["characterCreateNameMenu"];
                                 break;
                             case "Сбросить все изменения":
-                                //selectMenu.menu = selectMenu.menus["characterCreateResetMenu"];
+                                selectMenu.menu = selectMenu.menus["characterCreateResetMenu"];
                                 break;
                             case "Выйти без сохранения":
-                                //selectMenu.menu = selectMenu.menus["characterCreateExitMenu"];
+                                selectMenu.menu = selectMenu.menus["characterCreateExitMenu"];
                                 break;
                         }
                     }
@@ -119,7 +124,7 @@ var selectMenu = new Vue({
                         itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
                         valueIndex: item.i, // индекс значения пункта меню
                     };
-                    if (eventName == "onEscapePressed") {
+                    if (eventName == "onEscapePressed" || eventName == 'onBackspacePressed') {
                         selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
                     }
                     if (eventName == "onItemValueChanged") {
@@ -154,7 +159,8 @@ var selectMenu = new Vue({
             "characterCreateViewMenu": {
                 name: "charactercreateview",
                 header: "Внешность", // заголовок меню, видимый на экране
-                itemsMale: [{
+                
+                defaultItemsMale: [{
                         text: "Прическа",
                         values: [
                             "Под ноль", "Коротко", "Ястреб", "Хипстер", "Челка набок", "Коротко", "Байкер", "Хвост", "Косички", "Прилиза",
@@ -412,7 +418,7 @@ var selectMenu = new Vue({
                         text: "Назад",
                     },
                 ],
-                itemsFemale: [{
+                defaultItemsFemale: [{
                         text: "Прическа",
                         values: [
                             "Под ноль", "Коротко", "Слои", "Косички", "Хвост", "Ирокез", "Косички", "Боб", "Ястреб", "Ракушка",
@@ -672,7 +678,7 @@ var selectMenu = new Vue({
                         itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
                         valueIndex: item.i, // индекс значения пункта меню
                     };
-                    if (eventName == "onEscapePressed") {
+                    if (eventName == "onEscapePressed" || eventName == 'onBackspacePressed') {
                         selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
                     }
                     if (eventName == "onItemValueChanged") {
@@ -826,7 +832,7 @@ var selectMenu = new Vue({
                         itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
                         valueIndex: item.i, // индекс значения пункта меню
                     };
-                    if (eventName == "onEscapePressed") {
+                    if (eventName == "onEscapePressed" || eventName == 'onBackspacePressed') {
                         mp.trigger('characterInit.create.back');
                         selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
                     }
@@ -871,14 +877,22 @@ var selectMenu = new Vue({
                         itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
                         valueIndex: item.i, // индекс значения пункта меню
                     };
-                    if (eventName == "onEscapePressed") {
+                    if (eventName == "onEscapePressed" || eventName == 'onBackspacePressed') {
                         selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
                     }
                     if (eventName == "onItemSelected") {
                         switch (e.itemName) {
                             case "Да":
+                                selectMenu.menus["characterCreateMainMenu"].items[0].i = 0;
+                                /// Возвращение наследственности к базовому виду
+                                selectMenu.menus["characterCreateParentsMenu"].items[0].i = 0;
+                                selectMenu.menus["characterCreateParentsMenu"].items[1].i = 0;
+                                selectMenu.menus["characterCreateParentsMenu"].items[2].i = 0;
+                                selectMenu.menus["characterCreateParentsMenu"].items[3].i = 0;
+                                /// Возвращение внешности к базовому виду
+                                selectMenu.menus["characterCreateViewMenu"].items = cloneObj(selectMenu.menus["characterCreateViewMenu"].defaultItemsMale);
+
                                 mp.trigger('characterInit.create.reset');
-                                selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
                                 break;
                             case "Нет":
                                 selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
@@ -908,7 +922,7 @@ var selectMenu = new Vue({
                         itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
                         valueIndex: item.i, // индекс значения пункта меню
                     };
-                    if (eventName == "onEscapePressed") {
+                    if (eventName == "onEscapePressed" || eventName == 'onBackspacePressed') {
                         selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
                     }
                     if (eventName == "onItemSelected") {
@@ -1562,10 +1576,10 @@ var selectMenu = new Vue({
                 name: "factionControl",
                 header: "Организация",
                 items: [{
-                        text: "Состав онлайн"
+                        text: "Онлайн состав"
                     },
                     {
-                        text: "Состав оффлайн"
+                        text: "Полный состав"
                     },
                     {
                         text: "Закрыть"
@@ -1584,10 +1598,10 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Закрыть') selectMenu.show = false;
-                        else if (e.itemName == 'Состав онлайн') {
+                        else if (e.itemName == 'Онлайн состав') {
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.members.online.show`);
-                        } else if (e.itemName == 'Состав оффлайн') {
+                        } else if (e.itemName == 'Полный состав') {
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.members.offline.show`);
                         }

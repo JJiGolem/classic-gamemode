@@ -73,7 +73,7 @@ class BankPush extends Component {
                             style={{ borderColor: error && 'red' }}
                             onChange={this.handleChange}
                         />
-                        <div className='button_input-bank-react' onClick={this.pushMoney}>OK</div>
+                        <input className='button_input-bank-react' value='ОК' onClick={this.pushMoney} type='submit'/>
                     </div>
 
                     <div className='buttons_panel-bank-react'>

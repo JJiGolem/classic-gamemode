@@ -72,6 +72,7 @@ mp.bins = {
 mp.events.add({
     "characterInit.done": () => {
         mp.keys.bind(69, true, () => {
+            if (mp.game.ui.isPauseMenuActive()) return;
             mp.bins.trashHandler();
         }); // E
     },

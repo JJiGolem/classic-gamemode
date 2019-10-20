@@ -131,6 +131,20 @@ module.exports = {
                     vehicles.spawnVehicle(vehicleFound, 1);
                 }
                 parkingVehicles.splice(foundIndex, 1);
+
+                let vehId;
+                if (!vehicleFound.sqlId) {
+                    vehId = vehicleFound.id;
+                } else {
+                    vehId = vehicleFound.sqlId;
+                }
+
+                for (let i = 0; i < player.vehicleList.length; i++) {
+                    if (player.vehicleList[i].id == vehId) {
+                        player.vehicleList[i].parkingDate = null;
+                        console.log('set parking date to NULL');
+                    }
+                }
             } else {
                 player.call('notifications.push.error', [`Не удалось забрать т/с`, "Ошибка"]);
             }

@@ -15,6 +15,7 @@ let vehicles = call('vehicles');
 module.exports = {
     "init": () => {
         inventory.init();
+        inited(__dirname);
     },
     "auth.done": (player) => {
         inventory.initInventoryConfig(player);

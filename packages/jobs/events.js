@@ -5,6 +5,7 @@ let notifs = require('../notifications');
 module.exports = {
     "init": () => {
         jobs.init();
+        inited(__dirname);
     },
     "characterInit.done": (player) => {
         jobs.initJobSkills(player);

@@ -6,11 +6,41 @@ let peds = [
     {
         model: "cs_old_man2",
         position: {
-            x: -1849.6412744140625,
-            y: -1241.2181591796875,
-            z: 8.615778923034668,
+            x: -1593.1,
+            y: 5202.9,
+            z: 4.3,
         },
-        heading: 140.2574462890625,
+        heading: 294.5,
+        defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
+    },
+    {
+        model: "cs_old_man2",
+        position: {
+            x: 712.6,
+            y: 4099.5,
+            z: 35.8,
+        },
+        heading: 0,
+        defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
+    },
+    {
+        model: "cs_old_man2",
+        position: {
+            x: -1633.6,
+            y: -1120.9,
+            z: 2.4,
+        },
+        heading: 224.7,
+        defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
+    },
+    {
+        model: "cs_old_man2",
+        position: {
+            x: -426.5,
+            y: 6355.8,
+            z: 13.3,
+        },
+        heading: 33.14,
         defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
     }
 ];
@@ -25,29 +55,52 @@ let isFetch = false;
 let isHaveRod = false;
 let isShowPrompt = false;
 
-let interval;
+let intervalFishing;
 let isIntervalCreated = false;
 
 const checkConditions = () => {
-    return (!mp.busy.includes() && isHaveRod && !isEnter && !localPlayer.isInWater() 
-    && !localPlayer.isInAnyVehicle() 
+    return (!mp.busy.includes() && isHaveRod && !isEnter && !localPlayer.isInWater()
+    && !localPlayer.isInAnyVehicle()
     && !localPlayer.isInAnyBoat()
     && !localPlayer.isInAir()
     && !localPlayer.isInAnyPlane())
 }
 
 mp.events.add('characterInit.done', () => {
+    mp.events.call('fishing.game.exit');
+
     peds.forEach((current) => {
         mp.events.call('NPC.create', current);
     });
-    mp.events.call('fishing.game.exit');
 });
+
+// mp.events.add('fishing.fishers.init', (fishers) => {
+//     debug(fishers);
+//     fishers.forEach(fisher => {
+//         peds.push(
+            // {
+            //     model: "cs_old_man2",
+            //     position: {
+            //         x: fisher.x,
+            //         y: fisher.y,
+            //         z: fisher.z,
+            //     },
+            //     heading: fisher.heading,
+            //     defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
+            // }
+//         );
+//     });
+
+//     peds.forEach((current) => {
+//         mp.events.call('NPC.create', current);
+//     });
+// })
 
 mp.events.add('render', () => {
     if (checkConditions()) {
         if (!isIntervalCreated) {
             isIntervalCreated = true;
-            interval = setInterval(() => {
+            intervalFishing = setInterval(() => {
                 let heading = localPlayer.getHeading() + 90;
                 let point = {
                     x: localPlayer.position.x + 20*Math.cos(heading * Math.PI / 180.0),
@@ -67,8 +120,10 @@ mp.events.add('render', () => {
             }, 1000);
         }
     } else {
-        clearInterval(interval);
-        isIntervalCreated = false;
+        if (isIntervalCreated) {
+            clearInterval(intervalFishing);
+            isIntervalCreated = false;
+        }
     }
 });
 
@@ -91,7 +146,7 @@ mp.events.add('inventory.initItems', (items) => {
 mp.events.add('inventory.deleteItem', (item) => {
     if (item == sqlId) {
         isHaveRod = false;
-        clearInterval(interval);
+        clearInterval(intervalFishing);
         isIntervalCreated = false;
         bindButtons(false);
         mp.events.call('prompt.hide');
@@ -215,6 +270,7 @@ let bindButtons = (state) => {
 }
 
 let fishingEnter = () => {
+    if (mp.game.ui.isPauseMenuActive()) return;
     if (!isEnter) {
         mp.events.callRemote('fishing.game.enter');
         mp.events.call('prompt.hide');
@@ -222,6 +278,7 @@ let fishingEnter = () => {
 }
 
 let fishingStart = () => {
+    if (mp.game.ui.isPauseMenuActive()) return;
     if (isEnter && !isStarted) {
         playWaitAnimation(true);
         mp.callCEFVN({ "fishing.isStarted": true });
@@ -231,6 +288,7 @@ let fishingStart = () => {
 }
 
 let fishingEnd = () => {
+    if (mp.game.ui.isPauseMenuActive()) return;
     if (isEnter && isStarted && isFetch) {
         mp.callCEFV(`fishing.endFishing();`);
         isFetch = false;
@@ -238,6 +296,7 @@ let fishingEnd = () => {
 }
 
 let fishingExit = () => {
+    if (mp.game.ui.isPauseMenuActive()) return;
     if (!isFetch) {
         mp.events.call('fishing.game.exit');
         isEnter = false;
@@ -283,4 +342,3 @@ function playFetchAnimation(state, timeout) { /// Анимация вытяги�
         mp.events.callRemote('animations.stop');
     }
 }
-

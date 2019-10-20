@@ -8,6 +8,7 @@ var notifs = require('../notifications');
 module.exports = {
     "init": () => {
         army.init();
+        inited(__dirname);
     },
     "characterInit.done": (player) => {
         if (!factions.isArmyFaction(player.character.factionId)) return;

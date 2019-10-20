@@ -7,7 +7,7 @@ var hospital = require('../hospital');
 
 module.exports = {
     "init": () => {
-
+        inited(__dirname);
     },
     "characterInit.done": (player) => {
         if (!factions.isHospitalFaction(player.character.factionId)) return;

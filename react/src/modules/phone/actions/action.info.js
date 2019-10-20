@@ -3,6 +3,11 @@ export const addInfoToPhone = info => ({
     payload: info
 });
 
+export const disableHomePhone = state => ({
+    type: 'DISABLE_HOME_PHONE',
+    payload: state
+});
+
 export const addContact = (contact) => ({
     type: 'ADD_CONTACT',
     payload: contact
@@ -43,11 +48,6 @@ export const changeStateHouse = () => ({
     type: 'CHANGE_STATE_HOUSE'
 });
 
-export const setSellHouse = flag => ({
-    type: 'SET_SELL_HOUSE',
-    payload: flag
-});
-
 export const setSellStatusHouse = status => ({
     type: 'SET_SELL_STATUS_HOUSE',
     payload: status
@@ -61,11 +61,6 @@ export const setSellInfoHouse = info => ({
 export const sellHouse = name => ({
    type: 'SELL_HOUSE',
    payload: name
-});
-
-export const setSellBusiness = flag => ({
-    type: 'SET_SELL_BUSINESS',
-    payload: flag
 });
 
 export const setSellStatusBusiness = status => ({
@@ -97,9 +92,9 @@ export const sellBusiness = id => ({
     payload: id
 });
 
-export const buyImprovementHouse = name => ({
+export const buyImprovementHouse = type => ({
     type: 'BUY_IMPROVEMENT_HOUSE',
-    payload: name
+    payload: type
 });
 
 export const setBuyStatusHouse = status => ({

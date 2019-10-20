@@ -6,6 +6,7 @@ let terminal = call('terminal');
 module.exports = {
     "init": () => {
         dev.init();
+        inited(__dirname);
     },
     "dev.eval.result": (player, result, recId) => {
         var rec = mp.players.at(recId);

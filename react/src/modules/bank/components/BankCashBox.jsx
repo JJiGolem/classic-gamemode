@@ -119,7 +119,7 @@ class BankCashBox extends Component {
                                     onChange={this.handleChangeInput}
                                     style={{ borderColor: errorPush && 'red' }}
                                 />
-                                <button className='button_input-bank-react' onClick={this.pushMoney}>OK</button>
+                                <button className='button_input-bank-react' style={{ width: '20%' }} onClick={this.pushMoney}>OK</button>
                             </div>
                         </div>
 
@@ -134,7 +134,7 @@ class BankCashBox extends Component {
                                     onChange={this.handleChangeInput}
                                     style={{ borderColor: errorPop && 'red' }}
                                 />
-                                <button className='button_input-bank-react' onClick={this.popMoney}>OK</button>
+                                <button className='button_input-bank-react' style={{ width: '20%' }} onClick={this.popMoney}>OK</button>
                             </div>
                         </div>
                     </div>

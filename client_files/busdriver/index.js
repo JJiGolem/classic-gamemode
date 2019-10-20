@@ -1,4 +1,4 @@
-let routecreator = require('./busdriver/routecreator.js');
+let routecreator = require('busdriver/routecreator.js');
 
 let routesAvailable;
 let checkpoint;

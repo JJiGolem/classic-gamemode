@@ -192,7 +192,10 @@ module.exports = {
             chestHairColor: 0,
             Features: [],
             Appearances: [],
-            Promocode: {},
+            Fines: [],
+            Promocode: {
+                PromocodeReward: {},
+            },
             settings: {},
         }
         for (let i = 0; i < 20; i++) player.characterInfo.Features.push({
@@ -234,7 +237,11 @@ module.exports = {
                     model: db.Models.Appearance,
                 },
                 {
+                    model: db.Models.Fine,
+                },
+                {
                     model: db.Models.Promocode,
+                    include: db.Models.PromocodeReward,
                 },
                 {
                     as: "settings",
@@ -250,7 +257,6 @@ module.exports = {
     sendToCreator(player) {
         player.position = creatorPlayerPos;
         player.heading = creatorPlayerHeading;
-        player.usingCreator = true;
         player.call("characterInit.create", [true, JSON.stringify(player.characterInfo)]);
     },
     applyCharacter(player) {

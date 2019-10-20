@@ -3,8 +3,8 @@ import {connect} from 'react-redux';
 import {closeAppDisplay, setAppDisplay} from "../../actions/action.apps";
 import {
     createOrderBusiness,
+    disableHomePhone,
     sellBusiness,
-    setSellBusiness,
     setSellInfoBusiness,
     setSellStatusBusiness
 } from "../../actions/action.info";
@@ -19,14 +19,24 @@ class Success extends Component {
         this.back = this.back.bind(this);
     }
 
-    back() {
-        const { business, setApp, sellBusiness, createOrder, closeApp, productCount, productPrice } = this.props;
+    componentDidMount() {
+        const { business, sellBusiness, createOrder, productCount, productPrice, disableHome } = this.props;
 
-        if (business.isSell) {
+        if (business.sellStatus != null) {
             sellBusiness(business.id);
+            disableHome(false);
+        } else if (business.orderStatus != null) {
+            createOrder(productCount, parseInt(productCount * productPrice));
+            disableHome(false);
+        }
+    }
+
+    back() {
+        const { business, setApp, closeApp } = this.props;
+
+        if (business.sellStatus != null) {
             setApp({ name: 'MainDisplay', form: <MainDisplay /> });
         } else if (business.orderStatus != null) {
-            createOrder(productCount, productPrice);
             closeApp();
         }
     }
@@ -97,7 +107,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     setApp: app => dispatch(setAppDisplay(app)),
     closeApp: () => dispatch(closeAppDisplay()),
-    setSell: flag => dispatch(setSellBusiness(flag)),
+    disableHome: state => dispatch(disableHomePhone(state)),
     setSellStatus: status => dispatch(setSellStatusBusiness(status)),
     setSellInfo: info => dispatch(setSellInfoBusiness(info)),
     sellBusiness: id => dispatch(sellBusiness(id)),

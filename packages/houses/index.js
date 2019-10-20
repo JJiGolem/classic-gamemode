@@ -14,6 +14,7 @@ let utils;
 
 /// Economic constants
 let dropHouseMultiplier = 0.6;
+let holderImprovmentMultiplier = 0.01;
 
 /// Функции модуля системы домов
 let changeBlip = function(house) {
@@ -25,11 +26,9 @@ let changeBlip = function(house) {
     }
     mp.players.forEach(player => {
         if (player && player.character) {
-            if (player.character.id == house.info.characterId) 
-            {
+            if (player.character.id == house.info.characterId) {
                 player.call("house.blip.color", [house.blip.id, 3]);
-            }
-            else {
+            } else {
                 player.call("house.blip.color", [house.blip.id, house.blip.color]);
             }
         }
@@ -39,23 +38,35 @@ let createBlip = function(house) {
     mp.players.forEach(player => {
         if (player && player.character) {
             if (player.character.id == house.info.characterId) {
-                player.call("house.blip.create", [[{info: house.blip, specialColor: 3}]]);
-            }
-            else {
-                player.call("house.blip.create", [[{info: house.blip}]]);
+                player.call("house.blip.create", [
+                    [{
+                        info: house.blip,
+                        specialColor: 3
+                    }]
+                ]);
+            } else {
+                player.call("house.blip.create", [
+                    [{
+                        info: house.blip
+                    }]
+                ]);
             }
         }
     });
 };
-let loadBlips = function (player) {
+let loadBlips = function(player) {
     let blipsInfo = new Array();
     houses.forEach(house => {
         if (!house) return;
         if (player.character.id == house.info.characterId) {
-            blipsInfo.push({info: house.blip, specialColor: 3});
-        }
-        else {
-            blipsInfo.push({info: house.blip});
+            blipsInfo.push({
+                info: house.blip,
+                specialColor: 3
+            });
+        } else {
+            blipsInfo.push({
+                info: house.blip
+            });
         }
     });
     player.call("house.blip.create", [blipsInfo]);
@@ -68,6 +79,7 @@ let dropHouse = function(house, sellToGov) {
         house.info.characterNick = null;
         house.info.date = null;
         house.info.isOpened = true;
+        house.info.holder = 0;
         changeBlip(house);
         house.info.save().then(() => {
             if (money == null) return console.log("[HOUSES] House dropped " + house.info.id + ". But player didn't getmoney");
@@ -78,7 +90,7 @@ let dropHouse = function(house, sellToGov) {
             money.addMoneyById(characterId, house.info.price * dropHouseMultiplier, function(result) {
                 if (result) {
                     console.log("[HOUSES] House dropped " + house.info.id);
-                    let player = mp.players.toArray().find(x => x.character != null && characterId == x.character.id);
+                    let player = mp.players.toArray().find(x => x != null && x.character != null && characterId == x.character.id);
                     if (player != null) {
                         mp.events.call('player.house.changed', player);
                         if (sellToGov) {
@@ -87,8 +99,7 @@ let dropHouse = function(house, sellToGov) {
                             notifications.warning(player, "Ваш дом отобрали за неуплату налогов", "Внимание");
                             player.call('phone.app.remove', ["house", house.info.id]);
                         }
-                    }
-                    else {
+                    } else {
                         notifications.save(characterId, "warning", "Ваш дом отобрали за неуплату налогов", "Внимание");
                     }
                 } else {
@@ -103,6 +114,7 @@ let dropHouse = function(house, sellToGov) {
 
 module.exports = {
     dropHouseMultiplier: dropHouseMultiplier,
+    holderImprovmentMultiplier: holderImprovmentMultiplier,
 
     async init() {
         inventory = call('inventory');
@@ -259,11 +271,14 @@ module.exports = {
                 }]
             }]
         });
-        
+
         house = this.addHouse(info);
         this.setTimer(house);
+        /// Инициализация улучшений
+        if (house.info.holder) {
+            this.improvementLoad(house, "holder");
+        }
 
-        
         return true;
     },
     async createInterior(player, interiorInfo) {
@@ -383,7 +398,7 @@ module.exports = {
             exitGarage: exitGarageColshape,
             blip: blip,
             info: houseInfo,
-            holder: holder,
+            holder: holder
         });
         return houses[houses.length - 1];
     },
@@ -419,7 +434,11 @@ module.exports = {
         return houses.find(x => x.info.characterId == id);
     },
     getDateDays(date) {
-        return parseInt((date.getTime() - new Date().getTime()) / (24 * 60 * 60 * 1000));
+        let dateNowStringArray = new Date().toLocaleDateString().split('-');
+        let dateStringArray = date.toLocaleDateString().split('-');
+        let dateNow = new Date(dateNowStringArray[0], dateNowStringArray[1], dateNowStringArray[2]);
+        date = new Date(dateStringArray[0], dateStringArray[1], dateStringArray[2]);
+        return Math.ceil(Math.abs(date.getTime() - dateNow.getTime()) / (1000 * 3600 * 24));
     },
     isHaveHouse(id) {
         return houses.findIndex(x => x.info.characterId == id) != -1;
@@ -434,7 +453,12 @@ module.exports = {
             carPlaces: info.Interior.Garage != null ? info.Interior.Garage.carPlaces : 1,
             rent: this.getRent(house),
             isOpened: info.isOpened,
-            improvements: new Array(),
+            improvements: [{
+                name: 'Шкаф',
+                type: 'holder',
+                price: this.getImprovmentPrice('holder', house.info.price),
+                isBuyed: info.holder
+            }],
             price: info.price,
             days: this.getDateDays(info.date),
             pos: [info.pickupX, info.pickupY, info.pickupZ]
@@ -481,6 +505,36 @@ module.exports = {
                 }
             }, `Покупка дома #${house.info.id} у персонажа #${seller.character.id}`, `Продажа дома #${house.info.id} персонажу #${buyer.character.id}`);
         });
+    },
+    getImprovmentPrice(type, housePrice) {
+        switch (type) {
+            case "holder":
+                return housePrice * holderImprovmentMultiplier;
+            default:
+                return null;
+        }
+    },
+    buyImprovments(player, house, type, callback) {
+        money.removeMoney(player, this.getImprovmentPrice(type, house.info.price), async (result) => {
+            if (result) {
+                house.info.holder = true;
+                await house.info.save();
+                this.improvementLoad(house, type);
+            }
+            callback(result);
+        }, `Покупка улучшения "${type}" для дома #${house.info.id}`)
+    },
+    improvementLoad(house, type) {
+        switch (type) {
+            case "holder":
+                let holder = null;
+                if (house.info.holder) {
+                    holder = this.createHolderMarker(house.info);
+                    inventory.initHouseInventory(holder);
+                }
+                house.holder = holder;
+                break;
+        }
     },
     getHouseCarPlaces(id) {
         let house = this.getHouseByCharId(id).info;

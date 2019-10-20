@@ -6,6 +6,7 @@ let jobs = call('jobs');
 module.exports = {
     "init": () => {
         taxi.init();
+        inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;

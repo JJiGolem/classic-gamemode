@@ -7,10 +7,10 @@ module.exports = {
         access: 1,
         args: "",
         handler: (player, args, out) => {
-            var text = "ID) Имя [бп] [макс. бп] [мед] [макс. мед] | блип | цвет_блипа<br/>";
+            var text = "ID) Имя [бп] [макс. бп] [мед] [макс. мед] | блип | цвет_блипа | ранг склада<br/>";
             for (var i = 0; i < factions.factions.length; i++) {
                 var faction = factions.factions[i];
-                text += `${faction.id}) ${faction.name} [${faction.ammo}] [${faction.maxAmmo}] [${faction.medicines}] [${faction.maxMedicines}] | ${faction.blip} | ${faction.blipColor}<br/>`;
+                text += `${faction.id}) ${faction.name} [${faction.ammo}] [${faction.maxAmmo}] [${faction.medicines}] [${faction.maxMedicines}] | ${faction.blip} | ${faction.blipColor} | ${faction.ammoRank}<br/>`;
             }
             out.log(text, player);
         }
@@ -189,6 +189,20 @@ module.exports = {
 
             out.info(`${player.name} изменил блип у организации ${faction.name} (${faction.blip}-${faction.blipColor} => ${args[0]}-${args[1]})`);
             factions.setBlip(faction, args[1], args[2]);
+        }
+    },
+    "/fsetammorank": {
+        description: "Изменить минимальный ранг, с которого можно брать ящики БП/Мед со склада организации.",
+        access: 4,
+        args: "[ид_организации]:n [ранг]:n",
+        handler: (player, args, out) => {
+            var faction = factions.getFaction(args[0]);
+            if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
+
+            args[1] = Math.clamp(args[1], 0, faction.ranks.length - 1);
+
+            out.info(`${player.name} изменил мин. ранг для доступа к складу у организации ${faction.name} (${faction.ammoRank} => ${args[1]})`);
+            factions.setAmmoRank(faction, args[1]);
         }
     },
     "/fsetpos": {

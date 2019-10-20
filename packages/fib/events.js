@@ -6,7 +6,7 @@ var notifs = require('../notifications');
 
 module.exports = {
     "init": () => {
-
+        inited(__dirname);
     },
     "characterInit.done": (player) => {
         if (!factions.isFibFaction(player.character.factionId)) return;

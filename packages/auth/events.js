@@ -28,7 +28,7 @@ module.exports = {
     'auth.login': async (player, data) => {
         //  data = '{"loginOrEmail":"Carter", "password":"123123"}';
         data = JSON.parse(data);
-
+        data.loginOrEmail = data.loginOrEmail.toLowerCase();
         if (!data.loginOrEmail || data.loginOrEmail.length == 0) {
             /// Заполните поле логина или почты!
             return player.call('auth.login.result', [0]);
@@ -45,18 +45,6 @@ module.exports = {
             /// Неверный пароль!
             return player.call('auth.login.result', [2]);
         }
-
-        // let ban = await db.Models.IpBan.findOne({
-        //     where: {
-        //         ip: player.ip
-        //     }
-        // });
-        // if (ban) {
-        //     /// Игрок забанен
-        //     player.call('auth.login.result', [3]);
-        //     player.kick();
-        //     return;
-        // }
 
         let account = await db.Models.Account.findOne({
             where: {
@@ -105,6 +93,7 @@ module.exports = {
     'auth.register': async (player, data) => {
         // data = '{"login":"Carter","email":"test@mail.ru","password":"123123","emailCode":-1}';
         data = JSON.parse(data);
+        data.login = data.login.toLowerCase();
 
         /// Вы уже зарегистрировали учетную запись!
         if (player.accountRegistrated) return player.call('auth.register.result', [0]);
@@ -130,7 +119,7 @@ module.exports = {
                     socialClub: player.socialClub,
                     [Op.and]: {
                         email: data.email,
-                        confirmEmail: 0
+                        confirmEmail: 1
                     }
                 }
             }

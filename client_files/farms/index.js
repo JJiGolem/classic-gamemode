@@ -282,6 +282,7 @@ mp.farms = {
 mp.events.add({
     "characterInit.done": () => {
         mp.keys.bind(69, true, () => { // E
+            if (mp.game.ui.isPauseMenuActive()) return;
             mp.farms.takeCropHandler();
         });
     },

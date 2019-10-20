@@ -6,6 +6,7 @@ let cost = null;
 
 
 mp.keys.bind(0x42, true, function() {           //B
+    if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
     mp.events.callRemote('biz.menu.open');
 });
@@ -37,6 +38,10 @@ mp.events.add("biz.buy.ans", (ans, owner, actions) => {
 
 mp.events.add("biz.actions", (action) => {
     mp.events.callRemote("biz.actions", action);
+});
+
+mp.events.add("biz.cashbox.update", (number) => {
+    mp.callCEFR("biz.cashbox.update", [number]);
 });
 
 

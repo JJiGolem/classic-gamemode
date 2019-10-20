@@ -10,6 +10,7 @@ module.exports = {
     /// Событие инициализации сервера
     "init": () => {
         housesService.init();
+        inited(__dirname);
     },
     "player.joined": (player) => {
         player.house = {
@@ -239,6 +240,16 @@ module.exports = {
         player.house.sellingHouseId = null;
         player.house.sellingHouseCost = null;
     },
+    "house.improvements.buy": (player, type) => {
+        if (player.character == null) return player.call("house.improvements.buy.ans", [0]);
+        let house = housesService.getHouseByCharId(player.character.id);
+        if (house == null) return player.call("house.improvements.buy.ans", [0]);
+        housesService.buyImprovments(player, house, type, function(result) {
+            player.call("house.improvements.buy.ans", [result ? 1 : 2]);
+        });
+    },
+
+    /// События для работы с экземплярами домов
     "house.add": (player, houseInfo) => {
         housesService.createHouse(JSON.parse(houseInfo));
     },

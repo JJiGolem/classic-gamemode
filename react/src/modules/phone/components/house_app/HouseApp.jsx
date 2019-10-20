@@ -71,6 +71,7 @@ class HouseApp extends Component {
 }
 
 const mapStateToProps = state => ({
+    ...state,
     house: state.info.houses[0]
 });
 

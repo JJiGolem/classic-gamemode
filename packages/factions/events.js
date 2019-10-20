@@ -5,6 +5,7 @@ let money = call('money');
 module.exports = {
     "init": () => {
         factions.init();
+        inited(__dirname);
     },
     "characterInit.done": (player) => {
         player.call(`factions.faction.set`, [player.character.factionId]);

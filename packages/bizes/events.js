@@ -13,6 +13,7 @@ module.exports = {
         money = call("money");
         notifications = call('notifications');
         bizService.init();
+        inited(__dirname);
     },
     "player.joined": (player) => {
         player.biz = {
@@ -32,13 +33,13 @@ module.exports = {
     "playerEnterColshape": (player, shape) => {
         if (!shape.isBiz) return;
         if (prompt != null) prompt.showByName(player, "biz_info_ask");
-        player.biz.at = shape.bizId;
+        if (player && player.biz) player.biz.at = shape.bizId;
     },
     "playerExitColshape": (player, shape) => {
         if (!shape.isBiz) return;
         player.call('biz.menu.close',[true]);
         if (prompt != null) prompt.hide(player);
-        player.biz.at = null;
+        if (player && player.biz) player.biz.at = null;
     },
     "biz.menu.open": (player) => {
         if (player.biz.at == null) return;

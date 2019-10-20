@@ -475,7 +475,7 @@ module.exports = {
     },
     getSoilsWarehousePosByFarmId(farmId) {
         var positions = [
-            new mp.Vector3(2104.150146484375, 4782.9306640625, 41.20178985595703 - 2)
+            new mp.Vector3(2104.8779296875, 4785.744140625, 41.21879959106445 - 2)
         ];
         farmId = Math.clamp(farmId, 1, positions.length);
         return positions[farmId - 1];

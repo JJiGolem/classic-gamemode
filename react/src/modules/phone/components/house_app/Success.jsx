@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {closeAppDisplay, setAppDisplay} from "../../actions/action.apps";
-import {sellHouse, setSellHouse, setSellInfoHouse, setSellStatusHouse} from "../../actions/action.info";
+import {sellHouse, disableHomePhone, setSellInfoHouse, setSellStatusHouse} from "../../actions/action.info";
 import MainDisplay from "../MainDisplay";
 import HeaderHouseApp from "./HeaderHouseApp";
 
@@ -13,22 +13,29 @@ class Success extends Component {
         this.back = this.back.bind(this);
     }
 
-    back() {
-        const { house, setApp, sellHouse } = this.props;
+    componentDidMount() {
+        const { house, sellHouse, disableHome } = this.props;
 
+        disableHome(false);
         sellHouse(house.name);
+    }
+
+    back() {
+        const { house, setApp } = this.props;
+
         setApp({ name: 'MainDisplay', form: <MainDisplay /> });
     }
 
     render() {
 
-        const { house } = this.props;
+        const { name, area } = this.props;
+        console.log(name, area);
 
         return (
             <Fragment>
                 <div className='back_page-phone-react'>
 
-                    <HeaderHouseApp house={house}/>
+                    <HeaderHouseApp house={{name, area}}/>
 
                     <div style={{textAlign: 'center', marginTop: '50%'}}>
                         <svg id="Group_104" data-name="Group 104" xmlns="http://www.w3.org/2000/svg" width="40%" height="40%" viewBox="0 0 100.956 100.956">
@@ -59,12 +66,11 @@ class Success extends Component {
 
 const mapStateToProps = state => ({
     ...state,
-    house: state.info.houses[0]
 });
 
 const mapDispatchToProps = dispatch => ({
     setApp: app => dispatch(setAppDisplay(app)),
-    setSell: flag => dispatch(setSellHouse(flag)),
+    disableHome: state => dispatch(disableHomePhone(state)),
     setSellStatus: status => dispatch(setSellStatusHouse(status)),
     setSellInfo: info => dispatch(setSellInfoHouse(info)),
     sellHouse: name => dispatch(sellHouse(name))

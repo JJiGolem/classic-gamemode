@@ -6,5 +6,6 @@ module.exports = {
     /// Событие инициализации сервера
     "init": () => {
         test.test();
+        inited(__dirname);
     },
 };

@@ -40,7 +40,11 @@ let getBizByPlayerPos = function(player) {
     return bizes.find(x => player.dist(new mp.Vector3(x.info.x, x.info.y, x.info.z)) <= 10);
 }
 let getDateDays = function(date) {
-    return parseInt((date.getTime() - new Date().getTime()) / (24 * 60 * 60 * 1000));
+    let dateNowStringArray = new Date().toLocaleDateString().split('-');
+    let dateStringArray = date.toLocaleDateString().split('-');
+    let dateNow = new Date(dateNowStringArray[0], dateNowStringArray[1], dateNowStringArray[2]);
+    date = new Date(dateStringArray[0], dateStringArray[1], dateStringArray[2]);
+    return Math.ceil(Math.abs(date.getTime() - dateNow.getTime()) / (1000 * 3600 * 24));
 };
 let getBizRent = function(biz) {
     return biz.info.price * bizesModules[biz.info.type].rentPerDayMultiplier;
@@ -109,7 +113,7 @@ let getBizInfoForApp = function(biz) {
         resources: biz.info.productsCount,
         price: biz.info.price,
         statistics: biz.info.BizStatistics,
-        order: null,
+        order: { productsCount: biz.info.productsOrder, productsPrice: biz.info.productsOrderPrice },
         resourcePriceMin: bizesModules[biz.info.type].productPrice * minMultiplier,
         resourcePriceMax: bizesModules[biz.info.type].productPrice * maxMultiplier
     };
@@ -164,7 +168,9 @@ let bizUpdateCashBox = async function(id, money) {
         currentDay.money += bizMoney;
         currentDay.save();
     }
-    biz.info.save();
+    await biz.info.save();
+    let player = mp.players.toArray().find(player => player && player.character && player.character.id == biz.info.characterId);
+    player != null && player.call("biz.cashbox.update", [biz.info.cashBox]);
 };
 let addProducts = async function(id, count) {
     let biz = getBizById(id);
@@ -213,7 +219,7 @@ let destroyOrder = async function(id) {
 let getOrder = function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
-    if (biz.isOrderTaken) return false;
+    if (biz.isOrderTaken) return true;
     biz.isOrderTaken = true;
     let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
     player != null && player.call("biz.order.take", [true]);
@@ -222,31 +228,43 @@ let getOrder = function(id) {
 let dropOrder = function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
-    if (!biz.isOrderTaken) return false;
+    if (!biz.isOrderTaken) return true;
     biz.isOrderTaken = false;
     let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
     player != null && player.call("biz.order.take", [false]);
     return true;
 }
-let readyOrder = async function(id) {
+let readyOrder = async function(id, productsNumber) {
     let biz = getBizById(id);
-    if (biz == null) return false;
-    if (!biz.isOrderTaken) return false;
+    if (biz == null) return null;
+    if (!biz.isOrderTaken) return null;
     let addedProducts = 0;
-    if (biz.info.productsCount + biz.info.productsOrder > biz.info.productsMaxCount) {
+    if (productsNumber > biz.info.productsOrder) productsNumber = biz.info.productsOrder;
+    if (biz.info.productsCount + productsNumber > biz.info.productsMaxCount) {
         addedProducts = biz.info.productsMaxCount - biz.info.productsCount;
         biz.info.productsCount = biz.info.productsMaxCount;
     }
     else {
-        addedProducts = biz.info.productsOrder;
-        biz.info.productsCount += biz.info.productsOrder;
+        addedProducts = productsNumber;
+        biz.info.productsCount += productsNumber;
     }
-    biz.info.productsOrder = null;
-    biz.info.productsOrderPrice = null;
+    let pay = null;
+    if (productsNumber < biz.info.productsOrder) {
+        pay = biz.info.productsOrderPrice;
+        biz.info.productsOrderPrice = parseInt((1 - productsNumber/biz.info.productsOrder) * biz.info.productsOrderPrice);
+        pay -= biz.info.productsOrderPrice;
+        biz.info.productsOrder = biz.info.productsOrder - productsNumber;
+    }
+    else {
+        pay = biz.info.productsOrderPrice;
+        biz.info.productsOrder = null;
+        biz.info.productsOrderPrice = null;
+    }
+    
     await biz.info.save();
     let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
     player != null && player.call("biz.order.complete", [addedProducts]);
-    return true;
+    return {productsOrder: biz.info.productsOrder, productsOrderPrice: biz.info.productsOrderPrice, pay: pay};
 }
 
 module.exports = {

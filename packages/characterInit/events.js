@@ -7,6 +7,7 @@ let utils = call("utils");
 module.exports = {
     "init": () => {
         characterInit.moduleInit();
+        inited(__dirname);
     },
     "auth.done": (player) => {
         player.characterInit = {
@@ -39,19 +40,11 @@ module.exports = {
         player.call('characterInit.done');
         characterInit.spawn(player);
         player.authTime = Date.now();
-        logger.log(`Авторизовал персонажа`, "characterInit", player);
+        logger.log(`Авторизовал персонажа (IP: ${player.ip})`, "characterInit", player);
     },
     /// События создания персоонажа
-    "player.joined": player => {
-        player.usingCreator = false;
-    },
     "characterInit.create.check": (player, fullname, charData) => {
         characterInit.save(player, fullname, charData);
-    },
-    "characterInit.create.exit": player => {
-        if (player.usingCreator) {
-            player.usingCreator = false;
-        }
     },
     "characterInit.loadCharacter": (player) => {
         characterInit.applyCharacter(player);
@@ -71,6 +64,10 @@ module.exports = {
             player.character.h = player.heading;
         }
         player.character.save();
+
+        player.account.lastIp = player.ip;
+        player.account.lastDate = new Date();
+        player.account.save();
         logger.log(`Деавторизовал персонажа`, "characterInit", player);
     },
 }

@@ -24,6 +24,9 @@ export default function apps(state = initialState, action) {
         case 'SET_APP':
             return [ payload ];
 
+        case 'SET_APPS':
+            return payload;
+
         case 'CLOSE_APP':
             const newState = [ ...state ];
             if (newState.length > 1) {

@@ -27,6 +27,7 @@ mp.events.add('hud.load', () => {
 
     // список игроков на F9
     mp.keys.bind(0x78, true, function() {
+        if (mp.game.ui.isPauseMenuActive()) return;
         if (playersListState) {
             mp.events.call('hud.players.list.show', false)
         } else {

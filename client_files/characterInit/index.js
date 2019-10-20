@@ -37,8 +37,8 @@ let creatorTimer = null;
 
 mp.events.add('characterInit.init', (characters, slots) => {
     mp.gui.cursor.show(true, true);
-    currentCharacter = 0;
     if (characters != null) {
+        currentCharacter = 0;
         charNum = characters.length;
         for (let i = 0; i < characters.length; i++) {
             charInfos.push(characters[i].charInfo);
@@ -52,11 +52,21 @@ mp.events.add('characterInit.init', (characters, slots) => {
 
     mp.players.local.position = new mp.Vector3(camPos[0], camPos[1], camPos[2] + 10);
 
-    mp.utils.cam.create(camPos[0], camPos[1], camPos[2], camPos[0] + camDist * sinCamRot, camPos[1] + camDist * cosCamRot, camPos[2] + camPosZDelta);
-
-    createPeds();
-    setInfo();
-    mp.callCEFV(`characterInfo.slots = ${slots}`);
+    if (characters != null) {
+        mp.utils.cam.create(camPos[0], camPos[1], camPos[2], camPos[0] + camDist * sinCamRot, camPos[1] + camDist * cosCamRot, camPos[2] + camPosZDelta, 60);
+        createPeds();
+        setInfo();
+        mp.callCEFV(`characterInfo.slots = ${slots}`);
+    }
+    else {
+        mp.utils.cam.tpTo(camPos[0] + currentCharacter * pedDist * sinPedRot,
+            camPos[1] + currentCharacter * pedDist * cosPedRot,
+            camPos[2],
+            (camPos[0] + currentCharacter * pedDist * sinPedRot) + camDist * sinCamRot,
+            (camPos[1] + currentCharacter * pedDist * cosPedRot) + camDist * cosCamRot,
+            camPos[2] + camPosZDelta, 60);
+        mp.callCEFV(`characterInfo.show = true;`);
+    }
 
     mp.players.local.setAlpha(0);
 });
@@ -178,6 +188,7 @@ let setInfo = function() {
 };
 
 let chooseLeft = function() {
+    if (mp.game.ui.isPauseMenuActive()) return;
     if (currentCharacter > 0) {
         currentCharacter--;
     }
@@ -198,6 +209,7 @@ let chooseLeft = function() {
 };
 
 let chooseRight = function() {
+    if (mp.game.ui.isPauseMenuActive()) return;
     if (currentCharacter < charNum) {
         currentCharacter++;
     }
@@ -217,7 +229,9 @@ let chooseRight = function() {
 };
 
 let choose = function() {
-    if(isBinding) {
+    if (mp.game.ui.isPauseMenuActive()) return;
+    if (currentCharacter > slots) return;
+    if (isBinding) {
         binding(false);
         isBinding = false;
         if (creatorTimer != null) clearTimeout(creatorTimer);

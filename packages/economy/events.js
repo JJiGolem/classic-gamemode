@@ -7,6 +7,7 @@ let fs = require('fs');
 module.exports = {
     "init": () => {
         economy.init();
+        inited(__dirname);
     },
     "economy.change": (player, data) => {
         economy.setByType(JSON.parse(data));

@@ -98,6 +98,7 @@ module.exports = {
     },
     createWarehouseMarker(faction) {
         if (!faction.wX) return;
+        var header = `Склад ${faction.name}`;
         var pos = new mp.Vector3(faction.wX, faction.wY, faction.wZ - 1);
 
         var warehouse = mp.markers.new(1, pos, 0.5, {
@@ -112,13 +113,27 @@ module.exports = {
             } else if (player.hasAttachment("medicinesBox")) {
                 boxType = "medicines";
             } else if (this.isBandFaction(player.character.factionId) && this.isArmyFaction(faction)) {
-                if (faction.ammo < this.ammoBox) return notifs.error(player, `Склад пустой`, `Склад ${faction.name}`);
+                // банды тырят БП у армии
+                if (faction.ammo < this.ammoBox) return notifs.error(player, `Склад пустой`, header);
                 player.addAttachment("ammoBox");
                 this.setAmmo(faction, faction.ammo - this.ammoBox);
                 return;
+            } else if (player.character.factionId == faction.id) {
+                var rank = this.getRank(faction, faction.ammoRank);
+                if (player.character.factionRank < rank.id) return notifs.error(player, `Взятие доступно с ${rank.name}`, header);
+                // сотрудник берет БП/Мед со склада
+                var boxType = "ammo";
+                if (this.isHospitalFaction(faction)) boxType = "medicines";
+
+                if (faction[boxType] < this[boxType + "Box"]) return notifs.error(player, `Склад пустой`, header);
+
+                player.addAttachment(boxType + "Box");
+                if (boxType == "ammo") this.setAmmo(faction, faction.ammo - this.ammoBox);
+                else this.setMedicines(faction, faction.medicines - this.medicinesBox);
+                return;
             }
 
-            if (!this.canFillWarehouse(player, boxType, faction))
+            if (boxType && !this.canFillWarehouse(player, boxType, faction))
                 return notifs.error(player, `Нет прав для пополнения`, `Склад ${faction.name}`);
 
             player.call("factions.insideFactionWarehouse", [true, boxType]);
@@ -323,6 +338,12 @@ module.exports = {
         faction.blipColor = color;
         faction.save();
     },
+    setAmmoRank(faction, rank) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+
+        faction.ammoRank = rank;
+        faction.save();
+    },
     addMember(faction, player) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         var character = player.character;
@@ -375,8 +396,7 @@ module.exports = {
             include: {
                 model: db.Models.CharacterInventoryParam,
                 where: {
-                    [Op.or]: [
-                        {
+                    [Op.or]: [{
                             key: "owner",
                             value: character.id
                         },
@@ -592,7 +612,8 @@ module.exports = {
         label.text = text;
     },
     getWarehouseLabelText(faction) {
-        var text = `~y~Боеприпасы:\n~w~${faction.ammo} из ${faction.maxAmmo}`;
+        var text = ``;
+        if (faction.maxAmmo) text += `~y~Боеприпасы:\n~w~${faction.ammo} из ${faction.maxAmmo}`;
         if (faction.maxMedicines) text += `\n~b~Медикаменты:\n~w~${faction.medicines} из ${faction.maxMedicines}`;
         return text;
     },

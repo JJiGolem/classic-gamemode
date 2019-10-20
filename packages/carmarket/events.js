@@ -9,6 +9,7 @@ let PRICE_CONFIG = carmarket.getPriceConfig();
 module.exports = {
     "init": () => {
         carmarket.init();
+        inited(__dirname);
     },
     "vehicles.loaded": async () => {
         await carmarket.loadCarMarketData();

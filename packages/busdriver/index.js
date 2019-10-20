@@ -85,8 +85,8 @@ module.exports = {
         return RENT_PRICE;
     },
     getRoutesLevelByModel(model) {
-        if (model == 'rentalbus') return 0;
-        if (model == 'coach') return 1;
+        if (model == 'rentalbus' || model == 'coach') return 0;
+        //if (model == 'coach') return 1;
         return null;
     },
     getAvailiableRoutes(player) {

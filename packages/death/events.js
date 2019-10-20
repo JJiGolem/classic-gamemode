@@ -4,7 +4,7 @@ let notifs = call('notifications');
 
 module.exports = {
     "init": () => {
-
+        inited(__dirname);
     },
     "death.wait": (player) => {
         player.spawn(player.position);
