@@ -79,6 +79,7 @@ let dropHouse = function(house, sellToGov) {
         house.info.characterNick = null;
         house.info.date = null;
         house.info.isOpened = true;
+        house.info.holder = 0;
         changeBlip(house);
         house.info.save().then(() => {
             if (money == null) return console.log("[HOUSES] House dropped " + house.info.id + ". But player didn't getmoney");
