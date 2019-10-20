@@ -7,7 +7,7 @@ require('utils');
 require('browser');
 let browserLoaded = false;
 let initDone = false;
-
+// 2d text on
 /// Автоподключение клиентских модулей
 mp.events.add('init', (activeModules) => {
     activeModules.forEach(moduleName => {
@@ -23,6 +23,7 @@ mp.events.add('init', (activeModules) => {
 mp.events.add('browserDomReady', (browser) => {
     browserLoaded = true;
     if (initDone) {
+        // 2d text off
         mp.events.callRemote('player.joined');
     }
 });

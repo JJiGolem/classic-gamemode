@@ -52,5 +52,12 @@ module.exports = {
     isInWhiteList(socialClub) {
         let nick = allowed.find(x => x.socialClub == socialClub);
         return nick ? true : false;
+    },
+    pushToAllowed(record) {
+        allowed.push(record);
+    },
+    removeFromAllowed(socialClub) {
+        let index = allowed.findIndex(x => x.socialClub == socialClub);
+        allowed.splice(index, 1);
     }
 }
