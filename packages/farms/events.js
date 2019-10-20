@@ -426,8 +426,8 @@ module.exports = {
             veh.setVariable("label", null);
             delete veh.products;
             notifs.success(player, `Зерно продано`, header);
+            jobs.addJobExp(player, carrier.exp);
         }
-        player.call(`selectMenu.hide`);
 
         var price = count * farm.grainPrice;
         if (farm.playerId) {
@@ -444,8 +444,6 @@ module.exports = {
                 if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
             }, `Продажа зерна на ферме #${farm.id} без владельца`);
         }
-
-        jobs.addJobExp(player, carrier.exp);
     },
     "farms.soilsWarehouse.take": (player) => {
         var header = `Загрузка удобрения`;
@@ -534,6 +532,7 @@ module.exports = {
             veh.setVariable("label", null);
             delete veh.products;
             notifs.success(player, `Удобрение продано`, header);
+            jobs.addJobExp(player, carrier.exp);
         }
         player.call(`selectMenu.hide`);
 
@@ -552,8 +551,6 @@ module.exports = {
                 if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
             }, `Продажа удобрения на ферме #${farm.id} без владельца`);
         }
-
-        jobs.addJobExp(player, carrier.exp);
     },
     "farms.grains.price.set": (player, val) => {
         var header = `Цена на зерно`
