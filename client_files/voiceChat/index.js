@@ -58,7 +58,6 @@ mp.speechChanel.connect = (player, channel) => {
 
 /// Отключить выбранного игрока от канала связи
 mp.speechChanel.disconnect = (player, channel, isSend = false) => {
-    mp.console(JSON.stringify(player));
     mp.console(JSON.stringify(channel));
     if (player == null) return;
     let index = listeners.findIndex( x => x.playerId == player.remoteId);
