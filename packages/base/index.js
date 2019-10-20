@@ -84,7 +84,6 @@ db.connect(function() {
             }
         } 
     });
-    //modulesToLoad = activeServerModules;
 
     fs.readdirSync(path.dirname(__dirname) + "/../client_packages").forEach(file => {
         !new Array('base', 'index.js', '.listcache', 'browser', 'utils').includes(file) && !ignoreClientModules.includes(file) && activeClientModules.push(file);
