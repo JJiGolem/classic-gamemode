@@ -58,7 +58,6 @@ mp.events.add('phone.call.start.ans', function (ans, targetId) {
     }
     //playCallAnimation(false);
     playHoldAnimation(true, 1000);
-    mp.chat.debug(ans);
     /// Ответ на звонок
     mp.callCEFR('phone.call.ans', [ans]);
 });
@@ -66,6 +65,7 @@ mp.events.add('phone.call.start.ans', function (ans, targetId) {
 /// Сброс на нашем конце
 mp.events.add('phone.call.end', function () {
     mp.events.callRemote('phone.call.end', callerId);
+    mp.chat.debug('phone.call.end');
     mp.speechChanel.disconnect(mp.players.atRemoteId(callerId), "phone");
     callerId = -1;
     //playCallAnimation(false);
@@ -74,6 +74,7 @@ mp.events.add('phone.call.end', function () {
 
 /// Сброс звонка на другом конце
 mp.events.add('phone.call.end.in', function () {
+    mp.chat.debug('phone.call.end.in');
     mp.speechChanel.disconnect(mp.players.atRemoteId(callerId), "phone");
     callerId = -1;
     mp.callCEFR('phone.call.end', []);
@@ -104,7 +105,6 @@ mp.events.add('phone.call.in.ans', function (ans) {
     else {
         callerId = -1;
     }
-    mp.chat.debug(ans);
 });
 
 mp.events.add("playerDeath", (player) => {
