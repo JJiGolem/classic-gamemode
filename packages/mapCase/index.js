@@ -410,6 +410,12 @@ module.exports = {
         var rec = mp.players.at(ad.playerId);
         var header = factions.getFaction(7).name;
         if (rec && rec.character) notifs.success(rec, `${player.name} принял ваше объявление`, header);
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(rec, `${player.name} принял объявление от ${ad.author}`, header);
+        });
     },
     cancelAd(player, ad) {
         var rec = mp.players.at(ad.playerId);
