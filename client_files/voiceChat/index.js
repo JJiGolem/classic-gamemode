@@ -58,8 +58,11 @@ mp.speechChanel.connect = (player, channel) => {
 
 /// Отключить выбранного игрока от канала связи
 mp.speechChanel.disconnect = (player, channel, isSend = false) => {
+    console.log(player);
+    console.log(channel);
     if (player == null) return;
     let index = listeners.findIndex( x => x.playerId == player.remoteId);
+    console.log(index);
     console.log(listeners);
     if (channel == null) {
         index != -1 && listeners.splice(index, 1);
