@@ -5,6 +5,7 @@ let notifs = call('notifications');
 module.exports = {
     "init": () => {
         carrier.init();
+        inited(__dirname);
     },
     "carrier.job.start": (player) => {
         if (!player.character.truckLicense) return notifs.error(player, `Необходима лицензия на фуры`, `Грузоперевозчик`);

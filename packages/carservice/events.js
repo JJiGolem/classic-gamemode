@@ -10,6 +10,7 @@ let PRODUCT_PRICE = carservice.productPrice;
 module.exports = {
     "init": () => {
         carservice.init();
+        inited(__dirname);
     },
     "carservice.jobshape.enter": (player) => {
         if (player.character.job != 1) {

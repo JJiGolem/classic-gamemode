@@ -6,6 +6,7 @@ let allowed = whitelist.getAllowed();
 module.exports = {
     "init": () => {
         whitelist.init();
+        inited(__dirname);
     },
     "player.joined": (player) => {
         if (!whitelist.isEnabled()) return;

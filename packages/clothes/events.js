@@ -6,6 +6,7 @@ let weather = call('weather');
 module.exports = {
     "init": () => {
         clothes.init();
+        inited(__dirname);
     },
     "clothes.clime.check": (player) => {
         var temperature = weather.getCurrentWeather().temperature;

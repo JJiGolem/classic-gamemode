@@ -10,6 +10,7 @@ module.exports = {
     /// Событие инициализации сервера
     "init": () => {
         housesService.init();
+        inited(__dirname);
     },
     "player.joined": (player) => {
         player.house = {

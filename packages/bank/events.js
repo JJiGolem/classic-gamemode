@@ -13,6 +13,7 @@ module.exports = {
         houseService = call("houses");
         bizService = call("bizes");
         bank.init();
+        inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
         if (!shape.isBank) return;

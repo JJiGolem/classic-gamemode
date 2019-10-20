@@ -4,6 +4,7 @@ let documents = require("./index.js");
 module.exports = {
     "init": () => {
         documents.init();
+        inited(__dirname);
     },
     // "documents.showTo": (player, type, targetId, data) => {
     //     if (player.id == targetId) return mp.events.call('documents.show', player, type, targetId, data);

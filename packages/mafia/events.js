@@ -9,6 +9,7 @@ let police = call('police');
 module.exports = {
     "init": () => {
         mafia.init();
+        inited(__dirname);
     },
     "characterInit.done": (player) => {
         player.call(`mafia.mafiaZones.init`, [mafia.convertToClientMafiaZones()]);

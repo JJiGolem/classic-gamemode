@@ -9,6 +9,7 @@ let routes = call('routes');
 module.exports = {
     "init": () => {
         farms.init();
+        inited(__dirname);
     },
     "farms.buy": (player) => {
         var header = `Покупка фермы`;

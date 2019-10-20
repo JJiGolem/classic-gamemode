@@ -5,6 +5,7 @@ let money = call('money');
 module.exports = {
     "init": () => {
         fuelstations.init();
+        inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;

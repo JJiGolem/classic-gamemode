@@ -5,6 +5,7 @@ let clothes = call('clothes');
 module.exports = {
     "init": () => {
         clothingShop.init();
+        inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;

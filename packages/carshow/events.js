@@ -2,6 +2,7 @@ var carshow = require('./index.js');
 module.exports = {
     "init": () => {
         //carshow.init();
+        inited(__dirname);
     },
     "vehicles.loaded": async () => {
         await carshow.init();
