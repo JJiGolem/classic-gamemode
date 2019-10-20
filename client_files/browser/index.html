@@ -217,7 +217,7 @@
             <div class="arrow arr-up" :class="{active: menu.j > 0}"></div>
             <div class="items">
                 <div class="item" v-for="(item, index) in items" v-show="isItemShow(index)" :class="{selected: index == menu.i}">
-                    <div class="name" :class="{button: item.location}" :style="{'text-align': item.location}">{{ item.text }}</div>
+                    <div class="name" :class="{button: item.location}" :style="{'text-align': item.location}">{{ item.text.replace(/(\\)/g, "") }}</div>
                     <div class="value" v-if="item.values && valuesType(index) != 1">
                         {{ item.values[item.i] }}
                         <img :src="(menu.i != index)? 'img/selectMenu/edit.png' : 'img/selectMenu/edit-selected.png'" v-if="valuesType(index) == 3" />
