@@ -20,7 +20,7 @@ body {
 }
 
 body input::selection {
-    background-color: #f1d941aa;
+    background-color: #FFDF29;
     color: #000;
 }
 
