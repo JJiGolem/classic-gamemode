@@ -19,6 +19,11 @@ body {
     height: 100vh;
 }
 
+body input::selection {
+    background-color: #f1d941aa;
+    color: #000;
+}
+
 ::-webkit-scrollbar-button {
     background-image: url('');
     background-repeat: no-repeat;
