@@ -207,4 +207,14 @@ module.exports = {
             notifs.info(rec, text, `Грузоперевозчики`);
         });
     },
+    // получить арендованный грузовик игрока
+    getVehByDriver(player) {
+        return mp.vehicles.toArray().find(x => x.db && x.db.key == 'job' && x.db.owner == 4 && x.driver && x.driver.playerId == player.id && x.driver.characterId == player.character.id);
+    },
+    // получить игрока, который арендовал грузовик
+    getDriverByVeh(veh) {
+        if (!veh.driver) return;
+        var d = veh.driver;
+        return mp.players.toArray().find(x => x.character && x.id == d.playerId && x.character.id == d.characterId);
+    },
 };

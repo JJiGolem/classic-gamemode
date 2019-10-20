@@ -178,14 +178,28 @@ module.exports = {
             price: carrier.vehPrice
         }]);
         var characterId = player.character.id;
-        if (vehicle.driver.characterId != characterId) return out(`Грузовик арендован другим игроком`);
+        if (vehicle.driver.characterId != characterId) {
+            var driver = carrier.getDriverByVeh(vehicle);
+            if (!driver) delete vehicle.driver;
+            else return out(`Грузовик арендован другим игроком`);
+        }
         if (vehicle.products) return notifs.info(player, `Загружено: ${vehicle.products.name}`, `Товар`);
     },
     "playerQuit": (player) => {
         if (!player.character || player.character.job != 4) return;
         carrier.dropBizOrder(player);
+
+        var veh = carrier.getVehByDriver(player);
+        if (veh) delete veh.driver;
     },
     "vehicle.respawned": (veh) => {
+        if (!veh.db || veh.db.key != "job" || veh.db.owner != 4) return;
         carrier.dropBizOrderByVeh(veh);
+        delete veh.driver;
+    },
+    "jobs.leave": (player) => {
+        if (player.character.job != 4) return;
+        var veh = carrier.getVehByDriver(player);
+        if (veh) delete veh.driver;
     },
 }
