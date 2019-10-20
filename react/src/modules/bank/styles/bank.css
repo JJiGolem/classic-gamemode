@@ -201,24 +201,20 @@
     font-size: 75%;
 }
 
-/*.input_label-bank-react {*/
-/*    text-align: left;*/
-/*    margin-left: 10%;*/
-/*    font-size: 90%;*/
-/*}*/
-
 .button_input-bank-react {
     outline: none;
     background: #00932B;
-    border: 1px solid #00932B;
-    border-radius: 0 5px 5px 0;
+    margin-bottom: 5%;
     color: white;
-    box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.28);
-    padding: 3% 3% 3.2% 3%;
+    padding: 3%;
+    width: 15%;
+    height: 4%;
     box-sizing: border-box;
+    border-radius: 0px 5px 5px 0px;
+    border: 1px solid #00932B;
+    border-left: none;
+    box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.28);
     font-size: 75%;
-    display: inline-block;
-    /*float: right;*/
 }
 
 .buttons_panel-bank-react {
