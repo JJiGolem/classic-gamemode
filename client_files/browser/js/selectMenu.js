@@ -60,7 +60,7 @@ var selectMenu = new Vue({
 
                         mp.trigger('characterInit.create.setGender', e.valueIndex);
                     }
-                    if (eventName == "onEscapePressed" || eventName == 'onBackspacePressed') {
+                    if (eventName == "onEscapePressed") {
                         selectMenu.menu = selectMenu.menus["characterCreateExitMenu"];
                     }
                     if (eventName == "onItemSelected") {
