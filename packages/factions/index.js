@@ -329,6 +329,12 @@ module.exports = {
 
         mp.events.call(`player.faction.changed`, player, oldVal);
     },
+    isLeader(player) {
+        if (!player.character.factionId) return false;
+
+        var maxRank = this.getMaxRank(player.character.factionId);
+        return player.character.factionRank == maxRank.id;
+    },
     setBlip(faction, type, color) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         var blip = this.getBlip(faction.id);

@@ -128,6 +128,7 @@ module.exports = {
         var faction = factions.getFaction(character.factionId);
         var header = `Общак ${faction.name}`;
 
+        if (!factions.isLeader(player)) return notifs.error(player, `Нет доступа`, header);
         if (faction.cash < sum) return notifs.error(player, `Общак не имеет $${sum}`, header);
         money.addCash(player, sum, (res) => {
             if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
