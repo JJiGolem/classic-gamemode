@@ -43,11 +43,9 @@ module.exports = {
             this.createBlip(fisher);
         });
 
-        console.log(fishers);
-
-        mp.players.forEach(player => {
-            player.call('fishing.fishers.init', [fishers]);
-        })
+        // mp.players.forEach(player => {
+        //     player.call('fishing.fishers.init', [fishers]);
+        // })
     },
 
     createFisherColshape(fisher) {

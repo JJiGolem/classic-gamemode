@@ -9,30 +9,6 @@ class Phone extends Component {
     constructor(props) {
         super(props);
         this.state = {};
-
-        this.disabledHome = this.disabledHome.bind(this);
-    }
-
-    disabledHome() {
-        const { info } = this.props;
-
-        if (info.isCall) {
-            return true;
-        }
-
-        if (info.houses.length > 0) {
-            if (info.houses.some(house => house.isSell === true)) {
-                return true;
-            }
-        }
-
-        if (info.biz.length > 0) {
-            if (info.biz.some(biz => biz.isSell === true)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     render() {
@@ -51,7 +27,7 @@ class Phone extends Component {
                     <div className="panel_home-phone-react">
                         <button id="but_home-phone-react"
                                 onClick={() => setApp({name: 'MainDisplay', form: <MainDisplay/>})}
-                                disabled={info.isCall || (info.houses.length > 0 && info.houses.some(h => h.isSell))}
+                                disabled={info.isDisabled || info.isCall}
                         >
                         </button>
                     </div>

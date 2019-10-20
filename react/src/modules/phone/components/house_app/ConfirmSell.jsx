@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {addAppDisplay, closeAppDisplay} from "../../actions/action.apps";
-import {setSellHouse, setSellInfoHouse, setSellStatusHouse} from "../../actions/action.info";
+import {disableHomePhone, setSellInfoHouse, setSellStatusHouse} from "../../actions/action.info";
 import AnsSell from "./AnsSell";
 import HeaderHouseApp from "./HeaderHouseApp";
 import Error from "./Error";
@@ -24,20 +24,20 @@ class ConfirmSell extends Component {
     }
 
     cancel() {
-        const { closeApp, setSell, setSellInfo } = this.props;
+        const { closeApp, disableHome, setSellInfo } = this.props;
 
         // eslint-disable-next-line no-undef
         mp.trigger('house.sell.stop');
 
-        setSell(false);
+        disableHome(false);
         setSellInfo(null);
         closeApp();
     }
 
     confirmSell() {
-        const { setSellStatus, setSell } = this.props;
+        const { setSellStatus, setSell, disableHome } = this.props;
 
-        setSell(true);
+        disableHome(true);
         this.setState({ isConfirm: true });
 
         // eslint-disable-next-line no-undef
@@ -52,10 +52,6 @@ class ConfirmSell extends Component {
 
     getContent() {
         const { info, addApp, closeApp, setSell } = this.props;
-
-        if (!info.houses[0].isSell) {
-            setSell(false);
-        }
 
         if (info.houses[0].ansSell.nick != null) {
             return (
@@ -127,7 +123,7 @@ const mapDispatchToProps = dispatch => ({
     closeApp: () => dispatch(closeAppDisplay()),
     addApp: app => dispatch(addAppDisplay(app)),
     setSellStatus: status => dispatch(setSellStatusHouse(status)),
-    setSell: flag => dispatch(setSellHouse(flag)),
+    disableHome: state => dispatch(disableHomePhone(state)),
     setSellInfo: info => dispatch(setSellInfoHouse(info)),
 });
 

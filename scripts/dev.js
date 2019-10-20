@@ -6,6 +6,7 @@ const PATHS = require('./paths');
 
 let changedFiles = [];
 let files = [];
+let ignoreFiles = [ '.listcache', 'babelPolyfill.js' ];
 
 let DATE_CHANGE = null;
 
@@ -23,7 +24,7 @@ function deleteUnusedFiles(currentPath) {
             if (fs.lstatSync(updatePath).isDirectory()) {
                 deleteUnusedFiles(updatePath);
             }
-        } else if (item != '.listcache') {
+        } else if (!ignoreFiles.includes(item)) {
            rimraf.sync(updatePath);
         }
     });

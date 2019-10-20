@@ -8,6 +8,11 @@ export const setAppDisplay = app => ({
     payload: app
 });
 
+export const setAppsDisplay = apps => ({
+    type: 'SET_APPS',
+    payload: apps
+});
+
 export const closeAppDisplay = () => ({
     type: 'CLOSE_APP'
 });
