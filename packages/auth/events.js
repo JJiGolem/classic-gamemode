@@ -132,7 +132,7 @@ module.exports = {
                     socialClub: player.socialClub,
                     [Op.and]: {
                         email: data.email,
-                        confirmEmail: 0
+                        confirmEmail: 1
                     }
                 }
             }
