@@ -69,6 +69,7 @@ var selectMenu = new Vue({
                                 break;
                             case "Внешность":
                                 selectMenu.menu = selectMenu.menus["characterCreateViewMenu"];
+                                mp.trigger("characterInit.camera.head");
                                 break;
                             case "Сохранить и продолжить":
                                 mp.trigger('characterInit.create.continue');
@@ -680,6 +681,14 @@ var selectMenu = new Vue({
                     if (eventName == "onEscapePressed" || eventName == 'onBackspacePressed') {
                         selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
                     }
+                    if (eventName == "onItemFocusChanged") {
+                        if (e.itemName == "Волосы на теле" || e.itemName == "Цвет волос на теле") {
+                            mp.trigger("characterInit.showTorso", 1);
+                        }
+                        else {
+                            mp.trigger("characterInit.showTorso", 0);
+                        }
+                    }
                     if (eventName == "onItemValueChanged") {
                         switch (e.itemName) {
                             case "Прическа":
@@ -792,6 +801,7 @@ var selectMenu = new Vue({
                     if (eventName == "onItemSelected") {
                         switch (e.itemName) {
                             case "Назад":
+                                mp.trigger("characterInit.camera.head");
                                 selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
                                 break;
                         }
