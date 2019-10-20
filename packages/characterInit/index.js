@@ -257,7 +257,6 @@ module.exports = {
     sendToCreator(player) {
         player.position = creatorPlayerPos;
         player.heading = creatorPlayerHeading;
-        player.usingCreator = true;
         player.call("characterInit.create", [true, JSON.stringify(player.characterInfo)]);
     },
     applyCharacter(player) {

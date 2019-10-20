@@ -1,6 +1,6 @@
 let breakdowns = require('vehicles/breakdowns.js');
 let sell = require('vehicles/sell.js');
-let garage = require('\vehicles/garage.js');
+let garage = require('vehicles/garage.js');
 let radiosync = require('vehicles/radiosync.js');
 let currentSirenState = false;
 

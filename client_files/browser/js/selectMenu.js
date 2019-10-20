@@ -29,9 +29,9 @@ var selectMenu = new Vue({
                     {
                         text: "Сохранить и продолжить",
                     },
-                    {
-                        text: "Сбросить все изменения",
-                    },
+                    // {
+                    //     text: "Сбросить все изменения",
+                    // },
                     {
                         text: "Выйти без сохранения",
                     }
@@ -55,8 +55,7 @@ var selectMenu = new Vue({
                         selectMenu.menus["characterCreateParentsMenu"].items[2].i = e.valueIndex == 0 ? 0 : 4;
                         selectMenu.menus["characterCreateParentsMenu"].items[3].i = 0;
                         /// Возвращение внешности к базовому виду
-                        let menu = selectMenu.menus["characterCreateViewMenu"];
-                        menu.items = (e.valueIndex == 0) ? cloneObj(menu.defaultItemsMale) : cloneObj(menu.defaultItemsFemale);
+                        selectMenu.menus["characterCreateViewMenu"].items = (e.valueIndex == 0) ? cloneObj(selectMenu.menus["characterCreateViewMenu"].defaultItemsMale) : cloneObj(selectMenu.menus["characterCreateViewMenu"].defaultItemsFemale);
 
                         mp.trigger('characterInit.create.setGender', e.valueIndex);
                     }
@@ -70,14 +69,15 @@ var selectMenu = new Vue({
                                 break;
                             case "Внешность":
                                 selectMenu.menu = selectMenu.menus["characterCreateViewMenu"];
+                                mp.trigger("characterInit.camera.head");
                                 break;
                             case "Сохранить и продолжить":
                                 mp.trigger('characterInit.create.continue');
                                 selectMenu.menu = selectMenu.menus["characterCreateNameMenu"];
                                 break;
-                            case "Сбросить все изменения":
-                                selectMenu.menu = selectMenu.menus["characterCreateResetMenu"];
-                                break;
+                            // case "Сбросить все изменения":
+                            //     selectMenu.menu = selectMenu.menus["characterCreateResetMenu"];
+                            //     break;
                             case "Выйти без сохранения":
                                 selectMenu.menu = selectMenu.menus["characterCreateExitMenu"];
                                 break;
@@ -681,6 +681,14 @@ var selectMenu = new Vue({
                     if (eventName == "onEscapePressed" || eventName == 'onBackspacePressed') {
                         selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
                     }
+                    if (eventName == "onItemFocusChanged") {
+                        if (e.itemName == "Волосы на теле" || e.itemName == "Цвет волос на теле") {
+                            mp.trigger("characterInit.showTorso", 1);
+                        }
+                        else {
+                            mp.trigger("characterInit.showTorso", 0);
+                        }
+                    }
                     if (eventName == "onItemValueChanged") {
                         switch (e.itemName) {
                             case "Прическа":
@@ -793,6 +801,7 @@ var selectMenu = new Vue({
                     if (eventName == "onItemSelected") {
                         switch (e.itemName) {
                             case "Назад":
+                                mp.trigger("characterInit.camera.head");
                                 selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
                                 break;
                         }
@@ -856,9 +865,54 @@ var selectMenu = new Vue({
                     }
                 }
             },
-            "characterCreateResetMenu": {
-                name: "charactercreatereset",
-                header: "Сбросить все изменения?", // заголовок меню, видимый на экране
+            // "characterCreateResetMenu": {
+            //     name: "charactercreatereset",
+            //     header: "Сбросить все изменения?", // заголовок меню, видимый на экране
+            //     items: [{
+            //             text: "Да",
+            //         },
+            //         {
+            //             text: "Нет",
+            //         },
+            //     ],
+            //     i: 0, // индекс выбранного пункта
+            //     j: 0, // индекс первого видимого пункта
+            //     handler(eventName) { // обработчик взаимодействия с меню
+            //         var item = this.items[this.i];
+            //         var e = {
+            //             menuName: this.name, // название меню
+            //             itemName: item.text, // текст пункта меню
+            //             itemIndex: this.i, // индекс пункта меню
+            //             itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
+            //             valueIndex: item.i, // индекс значения пункта меню
+            //         };
+            //         if (eventName == "onEscapePressed" || eventName == 'onBackspacePressed') {
+            //             selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
+            //         }
+            //         if (eventName == "onItemSelected") {
+            //             switch (e.itemName) {
+            //                 case "Да":
+            //                     selectMenu.menus["characterCreateMainMenu"].items[0].i = 0;
+            //                     /// Возвращение наследственности к базовому виду
+            //                     selectMenu.menus["characterCreateParentsMenu"].items[0].i = 0;
+            //                     selectMenu.menus["characterCreateParentsMenu"].items[1].i = 0;
+            //                     selectMenu.menus["characterCreateParentsMenu"].items[2].i = 0;
+            //                     selectMenu.menus["characterCreateParentsMenu"].items[3].i = 0;
+            //                     /// Возвращение внешности к базовому виду
+            //                     selectMenu.menus["characterCreateViewMenu"].items = cloneObj(selectMenu.menus["characterCreateViewMenu"].defaultItemsMale);
+
+            //                     mp.trigger('characterInit.create.reset');
+            //                     break;
+            //                 case "Нет":
+            //                     selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
+            //                     break;
+            //             }
+            //         }
+            //     }
+            // },
+            "characterCreateExitMenu": {
+                name: "charactercreateexit",
+                header: "Хотите выйти?", // заголовок меню, видимый на экране
                 items: [{
                         text: "Да",
                     },
@@ -891,43 +945,6 @@ var selectMenu = new Vue({
                                 selectMenu.menus["characterCreateParentsMenu"].items[3].i = 0;
                                 /// Возвращение внешности к базовому виду
                                 selectMenu.menus["characterCreateViewMenu"].items = cloneObj(selectMenu.menus["characterCreateViewMenu"].defaultItemsMale);
-
-                                mp.trigger('characterInit.create.reset');
-                                break;
-                            case "Нет":
-                                selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
-                                break;
-                        }
-                    }
-                }
-            },
-            "characterCreateExitMenu": {
-                name: "charactercreateexit",
-                header: "Хотите выйти?", // заголовок меню, видимый на экране
-                items: [{
-                        text: "Да",
-                    },
-                    {
-                        text: "Нет",
-                    },
-                ],
-                i: 0, // индекс выбранного пункта
-                j: 0, // индекс первого видимого пункта
-                handler(eventName) { // обработчик взаимодействия с меню
-                    var item = this.items[this.i];
-                    var e = {
-                        menuName: this.name, // название меню
-                        itemName: item.text, // текст пункта меню
-                        itemIndex: this.i, // индекс пункта меню
-                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null, // значение пункта меню
-                        valueIndex: item.i, // индекс значения пункта меню
-                    };
-                    if (eventName == "onEscapePressed" || eventName == 'onBackspacePressed') {
-                        selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];
-                    }
-                    if (eventName == "onItemSelected") {
-                        switch (e.itemName) {
-                            case "Да":
                                 mp.trigger('characterInit.create.exit');
                                 selectMenu.show = false;
                                 break;

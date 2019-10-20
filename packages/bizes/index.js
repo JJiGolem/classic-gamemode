@@ -40,7 +40,11 @@ let getBizByPlayerPos = function(player) {
     return bizes.find(x => player.dist(new mp.Vector3(x.info.x, x.info.y, x.info.z)) <= 10);
 }
 let getDateDays = function(date) {
-    return parseInt((date.getTime() - new Date().getTime()) / (24 * 60 * 60 * 1000));
+    let dateNowStringArray = new Date().toLocaleDateString().split('-');
+    let dateStringArray = date.toLocaleDateString().split('-');
+    let dateNow = new Date(dateNowStringArray[0], dateNowStringArray[1], dateNowStringArray[2]);
+    date = new Date(dateStringArray[0], dateStringArray[1], dateStringArray[2]);
+    return Math.ceil(Math.abs(date.getTime() - dateNow.getTime()) / (1000 * 3600 * 24));
 };
 let getBizRent = function(biz) {
     return biz.info.price * bizesModules[biz.info.type].rentPerDayMultiplier;
