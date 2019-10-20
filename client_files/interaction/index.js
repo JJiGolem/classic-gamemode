@@ -37,12 +37,12 @@ function getClosestVehicle(pos, range = MAX_RANGE) {
     let closestVehicle;
     let minDist = 99999;
     mp.vehicles.forEachInStreamRange((veh) => {
-        let distToVeh = vdist(pos, veh.position);
+        let distToVeh = mp.vdist(pos, veh.position);
         if (distToVeh < range) {
             let hoodPos = mp.utils.getHoodPosition(veh);
             let bootPos = mp.utils.getBootPosition(veh);
-            let distToHood = vdist(pos, hoodPos);
-            let distToBoot = vdist(pos, bootPos);
+            let distToHood = mp.vdist(pos, hoodPos);
+            let distToBoot = mp.vdist(pos, bootPos);
             let vehArray = [{ pos: veh.position, dist: distToVeh }, { pos: hoodPos, dist: distToHood }, { pos: bootPos, dist: distToBoot }];
             let final = getFinalPosition(vehArray);
             let finalDist = final.minDist;
@@ -64,7 +64,7 @@ function getClosestPlayer(pos, range = INTERACTION_RANGE) {
     mp.players.forEachInStreamRange((current) => {
         if (current == mp.players.local) return;
         if (current.vehicle) return;
-        var distToPlayer = vdist(pos, current.position);
+        var distToPlayer = mp.vdist(pos, current.position);
         if (distToPlayer < range) {
             if (distToPlayer < minDist) {
                 closestPlayer = current;
@@ -99,9 +99,9 @@ function getClosestPlayerOrVehicle(pos) {
     if (!closestVehicle) {
         return closestPlayer;
     }
-    var distToPlayer = vdist(pos, closestPlayer.position);
+    var distToPlayer = mp.vdist(pos, closestPlayer.position);
 
-    var distToVehicle = vdist(pos, closestVehicle.minPos);
+    var distToVehicle = mp.vdist(pos, closestVehicle.minPos);
     if (distToPlayer <= distToVehicle) {
         return closestPlayer;
     } else return closestVehicle;
@@ -229,7 +229,7 @@ mp.events.add('render', () => {
               });
         }
 
-        let dist = vdist(mp.players.local.position, position);
+        let dist = mp.vdist(mp.players.local.position, position);
         if (dist > INTERACTION_RANGE && !personalInteractionEntity) {
             currentInteractionEntity = null;
             mp.events.call('interaction.menu.close');
