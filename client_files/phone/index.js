@@ -66,16 +66,20 @@ mp.events.add('phone.call.start.ans', function (ans, targetId) {
 mp.events.add('phone.call.end', function () {
     mp.events.callRemote('phone.call.end', callerId);
     mp.console("callerId" + callerId);
-    mp.speechChanel.disconnect(mp.players.atRemoteId(callerId), "phone");
-    callerId = -1;
+    if (callerId != -1) {
+        mp.speechChanel.disconnect(mp.players.atRemoteId(callerId), "phone");
+        callerId = -1;
+    }
     //playCallAnimation(false);
     playHoldAnimation(true);
 });
 
 /// Сброс звонка на другом конце
 mp.events.add('phone.call.end.in', function () {
-    mp.speechChanel.disconnect(mp.players.atRemoteId(callerId), "phone");
-    callerId = -1;
+    if (callerId != -1) {
+        mp.speechChanel.disconnect(mp.players.atRemoteId(callerId), "phone");
+        callerId = -1;
+    }
     mp.callCEFR('phone.call.end', []);
     //playCallAnimation(false);
     playHoldAnimation(true);
