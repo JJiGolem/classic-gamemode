@@ -195,6 +195,11 @@ mp.events.add("characterInit.create.head", (active) => {
 });
 
 mp.events.add('characterInit.create.exit', () => {
+    charData.gender = 0;
+    charData.mother = 21;
+    charData.father = 0;
+    charData.skin = 0;
+    updateParents();
     mp.events.call('characterInit.init');
 });
 
