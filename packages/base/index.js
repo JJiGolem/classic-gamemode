@@ -55,6 +55,7 @@ mp.events.add('inited', (moduleName) => {
     modulesToLoad.splice(modulesToLoad.findIndex(x => x == moduleName), 1);
     if (modulesToLoad.length == 0) {
         playersJoinPool.forEach(player => {
+            if (player == null) return;
             player.call('init', [activeClientModules]);
         });
     }
