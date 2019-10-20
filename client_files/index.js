@@ -17,6 +17,7 @@ mp.events.add('init', (activeModules) => {
 
     initDone = true;
     if (browserLoaded) {
+        showLoadingText = false;
         mp.events.callRemote('player.joined');
     }
 });
