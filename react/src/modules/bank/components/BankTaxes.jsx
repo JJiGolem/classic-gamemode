@@ -42,12 +42,10 @@ class BankTaxes extends Component {
         const { houseDays } = this.state;
         const { bank, setLoading, setArgs } = this.props;
 
-        if (houseDays > 0) {
-            setArgs({ money: parseInt(bank.houses[0].rent*houseDays), name: bank.houses[0].name, days: parseInt(houseDays) });
-            setLoading(true);
-            mp.trigger('bank.house.push', bank.houses[0].name, parseInt(houseDays));
-            this.setState({ houseDays: 0 });
-        }
+        setArgs({ money: parseInt(bank.houses[0].rent*houseDays), name: bank.houses[0].name, days: parseInt(houseDays) });
+        setLoading(true);
+        mp.trigger('bank.house.push', bank.houses[0].name, parseInt(houseDays));
+        this.setState({ houseDays: 0 });
     }
 
     incrementBizDays() {
@@ -72,12 +70,10 @@ class BankTaxes extends Component {
         const { bizDays } = this.state;
         const { setLoading, setArgs } = this.props;
 
-        if (bizDays > 0) {
-            setArgs({ money: parseInt(bank.biz[0].rent*bizDays), id: bank.biz[0].id, days: parseInt(bizDays) });
-            setLoading(true);
-            mp.trigger('bank.biz.push', bank.biz[0].id, parseInt(bizDays));
-            this.setState({ bizDays: 0 });
-        }
+        setArgs({ money: parseInt(bank.biz[0].rent*bizDays), id: bank.biz[0].id, days: parseInt(bizDays) });
+        setLoading(true);
+        mp.trigger('bank.biz.push', bank.biz[0].id, parseInt(bizDays));
+        this.setState({ bizDays: 0 });
     }
 
     getPayHouseForm() {
