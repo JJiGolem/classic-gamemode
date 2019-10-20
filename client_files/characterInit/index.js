@@ -33,6 +33,7 @@ const sinPedRot = Math.sin((pedRotation - 90) * Math.PI/180);
 let isBinding = false;
 
 let creatorTimer = null;
+let slotsNumber;
 
 
 mp.events.add('characterInit.init', (characters, slots) => {
@@ -56,6 +57,7 @@ mp.events.add('characterInit.init', (characters, slots) => {
         mp.utils.cam.create(camPos[0], camPos[1], camPos[2], camPos[0] + camDist * sinCamRot, camPos[1] + camDist * cosCamRot, camPos[2] + camPosZDelta, 60);
         createPeds();
         setInfo();
+        slotsNumber = slots;
         mp.callCEFV(`characterInfo.slots = ${slots}`);
     }
     else {
@@ -230,7 +232,7 @@ let chooseRight = function() {
 
 let choose = function() {
     if (mp.game.ui.isPauseMenuActive()) return;
-    if (currentCharacter > slots) return;
+    if (currentCharacter >= slotsNumber) return;
     if (isBinding) {
         binding(false);
         isBinding = false;
