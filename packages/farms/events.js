@@ -297,7 +297,7 @@ module.exports = {
         veh.products.count -= count;
         veh.setVariable("farmProductsState", parseInt(veh.products.count / 33));
         if (veh.products.count) {
-            veh.setVariable("label", `${vehicle.products.count} из 200 ед.`);
+            veh.setVariable("label", `${veh.products.count} из 200 ед.`);
             notifs.info(player, `Склад заполнен. ${veh.products.count} ед. урожая осталось в пикапе`, header);
         } else {
             veh.setVariable("label", null);
