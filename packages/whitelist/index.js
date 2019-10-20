@@ -41,8 +41,8 @@ module.exports = {
     getAllowed() {
         return allowed;
     },
-    init() {
-        this.loadWhiteList();
+    async init() {
+        await this.loadWhiteList();
     },
     async loadWhiteList() {
         allowed = await db.Models.WhiteList.findAll();

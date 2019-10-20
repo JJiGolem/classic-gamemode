@@ -55,6 +55,7 @@ mp.events.add('inited', (moduleName) => {
     modulesToLoad.splice(modulesToLoad.findIndex(x => x == moduleName), 1);
     if (modulesToLoad.length == 0) {
         playersJoinPool.forEach(player => {
+            if (player == null) return;
             player.call('init', [activeClientModules]);
         });
     }
@@ -100,6 +101,7 @@ mp.events.add('playerJoin', (player) => {
 
 /// Main events list
 /// init - загрузка всех моделей и событий всех модулей закончена
+/// (в случае использования данного события по завершению инициализации ОБЯЗАТЕЛЬНО вызывать функцию "inited(__dirname);")
 /// inited(moduleName) - модуль сообщает о том, что он инициализирован
 /// economy.done - загрузка экономических показателей окончена
 /// economy.updated - экономические показатели обновлены
