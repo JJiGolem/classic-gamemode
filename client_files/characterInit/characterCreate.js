@@ -181,7 +181,6 @@ mp.events.add("characterInit.create", (active, rawCharData) => {
     }
     else {
         mp.gui.cursor.show(false, false);
-        mp.events.callRemote('characterInit.create.exit');
     }
 });
 
@@ -196,8 +195,7 @@ mp.events.add("characterInit.create.head", (active) => {
 });
 
 mp.events.add('characterInit.create.exit', () => {
-    mp.events.callRemote('characterInit.create.exit');
-    //mp.events.callRemote('characterInit.start');
+    mp.events.call('characterInit.init');
 });
 
 mp.events.add('characterInit.create.reset', () => {

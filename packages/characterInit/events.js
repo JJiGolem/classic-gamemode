@@ -43,16 +43,8 @@ module.exports = {
         logger.log(`Авторизовал персонажа (IP: ${player.ip})`, "characterInit", player);
     },
     /// События создания персоонажа
-    "player.joined": player => {
-        player.usingCreator = false;
-    },
     "characterInit.create.check": (player, fullname, charData) => {
         characterInit.save(player, fullname, charData);
-    },
-    "characterInit.create.exit": player => {
-        if (player.usingCreator) {
-            player.usingCreator = false;
-        }
     },
     "characterInit.loadCharacter": (player) => {
         characterInit.applyCharacter(player);

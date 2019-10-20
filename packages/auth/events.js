@@ -46,19 +46,6 @@ module.exports = {
             return player.call('auth.login.result', [2]);
         }
 
-        // TODO
-        // let ban = await db.Models.IpBan.findOne({
-        //     where: {
-        //         ip: player.ip
-        //     }
-        // });
-        // if (ban) {
-        //     /// Игрок забанен
-        //     player.call('auth.login.result', [3]);
-        //     player.kick();
-        //     return;
-        // }
-
         let account = await db.Models.Account.findOne({
             where: {
                 [Op.or]: {
