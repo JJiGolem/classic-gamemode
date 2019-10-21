@@ -13,10 +13,13 @@ mp.animations = {
     animationTimers: {},
 
     playAnimation(player, a, time = null) {
+        clearTimeout(this.animationTimers[player.remoteId]);
         player.clearTasksImmediately();
+        delete player.anim;
         if (!a) return;
         mp.utils.requestAnimDict(a.dict, () => {
             player.taskPlayAnim(a.dict, a.name, a.speed, 0, -1, a.flag, 0, false, false, false);
+            player.anim = a;
         });
         if (!time) return;
         var id = player.remoteId;
@@ -25,6 +28,7 @@ mp.animations = {
             var rec = mp.players.atRemoteId(id);
             if (rec) rec.clearTasksImmediately();
             delete this.animationTimers[id];
+            delete rec.anim;
         }, time);
     },
     animator() {
@@ -110,6 +114,14 @@ mp.events.add({
         if (!a) return;
 
         mp.animations.playAnimation(player, a);
+    },
+    "playerEnterVehicle": () => {
+        // чтобы игрока не скручивало по-всякому когда садится на мотик во время проигрывания анимации
+        var player = mp.players.local;
+        if (player.anim) {
+            mp.animations.playAnimation(player, null);
+            mp.events.callRemote("animations.stop");
+        }
     },
 });
 
