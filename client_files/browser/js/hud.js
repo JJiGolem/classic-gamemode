@@ -37,7 +37,11 @@ var hud = new Vue({
             },
             {
                 key: "N",
-                name: "Войс",
+                name: "Войс-чат",
+            },
+            {
+                key: "L",
+                name: "Действия",
             },
             {
                 key: "M",

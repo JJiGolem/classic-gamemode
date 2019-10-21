@@ -204,7 +204,7 @@ module.exports = {
         player.jailArrestTimer = setTimeout(() => {
             try {
                 var rec = mp.players.at(playerId);
-                if (!rec || rec.character.id != characterId || !rec.character.arrestTime) {
+                if (!rec || !rec.character || rec.character.id != characterId || !rec.character.arrestTime) {
                     clearTimeout(player.cellArrestTimer);
                     return;
                 }

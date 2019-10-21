@@ -116,23 +116,7 @@ module.exports = {
             },
         };
 
-        var dbItems = await db.Models.CharacterInventory.findAll({
-            where: {
-                playerId: player.character.id
-            },
-            order: [
-                ['parentId', 'ASC']
-            ],
-            include: [{
-                    model: db.Models.CharacterInventoryParam,
-                    as: "params"
-                },
-                {
-                    model: db.Models.InventoryItem,
-                    as: "item"
-                }
-            ]
-        });
+        var dbItems = await this.loadCharacterItemsFromDB(player.character.id);
         player.inventory.items = dbItems;
 
         this.updateAllView(player);
@@ -211,6 +195,26 @@ module.exports = {
         });
         holder.inventory.items = dbItems;
         console.log(`[INVENTORY] Для дома #${holder.houseInfo.id} загружены предметы (${dbItems.length} шт.)`);
+    },
+    async loadCharacterItemsFromDB(characterId) {
+        var items = await db.Models.CharacterInventory.findAll({
+            where: {
+                playerId: characterId
+            },
+            order: [
+                ['parentId', 'ASC']
+            ],
+            include: [{
+                    model: db.Models.CharacterInventoryParam,
+                    as: "params"
+                },
+                {
+                    model: db.Models.InventoryItem,
+                    as: "item"
+                }
+            ]
+        });
+        return items;
     },
     convertServerToClientItems(dbItems) {
         // console.log("convertServerToClientItems");
@@ -951,30 +955,73 @@ module.exports = {
                 if (i != -1) rec.inventory.ground.splice(i, 1);
             }
         });
-        /* Для всех игроков из БД. */
     },
     deleteByParams(player, itemIds, keys, values) {
         // debug(`deleteByParams: ${player.name}`)
-        if (typeof player == 'number') { // удаление у игрока оффлайн
-            db.Models.CharacterInventory.destroy({
-                where: {
-                    playerId: player
-                },
-                include: [{
-                    model: db.Models.CharacterInventoryParam,
-                    where: {
-                        key: keys,
-                        value: values
-                    }
-                }]
-            });
-            return;
-        }
         if (itemIds && !Array.isArray(itemIds)) itemIds = [itemIds];
         if (!Array.isArray(keys)) keys = [keys];
         if (!Array.isArray(values)) values = [values];
 
         if (keys.length != values.length) return;
+
+        if (typeof player == 'number') { // удаление у игрока оффлайн
+            // db.Models.CharacterInventory.destroy({
+            //     where: {
+            //         playerId: player
+            //     },
+            //     include: [{
+            //         model: db.Models.CharacterInventoryParam,
+            //         where: {
+            //             key: keys,
+            //             value: values
+            //         }
+            //     }]
+            // });
+            debug(`Было вызвано удаление предметов у персонажа оффлайн с ID: ${player}`);
+
+            db.Models.CharacterInventory.findAll({
+                where: {
+                    playerId: player
+                },
+                include: [{
+                    as: "params",
+                    model: db.Models.CharacterInventoryParam
+                }]
+            }).then(allItems => {
+                debug(`Все предметы персонажа:`)
+                debug(allItems.map(x => x.id))
+
+                var items = this.getItemsByParams(allItems, itemIds, keys, values);
+
+                debug(`Предметы по типу: ${itemIds}, ключу: ${keys}, значению: ${values}`)
+                debug(items.map(x => x.id))
+
+                items.forEach(item => {
+                    var children = this.getChildren(allItems, item);
+                    if (children.length) {
+                        debug(`В предмете ${item.id} хранятся:`)
+                        debug(children.map(x => x.id))
+                    }
+
+                    children.forEach(child => {
+                        var children2 = this.getChildren(allItems, child);
+                        if (children2.length) {
+                            debug(`В предмете ${child.id} хранятся:`)
+                            debug(children2.map(x => x.id))
+                        }
+
+                        children2.forEach(child2 => {
+                            child2.destroy();
+                        });
+                        child.destroy();
+                    });
+                    item.destroy();
+                });
+
+            });
+
+            return;
+        }
 
         var items = (itemIds) ? this.getArrayByItemId(player, itemIds) : player.inventory.items;
         if (!items.length) return;

@@ -220,14 +220,14 @@ module.exports = {
                 var rec = mp.players.at(playerId);
                 if (!rec || rec.character.id != characterId) return;
                 // TODO: проверка на присмерти
+                rec.addAttachment("farmTrowel", true);
                 if (!rec.farmJob) return;
                 var obj = mp.objects.at(objId);
-                rec.addAttachment("farmTrowel", true);
                 if (!obj || !obj.field) {
                     return notifs.error(rec, `В этой части поля урожай уже собран`, header);
                 }
                 var names = ["farmProductA", "farmProductA", "farmProductB", "farmProductC"];
-                player.addAttachment(names[field.type]);
+                rec.addAttachment(names[field.type]);
 
                 obj.count--;
                 obj.field.count--;
@@ -297,7 +297,7 @@ module.exports = {
         veh.products.count -= count;
         veh.setVariable("farmProductsState", parseInt(veh.products.count / 33));
         if (veh.products.count) {
-            veh.setVariable("label", `${vehicle.products.count} из 200 ед.`);
+            veh.setVariable("label", `${veh.products.count} из 200 ед.`);
             notifs.info(player, `Склад заполнен. ${veh.products.count} ед. урожая осталось в пикапе`, header);
         } else {
             veh.setVariable("label", null);
@@ -426,8 +426,8 @@ module.exports = {
             veh.setVariable("label", null);
             delete veh.products;
             notifs.success(player, `Зерно продано`, header);
+            jobs.addJobExp(player, carrier.exp);
         }
-        player.call(`selectMenu.hide`);
 
         var price = count * farm.grainPrice;
         if (farm.playerId) {
@@ -444,8 +444,6 @@ module.exports = {
                 if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
             }, `Продажа зерна на ферме #${farm.id} без владельца`);
         }
-
-        jobs.addJobExp(player, carrier.exp);
     },
     "farms.soilsWarehouse.take": (player) => {
         var header = `Загрузка удобрения`;
@@ -534,6 +532,7 @@ module.exports = {
             veh.setVariable("label", null);
             delete veh.products;
             notifs.success(player, `Удобрение продано`, header);
+            jobs.addJobExp(player, carrier.exp);
         }
         player.call(`selectMenu.hide`);
 
@@ -552,8 +551,6 @@ module.exports = {
                 if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
             }, `Продажа удобрения на ферме #${farm.id} без владельца`);
         }
-
-        jobs.addJobExp(player, carrier.exp);
     },
     "farms.grains.price.set": (player, val) => {
         var header = `Цена на зерно`

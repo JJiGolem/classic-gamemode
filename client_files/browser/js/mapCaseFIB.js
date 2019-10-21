@@ -588,7 +588,7 @@ var mapCaseFIBData = {
 //Функция, срабатывающая при принятии вызова
 //data - данные о вызове
 mapCaseFIBCallsData.accept = (data) => {
-    mp.trigger(`callRemote`, `mapCase.fib.calls.accept`, data.id);
+    mp.trigger(`callRemote`, `mapCase.pd.calls.accept`, data.id);
 }
 
 

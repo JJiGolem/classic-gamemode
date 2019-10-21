@@ -316,7 +316,7 @@
             </div>
             <div class="confirmEmail" v-if="form == 3">
                 <label>Код подтверждения
-                    <input type="text" v-model="code" autofocus />
+                    <input type="text" v-model="code" autofocus v-on:keyup.enter="confirmEmailHandler(1)"/>
                     <img class="ic-password" src="img/auth/password.png" />
                 </label>
                 <a class="confirmEmailBtn" @click="confirmEmailHandler(0)">Пропустить</a>

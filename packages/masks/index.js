@@ -53,6 +53,7 @@ module.exports = {
         let shape = mp.colshapes.newSphere(shop.x, shop.y, shop.z, 2.5);
 
         shape.onEnter = (player) => {
+            if (player.vehicle) return;
             player.call('masks.shop.shape', [true]);
             player.call('prompt.show', ['Нажмите <span>E</span> для того, чтобы посмотреть маски']);
         }

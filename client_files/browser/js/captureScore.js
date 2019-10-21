@@ -21,7 +21,7 @@ var captureScore = new Vue({
             10: "Los Santos Vagos",
             11: "Marabunta Grande",
             12: "La Cosa Nostra",
-            13: "Armenian Mafia",
+            13: "La Eme",
             14: "Russian Mafia",
         },
         leftBandId: 8,

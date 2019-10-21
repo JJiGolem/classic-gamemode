@@ -269,6 +269,7 @@ module.exports = {
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
+            if (player.vehicle) return;
             if (!factions.isBandFaction(player.character.factionId)) return notifs.error(player, `Вы не член группировки`, `Наркопритон`);
             player.call("selectMenu.show", [`drugsStash`]);
             player.insideDrugsStash = true;
