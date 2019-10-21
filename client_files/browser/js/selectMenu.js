@@ -6589,6 +6589,8 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('clothingMain');
+                            selectMenu.menus["clothingTops"].i = 0;
+                            selectMenu.menus["clothingTops"].j = 0;
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
                             selectMenu.loader = true;
@@ -6597,9 +6599,10 @@ var selectMenu = new Vue({
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('clothingMain');
+                        selectMenu.menus["clothingTops"].i = 0;
+                        selectMenu.menus["clothingTops"].j = 0;
                         mp.trigger('clothingShop.inputClothes.set');
                     }
-
                 }
             },
             "clothingBracelets": {
@@ -6629,6 +6632,8 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('clothingMain');
+                            selectMenu.menus["clothingBracelets"].i = 0;
+                            selectMenu.menus["clothingBracelets"].j = 0;
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
                             selectMenu.loader = true;
@@ -6637,6 +6642,8 @@ var selectMenu = new Vue({
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('clothingMain');
+                        selectMenu.menus["clothingBracelets"].i = 0;
+                        selectMenu.menus["clothingBracelets"].j = 0;
                         mp.trigger('clothingShop.inputClothes.set');
                     }
 
@@ -6669,6 +6676,8 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('clothingMain');
+                            selectMenu.menus["clothingEars"].i = 0;
+                            selectMenu.menus["clothingEars"].j = 0;
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
                             selectMenu.loader = true;
@@ -6677,6 +6686,8 @@ var selectMenu = new Vue({
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('clothingMain');
+                        selectMenu.menus["clothingEars"].i = 0;
+                        selectMenu.menus["clothingEars"].j = 0;
                         mp.trigger('clothingShop.inputClothes.set');
                     }
                 }
@@ -6708,6 +6719,8 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('clothingMain');
+                            selectMenu.menus["clothingGlasses"].i = 0;
+                            selectMenu.menus["clothingGlasses"].j = 0;
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
                             selectMenu.loader = true;
@@ -6716,6 +6729,8 @@ var selectMenu = new Vue({
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('clothingMain');
+                        selectMenu.menus["clothingGlasses"].i = 0;
+                        selectMenu.menus["clothingGlasses"].j = 0;
                         mp.trigger('clothingShop.inputClothes.set');
                     }
                 }
@@ -6747,6 +6762,8 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('clothingMain');
+                            selectMenu.menus["clothingWatches"].i = 0;
+                            selectMenu.menus["clothingWatches"].j = 0;
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
                             selectMenu.loader = true;
@@ -6755,6 +6772,8 @@ var selectMenu = new Vue({
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('clothingMain');
+                        selectMenu.menus["clothingWatches"].i = 0;
+                        selectMenu.menus["clothingWatches"].j = 0;
                         mp.trigger('clothingShop.inputClothes.set');
                     }
                 }
@@ -6786,6 +6805,8 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('clothingMain');
+                            selectMenu.menus["clothingTies"].i = 0;
+                            selectMenu.menus["clothingTies"].j = 0;
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
                             selectMenu.loader = true;
@@ -6794,6 +6815,8 @@ var selectMenu = new Vue({
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('clothingMain');
+                        selectMenu.menus["clothingTies"].i = 0;
+                        selectMenu.menus["clothingTies"].j = 0;
                         mp.trigger('clothingShop.inputClothes.set');
                     }
                 }
@@ -6825,6 +6848,8 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('clothingMain');
+                            selectMenu.menus["clothingHats"].i = 0;
+                            selectMenu.menus["clothingHats"].j = 0;
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
                             selectMenu.loader = true;
@@ -6833,6 +6858,8 @@ var selectMenu = new Vue({
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('clothingMain');
+                        selectMenu.menus["clothingHats"].i = 0;
+                        selectMenu.menus["clothingHats"].j = 0;
                         mp.trigger('clothingShop.inputClothes.set');
                     }
                 }
@@ -6864,6 +6891,8 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('clothingMain');
+                            selectMenu.menus["clothingPants"].i = 0;
+                            selectMenu.menus["clothingPants"].j = 0;
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
                             selectMenu.loader = true;
@@ -6872,6 +6901,8 @@ var selectMenu = new Vue({
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('clothingMain');
+                        selectMenu.menus["clothingPants"].i = 0;
+                        selectMenu.menus["clothingPants"].j = 0;
                         mp.trigger('clothingShop.inputClothes.set');
                     }
                 }
@@ -6903,6 +6934,8 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('clothingMain');
+                            selectMenu.menus["clothingShoes"].i = 0;
+                            selectMenu.menus["clothingShoes"].j = 0;
                             mp.trigger('clothingShop.inputClothes.set');
                         } else {
                             selectMenu.loader = true;
@@ -6911,6 +6944,8 @@ var selectMenu = new Vue({
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('clothingMain');
+                        selectMenu.menus["clothingShoes"].i = 0;
+                        selectMenu.menus["clothingShoes"].j = 0;
                         mp.trigger('clothingShop.inputClothes.set');
                     }
                 }
