@@ -143,7 +143,7 @@ mp.events.add('inventory.addItem', (item) => {
 mp.events.add('fishing.menu.show', () => {
    if (mp.busy.includes()) return;
 
-   mp.busy.add('fishing.menu', false);
+   mp.busy.add('fishing.menu');
    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["fishingMenu"])`);
    mp.callCEFV(`selectMenu.show = true`);
 });
@@ -186,7 +186,7 @@ mp.events.add('fishing.game.menu', () => {
 mp.events.add('fishing.game.enter', () => {
     if (mp.busy.includes()) return;
 
-    mp.busy.add('fishingGame');
+    mp.busy.add('fishing.game', false);
     playBaseAnimation(true);
     mp.utils.disablePlayerMoving(true);
     localPlayer.freezePosition(true);
@@ -226,7 +226,7 @@ mp.events.add('fishing.game.exit', () => {
     localPlayer.freezePosition(false);
     mp.callCEFV(`fishing.clearData()`);
     mp.callCEFVN({ "fishing.show": false });
-    mp.busy.remove('fishingGame');
+    mp.busy.remove('fishing.game');
 });
 
 let bindButtons = (state) => {
