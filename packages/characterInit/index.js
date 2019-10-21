@@ -257,7 +257,6 @@ module.exports = {
     sendToCreator(player) {
         player.position = creatorPlayerPos;
         player.heading = creatorPlayerHeading;
-        player.usingCreator = true;
         player.call("characterInit.create", [true, JSON.stringify(player.characterInfo)]);
     },
     applyCharacter(player) {
@@ -388,8 +387,8 @@ module.exports = {
                 return [1155.053466796875, -470.5561828513281, 66.53962158203125]; /// Миррор-Парк
             case 4:
                 return [-164.7874755859375, 6426.59912109375, 31.886451721191406]; /// Палето-Бэй
-            case 5:
-                return [1958.814208984365, 3844.-35888671875, 31.985401153564453]; /// Сэнди-Шорс
+            // case 5:
+            //     return [1958.814208984365, 3844.-35888671875, 31.985401153564453]; /// Сэнди-Шорс
             default:
                 return [-252.91534423828125, -338.6800231933594, 29.70627212524414];
         }

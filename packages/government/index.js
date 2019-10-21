@@ -27,6 +27,7 @@ module.exports = {
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
+            if (player.vehicle) return;
             var data = {
                 fines: player.character.Fines,
                 vehicles: player.vehicleList || [],

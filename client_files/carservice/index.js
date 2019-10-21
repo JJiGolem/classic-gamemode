@@ -187,7 +187,6 @@ mp.events.add('carservice.diagnostics.preparation', (vehId) => {
 });
 
 function getHoodPosition(vehicle) {
-    mp.chat.debug('hood position')
     if (!vehicle) return null;
     let position = vehicle.getWorldPositionOfBone(vehicle.getBoneIndexByName("bonnet"));
     if (!position.x && !position.y && !position.z) return null;
@@ -196,7 +195,6 @@ function getHoodPosition(vehicle) {
 
 function getRepairAnimType(vehicle) {
     let vehClass = vehicle.getClass();
-    mp.chat.debug(vehClass);
     switch (vehClass) {
         case 2, 9, 12:
             return 1;

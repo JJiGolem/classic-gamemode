@@ -857,8 +857,7 @@ var playerMenu = new Vue({
             if (selectMenu.isEditing) return;
             if (Date.now() - this.lastShowTime < 500) return;
             if (!this.enable) return;
-            if (this.inputFocus) return;
-            if (e.keyCode == 77) this.show = !this.show;
+            if (e.keyCode == 77 && !this.inputFocus) this.show = !this.show;
             if (e.keyCode == 27 && this.show) this.show = false;
         });
     },

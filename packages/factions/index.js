@@ -107,6 +107,7 @@ module.exports = {
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
+            if (player.vehicle) return;
             var boxType = "";
             if (player.hasAttachment("ammoBox")) {
                 boxType = "ammo";
@@ -165,6 +166,7 @@ module.exports = {
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
+            if (player.vehicle) return;
             if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
 
             if (this.isBandFaction(faction.id)) bands.sendStorageInfo(player);
@@ -192,6 +194,7 @@ module.exports = {
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
+            if (player.vehicle) return;
             if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
 
             player.call("prompt.showByName", [`faction_items_holder`]);
@@ -217,6 +220,7 @@ module.exports = {
         });
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
+            if (player.vehicle) return;
             if (!this.isArmyFaction(player.character.factionId) &&
                 !this.isMafiaFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, `Склад боеприпасов`);
             player.call("factions.insideWarehouse", [true, "ammo"]);
@@ -241,6 +245,7 @@ module.exports = {
         });
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 2.5);
         colshape.onEnter = (player) => {
+            if (player.vehicle) return;
             if (!this.isHospitalFaction(player.character.factionId)) return notifs.error(player, `Нет доступа`, `Склад медикаментов`);
             player.call("factions.insideWarehouse", [true, "medicines"]);
             player.insideWarehouse = true;
@@ -329,6 +334,12 @@ module.exports = {
 
         mp.events.call(`player.faction.changed`, player, oldVal);
     },
+    isLeader(player) {
+        if (!player.character.factionId) return false;
+
+        var maxRank = this.getMaxRank(player.character.factionId);
+        return player.character.factionRank == maxRank.id;
+    },
     setBlip(faction, type, color) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         var blip = this.getBlip(faction.id);
@@ -389,25 +400,26 @@ module.exports = {
     deleteOfflineMember(character) {
         this.fullDeleteItems(character.id, character.factionId);
 
-        db.Models.CharacterInventory.destroy({
-            where: {
-                playerId: character.id
-            },
-            include: {
-                model: db.Models.CharacterInventoryParam,
-                where: {
-                    [Op.or]: [{
-                            key: "owner",
-                            value: character.id
-                        },
-                        {
-                            key: "faction",
-                            value: character.factionId
-                        }
-                    ]
-                }
-            }
-        });
+        // db.Models.CharacterInventory.destroy({
+        //     where: {
+        //         playerId: character.id
+        //     },
+        //     include: {
+        //         model: db.Models.CharacterInventoryParam,
+        //         where: {
+        //             [Op.or]: [{
+        //                     key: "owner",
+        //                     value: character.id
+        //                 },
+        //                 {
+        //                     key: "faction",
+        //                     value: character.factionId
+        //                 }
+        //             ]
+        //         }
+        //     }
+        // });
+        inventory.deleteByParams(character.id, null, ['owner', 'faction'], [character.id, character.factionId]);
 
         character.factionId = null;
         character.factionRank = null;

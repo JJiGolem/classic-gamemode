@@ -438,7 +438,7 @@ var inventory = new Vue({
             40: [22, 99],
         },
         // Огнестрельные оружия
-        weaponsList: [19, 20, 21, 22, 41, 44, 46, 47, 48, 52, 80, 87, 88, 89, 91, 93, 99, 100, 107],
+        weaponsList: [19, 20, 21, 22, 41, 44, 46, 47, 48, 52, 80, 87, 88, 89, 90, 91, 93, 96, 99, 100, 107],
         // Еда
         eatList: [35, 126, 127, 128, 129],
         // Напитки
@@ -605,9 +605,9 @@ var inventory = new Vue({
                 name: "Количество",
                 value: item.params.count + " ед."
             });
-            if (item.params.pockets) params.push({
+            if (item.pockets) params.push({
                 name: "Карманы",
-                value: item.params.pockets.length + " ед."
+                value: item.pockets.length + " ед."
             });
             if (this.getItemsCount(item)) params.push({
                 name: "Содержит",
@@ -627,8 +627,7 @@ var inventory = new Vue({
             });
             if (item.params.weaponHash) {
                 var ammoId = this.getAmmoItemId(item.itemId);
-                if (!ammoId) return params;
-                params.push({
+                if (ammoId) params.push({
                     name: "Калибр",
                     value: this.itemsInfo[ammoId].name
                 });
@@ -1248,7 +1247,7 @@ var inventory = new Vue({
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
-            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "playerMenu", "inputWindow"])) return;
+            if (busy.includes(["auth", "chat", "terminal", "interaction", "mapCase", "phone", "playerMenu", "inputWindow"])) return;
             if (selectMenu.isEditing) return;
             if (Date.now() - self.lastShowTime < 500) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;

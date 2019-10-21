@@ -10,11 +10,12 @@ function applyTorsoCamera() {
     mp.utils.cam.moveTo(localPlayer.position.x, localPlayer.position.y - 1.25, localPlayer.position.z + 0.5,
         localPlayer.position.x, localPlayer.position.y, localPlayer.position.z + 0.5, 500, 45);
 }
-
+mp.events.add("characterInit.camera.torso", applyTorsoCamera);
 function applyHeadCamera() { 
     mp.utils.cam.moveTo(localPlayer.position.x, localPlayer.position.y - 0.55, localPlayer.position.z + 0.675,
         localPlayer.position.x, localPlayer.position.y, localPlayer.position.z + 0.675, 500, 45);
 }
+mp.events.add("characterInit.camera.head", applyHeadCamera);
 
 function showTorso(state) {
     if (state) {
@@ -28,6 +29,7 @@ function showTorso(state) {
             localPlayer.setComponentVariation(8, 2, 0, 2);
             localPlayer.setComponentVariation(11, 18, 0, 2);
         }
+        applyTorsoCamera();
     } 
     else {
         if (charData.gender == 0) {
@@ -40,9 +42,10 @@ function showTorso(state) {
             localPlayer.setComponentVariation(8, 2, 0, 2);
             localPlayer.setComponentVariation(11, 0, 0, 2);
         }
+        applyHeadCamera();
     }
-    
 }
+mp.events.add("characterInit.showTorso", showTorso);
 
 function setDefWear() {
     if (charData.gender == 0) {
@@ -181,23 +184,16 @@ mp.events.add("characterInit.create", (active, rawCharData) => {
     }
     else {
         mp.gui.cursor.show(false, false);
-        mp.events.callRemote('characterInit.create.exit');
-    }
-});
-
-mp.events.add("characterInit.create.head", (active) => {
-    showTorso(false);
-    if (active) {
-        applyHeadCamera();
-    }
-    else {
-        applyTorsoCamera();
     }
 });
 
 mp.events.add('characterInit.create.exit', () => {
-    mp.events.callRemote('characterInit.create.exit');
-    //mp.events.callRemote('characterInit.start');
+    charData.gender = 0;
+    charData.mother = 21;
+    charData.father = 0;
+    charData.skin = 0;
+    updateParents();
+    mp.events.call('characterInit.init');
 });
 
 mp.events.add('characterInit.create.reset', () => {
@@ -206,7 +202,6 @@ mp.events.add('characterInit.create.reset', () => {
     charData.father = 0;
     charData.skin = 0;
     updateParents();
-    applyTorsoCamera();
 });
 
 let setGenderTimer = null;
@@ -230,7 +225,6 @@ mp.events.add('characterInit.create.setGender', gender => {
             charData.father = 0;
             charData.skin = 0;
             updateParents();
-            applyTorsoCamera();
             setDefWear();
         } catch (error) {
             mp.console(JSON.stringify(error));
@@ -312,8 +306,6 @@ mp.events.add('characterInit.create.setLipstickColor', (colorId) => {
 });
 
 mp.events.add('characterInit.create.setChestHairColor', colorId => {
-    applyTorsoCamera();
-    showTorso(true);
     colorId = parseInt(colorId);
     if (colorId >= 0 && colorId <= Data.maxHairColor) {
         charData.chestHairColor = colorId;
@@ -364,8 +356,6 @@ for (let i = 0; i < Data.faceFeaturesNames.length; i++) {
     if ('characterInit.create.setNoseBroken' == eventName) {
         mp.events.add(eventName, value => {
             value = 20 - value;
-            applyHeadCamera();
-            showTorso(false);
             value = parseInt(value);
             const valueScale = value * FACE_FETURE_STEP - 1;
             if (valueScale >= -1 && valueScale <= 1) {
@@ -376,8 +366,6 @@ for (let i = 0; i < Data.faceFeaturesNames.length; i++) {
     }
     else {
         mp.events.add(eventName, value => {
-            applyHeadCamera();
-            showTorso(false);
             value = parseInt(value);
             const valueScale = value * FACE_FETURE_STEP - 1;
             if (valueScale >= -1 && valueScale <= 1) {
@@ -392,14 +380,6 @@ for (let i = 0; i < Data.faceFeaturesNames.length; i++) {
 for (let i = 0; i < Data.headOverlays.length; i++) {
     const eventName = `characterInit.create.set${Data.headOverlays[i].replace(' ', '')}`;
     mp.events.add(eventName, (value, chest) => {
-        if (chest) {
-            applyTorsoCamera();
-            showTorso(true);
-        }
-        else {
-            applyHeadCamera();
-            showTorso(false);
-        }
         value = parseInt(value);
         const opacityScale = 1.0;
         if (opacityScale >= 0 && opacityScale <= 1 && value >= 0 && value <= Data.headOverlayItems[i].length) {

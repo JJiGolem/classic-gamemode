@@ -1,13 +1,35 @@
 "use strict";
 /// Модуль авторизации игрока
 let auth = require("./index.js");
-let utils = call("utils");
-let notifs = call("notifications");
+let utils;
+let notifs;
+let whitelist;
 
 module.exports = {
+    "init": () => {
+        utils = call("utils");
+        notifs = call("notifications");
+        whitelist = call("whitelist");
+        inited(__dirname);
+    },
     /// Заморозка игрока перед авторизацией
     'player.joined': async (player) => {
         player.dimension = player.id;
+
+        if (!whitelist.isEmpty) {
+            if (whitelist.isEnabled()) {
+                if (whitelist.isInWhiteList(player.socialClub)) {
+                    console.log(`[WHITELIST] ${player.socialClub} зашел на сервер по вайтлисту`);
+                }
+                else {
+                    console.log(`[WHITELIST] ${player.socialClub} пытался войти, но его нет в вайтлисте`);
+                    player.call('notifications.push.error', [`Social Club ${player.socialClub} не находится в вайтлисте`]);
+                    player.kick("Kicked");
+                    return;
+                }
+            }
+        }
+
         var ban = await db.Models.Ban.findOne({
             where: {
                 [Op.or]: {
@@ -45,19 +67,6 @@ module.exports = {
             /// Неверный пароль!
             return player.call('auth.login.result', [2]);
         }
-
-        // TODO
-        // let ban = await db.Models.IpBan.findOne({
-        //     where: {
-        //         ip: player.ip
-        //     }
-        // });
-        // if (ban) {
-        //     /// Игрок забанен
-        //     player.call('auth.login.result', [3]);
-        //     player.kick();
-        //     return;
-        // }
 
         let account = await db.Models.Account.findOne({
             where: {
@@ -132,7 +141,7 @@ module.exports = {
                     socialClub: player.socialClub,
                     [Op.and]: {
                         email: data.email,
-                        confirmEmail: 0
+                        confirmEmail: 1
                     }
                 }
             }

@@ -11,7 +11,6 @@ module.exports = {
         if (!player.character) return;
         if (shape.isAmmunation) {
             let id = shape.ammunationId;
-            player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} зашел в колшейп Ammo ${shape.ammunationId}`]);
             let data = ammunation.getRawShopData(id);
             let weaponsConfig = ammunation.getWeaponsConfig();
             player.call('ammunation.enter', [data, weaponsConfig, ammunation.ammoProducts]);
@@ -21,7 +20,6 @@ module.exports = {
     "playerExitColshape": (player, shape) => {
         if (!player.character) return;
         if (shape.isAmmunation) {
-            player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} вышел с колшейпа Ammo ${shape.ammunationId}`]);
             player.call('ammunation.exit');
         }
     },

@@ -299,14 +299,16 @@ module.exports = {
         player.call(`effect`, ['FocusOut', 15000]);
         notifs.success(player, `Вы употребили сигарету`, header);
 
-        mp.players.forEachInRange(player.position, 20, rec => {
-            rec.call(`animations.play`, [player.id, {
-                dict: "amb@code_human_wander_smoking@male@idle_a",
-                name: "idle_a",
-                speed: 1,
-                flag: 49
-            }, 8000]);
-        });
+        if (!player.vehicle) {
+            mp.players.forEachInRange(player.position, 20, rec => {
+                rec.call(`animations.play`, [player.id, {
+                    dict: "amb@code_human_wander_smoking@male@idle_a",
+                    name: "idle_a",
+                    speed: 1,
+                    flag: 49
+                }, 8000]);
+            });
+        }
 
         player.character.nicotine++;
         player.character.save();
@@ -324,14 +326,16 @@ module.exports = {
         satiety.set(player, character.satiety + (params.satiety || 10), character.thirst + (params.thirst || 10));
         notifs.success(player, `Вы съели ${inventory.getName(eat.itemId)}`, header);
 
-        mp.players.forEachInRange(player.position, 20, rec => {
-            rec.call(`animations.play`, [player.id, {
-                dict: "amb@code_human_wander_eating_donut@male@idle_a",
-                name: "idle_c",
-                speed: 1,
-                flag: 49
-            }, 7000]);
-        });
+        if (!player.vehicle) {
+            mp.players.forEachInRange(player.position, 20, rec => {
+                rec.call(`animations.play`, [player.id, {
+                    dict: "amb@code_human_wander_eating_donut@male@idle_a",
+                    name: "idle_c",
+                    speed: 1,
+                    flag: 49
+                }, 7000]);
+            });
+        }
 
         inventory.deleteItem(player, eat);
     },
@@ -347,14 +351,16 @@ module.exports = {
         satiety.set(player, character.satiety + (params.satiety || 10), character.thirst + (params.thirst || 10));
         notifs.success(player, `Вы выпили ${inventory.getName(drink.itemId)}`, header);
 
-        mp.players.forEachInRange(player.position, 20, rec => {
-            rec.call(`animations.play`, [player.id, {
-                dict: "amb@code_human_wander_drinking_fat@female@idle_a",
-                name: "idle_c",
-                speed: 1,
-                flag: 49
-            }, 7000]);
-        });
+        if (!player.vehicle) {
+            mp.players.forEachInRange(player.position, 20, rec => {
+                rec.call(`animations.play`, [player.id, {
+                    dict: "amb@code_human_wander_drinking_fat@female@idle_a",
+                    name: "idle_c",
+                    speed: 1,
+                    flag: 49
+                }, 7000]);
+            });
+        }
 
         inventory.deleteItem(player, drink);
     },
@@ -417,8 +423,8 @@ module.exports = {
                     money.removeCash(player, price, (res) => {
                         if (!res) return out(`Ошибка списания наличных`);
 
-                        fuelstations.removeProducts(biz.info.id, fuel);
-                        fuelstations.updateCashbox(biz.info.id, price);
+                        fuelstations.removeProducts(fuelStationId, fuel);
+                        fuelstations.updateCashbox(fuelStationId, price);
                         inventory.updateParam(player, item, 'litres', params.litres + fuel);
                     }, `Заправка канистры на АЗС #${biz.info.id}`);
 

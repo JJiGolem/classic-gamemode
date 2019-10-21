@@ -316,11 +316,11 @@
             </div>
             <div class="confirmEmail" v-if="form == 3">
                 <label>Код подтверждения
-                    <input type="text" v-model="code" autofocus />
+                    <input type="text" v-model="code" autofocus v-on:keyup.enter="confirmEmailHandler(1)"/>
                     <img class="ic-password" src="img/auth/password.png" />
                 </label>
-                <a class="confirmEmailBtn" onclick="regAccountHandler()">Пропустить</a>
-                <button>Далее</button>
+                <a class="confirmEmailBtn" @click="confirmEmailHandler(0)">Пропустить</a>
+                <button @click="confirmEmailHandler(1)">Далее</button>
             </div>
 
             <div class="input-prompt" v-if="prompt">{{ prompt }}</div>
@@ -1073,7 +1073,7 @@
             <div class="header"> Выдача розыска {{ profileData[currentMenuFocus].name}}</div>
             <div class="title">Введите причину</div>
             <div class="input"><input placeholder="Введите причину выдачи розыска..." v-model="causeValue" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
-            <div class="title">Выберете степень опасности</div>
+            <div class="title">Выберите степень опасности</div>
             <div class="stars" @click="setDanger()"><svg
                                 :class="{ fill: overDanger >= n }"
                                 v-for="n in 5"
