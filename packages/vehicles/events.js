@@ -151,6 +151,7 @@ module.exports = {
         let vehicle = mp.vehicles.at(vehicleId);
         if (!vehicle) return;
         if (vehicle.key == 'private' && !vehicles.haveKeys(player, vehicle)) return notifs.error(player, `Вы не имеете ключи`, vehicle.properties.name);
+        if (vehicle.db && vehicle.db.key == 'faction' && player.character.factionId != vehicle.db.owner) return notifs.error(player, `Нет доступа`, vehicle.properties.name);
 
         vehicle.setVariable("hood", state);
     },
@@ -158,6 +159,7 @@ module.exports = {
         let vehicle = mp.vehicles.at(vehicleId);
         if (!vehicle) return;
         if (vehicle.db && vehicle.db.key == 'private' && !vehicles.haveKeys(player, vehicle)) return notifs.error(player, `Вы не имеете ключи`, vehicle.properties.name);
+        if (vehicle.db && vehicle.db.key == 'faction' && player.character.factionId != vehicle.db.owner) return notifs.error(player, `Нет доступа`, vehicle.properties.name);
 
         vehicle.setVariable("trunk", state);
 
