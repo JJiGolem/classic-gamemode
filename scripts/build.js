@@ -11,7 +11,7 @@ let entry = {};
 
 let DATE_CHANGE = null;
 
-let ignoreModules = ['browser'];
+let ignoreModules = ['attaches'];
 let ignoreFiles = [ '.listcache', 'babelPolyfill.js' ];
 let changedFiles = [];
 
@@ -90,6 +90,19 @@ function copyChangedBrowserFiles(currentPath) {
     });
 }
 
+function copyIgnoreModules() {
+    ignoreModules.forEach(module => {
+        if (!fs.existsSync(path.resolve(__dirname, PATHS.finalPath, module))) {
+            fs.mkdirSync(path.resolve(__dirname, PATHS.finalPath, module));
+        }
+        fs.readdirSync(path.resolve(__dirname, PATHS.basePath, module)).forEach(file => {
+            if (fs.statSync(path.resolve(__dirname, PATHS.basePath, module, file)).mtime > DATE_CHANGE) {
+                copyFile(path.resolve(__dirname, PATHS.basePath, module, file));
+            }
+        });
+    });
+}
+
 function copyOnlyChangedFiles() {
     if (!fs.existsSync(path.resolve(__dirname, PATHS.buildPath))) {
         fs.mkdirSync(path.resolve(__dirname, PATHS.buildPath));
@@ -112,6 +125,8 @@ function copyOnlyChangedFiles() {
     wrench.copyDirSyncRecursive(path.resolve(__dirname, PATHS.basePath), path.resolve(__dirname, PATHS.buildPath), {
         forceDelete: true
     });
+
+    copyIgnoreModules();
 
     obfuscateBrowserScripts();
     copyChangedBrowserFiles(path.resolve(__dirname, PATHS.basePath, 'browser'));
@@ -142,7 +157,7 @@ function rewriteFile(dir, file) {
 
 function getEntry() {
     fs.readdirSync(path.resolve(__dirname, PATHS.buildPath)).forEach(dir => {
-        if (fs.lstatSync(path.resolve(__dirname, PATHS.buildPath, dir)).isDirectory() && !ignoreModules.includes(dir)) {
+        if (fs.lstatSync(path.resolve(__dirname, PATHS.buildPath, dir)).isDirectory() && !ignoreModules.includes(dir) && dir != 'browser') {
             let directory = fs.readdirSync(path.resolve(__dirname, PATHS.buildPath, dir));
             let isChange = false;
 

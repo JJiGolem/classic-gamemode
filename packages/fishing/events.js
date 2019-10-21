@@ -47,7 +47,13 @@ module.exports = {
 
         let rod = inventory.getItemByItemId(player, fishing.getRodId());
         let health = inventory.getParam(rod, 'health').value;
-        inventory.updateParam(player, rod, 'health', health - 5);
+
+        if (health <= 0) {
+            mp.events.call('fishing.game.exit', player);
+            return;
+        }
+
+        inventory.updateParam(player, rod, 'health', health - 20);
 
         fish = fishing.fishes[utils.randomInteger(0, fishing.fishes.length - 1)];
 
@@ -73,12 +79,12 @@ module.exports = {
                 } else {
                     return notifs.error(player, e, 'Ошибка');
                 }
-            })
+            });
         } else {
             notifs.error(player, 'Рыба сорвалась', 'Провал!');
         }
 
-        if (health == 0) {
+        if (health <= 0) {
             inventory.deleteItem(player, rod);
             notifs.error(player, 'Удочка сломалась', '');
             player.call('fishing.game.exit');
