@@ -16,12 +16,11 @@ mp.events.add('characterInit.done', function() {
         mp.callCEFV("hud.voice = false");
 		mp.busy.remove('voicechat');
     });
-    
-    // todo назначить на одну из клавиш F_num
-    // mp.keys.bind(0x4E, false, function() {
-    //     if (!mp.voiceChat.muted) return;
-    //     mp.voiceChat.cleanupAndReload(true, true, true);
-    // });
+
+    mp.keys.bind(0x73, false, function() {      // F4
+        if (!mp.voiceChat.muted) return;
+        mp.voiceChat.cleanupAndReload(true, true, true);
+    });
 });
 
 
