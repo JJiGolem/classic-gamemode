@@ -1,7 +1,8 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
-import {addAppDisplay, closeAppDisplay} from "../../actions/action.apps";
+import {addAppDisplay, closeAppDisplay, setAppsDisplay} from "../../actions/action.apps";
 import Success from "./Success";
+import MainDisplay from '../MainDisplay';
 import Error from "./Error";
 
 class AnsSell extends Component {
@@ -13,7 +14,7 @@ class AnsSell extends Component {
     }
 
     getAnsPage(status) {
-        const { addApp, closeApp } = this.props;
+        const { addApp, closeApp, setApps, business } = this.props;
 
         if (status === 0) {
             closeApp();
@@ -21,9 +22,12 @@ class AnsSell extends Component {
             addApp({ name: 'Error', form: <Error status='Ошибка'/> });
         }
         else if (status === 1) {
-            closeApp();
-            closeApp();
-            addApp({ name: 'Success', form: <Success status='Бизнес успешно продан'/> });
+            let name = business.name;
+            let area = business.area;
+            setApps([
+                { name: 'MainDisplay', form: <MainDisplay /> },
+                { name: 'Success', form: <Success name={name} area={area}  status='Бизнес успешно продан'/> }
+            ]);
         }
         else if (status === 2) {
             closeApp();
@@ -60,11 +64,13 @@ class AnsSell extends Component {
 }
 
 const mapStateToProps = state => ({
-    info: state.info
+    info: state.info,
+    business: state.info.biz[0]
 });
 
 const mapDispatchToProps = dispatch => ({
     addApp: app => dispatch(addAppDisplay(app)),
+    setApps: apps => dispatch(setAppsDisplay(apps)),
     closeApp: () => dispatch(closeAppDisplay()),
 });
 
