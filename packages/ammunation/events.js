@@ -27,6 +27,8 @@ module.exports = {
         let ammunationId = player.currentAmmunationId;
         if (ammunationId == null) return;
 
+        if (!player.character) return;
+        if (!player.character.gunLicenseDate) return player.call('ammunation.weapon.buy.ans', [4]);
         let weaponData = ammunation.weaponsConfig[weaponId];
 
         let price = weaponData.products * ammunation.productPrice * ammunation.getPriceMultiplier(ammunationId);
@@ -57,6 +59,10 @@ module.exports = {
     "ammunation.ammo.buy": (player, values) => {
         let ammunationId = player.currentAmmunationId;
         if (ammunationId == null) return;
+
+        if (!player.character) return;
+        if (!player.character.gunLicenseDate) return player.call('ammunation.weapon.buy.ans', [4]);
+        
         values = JSON.parse(values);
         let ammoIndex = values[0];
         let ammoCount = values[1];
