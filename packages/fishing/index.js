@@ -34,7 +34,9 @@ module.exports = {
     },
 
     async initFishersFromDB() {
-        let fishers = await db.Models.Fisher.findAll({ raw: true });
+        let fishers = await db.Models.Fisher.findAll({
+            raw: true
+        });
 
         fishers.forEach(fisher => {
             let colshape = this.createFisherColshape(fisher);
@@ -51,7 +53,7 @@ module.exports = {
     createFisherColshape(fisher) {
         let pos = new mp.Vector3(fisher.x, fisher.y, fisher.z);
         let colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 2);
-        
+
         colshape.isFisher = true;
 
         return colshape;
@@ -60,22 +62,20 @@ module.exports = {
     createMarker(fisher) {
         let heading = fisher.heading + 90;
 
-        let markerX = fisher.x + 0.8*Math.cos(heading * Math.PI / 180.0);
-        let markerY = fisher.y + 0.8*Math.sin(heading * Math.PI / 180.0);
+        let markerX = fisher.x + 0.8 * Math.cos(heading * Math.PI / 180.0);
+        let markerY = fisher.y + 0.8 * Math.sin(heading * Math.PI / 180.0);
 
-        mp.markers.new(1, new mp.Vector3(markerX, markerY, fisher.z - 1.2), 0.4,
-            {
-                direction: new mp.Vector3(markerX, markerY, fisher.z),
-                rotation: 0,
-                color: [255, 255, 125, 200],
-                visible: true,
-                dimension: 0
-            });
+        mp.markers.new(1, new mp.Vector3(markerX, markerY, fisher.z - 1.2), 0.4, {
+            direction: new mp.Vector3(markerX, markerY, fisher.z),
+            rotation: 0,
+            color: [255, 255, 125, 200],
+            visible: true,
+            dimension: 0
+        });
     },
 
     createBlip(blip) {
-        mp.blips.new(68, new mp.Vector3(blip.x, blip.y, blip.z),
-        {
+        mp.blips.new(68, new mp.Vector3(blip.x, blip.y, blip.z), {
             name: 'Рыбалка',
             shortRange: true,
             color: 26
@@ -83,22 +83,22 @@ module.exports = {
     },
 
     async buyRod(player) {
-        money.removeCash(player, this.rodPrice,  (result) => { 
-            if (result) {
-                inventory.addItem(player, ROD_ID, { health: 100 }, (e) => {
-                    if (!e) {
+        inventory.addItem(player, ROD_ID, { health: 100 }, (e) => {
+            if (!e) {
+                money.removeCash(player, this.rodPrice, (result) => {
+                    if (result) {
                         player.call('fishing.rod.buy.ans', [1]);
                         notifs.success(player, "Удочка добавлена в инвентарь", "Покупка");
                     } else {
-                        notifs.error(player, e, "Ошибка");
                         player.call('fishing.rod.buy.ans', [0]);
+                        notifs.error(player, "Недостаточно денег", "Ошибка");
                     }
-                });
+                }, `Buy fishing rod by player with id ${player.id}`);
             } else {
+                notifs.error(player, e, "Ошибка");
                 player.call('fishing.rod.buy.ans', [0]);
-                notifs.error(player, "Недостаточно денег", "Ошибка");
             }
-        }, `Buy fishing rod by player with id ${player.id}`);
+        });
     },
 
     async sellFish(player) {
@@ -110,12 +110,12 @@ module.exports = {
                 let fishName = inventory.getParam(fish, 'name').value;
                 let fishWeight = inventory.getParam(fish, 'weight').value;
                 let fishPrice = this.fishes.find(fish => fish.name == fishName).price;
-                sum += fishPrice * fishWeight;
+                sum += fishPrice * fishWeight * 10;
             });
 
             sum = parseInt(sum);
 
-            money.addCash(player, sum, async function(result) {
+            money.addCash(player, sum, async function (result) {
                 if (result) {
                     fishes.forEach(fish => inventory.deleteItem(player, fish.id));
                     player.call('fishing.fish.sell.ans', [1]);

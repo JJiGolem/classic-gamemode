@@ -1498,10 +1498,6 @@ var selectMenu = new Vue({
                         i: 0
                     },
                     {
-                        text: "Помощь",
-                        i: 0,
-                    },
-                    {
                         text: "Закрыть",
                         i: 0,
                     }
