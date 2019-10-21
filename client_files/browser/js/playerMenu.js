@@ -23,6 +23,7 @@ let convertWindowData = {
     coefficient: 123, // API: Коеффициент конвертации.
     acceptConvert(amount) {
         // TODO: Конвертация валюты; amount - СС для обмена.
+        if (isNaN(amount) || amount <= 0) return notifications.push("error", "Некорректное значение");
         mp.trigger(`callRemote`, `donate.convert`, parseInt(amount));
         // playerMenu.coins -= amount;
     }
@@ -1030,6 +1031,7 @@ Vue.component('player-menu-donate-convert', {
     }),
     computed: {
         virtualCoins() {
+            if (isNaN(this.price) || this.price <= 0) return 0;
             return this.price * this.coefficient;
         },
     },
@@ -1044,7 +1046,7 @@ Vue.component('player-menu-donate-convert', {
             }
         },
         convert() {
-            if (!this.price) return;
+            if (!this.virtualCoins) return;
             playerMenu.showConfirmWindow(
                 "Подтверждение действия",
                 `Вы действительно хотите ковертировать <br />

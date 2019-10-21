@@ -1425,7 +1425,7 @@
             <input placeholder="Введите число..." v-model="price" @keypress="inputCheck($event)" @keypress.enter="convert()" @focus="setFocus(true)" @blur="setFocus(false)" />
             <div class="equally">=</div>
             <div class="coins">{{ virtualCoins | playerMenuMoneySplit(true) }}</div>
-            <div :class="['btn', {disable: !price }]" @click="convert()">Конвертировать</div>
+            <div :class="['btn', {disable: !virtualCoins }]" @click="convert()">Конвертировать</div>
         </div>
     </script>
 
