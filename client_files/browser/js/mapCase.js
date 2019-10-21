@@ -159,7 +159,7 @@ var mapCase = new Vue({
                 return;
             }
 
-            function setTime () {
+            function setTime() {
                 let date = new Date();
                 let hours = date.getHours() + "";
                 let minutes = date.getMinutes() + "";
@@ -178,7 +178,7 @@ var mapCase = new Vue({
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
-            if (busy.includes(["chat", "terminal", "inventory", "playerMenu", "phone", "inputWindow"])) return;
+            if (busy.includes(["auth", "chat", "terminal", "inventory", "playerMenu", "phone", "inputWindow"])) return;
             if (selectMenu.isEditing) return;
             if (Date.now() - self.lastShowTime < 500) return;
             if (self.inputFocus) return;
@@ -209,7 +209,7 @@ Vue.component('map-case-members', {
         arrows: mapCaseSvgPaths.tableSortArrows,
     }),
     computed: {
-        sortedList () {
+        sortedList() {
             let newList = [...this.list];
 
             mapCaseSortByKey(newList, this.sortMod.mod);
@@ -239,7 +239,7 @@ Vue.component('map-case-members', {
 
             this.modalStyles.top = ((compOffsetTop > parentHeight * 1.25) ? (offsetTop - modalHeight - scrollTop) : compOffsetTop) + "px";
         },
-        hideModal (event) {
+        hideModal(event) {
             let className = event && event.target.className;
 
             if (className == 'record-align btn') return;
@@ -247,28 +247,28 @@ Vue.component('map-case-members', {
             this.modalIsShow = false;
             this.currentRecord = null;
         },
-        acceptDismiss () {
+        acceptDismiss() {
             mapCase.showLoad();
 
             this.dismiss(this.lastUsedRecord);
         },
-        onClickDismiss () {
+        onClickDismiss() {
             mapCase.showVerification(`Вы действительно хотите уволить <br /><span>${this.lastUsedRecord.name}</span>?`, this.acceptDismiss);
         },
-        acceptLower () {
+        acceptLower() {
             mapCase.showLoad();
 
             this.lowerRank(this.lastUsedRecord);
         },
-        onClickLower () {
+        onClickLower() {
             mapCase.showVerification(`Вы действительно хотите понизить <br /><span>${this.lastUsedRecord.name}</span>?`, this.acceptLower);
         },
-        acceptRaise () {
+        acceptRaise() {
             mapCase.showLoad();
 
             this.raiseRank(this.lastUsedRecord);
         },
-        onClickRaise () {
+        onClickRaise() {
             mapCase.showVerification(`Вы действительно хотите повысить <br /><span>${this.lastUsedRecord.name}</span>?`, this.acceptRaise);
         },
     }
@@ -285,7 +285,7 @@ Vue.component('map-case-calls', {
         arrows: mapCaseSvgPaths.tableSortArrows,
     }),
     computed: {
-        sortedList () {
+        sortedList() {
             let newList = [...this.list];
 
             mapCaseSortByKey(newList, this.sortMod.mod)
@@ -297,7 +297,7 @@ Vue.component('map-case-calls', {
         onClickSort(sortMod) {
             this.sortMod.update(sortMod);
         },
-        onClickAccept (data) {
+        onClickAccept(data) {
             mapCase.showLoad();
             this.accept(data);
         }

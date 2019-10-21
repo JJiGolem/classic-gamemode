@@ -132,7 +132,7 @@ mp.utils = {
         mp.game.object.doorControl(741314661, 1818.543, 2597.482, 44.60749, true, 0.0, 0.0, 0.0);
         mp.game.object.doorControl(741314661, 1806.939, 2616.975, 44.60093, true, 0.0, 0.0, 0.0);
         /// Мэрия (BANK)
-        mp.game.object.doorControl(110411286, 232.6054, 214.1584, 106.4049, true, 0.0, 0.0, 0.0);
+        mp.game.object.doorControl(110411286, 232.26393127441406, 214.656982421875, 106.28514099121094, true, 0.0, 0.0, 0.0);
         mp.game.object.doorControl(110411286, 231.5123, 216.5177, 106.4049, true, 0.0, 0.0, 0.0);
         mp.game.object.doorControl(110411286, 259.9831, 215.2468, 106.4049, true, 0.0, 0.0, 0.0);
         mp.game.object.doorControl(110411286, 259.0879, 212.8062, 106.4049, true, 0.0, 0.0, 0.0);

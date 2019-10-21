@@ -577,8 +577,8 @@ module.exports = {
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, holder.dimension);
         colshape.onEnter = (player) => {
-            // TODO: может быть проверка на владельца
-            // if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
+            if (player.vehicle) return;
+            if (player.character.id != house.info.characterId) return notifs.error(player, `Отказано в доступе`, `Шкаф`);
 
             player.call("prompt.showByName", [`house_items_holder`]);
             mp.events.call("house.holder.items.request", player, holder);

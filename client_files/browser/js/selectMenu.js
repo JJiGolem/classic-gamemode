@@ -159,7 +159,7 @@ var selectMenu = new Vue({
             "characterCreateViewMenu": {
                 name: "charactercreateview",
                 header: "Внешность", // заголовок меню, видимый на экране
-                
+
                 defaultItemsMale: [{
                         text: "Прическа",
                         values: [
@@ -1728,12 +1728,15 @@ var selectMenu = new Vue({
                             };
                             if (this.member.id != null) data.recId = this.member.id;
                             else if (this.member.sqlId != null) data.sqlId = this.member.sqlId;
+
+                            selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.members.ranks.set`, JSON.stringify(data));
                         } else if (e.itemName == 'Уволить') {
                             var data = {};
                             if (this.member.id != null) data.recId = this.member.id;
                             else if (this.member.sqlId != null) data.sqlId = this.member.sqlId;
 
+                            selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.members.uval`, JSON.stringify(data));
                         } else if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlMembers");
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlMembers");
@@ -7162,6 +7165,7 @@ var selectMenu = new Vue({
         // ************** События взаимодействия с меню **************
         // Выбран пункт меню
         onItemSelected() {
+            this.notification = null;
             this.menu.handler("onItemSelected");
             mp.trigger(`selectMenu.selectSound.play`);
         },
@@ -7177,6 +7181,7 @@ var selectMenu = new Vue({
         },
         // Нажата клавиша 'Назад'
         onBackspacePressed() {
+            if (this.isEditing) return;
             this.menu.handler("onBackspacePressed");
             mp.trigger(`selectMenu.backSound.play`);
         },

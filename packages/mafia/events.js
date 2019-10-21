@@ -119,6 +119,13 @@ module.exports = {
         }, `Пополнение общака ${faction.name}`);
 
         notifs.success(player, `Пополнено на $${sum}`, header);
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(rec, `${player.name} пополнил на $${sum}`, header);
+        });
     },
     "mafia.storage.cash.take": (player, sum) => {
         sum = Math.clamp(sum, 0, 1000000);
@@ -128,6 +135,7 @@ module.exports = {
         var faction = factions.getFaction(character.factionId);
         var header = `Общак ${faction.name}`;
 
+        if (!factions.isLeader(player)) return notifs.error(player, `Нет доступа`, header);
         if (faction.cash < sum) return notifs.error(player, `Общак не имеет $${sum}`, header);
         money.addCash(player, sum, (res) => {
             if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
@@ -137,6 +145,13 @@ module.exports = {
         }, `Снятие с общака ${faction.name}`);
 
         notifs.success(player, `Снято $${sum}`, header);
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(rec, `${player.name} снял $${sum}`, header);
+        });
     },
     "mafia.power.sell": (player, data) => {
         data = JSON.parse(data);
@@ -217,7 +232,7 @@ module.exports = {
         // rec = player; // for tests
         if (!rec || !rec.character) return notifs.error(player, `Игрок не найден`, header);
         var dist = player.dist(rec.position);
-        if (dist > 5 && data.recId != null) return notifs.error(player, `${rec.name} далеко`, header);
+        if (dist > 5) return notifs.error(player, `${rec.name} далеко`, header);
         var character = player.character;
         if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, header);
@@ -256,7 +271,7 @@ module.exports = {
 
         if (!rec || !rec.character) return out(`Игрок не найден`);
         var dist = player.dist(rec.position);
-        if (dist > 20 && data.recId != null) return out(`${rec.name} далеко`);
+        if (dist > 5) return out(`${rec.name} далеко`);
         var character = player.character;
         if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, header);

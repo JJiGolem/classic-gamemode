@@ -272,7 +272,7 @@ module.exports = {
     },
     "mapCase.pd.calls.accept": (player, id) => {
         // console.log(`calls.accept: ${player.name} ${id}`)
-        if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
+        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
         var header = `Вызов полиции`;
         var rec = mp.players.getBySqlId(id);
         if (!rec) return out.error(player, `Игрок #${id} оффлайн`);
@@ -282,6 +282,14 @@ module.exports = {
         var text = `Вы приняли вызов от <br/><span>${rec.name}</span>`;
         out.success(player, text);
         player.call(`waypoint.set`, [rec.position.x, rec.position.y]);
+
+        mp.players.forEach(_rec => {
+            if (!_rec.character) return;
+            var id = _rec.character.factionId;
+            if (!factions.isPoliceFaction(id) && !factions.isFibFaction(id)) return;
+
+            notifs.info(_rec, `${player.name} принял вызов ${rec.name}`, header);
+        });
     },
     "mapCase.pd.rank.raise": (player, recId) => {
         if (!factions.isPoliceFaction(player.character.factionId)) return out.error(player, `Вы не являетесь сотрудником`);
@@ -410,7 +418,8 @@ module.exports = {
         out.success(player, text);
     },
     "mapCase.fib.init": (player) => {
-        player.call(`mapCase.fib.calls.add`, [mapCase.fibCalls]);
+        // player.call(`mapCase.fib.calls.add`, [mapCase.fibCalls]);
+        player.call(`mapCase.fib.calls.add`, [mapCase.policeCalls]);
 
         var wanted = police.getWanted();
         wanted = mapCase.convertWanted(wanted);
@@ -569,25 +578,32 @@ module.exports = {
         var text = `Уровень розыска <span>${data.wanted}&#9733;</span><br/>выдан <span>${data.recName}</span><br/> по причине <span>${data.cause}</span>`;
         out.success(player, text);
     },
-    "mapCase.fib.calls.add": (player, description) => {
-        mapCase.addFibCall(player, description);
-    },
-    "mapCase.fib.calls.remove": (player, id) => {
-        mapCase.removeFibCall(id);
-    },
-    "mapCase.fib.calls.accept": (player, id) => {
-        // console.log(`calls.accept: ${player.name} ${id}`)
-        if (!factions.isFibFaction(player.character.factionId)) return out.error(player, `Вы не являетесь агентом`);
-        var header = `Вызов FIB`;
-        var rec = mp.players.getBySqlId(id);
-        if (!rec || !rec.character) return out.error(player, `Игрок #${id} оффлайн`);
-        var accepted = mapCase.acceptFibCall(id);
-        if (!accepted) return out.error(player, `Вызов #${id} принят другим агентом`);
-        notifs.success(rec, `${player.name} принял ваш вызов, оставайтесь на месте`, header);
-        var text = `Вы приняли вызов от <br/><span>${rec.name}</span>`;
-        out.success(player, text);
-        player.call(`waypoint.set`, [rec.position.x, rec.position.y]);
-    },
+    // "mapCase.fib.calls.add": (player, description) => {
+    //     mapCase.addFibCall(player, description);
+    // },
+    // "mapCase.fib.calls.remove": (player, id) => {
+    //     mapCase.removeFibCall(id);
+    // },
+    // "mapCase.fib.calls.accept": (player, id) => {
+    //     // console.log(`calls.accept: ${player.name} ${id}`)
+    //     if (!factions.isFibFaction(player.character.factionId)) return out.error(player, `Вы не являетесь агентом`);
+    //     var header = `Вызов FIB`;
+    //     var rec = mp.players.getBySqlId(id);
+    //     if (!rec || !rec.character) return out.error(player, `Игрок #${id} оффлайн`);
+    //     var accepted = mapCase.acceptFibCall(id);
+    //     if (!accepted) return out.error(player, `Вызов #${id} принят другим агентом`);
+    //     notifs.success(rec, `${player.name} принял ваш вызов, оставайтесь на месте`, header);
+    //     var text = `Вы приняли вызов от <br/><span>${rec.name}</span>`;
+    //     out.success(player, text);
+    //     player.call(`waypoint.set`, [rec.position.x, rec.position.y]);
+    //
+    //     mp.players.forEach(_rec => {
+    //         if (!_rec.character) return;
+    //         if (_rec.character.factionId != player.character.factionId) return;
+    //
+    //         notifs.info(_rec, `${player.name} принял вызов ${rec.name}`, header);
+    //     });
+    // },
     "mapCase.fib.rank.raise": (player, recId) => {
         if (!factions.isFibFaction(player.character.factionId)) return out.error(player, `Вы не являетесь агентом`);
         if (!factions.canGiveRank(player)) return out.error(player, `Недостаточно прав`);
@@ -682,6 +698,13 @@ module.exports = {
         var text = `Вы приняли вызов от <br/><span>${rec.name}</span>`;
         out.success(player, text);
         player.call(`waypoint.set`, [rec.position.x, rec.position.y]);
+
+        mp.players.forEach(_rec => {
+            if (!_rec.character) return;
+            if (_rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(_rec, `${player.name} принял вызов ${rec.name}`, header);
+        });
     },
     "mapCase.ems.rank.raise": (player, recId) => {
         if (!factions.isHospitalFaction(player.character.factionId)) return out.error(player, `Вы не являетесь медиком`);
@@ -836,7 +859,7 @@ module.exports = {
     "playerQuit": (player) => {
         if (!player.character) return;
         mapCase.removePoliceCall(player.character.id);
-        mapCase.removeFibCall(player.character.id);
+        // mapCase.removeFibCall(player.character.id);
         mapCase.removeHospitalCall(player.character.id);
         mapCase.removeNewsAd(player.id);
         if (player.character.wanted) {

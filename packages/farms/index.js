@@ -313,6 +313,7 @@ module.exports = {
         });
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
+            if (player.vehicle) return;
             player.call(`selectMenu.show`, [`farm`]);
             var data = {
                 id: farm.id,
