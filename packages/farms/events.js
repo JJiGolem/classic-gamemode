@@ -220,14 +220,14 @@ module.exports = {
                 var rec = mp.players.at(playerId);
                 if (!rec || rec.character.id != characterId) return;
                 // TODO: проверка на присмерти
+                rec.addAttachment("farmTrowel", true);
                 if (!rec.farmJob) return;
                 var obj = mp.objects.at(objId);
-                rec.addAttachment("farmTrowel", true);
                 if (!obj || !obj.field) {
                     return notifs.error(rec, `В этой части поля урожай уже собран`, header);
                 }
                 var names = ["farmProductA", "farmProductA", "farmProductB", "farmProductC"];
-                player.addAttachment(names[field.type]);
+                rec.addAttachment(names[field.type]);
 
                 obj.count--;
                 obj.field.count--;
