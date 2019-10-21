@@ -232,7 +232,7 @@ module.exports = {
         // rec = player; // for tests
         if (!rec || !rec.character) return notifs.error(player, `Игрок не найден`, header);
         var dist = player.dist(rec.position);
-        if (dist > 5 && data.recId != null) return notifs.error(player, `${rec.name} далеко`, header);
+        if (dist > 5) return notifs.error(player, `${rec.name} далеко`, header);
         var character = player.character;
         if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, header);
@@ -271,7 +271,7 @@ module.exports = {
 
         if (!rec || !rec.character) return out(`Игрок не найден`);
         var dist = player.dist(rec.position);
-        if (dist > 20 && data.recId != null) return out(`${rec.name} далеко`);
+        if (dist > 5) return out(`${rec.name} далеко`);
         var character = player.character;
         if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, header);
