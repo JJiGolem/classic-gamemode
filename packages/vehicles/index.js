@@ -234,8 +234,8 @@ module.exports = {
 
         var properties = {
             name: modelName,
-            maxFuel: 50,
-            consumption: 2,
+            maxFuel: 80,
+            consumption: 1.5,
             license: 1,
             price: 100000,
             vehType: 0
