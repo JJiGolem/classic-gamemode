@@ -48,6 +48,8 @@ let peds = [
 let localPlayer = mp.players.local;
 let sqlId;
 
+let timeoutEndFishing;
+
 let isBinding = false;
 let isEnter = false;
 let isStarted = false;
@@ -186,6 +188,8 @@ mp.events.add('fishing.game.menu', () => {
 mp.events.add('fishing.game.enter', () => {
     if (mp.busy.includes()) return;
 
+    clearTimeout(timeoutEndFishing);
+
     mp.busy.add('fishing.game', false);
     playBaseAnimation(true);
     mp.utils.disablePlayerMoving(true);
@@ -209,10 +213,14 @@ mp.events.add('fishing.game.fetch', (speed, zone, weight) => {
 mp.events.add('fishing.game.end', (result) => {
     playBaseAnimation(true);
     mp.events.callRemote('fishing.game.end', result);
-    setTimeout(() => {
-        isStarted = false;
-        mp.callCEFV(`fishing.clearData();`);
-        mp.callCEFVN({ "fishing.isStarted": false });
+    timeoutEndFishing = setTimeout(() => {
+        try {
+            isStarted = false;
+            mp.callCEFV(`fishing.clearData();`);
+            mp.callCEFVN({ "fishing.isStarted": false });
+        } catch (e) {
+            
+        }
     }, 1500);
 });
 
