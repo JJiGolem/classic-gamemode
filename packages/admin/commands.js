@@ -128,7 +128,7 @@ module.exports = {
     "/branch": {
         access: 6,
         description: "Переключиться на выбранную ветку.",
-        args: "[название ветки]",
+        args: "[ветка]",
         handler: (player, args, out) => {
 
             var exec = require("exec");
@@ -145,7 +145,7 @@ module.exports = {
         args: "",
         handler: (player, args, out) => {
             var exec = require("exec");
-            exec(`cd ${__dirname} && git clean -d -f && git stash && git pull`, (error, stdout, stderr) => {
+            exec(`cd ${__dirname} &&  && git pull`, (error, stdout, stderr) => {
                 if (error) out.error(stderr, player);
                 out.log(stdout, player);
                 out.info(`${player.name} обновил сборку сервера`);
