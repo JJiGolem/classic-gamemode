@@ -73,11 +73,6 @@ module.exports = {
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (vehicle.key == 'market' && seat == -1) {
-            player.call('chat.message.push', [`!{#f494ff} [MARKET INFO]`]);
-            player.call('chat.message.push', [`!{#f494ff} Пробег ${vehicle.mileage}`]);
-            player.call('chat.message.push', [`!{#f494ff} Название ${vehicle.properties.name}`]);
-            player.call('chat.message.push', [`!{#f494ff} spot ${vehicle.marketSpot}`]);
-
             let data = {
                 name: vehicle.properties.name,
                 price: vehicle.properties.price * PRICE_CONFIG.BUY,
