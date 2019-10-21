@@ -4,6 +4,7 @@ var hud = new Vue({
         players: 0,
         maxPlayers: 1000,
         build: 0,
+        branch: "",
         wanted: 0,
         cash: 0,
         bank: 0,
