@@ -104,6 +104,7 @@ mp.events.add({
     "busy.remove": mp.busy.remove,
     "time.main.tick": () => {
         if (mp.busy.mouses.length && !mp.gui.cursor.visible) mp.gui.cursor.show(true, true);
+        mp.game.player.resetStamina();
     }
 });
 
