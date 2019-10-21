@@ -400,7 +400,6 @@ module.exports = {
     deleteOfflineMember(character) {
         this.fullDeleteItems(character.id, character.factionId);
 
-        // TODO: реализовать
         // db.Models.CharacterInventory.destroy({
         //     where: {
         //         playerId: character.id
@@ -420,6 +419,7 @@ module.exports = {
         //         }
         //     }
         // });
+        inventory.deleteByParams(character.id, null, ['owner', 'faction'], [character.id, character.factionId]);
 
         character.factionId = null;
         character.factionRank = null;
