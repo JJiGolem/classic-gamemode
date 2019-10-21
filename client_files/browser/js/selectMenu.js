@@ -7181,6 +7181,7 @@ var selectMenu = new Vue({
         },
         // Нажата клавиша 'Назад'
         onBackspacePressed() {
+            if (this.isEditing) return;
             this.menu.handler("onBackspacePressed");
             mp.trigger(`selectMenu.backSound.play`);
         },
