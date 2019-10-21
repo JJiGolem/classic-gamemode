@@ -175,6 +175,7 @@ module.exports = {
                     destroys: 0
                 }
                 veh = await vehicles.spawnVehicle(veh);
+                veh.spawnedBy = player.name;
                 mp.events.call("admin.notify.all", `!{#e0bc43}[A] ${player.name} создал транспорт ${veh.modelName}`);
             }
         }
