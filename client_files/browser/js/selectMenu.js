@@ -7165,6 +7165,7 @@ var selectMenu = new Vue({
         // ************** События взаимодействия с меню **************
         // Выбран пункт меню
         onItemSelected() {
+            this.notification = null;
             this.menu.handler("onItemSelected");
             mp.trigger(`selectMenu.selectSound.play`);
         },
