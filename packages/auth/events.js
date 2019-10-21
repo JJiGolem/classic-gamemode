@@ -25,6 +25,7 @@ module.exports = {
                     console.log(`[WHITELIST] ${player.socialClub} пытался войти, но его нет в вайтлисте`);
                     player.call('notifications.push.error', [`Social Club ${player.socialClub} не находится в вайтлисте`]);
                     player.kick("Kicked");
+                    return;
                 }
             }
         }
