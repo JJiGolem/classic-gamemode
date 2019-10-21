@@ -84,9 +84,14 @@ mp.events.add('render', () => {
                     z: localPlayer.position.z
                 }
 
-                // mp.console('water: ' + Math.abs(mp.game.water.getWaterHeight(point.x, point.y, point.z, 0)));
-                // mp.console('ground: ' + mp.game.gameplay.getGroundZFor3dCoord(point.x, point.y, point.z - 5, 0.0, false));
-                if (Math.abs(mp.game.water.getWaterHeight(point.x, point.y, point.z, 0)) > 0 && mp.game.gameplay.getGroundZFor3dCoord(point.x, point.y, point.z, 0.0, false) < 0) {
+                let ground = mp.game.gameplay.getGroundZFor3dCoord(point.x, point.y, point.z, 0.0, false);
+                let water = Math.abs(mp.game.water.getWaterHeight(point.x, point.y, point.z, 0));
+
+                // mp.console('z: ' + point.z);
+                // mp.console('ground: ' + ground);
+                // mp.console('water: ' + water);
+
+                if (water > 0 && ground < water && ground != 0) {
                     isShowPrompt = true;
                     mp.events.call('fishing.game.menu');
                 } else {
@@ -145,7 +150,7 @@ mp.events.add('inventory.addItem', (item) => {
 mp.events.add('fishing.menu.show', () => {
    if (mp.busy.includes()) return;
 
-   mp.busy.add('fishing.menu');
+   mp.busy.add('fishing.menu', false);
    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["fishingMenu"])`);
    mp.callCEFV(`selectMenu.show = true`);
 });
@@ -219,7 +224,7 @@ mp.events.add('fishing.game.end', (result) => {
             mp.callCEFV(`fishing.clearData();`);
             mp.callCEFVN({ "fishing.isStarted": false });
         } catch (e) {
-            
+
         }
     }, 1500);
 });

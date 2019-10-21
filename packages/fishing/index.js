@@ -23,6 +23,8 @@ module.exports = {
 
     fishes: [],
 
+    fishers: [],
+
     colshapes: [],
 
     getRodId() {
@@ -34,11 +36,11 @@ module.exports = {
     },
 
     async initFishersFromDB() {
-        let fishers = await db.Models.Fisher.findAll({
+        this.fishers = await db.Models.Fisher.findAll({
             raw: true
         });
 
-        fishers.forEach(fisher => {
+        this.fishers.forEach(fisher => {
             let colshape = this.createFisherColshape(fisher);
             this.colshapes.push(colshape);
             this.createMarker(fisher);
@@ -129,5 +131,15 @@ module.exports = {
             player.call('fishing.fish.sell.ans', [0]);
             return notifs.error(player, 'У вас нет рыбы', 'Ошибка');
         }
+    },
+
+    getFisherPosition(id) {
+        let fisher = this.fishers.find(fisher => fisher.id == id);
+
+        return {
+            x: fisher.x,
+            y: fisher.y,
+            z: fisher.z
+        };
     }
 }
