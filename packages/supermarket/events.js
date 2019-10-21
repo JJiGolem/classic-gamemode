@@ -12,7 +12,6 @@ module.exports = {
         if (!player.character) return;
         if (shape.isSupermarket) {
             let id = shape.supermarketId;
-            player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} зашел в колшейп Supermarket ${shape.supermarketId}`]);
             let data = supermarket.getRawShopData(id);
             let priceConfig = supermarket.getPriceConfig();
             player.call('supermarket.enter', [data, priceConfig]);
@@ -22,7 +21,6 @@ module.exports = {
     "playerExitColshape": (player, shape) => {
         if (!player.character) return;
         if (shape.isSupermarket) {
-            player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} вышел с колшейпа Supermarket ${shape.supermarketId}`]);
             player.call('supermarket.exit');
         }
     },

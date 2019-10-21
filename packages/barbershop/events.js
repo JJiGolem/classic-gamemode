@@ -11,7 +11,6 @@ module.exports = {
         if (!player.character) return;
 
         if (shape.isBarbershop) {
-                player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} зашел в колшейп BS ${shape.barbershopId}`]);
                 player.call('prompt.show', ['Нажмите <span>E</span> для того, чтобы сменить прическу']);
                 player.call('barbershop.shape', [true]);
                 player.currentBarbershopId = shape.barbershopId;
@@ -21,7 +20,6 @@ module.exports = {
         if (!player.character) return;
 
         if (shape.isBarbershop) {
-                player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} вышел с колшейпа BS ${shape.barbershopId}`]);
                 player.call('barbershop.shape', [false]);
                 player.call('prompt.hide');
         }

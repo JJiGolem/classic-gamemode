@@ -34,7 +34,6 @@ module.exports = {
         if (shape.isCarService) {
             player.currentCarServiceId = shape.carServiceId;
             if (player.character.job == 1) {
-                player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} зашел в колшейп carService`]);
                 player.call('carservice.shape.enter');
             }
         }
@@ -44,7 +43,6 @@ module.exports = {
 
         if (shape.isCarService) {
             if (player.character.job == 1) {
-                player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} вышел с колшейпа carService`]);
                 player.call('carservice.shape.leave');
             }
         }

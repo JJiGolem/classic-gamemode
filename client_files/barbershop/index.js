@@ -42,7 +42,6 @@ mp.keys.bind(0x45, true, () => {
 mp.events.add('barbershop.enter', (shopData, gender, appearanceData, priceData) => {
     bindKeys(true);
     bType = shopData.bType;
-    mp.chat.debug(bType);
     controlsDisabled = true;
     mp.events.call('hud.enable', false);
     mp.game.ui.displayRadar(false);
