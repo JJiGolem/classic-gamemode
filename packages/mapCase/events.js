@@ -418,7 +418,8 @@ module.exports = {
         out.success(player, text);
     },
     "mapCase.fib.init": (player) => {
-        player.call(`mapCase.fib.calls.add`, [mapCase.fibCalls]);
+        // player.call(`mapCase.fib.calls.add`, [mapCase.fibCalls]);
+        player.call(`mapCase.fib.calls.add`, [mapCase.policeCalls]);
 
         var wanted = police.getWanted();
         wanted = mapCase.convertWanted(wanted);
@@ -858,7 +859,7 @@ module.exports = {
     "playerQuit": (player) => {
         if (!player.character) return;
         mapCase.removePoliceCall(player.character.id);
-        mapCase.removeFibCall(player.character.id);
+        // mapCase.removeFibCall(player.character.id);
         mapCase.removeHospitalCall(player.character.id);
         mapCase.removeNewsAd(player.id);
         if (player.character.wanted) {

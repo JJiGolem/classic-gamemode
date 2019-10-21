@@ -116,23 +116,7 @@ module.exports = {
             },
         };
 
-        var dbItems = await db.Models.CharacterInventory.findAll({
-            where: {
-                playerId: player.character.id
-            },
-            order: [
-                ['parentId', 'ASC']
-            ],
-            include: [{
-                    model: db.Models.CharacterInventoryParam,
-                    as: "params"
-                },
-                {
-                    model: db.Models.InventoryItem,
-                    as: "item"
-                }
-            ]
-        });
+        var dbItems = await this.loadCharacterItemsFromDB(player.character.id);
         player.inventory.items = dbItems;
 
         this.updateAllView(player);
@@ -211,6 +195,26 @@ module.exports = {
         });
         holder.inventory.items = dbItems;
         console.log(`[INVENTORY] Для дома #${holder.houseInfo.id} загружены предметы (${dbItems.length} шт.)`);
+    },
+    async loadCharacterItemsFromDB(characterId) {
+        var items = await db.Models.CharacterInventory.findAll({
+            where: {
+                playerId: characterId
+            },
+            order: [
+                ['parentId', 'ASC']
+            ],
+            include: [{
+                    model: db.Models.CharacterInventoryParam,
+                    as: "params"
+                },
+                {
+                    model: db.Models.InventoryItem,
+                    as: "item"
+                }
+            ]
+        });
+        return items;
     },
     convertServerToClientItems(dbItems) {
         // console.log("convertServerToClientItems");
@@ -956,18 +960,19 @@ module.exports = {
     deleteByParams(player, itemIds, keys, values) {
         // debug(`deleteByParams: ${player.name}`)
         if (typeof player == 'number') { // удаление у игрока оффлайн
-            db.Models.CharacterInventory.destroy({
-                where: {
-                    playerId: player
-                },
-                include: [{
-                    model: db.Models.CharacterInventoryParam,
-                    where: {
-                        key: keys,
-                        value: values
-                    }
-                }]
-            });
+            // TODO: реализовать
+            // db.Models.CharacterInventory.destroy({
+            //     where: {
+            //         playerId: player
+            //     },
+            //     include: [{
+            //         model: db.Models.CharacterInventoryParam,
+            //         where: {
+            //             key: keys,
+            //             value: values
+            //         }
+            //     }]
+            // });
             return;
         }
         if (itemIds && !Array.isArray(itemIds)) itemIds = [itemIds];

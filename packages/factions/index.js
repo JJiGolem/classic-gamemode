@@ -400,25 +400,26 @@ module.exports = {
     deleteOfflineMember(character) {
         this.fullDeleteItems(character.id, character.factionId);
 
-        db.Models.CharacterInventory.destroy({
-            where: {
-                playerId: character.id
-            },
-            include: {
-                model: db.Models.CharacterInventoryParam,
-                where: {
-                    [Op.or]: [{
-                            key: "owner",
-                            value: character.id
-                        },
-                        {
-                            key: "faction",
-                            value: character.factionId
-                        }
-                    ]
-                }
-            }
-        });
+        // TODO: реализовать
+        // db.Models.CharacterInventory.destroy({
+        //     where: {
+        //         playerId: character.id
+        //     },
+        //     include: {
+        //         model: db.Models.CharacterInventoryParam,
+        //         where: {
+        //             [Op.or]: [{
+        //                     key: "owner",
+        //                     value: character.id
+        //                 },
+        //                 {
+        //                     key: "faction",
+        //                     value: character.factionId
+        //                 }
+        //             ]
+        //         }
+        //     }
+        // });
 
         character.factionId = null;
         character.factionRank = null;
