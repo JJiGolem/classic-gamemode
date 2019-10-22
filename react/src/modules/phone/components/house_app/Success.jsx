@@ -29,7 +29,6 @@ class Success extends Component {
     render() {
 
         const { name, area } = this.props;
-        console.log(name, area);
 
         return (
             <Fragment>

@@ -46,7 +46,7 @@ let peds = [
 ];
 
 let localPlayer = mp.players.local;
-let sqlId;
+let rods = [];
 
 let timeoutEndFishing;
 
@@ -121,29 +121,40 @@ mp.events.add('inventory.initItems', (items) => {
                 for (let pocketItem in pocket.items) {
                     if (pocket.items[pocketItem].itemId == 5) {
                         isHaveRod = true;
-                        sqlId = pocket.items[pocketItem].sqlId;
+                        rods.push(pocket.items[pocketItem].sqlId);
                     }
                 }
             });
         }
     }
+
+    // debug(countRods);
 });
 
 mp.events.add('inventory.deleteItem', (item) => {
-    if (item == sqlId) {
-        isHaveRod = false;
-        clearInterval(intervalFishing);
-        isIntervalCreated = false;
-        bindButtons(false);
-        mp.events.call('prompt.hide');
-        isShowPrompt = false;
+    debug(item);
+    if (rods.includes(item)) {
+        let index = rods.findIndex(rod => rod == item);
+        rods.splice(index, 1);
+
+        if (rods.length == 0) {
+            isHaveRod = false;
+            clearInterval(intervalFishing);
+            isIntervalCreated = false;
+            bindButtons(false);
+            mp.events.call('prompt.hide');
+            isShowPrompt = false;
+        }
+
+        debug('delete rod');
+        debug(rods.length);
     }
 });
 
 mp.events.add('inventory.addItem', (item) => {
     if (item.itemId == 5) {
-        sqlId = item.sqlId;
         isHaveRod = true;
+        rods.push(item.sqlId)
     }
 });
 

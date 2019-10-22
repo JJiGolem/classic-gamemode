@@ -73,9 +73,9 @@ export const setSellInfoBusiness = info => ({
     payload: info
 });
 
-export const createOrderBusiness = (productCount, productPrice) => ({
+export const createOrderBusiness = (productsCount, productsPrice) => ({
     type: 'CREATE_ORDER_BUSINESS',
-    payload: { productCount, productPrice }
+    payload: { productsCount, productsPrice }
 });
 
 export const cancelOrderBusiness = () => ({
