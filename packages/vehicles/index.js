@@ -115,7 +115,7 @@ module.exports = {
         vehicle.fuelTick = 60000 / vehicle.consumption;
         if (!vehicle.fuelTick || isNaN(vehicle.fuelTick)) vehicle.fuelTick = 60000;
 
-        vehicle.fuelTimer = mp.timer.addInterval(() => {
+        vehicle.fuelTimer = timer.addInterval(() => {
             try {
                 if (vehicle.engine) {
                     vehicle.fuel = vehicle.fuel - 1;
@@ -138,7 +138,7 @@ module.exports = {
     },
     respawnVehicle(veh) {
         if (!mp.vehicles.exists(veh)) return;
-        mp.timer.remove(veh.fuelTimer);
+        timer.remove(veh.fuelTimer);
         if (veh.key == "admin") { /// Если админская, не респавним
             veh.destroy();
             return;
@@ -412,13 +412,13 @@ module.exports = {
     updateConsumption(vehicle) {
         if (!vehicle) return;
         try {
-            mp.timer.remove(vehicle.fuelTimer);
+            timer.remove(vehicle.fuelTimer);
 
             let multiplier = vehicle.multiplier;
             vehicle.consumption = vehicle.properties.consumption * multiplier;
             vehicle.fuelTick = 60000 / vehicle.consumption;
 
-            vehicle.fuelTimer = mp.timer.addInterval(() => {
+            vehicle.fuelTimer = timer.addInterval(() => {
                 try {
                     if (vehicle.engine) {
 

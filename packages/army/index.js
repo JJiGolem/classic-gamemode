@@ -72,7 +72,7 @@ module.exports = {
             startTime: Date.now(),
             pos: player.position
         };
-        mp.timer.add(() => {
+        timer.add(() => {
             try {
                 this.stopCapture();
             } catch (e) {

@@ -106,7 +106,7 @@ module.exports = {
         return veh;
     },
     startCarListUpdating() {
-        mp.timer.addInterval(() => {
+        timer.addInterval(() => {
             try {
                 this.updateCarList();
             } catch (err) {

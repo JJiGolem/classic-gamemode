@@ -177,7 +177,7 @@ module.exports = {
                 mp.events.call('animations.play', player, 'mini@repair', 'fixing_a_player', 1, 49);
                 break;
         }
-        mp.timer.add(() => {
+        timer.add(() => {
             try {
                 mp.events.call('carservice.diagnostics.end', player);
             } catch (err) {
@@ -339,7 +339,7 @@ module.exports = {
                             break;
                     }
 
-                    mp.timer.add(() => {
+                    timer.add(() => {
                         try {
                             mp.events.call('carservice.service.end.mechanic', mechanic, 0);
                             mp.events.call('carservice.service.end.target', target, 0);

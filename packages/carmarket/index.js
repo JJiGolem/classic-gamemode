@@ -141,7 +141,7 @@ module.exports = {
         });
         this.addMarketVehicle(vehicle);
         if (vehicle.fuelTimer) {
-            mp.timer.remove(vehicle.fuelTimer);
+            timer.remove(vehicle.fuelTimer);
         }
         vehicle.destroy();
     },
@@ -151,7 +151,7 @@ module.exports = {
     destroyMarketVehicleById(id) {
         mp.vehicles.forEach((current) => {
             if (current.sqlId == id) {
-                mp.timer.remove(current.fuelTimer);
+                timer.remove(current.fuelTimer);
                 current.destroy();
             }
         });
@@ -191,7 +191,7 @@ module.exports = {
                 inventory.fullDeleteItemsByParams(33, 'vehId', veh.db.id);
                 if (player) {
                     // console.log(veh);
-                    mp.timer.remove(veh.fuelTimer);
+                    timer.remove(veh.fuelTimer);
                     veh.destroy();
                     vehicles.removeVehicleFromPlayerVehicleList(player, veh.sqlId);
                     vehicles.removeVehicleFromCarPlace(player, veh);

@@ -125,7 +125,7 @@ module.exports = {
             startTime: Date.now(),
             bizId: biz.info.id,
         };
-        mp.timer.add(() => {
+        timer.add(() => {
             try {
                 this.stopBizWar(zone);
             } catch (e) {

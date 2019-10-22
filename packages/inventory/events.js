@@ -145,7 +145,7 @@ module.exports = {
             // TODO: проиграть анимацию
             // mp.events.call("anim", player, "random@domestic", "pickup_low", 0, 1000);
             notifs.success(player, `Предмет ${inventory.getName(obj.item.itemId)} в инвентаре`, header);
-            mp.timer.remove(obj.destroyTimer);
+            timer.remove(obj.destroyTimer);
             obj.destroy();
             var rec = mp.players.at(obj.playerId);
             if (!rec || !rec.character) return;

@@ -141,7 +141,7 @@ module.exports = {
         handler: async (player, args, out) => {
             let veh = player.vehicle;
             if (!veh) return out.error('Вы не в авто!', player);
-            mp.timer.remove(veh.fuelTimer);
+            timer.remove(veh.fuelTimer);
             if (!veh.db || veh.key == 'admin') {
                 veh.destroy();
                 out.info('Автомобиль удален, но его нет в БД', player);

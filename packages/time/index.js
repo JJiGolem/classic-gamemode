@@ -15,7 +15,7 @@ module.exports = {
     },
     initPayDayTimer() {
         var lastPayDayHour = new Date().getHours();
-        mp.timer.addInterval(() => {
+        timer.addInterval(() => {
             try {
                 ticks++;
                 mp.events.call(`time.main.tick`, ticks);

@@ -949,7 +949,7 @@ module.exports = {
                 }
             }
             if (doDelete) {
-                mp.timer.remove(obj.destroyTimer);
+                timer.remove(obj.destroyTimer);
                 obj.destroy();
                 var rec = mp.players.at(obj.playerId);
                 if (!rec || !rec.character) return;
@@ -1179,7 +1179,7 @@ module.exports = {
 
         var objId = newObj.id;
         var sqlId = item.id;
-        newObj.destroyTimer = mp.timer.add(() => {
+        newObj.destroyTimer = timer.add(() => {
             try {
                 var obj = mp.objects.at(objId);
                 if (!obj || !obj.item || obj.item.id != sqlId) return;
@@ -1196,7 +1196,7 @@ module.exports = {
         var ground = player.inventory.ground;
         if (ground.length > this.groundMaxItems) {
             var obj = ground.shift();
-            mp.timer.remove(obj.destroyTimer);
+            timer.remove(obj.destroyTimer);
             obj.destroy();
         }
     },

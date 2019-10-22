@@ -660,7 +660,7 @@ module.exports = {
         var time = Date.now() - date;
         player.character.arrestTime -= time;
         player.character.save();
-        mp.timer.remove(player.cellArrestTimer);
-        mp.timer.remove(player.jailArrestTimer);
+        timer.remove(player.cellArrestTimer);
+        timer.remove(player.jailArrestTimer);
     },
 }
