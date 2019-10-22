@@ -4,6 +4,7 @@ var dbVehicleProperties;
 var plates = [];
 let inventory = call('inventory');
 let utils = call('utils');
+let timer = call('timer');
 let tuning = call('tuning');
 
 const MAX_BREAK_LEVEL = 2;
@@ -84,14 +85,16 @@ module.exports = {
         }
         if (!veh.properties) {
             vehicle.properties = this.setVehiclePropertiesByModel(veh.modelName);
-        } else {
+        }
+        else {
             vehicle.properties = veh.properties;
         }
 
         if (veh.key == 'private' || veh.key == 'market') { // temp
             if (!veh.tuning) {
                 await this.initTuning(vehicle);
-            } else {
+            }
+            else {
                 vehicle.tuning = veh.tuning;
             }
             tuning.setTuning(vehicle);
@@ -112,7 +115,7 @@ module.exports = {
         vehicle.fuelTick = 60000 / vehicle.consumption;
         if (!vehicle.fuelTick || isNaN(vehicle.fuelTick)) vehicle.fuelTick = 60000;
 
-        vehicle.fuelTimer = setInterval(() => {
+        vehicle.fuelTimer = mp.timer.addInterval(() => {
             try {
                 if (vehicle.engine) {
                     vehicle.fuel = vehicle.fuel - 1;
@@ -123,7 +126,8 @@ module.exports = {
                         return;
                     }
                 }
-            } catch (err) {
+            }
+            catch (err) {
                 console.log(err);
             }
         }, vehicle.fuelTick);
@@ -257,7 +261,8 @@ module.exports = {
                     fuel: Math.ceil(veh.fuel)
                 });
                 console.log(`[DEBUG] Обновили пробег для ${veh.properties.name}. Текущий пробег: ${veh.mileage}. К занесению: ${value} км и ${Math.ceil(veh.fuel)} л`);
-            } catch (err) {
+            }
+            catch (err) {
                 console.log(err);
             }
         }
@@ -307,7 +312,8 @@ module.exports = {
                         //   }
                     }
                 }
-            } else {
+            }
+            else {
                 let veh = dbPrivate[0];
                 if (dbPrivate[0].parkingDate == null) {
                     let now = new Date();
@@ -416,7 +422,7 @@ module.exports = {
             vehicle.consumption = vehicle.properties.consumption * multiplier;
             vehicle.fuelTick = 60000 / vehicle.consumption;
 
-            vehicle.fuelTimer = setInterval(() => {
+            vehicle.fuelTimer = mp.timer.addInterval(() => {
                 try {
                     if (vehicle.engine) {
 
@@ -428,11 +434,13 @@ module.exports = {
                             return;
                         }
                     }
-                } catch (err) {
+                }
+                catch (err) {
                     console.log(err);
                 }
             }, vehicle.fuelTick);
-        } catch (err) {
+        }
+        catch (err) {
             console.log(err);
         }
     },
@@ -477,7 +485,8 @@ module.exports = {
             place.veh = vehicle;
             vehicle.isInGarage = false;
 
-        } else {
+        }
+        else {
             let index = player.carPlaces.findIndex(x => x.veh == null && x.d != 0);
             let place = player.carPlaces[index];
             vehicle.carPlaceIndex = index;
@@ -528,7 +537,8 @@ module.exports = {
         console.log(`hasHouse = ${hasHouse}`)
         if (!hasHouse) {
             if (player.vehicleList.length >= 1) return false;
-        } else {
+        }
+        else {
             if (player.carPlaces.length > 1 && player.vehicleList.length + 1 > player.carPlaces.length - 1) return false;
             if (player.carPlaces.length == 1 && player.vehicleList.length >= player.carPlaces.length) return false;
         }

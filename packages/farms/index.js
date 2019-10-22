@@ -2,6 +2,7 @@
 
 let inventory = call('inventory');
 let money = call('money');
+let timer = call('timer');
 let utils = call('utils');
 
 module.exports = {
@@ -569,7 +570,7 @@ module.exports = {
         field.state = 0;
         this.fieldObjects[field.id] = [];
 
-        var timerId = setInterval(() => {
+        var timerId = mp.timer.addInterval(() => {
             try {
                 field.state++;
                 if (field.state == 1) {

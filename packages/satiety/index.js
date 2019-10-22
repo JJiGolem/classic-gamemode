@@ -1,5 +1,6 @@
 "use strict";
 var notifs = require('../notifications');
+let timer = call('timer');
 
 module.exports = {
     // Время, через которое будет убавляться сытость и жажда у игрока (ms)
@@ -23,7 +24,7 @@ module.exports = {
 
         clearInterval(this.timers[playerId]);
         delete this.timers[playerId];
-        this.timers[playerId] = setInterval(() => {
+        this.timers[playerId] = mp.timer.addInterval(() => {
             try {
                 var rec = mp.players.at(playerId);
                 if (!rec || rec.character.id != characterId) {

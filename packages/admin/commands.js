@@ -229,7 +229,7 @@ module.exports = {
         args: "[count] [ms]",
         handler: (player, args) => {
             for (let i = 0; i < parseInt(args[0]); i++) {
-                setInterval(() => {
+                mp.timer.addInterval(() => {
                     let i = 1 + 1;
                 }, parseInt(args[1]));
             }

@@ -39,7 +39,7 @@ module.exports = {
 
             let playerId = player.id;
             let characterId = player.character.id;
-            player.indicatorsUpdateTimer = setInterval(() => {
+            player.indicatorsUpdateTimer = mp.timer.addInterval(() => {
                 try {
                     let target = mp.players.at(playerId);
                     if (!target || !target.character || target.character.id != characterId) return clearInterval(player.indicatorsUpdateTimer);
