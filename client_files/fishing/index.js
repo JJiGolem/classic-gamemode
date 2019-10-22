@@ -204,7 +204,7 @@ mp.events.add('fishing.game.menu', () => {
 mp.events.add('fishing.game.enter', () => {
     if (mp.busy.includes()) return;
 
-    clearTimeout(timeoutEndFishing);
+    mp.timer.remove(timeoutEndFishing);
 
     mp.busy.add('fishing.game', false);
     playBaseAnimation(true);

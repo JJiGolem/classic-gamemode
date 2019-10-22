@@ -144,7 +144,7 @@ function createCheckpoint(data, timeout) {
     }, timeout);
 }
 function deleteCheckpoint() {
-    clearTimeout(checkpointTimer);
+    mp.timer.remove(checkpointTimer);
     if (!checkpoint) return;
     checkpoint.destroy();
     checkpoint = null;

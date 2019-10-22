@@ -35,7 +35,7 @@ mp.death = {
         mp.callCEFV(`timer.start('death', ${this.knockTime})`);
     },
     stopKnockTimer() {
-        clearTimeout(this.knockTimer);
+        mp.timer.remove(this.knockTimer);
         mp.callCEFV(`timer.stop()`);
     }
 };

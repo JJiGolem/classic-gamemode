@@ -207,7 +207,7 @@ mp.events.add('characterInit.create.reset', () => {
 let setGenderTimer = null;
 mp.events.add('characterInit.create.setGender', gender => {
     if (setGenderTimer != null) {
-        clearTimeout(setGenderTimer);
+        mp.timer.remove(setGenderTimer);
     }
     setGenderTimer = mp.timer.add(function() {
         try {

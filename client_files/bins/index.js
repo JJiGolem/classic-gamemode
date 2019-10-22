@@ -44,7 +44,7 @@ mp.bins = {
         this.finding = true;
     },
     stopFinding() {
-        clearTimeout(this.trashTimer);
+        mp.timer.remove(this.trashTimer);
         if (this.finding) {
             mp.events.callRemote(`animations.stop`);
         }

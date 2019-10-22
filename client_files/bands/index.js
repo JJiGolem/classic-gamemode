@@ -81,7 +81,7 @@ mp.bands = {
     startCapture(bandId, enemyBandId, time, bandScore = 0, enemyBandScore = 0) {
         time = parseInt(time);
         mp.callCEFV(`captureScore.start(${bandId}, ${enemyBandId}, ${time}, ${bandScore}, ${enemyBandScore})`);
-        clearTimeout(this.captureTimer);
+        mp.timer.remove(this.captureTimer);
         this.removePlayerBlips();
         this.captureFactions = [bandId, enemyBandId];
 

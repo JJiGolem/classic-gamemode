@@ -116,7 +116,7 @@ mp.mapCasePd = {
         }, this.searchTime);
     },
     stopSearch(text = null) {
-        clearTimeout(this.searchTimer);
+        mp.timer.remove(this.searchTimer);
         this.searchTimer = null;
         this.searchPlayerId = null;
         if (text) mp.mapCase.showRedMessage(text);
@@ -224,7 +224,7 @@ mp.mapCaseFib = {
         }, this.searchTime);
     },
     stopSearch(text = null) {
-        clearTimeout(this.searchTimer);
+        mp.timer.remove(this.searchTimer);
         this.searchTimer = null;
         this.searchPlayerId = null;
         if (text) mp.mapCase.showRedMessage(text);

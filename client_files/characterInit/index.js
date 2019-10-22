@@ -248,7 +248,7 @@ let choose = function() {
     if (isBinding) {
         binding(false);
         isBinding = false;
-        if (creatorTimer != null) clearTimeout(creatorTimer);
+        if (creatorTimer != null) mp.timer.remove(creatorTimer);
         mp.events.callRemote('characterInit.choose', currentCharacter);
         mp.callCEFV(`loader.show = true;`);
     }

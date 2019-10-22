@@ -13,7 +13,7 @@ mp.animations = {
     animationTimers: {},
 
     playAnimation(player, a, time = null) {
-        clearTimeout(this.animationTimers[player.remoteId]);
+        mp.timer.remove(this.animationTimers[player.remoteId]);
         player.clearTasksImmediately();
         delete player.anim;
         if (!a) return;
@@ -23,7 +23,7 @@ mp.animations = {
         });
         if (!time) return;
         var id = player.remoteId;
-        clearTimeout(this.animationTimers[id]);
+        mp.timer.remove(this.animationTimers[id]);
         this.animationTimers[id] = mp.timer.add(() => {
             var rec = mp.players.atRemoteId(id);
             if (rec) rec.clearTasksImmediately();
