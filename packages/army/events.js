@@ -210,13 +210,16 @@ module.exports = {
         var faction = factions.getFaction(character.factionId);
         var header = `Склад ${faction.name}`;
 
-        if (faction.ammo < army.itemAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
         var itemIds = [24, 28];
+        var types = ["medicines", "ammo"];
 
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
+        var type = types[index];
 
+
+        if (faction[type] < army.itemAmmo) return notifs.error(player, `Недостаточно на складе`, header);
         var itemName = inventory.getInventoryItem(itemId).name;
         // var items = inventory.getArrayByItemId(player, itemId);
         // if (items.length > 0) return notifs.error(player, `Вы уже имеете ${itemName}`, header);
@@ -232,7 +235,7 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вам выданы ${itemName}`, header);
-            factions.setAmmo(faction, faction.ammo - army.itemAmmo);
+            factions.setProducts(faction, type, faction[type] - army.itemAmmo);
         });
     },
     "army.storage.guns.take": (player, index) => {
