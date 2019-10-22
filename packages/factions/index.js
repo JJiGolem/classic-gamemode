@@ -108,36 +108,8 @@ module.exports = {
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
             if (player.vehicle) return;
-            var boxType = "";
-            if (player.hasAttachment("ammoBox")) {
-                boxType = "ammo";
-            } else if (player.hasAttachment("medicinesBox")) {
-                boxType = "medicines";
-            } else if (this.isBandFaction(player.character.factionId) && this.isArmyFaction(faction)) {
-                // банды тырят БП у армии
-                if (faction.ammo < this.ammoBox) return notifs.error(player, `Склад пустой`, header);
-                player.addAttachment("ammoBox");
-                this.setAmmo(faction, faction.ammo - this.ammoBox);
-                return;
-            } else if (player.character.factionId == faction.id) {
-                var rank = this.getRank(faction, faction.ammoRank);
-                if (player.character.factionRank < rank.id) return notifs.error(player, `Взятие доступно с ${rank.name}`, header);
-                // сотрудник берет БП/Мед со склада
-                var boxType = "ammo";
-                if (this.isHospitalFaction(faction)) boxType = "medicines";
 
-                if (faction[boxType] < this[boxType + "Box"]) return notifs.error(player, `Склад пустой`, header);
-
-                player.addAttachment(boxType + "Box");
-                if (boxType == "ammo") this.setAmmo(faction, faction.ammo - this.ammoBox);
-                else this.setMedicines(faction, faction.medicines - this.medicinesBox);
-                return;
-            }
-
-            if (boxType && !this.canFillWarehouse(player, boxType, faction))
-                return notifs.error(player, `Нет прав для пополнения`, `Склад ${faction.name}`);
-
-            player.call("factions.insideFactionWarehouse", [true, boxType]);
+            player.call("factions.insideFactionWarehouse", [true]);
             player.insideFactionWarehouse = faction;
         };
         colshape.onExit = (player) => {
@@ -526,23 +498,40 @@ module.exports = {
     putBox(player) {
         var faction = player.insideFactionWarehouse;
         if (!faction) return notifs.error(player, `Вы далеко`, `Склад организации`);
+        var header = `Склад ${faction.name}`;
         if (player.hasAttachment("ammoBox")) {
             this.setAmmo(faction, faction.ammo + this.ammoBox);
             player.addAttachment("ammoBox", true);
-            notifs.info(player, `Боеприпасы: ${faction.ammo} из ${faction.maxAmmo} ед.`, `Склад ${faction.name}`);
-            if (faction.ammo == faction.maxAmmo) notifs.warning(player, `Склад заполнен`, `Склад ${faction.name}`);
+            notifs.info(player, `Боеприпасы: ${faction.ammo} из ${faction.maxAmmo} ед.`, header);
+            if (faction.ammo == faction.maxAmmo) notifs.warning(player, `Склад заполнен`, header);
         } else if (player.hasAttachment("medicinesBox")) {
-            faction.medicines += this.medicinesBox;
-            faction.save();
+            this.setMedicines(faction, faction.medicines + this.medicinesBox);
             player.addAttachment("medicinesBox", true);
-            notifs.info(player, `Медикаменты: ${faction.medicines} из ${faction.maxMedicines} ед.`, `Склад ${faction.name}`);
-            if (faction.medicines == faction.maxMedicines) notifs.warning(player, `Склад заполнен`, `Склад ${faction.name}`);
-        } else return;
+            notifs.info(player, `Медикаменты: ${faction.medicines} из ${faction.maxMedicines} ед.`, header);
+            if (faction.medicines == faction.maxMedicines) notifs.warning(player, `Склад заполнен`, header);
+        } else {
+            var type = "";
+            if (faction.maxAmmo) type = "ammo";
+            else if (faction.maxMedicines) type = "medicines";
+            if (!type) return notifs.error(player, `Подходящий товар не найден`, header);
+
+            if (faction[type] < this[type + "Box"]) return notifs.error(player, `Склад пустой`, header);
+            if (!this.canTakeWarehouse(player, type, faction)) return notifs.error(player, `Нет доступа`, header);
+
+            this.setProducts(faction, type, faction[type] - this[type + "Box"]);
+            player.addAttachment(type + "Box");
+        }
     },
     canFillWarehouse(player, boxType, faction) {
         if (!this.whiteListWarehouse[boxType]) return false;
         if (!this.whiteListWarehouse[boxType][player.character.factionId]) return false;
         return this.whiteListWarehouse[boxType][player.character.factionId].includes(faction.id)
+    },
+    canTakeWarehouse(player, boxType, faction) {
+        // банды тырят у армейцев
+        if (this.isBandFaction(player.character.factionId) && this.isArmyFaction(faction)) return true;
+        // игрок может брать в своей организации с определенного ранга
+        return player.character.factionId == faction.id && player.character.factionRank >= this.getRank(faction, faction.ammoRank).id;
     },
     canInvite(player) {
         if (!player.character.factionId) return false;
@@ -607,6 +596,10 @@ module.exports = {
         faction.medicines = count;
         faction.save();
         this.updateWarehosueLabel(faction);
+    },
+    setProducts(faction, type, count) {
+        if (type == "ammo") this.setAmmo(faction, count);
+        else if (type == "medicines") this.setMedicines(faction, count);
     },
     setMaxAmmo(faction, count) {
         faction.maxAmmo = count;
