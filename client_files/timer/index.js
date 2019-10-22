@@ -49,7 +49,7 @@ mp.timer = {
                     } catch (error) {
                         timers.splice(i, 1);
                         i--;
-                        mp.console(error);
+                        mp.console(JSON.stringify(error));
                     }
                 }
                 workTime = workTime + duration;
@@ -78,3 +78,24 @@ mp.timer = {
     }
 }
 mp.timer.init();
+
+
+/// Check server timer
+let timerCheckerServer = null;
+let isWork = true;
+mp.events.add('timer.check.start', (serverDuration) => {
+    if (timerCheckerServer != null) mp.timer.remove(timerCheckerServer);
+    timerCheckerServer = mp.timer.add(async () => {
+        if (!isWork) {
+            mp.events.callRemote("timer.error");
+            mp.timer.remove(timerCheckerServer);
+        }
+        isWork = false;
+    }, serverDuration * 2, true);
+});
+mp.events.add('timer.check.stop', () => {
+    mp.timer.remove(timerCheckerServer);
+});
+mp.events.add('timer.check.work', () => {
+    isWork = true;
+});

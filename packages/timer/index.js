@@ -5,10 +5,25 @@ const duration = 1000;
 let timers = new Array();
 let gId = 0;
 
+let checker = null;
+
+let error = false;
+
 /// Функции глобального таймера
 module.exports = {
+    setChecker(player) {
+        checker = player;
+        if (checker != null) checker.call('timer.check.start', [duration]);
+    },
+    getChecker() {
+        return checker;
+    },
+    throwError() {
+        error = true;
+    },
     init() {
         setInterval(async function() {
+            if (error) throw new Error("ТЕСТОВАЯ ОШИБКА");
             for (let i = 0; i < timers.length; i++) {
                 try {
                     if (timers[i].time <= Date.now()) {
@@ -27,6 +42,7 @@ module.exports = {
                     console.log(error);
                 }
             }
+            if (checker != null) checker.call('timer.check.work', []);
         }, duration);
     },
     /// Добавление нового таймера
