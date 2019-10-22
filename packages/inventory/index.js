@@ -1,5 +1,7 @@
 "use strict";
 
+let timer = call('timer');
+
 module.exports = {
     // Макс. вес предметов, переносимый игроком
     maxPlayerWeight: 30,
@@ -1177,7 +1179,7 @@ module.exports = {
 
         var objId = newObj.id;
         var sqlId = item.id;
-        newObj.destroyTimer = setTimeout(() => {
+        newObj.destroyTimer = mp.timer.add(() => {
             try {
                 var obj = mp.objects.at(objId);
                 if (!obj || !obj.item || obj.item.id != sqlId) return;

@@ -4,6 +4,7 @@ let fishing = require('./index.js');
 let inventory = call('inventory');
 let notifs = call('notifications');
 let utils = require('../utils');
+let timer = call('timer');
 
 let weight;
 let timeoutFetch;
@@ -64,11 +65,11 @@ module.exports = {
         weight = utils.randomFloat(fish.minWeight, fish.maxWeight, 1);
         let time = utils.randomInteger(5, 15);
 
-        timeoutFetch = setTimeout(() => {
+        timeoutFetch = mp.timer.add(() => {
             try {
                 player.call('fishing.game.fetch', [speed, zone, weight]);
             } catch (e) {
-                
+
             }
         }, time*1000);
     },

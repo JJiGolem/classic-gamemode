@@ -2,6 +2,7 @@ let carservice = require('./index.js');
 
 let money = call('money');
 let jobs = call('jobs');
+let timer = call('timer');
 
 let DEFAULT_PRODUCTS = carservice.defaultProducts;
 let DEFAULT_DIAGNOSTICS_PRODUCTS = DEFAULT_PRODUCTS.DIAGNOSTICS;
@@ -176,7 +177,7 @@ module.exports = {
                 mp.events.call('animations.play', player, 'mini@repair', 'fixing_a_player', 1, 49);
                 break;
         }
-        setTimeout(() => {
+        mp.timer.add(() => {
             try {
                 mp.events.call('carservice.diagnostics.end', player);
             } catch (err) {
@@ -338,7 +339,7 @@ module.exports = {
                             break;
                     }
 
-                    setTimeout(() => {
+                    mp.timer.add(() => {
                         try {
                             mp.events.call('carservice.service.end.mechanic', mechanic, 0);
                             mp.events.call('carservice.service.end.target', target, 0);

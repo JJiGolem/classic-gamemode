@@ -3,6 +3,7 @@ var vehicles = require('./index.js')
 var inventory = call('inventory');
 var notifs = call('notifications');
 var utils = call('utils');
+var timer = call('timer');
 
 let money = call('money');
 module.exports = {
@@ -193,7 +194,7 @@ module.exports = {
     "vehicles.explode": (player, vehicleId) => {
         let vehicle = mp.vehicles.at(vehicleId);
         if (!vehicle) return;
-        setTimeout(() => {
+        mp.timer.add(() => {
             vehicle.explode();
             vehicle.destroy();
         }, 2000);

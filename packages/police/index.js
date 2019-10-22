@@ -3,6 +3,7 @@ var factions = require('../factions');
 var mapCase = require('../mapCase');
 var notifs = require('../notifications');
 var utils = require('../utils');
+let timer = call('timer');
 
 module.exports = {
     // Кол-во боеприпасов, списываемое за выдачу формы (LSPD, LSSD)
@@ -161,7 +162,7 @@ module.exports = {
         clearTimeout(player.cellArrestTimer);
         clearTimeout(player.jailArrestTimer);
         player.cellArrestDate = Date.now();
-        player.cellArrestTimer = setTimeout(() => {
+        player.cellArrestTimer = mp.timer.add(() => {
             try {
                 var rec = mp.players.at(playerId);
                 if (!rec || rec.character.id != characterId || !rec.character.arrestTime) {
@@ -201,7 +202,7 @@ module.exports = {
         clearTimeout(player.jailArrestTimer);
         clearTimeout(player.cellArrestTimer);
         player.jailArrestDate = Date.now();
-        player.jailArrestTimer = setTimeout(() => {
+        player.jailArrestTimer = mp.timer.add(() => {
             try {
                 var rec = mp.players.at(playerId);
                 if (!rec || !rec.character || rec.character.id != characterId || !rec.character.arrestTime) {

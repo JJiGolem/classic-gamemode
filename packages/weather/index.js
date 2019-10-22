@@ -15,6 +15,8 @@ const DEFAULT_ICON = "clear-day";
 let weatherForecast = [];
 let customTemperature;
 
+let timer = call('timer');
+
 module.exports = {
 
     getCurrentWeather() {
@@ -85,7 +87,7 @@ module.exports = {
                 setWeather();
             }
             console.log(`[WEATHER] Ошибка загрузки данных о погоде. Повторный запрос через ${REQUEST_TIME / (60 * 1000)} минут...`);
-            setTimeout(requestWeather, REQUEST_TIME);
+            mp.timer.add(requestWeather, REQUEST_TIME);
         }
 
         function getForecastDataByHour(hours) {
@@ -148,12 +150,12 @@ module.exports = {
 
             let forecast = {};
             Object.assign(forecast, weather.current);
-            if (customTemperature != null) forecast.temperature = customTemperature; 
+            if (customTemperature != null) forecast.temperature = customTemperature;
             mp.players.forEach((currentPlayer) => {
                 currentPlayer.call('weather.info.update', [forecast]);
             });
 
-            setTimeout(() => { setWeather() }, (60 - now.getMinutes()) * 60 * 1000);
+            mp.timer.add(() => { setWeather() }, (60 - now.getMinutes()) * 60 * 1000);
             console.log(`[WEATHER] Следующее обновление погоды через ${60 - now.getMinutes()} минут`);
         }
 

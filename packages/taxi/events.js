@@ -2,6 +2,7 @@ let taxi = require('./index.js');
 let money = call('money');
 let vehicles = call('vehicles');
 let jobs = call('jobs');
+let timer = call('timer');
 
 module.exports = {
     "init": () => {
@@ -151,7 +152,7 @@ module.exports = {
         console.log(`водитель ${driver.name} привез игрока ${client.name} за $${price}`);
 
         client.call('taxi.client.destination.reach');
-       
+
         let commission = taxi.calculateComission(driver);
         money.removeCash(client, price, function (result) {
             if (result) {
@@ -253,7 +254,7 @@ module.exports = {
             console.log('покинул такси');
             player.call('notifications.push.warning', [`У вас есть ${taxi.getRespawnTimeout() / 1000} секунд, чтобы вернуться в транспорт`, 'Такси']);
             clearTimeout(vehicle.taxiRespawnTimer);
-            vehicle.taxiRespawnTimer = setTimeout(() => {
+            vehicle.taxiRespawnTimer = mp.timer.add(() => {
                 try {
                         vehicles.respawnVehicle(vehicle);
                 } catch (err) {

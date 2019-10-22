@@ -3,6 +3,7 @@ let money = call('money');
 let vehicles = call('vehicles');
 let notify = call('notifications');
 let jobs = call('jobs');
+let timer = call('timer');
 
 module.exports = {
     "init": () => {
@@ -131,7 +132,7 @@ module.exports = {
             player.call('busdriver.menu.show', [routes]);
         }
         if (seat != -1 && vehicle.busDriverId != player.id && vehicle.hasBusRoute) {
-        
+
             let driver = mp.players.at(vehicle.busDriverId);
             if (!driver || !mp.players.exists(driver)) {
                 notify.error(player, 'Нет водителя');
@@ -160,7 +161,7 @@ module.exports = {
     "busdriver.checkpoint.entered": (player) => {
         if (!player.vehicle) return;
         if (player.vehicle.busDriverId != player.id) return;
-        
+
         let bonus = bus.calculateBonus(player);
         let salary = parseInt(player.busRoute.salary * (1 + bonus));
         player.character.pay += salary;
@@ -199,7 +200,7 @@ module.exports = {
             console.log('покинул автобус');
             player.call('notifications.push.warning', [`У вас есть ${bus.getRespawnTimeout() / 1000} секунд, чтобы вернуться в транспорт`, 'Автобус']);
             clearTimeout(vehicle.busRespawnTimer);
-            vehicle.busRespawnTimer = setTimeout(() => {
+            vehicle.busRespawnTimer = mp.timer.add(() => {
                 try {
                         vehicles.respawnVehicle(vehicle);
                         mp.events.call('busdriver.route.end', player);

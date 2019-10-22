@@ -5,6 +5,7 @@ let jobs = call('jobs');
 let money = call('money');
 let notifs = call('notifications');
 let routes = call('routes');
+let timer = call('timer');
 
 module.exports = {
     "init": () => {
@@ -215,7 +216,7 @@ module.exports = {
         player.addAttachment("farmTrowel");
         var playerId = player.id;
         var characterId = player.character.id;
-        setTimeout(() => {
+        mp.timer.add(() => {
             try {
                 var rec = mp.players.at(playerId);
                 if (!rec || rec.character.id != characterId) return;
