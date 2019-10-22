@@ -96,7 +96,7 @@ function startBrakeTimer() {
             let random = Math.random();
             if (random <= breakChance) {
                 mp.players.local.vehicle.setHandbrake(true);
-                toBrake = setTimeout(() => {
+                toBrake = mp.timer.add(() => {
                     if (!mp.players.local.vehicle) return stopBrakeTimer();
                     try {
                         mp.players.local.vehicle.setHandbrake(false);

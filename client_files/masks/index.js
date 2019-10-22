@@ -43,10 +43,10 @@ mp.events.add('masks.shop.enter', (data, list) => {
     });
     player.position = new mp.Vector3(data.fitting.x, data.fitting.y, data.fitting.z);
     player.freezePosition(true);
-    setTimeout(() => {
+    mp.timer.add(() => {
         player.setHeading(data.fitting.h);
     }, 100);
-    
+
     mp.callCEFV(`selectMenu.setItems('maskShop', ${JSON.stringify(items)});`)
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["maskShop"])`);
     mp.callCEFV(`selectMenu.show = true`);
@@ -84,22 +84,22 @@ mp.events.add('masks.buy.ans', (ans, data) => {
             break;
         case 1:
             mp.callCEFV(`selectMenu.notification = 'Маска не найдена'`);
-            break; 
+            break;
         case 2:
             mp.callCEFV(`selectMenu.notification = '${data}'`);
-            break; 
+            break;
         case 3:
             mp.callCEFV(`selectMenu.notification = 'Маска недоступна'`);
-            break; 
+            break;
         case 4:
             mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
-            break; 
+            break;
         case 5:
             mp.callCEFV(`selectMenu.notification = 'Ошибка финансовой операции'`);
-            break; 
+            break;
         case 6:
             mp.callCEFV(`selectMenu.notification = 'В магазине кончились маски'`);
-            break; 
+            break;
     }
 });
 

@@ -229,7 +229,7 @@ mp.events.add('fishing.game.fetch', (speed, zone, weight) => {
 mp.events.add('fishing.game.end', (result) => {
     playBaseAnimation(true);
     mp.events.callRemote('fishing.game.end', result);
-    timeoutEndFishing = setTimeout(() => {
+    timeoutEndFishing = mp.timer.add(() => {
         try {
             isStarted = false;
             mp.callCEFV(`fishing.clearData();`);
@@ -310,7 +310,7 @@ let fishingExit = () => {
 function playBaseAnimation(state, timeout) { /// Анимация держания удочки
     if (state) {
         if (!timeout) timeout = 0;
-        setTimeout(()=> {
+        mp.timer.add(()=> {
             mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@base', 'base', 1, 49);
             mp.attachmentMngr.addLocal("takeRod");
         }, timeout);
@@ -323,7 +323,7 @@ function playBaseAnimation(state, timeout) { /// Анимация держани
 function playWaitAnimation(state, timeout) { /// Анимация начала рыбалки
     if (state) {
         if (!timeout) timeout = 0;
-        setTimeout(()=> {
+        mp.timer.add(()=> {
             mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@idle_a', 'idle_a', 1, 49);
             mp.attachmentMngr.addLocal("takeRod");
         }, timeout);
@@ -336,7 +336,7 @@ function playWaitAnimation(state, timeout) { /// Анимация начала �
 function playFetchAnimation(state, timeout) { /// Анимация вытягивания
     if (state) {
         if (!timeout) timeout = 0;
-        setTimeout(()=> {
+        mp.timer.add(()=> {
             mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@idle_a', 'idle_c', 1, 49);
             mp.attachmentMngr.addLocal("takeRod");
         }, timeout);

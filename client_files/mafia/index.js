@@ -105,7 +105,7 @@ mp.mafia = {
         this.bizWarFactions = [mafiaId, enemyMafiaId];
 
         this.createPlayerBlips();
-        this.bizWarTimer = setTimeout(() => {
+        this.bizWarTimer = mp.timer.add(() => {
             this.removePlayerBlips();
             this.bizWarFactions = [];
         }, time * 1000);

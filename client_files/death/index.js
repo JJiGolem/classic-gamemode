@@ -29,7 +29,7 @@ mp.death = {
     },
     startKnockTimer() {
         this.stopKnockTimer();
-        this.knockTimer = setTimeout(() => {
+        this.knockTimer = mp.timer.add(() => {
             mp.events.callRemote(`death.spawn`);
         }, this.knockTime);
         mp.callCEFV(`timer.start('death', ${this.knockTime})`);
@@ -44,7 +44,7 @@ mp.events.add({
     "playerDeath": (player, reason, killer) => {
         mp.death.disableControls(true);
 
-        setTimeout(() => {
+        mp.timer.add(() => {
             var knocked = mp.players.local.getVariable("knocked");
             if (!knocked) {
                 mp.callCEFV(`offerDialog.show('death')`);

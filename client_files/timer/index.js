@@ -58,13 +58,13 @@ mp.timer = {
     },
     /// Добавление нового таймера
     /// handler желательно async
-    /// return timer
+    /// return timer {id: id};
     add(handler, time, isInterval = false) {
         let id = gId++;
         timers.push({
             id: id,
-            handler: handler, 
-            time: Date.now() + time, 
+            handler: handler,
+            time: Date.now() + time,
             interval: isInterval ? time : null
         });
         return {id: id};

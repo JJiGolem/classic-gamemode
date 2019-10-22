@@ -24,7 +24,7 @@ mp.animations = {
         if (!time) return;
         var id = player.remoteId;
         clearTimeout(this.animationTimers[id]);
-        this.animationTimers[id] = setTimeout(() => {
+        this.animationTimers[id] = mp.timer.add(() => {
             var rec = mp.players.atRemoteId(id);
             if (rec) rec.clearTasksImmediately();
             delete this.animationTimers[id];

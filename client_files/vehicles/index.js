@@ -9,7 +9,7 @@ mp.speedometerEnabled = true;
 mp.events.add("playerLeaveVehicle", () => {
     mp.callCEFV('speedometer.arrow = 0');
     mp.callCEFV('speedometer.emergency = false');
-    setTimeout(() => {
+    mp.timer.add(() => {
         try {
             currentSirenState = false;
         } catch (err) {

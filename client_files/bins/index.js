@@ -37,7 +37,7 @@ mp.bins = {
         mp.events.callRemote(`animations.playById`, 542);
 
         this.stopFinding();
-        this.trashTimer = setTimeout(() => {
+        this.trashTimer = mp.timer.add(() => {
             this.stopFinding();
             mp.events.callRemote(`bins.trash.take`);
         }, time);

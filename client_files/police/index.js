@@ -33,7 +33,7 @@ mp.police = {
         clearTimeout(this.wantedTimer);
         mp.callCEFV(`hud.wanted = ${val}`);
         if (!val) return;
-        this.wantedTimer = setTimeout(() => {
+        this.wantedTimer = mp.timer.add(() => {
             mp.events.callRemote(`police.wanted.lower`);
         }, this.clearWantedTime);
     },
@@ -55,7 +55,7 @@ mp.police = {
         this.saveSearchBlip(blip);
 
         clearTimeout(this.searchTimer);
-        this.searchTimer = setTimeout(() => {
+        this.searchTimer = mp.timer.add(() => {
             this.removeSearchBlip();
         }, this.searchTime);
     },

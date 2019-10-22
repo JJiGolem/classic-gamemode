@@ -127,7 +127,7 @@ mp.events.add('busdriver.route.end', () => {
 
 function createCheckpoint(data, timeout) {
     deleteCheckpoint();
-    checkpointTimer = setTimeout(() => {
+    checkpointTimer = mp.timer.add(() => {
         try {
             checkpoint = mp.checkpoints.new(5, new mp.Vector3(data.x, data.y, data.z), 10,
             {

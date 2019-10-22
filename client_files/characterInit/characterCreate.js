@@ -11,7 +11,7 @@ function applyTorsoCamera() {
         localPlayer.position.x, localPlayer.position.y, localPlayer.position.z + 0.5, 500, 45);
 }
 mp.events.add("characterInit.camera.torso", applyTorsoCamera);
-function applyHeadCamera() { 
+function applyHeadCamera() {
     mp.utils.cam.moveTo(localPlayer.position.x, localPlayer.position.y - 0.55, localPlayer.position.z + 0.675,
         localPlayer.position.x, localPlayer.position.y, localPlayer.position.z + 0.675, 500, 45);
 }
@@ -23,20 +23,20 @@ function showTorso(state) {
             localPlayer.setComponentVariation(3, 15, 0, 2);
             localPlayer.setComponentVariation(8, 15, 0, 2);
             localPlayer.setComponentVariation(11, 15, 0, 2);
-        } 
+        }
         else {
             localPlayer.setComponentVariation(3, 15, 0, 2);
             localPlayer.setComponentVariation(8, 2, 0, 2);
             localPlayer.setComponentVariation(11, 18, 0, 2);
         }
         applyTorsoCamera();
-    } 
+    }
     else {
         if (charData.gender == 0) {
             localPlayer.setComponentVariation(3, 0, 0, 2);
             localPlayer.setComponentVariation(8, 15, 0, 2);
             localPlayer.setComponentVariation(11, 0, 0, 2);
-        } 
+        }
         else {
             localPlayer.setComponentVariation(3, 0, 0, 2);
             localPlayer.setComponentVariation(8, 2, 0, 2);
@@ -54,7 +54,7 @@ function setDefWear() {
         localPlayer.setComponentVariation(11, 0, 0, 2);
         localPlayer.setComponentVariation(6, 1, 0, 2);
         localPlayer.setComponentVariation(4, 0, 0, 2);
-    } 
+    }
     else {
         localPlayer.setComponentVariation(3, 0, 0, 2);
         localPlayer.setComponentVariation(8, 2, 0, 2);
@@ -116,7 +116,7 @@ function updateParents() {
 }
 
 let deltaRot = 30;
-let rotateLeft = function() { 
+let rotateLeft = function() {
     let newHeading = localPlayer.getHeading() - deltaRot;
     if (newHeading < 0) {
         newHeading = 360 - deltaRot;
@@ -124,7 +124,7 @@ let rotateLeft = function() {
     localPlayer.setRotation(0, 0, newHeading, 0, true);
     localPlayer.position = localPlayer.position;
 }
-let rotateRight = function() { 
+let rotateRight = function() {
     let newHeading = localPlayer.getHeading() + deltaRot;
     if (newHeading > 360) {
         newHeading = deltaRot;
@@ -177,7 +177,7 @@ mp.events.add("characterInit.create", (active, rawCharData) => {
 
         mp.utils.cam.tpTo(localPlayer.position.x, localPlayer.position.y - 1.25, localPlayer.position.z + 0.5,
             localPlayer.position.x, localPlayer.position.y, localPlayer.position.z + 0.5, 45);
-        
+
         mp.callCEFV(`selectMenu.menu = selectMenu.menus["characterCreateMainMenu"];`);
         mp.callCEFV(`selectMenu.menus["characterCreateViewMenu"].items = cloneObj(selectMenu.menus["characterCreateViewMenu"].defaultItemsMale);`);
         mp.callCEFV(`selectMenu.show = true`);
@@ -209,7 +209,7 @@ mp.events.add('characterInit.create.setGender', gender => {
     if (setGenderTimer != null) {
         clearTimeout(setGenderTimer);
     }
-    setGenderTimer = setTimeout(function() {
+    setGenderTimer = mp.timer.add(function() {
         try {
             charData.gender = parseInt(gender);
             if (charData.gender == 0 || charData.gender == 1) {

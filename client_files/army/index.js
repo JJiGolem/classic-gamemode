@@ -45,7 +45,7 @@ mp.army = {
         this.captureTeams = [teamAId, teamBId];
 
         this.createPlayerBlips(teamAIds, teamBIds);
-        this.captureTimer = setTimeout(() => {
+        this.captureTimer = mp.timer.add(() => {
             this.removePlayerBlips();
             this.captureTeams = [];
             this.destroyCaptureZone();

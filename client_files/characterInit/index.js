@@ -135,7 +135,7 @@ mp.events.add('characterInit.chooseLeft', () => {
 let createPeds = function() {
     mp.authDebug.push(`Создаем педов`);
     if (peds.length != 0) return;
-    creatorTimer = setTimeout(async () => {
+    creatorTimer = mp.timer.add(async () => {
         for (let i = 0; i < charNum; i++) {
             setCharCustom(i);
             setCharClothes(i);

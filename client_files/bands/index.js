@@ -86,7 +86,7 @@ mp.bands = {
         this.captureFactions = [bandId, enemyBandId];
 
         this.createPlayerBlips();
-        this.captureTimer = setTimeout(() => {
+        this.captureTimer = mp.timer.add(() => {
             this.removePlayerBlips();
             this.captureFactions = [];
         }, time * 1000);
