@@ -87,7 +87,7 @@ module.exports = {
                 setWeather();
             }
             console.log(`[WEATHER] Ошибка загрузки данных о погоде. Повторный запрос через ${REQUEST_TIME / (60 * 1000)} минут...`);
-            mp.timer.add(requestWeather, REQUEST_TIME);
+            timer.add(requestWeather, REQUEST_TIME);
         }
 
         function getForecastDataByHour(hours) {
@@ -155,7 +155,7 @@ module.exports = {
                 currentPlayer.call('weather.info.update', [forecast]);
             });
 
-            mp.timer.add(() => { setWeather() }, (60 - now.getMinutes()) * 60 * 1000);
+            timer.add(() => { setWeather() }, (60 - now.getMinutes()) * 60 * 1000);
             console.log(`[WEATHER] Следующее обновление погоды через ${60 - now.getMinutes()} минут`);
         }
 

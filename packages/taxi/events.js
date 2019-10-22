@@ -106,7 +106,7 @@ module.exports = {
         }
         if (seat == -1 && player.id == vehicle.taxiDriverId) {
             console.log('чистим таймер')
-            mp.timer.remove(vehicle.taxiRespawnTimer);
+            timer.remove(vehicle.taxiRespawnTimer);
         }
     },
     "vehicle.ready": (player, vehicle, seat) => {
@@ -253,8 +253,8 @@ module.exports = {
         if (vehicle.taxiDriverId == player.id) {
             console.log('покинул такси');
             player.call('notifications.push.warning', [`У вас есть ${taxi.getRespawnTimeout() / 1000} секунд, чтобы вернуться в транспорт`, 'Такси']);
-            mp.timer.remove(vehicle.taxiRespawnTimer);
-            vehicle.taxiRespawnTimer = mp.timer.add(() => {
+            timer.remove(vehicle.taxiRespawnTimer);
+            vehicle.taxiRespawnTimer = timer.add(() => {
                 try {
                         vehicles.respawnVehicle(vehicle);
                 } catch (err) {

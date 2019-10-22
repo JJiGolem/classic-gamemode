@@ -153,7 +153,7 @@ module.exports = {
             },
             startTime: Date.now()
         };
-        mp.timer.add(() => {
+        timer.add(() => {
             try {
                 this.stopCapture(zone);
             } catch (e) {

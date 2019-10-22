@@ -120,7 +120,7 @@ module.exports = {
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (seat == -1 && player.id == vehicle.busDriverId) {
             console.log('чистим таймер')
-            mp.timer.remove(vehicle.busRespawnTimer);
+            timer.remove(vehicle.busRespawnTimer);
         }
         if (seat == -1 && vehicle.isActiveBus && vehicle.busDriverId != player.id) {
             player.call('notifications.push.error', ['Транспорт уже арендован', 'Автобус']);
@@ -199,8 +199,8 @@ module.exports = {
         if (vehicle.busDriverId == player.id) {
             console.log('покинул автобус');
             player.call('notifications.push.warning', [`У вас есть ${bus.getRespawnTimeout() / 1000} секунд, чтобы вернуться в транспорт`, 'Автобус']);
-            mp.timer.remove(vehicle.busRespawnTimer);
-            vehicle.busRespawnTimer = mp.timer.add(() => {
+            timer.remove(vehicle.busRespawnTimer);
+            vehicle.busRespawnTimer = timer.add(() => {
                 try {
                         vehicles.respawnVehicle(vehicle);
                         mp.events.call('busdriver.route.end', player);

@@ -257,7 +257,7 @@ module.exports = {
     "house.add.carSpawn": async (player, i, garage) => {
         if (vehicles == null) return;
         if (carPlaceVehicle[i] != null) {
-            mp.timer.remove(carPlaceVehicle[i].fuelTimer);
+            timer.remove(carPlaceVehicle[i].fuelTimer);
             carPlaceVehicle[i].destroy();
             carPlaceVehicle[i] = null;
         }
@@ -287,7 +287,7 @@ module.exports = {
     },
     "house.add.carDrop": (player, i) => {
         if (carPlaceVehicle[i] == null) return;
-        mp.timer.remove(carPlaceVehicle[i].fuelTimer);
+        timer.remove(carPlaceVehicle[i].fuelTimer);
         carPlaceVehicle[i].destroy();
         carPlaceVehicle[i] = null;
     },

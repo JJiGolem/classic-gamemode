@@ -8,6 +8,7 @@ var money = require('../money');
 var notifs = require('../notifications');
 var police = require('../police')
 let timer = call('timer');
+let vehicles = call('vehicles');
 
 module.exports = {
     "init": () => {
@@ -579,8 +580,8 @@ module.exports = {
         if (!veh) return notifs.error(player, `Авто не найдено`, header);
         var dist = player.dist(veh.position);
         if (dist > 3) return notifs.error(player, `Авто далеко`, header);
-        var freeSeat = [0, 1, 2];
-        var occupants = veh.getOccupants();
+        var freeSeat = [1, 2];
+        var occupants = vehicles.getOccupants(veh);
         for (var i = 0; i < occupants.length; i++) {
             var occ = occupants[i];
             var index = freeSeat.indexOf(occ.seat);
@@ -659,7 +660,7 @@ module.exports = {
         var time = Date.now() - date;
         player.character.arrestTime -= time;
         player.character.save();
-        mp.timer.remove(player.cellArrestTimer);
-        mp.timer.remove(player.jailArrestTimer);
+        timer.remove(player.cellArrestTimer);
+        timer.remove(player.jailArrestTimer);
     },
 }

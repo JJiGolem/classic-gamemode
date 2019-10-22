@@ -570,7 +570,7 @@ module.exports = {
         field.state = 0;
         this.fieldObjects[field.id] = [];
 
-        var timerId = mp.timer.addInterval(() => {
+        var timerId = timer.addInterval(() => {
             try {
                 field.state++;
                 if (field.state == 1) {
@@ -602,7 +602,7 @@ module.exports = {
                     }
 
                     // debug(`Поле ${field.sqlId} созрело!`)
-                    mp.timer.remove(timerId);
+                    timer.remove(timerId);
                 }
             } catch (e) {
                 console.log(e);

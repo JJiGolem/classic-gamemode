@@ -115,7 +115,7 @@ module.exports = {
         vehicle.fuelTick = 60000 / vehicle.consumption;
         if (!vehicle.fuelTick || isNaN(vehicle.fuelTick)) vehicle.fuelTick = 60000;
 
-        vehicle.fuelTimer = mp.timer.addInterval(() => {
+        vehicle.fuelTimer = timer.addInterval(() => {
             try {
                 if (vehicle.engine) {
                     vehicle.fuel = vehicle.fuel - 1;
@@ -134,15 +134,11 @@ module.exports = {
         return vehicle;
     },
     getDriver(vehicle) {
-        let driver = vehicle.getOccupants()[0];
-        if (driver.seat != -1) {
-            return null
-        }
-        return driver;
+        return this.getOccupants(vehicle).find(x => x.seat == -1);
     },
     respawnVehicle(veh) {
         if (!mp.vehicles.exists(veh)) return;
-        mp.timer.remove(veh.fuelTimer);
+        timer.remove(veh.fuelTimer);
         if (veh.key == "admin") { /// Если админская, не респавним
             veh.destroy();
             return;
@@ -416,13 +412,13 @@ module.exports = {
     updateConsumption(vehicle) {
         if (!vehicle) return;
         try {
-            mp.timer.remove(vehicle.fuelTimer);
+            timer.remove(vehicle.fuelTimer);
 
             let multiplier = vehicle.multiplier;
             vehicle.consumption = vehicle.properties.consumption * multiplier;
             vehicle.fuelTick = 60000 / vehicle.consumption;
 
-            vehicle.fuelTimer = mp.timer.addInterval(() => {
+            vehicle.fuelTimer = timer.addInterval(() => {
                 try {
                     if (vehicle.engine) {
 
@@ -591,8 +587,15 @@ module.exports = {
     },
     // Получить всех игроков в авто
     getOccupants(vehicle) {
-        // TODO: Обойти баги рейджа через проверку на player.vehicle в радиусе авто
-        return vehicle.getOccupants();
+        var occupants = vehicle.getOccupants();
+        mp.players.forEachInRange(vehicle.position, 10, rec => {
+            if (!rec.vehicle) return;
+            if (rec.vehicle.id != vehicle.id) return;
+            if (occupants.find(x => x.id == rec.id)) return;
+            occupants.push(rec);
+        });
+        // Обходим баги рейджа через проверку на player.vehicle в радиусе авто
+        return occupants;
     },
     // Убито ли авто
     isDead(vehicle) {

@@ -216,7 +216,7 @@ module.exports = {
         player.addAttachment("farmTrowel");
         var playerId = player.id;
         var characterId = player.character.id;
-        mp.timer.add(() => {
+        timer.add(() => {
             try {
                 var rec = mp.players.at(playerId);
                 if (!rec || rec.character.id != characterId) return;

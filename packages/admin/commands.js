@@ -121,7 +121,7 @@ module.exports = {
                 current.call('chat.message.push', [`!{#edffc2}${player.name} запустил рестарт сервера через ${20000 / 1000} сек.`]);
                 mp.events.call("playerQuit", current);
             });
-            mp.timer.add(() => {
+            timer.add(() => {
                 process.exit();
             }, 20000);
         }
@@ -229,7 +229,7 @@ module.exports = {
         args: "[count] [ms]",
         handler: (player, args) => {
             for (let i = 0; i < parseInt(args[0]); i++) {
-                mp.timer.addInterval(() => {
+                timer.addInterval(() => {
                     let i = 1 + 1;
                 }, parseInt(args[1]));
             }

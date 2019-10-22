@@ -192,7 +192,7 @@ module.exports = {
                         parkingDate: now
                     });
                 }
-                mp.timer.remove(current.fuelTimer);
+                timer.remove(current.fuelTimer);
                 current.destroy();
             }
         });

@@ -46,7 +46,7 @@ module.exports = {
     "fishing.game.start": async (player) => {
         if (!player.character) return;
 
-        mp.timer.remove(timeoutFetch);
+        timer.remove(timeoutFetch);
 
         let rod = inventory.getItemByItemId(player, fishing.getRodId());
         let health = inventory.getParam(rod, 'health').value;
@@ -65,7 +65,7 @@ module.exports = {
         weight = utils.randomFloat(fish.minWeight, fish.maxWeight, 1);
         let time = utils.randomInteger(5, 15);
 
-        timeoutFetch = mp.timer.add(() => {
+        timeoutFetch = timer.add(() => {
             try {
                 player.call('fishing.game.fetch', [speed, zone, weight]);
             } catch (e) {
@@ -100,7 +100,7 @@ module.exports = {
     "fishing.game.exit": (player) => {
         if (!player.character) return;
 
-        mp.timer.remove(timeoutFetch);
+        timer.remove(timeoutFetch);
     },
     "fishing.rod.buy": (player) => {
         if (!player.character) return;
