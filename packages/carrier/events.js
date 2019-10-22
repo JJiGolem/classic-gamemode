@@ -196,6 +196,10 @@ module.exports = {
         if (!veh.db || veh.db.key != "job" || veh.db.owner != 4) return;
         carrier.dropBizOrderByVeh(veh);
         delete veh.driver;
+        if (veh.products) {
+            delete veh.products;
+            veh.setVariable("label", null);
+        }
     },
     "jobs.leave": (player) => {
         if (player.character.job != 4) return;
