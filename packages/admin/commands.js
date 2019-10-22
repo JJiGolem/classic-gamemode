@@ -321,7 +321,7 @@ module.exports = {
         access: 4,
         description: "Забанить игрока.",
         args: "[ид_игрока]:n [дни]:n [причина]",
-        handler: (player, args) => {
+        handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
             if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
 
