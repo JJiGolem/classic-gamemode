@@ -1,6 +1,7 @@
 "use strict";
 let logger = call('logger');
 let notifs = require('../notifications');
+let admin;
 
 module.exports = {
     // Мин. уровень админки для доступа к кносоли (character.admin)
@@ -9,6 +10,27 @@ module.exports = {
     commands: {},
 
 
+    init() {
+        admin = call('admin');
+        this.commands = admin.getCommands();
+        this.loadCommandsFromDB();
+    },
+    async loadCommandsFromDB() {
+        var dbCommands = await db.Models.Command.findAll();
+        dbCommands.forEach(dbCmd => {
+            var cmd = this.commands[dbCmd.cmd];
+            if (!cmd) return;
+            if (dbCmd.cmd != dbCmd.name) {
+                this.commands[dbCmd.name] = cmd;
+                delete this.commands[dbCmd.cmd];
+            }
+            cmd.description = dbCmd.description;
+            cmd.access = dbCmd.access;
+            cmd.db = dbCmd;
+        });
+
+        console.log(`[TERMINAL] Команды загружены (${dbCommands.length} / ${Object.keys(this.commands).length} шт.)`);
+    },
     haveAccess(player) {
         return player.character.admin >= this.access;
     },
