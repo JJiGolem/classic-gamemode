@@ -9,11 +9,11 @@ let radioSyncTimer;
 
 mp.events.add({
     "playerEnterVehicle": () => {
-        clearInterval(radioSyncTimer);
+        mp.timer.remove(radioSyncTimer);
         mp.timer.addInterval(syncRadio, 1000);
     },
     "playerLeaveVehicle": () => {
-        clearInterval(radioSyncTimer);
+        mp.timer.remove(radioSyncTimer);
     }
 });
 
@@ -39,6 +39,6 @@ function syncRadio() {
         }
     } catch (err) {
         mp.chat.debug(err.message);
-        clearInterval(radioSyncTimer);
+        mp.timer.remove(radioSyncTimer);
     }
 }

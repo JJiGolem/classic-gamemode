@@ -64,7 +64,7 @@ mp.bands = {
     flashBlip(id, toggle) {
         var blip = this.bandZones[id - 1];
         // mp.game.invoke(this.natives.SET_BLIP_FLASHES, blip, toggle);
-        clearInterval(this.flashTimer);
+        mp.timer.remove(this.flashTimer);
         if (!toggle) return;
         var oldColor = mp.game.invoke(this.natives.GET_BLIP_COLOUR, blip);
         this.flashTimer = mp.timer.addInterval(() => {

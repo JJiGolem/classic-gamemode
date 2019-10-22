@@ -64,7 +64,7 @@ mp.mafia = {
     flashBlip(id, toggle) {
         var blip = this.mafiaZones[id];
         // mp.game.invoke(this.natives.SET_BLIP_FLASHES, blip, toggle);
-        clearInterval(this.flashTimer);
+        mp.timer.remove(this.flashTimer);
         mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, 4);
         if (!toggle) return;
         var oldColor = mp.game.invoke(this.natives.GET_BLIP_COLOUR, blip);

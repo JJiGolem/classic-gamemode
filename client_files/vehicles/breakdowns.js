@@ -112,8 +112,8 @@ function startBrakeTimer() {
 }
 
 function stopBrakeTimer() {
-    clearInterval(brakeTimer);
-    clearInterval(toBrake);
+    mp.timer.remove(brakeTimer);
+    mp.timer.remove(toBrake);
 }
 
 let steeringTimer;
@@ -150,5 +150,5 @@ function startSteeringTimer() {
 }
 
 function stopSteeringTimer() {
-    clearInterval(steeringTimer);
+    mp.timer.remove(steeringTimer);
 }

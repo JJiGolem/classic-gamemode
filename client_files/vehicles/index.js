@@ -207,8 +207,8 @@ function startMileageCounter() {
 
 function stopMileageCounter() {
 
-    clearInterval(mileageTimer);
-    clearInterval(mileageUpdateTimer);
+    mp.timer.remove(mileageTimer);
+    mp.timer.remove(mileageUpdateTimer);
 
     if (currentDist < 0.1) return;
     mp.events.callRemote(`vehicles.mileage.add`, currentDist);

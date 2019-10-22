@@ -107,7 +107,7 @@ mp.events.add('render', () => {
         if (isIntervalCreated) {
             mp.events.call('prompt.hide');
             isShowPrompt = false;
-            clearInterval(intervalFishing);
+            mp.timer.remove(intervalFishing);
             isIntervalCreated = false;
         }
     }
@@ -139,7 +139,7 @@ mp.events.add('inventory.deleteItem', (item) => {
 
         if (rods.length == 0) {
             isHaveRod = false;
-            clearInterval(intervalFishing);
+            mp.timer.remove(intervalFishing);
             isIntervalCreated = false;
             bindButtons(false);
             mp.events.call('prompt.hide');
