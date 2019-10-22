@@ -20,6 +20,6 @@ module.exports = {
     },
     "timer.error": (player) => {
         if (player != timer.getChecker()) player.call("timer.check.stop", []);
-        console.log("[TIMER] ERROR! Серверный таймер перестал отвечать");
+        throw new Error("[TIMER] ERROR! Серверный таймер перестал отвечать");
     }
 }
