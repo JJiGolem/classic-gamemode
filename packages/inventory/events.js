@@ -197,7 +197,7 @@ module.exports = {
         var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         if (!rec.getVariable("knocked")) return notifs.error(player, `${rec.name} не нуждается в реанимации`, header);
-        if (player.dist(rec.position) > 20) return notifs.error(player, `${rec.name} далеко`, header);
+        if (player.dist(rec.position) > 5) return notifs.error(player, `${rec.name} далеко`, header);
         var adrenalin = (data.itemSqlId) ? inventory.getItem(player, data.itemSqlId) : inventory.getItemByItemId(player, 26);
         if (!adrenalin) return notifs.error(player, `Необходим предмет`, header);
         var count = inventory.getParam(adrenalin, 'count').value;
