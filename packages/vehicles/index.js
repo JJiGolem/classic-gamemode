@@ -67,6 +67,8 @@ module.exports = {
 
         vehicle.numberPlate = veh.plate; /// устанавливаем номер
 
+        vehicle.setVariable('isValid', true);
+        
         veh.d ? vehicle.dimension = veh.d : vehicle.dimension = 0; /// устанавливаем измерение
 
         veh.isInGarage ? vehicle.isInGarage = veh.isInGarage : vehicle.isInGarage = false;

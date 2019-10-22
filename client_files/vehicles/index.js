@@ -95,7 +95,7 @@ speedometerUpdateTimer = mp.timer.addInterval(() => { /// Обновление �
 
 }, 100);
 
-mp.keys.bind(0x32, true, function() {
+mp.keys.bind(0x32, true, function () {
     if (mp.busy.includes('chat')) return;
     if (mp.players.local.vehicle.getPedInSeat(-1) === mp.players.local.handle) {
         mp.events.callRemote('vehicles.engine.toggle');
@@ -215,7 +215,7 @@ function stopMileageCounter() {
     currentDist = 0;
 };
 
-mp.keys.bind(0x25, true, function() {
+mp.keys.bind(0x25, true, function () {
     if (mp.busy.includes()) return;
     var player = mp.players.local;
     var vehicle = player.vehicle;
@@ -237,7 +237,7 @@ mp.keys.bind(0x25, true, function() {
     }
 });
 
-mp.keys.bind(0x27, true, function() {
+mp.keys.bind(0x27, true, function () {
     if (mp.busy.includes()) return;
     var player = mp.players.local;
     var vehicle = player.vehicle;
@@ -601,4 +601,16 @@ mp.events.add('vehicles.autopilot', () => {
     player.taskVehicleDriveToCoordLongrange(veh.handle, pos.x, pos.y, pos.z + 2, speed, drivingStyle, stopRange);
     mp.notify.success("Автопилот активирован");
     mp.prompt.showByName("vehicle_autopilot");
+});
+
+mp.events.add('characterInit.done', () => {
+    mp.timer.addInterval(async () => {
+        mp.vehicles.forEachInStreamRange((vehicle) => {
+            if (mp.vdist(mp.players.local.position, vehicle.position) > 30) return;
+            if (vehicle.remoteId == null) return;
+            if (!vehicle.getVariable('isValid')) {
+                mp.events.callRemote('vehicles.invalid.found', vehicle.remoteId);
+            }
+        });
+    }, 1000);
 });
