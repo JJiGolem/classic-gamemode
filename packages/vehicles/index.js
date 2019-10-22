@@ -117,7 +117,7 @@ module.exports = {
 
         vehicle.fuelTimer = timer.addInterval(() => {
             try {
-                if (!mp.vehicles.exists(vehicle)) return clearInterval(vehicle.fuelTimer);
+                if (!mp.vehicles.exists(vehicle)) return timer.remove(vehicle.fuelTimer);
                 if (vehicle.engine) {
                     vehicle.fuel = vehicle.fuel - 1;
                     if (vehicle.fuel <= 0) {
