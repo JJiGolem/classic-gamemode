@@ -140,7 +140,7 @@ mp.events.add('characterInit.done', () => { /// E
         //getClosestPlayer(mp.players.local.position);
         //currentInteractionEntity = getClosestVehicle(mp.players.local.position);
         currentInteractionEntity = getClosestPlayerOrVehicle(mp.players.local.position);
-        // currentInteractionEntity = mp.players.local; // for tests
+        //currentInteractionEntity = mp.players.local; // for tests
         if (!currentInteractionEntity) return;
 
         if (currentInteractionEntity.type == 'vehicle') {
@@ -275,11 +275,11 @@ mp.events.add('interaction.money.show', () => {
     if (!currentInteractionEntity) return;
     if (currentInteractionEntity.type != 'player') return;
 
-    let playerName = currentInteractionEntity.name;
-    if (!playerName) return;
+    let playerId = currentInteractionEntity.remoteId;
+    if (playerId == null) return;
     mp.busy.add('money_giving', true);
     mp.callCEFV(`inputWindow.name = 'money_giving';
-inputWindow.header = "Передача денег ${playerName}";
+inputWindow.header = "Передача денег ID: ${playerId}";
 inputWindow.hint = "Введите сумму от $1 до $500";
 inputWindow.inputHint = "Сумма...";
 inputWindow.value = "";

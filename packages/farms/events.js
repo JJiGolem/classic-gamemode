@@ -179,7 +179,7 @@ module.exports = {
         player.call("farms.jobType.set", [null]);
         player.call("routes.checkpoints.destroy");
         notifs.success(player, `Удачного дня!`, header);
-        if ([2,3].includes(player.farmJob.type)) {
+        if ([2, 3].includes(player.farmJob.type)) {
             // тракторы с зерном и самолеты с удобрением, которые загрузил игрок
             var vehicles = mp.vehicles.toArray().filter(x => x.key == 'farm' && x.products && x.products.playerId == player.id);
             vehicles.forEach(veh => {
@@ -416,6 +416,8 @@ module.exports = {
         var farm = player.farm;
 
         var count = Math.clamp(veh.products.count, 0, farms.grainsMax - farm.grains);
+        var price = count * farm.grainPrice;
+        if (farm.playerId && farm.balance < price) return notifs.warning(player, `Баланс фермы не позволяет вам выплатить заплату`, header);
         farm.grains += count;
         farm.save();
         veh.products.count -= count;
@@ -429,16 +431,12 @@ module.exports = {
             jobs.addJobExp(player, carrier.exp);
         }
 
-        var price = count * farm.grainPrice;
         if (farm.playerId) {
-            if (farm.balance < price) notifs.warning(player, `Баланс фермы не позволяет вам выплатить заплату`, header);
-            else {
-                farm.balance -= price;
-                farm.save();
-                money.addCash(player, price, (res) => {
-                    if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
-                }, `Продажа зерна на ферме #${farm.id}`);
-            }
+            farm.balance -= price;
+            farm.save();
+            money.addCash(player, price, (res) => {
+                if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
+            }, `Продажа зерна на ферме #${farm.id}`);
         } else {
             money.addCash(player, price, (res) => {
                 if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
@@ -522,6 +520,8 @@ module.exports = {
         var farm = player.farm;
 
         var count = Math.clamp(veh.products.count, 0, farms.soilsMax - farm.soils);
+        var price = count * farm.soilPrice;
+        if (farm.balance < price) return notifs.warning(player, `Баланс фермы не позволяет вам выплатить заплату`, header);
         farm.soils += count;
         farm.save();
         veh.products.count -= count;
@@ -536,16 +536,12 @@ module.exports = {
         }
         player.call(`selectMenu.hide`);
 
-        var price = count * farm.soilPrice;
         if (farm.playerId) {
-            if (farm.balance < price) notifs.warning(player, `Баланс фермы не позволяет вам выплатить заплату`, header);
-            else {
-                farm.balance -= price;
-                farm.save();
-                money.addCash(player, price, (res) => {
-                    if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
-                }, `Продажа удобрения на ферме #${farm.id}`);
-            }
+            farm.balance -= price;
+            farm.save();
+            money.addCash(player, price, (res) => {
+                if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
+            }, `Продажа удобрения на ферме #${farm.id}`);
         } else {
             money.addCash(player, price, (res) => {
                 if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);

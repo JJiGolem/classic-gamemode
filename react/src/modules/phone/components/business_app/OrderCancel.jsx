@@ -39,7 +39,7 @@ class OrderCancel extends Component {
                             </svg>
                             <div style={{ fontSize: '1.1em', fontWeight: 'bold', marginTop: '10%' }}>
                                 Активный заказ:
-                                { business.order ? <span style={{ color: '#30af25' }}> {business.order.productCount} по ${business.order.productPrice}</span> : <span> нет</span> }
+                                { business.order ? <span style={{ color: '#30af25' }}> {business.order.productsCount} на ${business.order.productsPrice}</span> : <span> нет</span> }
                             </div>
                             <div style={{ marginTop: '5%' }}>При отмене заказа Вам будет возвращено 80% от суммы заказа</div>
                         </div>

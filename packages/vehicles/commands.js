@@ -196,5 +196,17 @@ module.exports = {
             });
             out.info(result, player);
         }
+    },
+    "/getspawner": {
+        access: 5,
+        description: "Узнать, кто заспавнил транспорт",
+        args: ``,
+        handler: (player, args, out) => {
+            let vehicle = player.vehicle;
+            if (!vehicle) return out.error(`Вы не в т/с`, player);
+            let name = vehicle.spawnedBy;
+            if (!name) return out.error(`У т/с нет создателя`, player);
+            out.info(`Этот транспорт создал ${name}`, player);
+        }
     }
 }

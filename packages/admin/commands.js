@@ -127,15 +127,15 @@ module.exports = {
     },
     "/branch": {
         access: 6,
-        description: "Обновить мод до выбранной ветки.",
-        args: "[название ветки]",
+        description: "Переключиться на выбранную ветку.",
+        args: "[ветка]",
         handler: (player, args, out) => {
 
             var exec = require("exec");
-            exec(`cd ${__dirname} && git clean -d -f && git stash && git checkout ${args[0]} && git pull`, (error, stdout, stderr) => {
-                if (error) console.log(stderr);
-                console.log(stdout);
-                // out.info(`${player.name} запустил обновление сервера`);
+            exec(`cd ${__dirname} && git clean -d -f && git stash && git checkout ${args[0]}`, (error, stdout, stderr) => {
+                if (error) out.error(stderr, player);
+                out.log(stdout, player);
+                out.info(`${player.name} переключился на ветку ${args[0]}`);
             });
         }
     },
@@ -145,10 +145,14 @@ module.exports = {
         args: "",
         handler: (player, args, out) => {
             var exec = require("exec");
-            exec(`cd ${__dirname} && git clean -d -f && git stash && git pull`, (error, stdout, stderr) => {
-                if (error) console.log(stderr);
-                console.log(stdout);
+            exec(`cd ${__dirname} &&  && git pull`, (error, stdout, stderr) => {
+                if (error) out.error(stderr, player);
+                out.log(stdout, player);
                 out.info(`${player.name} обновил сборку сервера`);
+
+                mp.players.forEach((current) => {
+                    current.call('chat.message.push', [`!{#edffc2}${player.name} обновил сборку сервера`]);
+                });
             });
         }
     },
@@ -175,6 +179,7 @@ module.exports = {
                     destroys: 0
                 }
                 veh = await vehicles.spawnVehicle(veh);
+                veh.spawnedBy = player.name;
                 mp.events.call("admin.notify.all", `!{#e0bc43}[A] ${player.name} создал транспорт ${veh.modelName}`);
             }
         }
@@ -316,7 +321,7 @@ module.exports = {
         access: 4,
         description: "Забанить игрока.",
         args: "[ид_игрока]:n [дни]:n [причина]",
-        handler: (player, args) => {
+        handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
             if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
 

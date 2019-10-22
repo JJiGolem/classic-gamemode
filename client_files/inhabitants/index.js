@@ -9,16 +9,6 @@ let inhabitants = [{
     defaultScenario: 'WORLD_HUMAN_MUSICIAN'
 },
 {
-    model: "a_m_m_farmer_01",
-    position: {
-        x: -257.7437438964844,
-        y: -337.05328369140625,
-        z: 29.93291664123535
-    },
-    heading: 279.3279113769531,
-    defaultScenario: 'WORLD_HUMAN_BUM_FREEWAY'
-},
-{
     model: "u_m_y_militarybum",
     position: {
         x: -2119.95849609375,

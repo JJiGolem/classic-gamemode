@@ -197,7 +197,7 @@ module.exports = {
         var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         if (!rec.getVariable("knocked")) return notifs.error(player, `${rec.name} не нуждается в реанимации`, header);
-        if (player.dist(rec.position) > 20) return notifs.error(player, `${rec.name} далеко`, header);
+        if (player.dist(rec.position) > 5) return notifs.error(player, `${rec.name} далеко`, header);
         var adrenalin = (data.itemSqlId) ? inventory.getItem(player, data.itemSqlId) : inventory.getItemByItemId(player, 26);
         if (!adrenalin) return notifs.error(player, `Необходим предмет`, header);
         var count = inventory.getParam(adrenalin, 'count').value;
@@ -552,12 +552,13 @@ module.exports = {
     },
     "death.spawn": (player) => {
         if (!player.character) return;
-        var weapons = inventory.getArrayWeapons(player);
-        if (!weapons.length) return;
-        weapons.forEach(weapon => {
-            inventory.putGround(player, weapon);
-        });
-        notifs.warning(player, `Вы потеряли оружие`, `Инвентарь`);
+        // TODO: включить выкидывание оружия в новой сис-ме расчет кор объекта
+        // var weapons = inventory.getArrayWeapons(player);
+        // if (!weapons.length) return;
+        // weapons.forEach(weapon => {
+        //     inventory.putGround(player, weapon);
+        // });
+        // notifs.warning(player, `Вы потеряли оружие`, `Инвентарь`);
     },
     "playerQuit": (player) => {
         if (!player.character) return;

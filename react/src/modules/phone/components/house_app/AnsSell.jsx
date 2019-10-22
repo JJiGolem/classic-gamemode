@@ -24,11 +24,10 @@ class AnsSell extends Component {
         else if (status == 1) {
             let name = house.name;
             let area = house.area;
-            console.log(name, area);
             setApps([
                 { name: 'MainDisplay', form: <MainDisplay /> },
-                { name: 'Success', form: <Success name={name} area={area} /> }
-            ])
+                { name: 'Success', form: <Success name={name} area={area}/> }
+            ]);
         }
         else if (status == 2) {
             closeApp();

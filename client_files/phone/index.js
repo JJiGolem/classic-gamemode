@@ -65,7 +65,6 @@ mp.events.add('phone.call.start.ans', function (ans, targetId) {
 /// Сброс на нашем конце
 mp.events.add('phone.call.end', function () {
     mp.events.callRemote('phone.call.end', callerId);
-    mp.console("callerId" + callerId);
     if (callerId != -1) {
         mp.speechChanel.disconnect(mp.players.atRemoteId(callerId), "phone");
         callerId = -1;

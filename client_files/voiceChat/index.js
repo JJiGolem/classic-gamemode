@@ -16,12 +16,11 @@ mp.events.add('characterInit.done', function() {
         mp.callCEFV("hud.voice = false");
 		mp.busy.remove('voicechat');
     });
-    
-    // todo назначить на одну из клавиш F_num
-    // mp.keys.bind(0x4E, false, function() {
-    //     if (!mp.voiceChat.muted) return;
-    //     mp.voiceChat.cleanupAndReload(true, true, true);
-    // });
+
+    mp.keys.bind(0x73, false, function() {      // F4
+        if (!mp.voiceChat.muted) return;
+        mp.voiceChat.cleanupAndReload(true, true, true);
+    });
 });
 
 
@@ -58,11 +57,8 @@ mp.speechChanel.connect = (player, channel) => {
 
 /// Отключить выбранного игрока от канала связи
 mp.speechChanel.disconnect = (player, channel, isSend = false) => {
-    mp.console("channel" + JSON.stringify(channel));
     if (player == null) return;
     let index = listeners.findIndex( x => x.playerId == player.remoteId);
-    mp.console("index" + JSON.stringify(index));
-    mp.console("listeners" + JSON.stringify(listeners));
     if (channel == null) {
         index != -1 && listeners.splice(index, 1);
     }

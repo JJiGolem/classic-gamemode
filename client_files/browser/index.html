@@ -61,7 +61,8 @@
                     {{ players }}
                     /
                     {{ maxPlayers }}</p>
-                <p v-if="build">{{ build }} <i class="fas fa-code-branch"></i></p>
+                <p v-if="build">{{ build }} <i class="fab fa-git-alt"></i></p>
+                <p v-if="branch && build">{{ branch }} <i class="fas fa-code-branch"></i></p>
             </div>
             <div class="wanted" v-if="wanted">
                 <img src="img/hud/star.svg" :style="{opacity: (wanted < 5)? 0.2 : 1}" />
@@ -316,7 +317,7 @@
             </div>
             <div class="confirmEmail" v-if="form == 3">
                 <label>Код подтверждения
-                    <input type="text" v-model="code" autofocus v-on:keyup.enter="confirmEmailHandler(1)"/>
+                    <input type="text" v-model="code" autofocus v-on:keyup.enter="confirmEmailHandler(1)" />
                     <img class="ic-password" src="img/auth/password.png" />
                 </label>
                 <a class="confirmEmailBtn" @click="confirmEmailHandler(0)">Пропустить</a>
@@ -1424,7 +1425,7 @@
             <input placeholder="Введите число..." v-model="price" @keypress="inputCheck($event)" @keypress.enter="convert()" @focus="setFocus(true)" @blur="setFocus(false)" />
             <div class="equally">=</div>
             <div class="coins">{{ virtualCoins | playerMenuMoneySplit(true) }}</div>
-            <div :class="['btn', {disable: !price }]" @click="convert()">Конвертировать</div>
+            <div :class="['btn', {disable: !virtualCoins }]" @click="convert()">Конвертировать</div>
         </div>
     </script>
 

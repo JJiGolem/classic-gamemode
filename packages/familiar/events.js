@@ -32,22 +32,26 @@ module.exports = {
         notifs.success(player, `${rec.name} ваш новый знакомый`, header);
         notifs.success(rec, `${player.name} ваш новый знакомый`, header);
 
-        var time = 5000;
-        mp.players.forEachInRange(player.position, 20, current => {
-            current.call(`animations.play`, [player.id, {
-                dict: "mp_ped_interaction",
-                name: "handshake_guy_a",
-                speed: 1,
-                flag: 1
-            }, time]);
-        });
-        mp.players.forEachInRange(rec.position, 20, current => {
-            current.call(`animations.play`, [rec.id, {
-                dict: "mp_ped_interaction",
-                name: "handshake_guy_a",
-                speed: 1,
-                flag: 1
-            }, time]);
-        });
+        if (!player.vehicle && !player.getVariable("knocked")) {
+            var time = 5000;
+            mp.players.forEachInRange(player.position, 20, current => {
+                current.call(`animations.play`, [player.id, {
+                    dict: "mp_ped_interaction",
+                    name: "handshake_guy_a",
+                    speed: 1,
+                    flag: 1
+                }, time]);
+            });
+        }
+        if (!rec.vehicle && !rec.getVariable("knocked")) {
+            mp.players.forEachInRange(rec.position, 20, current => {
+                current.call(`animations.play`, [rec.id, {
+                    dict: "mp_ped_interaction",
+                    name: "handshake_guy_a",
+                    speed: 1,
+                    flag: 1
+                }, time]);
+            });
+        }
     },
 };

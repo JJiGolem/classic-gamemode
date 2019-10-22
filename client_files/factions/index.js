@@ -8,8 +8,8 @@
 */
 
 mp.factions = {
-    enableTakeBox: false,
-    enablePutBox: false,
+    insideFactionWar: false,
+    enableTakeBox: false, // можно ли взять ящик на беск. складе
     typeBox: "",
     faction: null,
 
@@ -19,18 +19,21 @@ mp.factions = {
         this.enableTakeBox = inside;
         this.typeBox = type;
     },
-    insideFactionWarehouse(inside, type = null) {
-        if (inside) mp.prompt.showByName(`put_${type}box`);
+    insideFactionWarehouse(inside) {
+        if (inside) {
+            var type = this.getTypeBox();
+            if (!type) mp.prompt.showByName(`take_ammobox`);
+            else mp.prompt.showByName(`put_${type}box`);
+        }
         else mp.prompt.hide();
-        this.enablePutBox = inside;
+        this.insideFactionWar = inside;
     },
     boxHandler() {
         if (mp.busy.includes()) return;
         if (this.enableTakeBox) {
             if (this.hasBox()) return mp.notify.error(`Нельзя нести больше`, `Склад`);
             mp.events.callRemote("factions.warehouse.takeBox", this.typeBox);
-        } else if (this.enablePutBox) {
-            if (!this.hasBox()) return mp.notify.error(`Вы не несете ящик`, `Склад`);
+        } else if (this.insideFactionWar) {
             mp.events.callRemote("factions.warehouse.putBox");
         }
     },
@@ -41,6 +44,12 @@ mp.factions = {
             if (player.hasAttachment(names[i])) return true;
         }
         return false;
+    },
+    getTypeBox(player) {
+        if (!player) player = mp.players.local;
+        if (player.hasAttachment("ammoBox")) return "ammo";
+        if (player.hasAttachment("medicinesBox")) return "medicines";
+        return null;
     },
     showGiveRankSelectMenu(factionName, rankNames, rank, playerId) {
         if (typeof rankNames == 'object') rankNames = JSON.stringify(rankNames);
@@ -144,8 +153,8 @@ mp.events.add({
     "factions.insideWarehouse": (inside, type) => {
         mp.factions.insideWarehouse(inside, type);
     },
-    "factions.insideFactionWarehouse": (inside, type) => {
-        mp.factions.insideFactionWarehouse(inside, type);
+    "factions.insideFactionWarehouse": (inside) => {
+        mp.factions.insideFactionWarehouse(inside);
     },
     "factions.giverank.showMenu": mp.factions.showGiveRankSelectMenu,
     "factions.storage.showMenu": (factionId) => {

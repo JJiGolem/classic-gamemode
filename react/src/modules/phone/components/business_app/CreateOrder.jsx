@@ -80,15 +80,15 @@ class CreateOrder extends Component {
 
         if (this.validateForm()) {
             addApp({ name: 'AnsOrder', form: <AnsOrder
-                    productCount={parseInt(productCount)} productPrice={parseInt(productPrice)}
+                    productsCount={parseInt(productCount)} productsPrice={productPrice}
                 /> });
 
             // eslint-disable-next-line no-undef
             mp.trigger('biz.order.add', business.id, productCount, productPrice);
 
-            /*setTimeout(() => {
-                setOrderStatus(1);
-            }, 1000)*/
+            // setTimeout(() => {
+            //     setOrderStatus(1);
+            // }, 1000)
         }
     }
 

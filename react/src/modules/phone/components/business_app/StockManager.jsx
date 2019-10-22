@@ -25,7 +25,7 @@ class StockManager extends Component {
                             {
                                 !business.order
                                 ? <span style={{ color: 'red' }}> нет</span>
-                                : <span style={{ color: '#30af25' }}>{` ${business.order.productCount} на $${business.order.productsPrice}`}</span>
+                                : <span style={{ color: '#30af25' }}>{` ${business.order.productsCount} на $${business.order.productsPrice}`}</span>
                             }
                         </div>
                     </div>

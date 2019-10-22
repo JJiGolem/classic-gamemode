@@ -55,6 +55,9 @@ mp.events.add({
             case 3:
                 mp.callCEFV(`selectMenu.notification = 'Ошибка финансовой операции'`);
                 break;
+            case 4:
+                mp.callCEFV(`selectMenu.notification = 'У вас нет лицензии на оружие'`);
+                break;
         }
     },
     "ammunation.ammo.buy.ans": (ans, data) => {
@@ -74,6 +77,9 @@ mp.events.add({
                 break;
             case 3:
                 mp.callCEFV(`selectMenu.notification = 'Ошибка финансовой операции'`);
+                break;
+            case 4:
+                mp.callCEFV(`selectMenu.notification = 'У вас нет лицензии на оружие'`);
                 break;
         }
     }

@@ -3,6 +3,7 @@
 mp.events.add("render", () => {
     /// Отключение не используемых клавиш
     mp.game.controls.disableControlAction(1, 199, true); //Pause Menu (P)
+    mp.game.controls.disableControlAction(1, 243, true); //Cheat Code (~)
 });
 
 // debug
@@ -104,6 +105,7 @@ mp.events.add({
     "busy.remove": mp.busy.remove,
     "time.main.tick": () => {
         if (mp.busy.mouses.length && !mp.gui.cursor.visible) mp.gui.cursor.show(true, true);
+        mp.game.player.resetStamina();
     }
 });
 

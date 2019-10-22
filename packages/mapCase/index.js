@@ -198,9 +198,11 @@ module.exports = {
         });
     },
     removePoliceMember(player) {
+        if (!factions.isPoliceFaction(player.character.factionId)) return;
         mp.players.forEach((rec) => {
             if (!rec.character) return;
             if (!factions.isPoliceFaction(rec.character.factionId)) return;
+            if (rec.character.factionId != player.character.factionId) return;
 
             rec.call(`mapCase.pd.members.remove`, [player.character.id]);
         });
