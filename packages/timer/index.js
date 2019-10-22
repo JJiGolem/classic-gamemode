@@ -36,7 +36,8 @@ module.exports = {
                             i--;
                         }
                     }
-                } catch (error) {
+                }
+                catch (error) {
                     timers.splice(i, 1);
                     i--;
                     console.log(error);
@@ -52,19 +53,24 @@ module.exports = {
         let id = gId++;
         timers.push({
             id: id,
-            handler: handler, 
-            time: Date.now() + time, 
+            handler: handler,
+            time: Date.now() + time,
             interval: isInterval ? time : null
         });
-        return {id: id};
+        return {
+            id: id
+        };
     },
     /// Удаление существующего таймера, до его срабатывания
     remove(timer) {
         if (timer == null) return;
         if (timer.id == null) return;
-        let index = timers.findIndex( x => x.id == timer.id);
+        let index = timers.findIndex(x => x.id == timer.id);
         index != -1 && timers.splice(index, 1);
-    }
+    },
+    addInterval(handler, time) {
+        return this.add(handler, time, true);
+    },
 }
 /// obj.destroy()
-/// 
+///

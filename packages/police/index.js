@@ -3,6 +3,7 @@ var factions = require('../factions');
 var mapCase = require('../mapCase');
 var notifs = require('../notifications');
 var utils = require('../utils');
+let timer = call('timer');
 
 module.exports = {
     // Кол-во боеприпасов, списываемое за выдачу формы (LSPD, LSSD)
@@ -158,14 +159,14 @@ module.exports = {
         player.heading = cell.h;
         var playerId = player.id;
         var characterId = player.character.id;
-        clearTimeout(player.cellArrestTimer);
-        clearTimeout(player.jailArrestTimer);
+        timer.remove(player.cellArrestTimer);
+        timer.remove(player.jailArrestTimer);
         player.cellArrestDate = Date.now();
-        player.cellArrestTimer = setTimeout(() => {
+        player.cellArrestTimer = timer.add(() => {
             try {
                 var rec = mp.players.at(playerId);
                 if (!rec || rec.character.id != characterId || !rec.character.arrestTime) {
-                    clearTimeout(player.cellArrestTimer);
+                    timer.remove(player.cellArrestTimer);
                     return;
                 }
 
@@ -198,14 +199,14 @@ module.exports = {
         player.heading = cell.h;
         var playerId = player.id;
         var characterId = player.character.id;
-        clearTimeout(player.jailArrestTimer);
-        clearTimeout(player.cellArrestTimer);
+        timer.remove(player.jailArrestTimer);
+        timer.remove(player.cellArrestTimer);
         player.jailArrestDate = Date.now();
-        player.jailArrestTimer = setTimeout(() => {
+        player.jailArrestTimer = timer.add(() => {
             try {
                 var rec = mp.players.at(playerId);
                 if (!rec || !rec.character || rec.character.id != characterId || !rec.character.arrestTime) {
-                    clearTimeout(player.cellArrestTimer);
+                    timer.remove(player.cellArrestTimer);
                     return;
                 }
                 delete rec.jailArrestTimer;
@@ -225,7 +226,7 @@ module.exports = {
         }, time);
     },
     stopCellArrest(player) {
-        clearTimeout(player.cellArrestTimer);
+        timer.remove(player.cellArrestTimer);
         delete player.cellArrestTimer;
         player.call(`inventory.enable`, [true]);
 

@@ -10,6 +10,7 @@ let money = call('money');
 let notifs = require('../notifications');
 let police = call('police');
 let satiety = call('satiety');
+let timer = call('timer');
 let vehicles = call('vehicles');
 
 module.exports = {
@@ -144,7 +145,7 @@ module.exports = {
             // TODO: проиграть анимацию
             // mp.events.call("anim", player, "random@domestic", "pickup_low", 0, 1000);
             notifs.success(player, `Предмет ${inventory.getName(obj.item.itemId)} в инвентаре`, header);
-            clearTimeout(obj.destroyTimer);
+            timer.remove(obj.destroyTimer);
             obj.destroy();
             var rec = mp.players.at(obj.playerId);
             if (!rec || !rec.character) return;
