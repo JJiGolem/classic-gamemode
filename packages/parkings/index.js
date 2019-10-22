@@ -4,6 +4,7 @@ var parkingVehicles = []; /// автомобили на парковке
 var vehicles = call("vehicles");
 var houses = call("houses");
 let money = call('money');
+let timer = call('timer');
 
 const PARKING_PRICE = 2; /// цена парковки за час
 
@@ -112,9 +113,9 @@ module.exports = {
                 vehicleFound.y = parkings[index].carY;
                 vehicleFound.z = parkings[index].carZ;
                 vehicleFound.h = parkings[index].carH;
-        
+
                 player.call('parkings.blips.private.clear');
-        
+
                 vehicleFound.parkingDate = null;
                 if (vehicleFound.db) {
                     vehicleFound.db.update({
@@ -191,7 +192,7 @@ module.exports = {
                         parkingDate: now
                     });
                 }
-                clearInterval(current.fuelTimer);
+                mp.timer.remove(current.fuelTimer);
                 current.destroy();
             }
         });

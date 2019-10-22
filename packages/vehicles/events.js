@@ -35,18 +35,18 @@ module.exports = {
             player.call('vehicles.speedometer.show', [true]);
             player.call('vehicles.speedometer.max.update', [vehicle.properties.maxFuel]);
             player.call('vehicles.speedometer.sync');
-            clearInterval(player.indicatorsUpdateTimer);
+            mp.timer.remove(player.indicatorsUpdateTimer);
 
             let playerId = player.id;
             let characterId = player.character.id;
             player.indicatorsUpdateTimer = mp.timer.addInterval(() => {
                 try {
                     let target = mp.players.at(playerId);
-                    if (!target || !target.character || target.character.id != characterId) return clearInterval(player.indicatorsUpdateTimer);
+                    if (!target || !target.character || target.character.id != characterId) return mp.timer.remove(player.indicatorsUpdateTimer);
                     player.call('vehicles.speedometer.fuel.update', [Math.ceil(vehicle.fuel)]);
                 } catch (err) {
                     console.log(err);
-                    clearInterval(player.indicatorsUpdateTimer);
+                    mp.timer.remove(player.indicatorsUpdateTimer);
                 }
             }, 1000);
         }
@@ -56,7 +56,7 @@ module.exports = {
     },
     "playerQuit": (player) => {
         if (player.indicatorsUpdateTimer) {
-            clearInterval(player.indicatorsUpdateTimer);
+            mp.timer.remove(player.indicatorsUpdateTimer);
         }
         if (player.vehicle) player.vehicle.lastPlayerTime = Date.now();
     },
@@ -65,7 +65,7 @@ module.exports = {
     },
     "playerExitVehicle": (player, vehicle) => {
         if (player.indicatorsUpdateTimer) {
-            clearInterval(player.indicatorsUpdateTimer);
+            mp.timer.remove(player.indicatorsUpdateTimer);
         }
         player.call('vehicles.indicators.show', [false]);
         player.call('vehicles.speedometer.show', [false]);

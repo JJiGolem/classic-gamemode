@@ -22,13 +22,13 @@ module.exports = {
         var playerId = player.id;
         var characterId = player.character.id;
 
-        clearInterval(this.timers[playerId]);
+        mp.timer.remove(this.timers[playerId]);
         delete this.timers[playerId];
         this.timers[playerId] = mp.timer.addInterval(() => {
             try {
                 var rec = mp.players.at(playerId);
                 if (!rec || rec.character.id != characterId) {
-                    clearInterval(this.timers[playerId]);
+                    mp.timer.remove(this.timers[playerId]);
                     delete this.timers[playerId];
                     return 0;
                 }
@@ -56,7 +56,7 @@ module.exports = {
         console.log(`[SATIETY] Таймер для ${player.name} запущен`)
     },
     stopTimer(player) {
-        clearInterval(this.timers[player.id]);
+        mp.timer.remove(this.timers[player.id]);
         delete this.timers[player.id];
         console.log(`[SATIETY] Таймер для ${player.name} остановлен`);
     },

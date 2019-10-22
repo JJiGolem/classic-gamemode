@@ -2,6 +2,7 @@
 let vehicles = call("vehicles");
 let money = call("money");
 let inventory = call("inventory");
+let timer = call("timer");
 // console.log("carmarket:");
 // console.log(vehicles);
 var marketSpots = [];
@@ -140,7 +141,7 @@ module.exports = {
         });
         this.addMarketVehicle(vehicle);
         if (vehicle.fuelTimer) {
-            clearInterval(vehicle.fuelTimer);
+            mp.timer.remove(vehicle.fuelTimer);
         }
         vehicle.destroy();
     },
@@ -150,7 +151,7 @@ module.exports = {
     destroyMarketVehicleById(id) {
         mp.vehicles.forEach((current) => {
             if (current.sqlId == id) {
-                clearInterval(current.fuelTimer);
+                mp.timer.remove(current.fuelTimer);
                 current.destroy();
             }
         });
@@ -190,7 +191,7 @@ module.exports = {
                 inventory.fullDeleteItemsByParams(33, 'vehId', veh.db.id);
                 if (player) {
                     // console.log(veh);
-                    clearInterval(veh.fuelTimer);
+                    mp.timer.remove(veh.fuelTimer);
                     veh.destroy();
                     vehicles.removeVehicleFromPlayerVehicleList(player, veh.sqlId);
                     vehicles.removeVehicleFromCarPlace(player, veh);

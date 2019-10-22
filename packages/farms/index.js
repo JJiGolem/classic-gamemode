@@ -602,7 +602,7 @@ module.exports = {
                     }
 
                     // debug(`Поле ${field.sqlId} созрело!`)
-                    clearInterval(timerId);
+                    mp.timer.remove(timerId);
                 }
             } catch (e) {
                 console.log(e);

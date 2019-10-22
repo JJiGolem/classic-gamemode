@@ -142,7 +142,7 @@ module.exports = {
     },
     respawnVehicle(veh) {
         if (!mp.vehicles.exists(veh)) return;
-        clearInterval(veh.fuelTimer);
+        mp.timer.remove(veh.fuelTimer);
         if (veh.key == "admin") { /// Если админская, не респавним
             veh.destroy();
             return;
@@ -416,7 +416,7 @@ module.exports = {
     updateConsumption(vehicle) {
         if (!vehicle) return;
         try {
-            clearInterval(vehicle.fuelTimer);
+            mp.timer.remove(vehicle.fuelTimer);
 
             let multiplier = vehicle.multiplier;
             vehicle.consumption = vehicle.properties.consumption * multiplier;
