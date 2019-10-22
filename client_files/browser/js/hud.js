@@ -8,7 +8,7 @@ var hud = new Vue({
         wanted: 0,
         cash: 0,
         bank: 0,
-        time: new Date().toTimeString().replace(/(\d{2}:\d{2}).*/, '$1'),
+        time: convertToMoscowDate(new Date()).toTimeString().replace(/(\d{2}:\d{2}).*/, '$1'),
         region: "Округ Блейн",
         street: "Атли-стрит",
         temperature: 17,
@@ -56,7 +56,7 @@ var hud = new Vue({
     },
     methods: {
         updateTime() {
-            this.time = new Date().toTimeString().replace(/(\d{2}:\d{2}).*/, '$1');
+            this.time = convertToMoscowDate(new Date()).toTimeString().replace(/(\d{2}:\d{2}).*/, '$1');
         },
         pretty(val) {
             return prettyMoney(val);
