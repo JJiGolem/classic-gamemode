@@ -31,6 +31,64 @@ module.exports = {
 
         console.log(`[TERMINAL] Команды загружены (${dbCommands.length} / ${Object.keys(this.commands).length} шт.)`);
     },
+    setCmdName(cmdName, name) {
+        var cmd = this.commands[cmdName];
+        if (!cmd) return;
+        var dbCmd = cmd.db;
+        if (!dbCmd) {
+            dbCmd = db.Models.Command.build({
+                cmd: cmdName,
+                name: name,
+                description: cmd.description,
+                access: cmd.access
+            });
+            cmd.db = dbCmd;
+        }
+
+        dbCmd.name = name;
+        dbCmd.save();
+
+        this.commands[name] = cmd;
+        delete this.commands[cmdName];
+    },
+    setCmdDescription(cmdName, description) {
+        var cmd = this.commands[cmdName];
+        if (!cmd) return;
+        var dbCmd = cmd.db;
+        if (!dbCmd) {
+            dbCmd = db.Models.Command.build({
+                cmd: cmdName,
+                name: cmdName,
+                description: description,
+                access: cmd.access
+            });
+            cmd.db = dbCmd;
+        }
+
+        dbCmd.description = description;
+        dbCmd.save();
+
+        cmd.description = description;
+    },
+    setCmdAccess(cmdName, access) {
+        var cmd = this.commands[cmdName];
+        if (!cmd) return;
+        var dbCmd = cmd.db;
+        if (!dbCmd) {
+            dbCmd = db.Models.Command.build({
+                cmd: cmdName,
+                name: cmdName,
+                description: cmd.description,
+                access: access
+            });
+            cmd.db = dbCmd;
+        }
+
+        dbCmd.access = access;
+        dbCmd.save();
+
+        cmd.access = access;
+    },
     haveAccess(player) {
         return player.character.admin >= this.access;
     },
