@@ -1,11 +1,14 @@
 "use strict";
 var vehicles = require('./index.js')
 var inventory = call('inventory');
+var notifs = call('notifications');
+var utils = call('utils');
 
 let money = call('money');
 module.exports = {
     "init": () => {
         vehicles.init();
+        inited(__dirname);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         player.call('vehicles.garage', [vehicle.isInGarage]);
@@ -54,6 +57,7 @@ module.exports = {
         if (player.indicatorsUpdateTimer) {
             clearInterval(player.indicatorsUpdateTimer);
         }
+        if (player.vehicle) player.vehicle.lastPlayerTime = Date.now();
     },
     "vehicleDeath": (vehicle) => {
         vehicles.respawnVehicle(vehicle);
@@ -66,6 +70,8 @@ module.exports = {
         player.call('vehicles.speedometer.show', [false]);
         player.call('vehicles.garage', [false]);
         player.call('prompt.hide');
+
+        vehicle.lastPlayerTime = Date.now();
     },
     "playerStartExitVehicle": (player) => {
         if (player.vehicle.engine) player.vehicle.engine = true;
@@ -84,12 +90,13 @@ module.exports = {
             player.call('vehicles.engine.toggle', [false]);
             player.vehicle.setVariable("engine", false);
         } else {
+            if (player.vehicle.key == 'private' && !vehicles.haveKeys(player, player.vehicle)) return notifs.error(player, `Вы не имеете ключи`, player.vehicle.properties.name);
             player.vehicle.engine = true;
             player.call('vehicles.engine.toggle', [true]);
             player.vehicle.setVariable("engine", true);
             player.call('prompt.hide');
             if (player.vehicle.key == 'private') {
-            vehicles.generateBreakdowns(player.vehicle);
+                vehicles.generateBreakdowns(player.vehicle);
             }
             mp.events.call('vehicles.breakdowns.init', player);
         }
@@ -143,12 +150,16 @@ module.exports = {
     "vehicles.hood": (player, vehicleId, state) => {
         let vehicle = mp.vehicles.at(vehicleId);
         if (!vehicle) return;
+        if (vehicle.key == 'private' && !vehicles.haveKeys(player, vehicle)) return notifs.error(player, `Вы не имеете ключи`, vehicle.properties.name);
+        if (vehicle.db && vehicle.db.key == 'faction' && player.character.factionId != vehicle.db.owner) return notifs.error(player, `Нет доступа`, vehicle.properties.name);
 
         vehicle.setVariable("hood", state);
     },
     "vehicles.trunk": (player, vehicleId, state) => {
         let vehicle = mp.vehicles.at(vehicleId);
         if (!vehicle) return;
+        if (vehicle.db && vehicle.db.key == 'private' && !vehicles.haveKeys(player, vehicle)) return notifs.error(player, `Вы не имеете ключи`, vehicle.properties.name);
+        if (vehicle.db && vehicle.db.key == 'faction' && player.character.factionId != vehicle.db.owner) return notifs.error(player, `Нет доступа`, vehicle.properties.name);
 
         vehicle.setVariable("trunk", state);
 
@@ -167,7 +178,8 @@ module.exports = {
         if (!vehicle) return;
         // TEMP
         if (vehicle.key != 'private') return player.call('notifications.push.error', ['Это не ваше т/с', 'Ошибка']);
-        if (vehicle.owner != player.character.id) return player.call('notifications.push.error', ['Это не ваше т/с', 'Транспорт']);
+        // if (vehicle.owner != player.character.id) return player.call('notifications.push.error', ['Это не ваше т/с', 'Транспорт']);
+        if (!vehicles.haveKeys(player, vehicle)) return notifs.error(player, `Вы не имеете ключи`, vehicle.properties.name);
 
         let state = vehicle.locked;
         if (state) {
@@ -381,6 +393,7 @@ module.exports = {
                         price: props.price // todo isOnParking TODO !!!!!!!!!!!!!!!!!!!!!
                     });
 
+                    inventory.fullDeleteItemsByParams(33, 'vehId', vehId);
                     // выдача ключей в инвентарь
                     inventory.addItem(target, 33, {
                         owner: target.character.id,
@@ -392,7 +405,7 @@ module.exports = {
                         }]);
                     });
                     // удаление ключей у продавца
-                    inventory.deleteByParams(seller, 33, 'vehId', vehId);
+                    // inventory.deleteByParams(seller, 33, 'vehId', vehId);
 
                     delete target.sellCarTargetOffer;
                     delete seller.sellCarSenderOffer;
@@ -404,7 +417,7 @@ module.exports = {
                     delete target.sellCarTargetOffer;
                     delete seller.sellCarSenderOffer;
                 }
-            });
+            }, `Покупка/продажа т/с ${vehicle.properties.name} (#${vehicle.sqlId}) с рук`);
         } else {
             delete target.sellCarTargetOffer;
             delete seller.sellCarSenderOffer;
@@ -430,5 +443,59 @@ module.exports = {
     "vehicles.radio.set": (player, radioIndex) => {
         if (!player.vehicle) return;
         player.vehicle.setVariable('radioIndex', radioIndex);
+    },
+    "time.main.tick": (ticks) => {
+        if (ticks % 5) return;
+
+        var start = new Date();;
+        mp.vehicles.forEach(veh => {
+            if (!veh.db) return;
+            if (!veh.lastPlayerTime) return;
+            if (veh.db.key == 'private') return;
+            if (start.getTime() - veh.lastPlayerTime < vehicles.vehWaitSpawn) return;
+            if (vehicles.getOccupants(veh).length) return;
+
+            var spawnPos = new mp.Vector3(veh.db.x, veh.db.y, veh.db.z);
+            var vehPos = veh.position;
+            var dist = utils.vdist(spawnPos, vehPos);
+            var isDead = vehicles.isDead(veh);
+            if (dist > 10 || isDead) {
+                veh.repair();
+                veh.position = spawnPos;
+                veh.rotation = new mp.Vector3(0, 0, veh.db.h);
+                veh.setVariable("heading", veh.db.h);
+                delete veh.lastPlayerTime;
+                mp.events.call("vehicle.respawned", veh);
+            }
+        });
+        var diff = Date.now() - start.getTime();
+        debug(`time now: ${new Date()}`)
+        debug(`free vehicles was spawned: ${diff} ms`)
+        debug(`all vehicles: ${mp.vehicles.length}`)
+    },
+    "vehicles.props.add": async (player, data) => {
+        console.log(data);
+        data = JSON.parse(data);
+        try {
+            let prop = await db.Models.VehicleProperties.create({
+                model: data.model,
+                name: data.name,
+                vehType: data.type,
+                price: data.price,
+                maxFuel: data.maxFuel,
+                consumption: data.consumption
+            });
+            if (data.isAvailable) {
+                await db.Models.CarList.create({
+                    carShowId: data.carShowId,
+                    vehiclePropertyModel: data.model,
+                    percentage: data.percentage
+                });
+                player.call('notifications.push.success', ['Т/с добавлено']);
+            }
+        } catch (err) {
+            console.log(err.message);
+            player.call('notifications.push.error', [`${err.message.slice(0, 50)}...`, `Ошибка`]);
+        }
     }
 }

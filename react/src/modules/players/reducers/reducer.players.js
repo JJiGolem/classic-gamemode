@@ -13,7 +13,7 @@ const initialState = [
     //     ping: 5
     // },
     // {
-    //     id: 3,
+    //     id: 12,
     //     name: 'Deus Memes',
     //     faction: '-',
     //     ping: 9

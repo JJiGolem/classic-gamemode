@@ -13,7 +13,7 @@ class AnsOrder extends Component {
     }
 
     getAnsPage(status) {
-        const { addApp, closeApp, productCount, productPrice } = this.props;
+        const { addApp, closeApp, productsCount, productsPrice } = this.props;
 
         if (status === 0) {
             closeApp();
@@ -22,7 +22,7 @@ class AnsOrder extends Component {
         else if (status === 1) {
             closeApp();
             closeApp();
-            addApp({ name: 'Success', form: <Success status='Заказ успешно сделан' productCount={productCount} productPrice={productPrice}/> });
+            addApp({ name: 'Success', form: <Success status='Заказ успешно сделан' productsCount={productsCount} productsPrice={productsPrice}/> });
         }
         else if (status === 2) {
             closeApp();

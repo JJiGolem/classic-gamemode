@@ -57,7 +57,7 @@ module.exports = {
         console.log(`[BANDS] Зоны гетто загружены (${dbZones.length} шт.)`)
     },
     convertToClientBandZones() {
-        var zones = this.bandZones.map(x => x.dataValues);
+        var zones = this.bandZones.map(x => Object.assign({}, x.dataValues));
         var warZoneIds = Object.keys(this.wars);
         if (warZoneIds.length) zones[warZoneIds[0] - 1].flash = true;
 
@@ -269,6 +269,7 @@ module.exports = {
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
+            if (player.vehicle) return;
             if (!factions.isBandFaction(player.character.factionId)) return notifs.error(player, `Вы не член группировки`, `Наркопритон`);
             player.call("selectMenu.show", [`drugsStash`]);
             player.insideDrugsStash = true;

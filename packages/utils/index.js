@@ -124,17 +124,20 @@ module.exports = {
         });
         return result;
     },
-    getNearVehicle(player) {
+    getNearVehicle(player, range = 10) {
         var nearVehicle;
         var minDist = 99999;
         mp.vehicles.forEach((veh) => {
             if (veh.id == player.id) return;
             var distance = player.dist(veh.position);
-            if (distance < minDist) {
+            if (distance < minDist && distance < range) {
                 nearVehicle = veh;
                 minDist = distance;
             }
         });
         return nearVehicle;
     },
+    vdist(posA, posB) {
+        return (posA.x - posB.x) * (posA.x - posB.x) + (posA.y - posB.y) * (posA.y - posB.y) + (posA.z - posB.z) * (posA.z - posB.z);
+    }
 };

@@ -2,7 +2,7 @@ import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {addAppDisplay, closeAppDisplay} from "../../actions/action.apps";
 import AnsSell from "./AnsSell";
-import {setSellHouse, setSellStatusHouse} from "../../actions/action.info";
+import {disableHomePhone, setSellStatusHouse} from "../../actions/action.info";
 import HeaderHouseApp from "./HeaderHouseApp";
 
 class SellState extends Component {
@@ -18,10 +18,10 @@ class SellState extends Component {
     }
 
     sellHouse() {
-        const { addApp, setSell, setSellStatus, house } = this.props;
+        const { addApp, disableHome, setSellStatus, house } = this.props;
 
         // closeApp();
-        setSell(true);
+        disableHome(true);
         addApp({ name: 'AnsSell', form: <AnsSell /> });
 
         // eslint-disable-next-line no-undef
@@ -29,7 +29,7 @@ class SellState extends Component {
 
         // setTimeout(() => {
         //     setSellStatus(1);
-        // }, 1000);
+        // }, 4000);
     }
 
     render() {
@@ -55,7 +55,7 @@ class SellState extends Component {
                     </div>
 
                     {
-                        !house.isSell &&
+                        !info.isDisabled &&
                         <div className='house_buttons-phone-react' style={{ bottom: '6%', position: 'absolute' }}>
                             <div className='house_button-phone-react' onClick={() => this.sellHouse()}>
                                 <span className='ico_button_house-phone-react'>
@@ -89,7 +89,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     closeApp: () => dispatch(closeAppDisplay()),
     addApp: app => dispatch(addAppDisplay(app)),
-    setSell: flag => dispatch(setSellHouse(flag)),
+    disableHome: state => dispatch(disableHomePhone(state)),
     setSellStatus: status => dispatch(setSellStatusHouse(status)),
 });
 

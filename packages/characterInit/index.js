@@ -3,10 +3,14 @@ const freemodeCharacters = [mp.joaat("mp_m_freemode_01"), mp.joaat("mp_f_freemod
 const creatorPlayerPos = new mp.Vector3(402.8664, -996.4108, -99.00027);
 const creatorPlayerHeading = -185.0;
 
-let inventory = call('inventory');
-let notifs = call('notifications');
-let utils = call("utils");
-let promocodes = call("promocodes");
+let houses;
+let bizes;
+let factions;
+let jobs;
+let inventory;
+let notifs;
+let utils;
+let promocodes;
 
 let clothesConfig = {
     0: {
@@ -52,6 +56,16 @@ const SHOES_ID = 9;
 
 /// Функции модуля выбора и создания персоонажа
 module.exports = {
+    moduleInit() {
+        houses = call('houses');
+        bizes = call('bizes');
+        factions = call('factions');
+        inventory = call('inventory');
+        notifs = call('notifications');
+        utils = call("utils");
+        promocodes = call("promocodes");
+        jobs = call('jobs');
+    },
     async init(player) {
         if (player.character != null) delete player.character;
         if (player.characters == null) {
@@ -60,7 +74,8 @@ module.exports = {
                 where: {
                     accountId: player.account.id
                 },
-                include: [{
+                include: [
+                    {
                         model: db.Models.Feature,
                     },
                     {
@@ -75,19 +90,32 @@ module.exports = {
                         as: "settings",
                         model: db.Models.CharacterSettings,
                     },
-                    // Этот инклюд тормозит выборку до 5 сек...
                     // {
                     //     model: db.Models.CharacterInventory,
                     //     where: {
                     //         parentId: null,
                     //     },
-                    //     include: {
-                    //         as: "params",
-                    //         model: db.Models.CharacterInventoryParam,
-                    //     },
+                    //     // Этот инклюд тормозит выборку до 5 сек...
+                    //     // include: [{
+                    //     //     as: "params",
+                    //     //     model: db.Models.CharacterInventoryParam,
+                    //     // }],
                     // },
                 ]
             });
+            for (let i = 0; i < player.characters.length; i++) {
+                player.characters[i].CharacterInventories = await db.Models.CharacterInventory.findAll({
+                    where: {
+                        parentId: null,
+                        playerId: player.characters[i].id
+                    },
+                    include: {
+                        as: "params",
+                        model: db.Models.CharacterInventoryParam,
+                    },
+                });
+            }
+
             var diff = Date.now() - start;
             notifs.info(player, `Время выборки персонажей: ${diff} ms.`);
             player.characters.forEach(character => {
@@ -105,10 +133,40 @@ module.exports = {
         }
         let charInfos = new Array();
         for (let i = 0; i < player.characters.length; i++) {
+            let house = houses.getHouseByCharId(player.characters[i].id);
+            let biz = bizes.getBizByCharId(player.characters[i].id);
+            let factionName = factions.getFactionNameById(player.characters[i].factionId);
+            let jobName = jobs.getJobNameById(player.characters[i].job);
             charInfos.push({
-                charInfo: player.characters[i],
-                charClothes: null,
-                // charClothes: inventory.getView(player.characters[i].CharacterInventories),
+                charInfo: {
+                    name: player.characters[i].name,
+                    cash: player.characters[i].cash,
+                    bank: player.characters[i].bank,
+                    status: this.getSocialStatus(player.characters[i]),
+                    hours: parseInt(player.characters[i].minutes / 60),
+                    faction: factionName ? factionName : "Нет",
+                    job: jobName ? jobName : "Нет",
+                    house: house ? `${house.info.Interior.class}(№${house.info.id})` : "Нет",
+                    biz: biz ? `${biz.info.name}` : "Нет",
+                    warns: player.characters[i].warnNumber,
+                    hair: player.characters[i].hair,
+                    hairColor: player.characters[i].hairColor,
+                    hairHighlightColor: player.characters[i].hairHighlightColor,
+                    eyeColor: player.characters[i].eyeColor,
+                    beardColor: player.characters[i].beardColor,
+                    eyebrowColor: player.characters[i].eyebrowColor,
+                    blushColor: player.characters[i].blushColor,
+                    lipstickColor: player.characters[i].lipstickColor,
+                    chestHairColor: player.characters[i].chestHairColor,
+                    gender: player.characters[i].gender,
+                    mother: player.characters[i].mother,
+                    father: player.characters[i].father,
+                    skin: player.characters[i].skin,
+                    similarity: player.characters[i].similarity,
+                    Appearances: player.characters[i].Appearances,
+                    Features: player.characters[i].Features,
+                },
+                charClothes: inventory.getView(player.characters[i].CharacterInventories),
             });
         }
         return charInfos;
@@ -134,7 +192,10 @@ module.exports = {
             chestHairColor: 0,
             Features: [],
             Appearances: [],
-            Promocode: {},
+            Fines: [],
+            Promocode: {
+                PromocodeReward: {},
+            },
             settings: {},
         }
         for (let i = 0; i < 20; i++) player.characterInfo.Features.push({
@@ -176,7 +237,11 @@ module.exports = {
                     model: db.Models.Appearance,
                 },
                 {
+                    model: db.Models.Fine,
+                },
+                {
                     model: db.Models.Promocode,
+                    include: db.Models.PromocodeReward,
                 },
                 {
                     as: "settings",
@@ -192,7 +257,6 @@ module.exports = {
     sendToCreator(player) {
         player.position = creatorPlayerPos;
         player.heading = creatorPlayerHeading;
-        player.usingCreator = true;
         player.call("characterInit.create", [true, JSON.stringify(player.characterInfo)]);
     },
     applyCharacter(player) {
@@ -230,8 +294,7 @@ module.exports = {
                     this.colorForOverlayIdx(player, i), 0
                 ]);
             }
-        }
-        else {
+        } else {
             let features = new Array();
             player.characterInfo.Features.forEach((element) => {
                 features.push(element.value);
@@ -289,8 +352,7 @@ module.exports = {
                 default:
                     color = 0;
             }
-        }
-        else {
+        } else {
             switch (index) {
                 case 1:
                     color = player.characterInfo.beardColor;
@@ -314,13 +376,19 @@ module.exports = {
         return color;
     },
     getSpawn() {
-        switch (call('utils').randomInteger(0, 2)) {
+        switch (call('utils').randomInteger(0, 5)) {
             case 0:
-                return [-252.91534423828125, -338.6800231933594, 29.70627212524414];
+                return [-252.91534423828125, -338.6800231933594, 29.70627212524414]; /// Рокфорд-Хиллз
             case 1:
-                return [258.9052429199219, -1112.8656005859375, 29.43829917907715];
+                return [258.9052429199219, -1112.8656005859375, 29.43829917907715]; /// Мишн-Роу
             case 2:
-                return [-197.68017578125, -804.0416870117188, 30.45401954650879];
+                return [-197.68017578125, -804.0416870117188, 30.45401954650879]; /// Пиллбокс-Хилл
+            case 3:
+                return [1155.053466796875, -470.5561828513281, 66.53962158203125]; /// Миррор-Парк
+            case 4:
+                return [-164.7874755859375, 6426.59912109375, 31.886451721191406]; /// Палето-Бэй
+            case 5:
+                return [1958.814208984365, 3844.35888671875, 31.985401153564453]; /// Сэнди-Шорс
             default:
                 return [-252.91534423828125, -338.6800231933594, 29.70627212524414];
         }
@@ -335,6 +403,7 @@ module.exports = {
             variation: pants[0],
             texture: pants[1],
             pockets: '[5, 5, 5, 5, 4, 4, 4, 4]',
+            clime: '[15,25]',
             name: (pants[0] == 15 && sex == 1) || (pants[0] == 14 && sex == 0) ? 'Шорты' : 'Брюки'
         }
         inventory.addItem(player, PANTS_ID, pantsParams, (e) => {
@@ -348,6 +417,7 @@ module.exports = {
             sex: sex,
             variation: shoes[0],
             texture: shoes[1],
+            clime: '[15,25]',
             name: 'Кроссовки'
         }
         inventory.addItem(player, SHOES_ID, shoesParams, (e) => {
@@ -365,7 +435,7 @@ module.exports = {
             tTexture: top[3],
             undershirt: top[4],
             uTexture: top[5],
-            //pockets: '[3, 3]',
+            clime: '[15,25]',
             name: 'Футболка'
         }
         inventory.addItem(player, TOP_ID, topParams, (e) => {
@@ -374,8 +444,12 @@ module.exports = {
         });
     },
     spawn(player) {
+        if (player.character.arrestTime) return; // заспавнит модуль [police]
         var settings = player.character.settings;
-        if (!player.character.factionId || player.house.id == -1) settings.spawn = 0;
+        var house = houses.getHouseByCharId(player.character.id);
+
+        if (settings.spawn == 1 && !house) settings.spawn = 0;
+        if (settings.spawn == 2 && !player.character.factionId) settings.spawn = 0;
         switch (settings.spawn) {
             case 0: // улица
                 player.spawn(new mp.Vector3(player.character.x, player.character.y, player.character.z));
@@ -383,9 +457,27 @@ module.exports = {
                 player.dimension = 0;
                 break;
             case 1: // дом
+                var pos = new mp.Vector3(house.info.Interior.x, house.info.Interior.y, house.info.Interior.z);
+                player.spawn(pos);
+                player.dimension = house.info.id;
+                player.house = {
+                    id: house.info.id,
+                    place: 1
+                };
                 break;
             case 2: //организация
+                var pos = factions.getMarker(player.character.factionId).position;
+                player.spawn(pos);
+                player.dimension = 0;
                 break;
         }
+    },
+    getSocialStatus(character) {
+        if (character.admin) return "Администратор";
+        if (character.media) return "Медиа";
+        if (!character.factionId) return "Обычный";
+        if (character.factionId < 8) return "Госслужащий";
+
+        return "Бандит";
     },
 };

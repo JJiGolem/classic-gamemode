@@ -9,6 +9,7 @@ let PRICE_CONFIG = carmarket.getPriceConfig();
 module.exports = {
     "init": () => {
         carmarket.init();
+        inited(__dirname);
     },
     "vehicles.loaded": async () => {
         await carmarket.loadCarMarketData();
@@ -42,7 +43,13 @@ module.exports = {
         if (player.vehicle.key != 'private' || player.vehicle.owner != player.character.id) return player.call('carmarket.car.sell.ans', [0]);
 
         let price = (player.vehicle.properties.price * PRICE_CONFIG.SELL).toFixed();
-        console.log(price);
+       
+        let info = {
+            name: player.vehicle.properties.name,
+            id: player.vehicle.sqlId,
+            plate: player.vehicle.plate
+        }
+
         money.addCash(player, price, function(result) {
             if (result) {
                 try {
@@ -56,20 +63,16 @@ module.exports = {
                 carmarket.sellCar(player.vehicle);
                 player.call('carmarket.car.sell.ans', [3, price]);
                 // удаление ключей
-                inventory.deleteByParams(player, 33, 'vehId', vehicleId);
+                // inventory.deleteByParams(player, 33, 'vehId', vehicleId);
+                inventory.fullDeleteItemsByParams(33, 'vehId', vehicleId);
             } else {
                 console.log(`${player.name} не смог продать авто на рынке (addcash error)`)
                 player.call('carmarket.car.sell.ans', [2]);
             }
-        });
+        }, `Продажа на авторынке т/с ${info.name} (ID ${info.id} | PLATE ${info.plate})`);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (vehicle.key == 'market' && seat == -1) {
-            player.call('chat.message.push', [`!{#f494ff} [MARKET INFO]`]);
-            player.call('chat.message.push', [`!{#f494ff} Пробег ${vehicle.mileage}`]);
-            player.call('chat.message.push', [`!{#f494ff} Название ${vehicle.properties.name}`]);
-            player.call('chat.message.push', [`!{#f494ff} spot ${vehicle.marketSpot}`]);
-
             let data = {
                 name: vehicle.properties.name,
                 price: vehicle.properties.price * PRICE_CONFIG.BUY,
@@ -112,10 +115,16 @@ module.exports = {
             text: cant
         }]);
 
+        let info = {
+            name: player.vehicle.properties.name,
+            id: player.vehicle.sqlId,
+            plate: player.vehicle.plate
+        }
 
         money.removeCash(player, price, function(result) {
             if (result) {
 
+                inventory.fullDeleteItemsByParams(33, 'vehId', params.vehId);
                 // выдача ключей в инвентарь
                 inventory.addItem(player, 33, params, (e) => {
                     if (e) player.call('carmarket.car.buy.ans', [5, {
@@ -153,11 +162,12 @@ module.exports = {
                     parkingDate: veh.parkingDate
                 });
 
+
                 player.call('carmarket.car.buy.ans', [2, carInfo]);
                 mp.events.call('vehicles.engine.toggle', player);
             } else {
                 player.call('carmarket.car.buy.ans', [1]);
             }
-        });
+        }, `Покупка на авторынке т/с ${info.name} (ID ${info.id} | PLATE ${info.plate})`);
     }
 }

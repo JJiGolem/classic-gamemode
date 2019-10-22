@@ -6,6 +6,7 @@ import MainDisplay from "../MainDisplay";
 import {changeStateHouse} from "../../actions/action.info";
 import Sell from "./Sell";
 import SellState from "./SellState";
+import Improvements from './Improvements';
 import HeaderHouseApp from "./HeaderHouseApp";
 
 class HouseManager extends Component {
@@ -57,7 +58,7 @@ class HouseManager extends Component {
                                 }
                             </div>
                         </div>
-                        <div className='manager_button-phone-react' style={{ paddingTop: '2.9%' }}>
+                        <div className='manager_button-phone-react' style={{ paddingTop: '2.9%' }} onClick={() => addApp({name: 'Sell', form: <Improvements />})}>
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="48%" height="48%" id="imp" viewBox="0 0 33.238 42.685">
                                     <g id="imp" data-name="Group 67" transform="translate(0 0)">

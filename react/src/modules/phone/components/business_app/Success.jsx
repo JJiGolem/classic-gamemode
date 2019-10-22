@@ -3,8 +3,8 @@ import {connect} from 'react-redux';
 import {closeAppDisplay, setAppDisplay} from "../../actions/action.apps";
 import {
     createOrderBusiness,
+    disableHomePhone,
     sellBusiness,
-    setSellBusiness,
     setSellInfoBusiness,
     setSellStatusBusiness
 } from "../../actions/action.info";
@@ -19,16 +19,22 @@ class Success extends Component {
         this.back = this.back.bind(this);
     }
 
-    back() {
-        const { business, setApp, sellBusiness, createOrder, closeApp, productCount, productPrice } = this.props;
+    componentDidMount() {
+        const { business, sellBusiness, createOrder, productsCount, productsPrice, disableHome } = this.props;
 
-        if (business.isSell) {
+        if (business.sellStatus != null) {
             sellBusiness(business.id);
-            setApp({ name: 'MainDisplay', form: <MainDisplay /> });
+            disableHome(false);
         } else if (business.orderStatus != null) {
-            createOrder(productCount, productPrice);
-            closeApp();
+            createOrder(productsCount, parseInt(productsCount * productsPrice));
+            disableHome(false);
         }
+    }
+
+    back() {
+        const { business, setApp, closeApp, info } = this.props;
+
+        closeApp();
     }
 
     getButton(status) {
@@ -64,13 +70,13 @@ class Success extends Component {
 
     render() {
 
-        const { business, status } = this.props;
+        const { business, status, name, area } = this.props;
 
         return (
             <Fragment>
                 <div className='back_page-phone-react'>
 
-                    <Header business={business}/>
+                    <Header business={business ? business : { name, area }}/>
 
                     <div style={{textAlign: 'center', marginTop: '50%'}}>
                         <svg id="Group_104" data-name="Group 104" xmlns="http://www.w3.org/2000/svg" width="40%" height="40%" viewBox="0 0 100.956 100.956">
@@ -90,18 +96,18 @@ class Success extends Component {
 }
 
 const mapStateToProps = state => ({
-    ...state,
+    info: state.info,
     business: state.info.biz[0]
 });
 
 const mapDispatchToProps = dispatch => ({
     setApp: app => dispatch(setAppDisplay(app)),
     closeApp: () => dispatch(closeAppDisplay()),
-    setSell: flag => dispatch(setSellBusiness(flag)),
+    disableHome: state => dispatch(disableHomePhone(state)),
     setSellStatus: status => dispatch(setSellStatusBusiness(status)),
     setSellInfo: info => dispatch(setSellInfoBusiness(info)),
     sellBusiness: id => dispatch(sellBusiness(id)),
-    createOrder: (productCount, productPrice) => dispatch(createOrderBusiness(productCount, productPrice))
+    createOrder: (productsCount, productsPrice) => dispatch(createOrderBusiness(productsCount, productsPrice))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Success);

@@ -154,4 +154,59 @@ module.exports = {
 
         },
     },
+    "/addveh": {
+        access: 6,
+        description: "Добавить хар-ки авто (+ в автосалон)",
+        args: ``,
+        handler: (player, args, out) => {
+            player.call('vehicles.add.menu.show');
+        }
+    },
+    "/setvehprop": {
+        access: 6,
+        description: "Редактирование характеристик авто",
+        args: `[model]:s [name/vehType/price/maxFuel/consumption]:s [value]`,
+        handler: (player, args, out) => {
+            let model = args[0];
+            let key = args[1];
+            let value = args[2];
+            if (!['name', 'vehType', 'price', 'maxFuel', 'consumption'].includes(key)) return out.error('Неверная характеристика', player);
+            let props = vehicles.getVehiclePropertiesList();
+            let modelProps = props.find(x => x.model == model);
+            if (!modelProps) return out.error('Модель не найдена', player);
+
+            try {
+                modelProps[key] = value;
+                modelProps.save();
+                out.info(`${key} для ${model} установлено на ${value}`);
+            } catch (err) {
+                out.error(err.message, player);
+            }
+        }
+    },
+    "/vehproplist": {
+        access: 6,
+        description: "Список характеристик моделей авто",
+        args: ``,
+        handler: (player, args, out) => {
+            let result = 'Модель | Имя | Тип | Цена | Бак | Расход<br/>';
+            let props = vehicles.getVehiclePropertiesList();
+            props.forEach((prop) => {
+                result+=`${prop.model} | ${prop.name} | ${prop.vehType} | ${prop.price} | ${prop.maxFuel} | ${prop.consumption}<br/>`;
+            });
+            out.info(result, player);
+        }
+    },
+    "/getspawner": {
+        access: 5,
+        description: "Узнать, кто заспавнил транспорт",
+        args: ``,
+        handler: (player, args, out) => {
+            let vehicle = player.vehicle;
+            if (!vehicle) return out.error(`Вы не в т/с`, player);
+            let name = vehicle.spawnedBy;
+            if (!name) return out.error(`У т/с нет создателя`, player);
+            out.info(`Этот транспорт создал ${name}`, player);
+        }
+    }
 }

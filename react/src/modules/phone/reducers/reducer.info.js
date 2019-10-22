@@ -39,6 +39,7 @@ const initialState = {
     //         improvements: [
     //             {
     //                 name: 'Сигнализация',
+    
     //                 price: 300,
     //                 isBuyed: true,
     //             },
@@ -61,6 +62,8 @@ const initialState = {
     //         rent: 50,
     //         resourcesMax: 2000,
     //         resources: 228,
+    //         resourcePriceMin: 10,
+    //         resourcePriceMax: 50,
     //         price: 112000,
     //         statistics: [
     //             {
@@ -121,8 +124,21 @@ export default function info(state = initialState, action) {
         case 'LOAD_INFO_TO_PHONE':
             return {
                 ...state,
-                ...payload
+                ...payload,
+                contacts: [
+                    ...payload.contacts,
+                    {
+                        name: 'Мой номер',
+                        number: payload.number
+                    }
+                ]
             };
+
+        case 'DISABLE_HOME_PHONE':
+            return {
+                ...state,
+                isDisabled: payload
+            }
 
         case 'SET_SYMBOL_PRICE_NEWS':
             return {
@@ -197,11 +213,6 @@ export default function info(state = initialState, action) {
             newState.houses[0].isOpened = !newState.houses[0].isOpened;
             return newState;
 
-        case 'SET_SELL_HOUSE':
-            newState = {  ...state };
-            newState.houses[0].isSell = payload;
-            return  newState;
-
         case 'SET_SELL_STATUS_HOUSE':
             newState = { ...state };
             newState.houses[0].sellStatus = payload;
@@ -214,18 +225,9 @@ export default function info(state = initialState, action) {
 
         case 'SELL_HOUSE':
             const newStateSell = { ...state };
-            let houseIndex = newStateSell.houses.findIndex(house => house.name === payload);
-
-            if (houseIndex !== -1) {
-                newStateSell.houses.splice(houseIndex, 1);
-            }
+            newStateSell.houses.length = 0;
 
             return newStateSell;
-
-        case 'SET_SELL_BUSINESS':
-            newState = {  ...state };
-            newState.biz[0].isSell = payload;
-            return  newState;
 
         case 'SET_SELL_STATUS_BUSINESS':
             newState = { ...state };
@@ -263,7 +265,14 @@ export default function info(state = initialState, action) {
         case 'ORDER_COMPLETE_BUSINESS':
             newState = { ...state };
             newState.biz[0].resources += payload;
-            newState.biz[0].order = null;
+
+            if ((newState.biz[0].order.productsCount - payload) > 0) {
+                newState.biz[0].order.productsCount -= payload;
+                newState.biz[0].order.productsPrice = parseInt((1 - payload/newState.biz[0].order.productsCount) * newState.biz[0].order.productsPrice)
+            } else {
+                newState.biz[0].order = null;
+            }
+
             return newState;
 
         case 'SELL_BUSINESS':
@@ -342,6 +351,12 @@ export default function info(state = initialState, action) {
 
             return newState;
 
+        case 'UPDATE_CASHBOX_BUSINESS':
+            newState = { ...state };
+            newState.biz[0].cashBox = money;
+
+            return newState;
+
         case 'UPDATE_STATISTICS_BUSINESS':
             newState = { ...state };
             let dayIndex = newState.biz[0].statistics.findIndex(day => day.date == payload.date);
@@ -352,6 +367,24 @@ export default function info(state = initialState, action) {
                     newState.biz[0].statistics.pop();
                 }
                 newState.biz[0].statistics.unshift(payload);
+            }
+
+            return newState;
+
+        case 'BUY_IMPROVEMENT_HOUSE_ANS':
+            newState = { ...state };
+
+            newState.houses[0].buyStatus = payload;
+
+            return newState;
+
+        case 'BUY_IMPROVEMENT_HOUSE':
+            newState = { ...state };
+            let improvIndex = newState.houses[0].improvements.findIndex(imp => imp.type == payload);
+
+            if (improvIndex !== -1) {
+                newState.houses[0].improvements[improvIndex].isBuyed = true;
+                newState.houses[0].buyStatus = null;
             }
 
             return newState;

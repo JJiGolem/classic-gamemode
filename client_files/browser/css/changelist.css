@@ -1,0 +1,149 @@
+#changelist {
+    /* background: #111a; */
+    background: #000a;
+    border-radius: 1vh;
+    color: #fff;
+    font-family: Ubuntu;
+    font-size: 1.5vh;
+    left: 50%;
+    /* max-width: 80vh; */
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 85vh;
+    /* width: fit-content; */
+}
+
+#changelist .close {
+    font-size: 4vh;
+    position: absolute;
+    right: 1.5vh;
+}
+
+#changelist .close:hover {
+    color: red;
+}
+
+#changelist .content {
+    /* background: #000a; */
+    color: #c5c5c5;
+    height: 50vh;
+    line-height: 3.5vh;
+    margin: 2vh 4vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#changelist .content > div {
+    align-items: center;
+    display: flex;
+}
+
+#changelist .content > div > span {
+    align-items: center;
+    border-radius: 0.5vh;
+    color: #fff;
+    display: flex;
+    font-size: 1.2vh;
+    justify-content: center;
+    /* height: 3vh; */
+    margin-right: 1vh;
+    padding: 0.7vh;
+    /* width: 3vh; */
+}
+
+#changelist .content > div > span:hover {
+    background: #000;
+}
+
+#changelist .content .features {
+    background: #309aec;
+}
+
+#changelist .content .fixed {
+    background: #08a208;
+}
+
+#changelist .content .improvements {
+    background: #ff9300;
+}
+
+#changelist .content .removed {
+    background: #cd452b;
+}
+
+#changelist .footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 1vh;
+}
+
+#changelist .footer .build {
+    color: #fff5;
+    font-size: 1.5vh;
+}
+
+#changelist .footer .build:hover {
+    color: #fff;
+}
+
+#changelist .footer .likes.liked {
+    color: red;
+}
+
+#changelist .footer .likes:not(.liked):hover {
+    color: red;
+}
+
+#changelist .header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    line-height: 3.5vh;
+    padding: 2vh 20vh;
+}
+
+#changelist .header .arrow {
+    /* background: #000a; */
+    /* font-family: monospace; */
+    font-size: 5vh;
+    /* padding: 0 0.5vh; */
+}
+
+#changelist .header .arrow:hover {
+    /* background: #eee; */
+    color: #ccc;
+}
+
+#changelist .header .date.center {
+    text-align: center;
+}
+
+#changelist .header .date.right {
+    text-align: right;
+}
+
+#changelist .header .name {
+    font-family: Montserrat;
+    font-size: 3vh;
+    font-weight: 900;
+}
+
+#changelist .header .title.first {
+    color: #f1d941;
+}
+
+#changelist ::-webkit-scrollbar {
+    width: 1vh;
+}
+
+#changelist ::-webkit-scrollbar-thumb {
+    /* border-width: 1px 1px 1px 2px; */
+    /* border-color: #222; */
+    background-color: #f1d941;
+}
+
+#changelist ::-webkit-scrollbar-track {
+    background-color: #000;
+    /* box-shadow: 0px 0px 3px #000 inset; */
+}

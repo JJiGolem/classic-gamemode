@@ -35,8 +35,7 @@ class Statistics extends Component {
     }
 
     getDateStatistics(date) {
-        return `${String('00' + date.getDate()).slice(-2)}
-        .${String('00' + Number(date.getMonth() + 1)).slice(-2)}`
+        return `${String('00' + date.getDate()).slice(-2)}.${String('00' + Number(date.getMonth() + 1)).slice(-2)}`
     }
 
     getNavigatePanel() {

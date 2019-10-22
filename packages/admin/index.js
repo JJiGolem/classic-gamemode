@@ -14,8 +14,7 @@ module.exports = {
     init() {
         console.log("[COMMANDS] load commands...");
         fs.readdirSync(path.dirname(__dirname)).forEach(file => {
-            if (file != 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname) + "/" + file + '/commands.js'))
-            {
+            if (file != 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname) + "/" + file + '/commands.js')) {
                 Object.assign(commands, require('../' + file + '/commands'));
                 console.log(`[COMMANDS] --${file}`);
             }
@@ -24,5 +23,19 @@ module.exports = {
     },
     getCommands() {
         return commands;
+    },
+    isValidArg(type, arg) {
+        if (type == "n") return !isNaN(arg) && arg.length > 0;
+        if (type == "s") return arg && arg.length > 0;
+        if (type == "b") return !isNaN(arg) && (arg == 0 || arg == 1);
+        return false;
+    },
+    toValidArg(type, arg) {
+        if (type == "n") return parseFloat(arg);
+        if (type == "b") return arg == 1 ? true : false;
+        return arg;
+    },
+    isTerminalCommand(args) {
+        return args.indexOf(':') != -1;
     }
 };

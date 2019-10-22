@@ -1,10 +1,12 @@
 let taxi = require('./index.js');
 let money = call('money');
 let vehicles = call('vehicles');
+let jobs = call('jobs');
 
 module.exports = {
     "init": () => {
         taxi.init();
+        inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;
@@ -149,17 +151,22 @@ module.exports = {
         console.log(`водитель ${driver.name} привез игрока ${client.name} за $${price}`);
 
         client.call('taxi.client.destination.reach');
+       
+        let commission = taxi.calculateComission(driver);
         money.removeCash(client, price, function (result) {
             if (result) {
                 client.call('notifications.push.success', ['Вы оплатили поездку', 'Такси']);
+                jobs.addJobExp(driver, 0.05);
                 try {
-                    money.addMoney(driver, price, function (result) {
+                    money.addMoney(driver, parseInt((1 - commission) * price), function (result) {
                         if (result) {
-                            driver.call('notifications.push.success', ['Деньги зачислены на счет', 'Такси']);
+                            driver.call('notifications.push.success', ['Деньги зачислены на счет', 'Такси']); // возможно лишнее
+                            driver.call('notifications.push.info', [`Комиссия Cuber составила ${100*commission}%`, 'Такси']);
+                            driver.call('notifications.push.info', [`Комиссия уменьшается с увеличением навыка таксиста`, 'Такси']);
                         } else {
                             driver.call('notifications.push.error', ['Ошибка зачисления денег', 'Такси']);
                         }
-                    });
+                    }, `Оплата поездки в такси клиентом #${client.character.id}`);
                 } catch (err) {
                     console.log(err);
                 }
@@ -167,7 +174,7 @@ module.exports = {
                 client.call('notifications.push.error', ['Вы не смогли оплатить поездку', 'Такси']);
                 driver.call('notifications.push.error', ['Клиент не смог оплатить поездку', 'Такси']);
             }
-        });
+        }, `Оплата поездки в такси водителю #${driver.character.id}`);
         delete driver.taxiDriverDestination;
         delete client.taxiClientDestination;
     },
@@ -238,7 +245,7 @@ module.exports = {
                 player.call('notifications.push.error', ['Ошибка аренды', 'Такси']);
                 if (player.vehicle) player.removeFromVehicle();
             }
-        });
+        }, `Аренда такси`);
 
     },
     "playerExitVehicle": (player, vehicle) => {

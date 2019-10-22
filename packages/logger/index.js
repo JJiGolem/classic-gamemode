@@ -2,15 +2,53 @@
 
 module.exports = {
 
-    log(player, text) {
-        var data = {};
-        if (typeof player == 'string') text = player;
-        else {
-            data.characterId = player.character.id,
-            data.playerId = player.id
+    log(text, moduleName = null, player = null) {
+        var data = {
+            text: text
+        };
+        if (moduleName) data.module = moduleName;
+        if (player) {
+            if (typeof player == 'number') data.characterId = player;
+            else {
+                data.characterId = player.character.id;
+                data.playerId = player.id;
+            }
         }
-        data.text = text;
 
         db.Models.Log.create(data);
-    }
+    },
+    async loadLogs(characterId, dateA, dateB) {
+        var logs = await db.Models.Log.findAll({
+            where: {
+                characterId: characterId,
+                date: {
+                    [Op.gte]: dateA,
+                    [Op.lt]: dateB
+                }
+            }
+        });
+        return logs;
+    },
+    async loadLogIds(playerId, date) {
+        var logs = await db.Models.Log.findAll({
+            where: {
+                playerId: playerId,
+                date: {
+                    [Op.gte]: date,
+                    [Op.lt]: new Date(date.getTime() + 24 * 60 * 60 * 1000)
+                },
+                text: {
+                    [Op.or]: [{
+                            [Op.like]: '%Авторизовал персонажа%'
+                        },
+                        {
+                            [Op.like]: '%Деавторизовал персонажа%'
+                        }
+                    ],
+                }
+            }
+        });
+
+        return logs;
+    },
 };

@@ -5,6 +5,7 @@ module.exports = {
     /// Событие инициализации сервера
     "init": () => {
         utils.init();
+        inited(__dirname);
     },
     /// Событие вывода в консоль с клиента
     "console": (player, message) => {

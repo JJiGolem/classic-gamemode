@@ -4,6 +4,7 @@ let documents = require("./index.js");
 module.exports = {
     "init": () => {
         documents.init();
+        inited(__dirname);
     },
     // "documents.showTo": (player, type, targetId, data) => {
     //     if (player.id == targetId) return mp.events.call('documents.show', player, type, targetId, data);
@@ -144,7 +145,8 @@ module.exports = {
             name: player.character.name,
             sex: player.character.gender,
             number: documents.getPassIdentificator() + player.character.id,
-            regDate: player.character.creationDate
+            regDate: player.character.creationDate,
+            spouse: player.spouse ? player.spouse.character.name : null
         }
         if (!data) return;
         if (player.id == target.id) {

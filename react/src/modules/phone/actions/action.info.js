@@ -3,6 +3,11 @@ export const addInfoToPhone = info => ({
     payload: info
 });
 
+export const disableHomePhone = state => ({
+    type: 'DISABLE_HOME_PHONE',
+    payload: state
+});
+
 export const addContact = (contact) => ({
     type: 'ADD_CONTACT',
     payload: contact
@@ -43,11 +48,6 @@ export const changeStateHouse = () => ({
     type: 'CHANGE_STATE_HOUSE'
 });
 
-export const setSellHouse = flag => ({
-    type: 'SET_SELL_HOUSE',
-    payload: flag
-});
-
 export const setSellStatusHouse = status => ({
     type: 'SET_SELL_STATUS_HOUSE',
     payload: status
@@ -63,11 +63,6 @@ export const sellHouse = name => ({
    payload: name
 });
 
-export const setSellBusiness = flag => ({
-    type: 'SET_SELL_BUSINESS',
-    payload: flag
-});
-
 export const setSellStatusBusiness = status => ({
     type: 'SET_SELL_STATUS_BUSINESS',
     payload: status
@@ -78,9 +73,9 @@ export const setSellInfoBusiness = info => ({
     payload: info
 });
 
-export const createOrderBusiness = (productCount, productPrice) => ({
+export const createOrderBusiness = (productsCount, productsPrice) => ({
     type: 'CREATE_ORDER_BUSINESS',
-    payload: { productCount, productPrice }
+    payload: { productsCount, productsPrice }
 });
 
 export const cancelOrderBusiness = () => ({
@@ -95,4 +90,14 @@ export const setOrderStatusBusiness = status => ({
 export const sellBusiness = id => ({
     type: 'SELL_BUSINESS',
     payload: id
+});
+
+export const buyImprovementHouse = type => ({
+    type: 'BUY_IMPROVEMENT_HOUSE',
+    payload: type
+});
+
+export const setBuyStatusHouse = status => ({
+    type: 'BUY_IMPROVEMENT_HOUSE_ANS',
+    payload: status
 });

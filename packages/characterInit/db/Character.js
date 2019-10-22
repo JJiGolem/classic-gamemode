@@ -203,7 +203,7 @@ module.exports = (sequelize, DataTypes) => {
             },
         },
         satiety: {
-            type: DataTypes.INTEGER(11),
+            type: DataTypes.FLOAT(11),
             defaultValue: 100,
             allowNull: false,
             set(val) {
@@ -212,7 +212,7 @@ module.exports = (sequelize, DataTypes) => {
             },
         },
         thirst: {
-            type: DataTypes.INTEGER(11),
+            type: DataTypes.FLOAT(11),
             defaultValue: 100,
             allowNull: false,
             set(val) {
@@ -347,6 +347,10 @@ module.exports = (sequelize, DataTypes) => {
         model.hasMany(models.CharacterInventory, {
             foreignKey: "playerId"
         });
+        model.hasMany(models.FactionInventory, {
+            as: "items",
+            foreignKey: "playerId"
+		});
     };
     return model;
 };

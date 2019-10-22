@@ -4,20 +4,20 @@ let notifs = require('../notifications');
 module.exports = {
     "/flist": {
         description: "Посмотреть список организаций.",
-        access: 6,
+        access: 1,
         args: "",
         handler: (player, args, out) => {
-            var text = "ID) Имя [бп] [макс. бп] [мед] [макс. мед] | блип | цвет_блипа<br/>";
+            var text = "ID) Имя [бп] [макс. бп] [мед] [макс. мед] | блип | цвет_блипа | ранг склада<br/>";
             for (var i = 0; i < factions.factions.length; i++) {
                 var faction = factions.factions[i];
-                text += `${faction.id}) ${faction.name} [${faction.ammo}] [${faction.maxAmmo}] [${faction.medicines}] [${faction.maxMedicines}] | ${faction.blip} | ${faction.blipColor}<br/>`;
+                text += `${faction.id}) ${faction.name} [${faction.ammo}] [${faction.maxAmmo}] [${faction.medicines}] [${faction.maxMedicines}] | ${faction.blip} | ${faction.blipColor} | ${faction.ammoRank}<br/>`;
             }
             out.log(text, player);
         }
     },
     "/ftp": {
         description: "Телепортироваться к организации.",
-        access: 5,
+        access: 1,
         args: "[ид_организации]:n",
         handler: (player, args, out) => {
             var marker = factions.getMarker(args[0]);
@@ -69,7 +69,7 @@ module.exports = {
     },
     "/fsetleader": {
         description: "Сменить лидера организации.",
-        access: 6,
+        access: 1,
         args: "[ид_игрока]:n [ид_организации]:n",
         handler: async (player, args, out) => {
             var faction = factions.getFaction(args[1]);
@@ -84,11 +84,11 @@ module.exports = {
     },
     "/fuval": {
         description: "Уволить игрока из организации.",
-        access: 6,
+        access: 1,
         args: "[ид_игрока]:n",
         handler: async (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
 
             if (!rec.character.factionId) return out.error(`${rec.name} не состоит в организации`, player);
             var faction = factions.getFaction(rec.character.factionId);
@@ -104,7 +104,7 @@ module.exports = {
         args: "[ид_игрока]:n [ид_организации]:n",
         handler: async (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
 
             var faction = factions.getFaction(args[1]);
             if (!faction) return out.error(`Организация #${args[1]} не найдена`, player);
@@ -120,7 +120,7 @@ module.exports = {
         args: "[ид_игрока]:n [ранг]:n",
         handler: async (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            if (!rec) return out.error(`Игрок #${args[0]} не найден`, player);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
 
             if (!rec.character.factionId) return out.error(`${rec.name} не состоит в организации`, player);
 
@@ -133,7 +133,7 @@ module.exports = {
     },
     "/fsetammo": {
         description: "Изменить количество боеприпасов на складе организации.",
-        access: 6,
+        access: 1,
         args: "[ид_организации]:n [боеприпасы]:n",
         handler: (player, args, out) => {
             var faction = factions.getFaction(args[0]);
@@ -191,6 +191,20 @@ module.exports = {
             factions.setBlip(faction, args[1], args[2]);
         }
     },
+    "/fsetammorank": {
+        description: "Изменить минимальный ранг, с которого можно брать ящики БП/Мед со склада организации.",
+        access: 4,
+        args: "[ид_организации]:n [ранг]:n",
+        handler: (player, args, out) => {
+            var faction = factions.getFaction(args[0]);
+            if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
+
+            args[1] = Math.clamp(args[1], 0, faction.ranks.length - 1);
+
+            out.info(`${player.name} изменил мин. ранг для доступа к складу у организации ${faction.name} (${faction.ammoRank} => ${args[1]})`);
+            factions.setAmmoRank(faction, args[1]);
+        }
+    },
     "/fsetpos": {
         description: "Изменить позицию организации. Позиция берется от игрока.",
         access: 6,
@@ -238,24 +252,8 @@ module.exports = {
             warehouse.label.position = pos;
 
             var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
-            colshape.onEnter = (player) => {
-                var boxType = "";
-                if (player.hasAttachment("ammoBox")) {
-                    boxType = "ammo";
-                } else if (player.hasAttachment("medicinesBox")) {
-                    boxType = "medicines";
-                } else return;
-
-                if (!factions.canFillWarehouse(player, boxType, faction))
-                    return notifs.error(player, `Нет прав для пополнения`, `Склад ${faction.name}`);
-
-                player.call("factions.insideFactionWarehouse", [true, boxType]);
-                player.insideFactionWarehouse = faction;
-            };
-            colshape.onExit = (player) => {
-                player.call("factions.insideFactionWarehouse", [false]);
-                delete player.insideFactionWarehouse;
-            };
+            colshape.onEnter = warehouse.colshape.onEnter;
+            colshape.onExit = warehouse.colshape.onExit;
             warehouse.colshape = colshape;
 
 
@@ -282,18 +280,39 @@ module.exports = {
             storage.position = pos;
 
             var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
-            colshape.onEnter = (player) => {
-                if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
-                player.call("factions.storage.showMenu", [faction.id]);
-                player.insideFactionWarehouse = faction.id;
-            };
-            colshape.onExit = (player) => {
-                player.call("selectMenu.hide");
-                delete player.insideFactionWarehouse;
-            };
+            colshape.onEnter = storage.colshape.onEnter;
+            colshape.onExit = storage.colshape.onExit;
             storage.colshape = colshape;
 
             out.info(`${player.name} изменил позицию выдачи предметов у организации ${faction.name}`);
+        }
+    },
+    "/fsetholderpos": {
+        description: "Изменить позицию шкафа организации. Позиция берется от игрока.",
+        access: 6,
+        args: "[ид_организации]:n",
+        handler: (player, args, out) => {
+            var faction = factions.getFaction(args[0]);
+            if (!faction) return out.error(`Организация #${args[0]} не найдена`, player);
+
+            var pos = player.position;
+            faction.hX = pos.x;
+            faction.hY = pos.y;
+            faction.hZ = pos.z;
+            faction.save();
+            pos.z -= 1;
+
+            var holder = factions.getHolder(faction.id);
+            holder.colshape.destroy();
+            holder.position = pos;
+
+            var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+            colshape.onEnter = holder.colshape.onEnter;
+            colshape.onExit = holder.colshape.onExit;
+
+            holder.colshape = colshape;
+
+            out.info(`${player.name} изменил позицию шкафа у организации ${faction.name}`);
         }
     },
     "/franks": {

@@ -2,10 +2,12 @@ let bus = require('./index.js');
 let money = call('money');
 let vehicles = call('vehicles');
 let notify = call('notifications');
+let jobs = call('jobs');
 
 module.exports = {
     "init": () => {
         bus.init();
+        inited(__dirname);
     },
     "busdriver.employment": (player) => {
         if (player.character.job == 3) {
@@ -86,7 +88,7 @@ module.exports = {
                 player.call('busdriver.rent.ans', [1]);
                 if (player.vehicle) player.removeFromVehicle();
             }
-        });
+        }, `Аренда автобуса`);
 
     },
     "busdriver.route.start": (player, routeId, price) => {
@@ -144,7 +146,6 @@ module.exports = {
                 player.removeFromVehicle();
                 return;
             }
-
             money.moveCash(player, driver, price, function (result) {
                 if (result) {
                     notify.success(driver, `+$${price} за пассажира`, `Автобус`);
@@ -153,18 +154,21 @@ module.exports = {
                     notify.error(player, 'Ошибка оплаты');
                     player.removeFromVehicle();
                 }
-            })
+            }, `Деньги за пассажира в автобусе`);
         }
     },
     "busdriver.checkpoint.entered": (player) => {
         if (!player.vehicle) return;
         if (player.vehicle.busDriverId != player.id) return;
-
-        player.character.pay += player.busRoute.salary;
+        
+        let bonus = bus.calculateBonus(player);
+        let salary = parseInt(player.busRoute.salary * (1 + bonus));
+        player.character.pay += salary;
         player.busPointsToSave++;
         if (player.busPointsToSave % 10 == 0) {
             player.character.save();
-            console.log('save');
+            jobs.addJobExp(player, 0.05);
+            console.log('add skill');
         }
         console.log(player.character.pay);
         let timeout;

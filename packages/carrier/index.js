@@ -1,14 +1,16 @@
 "use strict";
 
+let bizes = call('bizes');
 let farms = call('farms');
 let jobs = call('jobs');
 let notifs = call('notifications');
+let utils = call('utils');
 
 module.exports = {
     // Место мониторинга складов бизнесов/ферм и заказа товара
     loadPos: new mp.Vector3(925.46, -1563.99, 30.83 - 1),
-    // Цена за 1 ед. товара/зерна
-    productPrice: 4,
+    // Место разгрузки урожая
+    cropUnloadPos: new mp.Vector3(90.33, 6333.52, 31.23 - 1),
     // Цена за 1 ед. товара/зерна
     productPrice: 4,
     // Вместимость грузовика
@@ -21,9 +23,14 @@ module.exports = {
     vehPrice: 100,
     // Опыт за доставку товара
     exp: 0.05,
+    // Заказы бизнесов
+    bizOrders: [],
+    // Цена урожая при продаже
+    cropPrice: 1,
 
     init() {
         this.createLoadMarker();
+        this.createCropUnloadMarker();
     },
     createLoadMarker() {
         var pos = this.loadPos;
@@ -33,7 +40,6 @@ module.exports = {
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z + 2, 2);
         colshape.onEnter = (player) => {
             if (player.character.job != 4) return notifs.error(player, `Отказано в доступе`, `Склад`);
-            player.call(`selectMenu.show`, [`carrierLoad`]);
             player.call(`carrier.load.info.set`, [this.getLoadData()]);
             player.carrierLoad = marker;
         };
@@ -49,9 +55,33 @@ module.exports = {
             scale: 1
         });
     },
+    createCropUnloadMarker() {
+        var pos = this.cropUnloadPos;
+        var marker = mp.markers.new(1, pos, 3, {
+            color: [255, 187, 0, 70]
+        });
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z + 2, 2);
+        colshape.onEnter = (player) => {
+            if (player.character.job != 4) return notifs.error(player, `Отказано в доступе`, `Склад`);
+            player.call(`carrier.cropUnload.info.set`, [this.getCropUnloadData()]);
+            player.cropUnloadMarker = marker;
+        };
+        colshape.onExit = (player) => {
+            player.call(`selectMenu.hide`);
+            delete player.cropUnloadMarker;
+        };
+        marker.colshape = colshape;
+        mp.blips.new(85, pos, {
+            color: 1,
+            name: `Урожай`,
+            shortRange: 10,
+            scale: 1
+        });
+    },
     getLoadData() {
         var data = {
             farms: [],
+            bizOrders: this.bizOrders,
             productPrice: this.productPrice,
             productSellK: this.productSellK,
         };
@@ -67,8 +97,124 @@ module.exports = {
         });
         return data;
     },
+    getCropUnloadData() {
+        var data = {
+            cropPrice: this.cropPrice
+        };
+        return data;
+    },
     getProductsMax(player) {
         var skill = jobs.getJobSkill(player, 4);
         return parseInt(this.productsMax + skill.exp * this.skillProducts);
+    },
+    initBizOrders() {
+        var list = bizes.getOrderBizes();
+        list.forEach(biz => this.addBizOrder(biz));
+    },
+    getBizOrder(bizId) {
+        return this.bizOrders.find(x => x.bizId == bizId);
+    },
+    addBizOrder(biz) {
+        var vdistance = utils.vdist(this.loadPos, new mp.Vector3(biz.info.x, biz.info.y, biz.info.z));
+        var order = {
+            bizId: biz.info.id,
+            bizName: biz.info.name,
+            ownerName: biz.info.characterNick,
+            prodName: bizes.getResourceName(biz.info.type),
+            prodCount: biz.info.productsOrder,
+            prodPrice: this.productPrice,
+            orderPrice: biz.info.productsOrderPrice,
+            distance: +Math.sqrt(vdistance).toFixed(1),
+        };
+        this.removeBizOrder(order.bizId);
+        this.jobBroadcast(`Поступил заказ для бизнеса ${order.bizName}`);
+        this.bizOrders.push(order);
+    },
+    removeBizOrder(bizId) {
+        var list = this.bizOrders;
+        for (var i = 0; i < list.length; i++) {
+            var order = list[i];
+            if (order.bizId != bizId) continue;
+            list.splice(i, 1);
+            i--;
+        }
+        // TODO: broadcast all carriers
+    },
+    takeBizOrder(player, veh, order) {
+        if (typeof order == 'number') order = this.getBizOrder(order);
+
+        var pos = bizes.getBizPosition(order.bizId);
+
+        veh.products = {
+            bizOrder: order,
+            playerId: player.id,
+        };
+        veh.setVariable("label", `${order.prodCount} из ${this.getProductsMax(player)} ед.`);
+
+        this.removeBizOrder(order.bizId);
+        player.call("waypoint.set", [pos.x, pos.y]);
+        notifs.success(player, `Заказ принят`, order.bizName);
+        this.jobBroadcast(`Взят заказ для бизнеса ${order.bizName}`);
+        bizes.getOrder(order.bizId);
+    },
+    dropBizOrder(player) {
+        mp.vehicles.forEach(veh => {
+            if (!veh.db || veh.db.key != "job" || veh.db.owner != 4) return;
+            if (!veh.products || !veh.products.bizOrder) return;
+            if (veh.products.playerId != player.id) return;
+
+            this.dropBizOrderByVeh(veh);
+        });
+    },
+    dropBizOrderByVeh(veh) {
+        if (!veh.db || veh.db.key != "job" || veh.db.owner != 4) return;
+        if (!veh.products || !veh.products.bizOrder) return;
+
+        var order = veh.products.bizOrder;
+
+        this.removeBizOrder(order.bizId);
+        this.bizOrders.push(order);
+
+        delete veh.products;
+        veh.setVariable("label", null);
+
+        this.jobBroadcast(`Вернулся заказ для бизнеса ${order.bizName}`);
+        bizes.dropOrder(order.bizId);
+    },
+    readyBizOrder(player, veh) {
+        var order = veh.products.bizOrder;
+        var biz = bizes.getBizById(order.bizId);
+
+        var max = biz.info.productsMaxCount - biz.info.productsCount;
+        var count = Math.clamp(order.prodCount, 1, max);
+
+        bizes.readyOrder(order.bizId);
+
+        delete veh.products;
+        veh.setVariable("label", null);
+
+        player.character.pay += order.orderPrice;
+        player.character.save();
+
+        jobs.addJobExp(player, this.exp);
+
+        notifs.success(player, `Заказ выполнен (+$${order.orderPrice})`, order.bizName);
+    },
+    jobBroadcast(text) {
+        mp.players.forEach(rec => {
+            if (!rec.character || rec.character.job != 4) return;
+
+            notifs.info(rec, text, `Грузоперевозчики`);
+        });
+    },
+    // получить арендованный грузовик игрока
+    getVehByDriver(player) {
+        return mp.vehicles.toArray().find(x => x.db && x.db.key == 'job' && x.db.owner == 4 && x.driver && x.driver.playerId == player.id && x.driver.characterId == player.character.id);
+    },
+    // получить игрока, который арендовал грузовик
+    getDriverByVeh(veh) {
+        if (!veh.driver) return;
+        var d = veh.driver;
+        return mp.players.toArray().find(x => x.character && x.id == d.playerId && x.character.id == d.characterId);
     },
 };

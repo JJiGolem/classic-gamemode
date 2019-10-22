@@ -1,6 +1,7 @@
 let carservice = require('./index.js');
 
 let money = call('money');
+let jobs = call('jobs');
 
 let DEFAULT_PRODUCTS = carservice.defaultProducts;
 let DEFAULT_DIAGNOSTICS_PRODUCTS = DEFAULT_PRODUCTS.DIAGNOSTICS;
@@ -9,6 +10,7 @@ let PRODUCT_PRICE = carservice.productPrice;
 module.exports = {
     "init": () => {
         carservice.init();
+        inited(__dirname);
     },
     "carservice.jobshape.enter": (player) => {
         if (player.character.job != 1) {
@@ -32,7 +34,6 @@ module.exports = {
         if (shape.isCarService) {
             player.currentCarServiceId = shape.carServiceId;
             if (player.character.job == 1) {
-                player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} зашел в колшейп carService`]);
                 player.call('carservice.shape.enter');
             }
         }
@@ -42,7 +43,6 @@ module.exports = {
 
         if (shape.isCarService) {
             if (player.character.job == 1) {
-                player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} вышел с колшейпа carService`]);
                 player.call('carservice.shape.leave');
             }
         }
@@ -119,7 +119,7 @@ module.exports = {
                             sender.call('notifications.push.error', [`Ошибка выдачи зарплаты`, 'Автомастерская']);
                             console.log(`Ошибка начисления денег за диагностику игроку ${sender.name}`);
                         }
-                    });
+                    }, `Зарплата за диагностику т/с #${vehicle.sqlId}`);
                     delete target.diagnosticsOffer;
                     delete sender.senderDiagnosticsOffer;
                 } else {
@@ -128,7 +128,7 @@ module.exports = {
                     delete target.diagnosticsOffer;
                     delete sender.senderDiagnosticsOffer;
                 }
-            });
+            }, `Оплата диагностики т/с #${vehicle.sqlId}`);
         } else {
             delete target.diagnosticsOffer;
             delete sender.senderDiagnosticsOffer;
@@ -306,17 +306,22 @@ module.exports = {
                     console.log(target.repairPrice);
                     carservice.repairVehicle(vehicle);
                     let salary = parseInt(target.repairPrice * salaryMultiplier);
+                    let bonus = carservice.calculateBonus(player);
                     let income = target.repairPrice - salary;
                     carservice.removeProducts(serviceId, target.repairProducts); /// Снятие продуктов
                     carservice.updateCashbox(serviceId, income); /// Начисление денег за ремонт
-                    money.addMoney(mechanic, salary, function (result) {
+                    jobs.addJobExp(mechanic, 0.05);
+                    money.addMoney(mechanic, parseInt(salary * (1 + bonus)), function (result) {
                         if (result) {
                             mechanic.call('notifications.push.success', [`К зарплате добавлено $${salary}`, 'Автомастерская']);
+                            if (bonus) {
+                                mechanic.call('notifications.push.info', [`Премия за навык механика составила ${bonus*100}%`, 'Автомастерская']);
+                            }
                         } else {
                             mechanic.call('notifications.push.error', [`Ошибка выдачи зарплаты`, 'Автомастерская']);
                             console.log(`Ошибка выдачи зарплаты за починку ${mechanic.name}`);
                         }
-                    });
+                    }, `Зарплата за ремонт т/с #${vehicle.sqlId}`);
 
                     switch (mechanic.lastRepairAnim) {
                         case 0:
@@ -348,7 +353,7 @@ module.exports = {
                     mp.events.call('carservice.service.end.target', target, 1);
                     return;
                 }
-            });
+            }, `Оплата ремонта т/с #${vehicle.sqlId}`);
 
         } else {
             mechanic.call('notifications.push.warning', ['Клиент отказался от ремонта', 'Автомастерская'])

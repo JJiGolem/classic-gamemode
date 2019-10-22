@@ -2,7 +2,6 @@ import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {addAppDisplay, closeAppDisplay, setAppDisplay} from "../../actions/action.apps";
 import Header from "./Header";
-import MainDisplay from "../MainDisplay";
 import CreateOrder from "./CreateOrder";
 import OrderCancel from "./OrderCancel";
 
@@ -25,8 +24,8 @@ class StockManager extends Component {
                         <div>Активный заказ:
                             {
                                 !business.order
-                                ? <span style={{ color: 'red' }}>нет</span>
-                                : <span style={{ color: '#30af25' }}>{`${business.order.productCount} по ${business.order.productPrice}$`}</span>
+                                ? <span style={{ color: 'red' }}> нет</span>
+                                : <span style={{ color: '#30af25' }}>{` ${business.order.productsCount} на $${business.order.productsPrice}`}</span>
                             }
                         </div>
                     </div>

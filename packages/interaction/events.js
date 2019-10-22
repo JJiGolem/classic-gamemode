@@ -19,12 +19,12 @@ module.exports = {
         money.moveCash(player, target, value, function(result) {
             if (result) {
                 player.call('interaction.money.ans', [4]);
-                target.call('notifications.push.success', [`+$${value} от ${player.name}`, `Деньги`]);
+                target.call('notifications.push.success', [`+$${value} от ID: ${player.id}`, `Деньги`]);
                 console.log('success');
             } else {
                 player.call('interaction.money.ans', [3]);
                 console.log('error');
             }
-        });
+        }, `Передача денег на руки от игрока #${player.character.id} игроку #${target.character.id}`);
     }
 }

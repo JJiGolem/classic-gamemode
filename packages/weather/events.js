@@ -4,6 +4,7 @@ module.exports = {
     /// Событие инициализации сервера
     "init": () => {
         weather.init();
+        inited(__dirname);
     },
 
     "player.joined": (player) => {

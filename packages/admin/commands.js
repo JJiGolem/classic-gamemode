@@ -127,15 +127,15 @@ module.exports = {
     },
     "/branch": {
         access: 6,
-        description: "Обновить мод до выбранной ветки.",
-        args: "[название ветки]",
+        description: "Переключиться на выбранную ветку.",
+        args: "[ветка]",
         handler: (player, args, out) => {
 
             var exec = require("exec");
-            exec(`cd ${__dirname} && git clean -d -f && git stash && git checkout ${args[0]} && git pull`, (error, stdout, stderr) => {
-                if (error) console.log(stderr);
-                console.log(stdout);
-                // out.info(`${player.name} запустил обновление сервера`);
+            exec(`cd ${__dirname} && git clean -d -f && git stash && git checkout ${args[0]}`, (error, stdout, stderr) => {
+                if (error) out.error(stderr, player);
+                out.log(stdout, player);
+                out.info(`${player.name} переключился на ветку ${args[0]}`);
             });
         }
     },
@@ -145,10 +145,14 @@ module.exports = {
         args: "",
         handler: (player, args, out) => {
             var exec = require("exec");
-            exec(`cd ${__dirname} && git clean -d -f && git stash && git pull`, (error, stdout, stderr) => {
-                if (error) console.log(stderr);
-                console.log(stdout);
+            exec(`cd ${__dirname} &&  && git pull`, (error, stdout, stderr) => {
+                if (error) out.error(stderr, player);
+                out.log(stdout, player);
                 out.info(`${player.name} обновил сборку сервера`);
+
+                mp.players.forEach((current) => {
+                    current.call('chat.message.push', [`!{#edffc2}${player.name} обновил сборку сервера`]);
+                });
             });
         }
     },
@@ -175,6 +179,7 @@ module.exports = {
                     destroys: 0
                 }
                 veh = await vehicles.spawnVehicle(veh);
+                veh.spawnedBy = player.name;
                 mp.events.call("admin.notify.all", `!{#e0bc43}[A] ${player.name} создал транспорт ${veh.modelName}`);
             }
         }
@@ -262,7 +267,7 @@ module.exports = {
         args: "[ид_игрока]:n [причина]",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
-            if (!rec || !rec.character) return out(`Игрок #${args[0]} не найден`, player);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
 
             args.shift();
             var reason = args.join(" ");
@@ -312,10 +317,102 @@ module.exports = {
             target.kick("kicked");
         }
     },
+    "/ban": {
+        access: 4,
+        description: "Забанить игрока.",
+        args: "[ид_игрока]:n [дни]:n [причина]",
+        handler: (player, args, out) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
+
+            var days = Math.clamp(args[1], 1, 30);
+            args.splice(0, 2);
+
+            mp.events.call('admin.notify.players', `!{#db5e4a}[A] Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${args.join(" ")} `);
+
+            rec.account.clearBanDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+            rec.account.save();
+            rec.kick();
+        }
+    },
+    "/banoff": {
+        access: 4,
+        description: "Забанить игрока оффлайн.",
+        args: "[имя] [фамилия] [дни]:n [причина]",
+        handler: async (player, args, out) => {
+            var name = `${args[0]} ${args[1]}`;
+            var days = Math.clamp(args[2], 1, 30);
+            args.splice(0, 3);
+            var reason = args.join(" ");
+
+            var character = await db.Models.Character.findOne({
+                where: {
+                    name: name
+                },
+                include: db.Models.Account
+            });
+            if (!character) return out.error(`Персонаж ${name} не найден`, player);
+
+            character.Account.clearBanDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+            character.Account.save();
+
+            var rec = mp.players.getByName(name);
+            if (rec) {
+                mp.events.call('admin.notify.players', `!{#db5e4a}[A] Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${reason} `);
+                rec.kick();
+            }
+
+            out.info(`${player.name} забанил ${name} оффлайн на ${days} дней: ${reason}`);
+        }
+    },
+    "/permban": {
+        access: 5,
+        description: "Забанить игрока перманентно (Account + IP + Social Club + Client Serial).",
+        args: "[ид_игрока]:n [причина]",
+        handler: async (player, args, out) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
+
+            args.shift();
+            mp.events.call('admin.notify.players', `!{#db5e4a}[A] Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${args.join(" ")} (PERMANENT)`);
+
+            db.Models.Ban.create({
+                ip: rec.ip,
+                socialClub: rec.socialClub,
+                serial: rec.serial,
+                reason: args.join(" ")
+            });
+
+            rec.account.clearBanDate = new Date(Date.now() + 30 * 365 * 24 * 60 * 60 * 1000);
+            rec.account.save();
+            rec.kick();
+        }
+    },
+    "/unban": {
+        access: 5,
+        description: "Разбанить игрока.",
+        args: "[имя] [фамилия]",
+        handler: async (player, args, out) => {
+            var name = args.join(" ");
+            var character = await db.Models.Character.findOne({
+                where: {
+                    name: name
+                },
+                include: db.Models.Account
+            });
+            if (!character) return out.error(`Персонаж ${name} не найден`, player);
+            if (!character.Account.clearBanDate) return out.error(`Персонаж ${name} не имеет бан`, player);
+
+            character.Account.clearBanDate = null;
+            character.Account.save();
+
+            out.info(`${player.name} разбанил ${name}`);
+        }
+    },
     "/clothes": {
         access: 3,
         description: "Выдача тестовой одежды",
-        args: "[тип] [текстура] [вариация]",
+        args: "[тип] [вариация] [текстура]",
         handler: (player, args) => {
             player.setClothes(parseInt(args[0]), parseInt(args[1]), parseInt(args[2]), 0);
         }
@@ -434,7 +531,7 @@ module.exports = {
         description: "Назначить игрока администратором",
         access: 5,
         args: "[ID] [Уровень администрирования]",
-        handler: (player, args) => {
+        handler: (player, args, out) => {
             let lvl = parseInt(args[1]);
             let id = parseInt(args[0]);
 
@@ -444,8 +541,9 @@ module.exports = {
             if (lvl >= player.character.admin /*|| target.character.admin > player.character.admin*/ ) return player.call('notifications.push.error', [`Недостаточно прав`, 'Ошибка'])
             target.character.admin = lvl;
             target.character.save();
+            out.info(`${player.name} назначил ${target.name} администратором ${lvl} уровня`);
             target.call('chat.message.push', [`!{#ffcf0d} ${player.character.name} назначил вас администратором ${lvl} уровня`]);
-
+            target.call('admin.set', [lvl]);
             mp.events.call("player.admin.changed", target);
         }
     },
@@ -453,7 +551,7 @@ module.exports = {
         description: "Снять админку с игрока",
         access: 5,
         args: "[ID]",
-        handler: (player, args) => {
+        handler: (player, args, out) => {
             let id = parseInt(args[0]);
 
             if (isNaN(id) || id < 0) return;
@@ -462,8 +560,9 @@ module.exports = {
             if (player.character.admin < target.character.admin) return player.call('notifications.push.error', [`Недостаточно прав`, 'Ошибка'])
             target.character.admin = 0;
             target.character.save();
+            target.call('admin.set', [0]);
             target.call('chat.message.push', [`!{#ff8819} ${player.character.name} забрал у вас права администратора`]);
-
+            out.info(`${player.name} забрал у ${target.name} права администратора`);
             mp.events.call("player.admin.changed", target);
         }
     },
@@ -576,7 +675,18 @@ module.exports = {
         access: 1,
         args: "",
         handler: (player, args, out) => {
-            out.debug("soon...")
+            var text = `Список включенных модулей:<br/>`
+            activeServerModules.forEach(moduleName => {
+                try {
+                    var commands = require(`../${moduleName}/commands`);
+                    var count = Object.keys(commands).length;
+                    text += `${moduleName} (${count} команд)<br/>`;
+                } catch (e) {
+                    text += `${moduleName}<br/>`;
+                }
+            });
+            text += `<br/>Всего модулей: ${activeServerModules.length} шт.`;
+            out.log(text, player);
         }
     },
     "/module": {

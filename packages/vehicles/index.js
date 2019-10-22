@@ -19,6 +19,9 @@ let breakdownConfig = {
 let houses;
 
 module.exports = {
+    // Время простоя авто, после которого оно будет заспавнено (ms) - точность ~0-5 мин
+    vehWaitSpawn: 20 * 60 * 1000,
+
     async init() {
         houses = call('houses');
         await this.loadVehiclePropertiesFromDB();
@@ -151,6 +154,7 @@ module.exports = {
             if (!houses.isHaveHouse(owner.character.id)) {
                 mp.events.call('parkings.vehicle.add', veh);
                 veh.destroy();
+                owner.call('chat.message.push', ['!{#ffcb5c}Транспорт доставлен на парковку, отмеченную на карте !{#e485e6}розовым']);
                 return;
             }
             if (veh.carPlaceIndex == null || !veh.hasOwnProperty('carPlaceIndex')) {
@@ -199,9 +203,17 @@ module.exports = {
     setFuel(vehicle, litres) {
         if (litres < 1) return;
         vehicle.fuel = litres;
+        if (vehicle.db) {
+            vehicle.db.fuel = litres;
+            vehicle.db.save();
+        }
     },
     addFuel(vehicle, litres) {
         if (litres < 1) return;
+        if (vehicle.db) {
+            vehicle.db.fuel = vehicle.fuel + litres;
+            vehicle.db.save();
+        }
         vehicle.fuel = vehicle.fuel + litres;
     },
     setVehiclePropertiesByModel(modelName) {
@@ -222,8 +234,8 @@ module.exports = {
 
         var properties = {
             name: modelName,
-            maxFuel: 50,
-            consumption: 2,
+            maxFuel: 80,
+            consumption: 1.5,
             license: 1,
             price: 100000,
             vehType: 0
@@ -299,7 +311,9 @@ module.exports = {
                 let veh = dbPrivate[0];
                 if (dbPrivate[0].parkingDate == null) {
                     let now = new Date();
-                    dbPrivate[0].update({ parkingDate: now });
+                    dbPrivate[0].update({
+                        parkingDate: now
+                    });
                 }
                 mp.events.call('parkings.vehicle.add', veh);
                 mp.events.call('parkings.notify', player, veh, 0);
@@ -559,5 +573,22 @@ module.exports = {
                 h: veh.h
             });
         }
+    },
+    // Имеет ли игрок ключи от авто
+    haveKeys(player, vehicle) {
+        var items = inventory.getItemsByParams(player.inventory.items, 33, ['vehId', 'owner'], [vehicle.db.id, vehicle.db.owner]);
+        return items.length > 0;
+    },
+    // Получить всех игроков в авто
+    getOccupants(vehicle) {
+        // TODO: Обойти баги рейджа через проверку на player.vehicle в радиусе авто
+        return vehicle.getOccupants();
+    },
+    // Убито ли авто
+    isDead(vehicle) {
+        return !vehicle.engineHealth || !vehicle.bodyHealth || vehicle.dead;
+    },
+    getVehiclePropertiesList() {
+        return dbVehicleProperties;
     }
 }

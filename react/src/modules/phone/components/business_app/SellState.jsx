@@ -2,7 +2,7 @@ import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {addAppDisplay, closeAppDisplay} from "../../actions/action.apps";
 import AnsSell from "./AnsSell";
-import {setSellBusiness, setSellStatusBusiness} from "../../actions/action.info";
+import { setSellStatusBusiness, disableHomePhone} from "../../actions/action.info";
 import HeaderBusinessApp from "./Header";
 
 class SellState extends Component {
@@ -18,10 +18,10 @@ class SellState extends Component {
     }
 
     sellBusiness() {
-        const { addApp, setSell, setSellStatus, business } = this.props;
+        const { addApp, setSell, setSellStatus, business, disableHome } = this.props;
 
         // closeApp();
-        setSell(true);
+        disableHome(true);
         addApp({ name: 'AnsSell', form: <AnsSell /> });
 
         // eslint-disable-next-line no-undef
@@ -55,7 +55,7 @@ class SellState extends Component {
                     </div>
 
                     {
-                        !business.isSell &&
+                        !info.isDisabled &&
                         <div className='house_buttons-phone-react' style={{ bottom: '6%', position: 'absolute' }}>
                             <div className='house_button-phone-react' onClick={() => this.sellBusiness()}>
                                 <span className='ico_button_house-phone-react'>
@@ -89,7 +89,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     closeApp: () => dispatch(closeAppDisplay()),
     addApp: app => dispatch(addAppDisplay(app)),
-    setSell: flag => dispatch(setSellBusiness(flag)),
+    disableHome: state => dispatch(disableHomePhone(state)),
     setSellStatus: status => dispatch(setSellStatusBusiness(status)),
 });
 

@@ -174,6 +174,8 @@ class Business extends Component {
                             onClick={() => { 
                                 // eslint-disable-next-line no-undef
                                 mp.trigger('biz.actions', 'finance');
+                                // eslint-disable-next-line no-undef
+                                mp.trigger('biz.menu.close');
                                 closeBusiness();
                              }}
                             onMouseOver={() => this.setState({ colorActionButton: 'black' })}
@@ -249,7 +251,7 @@ class Business extends Component {
                                 <span> в сутки</span>
                             </div>
                             <div>Владелец: <span>{ business.owner ? business.owner : 'нет' }</span></div>
-                            <div>Фракция: <span>{ business.faction ? business.faction : 'нет' }</span></div>
+                            <div>Крыша: <span>{ business.faction ? business.faction : 'нет' }</span></div>
                         </div>
 
                         <div className='buttons-house-react' style={{ top: '40%' }}>

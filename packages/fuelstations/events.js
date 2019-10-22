@@ -5,6 +5,7 @@ let money = call('money');
 module.exports = {
     "init": () => {
         fuelstations.init();
+        inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;
@@ -56,7 +57,7 @@ module.exports = {
             } else {
                 player.call('fuelstations.fill.fulltank.ans', [5]);
             }
-        });
+        }, `Заправка т/с ${vehicle.properties.name} (${litresToFill} л.) на АЗС #${fuelStationId}`);
     },
     'fuelstations.fill.litres': (player, litres) => {
         let shape = player.currentColshape;
@@ -93,6 +94,6 @@ module.exports = {
             } else {
                 player.call('fuelstations.fill.litres.ans', [5]);
             }
-        });
+        }, `Заправка т/с ${vehicle.properties.name} (${litres} л.) на АЗС #${fuelStationId}`);
     }
 }

@@ -7,6 +7,7 @@ const MASK_ID = 14;
 module.exports = {
     "init": () => {
         masks.init();
+        inited(__dirname);
     },
     "masks.shop.enter": (player) => {
         let list = masks.getRawMaskList();
@@ -50,7 +51,7 @@ module.exports = {
                     player.call('masks.buy.ans', [5]);
                     console.log(`[MASKS] Маска добавлена в инвентарь ${player.name}, но деньги не сняты`);
                 }
-            });
+            }, `Покупка маски (ID #${maskId} | Texture #${textureId})`);
         });
     }
 }

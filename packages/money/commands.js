@@ -1,4 +1,5 @@
 let money = require('./index');
+let logger = call("logger");
 
 module.exports = {
     "/addcash": {
@@ -15,7 +16,7 @@ module.exports = {
                 if (!result) return player.call('notifications.push.error', ["По неизвестным причинам", "Ошибка передачи денег"]);
                 player.call('notifications.push.success', ["Вы выдали " + number + "$ наличными", "Выдача денежных средств"]);
                 mp.players.at(id).call('notifications.push.success', ["Вам дали " + number + "$ наличными", "Получены денежные средства"]);
-            });
+            }, `Команда от админа #${player.character.id}`);
         }
     },
     "/addmoney": {
@@ -32,7 +33,7 @@ module.exports = {
                 if (!result) return player.call('notifications.push.error', ["По неизвестным причинам", "Ошибка пополнения счета"]);
                 player.call('notifications.push.success', ["Вы перевели " + number + "$ на счет", "Выдача денежных средств"]);
                 mp.players.at(id).call('notifications.push.success', ["Вам перевели " + number + "$ на счет", "Получены денежные средства"]);
-            });
+            }, `Команда от админа #${player.character.id}`);
         }
     },
     "/removecash": {
@@ -49,7 +50,7 @@ module.exports = {
                 if (!result) return player.call('notifications.push.error', ["По неизвестным причинам", "Ошибка снятия денег"]);
                 player.call('notifications.push.success', ["Вы отобрали " + number + "$ наличными", "Отъем денежных средств"]);
                 mp.players.at(id).call('notifications.push.success', ["У вас отобрали " + number + "$ наличными", "Потеряны денежные средства"]);
-            });
+            }, `Команда от админа #${player.character.id}`);
         }
     },
     "/removemoney": {
@@ -66,7 +67,7 @@ module.exports = {
                 if (!result) return player.call('notifications.push.error', ["По неизвестным причинам", "Ошибка снятия со счета"]);
                 player.call('notifications.push.success', ["Вы сняли " + number + "$ со счета", "Отъем денежных средств"]);
                 mp.players.at(id).call('notifications.push.success', ["У вас сняли " + number + "$ со счета", "Потеряны денежные средства"]);
-            });
+            }, `Команда от админа #${player.character.id}`);
         }
     },
     "/checkmoney": {

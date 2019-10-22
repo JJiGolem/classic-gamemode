@@ -50,6 +50,9 @@ module.exports = (sequelize, DataTypes) => {
         model.hasMany(models.GaragePlace, {
             foreignKey: "garageId"
         });
+        model.hasMany(models.Interior, {
+            foreignKey: "garageId"
+        });
     };
 
     return model;

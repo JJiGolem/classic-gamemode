@@ -14,12 +14,12 @@ module.exports = {
     // Остальные - 70% (в 14 из 20 мусорок)
     trashesInfo: [{
             itemId: 57,
-            price: 10,
+            price: 50,
             chance: 5,
         },
         {
             itemId: 58,
-            price: 10,
+            price: 50,
             chance: 5,
         },
         {
@@ -44,32 +44,37 @@ module.exports = {
         },
         {
             itemId: 63,
-            price: 10,
+            price: 30,
             chance: 10,
         },
         {
             itemId: 64,
-            price: 10,
+            price: 30,
             chance: 70,
         },
     ],
     // Не найдено - 15% (в 3 из 20 мусорок)
     emptyChance: 15,
 
-    async init() {
+    init() {
+        this.initBinsFromDB();
+        this.createDumpMarker();
+    },
+    async initBinsFromDB() {
         var list = await db.Models.Bin.findAll();
 
         list.forEach(bin => {
-            var colshape = this.createColshape(bin);
+            var colshape = this.createBinColshape(bin);
             this.colshapes.push(colshape);
         });
 
         console.log(`[BINS] Мусорки загружены (${list.length} шт.)`);
     },
-    createColshape(bin) {
+    createBinColshape(bin) {
         var pos = new mp.Vector3(bin.x, bin.y, bin.z);
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
+            if (player.vehicle) return;
             player.call("bins.inside", [true]);
             player.insideBin = colshape;
         };
@@ -79,6 +84,29 @@ module.exports = {
         };
         colshape.bin = bin;
         return colshape;
+    },
+    createDumpMarker() {
+        var pos = new mp.Vector3(1045.45, -1968.62, 31.01 - 1);
+
+        var marker = mp.markers.new(1, pos, 0.5, {
+            color: [105, 69, 69, 100]
+        });
+        marker.blip = mp.blips.new(527, pos, {
+            color: 21,
+            name: "Свалка",
+            shortRange: 10,
+            scale: 1
+        });
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+        colshape.onEnter = (player) => {
+            if (player.vehicle) return;
+            player.call(`selectMenu.show`, [`dump`]);
+            player.insideDumb = true;
+        };
+        colshape.onExit = (player) => {
+            player.call(`selectMenu.hide`);
+            delete player.insideDump;
+        };
     },
     getRandomTrash() {
         var interval = this.trashesInfo.map(x => x.chance);
@@ -102,7 +130,7 @@ module.exports = {
             y: pos.y,
             z: pos.z
         });
-        this.colshapes.push(this.createColshape(bin));
+        this.colshapes.push(this.createBinColshape(bin));
         bin.save();
     },
     remove(id) {

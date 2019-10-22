@@ -1,15 +1,20 @@
 "use strict";
-var government = require('../government');
-var factions = require('../factions');
-var inventory = require('../inventory');
-var notifs = require('../notifications');
+let government = require('../government');
+let factions = require('../factions');
+let inventory = require('../inventory');
+let money = call('money');
+let notifs = require('../notifications');
+let police = call('police');
 
 module.exports = {
     "init": () => {
-
+        government.init();
+        inited(__dirname);
     },
     "characterInit.done": (player) => {
-
+        if (!factions.isGovernmentFaction(player.character.factionId)) return;
+        // player.call(`mapCase.init`, [player.name, player.character.factionId]);
+        mp.events.call(`mapCase.gover.init`, player);
     },
     "government.storage.clothes.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Government`);
@@ -133,8 +138,8 @@ module.exports = {
         masksParams.faction = faction.id;
         glassesParams.faction = faction.id;
 
-        topParams.pockets = '[5,5,5,5,5,5,10,10]';
-        legsParams.pockets = '[5,5,5,5,5,5,10,10]';
+        topParams.pockets = '[5,5,5,5,10,5]';
+        legsParams.pockets = '[5,5,5,5,10,5]';
         hatParams.clime = '[-5,20]';
         topParams.clime = '[-5,20]';
         legsParams.clime = '[-5,20]';
@@ -166,5 +171,213 @@ module.exports = {
 
         notifs.success(player, `Форма выдана`, header);
         factions.setAmmo(faction, faction.ammo - government.clothesAmmo);
+    },
+    "government.storage.items.take": (player, index) => {
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Government`);
+        if (!factions.isGovernmentFaction(player.character.factionId)) return notifs.error(player, `Вы не охрана`, `Склад Government`);
+
+        var character = player.character;
+        var faction = factions.getFaction(character.factionId);
+        var header = `Склад ${faction.name}`;
+
+        if (faction.ammo < government.itemAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
+
+        var itemIds = [24, 28];
+
+        index = Math.clamp(index, 0, itemIds.length - 1);
+        var itemId = itemIds[index];
+
+        var itemName = inventory.getInventoryItem(itemId).name;
+        // var items = inventory.getArrayByItemId(player, itemId);
+        // if (items.length > 0) return notifs.error(player, `Вы уже имеете ${itemName}`, header);
+
+        // inventory.fullDeleteItemsByParams(itemId, ["faction", "owner"], [character.factionId, character.id]);
+        var params = {
+            faction: character.factionId,
+            owner: character.id,
+        };
+        if (index == 0) params.count = 2;
+
+        inventory.addItem(player, itemId, params, (e) => {
+            if (e) return notifs.error(player, e, header);
+
+            notifs.success(player, `Вам выданы ${itemName}`, header);
+            factions.setAmmo(faction, faction.ammo - government.itemAmmo);
+        });
+    },
+    "government.storage.guns.take": (player, index) => {
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Government`);
+        if (!factions.isGovernmentFaction(player.character.factionId)) return notifs.error(player, `Вы не служите`, `Склад Government`);
+
+        var character = player.character;
+        var faction = factions.getFaction(character.factionId);
+        var header = `Склад ${faction.name}`;
+
+        if (faction.ammo < government.gunAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
+
+        var itemIds = [19, 80, 87, 100, 93];
+        var weaponIds = ["weapon_stungun", "weapon_heavypistol", "weapon_assaultsmg", "weapon_advancedrifle", "weapon_bullpupshotgun"];
+        index = Math.clamp(index, 0, itemIds.length - 1);
+        var itemId = itemIds[index];
+
+        var gunName = inventory.getInventoryItem(itemId).name;
+        var guns = inventory.getArrayByItemId(player, itemId);
+
+        if (guns.length > 0) return notifs.error(player, `Вы уже имеете ${gunName}`, header);
+
+        inventory.fullDeleteItemsByParams(itemId, ["faction", "owner"], [character.factionId, character.id]);
+        var params = {
+            weaponHash: mp.joaat(weaponIds[index]),
+            ammo: 0,
+            faction: character.factionId,
+            owner: character.id
+        };
+
+        inventory.addItem(player, itemId, params, (e) => {
+            if (e) return notifs.error(player, e, header);
+
+            notifs.success(player, `Вам выдано оружие ${gunName}`, header);
+            factions.setAmmo(faction, faction.ammo - government.gunAmmo);
+        });
+    },
+    "government.storage.ammo.take": (player, values) => {
+        values = JSON.parse(values);
+        var index = values[0];
+        var ammo = values[1];
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Government`);
+        if (!factions.isGovernmentFaction(player.character.factionId)) return notifs.error(player, `Вы не служите`, `Склад Government`);
+
+        var character = player.character;
+        var faction = factions.getFaction(character.factionId);
+        var header = `Склад ${faction.name}`;
+
+        var itemIds = [37, 38, 40, 39];
+        index = Math.clamp(index, 0, itemIds.length - 1);
+        if (faction.ammo < government.ammoAmmo * ammo) return notifs.error(player, `Недостаточно боеприпасов`, header);
+
+        // inventory.fullDeleteItemsByParams(itemIds[index], ["faction", "owner"], [character.factionId, character.id]);
+        var params = {
+            count: ammo,
+            faction: character.factionId,
+            owner: character.id
+        };
+        inventory.addItem(player, itemIds[index], params, (e) => {
+            if (e) return notifs.error(player, e, header);
+
+            notifs.success(player, `Вам выданы ${inventory.getInventoryItem(itemIds[index]).name} (${ammo} ед.)`, header);
+            factions.setAmmo(faction, faction.ammo - government.ammoAmmo * ammo);
+        });
+    },
+    "government.service.fines.pay": (player, index) => {
+        var fines = player.character.Fines;
+        var header = `Оплата штрафа`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!fines.length) return out(`У вас нет штрафов`);
+        index = Math.clamp(index, 0, fines.length - 1);
+        var fine = fines[index];
+        if (player.character.cash < fine.price) return out(`Необходимо $${fine.price}`);
+
+        money.removeCash(player, fine.price, (res) => {
+            if (!res) return out(`Ошибка списания наличных`);
+
+            fine.destroy();
+            fines.splice(index, 1);
+            mp.events.call("player.fines.changed", player);
+        }, `Оплата штрафа от офицера #${fine.copId}`);
+
+        notifs.success(player, `Штраф #${fine.id} оплачен`, header);
+    },
+    "government.service.keys.veh.restore": (player, index) => {
+        var vehicles = player.vehicleList;
+        var header = `Восстановление ключей`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!vehicles.length) return out(`У вас нет авто`);
+        index = Math.clamp(index, 0, vehicles.length - 1);
+        var veh = vehicles[index];
+        var price = government.restoreVehKeysPrice;
+        if (player.character.cash < price) return out(`Необходимо $${price}`);
+
+        var items = inventory.getItemsByParams(player.inventory.items, 33, 'vehId', veh.id);
+        if (items.length) return out(`Вы уже имеете ключи от ${veh.name}`);
+
+        var params = {
+            owner: player.character.id,
+            vehId: veh.id,
+            vehName: veh.name
+        };
+        var cant = inventory.cantAdd(player, 33, params);
+        if (cant) return out(cant);
+
+        money.removeCash(player, price, (res) => {
+            if (!res) return out(`Ошибка списания наличных`);
+
+            inventory.fullDeleteItemsByParams(33, 'vehId', veh.id);
+            // выдача ключей в инвентарь
+            inventory.addItem(player, 33, params, (e) => {
+                if (e) out(e);
+            });
+        }, `Восстановление ключей от ${veh.name} (#${veh.id})`);
+
+        notifs.success(player, `Ключи от ${veh.name} восстановлены`, header);
+    },
+    "government.unarrest.offer": (player, recId) => {
+        var header = `Освобождение`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var rec = mp.players.at(recId);
+        if (!rec || !rec.character) return out(`Игрок #${recId} не найден`);
+        if (!rec.character.arrestTime) return out(`${rec.name} не отбывает срок`);
+
+        var price = police.getUnarrestPrice(rec.character.arrestTime);
+
+        rec.offer = {
+            type: "unarrest",
+            playerId: player.id
+        };
+        rec.call(`offerDialog.show`, [`unarrest`, {
+            name: player.name,
+            price: price
+        }]);
+    },
+    "government.unarrest.accept": (player) => {
+        var header = `Освобождение`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var offer = player.offer;
+        delete player.offer;
+        if (!offer || offer.type != "unarrest") return out(`Предложение не найдено`);
+        var rec = mp.players.at(offer.playerId);
+        if (!rec || !rec.character) return out(`Игрок #${recId} не найден`);
+        if (!player.character.arrestTime) return out(`Вы не отбываете срок`);
+
+        var price = police.getUnarrestPrice(player.character.arrestTime);
+        if (player.character.cash < price) return out(`Необходимо $${price}`);
+
+        money.removeCash(player, price, (res) => {
+            if (!res) return out(`Ошибка списания наличных`);
+
+            police.stopCellArrest(player);
+
+            notifs.success(rec, `${player.name} на свободе`, header);
+            notifs.success(player, `${rec.name} освободил вас`, header);
+
+            var pay = parseInt(price * police.unarrestPayK);
+
+            money.addCash(rec, pay, (res) => {
+                if (!res) return notifs.error(rec, `Ошибка начисления наличных`, header);
+            }, `Освобождение заключенного ${player.name}`);
+        }, `Освобождение через адвоката ${rec.name}`);
+    },
+    "government.unarrest.cancel": (player, recId) => {
+        if (!player.offer || player.offer.type != "unarrest") return;
+        var rec = mp.players.at(player.offer.playerId);
+        if (rec && rec.character) notifs.warning(rec, `${player.name} отклонил предложение`);
+        delete player.offer;
     },
 }

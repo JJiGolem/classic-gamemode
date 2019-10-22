@@ -3,6 +3,7 @@ let changelist = call('changelist');
 module.exports = {
     "init": () => {
         changelist.init();
+        inited(__dirname);
     },
     "characterInit.done": (player) => {
         changelist.sendLikes(player);

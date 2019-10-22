@@ -1,11 +1,26 @@
 "use strict";
 
+let logger;
+/// ФОРМАТ ЛОГОВ [MONEY]
+/// `[MONEY] 1000 add cash to | Just because`
+/// `[${moduleName}] ${moneyCount} ${operation} ${moneyType} ${target} | ${reason}`
+/// moduleName - название модуля
+/// moneyCount - кол-во средств
+/// operation - операция (add/remove)
+/// moneyType - тип средств(cash/money)
+/// target - цель к котрой применена операция(to - на текущего игрока/from - текущим игроком)
+/// reason - причина
+
 /// Функции модуля системы финансов игрока
 module.exports = {
+    init() {
+        logger = call("logger");
+    },
     /// player - игрок которому перевести средства
     /// number - количество средств
     /// callback - функция колбека, которая вызовется по завершению работы или в случае ошибки
-    addCash(player, number, callbackT) {
+    addCash(player, number, callbackT, reason = "") {
+        if (typeof player == 'number') return this.addCashById(player, number, callbackT, reason);
         if (callbackT == null) return;
         let callback = (result) => {
             try {
@@ -27,6 +42,7 @@ module.exports = {
             return player.character.save({transaction: t});
         }).then(result => {
             this.changing(player);
+            logger.log(`+${number}$ CASH | ${reason}`, "money", player);
             callback(true);
         }).catch(err => {
             if (cash != null) {
@@ -38,7 +54,7 @@ module.exports = {
     /// id - id персоонажа которому перевести средства
     /// number - количество средств
     /// callback - функция колбека, которая вызовется по завершению работы или в случае ошибки
-    addCashById(id, number, callbackT) {
+    addCashById(id, number, callbackT, reason = "") {
         if (callbackT == null) return;
         let callback = (result) => {
             try {
@@ -68,17 +84,18 @@ module.exports = {
                     return character.save({transaction: t});
                 });
             }).then(result => {
+                logger.log(`+${number}$ CASH | ${reason}`, "money", id);
                 callback(true);
             }).catch(err => {
                 callback(false);
             });
         }
         else {
-            this.addCash(player, number, callback);
+            this.addCash(player, number, callback, reason);
         }
     },
-    addMoney(player, number, callbackT) {
-        if (typeof player == 'number') return this.addMoneyById(player, number, callbackT);
+    addMoney(player, number, callbackT, reason = "") {
+        if (typeof player == 'number') return this.addMoneyById(player, number, callbackT, reason);
         if (callbackT == null) return;
         let callback = (result) => {
             try {
@@ -100,6 +117,7 @@ module.exports = {
             return player.character.save({transaction: t});
         }).then(result => {
             this.changing(player);
+            logger.log(`+${number}$ BANK | ${reason}`, "money", player);
             callback(true);
         }).catch(err => {
             if (bank != null) {
@@ -108,7 +126,7 @@ module.exports = {
             callback(false);
         });
     },
-    addMoneyById(id, number, callbackT) {
+    addMoneyById(id, number, callbackT, reason = "") {
         if (callbackT == null) return;
         let callback = (result) => {
             try {
@@ -138,16 +156,18 @@ module.exports = {
                     return character.save({transaction: t});
                 });
             }).then(result => {
+                logger.log(`+${number}$ BANK | ${reason}`, "money", id);
                 callback(true);
             }).catch(err => {
                 callback(false);
             });
         }
         else {
-            this.addMoney(player, number, callback);
+            this.addMoney(player, number, callback, reason);
         }
     },
-    removeCash(player, number, callbackT) {
+    removeCash(player, number, callbackT, reason = "") {
+        if (typeof player == 'number') return this.removeCashById(player, number, callbackT, reason);
         if (callbackT == null) return;
         let callback = (result) => {
             try {
@@ -170,6 +190,7 @@ module.exports = {
             return player.character.save({transaction: t});
         }).then(result => {
             this.changing(player);
+            logger.log(`-${number}$ CASH | ${reason}`, "money", player);
             callback(true);
         }).catch(err => {
             if (cash != null) {
@@ -178,7 +199,7 @@ module.exports = {
             callback(false);
         });
     },
-    removeCashById(id, number, callbackT) {
+    removeCashById(id, number, callbackT, reason = "") {
         if (callbackT == null) return;
         let callback = (result) => {
             try {
@@ -209,16 +230,18 @@ module.exports = {
                     return character.save({transaction: t});
                 });
             }).then(result => {
+                logger.log(`-${number}$ CASH | ${reason}`, "money", id);
                 callback(true);
             }).catch(err => {
                 callback(false);
             });
         }
         else {
-            this.addCash(player, number, callback);
+            this.removeCash(player, number, callback, reason);
         }
     },
-    removeMoney(player, number, callbackT) {
+    removeMoney(player, number, callbackT, reason = "") {
+        if (typeof player == 'number') return this.removeMoneyById(player, number, callbackT, reason);
         if (callbackT == null) return;
         let callback = (result) => {
             try {
@@ -241,6 +264,7 @@ module.exports = {
             return player.character.save({transaction: t});
         }).then(result => {
             this.changing(player);
+            logger.log(`-${number}$ BANK | ${reason}`, "money", player);
             callback(true);
         }).catch(err => {
             if (bank != null) {
@@ -249,7 +273,7 @@ module.exports = {
             callback(false);
         });
     },
-    removeMoneyById(id, number, callbackT) {
+    removeMoneyById(id, number, callbackT, reason = "") {
         if (callbackT == null) return;
         let callback = (result) => {
             try {
@@ -280,17 +304,18 @@ module.exports = {
                     return character.save({transaction: t});
                 });
             }).then(result => {
+                logger.log(`-${number}$ BANK | ${reason}`, "money", id);
                 callback(true);
             }).catch(err => {
                 callback(false);
             });
         }
         else {
-            this.addCash(player, number, callback);
+            this.removeMoney(player, number, callback, reason);
         }
     },
     /// Для ироков, которые онлайн
-    moveCash(playerFrom, playerTo, number, callbackT) {
+    moveCash(playerFrom, playerTo, number, callbackT, reasonFrom = "", reasonTo = "") {
         if (callbackT == null) return;
         let callback = (result) => {
             try {
@@ -319,6 +344,8 @@ module.exports = {
         }).then(result => {
             this.changing(playerFrom);
             this.changing(playerTo);
+            logger.log(`-${number}$ CASH | ${reasonFrom}`, "money", playerFrom);
+            logger.log(`+${number}$ CASH | ${reasonTo}`, "money", playerTo);
             callback(true);
         }).catch(err => {
             if (cashFrom != null) {
@@ -330,7 +357,7 @@ module.exports = {
             callback(false);
         });
     },
-    moveMoneyById(idFrom, idTo, number, callbackT) {
+    moveMoneyById(idFrom, idTo, number, callbackT, reasonFrom = "", reasonTo = "") {
         if (callbackT == null) return;
         let callback = (result) => {
             try {
@@ -366,7 +393,7 @@ module.exports = {
         let bankFrom = null;
         if (playerFrom != null && playerFrom.character != null) bankFrom = playerFrom.character.bank;
         let bankTo = null;
-        if (playerFrom != null && playerFrom.character != null) bankTo = playerTo.character.bank;
+        if (playerTo != null && playerTo.character != null) bankTo = playerTo.character.bank;
 
         db.sequelize.transaction(t => {
             if ((playerFrom != null && playerFrom.character != null) && (playerTo != null && playerTo.character != null)) {
@@ -417,6 +444,18 @@ module.exports = {
         }).then(result => {
             playerFrom != null && playerFrom.character != null && this.changing(playerFrom);
             playerTo != null && playerTo.character != null && this.changing(playerTo);
+            if (playerFrom != null && playerFrom.character != null) {
+                logger.log(`-${number}$ BANK | ${reasonFrom}`, "money", playerFrom);
+            }
+            else {
+                logger.log(`-${number}$ BANK | ${reasonFrom}`, "money", idFrom);
+            } 
+            if(playerTo != null && playerTo.character != null) {
+                logger.log(`+${number}$ BANK | ${reasonTo}`, "money", playerTo);
+            }
+            else {
+                logger.log(`+${number}$ BANK | ${reasonTo}`, "money", idTo);
+            }
             callback(true);
         }).catch(err => {
             if (bankFrom != null) {

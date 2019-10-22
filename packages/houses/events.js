@@ -10,6 +10,7 @@ module.exports = {
     /// Событие инициализации сервера
     "init": () => {
         housesService.init();
+        inited(__dirname);
     },
     "player.joined": (player) => {
         player.house = {
@@ -18,6 +19,7 @@ module.exports = {
         };
     },
     "characterInit.done": (player) => {
+        housesService.loadBlips(player);
         if (player.character.admin < 5) return;
         housesService.initHouseAdding(player);
     },
@@ -30,7 +32,8 @@ module.exports = {
     "playerEnterColshape": (player, shape) => {
         if (!shape.isHouse) return;
         player.house.place = shape.place;
-        let info = housesService.getHouseById(shape.hId).info;
+        let house = housesService.getHouseById(shape.hId)
+        let info = house.info;
         /// На улице
         if (shape.place == 0) {
             let houseInfo = {};
@@ -42,7 +45,7 @@ module.exports = {
                     numRooms: info.Interior.numRooms,
                     garage: info.Interior.Garage != null,
                     carPlaces: info.Interior.Garage != null ? info.Interior.Garage.carPlaces : 1,
-                    rent: info.price * info.Interior.rent,
+                    rent: housesService.getRent(house),
                     price: info.price,
                     pos: [info.pickupX, info.pickupY, info.pickupZ]
                 };
@@ -54,7 +57,7 @@ module.exports = {
                     numRooms: info.Interior.numRooms,
                     garage: info.Interior.Garage != null,
                     carPlaces: info.Interior.Garage != null ? info.Interior.Garage.carPlaces : 1,
-                    rent: info.price * info.Interior.rent,
+                    rent: housesService.getRent(house),
                     owner: info.characterNick,
                     pos: [info.pickupX, info.pickupY, info.pickupZ]
                 };
@@ -128,7 +131,7 @@ module.exports = {
             
             player.call('phone.app.add', ["house", housesService.getHouseInfoForApp(house)]);
             vehicles != null && vehicles.setPlayerCarPlaces(player);
-        });
+        }, `Покупка дома #${info.id} у государства`);
     },
     /// Phone app events
     "house.lock": (player, id, isOpened) => {
@@ -157,23 +160,17 @@ module.exports = {
         let id = parseInt(idOrNick);
         if (isNaN(id)) {
             if (player.character.name == idOrNick) return player.call("house.sell.check.ans", [null]);
-            for (let i = 0; i < mp.players.length; i++) {
-                if (mp.players.at(i) == null) continue;
-                if (mp.players.at(i).character == null) continue;
-                if (mp.players.at(i).character.name == idOrNick) {
-                    if (player.id == i) return player.call("biz.sell.check.ans", [null]);
-                    player.call("house.sell.check.ans", [character.name]);
-                    player.house.buyerIndex = i;
-                    return;
-                }
-            }
-            player.call("house.sell.check.ans", [null]);
+
+            let buyer = mp.players.toArray().find(x => x.character != null && x.character.name == idOrNick);
+            if (buyer == null) return player.call("house.sell.check.ans", [null]);
+            player.call("house.sell.check.ans", [buyer.character.name]);
+            player.house.buyerId = buyer.id;
         }
         else {
             if (id > 1000000) return player.call("house.sell.check.ans", [null]);
             if (player.id == id) return player.call("biz.sell.check.ans", [null]);
             if (mp.players.at(id).character != null) {
-                player.house.buyerIndex = id;
+                player.house.buyerId = id;
                 player.call("house.sell.check.ans", [mp.players.at(id).character.name]);
             }
             else {
@@ -182,67 +179,77 @@ module.exports = {
         }
     },
     "house.sell": (player, name, cost) => {
-        if (player.house.buyerIndex == null) return player.call("house.sell.ans", [0]);
-        if (mp.players.at(player.house.buyerIndex) == null) return player.call("house.sell.ans", [0]);
+        if (player.house.buyerId == null) return player.call("house.sell.ans", [0]);
+        if (mp.players.at(player.house.buyerId) == null) return player.call("house.sell.ans", [0]);
         if (vehicles == null) return player.call('house.sell.ans', [0]);
         if (vehicles.doesPlayerHaveHomeVehicles(player)) return player.call('house.sell.ans', [5]);
         name = parseInt(name);
         cost = parseInt(cost);
         if (isNaN(name) || isNaN(cost)) return player.call("house.sell.ans", [0]);
-        if (mp.players.at(player.house.buyerIndex).character.cash < cost) return player.call("house.sell.ans", [2]);
-        if (housesService.isHaveHouse(mp.players.at(player.house.buyerIndex).character.id)) return player.call("house.sell.ans", [2]);
+        if (mp.players.at(player.house.buyerId).character.cash < cost) return player.call("house.sell.ans", [2]);
+        if (housesService.isHaveHouse(mp.players.at(player.house.buyerId).character.id)) return player.call("house.sell.ans", [2]);
         let house = housesService.getHouseById(name);
         if (house == null) return player.call("house.sell.ans", [0]);
         let info = house.info;
         if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10 || 
-            mp.players.at(player.house.buyerIndex).dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return player.call("house.sell.ans", [3]);
+            mp.players.at(player.house.buyerId).dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return player.call("house.sell.ans", [3]);
         if (cost < info.price || cost > 1000000000) return player.call("house.sell.ans", [4]);
-        mp.players.at(player.house.buyerIndex).house.sellerIndex = player.id;
+        mp.players.at(player.house.buyerId).house.sellerId = player.id;
         player.house.sellingHouseId = info.id;
         player.house.sellingHouseCost = cost;
-        mp.players.at(player.house.buyerIndex).call('offerDialog.show', ["house_sell", {
+        mp.players.at(player.house.buyerId).call('offerDialog.show', ["house_sell", {
             name: player.character.name,
             price: cost
         }]);
     },
     "house.sell.ans": (player, result) => {
-        if (player.house.sellerIndex == null) return;
-        if (mp.players.at(player.house.sellerIndex) == null) return;
-        if (mp.players.at(player.house.sellerIndex).house == null) return;
-        if (mp.players.at(player.house.sellerIndex).house.buyerIndex == null) return;
-        let house = housesService.getHouseById(mp.players.at(player.house.sellerIndex).house.sellingHouseId);
-        if (house == null) return mp.players.at(player.house.sellerIndex).call("house.sell.ans", [0]);
+        if (player.house.sellerId == null) return;
+        if (mp.players.at(player.house.sellerId) == null) return;
+        if (mp.players.at(player.house.sellerId).house == null) return;
+        if (mp.players.at(player.house.sellerId).house.buyerId == null) return;
+        let house = housesService.getHouseById(mp.players.at(player.house.sellerId).house.sellingHouseId);
+        if (house == null) return mp.players.at(player.house.sellerId).call("house.sell.ans", [0]);
         let info = house.info;
-        if (info.characterId != mp.players.at(player.house.sellerIndex).character.id) return mp.players.at(player.house.sellerIndex).call("house.sell.ans", [0]);
+        if (info.characterId != mp.players.at(player.house.sellerId).character.id) return mp.players.at(player.house.sellerId).call("house.sell.ans", [0]);
         if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10 || 
-            mp.players.at(player.house.sellerIndex).dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return mp.players.at(player.house.sellerIndex).call("house.sell.ans", [3]);
-        if (player.character.cash < info.price) return mp.players.at(player.house.sellerIndex).call("house.sell.ans", [2]);
-        if (housesService.isHaveHouse(player.character.id)) return mp.players.at(player.house.sellerIndex).call("house.sell.ans", [2]);
-        if (result == 2) return  mp.players.at(player.house.sellerIndex).call("house.sell.ans", [2]);
+            mp.players.at(player.house.sellerId).dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return mp.players.at(player.house.sellerId).call("house.sell.ans", [3]);
+        if (player.character.cash < info.price) return mp.players.at(player.house.sellerId).call("house.sell.ans", [2]);
+        if (housesService.isHaveHouse(player.character.id)) return mp.players.at(player.house.sellerId).call("house.sell.ans", [2]);
+        if (result == 2) return  mp.players.at(player.house.sellerId).call("house.sell.ans", [2]);
 
-        housesService.sellHouse(house, mp.players.at(player.house.sellerIndex).house.sellingHouseCost,
-            mp.players.at(player.house.sellerIndex), player, function(ans) {
+        housesService.sellHouse(house, mp.players.at(player.house.sellerId).house.sellingHouseCost,
+            mp.players.at(player.house.sellerId), player, function(ans) {
                 if (ans) {
-                    mp.players.at(player.house.sellerIndex).call("house.sell.ans", [1]);
+                    mp.players.at(player.house.sellerId).call("house.sell.ans", [1]);
                 }
                 else {
-                    mp.players.at(player.house.sellerIndex).call("house.sell.ans", [0]);
+                    mp.players.at(player.house.sellerId).call("house.sell.ans", [0]);
                 }
             });
-        mp.players.at(player.house.sellerIndex).house.buyerIndex = null;
-        mp.players.at(player.house.sellerIndex).house.sellingHouseId = null;
-        mp.players.at(player.house.sellerIndex).house.sellingHouseCost = null;
-        player.house.sellerIndex = null;
+        mp.players.at(player.house.sellerId).house.buyerId = null;
+        mp.players.at(player.house.sellerId).house.sellingHouseId = null;
+        mp.players.at(player.house.sellerId).house.sellingHouseCost = null;
+        player.house.sellerId = null;
     },
     "house.sell.stop": (player) => {
-        if (player.house.buyerIndex != null) {
-            mp.players.at(player.house.buyerIndex).call("offerDialog.hide");
-            mp.players.at(player.house.buyerIndex).house.sellerIndex = null;
+        if (player.house.buyerId != null) {
+            mp.players.at(player.house.buyerId).call("offerDialog.hide");
+            mp.players.at(player.house.buyerId).house.sellerId = null;
         }
-        player.house.buyerIndex = null;
+        player.house.buyerId = null;
         player.house.sellingHouseId = null;
         player.house.sellingHouseCost = null;
     },
+    "house.improvements.buy": (player, type) => {
+        if (player.character == null) return player.call("house.improvements.buy.ans", [0]);
+        let house = housesService.getHouseByCharId(player.character.id);
+        if (house == null) return player.call("house.improvements.buy.ans", [0]);
+        housesService.buyImprovments(player, house, type, function(result) {
+            player.call("house.improvements.buy.ans", [result ? 1 : 2]);
+        });
+    },
+
+    /// События для работы с экземплярами домов
     "house.add": (player, houseInfo) => {
         housesService.createHouse(JSON.parse(houseInfo));
     },

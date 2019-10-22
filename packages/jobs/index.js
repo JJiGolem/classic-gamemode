@@ -82,7 +82,7 @@ module.exports = {
             notifs.info(player, `Зарплата: $${player.character.pay}`, `Работа`);
             player.character.pay = 0;
             player.character.save();
-        });
+        }, `Зарплата работ`);
     },
     clearJobApps(player) {
         if (!player.character) return;
@@ -93,5 +93,10 @@ module.exports = {
     getJobName(player) {
         if (!player.character.job) return null;
         return this.getJob(player.character.job).name;
+    },
+    getJobNameById(jobId) {
+        let job = this.getJob(jobId);
+        if (job == null) return null;
+        return job.name;
     },
 }

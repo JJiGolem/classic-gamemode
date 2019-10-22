@@ -6,12 +6,12 @@ let phone = call('phone');
 module.exports = {
     "init": () => {
         supermarket.init();
+        inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;
         if (shape.isSupermarket) {
             let id = shape.supermarketId;
-            player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} зашел в колшейп Supermarket ${shape.supermarketId}`]);
             let data = supermarket.getRawShopData(id);
             let priceConfig = supermarket.getPriceConfig();
             player.call('supermarket.enter', [data, priceConfig]);
@@ -21,7 +21,6 @@ module.exports = {
     "playerExitColshape": (player, shape) => {
         if (!player.character) return;
         if (shape.isSupermarket) {
-            player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} вышел с колшейпа Supermarket ${shape.supermarketId}`]);
             player.call('supermarket.exit');
         }
     },
@@ -44,7 +43,7 @@ module.exports = {
             } else {
                 player.call('supermarket.phone.buy.ans', [4]);
             }
-        });
+        }, `Покупка телефона`);
     },
     "supermarket.number.change": async (player, number) => {
         if (number.length != 6 || /\D/g.test(number) || number.charAt(0) == '0') return player.call('supermarket.number.change.ans', [0]);
@@ -69,7 +68,7 @@ module.exports = {
                 } else {
                     player.call('supermarket.number.change.ans', [4]);
                 }
-            });
+            }, `Смена номера телефона на ${number}`);
         }
 
     },
@@ -79,6 +78,7 @@ module.exports = {
 
         let productName;
         let brand;
+        let bagColor;
         switch (productId) {
             case 0:
                 productName = 'water';
@@ -99,6 +99,14 @@ module.exports = {
             case 5:
                 productName = 'canister';
                 break;
+            case 6:
+                productName = 'duffleBag';
+                bagColor = 'green';
+                break;
+            case 7:
+                productName = 'duffleBag';
+                bagColor = 'black';
+                break;
         }
         let price = supermarket.productsConfig[productName] * supermarket.productPrice * supermarket.getPriceMultiplier(supermarketId);
         if (player.character.cash < price) return player.call('supermarket.products.buy.ans', [2]);
@@ -111,6 +119,19 @@ module.exports = {
         if (productName == 'cigarettes') {
             params.count = 20;
             params.name = brand;
+        } else if (productName == 'canister') {
+            params.litres = 0;
+            params.max = 20;
+        } else if (productName == 'water') {
+            params.thirst = 20;
+        } else if (productName == 'chocolate') {
+            params.satiety = 15;
+            params.thirst = -5;
+        } else if (productName == 'duffleBag') {
+            params.sex = !player.character.gender;
+            params.pockets = '[2,2,6,5,2,3,6,6,12,10]';
+            params.texture = 0;
+            bagColor == 'green' ? params.variation = 41 : params.variation = 45;
         }
 
         inventory.addItem(player, itemId, params, (e) => {
@@ -120,11 +141,10 @@ module.exports = {
                         supermarket.removeProducts(supermarketId, supermarket.productsConfig[productName]);
                         supermarket.updateCashbox(supermarketId, price);
                         player.call('supermarket.products.buy.ans', [1]);
-
                 } else {
                     player.call('supermarket.products.buy.ans', [0]);
                 }
-            });
+            }, `Покупка в 24/7 ${productName}`);
         });
     },
 }

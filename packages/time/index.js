@@ -5,6 +5,7 @@ var jobs = require('../jobs');
 var notifs = require('../notifications');
 
 let CUSTOM_TIME;
+let ticks = 0;
 
 module.exports = {
     init() {
@@ -15,7 +16,8 @@ module.exports = {
         var lastPayDayHour = new Date().getHours();
         setInterval(() => {
             try {
-                mp.events.call(`time.main.tick`);
+                ticks++;
+                mp.events.call(`time.main.tick`, ticks);
                 var date = new Date();
                 this.updateWorldTime(date);
                 if (date.getMinutes() >= 0 && date.getMinutes() <= 3 && date.getHours() != lastPayDayHour) {
@@ -38,6 +40,7 @@ module.exports = {
     allBroadcast() {
         mp.players.forEach((rec) => {
             if (!rec.character) return;
+            if (rec.getVariable("afk")) return notifs.error(rec, `PayDay не засчитан`, `ANTI-AFK`);
             var minutes = parseInt((Date.now() - rec.authTime) / 1000 / 60 % 60);
             notifs.info(rec, `Минуты: ${rec.character.minutes} + ${minutes}`, `PayDay`)
             rec.character.minutes += minutes;
@@ -56,12 +59,14 @@ module.exports = {
     factionPay() {
         mp.players.forEach((rec) => {
             if (!rec.character) return;
+            if (rec.getVariable("afk")) return;
             if (rec.character.factionId) factions.pay(rec);
         });
     },
     jobsPay() {
         mp.players.forEach((rec) => {
             if (!rec.character) return;
+            if (rec.getVariable("afk")) return;
             if (rec.character.pay) jobs.pay(rec);
         });
     },

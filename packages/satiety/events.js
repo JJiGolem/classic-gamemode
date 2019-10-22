@@ -1,6 +1,8 @@
 let satiety = require('./index.js');
 module.exports = {
-    "init": () => {},
+    "init": () => {
+        inited(__dirname);
+    },
     "characterInit.done": (player) => {
         player.health = player.character.health;
         satiety.startTimer(player);

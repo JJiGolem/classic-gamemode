@@ -5,12 +5,12 @@ let inventory = call('inventory');
 module.exports = {
     "init": () => {
         barbershop.init();
+        inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;
 
         if (shape.isBarbershop) {
-                player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} зашел в колшейп BS ${shape.barbershopId}`]);
                 player.call('prompt.show', ['Нажмите <span>E</span> для того, чтобы сменить прическу']);
                 player.call('barbershop.shape', [true]);
                 player.currentBarbershopId = shape.barbershopId;
@@ -20,7 +20,6 @@ module.exports = {
         if (!player.character) return;
 
         if (shape.isBarbershop) {
-                player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} вышел с колшейпа BS ${shape.barbershopId}`]);
                 player.call('barbershop.shape', [false]);
                 player.call('prompt.hide');
         }
@@ -69,7 +68,7 @@ module.exports = {
             } else {
                 player.call('barbershop.hairstyle.buy.ans', [2]);
             }
-        });
+        }, `Смена прически на #${hairstyleId}`);
     },
     "barbershop.facialHair.buy": (player, index) => {
         let barbershopId = player.currentBarbershopId;
@@ -78,7 +77,7 @@ module.exports = {
         let price = barbershop.facialHairProducts * barbershop.productPrice * barbershop.getPriceMultiplier(barbershopId);
         if (player.character.cash < price) return player.call('barbershop.facialHair.buy.ans', [1]);
         let productsAvailable = barbershop.getProductsAmount(barbershopId);
-        if (barbershop.facialHairProducts > productsAvailable) return player.call('barbershop.hairstyle.buy.ans', [3]);
+        if (barbershop.facialHairProducts > productsAvailable) return player.call('barbershop.facialHair.buy.ans', [3]);
         money.removeCash(player, price, function (result) {
             if (result) {
                 barbershop.removeProducts(barbershopId, barbershop.facialHairProducts);
@@ -90,7 +89,7 @@ module.exports = {
             } else {
                 player.call('barbershop.facialHair.buy.ans', [2]);
             }
-        });
+        }, `Смена бороды на #${index}`);
 
     },
     "barbershop.color.buy": (player, type, index) => {
@@ -100,7 +99,7 @@ module.exports = {
         let price = barbershop.colorChangeProducts * barbershop.productPrice * barbershop.getPriceMultiplier(barbershopId);
         if (player.character.cash < price) return player.call('barbershop.color.buy.ans', [3]);
         let productsAvailable = barbershop.getProductsAmount(barbershopId);
-        if (barbershop.colorChangeProducts > productsAvailable) return player.call('barbershop.hairstyle.buy.ans', [5]);
+        if (barbershop.colorChangeProducts > productsAvailable) return player.call('barbershop.color.buy.ans', [5]);
         money.removeCash(player, price, function (result) {
             if (result) {
                 barbershop.removeProducts(barbershopId, barbershop.colorChangeProducts);
@@ -128,6 +127,6 @@ module.exports = {
             } else {
                 player.call('barbershop.color.buy.ans', [4]);
             }
-        });
+        }, `Смена цвета растительности типа #${type} на #${index}`);
     }
 }

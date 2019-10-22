@@ -4,10 +4,12 @@ let factions = call('factions');
 let inventory = call('inventory');
 let money = call('money');
 let notifs = call('notifications');
+let police = call('police');
 
 module.exports = {
     "init": () => {
         mafia.init();
+        inited(__dirname);
     },
     "characterInit.done": (player) => {
         player.call(`mafia.mafiaZones.init`, [mafia.convertToClientMafiaZones()]);
@@ -114,9 +116,16 @@ module.exports = {
 
             faction.cash += sum;
             faction.save();
-        });
+        }, `Пополнение общака ${faction.name}`);
 
         notifs.success(player, `Пополнено на $${sum}`, header);
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(rec, `${player.name} пополнил на $${sum}`, header);
+        });
     },
     "mafia.storage.cash.take": (player, sum) => {
         sum = Math.clamp(sum, 0, 1000000);
@@ -126,15 +135,23 @@ module.exports = {
         var faction = factions.getFaction(character.factionId);
         var header = `Общак ${faction.name}`;
 
+        if (!factions.isLeader(player)) return notifs.error(player, `Нет доступа`, header);
         if (faction.cash < sum) return notifs.error(player, `Общак не имеет $${sum}`, header);
         money.addCash(player, sum, (res) => {
             if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
 
             faction.cash -= sum;
             faction.save();
-        });
+        }, `Снятие с общака ${faction.name}`);
 
         notifs.success(player, `Снято $${sum}`, header);
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(rec, `${player.name} снял $${sum}`, header);
+        });
     },
     "mafia.power.sell": (player, data) => {
         data = JSON.parse(data);
@@ -147,9 +164,10 @@ module.exports = {
         var rank = factions.getRank(player.character.factionId, mafia.bizWarRank);
         if (player.character.factionRank < rank.id) return out(`Доступно с ранга ${rank.name}`);
         var rec = mp.players.at(data.recId);
-        if (!rec) return out(`Игрок #${data.recId} не найден`);
+        if (!rec || !rec.character) return out(`Игрок #${data.recId} не найден`);
         if (player.dist(rec.position) > 10) return out(`${rec.name} далеко`);
         if (!factions.isMafiaFaction(rec.character.factionId)) return out(`${rec.name} не член мафии`);
+        rank = factions.getRank(rec.character.factionId, mafia.bizWarRank);
         if (rec.character.factionRank < rank.id) return out(`${rec.name} еще мал для таких сделок`);
         if (player.character.factionId == rec.character.factionId) return out(`${rec.name} в вашей мафии`);
 
@@ -179,7 +197,7 @@ module.exports = {
         delete player.offer;
 
         var seller = mp.players.at(offer.playerId);
-        if (!seller) return out(`Мафиозник не найден`);
+        if (!seller || !seller.character) return out(`Мафиозник не найден`);
         if (player.dist(seller.position) > 10) return out(`${seller.name} далеко`);
         if (player.character.cash < offer.sum) return out(`Необходимо $${sum}`);
 
@@ -192,8 +210,8 @@ module.exports = {
                 if (!res) return notifs.error(seller, `Ошибка начисления наличных`, header);
 
                 bizes.setFactionId(offer.bizId, player.character.factionId);
-            });
-        });
+            }, `Продажа крыши бизнеса #${biz.info.id} игроку ${player.name}`);
+        }, `Покупка крыши бизнеса #${biz.info.id} у игрока ${seller.name}`);
 
         notifs.success(seller, `Крыша ${biz.info.name} продана`, header);
         notifs.success(player, `Крыша ${biz.info.name} куплена`, header);
@@ -202,11 +220,109 @@ module.exports = {
         if (!player.offer) return;
         var inviter = mp.players.at(player.offer.playerId);
         delete player.offer;
-        if (!inviter) return;
+        if (!inviter || !inviter.character) return;
         notifs.info(player, `Предложение отклонено`);
         notifs.info(inviter, `${player.name} отклонил предложение`);
     },
+    // снять/надеть веревку
+    "mafia.cuffs": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+        var header = `Веревка`;
+        var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
+        // rec = player; // for tests
+        if (!rec || !rec.character) return notifs.error(player, `Игрок не найден`, header);
+        var dist = player.dist(rec.position);
+        if (dist > 5) return notifs.error(player, `${rec.name} далеко`, header);
+        var character = player.character;
+        if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
+        if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, header);
+
+        if (!rec.cuffs) {
+            var cuffs = (data.cuffsSqlId) ? inventory.getItem(player, data.cuffsSqlId) : inventory.getItemByItemId(player, 54);
+            if (!cuffs) return notifs.error(player, `Предмет ${inventory.getName(54)} не найден`, header);
+            inventory.deleteItem(player, cuffs);
+            police.setCuffs(rec, cuffs);
+
+            notifs.info(rec, `${player.name} связал вас`, header);
+            notifs.success(player, `${rec.name} связан`, header);
+        } else {
+            if (rec.cuffs.itemId != 54) return notifs.error(player, `${rec.name} был обездижен с помощью ${inventory.getName(rec.cuffs.itemId)}`, header);
+            inventory.addOldItem(player, rec.cuffs, (e) => {
+                if (e) return notifs.error(player, e, header);
+            });
+
+            notifs.info(rec, `${player.name} развязал вас`, header);
+            notifs.info(player, `${rec.name} развязан`, header);
+
+            police.setCuffs(rec, null);
+            delete rec.isFollowing;
+            rec.call(`police.follow.stop`);
+        }
+    },
+    // снять/надеть мешок на голову
+    "mafia.bag": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+        var header = `Мешок`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
+        // rec = player; // for tests
+
+        if (!rec || !rec.character) return out(`Игрок не найден`);
+        var dist = player.dist(rec.position);
+        if (dist > 5) return out(`${rec.name} далеко`);
+        var character = player.character;
+        if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
+        if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, header);
+
+        if (!rec.bag) {
+            var bag = (data.bagSqlId) ? inventory.getItem(player, data.bagSqlId) : inventory.getItemByItemId(player, 55);
+            if (!bag) return out(`Предмет ${inventory.getName(55)} не найден`);
+            inventory.deleteItem(player, bag);
+            mafia.setBag(rec, bag);
+
+            notifs.info(rec, `${player.name} надел на вас мешок`, header);
+            notifs.success(player, `${rec.name} с мешком на голове`, header);
+        } else {
+            if (rec.bag.itemId != 55) return out(`${rec.name} имеет на голове ${inventory.getName(rec.bag.itemId)}`);
+            inventory.addOldItem(player, rec.bag, (e) => {
+                if (e) return out(player, e, header);
+            });
+
+            notifs.info(rec, `${player.name} снял с вас мешок`, header);
+            notifs.info(player, `${rec.name} без мешка на голове`, header);
+
+            mafia.setBag(rec, null);
+        }
+    },
+    "mafia.follow": (player, recId) => {
+        var header = `Следование`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var rec = mp.players.at(recId);
+        if (!rec || !rec.character) return out(`Гражданин не найден`);
+        if (!factions.isMafiaFaction(player.character.factionId)) return out(`Нет прав для использования`);
+        if (!rec.isFollowing) {
+            if (!rec.cuffs || rec.cuffs.itemId != 54) return out(`${rec.name} не связан`);
+            rec.isFollowing = true;
+            rec.call(`mafia.follow.start`, [player.id]);
+            notifs.success(player, `${rec.name} следует за вами`, header);
+            notifs.info(rec, `Вы следуете за ${player.name}`, header);
+        } else {
+            delete rec.isFollowing;
+            rec.call(`mafia.follow.stop`);
+            notifs.success(player, `${rec.name} не следует за вами`, header);
+            notifs.info(rec, `Вы не следуете за ${player.name}`, header);
+        }
+    },
+    "player.faction.changed": (player, oldVal) => {
+        if (!mafia.inWar(oldVal)) return;
+        player.call(`mafia.bizWar.stop`);
+    },
     "playerDeath": (player, reason, killer) => {
+        if (player.bag) mafia.setBag(player, false);
         // killer = player; // for tests
         if (!killer || !killer.character) return;
         if (!player.character) return;

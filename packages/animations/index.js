@@ -24,5 +24,8 @@ module.exports = {
     stopAnimation(player) {
         // player.stopAnimation();
         player.setVariable("anim", null);
-    }
+    },
+    has(dict, name) {
+        return list.findIndex(x => x == (dict + " " + name)) != -1;
+    },
 }

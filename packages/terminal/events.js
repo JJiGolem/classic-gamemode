@@ -3,6 +3,7 @@ let admin = require('../admin');
 module.exports = {
     "init": () => {
         terminal.commands = admin.getCommands();
+        inited(__dirname);
     },
     "characterInit.done": (player) => {
         if (terminal.haveAccess(player))

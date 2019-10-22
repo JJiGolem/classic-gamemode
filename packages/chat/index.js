@@ -3,7 +3,7 @@
 
 module.exports = {
     push(player, text) {
-        player.call('chat.message.push', [`!{#ffffff} ${text}`]);
+        player.call('chat.message.push', [`${text}`]);
     },
     broadcast(text) {
         mp.players.forEach(rec => {

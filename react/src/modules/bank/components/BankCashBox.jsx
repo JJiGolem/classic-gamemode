@@ -27,13 +27,16 @@ class BankCashBox extends Component {
     }
 
     validPop(money) {
-        const { info } = this.props;
+        const { bank } = this.props; 
 
         if (money) {
-            if (!isNaN(money) && parseInt(money > 0)) {
-                if (parseInt(money) <= info.biz[0].cashBox) {
+            if (!isNaN(money) && parseInt(money) > 0) {
+                if (parseInt(money) <= bank.biz[0].cashBox) {
                     this.setState({ errorPop: '', popMoney: '' });
                     return true;
+                } else {
+                    this.setState({ errorPop: 'Недостаточно денег в кассе' });
+                    return false;
                 }
             } else {
                 this.setState({ errorPop: 'Некорректные данные' });
@@ -49,10 +52,13 @@ class BankCashBox extends Component {
         const { bank } = this.props;
 
         if (money) {
-            if (!isNaN(money) && parseInt(money > 0)) {
+            if (!isNaN(money) && parseInt(money) > 0) {
                 if (parseInt(money) <= bank.money) {
                     this.setState({ errorPush: '', pushMoney: '' });
                     return true;
+                } else {
+                    this.setState({ errorPush: 'Недостаточно денег на счете' });
+                    return false;
                 }
             } else {
                 this.setState({ errorPush: 'Некорректные данные' });
@@ -66,40 +72,40 @@ class BankCashBox extends Component {
 
     pushMoney() {
         const { pushMoney } = this.state;
-        const { info } = this.props;
+        const { setArgs, setLoading, bank } = this.props;
 
         this.setState({ errorPop: '' });
 
         if (this.validPush(pushMoney)) {
-            setArgs({ money: parseInt(pushMoney), id: info.biz[0].id });
+            setArgs({ money: parseInt(pushMoney), id: bank.biz[0].id });
             setLoading(true);
-            mp.trigger('bank.biz.cashbox.push', info.biz[0].id, parseInt(pushMoney));
+            mp.trigger('bank.biz.cashbox.push', bank.biz[0].id, parseInt(pushMoney));
         }
     }
 
     popMoney() {
         const { popMoney } = this.state;
-        const { info } = this.props;
+        const { setArgs, setLoading, bank } = this.props;
 
         this.setState({ errorPush: '' });
 
-        if (this.validPush(popMoney)) {
-            setArgs({ money: parseInt(popMoney), id: info.biz[0].id });
+        if (this.validPop(popMoney)) {
+            setArgs({ money: parseInt(popMoney), id: bank.biz[0].id });
             setLoading(true);
-            mp.trigger('bank.biz.cashbox.pop', info.biz[0].id, parseInt(popMoney));
+            mp.trigger('bank.biz.cashbox.pop', bank.biz[0].id, parseInt(popMoney));
         }
     }
 
     getForm() {
-        const { info, bank } = this.props;
+        const { bank } = this.props;
         const { pushMoney, popMoney, errorPush, errorPop } = this.state;
 
-        if (info.biz.length > 0) {
+        if (bank.biz.length > 0) {
             return (
                 <Fragment>
                     <div style={{ fontSize: '140%' }}>
                         Состояние кассы:
-                        <span style={{ color: '#00932B' }}> { info.biz[0].cashBox }$</span>
+                        <span style={{ color: '#00932B' }}> ${ bank.biz[0].cashBox }</span>
                     </div>
                     <div className='cashbox_back-bank-react'>
                         <div style={{ display: 'inline-block', width: '35%', margin: '0 2% 0 2%' }}>
@@ -113,7 +119,7 @@ class BankCashBox extends Component {
                                     onChange={this.handleChangeInput}
                                     style={{ borderColor: errorPush && 'red' }}
                                 />
-                                <button className='button_input-bank-react' onClick={this.pushMoney}>OK</button>
+                                <button className='button_input-bank-react' style={{ width: '20%' }} onClick={this.pushMoney}>OK</button>
                             </div>
                         </div>
 
@@ -128,7 +134,7 @@ class BankCashBox extends Component {
                                     onChange={this.handleChangeInput}
                                     style={{ borderColor: errorPop && 'red' }}
                                 />
-                                <button className='button_input-bank-react' onClick={this.popMoney}>OK</button>
+                                <button className='button_input-bank-react' style={{ width: '20%' }} onClick={this.popMoney}>OK</button>
                             </div>
                         </div>
                     </div>
@@ -180,7 +186,6 @@ class BankCashBox extends Component {
 }
 
 const mapStateToProps = state => ({
-    info: state.info,
     bank: state.bank
 });
 

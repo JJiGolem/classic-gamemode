@@ -6,7 +6,7 @@ var notifs = require('../notifications');
 
 module.exports = {
     "init": () => {
-
+        inited(__dirname);
     },
     "characterInit.done": (player) => {
         if (!factions.isFibFaction(player.character.factionId)) return;
@@ -134,8 +134,8 @@ module.exports = {
         masksParams.faction = faction.id;
         glassesParams.faction = faction.id;
 
-        topParams.pockets = '[5,5,5,5,5,5,10,10]';
-        legsParams.pockets = '[5,5,5,5,5,5,10,10]';
+        topParams.pockets = '[5,5,5,5,10,5]';
+        legsParams.pockets = '[5,5,5,5,10,5]';
         hatParams.clime = '[-5,20]';
         topParams.clime = '[-5,20]';
         legsParams.clime = '[-5,20]';
@@ -317,7 +317,7 @@ module.exports = {
         var header = `Прослушка FIB`;
 
         var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
-        if (!rec) return notifs.error(player, `Гражданин не найден`, header);
+        if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         var dist = player.dist(rec.position);
         if (dist > 3) return notifs.error(player, `${rec.name} далеко`, header);
         if (!factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не агент`, header);

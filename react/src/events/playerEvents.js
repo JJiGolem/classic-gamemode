@@ -165,6 +165,13 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
+    myEventEmmiter.on('house.improvements.buy.ans', (ans) => {
+        dispatch({
+            type: 'BUY_IMPROVEMENT_HOUSE_ANS',
+            payload: ans
+        });
+    });
+
     // ------------ ТЕЛЕФОН (ДОМ) - КОНЕЦ -----------------
 
     // ------------ ТЕЛЕФОН (БИЗНЕС) -----------------
@@ -215,6 +222,13 @@ export const PlayerEvents = (dispatch, getState) => {
         dispatch({
             type: 'UPDATE_STATISTICS_BUSINESS',
             payload: { date, money }
+        });
+    });
+
+    myEventEmmiter.on('biz.cashbox.update', (money) => {
+        dispatch({
+            type: 'UPDATE_CASHBOX_BUSINESS',
+            payload: money
         });
     });
 

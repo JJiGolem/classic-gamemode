@@ -8,7 +8,7 @@ let bizesModules = new Array();
 /// biz types
 /// 0 - АЗС
 /// 1 - Супермаркет
-/// 2 - Ферма
+/// 2 - Закусочная
 /// 3 - СТО
 /// 4 - Магазин одежды
 /// 5 - Магазин оружия
@@ -20,10 +20,14 @@ let utils;
 let timer;
 let money;
 let notifications;
+let factions;
+let carrier;
 
 /// Economic constants
 let maxProductPriceMultiplier = 2.0;
 let minProductPriceMultiplier = 1.2;
+let factionPayMultiplier = 0.01;
+let dropBizMultiplier = 0.6;
 
 
 let getBizById = function(id) {
@@ -35,6 +39,16 @@ let getBizByCharId = function(characterId) {
 let getBizByPlayerPos = function(player) {
     return bizes.find(x => player.dist(new mp.Vector3(x.info.x, x.info.y, x.info.z)) <= 10);
 }
+let getDateDays = function(date) {
+    let dateNowStringArray = new Date().toLocaleDateString().split('-');
+    let dateStringArray = date.toLocaleDateString().split('-');
+    let dateNow = new Date(dateNowStringArray[0], dateNowStringArray[1], dateNowStringArray[2]);
+    date = new Date(dateStringArray[0], dateStringArray[1], dateStringArray[2]);
+    return Math.ceil(Math.abs(date.getTime() - dateNow.getTime()) / (1000 * 3600 * 24));
+};
+let getBizRent = function(biz) {
+    return biz.info.price * bizesModules[biz.info.type].rentPerDayMultiplier;
+};
 let dropBiz = function(biz, sellToGov = false) {
     if (biz == null) return;
     if (biz.info.characterId == null) return;
@@ -42,35 +56,35 @@ let dropBiz = function(biz, sellToGov = false) {
     biz.info.characterId = null;
     biz.info.characterNick = null;
     biz.info.date = null;
+    biz.info.cashBox = 0;
     biz.info.save().then(() => {
         if (money == null) return console.log("[bizes] Biz dropped " + biz.info.id + ". But player didn't getmoney");
-        money.addMoneyById(characterId, biz.info.price * 0.6, function(result) {
+        money.addMoneyById(characterId, biz.info.price * dropBizMultiplier, function(result) {
             if (result) {
                 console.log("[bizes] Biz dropped " + biz.info.id);
-                for (let j = 0; j < mp.players.length; j++) {
-                    if (mp.players.at(j).character == null) continue;
-                    if (characterId == mp.players.at(j).character.id) {
-                        mp.events.call('player.biz.changed', mp.players.at(j));
-                        if (sellToGov) {
-                            mp.players.at(j).call('biz.sell.toGov.ans', [1]);
-                        } else {
-                            notifications.warning(mp.players.at(j), "Ваш бизнес отобрали за неуплату налогов", "Внимание");
-                            mp.players.at(j).call('phone.app.remove', ["biz", biz.info.id]);
-                        }
-                        return;
+                let player = mp.players.toArray().find(x => x.character != null && characterId == x.character.id);
+                if (player != null) {
+                    mp.events.call('player.biz.changed', player);
+                    if (sellToGov) {
+                        player.call('biz.sell.toGov.ans', [1]);
+                    } else {
+                        notifications.warning(player, "Ваш бизнес отобрали за неуплату налогов", "Внимание");
+                        player.call('phone.app.remove', ["biz", biz.info.id]);
                     }
                 }
-                notifications.save(characterId, "warning", "Ваш бизнес отобрали за неуплату налогов", "Внимание");
+                else {
+                    notifications.save(characterId, "warning", "Ваш бизнес отобрали за неуплату налогов", "Внимание");
+                }
             } else {
                 console.log("[bizes] Biz dropped " + biz.info.id + ". But player didn't getmoney");
             }
-        });
+        }, sellToGov ? `Продажа бизнеса #${biz.info.id} государству` : `Слет бизнеса #${biz.info.id}`);
     });
 };
 let setTimer = function(biz) {
     if (biz == null) return;
     if (biz.info.characterId == null) return;
-    if (biz.info.date == null) return dropBiz(id);
+    if (biz.info.date == null) return dropBiz(biz);
     if (biz.info.date.getTime() - new Date().getTime() <= 10000) return dropBiz(biz);
     biz.timer != null && timer.remove(biz.timer);
     biz.timer = timer.add(async function() {
@@ -85,21 +99,35 @@ let getRandomDate = function(daysNumber) {
 let getBizInfoForApp = function(biz) {
     if (biz == null) return null;
     if (bizesModules[biz.info.type] == null) return null;
+    let minMultiplier = bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
+    let maxMultiplier = bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
     return {
         id: biz.info.id,
         name: biz.info.name,
         type: getTypeName(biz.info.type),
         cashBox: biz.info.cashBox,
         pos: [biz.info.x, biz.info.y, biz.info.z],
-        days: parseInt((biz.info.date - Date.now()) / (24 * 3600 * 1000)),
-        rent: biz.info.price * bizesModules[biz.info.type].rentPerDayMultiplier,
+        days: getDateDays(biz.info.date),
+        rent: getBizRent(biz),
         resourcesMax: biz.info.productsMaxCount,
         resources: biz.info.productsCount,
         price: biz.info.price,
         statistics: biz.info.BizStatistics,
-        order: null,
-        resourcePriceMin: bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier,
-        resourcePriceMax: bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier
+        order: { productsCount: biz.info.productsOrder, productsPrice: biz.info.productsOrderPrice },
+        resourcePriceMin: bizesModules[biz.info.type].productPrice * minMultiplier,
+        resourcePriceMax: bizesModules[biz.info.type].productPrice * maxMultiplier
+    };
+};
+let getBizInfoForBank = function(biz) {
+    if (biz == null) return null;
+    if (bizesModules[biz.info.type] == null) return null;
+    return {
+        id: biz.info.id,
+        name: biz.info.name,
+        type: getTypeName(biz.info.type),
+        cashBox: biz.info.cashBox,
+        days: getDateDays(biz.info.date),
+        rent: getBizRent(biz),
     };
 };
 let getResourceName = function(type) {
@@ -111,21 +139,38 @@ let getTypeName = function(type) {
 let bizUpdateCashBox = async function(id, money) {
     let biz = getBizById(id);
     if (biz == null) return;
-    biz.info.cashBox += money;
+    let factionMoney = 0;
+    if (biz.info.factionId != null && factions != null && money > 0) {
+        factionMoney = money * factionPayMultiplier;
+        if (factionMoney < 1) {
+            if (factionMoney * 10 >= 5) factionMoney = 1;
+            else factionMoney = 0;
+        }
+        else {
+            factionMoney = parseInt(factionMoney);
+        }
+        if (factionMoney > 0) {
+            factions.addCash(biz.info.factionId, factionMoney);
+        }
+    }
+    let bizMoney = money - factionMoney;
+    biz.info.cashBox += bizMoney;
     let currentDay = biz.info.BizStatistics.find(x => x.date.toLocaleDateString() == new Date().toLocaleDateString());
     if (currentDay == null) {
         currentDay = {
             bizId: biz.info.id,
             date: new Date(),
-            money: money
+            money: bizMoney
         }
         currentDay = await db.Models.BizStatistics.create(currentDay);
         biz.info.BizStatistics.unshift(currentDay);
     } else {
-        currentDay.money += money;
+        currentDay.money += bizMoney;
         currentDay.save();
     }
-    biz.info.save();
+    await biz.info.save();
+    let player = mp.players.toArray().find(player => player && player.character && player.character.id == biz.info.characterId);
+    player != null && player.call("biz.cashbox.update", [biz.info.cashBox]);
 };
 let addProducts = async function(id, count) {
     let biz = getBizById(id);
@@ -141,19 +186,25 @@ let removeProducts = async function(id, count) {
     if (biz.info.productsCount < count) return false;
     biz.info.productsCount -= count;
     await biz.info.save();
+    if (biz.info.characterId == null && biz.info.productsCount < biz.info.productsMaxCount / 2) {
+        let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
+        let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
+        let countOrder = biz.info.productsMaxCount -  biz.info.productsCount;
+        if (await createOrder(biz, countOrder, parseInt(((max + min) / 2) * countOrder)) != 1) console.log("[BIZES] Auto creating order error");
+    }
     return true;
 };
-let createOrder = async function(id, count, price) {
-    let biz = getBizById(id);
-    if (biz == null) return false;
-    if (biz.info.productsCount + count > biz.info.productsMaxCount) return false;
+let createOrder = async function(biz, count, price) {
+    if (biz == null) return 0;
+    if (biz.info.productsCount + count > biz.info.productsMaxCount) return 3;
     let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
     let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
-    if (price < min || price > max) return false;
+    if (price < min || price > max) return 0;
     biz.info.productsOrder = count;
-    biz.info.productsOrderPrice = price;
+    biz.info.productsOrderPrice = parseInt(price * count);
+    carrier != null && carrier.addBizOrder(biz);
     await biz.info.save();
-    return true;
+    return 1;
 }
 let destroyOrder = async function(id) {
     let biz = getBizById(id);
@@ -161,48 +212,77 @@ let destroyOrder = async function(id) {
     if (!biz.isOrderTaken) return false;
     biz.info.productsOrder = null;
     biz.info.productsOrderPrice = null;
+    carrier != null && carrier.removeBizOrder(biz.info.id);
     await biz.info.save();
     return true;
 }
 let getOrder = function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
-    if (biz.isOrderTaken) return false;
+    if (biz.isOrderTaken) return true;
     biz.isOrderTaken = true;
+    let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
+    player != null && player.call("biz.order.take", [true]);
     return true;
 }
 let dropOrder = function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
-    if (!biz.isOrderTaken) return false;
+    if (!biz.isOrderTaken) return true;
     biz.isOrderTaken = false;
+    let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
+    player != null && player.call("biz.order.take", [false]);
     return true;
 }
-let readyOrder = async function(id) {
+let readyOrder = async function(id, productsNumber) {
     let biz = getBizById(id);
-    if (biz == null) return false;
-    if (!biz.isOrderTaken) return false;
-    biz.info.productsCount += biz.info.productsOrder;
-    biz.info.productsOrder = null;
-    biz.info.productsOrderPrice = null;
-    if (biz.info.productsCount > biz.info.productsMaxCount) biz.info.productsCount = biz.info.productsMaxCount;
+    if (biz == null) return null;
+    if (!biz.isOrderTaken) return null;
+    let addedProducts = 0;
+    if (productsNumber > biz.info.productsOrder) productsNumber = biz.info.productsOrder;
+    if (biz.info.productsCount + productsNumber > biz.info.productsMaxCount) {
+        addedProducts = biz.info.productsMaxCount - biz.info.productsCount;
+        biz.info.productsCount = biz.info.productsMaxCount;
+    }
+    else {
+        addedProducts = productsNumber;
+        biz.info.productsCount += productsNumber;
+    }
+    let pay = null;
+    if (productsNumber < biz.info.productsOrder) {
+        pay = biz.info.productsOrderPrice;
+        biz.info.productsOrderPrice = parseInt((1 - productsNumber/biz.info.productsOrder) * biz.info.productsOrderPrice);
+        pay -= biz.info.productsOrderPrice;
+        biz.info.productsOrder = biz.info.productsOrder - productsNumber;
+    }
+    else {
+        pay = biz.info.productsOrderPrice;
+        biz.info.productsOrder = null;
+        biz.info.productsOrderPrice = null;
+    }
+    
     await biz.info.save();
-    return true;
+    let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
+    player != null && player.call("biz.order.complete", [addedProducts]);
+    return {productsOrder: biz.info.productsOrder, productsOrderPrice: biz.info.productsOrderPrice, pay: pay};
 }
 
 module.exports = {
     maxProductPriceMultiplier: maxProductPriceMultiplier,
     minProductPriceMultiplier: minProductPriceMultiplier,
+    factionPayMultiplier: factionPayMultiplier,
+    dropBizMultiplier: dropBizMultiplier,
 
     async init() {
         utils = call("utils");
         timer = call("timer");
         money = call("money");
         notifications = call('notifications');
+        factions = call("factions");
+        carrier = call("carrier");
 
         for (let file of fs.readdirSync(path.dirname(__dirname))) {
-            if (file != 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname) + "/" + file + '/index.js'))
-            {
+            if (file != 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname) + "/" + file + '/index.js')) {
                 let objects = require('../' + file + '/index');
                 if (objects.business != null && objects.business.type != null && objects.business.name != null && objects.business.productName != null && objects.rentPerDayMultiplier != null && objects.productPrice != null) {
                     bizesModules[objects.business.type] = call(file);
@@ -221,6 +301,7 @@ module.exports = {
             setTimer(biz);
             loadedCount++;
         }
+        mp.events.call("biz.done");
         console.log("[BIZES] " + loadedCount + " bizes loaded");
     },
     async createBiz(name, price, type, position) {
@@ -277,6 +358,7 @@ module.exports = {
     sellBiz(biz, cost, seller, buyer, callback) {
         biz.info.characterId = buyer.character.id;
         biz.info.characterNick = buyer.character.name;
+        biz.info.cashBox = 0;
         biz.info.date = getRandomDate(1);
         setTimer(biz);
         biz.info.save().then(() => {
@@ -291,7 +373,7 @@ module.exports = {
                 } else {
                     callback(false);
                 }
-            });
+            }, `Покупка бизнеса #${biz.info.id} у персонажа #${seller.character.id}`, `Продажа бизнеса #${biz.info.id} персонажу #${buyer.character.id}`);
         });
     },
     getBizById: getBizById,
@@ -301,6 +383,9 @@ module.exports = {
     getResourceName: getResourceName,
     getRandomDate: getRandomDate,
     getBizInfoForApp: getBizInfoForApp,
+    getBizInfoForBank: getBizInfoForBank,
+    getDateDays: getDateDays,
+    getBizRent: getBizRent,
     getBizesFactionIds() {
         return bizes.map((elem) => elem.info.factionId);
     },
@@ -344,6 +429,15 @@ module.exports = {
         });
         return nearBiz;
     },
+    // получить бизнесы с заказами
+    getOrderBizes() {
+        var list = [];
+        bizes.forEach(biz => {
+            if (!biz.info.productsOrder || !biz.info.productsOrderPrice) return;
+            list.push(biz);
+        });
+        return list;
+    },
     setTimer: setTimer,
     /// Функция пополняющая кассу биза
     /// После каждой покупки передавать в нее стоимость покупки и id бизнеса
@@ -376,6 +470,7 @@ module.exports = {
         bizParameters.params.forEach(param => {
             bizesModules[biz.info.type].setBizParam(bizParameters.bizId, param.key, param.value);
         });
+        mp.events.call("biz.finance.save.done", biz.info.id, biz.info.type);
         return true;
     },
 
@@ -387,4 +482,21 @@ module.exports = {
 
     bizesModules: bizesModules,
     dropBiz: dropBiz,
+
+    async fillAllBizesProducts() {
+        for (let index = 0; index < bizes.length; index++) {
+            let biz = bizes[index];
+            biz.info.productsCount = biz.info.productsMaxCount;
+            await biz.info.save();
+
+        }
+    },
+    async setBizesTypeMaxProducts(type, amount) {
+        for (let index = 0; index < bizes.length; index++) {
+            let biz = bizes[index];
+            if (biz.info.type != type) continue;
+            biz.info.productsMaxCount = amount;
+            await biz.info.save();
+        }
+    },
 }

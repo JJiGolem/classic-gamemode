@@ -6,8 +6,15 @@ var money = require('../money');
 var notifs = require('../notifications');
 
 module.exports = {
-    "init": () => {},
-    "characterInit.done": (player) => {},
+    "init": () => {
+        army.init();
+        inited(__dirname);
+    },
+    "characterInit.done": (player) => {
+        if (!factions.isArmyFaction(player.character.factionId)) return;
+        // player.call(`mapCase.init`, [player.name, player.character.factionId]);
+        mp.events.call(`mapCase.army.init`, player);
+    },
     "army.storage.clothes.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Army`);
         if (!factions.isArmyFaction(player.character.factionId)) return notifs.error(player, `Вы не служите`, `Склад Army`);
@@ -121,8 +128,8 @@ module.exports = {
         masksParams.faction = faction.id;
         glassesParams.faction = faction.id;
 
-        topParams.pockets = '[5,5,5,5,5,5,10,10]';
-        legsParams.pockets = '[5,5,5,5,5,5,10,10]';
+        topParams.pockets = '[5,5,5,5,10,5]';
+        legsParams.pockets = '[5,5,5,5,10,5]';
         hatParams.clime = '[-5,20]';
         topParams.clime = '[-5,20]';
         legsParams.clime = '[-5,20]';
@@ -293,5 +300,30 @@ module.exports = {
             notifs.success(player, `Вам выданы ${inventory.getInventoryItem(itemIds[index]).name} (${ammo} ед.)`, header);
             factions.setAmmo(faction, faction.ammo - army.ammoAmmo * ammo);
         });
+    },
+    "army.capture.start": (player) => {
+        army.startCapture(player);
+    },
+    "player.faction.changed": (player, oldVal) => {
+        if (!factions.isArmyFaction(oldVal)) return;
+        if (!army.inWar(player)) return;
+
+        player.call(`army.capture.stop`);
+        delete player.armyTeamId;
+    },
+    "playerDeath": (player, reason, killer) => {
+        // killer = player; // for tests
+        if (!killer || !killer.character) return;
+        if (!player.character) return;
+        if (!player.character.factionId) return;
+        if (!factions.isArmyFaction(player.character.factionId)) return;
+        if (!army.inWar(player)) return;
+        if (player.getVariable("knocked")) return;
+        if (!killer.character.factionId) return;
+        if (!factions.isArmyFaction(killer.character.factionId)) return;
+        if (!army.inWar(killer)) return;
+        if (killer.armyTeamId == player.armyTeamId) return;
+
+        army.giveScore(killer, player, reason);
     },
 }

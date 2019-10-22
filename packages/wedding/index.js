@@ -3,6 +3,8 @@
 module.exports = {
     // Место заключения брака
     weddingPos: new mp.Vector3(-1680.2960205078125, -291.5504455566406, 51.88338088989258 - 1),
+    // Цена брака
+    weddingPrice: 500,
 
     init() {
         this.createWeddingMarker();
@@ -36,6 +38,36 @@ module.exports = {
         }
         mp.events.call("spouseInit.done", player);
     },
+    async getSpouseName(player) {
+        if (typeof player == 'number') {
+            var spouse = await db.Models.Spouse.findOne({
+                where: {
+                    [Op.or]: {
+                        characterA: player,
+                        characterB: player
+                    }
+                },
+                include: [{
+                        as: "characterOne",
+                        model: db.Models.Character,
+                        attributes: ['name', 'gender']
+                    },
+                    {
+                        as: "characterTwo",
+                        model: db.Models.Character,
+                        attributes: ['name', 'gender']
+                    }
+                ],
+            });
+
+            if (!spouse) return null;
+            if (spouse.characterA == player) return spouse.characterTwo.name;
+            else return spouse.characterOne.name;
+        } else {
+            if (!player.spouse) return null;
+            return player.spouse.character.name;
+        }
+    },
     createWeddingMarker() {
         var pos = this.weddingPos;
 
@@ -50,6 +82,7 @@ module.exports = {
         });
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
+            if (player.vehicle) return;
             player.call(`selectMenu.show`, [`wedding`]);
             player.insideWedding = true;
         };

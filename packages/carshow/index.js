@@ -172,7 +172,6 @@ module.exports = {
                             var carPlate = vehicles.generateVehiclePlate();
                             let parking = parkings.getClosestParkingId(player);
                             let parkingInfo = parkings.getParkingInfoById(parking);
-                            console.log(parkingInfo);
 
                             let now = new Date();
 
@@ -248,6 +247,7 @@ module.exports = {
                                 player.call('carshow.car.buy.ans', [6, carToBuy]);
                             }
 
+                            inventory.fullDeleteItemsByParams(33, 'vehId', veh.db.id);
                             // выдача ключей в инвентарь
                             inventory.addItem(player, 33, {
                                 owner: player.character.id,
@@ -268,7 +268,7 @@ module.exports = {
                         player.call('carshow.car.buy.ans', [3]);
 
                     }
-                });
+                }, `Покупка в автосалоне т/с ${carToBuy.vehiclePropertyModel}`);
 
             }
         }

@@ -1,5 +1,6 @@
 "use strict";
-let vehicles = call("vehicles");
+let vehicles;
+let jobs;
 
 let busStation = {
     x: 435.4512634277344,
@@ -23,6 +24,8 @@ const RESPAWN_TIMEOUT = 30000;
 
 module.exports = {
     init() {
+        vehicles = call("vehicles");
+        jobs = call("jobs");
         this.createBusStation();
         this.loadBusStopsFromDB();
         this.loadBusRoutesFromDB();
@@ -82,8 +85,8 @@ module.exports = {
         return RENT_PRICE;
     },
     getRoutesLevelByModel(model) {
-        if (model == 'rentalbus') return 0;
-        if (model == 'coach') return 1;
+        if (model == 'rentalbus' || model == 'coach') return 0;
+        //if (model == 'coach') return 1;
         return null;
     },
     getAvailiableRoutes(player) {
@@ -107,5 +110,9 @@ module.exports = {
     },
     getRespawnTimeout() {
         return RESPAWN_TIMEOUT;
+    },
+    calculateBonus(player) {
+        let skill = jobs.getJobSkill(player, 3).exp;
+        return +(skill / 100).toFixed(2);
     }
 }

@@ -61,7 +61,7 @@ class BankPhone extends Component {
         return (
             <Fragment>
                 <div className='page_title-bank-react'>
-                    Ппоплонение счета телефона
+                    Пополонение счета телефона
                 </div>
 
                 <div className='push_block-bank-react'>
@@ -76,7 +76,7 @@ class BankPhone extends Component {
                                         style={{ borderColor: error && 'red' }}
                                         onChange={this.handleChange}
                                     />
-                                    <div className='button_input-bank-react' onClick={this.pushPhoneMoney}>OK</div>
+                                    <input className='button_input-bank-react' value='ОК' onClick={this.pushPhoneMoney} type='submit'/>
                                 </div>
 
                                 <div style={{ fontSize: '130%' }}>Текущий баланс:

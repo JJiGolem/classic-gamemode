@@ -187,14 +187,15 @@ module.exports = {
 
         mp.vehicles.forEach((veh) => {
             if (veh.key == 'private' && veh.owner == id) {
+                inventory.fullDeleteItemsByParams(33, 'vehId', veh.db.id);
                 if (player) {
-                    console.log(veh);
+                    // console.log(veh);
                     clearInterval(veh.fuelTimer);
                     veh.destroy();
                     vehicles.removeVehicleFromPlayerVehicleList(player, veh.sqlId);
                     vehicles.removeVehicleFromCarPlace(player, veh);
 
-                    inventory.deleteByParams(player, 33, 'vehId', veh.db.id);
+                    // inventory.deleteByParams(player, 33, 'vehId', veh.db.id);
                 } else inventory.deleteByParams(id, 33, 'vehId', veh.db.id);
             }
         })
@@ -208,7 +209,7 @@ module.exports = {
             } else {
                 console.log(`Ошибка начисления денег за авто, слетевшее в гос для игрока с ID ${id}`);
             }
-        });
+        }, `Слет автомобилей в гос после слета дома`);
     },
     getPriceConfig() {
         return PRICE_CONFIG;

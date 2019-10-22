@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {addAppDisplay, closeAppDisplay, setAppDisplay} from "../../actions/action.apps";
-import {setSellHouse, setSellInfoHouse, setSellStatusHouse} from "../../actions/action.info";
+import {disableHomePhone, setSellInfoHouse, setSellStatusHouse} from "../../actions/action.info";
 import ConfirmSell from "./ConfirmSell";
 import HeaderHouseApp from "./HeaderHouseApp";
 
@@ -31,11 +31,11 @@ class Sell extends Component {
     }
 
     sellHouse() {
-        const { setSell, setSellStatus, setSellInfo, addApp, house } = this.props;
+        const { disableHome, setSellStatus, setSellInfo, addApp, house } = this.props;
         const { userId, sellPrice } = this.state;
 
         if (this.validateForm()) {
-            setSell(true);
+            disableHome(true);
             addApp({name: 'ConfirmSell', form: <ConfirmSell />});
 
             // eslint-disable-next-line no-undef
@@ -176,7 +176,7 @@ const mapDispatchToProps = dispatch => ({
     closeApp: () => dispatch(closeAppDisplay()),
     addApp: app => dispatch(addAppDisplay(app)),
     setApp: app => dispatch(setAppDisplay(app)),
-    setSell: flag => dispatch(setSellHouse(flag)),
+    disableHome: state => dispatch(disableHomePhone(state)),
     setSellStatus: status => dispatch(setSellStatusHouse(status)),
     setSellInfo: info => dispatch(setSellInfoHouse(info)),
 });

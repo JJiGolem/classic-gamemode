@@ -7,6 +7,7 @@ let notifs = call('notifications');
 module.exports = {
     "init": () => {
         bands.init();
+        inited(__dirname);
     },
     "characterInit.done": (player) => {
         player.call(`bands.bandZones.init`, [bands.convertToClientBandZones()]);
@@ -100,9 +101,16 @@ module.exports = {
 
             faction.cash += sum;
             faction.save();
-        });
+        }, `Пополнение общака ${faction.name}`);
 
         notifs.success(player, `Пополнено на $${sum}`, header);
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(rec, `${player.name} пополнил на $${sum}`, header);
+        });
     },
     "bands.storage.cash.take": (player, sum) => {
         sum = Math.clamp(sum, 0, 1000000);
@@ -112,15 +120,23 @@ module.exports = {
         var faction = factions.getFaction(character.factionId);
         var header = `Общак ${faction.name}`;
 
+        if (!factions.isLeader(player)) return notifs.error(player, `Нет доступа`, header);
         if (faction.cash < sum) return notifs.error(player, `Общак не имеет $${sum}`, header);
         money.addCash(player, sum, (res) => {
             if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
 
             faction.cash -= sum;
             faction.save();
-        });
+        }, `Снятие из общака ${faction.name}`);
 
         notifs.success(player, `Снято $${sum}`, header);
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(rec, `${player.name} снял $${sum}`, header);
+        });
     },
     "bands.drugsStash.drugs.buy": (player, data) => {
         data = JSON.parse(data);
@@ -147,13 +163,17 @@ module.exports = {
         };
         money.removeCash(player, price, (res) => {
             if (!res) return notifs.error(player, `Ошибка списания наличных`, header);
-        });
+        }, `Покупка нарко в притоне`);
         inventory.addItem(player, itemIds[data.index], params, (e) => {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вы приобрели ${inventory.getInventoryItem(itemIds[data.index]).name} (${data.count} г.)`, header);
             player.call(`prompt.show`, [`Влияние вашей банды снизило цену на ${parseInt(power * 100)}%`]);
         });
+    },
+    "player.faction.changed": (player, oldVal) => {
+        if (!bands.inWar(oldVal)) return;
+        player.call(`bands.capture.stop`);
     },
     "playerDeath": (player, reason, killer) => {
         // killer = player; // for tests
@@ -168,17 +188,23 @@ module.exports = {
         if (killer.character.factionId == player.character.factionId) return;
         if (!bands.inWar(killer.character.factionId)) return;
 
+        if (!bands.isInBandZones(player.position)) return;
+        if (!bands.isInBandZones(killer.position)) return;
+        /*
+        // Засчитывать килл только в зоне капта
         var zone = bands.getZoneByPos(player.position);
         if (!zone) return;
         if (!bands.wars[zone.id]) return;
 
         var killerZone = bands.getZoneByPos(killer.position);
         if (!killerZone) return;
-        if (zone.id != killerZone.id) return;
+        if (zone.id != killerZone.id) return;*/
+
+        var zoneId = Object.keys(bands.wars)[0];
 
         player.lastWarDeathTime = Date.now();
 
         bands.checkReveangeKill(killer);
-        bands.giveScore(killer, player, reason, zone);
+        bands.giveScore(killer, player, reason, zoneId);
     },
 };

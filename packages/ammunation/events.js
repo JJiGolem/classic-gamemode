@@ -5,12 +5,12 @@ let money = call('money');
 module.exports = {
     "init": () => {
         ammunation.init();
+        inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;
         if (shape.isAmmunation) {
             let id = shape.ammunationId;
-            player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} зашел в колшейп Ammo ${shape.ammunationId}`]);
             let data = ammunation.getRawShopData(id);
             let weaponsConfig = ammunation.getWeaponsConfig();
             player.call('ammunation.enter', [data, weaponsConfig, ammunation.ammoProducts]);
@@ -20,7 +20,6 @@ module.exports = {
     "playerExitColshape": (player, shape) => {
         if (!player.character) return;
         if (shape.isAmmunation) {
-            player.call('chat.message.push', [`!{#ffffff}[debug]${player.name} вышел с колшейпа Ammo ${shape.ammunationId}`]);
             player.call('ammunation.exit');
         }
     },
@@ -28,6 +27,8 @@ module.exports = {
         let ammunationId = player.currentAmmunationId;
         if (ammunationId == null) return;
 
+        if (!player.character) return;
+        if (!player.character.gunLicenseDate) return player.call('ammunation.weapon.buy.ans', [4]);
         let weaponData = ammunation.weaponsConfig[weaponId];
 
         let price = weaponData.products * ammunation.productPrice * ammunation.getPriceMultiplier(ammunationId);
@@ -52,12 +53,16 @@ module.exports = {
                 } else {
                     player.call('ammunation.weapon.buy.ans', [4]);
                 }
-            });
+            }, `Покупка оружия ${weaponData.name}`);
         });
     },
     "ammunation.ammo.buy": (player, values) => {
         let ammunationId = player.currentAmmunationId;
         if (ammunationId == null) return;
+
+        if (!player.character) return;
+        if (!player.character.gunLicenseDate) return player.call('ammunation.weapon.buy.ans', [4]);
+        
         values = JSON.parse(values);
         let ammoIndex = values[0];
         let ammoCount = values[1];
@@ -84,7 +89,7 @@ module.exports = {
                 } else {
                     player.call('ammunation.ammo.buy.ans', [4]);
                 }
-            });
+            }, `Покупка боеприпасов с itemId #${itemIds[ammoIndex]} (${ammoCount} шт.)`);
         });
     }
 }

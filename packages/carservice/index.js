@@ -155,5 +155,9 @@ module.exports = {
         let service = dbCarServices.find(x => x.id == id);
         let bizId = service.bizId;
         bizes.bizUpdateCashBox(bizId, money);
+    },
+    calculateBonus(player) {
+        let skill = jobs.getJobSkill(player, 3).exp;
+        return +(skill / 500).toFixed(2);
     }
 }

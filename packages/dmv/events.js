@@ -4,6 +4,7 @@ let money = call('money');
 module.exports = {
     "init": () => {
         dmv.init();
+        inited(__dirname);
     },
     "dmv.license.buy": (player, id) => {
         let price;
@@ -53,7 +54,7 @@ module.exports = {
             } else {
                 player.call('dmv.license.buy.ans', [3]);
             }
-        });
+        }, `Покупка лицензии ${lic}`);
 
     }
 }

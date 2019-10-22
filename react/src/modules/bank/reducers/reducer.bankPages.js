@@ -22,6 +22,12 @@ export default function bankPages(state = initialState, action) {
             }
 
             return newState;
+
+        case 'CLOSE_BANK':
+            return [];
+
+        case 'SHOW_BANK':
+            return [ <BankMenu /> ];
     }
 
     return state;

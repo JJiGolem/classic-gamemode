@@ -43,7 +43,10 @@ module.exports = {
                     rotation: interiors[i].rotation,
                     exitX: interiors[i].exitX,  
                     exitY: interiors[i].exitY,
-                    exitZ: interiors[i].exitZ
+                    exitZ: interiors[i].exitZ,
+                    hX: 0,
+                    hY: 0,
+                    hZ: 0
                 }, {});
             }
             console.log("[PARSE] interiors loaded");

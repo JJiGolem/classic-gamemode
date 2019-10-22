@@ -3,6 +3,7 @@ let money = call('money');
 module.exports = {
     "init": () => {
         tuning.init();
+        inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
         if (shape.isCustoms) {
@@ -13,10 +14,10 @@ module.exports = {
             if (!player.vehicle.tuning || player.vehicle.properties.vehType != 0) return player.call('prompt.show', ['Этот транспорт нельзя модифицировать']);
             let occupants = player.vehicle.getOccupants();
             if (occupants.length > 1) return player.call('prompt.show', ['Нельзя тюнинговать транспорт с пассажирами']);
-            
+
             player.call('tuning.fadeOut');
             let customs = tuning.getCustomsDataById(shape.customsId);
-            player.vehicle.dimension = player.id + 1;
+            player.vehicle.dimension = player.id + 10000;
             player.vehicle.position = new mp.Vector3(customs.tuneX, customs.tuneY, customs.tuneZ);
             player.call('vehicles.heading.set', [customs.tuneH])
             let primary = player.vehicle.color1;
@@ -29,6 +30,15 @@ module.exports = {
             player.call('vehicles.engine.toggle', [false]);
             player.vehicle.setVariable("engine", false);
             player.vehicle.isBeingTuned = true;
+
+            // TODO: from Carter: test hotfix with vehicle dimension
+            mp.players.forEach(rec => {
+                if (!rec.character) return;
+                if (rec.id == player.id) return;
+                if (rec.dimension != player.vehicle.dimension) return;
+
+                rec.dimension = 0;
+            });
         }
     },
     "tuning.end": (player, id) => {
@@ -61,7 +71,7 @@ module.exports = {
             } else {
                 player.call('tuning.colors.set.ans', [4]);
             }
-        });
+        }, `Смена цвета т/с ${vehicle.properties.name} в LSC (#${primary} | #${secondary})`);
     },
     "tuning.buy": (player, type, index) => {
         let vehicle = player.vehicle;
@@ -80,7 +90,7 @@ module.exports = {
             } else {
                 player.call('tuning.buy.ans', [4]);
             }
-        });
+        }, `Покупка тюнинга т/с ${vehicle.properties.name} в LSC (type #${type} | index #${index})`);
 
     },
     "tuning.repair": (player) => {
@@ -97,6 +107,6 @@ module.exports = {
             } else {
                 player.call('tuning.repair.ans', [4]);
             }
-        });
+        }, `Ремонт т/с ${vehicle.properties.name} в LSC`);
     }
 }

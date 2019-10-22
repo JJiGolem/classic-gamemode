@@ -7,6 +7,8 @@ module.exports = {
         /// Список всех команд на сервере
         admin.init();
         commands = admin.getCommands();
+        
+        inited(__dirname);
     },
     /// обработка админ команд
     "admin.command.handle": (player, command, args) => {
@@ -17,10 +19,20 @@ module.exports = {
         // TODO: проверка на access
         if (player.character.admin >= cmd.access) {
             if (cmd.args) {
-                let requiredArgs = cmd.args.split('] ').length;
-
-                if (args.length < requiredArgs) {
+                let requiredArgs;
+                if (admin.isTerminalCommand(cmd.args)) {
+                    requiredArgs = cmd.args.split(' ');
+                } else {
+                    requiredArgs = cmd.args.split('] ');
+                }
+                if (args.length < requiredArgs.length) {
                     return player.call('chat.message.push', [`!{#ffffff} Используйте: ${command} ${cmd.args}`]);
+                }
+                for (let i = 0; i < requiredArgs.length; i++) {
+                    let argType = requiredArgs[i].split(":")[1];
+                    if (!argType) continue;
+                    if (!admin.isValidArg(argType, args[i])) return player.call('chat.message.push', [`Неверное значение "${args[i]}" для параметра ${requiredArgs[i]}`])
+                    else args[i] = admin.toValidArg(argType, args[i]);
                 }
             }
 
@@ -139,8 +151,14 @@ module.exports = {
     // Поступила жалоба от игрока
     "admin.report": (player, message) => {
         var media = player.character.Promocode.media;
-        var color = (!media)? "#ffe838" : "#ff3ec8";
+        var color = (!media) ? "#ffe838" : "#ff3ec8";
         player.call('chat.message.push', [`!{#87c924}Ваш репорт:!{${color}} ${message}`]);
         mp.events.call("admin.notify.all", `!{#87c924}${player.name}[${player.id}]:!{${color}} ${message}`);
+    },
+    "characterInit.done": (player) => {
+        let level = player.character.admin;
+        if (level > 0) {
+           player.call('admin.set', [level]);
+        }
     },
 }

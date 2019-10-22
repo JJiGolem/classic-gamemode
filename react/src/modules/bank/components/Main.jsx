@@ -1,8 +1,9 @@
+/* eslint-disable no-undef */
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 
 import '../styles/bank.css';
-import {loadBankInfo, showBank} from "../actions/action.bank";
+import {loadBankInfo, closeBank} from "../actions/action.bank";
 import BankMenu from "./BankMenu";
 import AnsOperationBank from "./AnsOperationBank";
 
@@ -14,34 +15,40 @@ class Main extends Component {
         this.getInfoPanel = this.getInfoPanel.bind(this);
     }
 
-    componentWillMount() {
-        const { loadInfo } = this.props;
-
-        let info = {
-            cash: 150471,
-            money: 2300,
-            number: 23,
-            phoneMoney: null,
-            name: 'Dun Hill',
-            /*houses: [
-                {
-                    name: 228,
-                    class: 'Люкс',
-                    rent: 350,
-                    days: 4
-                }
-            ],
-            biz: [],*/
-        };
-
-        loadInfo(info);
-    }
+    // componentWillMount() {
+    //     this.props.loadInfo({
+    //         number: '1223',
+    //         cash: 223123,
+    //         money: 400,
+    //         name: 'Immanuel Swift',
+    //         houses: [
+    //             {
+    //                 name: 25,
+    //                 class: 'Люкс',
+    //                 rent: 290,
+    //                 days: 13
+    //             }
+    //         ], // если нет, то []
+    //         biz: [
+    //             {
+    //                 id: 3,
+    //                 name: `"У дома твоей мамы в деревне"`,
+    //                 type: 'Оружейный магазин',
+    //                 rent: 500,
+    //                 days: 30,
+    //                 cashBox: 448448
+    //             }
+    //         ], // если нет, то []
+    //         phoneMoney: 21 // если нет, то null
+    //     });
+    // }
 
     exitBank() {
-        const { showBank, bank } = this.props;
+        const { closeBank, bank } = this.props;
 
         if (!bank.isLoading) {
-            showBank(false);
+            closeBank();
+            mp.trigger('bank.close');
         }
     }
 
@@ -78,7 +85,7 @@ class Main extends Component {
                     <div className='info_panel_field-bank-react'>
                         ${ bank.money.toLocaleString('ru-RU') }
                         <div>
-                            На счету
+                            На счете
                             <svg xmlns="http://www.w3.org/2000/svg" width="15%" height="15%" viewBox="0 0 25.524 17.016">
                                 <g id="Group_46" data-name="Group 46" transform="translate(0 -85.333)">
                                     <path id="Path_55" data-name="Path 55" d="M365.326,277.333h-1.063a1.6,1.6,0,0,0-1.6,1.6v1.063a1.6,1.6,0,0,0,1.6,1.6h1.063a1.6,1.6,0,0,0,1.6-1.6v-1.063A1.6,1.6,0,0,0,365.326,277.333Zm.532,2.659a.532.532,0,0,1-.532.532h-1.063a.532.532,0,0,1-.532-.532v-1.063a.532.532,0,0,1,.532-.532h1.063a.532.532,0,0,1,.532.532Z" transform="translate(-344.587 -182.429)" fill="#fff"/>
@@ -147,7 +154,7 @@ class Main extends Component {
         return (
             <div className='main-form-bank'>
                 { Object.keys(bank).length > 1 ? this.getForm() : this.getLoader() }
-                { bank.answer !== null && <AnsOperationBank /> }
+                { Object.keys(bank).length > 1 && bank.answer != null && <AnsOperationBank /> }
             </div>
         );
     }
@@ -160,7 +167,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     loadInfo: info => dispatch(loadBankInfo(info)),
-    showBank: flag => dispatch(showBank(flag))
+    closeBank: () => dispatch(closeBank())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

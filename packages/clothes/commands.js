@@ -16,7 +16,7 @@ module.exports = {
                 text += Object.values(el.dataValues).join(" | ") + "<br/>";
             });
 
-            out.log(text, player);
+            out.log(text.replace(/(["'])/g, "\\$1"), player);
         }
     },
     "/clname": {
@@ -36,6 +36,7 @@ module.exports = {
             el.name = name;
             el.save();
             out.info(`${player.name} изменил название одежды типа ${type} #${el.id} (${el.name})`);
+            clothes.updateClientList();
         }
     },
     "/clvar": {
@@ -52,6 +53,7 @@ module.exports = {
             el.save();
 
             out.info(`${player.name} изменил variation одежды типа ${args[0]} #${el.id} (${el.variation})`);
+            clothes.updateClientList();
         }
     },
     "/clprice": {
@@ -68,6 +70,7 @@ module.exports = {
             el.save();
 
             out.info(`${player.name} изменил цену на одежду типа ${args[0]} #${args[1]} ($${el.price})`);
+            clothes.updateClientList();
         }
     },
     "/clclass": {
@@ -84,6 +87,7 @@ module.exports = {
             el.save();
 
             out.info(`${player.name} изменил класс одежды типа ${args[0]} #${args[1]} (${el.class})`);
+            clothes.updateClientList();
         }
     },
     "/claddtext": {
@@ -109,6 +113,7 @@ module.exports = {
             el.save();
 
             out.info(`${player.name} добавил текстуру одежды типа ${args[0]} #${args[1]} (${args[2]})`);
+            clothes.updateClientList();
         }
     },
     "/cldeltext": {
@@ -132,6 +137,7 @@ module.exports = {
             el.save();
 
             out.info(`${player.name} удалил текстуру одежды типа ${args[0]} #${args[1]} (${args[2]})`);
+            clothes.updateClientList();
         }
     },
     "/cltorso": {
@@ -146,6 +152,7 @@ module.exports = {
             el.save();
 
             out.info(`${player.name} изменил торс одежды типа tops #${args[0]} (${el.torso})`);
+            clothes.updateClientList();
         }
     },
     "/clundershirt": {
@@ -160,6 +167,7 @@ module.exports = {
             el.save();
 
             out.info(`${player.name} изменил undershirt одежды типа tops #${args[0]} (${el.undershirt})`);
+            clothes.updateClientList();
         }
     },
     "/claddutext": {
@@ -183,6 +191,7 @@ module.exports = {
             el.save();
 
             out.info(`${player.name} добавил текстуру undershirt одежды типа tops #${args[0]} (${args[1]})`);
+            clothes.updateClientList();
         }
     },
     "/cldelutext": {
@@ -204,6 +213,7 @@ module.exports = {
             el.save();
 
             out.info(`${player.name} удалил текстуру undershirt одежды типа tops #${args[0]} (${args[1]})`);
+            clothes.updateClientList();
         }
     },
     "/clpockets": {
@@ -254,4 +264,13 @@ module.exports = {
             out.info(`${player.name} изменил климат одежды типа ${type} #${el.id} (${el.clime})`);
         }
     },
+    '/clupdatelist': {
+        args: '',
+        description: 'Обновить список одежды для клиентов',
+        access: 6,
+        handler: (player, args, out) => {
+            clothes.updateClientList();
+            out.info('Список одежды обновлен', player);
+        }
+    }
 }
