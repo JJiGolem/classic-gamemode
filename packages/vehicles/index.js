@@ -134,11 +134,7 @@ module.exports = {
         return vehicle;
     },
     getDriver(vehicle) {
-        let driver = vehicle.getOccupants()[0];
-        if (driver.seat != -1) {
-            return null
-        }
-        return driver;
+        return this.getOccupants(vehicle).find(x => x.seat == -1);
     },
     respawnVehicle(veh) {
         if (!mp.vehicles.exists(veh)) return;
@@ -591,8 +587,15 @@ module.exports = {
     },
     // Получить всех игроков в авто
     getOccupants(vehicle) {
-        // TODO: Обойти баги рейджа через проверку на player.vehicle в радиусе авто
-        return vehicle.getOccupants();
+        var occupants = vehicle.getOccupants();
+        mp.players.forEachInRange(vehicle.position, 10, rec => {
+            if (!rec.vehicle) return;
+            if (rec.vehicle.id != vehicle.id) return;
+            if (occupants.find(x => x.id == rec.id)) return;
+            occupants.push(rec);
+        });
+        // Обходим баги рейджа через проверку на player.vehicle в радиусе авто
+        return occupants;
     },
     // Убито ли авто
     isDead(vehicle) {

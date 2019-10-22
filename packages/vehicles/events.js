@@ -202,7 +202,7 @@ module.exports = {
     "vehicles.ejectlist.get": (player, vehicleId) => {
         let vehicle = mp.vehicles.at(vehicleId);
         if (!vehicle) return;
-        let occupants = vehicle.getOccupants();
+        let occupants = vehicles.getOccupants(vehicle);
         if (occupants.length == 0) return;
 
         let ejectList = [];
