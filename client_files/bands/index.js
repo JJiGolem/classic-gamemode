@@ -64,10 +64,10 @@ mp.bands = {
     flashBlip(id, toggle) {
         var blip = this.bandZones[id - 1];
         // mp.game.invoke(this.natives.SET_BLIP_FLASHES, blip, toggle);
-        clearInterval(this.flashTimer);
+        mp.timer.remove(this.flashTimer);
         if (!toggle) return;
         var oldColor = mp.game.invoke(this.natives.GET_BLIP_COLOUR, blip);
-        this.flashTimer = setInterval(() => {
+        this.flashTimer = mp.timer.addInterval(() => {
             var color = mp.game.invoke(this.natives.GET_BLIP_COLOUR, blip);
             if (color == oldColor) mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, this.flashColor);
             else mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, oldColor);
@@ -81,12 +81,12 @@ mp.bands = {
     startCapture(bandId, enemyBandId, time, bandScore = 0, enemyBandScore = 0) {
         time = parseInt(time);
         mp.callCEFV(`captureScore.start(${bandId}, ${enemyBandId}, ${time}, ${bandScore}, ${enemyBandScore})`);
-        clearTimeout(this.captureTimer);
+        mp.timer.remove(this.captureTimer);
         this.removePlayerBlips();
         this.captureFactions = [bandId, enemyBandId];
 
         this.createPlayerBlips();
-        this.captureTimer = setTimeout(() => {
+        this.captureTimer = mp.timer.add(() => {
             this.removePlayerBlips();
             this.captureFactions = [];
         }, time * 1000);

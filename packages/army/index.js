@@ -2,6 +2,7 @@
 
 let factions;
 let notifs;
+let timer;
 
 module.exports = {
     // Мин. ранг, который может начать учения
@@ -30,6 +31,7 @@ module.exports = {
     init() {
         factions = call('factions');
         notifs = call('notifications');
+        timer = call('timer');
     },
     startCapture(player) {
         var header = `Учения`;
@@ -70,7 +72,7 @@ module.exports = {
             startTime: Date.now(),
             pos: player.position
         };
-        setTimeout(() => {
+        timer.add(() => {
             try {
                 this.stopCapture();
             } catch (e) {

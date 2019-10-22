@@ -4,6 +4,7 @@ let fishing = require('./index.js');
 let inventory = call('inventory');
 let notifs = call('notifications');
 let utils = require('../utils');
+let timer = call('timer');
 
 let weight;
 let timeoutFetch;
@@ -45,7 +46,7 @@ module.exports = {
     "fishing.game.start": async (player) => {
         if (!player.character) return;
 
-        clearTimeout(timeoutFetch);
+        timer.remove(timeoutFetch);
 
         let rod = inventory.getItemByItemId(player, fishing.getRodId());
         let health = inventory.getParam(rod, 'health').value;
@@ -64,11 +65,11 @@ module.exports = {
         weight = utils.randomFloat(fish.minWeight, fish.maxWeight, 1);
         let time = utils.randomInteger(5, 15);
 
-        timeoutFetch = setTimeout(() => {
+        timeoutFetch = timer.add(() => {
             try {
                 player.call('fishing.game.fetch', [speed, zone, weight]);
             } catch (e) {
-                
+
             }
         }, time*1000);
     },
@@ -99,7 +100,7 @@ module.exports = {
     "fishing.game.exit": (player) => {
         if (!player.character) return;
 
-        clearTimeout(timeoutFetch);
+        timer.remove(timeoutFetch);
     },
     "fishing.rod.buy": (player) => {
         if (!player.character) return;

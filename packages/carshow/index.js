@@ -3,6 +3,7 @@ var parkings = call('parkings');
 var money = call('money');
 var houses = call('houses');
 var inventory = call('inventory');
+let timer = call('timer');
 var dbCarList;
 var dbCarShow;
 var carShow = [];
@@ -105,7 +106,7 @@ module.exports = {
         return veh;
     },
     startCarListUpdating() {
-        setInterval(() => {
+        timer.addInterval(() => {
             try {
                 this.updateCarList();
             } catch (err) {

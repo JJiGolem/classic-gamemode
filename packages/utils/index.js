@@ -1,18 +1,10 @@
 "use strict";
 let util = require('util');
+
 /// Утилиты и функции использующиеся в нескольких модулях
-module.exports = {
-    /// Инициализатор функций
-    init() {
-        // для удобства использования
-        console.logObject = this.logObject;
-        Math.clamp = this.clamp;
-        mp.players.getBySqlId = this.getPlayerBySqlId;
-        mp.players.getByName = this.getPlayerByName;
-        mp.players.getNear = this.getNearPlayer;
-        mp.vehicles.getBySqlId = this.getVehicleBySqlId;
-        mp.vehicles.getNear = this.getNearVehicle;
-    },
+let utils = {
+
+    init() {},
     /// Отправка писем на почту
     sendMail(to, subject, message) {
         var nodemailer = require("nodemailer");
@@ -141,3 +133,13 @@ module.exports = {
         return (posA.x - posB.x) * (posA.x - posB.x) + (posA.y - posB.y) * (posA.y - posB.y) + (posA.z - posB.z) * (posA.z - posB.z);
     }
 };
+module.exports = utils;
+
+// для удобства использования
+console.logObject = utils.logObject;
+Math.clamp = utils.clamp;
+mp.players.getBySqlId = utils.getPlayerBySqlId;
+mp.players.getByName = utils.getPlayerByName;
+mp.players.getNear = utils.getNearPlayer;
+mp.vehicles.getBySqlId = utils.getVehicleBySqlId;
+mp.vehicles.getNear = utils.getNearVehicle;

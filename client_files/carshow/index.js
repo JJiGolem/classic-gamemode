@@ -95,8 +95,8 @@ mp.events.add('carshow.list.close', () => {
 });
 
 mp.events.add('carshow.vehicle.show', (i) => {
-    clearTimeout(updateTimeout);
-    updateTimeout = setTimeout(() => {
+    mp.timer.remove(updateTimeout);
+    updateTimeout = mp.timer.add(() => {
         currentIndex = i;
         current.destroy();
         if (current) {

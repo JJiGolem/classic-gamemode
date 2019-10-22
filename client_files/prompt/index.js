@@ -32,7 +32,7 @@ mp.events.add("prompt.showByName", (name) => {
 });
 
 mp.events.add("prompt.waitShowByName", (name, time = 5000) => {
-    setTimeout(() => {
+    mp.timer.add(() => {
         mp.callCEFV(`prompt.showByName('${name}')`);
     }, time);
 });

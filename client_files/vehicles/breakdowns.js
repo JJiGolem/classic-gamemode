@@ -89,14 +89,14 @@ function startBrakeTimer() {
             break;
     }
 
-    brakeTimer = setInterval(() => {
+    brakeTimer = mp.timer.addInterval(() => {
         if (!mp.players.local.vehicle) return stopBrakeTimer();
 
         try {
             let random = Math.random();
             if (random <= breakChance) {
                 mp.players.local.vehicle.setHandbrake(true);
-                toBrake = setTimeout(() => {
+                toBrake = mp.timer.add(() => {
                     if (!mp.players.local.vehicle) return stopBrakeTimer();
                     try {
                         mp.players.local.vehicle.setHandbrake(false);
@@ -112,8 +112,8 @@ function startBrakeTimer() {
 }
 
 function stopBrakeTimer() {
-    clearInterval(brakeTimer);
-    clearInterval(toBrake);
+    mp.timer.remove(brakeTimer);
+    mp.timer.remove(toBrake);
 }
 
 let steeringTimer;
@@ -130,7 +130,7 @@ function startSteeringTimer() {
             break;
     }
 
-    steeringTimer = setInterval(() => {
+    steeringTimer = mp.timer.addInterval(() => {
         if (!mp.players.local.vehicle) return stopBrakeTimer();
         let breakRandom = Math.random();
         if (breakRandom > breakChance) return;
@@ -150,5 +150,5 @@ function startSteeringTimer() {
 }
 
 function stopSteeringTimer() {
-    clearInterval(steeringTimer);
+    mp.timer.remove(steeringTimer);
 }

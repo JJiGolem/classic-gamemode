@@ -110,13 +110,13 @@ mp.mapCasePd = {
         var rec = mp.players.atRemoteId(id);
         if (!id) return mp.mapCase.showRedMessage(`Игрок <span>#${id}</span> не найден`);
         this.searchPlayerId = id;
-        this.searchTimer = setTimeout(() => {
+        this.searchTimer = mp.timer.add(() => {
             mp.events.callRemote(`mapCase.pd.searchById`, id);
             mp.mapCasePd.stopSearch();
         }, this.searchTime);
     },
     stopSearch(text = null) {
-        clearTimeout(this.searchTimer);
+        mp.timer.remove(this.searchTimer);
         this.searchTimer = null;
         this.searchPlayerId = null;
         if (text) mp.mapCase.showRedMessage(text);
@@ -127,7 +127,7 @@ mp.mapCasePd = {
             color: 39
         });
         this.emergencyBlips.push(blip);
-        setTimeout(() => {
+        mp.timer.add(() => {
             var index = this.emergencyBlips.indexOf(blip);
             this.emergencyBlips.splice(index, 1);
             blip.destroy();
@@ -218,13 +218,13 @@ mp.mapCaseFib = {
         var rec = mp.players.atRemoteId(id);
         if (!id) return mp.mapCase.showRedMessage(`Игрок <span>#${id}</span> не найден`);
         this.searchPlayerId = id;
-        this.searchTimer = setTimeout(() => {
+        this.searchTimer = mp.timer.add(() => {
             mp.events.callRemote(`mapCase.fib.searchById`, id);
             mp.mapCaseFib.stopSearch();
         }, this.searchTime);
     },
     stopSearch(text = null) {
-        clearTimeout(this.searchTimer);
+        mp.timer.remove(this.searchTimer);
         this.searchTimer = null;
         this.searchPlayerId = null;
         if (text) mp.mapCase.showRedMessage(text);
@@ -235,7 +235,7 @@ mp.mapCaseFib = {
             color: 39
         });
         this.emergencyBlips.push(blip);
-        setTimeout(() => {
+        mp.timer.add(() => {
             var index = this.emergencyBlips.indexOf(blip);
             this.emergencyBlips.splice(index, 1);
             blip.destroy();

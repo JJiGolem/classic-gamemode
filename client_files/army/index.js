@@ -40,12 +40,12 @@ mp.army = {
     startCapture(teamAId, teamBId, time, teamAScore = 0, teamBScore = 0, pos = [], teamAIds = [], teamBIds = []) {
         time = parseInt(time);
         mp.callCEFV(`captureScore.start(${teamAId}, ${teamBId}, ${time}, ${teamAScore}, ${teamBScore})`);
-        clearTimeout(this.captureTimer);
+        mp.timer.remove(this.captureTimer);
         this.removePlayerBlips();
         this.captureTeams = [teamAId, teamBId];
 
         this.createPlayerBlips(teamAIds, teamBIds);
-        this.captureTimer = setTimeout(() => {
+        this.captureTimer = mp.timer.add(() => {
             this.removePlayerBlips();
             this.captureTeams = [];
             this.destroyCaptureZone();

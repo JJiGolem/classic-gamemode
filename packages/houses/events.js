@@ -2,6 +2,7 @@
 /// Модуль системы домов
 let housesService = require("./index.js");
 let money = call('money');
+let timer = call("timer");
 let vehicles = call("vehicles");
 
 let carPlaceVehicle = new Array();
@@ -37,7 +38,7 @@ module.exports = {
         /// На улице
         if (shape.place == 0) {
             let houseInfo = {};
-    
+
             if (info.characterId == null) {
                 houseInfo = {
                     name: info.id,
@@ -91,12 +92,12 @@ module.exports = {
             player.dimension = 0;
             pos = new mp.Vector3(info.spawnX, info.spawnY, info.spawnZ);
             rot = info.angle;
-        }   
+        }
         else if (place == 1) {
             player.dimension = info.id;
             pos = new mp.Vector3(info.Interior.x, info.Interior.y, info.Interior.z);
             rot = info.Interior.rotation;
-            
+
         }
         else if (place == 2) {
             if (info.Interior.Garage == null) return player.call('house.enter.ans', []);
@@ -128,7 +129,7 @@ module.exports = {
 
             housesService.updateHouse(house);
             mp.events.call('player.house.changed', player);
-            
+
             player.call('phone.app.add', ["house", housesService.getHouseInfoForApp(house)]);
             vehicles != null && vehicles.setPlayerCarPlaces(player);
         }, `Покупка дома #${info.id} у государства`);
@@ -191,7 +192,7 @@ module.exports = {
         let house = housesService.getHouseById(name);
         if (house == null) return player.call("house.sell.ans", [0]);
         let info = house.info;
-        if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10 || 
+        if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10 ||
             mp.players.at(player.house.buyerId).dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return player.call("house.sell.ans", [3]);
         if (cost < info.price || cost > 1000000000) return player.call("house.sell.ans", [4]);
         mp.players.at(player.house.buyerId).house.sellerId = player.id;
@@ -211,7 +212,7 @@ module.exports = {
         if (house == null) return mp.players.at(player.house.sellerId).call("house.sell.ans", [0]);
         let info = house.info;
         if (info.characterId != mp.players.at(player.house.sellerId).character.id) return mp.players.at(player.house.sellerId).call("house.sell.ans", [0]);
-        if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10 || 
+        if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10 ||
             mp.players.at(player.house.sellerId).dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return mp.players.at(player.house.sellerId).call("house.sell.ans", [3]);
         if (player.character.cash < info.price) return mp.players.at(player.house.sellerId).call("house.sell.ans", [2]);
         if (housesService.isHaveHouse(player.character.id)) return mp.players.at(player.house.sellerId).call("house.sell.ans", [2]);
@@ -256,7 +257,7 @@ module.exports = {
     "house.add.carSpawn": async (player, i, garage) => {
         if (vehicles == null) return;
         if (carPlaceVehicle[i] != null) {
-            clearInterval(carPlaceVehicle[i].fuelTimer);
+            timer.remove(carPlaceVehicle[i].fuelTimer);
             carPlaceVehicle[i].destroy();
             carPlaceVehicle[i] = null;
         }
@@ -286,7 +287,7 @@ module.exports = {
     },
     "house.add.carDrop": (player, i) => {
         if (carPlaceVehicle[i] == null) return;
-        clearInterval(carPlaceVehicle[i].fuelTimer);
+        timer.remove(carPlaceVehicle[i].fuelTimer);
         carPlaceVehicle[i].destroy();
         carPlaceVehicle[i] = null;
     },

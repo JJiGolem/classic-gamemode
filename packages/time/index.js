@@ -3,6 +3,7 @@ var factions = require('../factions');
 var farms = call('farms');
 var jobs = require('../jobs');
 var notifs = require('../notifications');
+var timer = call('timer');
 
 let CUSTOM_TIME;
 let ticks = 0;
@@ -14,7 +15,7 @@ module.exports = {
     },
     initPayDayTimer() {
         var lastPayDayHour = new Date().getHours();
-        setInterval(() => {
+        timer.addInterval(() => {
             try {
                 ticks++;
                 mp.events.call(`time.main.tick`, ticks);

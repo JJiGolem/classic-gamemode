@@ -3740,7 +3740,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName != 'Закрыть') {
-                            var bizId = parseInt(this.items[0].values[0].split(":")[1]);
+                            var bizId = parseInt(this.items[e.itemIndex].values[0].split(":")[1]);
                             mp.trigger(`callRemote`, `mafia.bizWar.start`, bizId);
                         }
                         selectMenu.show = false;

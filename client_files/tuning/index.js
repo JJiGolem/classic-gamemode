@@ -11,7 +11,7 @@ let vehicle;
 
 let vehPrice = 100;
 
-let priceConfig = { 
+let priceConfig = {
     repair: 500,
     default: 0.01,
     engine: 0.01,
@@ -132,27 +132,27 @@ data.colors.forEach((current) => {
 mp.events.add('mods.num', (type) => { // temp
     let num = mp.players.local.vehicle.getNumMods(type);
     mp.chat.debug(num);
-}); 
+});
 
 mp.events.add('mods.label', (type, index) => { // temp
     let label = mp.players.local.vehicle.getModTextLabel(type, index);
     mp.chat.debug(mp.game.ui.getLabelText(label));
-}); 
+});
 
 mp.events.add('mods.get', (type) => { // temp
     let num = mp.players.local.vehicle.getMod(type);
     mp.chat.debug(num);
-}); 
+});
 
 mp.events.add('tuning.fadeOut', () => {
     mp.game.cam.doScreenFadeOut(80);
 });
 
 mp.events.add('tuning.start', (id, primary, secondary, priceInfo) => {
-    setTimeout(() => {
+    mp.timer.add(() => {
         mp.game.cam.doScreenFadeIn(500);
     }, 500);
-    
+
     if (!mp.players.local.vehicle) return;
     controlsDisabled = true;
     mp.events.call('hud.enable', false);
@@ -196,7 +196,7 @@ mp.events.add('tuning.menu.show', (index = lastIndex) => {
 
 mp.events.add('tuning.defaultMenu.show', (modName) => {
     mp.events.call('tuning.modType.set', tuningParams[modName].modType);
-    
+
     let data = tuningParams[modName];
     let numMods = vehicle.getNumMods(data.modType);
     let items = [];
@@ -232,7 +232,7 @@ mp.events.add('tuning.colorMenu.show', () => {
     mp.callCEFVN({ "selectMenu.menu.items[0].j": tuningParams.primaryColour });
     mp.callCEFVN({ "selectMenu.menu.items[1].i": tuningParams.secondaryColour });
     mp.callCEFVN({ "selectMenu.menu.items[1].j": tuningParams.secondaryColour });
-    
+
 });
 
 mp.events.add('tuning.engineMenu.show', () => {
@@ -314,7 +314,7 @@ mp.events.add('tuning.end', () => {
     mp.events.call('hud.enable', true);
     mp.game.ui.displayRadar(true);
     mp.callCEFR('setOpacityChat', [1.0]);
-    
+
     mp.events.callRemote('tuning.end', customsId);
 });
 

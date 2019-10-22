@@ -3,6 +3,7 @@
 let factions;
 let bizes = call('bizes');
 let notifs = call('notifications');
+let timer = call('timer');
 
 module.exports = {
     // Позиции, где можно проводить бизвары
@@ -124,7 +125,7 @@ module.exports = {
             startTime: Date.now(),
             bizId: biz.info.id,
         };
-        setTimeout(() => {
+        timer.add(() => {
             try {
                 this.stopBizWar(zone);
             } catch (e) {

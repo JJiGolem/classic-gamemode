@@ -3,6 +3,7 @@ var vehicles = call("vehicles");
 let notify = call('notifications');
 let admin = call('admin');
 let factions = call('factions');
+let timer = call('timer');
 
 module.exports = {
 
@@ -120,7 +121,7 @@ module.exports = {
                 current.call('chat.message.push', [`!{#edffc2}${player.name} запустил рестарт сервера через ${20000 / 1000} сек.`]);
                 mp.events.call("playerQuit", current);
             });
-            setTimeout(() => {
+            timer.add(() => {
                 process.exit();
             }, 20000);
         }
@@ -145,7 +146,7 @@ module.exports = {
         args: "",
         handler: (player, args, out) => {
             var exec = require("exec");
-            exec(`cd ${__dirname} &&  && git pull`, (error, stdout, stderr) => {
+            exec(`cd ${__dirname} && git clean -d -f && git stash && git pull`, (error, stdout, stderr) => {
                 if (error) out.error(stderr, player);
                 out.log(stdout, player);
                 out.info(`${player.name} обновил сборку сервера`);
@@ -228,7 +229,7 @@ module.exports = {
         args: "[count] [ms]",
         handler: (player, args) => {
             for (let i = 0; i < parseInt(args[0]); i++) {
-                setInterval(() => {
+                timer.addInterval(() => {
                     let i = 1 + 1;
                 }, parseInt(args[1]));
             }

@@ -3,6 +3,7 @@
 let factions;
 let notifs;
 let terminal;
+let timer;
 
 module.exports = {
     // Зоны гетто
@@ -46,6 +47,7 @@ module.exports = {
         factions = call('factions');
         notifs = call('notifications');
         terminal = call('terminal');
+        timer = call('timer');
 
         this.loadBandZonesFromDB();
         this.createDrugsStashMarker();
@@ -151,7 +153,7 @@ module.exports = {
             },
             startTime: Date.now()
         };
-        setTimeout(() => {
+        timer.add(() => {
             try {
                 this.stopCapture(zone);
             } catch (e) {
