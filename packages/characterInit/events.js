@@ -25,6 +25,7 @@ module.exports = {
 
         if (player.characters[charnumber]) {
             player.character = player.characters[charnumber];
+            player.name = player.character.name;
             delete player.characters;
             characterInit.applyCharacter(player);
 

@@ -552,12 +552,13 @@ module.exports = {
     },
     "death.spawn": (player) => {
         if (!player.character) return;
-        var weapons = inventory.getArrayWeapons(player);
-        if (!weapons.length) return;
-        weapons.forEach(weapon => {
-            inventory.putGround(player, weapon);
-        });
-        notifs.warning(player, `Вы потеряли оружие`, `Инвентарь`);
+        // TODO: включить выкидывание оружия в новой сис-ме расчет кор объекта
+        // var weapons = inventory.getArrayWeapons(player);
+        // if (!weapons.length) return;
+        // weapons.forEach(weapon => {
+        //     inventory.putGround(player, weapon);
+        // });
+        // notifs.warning(player, `Вы потеряли оружие`, `Инвентарь`);
     },
     "playerQuit": (player) => {
         if (!player.character) return;
