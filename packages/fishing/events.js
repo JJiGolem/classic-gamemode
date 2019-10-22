@@ -46,7 +46,7 @@ module.exports = {
     "fishing.game.start": async (player) => {
         if (!player.character) return;
 
-        clearTimeout(timeoutFetch);
+        mp.timer.remove(timeoutFetch);
 
         let rod = inventory.getItemByItemId(player, fishing.getRodId());
         let health = inventory.getParam(rod, 'health').value;
@@ -100,7 +100,7 @@ module.exports = {
     "fishing.game.exit": (player) => {
         if (!player.character) return;
 
-        clearTimeout(timeoutFetch);
+        mp.timer.remove(timeoutFetch);
     },
     "fishing.rod.buy": (player) => {
         if (!player.character) return;

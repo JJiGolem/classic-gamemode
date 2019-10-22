@@ -949,7 +949,7 @@ module.exports = {
                 }
             }
             if (doDelete) {
-                clearTimeout(obj.destroyTimer);
+                mp.timer.remove(obj.destroyTimer);
                 obj.destroy();
                 var rec = mp.players.at(obj.playerId);
                 if (!rec || !rec.character) return;
@@ -1196,7 +1196,7 @@ module.exports = {
         var ground = player.inventory.ground;
         if (ground.length > this.groundMaxItems) {
             var obj = ground.shift();
-            clearTimeout(obj.destroyTimer);
+            mp.timer.remove(obj.destroyTimer);
             obj.destroy();
         }
     },

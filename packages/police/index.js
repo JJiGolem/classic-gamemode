@@ -159,14 +159,14 @@ module.exports = {
         player.heading = cell.h;
         var playerId = player.id;
         var characterId = player.character.id;
-        clearTimeout(player.cellArrestTimer);
-        clearTimeout(player.jailArrestTimer);
+        mp.timer.remove(player.cellArrestTimer);
+        mp.timer.remove(player.jailArrestTimer);
         player.cellArrestDate = Date.now();
         player.cellArrestTimer = mp.timer.add(() => {
             try {
                 var rec = mp.players.at(playerId);
                 if (!rec || rec.character.id != characterId || !rec.character.arrestTime) {
-                    clearTimeout(player.cellArrestTimer);
+                    mp.timer.remove(player.cellArrestTimer);
                     return;
                 }
 
@@ -199,14 +199,14 @@ module.exports = {
         player.heading = cell.h;
         var playerId = player.id;
         var characterId = player.character.id;
-        clearTimeout(player.jailArrestTimer);
-        clearTimeout(player.cellArrestTimer);
+        mp.timer.remove(player.jailArrestTimer);
+        mp.timer.remove(player.cellArrestTimer);
         player.jailArrestDate = Date.now();
         player.jailArrestTimer = mp.timer.add(() => {
             try {
                 var rec = mp.players.at(playerId);
                 if (!rec || !rec.character || rec.character.id != characterId || !rec.character.arrestTime) {
-                    clearTimeout(player.cellArrestTimer);
+                    mp.timer.remove(player.cellArrestTimer);
                     return;
                 }
                 delete rec.jailArrestTimer;
@@ -226,7 +226,7 @@ module.exports = {
         }, time);
     },
     stopCellArrest(player) {
-        clearTimeout(player.cellArrestTimer);
+        mp.timer.remove(player.cellArrestTimer);
         delete player.cellArrestTimer;
         player.call(`inventory.enable`, [true]);
 

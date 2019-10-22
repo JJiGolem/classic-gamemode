@@ -7,6 +7,7 @@ var mafia = require('../mafia');
 var money = require('../money');
 var notifs = require('../notifications');
 var police = require('../police')
+let timer = call('timer');
 
 module.exports = {
     "init": () => {
@@ -658,7 +659,7 @@ module.exports = {
         var time = Date.now() - date;
         player.character.arrestTime -= time;
         player.character.save();
-        clearTimeout(player.cellArrestTimer);
-        clearTimeout(player.jailArrestTimer);
+        mp.timer.remove(player.cellArrestTimer);
+        mp.timer.remove(player.jailArrestTimer);
     },
 }
