@@ -8,12 +8,12 @@
 
 mp.time = {
     startMainTimer() {
-        setInterval(() => {
+        mp.timer.addInterval(() => {
             mp.events.call("time.main.tick");
         }, 1000);
     },
     startMinuteTimer() {
-        setInterval(() => {
+        mp.timer.addInterval(() => {
             mp.events.call("time.minute.tick");
         }, 60000);
     },

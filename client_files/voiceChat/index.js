@@ -106,7 +106,7 @@ let updateCurrent = function(player, index, newCh) {
 
 mp.speechChanel.addChannel("voice", 20, true, true);
 /// Обработчик изменения состояния игроков для изменения состояния голосовой связи
-setInterval(() => {
+mp.timer.addInterval(() => {
     /// Автоматическое подключение к заданным каналам всех игроков в зоне стрима
 	mp.players.forEachInStreamRange(player => {
 		if (player != mp.players.local && mp.players.local.dimension == player.dimension) {

@@ -10,7 +10,7 @@ let radioSyncTimer;
 mp.events.add({
     "playerEnterVehicle": () => {
         clearInterval(radioSyncTimer);
-        setInterval(syncRadio, 1000);
+        mp.timer.addInterval(syncRadio, 1000);
     },
     "playerLeaveVehicle": () => {
         clearInterval(radioSyncTimer);

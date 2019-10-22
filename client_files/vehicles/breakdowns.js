@@ -89,7 +89,7 @@ function startBrakeTimer() {
             break;
     }
 
-    brakeTimer = setInterval(() => {
+    brakeTimer = mp.timer.addInterval(() => {
         if (!mp.players.local.vehicle) return stopBrakeTimer();
 
         try {
@@ -130,7 +130,7 @@ function startSteeringTimer() {
             break;
     }
 
-    steeringTimer = setInterval(() => {
+    steeringTimer = mp.timer.addInterval(() => {
         if (!mp.players.local.vehicle) return stopBrakeTimer();
         let breakRandom = Math.random();
         if (breakRandom > breakChance) return;

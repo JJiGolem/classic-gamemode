@@ -147,7 +147,7 @@ function calculatePrice(pos) {
 }
 
 let waypoint;
-setInterval(() => {
+mp.timer.addInterval(() => {
     try {
         if (!isActiveTaxiClient) return;
         if (waypoint !== mp.game.invoke('0x1DD1F58F493F1DA5')) {

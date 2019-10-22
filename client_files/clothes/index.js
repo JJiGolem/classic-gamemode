@@ -12,7 +12,7 @@ mp.clothes = {
     checkTime: 2 * 60 * 1000,
 
     initTimer() {
-        setInterval(() => {
+        mp.timer.addInterval(() => {
             mp.events.callRemote("clothes.clime.check");
         }, this.checkTime);
     },

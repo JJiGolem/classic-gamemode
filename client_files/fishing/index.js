@@ -76,7 +76,7 @@ mp.events.add('render', () => {
     if (checkConditions()) {
         if (!isIntervalCreated) {
             isIntervalCreated = true;
-            intervalFishing = setInterval(() => {
+            intervalFishing = mp.timer.addInterval(() => {
                 let heading = localPlayer.getHeading() + 90;
                 let point = {
                     x: localPlayer.position.x + 15*Math.cos(heading * Math.PI / 180.0),
