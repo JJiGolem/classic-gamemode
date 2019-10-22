@@ -1200,7 +1200,7 @@ module.exports = {
     },
     // урон климата (если игрок одет не по погоде)
     checkClimeDamage(player, temp, out) {
-        if (player.vehicle || player.dimension || player.godmode) return;
+        if (player.vehicle || player.dimension || player.godmode || player.farmJob) return;
 
         var clime = Object.assign({}, this.playerClime);
 
