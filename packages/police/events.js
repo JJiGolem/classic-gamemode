@@ -422,6 +422,8 @@ module.exports = {
     // снять/надеть наручники
     "police.cuffs": (player, data) => {
         if (typeof data == 'string') data = JSON.parse(data);
+
+        if (player.cuffs) return notifs.error(player, `У вас связаны руки`, `Наручники`);
         var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Наручники`);
         var dist = player.dist(rec.position);
@@ -568,6 +570,7 @@ module.exports = {
         var header = `Посадка`;
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
+        if (!rec.cuffs) return notifs.error(player, `${rec.name} не в наручниках`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} уже в авто`, header);
         if (!police.cuffsFactions.includes(player.character.factionId)) return notifs.error(player, `Нет прав`, header);
 
