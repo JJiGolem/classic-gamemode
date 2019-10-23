@@ -595,7 +595,7 @@ module.exports = {
         } else if (params.weaponHash) {
             player.addAttachment(`weapon_${item.itemId}`);
             this.removeWeapon(player, params.weaponHash);
-        } else return console.log("Неподходящий тип предмета для тела!");
+        } else return debug(`Неподходящий тип предмета для тела, item.id: ${item.id}`);
 
     },
     clearView(player, itemId) {
@@ -661,8 +661,11 @@ module.exports = {
         for (var i = 0; i < player.inventory.items.length; i++) {
             var item = player.inventory.items[i];
             if (item.parentId) continue;
+            if (item.index == 13) continue;
             this.updateView(player, item);
         }
+        var handsItem = this.getHandsItem(player);
+        this.syncHandsItem(player, handsItem);
     },
     clearAllView(player) {
         for (var index in this.bodyList) {
@@ -837,6 +840,12 @@ module.exports = {
             if (itemIds.includes(item.itemId)) result.push(item);
         }
         return result;
+    },
+    getBodyItemByIndex(player, index) {
+        return player.inventory.items.find(x => !x.parentId && x.index == index);
+    },
+    getHandsItem(player) {
+        return this.getBodyItemByIndex(player, 13);
     },
     getItemWeight(player, items, weight = 0) {
         if (!Array.isArray(items)) items = [items];
@@ -1156,8 +1165,11 @@ module.exports = {
         player.call(`weapons.giveWeapon`, [hash.toString()]);
     },
     removeWeapon(player, hash) {
-        // TODO: удалять, если в слотах рук
-        return;
+        // удалять, если в слотах рук
+        var item = this.getHandsItem(player);
+        if (!item) return;
+        var param = this.getParam(item, 'weaponHash');
+        if (!param || param.value != hash) return;
         player.removeWeapon(hash);
         player.call(`weapons.removeWeapon`, [hash.toString()]);
     },
@@ -1268,4 +1280,19 @@ module.exports = {
         }
         return null;
     },
+    // вкл выкл синхру предмета в руках
+    syncHandsItem(player, item) {
+        debug(`[inventory] sync hands at ${player.name}, item.id: ${item ? item.id : null}`);
+
+        if (item) { // вкл. синх. предмета/гана в руках
+            var params = this.getParamsValues(item);
+            if (params.weaponHash) this.giveWeapon(player, params.weaponHash, params.ammo);
+        } else { // выкл. синх. предмета/гана в руках
+            var handsItem = this.getHandsItem(player);
+            if (!handsItem) return;
+
+            var params = this.getParamsValues(handsItem);
+            if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
+        }
+    }
 };
