@@ -18,8 +18,9 @@ mp.events.add('characterInit.done', function() {
     });
 
     mp.keys.bind(0x73, false, function() {      // F4
-        if (!mp.voiceChat.muted) return;
+        if (!mp.voiceChat.muted) return mp.notify.error("Отпустите клавишу N", "Голосовой чат");        ;
         mp.voiceChat.cleanupAndReload(true, true, true);
+        mp.notify.success("Голосовой чат был перезагружен", "Голосовой чат");
     });
 });
 
