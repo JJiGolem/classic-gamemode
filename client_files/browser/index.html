@@ -563,24 +563,16 @@
             </div>
             <div class="empty" v-show="!havePockets">Без карманов</div>
         </div>
-        <div class="hands">
-            <div class="left-slot" v-bind:class="{busy: hands}">
+        <div class="hands" :class="{active: itemDrag.item}">
+            <div class="slot" v-bind:class="{busy: hands, focus: itemDrag.item && itemDrag.accessColumns.handsFocus}" @mouseenter="onHandsItemEnter()" @mouseleave="onHandsItemLeave()">
                 <div class="item" v-if="hands && getItem(hands.sqlId)" v-bind:style="{backgroundImage: 'url(' + urlItemImg(hands.itemId) + ')'}">
                     <div class="count" v-if="hands.params.count">{{ hands.params.count }}</div>
                     <div class="health" v-if="hands.params.health" v-bind:style="{top: 100 - hands.params.health + '%', 'border-color': valueColor(hands.params.health)}"></div>
                     <div class="sqlid" v-if="debug">#{{ hands.sqlId }}</div>
                 </div>
                 <img v-if="!hands" src="img/inventory/hand.png" />
-                <!-- <span v-if="!hands.left">в левой <br />руке</span> -->
-            </div>
-            <div class="right-slot" v-show="!hands" v-bind:class="{busy: hands}">
-                <!-- <div class="item" v-if="hands" v-bind:style="{backgroundImage: 'url(' + urlItemImg(hands.itemId) + ')'}">
-                    <div class="count" v-if="hands.params.count">{{ hands.params.count }}</div>
-                    <div class="health" v-if="hands.params.health" v-bind:style="{top: 100 - hands.params.health + '%', 'border-color': valueColor(hands.params.health)}"></div>
-                    <div class="sqlid" v-if="debug">#{{ hands.sqlId }}</div>
-                </div> -->
-                <!-- <span v-else>в правой <br />руке</span> -->
                 <img v-if="!hands" src="img/inventory/hand.png" />
+                <!-- <span v-if="!hands.left">в левой <br />руке</span> -->
             </div>
         </div>
         <div class="hotkeys" :class="{active: itemDrag.item && hotkeysList[itemDrag.item.itemId]}">

@@ -493,6 +493,7 @@ var inventory = new Vue({
                 columns: {},
                 bodyFocus: null,
                 hotkeyFocus: null,
+                handsFocus: null,
             },
             x: 0,
             y: 0
@@ -711,6 +712,21 @@ var inventory = new Vue({
             // console.log("onHotkeyItemLeave")
             var columns = this.itemDrag.accessColumns;
             columns.hotkeyFocus = null;
+        },
+        onHandsItemEnter() {
+            // console.log("onHotkeyItemEnter")
+            if (!this.itemDrag.item) return;
+            var item = this.hands;
+            if (item && this.getItem(item.sqlId)) return;
+            // TODO: возможно, в будущем стоит добавить проверку
+            // if (!this.hotkeysList[this.itemDrag.item.itemId]) return;
+            var columns = this.itemDrag.accessColumns;
+            columns.handsFocus = true;
+        },
+        onHandsItemLeave() {
+            // console.log("onHotkeyItemLeave")
+            var columns = this.itemDrag.accessColumns;
+            columns.handsFocus = null;
         },
         itemMouseHandler(item, e) {
             var rect = document.getElementById('inventory').getBoundingClientRect();
@@ -1062,6 +1078,7 @@ var inventory = new Vue({
                 var item = items[index];
                 if (item.sqlId == sqlId) {
                     this.clearHotkeys(item);
+                    this.clearHands(item);
                     Vue.delete(items, index);
                 }
                 if (item.pockets) {
@@ -1149,7 +1166,8 @@ var inventory = new Vue({
 
             this.hands = item;
         },
-        clearHands() {
+        clearHands(item = null) {
+            if (item && this.hands && this.hands.sqlId != item.sqlId) return;
             this.hands = null;
         },
 
@@ -1284,11 +1302,13 @@ var inventory = new Vue({
                 self.callRemote("item.add", {
                     sqlId: self.itemDrag.item.sqlId,
                     pocketI: null,
-                    index: columns.bodyFocus,
+                    index: parseInt(columns.bodyFocus),
                     placeSqlId: null
                 });
             } else if (columns.hotkeyFocus) {
                 self.bindHotkey(self.itemDrag.item.sqlId, columns.hotkeyFocus);
+            } else if (columns.handsFocus) {
+                self.fillHands(self.itemDrag.item.sqlId);
             } else if (columns.targetSqlId) {
                 self.deleteItem(self.itemDrag.item.sqlId);
                 self.callRemote("item.merge", {
@@ -1298,7 +1318,7 @@ var inventory = new Vue({
                     placeSqlId: columns.placeSqlId
                 });
             } else {
-                var index = Object.keys(columns.columns)[0];
+                var index = parseInt(Object.keys(columns.columns)[0]);
                 if (!columns.deny && columns.placeSqlId != null &&
                     columns.pocketI != null &&
                     index != null) {
