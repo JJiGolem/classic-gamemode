@@ -302,7 +302,7 @@ var inventory = new Vue({
             10: [13],
             11: [8],
             12: [9],
-            13: [1, 18, 21],
+            13: null
         },
         // Вайт-лист предметов, которые можно использовать в горячих клавишах
         hotkeysList: {
@@ -687,7 +687,7 @@ var inventory = new Vue({
             if (!this.itemDrag.item) return;
             var item = this.equipment[index];
             if (item) return;
-            if (!this.bodyList[index].includes(this.itemDrag.item.itemId)) return;
+            if (this.bodyList[index] && !this.bodyList[index].includes(this.itemDrag.item.itemId)) return;
             var nextWeight = this.commonWeight + this.itemsInfo[this.itemDrag.item.itemId].weight;
             if (nextWeight > this.maxPlayerWeight) return;
             var columns = this.itemDrag.accessColumns;

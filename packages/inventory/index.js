@@ -27,7 +27,7 @@ module.exports = {
         10: [13],
         11: [8],
         12: [9],
-        13: [],
+        13: null, // в слот рук можно класть любой предмет
     },
     // Блек-лист предметов, которые не могут храниться в других предметах
     blackList: {
@@ -63,8 +63,6 @@ module.exports = {
 
     async init() {
         await this.loadInventoryItemsFromDB();
-        // разрешаем все предметы класть в слот рук
-        this.bodyList[13] = this.inventoryItems.map(x => x.id);
     },
 
     // Загрузка общей информации о предметах из БД в данный модуль
@@ -657,7 +655,7 @@ module.exports = {
             otherItems[itemId]();
         } else if (this.bodyList[9].includes(itemId)) {
             player.addAttachment(`weapon_${itemId}`, true);
-        } else return console.log("Неподходящий тип предмета для тела!");
+        } else return console.log(`Неподходящий тип предмета для тела, itemId: ${itemId}`);
     },
     updateAllView(player) {
         for (var i = 0; i < player.inventory.items.length; i++) {
@@ -669,6 +667,7 @@ module.exports = {
     clearAllView(player) {
         for (var index in this.bodyList) {
             var itemIds = this.bodyList[index];
+            if (!itemIds) continue;
             itemIds.forEach((itemId) => {
                 this.clearView(player, itemId);
             });
@@ -702,6 +701,7 @@ module.exports = {
         var items = player.inventory.items;
         for (var bodyIndex in this.bodyList) {
             var list = this.bodyList[bodyIndex];
+            if (!list) continue;
             if (list.includes(itemId)) { // предмет, можно надеть
                 for (var i = 0; i < items.length; i++) {
                     var item = items[i];
