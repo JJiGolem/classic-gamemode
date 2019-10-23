@@ -245,8 +245,14 @@
 }
 
 #inventory .hands .item {
-    height: 9vh;
-    width: 17vh;
+    height: 12vh;
+    width: 31vh;
+}
+
+#inventory .hands .item .close {
+    font-size: 2vh;
+    right: 0.3vh;
+    top: -0.3vh;
 }
 
 #inventory .hands .slot {
@@ -263,10 +269,11 @@
 
 #inventory .hands .slot.busy {
     background: #fff1;
-    border: 1px solid #aaa;
+    /* border: 1px solid #aaa; */
 }
 
 #inventory .hands .slot.focus img {
+    width: 32%;
     opacity: 1;
 }
 
@@ -606,6 +613,10 @@
     font-size: 1.5vh;
 }
 
+#inventory .playerInventory .container .header:hover .title {
+    color: #fff;
+}
+
 #inventory .pockets {
     display: flex;
     flex-flow: wrap;
@@ -623,10 +634,10 @@
 }
 
 /* Анимация */
-
 #inventory.spin .item {
     animation: spin 1.2s linear infinite;
 }
+
 @keyframes spin {
     0% {
         transform: rotate(0deg);

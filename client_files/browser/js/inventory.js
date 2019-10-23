@@ -701,7 +701,7 @@ var inventory = new Vue({
         },
         onHotkeyItemEnter(key) {
             // console.log("onHotkeyItemEnter")
-            if (!this.itemDrag.item) return;
+            if (!this.itemDrag.item || !this.getItem(this.itemDrag.item.sqlId)) return;
             var item = this.hotkeys[key];
             if (item && this.getItem(item.sqlId)) return;
             if (!this.hotkeysList[this.itemDrag.item.itemId]) return;
@@ -714,8 +714,7 @@ var inventory = new Vue({
             columns.hotkeyFocus = null;
         },
         onHandsItemEnter() {
-            // console.log("onHotkeyItemEnter")
-            if (!this.itemDrag.item) return;
+            if (!this.itemDrag.item || !this.getItem(this.itemDrag.item.sqlId)) return;
             var item = this.hands;
             if (item && this.getItem(item.sqlId)) return;
             // TODO: возможно, в будущем стоит добавить проверку
@@ -724,7 +723,6 @@ var inventory = new Vue({
             columns.handsFocus = true;
         },
         onHandsItemLeave() {
-            // console.log("onHotkeyItemLeave")
             var columns = this.itemDrag.accessColumns;
             columns.handsFocus = null;
         },
@@ -1060,7 +1058,7 @@ var inventory = new Vue({
             this.deleteItem(item.sqlId);
             this.deleteEnvironmentItem(item.sqlId);
             if (item.pockets) {
-                item.showPockets = true;
+                Vue.set(item, 'showPockets', false);
             }
             if (parent) {
                 Vue.set(parent.pockets[pocket].items, index, item);
@@ -1174,7 +1172,7 @@ var inventory = new Vue({
         // ******************  [ Environment ] ******************
         addEnvironmentPlace(place) {
             if (typeof place == 'string') place = JSON.parse(place);
-            place.showPockets = true;
+            Vue.set(place, 'showPockets', true);
             this.environment.unshift(place);
         },
         deleteEnvironmentPlace(sqlId) {
@@ -1476,8 +1474,8 @@ inventory.addEnvironmentPlace({
     ],
 });
 inventory.addEnvironmentPlace({
-    sqlId: 0,
-    header: "На земле",
+    sqlId: -10,
+    header: "Шкаф",
     pockets: [{
         cols: 19,
         rows: 30,
