@@ -498,5 +498,16 @@ module.exports = {
             console.log(err.message);
             player.call('notifications.push.error', [`${err.message.slice(0, 50)}...`, `Ошибка`]);
         }
+    },
+    "vehicles.invalid.found": (player, vehId) => {
+        let vehicle = mp.vehicles.at(vehId);
+        if (!vehicle) return;
+
+        vehicle.setVariable("isValid", true);
+        if (!vehicle.db) return;
+
+        vehicle.setColor(vehicle.db.color1, vehicle.db.color2);
+        vehicle.numberPlate = vehicle.db.plate;
+        console.log(`[vehicles] Invalid vehicle found & fixed by ${player.name}`);
     }
 }

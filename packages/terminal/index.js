@@ -1,6 +1,7 @@
 "use strict";
 let logger = call('logger');
 let notifs = require('../notifications');
+let admin;
 
 module.exports = {
     // Мин. уровень админки для доступа к кносоли (character.admin)
@@ -9,6 +10,85 @@ module.exports = {
     commands: {},
 
 
+    init() {
+        admin = call('admin');
+        this.commands = admin.getCommands();
+        this.loadCommandsFromDB();
+    },
+    async loadCommandsFromDB() {
+        var dbCommands = await db.Models.Command.findAll();
+        dbCommands.forEach(dbCmd => {
+            var cmd = this.commands[dbCmd.cmd];
+            if (!cmd) return;
+            if (dbCmd.cmd != dbCmd.name) {
+                this.commands[dbCmd.name] = cmd;
+                delete this.commands[dbCmd.cmd];
+            }
+            cmd.description = dbCmd.description;
+            cmd.access = dbCmd.access;
+            cmd.db = dbCmd;
+        });
+
+        console.log(`[TERMINAL] Команды загружены (${dbCommands.length} / ${Object.keys(this.commands).length} шт.)`);
+    },
+    setCmdName(cmdName, name) {
+        var cmd = this.commands[cmdName];
+        if (!cmd) return;
+        var dbCmd = cmd.db;
+        if (!dbCmd) {
+            dbCmd = db.Models.Command.build({
+                cmd: cmdName,
+                name: name,
+                description: cmd.description,
+                access: cmd.access
+            });
+            cmd.db = dbCmd;
+        }
+
+        dbCmd.name = name;
+        dbCmd.save();
+
+        this.commands[name] = cmd;
+        delete this.commands[cmdName];
+    },
+    setCmdDescription(cmdName, description) {
+        var cmd = this.commands[cmdName];
+        if (!cmd) return;
+        var dbCmd = cmd.db;
+        if (!dbCmd) {
+            dbCmd = db.Models.Command.build({
+                cmd: cmdName,
+                name: cmdName,
+                description: description,
+                access: cmd.access
+            });
+            cmd.db = dbCmd;
+        }
+
+        dbCmd.description = description;
+        dbCmd.save();
+
+        cmd.description = description;
+    },
+    setCmdAccess(cmdName, access) {
+        var cmd = this.commands[cmdName];
+        if (!cmd) return;
+        var dbCmd = cmd.db;
+        if (!dbCmd) {
+            dbCmd = db.Models.Command.build({
+                cmd: cmdName,
+                name: cmdName,
+                description: cmd.description,
+                access: access
+            });
+            cmd.db = dbCmd;
+        }
+
+        dbCmd.access = access;
+        dbCmd.save();
+
+        cmd.access = access;
+    },
     haveAccess(player) {
         return player.character.admin >= this.access;
     },

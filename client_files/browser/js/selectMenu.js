@@ -5797,7 +5797,8 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Уволиться') {
                             mp.trigger(`callRemote`, `carrier.job.stop`);
                         } else if (e.itemName == 'Помощь') {
-
+                            selectMenu.show = false;
+                            modal.showByName("carrier_help");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }

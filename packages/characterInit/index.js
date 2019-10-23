@@ -249,6 +249,7 @@ module.exports = {
                 },
             ]
         });
+        player.name = player.character.name;
         this.applyCharacter(player);
         player.characterInit.created = true;
         player.call('characterInit.create.check.ans', [1]);

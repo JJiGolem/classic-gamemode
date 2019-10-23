@@ -1,8 +1,7 @@
 let terminal = require('./index.js');
-let admin = require('../admin');
 module.exports = {
     "init": () => {
-        terminal.commands = admin.getCommands();
+        terminal.init();
         inited(__dirname);
     },
     "characterInit.done": (player) => {
