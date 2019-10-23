@@ -122,7 +122,7 @@ module.exports = {
         player.inventory.items = dbItems;
 
         this.updateAllView(player);
-        this.loadWeapons(player);
+        // this.loadWeapons(player);
         player.call(`inventory.initItems`, [this.convertServerToClientItems(dbItems)]);
         console.log(`[INVENTORY] Для игрока ${player.character.name} загружены предметы (${dbItems.length} шт.)`);
     },
@@ -284,7 +284,7 @@ module.exports = {
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, itemId);
             if (weapon) return callback(`Оружие ${this.getName(itemId)} уже имеется`);
-            if (slot.parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
+            // if (slot.parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
         }
         var struct = [];
         for (var key in params) {
@@ -323,7 +323,7 @@ module.exports = {
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, item.itemId);
             if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
-            if (slot.parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
+            // if (slot.parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
         }
 
         item.playerId = player.character.id;
@@ -383,7 +383,7 @@ module.exports = {
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, item.itemId);
             if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
-            if (parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
+            // if (parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
         }
         var struct = [];
         for (var key in params) {
@@ -1139,11 +1139,12 @@ module.exports = {
     },
     // Загрузка оружия у игрока на основе предметов-оружия в инвентаре
     loadWeapons(player) {
-        var weapons = this.getArrayWeapons(player);
-        weapons.forEach(weapon => {
-            var params = this.getParamsValues(weapon);
-            this.giveWeapon(player, params.weaponHash, params.ammo);
-        });
+        // теперь у игрока есть только оружие из слота для рук
+        // var weapons = this.getArrayWeapons(player);
+        // weapons.forEach(weapon => {
+        //     var params = this.getParamsValues(weapon);
+        //     this.giveWeapon(player, params.weaponHash, params.ammo);
+        // });
     },
     giveWeapon(player, hash, ammo) {
         if (!hash) return;
@@ -1152,6 +1153,8 @@ module.exports = {
         player.call(`weapons.giveWeapon`, [hash.toString()]);
     },
     removeWeapon(player, hash) {
+        // TODO: удалять, если в слотах рук
+        return;
         player.removeWeapon(hash);
         player.call(`weapons.removeWeapon`, [hash.toString()]);
     },

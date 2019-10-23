@@ -39,7 +39,7 @@ module.exports = {
                 if (item.parentId == null && data.placeSqlId) { // снял вещь
                     inventory.clearView(player, item.itemId);
                     var params = inventory.getParamsValues(item);
-                    if (params.weaponHash) inventory.giveWeapon(player, params.weaponHash, params.ammo);
+                    // if (params.weaponHash) inventory.giveWeapon(player, params.weaponHash, params.ammo);
                 } else if (item.parentId && data.placeSqlId == null) { // надел вещь
                     inventory.updateView(player, item);
                 }
