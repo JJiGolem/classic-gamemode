@@ -38,8 +38,12 @@
     /* transition: border 1s, background 1s; */
 }
 
-#inventory .body-items .column.focus {
+#inventory .body-items .column.active {
     border-color: #046f04;
+}
+
+#inventory .body-items .column.focus {
+    border-color: #aaa;
 }
 
 #inventory .body-items .column:not(:empty) {

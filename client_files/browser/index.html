@@ -523,7 +523,7 @@
                 <!-- <div>Жажда <span class="thirst">{{ thirst }}</span>%</div> -->
             </div>
             <div class="body-items">
-                <div class="column" :class="{focus: itemDrag.item && itemDrag.accessColumns.bodyFocus == n-1}" v-for="n in 13" @mouseenter="onBodyItemEnter(n-1)" @mouseleave="onBodyItemLeave(n-1)">
+                <div class="column" :class="{focus: itemDrag.item && itemDrag.accessColumns.bodyFocus == n-1, active: itemDrag.item && bodyList[n-1].includes(itemDrag.item.itemId)}" v-for="n in 13" @mouseenter="onBodyItemEnter(n-1)" @mouseleave="onBodyItemLeave(n-1)">
                     <!-- <div class="item" v-if="equipment[n-1]" v-bind:style="{backgroundImage: 'url(' + urlItemImg(equipment[n-1].itemId) + ')'}">
                        <div class="count" v-if="equipment[n-1].params.count">{{ equipment[n-1].params.count }}</div>
                        <div class="health" v-if="equipment[n-1].params.health" v-bind:style="{top: 100 - equipment[n-1].params.health + '%'}"></div>
@@ -567,8 +567,8 @@
             </div>
             <div class="empty" v-show="!havePockets">Без карманов</div>
         </div>
-        <div class="hands" :class="{active: itemDrag.item && !hands}">
-            <div class="slot" v-bind:class="{busy: hands, focus: itemDrag.item && itemDrag.accessColumns.handsFocus}" @mouseenter="onHandsItemEnter()" @mouseleave="onHandsItemLeave()">
+        <div class="hands" :class="{active: itemDrag.item && bodyList[13].includes(itemDrag.item.itemId)}">
+            <div class="slot" v-bind:class="{busy: equipment[13], focus: itemDrag.item && itemDrag.accessColumns.bodyFocus == 13}" @mouseenter="onHandsItemEnter()" @mouseleave="onHandsItemLeave()">
                 <div class="item" v-if="hands && getItem(hands.sqlId)" v-bind:style="{backgroundImage: 'url(' + urlItemImg(hands.itemId) + ')'}">
                     <span class="close" @click="clearHands()">x</span>
                     <div class="count" v-if="hands.params.count">{{ hands.params.count }}</div>

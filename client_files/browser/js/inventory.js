@@ -302,6 +302,7 @@ var inventory = new Vue({
             10: [13],
             11: [8],
             12: [9],
+            13: [1, 18, 21],
         },
         // Вайт-лист предметов, которые можно использовать в горячих клавишах
         hotkeysList: {
@@ -714,17 +715,10 @@ var inventory = new Vue({
             columns.hotkeyFocus = null;
         },
         onHandsItemEnter() {
-            if (!this.itemDrag.item || !this.getItem(this.itemDrag.item.sqlId)) return;
-            var item = this.hands;
-            if (item && this.getItem(item.sqlId)) return;
-            // TODO: возможно, в будущем стоит добавить проверку
-            // if (!this.hotkeysList[this.itemDrag.item.itemId]) return;
-            var columns = this.itemDrag.accessColumns;
-            columns.handsFocus = true;
+            this.onBodyItemEnter(13);
         },
         onHandsItemLeave() {
-            var columns = this.itemDrag.accessColumns;
-            columns.handsFocus = null;
+            this.onBodyItemLeave(13);
         },
         itemMouseHandler(item, e) {
             var rect = document.getElementById('inventory').getBoundingClientRect();
