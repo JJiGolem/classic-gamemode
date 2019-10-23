@@ -3,8 +3,8 @@ Math.clamp = function(value, min, max) {
 }
 
 // var mp = {
-//     trigger(name)  {
-//         console.log(`mp.trigger: ${JSON.stringify(arguments)}`);
+//     trigger(name, values)  {
+//         console.log(`mp.trigger: ${name} ${JSON.stringify(values)}`);
 //     },
 // };
 

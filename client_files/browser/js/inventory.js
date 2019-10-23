@@ -1058,7 +1058,7 @@ var inventory = new Vue({
             this.deleteItem(item.sqlId);
             this.deleteEnvironmentItem(item.sqlId);
             if (item.pockets) {
-                Vue.set(item, 'showPockets', false);
+                Vue.set(item, 'showPockets', true);
             }
             if (parent) {
                 Vue.set(parent.pockets[pocket].items, index, item);
@@ -1527,5 +1527,7 @@ inventory.addEnvironmentPlace({
         }
     }]
 });
+// inventory.fillHands(300);
+inventory.debug = true;
 inventory.show = true;
 inventory.enable = true;*/
