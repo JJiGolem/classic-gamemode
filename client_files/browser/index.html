@@ -568,16 +568,16 @@
             <div class="empty" v-show="!havePockets">Без карманов</div>
         </div>
         <div class="hands" :class="{active: itemDrag.item && bodyList[13].includes(itemDrag.item.itemId)}">
-            <div class="slot" v-bind:class="{busy: equipment[13], focus: itemDrag.item && itemDrag.accessColumns.bodyFocus == 13}" @mouseenter="onHandsItemEnter()" @mouseleave="onHandsItemLeave()">
-                <div class="item" v-if="hands && getItem(hands.sqlId)" v-bind:style="{backgroundImage: 'url(' + urlItemImg(hands.itemId) + ')'}">
-                    <span class="close" @click="clearHands()">x</span>
-                    <div class="count" v-if="hands.params.count">{{ hands.params.count }}</div>
-                    <div class="health" v-if="hands.params.health" v-bind:style="{top: 100 - hands.params.health + '%', 'border-color': valueColor(hands.params.health)}"></div>
-                    <div class="sqlid" v-if="debug">#{{ hands.sqlId }}</div>
+            <div class="slot" v-bind:class="{busy: equipment[13], focus: itemDrag.item && itemDrag.accessColumns.bodyFocus == 13}" @mouseenter="onBodyItemEnter(13)" @mouseleave="onBodyItemLeave(13)">
+                <div class="item" v-if="equipment[13]" v-bind:style="{backgroundImage: 'url(' + urlItemImg(equipment[13].itemId) + ')'}"
+                    @mousedown="itemMouseHandler(equipment[13], $event)"
+                    @contextmenu="itemMouseHandler(equipment[13], $event)" :class="{dragging: equipment[13] == itemDrag.item}">
+                    <div class="count" v-if="equipment[13].params.count">{{ equipment[13].params.count }}</div>
+                    <div class="health" v-if="equipment[13].params.health" v-bind:style="{top: 100 - equipment[13].params.health + '%', 'border-color': valueColor(equipment[13].params.health)}"></div>
+                    <div class="sqlid" v-if="debug">#{{ equipment[13].sqlId }}</div>
                 </div>
-                <img v-if="!hands" src="img/inventory/hand.png" />
-                <img v-if="!hands" src="img/inventory/hand.png" />
-                <!-- <span v-if="!hands.left">в левой <br />руке</span> -->
+                <img v-if="!equipment[13]" src="img/inventory/hand.png" />
+                <img v-if="!equipment[13]" src="img/inventory/hand.png" />
             </div>
         </div>
         <div class="hotkeys" :class="{active: itemDrag.item && hotkeysList[itemDrag.item.itemId]}">

@@ -450,8 +450,6 @@ var inventory = new Vue({
         equipment: {},
         // Предметы на горячих клавишах
         hotkeys: {},
-        // Предметы в руках
-        hands: null,
         // Сытость игрока
         satiety: 0,
         // Жажда игрока
@@ -494,7 +492,6 @@ var inventory = new Vue({
                 columns: {},
                 bodyFocus: null,
                 hotkeyFocus: null,
-                handsFocus: null,
             },
             x: 0,
             y: 0
@@ -714,26 +711,20 @@ var inventory = new Vue({
             var columns = this.itemDrag.accessColumns;
             columns.hotkeyFocus = null;
         },
-        onHandsItemEnter() {
-            this.onBodyItemEnter(13);
-        },
-        onHandsItemLeave() {
-            this.onBodyItemLeave(13);
-        },
         itemMouseHandler(item, e) {
             var rect = document.getElementById('inventory').getBoundingClientRect();
             var descEl = document.getElementsByClassName('item-desc')[0];
             var descRect = (descEl) ? descEl.getBoundingClientRect() : null;
             var handlers = {
                 'mouseenter': (e) => {
-                    this.itemDesc.item = item;
-                    var x = (e.screenX - rect.x) + 15;
-                    var y = (e.screenY - rect.y) + 15;
+                    var x = e.screenX + 15;
+                    var y = e.screenY + 15;
 
-                    if (descRect && e.screenX + descRect.width > window.innerWidth) x -= descRect.width;
-                    if (descRect && e.screenY + descRect.height > window.innerHeight) y -= descRect.height;
-                    this.itemDesc.x = x;
-                    this.itemDesc.y = y;
+                    this.itemDesc.item = item;
+                    if (descRect && x + descRect.width > window.innerWidth) x = window.innerWidth - descRect.width;
+                    if (descRect && y + descRect.height > window.innerHeight) y = window.innerHeight - descRect.height;
+                    this.itemDesc.x = x - rect.x;
+                    this.itemDesc.y = y - rect.y;
                 },
                 'mouseleave': (e) => {
                     this.itemDesc.item = null;
@@ -1070,7 +1061,6 @@ var inventory = new Vue({
                 var item = items[index];
                 if (item.sqlId == sqlId) {
                     this.clearHotkeys(item);
-                    this.clearHands(item);
                     Vue.delete(items, index);
                 }
                 if (item.pockets) {
@@ -1149,18 +1139,6 @@ var inventory = new Vue({
                 var it = this.hotkeys[key];
                 if (it.sqlId == item.sqlId) this.unbindHotkey(key);
             }
-        },
-
-        // ******************  [ Hands ] ******************
-        fillHands(item) {
-            if (typeof item == 'number') item = this.getItem(item);
-            if (!item) return this.notify(`fillHands: Предмет ${item} не опреден`);
-
-            this.hands = item;
-        },
-        clearHands(item = null) {
-            if (item && this.hands && this.hands.sqlId != item.sqlId) return;
-            this.hands = null;
         },
 
         // ******************  [ Environment ] ******************
@@ -1299,8 +1277,6 @@ var inventory = new Vue({
                 });
             } else if (columns.hotkeyFocus) {
                 self.bindHotkey(self.itemDrag.item.sqlId, columns.hotkeyFocus);
-            } else if (columns.handsFocus) {
-                self.fillHands(self.itemDrag.item.sqlId);
             } else if (columns.targetSqlId) {
                 self.deleteItem(self.itemDrag.item.sqlId);
                 self.callRemote("item.merge", {
@@ -1521,7 +1497,6 @@ inventory.addEnvironmentPlace({
         }
     }]
 });
-// inventory.fillHands(300);
 inventory.debug = true;
 inventory.show = true;
 inventory.enable = true;*/

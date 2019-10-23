@@ -27,6 +27,7 @@ module.exports = {
         10: [13],
         11: [8],
         12: [9],
+        13: [],
     },
     // Блек-лист предметов, которые не могут храниться в других предметах
     blackList: {
@@ -60,8 +61,10 @@ module.exports = {
         feets: 0.2,
     },
 
-    init() {
-        this.loadInventoryItemsFromDB();
+    async init() {
+        await this.loadInventoryItemsFromDB();
+        // разрешаем все предметы класть в слот рук
+        this.bodyList[13] = this.inventoryItems.map(x => x.id);
     },
 
     // Загрузка общей информации о предметах из БД в данный модуль

@@ -140,8 +140,6 @@ mp.inventory = {
         mp.game.controls.disableControlAction(1, 163, true);
         mp.game.controls.disableControlAction(1, 164, true);
         mp.game.controls.disableControlAction(1, 165, true);
-
-        
     },
 };
 
