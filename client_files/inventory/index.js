@@ -130,6 +130,19 @@ mp.inventory = {
         }
         mp.callCEFV(`inventory.setBodyList(9, '${JSON.stringify(list)}')`)
     },
+    disableControlActions() {
+        mp.game.controls.disableControlAction(1, 157, true);
+        mp.game.controls.disableControlAction(1, 158, true);
+        mp.game.controls.disableControlAction(1, 159, true);
+        mp.game.controls.disableControlAction(1, 160, true);
+        mp.game.controls.disableControlAction(1, 161, true);
+        mp.game.controls.disableControlAction(1, 162, true);
+        mp.game.controls.disableControlAction(1, 163, true);
+        mp.game.controls.disableControlAction(1, 164, true);
+        mp.game.controls.disableControlAction(1, 165, true);
+
+        
+    },
 };
 
 mp.events.add("characterInit.done", () => {
@@ -206,6 +219,10 @@ mp.events.add("time.main.tick", () => {
     mp.objects.forEach(obj => {
         if (obj.getVariable("groundItem")) mp.utils.setNoCollision(obj, true);
     });
+});
+
+mp.events.add("render", () => {
+    mp.inventory.disableControlActions();
 });
 
 mp.events.addDataHandler("trunk", (vehicle, value) => {
