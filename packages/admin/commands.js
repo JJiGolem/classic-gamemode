@@ -779,4 +779,20 @@ module.exports = {
             }
         }
     },
+    "/hpall": {
+        access: 2,
+        description: "Пополнить здоровье игрокам в радиусе",
+        args: "[радиус]:n",
+        handler: (player, args, out) => {
+            let radius = args[0];
+            mp.players.forEachInRange(player.position, radius, (current) => {
+                if (!current.character) return;
+                if (current.dimension == player.dimension) {
+                    current.health = 100;
+                    notify.info(player, `Ваше здоровье восстановлено администратором`);
+                };
+            });
+            mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} пополнил HP игрокам в радиусе ${radius}`);
+        }
+    },
 }
