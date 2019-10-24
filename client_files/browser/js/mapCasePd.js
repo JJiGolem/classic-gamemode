@@ -254,7 +254,7 @@ Vue.component('map-case-pd-over-wanted', {
             mapCase.currentOverWindow = null;
         },
         give() {
-            if (!this.causeValue) return;
+            if (!this.causeValue && this.danger) return;
 
             mapCase.showLoad();
             mapCase.currentOverWindow = null;
@@ -263,7 +263,7 @@ Vue.component('map-case-pd-over-wanted', {
             this.danger = 1;
         },
         over(n) {
-            if (!n)
+            if (n < 0)
                 this.overDanger = this.danger;
             else
                 this.overDanger = n;

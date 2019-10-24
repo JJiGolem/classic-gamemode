@@ -70,7 +70,10 @@ Vue.component('map-case-fib-dbSearch', {
             if (e.keyCode == 13 && !mapCase.loadMod) {
                 this.search();
             }
-        }
+        },
+        setFocus(enable) {
+            mapCase.inputFocus = enable;
+        },
     },
 });
 
@@ -184,8 +187,11 @@ Vue.component('map-case-fib-identification', {
             if (e.keyCode == 13 && !mapCase.loadMod) {
                 this.search();
             }
-        }
-    }
+        },
+        setFocus(enable) {
+            mapCase.inputFocus = enable;
+        },
+    },
 });
 
 Vue.component('map-case-fib-over-fine', {
@@ -221,7 +227,10 @@ Vue.component('map-case-fib-over-fine', {
             if (e.keyCode == 13 && !mapCase.loadMod) {
                 this.give();
             }
-        }
+        },
+        setFocus(enable) {
+            mapCase.inputFocus = enable;
+        },
     }
 
 });
@@ -245,7 +254,7 @@ Vue.component('map-case-fib-over-wanted', {
             mapCase.currentOverWindow = null;
         },
         give() {
-            if (!this.causeValue) return;
+            if (!this.causeValue && this.danger) return;
 
             mapCase.showLoad();
             mapCase.currentOverWindow = null;
@@ -254,7 +263,7 @@ Vue.component('map-case-fib-over-wanted', {
             this.danger = 1;
         },
         over(n) {
-            if (!n)
+            if (n < 0)
                 this.overDanger = this.danger;
             else
                 this.overDanger = n;
@@ -266,7 +275,10 @@ Vue.component('map-case-fib-over-wanted', {
             if (e.keyCode == 13 && !mapCase.loadMod) {
                 this.give();
             }
-        }
+        },
+        setFocus(enable) {
+            mapCase.inputFocus = enable;
+        },
     }
 
 });

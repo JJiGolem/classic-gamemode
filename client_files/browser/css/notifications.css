@@ -2,7 +2,7 @@
     color: #fff;
     display: flex;
     flex-direction: column;
-    font-family: Montserrat;
+    font-family: Ubuntu;
     justify-content: flex-end;
     height: 60%;
     left: 2.5vh;
@@ -12,38 +12,66 @@
     top: 19.5%;
 }
 
-#notifications > div {
-    background: linear-gradient(to right, #000a, #0000);
+#notifications .notif-box {
+    /*background: linear-gradient(to right, #000a, #0000);*/
     display: flex;
-    margin-bottom: 0.5vh;
+    margin-bottom: 1vh;
+    border-radius: 1.5vh;
+    width: 30vh;
 }
 
 #notifications > div img {
-    margin: 0 1.5vh;
-    width: 1.5vh;
+    margin: 0 2vh 0 1.5vh;
+    width: 2vh;
 }
 
 #notifications > div .header {
     font-weight: bold;
+    font-size: 1.7vh;
+    margin-left: -0.5vh;
+    margin-bottom: 0.5vh;
 }
 
 #notifications > div .message {
-    padding: 1vh 0;
+    font-weight: 400;
+    font-size: 1.6vh;
+    padding: 1.5vh 0;
     padding-right: 1vh;
 }
 
 #notifications .error {
-    border-left: 2px solid #c22;
+    background: linear-gradient(to right, #AC3737, #0000);
+    /*border-left: 2px solid #c22;*/
 }
 
 #notifications .info {
-    border-left: 2px solid #23c;
+    background: linear-gradient(to right, #3937AC, #0000);
+    /*border-left: 2px solid #23c;*/
 }
 
 #notifications .success {
-    border-left: 2px solid #3c2;
+    background: linear-gradient(to right, #37AC4A, #0000);
+    /*border-left: 2px solid #3c2;*/
 }
 
 #notifications .warning {
-    border-left: 2px solid #c82;
+    background: linear-gradient(to right, #AC6F37, #0000);
+    /*border-left: 2px solid #c82;*/
+}
+
+.notif-enter-active {
+  transition: all 0.25s;
+  margin-left: 0;
+}
+.notif-enter {
+  margin-left: 100%;
+}
+
+.notif-leave-active {
+  transition: all 0.5s;
+  margin-left: -100%;
+}
+
+.notif-leave {
+  margin-left: 0;
 }

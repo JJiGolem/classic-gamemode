@@ -7,6 +7,8 @@
     <meta name="theme-color" content="#000000" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700&display=swap&subset=cyrillic">
+
     <link rel="stylesheet" type="text/css" href="build/css/styles.css">
     <link rel="stylesheet" type="text/css" href="css/main.css" />
     <link rel="stylesheet" type="text/css" href="css/fonts.css" />
@@ -54,49 +56,75 @@
     <!-- ************************** VUE JS ************************** -->
     <!-- v-cloak в контейнерах VUE используется для того, что бы решить проблему мерцания UI при запуске -->
     <div v-cloak="v-cloak" id="hud" v-show="show">
-        <div class="server-online" v-show="showOnline">
-            <div class="content">
-                <img class="logo" src="img/logo.png" />
-                <p>Онлайн:
-                    {{ players }}
-                    /
-                    {{ maxPlayers }}</p>
-                <p v-if="build">{{ build }} <i class="fab fa-git-alt"></i></p>
-                <p v-if="branch && build">{{ branch }} <i class="fas fa-code-branch"></i></p>
-            </div>
-            <div class="wanted" v-if="wanted">
-                <img src="img/hud/star.svg" :style="{opacity: (wanted < 5)? 0.2 : 1}" />
-                <img src="img/hud/star.svg" :style="{opacity: (wanted < 4)? 0.2 : 1}" />
-                <img src="img/hud/star.svg" :style="{opacity: (wanted < 3)? 0.2 : 1}" />
-                <img src="img/hud/star.svg" :style="{opacity: (wanted < 2)? 0.2 : 1}" />
-                <img src="img/hud/star.svg" />
-            </div>
-        </div>
         <div v-show="keysShow && !selectMenu.show" class="keys">
             <div v-for="key in keys"><span v-html="key.key"></span>{{ key.name }}</div>
         </div>
-        <div class="money">
-            <div class="cash">
-                <img src="img/hud/cash.svg" />
-                $
-                {{ pretty(cash) }}
+        <div class="panel-right-top">
+            <div class="info-logo">
+                <div class="info">
+                    <div v-if="build">Build: <span>{{ build }} ({{ branch }})</span></div>
+                    <div>Онлайн: <span>{{ players }}/{{ maxPlayers }}</span></div>
+                    <div>Ваш ID: <span>{{ playerId }}</span></div>
+                </div>
+                <div><img class="logo" src="img/logo.png" /></div>
             </div>
-            <div class="bank">
-                <img src="img/hud/credit-card.svg" />
-                $
-                {{ pretty(bank) }}
+            <div class="wanted" v-if="wanted">
+                <svg :class="{ paint: wanted > 5 - n }" v-for="n in 5" viewBox="0 0 26 24"><path :d="star"/></svg>
             </div>
-            <div class="time">{{ time }}</div>
+            <div class="player-state">
+                <img v-if="cold" src="img/hud/cold.svg" />
+                <img v-if="heat" src="img/hud/heat.svg" />
+            </div>
+            <div class="arrest" v-if="arrestProgress">
+                <div class="wrap">
+                    <svg>
+                        <circle :style="arrestProgressStyle"/>
+                    </svg>
+                    <img src="img/hud/jail.svg"/>
+                </div>
+                <div class="description">{{ arrestDescription }}</div>
+            </div>
         </div>
-        <div class="voice">
-            <img :src="(voice)? 'img/hud/voice-on.png' : 'img/hud/voice-off.png'" />
+        <div class="panel-right-bottom">
+            <div class="voice block">
+                <svg :class="{ on: voice }" viewBox="0 0 13 19" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6.72898 12.2246C8.46895 12.2246 9.85821 10.6324 9.82572 8.67313L9.74348 4.31009C9.71113 2.35894 8.27365 0.771667 6.53906 0.771667C4.80461 0.771667 3.41983 2.35894 3.45215 4.30807L3.51473 8.67525C3.54718 10.6324 4.98905 12.2246 6.72898 12.2246Z" />
+                    <path d="M12.2591 9.22286C12.2517 8.77101 11.9199 8.40479 11.5183 8.40479C11.1167 8.40479 10.7971 8.77101 10.8046 9.22286C10.8469 11.7715 9.04476 13.8462 6.78234 13.8622C6.77356 13.8619 6.76501 13.8608 6.75614 13.8608C6.74721 13.8608 6.73875 13.8619 6.72993 13.8622C4.46717 13.8463 2.59631 11.7715 2.55405 9.22286C2.54655 8.77101 2.21481 8.40479 1.81321 8.40479C1.41156 8.40479 1.09201 8.77101 1.0995 9.22286C1.15229 12.4063 3.31423 15.0438 6.05515 15.4459L6.08313 17.1331H4.48322C4.08158 17.1331 3.76203 17.4993 3.76952 17.9511C3.77701 18.4029 4.10871 18.7692 4.51036 18.7692H9.16499C9.56659 18.7692 9.88619 18.4029 9.8787 17.9511C9.87121 17.4993 9.53946 17.1331 9.13786 17.1331H7.53767L7.50969 15.4459C10.2374 15.0437 12.3119 12.4063 12.2591 9.22286Z" />
+                </svg>
+                <div class="symb">N</div>
+            </div>
+            <div class="starvation block">
+                <div class="satiety record">
+                    <div><img src="img/hud/burger.svg"/></div>
+                    <div class="progress"><div :style="{ width: satiety+'%' }"></div></div>
+                    <div class="percent">{{ satiety }}%</div>
+                </div>
+                <div class="thirst record">
+                    <div><img src="img/hud/glass.svg"/></div>
+                    <div class="progress"><div :style="{ width: thirst+'%' }"></div></div>
+                    <div class="percent">{{ thirst }}%</div>
+                </div>
+            </div>
+            <div class="money block">
+                <div class="cash">
+                    <img src="img/hud/cash.svg" />
+                    {{ pretty(cash) }}
+                    $
+                </div>
+                <div class="time">{{ time }}</div>
+                <div class="bank">
+                    <img src="img/hud/credit-card.svg" />
+                    {{ pretty(bank) }}
+                    $
+                </div>
+                <div class="date">{{ date }}</div>
+            </div>
         </div>
-        <div class="weather" v-bind:style="{left: leftWeather + 'px'}">
+        <div class="weather block" v-bind:style="{left: leftWeather + 'px'}">
             <div class="region">{{ region }}</div>
             <div class="street">{{ street }}</div>
             <div class="temperature">{{ temperature }}
                 C°</div>
-            <div class="city">{{ city }}</div>
             <img :src="'img/weather/' + weather + '.svg'" />
         </div>
     </div>
@@ -105,14 +133,16 @@
         <div class="text" v-html="text"></div>
     </div>
 
-    <div id="notifications" v-if="messages.length">
-        <div :class="notif.type" v-for="notif in messages">
-            <img :src="'img/notifs/' + notif.type + '.svg'" />
-            <div v-cloak="v-cloak" class="message">
-                <div class="header" v-if="notif.header">{{ notif.header }}</div>
-                {{ notif.text }}
+    <div id="notifications">
+        <transition-group name="notif" tag="div">
+            <div :class="[notif.type, 'notif-box']" v-for="notif, in messages" :key="notif.hash">
+                <img :src="'img/notifs/' + notif.type + '.svg'" />
+                <div v-cloak="v-cloak" class="message">
+                    <div class="header" v-if="notif.header">{{ notif.header }}</div>
+                    {{ notif.text }}
+                </div>
             </div>
-        </div>
+        </transition-group>
     </div>
 
     <div v-cloak id="offerDialog" v-if="dialog">
@@ -1043,7 +1073,7 @@
     <script type="text/x-template" id="map-case-wnews-over-ads">
         <div class="over ads">
             <div class="title">{{ header }}</div>
-            <div :class="['text', { focus: editMod }]" :contenteditable="editMod" @input="update" @keypress="inputCheck($event)"></div>
+            <div :class="['text', { focus: editMod }]" :contenteditable="editMod" @input="update" @keypress="inputCheck($event)" @focus="setFocus(true)" @blur="setFocus(false)"></div>
             <div class="line"></div>
             <div class="author"><span>Автор:</span> {{ adData.ad.author }}</div>
             <div :class="['btns', { refuse: refuseMod }]">
@@ -1074,12 +1104,13 @@
             <div class="title">Введите причину</div>
             <div class="input"><input placeholder="Введите причину выдачи розыска..." v-model="causeValue" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
             <div class="title">Выберите степень опасности</div>
-            <div class="stars" @click="setDanger()"><svg
+            <div class="stars" @click.self="over(0); setDanger()"><svg
                                 :class="{ fill: overDanger >= n }"
                                 v-for="n in 5"
                                 viewBox="0 0 14 14"
+                                @click="setDanger()"
                                 @mouseover="over(n)"
-                                @mouseout="over(0)">
+                                @mouseout="over(-1)">
                                 <path :d="star"/></svg></div>
             <div class="btns">
                 <div class="btn" @click="give()">Выдать</div>

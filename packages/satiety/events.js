@@ -6,6 +6,10 @@ module.exports = {
     "characterInit.done": (player) => {
         player.health = player.character.health;
         satiety.startTimer(player);
+        player.call(`hud.setData`, [{
+            satiety: player.character.satiety,
+            thirst: player.character.thirst
+        }]);
     },
     "playerQuit": (player) => {
         if (!player.character) return;

@@ -82,7 +82,7 @@ mp.events.add('hud.players.list.show', (state) => {
     } else {
         mp.busy.remove('playersList');
     }
-    
+
     playersListState = state;
 });
 
@@ -96,4 +96,8 @@ mp.events.add('hud.players.list.add', (newPlayer) => {
 
 mp.events.add('hud.players.list.remove', (id) => {
     mp.callCEFR('players.remove', [id]);
+});
+
+mp.events.call('hud.setData', {
+    playerId: mp.players.local.remoteId
 });

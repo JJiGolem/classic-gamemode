@@ -70,6 +70,9 @@ Vue.component("map-case-wnews-over-ads", {
             this.editMod = true;
             this.refuseMod = true;
         },
+        setFocus(enable) {
+            mapCase.inputFocus = enable;
+        },
     },
     mounted () {
         this.text = this.adData.ad.text;
