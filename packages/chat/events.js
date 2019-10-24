@@ -30,7 +30,6 @@ module.exports = {
     },
 
 
-    //TODO: добавить проверки на мут, организацию, знакомство (???)
     "chat.message.get": (player, type, message) => {
 
         if (message.length > 100) {
@@ -90,10 +89,12 @@ module.exports = {
             case '/s':
             case '/r':
             case '/n':
+            case '/b':
             case '/me':
             case '/do':
             case '/try':
                 if (!/\S/.test(args.join(' '))) return;
+                if (command == '/b') command = '/n';
                 mp.events.call(command, player, args);
                 break;
             default:
