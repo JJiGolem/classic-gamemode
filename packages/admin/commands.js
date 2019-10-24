@@ -13,7 +13,7 @@ module.exports = {
         description: "Сообщение в админский чат",
         args: "[сообщение]",
         handler: (player, args) => {
-            mp.events.call('admin.notify.all', `!{#b5e865}[A] ${player.name}[${player.id}]: ${args.join(' ')}`);
+            mp.events.call('admin.notify.all.split', args.join(' '), `!{#b5e865}[A] ${player.name}[${player.id}]: `);
         }
     },
     "/ans": {
@@ -24,8 +24,8 @@ module.exports = {
             let target = mp.players.at(parseInt(args[0]));
             if (!target) return player.call('notifications.push.error', ['Игрок не найден', 'Ошибка']);
             args.shift();
-            mp.events.call('admin.notify.all', `!{#f29f53}[A] ${player.name}[${player.id}] > ${target.name}[${target.id}]: ${args.join(' ')}`);
-            target.call('chat.message.push', [`!{#f29f53}Ответ от ${player.name}[${player.id}]: ${args.join(' ')}`]);
+            mp.events.call('admin.notify.all.split', args.join(' '), `!{#f29f53}[A] ${player.name}[${player.id}] > ${target.name}[${target.id}]: `);
+            target.call('chat.message.split', [args.join(' '), `!{#f29f53}Ответ от ${player.name}[${player.id}]: `]);
         }
     },
     "/msg": {
@@ -33,7 +33,7 @@ module.exports = {
         description: "Сообщение в общий чат",
         args: "[сообщение]",
         handler: (player, args) => {
-            mp.events.call('admin.notify.players', `!{#ebc71b}${player.name}[${player.id}]: ${args.join(' ')}`);
+            mp.events.call('admin.notify.players.split', args.join(' '), `!{#ebc71b}${player.name}[${player.id}]: `);
         }
     },
     "/goto": {

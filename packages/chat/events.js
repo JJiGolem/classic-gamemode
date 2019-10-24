@@ -94,6 +94,8 @@ module.exports = {
             case '/me':
             case '/do':
             case '/try':
+            case '/gnews':
+            case '/d':
                 if (!/\S/.test(args.join(' '))) return;
                 if (command == '/b') command = '/n';
                 mp.events.call(command, player, args);
@@ -166,7 +168,11 @@ module.exports = {
     },
 
     "/f": (player, message) => {
-        factions.sayRadio(player, message.join(' '));
+        if (factions.isStateFaction(player.character.factionId) || !factions.isLeader(player)) {
+            mp.events.call('/d', player, message);
+        } else {
+            factions.sayRadio(player, message.join(' '));
+        }
     },
 
     "/n": (player, message) => {
@@ -192,12 +198,27 @@ module.exports = {
         });
     },
 
+    "/gnews": (player, message) => {
+        if (!player.character) return;
+        if (!factions.isStateFaction(player.character.factionId) || !factions.isLeader(player)) return;
 
-    // "/gnews": (player, message) => {
-    //     mp.players.forEach((currentPlayer) => {
-    //         currentPlayer.call('playerGnews', [player.name, player.id, message]);
-    //     });
-    // },
+        mp.players.forEach((currentPlayer) => {
+            if (!currentPlayer.character) return;
+            currentPlayer.call('chat.message.split', [message.join(' '), `!{#498fff}[Гос. новости] ${player.character.name}[${player.id}]: `]);
+        });
+    },
+
+    "/d": (player, message) => {
+        if (!player.character) return;
+        if (!factions.isStateFaction(player.character.factionId)) return;
+
+        let rank = factions.getRankById(player.character.factionId, player.character.factionRank).name;
+        mp.players.forEach((currentPlayer) => {
+            if (!currentPlayer.character) return;
+            if (!factions.isStateFaction(currentPlayer.character.factionId)) return;
+            currentPlayer.call('chat.message.split', [message.join(' '), `!{#59b3cf}[D] ${rank} ${player.character.name}[${player.id}]: `]);
+        });
+    },
 
     "/try": (player, message) => {
 

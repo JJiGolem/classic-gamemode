@@ -11,7 +11,7 @@ mp.chat = {
 
 var chatOpacity = 1.0;
 var isOpen = false;
-const defaultSplitLimit = 90;
+const defaultSplitLimit = 95;
 
 const TAGS_LIST = [{
         id: 0,
@@ -219,18 +219,15 @@ mp.events.add('chat.action.try', (nickname, id, message, result) => {
     splitChatMessage(message, null, '!{#dd90ff}');
 });
 
-
-// mp.events.add('playerGnews', (nickname, id, message) => {
-//     message = message.join(' ');
-//     message = `!{#498fff}[Гос. новости] ${nickname}[${id}]: ${message}`;
-//     mp.events.call('pushChatMessage', message);
-// });
-
 mp.events.add('chat.message.push', (message) => {
-    if (message.length > 95) {
-        message = message.slice(0, 95);
+    if (message.length > 100) {
+        message = message.slice(0, 100);
     };
     mp.callCEFR('pushChatMessage', [message]);
+});
+
+mp.events.add('chat.message.split', (message, fixed, color) => {
+    splitChatMessage(message, fixed, color);
 });
 
 function splitChatMessage(message, fixed, color) {
