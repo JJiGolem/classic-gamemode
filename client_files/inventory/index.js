@@ -1,6 +1,7 @@
 mp.inventory = {
     groundMaxDist: 2,
     lastArmour: 0,
+    itemsInfo: null,
 
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
@@ -16,10 +17,13 @@ mp.inventory = {
         mp.callCEFV(`inventory.initItems('${items}')`);
     },
     setItemsInfo(itemsInfo) {
+        this.itemsInfo = itemsInfo;
+
         if (typeof itemsInfo == 'object') itemsInfo = JSON.stringify(itemsInfo);
         mp.callCEFV(`inventory.setItemsInfo('${itemsInfo}')`);
     },
     setItemInfo(id, itemInfo) {
+        this.itemsInfo[id] = itemInfo;
         if (typeof itemInfo == 'object') itemInfo = JSON.stringify(itemInfo);
         mp.callCEFV(`inventory.setItemInfo(${id}, '${itemInfo}')`);
     },
@@ -159,9 +163,13 @@ mp.events.add("inventory.initItems", (items) => {
     mp.inventory.loadHotkeys();
 });
 
-mp.events.add("inventory.setItemsInfo", mp.inventory.setItemsInfo);
+mp.events.add("inventory.setItemsInfo", (itemsInfo) => {
+    mp.inventory.setItemsInfo(itemsInfo);
+});
 
-mp.events.add("inventory.setItemInfo", mp.inventory.setItemInfo);
+mp.events.add("inventory.setItemInfo", (id, info) => {
+    mp.inventory.setItemInfo(id, info);
+});
 
 mp.events.add("inventory.setMergeList", mp.inventory.setMergeList);
 

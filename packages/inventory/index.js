@@ -86,7 +86,9 @@ module.exports = {
             description: item.description,
             height: item.height,
             width: item.width,
-            weight: item.weight
+            weight: item.weight,
+            model: item.model,
+            attachInfo: item.attachInfo,
         };
     },
     // Отправка общей информации о настройках инвентаря игроку
