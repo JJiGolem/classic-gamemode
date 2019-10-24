@@ -2,6 +2,8 @@
 var factions = require('../factions');
 var chat = require('./index');
 let news = call('news');
+let admin = call('admin');
+let notify = call('notifications');
 
 module.exports = {
 
@@ -99,6 +101,9 @@ module.exports = {
                 if (!/\S/.test(args.join(' '))) return;
                 if (command == '/b') command = '/n';
                 mp.events.call(command, player, args);
+                break;
+            case '/tp':
+                mp.events.call('/tp', player);
                 break;
             default:
                 if (!player.character.admin) return;
@@ -230,6 +235,13 @@ module.exports = {
                 currentPlayer.call('chat.action.try', [player.name, player.id, message, result]);
             };
         });
-    }
+    },
+
+    "/tp": (player) => {
+        let pos = admin.getMassTeleportPosition();
+        if (!pos) return notify.error(player, 'Массовый телепорт отключен');
+        player.position = pos;
+        notify.success(player, 'Вы были телепортированы');
+    },
 
 }

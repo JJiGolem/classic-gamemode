@@ -764,4 +764,19 @@ module.exports = {
             }
         }
     },
+    "/masstp": {
+        description: "Включить/отключить массовый телепорт",
+        access: 4,
+        args: "",
+        handler: (player, args, out) => {
+            let pos = admin.getMassTeleportPosition();
+            if (pos) {
+                admin.setMassTeleportPosition(null);
+                out.info(`${player.character.name} отключил массовый телепорт`);
+            } else {
+                admin.setMassTeleportPosition(player.position);
+                out.info(`${player.character.name} включил массовый телепорт`);
+            }
+        }
+    },
 }

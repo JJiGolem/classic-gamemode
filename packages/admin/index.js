@@ -2,6 +2,8 @@
 /// Модуль реализующий админские функции
 let commands = {};
 
+let massTeleportPosition;
+
 module.exports = {
     // Кол-во варнов, при которых игрок улетаем в бан
     banWarns: 3,
@@ -37,5 +39,11 @@ module.exports = {
     },
     isTerminalCommand(args) {
         return args.indexOf(':') != -1;
+    },
+    getMassTeleportPosition() {
+        return massTeleportPosition;
+    },
+    setMassTeleportPosition(pos) {
+        massTeleportPosition = pos;
     }
 };
