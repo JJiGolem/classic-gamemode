@@ -7,7 +7,7 @@ let carPassList = [];
 
 mp.events.add('documents.show', (type, data) => {
     if (isOpen) return;
-    setTimeout(() => {
+    mp.timer.add(() => {
         isOpen = true;
     }, 500);
     controlsDisabled = true;
@@ -71,7 +71,7 @@ mp.events.add('documents.show', (type, data) => {
 
 mp.events.add('documents.close', (type, data) => {
     if (!isOpen) return;
-    setTimeout(() => {
+    mp.timer.add(() => {
         isOpen = false;
     }, 500);
 
@@ -127,7 +127,7 @@ mp.events.add('documents.showTo', (type) => {
     } else {
         target = mp.getCurrentInteractionEntity();
     }
-    
+
     if (!target) return;
     if (target.type != 'player') return;
 

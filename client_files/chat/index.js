@@ -11,7 +11,7 @@ mp.chat = {
 
 var chatOpacity = 1.0;
 var isOpen = false;
-// TODO: цвета тэгов
+const defaultSplitLimit = 95;
 
 const TAGS_LIST = [{
         id: 0,
@@ -172,9 +172,7 @@ mp.events.add('chat.message.get', (type, message) => {
 mp.events.add('chat.action.say', (nickname, id, message) => {
     nickname = correctName(nickname);
 
-    message = `!{#ffffff}${nickname}[${id}]: ${message}`;
-    mp.events.call('chat.message.push', message);
-
+    splitChatMessage(message, `!{#ffffff}${nickname}[${id}]: `)
     playChatAnimation(id);
 });
 
@@ -182,22 +180,19 @@ mp.events.add('chat.action.shout', (nickname, id, message) => {
     nickname = correctName(nickname);
 
     if (typeof(message) != "string") message = message.join(' ');
-    message = `!{#ffdfa8}${nickname}[${id}] кричит: ${message}`;
-    mp.events.call('chat.message.push', message);
+    splitChatMessage(message, `!{#ffdfa8}${nickname}[${id}] кричит: `)
 });
 
-mp.events.add('chat.action.walkietalkie', (nickname, id, rank, message) => { //add rank
+mp.events.add('chat.action.walkietalkie', (nickname, id, rank, message) => {
     if (typeof(message) != "string") message = message.join(' ');
-    message = `!{#33cc66}[R] ${rank} ${nickname}[${id}]: ${message}`;
-    mp.events.call('chat.message.push', message);
+    splitChatMessage(message, `!{#33cc66}[R] ${rank} ${nickname}[${id}]: `)
 });
 
 mp.events.add('chat.action.nonrp', (nickname, id, message) => {
     nickname = correctName(nickname);
 
     if (typeof(message) != "string") message = message.join(' ');
-    message = `!{#c6c695}(( ${nickname}[${id}]: ${message} ))`;
-    mp.events.call('chat.message.push', message);
+    splitChatMessage(message, `!{#c6c695}[OOC] ${nickname}[${id}]: `);
 });
 
 mp.events.add('chat.action.me', (nickname, id, message) => {
@@ -205,7 +200,7 @@ mp.events.add('chat.action.me', (nickname, id, message) => {
 
     if (typeof(message) != "string") message = message.join(' ');
     message = `!{#dd90ff}${nickname}[${id}] ${message}`;
-    mp.events.call('chat.message.push', message);
+    splitChatMessage(message, null, '!{#dd90ff}');
 });
 
 mp.events.add('chat.action.do', (nickname, id, message) => {
@@ -213,48 +208,46 @@ mp.events.add('chat.action.do', (nickname, id, message) => {
 
     if (typeof(message) != "string") message = message.join(' ');
     message = `!{#dd90ff}${message} (${nickname}[${id}])`;
-    mp.events.call('chat.message.push', message);
+    splitChatMessage(message, null, '!{#dd90ff}');
 });
 
 mp.events.add('chat.action.try', (nickname, id, message, result) => {
     nickname = correctName(nickname);
 
     if (typeof(message) != "string") message = message.join(' ');
-    message = `!{#dd90ff}${nickname}[${id}] ${message} ${(result ? '!{#66cc00}[Удачно]' : '!{#ff6600}[Неудачно]')}`;
-    mp.events.call('chat.message.push', message);
+    message = `!{#dd90ff}${nickname}[${id}] ${message} ${result ? '!{#66cc00} [Удачно]' : '!{#ff6600} [Неудачно]'}`;
+    splitChatMessage(message, null, '!{#dd90ff}');
 });
 
-// mp.events.add('getAnswerMessage', (adminName, adminId, message) => {
-//     message = message.join(' ');
-//     message = `!{#f29f53}Администратор ${adminName}[${adminId}] ответил вам: ${message}`;
-//     mp.events.call('pushChatMessage', message);
-// });
-
-// mp.events.add('playerBroadcast', (nickname, id, message) => {
-//     message = `!{#81dbcf}[Радио] Ведущий ${nickname}[${id}]: ${message}`;
-//     mp.events.call('pushChatMessage', message);
-// });
-
-// mp.events.add('playerGnews', (nickname, id, message) => {
-//     message = message.join(' ');
-//     message = `!{#498fff}[Гос. новости] ${nickname}[${id}]: ${message}`;
-//     mp.events.call('pushChatMessage', message);
-// });
-/*
-Если будет сообщение о payday в чате:
-
-mp.events.add('payDayMessage.client', (hours) => {
-    mp.events.call('pushChatMessage.client', `!{#ffffff}Текущее время: !{#4fbeff}${formatTime(hours)}:00`);
-    mp.events.call('pushChatMessage.client', '!{#ffdb66}БАНКОВСКИЙ ЧЕК');
-    mp.events.call('pushChatMessage.client', '___________________');
-    mp.events.call('pushChatMessage.client', '!{#ffffff}Зарплата: !{#66cc00}$1200');
-    mp.events.call('pushChatMessage.client', '!{#ffffff}Баланс счета: !{#66cc00}$5600');
-    mp.events.call('pushChatMessage.client', '___________________');
-});
-*/
 mp.events.add('chat.message.push', (message) => {
     if (message.length > 100) {
-        message = message.slice(0, 95);
+        message = message.slice(0, 100);
     };
     mp.callCEFR('pushChatMessage', [message]);
 });
+
+mp.events.add('chat.message.split', (message, fixed, color) => {
+    splitChatMessage(message, fixed, color);
+});
+
+function splitChatMessage(message, fixed, color) {
+    if (!fixed) fixed = '';
+    if (!color) color = '';
+    let splitLimit = defaultSplitLimit - fixed.length;
+    if (message.length <= splitLimit) {
+        mp.events.call('chat.message.push', `${fixed}${message}`);
+        return;
+    }
+
+    let output = message.substr(0, splitLimit);
+    message = message.substr(splitLimit, message.length);
+    mp.events.call('chat.message.push', `${fixed}${output}...`);
+
+    while (message.length > splitLimit) {
+        output = message.substr(0, splitLimit);
+        message = message.substr(splitLimit, message.length);
+        mp.events.call('chat.message.push', `${color}${fixed}...${output}...`);
+    }
+
+    if (message.length > 0) mp.events.call('chat.message.push', `${color}${fixed}...${message}`);
+}

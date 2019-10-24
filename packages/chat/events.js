@@ -2,6 +2,8 @@
 var factions = require('../factions');
 var chat = require('./index');
 let news = call('news');
+let admin = call('admin');
+let notify = call('notifications');
 
 module.exports = {
 
@@ -9,11 +11,9 @@ module.exports = {
         player.call('chat.load');
         player.call('chat.message.push', ['!{#00abff} Добро пожаловать на Classic Roleplay!']);
 
-        player.name = player.character.name;
         if (player.character.admin > 0) {
             mp.events.call('admin.notify.all', `!{#f7f692}[A] Администратор ${player.character.admin} уровня ${player.name} авторизовался`);
         }
-
     },
 
     // "playerJoin": (player) => {
@@ -32,7 +32,6 @@ module.exports = {
     },
 
 
-    //TODO: добавить проверки на мут, организацию, знакомство (???)
     "chat.message.get": (player, type, message) => {
 
         if (message.length > 100) {
@@ -91,12 +90,20 @@ module.exports = {
         switch (command) {
             case '/s':
             case '/r':
+            case '/f':
             case '/n':
+            case '/b':
             case '/me':
             case '/do':
             case '/try':
+            case '/gnews':
+            case '/d':
                 if (!/\S/.test(args.join(' '))) return;
+                if (command == '/b') command = '/n';
                 mp.events.call(command, player, args);
+                break;
+            case '/tp':
+                mp.events.call('/tp', player);
                 break;
             default:
                 if (!player.character.admin) return;
@@ -165,6 +172,14 @@ module.exports = {
         factions.sayRadio(player, message.join(' '));
     },
 
+    "/f": (player, message) => {
+        if (factions.isStateFaction(player.character.factionId) || !factions.isLeader(player)) {
+            mp.events.call('/d', player, message);
+        } else {
+            factions.sayRadio(player, message.join(' '));
+        }
+    },
+
     "/n": (player, message) => {
         mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
@@ -188,12 +203,27 @@ module.exports = {
         });
     },
 
+    "/gnews": (player, message) => {
+        if (!player.character) return;
+        if (!factions.isStateFaction(player.character.factionId) || !factions.isLeader(player)) return;
 
-    // "/gnews": (player, message) => {
-    //     mp.players.forEach((currentPlayer) => {
-    //         currentPlayer.call('playerGnews', [player.name, player.id, message]);
-    //     });
-    // },
+        mp.players.forEach((currentPlayer) => {
+            if (!currentPlayer.character) return;
+            currentPlayer.call('chat.message.split', [message.join(' '), `!{#498fff}[Гос. новости] ${player.character.name}[${player.id}]: `]);
+        });
+    },
+
+    "/d": (player, message) => {
+        if (!player.character) return;
+        if (!factions.isStateFaction(player.character.factionId)) return;
+
+        let rank = factions.getRankById(player.character.factionId, player.character.factionRank).name;
+        mp.players.forEach((currentPlayer) => {
+            if (!currentPlayer.character) return;
+            if (!factions.isStateFaction(currentPlayer.character.factionId)) return;
+            currentPlayer.call('chat.message.split', [message.join(' '), `!{#59b3cf}[D] ${rank} ${player.character.name}[${player.id}]: `]);
+        });
+    },
 
     "/try": (player, message) => {
 
@@ -205,6 +235,13 @@ module.exports = {
                 currentPlayer.call('chat.action.try', [player.name, player.id, message, result]);
             };
         });
-    }
+    },
+
+    "/tp": (player) => {
+        let pos = admin.getMassTeleportPosition();
+        if (!pos) return notify.error(player, 'Массовый телепорт отключен');
+        player.position = pos;
+        notify.success(player, 'Вы были телепортированы');
+    },
 
 }

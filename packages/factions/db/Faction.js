@@ -67,6 +67,10 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         h: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        d: {
             type: DataTypes.FLOAT,
             allowNull: false
         },
@@ -85,6 +89,11 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: null,
             allowNull: true
         },
+        wD: {
+            type: DataTypes.INTEGER,
+            defaultValue: null,
+            allowNull: true
+        },
         sX: {
             type: DataTypes.FLOAT,
             allowNull: false
@@ -97,6 +106,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.FLOAT,
             allowNull: false
         },
+        sD: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
         hX: {
             type: DataTypes.FLOAT,
             allowNull: false
@@ -107,6 +120,10 @@ module.exports = (sequelize, DataTypes) => {
         },
         hZ: {
             type: DataTypes.FLOAT,
+            allowNull: false
+        },
+        hD: {
+            type: DataTypes.INTEGER,
             allowNull: false
         },
         // мин. ранг, который может брать БП/Мед со своего склада

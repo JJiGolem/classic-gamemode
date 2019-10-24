@@ -1,4 +1,7 @@
+
 var vehicles = require('./index.js');
+let timer = call('timer');
+
 module.exports = {
     "/resp": {
         access: 6,
@@ -138,7 +141,7 @@ module.exports = {
         handler: async (player, args, out) => {
             let veh = player.vehicle;
             if (!veh) return out.error('Вы не в авто!', player);
-            clearTimeout(veh.fuelTimer);
+            timer.remove(veh.fuelTimer);
             if (!veh.db || veh.key == 'admin') {
                 veh.destroy();
                 out.info('Автомобиль удален, но его нет в БД', player);
@@ -192,7 +195,7 @@ module.exports = {
             let result = 'Модель | Имя | Тип | Цена | Бак | Расход<br/>';
             let props = vehicles.getVehiclePropertiesList();
             props.forEach((prop) => {
-                result+=`${prop.model} | ${prop.name} | ${prop.vehType} | ${prop.price} | ${prop.maxFuel} | ${prop.consumption}<br/>`;
+                result += `${prop.model} | ${prop.name} | ${prop.vehType} | ${prop.price} | ${prop.maxFuel} | ${prop.consumption}<br/>`;
             });
             out.info(result, player);
         }
@@ -207,6 +210,23 @@ module.exports = {
             let name = vehicle.spawnedBy;
             if (!name) return out.error(`У т/с нет создателя`, player);
             out.info(`Этот транспорт создал ${name}`, player);
+        }
+    },
+    "/invveh": {
+        access: 5,
+        description: "Создать невалидный авто",
+        args: ``,
+        handler: (player, args, out) => {
+            let vehicle = mp.vehicles.new('elegy', new mp.Vector3(player.position.x, player.position.y + 2, player.position.z), {
+                heading: player.heading,
+                engine: false,
+                locked: false
+            });
+            vehicle.db = {
+                color1: 73,
+                color2: 88,
+                plate: 'HI228'
+            }
         }
     }
 }

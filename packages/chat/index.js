@@ -11,4 +11,10 @@ module.exports = {
             this.push(rec, text);
         });
     },
+    splitBroadcast(message, fixed, color) {
+        mp.players.forEach(current => {
+            if (!current.character) return;
+            current.call('chat.message.split', [message, fixed, color]);
+        });
+    }
 };

@@ -48,14 +48,13 @@ mp.events.add('taxi.client.order.ans', (ans) => {
 mp.events.add('taxi.client.waitshape.create', () => {
     let player = mp.players.local;
 
-    waitMarker = mp.markers.new(1, new mp.Vector3(player.position.x, player.position.y, player.position.z - 9.5), 10,
-        {
-            direction: new mp.Vector3(player.position.x, player.position.y, player.position.z),
-            rotation: 0,
-            color: [131, 255, 92, 180],
-            visible: true,
-            dimension: 0
-        });
+    waitMarker = mp.markers.new(1, new mp.Vector3(player.position.x, player.position.y, player.position.z - 9.5), 10, {
+        direction: new mp.Vector3(player.position.x, player.position.y, player.position.z),
+        rotation: 0,
+        color: [131, 255, 92, 180],
+        visible: true,
+        dimension: 0
+    });
     waitShape = mp.colshapes.newSphere(player.position.x, player.position.y, player.position.z, 5.5);
     waitShape.pos = new mp.Vector3(player.position.x, player.position.y, player.position.z);
     waitShape.isTaxiClientShape = true;
@@ -147,25 +146,27 @@ function calculatePrice(pos) {
 }
 
 let waypoint;
-setInterval(() => {
-    try {
-        if (!isActiveTaxiClient) return;
-        if (waypoint !== mp.game.invoke('0x1DD1F58F493F1DA5')) {
-            waypoint = mp.game.invoke('0x1DD1F58F493F1DA5');
-            let blipIterator = mp.game.invoke('0x186E5D252FA50E7D');
-            let firstInfoId = mp.game.invoke('0x1BEDE233E6CD2A1F', blipIterator);
-            let nextInfoId = mp.game.invoke('0x14F96AA50D6FBEA7', blipIterator);
-            for (let i = firstInfoId; mp.game.invoke('0xA6DB27D19ECBB7DA', i) != 0; i = nextInfoId) {
-                if (mp.game.invoke('0xBE9B0959FFD0779B', i) == 4) {
-                    var coord = mp.game.ui.getBlipInfoIdCoord(i);
-                    mp.events.call("taxi.client.waypoint.created", coord);
+mp.events.add("characterInit.done", () => {
+    mp.timer.addInterval(() => {
+        try {
+            if (!isActiveTaxiClient) return;
+            if (waypoint !== mp.game.invoke('0x1DD1F58F493F1DA5')) {
+                waypoint = mp.game.invoke('0x1DD1F58F493F1DA5');
+                let blipIterator = mp.game.invoke('0x186E5D252FA50E7D');
+                let firstInfoId = mp.game.invoke('0x1BEDE233E6CD2A1F', blipIterator);
+                let nextInfoId = mp.game.invoke('0x14F96AA50D6FBEA7', blipIterator);
+                for (let i = firstInfoId; mp.game.invoke('0xA6DB27D19ECBB7DA', i) != 0; i = nextInfoId) {
+                    if (mp.game.invoke('0xBE9B0959FFD0779B', i) == 4) {
+                        var coord = mp.game.ui.getBlipInfoIdCoord(i);
+                        mp.events.call("taxi.client.waypoint.created", coord);
+                    };
                 };
             };
-        };
-    } catch (err) {
-        mp.console(JSON.stringify(err.message));
-    }
-}, 100);
+        } catch (err) {
+            mp.console(JSON.stringify(err.message));
+        }
+    }, 100);
+});
 
 mp.events.add('taxi.client.order.canceled', () => {
     mp.notify.error('Заказ отменен водителем', 'Такси');

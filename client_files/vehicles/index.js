@@ -9,7 +9,7 @@ mp.speedometerEnabled = true;
 mp.events.add("playerLeaveVehicle", () => {
     mp.callCEFV('speedometer.arrow = 0');
     mp.callCEFV('speedometer.emergency = false');
-    setTimeout(() => {
+    mp.timer.add(() => {
         try {
             currentSirenState = false;
         } catch (err) {
@@ -28,7 +28,7 @@ mp.events.addDataHandler("engine", (entity) => {
 
 });
 
-setInterval(() => { /// Синхронизация двигателя
+mp.timer.addInterval(() => { /// Синхронизация двигателя
     try {
         var player = mp.players.local;
         if (player.vehicle && mp.vehicles.exists(player.vehicle)) {
@@ -47,7 +47,7 @@ let lastLightState;
 let lightState = 0;
 let lastLockStatus;
 
-speedometerUpdateTimer = setInterval(() => { /// Обновление спидометра
+speedometerUpdateTimer = mp.timer.addInterval(() => { /// Обновление спидометра
 
     try {
         if ((!mp.players.local.vehicle) || (mp.players.local.vehicle.getPedInSeat(-1) != mp.players.local.handle)) return;
@@ -95,7 +95,7 @@ speedometerUpdateTimer = setInterval(() => { /// Обновление спидо
 
 }, 100);
 
-mp.keys.bind(0x32, true, function() {
+mp.keys.bind(0x32, true, function () {
     if (mp.busy.includes('chat')) return;
     if (mp.players.local.vehicle.getPedInSeat(-1) === mp.players.local.handle) {
         mp.events.callRemote('vehicles.engine.toggle');
@@ -170,7 +170,7 @@ function startMileageCounter() {
     var player = mp.players.local;
     lastPos = player.position;
     stopMileageCounter();
-    mileageTimer = setInterval(() => {
+    mileageTimer = mp.timer.addInterval(() => {
         try {
             var vehicle = player.vehicle;
             if (!vehicle) return stopMileageCounter();
@@ -191,7 +191,7 @@ function startMileageCounter() {
         }
 
     }, 1000);
-    mileageUpdateTimer = setInterval(() => {
+    mileageUpdateTimer = mp.timer.addInterval(() => {
         try {
             var vehicle = player.vehicle;
             if (!vehicle) return stopMileageCounter();
@@ -207,15 +207,15 @@ function startMileageCounter() {
 
 function stopMileageCounter() {
 
-    clearInterval(mileageTimer);
-    clearInterval(mileageUpdateTimer);
+    mp.timer.remove(mileageTimer);
+    mp.timer.remove(mileageUpdateTimer);
 
     if (currentDist < 0.1) return;
     mp.events.callRemote(`vehicles.mileage.add`, currentDist);
     currentDist = 0;
 };
 
-mp.keys.bind(0x25, true, function() {
+mp.keys.bind(0x25, true, function () {
     if (mp.busy.includes()) return;
     var player = mp.players.local;
     var vehicle = player.vehicle;
@@ -237,7 +237,7 @@ mp.keys.bind(0x25, true, function() {
     }
 });
 
-mp.keys.bind(0x27, true, function() {
+mp.keys.bind(0x27, true, function () {
     if (mp.busy.includes()) return;
     var player = mp.players.local;
     var vehicle = player.vehicle;
@@ -420,7 +420,7 @@ mp.events.add('vehicles.siren.sound', () => {
     mp.events.callRemote('vehicles.siren.sound', veh.remoteId);
 });
 
-let sirenLightsUpdater = setInterval(() => {
+let sirenLightsUpdater = mp.timer.addInterval(() => {
     try {
         if (!mp.players.local.vehicle) return;
         if (currentSirenState == mp.players.local.vehicle.isSirenOn()) return;
@@ -601,4 +601,16 @@ mp.events.add('vehicles.autopilot', () => {
     player.taskVehicleDriveToCoordLongrange(veh.handle, pos.x, pos.y, pos.z + 2, speed, drivingStyle, stopRange);
     mp.notify.success("Автопилот активирован");
     mp.prompt.showByName("vehicle_autopilot");
+});
+
+mp.events.add('characterInit.done', () => {
+    mp.timer.addInterval(async () => {
+        mp.vehicles.forEachInStreamRange((vehicle) => {
+            if (mp.vdist(mp.players.local.position, vehicle.position) > 30) return;
+            if (vehicle.remoteId == null) return;
+            if (!vehicle.getVariable('isValid')) {
+                mp.events.callRemote('vehicles.invalid.found', vehicle.remoteId);
+            }
+        });
+    }, 1000);
 });

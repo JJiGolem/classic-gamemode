@@ -7,6 +7,8 @@ var mafia = require('../mafia');
 var money = require('../money');
 var notifs = require('../notifications');
 var police = require('../police')
+let timer = call('timer');
+let vehicles = call('vehicles');
 
 module.exports = {
     "init": () => {
@@ -422,6 +424,8 @@ module.exports = {
     // снять/надеть наручники
     "police.cuffs": (player, data) => {
         if (typeof data == 'string') data = JSON.parse(data);
+
+        if (player.cuffs) return notifs.error(player, `У вас связаны руки`, `Наручники`);
         var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Наручники`);
         var dist = player.dist(rec.position);
@@ -568,6 +572,7 @@ module.exports = {
         var header = `Посадка`;
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
+        if (!rec.cuffs) return notifs.error(player, `${rec.name} не в наручниках`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} уже в авто`, header);
         if (!police.cuffsFactions.includes(player.character.factionId)) return notifs.error(player, `Нет прав`, header);
 
@@ -575,8 +580,8 @@ module.exports = {
         if (!veh) return notifs.error(player, `Авто не найдено`, header);
         var dist = player.dist(veh.position);
         if (dist > 3) return notifs.error(player, `Авто далеко`, header);
-        var freeSeat = [0, 1, 2];
-        var occupants = veh.getOccupants();
+        var freeSeat = [1, 2];
+        var occupants = vehicles.getOccupants(veh);
         for (var i = 0; i < occupants.length; i++) {
             var occ = occupants[i];
             var index = freeSeat.indexOf(occ.seat);
@@ -655,7 +660,7 @@ module.exports = {
         var time = Date.now() - date;
         player.character.arrestTime -= time;
         player.character.save();
-        clearTimeout(player.cellArrestTimer);
-        clearTimeout(player.jailArrestTimer);
+        timer.remove(player.cellArrestTimer);
+        timer.remove(player.jailArrestTimer);
     },
 }

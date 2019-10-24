@@ -1,5 +1,7 @@
 "use strict";
 
+let timer = call('timer');
+
 module.exports = {
     // Макс. вес предметов, переносимый игроком
     maxPlayerWeight: 30,
@@ -25,6 +27,7 @@ module.exports = {
         10: [13],
         11: [8],
         12: [9],
+        13: null, // в слот рук можно класть любой предмет
     },
     // Блек-лист предметов, которые не могут храниться в других предметах
     blackList: {
@@ -43,10 +46,10 @@ module.exports = {
     groundMaxDist: 2,
     // Климат, при котором игрок может бегать голым
     playerClime: {
-        head: [10, 30],
-        body: [20, 30],
-        legs: [20, 30],
-        feets: [25, 35],
+        head: [10, 40],
+        body: [20, 40],
+        legs: [20, 40],
+        feets: [25, 45],
     },
     // Коэффицент урона игроку от климата (чем выше, тем больше урон) (при холоде -ХП, при жаре -жажда)
     climeK: 0.5,
@@ -58,8 +61,8 @@ module.exports = {
         feets: 0.2,
     },
 
-    init() {
-        this.loadInventoryItemsFromDB();
+    async init() {
+        await this.loadInventoryItemsFromDB();
     },
 
     // Загрузка общей информации о предметах из БД в данный модуль
@@ -83,7 +86,9 @@ module.exports = {
             description: item.description,
             height: item.height,
             width: item.width,
-            weight: item.weight
+            weight: item.weight,
+            model: item.model,
+            attachInfo: item.attachInfo,
         };
     },
     // Отправка общей информации о настройках инвентаря игроку
@@ -120,7 +125,7 @@ module.exports = {
         player.inventory.items = dbItems;
 
         this.updateAllView(player);
-        this.loadWeapons(player);
+        // this.loadWeapons(player);
         player.call(`inventory.initItems`, [this.convertServerToClientItems(dbItems)]);
         console.log(`[INVENTORY] Для игрока ${player.character.name} загружены предметы (${dbItems.length} шт.)`);
     },
@@ -282,7 +287,7 @@ module.exports = {
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, itemId);
             if (weapon) return callback(`Оружие ${this.getName(itemId)} уже имеется`);
-            if (slot.parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
+            // if (slot.parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
         }
         var struct = [];
         for (var key in params) {
@@ -321,7 +326,7 @@ module.exports = {
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, item.itemId);
             if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
-            if (slot.parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
+            // if (slot.parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
         }
 
         item.playerId = player.character.id;
@@ -381,7 +386,7 @@ module.exports = {
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, item.itemId);
             if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
-            if (parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
+            // if (parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
         }
         var struct = [];
         for (var key in params) {
@@ -417,6 +422,7 @@ module.exports = {
         var params = this.getParamsValues(item);
         if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
         if (!item.parentId) this.clearView(player, item.itemId);
+        if (!item.parentId && item.index == 13) this.syncHandsItem(player, null);
         item.destroy();
         player.call("inventory.deleteItem", [item.id]);
 
@@ -592,7 +598,7 @@ module.exports = {
         } else if (params.weaponHash) {
             player.addAttachment(`weapon_${item.itemId}`);
             this.removeWeapon(player, params.weaponHash);
-        } else return console.log("Неподходящий тип предмета для тела!");
+        } else return debug(`Неподходящий тип предмета для тела, item.id: ${item.id}`);
 
     },
     clearView(player, itemId) {
@@ -652,18 +658,22 @@ module.exports = {
             otherItems[itemId]();
         } else if (this.bodyList[9].includes(itemId)) {
             player.addAttachment(`weapon_${itemId}`, true);
-        } else return console.log("Неподходящий тип предмета для тела!");
+        } else return console.log(`Неподходящий тип предмета для тела, itemId: ${itemId}`);
     },
     updateAllView(player) {
         for (var i = 0; i < player.inventory.items.length; i++) {
             var item = player.inventory.items[i];
             if (item.parentId) continue;
+            if (item.index == 13) continue;
             this.updateView(player, item);
         }
+        var handsItem = this.getHandsItem(player);
+        this.syncHandsItem(player, handsItem);
     },
     clearAllView(player) {
         for (var index in this.bodyList) {
             var itemIds = this.bodyList[index];
+            if (!itemIds) continue;
             itemIds.forEach((itemId) => {
                 this.clearView(player, itemId);
             });
@@ -697,6 +707,7 @@ module.exports = {
         var items = player.inventory.items;
         for (var bodyIndex in this.bodyList) {
             var list = this.bodyList[bodyIndex];
+            if (!list) continue;
             if (list.includes(itemId)) { // предмет, можно надеть
                 for (var i = 0; i < items.length; i++) {
                     var item = items[i];
@@ -833,6 +844,12 @@ module.exports = {
         }
         return result;
     },
+    getBodyItemByIndex(player, index) {
+        return player.inventory.items.find(x => !x.parentId && x.index == index);
+    },
+    getHandsItem(player) {
+        return this.getBodyItemByIndex(player, 13);
+    },
     getItemWeight(player, items, weight = 0) {
         if (!Array.isArray(items)) items = [items];
         for (var i = 0; i < items.length; i++) {
@@ -947,7 +964,7 @@ module.exports = {
                 }
             }
             if (doDelete) {
-                clearTimeout(obj.destroyTimer);
+                timer.remove(obj.destroyTimer);
                 obj.destroy();
                 var rec = mp.players.at(obj.playerId);
                 if (!rec || !rec.character) return;
@@ -1137,11 +1154,12 @@ module.exports = {
     },
     // Загрузка оружия у игрока на основе предметов-оружия в инвентаре
     loadWeapons(player) {
-        var weapons = this.getArrayWeapons(player);
-        weapons.forEach(weapon => {
-            var params = this.getParamsValues(weapon);
-            this.giveWeapon(player, params.weaponHash, params.ammo);
-        });
+        // теперь у игрока есть только оружие из слота для рук
+        // var weapons = this.getArrayWeapons(player);
+        // weapons.forEach(weapon => {
+        //     var params = this.getParamsValues(weapon);
+        //     this.giveWeapon(player, params.weaponHash, params.ammo);
+        // });
     },
     giveWeapon(player, hash, ammo) {
         if (!hash) return;
@@ -1150,6 +1168,11 @@ module.exports = {
         player.call(`weapons.giveWeapon`, [hash.toString()]);
     },
     removeWeapon(player, hash) {
+        // удалять, если в слотах рук
+        var item = this.getHandsItem(player);
+        if (!item) return;
+        var param = this.getParam(item, 'weaponHash');
+        if (!param || param.value != hash) return;
         player.removeWeapon(hash);
         player.call(`weapons.removeWeapon`, [hash.toString()]);
     },
@@ -1177,7 +1200,7 @@ module.exports = {
 
         var objId = newObj.id;
         var sqlId = item.id;
-        newObj.destroyTimer = setTimeout(() => {
+        newObj.destroyTimer = timer.add(() => {
             try {
                 var obj = mp.objects.at(objId);
                 if (!obj || !obj.item || obj.item.id != sqlId) return;
@@ -1194,13 +1217,13 @@ module.exports = {
         var ground = player.inventory.ground;
         if (ground.length > this.groundMaxItems) {
             var obj = ground.shift();
-            clearTimeout(obj.destroyTimer);
+            timer.remove(obj.destroyTimer);
             obj.destroy();
         }
     },
     // урон климата (если игрок одет не по погоде)
     checkClimeDamage(player, temp, out) {
-        if (player.vehicle || player.dimension || player.godmode) return;
+        if (player.vehicle || player.dimension || player.godmode || player.farmJob) return;
 
         var clime = Object.assign({}, this.playerClime);
 
@@ -1260,4 +1283,21 @@ module.exports = {
         }
         return null;
     },
+    // вкл выкл синхру предмета в руках
+    syncHandsItem(player, item) {
+        debug(`[inventory] sync hands at ${player.name}, item.id: ${item ? item.id : null}`);
+
+        if (item) { // вкл. синх. предмета/гана в руках
+            var params = this.getParamsValues(item);
+            if (params.weaponHash) this.giveWeapon(player, params.weaponHash, params.ammo);
+            else player.setVariable("hands", item.itemId);
+        } else { // выкл. синх. предмета/гана в руках
+            var handsItem = this.getHandsItem(player);
+            if (!handsItem) return;
+
+            var params = this.getParamsValues(handsItem);
+            if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
+            else player.setVariable("hands", null);
+        }
+    }
 };

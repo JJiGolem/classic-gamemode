@@ -3740,7 +3740,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName != 'Закрыть') {
-                            var bizId = parseInt(this.items[0].values[0].split(":")[1]);
+                            var bizId = parseInt(this.items[e.itemIndex].values[0].split(":")[1]);
                             mp.trigger(`callRemote`, `mafia.bizWar.start`, bizId);
                         }
                         selectMenu.show = false;
@@ -5797,7 +5797,8 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Уволиться') {
                             mp.trigger(`callRemote`, `carrier.job.stop`);
                         } else if (e.itemName == 'Помощь') {
-
+                            selectMenu.show = false;
+                            modal.showByName("carrier_help");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }

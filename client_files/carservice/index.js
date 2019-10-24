@@ -148,7 +148,7 @@ mp.events.add('carservice.diagnostics.preparation', (vehId) => {
         let pos = vehicle.getOffsetFromInWorldCoords(0, 2, 0);
         mp.players.local.taskFollowNavMeshToCoord(pos.x, pos.y, pos.z, 1, -1, 1, true, 0);
     }
-    setTimeout(() => {
+    mp.timer.add(() => {
         isPreparingForDiagnostics = true;
         currentRepairingVehicle = vehicle;
     }, 1000);
@@ -171,7 +171,7 @@ mp.events.add('carservice.diagnostics.preparation', (vehId) => {
                     mp.players.local.position = newpos;
                 }
                 let animType = getRepairAnimType(currentRepairingVehicle);
-                setTimeout(() => {
+                mp.timer.add(() => {
                     try {
                         mp.players.local.freezePosition(true);
                     } catch (err) {

@@ -55,7 +55,7 @@ mp.events.add('barbershop.enter', (shopData, gender, appearanceData, priceData) 
 
     player.position = new mp.Vector3(shopData.pos.x, shopData.pos.y, shopData.pos.z);
     player.freezePosition(true);
-    setTimeout(() => {
+    mp.timer.add(() => {
         player.setHeading(shopData.pos.h);
         mp.prompt.show('Используйте <span>A</span> и <span>D</span> для того, чтобы вращать персонажа');
     }, 100);

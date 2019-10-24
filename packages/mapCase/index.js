@@ -198,9 +198,11 @@ module.exports = {
         });
     },
     removePoliceMember(player) {
+        if (!factions.isPoliceFaction(player.character.factionId)) return;
         mp.players.forEach((rec) => {
             if (!rec.character) return;
             if (!factions.isPoliceFaction(rec.character.factionId)) return;
+            if (rec.character.factionId != player.character.factionId) return;
 
             rec.call(`mapCase.pd.members.remove`, [player.character.id]);
         });
@@ -434,9 +436,8 @@ module.exports = {
         var ad = this.newsAdsEdited.shift();
         mp.players.forEach(rec => {
             if (!rec.character) return;
-            //chat.push(rec, `[ADS] ${ad.author}[${ad.playerId}]: ${ad.text}. Телефон: ${ad.number}. Редактор: ${ad.editorName}`);
-            rec.call('chat.message.push', [`!{#83d822}${ad.text} | Отправил ${ad.author}[${ad.playerId}] (т. ${ad.number})`]);
-            rec.call('chat.message.push', [`!{#5b9617}Объявление отредактировал ${ad.editorName}`]);
+            rec.call('chat.message.push', [`!{#83d822}${ad.text} (т. ${ad.number})`]);
+            rec.call('chat.message.push', [`!{#5b9617}Отправитель: ${ad.author} | Редактор: ${ad.editorName}`]);
         });
     },
     addNewsMember(player) {

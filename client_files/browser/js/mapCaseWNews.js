@@ -11,7 +11,7 @@ Vue.component('map-case-wnews-ads', {
     methods: {
         get () {
             if (!this.adsAmount) {
-                mapCase.showRedMessage("Нет объявлений<br />для редактироания!");
+                mapCase.showRedMessage("Нет объявлений<br />для редактирования!");
                 return;
             }
 
@@ -85,7 +85,7 @@ var mapCaseWnewsAdsData = {
     adsAmount: 0,
     adData: {
         ad: { text: "", author: "" },
-        maxLength: 380,
+        maxLength: 60,
         send: (adData) => {},
         refuse: (adData) => {},
     },

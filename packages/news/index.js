@@ -56,7 +56,7 @@ module.exports = {
         if (!this.liveStream.memberIds.includes(player.id)) return;
         if (player.dist(owner.position) > this.streamDist) return;
 
-        chat.broadcast(`!{#bd7aff}[WN] ${player.name}: ${text}`);
+        chat.splitBroadcast(text, `!{#bd7aff}[WN] ${player.name}: `);
     },
     isInStream(player) {
         return this.liveStream.ownerId == player.id || this.liveStream.memberIds.includes(player.id);

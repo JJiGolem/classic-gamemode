@@ -3,8 +3,8 @@ Math.clamp = function(value, min, max) {
 }
 
 // var mp = {
-//     trigger(name)  {
-//         console.log(`mp.trigger: ${JSON.stringify(arguments)}`);
+//     trigger(name, values)  {
+//         console.log(`mp.trigger: ${name} ${JSON.stringify(values)}`);
 //     },
 // };
 
@@ -34,6 +34,12 @@ function cloneObj(inObj) {
 
 function debug(text) {
     terminal.debug(text);
+}
+
+function convertToMoscowDate(date) {
+    var offsetMs = date.getTimezoneOffset() * 60 * 1000;
+    var moscowOffsetMs = 3 * 60 * 60 * 1000;
+    return new Date(date.getTime() + offsetMs + moscowOffsetMs);
 }
 
 var busy = {

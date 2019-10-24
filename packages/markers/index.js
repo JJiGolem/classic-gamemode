@@ -44,6 +44,7 @@ module.exports = {
         colshapeB.marker = markerB;
 
         colshapeA.onEnter = (player) => {
+            if (player.vehicle) return;
             if (player.lastTpMarkerId != null) return;
             var target = colshapeA.marker.target;
             var pos = target.position;

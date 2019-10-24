@@ -15,6 +15,9 @@ module.exports = {
         }
         mp.events.call('characterInit.start', player);
     },
+    "characterInit.debug": (player, text) => {
+        logger.debug(text, "characterInit", player);
+    },
     "characterInit.start": async (player) => {
         let charInfos = await characterInit.init(player);
         player.call('characterInit.init', [charInfos, player.account.slots]);
@@ -25,6 +28,7 @@ module.exports = {
 
         if (player.characters[charnumber]) {
             player.character = player.characters[charnumber];
+            player.name = player.character.name;
             delete player.characters;
             characterInit.applyCharacter(player);
 

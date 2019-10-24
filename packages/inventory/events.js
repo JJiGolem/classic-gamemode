@@ -1,5 +1,6 @@
 let bands = call('bands');
 let bizes = call('bizes');
+let death = call('death');
 let factions = call('factions');
 let fuelstations = call('fuelstations');
 let inventory = require('./index.js');
@@ -10,6 +11,7 @@ let money = call('money');
 let notifs = require('../notifications');
 let police = call('police');
 let satiety = call('satiety');
+let timer = call('timer');
 let vehicles = call('vehicles');
 
 module.exports = {
@@ -30,17 +32,40 @@ module.exports = {
     // срабатывает, когда игрок переместил предмет (в любом месте)
     "item.add": (player, data) => {
         data = JSON.parse(data);
-        console.log(`item.add: ${player.name}`)
-        console.log(data)
+        // debug(`item.add: ${player.name}`)
+        // debug(data)
         var item = inventory.getItem(player, data.sqlId);
         if (data.placeSqlId > 0 || data.placeSqlId == null) { // переместил в свой карман или на себя
             if (item) { // предмет уже есть у игрока
                 if (item.parentId == null && data.placeSqlId) { // снял вещь
-                    inventory.clearView(player, item.itemId);
-                    var params = inventory.getParamsValues(item);
-                    if (params.weaponHash) inventory.giveWeapon(player, params.weaponHash, params.ammo);
+                    // debug(`снял вещь`)
+                    if (item.index == 13) { // снял из рук
+                        // debug(`снял из рук`)
+                        inventory.syncHandsItem(player, null);
+                    } else { // снял с тела
+                        // debug(`снял с тела`)
+                        inventory.clearView(player, item.itemId);
+                    }
                 } else if (item.parentId && data.placeSqlId == null) { // надел вещь
-                    inventory.updateView(player, item);
+                    // debug(`надел вещь`)
+                    if (data.index == 13) { // на руки
+                        // debug(`на руки`)
+                        inventory.syncHandsItem(player, item);
+                    } else { // на тело
+                        // debug(`на тело`)
+                        inventory.updateView(player, item);
+                    }
+                } else if (!item.parentId && data.placeSqlId == null) { // переместил внутри слотов тела
+                    // debug(`внутри слотов тела`)
+                    if (data.index == 13) { // переместил из тела в руки
+                        // debug(`из тела в руки`)
+                        inventory.clearView(player, item.itemId);
+                        inventory.syncHandsItem(player, item);
+                    } else if (item.index == 13) { // переместил из рук на тело
+                        // debug(`из рук на тело`)
+                        inventory.syncHandsItem(player, null);
+                        inventory.updateView(player, item);
+                    }
                 }
                 item.pocketIndex = data.pocketI;
                 item.index = data.index;
@@ -144,7 +169,7 @@ module.exports = {
             // TODO: проиграть анимацию
             // mp.events.call("anim", player, "random@domestic", "pickup_low", 0, 1000);
             notifs.success(player, `Предмет ${inventory.getName(obj.item.itemId)} в инвентаре`, header);
-            clearTimeout(obj.destroyTimer);
+            timer.remove(obj.destroyTimer);
             obj.destroy();
             var rec = mp.players.at(obj.playerId);
             if (!rec || !rec.character) return;
@@ -197,7 +222,7 @@ module.exports = {
         var rec = (data.recId != null) ? mp.players.at(data.recId) : mp.players.getNear(player);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         if (!rec.getVariable("knocked")) return notifs.error(player, `${rec.name} не нуждается в реанимации`, header);
-        if (player.dist(rec.position) > 20) return notifs.error(player, `${rec.name} далеко`, header);
+        if (player.dist(rec.position) > 5) return notifs.error(player, `${rec.name} далеко`, header);
         var adrenalin = (data.itemSqlId) ? inventory.getItem(player, data.itemSqlId) : inventory.getItemByItemId(player, 26);
         if (!adrenalin) return notifs.error(player, `Необходим предмет`, header);
         var count = inventory.getParam(adrenalin, 'count').value;
@@ -205,7 +230,7 @@ module.exports = {
 
         rec.spawn(rec.position);
         rec.health = 10;
-        rec.setVariable("knocked", false);
+        death.removeKnocked(rec);
         mp.events.call(`mapCase.ems.calls.remove`, rec, rec.character.id);
 
         count--;
@@ -552,12 +577,13 @@ module.exports = {
     },
     "death.spawn": (player) => {
         if (!player.character) return;
-        var weapons = inventory.getArrayWeapons(player);
-        if (!weapons.length) return;
-        weapons.forEach(weapon => {
-            inventory.putGround(player, weapon);
-        });
-        notifs.warning(player, `Вы потеряли оружие`, `Инвентарь`);
+        // TODO: включить выкидывание оружия в новой сис-ме расчет кор объекта
+        // var weapons = inventory.getArrayWeapons(player);
+        // if (!weapons.length) return;
+        // weapons.forEach(weapon => {
+        //     inventory.putGround(player, weapon);
+        // });
+        // notifs.warning(player, `Вы потеряли оружие`, `Инвентарь`);
     },
     "playerQuit": (player) => {
         if (!player.character) return;

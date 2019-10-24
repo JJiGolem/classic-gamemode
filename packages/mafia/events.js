@@ -256,7 +256,7 @@ module.exports = {
 
             police.setCuffs(rec, null);
             delete rec.isFollowing;
-            rec.call(`police.follow.stop`);
+            rec.call(`mafia.follow.stop`);
         }
     },
     // снять/надеть мешок на голову

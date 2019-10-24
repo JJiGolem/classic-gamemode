@@ -145,7 +145,7 @@ mp.events.add({
             mp.utils.disablePlayerMoving(true);
             player.freezePosition(true);
         }
-        setTimeout(() => {
+        mp.timer.add(() => {
             player.setHeading(shopData.pos.h);
             mp.prompt.show('Используйте <span>A</span> и <span>D</span> для того, чтобы вращать персонажа');
         }, 100);

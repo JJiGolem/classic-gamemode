@@ -14,7 +14,7 @@ mp.mafia = {
     colors: {
         12: 43,
         13: 31,
-        14: 85,
+        14: 40,
     },
     // Нативки
     natives: {
@@ -64,11 +64,11 @@ mp.mafia = {
     flashBlip(id, toggle) {
         var blip = this.mafiaZones[id];
         // mp.game.invoke(this.natives.SET_BLIP_FLASHES, blip, toggle);
-        clearInterval(this.flashTimer);
+        mp.timer.remove(this.flashTimer);
         mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, 4);
         if (!toggle) return;
         var oldColor = mp.game.invoke(this.natives.GET_BLIP_COLOUR, blip);
-        this.flashTimer = setInterval(() => {
+        this.flashTimer = mp.timer.addInterval(() => {
             var color = mp.game.invoke(this.natives.GET_BLIP_COLOUR, blip);
             if (color == oldColor) mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, this.flashColor);
             else mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, oldColor);
@@ -100,12 +100,12 @@ mp.mafia = {
     startBizWar(mafiaId, enemyMafiaId, time, mafiaScore = 0, enemyMafiaScore = 0) {
         time = parseInt(time);
         mp.callCEFV(`captureScore.start(${mafiaId}, ${enemyMafiaId}, ${time}, ${mafiaScore}, ${enemyMafiaScore})`);
-        clearTimeout(this.bizWarTimer);
+        mp.timer.remove(this.bizWarTimer);
         this.removePlayerBlips();
         this.bizWarFactions = [mafiaId, enemyMafiaId];
 
         this.createPlayerBlips();
-        this.bizWarTimer = setTimeout(() => {
+        this.bizWarTimer = mp.timer.add(() => {
             this.removePlayerBlips();
             this.bizWarFactions = [];
         }, time * 1000);

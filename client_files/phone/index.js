@@ -224,7 +224,7 @@ function playHoldAnimation(state, timeout) { /// Анимация держани
     if (mp.players.local.vehicle) return;
     if (state) {
         if (!timeout) timeout = 0;
-        setTimeout(()=> {
+        mp.timer.add(()=> {
             mp.attachmentMngr.removeLocal("callPhone");
             mp.events.callRemote('animations.play', 'amb@code_human_wander_texting@male@base', 'static', 1, 49);
             mp.attachmentMngr.addLocal("takePhone");

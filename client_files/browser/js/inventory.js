@@ -302,6 +302,7 @@ var inventory = new Vue({
             10: [13],
             11: [8],
             12: [9],
+            13: null
         },
         // Вайт-лист предметов, которые можно использовать в горячих клавишах
         hotkeysList: {
@@ -438,7 +439,7 @@ var inventory = new Vue({
             40: [22, 99],
         },
         // Огнестрельные оружия
-        weaponsList: [19, 20, 21, 22, 41, 44, 46, 47, 48, 52, 80, 87, 88, 89, 90, 91, 93, 96, 99, 100, 107],
+        weaponsList: [19, 20, 21, 22, 41, 44, 46, 47, 48, 49, 50, 52, 80, 87, 88, 89, 90, 91, 93, 96, 99, 100, 107],
         // Еда
         eatList: [35, 126, 127, 128, 129],
         // Напитки
@@ -449,8 +450,6 @@ var inventory = new Vue({
         equipment: {},
         // Предметы на горячих клавишах
         hotkeys: {},
-        // Предметы в руках
-        hands: null,
         // Сытость игрока
         satiety: 0,
         // Жажда игрока
@@ -688,7 +687,7 @@ var inventory = new Vue({
             if (!this.itemDrag.item) return;
             var item = this.equipment[index];
             if (item) return;
-            if (!this.bodyList[index].includes(this.itemDrag.item.itemId)) return;
+            if (this.bodyList[index] && !this.bodyList[index].includes(this.itemDrag.item.itemId)) return;
             var nextWeight = this.commonWeight + this.itemsInfo[this.itemDrag.item.itemId].weight;
             if (nextWeight > this.maxPlayerWeight) return;
             var columns = this.itemDrag.accessColumns;
@@ -700,7 +699,7 @@ var inventory = new Vue({
         },
         onHotkeyItemEnter(key) {
             // console.log("onHotkeyItemEnter")
-            if (!this.itemDrag.item) return;
+            if (!this.itemDrag.item || !this.getItem(this.itemDrag.item.sqlId)) return;
             var item = this.hotkeys[key];
             if (item && this.getItem(item.sqlId)) return;
             if (!this.hotkeysList[this.itemDrag.item.itemId]) return;
@@ -718,14 +717,14 @@ var inventory = new Vue({
             var descRect = (descEl) ? descEl.getBoundingClientRect() : null;
             var handlers = {
                 'mouseenter': (e) => {
-                    this.itemDesc.item = item;
-                    var x = (e.screenX - rect.x) + 15;
-                    var y = (e.screenY - rect.y) + 15;
+                    var x = e.screenX + 15;
+                    var y = e.screenY + 15;
 
-                    if (descRect && e.screenX + descRect.width > window.innerWidth) x -= descRect.width;
-                    if (descRect && e.screenY + descRect.height > window.innerHeight) y -= descRect.height;
-                    this.itemDesc.x = x;
-                    this.itemDesc.y = y;
+                    this.itemDesc.item = item;
+                    if (descRect && x + descRect.width > window.innerWidth) x = window.innerWidth - descRect.width;
+                    if (descRect && y + descRect.height > window.innerHeight) y = window.innerHeight - descRect.height;
+                    this.itemDesc.x = x - rect.x;
+                    this.itemDesc.y = y - rect.y;
                 },
                 'mouseleave': (e) => {
                     this.itemDesc.item = null;
@@ -759,7 +758,8 @@ var inventory = new Vue({
         columnMouseHandler(place, pocket, index, e) {
             if (!this.itemDrag.item) return;
             var item = this.itemDrag.item;
-            var nextWeight = this.commonWeight + this.itemsInfo[item.itemId].weight;
+            var nextWeight = this.commonWeight;
+            if (!this.getItem(item.sqlId)) nextWeight += this.itemsInfo[item.itemId].weight;
             var columns = this.itemDrag.accessColumns;
             var pocketI = place.pockets.indexOf(pocket);
             var w = this.itemsInfo[item.itemId].width;
@@ -1044,7 +1044,7 @@ var inventory = new Vue({
             this.deleteItem(item.sqlId);
             this.deleteEnvironmentItem(item.sqlId);
             if (item.pockets) {
-                item.showPockets = true;
+                Vue.set(item, 'showPockets', true);
             }
             if (parent) {
                 Vue.set(parent.pockets[pocket].items, index, item);
@@ -1142,21 +1142,10 @@ var inventory = new Vue({
             }
         },
 
-        // ******************  [ Hands ] ******************
-        fillHands(item) {
-            if (typeof item == 'number') item = this.getItem(item);
-            if (!item) return this.notify(`fillHands: Предмет ${item} не опреден`);
-
-            this.hands = item;
-        },
-        clearHands() {
-            this.hands = null;
-        },
-
         // ******************  [ Environment ] ******************
         addEnvironmentPlace(place) {
             if (typeof place == 'string') place = JSON.parse(place);
-            place.showPockets = true;
+            Vue.set(place, 'showPockets', true);
             this.environment.unshift(place);
         },
         deleteEnvironmentPlace(sqlId) {
@@ -1284,7 +1273,7 @@ var inventory = new Vue({
                 self.callRemote("item.add", {
                     sqlId: self.itemDrag.item.sqlId,
                     pocketI: null,
-                    index: columns.bodyFocus,
+                    index: parseInt(columns.bodyFocus),
                     placeSqlId: null
                 });
             } else if (columns.hotkeyFocus) {
@@ -1298,7 +1287,7 @@ var inventory = new Vue({
                     placeSqlId: columns.placeSqlId
                 });
             } else {
-                var index = Object.keys(columns.columns)[0];
+                var index = parseInt(Object.keys(columns.columns)[0]);
                 if (!columns.deny && columns.placeSqlId != null &&
                     columns.pocketI != null &&
                     index != null) {
@@ -1456,8 +1445,8 @@ inventory.addEnvironmentPlace({
     ],
 });
 inventory.addEnvironmentPlace({
-    sqlId: 0,
-    header: "На земле",
+    sqlId: -10,
+    header: "Шкаф",
     pockets: [{
         cols: 19,
         rows: 30,
@@ -1509,5 +1498,6 @@ inventory.addEnvironmentPlace({
         }
     }]
 });
+inventory.debug = true;
 inventory.show = true;
 inventory.enable = true;*/

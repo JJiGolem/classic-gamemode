@@ -526,19 +526,21 @@
                     <div class="title">{{ place.header }} {{ (debug)? place.sqlId : "" }}</div>
                     <div>{{ +getPlaceWeight(place).toFixed(1) }} кг</div>
                 </div>
-                <div class="pockets" v-show="place.showPockets">
-                    <div class="items" v-for="pocket in place.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
-                        <div class="column" v-for="n in pocket.cols * pocket.rows" :key="n-1" :class="columnClass(n-1, pocket, place)" @mouseenter="columnMouseHandler(place, pocket, n-1, $event)"
-                            @mouseleave="columnMouseHandler(place, pocket, n-1, $event)">
-                            <div class="item" v-if="pocket.items[n-1]" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
-                                @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1].itemId)" :class="{dragging: pocket.items[n-1] == itemDrag.item}">
-                                <div class="count" v-if="pocket.items[n-1].params.count">{{ pocket.items[n-1].params.count }}</div>
-                                <div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>
-                                <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
+                <transition name="slide">
+                    <div class="pockets" v-show="place.showPockets">
+                        <div class="items" v-for="pocket in place.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
+                            <div class="column" v-for="n in pocket.cols * pocket.rows" :key="n-1" :class="columnClass(n-1, pocket, place)" @mouseenter="columnMouseHandler(place, pocket, n-1, $event)"
+                                @mouseleave="columnMouseHandler(place, pocket, n-1, $event)">
+                                <div class="item" v-if="pocket.items[n-1]" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
+                                    @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1].itemId)" :class="{dragging: pocket.items[n-1] == itemDrag.item}">
+                                    <div class="count" v-if="pocket.items[n-1].params.count">{{ pocket.items[n-1].params.count }}</div>
+                                    <div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>
+                                    <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </transition>
             </div>
             <div class="empty" v-show="!environment.length">Без взаимодействия</div>
         </div>
@@ -551,7 +553,7 @@
                 <!-- <div>Жажда <span class="thirst">{{ thirst }}</span>%</div> -->
             </div>
             <div class="body-items">
-                <div class="column" :class="{focus: itemDrag.item && itemDrag.accessColumns.bodyFocus == n-1}" v-for="n in 13" @mouseenter="onBodyItemEnter(n-1)" @mouseleave="onBodyItemLeave(n-1)">
+                <div class="column" :class="{focus: itemDrag.item && itemDrag.accessColumns.bodyFocus == n-1, active: itemDrag.item && bodyList[n-1] && bodyList[n-1].includes(itemDrag.item.itemId)}" v-for="n in 13" @mouseenter="onBodyItemEnter(n-1)" @mouseleave="onBodyItemLeave(n-1)">
                     <!-- <div class="item" v-if="equipment[n-1]" v-bind:style="{backgroundImage: 'url(' + urlItemImg(equipment[n-1].itemId) + ')'}">
                        <div class="count" v-if="equipment[n-1].params.count">{{ equipment[n-1].params.count }}</div>
                        <div class="health" v-if="equipment[n-1].params.health" v-bind:style="{top: 100 - equipment[n-1].params.health + '%'}"></div>
@@ -572,50 +574,47 @@
                 <div class="title">Инвентарь</div>
                 <div>Тяжесть {{ +playerWeight.toFixed(1) }}%</div>
             </div>
-            <div class="container" v-for="item in equipment" v-if="item.pockets" :class="{drag: itemDrag.item && itemDrag.item.sqlId == item.sqlId}">
+            <div class="container" v-for="item in equipment" v-bind:key="item.sqlId" v-if="item.pockets" :class="{drag: itemDrag.item && itemDrag.item.sqlId == item.sqlId}">
                 <div class="header" @click="item.showPockets = !item.showPockets" :class="{hidden: !item.showPockets}">
                     <div class="title">{{ item.params.name || itemsInfo[item.itemId].name }}</div>
                     <div>{{ +getPlaceWeight(item).toFixed(1) }} кг</div>
                 </div>
-                <div class="pockets" v-show="item.showPockets">
-                    <div class="items" v-for="pocket in item.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
-                        <div class="column" v-for="n in pocket.cols * pocket.rows" :key="n-1" :class="columnClass(n-1, pocket, item)" @mouseenter="columnMouseHandler(item, pocket, n-1, $event)"
-                            @mouseleave="columnMouseHandler(item, pocket, n-1, $event)">
-                            <div class="item" v-if="pocket.items[n-1]" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
-                                @contextmenu="itemMouseHandler(pocket.items[n-1], $event)" @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1].itemId)" :class="{dragging: pocket.items[n-1] == itemDrag.item}">
-                                <div class="count" v-if="pocket.items[n-1].params.count">{{ pocket.items[n-1].params.count }}</div>
-                                <div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>
-                                <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
+                <transition name="slide">
+                    <div class="pockets" v-show="item.showPockets">
+                        <div class="items" v-for="pocket in item.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
+                            <div class="column" v-for="n in pocket.cols * pocket.rows" :key="n-1" :class="columnClass(n-1, pocket, item)" @mouseenter="columnMouseHandler(item, pocket, n-1, $event)"
+                                @mouseleave="columnMouseHandler(item, pocket, n-1, $event)">
+                                <div class="item" v-if="pocket.items[n-1]" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
+                                    @contextmenu="itemMouseHandler(pocket.items[n-1], $event)" @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1].itemId)" :class="{dragging: pocket.items[n-1] == itemDrag.item}">
+                                    <div class="count" v-if="pocket.items[n-1].params.count">{{ pocket.items[n-1].params.count }}</div>
+                                    <div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>
+                                    <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </transition>
             </div>
             <div class="empty" v-show="!havePockets">Без карманов</div>
         </div>
-        <div class="hands">
-            <div class="left-slot" v-bind:class="{busy: hands}">
-                <div class="item" v-if="hands && getItem(hands.sqlId)" v-bind:style="{backgroundImage: 'url(' + urlItemImg(hands.itemId) + ')'}">
-                    <div class="count" v-if="hands.params.count">{{ hands.params.count }}</div>
-                    <div class="health" v-if="hands.params.health" v-bind:style="{top: 100 - hands.params.health + '%', 'border-color': valueColor(hands.params.health)}"></div>
-                    <div class="sqlid" v-if="debug">#{{ hands.sqlId }}</div>
+        <div class="hands" :class="{active: itemDrag.item}">
+            <div class="slot" v-bind:class="{busy: equipment[13], focus: itemDrag.item && itemDrag.accessColumns.bodyFocus == 13}" @mouseenter="onBodyItemEnter(13)" @mouseleave="onBodyItemLeave(13)">
+                <div class="item" v-if="equipment[13]" v-bind:style="{backgroundImage: 'url(' + urlItemImg(equipment[13].itemId) + ')'}"
+                    @mousedown="itemMouseHandler(equipment[13], $event)"
+                    @contextmenu="itemMouseHandler(equipment[13], $event)" :class="{dragging: equipment[13] == itemDrag.item}">
+                    <div class="count" v-if="equipment[13].params.count">{{ equipment[13].params.count }}</div>
+                    <div class="health" v-if="equipment[13].params.health" v-bind:style="{top: 100 - equipment[13].params.health + '%', 'border-color': valueColor(equipment[13].params.health)}"></div>
+                    <div class="sqlid" v-if="debug">#{{ equipment[13].sqlId }}</div>
                 </div>
-                <img v-if="!hands" src="img/inventory/hand.png" />
-                <!-- <span v-if="!hands.left">в левой <br />руке</span> -->
-            </div>
-            <div class="right-slot" v-show="!hands" v-bind:class="{busy: hands}">
-                <!-- <div class="item" v-if="hands" v-bind:style="{backgroundImage: 'url(' + urlItemImg(hands.itemId) + ')'}">
-                    <div class="count" v-if="hands.params.count">{{ hands.params.count }}</div>
-                    <div class="health" v-if="hands.params.health" v-bind:style="{top: 100 - hands.params.health + '%', 'border-color': valueColor(hands.params.health)}"></div>
-                    <div class="sqlid" v-if="debug">#{{ hands.sqlId }}</div>
-                </div> -->
-                <!-- <span v-else>в правой <br />руке</span> -->
-                <img v-if="!hands" src="img/inventory/hand.png" />
+                <img v-if="!equipment[13]" src="img/inventory/hand.png" />
+                <img v-if="!equipment[13]" src="img/inventory/hand.png" />
             </div>
         </div>
         <div class="hotkeys" :class="{active: itemDrag.item && hotkeysList[itemDrag.item.itemId]}">
             <div class="key" :class="{focus: itemDrag.item && itemDrag.accessColumns.hotkeyFocus == n}" v-for="n in 10" @mouseenter="onHotkeyItemEnter(n)" @mouseleave="onHotkeyItemLeave(n)">
-                <div class="item" v-if="hotkeys[n] && getItem(hotkeys[n].sqlId)" v-bind:style="{backgroundImage: 'url('+urlItemImg(hotkeys[n].itemId)+')'}">
+                <div class="item" v-if="hotkeys[n] && getItem(hotkeys[n].sqlId)"
+                    v-bind:style="{backgroundImage: 'url('+urlItemImg(hotkeys[n].itemId)+')'}"
+                    @mousedown="itemMouseHandler(hotkeys[n], $event)">
                     <span class="close" @click="unbindHotkey(n)">x</span>
                     <span class="hotkey">{{ (n == 10)? 0 : n }}</span>
 

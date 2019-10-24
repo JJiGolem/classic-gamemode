@@ -10,6 +10,13 @@ var SIZE = 0.4;
 mp.nametags.enabled = false;
 
 let showNametags = true;
+let localPlayer = mp.players.local;
+
+function getCorrectName(player) {
+    var factionId = localPlayer.getVariable("factionId");
+    var isMember = factionId && factionId == player.getVariable("factionId");
+    return (player.isFamiliar || isMember)? `${player.name} (${player.remoteId})` : `ID: ${player.remoteId}`;
+}
 
 mp.events.add('render', (nametags) => {
 
@@ -31,8 +38,12 @@ mp.events.add('render', (nametags) => {
             var armour = player.getArmour() / 100;
 
             y -= scale * (0.005 * (screenRes.y / 1080));
-            var playerName = (player.isFamiliar)? `${player.name} (${player.remoteId})` : `ID: ${player.remoteId}`;
+            var playerName = getCorrectName(player);
             var nameColor = player.nameColor || [255, 255, 255, 255];
+
+            let redNick = player.getVariable(`redNick`) || false;
+            if (redNick) nameColor = [255, 85, 66, 255];
+            
             mp.game.graphics.drawText(playerName, [x, y],
                 {
                     font: FONT,

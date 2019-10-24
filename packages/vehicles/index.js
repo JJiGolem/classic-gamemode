@@ -4,6 +4,7 @@ var dbVehicleProperties;
 var plates = [];
 let inventory = call('inventory');
 let utils = call('utils');
+let timer = call('timer');
 let tuning = call('tuning');
 
 const MAX_BREAK_LEVEL = 2;
@@ -66,6 +67,8 @@ module.exports = {
 
         vehicle.numberPlate = veh.plate; /// устанавливаем номер
 
+        vehicle.setVariable('isValid', true);
+        
         veh.d ? vehicle.dimension = veh.d : vehicle.dimension = 0; /// устанавливаем измерение
 
         veh.isInGarage ? vehicle.isInGarage = veh.isInGarage : vehicle.isInGarage = false;
@@ -84,14 +87,16 @@ module.exports = {
         }
         if (!veh.properties) {
             vehicle.properties = this.setVehiclePropertiesByModel(veh.modelName);
-        } else {
+        }
+        else {
             vehicle.properties = veh.properties;
         }
 
         if (veh.key == 'private' || veh.key == 'market') { // temp
             if (!veh.tuning) {
                 await this.initTuning(vehicle);
-            } else {
+            }
+            else {
                 vehicle.tuning = veh.tuning;
             }
             tuning.setTuning(vehicle);
@@ -112,8 +117,9 @@ module.exports = {
         vehicle.fuelTick = 60000 / vehicle.consumption;
         if (!vehicle.fuelTick || isNaN(vehicle.fuelTick)) vehicle.fuelTick = 60000;
 
-        vehicle.fuelTimer = setInterval(() => {
+        vehicle.fuelTimer = timer.addInterval(() => {
             try {
+                if (!mp.vehicles.exists(vehicle)) return timer.remove(vehicle.fuelTimer);
                 if (vehicle.engine) {
                     vehicle.fuel = vehicle.fuel - 1;
                     if (vehicle.fuel <= 0) {
@@ -123,22 +129,19 @@ module.exports = {
                         return;
                     }
                 }
-            } catch (err) {
+            }
+            catch (err) {
                 console.log(err);
             }
         }, vehicle.fuelTick);
         return vehicle;
     },
     getDriver(vehicle) {
-        let driver = vehicle.getOccupants()[0];
-        if (driver.seat != -1) {
-            return null
-        }
-        return driver;
+        return this.getOccupants(vehicle).find(x => x.seat == -1);
     },
     respawnVehicle(veh) {
         if (!mp.vehicles.exists(veh)) return;
-        clearInterval(veh.fuelTimer);
+        timer.remove(veh.fuelTimer);
         if (veh.key == "admin") { /// Если админская, не респавним
             veh.destroy();
             return;
@@ -257,7 +260,8 @@ module.exports = {
                     fuel: Math.ceil(veh.fuel)
                 });
                 console.log(`[DEBUG] Обновили пробег для ${veh.properties.name}. Текущий пробег: ${veh.mileage}. К занесению: ${value} км и ${Math.ceil(veh.fuel)} л`);
-            } catch (err) {
+            }
+            catch (err) {
                 console.log(err);
             }
         }
@@ -307,7 +311,8 @@ module.exports = {
                         //   }
                     }
                 }
-            } else {
+            }
+            else {
                 let veh = dbPrivate[0];
                 if (dbPrivate[0].parkingDate == null) {
                     let now = new Date();
@@ -410,13 +415,13 @@ module.exports = {
     updateConsumption(vehicle) {
         if (!vehicle) return;
         try {
-            clearInterval(vehicle.fuelTimer);
+            timer.remove(vehicle.fuelTimer);
 
             let multiplier = vehicle.multiplier;
             vehicle.consumption = vehicle.properties.consumption * multiplier;
             vehicle.fuelTick = 60000 / vehicle.consumption;
 
-            vehicle.fuelTimer = setInterval(() => {
+            vehicle.fuelTimer = timer.addInterval(() => {
                 try {
                     if (vehicle.engine) {
 
@@ -428,11 +433,13 @@ module.exports = {
                             return;
                         }
                     }
-                } catch (err) {
+                }
+                catch (err) {
                     console.log(err);
                 }
             }, vehicle.fuelTick);
-        } catch (err) {
+        }
+        catch (err) {
             console.log(err);
         }
     },
@@ -477,7 +484,8 @@ module.exports = {
             place.veh = vehicle;
             vehicle.isInGarage = false;
 
-        } else {
+        }
+        else {
             let index = player.carPlaces.findIndex(x => x.veh == null && x.d != 0);
             let place = player.carPlaces[index];
             vehicle.carPlaceIndex = index;
@@ -528,7 +536,8 @@ module.exports = {
         console.log(`hasHouse = ${hasHouse}`)
         if (!hasHouse) {
             if (player.vehicleList.length >= 1) return false;
-        } else {
+        }
+        else {
             if (player.carPlaces.length > 1 && player.vehicleList.length + 1 > player.carPlaces.length - 1) return false;
             if (player.carPlaces.length == 1 && player.vehicleList.length >= player.carPlaces.length) return false;
         }
@@ -581,8 +590,15 @@ module.exports = {
     },
     // Получить всех игроков в авто
     getOccupants(vehicle) {
-        // TODO: Обойти баги рейджа через проверку на player.vehicle в радиусе авто
-        return vehicle.getOccupants();
+        var occupants = vehicle.getOccupants();
+        mp.players.forEachInRange(vehicle.position, 10, rec => {
+            if (!rec.vehicle) return;
+            if (rec.vehicle.id != vehicle.id) return;
+            if (occupants.find(x => x.id == rec.id)) return;
+            occupants.push(rec);
+        });
+        // Обходим баги рейджа через проверку на player.vehicle в радиусе авто
+        return occupants;
     },
     // Убито ли авто
     isDead(vehicle) {
