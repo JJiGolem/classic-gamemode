@@ -137,6 +137,15 @@ module.exports = {
             }
         });
     },
+    "admin.notify.all.split": (message, fixed, color) => {
+        mp.players.forEach((current) => {
+            if (current.character) {
+                if (current.character.admin > 0) {
+                        current.call('chat.message.split', [message, fixed, color]);
+                }
+            }
+        });
+    },
     /// Отправить сообщение всем игрокам
     "admin.notify.players": (message) => {
         mp.players.forEach((current) => {
@@ -152,8 +161,17 @@ module.exports = {
     "admin.report": (player, message) => {
         var media = player.character.Promocode.media;
         var color = (!media) ? "#ffe838" : "#ff3ec8";
-        player.call('chat.message.push', [`!{#87c924}Ваш репорт:!{${color}} ${message}`]);
-        mp.events.call("admin.notify.all", `!{#87c924}${player.name}[${player.id}]:!{${color}} ${message}`);
+        //player.call('chat.message.push', [`!{#87c924}Ваш репорт:!{${color}} ${message}`]);
+        player.call('chat.message.split', [message, `!{#87c924}Ваш репорт:!{${color}} `]);
+        //mp.events.call("admin.notify.all", `!{#87c924}${player.name}[${player.id}]:!{${color}} ${message}`);
+
+        mp.players.forEach((current) => {
+            if (current.character) {
+                if (current.character.admin > 0) {
+                        player.call('chat.message.split', [message, `!{#87c924}${player.name}[${player.id}]:!{${color}} `]);
+                }
+            }
+        });
     },
     "characterInit.done": (player) => {
         let level = player.character.admin;
