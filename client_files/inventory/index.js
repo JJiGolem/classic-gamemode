@@ -147,6 +147,7 @@ mp.inventory = {
         mp.game.controls.disableControlAction(1, 165, true);
     },
     hands(player, itemId) {
+        if (!this.itemsInfo) return;
         if (itemId) {
             var info = this.itemsInfo[itemId];
             var object = mp.objects.new(mp.game.joaat(info.model), player.position);
