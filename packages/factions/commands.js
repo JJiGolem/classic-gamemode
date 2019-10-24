@@ -218,13 +218,16 @@ module.exports = {
             faction.y = pos.y;
             faction.z = pos.z;
             faction.h = player.heading;
+            faction.d = player.dimension;
             faction.save();
             pos.z -= 1;
 
             var marker = factions.getMarker(faction.id);
             marker.position = pos;
+            marker.dimension = faction.d;
             var blip = factions.getBlip(faction.id);
             blip.position = pos;
+            blip.dimension = faction.d;
 
             out.info(`${player.name} изменил позицию у организации ${faction.name}`);
         }
@@ -241,17 +244,19 @@ module.exports = {
             faction.wX = pos.x;
             faction.wY = pos.y;
             faction.wZ = pos.z;
+            faction.wD = player.dimension;
             faction.save();
             pos.z -= 1;
 
             var warehouse = factions.getWarehouse(faction.id);
             warehouse.colshape.destroy();
             warehouse.position = pos;
-            // TODO: перенос label
+            warehouse.dimension = faction.wD;
             pos.z += 2;
             warehouse.label.position = pos;
+            warehouse.label.dimension = faction.wD;
 
-            var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+            var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, warehouse.dimension);
             colshape.onEnter = warehouse.colshape.onEnter;
             colshape.onExit = warehouse.colshape.onExit;
             warehouse.colshape = colshape;
@@ -272,14 +277,16 @@ module.exports = {
             faction.sX = pos.x;
             faction.sY = pos.y;
             faction.sZ = pos.z;
+            faction.sD = player.dimension;
             faction.save();
             pos.z -= 1;
 
             var storage = factions.getStorage(faction.id);
             storage.colshape.destroy();
             storage.position = pos;
+            storage.dimension = faction.sD;
 
-            var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+            var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, storage.dimension);
             colshape.onEnter = storage.colshape.onEnter;
             colshape.onExit = storage.colshape.onExit;
             storage.colshape = colshape;
@@ -299,14 +306,16 @@ module.exports = {
             faction.hX = pos.x;
             faction.hY = pos.y;
             faction.hZ = pos.z;
+            faction.hD = player.dimension;
             faction.save();
             pos.z -= 1;
 
             var holder = factions.getHolder(faction.id);
             holder.colshape.destroy();
             holder.position = pos;
+            holder.dimension = faction.hD;
 
-            var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+            var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, holder.dimension);
             colshape.onEnter = holder.colshape.onEnter;
             colshape.onExit = holder.colshape.onExit;
 
