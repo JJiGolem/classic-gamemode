@@ -11,7 +11,7 @@ mp.chat = {
 
 var chatOpacity = 1.0;
 var isOpen = false;
-const defaultSplitLimit = 90;
+const defaultSplitLimit = 95;
 
 const TAGS_LIST = [{
         id: 0,
@@ -220,8 +220,8 @@ mp.events.add('chat.action.try', (nickname, id, message, result) => {
 });
 
 mp.events.add('chat.message.push', (message) => {
-    if (message.length > 95) {
-        message = message.slice(0, 95);
+    if (message.length > 100) {
+        message = message.slice(0, 100);
     };
     mp.callCEFR('pushChatMessage', [message]);
 });
