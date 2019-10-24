@@ -157,6 +157,12 @@ module.exports = {
             }
         });
     },
+    "admin.notify.players.split": (message, fixed, color) => {
+        mp.players.forEach((current) => {
+            if (!current.character) return;
+                current.call('chat.message.split', [message, fixed, color]);
+        });
+    },
     // Поступила жалоба от игрока
     "admin.report": (player, message) => {
         var media = player.character.Promocode.media;
