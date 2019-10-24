@@ -87,13 +87,15 @@ module.exports = {
         var pos = new mp.Vector3(faction.x, faction.y, faction.z - 1);
 
         this.markers.push(mp.markers.new(1, pos, 0.5, {
-            color: [255, 187, 0, 70]
+            color: [255, 187, 0, 70],
+            dimension: faction.d
         }));
         this.blips.push(mp.blips.new(faction.blip, pos, {
             color: faction.blipColor,
             name: faction.name,
             shortRange: 10,
-            scale: 1
+            scale: 1,
+            dimension: faction.d
         }));
     },
     createWarehouseMarker(faction) {
@@ -102,10 +104,11 @@ module.exports = {
         var pos = new mp.Vector3(faction.wX, faction.wY, faction.wZ - 1);
 
         var warehouse = mp.markers.new(1, pos, 0.5, {
-            color: [0, 187, 255, 70]
+            color: [0, 187, 255, 70],
+            dimension: faction.wD
         });
 
-        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, warehouse.dimension);
         colshape.onEnter = (player) => {
             if (player.vehicle) return;
 
@@ -125,6 +128,7 @@ module.exports = {
                 los: false,
                 font: 0,
                 drawDistance: 10,
+                dimension: warehouse.dimension
             });
         this.warehouses.push(warehouse);
     },
@@ -132,11 +136,12 @@ module.exports = {
         var pos = new mp.Vector3(faction.sX, faction.sY, faction.sZ - 1);
 
         var storage = mp.markers.new(1, pos, 0.5, {
-            color: [0, 187, 255, 70]
+            color: [0, 187, 255, 70],
+            dimension: faction.sD
         });
         this.storages.push(storage);
 
-        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, storage.dimension);
         colshape.onEnter = (player) => {
             if (player.vehicle) return;
             if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
@@ -157,14 +162,15 @@ module.exports = {
         var pos = new mp.Vector3(faction.hX, faction.hY, faction.hZ - 1);
 
         var holder = mp.markers.new(1, pos, 0.5, {
-            color: [0, 187, 255, 70]
+            color: [0, 187, 255, 70],
+            dimension: faction.hD
         });
         holder.inventory = {
             items: {}, // предметов игроков в шкафе
         };
         this.holders.push(holder);
 
-        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, holder.dimension);
         colshape.onEnter = (player) => {
             if (player.vehicle) return;
             if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
