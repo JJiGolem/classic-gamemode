@@ -69,7 +69,9 @@ global.debug = (text) => {
 if (!isBuild) {
     require('../../scripts/dev').compile();
 } else {
+    console.log('START BUILD CLIENT-SIDE');
     childProcess.execSync('npm run build');
+    console.log('END BUILD CLIENT-SIDE');
 }
 
 /// Вызов подключения к БД, подключение всех модулей и вызов их инициализации
