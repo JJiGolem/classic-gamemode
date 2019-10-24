@@ -88,6 +88,7 @@ module.exports = {
         switch (command) {
             case '/s':
             case '/r':
+            case '/f':
             case '/n':
             case '/b':
             case '/me':
@@ -162,6 +163,10 @@ module.exports = {
 
     "/r": (player, message) => {
         factions.sayRadio(player, message.join(' '));
+    },
+
+    "/f": (player, message) => {
+        factions.sayFamiliy(player, message.join(' '));
     },
 
     "/n": (player, message) => {
