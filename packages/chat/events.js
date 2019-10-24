@@ -166,7 +166,7 @@ module.exports = {
     },
 
     "/f": (player, message) => {
-        factions.sayFamiliy(player, message.join(' '));
+        factions.sayRadio(player, message.join(' '));
     },
 
     "/n": (player, message) => {

@@ -561,20 +561,7 @@ module.exports = {
     sayRadio(player, text) {
         var factionId = player.character.factionId;
         if (!factionId) return notifs.error(player, `Вы не состоите в организации`, `Рация`);
-        if (!this.isStateFaction(factionId)) return notifs.error(player, `Вы не в гос. структуре`, `Рация`);
-
-        var rank = this.getRankById(factionId, player.character.factionRank);
-        mp.players.forEach((rec) => {
-            if (!rec.character) return;
-            if (rec.character.factionId != factionId) return;
-
-            rec.call('chat.action.walkietalkie', [player.name, player.id, rank.name, text]);
-        });
-    },
-    sayFamiliy(player, text) {
-        var factionId = player.character.factionId;
-        if (!factionId) return notifs.error(player, `Вы не состоите в организации`, `Рация`);
-        if (!this.isCrimeFaction(factionId)) return notifs.error(player, `Вы не в криминал. структуре`, `Рация`);
+        // if (!this.isStateFaction(factionId)) return notifs.error(player, `Вы не в гос. структуре`, `Рация`);
 
         var rank = this.getRankById(factionId, player.character.factionRank);
         mp.players.forEach((rec) => {
