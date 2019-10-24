@@ -38,8 +38,12 @@
     /* transition: border 1s, background 1s; */
 }
 
-#inventory .body-items .column.focus {
+#inventory .body-items .column.active {
     border-color: #046f04;
+}
+
+#inventory .body-items .column.focus {
+    border-color: #aaa;
 }
 
 #inventory .body-items .column:not(:empty) {
@@ -233,29 +237,10 @@
 #inventory .hands {
     display: grid;
     grid-row-end: span 2;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(1, 1fr);
 }
 
-#inventory .hands>div {
-    align-items: center;
-    /* border: 1px solid #333; */
-    color: #ddd7;
-    display: flex;
-    font-size: 1.7vh;
-    padding: 2vh;
-}
-
-#inventory .hands>div:first-child {
-    border-right: 1px solid #333;
-    justify-content: flex-end;
-}
-
-#inventory .hands>div:nth-child(2) {}
-
-#inventory .hands>div.busy {
-    background: #fff1;
-    border: 1px solid #aaa;
+#inventory .hands.active {
+    background: #333d;
 }
 
 #inventory .hands img {
@@ -263,13 +248,41 @@
     opacity: 0.5;
 }
 
-#inventory .hands .left-slot img {
-    transform: scale(-1, 1);
+#inventory .hands .item {
+    height: 12vh;
+    width: 31vh;
 }
 
-#inventory .hands .item {
-    height: 9vh;
-    width: 17vh;
+#inventory .hands .item .close {
+    font-size: 2vh;
+    right: 0.3vh;
+    top: -0.3vh;
+}
+
+#inventory .hands .slot {
+    align-items: center;
+    /* border: 1px solid #333; */
+    color: #ddd7;
+    display: flex;
+    font-size: 1.7vh;
+    justify-content: space-around;
+    margin: 0 auto;
+    /* padding: 2vh; */
+    width: 80%;
+}
+
+#inventory .hands .slot.busy {
+    background: #fff1;
+    /* border: 1px solid #aaa; */
+}
+
+#inventory .hands .slot.focus img {
+    width: 32%;
+    opacity: 1;
+}
+
+#inventory .hands .slot img:first-child {
+    transform: scale(-1, 1);
 }
 
 #inventory .header {
@@ -604,10 +617,14 @@
     font-size: 1.5vh;
 }
 
+#inventory .playerInventory .container .header:hover .title {
+    color: #fff;
+}
+
 #inventory .pockets {
     display: flex;
     flex-flow: wrap;
-    margin-bottom: 3vh;
+    /* margin-bottom: 3vh; */
 }
 
 #inventory ::-webkit-scrollbar {
@@ -621,10 +638,10 @@
 }
 
 /* Анимация */
-
 #inventory.spin .item {
     animation: spin 1.2s linear infinite;
 }
+
 @keyframes spin {
     0% {
         transform: rotate(0deg);
@@ -633,4 +650,25 @@
     100% {
         transform: rotate(360deg);
     }
+}
+
+/* Для карманов */
+#inventory .slide-enter-active {
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in;
+}
+
+#inventory .slide-leave-active {
+    transition-duration: 0.3s;
+    transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+
+#inventory .slide-enter-to, .slide-leave {
+    max-height: 500px;
+    overflow: hidden;
+}
+
+#inventory .slide-enter, .slide-leave-to {
+    overflow: hidden;
+    max-height: 0px;
 }

@@ -161,6 +161,7 @@ mp.events.add("playerStartEnterVehicle", () => {
         if (!object.lost) continue;
         mp.attachmentMngr.removeLocal(id);
         mp.attachmentMngr.removeFor(player, id);
+        mp.notify.error(`Вы уронили груз`);
     }
 });
 

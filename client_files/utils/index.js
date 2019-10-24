@@ -314,6 +314,12 @@ mp.utils = {
         };
         return null;
     },
+    // Сумма чисел в массиве
+    arraySum(array) {
+        var sum = 0;
+        array.forEach(num => sum += num);
+        return sum;
+    },
 };
 
 

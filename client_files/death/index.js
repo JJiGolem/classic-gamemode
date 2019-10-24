@@ -63,6 +63,12 @@ mp.events.add({
         var knocked = mp.players.local.getVariable("knocked");
         if (knocked) mp.game.controls.disableAllControlActions(0);
     },
+    "time.main.tick": () => {
+        var player = mp.players.local;
+        if (!player.getVariable("knocked")) return;
+        if (player.isPlayingAnim("amb@world_human_bum_slumped@male@laying_on_left_side@base", "base", 3)) return;
+        mp.death.knock(player, true);
+    },
 });
 
 mp.events.addDataHandler("knocked", (player, knocked) => {

@@ -5,6 +5,7 @@ const creatorPlayerHeading = -185.0;
 
 let houses;
 let bizes;
+let death;
 let factions;
 let jobs;
 let inventory;
@@ -59,6 +60,7 @@ module.exports = {
     moduleInit() {
         houses = call('houses');
         bizes = call('bizes');
+        death = call('death');
         factions = call('factions');
         inventory = call('inventory');
         notifs = call('notifications');
@@ -74,8 +76,7 @@ module.exports = {
                 where: {
                     accountId: player.account.id
                 },
-                include: [
-                    {
+                include: [{
                         model: db.Models.Feature,
                     },
                     {
@@ -472,6 +473,8 @@ module.exports = {
                 player.dimension = 0;
                 break;
         }
+
+        if (death.knockedList.includes(player.character.id)) death.addKnocked(player);
     },
     getSocialStatus(character) {
         if (character.admin) return "Администратор";

@@ -1,5 +1,6 @@
 let bands = call('bands');
 let bizes = call('bizes');
+let death = call('death');
 let factions = call('factions');
 let fuelstations = call('fuelstations');
 let inventory = require('./index.js');
@@ -31,17 +32,40 @@ module.exports = {
     // срабатывает, когда игрок переместил предмет (в любом месте)
     "item.add": (player, data) => {
         data = JSON.parse(data);
-        console.log(`item.add: ${player.name}`)
-        console.log(data)
+        // debug(`item.add: ${player.name}`)
+        // debug(data)
         var item = inventory.getItem(player, data.sqlId);
         if (data.placeSqlId > 0 || data.placeSqlId == null) { // переместил в свой карман или на себя
             if (item) { // предмет уже есть у игрока
                 if (item.parentId == null && data.placeSqlId) { // снял вещь
-                    inventory.clearView(player, item.itemId);
-                    var params = inventory.getParamsValues(item);
-                    if (params.weaponHash) inventory.giveWeapon(player, params.weaponHash, params.ammo);
+                    // debug(`снял вещь`)
+                    if (item.index == 13) { // снял из рук
+                        // debug(`снял из рук`)
+                        inventory.syncHandsItem(player, null);
+                    } else { // снял с тела
+                        // debug(`снял с тела`)
+                        inventory.clearView(player, item.itemId);
+                    }
                 } else if (item.parentId && data.placeSqlId == null) { // надел вещь
-                    inventory.updateView(player, item);
+                    // debug(`надел вещь`)
+                    if (data.index == 13) { // на руки
+                        // debug(`на руки`)
+                        inventory.syncHandsItem(player, item);
+                    } else { // на тело
+                        // debug(`на тело`)
+                        inventory.updateView(player, item);
+                    }
+                } else if (!item.parentId && data.placeSqlId == null) { // переместил внутри слотов тела
+                    // debug(`внутри слотов тела`)
+                    if (data.index == 13) { // переместил из тела в руки
+                        // debug(`из тела в руки`)
+                        inventory.clearView(player, item.itemId);
+                        inventory.syncHandsItem(player, item);
+                    } else if (item.index == 13) { // переместил из рук на тело
+                        // debug(`из рук на тело`)
+                        inventory.syncHandsItem(player, null);
+                        inventory.updateView(player, item);
+                    }
                 }
                 item.pocketIndex = data.pocketI;
                 item.index = data.index;
@@ -206,7 +230,7 @@ module.exports = {
 
         rec.spawn(rec.position);
         rec.health = 10;
-        rec.setVariable("knocked", false);
+        death.removeKnocked(rec);
         mp.events.call(`mapCase.ems.calls.remove`, rec, rec.character.id);
 
         count--;

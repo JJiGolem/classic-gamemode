@@ -1,6 +1,8 @@
 mp.inventory = {
     groundMaxDist: 2,
     lastArmour: 0,
+    itemsInfo: null,
+    animData: require('animations/data.js'),
 
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
@@ -16,10 +18,13 @@ mp.inventory = {
         mp.callCEFV(`inventory.initItems('${items}')`);
     },
     setItemsInfo(itemsInfo) {
+        this.itemsInfo = itemsInfo;
+
         if (typeof itemsInfo == 'object') itemsInfo = JSON.stringify(itemsInfo);
         mp.callCEFV(`inventory.setItemsInfo('${itemsInfo}')`);
     },
     setItemInfo(id, itemInfo) {
+        this.itemsInfo[id] = itemInfo;
         if (typeof itemInfo == 'object') itemInfo = JSON.stringify(itemInfo);
         mp.callCEFV(`inventory.setItemInfo(${id}, '${itemInfo}')`);
     },
@@ -130,6 +135,50 @@ mp.inventory = {
         }
         mp.callCEFV(`inventory.setBodyList(9, '${JSON.stringify(list)}')`)
     },
+    disableControlActions() {
+        mp.game.controls.disableControlAction(1, 157, true);
+        mp.game.controls.disableControlAction(1, 158, true);
+        mp.game.controls.disableControlAction(1, 159, true);
+        mp.game.controls.disableControlAction(1, 160, true);
+        mp.game.controls.disableControlAction(1, 161, true);
+        mp.game.controls.disableControlAction(1, 162, true);
+        mp.game.controls.disableControlAction(1, 163, true);
+        mp.game.controls.disableControlAction(1, 164, true);
+        mp.game.controls.disableControlAction(1, 165, true);
+    },
+    hands(player, itemId) {
+        if (itemId) {
+            var info = this.itemsInfo[itemId];
+            var object = mp.objects.new(mp.game.joaat(info.model), player.position);
+            var pos = info.attachInfo.pos;
+            var rot = info.attachInfo.rot;
+            object.attachTo(player.handle,
+                player.getBoneIndex(info.attachInfo.bone),
+                pos.x, pos.y, pos.z,
+                rot.x, rot.y, rot.z,
+                false, false, false, false, 2, true);
+
+            if (info.attachInfo.anim) {
+                var a = this.animData[info.attachInfo.anim].split(" ");
+                player.clearTasksImmediately();
+                mp.utils.requestAnimDict(a[0], () => {
+                    player.taskPlayAnim(a[0], a[1], 8, 0, -1, 49, 0, false, false, false);
+                });
+            }
+            player.hands = {
+                object: object,
+                itemId: itemId
+            };
+        } else {
+            if (!player.hands) return;
+            if (this.itemsInfo[player.hands.itemId].attachInfo.anim) player.clearTasksImmediately();
+            if (mp.objects.exists(player.hands.object)) {
+                player.hands.object.destroy();
+                delete player.hands;
+            }
+
+        }
+    },
 };
 
 mp.events.add("characterInit.done", () => {
@@ -148,9 +197,13 @@ mp.events.add("inventory.initItems", (items) => {
     mp.inventory.loadHotkeys();
 });
 
-mp.events.add("inventory.setItemsInfo", mp.inventory.setItemsInfo);
+mp.events.add("inventory.setItemsInfo", (itemsInfo) => {
+    mp.inventory.setItemsInfo(itemsInfo);
+});
 
-mp.events.add("inventory.setItemInfo", mp.inventory.setItemInfo);
+mp.events.add("inventory.setItemInfo", (id, info) => {
+    mp.inventory.setItemInfo(id, info);
+});
 
 mp.events.add("inventory.setMergeList", mp.inventory.setMergeList);
 
@@ -199,6 +252,18 @@ mp.events.add("playerExitVehicleBoot", (player, vehicle) => {
     mp.events.callRemote(`vehicle.boot.items.clear`, vehicle.remoteId);
 });
 
+mp.events.add("entityStreamIn", (entity) => {
+    if (entity.type != "player") return;
+    var itemId = entity.getVariable("hands");
+    mp.inventory.hands(entity, itemId);
+});
+
+mp.events.add("entityStreamOut", (entity) => {
+    if (entity.type != "player") return;
+    if (!entity.handsObject) return;
+    mp.inventory.hands(entity, null);
+});
+
 mp.events.add("time.main.tick", () => {
     var value = mp.players.local.getArmour();
     mp.inventory.setArmour(value);
@@ -206,6 +271,10 @@ mp.events.add("time.main.tick", () => {
     mp.objects.forEach(obj => {
         if (obj.getVariable("groundItem")) mp.utils.setNoCollision(obj, true);
     });
+});
+
+mp.events.add("render", () => {
+    mp.inventory.disableControlActions();
 });
 
 mp.events.addDataHandler("trunk", (vehicle, value) => {
@@ -218,4 +287,9 @@ mp.events.addDataHandler("trunk", (vehicle, value) => {
         mp.events.callRemote(`vehicle.boot.items.clear`, vehicle.remoteId);
         mp.prompt.showByName("vehicle_open_boot");
     }
+});
+
+mp.events.addDataHandler("hands", (player, itemId) => {
+    // debug(`${player.name} hands ${itemId}`)
+    mp.inventory.hands(player, itemId);
 });
