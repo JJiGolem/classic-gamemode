@@ -89,6 +89,9 @@ module.exports = {
         money.removeCash(player, carrier.vehPrice, (res) => {
             if (!res) return out(`Ошибка списания наличных`);
 
+            var driverVeh = carrier.getVehByDriver(player);
+            if (driverVeh) carrier.clearVeh(driverVeh);
+
             veh.driver = {
                 playerId: player.id,
                 characterId: player.character.id,
@@ -190,20 +193,15 @@ module.exports = {
         carrier.dropBizOrder(player);
 
         var veh = carrier.getVehByDriver(player);
-        if (veh) delete veh.driver;
+        if (veh) carrier.clearVeh(veh);
     },
     "vehicle.respawned": (veh) => {
         if (!veh.db || veh.db.key != "job" || veh.db.owner != 4) return;
-        carrier.dropBizOrderByVeh(veh);
-        delete veh.driver;
-        if (veh.products) {
-            delete veh.products;
-            veh.setVariable("label", null);
-        }
+        carrier.clearVeh(veh);
     },
     "jobs.leave": (player) => {
         if (player.character.job != 4) return;
         var veh = carrier.getVehByDriver(player);
-        if (veh) delete veh.driver;
+        if (veh) carrier.clearVeh(veh);
     },
 }

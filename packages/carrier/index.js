@@ -217,4 +217,13 @@ module.exports = {
         var d = veh.driver;
         return mp.players.toArray().find(x => x.character && x.id == d.playerId && x.character.id == d.characterId);
     },
+    // полностью очистить грузовик от товара и водителя
+    clearVeh(veh) {
+        this.dropBizOrderByVeh(veh);
+        delete veh.driver;
+        if (veh.products) {
+            delete veh.products;
+            veh.setVariable("label", null);
+        }
+    },
 };
