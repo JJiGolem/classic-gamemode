@@ -9,10 +9,16 @@ module.exports = {
     "death.wait": (player) => {
         player.spawn(player.position);
         player.health = death.health;
+        if (player.cellArrestDate || player.jailArrestDate) return;
         player.setVariable("knocked", true);
         mp.events.call(`mapCase.ems.calls.add`, player, `Ранение`);
     },
     "death.spawn": (player) => {
+        if (player.cellArrestDate || player.jailArrestDate) {
+            player.spawn(player.position);
+            player.health = 10;
+            return;
+        }
         var hospitalPos = factions.getMarker(5).position;
         player.spawn(hospitalPos);
         player.health = 10;
