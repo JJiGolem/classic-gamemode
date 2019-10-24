@@ -165,13 +165,18 @@ mp.inventory = {
                     player.taskPlayAnim(a[0], a[1], 8, 0, -1, 49, 0, false, false, false);
                 });
             }
-            player.handsObject = object;
+            player.hands = {
+                object: object,
+                itemId: itemId
+            };
         } else {
-            if (mp.objects.exists(player.handsObject)) {
-                player.handsObject.destroy();
-                delete player.handsObject;
+            if (!player.hands) return;
+            if (this.itemsInfo[player.hands.itemId].attachInfo.anim) player.clearTasksImmediately();
+            if (mp.objects.exists(player.hands.object)) {
+                player.hands.object.destroy();
+                delete player.hands;
             }
-            player.clearTasksImmediately();
+
         }
     },
 };
@@ -245,6 +250,18 @@ mp.events.add("playerExitVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`exitBoot: #${vehicle.remoteId}`);
     if (vehicle.getVariable("static")) return;
     mp.events.callRemote(`vehicle.boot.items.clear`, vehicle.remoteId);
+});
+
+mp.events.add("entityStreamIn", (entity) => {
+    if (entity.type != "player") return;
+    var itemId = entity.getVariable("hands");
+    mp.inventory.hands(entity, itemId);
+});
+
+mp.events.add("entityStreamOut", (entity) => {
+    if (entity.type != "player") return;
+    if (!entity.handsObject) return;
+    mp.inventory.hands(entity, null);
 });
 
 mp.events.add("time.main.tick", () => {
