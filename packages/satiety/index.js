@@ -66,5 +66,10 @@ module.exports = {
         character.save();
         player.call("inventory.setSatiety", [character.satiety])
         player.call("inventory.setThirst", [character.thirst]);
+
+        player.call(`hud.setData`, [{
+            satiety: character.satiety,
+            thirst: character.thirst
+        }]);
     }
 };

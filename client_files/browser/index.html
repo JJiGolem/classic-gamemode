@@ -62,8 +62,8 @@
         <div class="panel-right-top">
             <div class="info-logo">
                 <div class="info">
-                    <div>Build: <span>{{ build }}</span></div>
-                    <div>Онлай: <span>{{ players }}/{{ maxPlayers }}</span></div>
+                    <div v-if="build">Build: <span>{{ build }} ({{ branch }})</span></div>
+                    <div>Онлайн: <span>{{ players }}/{{ maxPlayers }}</span></div>
                     <div>Ваш ID: <span>{{ playerId }}</span></div>
                 </div>
                 <div><img class="logo" src="img/logo.png" /></div>
@@ -75,7 +75,7 @@
                 <img v-if="cold" src="img/hud/cold.svg" />
                 <img v-if="heat" src="img/hud/heat.svg" />
             </div>
-            <div class="arrest">
+            <div class="arrest" v-if="arrestProgress">
                 <div class="wrap">
                     <svg>
                         <circle :style="arrestProgressStyle"/>
@@ -99,10 +99,10 @@
                     <div class="progress"><div :style="{ width: satiety+'%' }"></div></div>
                     <div class="percent">{{ satiety }}%</div>
                 </div>
-                <div class="thrist record">
+                <div class="thirst record">
                     <div><img src="img/hud/glass.svg"/></div>
-                    <div class="progress"><div :style="{ width: thrist+'%' }"></div></div>
-                    <div class="percent">{{ thrist }}%</div>
+                    <div class="progress"><div :style="{ width: thirst+'%' }"></div></div>
+                    <div class="percent">{{ thirst }}%</div>
                 </div>
             </div>
             <div class="money block">

@@ -32,7 +32,7 @@ var notifications = new Vue({
 });
 
 // for tests
-notifications.push("error", "зачисление + $500", "Банк Maze");
-notifications.push("success", "зачисление + $500", "Банк Maze");
-notifications.push("info", "зачисление + $500", "Банк Maze");
-notifications.push("warning", "зачисление + $500", "Банк Maze");
+// notifications.push("error", "зачисление + $500", "Банк Maze");
+// notifications.push("success", "зачисление + $500", "Банк Maze");
+// notifications.push("info", "зачисление + $500", "Банк Maze");
+// notifications.push("warning", "зачисление + $500", "Банк Maze");
