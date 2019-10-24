@@ -422,6 +422,7 @@ module.exports = {
         var params = this.getParamsValues(item);
         if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
         if (!item.parentId) this.clearView(player, item.itemId);
+        if (!item.parentId && item.index == 13) this.syncHandsItem(player, null);
         item.destroy();
         player.call("inventory.deleteItem", [item.id]);
 
@@ -1289,12 +1290,14 @@ module.exports = {
         if (item) { // вкл. синх. предмета/гана в руках
             var params = this.getParamsValues(item);
             if (params.weaponHash) this.giveWeapon(player, params.weaponHash, params.ammo);
+            else player.setVariable("hands", item.itemId);
         } else { // выкл. синх. предмета/гана в руках
             var handsItem = this.getHandsItem(player);
             if (!handsItem) return;
 
             var params = this.getParamsValues(handsItem);
             if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
+            else player.setVariable("hands", null);
         }
     }
 };

@@ -70,7 +70,7 @@ module.exports = (sequelize, DataTypes) => {
                 bone: 11363,
                 pos: [0.08, -0.15, -0.25],
                 rot: [-100, 0, 0],
-                anim: 1333
+                anim: 0
             }),
             allowNull: false,
             get() {

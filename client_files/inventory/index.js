@@ -2,6 +2,7 @@ mp.inventory = {
     groundMaxDist: 2,
     lastArmour: 0,
     itemsInfo: null,
+    animData: require('animations/data.js'),
 
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
@@ -145,6 +146,34 @@ mp.inventory = {
         mp.game.controls.disableControlAction(1, 164, true);
         mp.game.controls.disableControlAction(1, 165, true);
     },
+    hands(player, itemId) {
+        if (itemId) {
+            var info = this.itemsInfo[itemId];
+            var object = mp.objects.new(mp.game.joaat(info.model), player.position);
+            var pos = info.attachInfo.pos;
+            var rot = info.attachInfo.rot;
+            object.attachTo(player.handle,
+                player.getBoneIndex(info.attachInfo.bone),
+                pos.x, pos.y, pos.z,
+                rot.x, rot.y, rot.z,
+                false, false, false, false, 2, true);
+
+            if (info.attachInfo.anim) {
+                var a = this.animData[info.attachInfo.anim].split(" ");
+                player.clearTasksImmediately();
+                mp.utils.requestAnimDict(a[0], () => {
+                    player.taskPlayAnim(a[0], a[1], 8, 0, -1, 49, 0, false, false, false);
+                });
+            }
+            player.handsObject = object;
+        } else {
+            if (mp.objects.exists(player.handsObject)) {
+                player.handsObject.destroy();
+                delete player.handsObject;
+            }
+            player.clearTasksImmediately();
+        }
+    },
 };
 
 mp.events.add("characterInit.done", () => {
@@ -241,4 +270,9 @@ mp.events.addDataHandler("trunk", (vehicle, value) => {
         mp.events.callRemote(`vehicle.boot.items.clear`, vehicle.remoteId);
         mp.prompt.showByName("vehicle_open_boot");
     }
+});
+
+mp.events.addDataHandler("hands", (player, itemId) => {
+    // debug(`${player.name} hands ${itemId}`)
+    mp.inventory.hands(player, itemId);
 });

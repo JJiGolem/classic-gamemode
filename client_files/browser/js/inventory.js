@@ -758,7 +758,8 @@ var inventory = new Vue({
         columnMouseHandler(place, pocket, index, e) {
             if (!this.itemDrag.item) return;
             var item = this.itemDrag.item;
-            var nextWeight = this.commonWeight + this.itemsInfo[item.itemId].weight;
+            var nextWeight = this.commonWeight;
+            if (!this.getItem(item.sqlId)) nextWeight += this.itemsInfo[item.itemId].weight;
             var columns = this.itemDrag.accessColumns;
             var pocketI = place.pockets.indexOf(pocket);
             var w = this.itemsInfo[item.itemId].width;
