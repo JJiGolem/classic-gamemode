@@ -8,8 +8,8 @@ module.exports = {
         });
     },
     "characterInit.done": (player) => {
-        player.call('hud.load'); 
-        
+        player.call('hud.load');
+
         if (player.character.admin > 0) {
             player.call('hud.players.list.load', [hud.loadPlayers()]);
         }
