@@ -452,7 +452,7 @@ module.exports = {
         mp.vehicles.forEach(veh => {
             if (!veh.db) return;
             if (!veh.lastPlayerTime) return;
-            if (veh.db.key == 'private') return;
+            if (veh.db.key == 'private' || veh.db.key == 'market') return;
             if (start.getTime() - veh.lastPlayerTime < vehicles.vehWaitSpawn) return;
             if (vehicles.getOccupants(veh).length) return;
 
