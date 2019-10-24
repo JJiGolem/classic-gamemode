@@ -4,6 +4,7 @@ let notify = call('notifications');
 let admin = call('admin');
 let factions = call('factions');
 let timer = call('timer');
+let death = call('death');
 
 module.exports = {
 
@@ -602,7 +603,7 @@ module.exports = {
             rec.health = Math.clamp(args[1], 0, 100);
             out.info(`Игроку ${rec.name} установлено ${rec.health} ед. здоровья`, player);
             notify.info(rec, `${player.name} установил вам ${rec.health} ед. здоровья`);
-            if (rec.getVariable("knocked")) rec.setVariable("knocked", null);
+            if (rec.getVariable("knocked")) death.removeKnocked(rec);
         }
     },
     "/weapon": {

@@ -1,5 +1,6 @@
 let bands = call('bands');
 let bizes = call('bizes');
+let death = call('death');
 let factions = call('factions');
 let fuelstations = call('fuelstations');
 let inventory = require('./index.js');
@@ -206,7 +207,7 @@ module.exports = {
 
         rec.spawn(rec.position);
         rec.health = 10;
-        rec.setVariable("knocked", false);
+        death.removeKnocked(rec);
         mp.events.call(`mapCase.ems.calls.remove`, rec, rec.character.id);
 
         count--;
