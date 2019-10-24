@@ -50,12 +50,23 @@ module.exports = {
                 return;
             }
             try {
+                player.backPosition = player.position;
                 player.position = new mp.Vector3(target.position.x + 2, target.position.y, target.position.z);
                 player.dimension = target.dimension;
                 mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} телепортировался к ${target.name}`);
             } catch (err) {
                 player.call('chat.message.push', [`!{#ffffff}Игрок отключился`]);
             }
+        }
+    },
+    "/goback": {
+        access: 2,
+        description: "Вернуться на исходную позицию (после /goto)",
+        args: "",
+        handler: (player, args) => {
+            if (!player.backPosition) return notify.error(player, `У вас нет исходной позиции`);
+            player.position = player.backPosition;
+            notify.info(player, `Вы вернулись на исходную позицию`);
         }
     },
     "/gethere": {
@@ -72,13 +83,29 @@ module.exports = {
                 return;
             }
             try {
+                target.returnPosition = target.position;
                 target.position = new mp.Vector3(player.position.x + 2, player.position.y, player.position.z);
                 target.dimension = player.dimension;
                 mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} телепортировал к себе ${target.name}`);
+                player.call('chat.message.push', [`!{#ebd13d}Используйте /return, чтобы вернуть игрока обратно`]);
                 target.call('chat.message.push', [`!{#ffffff}${player.name} телепортировал вас к себе`]);
             } catch (err) {
                 player.call('chat.message.push', [`!{#ffffff}Игрок отключился`]);
             }
+        }
+    },
+    "/return": {
+        access: 2,
+        description: "Вернуть игрока на исходную позицию (после /gethere)",
+        args: "[ID]:n",
+        handler: (player, args) => {
+            let target = mp.players.at(args[0]);
+            if (!target) return notify.error(player, `Игрок не найден`);
+            if (!target.returnPosition) return notify.error(player, `У игрока нет исходной позиции`);
+            target.position = target.returnPosition;
+            target.returnPosition = null;
+            notify.info(player, `Вы вернули игрока на исходную позицию`);
+            notify.info(target, `${player.character.name} вернул вас на исходную позицию`);
         }
     },
     "/hp": {
@@ -719,6 +746,22 @@ module.exports = {
         args: "[эффект] [продолжительность]:n",
         handler: (player, args, out) => {
             player.call(`effect`, args);
+        }
+    },
+    "/red": {
+        description: "Включить/отключить красный ник",
+        access: 2,
+        args: "",
+        handler: (player, args, out) => {
+            if (!player.hasRedNick) {
+                player.setVariable('redNick', true);
+                player.hasRedNick = true;
+                out.info('Красный ник включен', player);
+            } else {
+                player.setVariable('redNick', false);
+                player.hasRedNick = false;
+                out.info('Красный ник отключен', player);
+            }
         }
     },
 }

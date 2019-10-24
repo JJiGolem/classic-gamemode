@@ -40,6 +40,10 @@ mp.events.add('render', (nametags) => {
             y -= scale * (0.005 * (screenRes.y / 1080));
             var playerName = getCorrectName(player);
             var nameColor = player.nameColor || [255, 255, 255, 255];
+
+            let redNick = player.getVariable(`redNick`) || false;
+            if (redNick) nameColor = [255, 85, 66, 255];
+            
             mp.game.graphics.drawText(playerName, [x, y],
                 {
                     font: FONT,
