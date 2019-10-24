@@ -1,7 +1,8 @@
 "use strict";
 
-var prevValues = {};
-var hudState = false;
+let prevValues = {};
+let ignoreValues = ['cold', 'heat'];
+let hudState = false;
 let playersListState = false;
 
 mp.events.add('hud.load', () => {
@@ -47,7 +48,7 @@ mp.events.add('hud.enable', (state) => {
 
 mp.events.add("hud.setData", (data) => {
     for (var key in data) {
-        if (prevValues[key] == data[key]) continue;
+        if (prevValues[key] == data[key] && !ignoreValues.includes(key)) continue;
         prevValues[key] = data[key];
         if (typeof data[key] == 'string') data[key] = `'${data[key]}'`;
         mp.callCEFV(`hud.${key} = ${data[key]}`);

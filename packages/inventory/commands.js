@@ -101,13 +101,27 @@ module.exports = {
     },
     "/invlist": {
         description: "Посмотреть общую информация о предметах инвентаря.",
-        access: 6,
+        access: 3,
         args: "",
         handler: (player, args, out) => {
             var text = "ID) Имя (Описание) [вес] [высота X ширина] | модель | DeltaZ | rX | rY<br/>";
             for (var i = 0; i < inventory.inventoryItems.length; i++) {
                 var item = inventory.inventoryItems[i];
                 text += `${item.id}) ${item.name} (${item.description}) [${item.weight} кг] [${item.height}x${item.width}] | ${item.model} | ${item.deltaZ} | ${item.rX} | ${item.rY}<br/>`;
+            }
+            out.log(text, player);
+        }
+    },
+    "/invattachinfo": {
+        description: "Посмотреть настройки аттачей предметов к руке.",
+        access: 3,
+        args: "",
+        handler: (player, args, out) => {
+            var text = "ID) Имя | Bone | Pos | Rot| Anim<br/>";
+            for (var i = 0; i < inventory.inventoryItems.length; i++) {
+                var item = inventory.inventoryItems[i];
+                var info = item.attachInfo;
+                text += `${item.id}) ${item.name} | ${info.bone} | ${info.pos} | ${info.rot} | ${info.anim}<br/>`;
             }
             out.log(text, player);
         }
@@ -215,6 +229,72 @@ module.exports = {
             out.info(`${player.name} изменил rotation предмета #${args[0]} (${item.rX}x${item.rY} => ${args[1]}x${args[2]})`);
             item.rX = args[1];
             item.rY = args[2];
+            item.save();
+            inventory.updateItemInfo(item);
+        }
+    },
+    "/invsetattachbone": {
+        description: "Изменить bone аттача предмета в руке. (см. /invattachinfo)",
+        access: 6,
+        args: "[ид_предмета]:n [bone]:n",
+        handler: (player, args, out) => {
+            var item = inventory.inventoryItems[args[0] - 1];
+            if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
+
+            var info = item.attachInfo;
+            out.info(`${player.name} изменил bone аттача предмета в руке #${args[0]} (${info.bone} => ${args[1]})`);
+            info.bone = args[1];
+            item.attachInfo = info;
+            item.save();
+            inventory.updateItemInfo(item);
+        }
+    },
+    "/invsetattachpos": {
+        description: "Изменить позицию аттача предмета в руке. (см. /invattachinfo)",
+        access: 6,
+        args: "[ид_предмета]:n [x]:n [y]:n [z]:n",
+        handler: (player, args, out) => {
+            var item = inventory.inventoryItems[args[0] - 1];
+            if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
+
+            var info = item.attachInfo;
+            args.shift();
+            out.info(`${player.name} изменил позицию аттача предмета в руке #${item.id} (${info.pos} => ${args})`);
+            info.pos = args;
+            item.attachInfo = info;
+            item.save();
+            inventory.updateItemInfo(item);
+        }
+    },
+    "/invsetattachrot": {
+        description: "Изменить поворот аттача предмета в руке. (см. /invattachinfo)",
+        access: 6,
+        args: "[ид_предмета]:n [x]:n [y]:n [z]:n",
+        handler: (player, args, out) => {
+            var item = inventory.inventoryItems[args[0] - 1];
+            if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
+
+            var info = item.attachInfo;
+            args.shift();
+            out.info(`${player.name} изменил поворот аттача предмета в руке #${item.id} (${info.rot} => ${args})`);
+            info.rot = args;
+            item.attachInfo = info;
+            item.save();
+            inventory.updateItemInfo(item);
+        }
+    },
+    "/invsetattachanim": {
+        description: "Изменить анимацию аттача предмета в руке. 0 - ВЫКЛ (см. /invattachinfo)",
+        access: 6,
+        args: "[ид_предмета]:n [animId]:n",
+        handler: (player, args, out) => {
+            var item = inventory.inventoryItems[args[0] - 1];
+            if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
+
+            var info = item.attachInfo;
+            out.info(`${player.name} изменил анимацию аттача предмета в руке #${item.id} (${info.anim} => ${args[1]})`);
+            info.anim = args[0];
+            item.attachInfo = info;
             item.save();
             inventory.updateItemInfo(item);
         }

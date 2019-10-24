@@ -1242,38 +1242,43 @@ module.exports = {
 
         if (temp < clime.head[0]) {
             damage += this.climeOpacity.head * (clime.head[0] - temp) * this.climeK;
-            out(`У вас мерзнет голова`);
+            // out(`У вас мерзнет голова`);
         } else if (temp > clime.head[1]) {
             thirst += this.climeOpacity.head * (temp - clime.head[1]) * this.climeK;
-            out(`У вас вспотела голова`);
+            // out(`У вас вспотела голова`);
         }
 
         if (temp < clime.body[0]) {
             damage += this.climeOpacity.body * (clime.body[0] - temp) * this.climeK;
-            out(`У вас мерзнет тело`);
+            // out(`У вас мерзнет тело`);
         } else if (temp > clime.body[1]) {
             thirst += this.climeOpacity.body * (temp - clime.body[1]) * this.climeK;
-            out(`У вас вспотело тело`);
+            // out(`У вас вспотело тело`);
         }
 
         if (temp < clime.legs[0]) {
             damage += this.climeOpacity.legs * (clime.legs[0] - temp) * this.climeK;
-            out(`У вас мерзнут ноги`);
+            // out(`У вас мерзнут ноги`);
         } else if (temp > clime.legs[1]) {
             thirst += this.climeOpacity.legs * (temp - clime.legs[1]) * this.climeK;
-            out(`У вас вспотели ноги`);
+            // out(`У вас вспотели ноги`);
         }
 
         if (temp < clime.feets[0]) {
             damage += this.climeOpacity.feets * (clime.feets[0] - temp) * this.climeK;
-            out(`У вас мерзнут ступни`);
+            // out(`У вас мерзнут ступни`);
         } else if (temp > clime.feets[1]) {
             thirst += this.climeOpacity.feets * (temp - clime.feets[1]) * this.climeK;
-            out(`У вас вспотели ступни`);
+            // out(`У вас вспотели ступни`);
         }
 
         player.health -= damage;
-        call("satiety").set(player, player.character.satiety, player.character.thirst - thirst);
+        if (thirst) call("satiety").set(player, player.character.satiety, player.character.thirst - thirst);
+
+        var data = {};
+        if (damage) data.cold = true;
+        if (thirst) data.heat = true;
+        if (Object.keys(data).length) player.call(`hud.setData`, [data]);
     },
     // получить ID предмета патронов по ID предмета оружия
     getAmmoItemId(itemId) {

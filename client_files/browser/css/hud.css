@@ -80,6 +80,7 @@
 }
 
 #hud .wanted svg {
+    height: 3vh;
     width: 3vh;
     fill: white;
     opacity: 0.4;
@@ -117,7 +118,7 @@
 #hud .arrest svg {
     transform: rotate(-90deg);
     position: relative;
-    top: 1%;
+    top: -1%;
     left: -1%;
     height: calc(100% + 2%);
     width: calc(100% + 2%);
