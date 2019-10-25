@@ -60,6 +60,7 @@ mp.timer = {
     /// handler желательно async
     /// return timer {id: id};
     add(handler, time, isInterval = false) {
+        if (time == 0) return handler();
         let id = gId++;
         timers.push({
             id: id,
