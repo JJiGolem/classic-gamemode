@@ -1314,6 +1314,7 @@ var inventory = new Vue({
             var columns = self.itemDrag.accessColumns;
             if (columns.bodyFocus != null) {
                 self.addItem(self.itemDrag.item, null, columns.bodyFocus);
+                if (self.weaponsList.includes(self.itemDrag.item.itemId)) mp.trigger(`weapons.ammo.sync`);
                 self.callRemote("item.add", {
                     sqlId: self.itemDrag.item.sqlId,
                     pocketI: null,
@@ -1336,7 +1337,8 @@ var inventory = new Vue({
                     columns.pocketI != null &&
                     index != null) {
                     if (columns.placeSqlId > 0) self.addItem(self.itemDrag.item, columns.pocketI, index, columns.placeSqlId)
-                    else self.addEnvironmentItem(self.itemDrag.item, columns.pocketI, index, columns.placeSqlId)
+                    else self.addEnvironmentItem(self.itemDrag.item, columns.pocketI, index, columns.placeSqlId);
+                    if (self.weaponsList.includes(self.itemDrag.item.itemId)) mp.trigger(`weapons.ammo.sync`);
                     self.callRemote("item.add", {
                         sqlId: self.itemDrag.item.sqlId,
                         pocketI: columns.pocketI,
