@@ -7,12 +7,17 @@ mp.inventory = {
         need: false, // нужно ли синхронизировать кол-во патронов оружия в CEF
         weaponHash: 0,
     },
+    handsBlock: false,
 
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
     },
     debug(enable) {
         mp.callCEFV(`inventory.debug = ${enable}`);
+    },
+    setHandsBlock(enable) {
+        if (this.handsBlock != enable) mp.callCEFV(`inventory.handsBlock = ${enable}`);
+        this.handsBlock = enable;
     },
     spin(enable) {
         mp.callCEFV(`inventory.spin = ${enable}`);
@@ -300,8 +305,10 @@ mp.events.add("entityStreamOut", (entity) => {
 });
 
 mp.events.add("time.main.tick", () => {
-    var value = mp.players.local.getArmour();
+    var player = mp.players.local;
+    var value = player.getArmour();
     mp.inventory.setArmour(value);
+    mp.inventory.setHandsBlock(player.vehicle != null);
 
     mp.objects.forEach(obj => {
         if (obj.getVariable("groundItem")) mp.utils.setNoCollision(obj, true);
