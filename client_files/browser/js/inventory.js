@@ -498,6 +498,8 @@ var inventory = new Vue({
         },
         // Крутятся все предметы
         spin: false,
+        // Блокировка слот рук
+        handsBlock: false,
     },
     computed: {
         // Тяжесть игрока (в %)
@@ -668,6 +670,9 @@ var inventory = new Vue({
                 y: window.screenY
             };
         },
+        handImg() {
+            return `img/inventory/${(this.handsBlock)? 'hand-block.svg' : 'hand.png'}`;
+        },
     },
     methods: {
         // ******************  [ Private ] ******************
@@ -696,6 +701,7 @@ var inventory = new Vue({
             if (this.bodyList[index] && !this.bodyList[index].includes(this.itemDrag.item.itemId)) return;
             var nextWeight = this.commonWeight + this.itemsInfo[this.itemDrag.item.itemId].weight;
             if (nextWeight > this.maxPlayerWeight) return;
+            if (index == 13 && this.handsBlock) return;
             var columns = this.itemDrag.accessColumns;
             columns.bodyFocus = index;
         },

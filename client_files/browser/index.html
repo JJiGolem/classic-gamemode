@@ -597,7 +597,7 @@
             </div>
             <div class="empty" v-show="!havePockets">Без карманов</div>
         </div>
-        <div class="hands" :class="{active: itemDrag.item}">
+        <div class="hands" :class="{active: itemDrag.item, blocked: handsBlock}">
             <div class="slot" v-bind:class="{busy: equipment[13], focus: itemDrag.item && itemDrag.accessColumns.bodyFocus == 13}" @mouseenter="onBodyItemEnter(13)" @mouseleave="onBodyItemLeave(13)">
                 <div class="item" v-if="equipment[13]" v-bind:style="{backgroundImage: 'url(' + urlItemImg(equipment[13].itemId) + ')'}"
                     @mousedown="itemMouseHandler(equipment[13], $event)"
@@ -606,8 +606,8 @@
                     <div class="health" v-if="equipment[13].params.health" v-bind:style="{top: 100 - equipment[13].params.health + '%', 'border-color': valueColor(equipment[13].params.health)}"></div>
                     <div class="sqlid" v-if="debug">#{{ equipment[13].sqlId }}</div>
                 </div>
-                <img v-if="!equipment[13]" src="img/inventory/hand.png" />
-                <img v-if="!equipment[13]" src="img/inventory/hand.png" />
+                <img v-if="!equipment[13]" :src="handImg" />
+                <img v-if="!equipment[13]" :src="handImg" />
             </div>
         </div>
         <div class="hotkeys" :class="{active: itemDrag.item && hotkeysList[itemDrag.item.itemId]}">

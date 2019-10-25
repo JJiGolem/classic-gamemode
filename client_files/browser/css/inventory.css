@@ -243,6 +243,10 @@
     background: #333d;
 }
 
+#inventory .hands.blocked {
+    background: #400d;
+}
+
 #inventory .hands img {
     height: 9vh;
     opacity: 0.5;

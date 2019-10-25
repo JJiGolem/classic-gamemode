@@ -152,6 +152,7 @@ mp.inventory = {
     },
     hands(player, itemId) {
         if (!this.itemsInfo) return;
+        if (player.vehicle) return;
         if (itemId) {
             var info = this.itemsInfo[itemId];
             var object = mp.objects.new(mp.game.joaat(info.model), player.position);
