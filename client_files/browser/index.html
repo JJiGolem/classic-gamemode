@@ -97,12 +97,12 @@
                 <div class="satiety record">
                     <div><img src="img/hud/burger.svg"/></div>
                     <div class="progress"><div :style="{ width: satiety+'%' }"></div></div>
-                    <div class="percent">{{ satiety }}%</div>
+                    <div class="percent">{{ +satiety.toFixed(1) }}%</div>
                 </div>
                 <div class="thirst record">
                     <div><img src="img/hud/glass.svg"/></div>
                     <div class="progress"><div :style="{ width: thirst+'%' }"></div></div>
-                    <div class="percent">{{ thirst }}%</div>
+                    <div class="percent">{{ +thirst.toFixed(1) }}%</div>
                 </div>
             </div>
             <div class="money block">
