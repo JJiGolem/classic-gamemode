@@ -468,10 +468,9 @@ module.exports = {
         var result = [];
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
-            if (!item.parentId) continue;
+            // if (!item.parentId) continue;
             var params = this.getParamsValues(item);
-            if (!params.weaponHash) continue;
-            result.push(item);
+            if (params.weaponHash) result.push(item);
             var children = this.getChildren(items, item);
             if (!children.length) continue;
 
