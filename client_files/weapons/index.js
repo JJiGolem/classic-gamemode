@@ -69,10 +69,10 @@ mp.events.add({
 
         var isFreeAiming = mp.game.player.isFreeAiming();
         if (isFreeAiming && !mp.weapons.lastIsFreeAiming) {
-            mp.events.call("playerStartFreeAiminig");
+            mp.events.call("playerStartFreeAiming");
         }
         if (!isFreeAiming && mp.weapons.lastIsFreeAiming) {
-            mp.events.call("playerEndFreeAiminig");
+            mp.events.call("playerEndFreeAiming");
         }
         mp.weapons.lastIsFreeAiming = isFreeAiming;
     },

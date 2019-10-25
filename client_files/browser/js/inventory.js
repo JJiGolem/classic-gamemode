@@ -631,6 +631,12 @@ var inventory = new Vue({
                     value: this.itemsInfo[ammoId].name
                 });
             }
+            if (item.params.ammo != null) {
+                params.push({
+                    name: "Патроны",
+                    value: item.params.ammo + " ед."
+                });
+            }
             if (item.params.owner) params.push({
                 name: "Владелец",
                 value: `#${item.params.owner}`
@@ -939,6 +945,38 @@ var inventory = new Vue({
             }
             return null;
         },
+        getItemByParams(keys, values, items = this.equipment) {
+            if (!Array.isArray(keys)) keys = [keys];
+            if (!Array.isArray(values)) values = [values];
+
+            for (var index in items) {
+                var item = items[index];
+                var params = item.params;
+
+                var isFind = true;
+                for (var i = 0; i < keys.length; i++) {
+                    var param = params[keys[i]];
+                    if (!param) {
+                        isFind = false;
+                        break;
+                    }
+                    if (param && param != values[i]) {
+                        isFind = false;
+                        break;
+                    }
+                }
+                if (isFind) return item;
+
+                if (item.pockets) {
+                    for (var key in item.pockets) {
+                        var pocket = item.pockets[key];
+                        var it = this.getItemByParams(keys, values, pocket.items);
+                        if (it) return it;
+                    }
+                }
+            }
+            return null;
+        },
         // получить ID предмета патронов по ID предмета оружия
         getAmmoItemId(itemId) {
             for (var ammoId in this.mergeList) {
@@ -1111,6 +1149,12 @@ var inventory = new Vue({
             var item = this.equipment[4];
             if (!item) return;
             item.params.health = value;
+        },
+        setAmmo(weaponHash, ammo) {
+            weaponHash = parseInt(weaponHash);
+            var item = this.getItemByParams('weaponHash', weaponHash);
+            if (!item) return;
+            this.setItemParam(item, 'ammo', ammo);
         },
 
         // ******************  [ Hotkeys ] ******************
