@@ -789,7 +789,7 @@ module.exports = {
                 if (!current.character) return;
                 if (current.dimension == player.dimension) {
                     current.health = 100;
-                    notify.info(player, `Ваше здоровье восстановлено администратором`);
+                    notify.info(current, `Ваше здоровье восстановлено администратором`);
                 };
             });
             mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} пополнил HP игрокам в радиусе ${radius}`);
