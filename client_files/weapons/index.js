@@ -14,6 +14,7 @@ mp.weapons = {
     lastData: {},
     hashes: [],
     weaponData: require('weapons/data.js'),
+    lastIsFreeAiming: false,
 
     sync() {
         var data = {};
@@ -64,6 +65,16 @@ mp.events.add({
         //     type: ${mp.weapons.getAmmoType()} slot: ${mp.weapons.getWeaponSlot(mp.weapons.currentWeapon())}`);
         // mp.utils.drawText2d(`hashes: ${JSON.stringify(mp.weapons.hashes)}`, [0.8, 0.6]);
         // mp.utils.drawText2d(`name: ${mp.weapons.getWeaponName(mp.weapons.currentWeapon())}`, [0.8, 0.65]);
+        // mp.utils.drawText2d(`mp.game.player.isFreeAiming(): ${mp.game.player.isFreeAiming()}`);
+
+        var isFreeAiming = mp.game.player.isFreeAiming();
+        if (isFreeAiming && !mp.weapons.lastIsFreeAiming) {
+            mp.events.call("playerStartFreeAiminig");
+        }
+        if (!isFreeAiming && mp.weapons.lastIsFreeAiming) {
+            mp.events.call("playerEndFreeAiminig");
+        }
+        mp.weapons.lastIsFreeAiming = isFreeAiming;
     },
     "time.main.tick": () => {
         if (!mp.weapons.needSync) return;
