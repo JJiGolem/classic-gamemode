@@ -1,5 +1,9 @@
 "use strict";
 
+let inventory = call('inventory');
+let money = call('money');
+let notifs = call('notifications');
+
 module.exports = {
     // Общая информация о типах деревьев
     treesInfo: null,
@@ -10,6 +14,7 @@ module.exports = {
             itemId: 70,
             params: {
                 health: 100,
+                weaponHash: mp.joaat('weapon_battleaxe'),
             },
             price: 100
         }
@@ -91,6 +96,29 @@ module.exports = {
         return prices;
     },
     buyItem(player, index) {
-        debug(`buyItem: ${index}`)
+        var header = 'Дровосек';
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.woodmanStorage) return out(`Вы не у лесопилки`);
+
+        index = Math.clamp(index, 0, this.items.length - 1);
+        var item = this.items[index];
+        if (player.character.cash < item.price) return out(`Необходимо $${item.price}`);
+
+        var cantAdd = inventory.cantAdd(player, item.itemId, item.params);
+        if (cantAdd) return out(cantAdd);
+
+        money.removeCash(player, item.price, (res) => {
+            if (!res) out(`Ошибка списания наличных`);
+        }, `Покупка предмета #${item.itemId} на лесопилке`);
+
+        inventory.addItem(player, item.itemId, item.params, (e) => {
+            if (e) notifs.error(player, e);
+        });
+
+        notifs.success(player, `Вы приобрели ${inventory.getName(item.itemId)}`);
+    },
+    buyClothes(player, index) {
     },
 };

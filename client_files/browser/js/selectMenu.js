@@ -7137,7 +7137,6 @@ var selectMenu = new Vue({
                 j: 0,
                 prices: [],
                 init(prices) {
-                    debug(prices)
                     if (typeof prices == 'string') prices = JSON.parse(prices);
                     var items = selectMenu.menus['woodmanItems'].items;
                     items[0].values[0] = `$${prices[0]}`;
@@ -7196,7 +7195,8 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Топор') {
-
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `woodman.items.buy`, e.itemIndex);
                         } else if (e.itemName == 'Форма') {
                             selectMenu.showByName("woodmanItemsClothes");
                         } else if (e.itemName == 'Вернуться') {
@@ -7237,12 +7237,11 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-                        if (e.itemName == 'Жилетка') {
-
-                        } else if (e.itemName == 'Штаны') {
-                        } else if (e.itemName == 'Ботинки') {
-                        } else if (e.itemName == 'Вернуться') {
+                        if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("woodmanItems");
+                        } else {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `woodman.clothes.buy`, e.itemIndex);
                         }
                     } else if (eventName == 'onBackspacePressed')
                         selectMenu.showByName("woodmanItems");
