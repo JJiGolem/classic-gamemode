@@ -44,6 +44,12 @@ mp.woodman = {
     isTreeHash(hash) {
         return this.treesHash.includes(hash);
     },
+    setInside(prices) {
+        if (!prices) return mp.callCEFV(`selectMenu.show = false`);
+
+        mp.callCEFV(`selectMenu.menus['woodman'].init('${JSON.stringify(prices)}')`);
+        mp.callCEFV(`selectMenu.showByName('woodman')`);
+    }
 };
 
 mp.events.add({
@@ -67,5 +73,8 @@ mp.events.add({
     },
     "woodman.setTreesInfo": (info) => {
         mp.woodman.setTreesInfo(info);
+    },
+    "woodman.storage.inside": (prices) => {
+        mp.woodman.setInside(prices);
     },
 });
