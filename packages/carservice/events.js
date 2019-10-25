@@ -50,11 +50,11 @@ module.exports = {
     },
     "carservice.diagnostics.offer": (player, targetId) => {
         if (player.character.job != 1) return player.call('notifications.push.error', ['Вы не механик', 'Ошибка']);
-        if (player.currentCarServiceId == null) return;
+        if (player.currentCarServiceId == null) return console.log('car service id == null');
         let target = mp.players.at(targetId);
-        if (!target) return;
+        if (!target) return console.log('no target');
         let vehicle = target.vehicle;
-        if (!vehicle) return;
+        if (!vehicle) return console.log('no target vehicle');;
 
         if (vehicle.isBeingRepaired) return player.call('notifications.push.error', ['Транспорт уже ремонтируется', 'Ошибка']);
 
