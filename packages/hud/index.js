@@ -30,10 +30,11 @@ module.exports = {
 
         return arrayPlayers;
     },
+
     loadNewPlayer(player) {
         if (!player.character) return;
 
-        let factionName = '-';
+        let factionName = '';
         
         if (player.character.factionId != null) {
             let faction = factions.getFaction(player.character.factionId);
@@ -51,5 +52,17 @@ module.exports = {
         }
 
         return newPlayer;
+    },
+
+    setFaction(player) {
+        let factionName = factions.getFactionName(player);
+
+        if (!factionName) factionName = '';
+
+        mp.players.forEach(current => {
+            if (current.character && current.character.admin > 0 ) {
+                current.call(`hud.players.list.update`, [player.id, { faction: factionName }]);
+            }
+        });
     }
 };

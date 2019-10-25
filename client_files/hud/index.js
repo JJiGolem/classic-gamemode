@@ -99,6 +99,10 @@ mp.events.add('hud.players.list.remove', (id) => {
     mp.callCEFR('players.remove', [id]);
 });
 
+mp.events.add('hud.players.list.update', (id, data) => {
+    mp.callCEFR('players.update', [id, data]);
+});
+
 mp.events.call('hud.setData', {
     playerId: mp.players.local.remoteId
 });

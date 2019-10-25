@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable default-case */
 const initialState = [
     // {
@@ -54,6 +55,19 @@ export default function players(state = initialState, action) {
             }
 
             return newState;
+
+        case 'UPDATE_PLAYER':
+            const newStateUpdate = [ ...state ];
+            let updateIndex = newStateUpdate.findIndex(player => player.id == payload.id);
+
+            if (updateIndex !== -1) {
+                newStateUpdate[updateIndex] = {
+                    ...newStateUpdate[updateIndex],
+                    ...payload.data
+                };
+            }
+
+            return newStateUpdate;
     }
 
     return state;

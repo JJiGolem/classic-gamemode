@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React from 'react';
 import myEventEmmiter from '../helpers/events.js';
 import IncomingCall from "../modules/phone/components/IncomingCall";
@@ -449,6 +450,15 @@ export const PlayerEvents = (dispatch, getState) => {
             payload: id
         });
     });
+
+    myEventEmmiter.on('players.update', (id, data) => {
+        dispatch({
+            type: 'UPDATE_PLAYER',
+            payload: { id, data }
+        });
+    });
+
+    // --------------- БАНК ----------------------
 
     myEventEmmiter.on('bank.show', (bankInfo) => {
         dispatch({
