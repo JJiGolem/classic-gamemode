@@ -757,6 +757,7 @@ var inventory = new Vue({
                     this.itemMenu.y = e.clientY - rect.y;
                 },
                 'mousedown': (e) => {
+                    if (item.wait) return;
                     if (e.which == 1) { // Left Mouse Button
                         this.itemDrag.item = item;
                         this.itemDrag.div = e.target;
@@ -1001,6 +1002,10 @@ var inventory = new Vue({
 
             mp.trigger("callRemote", eventName, JSON.stringify(values));
         },
+        // Ожидание синхр. предмета с сервером
+        setWaitItem(item, enable) {
+            Vue.set(item, 'wait', enable);
+        },
 
         // ******************  [ Inventory Config ] ******************
         setItemsInfo(itemsInfo) {
@@ -1121,6 +1126,7 @@ var inventory = new Vue({
             if (!item) return this.notify(`setItemSqlId: Предмет ${item} не найден`);
             sqlId = parseInt(sqlId);
             Vue.set(item, 'sqlId', sqlId);
+            this.setWaitItem(item, false);
         },
         setItemParam(item, key, value) {
             if (typeof item == 'number') item = this.getItem(item);
@@ -1256,6 +1262,7 @@ var inventory = new Vue({
             if (!item) return this.notify(`setEnvironmentItemParam: Предмет ${item} не найден`);
             sqlId = parseInt(sqlId);
             Vue.set(item, 'sqlId', sqlId);
+            this.setWaitItem(item, false);
         },
         setEnvironmentItemParam(item, key, value) {
             if (typeof item == 'number') item = this.getEnvironmentItem(item);
@@ -1318,11 +1325,13 @@ var inventory = new Vue({
         window.addEventListener('mouseup', function(e) {
             // console.log(JSON.stringify(self.itemDrag))
             var columns = self.itemDrag.accessColumns;
+            var item = self.itemDrag.item;
             if (columns.bodyFocus != null) {
-                self.addItem(self.itemDrag.item, null, columns.bodyFocus);
-                if (self.weaponsList.includes(self.itemDrag.item.itemId)) mp.trigger(`weapons.ammo.sync`);
+                if (!self.getItem(item.sqlId)) self.setWaitItem(item, true);
+                self.addItem(item, null, columns.bodyFocus);
+                if (self.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`);
                 self.callRemote("item.add", {
-                    sqlId: self.itemDrag.item.sqlId,
+                    sqlId: item.sqlId,
                     pocketI: null,
                     index: parseInt(columns.bodyFocus),
                     placeSqlId: null
@@ -1342,11 +1351,17 @@ var inventory = new Vue({
                 if (!columns.deny && columns.placeSqlId != null &&
                     columns.pocketI != null &&
                     index != null) {
-                    if (columns.placeSqlId > 0) self.addItem(self.itemDrag.item, columns.pocketI, index, columns.placeSqlId)
-                    else self.addEnvironmentItem(self.itemDrag.item, columns.pocketI, index, columns.placeSqlId);
-                    if (self.weaponsList.includes(self.itemDrag.item.itemId)) mp.trigger(`weapons.ammo.sync`);
+                    if (columns.placeSqlId > 0) {
+                        if (!self.getItem(item.sqlId)) self.setWaitItem(item, true);
+                        self.addItem(item, columns.pocketI, index, columns.placeSqlId)
+                    }
+                    else {
+                        if (self.getItem(item.sqlId)) self.setWaitItem(item, true);
+                        self.addEnvironmentItem(item, columns.pocketI, index, columns.placeSqlId);
+                    }
+                    if (self.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`);
                     self.callRemote("item.add", {
-                        sqlId: self.itemDrag.item.sqlId,
+                        sqlId: item.sqlId,
                         pocketI: columns.pocketI,
                         index: index,
                         placeSqlId: columns.placeSqlId

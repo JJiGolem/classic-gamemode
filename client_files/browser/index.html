@@ -536,6 +536,11 @@
                                     <div class="count" v-if="pocket.items[n-1].params.count">{{ pocket.items[n-1].params.count }}</div>
                                     <div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>
                                     <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
+                                    <div v-if="pocket.items[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
+                                        <div class="lds-rolling">
+                                            <div></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -565,6 +570,11 @@
                         <div class="count" v-if="equipment[n-1].params.count">{{ equipment[n-1].params.count }}</div>
                         <div class="health" v-if="equipment[n-1].params.health" v-bind:style="{top: 100 - equipment[n-1].params.health + '%', 'border-color': valueColor(equipment[n-1].params.health)}"></div>
                         <div class="sqlid" v-if="debug">#{{ equipment[n-1].sqlId }}</div>
+                        <div v-if="equipment[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
+                            <div class="lds-rolling">
+                                <div></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -589,6 +599,11 @@
                                     <div class="count" v-if="pocket.items[n-1].params.count">{{ pocket.items[n-1].params.count }}</div>
                                     <div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>
                                     <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
+                                    <div v-if="pocket.items[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
+                                        <div class="lds-rolling">
+                                            <div></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -605,6 +620,11 @@
                     <div class="count" v-if="equipment[13].params.count">{{ equipment[13].params.count }}</div>
                     <div class="health" v-if="equipment[13].params.health" v-bind:style="{top: 100 - equipment[13].params.health + '%', 'border-color': valueColor(equipment[13].params.health)}"></div>
                     <div class="sqlid" v-if="debug">#{{ equipment[13].sqlId }}</div>
+                    <div v-if="equipment[13].wait" v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
+                        <div class="lds-rolling">
+                            <div></div>
+                        </div>
+                    </div>
                 </div>
                 <img v-if="!equipment[13]" :src="handImg" />
                 <img v-if="!equipment[13]" :src="handImg" />
@@ -621,6 +641,11 @@
                     <div class="count" v-if="hotkeys[n].params.count">{{ hotkeys[n].params.count }}</div>
                     <div class="health" v-if="hotkeys[n].params.health" v-bind:style="{top: 100 - hotkeys[n].params.health + '%', 'border-color': valueColor(hotkeys[n].params.health)}"></div>
                     <div class="sqlid" v-if="debug">#{{ hotkeys[n].sqlId }}</div>
+                    <div v-if="hotkeys[n].wait" v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
+                        <div class="lds-rolling">
+                            <div></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

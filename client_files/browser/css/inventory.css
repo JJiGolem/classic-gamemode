@@ -458,6 +458,44 @@
     right: -1.5vh;
 }
 
+/* Колесо загрузки в инвентаре */
+#inventory .loader {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#inventory .loader .lds-rolling {
+    position: absolute;
+    animation: login 1s ease-in-out;
+}
+
+#inventory .loader .lds-rolling div,
+#inventory .loader .lds-rolling div:after {
+    position: absolute;
+    width: 2vh;
+    height: 2vh;
+    border: 0.5vh solid #ddd;
+    border-top-color: transparent;
+    border-radius: 50%;
+}
+
+#inventory .loader .lds-rolling div {
+    -webkit-animation: lds-rolling 1.2s linear infinite;
+    animation: lds-rolling 1.2s linear infinite;
+}
+
+#inventory .loader .lds-rolling div:after {
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+#inventory .loader .lds-rolling {
+    width: 2vh !important;
+    height: 2vh !important;
+}
+
 #inventory .item .sqlid {
     background: #222c;
     color: #fff;
