@@ -50,6 +50,11 @@ module.exports = {
     /// handler желательно async
     /// return timer
     add(handler, time, isInterval = false) {
+        if (handler == null) throw new Error("handler is null");
+        if (typeof handler != "function") throw new Error("handler is not a function");
+        time = parseInt(time);
+        if (isNaN(time)) throw new Error("time is NaN");
+        if (isInterval == null) throw new Error("isInterval is null");
         let id = gId++;
         timers.push({
             id: id,
@@ -72,5 +77,3 @@ module.exports = {
         return this.add(handler, time, true);
     },
 }
-/// obj.destroy()
-///
