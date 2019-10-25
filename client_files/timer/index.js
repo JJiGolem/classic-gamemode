@@ -25,7 +25,7 @@ mp.timer = {
                 } catch (error) {
                     timers.splice(i, 1);
                     i--;
-                    console.log(error);
+                    mp.console(JSON.stringify(error));
                 }
             }
         }, duration);
