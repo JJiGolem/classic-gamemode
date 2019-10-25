@@ -320,6 +320,19 @@ mp.utils = {
         array.forEach(num => sum += num);
         return sum;
     },
+    // Хеш объект перед игроком
+    getFrontObjectHash(player) {
+        var raycast = this.frontRaycast(player);
+        if (!raycast) return null;
+
+        return mp.game.invoke('0x9F47B058362C84B5', raycast.entity);
+    },
+    // Луч от игрок перед собой
+    frontRaycast(player) {
+        var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
+        var endPos = player.getOffsetFromInWorldCoords(0, 1, 0);
+        return mp.raycasting.testPointToPoint(startPos, endPos);
+    }
 };
 
 
