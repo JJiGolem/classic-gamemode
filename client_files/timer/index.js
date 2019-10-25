@@ -9,57 +9,63 @@ let gId = 0;
 mp.timer = {
     init() {
         /// With interval
-        // setInterval(async function() {
-        //     for (let i = 0; i < timers.length; i++) {
-        //         try {
-        //             if (timers[i].time <= Date.now()) {
-        //                 timers[i].handler();
-        //                 if (timers[i].interval != null) {
-        //                     timers[i].time += timers[i].interval;
-        //                 }
-        //                 else {
-        //                     timers.splice(i, 1);
-        //                     i--;
-        //                 }
-        //             }
-        //         } catch (error) {
-        //             timers.splice(i, 1);
-        //             i--;
-        //             console.log(error);
-        //         }
-        //     }
-        // }, duration);
+        setInterval(async function() {
+            for (let i = 0; i < timers.length; i++) {
+                try {
+                    if (timers[i].time <= Date.now()) {
+                        timers[i].handler();
+                        if (timers[i].interval != null) {
+                            timers[i].time += timers[i].interval;
+                        }
+                        else {
+                            timers.splice(i, 1);
+                            i--;
+                        }
+                    }
+                } catch (error) {
+                    timers.splice(i, 1);
+                    i--;
+                    mp.console(JSON.stringify(error));
+                }
+            }
+        }, duration);
 
         /// Whith render
-        let workTime = Date.now() + duration;
-        mp.events.add('render', async () => {
-            if (workTime <= Date.now()) {
-                for (let i = 0; i < timers.length; i++) {
-                    try {
-                        if (timers[i].time <= Date.now()) {
-                            timers[i].handler();
-                            if (timers[i].interval != null) {
-                                timers[i].time += timers[i].interval;
-                            }
-                            else {
-                                timers.splice(i, 1);
-                                i--;
-                            }
-                        }
-                    } catch (error) {
-                        timers.splice(i, 1);
-                        i--;
-                        mp.console(JSON.stringify(error));
-                    }
-                }
-                workTime = workTime + duration;
-            }
-        });
+        // let workTime = Date.now() + duration;
+        // mp.events.add('render', async () => {
+        //     if (workTime <= Date.now()) {
+        //         for (let i = 0; i < timers.length; i++) {
+        //             try {
+        //                 if (timers[i].time <= Date.now()) {
+        //                     timers[i].handler();
+        //                     if (timers[i].interval != null) {
+        //                         timers[i].time += timers[i].interval;
+        //                     }
+        //                     else {
+        //                         timers.splice(i, 1);
+        //                         i--;
+        //                     }
+        //                 }
+        //             } catch (error) {
+        //                 timers.splice(i, 1);
+        //                 i--;
+        //                 mp.console(JSON.stringify(error));
+        //             }
+        //         }
+        //         workTime = workTime + duration;
+        //     }
+        // });
     },
     /// Добавление нового таймера
     /// handler желательно async
     /// return timer {id: id};
     add(handler, time, isInterval = false) {
+        if (handler == null) throw new Error("handler is null");
+        if (typeof handler != "function") throw new Error("handler is not a function");
+        time = parseInt(time);
+        if (isNaN(time)) throw new Error("time is NaN");
+        if (isInterval == null) throw new Error("isInterval is null");
+        if (time == 0) return handler();
         let id = gId++;
         timers.push({
             id: id,
