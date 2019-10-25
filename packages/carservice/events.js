@@ -120,7 +120,7 @@ module.exports = {
                             sender.call('notifications.push.error', [`Ошибка выдачи зарплаты`, 'Автомастерская']);
                             console.log(`Ошибка начисления денег за диагностику игроку ${sender.name}`);
                         }
-                    }, `Зарплата за диагностику т/с #${vehicle.modelName}`);
+                    }, `Зарплата за диагностику транспорта`);
                     delete target.diagnosticsOffer;
                     delete sender.senderDiagnosticsOffer;
                 } else {
@@ -129,7 +129,7 @@ module.exports = {
                     delete target.diagnosticsOffer;
                     delete sender.senderDiagnosticsOffer;
                 }
-            }, `Оплата диагностики т/с #${vehicle.modelName}`);
+            }, `Оплата диагностики транспорта`);
         } else {
             delete target.diagnosticsOffer;
             delete sender.senderDiagnosticsOffer;
@@ -322,7 +322,7 @@ module.exports = {
                             mechanic.call('notifications.push.error', [`Ошибка выдачи зарплаты`, 'Автомастерская']);
                             console.log(`Ошибка выдачи зарплаты за починку ${mechanic.name}`);
                         }
-                    }, `Зарплата за ремонт т/с #${vehicle.modelName}`);
+                    }, `Зарплата за ремонт транспорта`);
 
                     switch (mechanic.lastRepairAnim) {
                         case 0:
@@ -354,7 +354,7 @@ module.exports = {
                     mp.events.call('carservice.service.end.target', target, 1);
                     return;
                 }
-            }, `Оплата ремонта т/с #${vehicle.modelName}`);
+            }, `Оплата ремонта транспорта`);
 
         } else {
             mechanic.call('notifications.push.warning', ['Клиент отказался от ремонта', 'Автомастерская'])
