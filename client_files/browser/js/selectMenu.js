@@ -7195,7 +7195,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Топор') {
-                            selectMenu.show = false;
+                            // selectMenu.show = false;
                             mp.trigger(`callRemote`, `woodman.items.buy`, e.itemIndex);
                         } else if (e.itemName == 'Форма') {
                             selectMenu.showByName("woodmanItemsClothes");
@@ -7240,7 +7240,7 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("woodmanItems");
                         } else {
-                            selectMenu.show = false;
+                            // selectMenu.show = false;
                             mp.trigger(`callRemote`, `woodman.clothes.buy`, e.itemIndex);
                         }
                     } else if (eventName == 'onBackspacePressed')
