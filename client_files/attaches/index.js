@@ -17,7 +17,7 @@ mp.attachmentMngr = {
                 entity.__attachmentObjects[id] = object;
 
                 var a = attInfo.anim;
-                if (a) {
+                if (a && !entity.vehicle) {
                     entity.clearTasksImmediately();
                     mp.utils.requestAnimDict(a.dict, () => {
                         entity.taskPlayAnim(a.dict, a.name, a.speed, 0, -1, a.flag, 0, false, false, false);
@@ -31,13 +31,14 @@ mp.attachmentMngr = {
 
     removeFor: function(entity, id) {
         if (entity && entity.__attachmentObjects && entity.__attachmentObjects.hasOwnProperty(id)) {
+            let attInfo = this.attachments[id];
             let obj = entity.__attachmentObjects[id];
             delete entity.__attachmentObjects[id];
 
             if (mp.objects.exists(obj)) {
                 obj.destroy();
             }
-            entity.clearTasksImmediately();
+            if (attInfo.anim) entity.clearTasksImmediately();
         }
     },
 
@@ -234,6 +235,7 @@ mp.events.add({
     },
     "time.main.tick": () => {
         var player = mp.players.local;
+        if (player.vehicle) return;
         for (let id of player.__attachments) {
             let attInfo = mp.attachmentMngr.attachments[id];
             var a  = attInfo.anim;
