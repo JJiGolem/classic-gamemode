@@ -21,7 +21,10 @@ module.exports = {
             if (!world.colshapes[args[0]]) return out.error(`Объект мира #${args[0]} не найден`, player);
 
             world.deleteObject(args[0]);
-            player.call(`world.objects.delete`, [args[0]]);
+            mp.players.forEach(rec => {
+                if (!rec.character || !rec.character.admin) return;
+                rec.call(`world.objects.delete`, [args[0]]);
+            });
             out.info(`${player.name} удалил объект мира #${args[0]}`);
         }
     },
@@ -39,7 +42,11 @@ module.exports = {
 
             obj.name = name;
             obj.save();
-            player.call(`world.objects.params.set`, [obj.id, 'name', obj.name]);
+
+            mp.players.forEach(rec => {
+                if (!rec.character || !rec.character.admin) return;
+                rec.call(`world.objects.params.set`, [obj.id, 'name', obj.name]);
+            });
         }
     },
     "/worldsethash": {
@@ -54,7 +61,10 @@ module.exports = {
 
             obj.hash = args[1];
             obj.save();
-            player.call(`world.objects.params.set`, [obj.id, 'hash', obj.hash]);
+            mp.players.forEach(rec => {
+                if (!rec.character || !rec.character.admin) return;
+                rec.call(`world.objects.params.set`, [obj.id, 'hash', obj.hash]);
+            });
         }
     },
     "/worldsetpos": {
@@ -64,7 +74,10 @@ module.exports = {
         handler: (player, args, out) => {
             if (!world.colshapes[args[0]]) return out.error(`Объект мира #${args[0]} не найден`, player);
 
-            player.call(`world.objects.position.set`, [args[0], args[1]]);
+            mp.players.forEach(rec => {
+                if (!rec.character || !rec.character.admin) return;
+                rec.call(`world.objects.position.set`, [args[0], args[1]]);
+            });
         }
     },
     "/worldshow": {
