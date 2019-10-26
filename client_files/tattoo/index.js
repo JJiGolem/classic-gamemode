@@ -33,8 +33,8 @@ mp.events.add({
         mp.utils.cam.create(shopData.camera.x, shopData.camera.y, shopData.camera.z, shopData.pos.x, shopData.pos.y, shopData.pos.z, 50);
         mp.callCEFV('loader.show = false');
         priceMultiplier = shopData.priceMultiplier;
-        initMainMenu();
-        //mp.events.call('selectMenu.show', 'tattooMain');
+        //initMainMenu();
+        mp.events.call('selectMenu.show', 'tattooMain');
         player.position = new mp.Vector3(shopData.pos.x, shopData.pos.y, shopData.pos.z);
         if (!playerIsFrozen) {
             mp.utils.disablePlayerMoving(true);
@@ -44,6 +44,25 @@ mp.events.add({
             player.setHeading(shopData.pos.h);
             mp.prompt.show('Используйте <span>A</span> и <span>D</span> для того, чтобы вращать персонажа');
         }, 100);
+    },
+    'tattoo.player.freeze': () => {
+        mp.callCEFV('loader.show = true');
+        mp.utils.disablePlayerMoving(true);
+        player.freezePosition(true);
+        playerIsFrozen = true;
+    },
+    'tattoo.exit': () => {
+        playerIsFrozen = false;
+        mp.events.call(`selectMenu.hide`);
+        bindKeys(false);
+        mp.utils.cam.destroy();
+        mp.events.call('hud.enable', true);
+        mp.game.ui.displayRadar(true);
+        mp.callCEFR('setOpacityChat', [1.0]);
+        player.freezePosition(false);
+        mp.utils.disablePlayerMoving(false);
+
+        mp.events.callRemote('tattoo.exit');
     },
     'render': () => {
         if (rotation.left) player.setHeading(player.getHeading() - 2);

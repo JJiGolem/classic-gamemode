@@ -96,7 +96,7 @@ module.exports = {
                 dimension: 0
             });
 
-        let shape = mp.colshapes.newSphere(shop.x, shop.y, shop.z, 1.8);
+        let shape = mp.colshapes.newSphere(shop.x, shop.y, shop.z, 1.6);
         shape.isTattooParlor = true;
         shape.tattooParlorId = shop.id;
     },

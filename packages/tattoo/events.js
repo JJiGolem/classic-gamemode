@@ -42,6 +42,6 @@ module.exports = {
     },
     "tattoo.exit": (player) => {
         player.dimension = 0;
-        inventory.updateAllView(player);
+        //inventory.updateAllView(player);
     },
 }

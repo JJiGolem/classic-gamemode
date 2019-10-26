@@ -7254,6 +7254,63 @@ var selectMenu = new Vue({
                         selectMenu.showByName("woodmanItems");
                 }
             },
+            "tattooMain": {
+                name: "tattooMain",
+                header: "Тату-салон",
+                headerImg: "",
+                items: [
+                    {
+                        text: 'Голова'
+                    },
+                    {
+                        text: 'Торс'
+                    },
+                    {
+                        text: 'Правая рука'
+                    },
+                    {
+                        text: 'Левая рука'
+                    },
+                    {
+                        text: 'Правая нога'
+                    },
+                    {
+                        text: 'Левая нога'
+                    },
+                    {
+                        text: 'Сведение татуировок'
+                    },
+                    {
+                        text: 'Закрыть'
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Закрыть') {
+                            mp.trigger('tattoo.exit');
+                        }
+                        // if (e.itemName == 'Тело') {
+                        //     mp.trigger('clothingShop.item.set', 'tops', 0, 0);
+                        //     selectMenu.showByName('clothingTops');
+                        // }
+                    }
+
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        mp.trigger('tattoo.exit');
+                    }
+
+                }
+            },
         },
         // Уведомление
         notification: null,
