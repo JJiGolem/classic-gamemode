@@ -1514,6 +1514,10 @@ var selectMenu = new Vue({
                         i: 0
                     },
                     {
+                        text: 'Помощь',
+                        i: 0
+                    },
+                    {
                         text: "Закрыть",
                         i: 0,
                     }
@@ -1538,6 +1542,9 @@ var selectMenu = new Vue({
                         }
                         if (e.itemName == 'Продать рыбу') {
                             mp.trigger(`fishing.fish.sell`);
+                        } else if (e.itemName == 'Помощь') {
+                            selectMenu.show = false;
+                            modal.showByName("fishing_help");
                         }
                     }
                 }

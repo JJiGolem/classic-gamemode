@@ -127,8 +127,6 @@ mp.events.add('inventory.initItems', (items) => {
             });
         }
     }
-
-    // debug(countRods);
 });
 
 mp.events.add('inventory.deleteItem', (item) => {
@@ -176,11 +174,22 @@ mp.events.add('fishing.rod.buy', () => {
     mp.events.callRemote('fishing.rod.buy');
 });
 
-mp.events.add('fishing.rod.buy.ans', (ans) => {
+mp.events.add('fishing.rod.buy.ans', (ans, data) => {
     mp.callCEFV(`selectMenu.loader = false`);
 
-    if (ans == 1) {
-        mp.events.call('fishing.menu.close');
+    switch (ans) {
+        case 0:
+            mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
+            break;
+        case 1:
+            mp.events.call('fishing.menu.close');
+            break;
+        case 2:
+            mp.callCEFV(`selectMenu.notification = '${data}'`);
+            break;
+        case 3:
+            mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+            break;
     }
 });
 
