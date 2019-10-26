@@ -27,6 +27,7 @@ module.exports = {
             region: data.region,
             street: data.street,
             type: data.type,
+            name: data.name,
             pos: JSON.stringify(data.pos),
             radius: data.radius,
             hash: parseInt(data.hash) || null,
@@ -37,6 +38,7 @@ module.exports = {
         if (!this.objects[obj.region][obj.street][obj.type]) this.objects[obj.region][obj.street][obj.type] = [];
 
         this.objects[obj.region][obj.street][obj.type].push(obj);
+        this.createObjColshape(obj);
     },
     createObjColshape(obj) {
         var pos = obj.pos;

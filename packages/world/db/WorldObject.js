@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: false,
         },
+        name: {
+            type: DataTypes.STRING(50),
+            allowNull: false,
+        },
         pos: {
             type: DataTypes.STRING(128),
             allowNull: false,
