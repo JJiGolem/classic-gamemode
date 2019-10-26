@@ -14,4 +14,10 @@ module.exports = {
     "woodman.clothes.buy": (player, index) => {
         woodman.buyClothes(player, index);
     },
+    "playerEnterWorldObject": (player, obj) => {
+        debug(`playerEnterWorldObject`)
+    },
+    "playerExitWorldObject": (player, obj) => {
+        debug(`playerExitWorldObject`)
+    },
 };

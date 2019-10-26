@@ -18,6 +18,7 @@ mp.woodman = {
     },
     treesInfo: null,
     treesHash: [],
+    currentTreeHash: null,
 
     drawHealthBar(x, y) {
         var info = this.healthBar;
@@ -41,33 +42,52 @@ mp.woodman = {
         this.treesInfo = info;
         this.treesHash = info.map(x => x.hash);
     },
+    setCurrentTree(hash) {
+        if (hash && !this.isTreeHash(hash)) return; // фокус не на дереве
+        if (this.currentTreeHash) { // в пред. кадре был фокус на дереве.
+            if (hash) return; // в тек. кадре есть фокус на дереве
+
+            this.currentTreeHash = hash;
+            // mp.events.call("playerExitTree");
+        } else { // в пред. кадре не было фокуса на дереве
+            if (!hash) return; // в тек. кадре нет фокуса на дереве
+
+            this.currentTreeHash = hash;
+            // mp.events.call("playerEnterTree");
+        }
+    },
     isTreeHash(hash) {
-        return this.treesHash.includes(hash);
+        return hash && this.treesHash.includes(hash);
+    },
+    isAxInHands(player) {
+        return player.weapon == mp.game.joaat('weapon_battleaxe');
     },
     setInside(prices) {
         if (!prices) return mp.callCEFV(`selectMenu.show = false`);
 
         mp.callCEFV(`selectMenu.menus['woodman'].init('${JSON.stringify(prices)}')`);
         mp.callCEFV(`selectMenu.showByName('woodman')`);
-    }
+    },
 };
 
 mp.events.add({
     "render": () => {
-        var player = mp.players.local;
-
-        var raycast = mp.utils.frontRaycast(player);
-        if (!raycast) return;
-        var hash = mp.game.invoke('0x9F47B058362C84B5', raycast.entity);
-        if (!hash || !mp.woodman.isTreeHash(hash)) return;
-
-        var pos2d = mp.game.graphics.world3dToScreen2d(raycast.position);
-        if (!pos2d) return;
-        mp.woodman.drawHealthBar(pos2d.x, pos2d.y);
-
-        // if (raycast) mp.utils.drawText2d(`entity: ${raycast.entity}`, [0.8, 0.5]);
-        // if (hash) mp.utils.drawText2d(`hash: ${hash}`, [0.8, 0.6]);
+        // var player = mp.players.local;
+        // if (!mp.woodman.isAxInHands(player)) return;
+        // mp.utils.drawText2d(`tree: ${mp.woodman.currentTreeHash}`, [0.8, 0.5]);
+        // mp.utils.drawText2d(`hashes: ${mp.woodman.treesHash}`, [0.8, 0.55]);
+        //
+        // var raycast = mp.utils.frontRaycast(player);
+        // if (!raycast) return mp.woodman.setCurrentTree(null);
         // if (raycast) mp.utils.drawText2d(`raycast: ${JSON.stringify(raycast)}`, [0.5, 0.7]);
+        // var hash = mp.game.invoke('0x9F47B058362C84B5', raycast.entity);
+        // mp.woodman.setCurrentTree(hash);
+        // if (!mp.woodman.currentTreeHash) return;
+        //
+        // var pos2d = mp.game.graphics.world3dToScreen2d(raycast.position);
+        // if (!pos2d) return;
+        // mp.woodman.drawHealthBar(pos2d.x, pos2d.y);
+        // if (hash) mp.utils.drawText2d(`hash: ${hash}`, [0.8, 0.6]);
         // if (raycast) mp.utils.drawText2d(`raycast: ${JSON.stringify(Object.keys(raycast))}`, [0.5, 0.8]);
         // if (raycast) mp.utils.drawText2d(`offset: ${JSON.stringify(mp.game.invoke('0x1899F328B0E12848', raycast.entity, 0, 0, 0))}`, [0.5, 0.85]);
     },
@@ -78,3 +98,12 @@ mp.events.add({
         mp.woodman.setInside(prices);
     },
 });
+
+mp.test = (count) => {
+    for (var i = 0; i < count; i++) {
+        var x = mp.utils.randomInteger(-3000, 3000);
+        var y = mp.utils.randomInteger(-3000, 3000);
+        var z = mp.utils.randomInteger(-3000, 3000);
+        mp.colshapes.newSphere(x, y, z, 1);
+    }
+}

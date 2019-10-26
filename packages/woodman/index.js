@@ -30,8 +30,10 @@ module.exports = {
                     torso: 99,
                     tTexture: 7,
                     undershirt: 81,
-                    uTexture: 85,
+                    uTexture: 5,
                     sex: 1,
+                    pockets: '[5,5,5,5,10,5]',
+                    clime: '[-5,30]',
                 },
                 price: 100,
             },
@@ -41,6 +43,8 @@ module.exports = {
                     variation: 97,
                     texture: 1,
                     sex: 1,
+                    pockets: '[5,5,5,5,10,5]',
+                    clime: '[-5,30]',
                 },
                 price: 100,
             },
@@ -49,7 +53,8 @@ module.exports = {
                 params: {
                     variation: 27,
                     texture: 0,
-                    sex: 1
+                    sex: 1,
+                    clime: '[-5,30]',
                 },
                 price: 100,
             }
@@ -120,5 +125,28 @@ module.exports = {
         notifs.success(player, `Вы приобрели ${inventory.getName(item.itemId)}`);
     },
     buyClothes(player, index) {
+        var header = 'Дровосек';
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.woodmanStorage) return out(`Вы не у лесопилки`);
+
+        var g = player.character.gender;
+        index = Math.clamp(index, 0, this.clothes[g].length - 1);
+        var item = this.clothes[g][index];
+        if (player.character.cash < item.price) return out(`Необходимо $${item.price}`);
+
+        var cantAdd = inventory.cantAdd(player, item.itemId, item.params);
+        if (cantAdd) return out(cantAdd);
+
+        money.removeCash(player, item.price, (res) => {
+            if (!res) out(`Ошибка списания наличных`);
+        }, `Покупка одежды #${item.itemId} на лесопилке`);
+
+        inventory.addItem(player, item.itemId, item.params, (e) => {
+            if (e) notifs.error(player, e);
+        });
+
+        notifs.success(player, `Вы приобрели ${inventory.getName(item.itemId)}`);
     },
 };
