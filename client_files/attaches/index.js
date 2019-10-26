@@ -238,7 +238,17 @@ mp.events.add({
         if (player.vehicle) return;
         for (let id of player.__attachments) {
             let attInfo = mp.attachmentMngr.attachments[id];
-            var a  = attInfo.anim;
+            let object = player.__attachmentObjects[id];
+
+            if (!object.isAttached()) {
+                object.attachTo(player.handle,
+                    (typeof(attInfo.boneName) === 'string') ? player.getBoneIndexByName(attInfo.boneName) : player.getBoneIndex(attInfo.boneName),
+                    attInfo.offset.x, attInfo.offset.y, attInfo.offset.z,
+                    attInfo.rotation.x, attInfo.rotation.y, attInfo.rotation.z,
+                    false, false, false, false, 2, true);
+            }
+
+            var a = attInfo.anim;
             if (!a) continue;
             if (player.isPlayingAnim(a.dict, a.name, 3)) return;
             mp.utils.requestAnimDict(a.dict, () => {
