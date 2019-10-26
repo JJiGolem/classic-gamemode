@@ -1289,7 +1289,7 @@ module.exports = {
     },
     // вкл выкл синхру предмета в руках
     syncHandsItem(player, item) {
-        debug(`[inventory] sync hands at ${player.name}, item.id: ${item ? item.id : null}`);
+        // debug(`[inventory] sync hands at ${player.name}, item.id: ${item ? item.id : null}`);
 
         if (item) { // вкл. синх. предмета/гана в руках
             var params = this.getParamsValues(item);

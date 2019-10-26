@@ -74,10 +74,7 @@ module.exports = {
         handler: (player, args, out) => {
             if (!world.colshapes[args[0]]) return out.error(`Объект мира #${args[0]} не найден`, player);
 
-            mp.players.forEach(rec => {
-                if (!rec.character || !rec.character.admin) return;
-                rec.call(`world.objects.position.set`, [args[0], args[1]]);
-            });
+            player.call(`world.objects.position.set`, [args[0], args[1]]);
         }
     },
     "/worldshow": {
