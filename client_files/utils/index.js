@@ -1,6 +1,7 @@
 "use strict";
 
 let playerMovingDisabled = false;
+let isCapsuleCollision = false;
 
 mp.utils = {
     /// Управление камерой
@@ -320,6 +321,19 @@ mp.utils = {
         array.forEach(num => sum += num);
         return sum;
     },
+    // Хеш объект перед игроком
+    getFrontObjectHash(player) {
+        var raycast = this.frontRaycast(player);
+        if (!raycast) return null;
+
+        return mp.game.invoke('0x9F47B058362C84B5', raycast.entity);
+    },
+    // Луч от игрок перед собой
+    frontRaycast(player) {
+        var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
+        var endPos = player.getOffsetFromInWorldCoords(0, 1, 0);
+        return mp.raycasting.testPointToPoint(startPos, endPos);
+    }
 };
 
 
@@ -365,6 +379,10 @@ mp.events.add("godmode.set", (enable) => {
     mp.players.local.setProofs(enable, enable, enable, enable, enable, enable, enable, enable);
 });
 
+// Коллизия
+mp.events.add("collision.set", (enable) => {
+    isCapsuleCollision = enable;
+});
 
 /// Отключение движения игрока
 mp.events.add('render', () => {
@@ -382,4 +400,5 @@ mp.events.add('render', () => {
             mp.game.controls.disableControlAction(24, i, true); /// цифры 1-9
         }
     }
+    if (isCapsuleCollision) mp.players.local.setCapsule(0.00001);
 });

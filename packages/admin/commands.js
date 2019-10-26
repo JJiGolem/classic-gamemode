@@ -795,4 +795,21 @@ module.exports = {
             mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} пополнил HP игрокам в радиусе ${radius}`);
         }
     },
+    "/collision": {
+        access: 3,
+        description: "Уменьшить капсулу коллизии игрока.",
+        args: "",
+        handler: (player, args, out) => {
+            if (player.isCapsuleCollision) {
+                delete player.isCapsuleCollision;
+                player.call(`collision.set`, [false]);
+                out.info(`Коллизия включена`, player);
+            } else {
+                player.isCapsuleCollision = true;
+
+                player.call(`collision.set`, [true]);
+                out.info(`Коллизия отключена`, player);
+            }
+        }
+    },
 }

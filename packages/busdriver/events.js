@@ -202,6 +202,7 @@ module.exports = {
             timer.remove(vehicle.busRespawnTimer);
             vehicle.busRespawnTimer = timer.add(() => {
                 try {
+                        console.log('таймер сработал');
                         vehicles.respawnVehicle(vehicle);
                         mp.events.call('busdriver.route.end', player);
                 } catch (err) {
@@ -213,6 +214,7 @@ module.exports = {
     },
     "busdriver.route.end": (player) => {
         if (!player || !mp.players.exists(player)) return;
+        console.log('notify player');
         notify.info(player, 'Рабочий день окончен');
         delete player.hasBusRent;
         if (!player.busRoute) return;
