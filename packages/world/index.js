@@ -69,4 +69,29 @@ module.exports = {
 
         this.colshapes[obj.id] = colshape;
     },
+    setObjectPos(data) {
+        if (!this.colshapes[data.id]) return;
+
+        var colshape = this.colshapes[data.id];
+        var obj = colshape.db;
+        var list = this.objects[obj.region][obj.street][obj.type];
+
+        var i = list.indexOf(obj);
+        if (i != -1) list.splice(i, 1);
+        colshape.destroy();
+        delete this.colshapes[obj.id];
+
+        obj.region = data.region;
+        obj.street = data.street;
+        obj.pos = data.pos;
+        obj.radius = data.radius;
+        obj.save();
+
+        if (!this.objects[obj.region]) this.objects[obj.region] = {};
+        if (!this.objects[obj.region][obj.street]) this.objects[obj.region][obj.street] = {};
+        if (!this.objects[obj.region][obj.street][obj.type]) this.objects[obj.region][obj.street][obj.type] = [];
+
+        this.objects[obj.region][obj.street][obj.type].push(obj);
+        this.createObjColshape(obj);
+    },
 }

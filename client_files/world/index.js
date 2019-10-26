@@ -22,12 +22,9 @@ mp.world = {
 mp.events.add({
     "world.objects.add": (type, radius, hash, name) => {
         var pos = mp.players.local.position;
-        var region = mp.utils.getRegionName(pos);
-        var street = mp.utils.getStreetName(pos);
-
         var data = {
-            region: region,
-            street: street,
+            region: mp.utils.getRegionName(pos),
+            street: mp.utils.getStreetName(pos),
             type: type,
             name: name,
             pos: pos,
@@ -59,6 +56,26 @@ mp.events.add({
             var obj = mp.world.debugObjects[i];
             obj.db[key] = value;
         }
+    },
+    "world.objects.position.set": (id, radius) => {
+        var pos = mp.players.local.position;
+        var i = mp.world.debugObjects.findIndex(x => x.db && x.db.id == id);
+        if (i != -1) {
+            var obj = mp.world.debugObjects[i];
+            obj.blip.position = pos;
+            obj.marker.position = pos;
+            obj.marker.scale = radius;
+        }
+
+        var data = {
+            id: id,
+            region: mp.utils.getRegionName(pos),
+            street: mp.utils.getStreetName(pos),
+            pos: pos,
+            radius: radius,
+        };
+
+        mp.events.callRemote(`world.objects.position.set`, JSON.stringify(data));
     },
     "world.objects.show": (list) => {
         mp.world.clearDebugObjects();

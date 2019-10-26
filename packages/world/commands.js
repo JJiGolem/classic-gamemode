@@ -57,6 +57,16 @@ module.exports = {
             player.call(`world.objects.params.set`, [obj.id, 'hash', obj.hash]);
         }
     },
+    "/worldsetpos": {
+        access: 3,
+        description: "Изменить позицию объекта мира. Позиция берется от игрока.<br/>Хеш - по-умолчанию ставить 0.<br/>Типы: 1 - дерево",
+        args: "[ид]:n [радиус]:n",
+        handler: (player, args, out) => {
+            if (!world.colshapes[args[0]]) return out.error(`Объект мира #${args[0]} не найден`, player);
+
+            player.call(`world.objects.position.set`, [args[0], args[1]]);
+        }
+    },
     "/worldshow": {
         access: 1,
         description: "Показать объекты мира в радиусе.",
