@@ -1,6 +1,7 @@
 "use strict";
 
 let playerMovingDisabled = false;
+let isCapsuleCollision = false;
 
 mp.utils = {
     /// Управление камерой
@@ -378,6 +379,10 @@ mp.events.add("godmode.set", (enable) => {
     mp.players.local.setProofs(enable, enable, enable, enable, enable, enable, enable, enable);
 });
 
+// Коллизия
+mp.events.add("collision.set", (enable) => {
+    isCapsuleCollision = enable;
+});
 
 /// Отключение движения игрока
 mp.events.add('render', () => {
@@ -395,4 +400,5 @@ mp.events.add('render', () => {
             mp.game.controls.disableControlAction(24, i, true); /// цифры 1-9
         }
     }
+    if (isCapsuleCollision) mp.players.local.setCapsule(0.00001);
 });
