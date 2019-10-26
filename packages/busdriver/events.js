@@ -201,13 +201,9 @@ module.exports = {
             player.call('notifications.push.warning', [`У вас есть ${bus.getRespawnTimeout() / 1000} секунд, чтобы вернуться в транспорт`, 'Автобус']);
             timer.remove(vehicle.busRespawnTimer);
             vehicle.busRespawnTimer = timer.add(() => {
-                try {
-                        console.log('таймер сработал');
-                        vehicles.respawnVehicle(vehicle);
-                        mp.events.call('busdriver.route.end', player);
-                } catch (err) {
-                    console.log(err);
-                }
+                console.log('таймер сработал');
+                vehicles.respawnVehicle(vehicle);
+                mp.events.call('busdriver.route.end', player);
             }, bus.getRespawnTimeout());
             console.log('BUS RESPAWN TIMER: ' + vehicle.busRespawnTimer);
         }
