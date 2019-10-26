@@ -18,7 +18,7 @@ module.exports = {
             if (current.character && current.id != player.id && current.character.admin > 0 ) {
                 current.call('hud.players.list.add', [hud.loadNewPlayer(player)])
             }
-        })
+        });
     },
     "playerQuit": (player) => {
         mp.players.forEach((current) => {
@@ -32,5 +32,8 @@ module.exports = {
         if (player.character.admin > 0) {
             player.call("hud.players.list.show", [true]);
         }
+    },
+    "player.faction.changed": (player) => {
+        hud.setFaction(player);
     }
 }
