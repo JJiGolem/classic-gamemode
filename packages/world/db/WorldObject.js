@@ -42,6 +42,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             defaultValue: null,
             allowNull: true,
+            set(val) {
+                if (!val) val = null;
+
+                this.setDataValue('hash', val);
+            },
         },
     }, {
         timestamps: false

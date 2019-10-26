@@ -53,6 +53,13 @@ mp.events.add({
             mp.world.debugObjects.splice(i, 1);
         }
     },
+    "world.objects.params.set": (id, key, value) => {
+        var i = mp.world.debugObjects.findIndex(x => x.db && x.db.id == id);
+        if (i != -1) {
+            var obj = mp.world.debugObjects[i];
+            obj.db[key] = value;
+        }
+    },
     "world.objects.show": (list) => {
         mp.world.clearDebugObjects();
         list.forEach(el => {

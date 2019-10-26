@@ -25,6 +25,38 @@ module.exports = {
             out.info(`${player.name} удалил объект мира #${args[0]}`);
         }
     },
+    "/worldsetname": {
+        access: 3,
+        description: "Изменить название объекта мира. ID смотреть в /worldshow",
+        args: "[ид]:n [название]",
+        handler: (player, args, out) => {
+            var obj = world.colshapes[args[0]].db;
+            if (!obj) return out.error(`Объект мира #${args[0]} не найден`, player);
+
+            args.shift();
+            var name = args.join(" ");
+            out.info(`${player.name} изменил название объекта мира #${obj.id} (${obj.name} => ${name})`);
+
+            obj.name = name;
+            obj.save();
+            player.call(`world.objects.params.set`, [obj.id, 'name', obj.name]);
+        }
+    },
+    "/worldsethash": {
+        access: 3,
+        description: "Изменить хеш объекта мира. ID смотреть в /worldshow",
+        args: "[ид]:n [хеш]:n",
+        handler: (player, args, out) => {
+            var obj = world.colshapes[args[0]].db;
+            if (!obj) return out.error(`Объект мира #${args[0]} не найден`, player);
+
+            out.info(`${player.name} изменил хеш объекта мира #${obj.id} (${obj.hash} => ${args[1]})`);
+
+            obj.hash = args[1];
+            obj.save();
+            player.call(`world.objects.params.set`, [obj.id, 'hash', obj.hash]);
+        }
+    },
     "/worldshow": {
         access: 1,
         description: "Показать объекты мира в радиусе.",
