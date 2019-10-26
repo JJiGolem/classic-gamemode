@@ -40,6 +40,19 @@ module.exports = {
         this.objects[obj.region][obj.street][obj.type].push(obj);
         this.createObjColshape(obj);
     },
+    deleteObject(id) {
+        if (!this.colshapes[id]) return;
+
+        var colshape = this.colshapes[id];
+        var obj = colshape.db;
+        var list = this.objects[obj.region][obj.street][obj.type];
+
+        var i = list.indexOf(obj);
+        if (i != -1) list.splice(i, 1);
+        colshape.destroy();
+        obj.destroy();
+        delete this.colshapes[id];
+    },
     createObjColshape(obj) {
         var pos = obj.pos;
 

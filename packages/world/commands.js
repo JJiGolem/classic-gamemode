@@ -13,6 +13,18 @@ module.exports = {
             player.call(`world.objects.add`, [args[0], args[1], args[2], name]);
         }
     },
+    "/worlddel": {
+        access: 3,
+        description: "Удалить объект мира. ID смотреть в /worldshow",
+        args: "[ид]:n",
+        handler: (player, args, out) => {
+            if (!world.colshapes[args[0]]) return out.error(`Объект мира #${args[0]} не найден`, player);
+
+            world.deleteObject(args[0]);
+            player.call(`world.objects.delete`, [args[0]]);
+            out.info(`${player.name} удалил объект мира #${args[0]}`);
+        }
+    },
     "/worldshow": {
         access: 1,
         description: "Показать объекты мира в радиусе.",
