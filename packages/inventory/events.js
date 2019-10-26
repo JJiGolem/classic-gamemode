@@ -159,7 +159,7 @@ module.exports = {
             // из-за paranoid: true
             item.restore();
             player.inventory.items.push(item);
-            inventory.giveWeapon(player, params.weaponHash, params.ammo);
+            // inventory.giveWeapon(player, params.weaponHash, params.ammo);
         });
         obj.denyTake = true;
         inventory.addOldItem(player, obj.item, (e) => {

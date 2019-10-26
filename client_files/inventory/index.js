@@ -165,8 +165,8 @@ mp.inventory = {
             var rot = info.attachInfo.rot;
             object.attachTo(player.handle,
                 player.getBoneIndex(info.attachInfo.bone),
-                pos.x, pos.y, pos.z,
-                rot.x, rot.y, rot.z,
+                pos[0], pos[1], pos[2],
+                rot[0], rot[1], rot[2],
                 false, false, false, false, 2, true);
 
             if (info.attachInfo.anim) {
