@@ -28,6 +28,7 @@ mp.woodman = {
     treePos: null,
     logSquats: [],
     logObj: null,
+    logFocusSlotI: -1,
     lastStartMelee: 0,
     hitWaitTime: 500,
     // Высота и ширина бревна
@@ -55,9 +56,9 @@ mp.woodman = {
             outline: false
         });
     },
-    drawLogHealthBar(x, y, slotI) {
+    drawLogHealthBar(x, y) {
         var info = this.logHealthBar;
-        var health = this.logSquats[slotI];
+        var health = this.logSquats[this.logFocusSlotI];
         var color = this.getProgressColor();
         var border = info.border;
         var fillColor = this.getFillColor(health);
@@ -216,14 +217,14 @@ mp.events.add({
             var pos2d = mp.game.graphics.world3dToScreen2d(mp.woodman.treePos);
             if (pos2d) mp.woodman.drawTreeHealthBar(pos2d.x, pos2d.y);
 
-        }
-        else {
+        } else {
             if (mp.woodman.logObj) {
                 var slots = mp.woodman.getLogSlots(mp.woodman.logObj);
-                for (var i = 0; i < slots.length; i++) {
-                    var slot = slots[i];
-                    var pos2d = mp.game.graphics.world3dToScreen2d(slot);
-                    if (pos2d) mp.woodman.drawLogHealthBar(pos2d.x, pos2d.y, i);
+                var nearSlot = mp.utils.getNearPos(player.position, slots);
+                mp.woodman.logFocusSlotI = slots.indexOf(nearSlot);
+                if (mp.woodman.logFocusSlotI != -1) {
+                    var pos2d = mp.game.graphics.world3dToScreen2d(nearSlot);
+                    if (pos2d) mp.woodman.drawLogHealthBar(pos2d.x, pos2d.y);
                 }
             }
         }
