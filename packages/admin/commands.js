@@ -821,7 +821,7 @@ module.exports = {
             if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
 
             rec.call("slap");
-            notifs.warning(rec, `Администратор пнул вас`);
+            notify.warning(rec, `Администратор пнул вас`);
         }
     },
 }

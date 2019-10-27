@@ -128,4 +128,9 @@ mp.events.add({
     "woodman.tree.inside": (pos, health) => {
         mp.woodman.setTreeInside(pos, health);
     },
+    "playerWeaponChanged": (weapon) => {
+        if (!mp.woodman.treePos) return;
+        if (mp.woodman.isAxInHands()) mp.prompt.showByName('woodman_start_ax');
+        else mp.prompt.showByName('woodman_take_ax');
+    },
 });

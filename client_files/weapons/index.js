@@ -15,6 +15,7 @@ mp.weapons = {
     hashes: [],
     weaponData: require('weapons/data.js'),
     lastIsFreeAiming: false,
+    lastWeapon: null,
 
     sync() {
         var data = {};
@@ -75,6 +76,10 @@ mp.events.add({
             mp.events.call("playerEndFreeAiming");
         }
         mp.weapons.lastIsFreeAiming = isFreeAiming;
+
+        var weapon = mp.players.local.weapon;
+        if (weapon != mp.weapons.lastWeapon) mp.events.call("playerWeaponChanged", weapon);
+        mp.weapons.lastWeapon = weapon;
     },
     "time.main.tick": () => {
         if (!mp.weapons.needSync) return;
