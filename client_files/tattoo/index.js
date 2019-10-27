@@ -3,6 +3,8 @@ mp.game.ui.requestAdditionalText("tat_mnu", 9);
 let player = mp.players.local;
 let playerIsFrozen = false;
 let gender;
+let priceMultiplier;
+let deletePrice;
 
 let tattoPacksLoaded = 0;
 
@@ -41,6 +43,7 @@ mp.events.add({
     'tattoo.enter': (shopData, inputGender) => {
         mp.chat.debug(inputGender);
         gender = inputGender;
+        deletePrice = shopData.deleteTattooPrice;
         bindKeys(true);
         sortTattooList();
         clearClothes();
@@ -131,7 +134,7 @@ mp.events.add({
         characterTattoos.forEach((current) => {
             items.push({
                 text: mp.game.ui.getLabelText(current.name),
-                values: [`$150`]
+                values: [`$${deletePrice * priceMultiplier}`]
             });
         });
         items.push({

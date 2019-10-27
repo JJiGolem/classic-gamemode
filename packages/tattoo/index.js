@@ -14,6 +14,7 @@ module.exports = {
     minPriceMultiplier: 1.0,
     maxPriceMultiplier: 2.0,
     productPrice: 20,
+    deleteTattooProducts: 20,
     async init() {
         bizes = call('bizes');
         await this.loadShopsFromDB();
@@ -174,5 +175,13 @@ module.exports = {
     },
     removeTattooFromClient(player, tattooId) {
         player.call('tattoo.characterTattoos.remove', [tattooId]);
+    },
+    calculateProductsNeeded(price) {
+        switch (price) {
+            case price < 100:
+                return 3;
+            default:
+                return parseInt(price / this.productPrice);
+        }
     }
 }
