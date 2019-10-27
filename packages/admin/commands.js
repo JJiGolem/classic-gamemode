@@ -748,6 +748,17 @@ module.exports = {
             player.call(`effect`, args);
         }
     },
+    "/sound": {
+        description: "Включить звуковой эффект.",
+        access: 1,
+        args: "[name] [set_name]:n",
+        handler: (player, args, out) => {
+            player.call(`sound`, [{
+                name: args[0],
+                setName: args[1]
+            }]);
+        }
+    },
     "/red": {
         description: "Включить/отключить красный ник",
         access: 2,
