@@ -14,10 +14,10 @@ module.exports = {
     "woodman.clothes.buy": (player, index) => {
         woodman.buyClothes(player, index);
     },
-    "playerEnterWorldObject": (player, obj) => {
+    "playerEnterWorldObject": (player, colshape) => {
         debug(`playerEnterWorldObject`)
 
-        player.call(`woodman.tree.inside`, [obj.pos, 47]);
+        player.call(`woodman.tree.inside`, [colshape.db.pos, colshape.health]);
     },
     "playerExitWorldObject": (player, obj) => {
         debug(`playerExitWorldObject`)

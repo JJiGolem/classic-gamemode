@@ -100,6 +100,24 @@ mp.events.add({
         if (mp.woodman.treePos) {
             var pos2d = mp.game.graphics.world3dToScreen2d(mp.woodman.treePos);
             if (pos2d) mp.woodman.drawHealthBar(pos2d.x, pos2d.y);
+
+            var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
+            var endPos = player.getOffsetFromInWorldCoords(0, 1, 0);
+            mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
+
+            startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
+            endPos = player.getOffsetFromInWorldCoords(-0.3, 1, 0);
+            mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
+
+            startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
+            endPos = player.getOffsetFromInWorldCoords(0.3, 1, 0);
+            mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
+
+            if (mp.woodman.treePos) {
+                startPos = player.position;
+                endPos = mp.woodman.treePos;
+                mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 255, 0, 100);
+            }
         }
 
         // mp.utils.drawText2d(`tree: ${mp.woodman.currentTreeHash}`, [0.8, 0.5]);

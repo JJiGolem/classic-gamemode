@@ -59,12 +59,13 @@ module.exports = {
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
             if (player.vehicle) return;
-            mp.events.call('playerEnterWorldObject', player, obj);
+            mp.events.call('playerEnterWorldObject', player, colshape);
         };
         colshape.onExit = (player) => {
-            mp.events.call('playerExitWorldObject', player, obj);
+            mp.events.call('playerExitWorldObject', player, colshape);
         };
         colshape.db = obj;
+        colshape.health = 100;
 
         this.colshapes[obj.id] = colshape;
     },
