@@ -15,6 +15,8 @@ mp.weapons = {
     hashes: [],
     weaponData: require('weapons/data.js'),
     lastIsFreeAiming: false,
+    lastIsInMeleeCombat: false,
+    lastWeapon: null,
 
     sync() {
         var data = {};
@@ -75,6 +77,19 @@ mp.events.add({
             mp.events.call("playerEndFreeAiming");
         }
         mp.weapons.lastIsFreeAiming = isFreeAiming;
+
+        var isInMeleeCombat = mp.players.local.isInMeleeCombat();
+        if (isInMeleeCombat && !mp.weapons.lastIsInMeleeCombat) {
+            mp.events.call("playerStartMeleeCombat");
+        }
+        if (!isInMeleeCombat && mp.weapons.lastIsInMeleeCombat) {
+            mp.events.call("playerEndMeleeCombat");
+        }
+        mp.weapons.lastIsInMeleeCombat = isInMeleeCombat;
+
+        var weapon = mp.players.local.weapon;
+        if (weapon != mp.weapons.lastWeapon) mp.events.call("playerWeaponChanged", weapon);
+        mp.weapons.lastWeapon = weapon;
     },
     "time.main.tick": () => {
         if (!mp.weapons.needSync) return;

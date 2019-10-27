@@ -748,6 +748,17 @@ module.exports = {
             player.call(`effect`, args);
         }
     },
+    "/sound": {
+        description: "Включить звуковой эффект.",
+        access: 1,
+        args: "[name] [set_name]:n",
+        handler: (player, args, out) => {
+            player.call(`sound`, [{
+                name: args[0],
+                setName: args[1]
+            }]);
+        }
+    },
     "/red": {
         description: "Включить/отключить красный ник",
         access: 2,
@@ -810,6 +821,18 @@ module.exports = {
                 player.call(`collision.set`, [true]);
                 out.info(`Коллизия отключена`, player);
             }
+        }
+    },
+    "/slap": {
+        access: 2,
+        description: "Дать пинка игроку.",
+        args: "[ид_игрока]:n",
+        handler: (player, args, out) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
+
+            rec.call("slap");
+            notify.warning(rec, `Администратор пнул вас`);
         }
     },
 }
