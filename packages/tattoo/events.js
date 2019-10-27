@@ -12,7 +12,6 @@ module.exports = {
         tattoo.sendTattoosDataToClient(player, player.character.tattoos);
     },
     "playerEnterColshape": (player, shape) => {
-        
         if (!player.character) return;
         if (shape.isTattooParlor) {
             player.currentTattooParlorId = shape.tattooParlorId;
@@ -25,7 +24,6 @@ module.exports = {
                 let tattooList = tattoo.getRawTattooList();
                 let packsCount = tattooList.length % 100 == 0 ? 
                 parseInt(tattooList.length / 100) : parseInt(tattooList.length / 100) + 1;
-                console.log(packsCount)
                 while (tattooList.length > 0) {
                     let pack = tattooList.slice(0, 100);
                     console.log(pack.length);
@@ -39,11 +37,28 @@ module.exports = {
     "tattoo.enter": (player) => {
         let id = player.currentTattooParlorId;
         let data = tattoo.getRawShopData(id);
-        let gender = player.character.gender ? 0 : 1;
+        let gender = player.character.gender;
         player.call('tattoo.enter', [data, gender]);
     },
     "tattoo.exit": (player) => {
         player.dimension = 0;
         inventory.updateAllView(player);
     },
+    "tattoo.buy": async (player, tattooId) => {
+        let list = tattoo.getRawTattooList();
+        let tat = list.find(x => x.id == tattooId);
+        console.log(tat);
+        if (!tat) return;
+        let hash = player.character.gender ? 'hashNameFemale' : 'hashNameMale';
+        await tattoo.addCharacterTattoo(player, tat.collection, tat[hash], tat.zoneId, tat.name);
+        player.call('tattoo.buy.ans', [0]);
+    },
+    "tattoo.delete": (player, tattooId) => {
+        let tat = player.character.tattoos.find(x => x.id == tattooId);
+        console.log(tattooId)
+        if (!tat) return console.log(`${tattooId} not found`);
+        console.log('remove')
+        tattoo.removeCharacterTattoo(player, tattooId)
+        player.call('tattoo.delete.ans', [0, tattooId]);
+    }
 }

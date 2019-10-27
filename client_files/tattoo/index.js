@@ -88,15 +88,89 @@ mp.events.add({
         clearTattoos();
         setTattoo(currentTattoo.collection, currentTattoo[gender ? 'hashNameFemale' : 'hashNameMale']);
     },
+    'tattoo.buy': (zoneId, index) => {
+        let currentList = sortedList.filter(x => x.zoneId == zoneId);
+        let currentTattoo = currentList[index];
+        mp.events.callRemote('tattoo.buy', currentTattoo.id);
+    },
+    'tattoo.buy.ans': (ans) => {
+        mp.callCEFV(`selectMenu.loader = false`);
+        switch (ans) {
+            case 0:
+                clearTattoos();
+                mp.callCEFV(`selectMenu.notification = 'Татуировка набита'`);
+                break;
+            case 1:
+                mp.callCEFV(`selectMenu.notification = 'Татуировка не найдена'`);
+                break;
+            case 2:
+                mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+                break;
+            case 3:
+                mp.callCEFV(`selectMenu.notification = 'Ошибка финансовой операции'`);
+                break;
+            case 4:
+                mp.callCEFV(`selectMenu.notification = 'В салоне кончились материалы'`);
+                break;
+        }
+    },
     'tattoo.characterTattoos.add': (list) => {
         characterTattoos = characterTattoos.concat(list);
         mp.chat.debug(`${list.length} tattoos added`)
     },
     'tattoo.characterTattoos.remove': (id) => {
-        characterTattoos = characterTattoos.filter(x => x.id != id);
-        mp.chat.debug(`tattoo ${id} removed`)
+        removeTattoo(id);
     },
     'tattoo.clear': clearTattoos,
+    'tattoo.clear.single': (index) => {
+        clearSingleTattoo(index);
+    },
+    'tattoo.delete.show': () => {
+        if (!characterTattoos.length) return mp.callCEFV(`selectMenu.notification = 'У вас нет татуировок'`);
+        let items = [];
+        characterTattoos.forEach((current) => {
+            items.push({
+                text: mp.game.ui.getLabelText(current.name),
+                values: [`$150`]
+            });
+        });
+        items.push({
+            text: 'Назад'
+        });
+        mp.events.call('tattoo.clear.single', 0);
+        mp.callCEFV(`selectMenu.setItems('tattooDelete', ${JSON.stringify(items)});`)
+        mp.callCEFV(`selectMenu.menus["tattooDelete"].i = 0`);
+        mp.callCEFV(`selectMenu.menus["tattooDelete"].j = 0`);
+        mp.callCEFV(`selectMenu.showByName("tattooDelete")`);
+    },
+    'tattoo.delete': (index) => {
+        let tattooId = characterTattoos[index].id;
+        mp.events.callRemote('tattoo.delete', tattooId);
+    },
+    'tattoo.delete.ans': (ans, data) => {
+        mp.callCEFV(`selectMenu.loader = false`);
+        switch (ans) {
+            case 0:
+                removeTattoo(data);
+                mp.callCEFV(`selectMenu.notification = 'Татуировка сведена'`);
+                mp.callCEFV(`selectMenu.showByName("tattooMain")`);
+                if (!characterTattoos.length) return;
+                mp.events.call('tattoo.delete.show');
+                break;
+            case 1:
+                mp.callCEFV(`selectMenu.notification = 'Татуировка не найдена'`);
+                break;
+            case 2:
+                mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+                break;
+            case 3:
+                mp.callCEFV(`selectMenu.notification = 'Ошибка финансовой операции'`);
+                break;
+            case 4:
+                mp.callCEFV(`selectMenu.notification = 'В салоне кончились материалы'`);
+                break;
+        }
+    },
     'render': () => {
         if (rotation.left) player.setHeading(player.getHeading() - 2);
         if (rotation.right) player.setHeading(player.getHeading() + 2);
@@ -139,6 +213,7 @@ function stopRotationRight() {
 
 function sortTattooList() {
     let hash = gender ? 'hashNameFemale' : 'hashNameMale';
+    mp.chat.debug(hash);
     sortedList = tattooList.filter(x => x[hash].length != 0);
     mp.chat.debug(`sortedList length ${sortedList.length}`);
 }
@@ -170,15 +245,27 @@ function clearTattoos() {
     });
 }
 
+function clearSingleTattoo(index) {
+    player.clearDecorations();
+    for (let i = 0; i < characterTattoos.length; i++) {
+        if (i == index) continue;
+        setTattoo(characterTattoos[i].collection, characterTattoos[i].hashName);
+    }
+}
+
 function setTattoo(collection, hashName) {
     player.setDecoration(mp.game.joaat(collection), mp.game.joaat(hashName));
 }
 
 function clearClothes() {
-        player.setComponentVariation(3, 15, 0, 0);
-        player.setComponentVariation(11, gender ? 15 : 18, 0, 2);
-        player.setComponentVariation(8, gender ? 15 : 3, 0, 2);
-        player.setComponentVariation(4, gender ? 18 : 17, gender ? 2 : 0, 2);
-        player.setComponentVariation(6, gender ? 34 : 35, 0, 0);
-        player.setComponentVariation(7, 0, 0, 2);
+    player.setComponentVariation(3, 15, 0, 0);
+    player.setComponentVariation(11, gender ? 18 : 15, 0, 2);
+    player.setComponentVariation(8, gender ? 3 : 15, 0, 2);
+    player.setComponentVariation(4, gender ? 17 : 18, gender ? 0 : 2, 2);
+    player.setComponentVariation(6, gender ? 35 : 34, 0, 0);
+    player.setComponentVariation(7, 0, 0, 2);
+}
+
+function removeTattoo(id) {
+    characterTattoos = characterTattoos.filter(x => x.id != id);
 }
