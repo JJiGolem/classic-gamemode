@@ -7,7 +7,8 @@ module.exports = {
     },
     "characterInit.done": async (player) => {
         await tattoo.loadCharacterTattoos(player);
-        tattoo.setCharacterTattoos(player)
+        tattoo.setCharacterTattoos(player);
+        tattoo.sendTattoosDataToClient(player, player.character.tattoos);
     },
     "playerEnterColshape": (player, shape) => {
         

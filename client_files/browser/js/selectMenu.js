@@ -7299,16 +7299,56 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Закрыть') {
                             mp.trigger('tattoo.exit');
                         }
-                        // if (e.itemName == 'Тело') {
-                        //     mp.trigger('clothingShop.item.set', 'tops', 0, 0);
-                        //     selectMenu.showByName('clothingTops');
-                        // }
+                        if (e.itemName == 'Голова') {
+                            mp.trigger('tattoo.set', 1, 0);
+                            selectMenu.showByName('tattooHead');
+                        }
                     }
 
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         mp.trigger('tattoo.exit');
                     }
 
+                }
+            },
+            "tattooHead": {
+                name: "tattooHead",
+                header: "Голова",
+                headerImg: "",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('tattoo.set', 1, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('tattooMain');
+                            selectMenu.menus["tattooHead"].i = 0;
+                            selectMenu.menus["tattooHead"].j = 0;
+                            mp.trigger('tattoo.clear');
+                        } else {
+                            selectMenu.loader = true;
+                            mp.trigger('tattoo.buy', 1, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('tattooMain');
+                        selectMenu.menus["tattooHead"].i = 0;
+                        selectMenu.menus["tattooHead"].j = 0;
+                        mp.trigger('tattoo.clear');
+                    }
                 }
             },
         },

@@ -48,16 +48,18 @@ module.exports = {
             player.setDecoration(mp.joaat(current.collection), mp.joaat(current.hashName));
         });
     },
-    async addCharacterTattoo(player, collection, hashName, zoneId) {
+    async addCharacterTattoo(player, collection, hashName, zoneId, name) {
         if (!player.character) return;
         let tattoo = await db.Models.CharacterTattoo.create({
             characterId: player.character.id,
+            name: name,
             collection: collection,
             hashName: hashName,
             zoneId: zoneId
         });
         player.character.tattoos.push(tattoo);
         player.setDecoration(mp.joaat(collection), mp.joaat(hashName));
+        this.sendTattoosDataToClient(player, [tattoo]);
     },
     async removeCharacterTattoo(player, tattooId) {
         if (!player.character) return;
@@ -69,6 +71,7 @@ module.exports = {
         tattoos.splice(index, 1);
         player.clearDecorations();
         this.setCharacterTattoos(player);
+        this.removeTattooFromClient(player, tattooId);
     },
     async loadTattoosFromDB() {
         tattooList = await db.Models.Tattoo.findAll();
@@ -160,5 +163,12 @@ module.exports = {
     },
     getRawTattooList() {
         return tattooList.map(current => current.dataValues);
+    },
+    sendTattoosDataToClient(player, tattoos) {
+        let data = tattoos.map(current => current.dataValues);
+        player.call('tattoo.characterTattoos.add', [data]);
+    },
+    removeTattooFromClient(player, tattooId) {
+        player.call('tattoo.characterTattoos.remove', [tattooId]);
     }
 }
