@@ -16,8 +16,11 @@ module.exports = {
     },
     "playerEnterWorldObject": (player, obj) => {
         debug(`playerEnterWorldObject`)
+
+        player.call(`woodman.tree.inside`, [obj.pos, 47]);
     },
     "playerExitWorldObject": (player, obj) => {
         debug(`playerExitWorldObject`)
+        player.call(`woodman.tree.inside`);
     },
 };

@@ -12,31 +12,39 @@ mp.woodman = {
         height: 0.015,
         color: [0, 0, 0, 200],
         border: 0.0005,
-        fillColor: [52, 222, 59, 200],
         textColor: [255, 255, 255, 255],
         textScale: [0.2, 0.2],
     },
     treesInfo: null,
     treesHash: [],
     currentTreeHash: null,
+    treeHealth: 0,
+    treePos: null,
+
 
     drawHealthBar(x, y) {
         var info = this.healthBar;
         var color = info.color;
-        var border = info.border
-        var fillColor = info.fillColor
+        var border = info.border;
+        var fillColor = this.getFillColor();
         var textColor = info.textColor
         var textScale = info.textScale
         mp.game.graphics.drawRect(x, y, info.width + border * 2, info.height + border * 5, color[0], color[1], color[2], color[3]);
-        mp.game.graphics.drawRect(x - (100 - 90) * 0.0005, y,
-            info.width * 0.9, info.height,
+        mp.game.graphics.drawRect(x - (100 - this.treeHealth) * 0.0005, y,
+            info.width * this.treeHealth / 100, info.height,
             fillColor[0], fillColor[1], fillColor[2], fillColor[3]);
-        mp.game.graphics.drawText("90%", [x, y - 0.04 * textScale[0]], {
+        mp.game.graphics.drawText(`${this.treeHealth}%`, [x, y - 0.04 * textScale[0]], {
             font: 0,
             color: textColor,
             scale: textScale,
             outline: false
         });
+    },
+    getFillColor() {
+        if (this.treeHealth > 50) return [52, 222, 59, 200];
+        if (this.treeHealth > 15) return [255, 187, 0, 200];
+
+        return [187, 68, 68, 200];
     },
     setTreesInfo(info) {
         this.treesInfo = info;
@@ -60,6 +68,7 @@ mp.woodman = {
         return hash && this.treesHash.includes(hash);
     },
     isAxInHands(player) {
+        if (!player) player = mp.players.local;
         return player.weapon == mp.game.joaat('weapon_battleaxe');
     },
     setInside(prices) {
@@ -68,12 +77,31 @@ mp.woodman = {
         mp.callCEFV(`selectMenu.menus['woodman'].init('${JSON.stringify(prices)}')`);
         mp.callCEFV(`selectMenu.showByName('woodman')`);
     },
+    setTreeInside(pos, health) {
+        if (pos) {
+            if (this.isAxInHands()) mp.prompt.showByName('woodman_start_ax');
+            else mp.prompt.showByName('woodman_take_ax');
+
+            this.treePos = pos;
+            this.treeHealth = health;
+        } else {
+            mp.prompt.hide();
+
+            this.treePos = null;
+            this.treeHealth = 0;
+        }
+    },
 };
 
 mp.events.add({
     "render": () => {
-        // var player = mp.players.local;
-        // if (!mp.woodman.isAxInHands(player)) return;
+        var player = mp.players.local;
+        if (!mp.woodman.isAxInHands(player)) return;
+        if (mp.woodman.treePos) {
+            var pos2d = mp.game.graphics.world3dToScreen2d(mp.woodman.treePos);
+            if (pos2d) mp.woodman.drawHealthBar(pos2d.x, pos2d.y);
+        }
+
         // mp.utils.drawText2d(`tree: ${mp.woodman.currentTreeHash}`, [0.8, 0.5]);
         // mp.utils.drawText2d(`hashes: ${mp.woodman.treesHash}`, [0.8, 0.55]);
         //
@@ -97,13 +125,7 @@ mp.events.add({
     "woodman.storage.inside": (prices) => {
         mp.woodman.setInside(prices);
     },
+    "woodman.tree.inside": (pos, health) => {
+        mp.woodman.setTreeInside(pos, health);
+    },
 });
-
-mp.test = (count) => {
-    for (var i = 0; i < count; i++) {
-        var x = mp.utils.randomInteger(-3000, 3000);
-        var y = mp.utils.randomInteger(-3000, 3000);
-        var z = mp.utils.randomInteger(-3000, 3000);
-        mp.colshapes.newSphere(x, y, z, 1);
-    }
-}

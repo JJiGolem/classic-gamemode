@@ -128,6 +128,12 @@ var prompt = new Vue({
             "bin": {
                 text: "Нажмите <span>E</span>, чтобы покопаться в мусорке",
             },
+            "woodman_take_ax": {
+                text: "Достаньте топор, чтобы вырубить дерево",
+            },
+            "woodman_start_ax": {
+                text: "Нажмите <span>SPACE</span>, чтобы начать рубить дерево",
+            },
         },
         text: null
     },
