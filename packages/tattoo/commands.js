@@ -14,9 +14,9 @@ module.exports = {
     "/addtat": {
         description: "Добавить тату",
         access: 6,
-        args: "[collection]:s [overlay]:s [zoneId]:n",
+        args: "[collection]:s [overlay]:s [zoneId]:n [name]:s",
         handler: async (player, args, out) => {
-            await tattoo.addCharacterTattoo(player, args[0], args[1], args[2]);
+            await tattoo.addCharacterTattoo(player, args[0], args[1], args[2], args[3]);
             out.info('Тату установлена', player);
         }
     },
@@ -32,7 +32,7 @@ module.exports = {
             });
             if (!tat) return out.error('Тату не найдена', player);
             console.log(tat)
-            await tattoo.addCharacterTattoo(player, tat.collection, tat.hashNameMale, tat.zoneId);
+            await tattoo.addCharacterTattoo(player, tat.collection, tat.hashNameMale, tat.zoneId, tat.name);
             out.info('Тату установлена', player);
         }
     },

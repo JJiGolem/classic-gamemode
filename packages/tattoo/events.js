@@ -1,4 +1,5 @@
 let tattoo = require('./index.js');
+let inventory = call('inventory');
 
 module.exports = {
     "init": () => {
@@ -7,7 +8,8 @@ module.exports = {
     },
     "characterInit.done": async (player) => {
         await tattoo.loadCharacterTattoos(player);
-        tattoo.setCharacterTattoos(player)
+        tattoo.setCharacterTattoos(player);
+        tattoo.sendTattoosDataToClient(player, player.character.tattoos);
     },
     "playerEnterColshape": (player, shape) => {
         
@@ -42,6 +44,6 @@ module.exports = {
     },
     "tattoo.exit": (player) => {
         player.dimension = 0;
-        //inventory.updateAllView(player);
+        inventory.updateAllView(player);
     },
 }
