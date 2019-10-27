@@ -812,4 +812,16 @@ module.exports = {
             }
         }
     },
+    "/slap": {
+        access: 2,
+        description: "Дать пинка игроку.",
+        args: "[ид_игрока]:n",
+        handler: (player, args, out) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
+
+            rec.call("slap");
+            notifs.warning(rec, `Администратор пнул вас`);
+        }
+    },
 }
