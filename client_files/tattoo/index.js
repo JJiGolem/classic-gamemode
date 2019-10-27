@@ -47,7 +47,7 @@ mp.events.add({
         bindKeys(true);
         sortTattooList();
         clearClothes();
-        // setHeaders(shopData.bType);
+        setHeaders(shopData.bType);
         mp.events.call('hud.enable', false);
         mp.game.ui.displayRadar(false);
         mp.callCEFR('setOpacityChat', [0.0]);
@@ -271,4 +271,27 @@ function clearClothes() {
 
 function removeTattoo(id) {
     characterTattoos = characterTattoos.filter(x => x.id != id);
+}
+
+function setHeaders(type) {
+    let img;
+    switch (type) {
+        case 0:
+            img = 'blazing';
+            break;
+        case 1:
+            img = 'bodyart';
+            break;
+        case 2:
+            img = 'inkinc';
+            break;
+        case 3:
+            img = 'lstattoos';
+            break;
+        case 4:
+            img = 'thepit';
+            break;
+    }
+    ['Main', 'Torso', 'Head', 'LeftArm', 'RightArm', 'LeftLeg', 'RightLeg', 'Delete']
+    .forEach(name => mp.callCEFV(`selectMenu.menus["tattoo${name}"].headerImg = '${img}.png'`));
 }
