@@ -10,7 +10,6 @@ mp.woodman = {
     healthBar: {
         width: 0.1,
         height: 0.015,
-        color: [0, 0, 0, 200],
         border: 0.0005,
         textColor: [255, 255, 255, 255],
         textScale: [0.2, 0.2],
@@ -24,7 +23,7 @@ mp.woodman = {
 
     drawHealthBar(x, y) {
         var info = this.healthBar;
-        var color = info.color;
+        var color = this.getProgressColor();
         var border = info.border;
         var fillColor = this.getFillColor();
         var textColor = info.textColor
@@ -39,6 +38,10 @@ mp.woodman = {
             scale: textScale,
             outline: false
         });
+    },
+    getProgressColor() {
+        var player = mp.players.local;
+        return (player.isInMeleeCombat()) ? [255, 0, 0, 200] : [0, 0, 0, 200];
     },
     getFillColor() {
         if (this.treeHealth > 50) return [52, 222, 59, 200];
@@ -71,6 +74,17 @@ mp.woodman = {
         if (!player) player = mp.players.local;
         return player.weapon == mp.game.joaat('weapon_battleaxe');
     },
+    isFocusTree() {
+        if (!this.treePos) return false;
+        var player = mp.players.local;
+        var raycastToTree = mp.raycasting.testPointToPoint(player.position, this.treePos);
+        if (!raycastToTree || !raycastToTree.entity) return false;
+        // var frontHash = mp.utils.getFrontObjectHash(player);
+        // if (!frontHash || frontHash != raycastToTree.entity) return false;
+        var frontPos = player.getOffsetFromInWorldCoords(0, 1, 0);
+
+        return mp.vdist(player.position, this.treePos) > mp.vdist(frontPos, this.treePos);
+    },
     setInside(prices) {
         if (!prices) return mp.callCEFV(`selectMenu.show = false`);
 
@@ -98,9 +112,6 @@ mp.events.add({
         var player = mp.players.local;
         if (!mp.woodman.isAxInHands(player)) return;
         if (mp.woodman.treePos) {
-            var pos2d = mp.game.graphics.world3dToScreen2d(mp.woodman.treePos);
-            if (pos2d) mp.woodman.drawHealthBar(pos2d.x, pos2d.y);
-
             var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
             var endPos = player.getOffsetFromInWorldCoords(0, 1, 0);
             mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
@@ -118,6 +129,11 @@ mp.events.add({
                 endPos = mp.woodman.treePos;
                 mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 255, 0, 100);
             }
+
+            if (!mp.woodman.isFocusTree()) return;
+            var pos2d = mp.game.graphics.world3dToScreen2d(mp.woodman.treePos);
+            if (pos2d) mp.woodman.drawHealthBar(pos2d.x, pos2d.y);
+
         }
 
         // mp.utils.drawText2d(`tree: ${mp.woodman.currentTreeHash}`, [0.8, 0.5]);
@@ -146,9 +162,20 @@ mp.events.add({
     "woodman.tree.inside": (pos, health) => {
         mp.woodman.setTreeInside(pos, health);
     },
+    "woodman.tree.health": (health) => {
+        mp.woodman.treeHealth = health;
+    },
     "playerWeaponChanged": (weapon) => {
         if (!mp.woodman.treePos) return;
         if (mp.woodman.isAxInHands()) mp.prompt.showByName('woodman_start_ax');
         else mp.prompt.showByName('woodman_take_ax');
+    },
+    "playerStartMeleeCombat": () => {
+        if (!mp.woodman.isAxInHands()) return;
+        if (!mp.woodman.treePos) return;
+        if (!mp.woodman.isFocusTree()) return;
+        
+
+        mp.events.callRemote(`woodman.trees.hit`);
     },
 });

@@ -63,6 +63,8 @@ module.exports = {
 
         ]
     },
+    // Урон по дереву
+    treeDamage: 10,
 
     init() {
         this.loadTreesInfoFromDB();
@@ -148,5 +150,16 @@ module.exports = {
         });
 
         notifs.success(player, `Вы приобрели ${inventory.getName(item.itemId)}`);
+    },
+    hitTree(player, colshape) {
+        var damage = this.treeDamage;
+        // TODO: зависеть урон от топора, формы и навыка
+
+        colshape.health = Math.clamp(colshape.health - damage, 0, 100);
+
+        mp.players.forEachInRange(colshape.db.pos, colshape.db.radius, rec => {
+            if (!rec.character) return;
+            rec.call(`woodman.tree.health`, [colshape.health]);
+        });
     },
 };

@@ -56,7 +56,7 @@ module.exports = {
     createObjColshape(obj) {
         var pos = obj.pos;
 
-        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, obj.radius);
         colshape.onEnter = (player) => {
             if (player.vehicle) return;
             mp.events.call('playerEnterWorldObject', player, colshape);
