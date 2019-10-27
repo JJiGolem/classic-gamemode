@@ -132,7 +132,7 @@ var prompt = new Vue({
                 text: "Достаньте топор, чтобы вырубить дерево",
             },
             "woodman_start_ax": {
-                text: "Нажмите <span>SPACE</span>, чтобы начать рубить дерево",
+                text: "Нажмите <span>ЛКМ</span>, чтобы начать рубить дерево",
             },
         },
         text: null

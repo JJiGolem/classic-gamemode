@@ -97,7 +97,7 @@ var hud = new Vue({
                 this.setDate();
         },
         setDate() {
-            let date = new Date();
+            let date = convertToMoscowDate(new Date());
             let day = date.getDate();
             let month = date.getMonth() + 1;
             let year = date.getUTCFullYear();

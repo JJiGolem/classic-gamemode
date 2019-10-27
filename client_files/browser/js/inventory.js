@@ -598,7 +598,7 @@ var inventory = new Vue({
                     value: this.itemsInfo[item.itemId].width + 'x' + this.itemsInfo[item.itemId].height + " ячейки"
                 }
             ];
-            if (item.params.health) params.push({
+            if (item.params.health != null) params.push({
                 name: "Прочность",
                 value: item.params.health + "%"
             });

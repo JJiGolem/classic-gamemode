@@ -19,6 +19,13 @@ mp.woodman = {
     currentTreeHash: null,
     treeHealth: 0,
     treePos: null,
+    lastStartMelee: 0,
+    hitWaitTime: 500,
+    // Высота и ширина бревна
+    logSize: {
+        height: 0.3,
+        width: 4.4,
+    },
 
 
     drawHealthBar(x, y) {
@@ -105,7 +112,30 @@ mp.woodman = {
             this.treeHealth = 0;
         }
     },
+    getFreeTreeSlot() {
+        var player = mp.players.local;
+        var leftPos = player.getOffsetFromInWorldCoords(2, -this.logSize.width / 2, 0);
+        var rightPos = player.getOffsetFromInWorldCoords(2, this.logSize.width / 2, 0);
+
+        var leftGroundZ = mp.game.gameplay.getGroundZFor3dCoord(leftPos.x, leftPos.y, leftPos.z, false, false);
+        var rightGroundZ = mp.game.gameplay.getGroundZFor3dCoord(rightPos.x, rightPos.y, rightPos.z, false, false);
+
+        var leftDist = mp.vdist(leftPos, new mp.Vector3(leftPos.x, leftPos.y, leftGroundZ));
+        var rightDist = mp.vdist(rightPos, new mp.Vector3(rightPos.x, rightPos.y, rightGroundZ));
+
+        var alpha = -Math.sin((leftDist - rightDist) / this.logSize.width) * 180 / Math.PI;
+
+
+        var objPos = player.getOffsetFromInWorldCoords(2, 0, 0);
+        objPos.z = mp.game.gameplay.getGroundZFor3dCoord(objPos.x, objPos.y, objPos.z, false, false) + this.logSize.height / 2;
+
+        return {
+            pos: objPos,
+            rot: new mp.Vector3(0, alpha, player.getHeading() + 90),
+        };
+    },
 };
+
 
 mp.events.add({
     "render": () => {
@@ -135,7 +165,14 @@ mp.events.add({
             if (pos2d) mp.woodman.drawHealthBar(pos2d.x, pos2d.y);
 
         }
+        if (mp.woodman.lastStartMelee && Date.now() > mp.woodman.lastStartMelee + mp.woodman.hitWaitTime) {
+            mp.woodman.lastStartMelee = 0;
 
+            if (!mp.woodman.isAxInHands()) return;
+            if (!mp.woodman.treePos) return;
+            if (!mp.woodman.isFocusTree()) return;
+            mp.events.callRemote(`woodman.trees.hit`);
+        }
         // mp.utils.drawText2d(`tree: ${mp.woodman.currentTreeHash}`, [0.8, 0.5]);
         // mp.utils.drawText2d(`hashes: ${mp.woodman.treesHash}`, [0.8, 0.55]);
         //
@@ -165,6 +202,10 @@ mp.events.add({
     "woodman.tree.health": (health) => {
         mp.woodman.treeHealth = health;
     },
+    "woodman.log.request": () => {
+        var slot = mp.woodman.getFreeTreeSlot();
+        mp.events.callRemote(`woodman.logs.add`, JSON.stringify(slot));
+    },
     "playerWeaponChanged": (weapon) => {
         if (!mp.woodman.treePos) return;
         if (mp.woodman.isAxInHands()) mp.prompt.showByName('woodman_start_ax');
@@ -174,8 +215,8 @@ mp.events.add({
         if (!mp.woodman.isAxInHands()) return;
         if (!mp.woodman.treePos) return;
         if (!mp.woodman.isFocusTree()) return;
-        
+        if (mp.woodman.treeHealth <= 0) return mp.notify.error(`Дерево исчерпало свой ресурс`);
 
-        mp.events.callRemote(`woodman.trees.hit`);
+        mp.woodman.lastStartMelee = Date.now();
     },
 });
