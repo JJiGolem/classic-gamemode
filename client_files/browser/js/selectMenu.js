@@ -7323,6 +7323,9 @@ var selectMenu = new Vue({
                             mp.trigger('tattoo.set', 5, 0);
                             selectMenu.showByName('tattooRightLeg');
                         }
+                        if (e.itemName == 'Сведение татуировок') {
+                            mp.trigger('tattoo.delete.show');
+                        }
                     }
 
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
@@ -7567,6 +7570,46 @@ var selectMenu = new Vue({
                         selectMenu.showByName('tattooMain');
                         selectMenu.menus["tattooRightLeg"].i = 0;
                         selectMenu.menus["tattooRightLeg"].j = 0;
+                        mp.trigger('tattoo.clear');
+                    }
+                }
+            },
+            "tattooDelete": {
+                name: "tattooDelete",
+                header: "Сведение татуировок",
+                headerImg: "",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('tattoo.clear.single', e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('tattooMain');
+                            selectMenu.menus["tattooDelete"].i = 0;
+                            selectMenu.menus["tattooDelete"].j = 0;
+                            mp.trigger('tattoo.clear');
+                        } else {
+                            selectMenu.loader = true;
+                            mp.trigger('tattoo.delete', e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('tattooMain');
+                        selectMenu.menus["tattooDelete"].i = 0;
+                        selectMenu.menus["tattooDelete"].j = 0;
                         mp.trigger('tattoo.clear');
                     }
                 }

@@ -65,17 +65,17 @@ module.exports = {
         player.setDecoration(mp.joaat(collection), mp.joaat(hashName));
         this.sendTattoosDataToClient(player, [tattoo]);
     },
-    async removeCharacterTattoo(player, tattooId) {
+    removeCharacterTattoo(player, tattooId) {
         if (!player.character) return;
         let tattoos = player.character.tattoos;
         let index = tattoos.findIndex(x => x.id == tattooId);
         let tat = tattoos[index];
         if (!tat) return;
-        await tat.destroy();
+        tat.destroy();
         tattoos.splice(index, 1);
         player.clearDecorations();
         this.setCharacterTattoos(player);
-        this.removeTattooFromClient(player, tattooId);
+        //this.removeTattooFromClient(player, tattooId);
     },
     async loadTattoosFromDB() {
         tattooList = await db.Models.Tattoo.findAll();
