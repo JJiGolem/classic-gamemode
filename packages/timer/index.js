@@ -27,7 +27,7 @@ module.exports = {
             for (let i = 0; i < timers.length; i++) {
                 try {
                     if (timers[i].time <= Date.now()) {
-                        timers[i].handler();
+                        let handler = timers[i].handler;
                         if (timers[i].interval != null) {
                             timers[i].time += timers[i].interval;
                         }
@@ -35,6 +35,7 @@ module.exports = {
                             timers.splice(i, 1);
                             i--;
                         }
+                        handler();
                     }
                 }
                 catch (error) {
@@ -60,7 +61,7 @@ module.exports = {
             id: id,
             handler: handler,
             time: Date.now() + time,
-            interval: isInterval ? time : null
+            interval: isInterval ? time : null,
         });
         return {
             id: id
