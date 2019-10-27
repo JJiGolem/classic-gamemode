@@ -7299,9 +7299,29 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Закрыть') {
                             mp.trigger('tattoo.exit');
                         }
+                        if (e.itemName == 'Торс') {
+                            mp.trigger('tattoo.set', 0, 0);
+                            selectMenu.showByName('tattooTorso');
+                        }
                         if (e.itemName == 'Голова') {
                             mp.trigger('tattoo.set', 1, 0);
                             selectMenu.showByName('tattooHead');
+                        }
+                        if (e.itemName == 'Левая рука') {
+                            mp.trigger('tattoo.set', 2, 0);
+                            selectMenu.showByName('tattooLeftArm');
+                        }
+                        if (e.itemName == 'Правая рука') {
+                            mp.trigger('tattoo.set', 3, 0);
+                            selectMenu.showByName('tattooRightArm');
+                        }
+                        if (e.itemName == 'Левая нога') {
+                            mp.trigger('tattoo.set', 4, 0);
+                            selectMenu.showByName('tattooLeftLeg');
+                        }
+                        if (e.itemName == 'Правая нога') {
+                            mp.trigger('tattoo.set', 5, 0);
+                            selectMenu.showByName('tattooRightLeg');
                         }
                     }
 
@@ -7309,6 +7329,46 @@ var selectMenu = new Vue({
                         mp.trigger('tattoo.exit');
                     }
 
+                }
+            },
+            "tattooTorso": {
+                name: "tattooTorso",
+                header: "Торс",
+                headerImg: "",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('tattoo.set', 0, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('tattooMain');
+                            selectMenu.menus["tattooTorso"].i = 0;
+                            selectMenu.menus["tattooTorso"].j = 0;
+                            mp.trigger('tattoo.clear');
+                        } else {
+                            selectMenu.loader = true;
+                            mp.trigger('tattoo.buy', 0, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('tattooMain');
+                        selectMenu.menus["tattooTorso"].i = 0;
+                        selectMenu.menus["tattooTorso"].j = 0;
+                        mp.trigger('tattoo.clear');
+                    }
                 }
             },
             "tattooHead": {
@@ -7347,6 +7407,166 @@ var selectMenu = new Vue({
                         selectMenu.showByName('tattooMain');
                         selectMenu.menus["tattooHead"].i = 0;
                         selectMenu.menus["tattooHead"].j = 0;
+                        mp.trigger('tattoo.clear');
+                    }
+                }
+            },
+            "tattooLeftArm": {
+                name: "tattooLeftArm",
+                header: "Левая рука",
+                headerImg: "",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('tattoo.set', 2, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('tattooMain');
+                            selectMenu.menus["tattooLeftArm"].i = 0;
+                            selectMenu.menus["tattooLeftArm"].j = 0;
+                            mp.trigger('tattoo.clear');
+                        } else {
+                            selectMenu.loader = true;
+                            mp.trigger('tattoo.buy', 2, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('tattooMain');
+                        selectMenu.menus["tattooLeftArm"].i = 0;
+                        selectMenu.menus["tattooLeftArm"].j = 0;
+                        mp.trigger('tattoo.clear');
+                    }
+                }
+            },
+            "tattooRightArm": {
+                name: "tattooRightArm",
+                header: "Правая рука",
+                headerImg: "",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('tattoo.set', 3, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('tattooMain');
+                            selectMenu.menus["tattooRightArm"].i = 0;
+                            selectMenu.menus["tattooRightArm"].j = 0;
+                            mp.trigger('tattoo.clear');
+                        } else {
+                            selectMenu.loader = true;
+                            mp.trigger('tattoo.buy', 3, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('tattooMain');
+                        selectMenu.menus["tattooRightArm"].i = 0;
+                        selectMenu.menus["tattooRightArm"].j = 0;
+                        mp.trigger('tattoo.clear');
+                    }
+                }
+            },
+            "tattooLeftLeg": {
+                name: "tattooLeftLeg",
+                header: "Левая нога",
+                headerImg: "",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('tattoo.set', 4, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('tattooMain');
+                            selectMenu.menus["tattooLeftLeg"].i = 0;
+                            selectMenu.menus["tattooLeftLeg"].j = 0;
+                            mp.trigger('tattoo.clear');
+                        } else {
+                            selectMenu.loader = true;
+                            mp.trigger('tattoo.buy', 4, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('tattooMain');
+                        selectMenu.menus["tattooLeftLeg"].i = 0;
+                        selectMenu.menus["tattooLeftLeg"].j = 0;
+                        mp.trigger('tattoo.clear');
+                    }
+                }
+            },
+            "tattooRightLeg": {
+                name: "tattooRightLeg",
+                header: "Правая нога",
+                headerImg: "",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('tattoo.set', 5, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('tattooMain');
+                            selectMenu.menus["tattooRightLeg"].i = 0;
+                            selectMenu.menus["tattooRightLeg"].j = 0;
+                            mp.trigger('tattoo.clear');
+                        } else {
+                            selectMenu.loader = true;
+                            mp.trigger('tattoo.buy', 5, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('tattooMain');
+                        selectMenu.menus["tattooRightLeg"].i = 0;
+                        selectMenu.menus["tattooRightLeg"].j = 0;
                         mp.trigger('tattoo.clear');
                     }
                 }
