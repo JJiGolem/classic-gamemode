@@ -11,14 +11,13 @@ module.exports = {
     storagePos: new mp.Vector3(1568.9091796875, 1647.27392578125, 107.4094467163086 - 1),
     // Снаряжение лесопилки
     items: [{
-            itemId: 70,
-            params: {
-                health: 100,
-                weaponHash: mp.joaat('weapon_battleaxe'),
-            },
-            price: 100
-        }
-    ],
+        itemId: 70,
+        params: {
+            health: 100,
+            weaponHash: mp.joaat('weapon_battleaxe'),
+        },
+        price: 100
+    }],
     // Форма дровосека
     clothes: {
         0: [ // муж.
@@ -187,10 +186,17 @@ module.exports = {
         var obj = mp.objects.new('prop_fence_log_02', slot.pos, {
             rotation: slot.rot
         });
-        obj.db = colshape.db;
-        obj.setVariable('treeLog', {
-            name: obj.db.name,
-            squats: 4,
-        });
+        var pos = obj.position;
+        var logColshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 3);
+        logColshape.onEnter = (player) => {
+            if (player.vehicle) return;
+            player.call(`woodman.log.inside`, [logColshape.squats, logColshape.obj.id]);
+        };
+        logColshape.onExit = (player) => {
+            player.call(`woodman.log.inside`);
+        };
+        logColshape.obj = obj;
+        logColshape.tree = colshape.db;
+        logColshape.squats = [100, 100, 100, 100, 100];
     },
 };

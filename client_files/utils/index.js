@@ -228,6 +228,19 @@ mp.utils = {
         });
         return nearObj;
     },
+    // Получить ближ. позицию
+    getNearPos(pos, positions) {
+        var nearPos = positions[0];
+        var minDist = mp.vdist(pos, positions[0]);
+        for (var i = 1; i < positions.length; i++) {
+            var distance = mp.vdist(pos, positions[i]);
+            if (distance < minDist) {
+                nearPos = positions[i];
+                minDist = distance;
+            }
+        }
+        return nearPos;
+    },
     // Рисовать текст на экране
     drawText2d(text, pos = [0.8, 0.5], color = [255, 255, 255, 255], scale = [0.3, 0.3]) {
         mp.game.graphics.drawText(text, pos, {
