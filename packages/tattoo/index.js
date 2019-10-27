@@ -38,7 +38,11 @@ module.exports = {
     },
     async loadCharacterTattoos(player) {
         if (!player.character) return;
-        let tattoos = await db.Models.CharacterTattoo.findAll();
+        let tattoos = await db.Models.CharacterTattoo.findAll({
+            where: {
+                characterId: player.character.id
+            }
+        });
         player.character.tattoos = tattoos;
         console.log(`[TATTOO] Для персонажа ${player.character.name} загружено ${tattoos.length} татуировок`);
     },

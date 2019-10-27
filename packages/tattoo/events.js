@@ -1,4 +1,5 @@
 let tattoo = require('./index.js');
+let inventory = call('inventory');
 
 module.exports = {
     "init": () => {
@@ -43,6 +44,6 @@ module.exports = {
     },
     "tattoo.exit": (player) => {
         player.dimension = 0;
-        //inventory.updateAllView(player);
+        inventory.updateAllView(player);
     },
 }
