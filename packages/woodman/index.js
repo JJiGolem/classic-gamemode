@@ -65,6 +65,10 @@ module.exports = {
     },
     // Урон по дереву
     treeDamage: 10,
+    // Урон по топору
+    axDamage: 1,
+    // Бревна на земле
+    logObjects: [],
 
     init() {
         this.loadTreesInfoFromDB();
@@ -152,6 +156,21 @@ module.exports = {
         notifs.success(player, `Вы приобрели ${inventory.getName(item.itemId)}`);
     },
     hitTree(player, colshape) {
+        var header = `Лесоруб`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var ax = inventory.getHandsItem(player);
+        if (!ax || ax.itemId != 70) return out(`Возьмите в руки топор`);
+
+        var health = inventory.getParam(ax, 'health');
+        if (!health || health.value <= 0) return out(`Топор сломан`);
+        if (colshape.health <= 0) return out(`Дерево исчерпало свой ресурс`);
+
+        health.value = Math.clamp(health.value - this.axDamage, 0, 100);
+        inventory.updateParam(player, ax, 'health', health.value);
+
+
         var damage = this.treeDamage;
         // TODO: зависеть урон от топора, формы и навыка
 
@@ -160,6 +179,18 @@ module.exports = {
         mp.players.forEachInRange(colshape.db.pos, colshape.db.radius, rec => {
             if (!rec.character) return;
             rec.call(`woodman.tree.health`, [colshape.health]);
+        });
+
+        if (!colshape.health) player.call(`woodman.log.request`);
+    },
+    addLogObject(colshape, slot) {
+        var obj = mp.objects.new('prop_fence_log_02', slot.pos, {
+            rotation: slot.rot
+        });
+        obj.db = colshape.db;
+        obj.setVariable('treeLog', {
+            name: obj.db.name,
+            squats: 4,
         });
     },
 };
