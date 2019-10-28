@@ -36,6 +36,7 @@ mp.woodman = {
         height: 0.3,
         width: 4.4,
     },
+    logTimer: null,
 
 
     drawTreeHealthBar(x, y) {
@@ -65,7 +66,7 @@ mp.woodman = {
         var textColor = info.textColor;
         var textScale = info.textScale;
         mp.game.graphics.drawRect(x, y, info.width + border * 2, info.height + border * 5, color[0], color[1], color[2], color[3]);
-        mp.game.graphics.drawRect(x - (100 - health) * 0.0005, y,
+        mp.game.graphics.drawRect(x - (100 - health) * 0.00025, y,
             info.width * health / 100, info.height,
             fillColor[0], fillColor[1], fillColor[2], fillColor[3]);
         mp.game.graphics.drawText(`${health}%`, [x, y - 0.045 * textScale[0]], {
@@ -188,13 +189,24 @@ mp.woodman = {
         return slots;
     },
     hitLogHandler() {
-        if (this.logFocusSlotI == -1 || !this.logObj) return;
+        if (this.logFocusSlotI == -1 || !this.logObj || this.logTimer != null) return;
         if (!this.isAxInHands()) return;
         if (!this.logSquats[this.logFocusSlotI]) return mp.notify.error(`Перейдите к другой части бревна`, `Лесоруб`);
 
         // TODO: set correct heading
         mp.events.callRemote(`animations.playById`, 5523);
-        // mp.events.callRemote(`woodman.logs.hit`, this.logFocusSlotI);
+        this.logTimer = mp.timer.add(() => {
+            if (!mp.objects.exists(this.logObj) || !this.logObj || this.logFocusSlotI == -1 || !this.logSquats[this.logFocusSlotI]) {
+                this.stopLogTimer();
+                return;
+            }
+            mp.events.callRemote(`woodman.logs.hit`, this.logFocusSlotI);
+        }, 2000);
+    },
+    stopLogTimer() {
+        mp.timer.remove(this.logTimer);
+        this.logTimer = null;
+        mp.events.callRemote(`animations.stop`);
     },
 };
 
@@ -235,13 +247,15 @@ mp.events.add({
         }
         if (mp.objects.exists(mp.woodman.logObj) && mp.woodman.logObj) {
             var slots = mp.woodman.getLogSlots(mp.woodman.logObj);
-            var playerPos = player.getOffsetFromInWorldCoords(0, 0, -1);
-            var nearSlot = mp.utils.getNearPos(playerPos, slots, 1);
-            mp.woodman.logFocusSlotI = slots.indexOf(nearSlot);
-            var frontPos = player.getOffsetFromInWorldCoords(0, 0.5, -1);
-            if (mp.vdist(playerPos, nearSlot) < mp.vdist(frontPos, nearSlot)) mp.woodman.logFocusSlotI = -1;
+            if (mp.woodman.logTimer == null) {
+                var playerPos = player.getOffsetFromInWorldCoords(0, 0, -1);
+                var nearSlot = mp.utils.getNearPos(playerPos, slots, mp.x);
+                mp.woodman.logFocusSlotI = slots.indexOf(nearSlot);
+                var frontPos = player.getOffsetFromInWorldCoords(0, 0.5, -1);
+                if (mp.vdist(playerPos, nearSlot) < mp.vdist(frontPos, nearSlot)) mp.woodman.logFocusSlotI = -1;
+            }
             if (mp.woodman.logFocusSlotI != -1) {
-                var pos2d = mp.game.graphics.world3dToScreen2d(nearSlot);
+                var pos2d = mp.game.graphics.world3dToScreen2d(slots[mp.woodman.logFocusSlotI]);
                 if (pos2d) mp.woodman.drawLogHealthBar(pos2d.x, pos2d.y);
             }
             var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
@@ -294,6 +308,7 @@ mp.events.add({
         mp.woodman.setLogInside(squats, objId);
     },
     "woodman.log.health": (objId, slotI, health) => {
+        if (mp.woodman.logFocusSlotI == slotI) mp.woodman.stopLogTimer();
         if (!mp.objects.exists(mp.woodman.logObj) || !mp.woodman.logObj || mp.woodman.logObj.remoteId != objId) return;
         mp.woodman.logSquats[slotI] = health;
     },
