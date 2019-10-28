@@ -40,6 +40,15 @@ module.exports = {
         if (!player.treeLog) return out(`Вы не у бревна`);
         woodman.hitLog(player, player.treeLog, index);
     },
+    "woodman.items.add": (player, slots) => {
+        slots = JSON.parse(slots);
+        var header = `Лесоруб`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.treeLog) return out(`Вы не у бревна`);
+        woodman.addLogItems(player.treeLog, slots);
+    },
     "playerEnterWorldObject": (player, colshape) => {
         debug(`playerEnterWorldObject`)
         player.tree = colshape;

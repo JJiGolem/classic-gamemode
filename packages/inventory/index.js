@@ -1220,6 +1220,35 @@ module.exports = {
             obj.destroy();
         }
     },
+    async addGroundItem(itemId, params, pos) {
+        var info = this.getInventoryItem(itemId);
+        var struct = [];
+        for (var key in params) {
+            struct.push({
+                key: key,
+                value: params[key]
+            });
+        }
+        var newObj = mp.objects.new(mp.joaat(info.model), pos, {
+            rotation: new mp.Vector3(info.rX, info.rY, 0),
+        });
+        var item = await db.Models.CharacterInventory.create({
+            playerId: null,
+            itemId: itemId,
+            pocketIndex: null,
+            index: 0,
+            parentId: null,
+            params: struct,
+        }, {
+            include: [{
+                model: db.Models.CharacterInventoryParam,
+                as: "params",
+            }]
+        });
+        newObj.item = item;
+        newObj.children = [];
+        newObj.setVariable("groundItem", true);
+    },
     // урон климата (если игрок одет не по погоде)
     checkClimeDamage(player, temp, out) {
         if (player.vehicle || player.dimension || player.godmode || player.farmJob) return;

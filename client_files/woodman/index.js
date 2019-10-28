@@ -189,7 +189,7 @@ mp.woodman = {
         return slots;
     },
     hitLogHandler() {
-        if (this.logFocusSlotI == -1 || !this.logObj || this.logTimer != null) return;
+        if (this.logFocusSlotI == -1 || !this.logObj || !mp.objects.exists(this.logObj) || this.logTimer != null) return;
         if (!this.isAxInHands()) return;
         if (!this.logSquats[this.logFocusSlotI]) return mp.notify.error(`Перейдите к другой части бревна`, `Лесоруб`);
 
@@ -311,6 +311,12 @@ mp.events.add({
         if (mp.woodman.logFocusSlotI == slotI) mp.woodman.stopLogTimer();
         if (!mp.objects.exists(mp.woodman.logObj) || !mp.woodman.logObj || mp.woodman.logObj.remoteId != objId) return;
         mp.woodman.logSquats[slotI] = health;
+    },
+    "woodman.items.request": () => {
+        if (!mp.woodman.logObj) return
+        var slots = mp.woodman.getLogSlots(mp.woodman.logObj);
+        slots.forEach(slot => slot.z -= mp.woodman.logSize.height / 2);
+        mp.events.callRemote(`woodman.items.add`, JSON.stringify(slots));
     },
     "playerWeaponChanged": (weapon) => {
         if (mp.woodman.treePos) {

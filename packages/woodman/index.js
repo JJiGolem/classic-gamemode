@@ -233,11 +233,18 @@ module.exports = {
 
         var allHealth = utils.arraySum(colshape.squats);
         if (!allHealth) {
-            colshape.destroy();
-            obj.destroy();
-            // TODO: Спавн предметов на земле
+            player.call(`woodman.items.request`);
         }
+    },
+    addLogItems(colshape, slots) {
+        colshape.destroy();
+        colshape.obj.destroy();
 
-        // if (!colshape.health) player.call(`woodman.log.request`);
+        var params = {
+            name: colshape.tree.name
+        };
+        slots.forEach(slot => {
+            inventory.addGroundItem(131, params, slot);
+        });
     },
 };

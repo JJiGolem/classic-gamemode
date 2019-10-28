@@ -577,6 +577,8 @@ var inventory = new Vue({
                 return this.itemsInfo[item.itemId].name + " " + item.params.name;
             if (item.itemId == 33 && item.params.vehName) // ключи авто
                 return `Ключи от ${item.params.vehName}`;
+            if (item.itemId == 131 && item.params.name) // ресурс - дерево
+                return `Дерево ${item.params.name}`;
             return this.itemsInfo[item.itemId].name;
         },
         descItemWeight() {
