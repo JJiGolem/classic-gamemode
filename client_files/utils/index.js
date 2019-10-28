@@ -229,12 +229,12 @@ mp.utils = {
         return nearObj;
     },
     // Получить ближ. позицию
-    getNearPos(pos, positions) {
-        var nearPos = positions[0];
-        var minDist = mp.vdist(pos, positions[0]);
-        for (var i = 1; i < positions.length; i++) {
+    getNearPos(pos, positions, range = Number.MAX_VALUE) {
+        var nearPos = null;
+        var minDist = Number.MAX_VALUE;
+        for (var i = 0; i < positions.length; i++) {
             var distance = mp.vdist(pos, positions[i]);
-            if (distance < minDist) {
+            if (distance < minDist && distance < range) {
                 nearPos = positions[i];
                 minDist = distance;
             }

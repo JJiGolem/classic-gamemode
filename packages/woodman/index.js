@@ -3,6 +3,7 @@
 let inventory = call('inventory');
 let money = call('money');
 let notifs = call('notifications');
+let utils = call('utils');
 
 module.exports = {
     // Общая информация о типах деревьев
@@ -64,6 +65,8 @@ module.exports = {
     },
     // Урон по дереву
     treeDamage: 10,
+    // Урон по бревну
+    logDamage: 25,
     // Урон по топору
     axDamage: 1,
     // Бревна на земле
@@ -190,13 +193,51 @@ module.exports = {
         var logColshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 3);
         logColshape.onEnter = (player) => {
             if (player.vehicle) return;
+            player.treeLog = logColshape;
             player.call(`woodman.log.inside`, [logColshape.squats, logColshape.obj.id]);
         };
         logColshape.onExit = (player) => {
+            delete player.treeLog;
             player.call(`woodman.log.inside`);
         };
         logColshape.obj = obj;
         logColshape.tree = colshape.db;
         logColshape.squats = [100, 100, 100, 100, 100];
+    },
+    hitLog(player, colshape, index) {
+        var header = `Лесоруб`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var ax = inventory.getHandsItem(player);
+        if (!ax || ax.itemId != 70) return out(`Возьмите в руки топор`);
+
+        var health = inventory.getParam(ax, 'health');
+        if (!health || health.value <= 0) return out(`Топор сломан`);
+
+        index = Math.clamp(index, 0, colshape.squats.length - 1);
+        if (colshape.squats[index] <= 0) return out(`Перейдите к другой части бревна`);
+
+        health.value = Math.clamp(health.value - this.axDamage, 0, 100);
+        inventory.updateParam(player, ax, 'health', health.value);
+
+        var damage = this.logDamage;
+        // TODO: зависеть урон от топора, формы и навыка
+        colshape.squats[index] = Math.clamp(colshape.squats[index] - damage, 0, 100);
+
+        var obj = colshape.obj;
+        mp.players.forEachInRange(obj.position, 3, rec => {
+            if (!rec.character) return;
+            rec.call(`woodman.log.health`, [obj.id, index, colshape.squats[index]]);
+        });
+
+        var allHealth = utils.arraySum(colshape.squats);
+        if (!allHealth) {
+            colshape.destroy();
+            obj.destroy();
+            // TODO: Спавн предметов на земле
+        }
+
+        // if (!colshape.health) player.call(`woodman.log.request`);
     },
 };

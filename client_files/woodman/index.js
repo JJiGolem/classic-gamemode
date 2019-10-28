@@ -187,10 +187,25 @@ mp.woodman = {
         ];
         return slots;
     },
+    hitLogHandler() {
+        if (this.logFocusSlotI == -1 || !this.logObj) return;
+        if (!this.isAxInHands()) return;
+        if (!this.logSquats[this.logFocusSlotI]) return mp.notify.error(`Перейдите к другой части бревна`, `Лесоруб`);
+
+        // TODO: set correct heading
+        mp.events.callRemote(`animations.playById`, 5523);
+        // mp.events.callRemote(`woodman.logs.hit`, this.logFocusSlotI);
+    },
 };
 
-
 mp.events.add({
+    "characterInit.done": () => {
+        mp.keys.bind(69, true, () => { // E
+            if (mp.game.ui.isPauseMenuActive()) return;
+            if (mp.busy.includes()) return;
+            mp.woodman.hitLogHandler();
+        });
+    },
     "render": () => {
         var player = mp.players.local;
         if (!mp.woodman.isAxInHands(player)) return;
@@ -213,29 +228,35 @@ mp.events.add({
                 mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 255, 0, 100);
             }
 
-            if (!mp.woodman.isFocusTree()) return;
-            var pos2d = mp.game.graphics.world3dToScreen2d(mp.woodman.treePos);
-            if (pos2d) mp.woodman.drawTreeHealthBar(pos2d.x, pos2d.y);
-
-        } else {
-            if (mp.woodman.logObj) {
-                var slots = mp.woodman.getLogSlots(mp.woodman.logObj);
-                var nearSlot = mp.utils.getNearPos(player.position, slots);
-                mp.woodman.logFocusSlotI = slots.indexOf(nearSlot);
-                if (mp.woodman.logFocusSlotI != -1) {
-                    var pos2d = mp.game.graphics.world3dToScreen2d(nearSlot);
-                    if (pos2d) mp.woodman.drawLogHealthBar(pos2d.x, pos2d.y);
-                }
+            if (mp.woodman.isFocusTree()) {
+                var pos2d = mp.game.graphics.world3dToScreen2d(mp.woodman.treePos);
+                if (pos2d) mp.woodman.drawTreeHealthBar(pos2d.x, pos2d.y);
             }
+        }
+        if (mp.objects.exists(mp.woodman.logObj) && mp.woodman.logObj) {
+            var slots = mp.woodman.getLogSlots(mp.woodman.logObj);
+            var playerPos = player.getOffsetFromInWorldCoords(0, 0, -1);
+            var nearSlot = mp.utils.getNearPos(playerPos, slots, 1);
+            mp.woodman.logFocusSlotI = slots.indexOf(nearSlot);
+            var frontPos = player.getOffsetFromInWorldCoords(0, 0.5, -1);
+            if (mp.vdist(playerPos, nearSlot) < mp.vdist(frontPos, nearSlot)) mp.woodman.logFocusSlotI = -1;
+            if (mp.woodman.logFocusSlotI != -1) {
+                var pos2d = mp.game.graphics.world3dToScreen2d(nearSlot);
+                if (pos2d) mp.woodman.drawLogHealthBar(pos2d.x, pos2d.y);
+            }
+            var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
+            var endPos = player.getOffsetFromInWorldCoords(0, 0.5, -1);
+            mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 187, 255, 100);
         }
         if (mp.woodman.lastStartMelee && Date.now() > mp.woodman.lastStartMelee + mp.woodman.hitWaitTime) {
             mp.woodman.lastStartMelee = 0;
 
-            if (!mp.woodman.isAxInHands()) return;
-            if (!mp.woodman.treePos) return;
-            if (!mp.woodman.isFocusTree()) return;
-            mp.events.callRemote(`woodman.trees.hit`);
+            if (mp.woodman.isAxInHands() && mp.woodman.treePos && mp.woodman.isFocusTree()) {
+                mp.events.callRemote(`woodman.trees.hit`);
+            }
         }
+
+        // if (mp.woodman.logObj) mp.utils.drawText2d(`dist: ${mp.vdist(endPos, mp.woodman.getLogSlots(mp.woodman.logObj)[mp.woodman.logFocusSlotI])}`, [0.8, 0.5]);
         // mp.utils.drawText2d(`tree: ${mp.woodman.currentTreeHash}`, [0.8, 0.5]);
         // mp.utils.drawText2d(`hashes: ${mp.woodman.treesHash}`, [0.8, 0.55]);
         //
@@ -271,6 +292,10 @@ mp.events.add({
     },
     "woodman.log.inside": (squats, objId) => {
         mp.woodman.setLogInside(squats, objId);
+    },
+    "woodman.log.health": (objId, slotI, health) => {
+        if (!mp.objects.exists(mp.woodman.logObj) || !mp.woodman.logObj || mp.woodman.logObj.remoteId != objId) return;
+        mp.woodman.logSquats[slotI] = health;
     },
     "playerWeaponChanged": (weapon) => {
         if (mp.woodman.treePos) {
