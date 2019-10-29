@@ -34,6 +34,7 @@ module.exports = {
                     sex: 1,
                     pockets: '[5,5,5,5,10,5]',
                     clime: '[-5,30]',
+                    name: 'Жилетка лесоруба',
                 },
                 price: 100,
             },
@@ -45,6 +46,7 @@ module.exports = {
                     sex: 1,
                     pockets: '[5,5,5,5,10,5]',
                     clime: '[-5,30]',
+                    name: 'Штаны лесоруба',
                 },
                 price: 100,
             },
@@ -55,12 +57,51 @@ module.exports = {
                     texture: 0,
                     sex: 1,
                     clime: '[-5,30]',
+                    name: 'Ботинки лесоруба',
                 },
                 price: 100,
             }
         ],
         1: [ // жен.
-
+            {
+                itemId: 7,
+                params: {
+                    variation: 167,
+                    texture: 0,
+                    torso: 46,
+                    tTexture: 1,
+                    undershirt: 86,
+                    // uTexture: 0,
+                    sex: 0,
+                    pockets: '[5,5,5,5,10,5]',
+                    clime: '[-5,30]',
+                    name: 'Жилетка лесоруба',
+                },
+                price: 100,
+            },
+            {
+                itemId: 8,
+                params: {
+                    variation: 100,
+                    texture: 13,
+                    sex: 0,
+                    pockets: '[5,5,5,5,10,5]',
+                    clime: '[-5,30]',
+                    name: 'Штаны лесоруба',
+                },
+                price: 100,
+            },
+            {
+                itemId: 9,
+                params: {
+                    variation: 26,
+                    texture: 0,
+                    sex: 0,
+                    clime: '[-5,30]',
+                    name: 'Ботинки лесоруба',
+                },
+                price: 100,
+            }
         ]
     },
     // Урон по дереву

@@ -571,7 +571,7 @@ var inventory = new Vue({
         descItemName() {
             var item = this.itemDesc.item;
             if (!item) return null;
-            if (item.itemId == 15 && item.params.name) // рыба
+            if ([6, 7, 8, 9, 15].includes(item.itemId) && item.params.name) // одежда, рыба
                 return `${item.params.name}`;
             if (item.itemId == 16 && item.params.name) // сигареты
                 return this.itemsInfo[item.itemId].name + " " + item.params.name;
@@ -1356,8 +1356,7 @@ var inventory = new Vue({
                     if (columns.placeSqlId > 0) {
                         if (!self.getItem(item.sqlId)) self.setWaitItem(item, true);
                         self.addItem(item, columns.pocketI, index, columns.placeSqlId)
-                    }
-                    else {
+                    } else {
                         if (self.getItem(item.sqlId)) self.setWaitItem(item, true);
                         self.addEnvironmentItem(item, columns.pocketI, index, columns.placeSqlId);
                     }

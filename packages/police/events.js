@@ -251,6 +251,7 @@ module.exports = {
         feetsParams.clime = '[-5,20]';
         topParams.name = `Рубашка ${faction.name}`;
         legsParams.name = `Брюки ${faction.name}`;
+        feetsParams.name = `Ботинки ${faction.name}`;
 
         hatParams.owner = character.id;
         topParams.owner = character.id;
