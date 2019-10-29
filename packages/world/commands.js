@@ -70,11 +70,30 @@ module.exports = {
     "/worldsetpos": {
         access: 3,
         description: "Изменить позицию объекта мира. Позиция берется от игрока.<br/>Хеш - по-умолчанию ставить 0.<br/>Типы: 1 - дерево",
-        args: "[ид]:n [радиус]:n",
+        args: "[ид]:n",
         handler: (player, args, out) => {
             if (!world.colshapes[args[0]]) return out.error(`Объект мира #${args[0]} не найден`, player);
 
-            player.call(`world.objects.position.set`, [args[0], args[1]]);
+            player.call(`world.objects.position.set`, [args[0]]);
+        }
+    },
+    "/worldsetradius": {
+        access: 3,
+        description: "Изменить радиус объекта мира. ID смотреть в /worldshow",
+        args: "[ид]:n [радиус]:n",
+        handler: (player, args, out) => {
+            var obj = world.colshapes[args[0]].db;
+            if (!obj) return out.error(`Объект мира #${args[0]} не найден`, player);
+
+            out.info(`${player.name} изменил радиус объекта мира #${obj.id} (${obj.radius} => ${args[1]})`);
+
+            obj.radius = args[1];
+            obj.save();
+            mp.players.forEach(rec => {
+                if (!rec.character || !rec.character.admin) return;
+                rec.call(`world.objects.params.set`, [obj.id, 'radius', obj.radius]);
+            });
+            world.setObjectRadius(obj.id, obj.radius);
         }
     },
     "/worldshow": {

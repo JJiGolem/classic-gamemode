@@ -56,7 +56,7 @@ module.exports = {
     createObjColshape(obj) {
         var pos = obj.pos;
 
-        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, obj.radius);
+        var colshape = mp.colshapes.newCircle(pos.x, pos.y, obj.radius);
         colshape.onEnter = (player) => {
             if (player.vehicle) return;
             mp.events.call('playerEnterWorldObject', player, colshape);
@@ -84,7 +84,6 @@ module.exports = {
         obj.region = data.region;
         obj.street = data.street;
         obj.pos = data.pos;
-        obj.radius = data.radius;
         obj.save();
 
         if (!this.objects[obj.region]) this.objects[obj.region] = {};
@@ -92,6 +91,20 @@ module.exports = {
         if (!this.objects[obj.region][obj.street][obj.type]) this.objects[obj.region][obj.street][obj.type] = [];
 
         this.objects[obj.region][obj.street][obj.type].push(obj);
+        this.createObjColshape(obj);
+    },
+    setObjectRadius(objId, radius) {
+        if (!this.colshapes[objId]) return;
+
+        var colshape = this.colshapes[objId];
+        var obj = colshape.db;
+
+        colshape.destroy();
+        delete this.colshapes[obj.id];
+
+        obj.radius = radius;
+        obj.save();
+
         this.createObjColshape(obj);
     },
 }
