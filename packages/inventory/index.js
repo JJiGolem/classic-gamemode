@@ -1248,6 +1248,18 @@ module.exports = {
         newObj.item = item;
         newObj.children = [];
         newObj.setVariable("groundItem", true);
+
+        var objId = newObj.id;
+        var sqlId = item.id;
+        newObj.destroyTimer = timer.add(() => {
+            try {
+                var obj = mp.objects.at(objId);
+                if (!obj || !obj.item || obj.item.id != sqlId) return;
+                obj.destroy();
+            } catch (e) {
+                console.log(e);
+            }
+        }, this.groundItemTime);
     },
     // урон климата (если игрок одет не по погоде)
     checkClimeDamage(player, temp, out) {
