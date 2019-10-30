@@ -31,7 +31,7 @@ mp.afk = {
     },
     action() {
         this.lastActiveTime = Date.now();
-        if (mp.players.local.getVariable("afk")) mp.events.callRemote(`afk.set`, null);
+        if (mp.players.local.getVariable("afk")) mp.events.callRemote(`afk.set`, false);
     },
     check() {
         if (mp.players.local.getVariable("afk")) return;
@@ -39,9 +39,12 @@ mp.afk = {
     },
     setAfk(player, enable) {
         player.setAlpha(enable ? this.alpha : 255);
+        mp.utils.setNoCollision(player, !enable);
         if (player.remoteId == mp.players.local.remoteId) {
             if (enable) mp.notify.warning(`Режим AFK активирован`, `ANTI-AFK`);
             else mp.notify.success(`Режим AFK деактивирован`, `ANTI-AFK`);
+
+            player.setProofs(enable, enable, enable, enable, enable, enable, enable, enable);
         }
     }
 };
