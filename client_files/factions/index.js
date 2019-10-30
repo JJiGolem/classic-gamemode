@@ -123,7 +123,7 @@ mp.factions = {
     },
     setRanks(ranks) {
         this.ranks = ranks;
-        // TODO: init selectMenu
+        mp.callCEFV(`selectMenu.menus['factionControlRanks'].init('${JSON.stringify(ranks)}')`);
     },
     registerAttachments() {
         // коробка с боеприпасами в руках

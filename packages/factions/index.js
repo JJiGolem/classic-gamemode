@@ -303,6 +303,17 @@ module.exports = {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         return faction.ranks;
     },
+    getClientRanks(faction) {
+        if (!faction) return null;
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction.ranks.map(x => {
+            return {
+                name: x.name,
+                rank: x.rank,
+                pay: x.pay
+            }
+        });
+    },
     setLeader(faction, player) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         var character = player.character;
@@ -312,7 +323,7 @@ module.exports = {
         character.save();
 
         player.setVariable("factionId", character.factionId);
-        player.call(`factions.faction.set`, [character.factionId, faction.ranks]);
+        player.call(`factions.faction.set`, [character.factionId, this.getClientRanks(faction)]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isGovernmentFaction(faction)) mp.events.call(`mapCase.gover.init`, player);
         else if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
@@ -354,7 +365,7 @@ module.exports = {
         character.save();
 
         player.setVariable("factionId", character.factionId);
-        player.call(`factions.faction.set`, [character.factionId, faction.ranks]);
+        player.call(`factions.faction.set`, [character.factionId, this.getClientRanks(faction)]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isGovernmentFaction(faction)) mp.events.call(`mapCase.gover.init`, player);
         else if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);

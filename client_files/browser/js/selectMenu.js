@@ -1605,6 +1605,9 @@ var selectMenu = new Vue({
                         values: [`$999`],
                     },
                     {
+                        text: "Ранги"
+                    },
+                    {
                         text: "Закрыть"
                     }
                 ],
@@ -1629,6 +1632,8 @@ var selectMenu = new Vue({
                             mp.trigger(`callRemote`, `factions.control.members.offline.show`);
                         } else if (e.itemName == 'Вернуть авто') {
                             mp.trigger(`callRemote`, `factions.control.vehicles.respawn`);
+                        } else if (e.itemName == 'Ранги') {
+                            selectMenu.showByName("factionControlRanks");
                         }
                     }
                 }
@@ -1748,6 +1753,66 @@ var selectMenu = new Vue({
                             mp.trigger(`callRemote`, `factions.control.members.uval`, JSON.stringify(data));
                         } else if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlMembers");
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlMembers");
+                }
+            },
+            "factionControlRanks": {
+                name: "factionControlRanks",
+                header: "Ранги",
+                items: [{
+                        text: "Ранг 1",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Ранг 2",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Ранг 3",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Ранг 4",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Вернуться"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                ranks: [],
+                init(ranks) {
+                    if (typeof ranks == 'string') ranks = JSON.parse(ranks);
+
+                    var items = [];
+                    ranks.forEach(rank => {
+                        items.push({
+                            text: rank.name,
+                            values: [`$${rank.pay}`]
+                        });
+                    });
+                    items.push({
+                        text: `Вернуться`
+                    });
+
+                    selectMenu.setItems('factionControlRanks', items);
+                    this.ranks = ranks;
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControl");
+                        else {
+                            debug("todo")
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControl");
                 }
             },
             "governmentStorage": {
@@ -7306,8 +7371,7 @@ var selectMenu = new Vue({
                 name: "tattooMain",
                 header: "Тату-салон",
                 headerImg: "",
-                items: [
-                    {
+                items: [{
                         text: 'Голова'
                     },
                     {
