@@ -14,6 +14,7 @@ mp.moduleMarkers = {
 mp.events.add({
     "time.main.tick": () => {
         mp.markers.forEach(marker => {
+            if (marker.ignoreCheckVisible) return;
             var pos = mp.players.local.position;
             marker.visible = !(mp.vdist(pos, marker.position) > mp.moduleMarkers.drawRadius);
         });
