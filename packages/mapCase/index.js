@@ -99,6 +99,7 @@ module.exports = {
             var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank);
             result.push({
                 id: rec.character.id,
+                num: rec.id,
                 name: rec.name,
                 rank: rank.rank
             });

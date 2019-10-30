@@ -25,7 +25,6 @@ var mapCaseNgMembersData = {
         if (!Array.isArray(members)) members = [members];
         for (var i = 0; i < members.length; i++) {
             this.remove(members[i].id);
-            members[i].num = members[i].id;
             this.list.push(members[i]);
         }
     },
