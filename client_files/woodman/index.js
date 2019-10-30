@@ -208,6 +208,18 @@ mp.woodman = {
         this.logTimer = null;
         mp.events.callRemote(`animations.stop`);
     },
+    createJobPed() {
+        var pedInfo = {
+            model: "s_m_m_cntrybar_01",
+            position: {
+                x: -567.8530883789062,
+                y: 5254.45556640625,
+                z: 70.46736907958984
+            },
+            heading: 146.89959716796875,
+        };
+        mp.events.call('NPC.create', pedInfo);
+    },
 };
 
 mp.events.add({
@@ -336,3 +348,5 @@ mp.events.add({
         mp.woodman.lastStartMelee = Date.now();
     },
 });
+
+mp.woodman.createJobPed();
