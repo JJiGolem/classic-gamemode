@@ -657,6 +657,10 @@ var inventory = new Vue({
                 name: "Вместимость",
                 value: `${item.params.max} л.`
             });
+            if (item.params.treeDamage) params.push({
+                name: "Урон по дереву",
+                value: `${item.params.treeDamage}%`
+            });
 
             return params;
         },

@@ -35,6 +35,7 @@ module.exports = {
                     pockets: '[5,5,5,5,10,5]',
                     clime: '[-5,30]',
                     name: 'Жилетка лесоруба',
+                    treeDamage: 5,
                 },
                 price: 100,
             },
@@ -47,6 +48,7 @@ module.exports = {
                     pockets: '[5,5,5,5,10,5]',
                     clime: '[-5,30]',
                     name: 'Штаны лесоруба',
+                    treeDamage: 5,
                 },
                 price: 100,
             },
@@ -58,6 +60,7 @@ module.exports = {
                     sex: 1,
                     clime: '[-5,30]',
                     name: 'Ботинки лесоруба',
+                    treeDamage: 5,
                 },
                 price: 100,
             }
@@ -76,6 +79,7 @@ module.exports = {
                     pockets: '[5,5,5,5,10,5]',
                     clime: '[-5,30]',
                     name: 'Жилетка лесоруба',
+                    treeDamage: 5,
                 },
                 price: 100,
             },
@@ -88,6 +92,7 @@ module.exports = {
                     pockets: '[5,5,5,5,10,5]',
                     clime: '[-5,30]',
                     name: 'Штаны лесоруба',
+                    treeDamage: 5,
                 },
                 price: 100,
             },
@@ -99,6 +104,7 @@ module.exports = {
                     sex: 0,
                     clime: '[-5,30]',
                     name: 'Ботинки лесоруба',
+                    treeDamage: 5,
                 },
                 price: 100,
             }
@@ -214,8 +220,7 @@ module.exports = {
         inventory.updateParam(player, ax, 'health', health.value);
 
 
-        var damage = this.treeDamage;
-        // TODO: зависеть урон от топора, формы и навыка
+        var damage = parseInt(this.treeDamage * this.getInventoryDamageBoost(player.inventory.items));
 
         colshape.health = Math.clamp(colshape.health - damage, 0, 100);
 
@@ -262,8 +267,7 @@ module.exports = {
         health.value = Math.clamp(health.value - this.axDamage, 0, 100);
         inventory.updateParam(player, ax, 'health', health.value);
 
-        var damage = this.logDamage;
-        // TODO: зависеть урон от топора, формы и навыка
+        var damage = parseInt(this.logDamage * this.getInventoryDamageBoost(player.inventory.items));
         colshape.squats[index] = Math.clamp(colshape.squats[index] - damage, 0, 100);
 
         var obj = colshape.obj;
@@ -287,5 +291,14 @@ module.exports = {
         slots.forEach(slot => {
             inventory.addGroundItem(131, params, slot);
         });
+    },
+    getInventoryDamageBoost(list) {
+        var items = inventory.getItemsByParams(list, null, 'treeDamage', null).filter(x => !x.parentId);
+        var boost = 0;
+        items.forEach(item => {
+            var treeDamage = inventory.getParam(item, 'treeDamage').value;
+            boost += treeDamage;
+        });
+        return 1 + (boost / 100);
     },
 };

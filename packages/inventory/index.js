@@ -1086,7 +1086,7 @@ module.exports = {
                     isFind = false;
                     break;
                 }
-                if (param && param != values[i]) {
+                if (param && param != values[i] && values[i] != null) {
                     isFind = false;
                     break;
                 }
