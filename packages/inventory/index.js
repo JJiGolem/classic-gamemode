@@ -845,6 +845,9 @@ module.exports = {
     getHandsItem(player) {
         return this.getBodyItemByIndex(player, 13);
     },
+    isInHands(item) {
+        return !item.parentId && item.index == 13;
+    },
     getItemWeight(player, items, weight = 0) {
         if (!Array.isArray(items)) items = [items];
         for (var i = 0; i < items.length; i++) {
