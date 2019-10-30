@@ -103,6 +103,7 @@ mp.inventory = {
     takeItemHandler() {
         // поднятие предмета с земли
         if (mp.busy.includes()) return;
+        if (mp.players.local.vehicle) return;
         var pos = mp.players.local.getOffsetFromInWorldCoords(0, 0, -1);
         var itemObj = this.getNearGroundItemObject(pos);
         if (!itemObj) return;
@@ -273,6 +274,12 @@ mp.events.add("inventory.saveHotkey", mp.inventory.saveHotkey);
 
 mp.events.add("inventory.removeHotkey", mp.inventory.removeHotkey);
 
+mp.events.add("inventory.ground.put", (sqlId) => {
+    var pos = mp.players.local.getOffsetFromInWorldCoords(0, 1, 2);
+    pos.z = mp.game.gameplay.getGroundZFor3dCoord(pos.x, pos.y, pos.z, false, false);
+    mp.events.callRemote(`item.ground.put`, sqlId, JSON.stringify(pos));
+});
+
 mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`enterBoot: #${vehicle.remoteId}`);
     if (!vehicle.getVariable("trunk")) return;
@@ -336,7 +343,7 @@ mp.events.add("render", () => {
 
     var player = mp.players.local;
     var itemObj = mp.inventory.getNearGroundItemObject(player.position);
-    if (itemObj) {
+    if (itemObj && !player.vehicle) {
         var pos = itemObj.position;
         pos.z += 0.5;
         mp.inventory.groundItemMarker.position = pos;

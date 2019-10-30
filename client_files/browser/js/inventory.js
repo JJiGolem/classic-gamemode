@@ -1064,7 +1064,7 @@ var inventory = new Vue({
                             var weapon = children.find(x => inventory.weaponsList.includes(x.itemId));
                             if (weapon) mp.trigger(`weapons.ammo.sync`);
                         }
-                        mp.trigger(`callRemote`, `item.ground.put`, item.sqlId);
+                        mp.trigger(`inventory.ground.put`, item.sqlId);
                     }
                 };
             }
