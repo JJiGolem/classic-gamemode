@@ -27,7 +27,6 @@ module.exports = {
                 parseInt(tattooList.length / 100) : parseInt(tattooList.length / 100) + 1;
                 while (tattooList.length > 0) {
                     let pack = tattooList.slice(0, 100);
-                    console.log(pack.length);
                     tattooList.splice(0, 100);
                     player.call('tattoo.pack.get', [pack, packsCount]);
                 }

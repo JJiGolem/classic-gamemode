@@ -31,17 +31,13 @@ let characterTattoos = [];
 mp.events.add({
     'tattoo.pack.get': (pack, packsCount) => {
         tattooList = tattooList.concat(pack)
-        mp.chat.debug(`${pack.length} tattoos received`)
         tattoPacksLoaded++;
         if (tattoPacksLoaded == packsCount) {
             clothesLoaded = 0;
-            mp.chat.debug(`all tattoos received`)
-            mp.chat.debug(`final length ${tattooList.length}`)
             mp.events.callRemote('tattoo.enter');
         }
     },
     'tattoo.enter': (shopData, inputGender) => {
-        mp.chat.debug(inputGender);
         gender = inputGender;
         deletePrice = shopData.deleteTattooPrice;
         bindKeys(true);
@@ -119,7 +115,6 @@ mp.events.add({
     },
     'tattoo.characterTattoos.add': (list) => {
         characterTattoos = characterTattoos.concat(list);
-        mp.chat.debug(`${list.length} tattoos added`)
     },
     'tattoo.characterTattoos.remove': (id) => {
         removeTattoo(id);
@@ -216,9 +211,7 @@ function stopRotationRight() {
 
 function sortTattooList() {
     let hash = gender ? 'hashNameFemale' : 'hashNameMale';
-    mp.chat.debug(hash);
     sortedList = tattooList.filter(x => x[hash].length != 0);
-    mp.chat.debug(`sortedList length ${sortedList.length}`);
 }
 
 function initMenus() {
