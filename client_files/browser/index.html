@@ -7,8 +7,6 @@
     <meta name="theme-color" content="#000000" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700&display=swap&subset=cyrillic">
-
     <link rel="stylesheet" type="text/css" href="build/css/styles.css">
     <link rel="stylesheet" type="text/css" href="css/main.css" />
     <link rel="stylesheet" type="text/css" href="css/fonts.css" />
@@ -94,12 +92,12 @@
                 <div class="symb">N</div>
             </div>
             <div class="starvation block">
-                <div class="satiety record">
+                <div :class="['satiety', 'record', { red: satiety <= 10 } ]">
                     <div><img src="img/hud/burger.svg"/></div>
                     <div class="progress"><div :style="{ width: satiety+'%' }"></div></div>
                     <div class="percent">{{ satiety }}%</div>
                 </div>
-                <div class="thirst record">
+                <div :class="['thirst', 'record', { red: thirst <= 10 } ]">
                     <div><img src="img/hud/glass.svg"/></div>
                     <div class="progress"><div :style="{ width: thirst+'%' }"></div></div>
                     <div class="percent">{{ thirst }}%</div>
@@ -121,11 +119,12 @@
             </div>
         </div>
         <div class="weather block" v-bind:style="{left: leftWeather + 'px'}">
-            <div class="region">{{ region }}</div>
-            <div class="street">{{ street }}</div>
-            <div class="temperature">{{ temperature }}
-                C°</div>
-            <img :src="'img/weather/' + weather + '.svg'" />
+            <div>
+                <div class="region">{{ region }}</div>
+                <div class="street">{{ street }}</div>
+                <div class="temperature">{{ temperature }}°C</div>
+                <img :src="'img/weather/' + weather + '.svg'" />
+            </div>
         </div>
     </div>
 
@@ -1255,7 +1254,7 @@
             <div class="head">
                 <div class="top-bar">
                     <div class="info">
-                        <div>{{ name }} |
+                        <div ref="name"><d ref="def">{{ name }} |</d>
                             <span :class="'social-status'+socialStatus">{{ socialData[socialStatus].head }}
                                 <img :src="socialData[socialStatus].img" />
                             </span>
@@ -1280,7 +1279,7 @@
                     </div>
                 </div>
             </div>
-            <div class="body">
+            <div :class="['body', {'long-name': longName}]">
                 <keep-alive>
                     <component :is="menuBarFocus.window" v-bind="menuBarFocus.windowData"></component>
                 </keep-alive>
@@ -1455,7 +1454,7 @@
             <input placeholder="Введите число..." v-model="price" @keypress="inputCheck($event)" @keypress.enter="convert()" @focus="setFocus(true)" @blur="setFocus(false)" />
             <div class="equally">=</div>
             <div class="coins">{{ virtualCoins | playerMenuMoneySplit(true) }}</div>
-            <div :class="['btn', {disable: !virtualCoins }]" @click="convert()">Конвертировать</div>
+            <div :class="['btn', {disable: !isEnable }]" @click="convert()">Конвертировать</div>
         </div>
     </script>
 

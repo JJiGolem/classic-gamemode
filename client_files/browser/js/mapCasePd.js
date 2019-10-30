@@ -245,8 +245,8 @@ Vue.component('map-case-pd-over-wanted', {
     },
     data: () => ({
         causeValue: "",
-        danger: 1,
-        overDanger: 1,
+        danger: 0,
+        overDanger: 0,
         star: mapCaseSvgPaths.dangerStar,
     }),
     methods: {
