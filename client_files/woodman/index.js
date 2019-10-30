@@ -122,10 +122,10 @@ mp.woodman = {
 
         return mp.vdist(player.position, this.treePos) > mp.vdist(frontPos, this.treePos);
     },
-    setInside(prices) {
-        if (!prices) return mp.callCEFV(`selectMenu.show = false`);
+    setInside(data) {
+        if (!data) return mp.callCEFV(`selectMenu.show = false`);
 
-        mp.callCEFV(`selectMenu.menus['woodman'].init('${JSON.stringify(prices)}')`);
+        mp.callCEFV(`selectMenu.menus['woodman'].init('${JSON.stringify(data)}')`);
         mp.callCEFV(`selectMenu.showByName('woodman')`);
     },
     setTreeInside(pos, health) {
@@ -303,8 +303,8 @@ mp.events.add({
     "woodman.setTreesInfo": (info) => {
         mp.woodman.setTreesInfo(info);
     },
-    "woodman.storage.inside": (prices) => {
-        mp.woodman.setInside(prices);
+    "woodman.storage.inside": (data) => {
+        mp.woodman.setInside(data);
     },
     "woodman.tree.inside": (pos, health) => {
         mp.woodman.setTreeInside(pos, health);

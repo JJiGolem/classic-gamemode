@@ -15,6 +15,9 @@ module.exports = {
     "woodman.clothes.buy": (player, index) => {
         woodman.buyClothes(player, index);
     },
+    "woodman.items.sell": (player) => {
+        woodman.sellItems(player);
+    },
     "woodman.trees.hit": (player) => {
         var header = `Лесоруб`;
         var out = (text) => {

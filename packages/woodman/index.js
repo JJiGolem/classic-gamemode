@@ -118,6 +118,8 @@ module.exports = {
     axDamage: 1,
     // Бревна на земле
     logObjects: [],
+    // Стоимость продажи дерева
+    treePrice: 10,
 
     init() {
         this.loadTreesInfoFromDB();
@@ -135,7 +137,11 @@ module.exports = {
         });
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
-            player.call(`woodman.storage.inside`, [this.getItemPrices(player.character.gender)]);
+            var data = {
+                itemPrices: this.getItemPrices(player.character.gender),
+                treePrice: this.treePrice
+            };
+            player.call(`woodman.storage.inside`, [data]);
             player.woodmanStorage = marker;
         };
         colshape.onExit = (player) => {
@@ -203,6 +209,26 @@ module.exports = {
         });
 
         notifs.success(player, `Вы приобрели ${inventory.getName(item.itemId)}`);
+    },
+    sellItems(player) {
+        var header = 'Дровосек';
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.woodmanStorage) return out(`Вы не у лесопилки`);
+
+        var items = inventory.getArrayByItemId(player, 131);
+        if (!items.length) return out(`Вы не имеете ресурсы`);
+
+        var pay = items.length * this.treePrice;
+        money.addCash(player, pay, (res) => {
+            if (!res) out(`Ошибка начисления наличных`);
+
+            items.forEach(item => inventory.deleteItem(player, item));
+
+        }, `Продажа ${items.length} ед. дерева на лесопилке`);
+
+        notifs.success(player, `Продано ${items.length} ед. дерева`, header);
     },
     hitTree(player, colshape) {
         var header = `Лесоруб`;

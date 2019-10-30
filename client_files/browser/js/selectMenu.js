@@ -7137,23 +7137,28 @@ var selectMenu = new Vue({
                         text: "Снаряжение",
                     },
                     {
+                        text: "Ресурсы"
+                    },
+                    {
                         text: "Закрыть"
                     },
                 ],
                 i: 0,
                 j: 0,
                 prices: [],
-                init(prices) {
-                    if (typeof prices == 'string') prices = JSON.parse(prices);
+                init(data) {
+                    if (typeof data == 'string') data = JSON.parse(data);
                     var items = selectMenu.menus['woodmanItems'].items;
-                    items[0].values[0] = `$${prices[0]}`;
+                    items[0].values[0] = `$${data.itemPrices[0]}`;
 
                     var clothesItems = selectMenu.menus['woodmanItemsClothes'].items;
                     for (var i = 0; i < clothesItems.length - 1; i++) {
-                        clothesItems[i].values[0] = `$${prices[i + 1]}`;
+                        clothesItems[i].values[0] = `$${data.itemPrices[i + 1]}`;
                     }
 
-                    this.prices = prices;
+                    this.prices = data.itemPrices;
+
+                    selectMenu.menus['woodmanSell'].items[0].values[0] = `$${data.treePrice}`;
                 },
                 handler(eventName) {
                     var item = this.items[this.i];
@@ -7169,6 +7174,8 @@ var selectMenu = new Vue({
 
                         } else if (e.itemName == 'Снаряжение') {
                             selectMenu.showByName("woodmanItems");
+                        } else if (e.itemName == 'Ресурсы') {
+                            selectMenu.showByName("woodmanSell");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
@@ -7252,6 +7259,41 @@ var selectMenu = new Vue({
                         }
                     } else if (eventName == 'onBackspacePressed')
                         selectMenu.showByName("woodmanItems");
+                }
+            },
+            "woodmanSell": {
+                name: "woodmanSell",
+                header: "Ресурсы",
+                items: [{
+                        text: "Дерево",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Продать"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Продать') {
+                            mp.trigger(`callRemote`, `woodman.items.sell`);
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("woodman");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("woodman");
                 }
             },
             "tattooMain": {
