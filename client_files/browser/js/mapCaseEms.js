@@ -13,7 +13,6 @@ var mapCaseEmsCallsData = {
         if (!Array.isArray(calls)) calls = [calls];
         for (var i = 0; i < calls.length; i++) {
             this.remove(calls[i].id);
-            calls[i].num = calls[i].id;
             this.list.push(calls[i]);
         }
     },
