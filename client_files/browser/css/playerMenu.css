@@ -34,7 +34,7 @@
 
 #player-menu .head .top-bar {
     display: grid;
-    grid-template-columns: 2fr 1fr 2fr;
+    grid-template-columns: 2fr min-content 2fr;
 }
 
 #player-menu .head .top-bar .info {
@@ -46,6 +46,7 @@
     font-size: 1.5vh;
     position: relative;
     top: -0.2vh;
+    white-space: nowrap;
 }
 
 #player-menu .head .top-bar .info img {
@@ -179,6 +180,10 @@
 #player-menu .body {
     margin-top: 2vh;
     overflow: hidden;
+}
+
+#player-menu .body.long-name {
+    height: 100%;
 }
 
 #player-menu .body .character {
