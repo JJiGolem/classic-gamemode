@@ -1601,11 +1601,10 @@ var selectMenu = new Vue({
                         text: "Полный состав"
                     },
                     {
-                        text: "Вернуть авто",
-                        values: [`$999`],
+                        text: "Ранги"
                     },
                     {
-                        text: "Ранги"
+                        text: "Транспорт"
                     },
                     {
                         text: "Закрыть"
@@ -1630,10 +1629,11 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Полный состав') {
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.members.offline.show`);
-                        } else if (e.itemName == 'Вернуть авто') {
-                            mp.trigger(`callRemote`, `factions.control.vehicles.respawn`);
                         } else if (e.itemName == 'Ранги') {
                             selectMenu.showByName("factionControlRanks");
+                        } else if (e.itemName == 'Транспорт') {
+                            // selectMenu.loader = true;
+                            // mp.trigger(`callRemote`, `factions.control.vehicles.show`);
                         }
                     }
                 }
@@ -1869,6 +1869,41 @@ var selectMenu = new Vue({
                             mp.trigger(`callRemote`, `factions.control.ranks.set`, JSON.stringify(data));
                         }
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlRanks");
+                }
+            },
+            "factionControlVehicles": {
+                name: "factionControlVehicles",
+                header: "Транспорт",
+                items: [
+                    {
+                        text: "Infernus",
+                        values: [`999 ед.`]
+                    },
+                    {
+                        text: "Вернуть авто",
+                        values: [`$999`],
+                    },
+                    {
+                        text: "Вернуться"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControl");
+                        else if (e.itemName == 'Вернуть авто') {
+                            mp.trigger(`callRemote`, `factions.control.vehicles.respawn`);
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControl");
                 }
             },
             "governmentStorage": {

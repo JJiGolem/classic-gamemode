@@ -434,6 +434,15 @@ module.exports = {
         });
         return members;
     },
+    getVehicles(player) {
+        var vehicles = [];
+        mp.vehicles.forEach(veh => {
+            if (!veh.db || veh.db.key != 'faction') return;
+            if (veh.db.owner != player.character.factionId) return;
+            vehicles.push(veh);
+        });
+        return vehicles;
+    },
     setRank(player, rank) {
         var character = player.character;
         if (typeof rank == 'number') rank = this.getRank(character.factionId, rank);

@@ -356,6 +356,22 @@ module.exports = {
         out(`${character.name} уволен`);
         notifs.info(rec, `${player.name} вас уволил`, `Организация`);
     },
+    "factions.control.vehicles.show": (player) => {
+        var out = (text) => {
+            player.call(`selectMenu.notification`, [text]);
+        };
+        if (!player.character.factionId) return out(`Вы не состоите в организации`);
+        if (!factions.isLeader(player)) return out(`Вы не лидер`);
+
+        var vehicles = factions.getVehicles(player);
+
+        debug(vehicles.map(x => x.id));
+        return;
+        player.call(`factions.control.players.show`, [{
+            members: members,
+            rankNames: factions.getRankNames(player.character.factionId),
+        }]);
+    },
     "factions.control.vehicles.respawn": (player) => {
         var out = (text) => {
             player.call(`selectMenu.notification`, [text]);
@@ -409,6 +425,12 @@ module.exports = {
         if (player.character.factionId != vehicle.owner) {
             notifs.error(player, `Вы не состоите в организации`, factions.getFaction(vehicle.owner).name);
             player.removeFromVehicle();
+        } else if (vehicle.db.minRank) {
+            var minRank = factions.getRank(vehicle.owner, vehicle.db.minRank.rank);
+            if (minRank.id > player.character.factionRank) {
+                notifs.error(player, `Доступно с ранга ${minRank.name}`, factions.getFaction(vehicle.owner).name);
+                player.removeFromVehicle();
+            }
         }
     },
 };
