@@ -380,6 +380,30 @@ module.exports = {
             notifs.info(rec, `${player.name} вернул свободное авто (без водителя - ${mins} мин.)`, factionName);
         });
     },
+    "factions.control.ranks.set": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+
+        var out = (text) => {
+            player.call(`selectMenu.notification`, [text]);
+        };
+        if (!player.character.factionId) return out(`Вы не состоите в организации`);
+        if (!factions.isLeader(player)) return out(`Вы не лидер`);
+
+        var rank = factions.getRank(player.character.factionId, data.rank);
+        if (!rank) return out(`Ранг ${data.rank} не найден`);
+
+        var header = factions.getFactionName(player);
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(rec, `${player.name} изменил ранг #${data.rank} (${rank.name} => ${data.name})`, header);
+            rec.call(`factions.ranks.name.set`, [data]);
+        });
+
+        rank.name = data.name;
+        rank.save();
+    },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (seat != -1 || vehicle.key != 'faction') return;
         if (player.character.factionId != vehicle.owner) {

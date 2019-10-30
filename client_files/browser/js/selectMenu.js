@@ -1810,9 +1810,65 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("factionControl");
                         else {
-                            debug("todo")
+                            selectMenu.menus["factionControlRank"].init(this.ranks[e.itemIndex]);
+                            selectMenu.showByName("factionControlRank");
                         }
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControl");
+                }
+            },
+            "factionControlRank": {
+                name: "factionControlRank",
+                header: "Ранг 1",
+                items: [{
+                        text: "Название",
+                        values: [`Килла`],
+                        type: 'editable',
+                    },
+                    {
+                        text: "Зарплата",
+                        values: [`$9999`],
+                    },
+                    {
+                        text: "Сохранить"
+                    },
+                    {
+                        text: "Вернуться"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                rank: null,
+                init(rank) {
+                    if (typeof rank == 'string') rank = JSON.parse(rank);
+
+                    this.header = `Ранг ${rank.rank}`;
+                    this.items[0].values[0] = rank.name;
+                    this.items[1].values[0] = `$${rank.pay}`;
+
+                    this.rank = rank;
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlRanks");
+                        else if (e.itemName == 'Сохранить') {
+                            var data = {
+                                rank: this.rank.rank,
+                                name: this.items[0].values[0]
+                            };
+                            if (!data.name) return selectMenu.notification = "Введите название ранга";
+
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `factions.control.ranks.set`, JSON.stringify(data));
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlRanks");
                 }
             },
             "governmentStorage": {

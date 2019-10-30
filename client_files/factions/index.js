@@ -125,6 +125,12 @@ mp.factions = {
         this.ranks = ranks;
         mp.callCEFV(`selectMenu.menus['factionControlRanks'].init('${JSON.stringify(ranks)}')`);
     },
+    setRankName(rank, name) {
+        if (!this.ranks) return;
+
+        this.ranks[rank - 1].name = name;
+        mp.callCEFV(`selectMenu.menus['factionControlRanks'].init('${JSON.stringify(this.ranks)}')`);
+    },
     registerAttachments() {
         // коробка с боеприпасами в руках
         mp.attachmentMngr.register("ammoBox", "prop_box_ammo04a", 11363, new mp.Vector3(0.05, 0, -0.25),
@@ -174,6 +180,9 @@ mp.events.add({
     "factions.faction.set": (val, ranks) => {
         mp.factions.setFaction(val);
         mp.factions.setRanks(ranks);
+    },
+    "factions.ranks.name.set": (data) => {
+        mp.factions.setRankName(data.rank, data.name);
     },
     "factions.control.players.show": (data) => {
         mp.factions.showMembersSelectMenu(data);
