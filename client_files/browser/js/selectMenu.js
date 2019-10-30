@@ -1601,6 +1601,10 @@ var selectMenu = new Vue({
                         text: "Полный состав"
                     },
                     {
+                        text: "Вернуть авто",
+                        values: [`$999`],
+                    },
+                    {
                         text: "Закрыть"
                     }
                 ],
@@ -1623,6 +1627,8 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Полный состав') {
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.members.offline.show`);
+                        } else if (e.itemName == 'Вернуть авто') {
+                            mp.trigger(`callRemote`, `factions.control.vehicles.respawn`);
                         }
                     }
                 }

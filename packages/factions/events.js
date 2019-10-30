@@ -10,6 +10,9 @@ module.exports = {
     "characterInit.done": (player) => {
         player.call(`factions.faction.set`, [player.character.factionId]);
         player.setVariable("factionId", player.character.factionId);
+        player.call(`factions.info.set`, [{
+            vehRespawnPrice: factions.vehRespawnPrice
+        }]);
     },
     "factions.warehouse.takeBox": (player, type) => {
         factions.takeBox(player, type);
@@ -352,6 +355,30 @@ module.exports = {
 
         out(`${character.name} уволен`);
         notifs.info(rec, `${player.name} вас уволил`, `Организация`);
+    },
+    "factions.control.vehicles.respawn": (player) => {
+        var out = (text) => {
+            player.call(`selectMenu.notification`, [text]);
+        };
+        if (!player.character.factionId) return out(`Вы не состоите в организации`);
+        if (!factions.isLeader(player)) return out(`Вы не лидер`);
+        var price = factions.vehRespawnPrice;
+        if (player.character.cash < price) return out(`Необходимо $${price}`);
+        var factionId = player.character.factionId;
+        var factionName = factions.getFactionName(player);
+        var mins = parseInt(factions.vehWaitSpawn / 1000 / 60);
+
+        factions.respawnVehicles(factionId);
+
+        money.removeCash(player, price, (res) => {
+            if (!res) out(`Ошибка списания наличных`);
+        }, `Респавн авто организации #${factionId}`);
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != factionId) return;
+            notifs.info(rec, `${player.name} вернул свободное авто (без водителя - ${mins} мин.)`, factionName);
+        });
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (seat != -1 || vehicle.key != 'faction') return;

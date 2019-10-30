@@ -12,6 +12,7 @@ mp.factions = {
     enableTakeBox: false, // можно ли взять ящик на беск. складе
     typeBox: "",
     faction: null,
+    vehRespawnPrice: 0,
 
     insideWarehouse(inside, type = null) {
         if (inside) mp.prompt.showByName(`take_${type}box`);
@@ -141,6 +142,11 @@ mp.factions = {
             true
         );
     },
+    setInfo(info) {
+        this.vehRespawnPrice = info.vehRespawnPrice;
+
+        mp.callCEFV(`selectMenu.setItemValues('factionControl', 'Вернуть авто', '${JSON.stringify([`$${this.vehRespawnPrice}`])}')`);
+    },
 };
 
 mp.events.add({
@@ -165,6 +171,9 @@ mp.events.add({
     },
     "factions.control.players.show": (data) => {
         mp.factions.showMembersSelectMenu(data);
+    },
+    "factions.info.set": (info) => {
+        mp.factions.setInfo(info);
     },
     "playerEnterVehicleBoot": (player, vehicle) => {
         if (mp.factions.hasBox()) {

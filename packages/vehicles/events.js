@@ -448,7 +448,7 @@ module.exports = {
     "time.main.tick": (ticks) => {
         if (ticks % 5) return;
 
-        var start = new Date();;
+        var start = new Date();
         mp.vehicles.forEach(veh => {
             if (!veh.db) return;
             if (!veh.lastPlayerTime) return;
@@ -461,12 +461,7 @@ module.exports = {
             var dist = utils.vdist(spawnPos, vehPos);
             var isDead = vehicles.isDead(veh);
             if (dist > 10 || isDead) {
-                veh.repair();
-                veh.position = spawnPos;
-                veh.rotation = new mp.Vector3(0, 0, veh.db.h);
-                veh.setVariable("heading", veh.db.h);
-                delete veh.lastPlayerTime;
-                mp.events.call("vehicle.respawned", veh);
+                vehicles.respawn(veh);
             }
         });
         var diff = Date.now() - start.getTime();
