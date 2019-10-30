@@ -365,11 +365,15 @@ module.exports = {
 
         var vehicles = factions.getVehicles(player);
 
-        debug(vehicles.map(x => x.id));
-        return;
-        player.call(`factions.control.players.show`, [{
-            members: members,
-            rankNames: factions.getRankNames(player.character.factionId),
+        player.call(`factions.control.vehicles.show`, [{
+            vehicles: vehicles.map(x => {
+                return {
+                    id: x.db.id,
+                    name: x.properties.name,
+                    plate: x.db.plate,
+                    minRank: x.db.minRank ? x.db.minRank.rank : null
+                }
+            }),
         }]);
     },
     "factions.control.vehicles.respawn": (player) => {

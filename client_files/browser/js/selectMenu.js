@@ -1632,8 +1632,8 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Ранги') {
                             selectMenu.showByName("factionControlRanks");
                         } else if (e.itemName == 'Транспорт') {
-                            // selectMenu.loader = true;
-                            // mp.trigger(`callRemote`, `factions.control.vehicles.show`);
+                            selectMenu.loader = true;
+                            mp.trigger(`callRemote`, `factions.control.vehicles.show`);
                         }
                     }
                 }
@@ -1874,10 +1874,9 @@ var selectMenu = new Vue({
             "factionControlVehicles": {
                 name: "factionControlVehicles",
                 header: "Транспорт",
-                items: [
-                    {
+                items: [{
                         text: "Infernus",
-                        values: [`999 ед.`]
+                        values: [`PM777`]
                     },
                     {
                         text: "Вернуть авто",
@@ -1889,6 +1888,29 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                respawnPrice: -1,
+                vehicles: [],
+                init(data) {
+                    if (typeof data == 'string') data = JSON.parse(data);
+
+                    var items = [];
+                    data.vehicles.forEach(veh => {
+                        items.push({
+                            text: veh.name,
+                            values: [veh.plate]
+                        });
+                    });
+                    items.push({
+                        text: `Вернуть авто`,
+                        values: [`$${this.respawnPrice}`]
+                    });
+                    items.push({
+                        text: `Вернуться`
+                    });
+                    selectMenu.setItems('factionControlVehicles', items);
+
+                    this.vehicles = data.vehicles;
+                },
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -1902,8 +1924,69 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Вернуться') selectMenu.showByName("factionControl");
                         else if (e.itemName == 'Вернуть авто') {
                             mp.trigger(`callRemote`, `factions.control.vehicles.respawn`);
+                        } else {
+                            var rankNames = selectMenu.menus['factionControlRanks'].ranks.map(x => x.name);
+                            selectMenu.menus['factionControlVehicle'].init(this.vehicles[e.itemIndex], rankNames);
+                            selectMenu.showByName('factionControlVehicle');
                         }
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControl");
+                }
+            },
+            "factionControlVehicle": {
+                name: "factionControlVehicle",
+                header: "Infernus",
+                items: [{
+                        text: "Название",
+                        values: [`Infernus`],
+                    },
+                    {
+                        text: "Номер",
+                        values: [`PM7777`],
+                    },
+                    {
+                        text: "Мин. ранг",
+                        values: [`Ранг 1`, `Ранг 2`],
+                        i: 0
+                    },
+                    {
+                        text: "Сохранить"
+                    },
+                    {
+                        text: "Вернуться"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                vehicle: null,
+                init(vehicle, rankNames) {
+                    debug(vehicle)
+                    debug(rankNames)
+
+                    this.header = vehicle.name;
+                    this.items[0].values[0] = vehicle.name;
+                    this.items[1].values[0] = vehicle.plate;
+                    this.items[2].values = rankNames;
+                    this.items[2].i = (vehicle.minRank) ? vehicle.minRank - 1 : 0;
+
+                    this.vehicle = vehicle;
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlVehicles");
+                        else if (e.itemName == 'Сохранить') {
+                            debug("todo")
+                            // selectMenu.show = false;
+                            // mp.trigger(`callRemote`, `factions.control.ranks.set`, JSON.stringify(data));
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlVehicles");
                 }
             },
             "governmentStorage": {
