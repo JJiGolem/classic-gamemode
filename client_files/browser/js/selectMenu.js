@@ -7852,7 +7852,7 @@ var selectMenu = new Vue({
             };
         },
         isEditing() {
-            return this.menu && this.valuesType(this.menu.i) == 3;
+            return this.show && this.menu && this.valuesType(this.menu.i) == 3;
         },
     },
     watch: {

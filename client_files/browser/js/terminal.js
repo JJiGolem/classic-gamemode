@@ -44,8 +44,10 @@ var terminal = new Vue({
         },
         scrollTop() {
             setTimeout(() => {
+                var el = this.$el;
+                if (!el) return this.debug(`Элемент не найден при скролле консоли! (screen --> @carter)`);
                 var content = this.$el.querySelector(".content");
-                content.scrollTop = 99999;
+                content.scrollTop = 999999;
             }, 10);
         },
         onHeaderMouseDown(e) {
