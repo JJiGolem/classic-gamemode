@@ -251,6 +251,7 @@ module.exports = {
         feetsParams.clime = '[-5,20]';
         topParams.name = `Рубашка ${faction.name}`;
         legsParams.name = `Брюки ${faction.name}`;
+        feetsParams.name = `Ботинки ${faction.name}`;
 
         hatParams.owner = character.id;
         topParams.owner = character.id;
@@ -430,6 +431,7 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Наручники`);
         var dist = player.dist(rec.position);
         if (dist > 5) return notifs.error(player, `${rec.name} далеко`, `Наручники`);
+        if (rec.getVariable("afk")) return notifs.error(player, `${rec.name} не активен`, `ANTI-AFK`);
         var character = player.character;
         if (!police.cuffsFactions.includes(character.factionId)) return notifs.error(player, `Нет прав для использования`, `Наручники`);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, `Наручники`);
@@ -459,6 +461,7 @@ module.exports = {
     "police.follow": (player, recId) => {
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Следование`);
+        if (rec.getVariable("afk")) return notifs.error(player, `${rec.name} не активен`, `ANTI-AFK`);
         if (!police.cuffsFactions.includes(player.character.factionId)) return notifs.error(player, `Нет прав для использования`, `Наручники`);
         if (!rec.isFollowing) {
             if (!rec.cuffs) return notifs.error(player, `${rec.name} не в наручниках`, `Следование`);

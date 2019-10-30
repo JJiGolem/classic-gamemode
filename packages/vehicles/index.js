@@ -68,7 +68,7 @@ module.exports = {
         vehicle.numberPlate = veh.plate; /// устанавливаем номер
 
         vehicle.setVariable('isValid', true);
-        
+
         veh.d ? vehicle.dimension = veh.d : vehicle.dimension = 0; /// устанавливаем измерение
 
         veh.isInGarage ? vehicle.isInGarage = veh.isInGarage : vehicle.isInGarage = false;
@@ -87,16 +87,14 @@ module.exports = {
         }
         if (!veh.properties) {
             vehicle.properties = this.setVehiclePropertiesByModel(veh.modelName);
-        }
-        else {
+        } else {
             vehicle.properties = veh.properties;
         }
 
         if (veh.key == 'private' || veh.key == 'market') { // temp
             if (!veh.tuning) {
                 await this.initTuning(vehicle);
-            }
-            else {
+            } else {
                 vehicle.tuning = veh.tuning;
             }
             tuning.setTuning(vehicle);
@@ -129,8 +127,7 @@ module.exports = {
                         return;
                     }
                 }
-            }
-            catch (err) {
+            } catch (err) {
                 console.log(err);
             }
         }, vehicle.fuelTick);
@@ -260,8 +257,7 @@ module.exports = {
                     fuel: Math.ceil(veh.fuel)
                 });
                 console.log(`[DEBUG] Обновили пробег для ${veh.properties.name}. Текущий пробег: ${veh.mileage}. К занесению: ${value} км и ${Math.ceil(veh.fuel)} л`);
-            }
-            catch (err) {
+            } catch (err) {
                 console.log(err);
             }
         }
@@ -311,8 +307,7 @@ module.exports = {
                         //   }
                     }
                 }
-            }
-            else {
+            } else {
                 let veh = dbPrivate[0];
                 if (dbPrivate[0].parkingDate == null) {
                     let now = new Date();
@@ -433,13 +428,11 @@ module.exports = {
                             return;
                         }
                     }
-                }
-                catch (err) {
+                } catch (err) {
                     console.log(err);
                 }
             }, vehicle.fuelTick);
-        }
-        catch (err) {
+        } catch (err) {
             console.log(err);
         }
     },
@@ -484,8 +477,7 @@ module.exports = {
             place.veh = vehicle;
             vehicle.isInGarage = false;
 
-        }
-        else {
+        } else {
             let index = player.carPlaces.findIndex(x => x.veh == null && x.d != 0);
             let place = player.carPlaces[index];
             vehicle.carPlaceIndex = index;
@@ -536,8 +528,7 @@ module.exports = {
         console.log(`hasHouse = ${hasHouse}`)
         if (!hasHouse) {
             if (player.vehicleList.length >= 1) return false;
-        }
-        else {
+        } else {
             if (player.carPlaces.length > 1 && player.vehicleList.length + 1 > player.carPlaces.length - 1) return false;
             if (player.carPlaces.length == 1 && player.vehicleList.length >= player.carPlaces.length) return false;
         }
@@ -606,5 +597,13 @@ module.exports = {
     },
     getVehiclePropertiesList() {
         return dbVehicleProperties;
-    }
+    },
+    respawn(veh) {
+        veh.repair();
+        veh.position = new mp.Vector3(veh.db.x, veh.db.y, veh.db.z);
+        veh.rotation = new mp.Vector3(0, 0, veh.db.h);
+        veh.setVariable("heading", veh.db.h);
+        delete veh.lastPlayerTime;
+        mp.events.call("vehicle.respawned", veh);
+    },
 }

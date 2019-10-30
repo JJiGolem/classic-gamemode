@@ -110,8 +110,8 @@ module.exports = {
         }
     },
     // срабатывает, когда игрок выкидывает предмет
-    "item.ground.put": (player, sqlId) => {
-        // console.log(`item.ground.put: ${sqlId}`)
+    "item.ground.put": (player, sqlId, pos) => {
+        pos = JSON.parse(pos);
         var header = `Выброс предмета`;
         var item = inventory.getItem(player, sqlId);
         if (!item) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
@@ -119,7 +119,7 @@ module.exports = {
         if (player.vehicle) return notifs.error(player, `Недоступно в авто`, header);
         if (player.cuffs) return notifs.error(`Недоступно в наручниках`, header);
 
-        inventory.putGround(player, item);
+        inventory.putGround(player, item, pos);
         notifs.success(player, `Предмет ${inventory.getName(item.itemId)} на земле`, header);
     },
     // срабатывает, когда игрок поднимает предмет
@@ -575,15 +575,18 @@ module.exports = {
         mp.events.call("faction.holder.items.clear", player);
         mp.events.call("faction.holder.items.init", player);
     },
-    "death.spawn": (player) => {
+    "death.spawn": (player, groundZ) => {
         if (!player.character) return;
-        // TODO: включить выкидывание оружия в новой сис-ме расчет кор объекта
-        // var weapons = inventory.getArrayWeapons(player);
-        // if (!weapons.length) return;
-        // weapons.forEach(weapon => {
-        //     inventory.putGround(player, weapon);
-        // });
-        // notifs.warning(player, `Вы потеряли оружие`, `Инвентарь`);
+
+        var weapons = inventory.getArrayWeapons(player);
+        if (!weapons.length) return;
+
+        var pos = player.position;
+        pos.z = groundZ;
+        weapons.forEach(weapon => {
+            inventory.putGround(player, weapon, pos);
+        });
+        notifs.warning(player, `Вы потеряли оружие`, `Инвентарь`);
     },
     "playerQuit": (player) => {
         if (!player.character) return;

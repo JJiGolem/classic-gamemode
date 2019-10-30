@@ -4,6 +4,8 @@ var inventory = call('inventory');
 var mafia = call('mafia');
 var money = require('../money')
 var notifs = require('../notifications');
+var vehicles = call('vehicles');
+var utils = call('utils');
 
 module.exports = {
     // Организации
@@ -57,6 +59,10 @@ module.exports = {
     },
     // Кол-во минут онлайна, необходимых для получения ЗП
     payMins: 15,
+    // Стоимость респавна авто
+    vehRespawnPrice: 1000,
+    // Мин. время простоя, чтобы авто зареспавнилось лидером
+    vehWaitSpawn: 5 * 60 * 1000,
 
     async init() {
         await this.loadFactionsFromDB();
@@ -292,6 +298,22 @@ module.exports = {
         }
         return names;
     },
+    getRanks(faction) {
+        if (!faction) return null;
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction.ranks;
+    },
+    getClientRanks(faction) {
+        if (!faction) return null;
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction.ranks.map(x => {
+            return {
+                name: x.name,
+                rank: x.rank,
+                pay: x.pay
+            }
+        });
+    },
     setLeader(faction, player) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         var character = player.character;
@@ -301,7 +323,7 @@ module.exports = {
         character.save();
 
         player.setVariable("factionId", character.factionId);
-        player.call(`factions.faction.set`, [character.factionId]);
+        player.call(`factions.faction.set`, [character.factionId, this.getClientRanks(faction)]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isGovernmentFaction(faction)) mp.events.call(`mapCase.gover.init`, player);
         else if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
@@ -343,7 +365,7 @@ module.exports = {
         character.save();
 
         player.setVariable("factionId", character.factionId);
-        player.call(`factions.faction.set`, [character.factionId]);
+        player.call(`factions.faction.set`, [character.factionId, this.getClientRanks(faction)]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isGovernmentFaction(faction)) mp.events.call(`mapCase.gover.init`, player);
         else if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
@@ -370,7 +392,7 @@ module.exports = {
         character.save();
 
         player.setVariable("factionId", character.factionId);
-        player.call(`factions.faction.set`, [null]);
+        player.call(`factions.faction.set`, [null, []]);
         player.call(`mapCase.enable`, [false]);
 
         mp.events.call(`player.faction.changed`, player, oldVal);
@@ -651,4 +673,24 @@ module.exports = {
         if (!count) return;
         notifs.warning(player, `Предмет из шкафа потеряны (${count} шт.)`, `Организация`);
     },
+    respawnVehicles(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+
+        var start = new Date();
+        mp.vehicles.forEach(veh => {
+            if (!veh.db) return;
+            if (!veh.lastPlayerTime) return;
+            if (veh.db.key == 'private' || veh.db.key == 'market') return;
+            if (start.getTime() - veh.lastPlayerTime < this.vehWaitSpawn) return;
+            if (vehicles.getOccupants(veh).length) return;
+
+            var spawnPos = new mp.Vector3(veh.db.x, veh.db.y, veh.db.z);
+            var vehPos = veh.position;
+            var dist = utils.vdist(spawnPos, vehPos);
+            var isDead = vehicles.isDead(veh);
+            if (dist > 10 || isDead) {
+                vehicles.respawn(veh);
+            }
+        });
+    }
 };

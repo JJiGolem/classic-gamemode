@@ -59,7 +59,7 @@
         <div v-show="keysShow && !selectMenu.show" class="keys">
             <div v-for="key in keys"><span v-html="key.key"></span>{{ key.name }}</div>
         </div>
-        <div class="panel-right-top">
+        <div class="panel-right-top" v-show="!prompt.text">
             <div class="info-logo">
                 <div class="info">
                     <div v-if="build">Build: <span>{{ build }} ({{ branch }})</span></div>

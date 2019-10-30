@@ -1,5 +1,5 @@
 mp.inventory = {
-    groundMaxDist: 2,
+    groundMaxDist: 1.8,
     lastArmour: 0,
     itemsInfo: null,
     animData: require('animations/data.js'),
@@ -8,6 +8,7 @@ mp.inventory = {
         weaponHash: 0,
     },
     handsBlock: false,
+    groundItemMarker: {},
 
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
@@ -85,10 +86,7 @@ mp.inventory = {
         this.lastArmour = val;
         mp.callCEFV(`inventory.setArmour(${val})`);
     },
-    takeItemHandler() {
-        // поднятие предмета с земли
-        if (mp.busy.includes()) return;
-        var pos = mp.players.local.position;
+    getNearGroundItemObject(pos) {
         var itemObj, minDist = 9999;
         mp.objects.forEach((obj) => {
             var objPos = obj.position;
@@ -100,6 +98,14 @@ mp.inventory = {
             minDist = dist;
             itemObj = obj;
         });
+        return itemObj;
+    },
+    takeItemHandler() {
+        // поднятие предмета с земли
+        if (mp.busy.includes()) return;
+        if (mp.players.local.vehicle) return;
+        var pos = mp.players.local.getOffsetFromInWorldCoords(0, 0, 0);
+        var itemObj = this.getNearGroundItemObject(pos);
         if (!itemObj) return;
         // TODO: проверка на аттачи
         mp.events.callRemote("item.ground.take", itemObj.remoteId);
@@ -199,11 +205,22 @@ mp.inventory = {
         this.ammoSync.need = false;
         this.ammoSync.weaponHash = 0;
     },
+    initGroundItemMarker() {
+        this.groundItemMarker = mp.markers.new(2, new mp.Vector3(0, 0, 0), 0.1, {
+            rotation: new mp.Vector3(0, 180, 0),
+            visible: false,
+            color: [255, 223, 41, 255],
+        });
+        this.groundItemMarker.ignoreCheckVisible = true;
+    },
 };
 
 mp.events.add("characterInit.done", () => {
     mp.inventory.enable(true);
-    mp.keys.bind(69, true, mp.inventory.takeItemHandler); // E
+    mp.keys.bind(69, true, () => { // E
+        mp.inventory.takeItemHandler();
+    });
+    mp.inventory.initGroundItemMarker();
 });
 
 mp.events.add("inventory.enable", mp.inventory.enable);
@@ -256,6 +273,12 @@ mp.events.add("inventory.setThirst", mp.inventory.setThirst);
 mp.events.add("inventory.saveHotkey", mp.inventory.saveHotkey);
 
 mp.events.add("inventory.removeHotkey", mp.inventory.removeHotkey);
+
+mp.events.add("inventory.ground.put", (sqlId) => {
+    var pos = mp.players.local.getOffsetFromInWorldCoords(0, 1, 2);
+    pos.z = mp.game.gameplay.getGroundZFor3dCoord(pos.x, pos.y, pos.z, false, false);
+    mp.events.callRemote(`item.ground.put`, sqlId, JSON.stringify(pos));
+});
 
 mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`enterBoot: #${vehicle.remoteId}`);
@@ -317,6 +340,15 @@ mp.events.add("time.main.tick", () => {
 
 mp.events.add("render", () => {
     mp.inventory.disableControlActions();
+
+    var player = mp.players.local;
+    var itemObj = mp.inventory.getNearGroundItemObject(player.position);
+    if (itemObj && !player.vehicle) {
+        var pos = itemObj.position;
+        pos.z += 0.5;
+        mp.inventory.groundItemMarker.position = pos;
+        mp.inventory.groundItemMarker.visible = true;
+    } else mp.inventory.groundItemMarker.visible = false;
 });
 
 mp.events.addDataHandler("trunk", (vehicle, value) => {

@@ -8,8 +8,11 @@ module.exports = {
         inited(__dirname);
     },
     "characterInit.done": (player) => {
-        player.call(`factions.faction.set`, [player.character.factionId]);
+        player.call(`factions.faction.set`, [player.character.factionId, factions.getClientRanks(player.character.factionId)]);
         player.setVariable("factionId", player.character.factionId);
+        player.call(`factions.info.set`, [{
+            vehRespawnPrice: factions.vehRespawnPrice
+        }]);
     },
     "factions.warehouse.takeBox": (player, type) => {
         factions.takeBox(player, type);
@@ -352,6 +355,54 @@ module.exports = {
 
         out(`${character.name} уволен`);
         notifs.info(rec, `${player.name} вас уволил`, `Организация`);
+    },
+    "factions.control.vehicles.respawn": (player) => {
+        var out = (text) => {
+            player.call(`selectMenu.notification`, [text]);
+        };
+        if (!player.character.factionId) return out(`Вы не состоите в организации`);
+        if (!factions.isLeader(player)) return out(`Вы не лидер`);
+        var price = factions.vehRespawnPrice;
+        if (player.character.cash < price) return out(`Необходимо $${price}`);
+        var factionId = player.character.factionId;
+        var factionName = factions.getFactionName(player);
+        var mins = parseInt(factions.vehWaitSpawn / 1000 / 60);
+
+        factions.respawnVehicles(factionId);
+
+        money.removeCash(player, price, (res) => {
+            if (!res) out(`Ошибка списания наличных`);
+        }, `Респавн авто организации #${factionId}`);
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != factionId) return;
+            notifs.info(rec, `${player.name} вернул свободное авто (без водителя - ${mins} мин.)`, factionName);
+        });
+    },
+    "factions.control.ranks.set": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+
+        var out = (text) => {
+            player.call(`selectMenu.notification`, [text]);
+        };
+        if (!player.character.factionId) return out(`Вы не состоите в организации`);
+        if (!factions.isLeader(player)) return out(`Вы не лидер`);
+
+        var rank = factions.getRank(player.character.factionId, data.rank);
+        if (!rank) return out(`Ранг ${data.rank} не найден`);
+
+        var header = factions.getFactionName(player);
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(rec, `${player.name} изменил ранг #${data.rank} (${rank.name} => ${data.name})`, header);
+            rec.call(`factions.ranks.name.set`, [data]);
+        });
+
+        rank.name = data.name;
+        rank.save();
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (seat != -1 || vehicle.key != 'faction') return;

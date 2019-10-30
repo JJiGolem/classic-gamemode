@@ -30,7 +30,7 @@ mp.death = {
     startKnockTimer() {
         this.stopKnockTimer();
         this.knockTimer = mp.timer.add(() => {
-            mp.events.callRemote(`death.spawn`);
+            mp.events.call(`death.callRemote.spawn`);
         }, this.knockTime);
         mp.callCEFV(`timer.start('death', ${this.knockTime})`);
     },
@@ -41,6 +41,11 @@ mp.death = {
 };
 
 mp.events.add({
+    "death.callRemote.spawn": () => {
+        var pos = mp.players.local.position;
+        var groundZ = mp.game.gameplay.getGroundZFor3dCoord(pos.x, pos.y, pos.z + 2, false, false);
+        mp.events.callRemote(`death.spawn`, groundZ);
+    },
     "playerDeath": (player, reason, killer) => {
         mp.death.disableControls(true);
 
@@ -49,7 +54,7 @@ mp.events.add({
             if (!knocked) {
                 mp.callCEFV(`offerDialog.show('death')`);
             } else {
-                mp.events.callRemote(`death.spawn`);
+                mp.events.call(`death.callRemote.spawn`);
             }
         }, mp.death.waitHurtTime);
 

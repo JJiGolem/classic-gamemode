@@ -233,6 +233,7 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Игрок не найден`, header);
         var dist = player.dist(rec.position);
         if (dist > 5) return notifs.error(player, `${rec.name} далеко`, header);
+        if (rec.getVariable("afk")) return notifs.error(player, `${rec.name} не активен`, `ANTI-AFK`);
         var character = player.character;
         if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, header);
@@ -303,6 +304,7 @@ module.exports = {
         };
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return out(`Гражданин не найден`);
+        if (rec.getVariable("afk")) return notifs.error(player, `${rec.name} не активен`, `ANTI-AFK`);
         if (!factions.isMafiaFaction(player.character.factionId)) return out(`Нет прав для использования`);
         if (!rec.isFollowing) {
             if (!rec.cuffs || rec.cuffs.itemId != 54) return out(`${rec.name} не связан`);

@@ -101,6 +101,12 @@ let settingsmainWindowData = {
             pull: ["Выкл", "Вкл"],
             value: 0,
         },
+        ghetto: {
+            type: 'scroll',
+            head: 'Гетто/рекеты на карте',
+            pull: ["Выкл", "Вкл"],
+            value: 0,
+        },
         walking: {
             type: 'scroll',
             head: 'Походка',
@@ -777,6 +783,10 @@ var playerMenu = new Vue({
                 if (key == 'chatTimestamp') mp.events.call("setTimeChat", !!settings[key]);
                 else if (key == 'nicknames') mp.trigger(`nametags.show`, !!settings[key]);
                 else if (key == 'hudKeys') hud.keysShow = !!settings[key];
+                else if (key == 'ghetto') {
+                    mp.trigger(`bands.bandZones.show`, !!settings[key]);
+                    mp.trigger(`mafia.mafiaZones.show`, !!settings[key]);
+                }
             }
         },
         setEmail(email, confirm = 0) {

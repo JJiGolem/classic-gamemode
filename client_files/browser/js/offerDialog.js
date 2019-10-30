@@ -175,7 +175,7 @@ var offerDialog = new Vue({
                     mp.trigger(`callRemote`, `death.wait`);
                 },
                 no() {
-                    mp.trigger(`callRemote`, `death.spawn`);
+                    mp.trigger(`death.callRemote.spawn`);
                 },
                 ignore() {
                     mp.trigger(`callRemote`, `death.wait`);

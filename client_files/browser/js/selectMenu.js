@@ -1601,6 +1601,13 @@ var selectMenu = new Vue({
                         text: "Полный состав"
                     },
                     {
+                        text: "Вернуть авто",
+                        values: [`$999`],
+                    },
+                    {
+                        text: "Ранги"
+                    },
+                    {
                         text: "Закрыть"
                     }
                 ],
@@ -1623,6 +1630,10 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Полный состав') {
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.members.offline.show`);
+                        } else if (e.itemName == 'Вернуть авто') {
+                            mp.trigger(`callRemote`, `factions.control.vehicles.respawn`);
+                        } else if (e.itemName == 'Ранги') {
+                            selectMenu.showByName("factionControlRanks");
                         }
                     }
                 }
@@ -1742,6 +1753,122 @@ var selectMenu = new Vue({
                             mp.trigger(`callRemote`, `factions.control.members.uval`, JSON.stringify(data));
                         } else if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlMembers");
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlMembers");
+                }
+            },
+            "factionControlRanks": {
+                name: "factionControlRanks",
+                header: "Ранги",
+                items: [{
+                        text: "Ранг 1",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Ранг 2",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Ранг 3",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Ранг 4",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Вернуться"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                ranks: [],
+                init(ranks) {
+                    if (typeof ranks == 'string') ranks = JSON.parse(ranks);
+
+                    var items = [];
+                    ranks.forEach(rank => {
+                        items.push({
+                            text: rank.name,
+                            values: [`$${rank.pay}`]
+                        });
+                    });
+                    items.push({
+                        text: `Вернуться`
+                    });
+
+                    selectMenu.setItems('factionControlRanks', items);
+                    this.ranks = ranks;
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControl");
+                        else {
+                            selectMenu.menus["factionControlRank"].init(this.ranks[e.itemIndex]);
+                            selectMenu.showByName("factionControlRank");
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControl");
+                }
+            },
+            "factionControlRank": {
+                name: "factionControlRank",
+                header: "Ранг 1",
+                items: [{
+                        text: "Название",
+                        values: [`Килла`],
+                        type: 'editable',
+                    },
+                    {
+                        text: "Зарплата",
+                        values: [`$9999`],
+                    },
+                    {
+                        text: "Сохранить"
+                    },
+                    {
+                        text: "Вернуться"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                rank: null,
+                init(rank) {
+                    if (typeof rank == 'string') rank = JSON.parse(rank);
+
+                    this.header = `Ранг ${rank.rank}`;
+                    this.items[0].values[0] = rank.name;
+                    this.items[1].values[0] = `$${rank.pay}`;
+
+                    this.rank = rank;
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlRanks");
+                        else if (e.itemName == 'Сохранить') {
+                            var data = {
+                                rank: this.rank.rank,
+                                name: this.items[0].values[0]
+                            };
+                            if (!data.name) return selectMenu.notification = "Введите название ранга";
+
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `factions.control.ranks.set`, JSON.stringify(data));
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlRanks");
                 }
             },
             "governmentStorage": {
@@ -7137,23 +7264,28 @@ var selectMenu = new Vue({
                         text: "Снаряжение",
                     },
                     {
+                        text: "Ресурсы"
+                    },
+                    {
                         text: "Закрыть"
                     },
                 ],
                 i: 0,
                 j: 0,
                 prices: [],
-                init(prices) {
-                    if (typeof prices == 'string') prices = JSON.parse(prices);
+                init(data) {
+                    if (typeof data == 'string') data = JSON.parse(data);
                     var items = selectMenu.menus['woodmanItems'].items;
-                    items[0].values[0] = `$${prices[0]}`;
+                    items[0].values[0] = `$${data.itemPrices[0]}`;
 
                     var clothesItems = selectMenu.menus['woodmanItemsClothes'].items;
                     for (var i = 0; i < clothesItems.length - 1; i++) {
-                        clothesItems[i].values[0] = `$${prices[i + 1]}`;
+                        clothesItems[i].values[0] = `$${data.itemPrices[i + 1]}`;
                     }
 
-                    this.prices = prices;
+                    this.prices = data.itemPrices;
+
+                    selectMenu.menus['woodmanSell'].items[0].values[0] = `$${data.treePrice}`;
                 },
                 handler(eventName) {
                     var item = this.items[this.i];
@@ -7169,6 +7301,8 @@ var selectMenu = new Vue({
 
                         } else if (e.itemName == 'Снаряжение') {
                             selectMenu.showByName("woodmanItems");
+                        } else if (e.itemName == 'Ресурсы') {
+                            selectMenu.showByName("woodmanSell");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
@@ -7254,12 +7388,46 @@ var selectMenu = new Vue({
                         selectMenu.showByName("woodmanItems");
                 }
             },
+            "woodmanSell": {
+                name: "woodmanSell",
+                header: "Ресурсы",
+                items: [{
+                        text: "Дерево",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Продать"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Продать') {
+                            mp.trigger(`callRemote`, `woodman.items.sell`);
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("woodman");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("woodman");
+                }
+            },
             "tattooMain": {
                 name: "tattooMain",
                 header: "Тату-салон",
                 headerImg: "",
-                items: [
-                    {
+                items: [{
                         text: 'Голова'
                     },
                     {
@@ -7810,7 +7978,7 @@ var selectMenu = new Vue({
             };
         },
         isEditing() {
-            return this.menu && this.valuesType(this.menu.i) == 3;
+            return this.show && this.menu && this.valuesType(this.menu.i) == 3;
         },
     },
     watch: {

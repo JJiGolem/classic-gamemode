@@ -71,7 +71,7 @@ module.exports = {
     async init(player) {
         if (player.character != null) delete player.character;
         if (player.characters == null) {
-            var start = Date.now();
+            // var start = Date.now();
             player.characters = await db.Models.Character.findAll({
                 where: {
                     accountId: player.account.id
@@ -117,8 +117,8 @@ module.exports = {
                 });
             }
 
-            var diff = Date.now() - start;
-            notifs.info(player, `Время выборки персонажей: ${diff} ms.`);
+            // var diff = Date.now() - start;
+            // notifs.info(player, `Время выборки персонажей: ${diff} ms.`);
             player.characters.forEach(character => {
                 character.Appearances.sort((x, y) => {
                     if (x.order > y.order) return 1;

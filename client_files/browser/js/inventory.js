@@ -571,12 +571,14 @@ var inventory = new Vue({
         descItemName() {
             var item = this.itemDesc.item;
             if (!item) return null;
-            if (item.itemId == 15 && item.params.name) // рыба
+            if ([6, 7, 8, 9, 15].includes(item.itemId) && item.params.name) // одежда, рыба
                 return `${item.params.name}`;
             if (item.itemId == 16 && item.params.name) // сигареты
                 return this.itemsInfo[item.itemId].name + " " + item.params.name;
             if (item.itemId == 33 && item.params.vehName) // ключи авто
                 return `Ключи от ${item.params.vehName}`;
+            if (item.itemId == 131 && item.params.name) // ресурс - дерево
+                return `Дерево ${item.params.name}`;
             return this.itemsInfo[item.itemId].name;
         },
         descItemWeight() {
@@ -654,6 +656,10 @@ var inventory = new Vue({
             if (item.params.max) params.push({
                 name: "Вместимость",
                 value: `${item.params.max} л.`
+            });
+            if (item.params.treeDamage) params.push({
+                name: "Урон по дереву",
+                value: `${item.params.treeDamage}%`
             });
 
             return params;
@@ -1058,7 +1064,7 @@ var inventory = new Vue({
                             var weapon = children.find(x => inventory.weaponsList.includes(x.itemId));
                             if (weapon) mp.trigger(`weapons.ammo.sync`);
                         }
-                        mp.trigger(`callRemote`, `item.ground.put`, item.sqlId);
+                        mp.trigger(`inventory.ground.put`, item.sqlId);
                     }
                 };
             }
@@ -1354,8 +1360,7 @@ var inventory = new Vue({
                     if (columns.placeSqlId > 0) {
                         if (!self.getItem(item.sqlId)) self.setWaitItem(item, true);
                         self.addItem(item, columns.pocketI, index, columns.placeSqlId)
-                    }
-                    else {
+                    } else {
                         if (self.getItem(item.sqlId)) self.setWaitItem(item, true);
                         self.addEnvironmentItem(item, columns.pocketI, index, columns.placeSqlId);
                     }
