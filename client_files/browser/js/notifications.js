@@ -2,10 +2,10 @@ var notifications = new Vue({
     el: "#notifications",
     data: {
         messages: [
-            /*{ type: "error", header: "Бизнес", text: "Вы не оплатили налог 100000$", hash: 122 },
-            { type: "success", header: "header", text: "text message", hash: 123 },
+            /*{ type: "warning", header: "header", text: "text message", hash: 12 },
             { type: "info", header: "header", text: "text message", hash: 142 },
-            { type: "warning", header: "header", text: "text message", hash: 12 },*/
+            { type: "success", header: "header", text: "text message", hash: 123 },
+            { type: "error", header: "Бизнес", text: "Вы не оплатили налог 100$", hash: 122 },*/
         ],
         // Время показа уведомления
         showTime: 10000,
