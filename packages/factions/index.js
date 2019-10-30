@@ -701,5 +701,13 @@ module.exports = {
                 vehicles.respawn(veh);
             }
         });
-    }
+    },
+    setVehicleMinRank(veh, rank) {
+        if (!veh.db.minRank) veh.db.minRank = db.Models.FactionVehicleRank.build({
+            vehicleId: veh.db.id,
+            rank: rank
+        });
+        veh.db.minRank.rank = rank;
+        veh.db.minRank.save();
+    },
 };

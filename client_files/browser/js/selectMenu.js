@@ -1959,9 +1959,6 @@ var selectMenu = new Vue({
                 j: 0,
                 vehicle: null,
                 init(vehicle, rankNames) {
-                    debug(vehicle)
-                    debug(rankNames)
-
                     this.header = vehicle.name;
                     this.items[0].values[0] = vehicle.name;
                     this.items[1].values[0] = vehicle.plate;
@@ -1982,9 +1979,13 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlVehicles");
                         else if (e.itemName == 'Сохранить') {
-                            debug("todo")
-                            // selectMenu.show = false;
-                            // mp.trigger(`callRemote`, `factions.control.ranks.set`, JSON.stringify(data));
+                            var data = {
+                                vehId: this.vehicle.id,
+                                rank: this.items[2].i + 1
+                            };
+                            if (data.rank == this.vehicle.minRank) return selectMenu.notification = "Ранг уже установлен";
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `factions.control.vehicles.minRank.set`, JSON.stringify(data));
                         }
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlVehicles");
                 }
