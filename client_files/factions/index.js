@@ -12,6 +12,7 @@ mp.factions = {
     enableTakeBox: false, // можно ли взять ящик на беск. складе
     typeBox: "",
     faction: null,
+    ranks: [],
     vehRespawnPrice: 0,
 
     insideWarehouse(inside, type = null) {
@@ -120,6 +121,10 @@ mp.factions = {
         mp.callCEFV(`interactionMenu.faction = ${factionId}`);
         mp.events.call("mapCase.init", mp.players.local.name, factionId);
     },
+    setRanks(ranks) {
+        this.ranks = ranks;
+        // TODO: init selectMenu
+    },
     registerAttachments() {
         // коробка с боеприпасами в руках
         mp.attachmentMngr.register("ammoBox", "prop_box_ammo04a", 11363, new mp.Vector3(0.05, 0, -0.25),
@@ -166,8 +171,9 @@ mp.events.add({
     "factions.storage.showMenu": (factionId) => {
         mp.factions.showStorageSelectMenu(factionId);
     },
-    "factions.faction.set": (val) => {
+    "factions.faction.set": (val, ranks) => {
         mp.factions.setFaction(val);
+        mp.factions.setRanks(ranks);
     },
     "factions.control.players.show": (data) => {
         mp.factions.showMembersSelectMenu(data);

@@ -8,7 +8,7 @@ module.exports = {
         inited(__dirname);
     },
     "characterInit.done": (player) => {
-        player.call(`factions.faction.set`, [player.character.factionId]);
+        player.call(`factions.faction.set`, [player.character.factionId, factions.getRanks(player.character.factionId)]);
         player.setVariable("factionId", player.character.factionId);
         player.call(`factions.info.set`, [{
             vehRespawnPrice: factions.vehRespawnPrice
