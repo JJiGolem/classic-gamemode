@@ -1,5 +1,5 @@
 mp.inventory = {
-    groundMaxDist: 1.5,
+    groundMaxDist: 1.8,
     lastArmour: 0,
     itemsInfo: null,
     animData: require('animations/data.js'),
@@ -104,7 +104,7 @@ mp.inventory = {
         // поднятие предмета с земли
         if (mp.busy.includes()) return;
         if (mp.players.local.vehicle) return;
-        var pos = mp.players.local.getOffsetFromInWorldCoords(0, 0, -1);
+        var pos = mp.players.local.getOffsetFromInWorldCoords(0, 0, 0);
         var itemObj = this.getNearGroundItemObject(pos);
         if (!itemObj) return;
         // TODO: проверка на аттачи

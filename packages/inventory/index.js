@@ -471,10 +471,6 @@ module.exports = {
             // if (!item.parentId) continue;
             var params = this.getParamsValues(item);
             if (params.weaponHash) result.push(item);
-            var children = this.getChildren(items, item);
-            if (!children.length) continue;
-
-            result = result.concat(this.findArrayWeapons(children));
         }
         return result;
     },

@@ -575,15 +575,18 @@ module.exports = {
         mp.events.call("faction.holder.items.clear", player);
         mp.events.call("faction.holder.items.init", player);
     },
-    "death.spawn": (player) => {
+    "death.spawn": (player, groundZ) => {
         if (!player.character) return;
-        // TODO: включить выкидывание оружия в новой сис-ме расчет кор объекта
-        // var weapons = inventory.getArrayWeapons(player);
-        // if (!weapons.length) return;
-        // weapons.forEach(weapon => {
-        //     inventory.putGround(player, weapon);
-        // });
-        // notifs.warning(player, `Вы потеряли оружие`, `Инвентарь`);
+
+        var weapons = inventory.getArrayWeapons(player);
+        if (!weapons.length) return;
+
+        var pos = player.position;
+        pos.z = groundZ;
+        weapons.forEach(weapon => {
+            inventory.putGround(player, weapon, pos);
+        });
+        notifs.warning(player, `Вы потеряли оружие`, `Инвентарь`);
     },
     "playerQuit": (player) => {
         if (!player.character) return;
