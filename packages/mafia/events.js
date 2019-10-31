@@ -47,6 +47,9 @@ module.exports = {
         var faction = factions.getFaction(character.factionId);
         var header = `Склад ${faction.name}`;
 
+        var storage = factions.getStorage(player.insideFactionWarehouse);
+        if (!storage.isOpen) return notifs.error(player, `Склад мафии закрыт`, header);
+
         if (faction.ammo < mafia.gunAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
         var itemIds = [44, 46, 90, 48, 49, 96, 50, 22];
@@ -84,6 +87,9 @@ module.exports = {
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
         var header = `Склад ${faction.name}`;
+
+        var storage = factions.getStorage(player.insideFactionWarehouse);
+        if (!storage.isOpen) return notifs.error(player, `Склад мафии закрыт`, header);
 
         var itemIds = [37, 38, 40, 39];
         index = Math.clamp(index, 0, itemIds.length - 1);
@@ -151,6 +157,32 @@ module.exports = {
             if (rec.character.factionId != player.character.factionId) return;
 
             notifs.info(rec, `${player.name} снял $${sum}`, header);
+        });
+    },
+    "mafia.storage.state": (player, open) => {
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Общак мафии`);
+
+        var character = player.character;
+        var faction = factions.getFaction(character.factionId);
+        var header = `Склад ${faction.name}`;
+
+        if (!factions.isLeader(player)) return notifs.error(player, `Нет доступа`, header);
+
+        var storage = factions.getStorage(player.insideFactionWarehouse);
+
+        if (storage.isOpen == open) {
+            if (open) return notifs.error(player, `Склад уже открыт`, header);
+            else return notifs.error(player, `Склад уже закрыт`, header);
+        }
+
+        storage.isOpen = open;
+        var str = (open)? "открыл" : "закрыл";
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(rec, `${player.name} ${str} склад мафии`, header);
         });
     },
     "mafia.power.sell": (player, data) => {
