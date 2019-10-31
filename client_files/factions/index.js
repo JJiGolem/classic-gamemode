@@ -88,6 +88,10 @@ mp.factions = {
         mp.callCEFV(`selectMenu.menus['factionControlMembers'].init('${JSON.stringify(data)}')`);
         mp.callCEFV(`selectMenu.showByName('factionControlMembers')`);
     },
+    showVehiclesSelectMenu(data) {
+        mp.callCEFV(`selectMenu.menus['factionControlVehicles'].init('${JSON.stringify(data)}')`);
+        mp.callCEFV(`selectMenu.showByName('factionControlVehicles')`);
+    },
     isGovernmentFaction(factionId) {
         return factionId == 1;
     },
@@ -156,7 +160,7 @@ mp.factions = {
     setInfo(info) {
         this.vehRespawnPrice = info.vehRespawnPrice;
 
-        mp.callCEFV(`selectMenu.setItemValues('factionControl', 'Вернуть авто', '${JSON.stringify([`$${this.vehRespawnPrice}`])}')`);
+        mp.callCEFV(`selectMenu.setProp('factionControlVehicles', 'respawnPrice', ${this.vehRespawnPrice})`);
     },
 };
 
@@ -186,6 +190,9 @@ mp.events.add({
     },
     "factions.control.players.show": (data) => {
         mp.factions.showMembersSelectMenu(data);
+    },
+    "factions.control.vehicles.show": (data) => {
+        mp.factions.showVehiclesSelectMenu(data);
     },
     "factions.info.set": (info) => {
         mp.factions.setInfo(info);

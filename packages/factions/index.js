@@ -145,6 +145,7 @@ module.exports = {
             color: [0, 187, 255, 70],
             dimension: faction.sD
         });
+        storage.isOpen = true;
         this.storages.push(storage);
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, storage.dimension);
@@ -434,6 +435,15 @@ module.exports = {
         });
         return members;
     },
+    getVehicles(player) {
+        var vehicles = [];
+        mp.vehicles.forEach(veh => {
+            if (!veh.db || veh.db.key != 'faction') return;
+            if (veh.db.owner != player.character.factionId) return;
+            vehicles.push(veh);
+        });
+        return vehicles;
+    },
     setRank(player, rank) {
         var character = player.character;
         if (typeof rank == 'number') rank = this.getRank(character.factionId, rank);
@@ -692,5 +702,13 @@ module.exports = {
                 vehicles.respawn(veh);
             }
         });
-    }
+    },
+    setVehicleMinRank(veh, rank) {
+        if (!veh.db.minRank) veh.db.minRank = db.Models.FactionVehicleRank.build({
+            vehicleId: veh.db.id,
+            rank: rank
+        });
+        veh.db.minRank.rank = rank;
+        veh.db.minRank.save();
+    },
 };

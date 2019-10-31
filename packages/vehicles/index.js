@@ -188,6 +188,10 @@ module.exports = {
                 key: {
                     [Op.or]: ["newbie", "faction", "job", "farm"]
                 }
+            },
+            include: {
+                as: "minRank",
+                model: db.Models.FactionVehicleRank
             }
         });
         for (var i = 0; i < dbVehicles.length; i++) {

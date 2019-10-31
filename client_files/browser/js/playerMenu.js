@@ -509,8 +509,8 @@ var playerMenu = new Vue({
         menuBar: menuBar,
         socialData: socialData,
         menuBarFocus: menuBar[0],
-        name: "Jonathan Rockfall", // API: Имя игрока
-        admin: 0,
+        name: "Cyrus Raider", // API: Имя игрока
+        admin: 1,
         factionId: 0,
         media: 0,
         coins: 1000, // API: СС
@@ -521,6 +521,7 @@ var playerMenu = new Vue({
         confirmation: null,
         codeMod: false,
         code: '',
+        longName: false,
     },
     computed: {
         blurMod() {
@@ -855,6 +856,11 @@ var playerMenu = new Vue({
         },
         codeMod(val) {
             if (val) this.code = '';
+        },
+        name(val) {
+            setTimeout(() => {
+                this.longName = this.$refs.name.offsetHeight > this.$refs.def.offsetHeight;
+            }, 100);
         }
     },
     filters: {
@@ -1044,19 +1050,22 @@ Vue.component('player-menu-donate-convert', {
             if (isNaN(this.price) || this.price <= 0) return 0;
             return this.price * this.coefficient;
         },
+        isEnable() {
+            return this.price && this.price != 0 && this.price > 0 && (this.price <= playerMenu.coins);
+        }
     },
     methods: {
         inputCheck(event) {
             let regex = new RegExp("[0-9]")
             if (!regex.test(event.key))
                 event.preventDefault();
-            if (this.price + event.key > playerMenu.coins) {
+            /*if (this.price + event.key > playerMenu.coins) {
                 this.price = playerMenu.coins;
                 event.preventDefault();
-            }
+            }*/
         },
         convert() {
-            if (!this.virtualCoins) return;
+            if (!this.isEnable) return;
             playerMenu.showConfirmWindow(
                 "Подтверждение действия",
                 `Вы действительно хотите ковертировать <br />
@@ -1388,5 +1397,5 @@ Vue.component('player-menu-settings-protection', {
 });
 
 // playerMenu.show = true;
-
+// playerMenu.name = "Looooooonnnnnng Naaaaaaammeeeeee";
 //playerMenu.showConfirmWindow("Head ex", "description <br /> description")
