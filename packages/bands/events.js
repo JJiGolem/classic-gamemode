@@ -32,6 +32,9 @@ module.exports = {
         var faction = factions.getFaction(character.factionId);
         var header = `Склад ${faction.name}`;
 
+        var storage = factions.getStorage(player.insideFactionWarehouse);
+        if (!storage.isOpen) return notifs.error(player, `Склад банды закрыт`, header);
+
         if (faction.ammo < bands.gunAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
         var itemIds = [41, 21, 44, 20, 47, 89, 52];
@@ -69,6 +72,9 @@ module.exports = {
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
         var header = `Склад ${faction.name}`;
+
+        var storage = factions.getStorage(player.insideFactionWarehouse);
+        if (!storage.isOpen) return notifs.error(player, `Склад банды закрыт`, header);
 
         var itemIds = [37, 38, 40, 39];
         index = Math.clamp(index, 0, itemIds.length - 1);
@@ -136,6 +142,32 @@ module.exports = {
             if (rec.character.factionId != player.character.factionId) return;
 
             notifs.info(rec, `${player.name} снял $${sum}`, header);
+        });
+    },
+    "bands.storage.state": (player, open) => {
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Общак банды`);
+
+        var character = player.character;
+        var faction = factions.getFaction(character.factionId);
+        var header = `Склад ${faction.name}`;
+
+        if (!factions.isLeader(player)) return notifs.error(player, `Нет доступа`, header);
+
+        var storage = factions.getStorage(player.insideFactionWarehouse);
+
+        if (storage.isOpen == open) {
+            if (open) return notifs.error(player, `Склад уже открыт`, header);
+            else return notifs.error(player, `Склад уже закрыт`, header);
+        }
+
+        storage.isOpen = open;
+        var str = (open)? "открыл" : "закрыл";
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(rec, `${player.name} ${str} склад банды`, header);
         });
     },
     "bands.drugsStash.drugs.buy": (player, data) => {

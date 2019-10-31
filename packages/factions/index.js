@@ -145,6 +145,7 @@ module.exports = {
             color: [0, 187, 255, 70],
             dimension: faction.sD
         });
+        storage.isOpen = true;
         this.storages.push(storage);
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, storage.dimension);

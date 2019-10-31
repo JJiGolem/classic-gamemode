@@ -3414,6 +3414,9 @@ var selectMenu = new Vue({
                         text: "Общак"
                     },
                     {
+                        text: "Склад"
+                    },
+                    {
                         text: "Закрыть"
                     },
                 ],
@@ -3437,6 +3440,8 @@ var selectMenu = new Vue({
                             selectMenu.showByName("bandPower");
                         } else if (e.itemName == 'Общак') {
                             selectMenu.showByName("bandCash");
+                        } else if (e.itemName == 'Склад') {
+                            selectMenu.showByName("bandWarehouse");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
@@ -3672,6 +3677,44 @@ var selectMenu = new Vue({
                         }
                     } else if (eventName == 'onBackspacePressed' && this.i > 1)
                         selectMenu.showByName("bandCash");
+                }
+            },
+            "bandWarehouse": {
+                name: "bandWarehouse",
+                header: "Склад",
+                items: [{
+                        text: "Открыть",
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Открыть') {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `bands.storage.state`, true);
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `bands.storage.state`, false);
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("bandStorage");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("bandStorage");
                 }
             },
             "mafiaStorage": {
