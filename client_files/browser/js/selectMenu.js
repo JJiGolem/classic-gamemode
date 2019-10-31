@@ -1638,7 +1638,8 @@ var selectMenu = new Vue({
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.vehicles.show`);
                         } else if (e.itemName == 'Доступ к складу') {
-                            selectMenu.showByName('factionControlStorage');
+                            selectMenu.loader = true;
+                            mp.trigger(`callRemote`, `factions.control.warehouse.show`);
                         }
                     }
                 }
@@ -2016,6 +2017,14 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                clothesRanks: [],
+                itemRanks: [],
+                init(data) {
+                    if (typeof data == 'string') data = JSON.parse(data);
+
+                    this.clothesRanks = data.clothesRanks;
+                    this.itemRanks = data.itemRanks;
+                },
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2029,7 +2038,7 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Вернуться') selectMenu.showByName("factionControl");
                         else if (e.itemName == 'Форма') {
                             var menu = selectMenu.menus[`factionControlStorageClothes`];
-                            menu.init();
+                            menu.init(this.clothesRanks);
                             selectMenu.menu = menu;
                         } else if (e.itemName == 'Снаряжение') {
                             var menu = selectMenu.menus[`factionControlStorageItems`];
@@ -2055,7 +2064,7 @@ var selectMenu = new Vue({
                 }],
                 i: 0,
                 j: 0,
-                init() {
+                init(clothesRanks) {
                     var factionId = playerMenu.factionId;
                     if (!factionId) return;
                     var list = ["government", "lspd", "lssd", "fib", "hospital", "army", "news",
@@ -2065,9 +2074,27 @@ var selectMenu = new Vue({
                     if (factionId > list.length) return;
                     var str = list[factionId - 1];
                     var menu = selectMenu.menus[`${str}Clothes`];
-                    selectMenu.setItems(this.name, menu ? menu.items : [{
+                    if (!menu) return selectMenu.setItems(this.name, [{
                         text: "Вернуться"
                     }]);
+                    var rankNames = selectMenu.menus['factionControlRanks'].ranks.map(x => x.name);
+                    var items = [];
+                    for (var i = 0; i < menu.items.length - 1; i++) {
+                        items.push({
+                            text: menu.items[i].text,
+                            values: rankNames,
+                            i: 0,
+                        });
+                    }
+                    items.push({
+                        text: "Вернуться"
+                    });
+                    for (var i = 0; i < clothesRanks.length; i++) {
+                        var rank = clothesRanks[i];
+                        items[rank.clothesIndex].i = rank.rank - 1;
+                    }
+
+                    selectMenu.setItems(this.name, items);
                 },
                 handler(eventName) {
                     var item = this.items[this.i];
@@ -2081,7 +2108,12 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlStorage");
                         else {
-                            debug("todo")
+                            selectMenu.show = false;
+                            var data = {
+                                index: e.itemIndex,
+                                rank: item.i + 1
+                            };
+                            mp.trigger(`callRemote`, `factions.control.clothes.rank.set`, JSON.stringify(data));
                         }
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlStorage");
                 }

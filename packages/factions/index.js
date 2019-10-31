@@ -71,14 +71,28 @@ module.exports = {
         this.createMedicinesWarehouseMarker();
     },
     async loadFactionsFromDB() {
-        var dbFactons = await db.Models.Faction.findAll({
+        var dbFactions = await db.Models.Faction.findAll({
             include: [{
-                model: db.Models.FactionRank,
-                as: "ranks"
-            }]
+                    model: db.Models.FactionRank,
+                    as: "ranks",
+                },
+                {
+                    model: db.Models.FactionClothesRank,
+                    as: "clothesRanks",
+                }
+            ],
+            order: ['id']
         });
-        this.factions = dbFactons;
-        console.log(`[FACTIONS] Организации загужены (${dbFactons.length} шт.)`);
+        dbFactions.forEach(faction => {
+            faction.ranks.sort((a, b) => {
+                return a.id - b.id;
+            });
+            faction.clothesRanks.sort((a, b) => {
+                return a.id - b.id;
+            });
+        });
+        this.factions = dbFactions;
+        console.log(`[FACTIONS] Организации загужены (${dbFactions.length} шт.)`);
     },
     initFactionMarkers() {
         for (var i = 0; i < this.factions.length; i++) {

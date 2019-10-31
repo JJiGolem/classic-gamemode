@@ -448,6 +448,47 @@ module.exports = {
         rank.name = data.name;
         rank.save();
     },
+    "factions.control.warehouse.show": (player) => {
+        var out = (text) => {
+            player.call(`selectMenu.notification`, [text]);
+        };
+        if (!player.character.factionId) return out(`Вы не состоите в организации`);
+        if (!factions.isLeader(player)) return out(`Вы не лидер`);
+
+        var faction = factions.getFaction(player.character.factionId);
+
+        player.call(`factions.control.warehouse.show`, [{
+            clothesRanks: faction.clothesRanks,
+            itemRanks: [], // TODO: иниц.
+        }]);
+    },
+    "factions.control.clothes.rank.set": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+        var out = (text) => {
+            notifs.error(player, text);
+        };
+        if (!player.character.factionId) return out(`Вы не состоите в организации`);
+        if (!factions.isLeader(player)) return out(`Вы не лидер`);
+
+        var faction = factions.getFaction(player.character.factionId);
+        var clothesRank = faction.clothesRanks.find(x => x.clothesIndex == data.index);
+        if (!clothesRank) {
+            clothesRank = db.Models.FactionClothesRank.build({
+                factionId: faction.id,
+                clothesIndex: data.index,
+                rank: data.rank
+            });
+            faction.clothesRanks.push(clothesRank);
+        }
+        clothesRank.rank = data.rank;
+        clothesRank.save();
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+            notifs.info(rec, `${player.name} изменил ранг формы`, faction.name);
+        });
+    },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (seat != -1 || vehicle.key != 'faction') return;
         if (player.character.factionId != vehicle.owner) {

@@ -141,6 +141,10 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'factionId',
             as: "ranks"
         });
+        model.hasMany(models.FactionClothesRank, {
+            foreignKey: 'factionId',
+            as: "clothesRanks"
+        });
     };
 
     return model;

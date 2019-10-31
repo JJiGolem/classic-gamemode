@@ -92,6 +92,10 @@ mp.factions = {
         mp.callCEFV(`selectMenu.menus['factionControlVehicles'].init('${JSON.stringify(data)}')`);
         mp.callCEFV(`selectMenu.showByName('factionControlVehicles')`);
     },
+    showWarehouseSelectMenu(data) {
+        mp.callCEFV(`selectMenu.menus['factionControlStorage'].init('${JSON.stringify(data)}')`);
+        mp.callCEFV(`selectMenu.showByName('factionControlStorage')`);
+    },
     isGovernmentFaction(factionId) {
         return factionId == 1;
     },
@@ -193,6 +197,9 @@ mp.events.add({
     },
     "factions.control.vehicles.show": (data) => {
         mp.factions.showVehiclesSelectMenu(data);
+    },
+    "factions.control.warehouse.show": (data) => {
+        mp.factions.showWarehouseSelectMenu(data);
     },
     "factions.info.set": (info) => {
         mp.factions.setInfo(info);
