@@ -1607,7 +1607,7 @@ var selectMenu = new Vue({
                         text: "Транспорт"
                     },
                     {
-                        text: "Склад"
+                        text: "Доступ к складу"
                     },
                     {
                         text: "Закрыть"
@@ -1637,7 +1637,7 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Транспорт') {
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.vehicles.show`);
-                        } else if (e.itemName == 'Склад') {
+                        } else if (e.itemName == 'Доступ к складу') {
                             selectMenu.showByName('factionControlStorage');
                         }
                     }
@@ -2032,11 +2032,17 @@ var selectMenu = new Vue({
                             menu.init();
                             selectMenu.menu = menu;
                         } else if (e.itemName == 'Снаряжение') {
-
+                            var menu = selectMenu.menus[`factionControlStorageItems`];
+                            menu.init();
+                            selectMenu.menu = menu;
                         } else if (e.itemName == 'Вооружение') {
-
+                            var menu = selectMenu.menus[`factionControlStorageGuns`];
+                            menu.init();
+                            selectMenu.menu = menu;
                         } else if (e.itemName == 'Патроны') {
-
+                            var menu = selectMenu.menus[`factionControlStorageAmmo`];
+                            menu.init();
+                            selectMenu.menu = menu;
                         }
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControl");
                 }
@@ -2044,23 +2050,143 @@ var selectMenu = new Vue({
             "factionControlStorageClothes": {
                 name: "factionControlStorageClothes",
                 header: "Доступ к форме",
-                items: [
-                    {
-                        text: "Вернуться"
-                    }
-                ],
+                items: [{
+                    text: "Вернуться"
+                }],
                 i: 0,
                 j: 0,
                 init() {
                     var factionId = playerMenu.factionId;
                     if (!factionId) return;
-                    var list = ["government", "lspd", "lssd", "fib", "army", "hospital", "news",
-                        // "band", "band", "band", "band",
-                        // "mafia", "mafia", "mafia"
+                    var list = ["government", "lspd", "lssd", "fib", "hospital", "army", "news",
+                        "band", "band", "band", "band",
+                        "mafia", "mafia", "mafia"
                     ];
                     if (factionId > list.length) return;
                     var str = list[factionId - 1];
-                    selectMenu.setItems(this.name, selectMenu.menus[`${str}Clothes`].items);
+                    var menu = selectMenu.menus[`${str}Clothes`];
+                    selectMenu.setItems(this.name, menu ? menu.items : [{
+                        text: "Вернуться"
+                    }]);
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlStorage");
+                        else {
+                            debug("todo")
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlStorage");
+                }
+            },
+            "factionControlStorageItems": {
+                name: "factionControlStorageItems",
+                header: "Доступ к снаряжению",
+                items: [{
+                    text: "Вернуться"
+                }],
+                i: 0,
+                j: 0,
+                init() {
+                    var factionId = playerMenu.factionId;
+                    if (!factionId) return;
+                    var list = ["government", "lspd", "lssd", "fib", "hospital", "army", "news",
+                        "band", "band", "band", "band",
+                        "mafia", "mafia", "mafia"
+                    ];
+                    if (factionId > list.length) return;
+                    var str = list[factionId - 1];
+                    debug(str)
+                    var menu = selectMenu.menus[`${str}Items`];
+                    debug(menu)
+                    selectMenu.setItems(this.name, menu ? menu.items : [{
+                        text: "Вернуться"
+                    }]);
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlStorage");
+                        else {
+                            debug("todo")
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlStorage");
+                }
+            },
+            "factionControlStorageGuns": {
+                name: "factionControlStorageGuns",
+                header: "Доступ к вооружению",
+                items: [{
+                    text: "Вернуться"
+                }],
+                i: 0,
+                j: 0,
+                init() {
+                    var factionId = playerMenu.factionId;
+                    if (!factionId) return;
+                    var list = ["government", "lspd", "lssd", "fib", "hospital", "army", "news",
+                        "band", "band", "band", "band",
+                        "mafia", "mafia", "mafia"
+                    ];
+                    if (factionId > list.length) return;
+                    var str = list[factionId - 1];
+                    var menu = selectMenu.menus[`${str}Guns`];
+                    selectMenu.setItems(this.name, menu ? menu.items : [{
+                        text: "Вернуться"
+                    }]);
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlStorage");
+                        else {
+                            debug("todo")
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlStorage");
+                }
+            },
+            "factionControlStorageAmmo": {
+                name: "factionControlStorageAmmo",
+                header: "Доступ к вооружению",
+                items: [{
+                    text: "Вернуться"
+                }],
+                i: 0,
+                j: 0,
+                init() {
+                    var factionId = playerMenu.factionId;
+                    if (!factionId) return;
+                    var list = ["government", "lspd", "lssd", "fib", "hospital", "army", "news",
+                        "band", "band", "band", "band",
+                        "mafia", "mafia", "mafia"
+                    ];
+                    if (factionId > list.length) return;
+                    var str = list[factionId - 1];
+                    var menu = selectMenu.menus[`${str}Ammo`];
+                    selectMenu.setItems(this.name, menu ? menu.items : [{
+                        text: "Вернуться"
+                    }]);
                 },
                 handler(eventName) {
                     var item = this.items[this.i];
