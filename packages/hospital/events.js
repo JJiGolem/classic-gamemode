@@ -189,6 +189,7 @@ module.exports = {
 
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
+        var rank = factions.getRankById(faction, character.factionRank);
         var header = `Склад ${faction.name}`;
 
         if (faction.medicines < hospital.itemMedicines) return notifs.error(player, `Недостаточно медикаментов`, header);
@@ -197,6 +198,9 @@ module.exports = {
 
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
+
+        var minRank = faction.itemRanks.find(x => x.itemId == itemId);
+        if (minRank && minRank.rank > rank.rank) return notifs.error(player, `Доступно с ранга ${factions.getRank(faction, minRank.rank).name}`, header);
 
         var itemName = inventory.getInventoryItem(itemId).name;
         // var items = inventory.getArrayByItemId(player, itemId);

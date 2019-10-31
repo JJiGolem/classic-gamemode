@@ -182,6 +182,7 @@ module.exports = {
 
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
+        var rank = factions.getRankById(faction, character.factionRank);
         var header = `Склад ${faction.name}`;
 
         if (faction.ammo < government.itemAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
@@ -190,6 +191,9 @@ module.exports = {
 
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
+
+        var minRank = faction.itemRanks.find(x => x.itemId == itemId);
+        if (minRank && minRank.rank > rank.rank) return notifs.error(player, `Доступно с ранга ${factions.getRank(faction, minRank.rank).name}`, header);
 
         var itemName = inventory.getInventoryItem(itemId).name;
         // var items = inventory.getArrayByItemId(player, itemId);
@@ -215,6 +219,7 @@ module.exports = {
 
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
+        var rank = factions.getRankById(faction, character.factionRank);
         var header = `Склад ${faction.name}`;
 
         if (faction.ammo < government.gunAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
@@ -223,6 +228,10 @@ module.exports = {
         var weaponIds = ["weapon_stungun", "weapon_heavypistol", "weapon_assaultsmg", "weapon_advancedrifle", "weapon_bullpupshotgun"];
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
+
+        var minRank = faction.itemRanks.find(x => x.itemId == itemId);
+        if (minRank && minRank.rank > rank.rank) return notifs.error(player, `Доступно с ранга ${factions.getRank(faction, minRank.rank).name}`, header);
+
 
         var gunName = inventory.getInventoryItem(itemId).name;
         var guns = inventory.getArrayByItemId(player, itemId);
@@ -253,10 +262,15 @@ module.exports = {
 
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
+        var rank = factions.getRankById(faction, character.factionRank)
         var header = `Склад ${faction.name}`;
 
         var itemIds = [37, 38, 40, 39];
         index = Math.clamp(index, 0, itemIds.length - 1);
+
+        var minRank = faction.itemRanks.find(x => x.itemId == itemIds[index]);
+        if (minRank && minRank.rank > rank.rank) return notifs.error(player, `Доступно с ранга ${factions.getRank(faction, minRank.rank).name}`, header);
+
         if (faction.ammo < government.ammoAmmo * ammo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
         // inventory.fullDeleteItemsByParams(itemIds[index], ["faction", "owner"], [character.factionId, character.id]);
