@@ -1638,7 +1638,8 @@ var selectMenu = new Vue({
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.vehicles.show`);
                         } else if (e.itemName == 'Доступ к складу') {
-                            selectMenu.showByName('factionControlStorage');
+                            selectMenu.loader = true;
+                            mp.trigger(`callRemote`, `factions.control.warehouse.show`);
                         }
                     }
                 }
@@ -2016,6 +2017,14 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                clothesRanks: [],
+                itemRanks: [],
+                init(data) {
+                    if (typeof data == 'string') data = JSON.parse(data);
+
+                    this.clothesRanks = data.clothesRanks;
+                    this.itemRanks = data.itemRanks;
+                },
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2029,19 +2038,19 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Вернуться') selectMenu.showByName("factionControl");
                         else if (e.itemName == 'Форма') {
                             var menu = selectMenu.menus[`factionControlStorageClothes`];
-                            menu.init();
+                            menu.init(this.clothesRanks);
                             selectMenu.menu = menu;
                         } else if (e.itemName == 'Снаряжение') {
                             var menu = selectMenu.menus[`factionControlStorageItems`];
-                            menu.init();
+                            menu.init(this.itemRanks);
                             selectMenu.menu = menu;
                         } else if (e.itemName == 'Вооружение') {
                             var menu = selectMenu.menus[`factionControlStorageGuns`];
-                            menu.init();
+                            menu.init(this.itemRanks);
                             selectMenu.menu = menu;
                         } else if (e.itemName == 'Патроны') {
                             var menu = selectMenu.menus[`factionControlStorageAmmo`];
-                            menu.init();
+                            menu.init(this.itemRanks);
                             selectMenu.menu = menu;
                         }
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControl");
@@ -2055,7 +2064,7 @@ var selectMenu = new Vue({
                 }],
                 i: 0,
                 j: 0,
-                init() {
+                init(clothesRanks) {
                     var factionId = playerMenu.factionId;
                     if (!factionId) return;
                     var list = ["government", "lspd", "lssd", "fib", "hospital", "army", "news",
@@ -2065,9 +2074,27 @@ var selectMenu = new Vue({
                     if (factionId > list.length) return;
                     var str = list[factionId - 1];
                     var menu = selectMenu.menus[`${str}Clothes`];
-                    selectMenu.setItems(this.name, menu ? menu.items : [{
+                    if (!menu) return selectMenu.setItems(this.name, [{
                         text: "Вернуться"
                     }]);
+                    var rankNames = selectMenu.menus['factionControlRanks'].ranks.map(x => x.name);
+                    var items = [];
+                    for (var i = 0; i < menu.items.length - 1; i++) {
+                        items.push({
+                            text: menu.items[i].text,
+                            values: rankNames,
+                            i: 0,
+                        });
+                    }
+                    items.push({
+                        text: "Вернуться"
+                    });
+                    for (var i = 0; i < clothesRanks.length; i++) {
+                        var rank = clothesRanks[i];
+                        items[rank.clothesIndex].i = rank.rank - 1;
+                    }
+
+                    selectMenu.setItems(this.name, items);
                 },
                 handler(eventName) {
                     var item = this.items[this.i];
@@ -2081,7 +2108,12 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlStorage");
                         else {
-                            debug("todo")
+                            selectMenu.show = false;
+                            var data = {
+                                index: e.itemIndex,
+                                rank: item.i + 1
+                            };
+                            mp.trigger(`callRemote`, `factions.control.clothes.rank.set`, JSON.stringify(data));
                         }
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlStorage");
                 }
@@ -2311,6 +2343,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [24, 28],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2350,6 +2383,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [19, 80, 87, 100, 93],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2390,6 +2424,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [37, 38, 40, 39],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2685,6 +2720,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [28, 24],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2731,6 +2767,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [18, 17, 19, 20, 48, 21, 22],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2771,6 +2808,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [37, 38, 40, 39],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2896,6 +2934,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [28, 24],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2942,6 +2981,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [18, 17, 19, 20, 48, 21, 22],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2982,6 +3022,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [37, 38, 40, 39],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -3107,6 +3148,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [28, 24, 4],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -3150,6 +3192,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [107, 99, 88, 46, 19, 91],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -3190,6 +3233,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [37, 38, 40, 39],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -3327,6 +3371,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [24, 28],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -3367,6 +3412,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [17, 80, 48, 21, 22],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -3407,6 +3453,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [37, 38, 40, 39],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -3524,6 +3571,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [24, 27, 25, 26],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -3693,6 +3741,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [41, 21, 44, 20, 47, 89, 52],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -3733,6 +3782,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [37, 38, 40, 39],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -4015,6 +4065,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [44, 46, 90, 48, 49, 96, 50, 22],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -4055,6 +4106,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [37, 38, 40, 39],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
