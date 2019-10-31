@@ -1607,6 +1607,9 @@ var selectMenu = new Vue({
                         text: "Транспорт"
                     },
                     {
+                        text: "Склад"
+                    },
+                    {
                         text: "Закрыть"
                     }
                 ],
@@ -1634,6 +1637,8 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Транспорт') {
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.vehicles.show`);
+                        } else if (e.itemName == 'Склад') {
+                            selectMenu.showByName('factionControlStorage');
                         }
                     }
                 }
@@ -1988,6 +1993,90 @@ var selectMenu = new Vue({
                             mp.trigger(`callRemote`, `factions.control.vehicles.minRank.set`, JSON.stringify(data));
                         }
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlVehicles");
+                }
+            },
+            "factionControlStorage": {
+                name: "factionControlStorage",
+                header: "Доступ к складу",
+                items: [{
+                        text: "Форма",
+                    },
+                    {
+                        text: "Снаряжение",
+                    },
+                    {
+                        text: "Вооружение",
+                    },
+                    {
+                        text: "Патроны",
+                    },
+                    {
+                        text: "Вернуться"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControl");
+                        else if (e.itemName == 'Форма') {
+                            var menu = selectMenu.menus[`factionControlStorageClothes`];
+                            menu.init();
+                            selectMenu.menu = menu;
+                        } else if (e.itemName == 'Снаряжение') {
+
+                        } else if (e.itemName == 'Вооружение') {
+
+                        } else if (e.itemName == 'Патроны') {
+
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControl");
+                }
+            },
+            "factionControlStorageClothes": {
+                name: "factionControlStorageClothes",
+                header: "Доступ к форме",
+                items: [
+                    {
+                        text: "Вернуться"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                init() {
+                    var factionId = playerMenu.factionId;
+                    if (!factionId) return;
+                    var list = ["government", "lspd", "lssd", "fib", "army", "hospital", "news",
+                        // "band", "band", "band", "band",
+                        // "mafia", "mafia", "mafia"
+                    ];
+                    if (factionId > list.length) return;
+                    var str = list[factionId - 1];
+                    selectMenu.setItems(this.name, selectMenu.menus[`${str}Clothes`].items);
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlStorage");
+                        else {
+                            debug("todo")
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlStorage");
                 }
             },
             "governmentStorage": {
