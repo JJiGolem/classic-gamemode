@@ -2189,7 +2189,8 @@ var selectMenu = new Vue({
                 }],
                 i: 0,
                 j: 0,
-                init() {
+                itemIds: [],
+                init(itemRanks) {
                     var factionId = playerMenu.factionId;
                     if (!factionId) return;
                     var list = ["government", "lspd", "lssd", "fib", "hospital", "army", "news",
@@ -2199,9 +2200,27 @@ var selectMenu = new Vue({
                     if (factionId > list.length) return;
                     var str = list[factionId - 1];
                     var menu = selectMenu.menus[`${str}Guns`];
-                    selectMenu.setItems(this.name, menu ? menu.items : [{
+                    var rankNames = selectMenu.menus['factionControlRanks'].ranks.map(x => x.name);
+                    var items = [];
+                    for (var i = 0; i < menu.items.length - 1; i++) {
+                        items.push({
+                            text: menu.items[i].text,
+                            values: rankNames,
+                            i: 0,
+                        });
+                    }
+                    items.push({
                         text: "Вернуться"
-                    }]);
+                    });
+
+                    for (var i = 0; i < menu.itemIds.length; i++) {
+                        var itemId = menu.itemIds[i];
+                        var minRank = itemRanks.find(x => x.itemId == itemId);
+                        items[i].i = (minRank) ? minRank.rank - 1 : 0;
+                    }
+
+                    selectMenu.setItems(this.name, items);
+                    this.itemIds = menu.itemIds;
                 },
                 handler(eventName) {
                     var item = this.items[this.i];
@@ -2215,20 +2234,26 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlStorage");
                         else {
-                            debug("todo")
+                            selectMenu.show = false;
+                            var data = {
+                                itemId: this.itemIds[e.itemIndex],
+                                rank: item.i + 1
+                            };
+                            mp.trigger(`callRemote`, `factions.control.items.rank.set`, JSON.stringify(data));
                         }
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlStorage");
                 }
             },
             "factionControlStorageAmmo": {
                 name: "factionControlStorageAmmo",
-                header: "Доступ к вооружению",
+                header: "Доступ к патронам",
                 items: [{
                     text: "Вернуться"
                 }],
                 i: 0,
                 j: 0,
-                init() {
+                itemIds: [],
+                init(itemRanks) {
                     var factionId = playerMenu.factionId;
                     if (!factionId) return;
                     var list = ["government", "lspd", "lssd", "fib", "hospital", "army", "news",
@@ -2238,9 +2263,27 @@ var selectMenu = new Vue({
                     if (factionId > list.length) return;
                     var str = list[factionId - 1];
                     var menu = selectMenu.menus[`${str}Ammo`];
-                    selectMenu.setItems(this.name, menu ? menu.items : [{
+                    var rankNames = selectMenu.menus['factionControlRanks'].ranks.map(x => x.name);
+                    var items = [];
+                    for (var i = 0; i < menu.items.length - 1; i++) {
+                        items.push({
+                            text: menu.items[i].text,
+                            values: rankNames,
+                            i: 0,
+                        });
+                    }
+                    items.push({
                         text: "Вернуться"
-                    }]);
+                    });
+
+                    for (var i = 0; i < menu.itemIds.length; i++) {
+                        var itemId = menu.itemIds[i];
+                        var minRank = itemRanks.find(x => x.itemId == itemId);
+                        items[i].i = (minRank) ? minRank.rank - 1 : 0;
+                    }
+
+                    selectMenu.setItems(this.name, items);
+                    this.itemIds = menu.itemIds;
                 },
                 handler(eventName) {
                     var item = this.items[this.i];
@@ -2254,7 +2297,12 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlStorage");
                         else {
-                            debug("todo")
+                            selectMenu.show = false;
+                            var data = {
+                                itemId: this.itemIds[e.itemIndex],
+                                rank: item.i + 1
+                            };
+                            mp.trigger(`callRemote`, `factions.control.items.rank.set`, JSON.stringify(data));
                         }
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlStorage");
                 }
