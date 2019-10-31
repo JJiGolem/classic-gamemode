@@ -28,6 +28,11 @@ module.exports = {
     "clothingShop.enter": (player) => {
         let id = player.currentClothingShopId;
         let data = clothingShop.getRawShopData(id);
+        data.appearance = {
+            hairColor: player.character.hairColor,
+            hairHighlightColor: player.character.hairHighlightColor,
+            hairstyle: player.character.hair
+        }
         player.call('clothingShop.enter', [data]);
     },
     "clothingShop.exit": (player) => {

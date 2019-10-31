@@ -21,6 +21,8 @@ let priceMultiplier;
 //     textureIndex: 0
 // };
 
+let hairInfo = {};
+
 let input = {
     clothes: {
         4: {
@@ -131,6 +133,8 @@ mp.events.add({
         player.setComponentVariation(1, 0, 0, 0); /// убираем маску
         bindKeys(true);
         setHeaders(shopData.bType);
+        initCurrentHair(shopData.appearance);
+        setHair();
         mp.events.call('hud.enable', false);
         mp.game.ui.displayRadar(false);
         mp.callCEFR('setOpacityChat', [0.0]);
@@ -354,4 +358,15 @@ function setInputClothes() {
         player.setPropIndex(key, item.drawable, item.texture, true);
         if (item.drawable == -1) player.clearProp(key);
     }
+}
+
+function initCurrentHair(data) {
+    hairInfo.hairstyle = data.hairstyle;
+    hairInfo.hairColor = data.hairColor;
+    hairInfo.hairHighlightColor = data.hairHighlightColor;
+}
+
+function setHair() {
+    player.setComponentVariation(2, hairInfo.hairstyle, 0, 2);
+    player.setHairColor(hairInfo.hairColor, hairInfo.hairHighlightColor);
 }
