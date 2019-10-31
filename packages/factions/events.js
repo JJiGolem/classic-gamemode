@@ -489,6 +489,33 @@ module.exports = {
             notifs.info(rec, `${player.name} изменил ранг формы`, faction.name);
         });
     },
+    "factions.control.items.rank.set": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+        var out = (text) => {
+            notifs.error(player, text);
+        };
+        if (!player.character.factionId) return out(`Вы не состоите в организации`);
+        if (!factions.isLeader(player)) return out(`Вы не лидер`);
+
+        var faction = factions.getFaction(player.character.factionId);
+        var itemRank = faction.itemRanks.find(x => x.itemId == data.itemId);
+        if (!itemRank) {
+            itemRank = db.Models.FactionItemRank.build({
+                factionId: faction.id,
+                itemId: data.itemId,
+                rank: data.rank
+            });
+            faction.itemRanks.push(itemRank);
+        }
+        itemRank.rank = data.rank;
+        itemRank.save();
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+            notifs.info(rec, `${player.name} изменил ранг предмета`, faction.name);
+        });
+    },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (seat != -1 || vehicle.key != 'faction') return;
         if (player.character.factionId != vehicle.owner) {
