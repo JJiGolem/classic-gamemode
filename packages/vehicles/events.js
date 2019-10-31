@@ -504,5 +504,11 @@ module.exports = {
         vehicle.setColor(vehicle.db.color1, vehicle.db.color2);
         vehicle.numberPlate = vehicle.db.plate;
         console.log(`[vehicles] Invalid vehicle found & fixed by ${player.name}`);
+    },
+    "vehicles.own.list.show": (player) => {
+        if (!player.character) return;
+        if (player.vehicleList.length == 0) return notifs.error(player, `У вас нет транспорта`);
+        console.log(player.vehicleList);
+        player.call('vehicles.own.list.show', [player.vehicleList]);
     }
 }

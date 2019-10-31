@@ -100,6 +100,10 @@ var interactionMenu = new Vue({
                         text: "Мои документы",
                         icon: "doc.png"
                     },
+                    {
+                        text: "Мой транспорт",
+                        icon: "vehicle.svg"
+                    },
                     // {
                     //     text: "Анимации",
                     //     icon: "activity.png"
@@ -128,6 +132,9 @@ var interactionMenu = new Vue({
                     } else if (item.text == "Эфир") {
                         mp.trigger(`interaction.menu.close`);
                         mp.trigger(`callRemote`, `news.stream`);
+                    } else if (item.text == "Мой транспорт") {
+                        mp.trigger(`interaction.menu.close`);
+                        mp.trigger(`callRemote`, `vehicles.own.list.show`);
                     }
                 }
             },

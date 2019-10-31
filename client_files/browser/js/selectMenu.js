@@ -7649,7 +7649,7 @@ var selectMenu = new Vue({
                 }
             },
             "vehiclePropAdd": {
-                name: "eateryMain",
+                name: "vehiclePropAdd",
                 header: "Добавление т/с",
                 items: [{
                         text: 'Модель',
@@ -8251,6 +8251,73 @@ var selectMenu = new Vue({
                         selectMenu.menus["tattooDelete"].i = 0;
                         selectMenu.menus["tattooDelete"].j = 0;
                         mp.trigger('tattoo.clear');
+                    }
+                }
+            },
+            "ownVehiclesList": {
+                name: "ownVehiclesList",
+                header: "Личный транспорт",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        } else {
+                            mp.trigger('vehicles.own.menu.show', e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.show = false;
+                    }
+                }
+            },
+            "ownVehicleMenu": {
+                name: "ownVehicleMenu",
+                header: "Личный транспорт",
+                items: [
+                    {
+                        text: 'Номер',
+                        values: ['0']
+                    },
+                    {
+                        text: 'Поиск по GPS'
+                    },
+                    {
+                        text: 'Доставить',
+                        values: ['$100']
+                    },
+                    {
+                        text: 'Назад'
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('ownVehiclesList');
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.show = false;
                     }
                 }
             },
