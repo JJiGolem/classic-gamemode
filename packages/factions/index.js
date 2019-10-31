@@ -79,7 +79,11 @@ module.exports = {
                 {
                     model: db.Models.FactionClothesRank,
                     as: "clothesRanks",
-                }
+                },
+                {
+                    model: db.Models.FactionItemRank,
+                    as: "itemRanks",
+                },
             ],
             order: ['id']
         });
@@ -88,6 +92,9 @@ module.exports = {
                 return a.id - b.id;
             });
             faction.clothesRanks.sort((a, b) => {
+                return a.id - b.id;
+            });
+            faction.itemRanks.sort((a, b) => {
                 return a.id - b.id;
             });
         });

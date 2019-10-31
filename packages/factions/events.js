@@ -459,7 +459,7 @@ module.exports = {
 
         player.call(`factions.control.warehouse.show`, [{
             clothesRanks: faction.clothesRanks,
-            itemRanks: [], // TODO: иниц.
+            itemRanks: faction.itemRanks,
         }]);
     },
     "factions.control.clothes.rank.set": (player, data) => {
