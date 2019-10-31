@@ -17,8 +17,13 @@ module.exports = {
             return current;
         });
         let data = masks.getShopData();
+        let appearanceData = {
+            hairColor: player.character.hairColor,
+            hairHighlightColor: player.character.hairHighlightColor,
+            hairstyle: player.character.hair
+        }
         player.dimension = player.id + 1;
-        player.call("masks.shop.enter", [data, list]);
+        player.call("masks.shop.enter", [data, list, appearanceData]);
     },
     "masks.shop.exit": (player) => {
         player.dimension = 0;
