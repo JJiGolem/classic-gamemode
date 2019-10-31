@@ -7,6 +7,7 @@ let isAbleToEnter = false;
 let gender;
 let priceMultiplier;
 let deletePrice;
+let hairInfo = {};
 
 let tattoPacksLoaded = 0;
 
@@ -44,6 +45,8 @@ mp.events.add({
         deletePrice = shopData.deleteTattooPrice;
         bindKeys(true);
         sortTattooList();
+        initCurrentHair(shopData.appearance);
+        setHair();
         clearClothes();
         setHeaders(shopData.bType);
         mp.events.call('hud.enable', false);
@@ -310,4 +313,15 @@ function setHeaders(type) {
 function isAbleToBuyTattoo(name) {
     let tattoo = characterTattoos.find(x => x.name == name); 
     return tattoo ? false : true;
+}
+
+function initCurrentHair(data) {
+    hairInfo.hairstyle = data.hairstyle;
+    hairInfo.hairColor = data.hairColor;
+    hairInfo.hairHighlightColor = data.hairHighlightColor;
+}
+
+function setHair() {
+    player.setComponentVariation(2, hairInfo.hairstyle, 0, 2);
+    player.setHairColor(hairInfo.hairColor, hairInfo.hairHighlightColor);
 }

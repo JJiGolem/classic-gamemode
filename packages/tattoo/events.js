@@ -52,6 +52,11 @@ module.exports = {
         let id = player.currentTattooParlorId;
         let data = tattoo.getRawShopData(id);
         data.deleteTattooPrice = tattoo.deleteTattooProducts * tattoo.productPrice;
+        data.appearance = {
+            hairColor: player.character.hairColor,
+            hairHighlightColor: player.character.hairHighlightColor,
+            hairstyle: player.character.hair
+        }
         let gender = player.character.gender;
         player.call('tattoo.enter', [data, gender]);
     },
