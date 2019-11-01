@@ -8385,9 +8385,16 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Назад') {
                             selectMenu.showByName('ownVehiclesList');
                         }
+                        if (e.itemName == 'Поиск по GPS') {
+                            selectMenu.show = false;
+                            mp.trigger('vehicles.own.find');
+                        }
+                        if (e.itemName == 'Доставить') {
+                            mp.trigger('vehicles.own.deliver');
+                        }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
-                        selectMenu.show = false;
+                        selectMenu.showByName('ownVehiclesList');
                     }
                 }
             },

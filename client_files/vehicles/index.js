@@ -2,6 +2,7 @@ let breakdowns = require('vehicles/breakdowns.js');
 let sell = require('vehicles/sell.js');
 let garage = require('vehicles/garage.js');
 let radiosync = require('vehicles/radiosync.js');
+let own = require('vehicles/own.js');
 let currentSirenState = false;
 
 mp.speedometerEnabled = true;
@@ -613,28 +614,4 @@ mp.events.add('characterInit.done', () => {
             }
         });
     }, 1000);
-});
-
-let vehicleList = [];
-let currentVehicleListInfo;
-
-mp.events.add('vehicles.own.list.show', (list) => {
-    vehicleList = list;
-    let items = [];
-    list.forEach((current) => {
-        items.push({
-            text: current.name,
-            values: [current.plate]
-        });
-    });
-    items.push({ text: 'Закрыть' });
-    mp.callCEFV(`selectMenu.setItems('ownVehiclesList', ${JSON.stringify(items)});`)
-    mp.events.call('selectMenu.show', 'ownVehiclesList');
-});
-
-mp.events.add('vehicles.own.menu.show', (index) => {
-    currentVehicleListInfo = vehicleList[index];
-    mp.callCEFV(`selectMenu.menus['ownVehicleMenu'].items[0].values = ['${currentVehicleListInfo.plate}']`);
-    mp.callCEFV(`selectMenu.menus['ownVehicleMenu'].header = '${currentVehicleListInfo.name}'`);
-    mp.events.call('selectMenu.show', 'ownVehicleMenu');
 });

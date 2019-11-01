@@ -6,6 +6,8 @@ var utils = call('utils');
 var timer = call('timer');
 
 let money = call('money');
+let houses = call('houses');
+
 module.exports = {
     "init": () => {
         vehicles.init();
@@ -508,7 +510,21 @@ module.exports = {
     "vehicles.own.list.show": (player) => {
         if (!player.character) return;
         if (player.vehicleList.length == 0) return notifs.error(player, `У вас нет транспорта`);
-        console.log(player.vehicleList);
         player.call('vehicles.own.list.show', [player.vehicleList]);
+    },
+    "vehicles.own.deliver": (player, id) => {
+        //todo 
+        console.log('request delivery')
+    },
+    "vehicles.own.find": (player, id) => {
+        let hasHouse = houses.isHaveHouse(player.character.id);
+        let vehicle = mp.vehicles.toArray().find(x => x.sqlId == id);
+        if (!vehicle) return hasHouse ? notifs.error(player, `Транспорт не найден`, `GPS`) : 
+        notifs.warning(player, `Не удалось отследить ваше т/с, ищите его на парковке`, `GPS`);
+
+        if (vehicle.dimension != 0) return notifs.warning(player, `Не удалось отследить ваше т/с, попробуйте выполнить доставку`, `GPS`);
+        let pos = vehicle.position;
+        player.call('vehicles.own.destination.create', [pos]);
+        notifs.success(player, 'Транспортное средство отмечено на карте', 'GPS');
     }
 }
