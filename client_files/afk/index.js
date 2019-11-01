@@ -61,6 +61,16 @@ mp.events.add({
         var value = player.getVariable("afk");
         mp.afk.setAfk(player, value);
     },
+    "playerStartMeleeCombat": () => {
+        var player = mp.players.local;
+        if (!player.getVariable("afk")) return;
+        mp.afk.setAfk(player, false);
+    },
+    "playerWeaponShot": () => {
+        var player = mp.players.local;
+        if (!player.getVariable("afk")) return;
+        mp.afk.setAfk(player, false);
+    },
 });
 
 mp.events.addDataHandler("afk", (player, value) => {

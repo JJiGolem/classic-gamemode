@@ -185,6 +185,7 @@ mp.farms = {
             },
         ];
         mp.callCEFV(`selectMenu.setItems('farmWarehouseInfo', '${JSON.stringify(items)}')`);
+        mp.callCEFV(`selectMenu.menus['farmGrainsTake'].init('${JSON.stringify(data.fieldIds)}')`);
     },
     setSoilsWarehouseInfo(data) {
         var items = [{

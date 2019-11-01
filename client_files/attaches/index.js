@@ -17,7 +17,8 @@ mp.attachmentMngr = {
                 entity.__attachmentObjects[id] = object;
 
                 var a = attInfo.anim;
-                if (a && !entity.vehicle) {
+                if (a && !entity.vehicle &&
+                    entity.isJumping() || entity.isShooting() || entity.isSwimming() || entity.isFalling()) {
                     entity.clearTasksImmediately();
                     mp.utils.requestAnimDict(a.dict, () => {
                         entity.taskPlayAnim(a.dict, a.name, a.speed, 0, -1, a.flag, 0, false, false, false);

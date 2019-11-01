@@ -293,7 +293,7 @@ module.exports = {
 
             var info = item.attachInfo;
             out.info(`${player.name} изменил анимацию аттача предмета в руке #${item.id} (${info.anim} => ${args[1]})`);
-            info.anim = args[0];
+            info.anim = args[1];
             item.attachInfo = info;
             item.save();
             inventory.updateItemInfo(item);

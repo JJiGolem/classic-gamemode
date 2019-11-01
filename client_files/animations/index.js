@@ -14,8 +14,9 @@ mp.animations = {
 
     playAnimation(player, a, time = null) {
         mp.timer.remove(this.animationTimers[player.remoteId]);
-        player.clearTasksImmediately();
         delete player.anim;
+        if (player.isJumping() || player.isShooting() || player.isSwimming() || player.isFalling()) return;
+        player.clearTasksImmediately();
         if (!a) return;
         mp.utils.requestAnimDict(a.dict, () => {
             player.taskPlayAnim(a.dict, a.name, a.speed, 0, -1, a.flag, 0, false, false, false);

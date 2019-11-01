@@ -2038,20 +2038,16 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Вернуться') selectMenu.showByName("factionControl");
                         else if (e.itemName == 'Форма') {
                             var menu = selectMenu.menus[`factionControlStorageClothes`];
-                            menu.init(this.clothesRanks);
-                            selectMenu.menu = menu;
+                            menu.show(this.clothesRanks);
                         } else if (e.itemName == 'Снаряжение') {
                             var menu = selectMenu.menus[`factionControlStorageItems`];
-                            menu.init(this.itemRanks);
-                            selectMenu.menu = menu;
+                            menu.show(this.itemRanks);
                         } else if (e.itemName == 'Вооружение') {
                             var menu = selectMenu.menus[`factionControlStorageGuns`];
-                            menu.init(this.itemRanks);
-                            selectMenu.menu = menu;
+                            menu.show(this.itemRanks);
                         } else if (e.itemName == 'Патроны') {
                             var menu = selectMenu.menus[`factionControlStorageAmmo`];
-                            menu.init(this.itemRanks);
-                            selectMenu.menu = menu;
+                            menu.show(this.itemRanks);
                         }
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControl");
                 }
@@ -2064,7 +2060,7 @@ var selectMenu = new Vue({
                 }],
                 i: 0,
                 j: 0,
-                init(clothesRanks) {
+                show(clothesRanks) {
                     var factionId = playerMenu.factionId;
                     if (!factionId) return;
                     var list = ["government", "lspd", "lssd", "fib", "hospital", "army", "news",
@@ -2074,9 +2070,7 @@ var selectMenu = new Vue({
                     if (factionId > list.length) return;
                     var str = list[factionId - 1];
                     var menu = selectMenu.menus[`${str}Clothes`];
-                    if (!menu) return selectMenu.setItems(this.name, [{
-                        text: "Вернуться"
-                    }]);
+                    if (!menu) return selectMenu.notification = "Формы нет в наличии";
                     var rankNames = selectMenu.menus['factionControlRanks'].ranks.map(x => x.name);
                     var items = [];
                     for (var i = 0; i < menu.items.length - 1; i++) {
@@ -2095,6 +2089,7 @@ var selectMenu = new Vue({
                     }
 
                     selectMenu.setItems(this.name, items);
+                    selectMenu.showByName(this.name);
                 },
                 handler(eventName) {
                     var item = this.items[this.i];
@@ -2127,7 +2122,7 @@ var selectMenu = new Vue({
                 i: 0,
                 j: 0,
                 itemIds: [],
-                init(itemRanks) {
+                show(itemRanks) {
                     var factionId = playerMenu.factionId;
                     if (!factionId) return;
                     var list = ["government", "lspd", "lssd", "fib", "hospital", "army", "news",
@@ -2137,6 +2132,7 @@ var selectMenu = new Vue({
                     if (factionId > list.length) return;
                     var str = list[factionId - 1];
                     var menu = selectMenu.menus[`${str}Items`];
+                    if (!menu) return selectMenu.notification = "Снаряжения нет в наличии";
                     var rankNames = selectMenu.menus['factionControlRanks'].ranks.map(x => x.name);
                     var items = [];
                     for (var i = 0; i < menu.items.length - 1; i++) {
@@ -2156,8 +2152,9 @@ var selectMenu = new Vue({
                         items[i].i = (minRank) ? minRank.rank - 1 : 0;
                     }
 
-                    selectMenu.setItems(this.name, items);
                     this.itemIds = menu.itemIds;
+                    selectMenu.setItems(this.name, items);
+                    selectMenu.showByName(this.name);
                 },
                 handler(eventName) {
                     var item = this.items[this.i];
@@ -2190,7 +2187,7 @@ var selectMenu = new Vue({
                 i: 0,
                 j: 0,
                 itemIds: [],
-                init(itemRanks) {
+                show(itemRanks) {
                     var factionId = playerMenu.factionId;
                     if (!factionId) return;
                     var list = ["government", "lspd", "lssd", "fib", "hospital", "army", "news",
@@ -2200,6 +2197,7 @@ var selectMenu = new Vue({
                     if (factionId > list.length) return;
                     var str = list[factionId - 1];
                     var menu = selectMenu.menus[`${str}Guns`];
+                    if (!menu) return selectMenu.notification = "Оружия нет в наличии";
                     var rankNames = selectMenu.menus['factionControlRanks'].ranks.map(x => x.name);
                     var items = [];
                     for (var i = 0; i < menu.items.length - 1; i++) {
@@ -2219,8 +2217,9 @@ var selectMenu = new Vue({
                         items[i].i = (minRank) ? minRank.rank - 1 : 0;
                     }
 
-                    selectMenu.setItems(this.name, items);
                     this.itemIds = menu.itemIds;
+                    selectMenu.setItems(this.name, items);
+                    selectMenu.showByName(this.name);
                 },
                 handler(eventName) {
                     var item = this.items[this.i];
@@ -2253,7 +2252,7 @@ var selectMenu = new Vue({
                 i: 0,
                 j: 0,
                 itemIds: [],
-                init(itemRanks) {
+                show(itemRanks) {
                     var factionId = playerMenu.factionId;
                     if (!factionId) return;
                     var list = ["government", "lspd", "lssd", "fib", "hospital", "army", "news",
@@ -2263,6 +2262,7 @@ var selectMenu = new Vue({
                     if (factionId > list.length) return;
                     var str = list[factionId - 1];
                     var menu = selectMenu.menus[`${str}Ammo`];
+                    if (!menu) return selectMenu.notification = "Патронов нет в наличии";
                     var rankNames = selectMenu.menus['factionControlRanks'].ranks.map(x => x.name);
                     var items = [];
                     for (var i = 0; i < menu.items.length - 1; i++) {
@@ -2282,8 +2282,9 @@ var selectMenu = new Vue({
                         items[i].i = (minRank) ? minRank.rank - 1 : 0;
                     }
 
-                    selectMenu.setItems(this.name, items);
                     this.itemIds = menu.itemIds;
+                    selectMenu.setItems(this.name, items);
+                    selectMenu.showByName(this.name);
                 },
                 handler(eventName) {
                     var item = this.items[this.i];
@@ -5870,7 +5871,7 @@ var selectMenu = new Vue({
                 header: "Загрузка зерна",
                 items: [{
                         text: "Участок",
-                        values: ["Поле №1", "Поле №2", "Поле №3", "Поле №4"],
+                        values: ["Поле №999"],
                     },
                     {
                         text: "Тип зерна",
@@ -5885,6 +5886,11 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                init(fieldIds) {
+                    if (typeof fieldIds == 'string') fieldIds = JSON.parse(fieldIds);
+
+                    selectMenu.setItemValues(this.name, 'Участок', fieldIds.map(x => `Поле №${x}`));
+                },
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -8508,6 +8514,8 @@ var selectMenu = new Vue({
             var item = this.getItemByName(itemName, menu.items);
             if (!item) return;
             Vue.set(item, 'values', values);
+            menu.i = 0;
+            menu.j = 0;
         },
         setItems(menuName, items) {
             if (typeof items == 'string') items = JSON.parse(items);
