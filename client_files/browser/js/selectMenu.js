@@ -5871,7 +5871,7 @@ var selectMenu = new Vue({
                 header: "Загрузка зерна",
                 items: [{
                         text: "Участок",
-                        values: ["Поле №1", "Поле №2", "Поле №3", "Поле №4"],
+                        values: ["Поле №999"],
                     },
                     {
                         text: "Тип зерна",
@@ -5886,6 +5886,11 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                init(fieldIds) {
+                    if (typeof fieldIds == 'string') fieldIds = JSON.parse(fieldIds);
+
+                    selectMenu.setItemValues(this.name, 'Участок', fieldIds.map(x => `Поле №${x}`));
+                },
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -8502,6 +8507,8 @@ var selectMenu = new Vue({
             var item = this.getItemByName(itemName, menu.items);
             if (!item) return;
             Vue.set(item, 'values', values);
+            menu.i = 0;
+            menu.j = 0;
         },
         setItems(menuName, items) {
             if (typeof items == 'string') items = JSON.parse(items);

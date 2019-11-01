@@ -377,6 +377,7 @@ module.exports = {
                 productCPrice: farm.productCPrice,
                 grainsMax: this.grainsMax,
                 productsMax: this.productsMax,
+                fieldIds: farm.fields.map(x => x.id),
             }]);
             player.farm = farm;
         };
@@ -470,14 +471,16 @@ module.exports = {
     },
     getWarehousePosByFarmId(farmId) {
         var positions = [
-            new mp.Vector3(1982.4197998046875, 5020.7783203125, 42.205257415771484 - 2)
+            new mp.Vector3(1982.4197998046875, 5020.7783203125, 42.205257415771484 - 2),
+            new mp.Vector3(410.41259765625, 6455.1552734375, 28.809022903442383 - 2),
         ];
         farmId = Math.clamp(farmId, 1, positions.length);
         return positions[farmId - 1];
     },
     getSoilsWarehousePosByFarmId(farmId) {
         var positions = [
-            new mp.Vector3(2104.8779296875, 4785.744140625, 41.21879959106445 - 2)
+            new mp.Vector3(2104.8779296875, 4785.744140625, 41.21879959106445 - 2),
+            new mp.Vector3(469.9630126953125, 6526.43505859375, 29.309743881225586 - 2),
         ];
         farmId = Math.clamp(farmId, 1, positions.length);
         return positions[farmId - 1];
