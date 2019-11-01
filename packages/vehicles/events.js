@@ -510,17 +510,36 @@ module.exports = {
     "vehicles.own.list.show": (player) => {
         if (!player.character) return;
         if (player.vehicleList.length == 0) return notifs.error(player, `У вас нет транспорта`);
-        player.call('vehicles.own.list.show', [player.vehicleList]);
+        player.call('vehicles.own.list.show', [player.vehicleList, vehicles.ownVehicleRespawnPrice]);
     },
     "vehicles.own.deliver": (player, id) => {
-        //todo 
-        console.log('request delivery')
+        if (!player.character) return;
+        let hasHouse = houses.isHaveHouse(player.character.id);
+        let vehicle = mp.vehicles.toArray().find(x => x.sqlId == id);
+        let price = vehicles.ownVehicleRespawnPrice;
+        if (player.character.cash < price) return notifs.error(player, `Недостаточно денег`); 
+        if (!vehicle) return hasHouse ? notifs.warning(player, `Транспорт не найден`) : 
+        notifs.warning(player, `Не удалось отследить ваше т/с, ищите его на парковке`);
+
+        if (vehicle.key != 'private' || vehicle.owner != player.character.id) return;
+        money.removeCash(player, price, function(result) {
+            if (result) {
+                vehicles.respawnVehicle(vehicle);
+            } else {
+                notifs.error(player, `Ошибка финансовой операции`); 
+            }
+        }, `Доставка т/с к дому`)
+        
+        notifs.success(player, `Транспортное средство доставлено ${hasHouse ? 'к дому' : 'на парковку'}`, 'Доставка');
     },
     "vehicles.own.find": (player, id) => {
+        if (!player.character) return;
         let hasHouse = houses.isHaveHouse(player.character.id);
         let vehicle = mp.vehicles.toArray().find(x => x.sqlId == id);
         if (!vehicle) return hasHouse ? notifs.error(player, `Транспорт не найден`, `GPS`) : 
         notifs.warning(player, `Не удалось отследить ваше т/с, ищите его на парковке`, `GPS`);
+
+        if (vehicle.key != 'private' || vehicle.owner != player.character.id) return;
 
         if (vehicle.dimension != 0) return notifs.warning(player, `Не удалось отследить ваше т/с, попробуйте выполнить доставку`, `GPS`);
         let pos = vehicle.position;

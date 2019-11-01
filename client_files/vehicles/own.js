@@ -1,10 +1,12 @@
 let vehicleList = [];
 let currentVehicleListInfo;
+let respawnPrice = 0;
 
 let destination = {};
 
-mp.events.add('vehicles.own.list.show', (list) => {
+mp.events.add('vehicles.own.list.show', (list, price) => {
     vehicleList = list;
+    respawnPrice = price;
     let items = [];
     list.forEach((current) => {
         items.push({
@@ -20,6 +22,7 @@ mp.events.add('vehicles.own.list.show', (list) => {
 mp.events.add('vehicles.own.menu.show', (index) => {
     currentVehicleListInfo = vehicleList[index];
     mp.callCEFV(`selectMenu.menus['ownVehicleMenu'].items[0].values = ['${currentVehicleListInfo.plate}']`);
+    mp.callCEFV(`selectMenu.menus['ownVehicleMenu'].items[2].values = ['$${respawnPrice}']`);
     mp.callCEFV(`selectMenu.menus['ownVehicleMenu'].header = '${currentVehicleListInfo.name}'`);
     mp.events.call('selectMenu.show', 'ownVehicleMenu');
 });
