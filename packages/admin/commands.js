@@ -751,7 +751,7 @@ module.exports = {
     "/sound": {
         description: "Включить звуковой эффект.",
         access: 1,
-        args: "[name] [set_name]:n",
+        args: "[name] [set_name]",
         handler: (player, args, out) => {
             player.call(`sound`, [{
                 name: args[0],
