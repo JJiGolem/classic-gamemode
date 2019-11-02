@@ -190,7 +190,6 @@ class DialogPage extends Component {
     render() {
 
         const { dialog } = this.props;
-        const { isShowLoad } = this.state;
 
         return (
             <Fragment>

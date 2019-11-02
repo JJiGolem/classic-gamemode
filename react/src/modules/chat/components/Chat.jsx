@@ -11,7 +11,8 @@ class Chat extends React.Component {
             currentMessage: '',
             index: 0,
             curTagIndex: 0,
-            opacity: 1
+            opacity: 1,
+            isMyMessage: false
         };
 
         this.history = [];
@@ -25,15 +26,25 @@ class Chat extends React.Component {
     }
 
     componentDidMount() {
-        // this.props.pushMessage('!{#ffffff} w !{#000000}цврфцл    ццц')
     }
 
     componentDidUpdate() {
         const objDiv = this.refList;
+        const { chat } = this.props;
+        const { isMyMessage } = this.state;
 
         if (objDiv) {
-            objDiv.scrollTop = objDiv.scrollHeight;
-            if(this.props.chat.isFocus) {
+            
+            if (chat.isFocus) {
+                if (isMyMessage) {
+                    objDiv.scrollTop = objDiv.scrollHeight;
+                    this.setState({ isMyMessage: false });
+                }
+            } else {
+                objDiv.scrollTop = objDiv.scrollHeight;
+            }
+
+            if(chat.isFocus) {
                 this.refList.style.overflowY = 'auto'
             } else {
                 this.refList.style.overflowY = 'hidden'
@@ -73,7 +84,7 @@ class Chat extends React.Component {
 
         if(currentMessage && currentMessage.length <= 300) {
             this.history.push(currentMessage);
-            this.setState({index: this.history.length});
+            this.setState({index: this.history.length, isMyMessage: true});
             // eslint-disable-next-line no-undef
             mp.trigger('chat.message.get', chat.tags[curTagIndex].id, currentMessage);
             this.setState({ currentMessage: '' });
