@@ -71,7 +71,7 @@ module.exports = {
             delete player.cropUnloadMarker;
         };
         marker.colshape = colshape;
-        mp.blips.new(85, pos, {
+        mp.blips.new(569, pos, {
             color: 1,
             name: `Урожай`,
             shortRange: 10,

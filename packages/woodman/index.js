@@ -149,7 +149,7 @@ module.exports = {
             delete player.woodmanStorage;
         };
         marker.colshape = colshape;
-        mp.blips.new(1, pos, {
+        mp.blips.new(85, pos, {
             color: 71,
             name: `Лесопилка`,
             shortRange: 10,
