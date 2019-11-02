@@ -22,7 +22,7 @@ let houses;
 module.exports = {
     // Время простоя авто, после которого оно будет заспавнено (ms) - точность ~0-5 мин
     vehWaitSpawn: 20 * 60 * 1000,
-
+    ownVehicleRespawnPrice: 300,
     async init() {
         houses = call('houses');
         await this.loadVehiclePropertiesFromDB();

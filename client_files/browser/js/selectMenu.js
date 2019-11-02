@@ -8396,6 +8396,7 @@ var selectMenu = new Vue({
                             mp.trigger('vehicles.own.find');
                         }
                         if (e.itemName == 'Доставить') {
+                            selectMenu.show = false;
                             mp.trigger('vehicles.own.deliver');
                         }
                     }
