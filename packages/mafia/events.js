@@ -184,7 +184,7 @@ module.exports = {
         }
 
         storage.isOpen = open;
-        var str = (open)? "открыл" : "закрыл";
+        var str = (open) ? "открыл" : "закрыл";
 
         mp.players.forEach(rec => {
             if (!rec.character) return;
@@ -275,10 +275,10 @@ module.exports = {
         if (dist > 5) return notifs.error(player, `${rec.name} далеко`, header);
         if (rec.getVariable("afk")) return notifs.error(player, `${rec.name} не активен`, `ANTI-AFK`);
         var character = player.character;
-        if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, header);
 
         if (!rec.cuffs) {
+            if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
             var cuffs = (data.cuffsSqlId) ? inventory.getItem(player, data.cuffsSqlId) : inventory.getItemByItemId(player, 54);
             if (!cuffs) return notifs.error(player, `Предмет ${inventory.getName(54)} не найден`, header);
             inventory.deleteItem(player, cuffs);
@@ -287,6 +287,7 @@ module.exports = {
             notifs.info(rec, `${player.name} связал вас`, header);
             notifs.success(player, `${rec.name} связан`, header);
         } else {
+            if (!factions.isMafiaFaction(character.factionId) && !factions.isPoliceFaction(character.factionId) && !factions.isFibFaction(character.factionId)) return notifs.error(player, `Вы не член мафии/порядка`, header);
             if (rec.cuffs.itemId != 54) return notifs.error(player, `${rec.name} был обездижен с помощью ${inventory.getName(rec.cuffs.itemId)}`, header);
             inventory.addOldItem(player, rec.cuffs, (e) => {
                 if (e) return notifs.error(player, e, header);
@@ -314,10 +315,10 @@ module.exports = {
         var dist = player.dist(rec.position);
         if (dist > 5) return out(`${rec.name} далеко`);
         var character = player.character;
-        if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, header);
 
         if (!rec.bag) {
+            if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
             var bag = (data.bagSqlId) ? inventory.getItem(player, data.bagSqlId) : inventory.getItemByItemId(player, 55);
             if (!bag) return out(`Предмет ${inventory.getName(55)} не найден`);
             inventory.deleteItem(player, bag);
@@ -326,6 +327,7 @@ module.exports = {
             notifs.info(rec, `${player.name} надел на вас мешок`, header);
             notifs.success(player, `${rec.name} с мешком на голове`, header);
         } else {
+            if (!factions.isMafiaFaction(character.factionId) && !factions.isPoliceFaction(character.factionId) && !factions.isFibFaction(character.factionId)) return notifs.error(player, `Вы не член мафии/порядка`, header);
             if (rec.bag.itemId != 55) return out(`${rec.name} имеет на голове ${inventory.getName(rec.bag.itemId)}`);
             inventory.addOldItem(player, rec.bag, (e) => {
                 if (e) return out(player, e, header);
