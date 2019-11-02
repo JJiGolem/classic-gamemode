@@ -1058,11 +1058,11 @@ var inventory = new Vue({
                 menu['Выкинуть'] = {
                     handler(item) {
                         // console.log(`выкинуть ${item}`)
-                        if (inventory.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`);
+                        if (inventory.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
                         else {
                             var children = inventory.getChildren(item);
                             var weapon = children.find(x => inventory.weaponsList.includes(x.itemId));
-                            if (weapon) mp.trigger(`weapons.ammo.sync`);
+                            if (weapon) mp.trigger(`weapons.ammo.sync`, true);
                         }
                         mp.trigger(`inventory.ground.put`, item.sqlId);
                     }
@@ -1335,7 +1335,7 @@ var inventory = new Vue({
             if (columns.bodyFocus != null) {
                 if (!self.getItem(item.sqlId)) self.setWaitItem(item, true);
                 self.addItem(item, null, columns.bodyFocus);
-                if (self.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`);
+                if (self.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
                 self.callRemote("item.add", {
                     sqlId: item.sqlId,
                     pocketI: null,
@@ -1364,7 +1364,7 @@ var inventory = new Vue({
                         if (self.getItem(item.sqlId)) self.setWaitItem(item, true);
                         self.addEnvironmentItem(item, columns.pocketI, index, columns.placeSqlId);
                     }
-                    if (self.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`);
+                    if (self.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
                     self.callRemote("item.add", {
                         sqlId: item.sqlId,
                         pocketI: columns.pocketI,

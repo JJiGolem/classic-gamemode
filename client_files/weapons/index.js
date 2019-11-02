@@ -18,11 +18,11 @@ mp.weapons = {
     lastIsInMeleeCombat: false,
     lastWeapon: null,
 
-    sync() {
+    sync(force = false) {
         var data = {};
         this.hashes.forEach(hash => {
             var ammo = this.getAmmoWeapon(hash);
-            if (this.lastData[hash] == ammo) return;
+            if (!force && this.lastData[hash] == ammo) return;
             this.lastData[hash] = ammo;
             data[hash] = ammo;
         });
@@ -112,9 +112,10 @@ mp.events.add({
         var i = mp.weapons.hashes.indexOf(hash);
         if (i == -1) return;
         mp.weapons.hashes.splice(i, 1);
+        delete mp.weapons.lastData[hash];
     },
-    "weapons.ammo.sync": () => {
-        mp.weapons.sync();
+    "weapons.ammo.sync": (force = false) => {
+        mp.weapons.sync(force);
     },
     "weapons.ammo.remove": (sqlId, hash) => {
         hash = parseInt(hash);

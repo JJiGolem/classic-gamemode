@@ -8,7 +8,6 @@ module.exports = {
         inited(__dirname);
     },
     "characterInit.done": async (player) => {
-        await tattoo.loadCharacterTattoos(player);
         tattoo.setCharacterTattoos(player);
         tattoo.sendTattoosDataToClient(player, player.character.tattoos);
     },

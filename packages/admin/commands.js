@@ -835,4 +835,13 @@ module.exports = {
             notify.warning(rec, `Администратор пнул вас`);
         }
     },
+    "/skin": {
+        access: 1,
+        description: "Изменить скин.",
+        args: "[модель]",
+        handler: (player, args, out) => {
+            player.model = mp.joaat(args[0]);
+            out.log(`Скин изменен`, player);
+        }
+    },
 }

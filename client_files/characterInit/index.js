@@ -139,6 +139,7 @@ let createPeds = function() {
         for (let i = 0; i < charNum; i++) {
             setCharCustom(i);
             setCharClothes(i);
+            setCharTattoos(i);
 
             let x = (camPos[0] + i * pedDist * sinPedRot) + camDist * sinCamRot;
             let y = (camPos[1] + i * pedDist * cosPedRot) + camDist * cosCamRot;
@@ -266,6 +267,16 @@ let setCharClothes = function(indexPed) {
     for (let i = 0; i < props.length; i++) {
         mp.players.local.setPropIndex(props[i][0], props[i][1], props[i][2], false);
     }
+    mp.authDebug.push(`- поставили`);
+};
+
+let setCharTattoos = function(indexPed) {
+    mp.authDebug.push(`Ставим на игрока татуировки от педа ${indexPed}`);
+    if (charInfos.length <= indexPed) return;
+    let tattoos = charInfos[indexPed].tattoos;
+    tattoos.forEach((tattoo) => {
+        mp.players.local.setDecoration(mp.game.joaat(tattoo.collection), mp.game.joaat(tattoo.hashName));
+    });
     mp.authDebug.push(`- поставили`);
 };
 
