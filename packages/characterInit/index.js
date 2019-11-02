@@ -115,6 +115,12 @@ module.exports = {
                         model: db.Models.CharacterInventoryParam,
                     },
                 });
+
+                player.characters[i].tattoos = await db.Models.CharacterTattoo.findAll({
+                    where: {
+                        characterId: player.characters[i].id
+                    }
+                });
             }
 
             // var diff = Date.now() - start;
@@ -147,7 +153,7 @@ module.exports = {
                     hours: parseInt(player.characters[i].minutes / 60),
                     faction: factionName ? factionName : "Нет",
                     job: jobName ? jobName : "Нет",
-                    house: house ? `${house.info.Interior.class}(№${house.info.id})` : "Нет",
+                    house: house ? `${house.info.Interior.class} (№${house.info.id})` : "Нет",
                     biz: biz ? `${biz.info.name}` : "Нет",
                     warns: player.characters[i].warnNumber,
                     hair: player.characters[i].hair,
@@ -166,6 +172,7 @@ module.exports = {
                     similarity: player.characters[i].similarity,
                     Appearances: player.characters[i].Appearances,
                     Features: player.characters[i].Features,
+                    tattoos: player.characters[i].tattoos.map(current => current.dataValues)
                 },
                 charClothes: inventory.getView(player.characters[i].CharacterInventories),
             });
