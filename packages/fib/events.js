@@ -178,10 +178,14 @@ module.exports = {
 
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
+        var rank = factions.getRankById(faction, character.factionRank);
         var header = `Склад ${faction.name}`;
 
         if (faction.ammo < fib.armourAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
         var armours = inventory.getArrayByItemId(player, 3);
+
+        var minRank = faction.itemRanks.find(x => x.itemId == 3);
+        if (minRank && minRank.rank > rank.rank) return notifs.error(player, `Доступно с ранга ${factions.getRank(faction, minRank.rank).name}`, header);
 
         for (var key in armours) {
             var params = inventory.getParamsValues(armours[key]);
