@@ -42,18 +42,22 @@ module.exports = {
                     if (item.index == 13) { // снял из рук
                         // debug(`снял из рук`)
                         inventory.syncHandsItem(player, null);
+                        inventory.notifyOverhead(player, `Спрятал '${inventory.getName(item.itemId)}'`);
                     } else { // снял с тела
                         // debug(`снял с тела`)
                         inventory.clearView(player, item.itemId);
+                        inventory.notifyOverhead(player, `Снял '${inventory.getName(item.itemId)}'`);
                     }
                 } else if (item.parentId && data.placeSqlId == null) { // надел вещь
                     // debug(`надел вещь`)
                     if (data.index == 13) { // на руки
                         // debug(`на руки`)
                         inventory.syncHandsItem(player, item);
+                        inventory.notifyOverhead(player, `Взял '${inventory.getName(item.itemId)}'`);
                     } else { // на тело
                         // debug(`на тело`)
                         inventory.updateView(player, item);
+                        inventory.notifyOverhead(player, `Надел '${inventory.getName(item.itemId)}'`);
                     }
                 } else if (!item.parentId && data.placeSqlId == null) { // переместил внутри слотов тела
                     // debug(`внутри слотов тела`)
@@ -61,10 +65,12 @@ module.exports = {
                         // debug(`из тела в руки`)
                         inventory.clearView(player, item.itemId);
                         inventory.syncHandsItem(player, item);
+                        inventory.notifyOverhead(player, `Взял '${inventory.getName(item.itemId)}'`);
                     } else if (item.index == 13) { // переместил из рук на тело
                         // debug(`из рук на тело`)
                         inventory.syncHandsItem(player, null);
                         inventory.updateView(player, item);
+                        inventory.notifyOverhead(player, `Надел '${inventory.getName(item.itemId)}'`);
                     }
                 }
                 item.pocketIndex = data.pocketI;
@@ -78,17 +84,20 @@ module.exports = {
                 inventory.addPlayerItem(player, item, data.placeSqlId, data.pocketI, data.index);
                 item.destroy();
                 player.inventory.place.items.splice(i, 1);
+                inventory.notifyOverhead(player, `Забрал '${inventory.getName(item.itemId)}'`);
             }
         } else { // переместил в окруж. среду
             if (item) { // переместил из своего инвентаря в окруж. среду
                 inventory.addEnvironmentItem(player, item, data.pocketI, data.index);
                 inventory.deleteItem(player, item);
+                inventory.notifyOverhead(player, `Положил '${inventory.getName(item.itemId)}'`);
             } else { // предмет уже находится в окруж. среде
                 item = player.inventory.place.items.find(x => x.id == data.sqlId);
                 if (!item) return notifs.error(player, `Предмет #${data.sqlId} в среде не найден. Сообщите разработчикам CRP. :)`, `Код 2`);
                 item.pocketIndex = data.pocketI;
                 item.index = data.index;
                 item.save();
+                inventory.notifyOverhead(player, `Копается`);
             }
         }
     },
