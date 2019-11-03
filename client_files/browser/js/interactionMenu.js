@@ -458,6 +458,7 @@ var interactionMenu = new Vue({
             },
         },
         faction: null,
+        hasHeadBag: false,
     },
     methods: {
         imgSrc(index) {
@@ -615,7 +616,20 @@ var interactionMenu = new Vue({
                 this.deleteItem("player_interaction", "Mafia");
                 this.deleteItem('player_ownmenu', "Захват биз.");
             }
-        }
+        },
+        hasHeadBag(val) {
+            if (val) {
+                var item = {
+                    text: "Снять мешок",
+                    icon: "hide.svg",
+                };
+                this.addItems("police", item);
+                this.addItems("fib", item);
+            } else {
+                this.deleteItem("police", "Снять мешок");
+                this.deleteItem("fib", "Снять мешок");
+            }
+        },
     },
 });
 
