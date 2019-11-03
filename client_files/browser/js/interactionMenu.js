@@ -156,13 +156,13 @@ var interactionMenu = new Vue({
                 handler(index) {
                     var item = this.items[index];
                     if (item.text == 'Познакомиться') {
-                        interactionMenu.show = false;
+                        mp.trigger(`interaction.menu.close`);
                         mp.trigger(`interactionMenu.onClick`, this.name, item.text);
                     } else if (item.text == 'Документы') {
                         mp.trigger(`documents.list`);
                     } else if (item.text == 'Деньги') {
                         //mp.trigger(`interaction.menu.close`);
-                        interactionMenu.show = false;
+                        mp.trigger(`interaction.menu.close`);
                         mp.trigger(`interaction.money.show`);
 
                     } else if (item.text == 'Организация') {
@@ -182,7 +182,7 @@ var interactionMenu = new Vue({
                     } else if (item.text == 'Mafia') {
                         interactionMenu.menu = interactionMenu.menus["mafia"];
                     } else if (item.text == 'Бросить кости') {
-                        interactionMenu.show = false;
+                        mp.trigger(`interaction.menu.close`);
                         mp.trigger(`casino.dice.offer.create`);
                     }
                 }

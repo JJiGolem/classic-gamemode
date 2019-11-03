@@ -138,6 +138,13 @@ let utils = {
         array.forEach(num => sum += num);
         return sum;
     },
+    // Добавить текст над головой игрока
+    addOverheadText(player, text, color = [255, 255, 255, 255]) {
+        mp.players.forEachInRange(player.position, 20, rec => {
+            if (rec.id == player.id) return;
+            rec.call(`addOverheadText`, [player.id, text, color]);
+        });
+    },
 };
 module.exports = utils;
 

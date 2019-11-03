@@ -34,7 +34,7 @@ class CreateDialogPage extends Component {
         const { addApp, dialogs, addDialog, info } = this.props;
         e.preventDefault();
 
-        let dialogIndex = dialogs.findIndex(d => d.number === number);
+        let dialogIndex = dialogs.list.findIndex(d => d.number === number);
         let contact = info.contacts.find(c => c.number === number);
 
         if (contact) {
@@ -43,7 +43,7 @@ class CreateDialogPage extends Component {
                 addDialog(contact.name, number);
                 addApp({ name: 'DialogPage', form: <DialogPage dialog={dialog} /> });
             } else {
-                let dialog = dialogs[dialogIndex];
+                let dialog = dialogs.list[dialogIndex];
                 addApp({ name: 'DialogPage', form: <DialogPage dialog={dialog} /> });
             }
         } else {
