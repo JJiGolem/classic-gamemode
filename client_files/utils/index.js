@@ -356,7 +356,7 @@ mp.utils = {
         player.overheadText = {
             text: text,
             color: color,
-            scale: [0.25, 0.25],
+            scale: [0.3, 0.3],
         };
         player.overheadText.timer = mp.timer.add(() => {
             delete player.overheadText;

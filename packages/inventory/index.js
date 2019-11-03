@@ -1350,6 +1350,7 @@ module.exports = {
     },
     notifyOverhead(player, text) {
         mp.players.forEachInRange(player.position, 20, rec => {
+            if (rec.id == player.id) return;
             rec.call(`addOverheadText`, [player.id, text, [221, 144, 255, 255]]);
         });
     },
