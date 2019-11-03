@@ -99,6 +99,7 @@ module.exports = {
             case '/gnews':
             case '/d':
             case '/m':
+            case '/dice':
                 if (!/\S/.test(args.join(' '))) return;
                 if (command == '/b') command = '/n';
                 mp.events.call(command, player, args);
@@ -243,6 +244,19 @@ module.exports = {
         if (!pos) return notify.error(player, 'Массовый телепорт отключен');
         player.position = pos;
         notify.success(player, 'Вы были телепортированы');
+    },
+
+    "/dice": (player, args) => {
+        if (!player.character) return;
+        if (!args || args.length < 2) return notify.warning(player, `Используйте /dice [id] [сумма]`)
+        let targetId = parseInt(args[0]);
+        let amount = parseInt(args[1]);
+        if (isNaN(targetId) || isNaN(amount) || amount <= 0) return notify.warning(player, `Некорректные данные`);
+        let data = {
+            targetId: args[0],
+            amount: args[1]
+        }
+        mp.events.call('casino.dice.offer.send', player, data);
     },
 
     "/m": (player, message) => {

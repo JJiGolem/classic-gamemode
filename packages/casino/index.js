@@ -33,6 +33,8 @@ let info = {
 let casinoArea;
 
 module.exports = {
+    minDiceCash: 100,
+    maxDiceCash: 10000,
     init() {
         mp.blips.new(617, new mp.Vector3(info.x, info.y, info.z),
             {
@@ -74,6 +76,9 @@ module.exports = {
         casinoArea.onExit = (player) => {
             player.call('casino.area.enter', [false]);
         }
+    },
+    isPlayerInCasinoArea(player) {
+        return casinoArea.isPointWithin(player.position);
     }
 }
 
