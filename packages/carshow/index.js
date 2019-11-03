@@ -101,7 +101,7 @@ module.exports = {
         return list;
     },
     setCarListProperties(veh) {
-        let properties = vehicles.setVehiclePropertiesByModel(veh.vehiclePropertyModel);
+        let properties = vehicles.getVehiclePropertiesByModel(veh.vehiclePropertyModel);
         veh.properties = properties;
         return veh;
     },
@@ -230,7 +230,7 @@ module.exports = {
                             carToBuy.count = carToBuy.count - 1;
                             //player.vehiclesCount = player.vehiclesCount + 1;
                             //console.log(player.vehiclesCount);
-                            let props = vehicles.setVehiclePropertiesByModel(data.modelName);
+                            let props = vehicles.getVehiclePropertiesByModel(data.modelName);
                             player.vehicleList.push({
                                 id: data.id,
                                 name: props.name,

@@ -16,7 +16,6 @@ mp.events.add({
     },
     "casino.dice.offer.create": () => {
         let entity = mp.getCurrentInteractionEntity();
-        mp.events.call('interaction.menu.close');
         if (!entity || entity.type != 'player') return;
         mp.callCEFV(`inputWindow.name = 'dice';
         inputWindow.header = "Игра в кости (ID: ${entity.remoteId})";

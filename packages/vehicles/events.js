@@ -386,7 +386,7 @@ module.exports = {
 
                     vehicles.removeVehicleFromPlayerVehicleList(seller, vehId);
                     // TODO на парковке или нет
-                    let props = vehicles.setVehiclePropertiesByModel(veh.modelName)
+                    let props = vehicles.getVehiclePropertiesByModel(veh.modelName)
                     console.log(props)
                     target.vehicleList.push({
                         id: veh.id,

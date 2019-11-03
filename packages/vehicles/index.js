@@ -86,7 +86,7 @@ module.exports = {
             vehicle.inventory = veh.inventory;
         }
         if (!veh.properties) {
-            vehicle.properties = this.setVehiclePropertiesByModel(veh.modelName);
+            vehicle.properties = this.getVehiclePropertiesByModel(veh.modelName);
         } else {
             vehicle.properties = veh.properties;
         }
@@ -220,7 +220,7 @@ module.exports = {
         }
         vehicle.fuel = vehicle.fuel + litres;
     },
-    setVehiclePropertiesByModel(modelName) {
+    getVehiclePropertiesByModel(modelName) {
         for (let i = 0; i < dbVehicleProperties.length; i++) {
             if (dbVehicleProperties[i].model == modelName) {
                 var properties = {
@@ -275,7 +275,7 @@ module.exports = {
         });
         player.vehicleList = [];
         dbPrivate.forEach((current) => {
-            let props = this.setVehiclePropertiesByModel(current.modelName);
+            let props = this.getVehiclePropertiesByModel(current.modelName);
             player.vehicleList.push({
                 id: current.id,
                 name: props.name,
