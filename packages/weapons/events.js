@@ -68,7 +68,7 @@ module.exports = {
         if (!params.count) return notifs.error(player, `Патронов: 0 ед.`, header);
         if (!weapon) weapon = weapons.getWeaponByAmmoId(player, ammo.itemId);
         if (!weapon) return notifs.error(player, `Подходящее оружие не найдено`, header);
-        if (!inventory.isInHands(weapon)) return notifs.error(player, `Оружие должно находиться в руках`, header);
+        // if (!inventory.isInHands(weapon)) return notifs.error(player, `Оружие должно находиться в руках`, header);
         if (weapons.getAmmoItemId(weapon.itemId) != ammo.itemId) return notifs.error(player, `Неверный тип патронов`, header);
 
         var name = inventory.getName(weapon.itemId);
