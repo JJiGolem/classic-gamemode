@@ -160,7 +160,13 @@ module.exports = {
         // console.log(`[INVENTORY] Для авто ${vehicle.db.modelName} загружены предметы (${dbItems.length} шт.)`);
     },
     async initFactionInventory(player, holder) {
-        holder.inventory.items[player.character.id] = []; // предметы
+        var oldHolder = call("factions").holders.find(x => x.inventory.items[player.character.id]);
+        if (oldHolder) {
+            holder.inventory.items[player.character.id] = oldHolder.inventory.items[player.character.id];
+            // delete oldHolder.inventory.items[player.character.id];
+            return;
+        }
+        holder.inventory.items[player.character.id] = [];
 
         var dbItems = await db.Models.FactionInventory.findAll({
             where: {

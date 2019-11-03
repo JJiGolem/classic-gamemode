@@ -10,7 +10,7 @@ module.exports = {
     // Место мониторинга складов бизнесов/ферм и заказа товара
     loadPos: new mp.Vector3(925.46, -1563.99, 30.83 - 1),
     // Место разгрузки урожая
-    cropUnloadPos: new mp.Vector3(90.33, 6333.52, 31.23 - 1),
+    cropUnloadPos: new mp.Vector3(85.55198669433594, 6331.1318359375, 31.225765228271484 - 1),
     // Цена за 1 ед. товара/зерна
     productPrice: 4,
     // Вместимость грузовика
@@ -71,7 +71,7 @@ module.exports = {
             delete player.cropUnloadMarker;
         };
         marker.colshape = colshape;
-        mp.blips.new(85, pos, {
+        mp.blips.new(569, pos, {
             color: 1,
             name: `Урожай`,
             shortRange: 10,

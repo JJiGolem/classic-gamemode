@@ -1633,11 +1633,20 @@ var selectMenu = new Vue({
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.members.offline.show`);
                         } else if (e.itemName == 'Ранги') {
+                            var ranks = selectMenu.menus["factionControlRanks"].ranks;
+                            var maxRankName = ranks[ranks.length - 1].name;
+                            if (statistics['factionRank'].value != maxRankName) return selectMenu.notification = "Вы не лидер";
                             selectMenu.showByName("factionControlRanks");
                         } else if (e.itemName == 'Транспорт') {
+                            var ranks = selectMenu.menus["factionControlRanks"].ranks;
+                            var maxRankName = ranks[ranks.length - 1].name;
+                            if (statistics['factionRank'].value != maxRankName) return selectMenu.notification = "Вы не лидер";
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.vehicles.show`);
                         } else if (e.itemName == 'Доступ к складу') {
+                            var ranks = selectMenu.menus["factionControlRanks"].ranks;
+                            var maxRankName = ranks[ranks.length - 1].name;
+                            if (statistics['factionRank'].value != maxRankName) return selectMenu.notification = "Вы не лидер";
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.warehouse.show`);
                         }

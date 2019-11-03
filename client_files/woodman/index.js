@@ -210,7 +210,7 @@ mp.woodman = {
     },
     createJobPed() {
         var pedInfo = {
-            model: "s_m_m_cntrybar_01",
+            model: "mp_m_counterfeit_01",
             position: {
                 x: -567.8530883789062,
                 y: 5254.45556640625,

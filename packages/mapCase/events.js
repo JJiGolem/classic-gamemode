@@ -195,7 +195,7 @@ module.exports = {
         });
         var vehicles = await db.Models.Vehicle.findAll({
             where: {
-                key: "owner",
+                key: "private",
                 owner: id
             }
         });
