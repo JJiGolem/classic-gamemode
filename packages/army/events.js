@@ -220,7 +220,7 @@ module.exports = {
         var header = `Склад ${faction.name}`;
 
 
-        var itemIds = [24, 28];
+        var itemIds = [24, 28, 132];
         var types = ["medicines", "ammo"];
 
         index = Math.clamp(index, 0, itemIds.length - 1);
@@ -241,11 +241,12 @@ module.exports = {
             owner: character.id,
         };
         if (index == 0) params.count = 2;
+        if (index == 2) params.satiety = params.thirst = 100;
 
         inventory.addItem(player, itemId, params, (e) => {
             if (e) return notifs.error(player, e, header);
 
-            notifs.success(player, `Вам выданы ${itemName}`, header);
+            notifs.success(player, `Вам выдано "${itemName}"`, header);
             factions.setProducts(faction, type, faction[type] - army.itemAmmo);
         });
     },

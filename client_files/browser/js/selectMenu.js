@@ -3443,10 +3443,10 @@ var selectMenu = new Vue({
                         text: "Наручники"
                     },
                     {
-                        text: "Бронежилет"
+                        text: "Сухпай"
                     },
                     {
-                        text: "Сухпай"
+                        text: "Бронежилет"
                     },
                     {
                         text: "Вернуться"
@@ -3454,7 +3454,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
-                itemIds: [24, 28, 3, 132],
+                itemIds: [24, 28, 132, 3],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
