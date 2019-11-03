@@ -5,7 +5,13 @@ mp.gui.chat.show(false);
 mp.chat = {
     debug: (message) => { /// выводит в чат строку белым цветом (для дебага)
         mp.events.call('chat.message.push', `!{#ffffff} ${message}`);
-    }
+    },
+    correctName(name) {
+        if (name == mp.players.local.name) return name;
+        var player = mp.utils.getPlayerByName(name);
+        if (player && !player.isFamiliar) return `Незнакомец`;
+        return name;
+    }    
 };
 
 
@@ -140,13 +146,6 @@ function sortTagsById() {
     });
 }
 
-function correctName(name) {
-    if (name == mp.players.local.name) return name;
-    var player = mp.utils.getPlayerByName(name);
-    if (player && !player.isFamiliar) return `Незнакомец`;
-    return name;
-}
-
 function playChatAnimation(id) {
     var player = mp.players.atRemoteId(id);
     if (!player || player.vehicle || player.getVariable("knocked")) return;
@@ -170,7 +169,7 @@ mp.events.add('chat.message.get', (type, message) => {
 });
 
 mp.events.add('chat.action.say', (nickname, id, message) => {
-    nickname = correctName(nickname);
+    nickname = mp.chat.correctName(nickname);
 
     splitChatMessage(message, `!{#ffffff}${nickname}[${id}]: `)
     playChatAnimation(id);
@@ -178,7 +177,7 @@ mp.events.add('chat.action.say', (nickname, id, message) => {
 });
 
 mp.events.add('chat.action.shout', (nickname, id, message) => {
-    nickname = correctName(nickname);
+    nickname = mp.chat.correctName(nickname);
 
     if (typeof(message) != "string") message = message.join(' ');
     splitChatMessage(message, `!{#ffdfa8}${nickname}[${id}] кричит: `)
@@ -190,14 +189,14 @@ mp.events.add('chat.action.walkietalkie', (nickname, id, rank, message) => {
 });
 
 mp.events.add('chat.action.nonrp', (nickname, id, message) => {
-    nickname = correctName(nickname);
+    nickname = mp.chat.correctName(nickname);
 
     if (typeof(message) != "string") message = message.join(' ');
     splitChatMessage(message, `!{#c6c695}[OOC] ${nickname}[${id}]: `);
 });
 
 mp.events.add('chat.action.me', (nickname, id, message) => {
-    nickname = correctName(nickname);
+    nickname = mp.chat.correctName(nickname);
 
     if (typeof(message) != "string") message = message.join(' ');
     mp.utils.addOverheadText(id, message, [221, 144, 255, 255]);
@@ -206,7 +205,7 @@ mp.events.add('chat.action.me', (nickname, id, message) => {
 });
 
 mp.events.add('chat.action.do', (nickname, id, message) => {
-    nickname = correctName(nickname);
+    nickname = mp.chat.correctName(nickname);
 
     if (typeof(message) != "string") message = message.join(' ');
     message = `!{#dd90ff}${message} (${nickname}[${id}])`;
@@ -214,7 +213,7 @@ mp.events.add('chat.action.do', (nickname, id, message) => {
 });
 
 mp.events.add('chat.action.try', (nickname, id, message, result) => {
-    nickname = correctName(nickname);
+    nickname = mp.chat.correctName(nickname);
 
     if (typeof(message) != "string") message = message.join(' ');
     message = `!{#dd90ff}${nickname}[${id}] ${message} ${result ? '!{#66cc00} [Удачно]' : '!{#ff6600} [Неудачно]'}`;

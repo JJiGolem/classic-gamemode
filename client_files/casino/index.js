@@ -25,5 +25,12 @@ mp.events.add({
         inputWindow.show = true;
         inputWindow.playerId = ${entity.remoteId}
         `);
+    },
+    "casino.dice.text.show": (data) => {
+        data = JSON.parse(data);
+        data.senderName = mp.chat.correctName(data.senderName);
+        data.targetName = mp.chat.correctName(data.targetName);
+        mp.events.call('chat.message.push', 
+        `!{#dd90ff}${data.senderName}[${data.senderId}] и ${data.targetName}[${data.targetId}] бросили кости. Результат: !{#fff5a6}${data.senderCount}:${data.targetCount}`);
     }
 });
