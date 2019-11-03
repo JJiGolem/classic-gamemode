@@ -89,7 +89,7 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
             stage: 3,
           }),
         ],
-        sourceMap: shouldUseSourceMap,
+        sourceMap: false,
       },
     },
   ];
@@ -97,7 +97,7 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
     loaders.push({
       loader: require.resolve(preProcessor),
       options: {
-        sourceMap: shouldUseSourceMap,
+        sourceMap: false,
       },
     });
   }
@@ -179,7 +179,7 @@ module.exports = {
       new OptimizeCSSAssetsPlugin({
         cssProcessorOptions: {
           parser: safePostCssParser,
-          map: shouldUseSourceMap
+          map: false
             ? {
                 // `inline: false` forces the sourcemap to be output into a
                 // separate file
@@ -350,7 +350,7 @@ module.exports = {
             exclude: cssModuleRegex,
             loader: getStyleLoaders({
               importLoaders: 1,
-              sourceMap: shouldUseSourceMap,
+              sourceMap: false,
             }),
             // Don't consider CSS imports dead code even if the
             // containing package claims to have no side effects.
@@ -364,7 +364,7 @@ module.exports = {
             test: cssModuleRegex,
             loader: getStyleLoaders({
               importLoaders: 1,
-              sourceMap: shouldUseSourceMap,
+              sourceMap: false,
               modules: true,
               getLocalIdent: getCSSModuleLocalIdent,
             }),
@@ -380,7 +380,7 @@ module.exports = {
             loader: getStyleLoaders(
               {
                 importLoaders: 2,
-                sourceMap: shouldUseSourceMap,
+                sourceMap: false,
               },
               'sass-loader'
             ),
@@ -397,7 +397,7 @@ module.exports = {
             loader: getStyleLoaders(
               {
                 importLoaders: 2,
-                sourceMap: shouldUseSourceMap,
+                sourceMap: false,
                 modules: true,
                 getLocalIdent: getCSSModuleLocalIdent,
               },

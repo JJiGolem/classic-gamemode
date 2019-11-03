@@ -73,7 +73,7 @@ class DialingNumber extends Component {
         const { addApp, dialogs, addDialog } = this.props;
 
         if (inputNumber) {
-            let dialogIndex = dialogs.findIndex(d => d.number === inputNumber);
+            let dialogIndex = dialogs.list.findIndex(d => d.number === inputNumber);
 
             if (inputNumber == '911') {
                 return addApp({ name: 'EmergencyCall', form: <EmergencyCall /> })
@@ -84,8 +84,7 @@ class DialingNumber extends Component {
                 addDialog('', inputNumber);
                 addApp({ name: 'DialogPage', form: <DialogPage dialog={dialog} /> });
             } else {
-                let dialog = dialogs[dialogIndex];
-                console.log(dialog);
+                let dialog = dialogs.list[dialogIndex];
                 addApp({ name: 'DialogPage', form: <DialogPage dialog={dialog} /> });
             }
         }
