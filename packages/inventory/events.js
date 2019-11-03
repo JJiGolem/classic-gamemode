@@ -116,7 +116,7 @@ module.exports = {
         var params = inventory.getParamsValues(target);
         if (params.weaponHash) { // зарядка оружия
             mp.events.call("weapons.ammo.fill", player, item, target);
-            inventory.notifyOverhead(player, `Зарядил оружие`);
+            inventory.notifyOverhead(player, `Зарядил '${inventory.getName(item.itemId)}'`);
         }
     },
     // срабатывает, когда игрок выкидывает предмет

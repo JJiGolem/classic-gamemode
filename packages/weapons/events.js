@@ -55,7 +55,8 @@ module.exports = {
 
             inventory.updateParam(player, weapon, 'ammo', 0);
             player.setWeaponAmmo(params.weaponHash, 0);
-            notifs.success(player, `${name} разряжен`, ammoName)
+            notifs.success(player, `${name} разряжен`, ammoName);
+            inventory.notifyOverhead(player, `Разрядил '${name}'`);
         });
     },
     "weapons.ammo.fill": (player, ammo, weapon) => {
@@ -80,6 +81,7 @@ module.exports = {
         inventory.deleteItem(player, ammo);
         player.setWeaponAmmo(weaponParams.weaponHash, newAmmo);
         notifs.success(player, `${name} заряжен`, ammoName);
+        inventory.notifyOverhead(player, `Зарядил '${name}'`);
     },
     "weapons.weapon.ammo.fill": (player, sqlId) => {
         var header = `Зарядка оружия`;
@@ -92,5 +94,6 @@ module.exports = {
         var ammo = inventory.getItemByItemId(player, ammoId);
         if (!ammo) return notifs.error(player, `Подходящие патроны не найдены`, name);
         mp.events.call(`weapons.ammo.fill`, player, ammo, weapon);
+        inventory.notifyOverhead(player, `Зарядил '${name}'`);
     },
 }
