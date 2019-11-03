@@ -286,10 +286,14 @@ module.exports = {
 
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
+        var rank = factions.getRankById(faction, character.factionRank);
         var header = `Склад ${faction.name}`;
 
         if (faction.ammo < police.armourAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
         var armours = inventory.getArrayByItemId(player, 3);
+
+        var minRank = faction.itemRanks.find(x => x.itemId == 3);
+        if (minRank && minRank.rank > rank.rank) return notifs.error(player, `Доступно с ранга ${factions.getRank(faction, minRank.rank).name}`, header);
 
         for (var key in armours) {
             var params = inventory.getParamsValues(armours[key]);
@@ -455,15 +459,15 @@ module.exports = {
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, `Наручники`);
 
         if (!rec.cuffs) {
-            var cuffs = (data.cuffsSqlId) ? inventory.getItem(player, data.cuffsSqlId) : inventory.getItemByItemId(player, 28);
-            if (!cuffs) return notifs.error(player, `Предмет ${inventory.getName(28)} не найден`, `Наручники`);
+            var cuffs = (data.cuffsSqlId) ? inventory.getItem(player, data.cuffsSqlId) : inventory.getItemByItemId(player, [28, 54]);
+            if (!cuffs) return notifs.error(player, `Предмет ${inventory.getName(cuffs.itemId)} не найден`, `Наручники`);
             inventory.deleteItem(player, cuffs);
             police.setCuffs(rec, cuffs);
 
             notifs.info(rec, `${player.name} задержал вас`, `Наручники`);
             notifs.success(player, `${rec.name} задержан`, `Наручники`);
         } else {
-            if (rec.cuffs.itemId != 28) return notifs.error(player, `${rec.name} был обездижен с помощью ${inventory.getName(rec.cuffs.itemId)}`, `Наручники`);
+            // if (rec.cuffs.itemId != 28) return notifs.error(player, `${rec.name} был обездижен с помощью ${inventory.getName(rec.cuffs.itemId)}`, `Наручники`);
             inventory.addOldItem(player, rec.cuffs, (e) => {
                 if (e) return notifs.error(player, e, `Наручники`);
             });

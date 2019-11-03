@@ -127,7 +127,7 @@ module.exports = {
         if (!item) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
 
         if (player.vehicle) return notifs.error(player, `Недоступно в авто`, header);
-        if (player.cuffs) return notifs.error(`Недоступно в наручниках`, header);
+        if (player.cuffs) return notifs.error(player, `Недоступно в наручниках`, header);
 
         var itemName = inventory.getName(item.itemId);
         inventory.putGround(player, item, pos);
@@ -204,6 +204,7 @@ module.exports = {
         var header = `Аптечка`;
         var med = inventory.getItem(player, sqlId);
         if (!med) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        if (!inventory.isInHands(med)) return notifs.error(player, `${inventory.getName(med.itemId)} не в руках`, header);
         var count = inventory.getParam(med, 'count').value;
         if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
         if (player.health >= hospital.medMaxHealth) {
@@ -239,6 +240,7 @@ module.exports = {
         if (player.dist(rec.position) > 5) return notifs.error(player, `${rec.name} далеко`, header);
         var adrenalin = (data.itemSqlId) ? inventory.getItem(player, data.itemSqlId) : inventory.getItemByItemId(player, 26);
         if (!adrenalin) return notifs.error(player, `Необходим предмет`, header);
+        if (!inventory.isInHands(adrenalin)) return notifs.error(player, `${inventory.getName(adrenalin.itemId)} не в руках`, header);
         var count = inventory.getParam(adrenalin, 'count').value;
         if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
 
@@ -260,6 +262,7 @@ module.exports = {
         var header = `Пластырь`;
         var patch = inventory.getItem(player, sqlId);
         if (!patch) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        if (!inventory.isInHands(patch)) return notifs.error(player, `${inventory.getName(patch.itemId)} не в руках`, header);
         var count = inventory.getParam(patch, 'count').value;
         if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
         if (player.health >= hospital.medMaxHealth) {
@@ -290,6 +293,7 @@ module.exports = {
         var header = `Наркотики`;
         var drugs = inventory.getItem(player, sqlId);
         if (!drugs) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        if (!inventory.isInHands(drugs)) return notifs.error(player, `${inventory.getName(drugs.itemId)} не в руках`, header);
         var count = inventory.getParam(drugs, 'count').value;
         if (!count) return notifs.error(player, `Количество: 0 г.`, header);
         if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
@@ -321,6 +325,7 @@ module.exports = {
         var header = `Сигарета`;
         var smoke = inventory.getItem(player, sqlId);
         if (!smoke) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        if (!inventory.isInHands(smoke)) return notifs.error(player, `${inventory.getName(smoke.itemId)} не в руках`, header);
         var count = inventory.getParam(smoke, 'count').value;
         if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
         if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
@@ -362,6 +367,7 @@ module.exports = {
         var header = `Еда`;
         var eat = inventory.getItem(player, sqlId);
         if (!eat) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        if (!inventory.isInHands(eat)) return notifs.error(player, `${inventory.getName(eat.itemId)} не в руках`, header);
 
         var params = inventory.getParamsValues(eat);
         var character = player.character;
@@ -388,6 +394,7 @@ module.exports = {
         var header = `Напиток`;
         var drink = inventory.getItem(player, sqlId);
         if (!drink) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        if (!inventory.isInHands(drink)) return notifs.error(player, `${inventory.getName(drink.itemId)} не в руках`, header);
 
         var params = inventory.getParamsValues(drink);
         var character = player.character;
@@ -417,6 +424,7 @@ module.exports = {
 
         var item = inventory.getItem(player, data.sqlId);
         if (!item) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        if (!inventory.isInHands(item)) return notifs.error(player, `${inventory.getName(item.itemId)} не в руках`, header);
 
         var header = inventory.getName(item.itemId);
         var out = (text) => {

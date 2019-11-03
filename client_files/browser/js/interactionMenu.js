@@ -445,6 +445,10 @@ var interactionMenu = new Vue({
                         text: "Мешок на голову",
                         icon: "hide.svg"
                     },
+                    {
+                        text: "В авто",
+                        icon: "vehicle.svg"
+                    },
                 ],
                 handler(index) {
                     var item = this.items[index];
