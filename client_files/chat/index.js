@@ -200,6 +200,7 @@ mp.events.add('chat.action.me', (nickname, id, message) => {
     nickname = correctName(nickname);
 
     if (typeof(message) != "string") message = message.join(' ');
+    mp.utils.addOverheadText(id, message, [221, 144, 255, 255]);
     message = `!{#dd90ff}${nickname}[${id}] ${message}`;
     splitChatMessage(message, null, '!{#dd90ff}');
 });
