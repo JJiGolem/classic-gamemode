@@ -11,7 +11,7 @@ mp.chat = {
         var player = mp.utils.getPlayerByName(name);
         if (player && !player.isFamiliar) return `Незнакомец`;
         return name;
-    }    
+    }
 };
 
 
@@ -173,7 +173,7 @@ mp.events.add('chat.action.say', (nickname, id, message) => {
 
     splitChatMessage(message, `!{#ffffff}${nickname}[${id}]: `)
     playChatAnimation(id);
-    mp.utils.addOverheadText(id, message);
+    if (mp.players.local.remoteId != id) mp.utils.addOverheadText(id, message);
 });
 
 mp.events.add('chat.action.shout', (nickname, id, message) => {
@@ -199,7 +199,7 @@ mp.events.add('chat.action.me', (nickname, id, message) => {
     nickname = mp.chat.correctName(nickname);
 
     if (typeof(message) != "string") message = message.join(' ');
-    mp.utils.addOverheadText(id, message, [221, 144, 255, 255]);
+    if (mp.players.local.remoteId != id) mp.utils.addOverheadText(id, message, [221, 144, 255, 255]);
     message = `!{#dd90ff}${nickname}[${id}] ${message}`;
     splitChatMessage(message, null, '!{#dd90ff}');
 });
