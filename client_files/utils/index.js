@@ -349,12 +349,14 @@ mp.utils = {
     },
     // Добавить текст над головой игрока
     addOverheadText(player, text, color = [255, 255, 255, 255]) {
+        if (typeof player == 'number') player = mp.players.atRemoteId(player);
+        if (!player) return;
         if (player.overheadText) mp.timer.remove(player.overheadText.timer);
 
         player.overheadText = {
             text: text,
             color: color,
-            scale: [0.2, 0.2],
+            scale: [0.25, 0.25],
         };
         player.overheadText.timer = mp.timer.add(() => {
             delete player.overheadText;
@@ -411,9 +413,7 @@ mp.events.add("collision.set", (enable) => {
 });
 
 mp.events.add("addOverheadText", (playerId, text, color) => {
-    var player = mp.players.atRemoteId(playerId);
-    if (!player) return;
-    mp.utils.addOverheadText(player, text, color);
+    mp.utils.addOverheadText(playerId, text, color);
 });
 
 /// Отключение движения игрока

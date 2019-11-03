@@ -174,6 +174,7 @@ mp.events.add('chat.action.say', (nickname, id, message) => {
 
     splitChatMessage(message, `!{#ffffff}${nickname}[${id}]: `)
     playChatAnimation(id);
+    mp.utils.addOverheadText(id, message);
 });
 
 mp.events.add('chat.action.shout', (nickname, id, message) => {
