@@ -24,6 +24,8 @@ module.exports = {
         if (data.amount > player.character.cash) return notify.error(player, `У вас недостаточно денег`);
         if (data.amount > target.character.cash) return notify.error(player, `У игрока недостаточно денег`);
         if (player.hasActiveDiceOffer) return notify.error(player, `Вы уже отправили предложение`);
+        if (target.hasActiveDiceOffer) return notify.error(player, `Игрок отправил предложение`);
+        if (player.diceOffer) return notify.error(player, `Вам отправлено предложение`);
         if (target.diceOffer) return notify.error(player, `Игроку уже отправлено предложение`);
 
         notify.info(player, `Вы предложили игру в кости`);
