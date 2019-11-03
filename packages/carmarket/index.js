@@ -171,7 +171,7 @@ module.exports = {
 
         let fullPrice = 0;
         for (let i = 0; i < vehs.length; i++) {
-            let props = vehicles.setVehiclePropertiesByModel(vehs[i].modelName);
+            let props = vehicles.getVehiclePropertiesByModel(vehs[i].modelName);
             await vehs[i].update({
                 key: "market",
                 owners: vehs[i].owners + 1
