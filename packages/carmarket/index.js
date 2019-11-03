@@ -139,7 +139,11 @@ module.exports = {
         vehicle.db.update({
             key: "market",
         });
-        this.addMarketVehicle(vehicle);
+        try {
+            this.addMarketVehicle(vehicle);
+        } catch (err) {
+            console.log(err);
+        }  
         if (vehicle.fuelTimer) {
             timer.remove(vehicle.fuelTimer);
         }
