@@ -239,8 +239,7 @@ module.exports = {
         var killerZone = bands.getZoneByPos(killer.position);
         if (!killerZone) return;
         if (zone.id != killerZone.id) return;*/
-
-        var zoneId = Object.keys(bands.wars)[0];
+        var zoneId = parseInt(Object.keys(bands.wars)[0]);
 
         player.lastWarDeathTime = Date.now();
 

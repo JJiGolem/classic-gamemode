@@ -346,7 +346,20 @@ mp.utils = {
         var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
         var endPos = player.getOffsetFromInWorldCoords(0, 1, 0);
         return mp.raycasting.testPointToPoint(startPos, endPos);
-    }
+    },
+    // Добавить текст над головой игрока
+    addOverheadText(player, text, color = [255, 255, 255, 255]) {
+        if (player.overheadText) mp.timer.remove(player.overheadText.timer);
+
+        player.overheadText = {
+            text: text,
+            color: color,
+            scale: [0.2, 0.2],
+        };
+        player.overheadText.timer = mp.timer.add(() => {
+            delete player.overheadText;
+        }, 5000);
+    },
 };
 
 
@@ -397,6 +410,12 @@ mp.events.add("collision.set", (enable) => {
     isCapsuleCollision = enable;
 });
 
+mp.events.add("addOverheadText", (playerId, text, color) => {
+    var player = mp.players.atRemoteId(playerId);
+    if (!player) return;
+    mp.utils.addOverheadText(player, text, color);
+});
+
 /// Отключение движения игрока
 mp.events.add('render', () => {
     if (playerMovingDisabled) {
@@ -414,4 +433,14 @@ mp.events.add('render', () => {
         }
     }
     if (isCapsuleCollision) mp.players.local.setCapsule(0.00001);
+    mp.players.forEachInStreamRange(rec => {
+        if (rec.overheadText) {
+            var info = rec.overheadText;
+            var pos3d = rec.position;
+            pos3d.z += 1.5;
+            var pos2d = mp.game.graphics.world3dToScreen2d(pos3d);
+            if (!pos2d) return;
+            mp.utils.drawText2d(info.text, [pos2d.x, pos2d.y], info.color, info.scale);
+        }
+    });
 });

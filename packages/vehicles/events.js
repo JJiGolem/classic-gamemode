@@ -375,6 +375,8 @@ module.exports = {
                     });
                     let veh = vehicles.getVehicleBySqlId(vehId);
                     if (veh) {
+                        veh.db.owner = target.character.id;
+                        veh.db.owners = veh.owners + 1;
                         veh.owner = target.character.id;
                         veh.owners = veh.owners + 1;
                     }
