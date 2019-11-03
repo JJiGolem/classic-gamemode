@@ -62,7 +62,7 @@ function getClosestPlayer(pos, range = INTERACTION_RANGE) {
     var closestPlayer;
     var minDist = 99999;
     mp.players.forEachInStreamRange((current) => {
-        //if (current == mp.players.local) return; //for tests
+        if (current == mp.players.local) return; //for tests
         if (current.vehicle) return;
         var distToPlayer = mp.vdist(pos, current.position);
         if (distToPlayer < range) {
