@@ -223,10 +223,13 @@ module.exports = {
         }
     },
     giveScore(player, enemy, reason, zone) {
+        debug(`b1`)
         if (typeof zone == 'number') zone = this.getZone(zone);
         var war = this.wars[zone.id];
+        debug(`b2`)
         if (!war) return;
 
+        debug(`b3`)
         var bandId, score;
 
         if (player.character.factionId == war.band.id) {
@@ -238,6 +241,7 @@ module.exports = {
             bandId = war.enemyBand.id;
             score = war.enemyBand.score;
         }
+        debug(`b4`)
 
         mp.players.forEach(rec => {
             if (!rec.character) return;
@@ -246,6 +250,7 @@ module.exports = {
             if (!factions.isBandFaction(factionId)) return;
             if (factionId != war.band.id && factionId != war.enemyBand.id) return;
 
+            debug(`b5`)
             rec.call(`bands.capture.killList.log`, [{
                 name: enemy.name,
                 factionId: enemy.character.factionId
@@ -253,6 +258,7 @@ module.exports = {
                 name: player.name,
                 factionId: player.character.factionId
             }, reason.toString()]);
+            debug(`b7`)
             rec.call(`bands.capture.score.set`, [bandId, score]);
         });
     },
