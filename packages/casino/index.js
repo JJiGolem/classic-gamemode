@@ -69,10 +69,10 @@ module.exports = {
         casinoArea = mp.colshapes.newSphere(info.area.x, info.area.y, info.area.z, 100);
         casinoArea.dimension = 1;
         casinoArea.onEnter = (player) => {
-            console.log('enter casino')
+            player.call('casino.area.enter', [true]);
         }
         casinoArea.onExit = (player) => {
-            console.log('exit casino')
+            player.call('casino.area.enter', [false]);
         }
     }
 }
