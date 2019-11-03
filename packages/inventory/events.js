@@ -116,6 +116,7 @@ module.exports = {
         var params = inventory.getParamsValues(target);
         if (params.weaponHash) { // зарядка оружия
             mp.events.call("weapons.ammo.fill", player, item, target);
+            inventory.notifyOverhead(player, `Зарядил оружие`);
         }
     },
     // срабатывает, когда игрок выкидывает предмет
@@ -128,8 +129,10 @@ module.exports = {
         if (player.vehicle) return notifs.error(player, `Недоступно в авто`, header);
         if (player.cuffs) return notifs.error(`Недоступно в наручниках`, header);
 
+        var itemName = inventory.getName(item.itemId);
         inventory.putGround(player, item, pos);
-        notifs.success(player, `Предмет ${inventory.getName(item.itemId)} на земле`, header);
+        notifs.success(player, `Предмет ${itemName} на земле`, header);
+        inventory.notifyOverhead(player, `Выкинул '${itemName}'`);
     },
     // срабатывает, когда игрок поднимает предмет
     "item.ground.take": (player, objId) => {
@@ -194,6 +197,7 @@ module.exports = {
                 flag: 1
             }, 1500]);
         });
+        inventory.notifyOverhead(player, `Поднял '${inventory.getName(obj.item.itemId)}'`);
     },
     // вылечиться аптечкой
     "inventory.item.med.use": (player, sqlId) => {
@@ -223,6 +227,7 @@ module.exports = {
         else inventory.updateParam(player, med, 'count', count);
 
         notifs.success(player, `Вы вылечились`, header);
+        inventory.notifyOverhead(player, `Вылечился (${inventory.getName(med.itemId)})`);
     },
     // реанимировать адреналином
     "inventory.item.adrenalin.use": (player, data) => {
@@ -248,6 +253,7 @@ module.exports = {
 
         notifs.success(player, `${rec.name} реанимирован`, header);
         notifs.success(rec, `${player.name} вас реанимировал`, header);
+        inventory.notifyOverhead(player, `Использовал '${inventory.getName(adrenalin.itemId)}'`);
     },
     // вылечиться пластырем
     "inventory.item.patch.use": (player, sqlId) => {
@@ -277,6 +283,7 @@ module.exports = {
         else inventory.updateParam(player, patch, 'count', count);
 
         notifs.success(player, `Вы вылечились`, header);
+        inventory.notifyOverhead(player, `Накинул '${inventory.getName(patch.itemId)}'`);
     },
     // употребить наркотик
     "inventory.item.drugs.use": (player, sqlId) => {
@@ -307,6 +314,7 @@ module.exports = {
         player.character.narcotism += bands.drugsNarcotism[i];
         player.character.save();
         mp.events.call("player.narcotism.changed", player);
+        inventory.notifyOverhead(player, `Употребил '${inventory.getName(drugs.itemId)}'`);
     },
     // употребить сигарету
     "inventory.item.smoke.use": (player, sqlId) => {
@@ -347,6 +355,7 @@ module.exports = {
         player.character.nicotine++;
         player.character.save();
         mp.events.call("player.nicotine.changed", player);
+        inventory.notifyOverhead(player, `Курит '${inventory.getName(smoke.itemId)}'`);
     },
     // употребить еду
     "inventory.item.eat.use": (player, sqlId) => {
@@ -372,6 +381,7 @@ module.exports = {
         }
 
         inventory.deleteItem(player, eat);
+        inventory.notifyOverhead(player, `Съел '${inventory.getName(eat.itemId)}'`);
     },
     // употребить напиток
     "inventory.item.drink.use": (player, sqlId) => {
@@ -397,11 +407,12 @@ module.exports = {
         }
 
         inventory.deleteItem(player, drink);
+        inventory.notifyOverhead(player, `Выпил '${inventory.getName(drink.itemId)}'`);
     },
     // использовать предмет инвентаря
     "inventory.item.use": (player, data) => {
-        debug(`item.use`)
-        debug(data)
+        // debug(`item.use`)
+        // debug(data)
         data = JSON.parse(data);
 
         var item = inventory.getItem(player, data.sqlId);
@@ -432,6 +443,7 @@ module.exports = {
                     inventory.updateParam(player, item, 'litres', params.litres - fuel);
 
                     notifs.success(player, `Авто ${vehName} заправлено на ${fuel} л.`, header);
+                    inventory.notifyOverhead(player, `Заправил '${vehName}'`);
                 } else if (data.index == 1) { // пополнить канистру
                     var biz = bizes.getBizByPlayerPos(player);
                     if (!biz || biz.info.type != 0) return out(`Вы не у бизнеса`);
@@ -463,6 +475,7 @@ module.exports = {
                     }, `Заправка канистры на АЗС #${biz.info.id}`);
 
                     notifs.success(player, `Канистра заправлена на ${fuel} л.`, header);
+                    inventory.notifyOverhead(player, `Заправил канистру`);
                 }
                 break;
         }
