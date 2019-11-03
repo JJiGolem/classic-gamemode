@@ -39,10 +39,11 @@ module.exports = {
             return notify.error(player, `Игрок отключился`);
 
         if (accept) {
+            let winner, loser;
             let targetCount = utils.randomInteger(1, 6);
             let senderCount = utils.randomInteger(1, 6);
             console.log(`sender ${senderCount} : target ${targetCount}`);
-            let winner, loser;
+           
             if (senderCount > targetCount) {
                 winner = sender;
                 loser = target;
@@ -53,12 +54,24 @@ module.exports = {
                 console.log('target win')
             } else {
                 console.log('draw')
-                // ничья
+                notify.info(target, `Вы сыграли в ничью`)
+                notify.info(sender, `Вы сыграли в ничью`)
+                return;
             }
+            
+            money.moveCash(loser, winner, offer.amount, function (result) {
+                if (result) {
+                    notify.success(winner, `Поздравляем, вы выиграли!`)
+                    notify.warning(loser, `К сожалению, вы проиграли!`)
+                } else {
+                    notify.error(winner, `Финансовая ошибка`);
+                    notify.error(loser, `Финансовая ошибка`);
+                }
+            }, `Проигрыш в кости ID ${winner.character.id}`, `Победа в кости ${loser.character.id}`);
         } else {
             notify.warning(sender, 'Игрок отказался от игры в кости');
             notify.warning(target, 'Вы отказались от игры в кости');
-            delete target.diceOffer;
         }
+        delete target.diceOffer;
     }
 }
