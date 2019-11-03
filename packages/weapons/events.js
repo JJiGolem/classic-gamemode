@@ -79,7 +79,7 @@ module.exports = {
         var newAmmo = weaponParams.ammo + params.count;
         inventory.updateParam(player, weapon, 'ammo', newAmmo);
         inventory.deleteItem(player, ammo);
-        player.setWeaponAmmo(weaponParams.weaponHash, newAmmo);
+        if (inventory.isInHands(weapon)) player.setWeaponAmmo(weaponParams.weaponHash, newAmmo);
         notifs.success(player, `${name} заряжен`, ammoName);
         inventory.notifyOverhead(player, `Зарядил '${name}'`);
     },
@@ -87,7 +87,7 @@ module.exports = {
         var header = `Зарядка оружия`;
         var weapon = inventory.getItem(player, sqlId);
         if (!weapon) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
-        if (!inventory.isInHands(weapon)) return notifs.error(player, `Оружие должно находиться в руках`, header);
+        // if (!inventory.isInHands(weapon)) return notifs.error(player, `Оружие должно находиться в руках`, header);
         var ammoId = weapons.getAmmoItemId(weapon.itemId);
         var name = inventory.getName(weapon.itemId);
         if (!ammoId) return notifs.error(player, `Тип патронов для ${name} не найден`, header);
