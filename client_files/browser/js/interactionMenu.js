@@ -181,6 +181,9 @@ var interactionMenu = new Vue({
                         interactionMenu.menu = interactionMenu.menus["news"];
                     } else if (item.text == 'Mafia') {
                         interactionMenu.menu = interactionMenu.menus["mafia"];
+                    } else if (item.text == 'Бросить кости') {
+                        interactionMenu.show = false;
+                        mp.trigger(`casino.dice.offer.create`);
                     }
                 }
             },

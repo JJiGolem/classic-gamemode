@@ -270,6 +270,23 @@ var offerDialog = new Vue({
                     mp.trigger(`callRemote`, `government.unarrest.cancel`);
                 },
             },
+            "dice": {
+                text: `Carter Slade предлагает вам сыграть в кости`,
+                price: 999,
+                on(values) {
+                    this.text = `ID: ${values.id} предлагает вам сыграть в кости`;
+                    this.price = values.amount;
+                },
+                yes() {
+                    mp.trigger(`callRemote`, `casino.dice.offer.accept`, 1);
+                },
+                no() {
+                    mp.trigger(`callRemote`, `casino.dice.offer.accept`, 0);
+                },
+                ignore() {
+                    mp.trigger(`callRemote`, `casino.dice.offer.accept`, 0);
+                },
+            },
         },
         dialog: null,
         timeout: null,
