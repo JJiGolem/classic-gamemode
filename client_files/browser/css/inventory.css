@@ -1,35 +1,102 @@
 #inventory {
     color: #ddd;
     display: grid;
-    grid-gap: 0.7vh;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(10, 1fr);
-    height: 80%;
+    grid-gap: 0.4vh;
+    grid-template-columns: 57.5vh repeat(2, 46.4vh);
+    grid-template-rows: 58.7vh 13.1vh 1fr;
+    height: 81.8vh;
     left: 50%;
     opacity: 0;
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 124vh;
+    font-family: Ubuntu;
+    /*width: 151vh;*/
     z-index: 100;
 }
 
+#inventory.non-environment {
+    grid-template-columns: repeat(2, 46.4vh);
+}
+
 #inventory>div {
-    background: #222d;
-    box-shadow: 0px 0px 0.5vh #aaa;
-    padding: 1.5vh;
+    background-color: rgba(12, 12, 12, 0.8);
+    /*background: #2225;*/
+    /*box-shadow: 0px 0px 0.5vh #aaa;*/
+    padding: 1.8vh 2.1vh;
+    border-radius: 1.2vh;
+}
+
+#inventory .starvation {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0 3vh;
+    margin-top: 4.3vh;
+    grid-gap: 3.1vh;
+}
+
+#inventory .starvation .record {
+    display: grid;
+    grid-template-columns: min-content 1fr min-content;
+    grid-column-gap: 0.6vh;
+}
+
+#inventory .starvation .record.red .progress {
+    background-color: rgba(255, 56, 56, 0.2);
+}
+
+#inventory .starvation .record .percent {
+    grid-column: 3/4;
+    font-size: 1.3vh;
+    margin-top: -0.1vh;
+}
+
+#inventory .starvation .record.red .percent {
+    color: rgb(255, 56, 56);
+}
+
+#inventory .starvation .record .img {
+    grid-row: 1/3;
+}
+
+#inventory .starvation .record .img img {
+    height: 2.3vh;
+}
+
+#inventory .starvation .record .progress {
+    height: 0.9vh;
+    border-radius: 0.2vh;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.2);
+    grid-row: 2/3;
+    grid-column: 2/4;
+}
+
+#inventory .starvation .record.satiety .progress div {
+    width: 50%;
+    height: 100%;
+    background-color: #FFB72B;
+}
+
+#inventory .starvation .record.thirst .progress div {
+    width: 50%;
+    height: 100%;
+    background-color: #2BC6C6;
 }
 
 #inventory .body-items {
     display: grid;
-    grid-gap: 0.5vh;
-    grid-template-columns: repeat(15, 1fr);
-    grid-template-rows: repeat(22, 1fr);
-    height: 61vh;
+    grid-gap: 0.9vh;
+    grid-template-columns: 13vh 10.7vh 1.4vh 2.8vh 5.6vh 2.9vh;/*repeat(15, 1fr);*/
+    grid-template-rows:  3.7vh 4.7vh 4.7vh 1vh 7.4vh 11.2vh 9.3vh 6.5vh;/*repeat(22, 1fr);*/
+    /*height: 61vh;*/
+    margin: 1.8vh 0.7vh;
 }
 
 #inventory .body-items .column {
-    border: 1px solid #444;
+    border-radius: 0.7vh;
+    background-color: rgba(255, 255, 255, 0.2);
+    /*border: 1px solid #444;*/
     background-position-y: center;
     background-position-x: center;
     background-repeat: no-repeat;
@@ -39,36 +106,62 @@
 }
 
 #inventory .body-items .column.active {
-    border-color: #046f04;
+    background-color: rgba(106, 201, 61, 0.4);
+    /*border-color: #046f04;*/
 }
 
 #inventory .body-items .column.focus {
     border-color: #aaa;
 }
 
-#inventory .body-items .column:not(:empty) {
-    background: #fff1;
+#inventory .body-items .column.active:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+#inventory .body-items .column.active:before {
     background-image: none !important;
-    border-color: #aaa;
+}
+
+#inventory .body-items .column:not(:empty) {
+    background: rgba(255, 255, 255, 0.4);
+    /*background-image: none !important;*/
+    /*border-color: #aaa;*/
+}
+
+#inventory .body-items .column:empty:before {
+    content: "";
+    width: 100%;
+    z-index: -1;
+    background-position-y: center;
+    background-position-x: center;
+    background-repeat: no-repeat;
+    background-size: 65%;
+}
+
+#inventory .body-items .column:nth-child(1):before {
+    background-image: url('../img/inventory/items/1.png');
+    background-size: 45%;
 }
 
 #inventory .body-items .column:nth-child(1) {
-    background-image: url('../img/inventory/body/1-off.png');
-    grid-column-start: 4;
+    /*grid-column-start: 4;
     grid-column-end: span 3;
-    height: 3vh;
+    height: 3vh;*/
 }
 
 #inventory .body-items .column:nth-child(1) .item {
     /* background-image: url('../img/inventory/items/1.png'); */
     height: 3vh;
-    width: 3vh;
+    width: 6vh;
+}
+
+#inventory .body-items .column:nth-child(2):before {
+    background-image: url('../img/inventory/items/6.png');
 }
 
 #inventory .body-items .column:nth-child(2) {
-    background-image: url('../img/inventory/body/6-off.png');
-    grid-column-end: span 4;
-    grid-row-end: span 4;
+    /*grid-column-end: span 4;*/
+    grid-row-end: span 2;
 }
 
 #inventory .body-items .column:nth-child(2) .item {
@@ -77,10 +170,14 @@
     width: 8vh;
 }
 
+#inventory .body-items .column:nth-child(3):before {
+    background-image: url('../img/inventory/items/14.png');
+    background-size: 47%;
+}
+
 #inventory .body-items .column:nth-child(3) {
-    background-image: url('../img/inventory/body/14-off.png');
-    grid-column-end: span 5;
-    grid-row-end: span 4;
+    grid-column-end: span 4;
+    grid-row-end: span 2;
 }
 
 #inventory .body-items .column:nth-child(3) .item {
@@ -89,11 +186,15 @@
     width: 8vh;
 }
 
+#inventory .body-items .column:nth-child(4):before {
+    background-image: url('../img/inventory/items/2.png');
+    background-size: 23%;
+}
+
 #inventory .body-items .column:nth-child(4) {
-    background-image: url('../img/inventory/body/2-off.png');
-    grid-column-start: 4;
-    grid-column-end: span 3;
-    grid-row-end: span 3;
+    /*grid-column-start: 4;
+    grid-column-end: span 3;*/
+    grid-row-end: span 2;
 }
 
 #inventory .body-items .column:nth-child(4) .item {
@@ -102,10 +203,13 @@
     width: 6vh;
 }
 
+#inventory .body-items .column:nth-child(5):before {
+    background-image: url('../img/inventory/items/3.png');
+}
+
 #inventory .body-items .column:nth-child(5) {
-    background-image: url('../img/inventory/body/3-off.png');
-    grid-column-end: span 5;
-    grid-row-end: span 7;
+    /*grid-column-end: span 2;*/
+    grid-row-end: span 2;
 }
 
 #inventory .body-items .column:nth-child(5) .item {
@@ -114,11 +218,17 @@
     width: 12vh;
 }
 
+#inventory .body-items .column:nth-child(6):before {
+    background-image: url('../img/inventory/items/7.png');
+    background-size: 80%;
+}
+
 #inventory .body-items .column:nth-child(6) {
-    background-image: url('../img/inventory/body/7-off.png');
-    background-size: 70%;
-    grid-column-end: span 5;
-    grid-row-end: span 7;
+    /*background-size: 70%;*/
+    grid-row-start: 3;
+    grid-column-start: 2;
+    grid-column-end: span 2;
+    grid-row-end: span 3;
 }
 
 #inventory .body-items .column:nth-child(6) .item {
@@ -127,10 +237,15 @@
     width: 12vh;
 }
 
+#inventory .body-items .column:nth-child(7):before {
+    background-image: url('../img/inventory/items/11.png');
+}
+
 #inventory .body-items .column:nth-child(7) {
-    background-image: url('../img/inventory/body/11-off.png');
-    grid-row-end: span 3;
-    width: 3vh;
+    grid-column-start: 4;
+    grid-row-start: 3;
+    grid-row-end: span 2;
+    /*width: 3vh;*/
 }
 
 #inventory .body-items .column:nth-child(7) .item {
@@ -139,10 +254,16 @@
     width: 4vh;
 }
 
+#inventory .body-items .column:nth-child(8):before {
+    background-image: url('../img/inventory/items/10.png');
+}
+
 #inventory .body-items .column:nth-child(8) {
-    background-image: url('../img/inventory/body/10-off.png');
-    grid-column-end: span 3;
-    grid-row-end: span 3;
+    grid-column-start: 5;
+    grid-row-start: 3;
+    grid-row-end: span 2;
+    /*grid-column-end: span 3;
+    grid-row-end: span 3;*/
 }
 
 #inventory .body-items .column:nth-child(8) .item {
@@ -151,10 +272,16 @@
     width: 4vh;
 }
 
+#inventory .body-items .column:nth-child(9):before {
+    background-image: url('../img/inventory/items/12.png');
+}
+
 #inventory .body-items .column:nth-child(9) {
-    background-image: url('../img/inventory/body/12-off.png');
-    grid-row-end: span 3;
-    width: 3vh;
+    grid-column-start: 6;
+    grid-row-start: 3;
+    grid-row-end: span 2;
+    /*grid-row-end: span 3;
+    width: 3vh;*/
 }
 
 #inventory .body-items .column:nth-child(9) .item {
@@ -163,22 +290,42 @@
     width: 2vh;
 }
 
+#inventory .body-items .column:nth-child(10):before {
+    background-image: url(../img/inventory/items/22.png);
+    transform: rotate(90deg);
+    width: 37vh;
+    height: 13vh;
+    transform-origin: 0 0;
+    margin-left: 13vh;
+}
+
 #inventory .body-items .column:nth-child(10) {
-    background-image: url('../img/inventory/body/rifle.png');
-    grid-column-end: span 5;
-    grid-row-end: span 12;
+    grid-column-end: span 3;
+    grid-row-end: span 4;
+    grid-row-start: 5;
+    grid-column-start: 4;;
+    display: grid;
 }
 
 #inventory .body-items .column:nth-child(10) .item {
     /* background-image: url('../img/inventory/items/105.png'); */
-    height: 12vh;
-    width: 12vh;
+    transform: rotate(90deg);
+    width: 37vh;
+    height: 13vh;
+    transform-origin: 0 0;
+    margin-left: 13vh;
+    margin-top: 0;
+    background-size: 65%;
 }
 
 #inventory .body-items .column:nth-child(11) {
-    background-image: url('../img/inventory/body/13-off.png');
-    grid-column-end: span 5;
-    grid-row-end: span 11;
+    grid-row-start: 4;
+    /*grid-column-end: span 5;*/
+    grid-row-end: span 3;
+}
+
+#inventory .body-items .column:nth-child(11):before {
+    background-image: url('../img/inventory/items/13.png');
 }
 
 #inventory .body-items .column:nth-child(11) .item {
@@ -187,10 +334,14 @@
     width: 12vh;
 }
 
+#inventory .body-items .column:nth-child(12):before {
+    background-image: url('../img/inventory/items/8.png');
+}
+
 #inventory .body-items .column:nth-child(12) {
-    background-image: url('../img/inventory/body/8-off.png');
-    grid-column-end: span 5;
-    grid-row-end: span 7;
+    grid-row-start: 6;
+    grid-column-end: span 2;
+    grid-row-end: span 2;
 }
 
 #inventory .body-items .column:nth-child(12) .item {
@@ -199,10 +350,14 @@
     width: 12vh;
 }
 
+#inventory .body-items .column:nth-child(13):before {
+    background-image: url('../img/inventory/items/9.png');
+    background-size: 50%;
+}
+
 #inventory .body-items .column:nth-child(13) {
-    background-image: url('../img/inventory/body/9-off.png');
-    grid-column-end: span 5;
-    grid-row-end: span 4;
+    grid-column-end: span 2;
+    /*grid-row-end: span 4;*/
 }
 
 #inventory .body-items .column:nth-child(13) .item {
@@ -216,12 +371,13 @@
 }
 
 #inventory .container .item {
-    border: 1px solid #fff4;
-    background-color: #fff1;
+    /*border: 1px solid #fff4;*/
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 0.4vh;
 }
 
 #inventory .environment {
-    grid-row-end: span 10;
+    grid-row-end: span 3;
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -231,20 +387,21 @@
 }
 
 #inventory .equipment {
-    grid-row-end: span 9;
+    grid-row-end: span 2;
 }
 
 #inventory .hands {
     display: grid;
-    grid-row-end: span 2;
+    /*grid-row-end: span 2;*/
+    padding: 0;
 }
 
 #inventory .hands.active {
-    background: #333d;
+    background-color: rgba(106, 201, 61, 0.2);
 }
 
 #inventory .hands img {
-    height: 9vh;
+    height: 6.5vh;
     opacity: 0.5;
 }
 
@@ -266,14 +423,27 @@
     display: flex;
     font-size: 1.7vh;
     justify-content: space-around;
-    margin: 0 auto;
+    /*margin: 0 auto;*/
     /* padding: 2vh; */
-    width: 80%;
+    width: 100%;
 }
 
 #inventory .hands .slot.busy {
-    background: #fff1;
+    background-image: none;
+    background-color: rgba(255, 255, 255, 0.4);
     /* border: 1px solid #aaa; */
+    width: 100%;
+    margin: 0;
+    border-radius: 1.1vh;
+}
+
+#inventory .hands .slot.focus {
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 1.1vh;
+}
+
+#inventory .hands .slot img {
+    margin-right: 14vh;
 }
 
 #inventory .hands .slot.focus img {
@@ -283,35 +453,52 @@
 
 #inventory .hands .slot img:first-child {
     transform: scale(-1, 1);
+    margin-left: 14vh;
+    margin-right: 0;
+}
+
+#inventory .hands .slot .health {
+    position: relative;
+    width: 100%;
 }
 
 #inventory .header {
+    /*background-color: rgba(255, 255, 255, 0.1);*/
     color: #fff;
     display: flex;
     font-size: 1.5vh;
     justify-content: flex-end;
-    padding: 1vh 0;
+    margin-top: 1vh;
+    margin-bottom: 1.3vh;
 }
 
 #inventory .header.hidden {
-    border-bottom: 1px solid #444;
+    /*border-bottom: 1px solid #444;*/
 }
 
 #inventory .header div {
-    padding: 0 0.5vh;
+    margin-right: 1.7vh;
 }
 
 #inventory .header>.title {
-    font-size: 2vh;
-    font-weight: bold;
+    font-size: 1.8vh;
+    font-weight: 700;
     margin-right: auto;
     text-transform: uppercase;
+    color: #FFDF29;
+    margin-left: 1.5vh;
 }
 
 #inventory .header img {
-    height: 2vh;
+    height: 1.2vh;
     opacity: 0.8;
-    padding-left: 2vh;
+    padding-left: 1.6vh;
+    margin-top: 1vh;
+    transform-origin: 75% 50%;
+}
+
+#inventory .header img.hidden {
+    transform: rotate(-90deg);
 }
 
 #inventory .header span {
@@ -321,22 +508,31 @@
 #inventory .hotkeys {
     display: grid;
     grid-column-end: span 2;
-    grid-template-columns: repeat(10, 1fr);
+    grid-template-columns: repeat(9, 1fr);
     grid-template-rows: repeat(1, 1fr);
-    padding: 0;
+    padding: 1.8vh 3vh;
+    grid-gap: 4.6vh;
 }
 
 #inventory .hotkeys .item {
-    height: 6vh;
-    width: 6vh;
+    height: 4vh;
+    width: 4vh;
+    position: relative;
+    transform: translateY(-50%);
+    top: 50%;
 }
 
-#inventory .hotkeys.active {
-    background: #333d;
+#inventory .hotkeys .item .count {
+    top: -0.2vh;
+    left: -0.2vh;
+}
+
+#inventory .hotkeys .key.active {
+    /*background-color: rgba(106, 201, 61, 0.2);*/
 }
 
 #inventory .hotkeys>.key {
-    align-items: center;
+    /*align-items: center;
     background-repeat: no-repeat;
     background-position-x: center;
     background-position-y: center;
@@ -346,15 +542,22 @@
     font-size: 1.7vh;
     font-weight: bold;
     justify-content: center;
-    transition: background-size 0.3s;
+    transition: background-size 0.3s;*/
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 1.2vh;
+    position: relative;
 }
 
 #inventory .hotkeys>.key.focus {
-    background-color: #222;
+    background-color: rgba(106, 201, 61, 0.2);
     background-size: 70%;
 }
 
-#inventory .hotkeys>.key:not(:empty) {
+#inventory .hotkeys>.key.has {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+/*#inventory .hotkeys>.key:not(:empty) {
     background: #fff1;
     border-right: 1px solid #777;
 }
@@ -401,7 +604,7 @@
 
 #inventory .hotkeys>.key:not(:last-child, :empty) {
     border-right: 1px solid #333;
-}
+}*/
 
 #inventory .item {
     background-position-y: center;
@@ -413,7 +616,7 @@
 }
 
 #inventory .item.dragging {
-    opacity: 0.4;
+    opacity: 0;
 }
 
 #inventory .item .close {
@@ -428,14 +631,19 @@
 }
 
 #inventory .item .count {
-    background: #222c;
-    bottom: 0;
-    color: #fff;
-    font-size: 1.7vh;
+    background: rgba(12, 12, 12, 0.5);
+    /*bottom: 0;*/
+    color: #FFDF29;
+    font-size: 1.3vh;
     font-weight: bold;
-    padding: 0.25vh 0.5vh;
+    padding: 0 0.3vh;
     position: absolute;
-    right: 0;
+    border-radius: 0.5vh;
+    left: 0.2vh;
+    top: 0.2vh;
+    /*right: 0;*/
+    height: 1.6vh;
+    line-height: 1.6vh;
 }
 
 #inventory .item .health {
@@ -454,6 +662,13 @@
     right: -1.5vh;
 }
 
+#inventory .key .hotkey {
+    position: absolute;
+    bottom: 0.4vh;
+    right: 0.4vh;
+    opacity: 0.3;
+}
+
 #inventory .item .sqlid {
     background: #222c;
     color: #fff;
@@ -467,47 +682,54 @@
 #inventory .item-desc {
     background: #111e;
     box-shadow: none;
-    font-size: 2vh;
+    font-size: 1.5vh;
     height: fit-content;
     max-height: 40vh;
     overflow-y: auto;
     position: absolute;
-    width: 55vh;
+    width: 36vh;
+    padding: 1.3vh 1.9vh;
 }
 
 #inventory .item-desc .description {
-    color: #aaa;
-    margin-bottom: 2vh;
+    color: #fff;
+    margin-bottom: 0.8vh;
+    font-weight: 700;
+    font-size: 1.45vh;
 }
 
 #inventory .item-desc .item {
-    margin: 1vh;
+    margin: 1vh 0.5vh;
+    border-radius: 1.1vh;
 }
 
 #inventory .item-desc .params {
     display: flex;
     flex-flow: wrap;
-    justify-content: space-between;
+    /*justify-content: space-between;*/
 }
 
 #inventory .item-desc .params .param {
-    line-height: 3vh;
-    margin: 2vh;
+    /*line-height: 3vh;*/
+    margin: 1vh;
     margin-top: 0;
 }
 
 #inventory .item-desc .params .name {
-    font-size: 1.8vh;
-    font-weight: bold;
-    text-transform: uppercase;
+    font-size: 1.3vh;
+    font-weight: 500;
+    /*text-transform: uppercase;*/
 }
 
 #inventory .item-desc .params .value {
-    color: #aaa;
+    color: #B9B9B9;
+    font-weight: 500;
+    margin-top: 0.3vh;
+    font-size: 1.3vh;
 }
 
 #inventory .item-desc .title {
-    color: #fff;
+    color: #FFDF29;
     font-weight: bold;
 }
 
@@ -555,35 +777,41 @@
 }
 
 #inventory .item-notif {
-    background: #111e;
+    background: rgba(12, 12, 12, 0.8);
     box-shadow: none;
-    font-size: 1.5vh;
+    font-size: 1.34vh;
+    line-height: 3.2vh;
     height: fit-content;
-    padding: 0.5vh;
+    padding: 0 2vh;
     position: absolute;
     width: fit-content;
     z-index: 1;
+    border-radius: 1vh;
 }
 
 #inventory .items {
-    border: 1px solid #555;
+    /*border: 1px solid #555;*/
     display: grid;
     height: fit-content;
-    margin: 0.5vh;
+    margin: 0.49vh;
     width: fit-content;
+    /*grid-gap: 0.15vh;*/
 }
 
 #inventory .items .column {
-    border-bottom: 1px solid #5557;
-    border-right: 1px solid #5557;
-    height: 2vh;
-    margin-bottom: -1px;
-    margin-right: -1px;
-    width: 2vh;
+    /*border-bottom: 1px solid #5557;
+    border-right: 1px solid #5557;*/
+    /*margin-bottom: -1px;
+    margin-right: -1px;*/
+    background: rgba(255, 255, 255, 0.2);
+    height: 2.45vh;
+    width: 2.45vh;
+    border-radius: 0.4vh;
+    margin: 0.07vh;
 }
 
 #inventory .items .column.access {
-    background-color: #0007;
+    background-color: rgba(106, 201, 61, 0.3);/*#0007;*/
 }
 
 #inventory .items .column.busy {
@@ -591,7 +819,7 @@
 }
 
 #inventory .items .column.deny {
-    background-color: #f001;
+    background-color: rgba(201, 61, 61, 0.3);/*#f001;*/
 }
 
 #inventory .items .column.merge {
@@ -607,14 +835,51 @@
 }
 
 #inventory .playerInventory {
-    grid-row-end: span 7;
+    /*grid-row-end: span 2;*/
+    /*overflow-x: hidden;
+    overflow-y: auto;*/
+    padding-right: 0;
+}
+
+#inventory .playerInventory>.header {
+    margin-bottom: 0.5vh;
+}
+
+#inventory .playerInventory>.header div {
+    padding-right: 2vh;
+}
+
+#inventory .playerInventory>.block {
+    margin-bottom: 1.9vh;
+    padding-right: 2.1vh;
     overflow-x: hidden;
     overflow-y: auto;
+    height: 93%;
+}
+
+#inventory .playerInventory>.block .container {
+    width: 42vh;
+}
+
+#inventory .playerInventory .container .header {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 0.9vh;
+    height: 3.5vh;
+    margin: 1.3vh 0;
+}
+
+#inventory .playerInventory .container .header div {
+    line-height: 1vh;
+    line-height: 3.5vh;
 }
 
 #inventory .playerInventory .container .title {
     color: #aaa;
     font-size: 1.5vh;
+    text-transform: none;
+    font-weight: 500;
+    margin-left: 0.9vh;
+    line-height: 3.5vh;
 }
 
 #inventory .playerInventory .container .header:hover .title {
@@ -625,16 +890,24 @@
     display: flex;
     flex-flow: wrap;
     /* margin-bottom: 3vh; */
+    padding: 0 1.2vh;
 }
 
 #inventory ::-webkit-scrollbar {
-    width: 0.5vh;
+    width: 1.1vh;
+}
+
+#inventory ::-webkit-scrollbar-track {
+    box-shadow: none;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 2vh;
 }
 
 #inventory ::-webkit-scrollbar-thumb {
     /* border-width: 1px 1px 1px 2px; */
     /* border-color: #222; */
-    background-color: #555;
+    border-radius: 2vh;
+    background-color: #FFDF29;
 }
 
 /* Анимация */
@@ -671,4 +944,27 @@
 #inventory .slide-enter, .slide-leave-to {
     overflow: hidden;
     max-height: 0px;
+}
+
+#inventory .bin {
+    background: #0000;
+    height: 10vh;
+    width: 10vh;
+    position: absolute;
+    bottom: -9.6vh;
+    left: 50%;
+    transform: translate(-50%);
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#inventory .bin svg {
+    height: 5vh;
+}
+
+#inventory .bin:hover svg path {
+    fill: #F03636;
+    box-shadow: 0 0 0.5vh #F03636;
 }

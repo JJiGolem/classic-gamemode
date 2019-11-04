@@ -849,7 +849,7 @@ var playerMenu = new Vue({
         },
         name(val) {
             setTimeout(() => {
-                this.longName = this.$refs.name.offsetHeight > this.$refs.def.offsetHeight;
+                // this.longName = this.$refs.name.offsetHeight > this.$refs.def.offsetHeight;
             }, 100);
         }
     },
@@ -1041,7 +1041,7 @@ Vue.component('player-menu-donate-convert', {
             return this.price * this.coefficient;
         },
         isEnable() {
-            return this.price && this.price != 0 && this.price > 0 && (this.price <= playerMenu.coins);
+            return this.price && this.price != 0 && (this.price <= playerMenu.coins);
         }
     },
     methods: {
@@ -1386,6 +1386,6 @@ Vue.component('player-menu-settings-protection', {
     }*/
 });
 
-// playerMenu.show = true;
+//playerMenu.show = true;
 // playerMenu.name = "Looooooonnnnnng Naaaaaaammeeeeee";
 //playerMenu.showConfirmWindow("Head ex", "description <br /> description")
