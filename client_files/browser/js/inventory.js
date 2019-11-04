@@ -50,8 +50,8 @@ var inventory = new Vue({
             18: {
                 name: 'Фонарь SureFire G2 Nitrolon',
                 description: 'Компактный, легкий и мощный фонарик, который можно использовать как подствольный целеуказатель.',
-                height: 6,
-                width: 8,
+                height: 3,
+                width: 4,
                 weight: 2,
             },
             21: {
@@ -685,20 +685,29 @@ var inventory = new Vue({
         urlItemImg(itemId) {
             return `img/inventory/items/${itemId}.png`;
         },
-        itemStyle(itemId) {
-            var url = this.urlItemImg(itemId);
+        itemStyle(item, isDraggable) {
+            var url = this.urlItemImg(item.itemId);
             var style = {
                 backgroundImage: `url(${url})`,
-                height: this.itemsInfo[itemId].height * 2 + "vh",
-                width: this.itemsInfo[itemId].width * 2 + "vh",
+                height: this.itemsInfo[item.itemId].height * 2.59 - 0.14 + "vh", // Высота + отступ ( минус один отступ)
+                width: this.itemsInfo[item.itemId].width * 2.59 - 0.14 + "vh",
                 pointerEvents: (this.itemDrag.item) ? 'none' : '',
             };
+            if (item.params && item.params.health && !isDraggable) {
+                style.backgroundImage = `url(${url}), ${this.itemGradient(item)}`;
+                style.backgroundColor = `#fff0`;
+            }
             return style;
         },
         valueColor(value) {
-            if (value > 50) return "#bf0";
-            if (value > 15) return "#fb0";
-            return "#b44";
+            if (value > 50) return "#6AC93D88";
+            if (value > 15) return "#C9783D88";
+            return "#C93D3D88";
+        },
+        itemGradient(item, transparent) {
+            if (item && item.params && item.params.health)
+                return `linear-gradient(0deg, ${this.valueColor(item.params.health)} ${item.params.health}%, rgba(255,255,255,${(transparent ? 0 : 0.3)}) ${item.params.health}%)`;
+
         },
         onBodyItemEnter(index) {
             if (!this.itemDrag.item) return;
@@ -1397,13 +1406,18 @@ var inventory = new Vue({
         itemId: 7,
         params: {},
         pockets: [{
-                cols: 9,
-                rows: 20,
+                cols: 3,
+                rows: 2,
                 items: {}
             },
             {
-                cols: 5,
-                rows: 5,
+                cols: 3,
+                rows: 2,
+                items: {}
+            },
+            {
+                cols: 15,
+                rows: 4,
                 items: {
                     2: {
                         sqlId: 300,
@@ -1520,8 +1534,8 @@ inventory.addEnvironmentPlace({
     sqlId: -10,
     header: "Шкаф",
     pockets: [{
-        cols: 19,
-        rows: 30,
+        cols: 18,
+        rows: 10,
         items: {
             0: {
                 sqlId: 1,
@@ -1533,7 +1547,7 @@ inventory.addEnvironmentPlace({
             },
             5: {
                 sqlId: 2,
-                itemId: 39,
+                itemId: 37,
                 // index: 5,
                 params: {
                     count: 10
@@ -1562,10 +1576,12 @@ inventory.addEnvironmentPlace({
                 // index: 10,
                 params: {}
             },
-            290: {
+            10: {
                 sqlId: 6,
                 itemId: 21,
-                params: {}
+                params: {
+                    health: 10,
+                }
             }
         }
     }]
