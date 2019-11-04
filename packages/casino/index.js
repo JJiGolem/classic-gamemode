@@ -31,6 +31,7 @@ let info = {
     }
 }
 let casinoArea;
+let infoShape;
 
 module.exports = {
     minDiceCash: 100,
@@ -75,6 +76,15 @@ module.exports = {
         }
         casinoArea.onExit = (player) => {
             player.call('casino.area.enter', [false]);
+        }
+
+        infoShape = mp.colshapes.newSphere(1088.2305908203125, 219.5839080810547, -49.200382232666016, 1.2)
+        infoShape.dimension = 1;
+        infoShape.onEnter = (player) => {
+            player.call('casino.info.show', [true]);
+        }
+        infoShape.onExit = (player) => {
+            player.call('casino.info.show', [false]);
         }
     },
     isPlayerInCasinoArea(player) {
