@@ -2800,7 +2800,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
-                itemIds: [28, 24],
+                itemIds: [28, 24, 3],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -3014,7 +3014,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
-                itemIds: [28, 24],
+                itemIds: [28, 24, 3],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -3228,7 +3228,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
-                itemIds: [28, 24, 4],
+                itemIds: [28, 24, 4, 3],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -3443,6 +3443,9 @@ var selectMenu = new Vue({
                         text: "Наручники"
                     },
                     {
+                        text: "Сухпай"
+                    },
+                    {
                         text: "Бронежилет"
                     },
                     {
@@ -3451,7 +3454,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
-                itemIds: [24, 28],
+                itemIds: [24, 28, 132, 3],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {

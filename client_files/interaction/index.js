@@ -128,7 +128,7 @@ mp.events.add('characterInit.done', () => { /// E
         if (mp.game.ui.isPauseMenuActive()) return;
         if (isOpen) mp.busy.remove('interaction');
         if (mp.busy.includes()) return;
-        if (isOpen) return mp.events.call('interaction.menu.close');;
+        if (isOpen) return mp.events.call('interaction.menu.close');
 
         let veh = mp.players.local.getVehicleIsTryingToEnter();
         if (veh) return;
@@ -162,6 +162,7 @@ mp.events.add('characterInit.done', () => { /// E
             mp.events.call('interaction.menu.show');
         } else if (currentInteractionEntity.type == 'player') {
             if (mp.farms.isCropping()) return;
+            mp.callCEFV(`interactionMenu.hasHeadBag = ${mp.mafia.hasBag(currentInteractionEntity)}`);
             mp.callCEFV(`interactionMenu.showByName('player_interaction')`);
             mp.callCEFV(`interactionMenu.left = ${defaultLeft}`);
             mp.events.call('interaction.menu.show');

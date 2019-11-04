@@ -197,6 +197,10 @@ mp.mafia = {
     stopFollowToPlayer() {
         this.followPlayer = null;
     },
+    hasBag(player) {
+        if (!player) player = mp.players.local;
+        return player.hasAttachment("headBag");
+    },
 };
 
 mp.events.add({

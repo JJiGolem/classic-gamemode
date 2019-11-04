@@ -1332,7 +1332,7 @@ module.exports = [
     "anim@deathmatch_intros@unarmed intro_male_unarmed_c",
     "anim@heists@biolab@ contact_gives_codes",
     "anim@heists@biolab@ig_1_karen_codes handover_karen",
-    "anim@heists@box_carry@ run",
+    "anim@heists@box_carry@ idle",
     "anim@heists@camera_tests@end_mission_pulse end_mission_pulse_cam",
     "anim@heists@chicken_heist@ig_5_guard_wave_in guard_reaction_in_booth",
     "anim@heists@fleeca_bank@bank_vault_door bank_vault_door_opens",
