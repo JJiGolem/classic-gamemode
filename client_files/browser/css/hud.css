@@ -2,7 +2,7 @@
     color: #fff;
     font-family: Ubuntu;
     height: 100%;
-    /*pointer-events: none;*/
+    pointer-events: none;
     position: absolute;
     width: 100%;
 }
