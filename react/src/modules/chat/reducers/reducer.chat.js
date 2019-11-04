@@ -3,12 +3,7 @@ const initialState = {
     messages: [],
     opacity: 1,
     time: true,
-    tags: [
-        // {
-        //     id: 1,
-        //     name: 'C'
-        // }
-    ],
+    tags: [],
     isFocus: false
 };
 

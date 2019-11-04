@@ -99,7 +99,7 @@ mp.events.add('render', () => {
                         mp.events.call('prompt.hide');
                         isShowPrompt = false;
                     }
-                    bindButtons(false);
+                    // bindButtons(false);
                 }
             }, 1000);
         }
