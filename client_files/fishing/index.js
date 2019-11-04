@@ -99,7 +99,7 @@ mp.events.add('render', () => {
                         mp.events.call('prompt.hide');
                         isShowPrompt = false;
                     }
-                    // bindButtons(false);
+                    if (!isEnter) bindButtons(false);
                 }
             }, 1000);
         }
@@ -109,7 +109,7 @@ mp.events.add('render', () => {
             isShowPrompt = false;
             mp.timer.remove(intervalFishing);
             isIntervalCreated = false;
-            bindButtons(false);
+            if (!isEnter) bindButtons(false);
         }
     }
 });
