@@ -527,6 +527,25 @@ module.exports = {
         vehicle.d = place.d;
         place.veh = vehicle;
     },
+    setVehicleHomeSpawnPlaceByVeh(player, vehicle) {
+        if (!player) return;
+        if (!vehicle) return;
+
+        let index = player.carPlaces.findIndex(x => x.veh == null && x.d != 0);
+
+        if (player.carPlaces.length == 1 && player.carPlaces[0].d == 0) {
+            index = 0;
+        }
+
+        let place = player.carPlaces[index];
+        vehicle.carPlaceIndex = index;
+        vehicle.x = place.x;
+        vehicle.y = place.y;
+        vehicle.z = place.z;
+        vehicle.h = place.h;
+        vehicle.d = place.d;
+        place.veh = vehicle;
+    },
     isAbleToBuyVehicle(player) {
         let hasHouse = houses.isHaveHouse(player.character.id);
         console.log(`hasHouse = ${hasHouse}`)

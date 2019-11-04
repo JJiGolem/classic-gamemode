@@ -385,6 +385,9 @@ module.exports = {
                     }
 
                     vehicles.removeVehicleFromPlayerVehicleList(seller, vehId);
+                    vehicles.removeVehicleFromCarPlace(seller, veh);
+
+
                     // TODO на парковке или нет
                     let props = vehicles.getVehiclePropertiesByModel(veh.modelName)
                     console.log(props)
@@ -395,8 +398,11 @@ module.exports = {
                         regDate: veh.regDate,
                         owners: veh.owners,
                         vehType: props.vehType,
-                        price: props.price // todo isOnParking TODO !!!!!!!!!!!!!!!!!!!!!
+                        price: props.price,
+                        parkingDate: veh.parkingDate
                     });
+                    let hasHouse = houses.isHaveHouse(player.character.id);
+                    if (hasHouse && veh) vehicles.setVehicleHomeSpawnPlaceByVeh(player, veh);
 
                     inventory.fullDeleteItemsByParams(33, 'vehId', vehId);
                     // выдача ключей в инвентарь
