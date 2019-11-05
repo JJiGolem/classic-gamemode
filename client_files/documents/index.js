@@ -12,7 +12,7 @@ mp.events.add('documents.show', (type, data) => {
     }, 500);
     controlsDisabled = true;
     mp.game.graphics.transitionToBlurred(500);
-    mp.gui.cursor.show(true, true);
+    mp.busy.add('docs', true);
     mp.events.call("prompt.showByName", 'documents_close');
 
     currentType = type;
@@ -91,7 +91,7 @@ mp.events.add('documents.close', (type, data) => {
     }
 
     mp.game.graphics.transitionFromBlurred(500);
-    mp.gui.cursor.show(false, false);
+    mp.busy.remove('docs');
     mp.events.call("prompt.hide");
     controlsDisabled = false;
 });

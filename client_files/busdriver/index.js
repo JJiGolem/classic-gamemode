@@ -25,7 +25,6 @@ mp.events.add('characterInit.done', () => {
 
 
 mp.events.add('busdriver.jobmenu.show', (state) => {
-    mp.busy.add('busdriver.jobmenu', false);
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["busJobMenu"])`);
     switch (state) {
         case 0:
@@ -40,7 +39,6 @@ mp.events.add('busdriver.jobmenu.show', (state) => {
 
 
 mp.events.add('busdriver.jobmenu.close', () => {
-    mp.busy.remove('busdriver.jobmenu');
     mp.callCEFV(`selectMenu.show = false`);
 });
 
