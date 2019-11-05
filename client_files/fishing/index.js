@@ -61,7 +61,22 @@ let intervalFishing;
 let isIntervalCreated = false;
 
 const checkConditions = () => {
-    return (!mp.busy.includes() && isHaveRod && !isEnter && !localPlayer.isInWater() && !localPlayer.vehicle);
+    return (
+        !mp.busy.includes() && 
+        isHaveRod && 
+        !isEnter && 
+        !localPlayer.isInWater() && 
+        !localPlayer.vehicle &&
+        !localPlayer.getVehicleIsTryingToEnter() &&
+        !localPlayer.isInAir() &&
+        !localPlayer.isPlayingAnim() &&
+        !localPlayer.isJumping() &&
+        !localPlayer.isDiving() &&
+        !localPlayer.isEvasiveDiving() &&
+        !localPlayer.isFalling() &&
+        !localPlayer.isSwimmingUnderWater() &&
+        !localPlayer.isClimbing()
+    );
 }
 
 mp.events.add('characterInit.done', () => {
