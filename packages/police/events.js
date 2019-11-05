@@ -673,9 +673,8 @@ module.exports = {
         // Если убийство на учениях армии
         if (army.inWar(killer) && army.inWar(player)) return;
 
-        // Если полицейский/агент убил преступника, то розыск не выдаем
-        if ((factions.isPoliceFaction(killer.character.factionId) || factions.isFibFaction(killer.character.factionId)) &&
-            player.character.wanted) return;
+        // Если полицейский/агент убил любого, то розыск не выдаем
+        if (factions.isPoliceFaction(killer.character.factionId) || factions.isFibFaction(killer.character.factionId)) return;
 
         police.setWanted(killer, killer.character.wanted + 1, `Убийство мирного жителя`);
     },
