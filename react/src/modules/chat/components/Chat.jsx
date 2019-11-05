@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 import React, {Fragment} from 'react';
 import { connect } from 'react-redux';
 import { setOpacityChat, setFocusChat, pushMessage, setTagsChat, showChat } from '../actions/action.chat';
@@ -26,30 +27,53 @@ class Chat extends React.Component {
     }
 
     componentDidMount() {
+        // for (let i = 0; i < 20; i++) {
+        //     this.props.pushMessage('hii');
+        // }
+        
+        // this.props.setFocusChat(true);
+
+        // setInterval(() => {
+        //     this.props.pushMessage('message');
+        // }, 4000);
+    }
+
+    componentWillUpdate() {
+        if (this.refList.scrollHeight - this.refList.scrollTop === this.refList.clientHeight) {
+            if (!this.state.isScroll) {
+                this.setState({ isScroll: true });
+            }
+        }
     }
 
     componentDidUpdate() {
-        const objDiv = this.refList;
+        const list = this.refList;
         const { chat } = this.props;
-        const { isMyMessage } = this.state;
+        const { isMyMessage, isScroll } = this.state;
 
-        if (objDiv) {
-            
-            if (chat.isFocus) {
-                if (isMyMessage) {
-                    objDiv.scrollTop = objDiv.scrollHeight;
-                    this.setState({ isMyMessage: false });
+        if (chat.isFocus) {
+            list.style.overflowY = 'auto';
+
+            if (isMyMessage) {
+                this.scrollToBottom();
+                this.setState({ isMyMessage: false });
+            } else {
+                if (isScroll) {
+                    this.scrollToBottom();
+                    this.setState({ isScroll: false });
                 }
-            } else {
-                objDiv.scrollTop = objDiv.scrollHeight;
             }
-
-            if(chat.isFocus) {
-                this.refList.style.overflowY = 'auto'
-            } else {
-                this.refList.style.overflowY = 'hidden'
-            }
+        } else {
+            list.style.overflowY = 'hidden';
+            this.scrollToBottom();
         }
+    }
+
+    scrollToBottom() {
+        const scrollHeight = this.refList.scrollHeight;
+        const height = this.refList.clientHeight;
+        const maxScrollTop = scrollHeight - height;
+        this.refList.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
     }
 
     handleChangeInput(e) {

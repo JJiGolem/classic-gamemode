@@ -96,10 +96,10 @@ mp.events.add('render', () => {
                     mp.events.call('fishing.game.menu');
                 } else {
                     if (isShowPrompt) {
-                        bindButtons(false);
                         mp.events.call('prompt.hide');
                         isShowPrompt = false;
                     }
+                    if (!isEnter) bindButtons(false);
                 }
             }, 1000);
         }
@@ -109,6 +109,7 @@ mp.events.add('render', () => {
             isShowPrompt = false;
             mp.timer.remove(intervalFishing);
             isIntervalCreated = false;
+            if (!isEnter) bindButtons(false);
         }
     }
 });
@@ -130,7 +131,6 @@ mp.events.add('inventory.initItems', (items) => {
 });
 
 mp.events.add('inventory.deleteItem', (item) => {
-    debug(item);
     if (rods.includes(item)) {
         let index = rods.findIndex(rod => rod == item);
         rods.splice(index, 1);
@@ -143,9 +143,6 @@ mp.events.add('inventory.deleteItem', (item) => {
             mp.events.call('prompt.hide');
             isShowPrompt = false;
         }
-
-        debug('delete rod');
-        debug(rods.length);
     }
 });
 
@@ -221,12 +218,6 @@ mp.events.add('fishing.game.enter', () => {
     localPlayer.freezePosition(true);
     mp.callCEFVN({ "fishing.show": true });
     isEnter = true;
-});
-
-mp.events.add('fishing.game.start', () => {
-    playWaitAnimation(true);
-    mp.callCEFVN({ "fishing.isStarted": true });
-    mp.events.callRemote('fishing.game.start');
 });
 
 mp.events.add('fishing.game.fetch', (speed, zone, weight) => {

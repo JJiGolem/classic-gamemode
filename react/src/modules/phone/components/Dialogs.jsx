@@ -28,14 +28,14 @@ class Dialogs extends Component {
         }
     }
 
-    componentDidMount() {
-        setTimeout(() => {
-            this.props.addMessage('h2222i', Date.now(), '232332', false, false);
-        }, 1000);
-        setTimeout(() => {
-            this.props.addMessage('hi', Date.now(), '4462', false, false);
-        }, 3000);
-    }
+    // componentDidMount() {
+    //     setTimeout(() => {
+    //         this.props.addMessage('h2222i', Date.now(), '232332', false, false);
+    //     }, 1000);
+    //     setTimeout(() => {
+    //         this.props.addMessage('hi', Date.now(), '4462', false, false);
+    //     }, 3000);
+    // }
 
     componentDidUpdate(prevProps, prevState) {
         const { dialogs, sortDialogsByDate } = this.props;
