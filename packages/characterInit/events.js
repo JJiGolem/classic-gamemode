@@ -61,7 +61,7 @@ module.exports = {
 
         var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60 % 60);
         player.character.minutes += minutes;
-        if (!player.dimension) {
+        if (!player.dimension && !player.character.arrestTime) {
             player.character.x = player.position.x;
             player.character.y = player.position.y;
             player.character.z = player.position.z;
