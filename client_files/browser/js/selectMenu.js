@@ -1122,10 +1122,10 @@ var selectMenu = new Vue({
                         text: "Устроиться на работу",
                         i: 0,
                     },
-                    // {
-                    //     text: "Помощь", // TODO
-                    //     i: 0,
-                    // },
+                    {
+                        text: "Помощь",
+                        i: 0,
+                    },
                     {
                         text: "Закрыть",
                         i: 0,
@@ -1151,6 +1151,9 @@ var selectMenu = new Vue({
                         }
                         if (e.itemName == 'Закрыть') {
                             mp.trigger(`carservice.jobmenu.close`);
+                        } else if (e.itemName == 'Помощь') {
+                            selectMenu.show = false;
+                            modal.showByName("carservice_help");
                         }
                     }
                 }
@@ -1468,10 +1471,10 @@ var selectMenu = new Vue({
                         text: "Устроиться на работу",
                         i: 0,
                     },
-                    // {
-                    //     text: "Помощь", // TODO
-                    //     i: 0,
-                    // },
+                    {
+                        text: "Помощь",
+                        i: 0,
+                    },
                     {
                         text: "Закрыть",
                         i: 0,
@@ -1497,6 +1500,9 @@ var selectMenu = new Vue({
                         }
                         if (e.itemName == 'Закрыть') {
                             mp.trigger(`taxi.jobmenu.close`);
+                        } else if (e.itemName == 'Помощь') {
+                            selectMenu.show = false;
+                            modal.showByName("taxi_help");
                         }
                     }
                 }
@@ -4559,10 +4565,10 @@ var selectMenu = new Vue({
                         text: "Устроиться на работу",
                         i: 0,
                     },
-                    // {
-                    //     text: "Помощь", // TODO
-                    //     i: 0,
-                    // },
+                    {
+                        text: "Помощь",
+                        i: 0,
+                    },
                     {
                         text: "Закрыть",
                         i: 0,
@@ -4590,6 +4596,9 @@ var selectMenu = new Vue({
                         }
                         if (e.itemName == 'Закрыть') {
                             mp.trigger(`busdriver.jobmenu.close`);
+                        } else if (e.itemName == 'Помощь') {
+                            selectMenu.show = false;
+                            modal.showByName("bus_help");
                         }
                     }
                 }

@@ -72,7 +72,6 @@ mp.events.add('characterInit.done', () => {
 
 mp.events.add('carservice.jobshape.enter', () => {
     if (mp.busy.includes()) return;
-    mp.busy.add('carservice.jobshape', false);
     mp.events.callRemote('carservice.jobshape.enter');
 });
 
@@ -99,7 +98,6 @@ mp.events.add('carservice.jobmenu.show', (state) => {
 });
 
 mp.events.add('carservice.jobmenu.close', () => {
-    mp.busy.remove('carservice.jobshape');
     mp.callCEFV(`selectMenu.show = false`);
 });
 
