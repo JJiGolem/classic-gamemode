@@ -15,7 +15,7 @@ module.exports = {
         itemId: 70,
         params: {
             health: 100,
-            weaponHash: mp.joaat('weapon_battleaxe'),
+            weaponHash: mp.joaat('weapon_hatchet'),
         },
         price: 100
     }],
