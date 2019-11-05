@@ -6,7 +6,10 @@ mp.attachmentMngr = {
             if (entity && entity.__attachmentObjects && !entity.__attachmentObjects.hasOwnProperty(id)) {
                 let attInfo = this.attachments[id];
                 let object = mp.objects.new(attInfo.model, entity.position);
-                if (attInfo.lost) object.lost = attInfo.lost;
+                if (attInfo.lost) {
+                    object.lost = attInfo.lost;
+                    mp.inventory.hands(entity, null);
+                }
 
                 object.attachTo(entity.handle,
                     (typeof(attInfo.boneName) === 'string') ? entity.getBoneIndexByName(attInfo.boneName) : entity.getBoneIndex(attInfo.boneName),
@@ -40,6 +43,7 @@ mp.attachmentMngr = {
                 obj.destroy();
             }
             if (attInfo.anim) entity.clearTasksImmediately();
+            if (attInfo.lost) mp.inventory.hands(entity, entity.getVariable("hands"));
         }
     },
 
