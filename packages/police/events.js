@@ -322,9 +322,10 @@ module.exports = {
 
         inventory.addItem(player, 3, params, (e) => {
             if (e) return notifs.error(player, e, header);
+
+            notifs.success(player, `Выдан бронежилет`, header);
+            factions.setAmmo(faction, faction.ammo - police.armourAmmo);
         });
-        notifs.success(player, `Выдан бронежилет`, header);
-        factions.setAmmo(faction, faction.ammo - police.armourAmmo);
     },
     "police.storage.items.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Police`);
@@ -593,6 +594,13 @@ module.exports = {
 
         //todo broadcast to radio
     },
+    "police.cells.forceArrest": (player) => {
+        if (!player.character) return;
+
+        var time = police.arrestTime * player.character.wanted;
+        player.character.arrestTime = time;
+        police.startCellArrest(player, null, time);
+    },
     "police.vehicle.put": (player, recId) => {
         var header = `Посадка`;
         var rec = mp.players.at(recId);
@@ -672,9 +680,8 @@ module.exports = {
         // Если убийство на учениях армии
         if (army.inWar(killer) && army.inWar(player)) return;
 
-        // Если полицейский/агент убил преступника, то розыск не выдаем
-        if ((factions.isPoliceFaction(killer.character.factionId) || factions.isFibFaction(killer.character.factionId)) &&
-            player.character.wanted) return;
+        // Если полицейский/агент убил любого, то розыск не выдаем
+        if (factions.isPoliceFaction(killer.character.factionId) || factions.isFibFaction(killer.character.factionId)) return;
 
         police.setWanted(killer, killer.character.wanted + 1, `Убийство мирного жителя`);
     },

@@ -26,6 +26,7 @@ mp.police = {
         mp.inventory.enable(!enable);
         mp.mapCase.enable(!enable);
         mp.callCEFR('phone.show', [false]);
+        enable ? mp.busy.add("cuffs") : mp.busy.remove("cuffs");
     },
     setWanted(val) {
         this.wanted = val;
