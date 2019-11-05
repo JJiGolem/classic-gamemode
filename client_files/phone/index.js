@@ -192,14 +192,10 @@ let bindButtons = (state) => {
 let showPhone = () => {
     if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
-    if (mp.police.haveCuffs) return;
     var player = mp.players.local;
     if (player.getVariable("knocked")) return;
     if (!player.getHealth()) return;
-    if (mp.farms.hasProduct(player)) return;
     if (mp.farms.isCropping(player)) return;
-    if (mp.factions.hasBox(player)) return;
-    if (player.getVariable("cuffs")) return;
 
     if (!mp.busy.add('phone')) return;
     mp.callCEFR('phone.show', [true]);

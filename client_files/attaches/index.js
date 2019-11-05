@@ -9,6 +9,7 @@ mp.attachmentMngr = {
                 if (attInfo.lost) {
                     object.lost = attInfo.lost;
                     mp.inventory.hands(entity, null);
+                    if (entity.remoteId == mp.players.local.remoteId) mp.busy.add("lostAttach", false);
                 }
 
                 object.attachTo(entity.handle,
@@ -43,7 +44,10 @@ mp.attachmentMngr = {
                 obj.destroy();
             }
             if (attInfo.anim) entity.clearTasksImmediately();
-            if (attInfo.lost) mp.inventory.hands(entity, entity.getVariable("hands"));
+            if (attInfo.lost) {
+                mp.inventory.hands(entity, entity.getVariable("hands"));
+                if (entity.remoteId == mp.players.local.remoteId) mp.busy.remove("lostAttach");
+            }
         }
     },
 
