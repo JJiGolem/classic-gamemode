@@ -594,6 +594,13 @@ module.exports = {
 
         //todo broadcast to radio
     },
+    "police.cells.forceArrest": (player) => {
+        if (!player.character) return;
+
+        var time = police.arrestTime * player.character.wanted;
+        player.character.arrestTime = time;
+        police.startCellArrest(player, null, time);
+    },
     "police.vehicle.put": (player, recId) => {
         var header = `Посадка`;
         var rec = mp.players.at(recId);
