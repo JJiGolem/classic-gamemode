@@ -58,9 +58,9 @@ mp.events.add({
     },
     "casino.info.show": (show) => {
         if (show) {
-            //mp.callCEFV(`modal.showByName('fishing_help')`)
+            mp.callCEFV(`modal.showByName('casino_help')`)
         } else {
-            //mp.callCEFV(`modal.show = false`)
+            mp.callCEFV(`modal.show = false`)
         }    
     }
 });
