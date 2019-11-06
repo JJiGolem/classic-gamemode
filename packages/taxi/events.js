@@ -286,7 +286,7 @@ module.exports = {
             console.log(`currentDist = ${currentDist}`);
             console.log(`currentDist / entireDist = ${currentDist / entireDist}`);
             if (currentDist / entireDist > 0.5) {
-                let sum = Math.round(((entireDist - currentDist) / 1000) * 0.5 * taxi.getPricePerKilometer());
+                let sum = Math.round((entireDist / 1000) * 0.5 * taxi.getPricePerKilometer());
                 console.log(`Начисляем деньги водителю ${sum}`);
                 money.moveCash(player, driver, sum, function (result) {
                     if (result) {
