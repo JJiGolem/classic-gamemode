@@ -262,8 +262,10 @@ module.exports = {
     "/m": (player, message) => {
         if (!player.character) return;
         let factionId = player.character.factionId;
-        if (!factions.isPoliceFaction(factionId) && 
-        !factions.isFibFaction(factionId) && !factions.isArmyFaction(factionId)) return;
+        if (!factions.isPoliceFaction(factionId) &&
+            !factions.isFibFaction(factionId) && !factions.isArmyFaction(factionId)) return;
+        if (!player.vehicle ||
+            !(player.vehicle.key == 'faction' && player.vehicle.owner == factionId)) return notify.error(player, 'Вы не в служебном транспорте');
         mp.players.forEachInRange(player.position, 15, (currentPlayer) => {
             if (!currentPlayer.character) return;
             currentPlayer.call('chat.message.split', [message.join(' '), `!{#ffcd45}[Мегафон] ${player.character.name}[${player.id}]: `]);
