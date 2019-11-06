@@ -280,9 +280,9 @@ module.exports = {
 
             let driver = mp.players.at(dest.driverId);
             if (!driver) return console.log('Нет водителя');
-            let entireDist = utils.vdist(dest.startPosition, dest.destination);
+            let entireDist = utils.vdistSqr(dest.startPosition, dest.destination);
             console.log(`entireDist = ${entireDist}`);
-            let currentDist = utils.vdist({ x: player.position.x, y: player.position.y, z: player.position.z }, dest.destination);
+            let currentDist = utils.vdistSqr({ x: player.position.x, y: player.position.y, z: player.position.z }, dest.destination);
             console.log(`currentDist = ${currentDist}`);
             console.log(`currentDist / entireDist = ${currentDist / entireDist}`);
             if (currentDist / entireDist > 0.5) {
