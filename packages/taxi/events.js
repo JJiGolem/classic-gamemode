@@ -3,6 +3,8 @@ let money = call('money');
 let vehicles = call('vehicles');
 let jobs = call('jobs');
 let timer = call('timer');
+let utils = call('utils');
+let notify = call('notifications');
 
 module.exports = {
     "init": () => {
@@ -136,6 +138,7 @@ module.exports = {
 
         player.taxiClientDestination = {
             driverId: driver.id,
+            startPosition: player.position,
             destination: destination,
             price: price
         }
@@ -266,6 +269,27 @@ module.exports = {
         if (player.taxiClientDestination) {
             mp.events.call('taxi.client.order.cancel', player);
             player.call('taxi.client.car.leave');
+            
+            let dest = player.taxiClientDestination;
+            let driver = mp.players.at(dest.driverId);
+            if (!driver) return console.log('Нет водителя');
+            let entireDist = utils.vdist(dest.startPos, dest.destination);
+            console.log(`entireDist = ${entireDist}`);
+            let currentDist = utils.vdist(player.position, dest.destination);
+            console.log(`currentDist = ${currentDist}`);
+            console.log(`currentDist / entireDist = ${currentDist / entireDist}`);
+            if (currentDist / entireDist > 0.5) {
+                let sum = (entireDist - currentDist) * 0.5 * taxi.getPricePerKilometer();
+                console.log(`Начисляем деньги водителю ${sum}`);
+                money.moveCash(player, driver, sum, function(result) {
+                    if (result) {
+                        notify.warning(player, 'Вы покинули такси, с вас списана часть суммы поездки');
+                        notify.warning(driver, 'Клиент покинул такси, вам начислена компенсация');
+                    } else {
+                        console.log('Ошибка начисления денег за компенсацию такси');
+                    }
+                }, `Компенсация за поездку такси`, `Компенсация за поездку такси`)
+            }
         }
     },
 }
