@@ -132,6 +132,10 @@ let utils = {
     vdist(posA, posB) {
         return (posA.x - posB.x) * (posA.x - posB.x) + (posA.y - posB.y) * (posA.y - posB.y) + (posA.z - posB.z) * (posA.z - posB.z);
     },
+    // Получить расстояние между двумя точками без учета Z
+    vdistSqr(posA, posB) {
+        return Math.sqrt(Math.pow((posB.x - posA.x), 2) + Math.pow((posB.y - posA.y), 2));
+    },
     // Сумма чисел в массиве
     arraySum(array) {
         var sum = 0;
