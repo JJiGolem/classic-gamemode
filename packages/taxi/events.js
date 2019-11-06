@@ -267,10 +267,11 @@ module.exports = {
             console.log('TAXI RESPAWN TIMER: ' + vehicle.taxiRespawnTimer);
         }
         if (player.taxiClientDestination) {
+            let dest = player.taxiClientDestination;
             mp.events.call('taxi.client.order.cancel', player);
             player.call('taxi.client.car.leave');
             
-            let dest = player.taxiClientDestination;
+            
             let driver = mp.players.at(dest.driverId);
             if (!driver) return console.log('Нет водителя');
             let entireDist = utils.vdist(dest.startPos, dest.destination);
