@@ -267,7 +267,9 @@ module.exports = {
             console.log('TAXI RESPAWN TIMER: ' + vehicle.taxiRespawnTimer);
         }
         if (player.taxiClientDestination) {
-            let dest = player.taxiClientDestination;
+            console.log(player.taxiClientDestination);
+            let dest = Object.assign({}, player.taxiClientDestination);
+            console.log(dest);
             mp.events.call('taxi.client.order.cancel', player);
             player.call('taxi.client.car.leave');
             
