@@ -109,7 +109,7 @@ mp.woodman = {
     },
     isAxInHands(player) {
         if (!player) player = mp.players.local;
-        return player.weapon == mp.game.joaat('weapon_battleaxe');
+        return player.weapon == mp.game.joaat('weapon_hatchet');
     },
     isFocusTree() {
         if (!this.treePos) return false;
