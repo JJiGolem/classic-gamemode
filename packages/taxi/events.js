@@ -282,7 +282,7 @@ module.exports = {
             if (!driver) return console.log('Нет водителя');
             let entireDist = utils.vdistSqr(dest.startPosition, dest.destination);
             console.log(`entireDist = ${entireDist}`);
-            let currentDist = utils.vdistSqr({ x: player.position.x, y: player.position.y, z: player.position.z }, dest.destination);
+            let currentDist = entireDist - utils.vdistSqr({ x: player.position.x, y: player.position.y, z: player.position.z }, dest.destination);
             console.log(`currentDist = ${currentDist}`);
             console.log(`currentDist / entireDist = ${currentDist / entireDist}`);
             if (currentDist / entireDist > 0.5) {
