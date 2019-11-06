@@ -115,12 +115,11 @@ module.exports = {
         var order = carrier.getBizOrder(bizId);
         if (!order) return out(`Заказ просрочен`);
 
-        var max = carrier.getProductsMax(player);
-        if (order.prodCount > max) return out(`Ваш навык не позволяет загрузить более ${max} ед.`);
-        var price = order.prodCount * order.prodPrice;
+        var count = Math.min(carrier.getProductsMax(player), order.prodCount);
+        var price = count * order.prodPrice;
         if (player.character.cash < price) return out(`Необходимо $${price}`);
 
-        carrier.takeBizOrder(player, veh, order);
+        carrier.takeBizOrder(player, veh, order, count);
 
         money.removeCash(player, price, (res) => {
             if (!res) return out(`Ошибка списания наличных`);

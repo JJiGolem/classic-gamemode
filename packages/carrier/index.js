@@ -126,11 +126,11 @@ module.exports = {
             orderPrice: biz.info.productsOrderPrice,
             distance: +Math.sqrt(vdistance).toFixed(1),
         };
-        this.removeBizOrder(order.bizId);
+        this.removeBizOrderByBizId(order.bizId);
         this.jobBroadcast(`Поступил заказ для бизнеса ${order.bizName}`);
         this.bizOrders.push(order);
     },
-    removeBizOrder(bizId) {
+    removeBizOrderByBizId(bizId) {
         var list = this.bizOrders;
         for (var i = 0; i < list.length; i++) {
             var order = list[i];
@@ -140,18 +140,29 @@ module.exports = {
         }
         // TODO: broadcast all carriers
     },
-    takeBizOrder(player, veh, order) {
+    removeBizOrder(order) {
+        var list = this.bizOrders;
+        var i = list.indexOf(order);
+        if (i != -1) list.splice(i, 1);
+        // TODO: broadcast all carriers
+    },
+    takeBizOrder(player, veh, order, count) {
         if (typeof order == 'number') order = this.getBizOrder(order);
 
         var pos = bizes.getBizPosition(order.bizId);
+
+        if (count == order.prodCount) this.removeBizOrder(order);
+        else {
+            order.prodCount -= count;
+            order = Object.assign({}, order);
+            order.prodCount = count;
+        }
 
         veh.products = {
             bizOrder: order,
             playerId: player.id,
         };
-        veh.setVariable("label", `${order.prodCount} из ${this.getProductsMax(player)} ед.`);
-
-        this.removeBizOrder(order.bizId);
+        veh.setVariable("label", `${count} из ${this.getProductsMax(player)} ед.`);
         player.call("waypoint.set", [pos.x, pos.y]);
         notifs.success(player, `Заказ принят`, order.bizName);
         this.jobBroadcast(`Взят заказ для бизнеса ${order.bizName}`);
@@ -172,8 +183,10 @@ module.exports = {
 
         var order = veh.products.bizOrder;
 
-        this.removeBizOrder(order.bizId);
-        this.bizOrders.push(order);
+        // this.removeBizOrderByBizId(order.bizId);
+        var oldOrder = this.getBizOrder(order.bizId);
+        if (oldOrder) oldOrder.prodCount += order.prodCount;
+        else this.bizOrders.push(order);
 
         delete veh.products;
         veh.setVariable("label", null);
