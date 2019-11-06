@@ -626,6 +626,7 @@ module.exports = {
         veh.position = new mp.Vector3(veh.db.x, veh.db.y, veh.db.z);
         veh.rotation = new mp.Vector3(0, 0, veh.db.h);
         veh.setVariable("heading", veh.db.h);
+        this.setFuel(veh, veh.properties.maxFuel);
         delete veh.lastPlayerTime;
         mp.events.call("vehicle.respawned", veh);
     },
