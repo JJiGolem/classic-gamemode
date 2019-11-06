@@ -1,4 +1,5 @@
 let bins = call('bins');
+let jobs = call('jobs');
 let inventory = call('inventory');
 let money = call('money');
 let notifs = call('notifications');
@@ -30,6 +31,7 @@ module.exports = {
 
         inventory.addItem(player, trashInfo.itemId, {}, (e) => {
             if (e) out(e);
+            bins.addJobExp(player);
         });
 
         notifs.success(player, `Вы нашли ${name}`, `Мусорка`);
@@ -41,10 +43,11 @@ module.exports = {
         var trashIds = bins.trashesInfo.map(x => x.itemId);
         var items = inventory.getArrayByItemId(player, trashIds);
         if (!items.length) return notifs.error(player, `Вы не имеете мусор`, header);
+        var exp = jobs.getJobSkill(player, 6).exp;
         var pay = 0;
         items.forEach(item => {
             var price = bins.trashesInfo.find(x => x.itemId == item.itemId).price;
-            pay += price;
+            pay += price * (1 + bins.priceBonus * (exp / 100));
             inventory.deleteItem(player, item);
         });
         money.addCash(player, pay, (res) => {
