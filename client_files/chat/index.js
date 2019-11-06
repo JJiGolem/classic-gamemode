@@ -75,7 +75,8 @@ mp.events.add('chat.load', () => {
 
     mp.keys.bind(0x54, true, function() {
         if (mp.game.ui.isPauseMenuActive()) return;
-        if (mp.busy.includes()) return;
+        //if (mp.busy.includes()) return;
+        if (mp.busy.includes() && !mp.busy.includes('lostAttach') && !mp.busy.includes('cuffs')) return;
         mp.busy.add('chat', true);
         isOpen = true;
         mp.callCEFR('setFocusChat', [true]);
