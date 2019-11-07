@@ -47,9 +47,10 @@ module.exports = {
         var pay = 0;
         items.forEach(item => {
             var price = bins.trashesInfo.find(x => x.itemId == item.itemId).price;
-            pay += price * (1 + bins.priceBonus * (exp / 100));
+            pay += price;
             inventory.deleteItem(player, item);
         });
+        pay *= (1 + bins.priceBonus * (exp / 100));
         money.addCash(player, pay, (res) => {
             if (!res) notifs.error(player, `Ошибка начисления наличных`, header);
         }, `Сдача мусора на свалке`);

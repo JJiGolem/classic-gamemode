@@ -22,7 +22,11 @@ let houses;
 module.exports = {
     // Время простоя авто, после которого оно будет заспавнено (ms) - точность ~0-5 мин
     vehWaitSpawn: 20 * 60 * 1000,
+    // Кол-во топлива при респавне авто (кроме рабочих - в них всегда полный бак)
+    respawnFuel: 10,
     ownVehicleRespawnPrice: 300,
+
+
     async init() {
         houses = call('houses');
         await this.loadVehiclePropertiesFromDB();
@@ -622,10 +626,13 @@ module.exports = {
         return dbVehicleProperties;
     },
     respawn(veh) {
+        var fuel = (veh.db.key == 'job')? veh.properties.maxFuel : Math.max(veh.db.fuel, this.respawnFuel);
+
         veh.repair();
         veh.position = new mp.Vector3(veh.db.x, veh.db.y, veh.db.z);
         veh.rotation = new mp.Vector3(0, 0, veh.db.h);
         veh.setVariable("heading", veh.db.h);
+        this.setFuel(veh, fuel);
         delete veh.lastPlayerTime;
         mp.events.call("vehicle.respawned", veh);
     },

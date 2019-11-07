@@ -151,6 +151,8 @@ function playChatAnimation(id) {
     var player = mp.players.atRemoteId(id);
     if (!player || player.vehicle || player.getVariable("knocked")) return;
     if (!player.getHealth()) return;
+    if (mp.farms.hasProduct(player)) return;
+    if (mp.factions.hasBox(player)) return;
     if (mp.farms.isCropping(player)) return;
     if (player.getVariable("cuffs")) return;
 

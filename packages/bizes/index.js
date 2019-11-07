@@ -213,7 +213,7 @@ let destroyOrder = async function(id) {
     if (!biz.isOrderTaken) return false;
     biz.info.productsOrder = null;
     biz.info.productsOrderPrice = null;
-    carrier != null && carrier.removeBizOrder(biz.info.id);
+    carrier != null && carrier.removeBizOrderByBizId(biz.info.id);
     await biz.info.save();
     return true;
 }
