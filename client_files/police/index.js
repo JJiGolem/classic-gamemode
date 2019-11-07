@@ -26,7 +26,7 @@ mp.police = {
         mp.inventory.enable(!enable);
         mp.mapCase.enable(!enable);
         mp.callCEFR('phone.show', [false]);
-        enable ? mp.busy.add("cuffs") : mp.busy.remove("cuffs");
+        enable ? mp.busy.add("cuffs", false) : mp.busy.remove("cuffs");
     },
     setWanted(val) {
         this.wanted = val;
@@ -85,7 +85,7 @@ mp.events.add({
     "render": () => {
         if (mp.police.followPlayer) {
             mp.game.controls.disableControlAction(0, 21, true); /// бег
-            mp.game.controls.disableControlAction(0, 22, true); /// прыжок
+            mp.game.controls.diАsableControlAction(0, 22, true); /// прыжок
             mp.game.controls.disableControlAction(0, 31, true); /// вперед назад
             mp.game.controls.disableControlAction(0, 30, true); /// влево вправо
             mp.game.controls.disableControlAction(0, 24, true); /// удары
