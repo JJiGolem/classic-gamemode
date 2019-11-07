@@ -1,3 +1,4 @@
+let bizes = call('bizes');
 let carrier = call('carrier');
 let money = call('money');
 let notifs = call('notifications');
@@ -114,6 +115,9 @@ module.exports = {
 
         var order = carrier.getBizOrder(bizId);
         if (!order) return out(`Заказ просрочен`);
+
+        var type = bizes.getBizById(bizId).info.type;
+        if (!carrier.isCorrectProductType(veh.db.modelName, type)) return out(`Данный грузовик не перевозит "${bizes.getResourceName(type)}"`);
 
         var count = Math.min(carrier.getProductsMax(player), order.prodCount);
         var price = count * order.prodPrice;

@@ -28,6 +28,15 @@ module.exports = {
     bizOrders: [],
     // Цена урожая при продаже
     cropPrice: 1,
+    // Модели авто и их типы товара
+    vehModels: {
+        "boxville2": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        "boxville4": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        "mule": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        "pony": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        "pounder": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        "speedo4": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    },
 
     init() {
         this.createLoadMarker();
@@ -247,5 +256,9 @@ module.exports = {
             delete veh.products;
             veh.setVariable("label", null);
         }
+    },
+    isCorrectProductType(vehModel, type) {
+        if (!this.vehModels[vehModel]) return false;
+        return this.vehModels[vehModel].includes(type);
     },
 };
