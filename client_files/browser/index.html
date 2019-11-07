@@ -147,13 +147,25 @@
 
     <div v-cloak id="offerDialog" v-if="dialog">
         <div class="quick" v-if="!dialog.price">
-            <div class="agree" @click="dialog.yes(); hide()"><img src="img/hud/agree.svg"/></div>
+            <div class="agree" @click="dialog.yes(); hide()">
+                <svg :class="{green: green}" width="37" height="37" viewBox="0 0 37 37">
+                    <circle  cx="18.5" cy="18.5" r="17.5" stroke-width="2"/>
+                    <circle class="fill" cx="18.5" cy="18.5" r="10.5" />
+                    <path d="M17.7816 25V20.014L12.5436 12.4H14.2716L18.5196 18.7L22.8036 12.4H24.4596L19.2216 19.996V25H17.7816Z" fill="white"/>
+                </svg>
+            </div>
             <div class="content">
                 <div class="message" v-html="dialog.text"><span>Swift Dunhill</span> желает с вами познакомиться</div>
                 <!--<div class="price" v-if="dialog.price">
                     ${{ pretty(dialog.price) }}</div>-->
             </div>
-            <div class="cancel" @click="dialog.no(); hide()"><img src="img/hud/disagree.svg"/></div>
+            <div class="cancel" @click="dialog.no(); hide()">
+                <svg :class="{red: red}" width="37" height="37" viewBox="0 0 37 37">
+                    <circle cx="18.5" cy="18.5" r="17.5" stroke-width="2"/>
+                    <circle class="fill" cx="18.5" cy="18.5" r="10.5"/>
+                    <path d="M13.1716 25V12.4H14.5036L22.4416 22.498V12.4H23.8276V25H22.6936L14.5576 14.668V25H13.1716Z" fill="white"/>
+                </svg>
+            </div>
         </div>
         <div class="offer" v-else>
             <div>

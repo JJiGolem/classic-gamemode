@@ -13,7 +13,7 @@
 #offerDialog .quick {
     bottom: 13.8vh;
     min-height: 5.2vh;
-    min-width: 49.5vh;
+    max-width: 60vh;
     display: grid;
     grid-template-columns: min-content 1fr min-content;
     font-size: 1.5vh;
@@ -26,14 +26,58 @@
     top: 50%;
     transform: translateY(-50%);
     margin: 0 1.3vh;
+    fill: none;
+}
+
+#offerDialog .quick svg {
+    position: relative;
+    height: 3.5vh;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 1.3vh;
+    fill: none;
+}
+
+#offerDialog .quick svg circle {
+    stroke: rgba(255, 255, 255, 0.6);
+}
+
+#offerDialog .quick svg .fill {
+    fill: none;/*rgba(255, 255, 255, 0.6);*/
+    stroke: none;
+}
+
+#offerDialog .quick .agree:hover svg circle,
+#offerDialog .quick svg.green circle {
+    stroke: #00FF19;
+}
+
+#offerDialog .quick .agree:hover svg .fill,
+#offerDialog .quick svg.green .fill {
+    fill: #00FF19;
+}
+
+#offerDialog .quick .cancel:hover svg circle,
+#offerDialog .quick svg.red circle {
+    stroke: #FF2525;
+}
+
+#offerDialog .quick .cancel:hover svg .fill,
+#offerDialog .quick svg.red .fill {
+    fill: #FF2525;
 }
 
 #offerDialog .quick .content {
+    height: 100%;
+}
+
+#offerDialog .quick .content .message {
     margin: 0 2vh;
     height: min-content;
     position: relative;
     top: 50%;
     transform: translateY(-50%);
+    padding: 1vh 0;
 }
 
 #offerDialog .quick .content span {

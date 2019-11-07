@@ -689,8 +689,8 @@ var inventory = new Vue({
             var url = this.urlItemImg(item.itemId);
             var style = {
                 backgroundImage: `url(${url})`,
-                height: this.itemsInfo[item.itemId].height * 2.59 - 0.14 + "vh", // Высота + отступ ( минус один отступ)
-                width: this.itemsInfo[item.itemId].width * 2.59 - 0.14 + "vh",
+                height: `calc(${this.itemsInfo[item.itemId].height * 2.45}vh + ${(this.itemsInfo[item.itemId].height - 1) * 1}px)`, // Высота + отступ ( минус один отступ)
+                width: `calc(${this.itemsInfo[item.itemId].width * 2.45}vh + ${(this.itemsInfo[item.itemId].width - 1) * 1}px)`,
                 pointerEvents: (this.itemDrag.item) ? 'none' : '',
             };
             if (item.params && item.params.health && !isDraggable) {

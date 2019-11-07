@@ -303,9 +303,12 @@ var offerDialog = new Vue({
         },
         dialog: null,
         timeout: null,
+        green: false,
+        red: false,
     },
     methods: {
         show(name, values) {
+            this.green = this.red = false;
             if (typeof values == 'string') values = JSON.parse(values);
             this.dialogs[name].on(values);
             this.dialog = this.dialogs[name];
@@ -328,6 +331,7 @@ var offerDialog = new Vue({
         let self = this;
         window.addEventListener('keyup', function(e) {
             if (!self.dialog) return;
+            self.green = self.red = false;
             if (busy.includes(["chat", "terminal", "mapCase", "phone"])) return;
             if (e.keyCode == 89) { // Y
                 self.dialog.yes();
@@ -335,6 +339,15 @@ var offerDialog = new Vue({
             } else if (e.keyCode == 78) { // N
                 self.dialog.no();
                 self.hide();
+            }
+        });
+        window.addEventListener('keydown', function(e) {
+            if (!self.dialog) return;
+            if (busy.includes(["chat", "terminal", "mapCase", "phone"])) return;
+            if (e.keyCode == 89) { // Y
+                self.green = true;
+            } else if (e.keyCode == 78) { // N
+                self.red = true;
             }
         });
     },
@@ -347,4 +360,4 @@ var offerDialog = new Vue({
 });
 
 // for tests
-// offerDialog.show("unarrest", {name: "Kir", price: "200000"});
+ //offerDialog.show("documents", {name: "Kir", price: "200000"});

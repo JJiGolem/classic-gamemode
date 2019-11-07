@@ -859,7 +859,8 @@ var playerMenu = new Vue({
         },
         name(val) {
             setTimeout(() => {
-                // this.longName = this.$refs.name.offsetHeight > this.$refs.def.offsetHeight;
+                if (this.$refs.name)
+                    this.longName = this.$refs.name.offsetHeight > this.$refs.def.offsetHeight;
             }, 100);
         }
     },

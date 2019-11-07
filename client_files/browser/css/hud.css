@@ -157,8 +157,8 @@
 
 
 #hud .panel-right-bottom {
-    right: 2.8vh;
-    bottom: 2.6vh;
+    right: 1.8vh;
+    bottom: 1.8vh;
     display: flex;
     height: 6.5vh;
 }
@@ -321,7 +321,7 @@
 
 #hud .weather {
     bottom: 1.8vh;
-    left: 31.1vh !important;
+    /*left: 31.1vh !important;*/
     width: fit-content;
     height: 11.6vh;
     min-width: 17.3vh;
