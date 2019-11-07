@@ -8,6 +8,8 @@
 */
 
 mp.carrier = {
+    bizOrderBlip: null,
+
     initStartJob() {
         var pedInfo = {
             model: "s_m_m_cntrybar_01",
@@ -59,6 +61,19 @@ mp.carrier = {
         mp.callCEFV(`selectMenu.setItems('carrierLoadBizOrders', '${JSON.stringify(items)}')`);
         mp.callCEFV(`selectMenu.setProp('carrierLoadBizOrders', 'bizOrders', '${JSON.stringify(data.bizOrders)}')`);
     },
+    setBizOrderWaypoint(pos) {
+        if (this.bizOrderBlip && mp.blips.exists(this.bizOrderBlip)) {
+            this.bizOrderBlip.destroy();
+            this.bizOrderBlip = null;
+        }
+        if (!pos) return;
+
+        this.bizOrderBlip = mp.blips.new(1, pos, {
+            name: "Заказ",
+            color: 60
+        });
+        this.bizOrderBlip.setRoute(true);
+    },
 };
 
 mp.events.add({
@@ -76,5 +91,8 @@ mp.events.add({
     },
     "carrier.jobshape.leave": () => {
         mp.events.call(`selectMenu.hide`);
+    },
+    "carrier.bizOrder.waypoint.set": (pos) => {
+        mp.carrier.setBizOrderWaypoint(pos);
     },
 });

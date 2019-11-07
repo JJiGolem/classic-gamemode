@@ -48,8 +48,13 @@ mp.events.add({
     },
     "playerDeath": (player, reason, killer) => {
         mp.death.disableControls(true);
-
+        var arrest = false;
+        if (killer && killer.remoteId != mp.players.local.remoteId) {
+            var factionId = killer.getVariable("factionId");
+            arrest = (mp.factions.isPoliceFaction(factionId) || mp.factions.isFibFaction(factionId)) && mp.police.wanted;
+        }
         mp.timer.add(() => {
+            if (arrest) return mp.events.callRemote(`police.cells.forceArrest`);
             var knocked = mp.players.local.getVariable("knocked");
             if (!knocked) {
                 mp.callCEFV(`offerDialog.show('death')`);

@@ -214,9 +214,10 @@ module.exports = {
 
         inventory.addItem(player, 3, params, (e) => {
             if (e) return notifs.error(player, e, header);
+
+            notifs.success(player, `Выдан бронежилет`, header);
+            factions.setAmmo(faction, faction.ammo - fib.armourAmmo);
         });
-        notifs.success(player, `Выдан бронежилет`, header);
-        factions.setAmmo(faction, faction.ammo - fib.armourAmmo);
     },
     "fib.storage.items.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад FIB`);

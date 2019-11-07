@@ -1,6 +1,7 @@
 "use strict";
 
 let inventory = call('inventory');
+let jobs = call('jobs');
 let money = call('money');
 let notifs = call('notifications');
 let utils = call('utils');
@@ -15,7 +16,7 @@ module.exports = {
         itemId: 70,
         params: {
             health: 100,
-            weaponHash: mp.joaat('weapon_battleaxe'),
+            weaponHash: mp.joaat('weapon_hatchet'),
         },
         price: 100
     }],
@@ -120,6 +121,10 @@ module.exports = {
     logObjects: [],
     // Стоимость продажи дерева
     treePrice: 10,
+    // Опыт скилла за срубленное дерево/бревно
+    exp: 0.05,
+    // Прибавка к цене предмета в % (0.0-1.0) при фулл скилле
+    priceBonus: 0.5,
 
     init() {
         this.loadTreesInfoFromDB();
@@ -220,7 +225,9 @@ module.exports = {
         var items = inventory.getArrayByItemId(player, 131);
         if (!items.length) return out(`Вы не имеете ресурсы`);
 
+        var exp = jobs.getJobSkill(player, 7).exp;
         var pay = items.length * this.treePrice;
+        pay *= (1 + this.priceBonus * (exp / 100));
         money.addCash(player, pay, (res) => {
             if (!res) out(`Ошибка начисления наличных`);
 
@@ -255,7 +262,10 @@ module.exports = {
             rec.call(`woodman.tree.health`, [colshape.health]);
         });
 
-        if (!colshape.health) player.call(`woodman.log.request`);
+        if (!colshape.health) {
+            player.call(`woodman.log.request`);
+            this.addJobExp(player);
+        }
     },
     addLogObject(colshape, slot) {
         var obj = mp.objects.new('prop_fence_log_02', slot.pos, {
@@ -305,6 +315,7 @@ module.exports = {
         var allHealth = utils.arraySum(colshape.squats);
         if (!allHealth) {
             player.call(`woodman.items.request`);
+            this.addJobExp(player);
         }
     },
     addLogItems(colshape, slots) {
@@ -326,5 +337,9 @@ module.exports = {
             boost += treeDamage;
         });
         return 1 + (boost / 100);
+    },
+    addJobExp(player) {
+        var skill = jobs.getJobSkill(player, 7);
+        jobs.setJobExp(player, skill, skill.exp + this.exp);
     },
 };

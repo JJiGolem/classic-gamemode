@@ -75,7 +75,8 @@ mp.events.add('chat.load', () => {
 
     mp.keys.bind(0x54, true, function() {
         if (mp.game.ui.isPauseMenuActive()) return;
-        if (mp.busy.includes()) return;
+        //if (mp.busy.includes()) return;
+        if (mp.busy.includes() && !mp.busy.includes('lostAttach') && !mp.busy.includes('cuffs')) return;
         mp.busy.add('chat', true);
         isOpen = true;
         mp.callCEFR('setFocusChat', [true]);
@@ -151,8 +152,8 @@ function playChatAnimation(id) {
     if (!player || player.vehicle || player.getVariable("knocked")) return;
     if (!player.getHealth()) return;
     if (mp.farms.hasProduct(player)) return;
-    if (mp.farms.isCropping(player)) return;
     if (mp.factions.hasBox(player)) return;
+    if (mp.farms.isCropping(player)) return;
     if (player.getVariable("cuffs")) return;
 
     mp.animations.playAnimation(player, {

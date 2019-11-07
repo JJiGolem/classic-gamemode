@@ -18,7 +18,7 @@ mp.events.add('characterInit.done', function() {
     });
 
     mp.keys.bind(0x73, false, function() {      // F4
-        if (!mp.voiceChat.muted) return mp.notify.error("Отпустите клавишу N", "Голосовой чат");        ;
+        if (!mp.voiceChat.muted) return mp.notify.error("Отпустите клавишу N", "Голосовой чат");
         mp.voiceChat.cleanupAndReload(true, true, true);
         mp.notify.success("Голосовой чат был перезагружен", "Голосовой чат");
     });
@@ -27,7 +27,7 @@ mp.events.add('characterInit.done', function() {
 
 mp.speechChanel = {};
 
-let listeners = new Array();
+let listeners = [];
 let channels = {};
 
 /// Добавить канал связи с требуемыми настройками
@@ -55,6 +55,9 @@ mp.speechChanel.connect = (player, channel) => {
 
     player.voiceVolume = 1.0;
 }
+mp.events.add("voiceChat.connect", (playerId, channel) => {
+    mp.speechChanel.connect(mp.players.atRemoteId(playerId), channel);
+});
 
 /// Отключить выбранного игрока от канала связи
 mp.speechChanel.disconnect = (player, channel, isSend = false) => {
@@ -79,6 +82,9 @@ mp.speechChanel.disconnect = (player, channel, isSend = false) => {
         mp.events.callRemote("voiceChat.remove", player);
     }
 }
+mp.events.add("voiceChat.disconnect", (playerId, channel) => {
+    mp.speechChanel.disconnect(mp.players.atRemoteId(playerId), channel);
+});
 
 let updateCurrent = function(player, index, newCh) {
     if (channels[listeners[index].current].maxRange == 0) return;

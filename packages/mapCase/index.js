@@ -2,6 +2,7 @@
 let chat = call('chat');
 var factions = require('../factions');
 var notifs = call('notifications');
+var vehicles = call('vehicles');
 
 var out = {
     error(player, text) {
@@ -45,7 +46,7 @@ module.exports = {
         }
         return result;
     },
-    convertCharactersToProfileData(character, vehicles) {
+    convertCharactersToProfileData(character, vehs) {
         var number = (character.Phone) ? character.Phone.number : null;
         var housePos = null,
             houseId = 0;
@@ -55,8 +56,10 @@ module.exports = {
             houseId = h.id;
         }
         var vehNames = [];
-        for (var i = 0; i < vehicles.length; i++)
-            vehNames.push(`${vehicles[i].modelName} (${vehicles[i].plate})`);
+        for (var i = 0; i < vehs.length; i++) {
+            var vehName = vehicles.getVehiclePropertiesByModel(vehs[i].modelName).name;
+            vehNames.push(`${vehName} (${vehs[i].plate})`);
+        }
         var faction = "-";
         if (character.Faction) faction = character.Faction.name;
         var rank = "-";

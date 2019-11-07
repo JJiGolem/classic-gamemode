@@ -155,7 +155,7 @@ module.exports = {
         delete player.isFollowing;
         player.call(`police.follow.stop`);
         player.call(`inventory.enable`, [false]);
-        player.position = cell;
+        (!player.health) ? player.spawn(cell) : player.position = cell;
         player.heading = cell.h;
         var playerId = player.id;
         var characterId = player.character.id;

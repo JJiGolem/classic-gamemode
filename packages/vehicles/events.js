@@ -392,7 +392,7 @@ module.exports = {
                     let props = vehicles.getVehiclePropertiesByModel(veh.modelName)
                     console.log(props)
                     target.vehicleList.push({
-                        id: veh.id,
+                        id: veh.sqlId,
                         name: props.name,
                         plate: veh.plate,
                         regDate: veh.regDate,
