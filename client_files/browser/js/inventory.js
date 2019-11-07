@@ -1330,8 +1330,6 @@ var inventory = new Vue({
                 self.itemDrag.y = e.screenY - rect.y - itemDiv.offsetHeight / 2;
 
                 if (self.itemNotif.text) {
-                    var rect = document.getElementById('inventory').getBoundingClientRect();
-
                     self.itemNotif.x = e.screenX - rect.x + 15;
                     self.itemNotif.y = e.screenY - rect.y + 15;
                 }

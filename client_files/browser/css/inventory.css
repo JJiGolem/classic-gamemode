@@ -414,12 +414,6 @@
     width: 31vh;
 }
 
-#inventory .hands .item .close {
-    font-size: 2vh;
-    right: 0.3vh;
-    top: -0.3vh;
-}
-
 #inventory .hands .slot {
     align-items: center;
     /* border: 1px solid #333; */
