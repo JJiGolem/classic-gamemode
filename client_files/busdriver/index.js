@@ -5,6 +5,8 @@ let checkpoint;
 let blip;
 let checkpointTimer;
 
+let isActiveBusDriver = false;
+
 let peds = [{
     model: "a_m_o_genstreet_01",
     position: {
@@ -105,6 +107,8 @@ mp.events.add('busdriver.route.start.ans', (ans, data) => {
             break;
         case 1:
             mp.notify.success('Маршрут построен', 'Автобус');
+            mp.notify.info('Чтобы окончить рабочий день, нажмите F6', 'Автобус');
+            isActiveBusDriver = true;
             createCheckpoint(data, 0);
             break;
     }
@@ -123,10 +127,23 @@ mp.events.add('busdriver.route.end', () => {
     deleteCheckpoint();
 });
 
+mp.events.add('busdriver.status.set', (status) => {
+    isActiveBusDriver = status;
+});
+
+mp.keys.bind(0x75, true, () => { 
+   if (!isActiveBusDriver) return;
+   if (!mp.players.local.vehicle) return mp.notify.warning('Вы не в автобусе!')
+   mp.events.callRemote('busdriver.workday.end');
+});
+
 function createCheckpoint(data, timeout) {
     deleteCheckpoint();
+    mp.chat.debug(timeout);
+    mp.chat.debug(JSON.stringify(data));
     checkpointTimer = mp.timer.add(() => {
         try {
+            mp.chat.debug('new checkpoint')
             checkpoint = mp.checkpoints.new(5, new mp.Vector3(data.x, data.y, data.z), 10,
                 {
                     color: data.isStop ? [30, 206, 255, 255] : [255, 246, 0, 255],
@@ -150,5 +167,3 @@ function deleteCheckpoint() {
     blip.destroy();
     blip = null;
 }
-// [30, 206, 255, 255] stop
-// [255, 246, 0, 255] point

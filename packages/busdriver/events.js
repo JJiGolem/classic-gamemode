@@ -106,7 +106,6 @@ module.exports = {
                 isStop: current.isStop
             }
         })
-        console.log(player.busPoints);
         let label = (price == 0) ? `~y~${player.busRoute.name} \n~g~Проезд бесплатный` : `~y~${player.busRoute.name} \n ~w~Стоимость проезда: ~g~$${price}`;
         player.vehicle.setVariable('label', label);
         player.vehicle.busPrice = price;
@@ -197,6 +196,7 @@ module.exports = {
         }
 
         if (vehicle.busDriverId == player.id) {
+            if (vehicle.busWorkdayEnded) return;
             console.log('покинул автобус');
             player.call('notifications.push.warning', [`У вас есть ${bus.getRespawnTimeout() / 1000} секунд, чтобы вернуться в транспорт`, 'Автобус']);
             timer.remove(vehicle.busRespawnTimer);
@@ -210,13 +210,10 @@ module.exports = {
     },
     "busdriver.route.end": (player) => {
         if (!player || !mp.players.exists(player)) return;
-        console.log('notify player');
         notify.info(player, 'Рабочий день окончен');
         delete player.hasBusRent;
         if (!player.busRoute) return;
         player.call('busdriver.route.end');
-        console.log(`points ${player.busPointsToSave}`);
-        console.log(`pass ${player.busPassengers}`);
         player.call(`chat.message.push`, [`!{#f3c800}Рабочий день окончен. Деньги придут на счет во время зарплаты`]);
         player.call(`chat.message.push`, [`!{#f3c800}Заработано: !{#80c102}$${player.busPointsToSave*player.busRoute.salary}`]);
         player.call(`chat.message.push`, [`!{#f3c800}Перевезено пассажиров: !{#009eec}${player.busPassengers}`]);
@@ -225,5 +222,22 @@ module.exports = {
         delete player.busPoints;
         delete player.busPassengers;
         delete player.busPointsToSave;
+    },
+    "busdriver.workday.end": (player) => {
+        if (!player || !mp.players.exists(player)) return;
+        let vehicle = player.vehicle;
+        if (vehicle.busDriverId !== player.id) return notify.warning(player, 'Вы не в автобусе!');
+        vehicle.busWorkdayEnded = true;
+        player.call('busdriver.status.set', [false]);
+        vehicles.respawnVehicle(vehicle);
+        mp.events.call('busdriver.route.end', player);
+    },
+    "playerQuit": (player) => {
+        let vehicle = player.vehicle;
+        if (!vehicle) return;
+        if (vehicle.busDriverId == player.id) {
+            console.log('quit -> respawn')
+            vehicles.respawnVehicle(vehicle);
+        }
     }
 }
