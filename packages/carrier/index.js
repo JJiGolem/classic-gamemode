@@ -8,7 +8,8 @@ let utils = call('utils');
 
 module.exports = {
     // Место мониторинга складов бизнесов/ферм и заказа товара
-    loadPos: new mp.Vector3(925.46, -1563.99, 30.83 - 1),
+    loadPos: new mp.Vector3(916.1118774414062, -1560.7391357421875, 30.748455047607422 - 10),
+    // loadPos: new mp.Vector3(-77.97127532958984, -1784.080810546875, 28.418481826782227 - 1), // for tests
     // Место разгрузки урожая
     cropUnloadPos: new mp.Vector3(85.55198669433594, 6331.1318359375, 31.225765228271484 - 1),
     // Цена за 1 ед. товара/зерна
@@ -34,10 +35,10 @@ module.exports = {
     },
     createLoadMarker() {
         var pos = this.loadPos;
-        var marker = mp.markers.new(1, pos, 3, {
+        var marker = mp.markers.new(1, pos, 10, {
             color: [255, 187, 0, 70]
         });
-        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z + 2, 2);
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z + 10, 5);
         colshape.onEnter = (player) => {
             if (player.character.job != 4) return notifs.error(player, `Отказано в доступе`, `Склад`);
             player.call(`carrier.load.info.set`, [this.getLoadData()]);
@@ -191,8 +192,7 @@ module.exports = {
         if (oldOrder) {
             oldOrder.orderPrice += order.orderPrice;
             oldOrder.prodCount += order.prodCount;
-        }
-        else this.bizOrders.push(order);
+        } else this.bizOrders.push(order);
 
         delete veh.products;
         veh.setVariable("label", null);
