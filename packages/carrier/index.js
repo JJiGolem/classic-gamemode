@@ -167,7 +167,7 @@ module.exports = {
             playerId: player.id,
         };
         veh.setVariable("label", `${count} из ${this.getProductsMax(player)} ед.`);
-        player.call("waypoint.set", [pos.x, pos.y]);
+        player.call("carrier.bizOrder.waypoint.set", [pos]);
         notifs.success(player, `Заказ принят`, order.bizName);
         this.jobBroadcast(`Взят заказ для бизнеса ${order.bizName}`);
         bizes.getOrder(order.bizId);
@@ -218,6 +218,7 @@ module.exports = {
         jobs.addJobExp(player, this.exp);
 
         notifs.success(player, `Заказ выполнен (+$${order.orderPrice})`, order.bizName);
+        player.call(`carrier.bizOrder.waypoint.set`);
     },
     jobBroadcast(text) {
         mp.players.forEach(rec => {
@@ -238,6 +239,8 @@ module.exports = {
     },
     // полностью очистить грузовик от товара и водителя
     clearVeh(veh) {
+        var driver = this.getDriverByVeh(veh);
+        if (driver) driver.call(`carrier.bizOrder.waypoint.set`);
         this.dropBizOrderByVeh(veh);
         delete veh.driver;
         if (veh.products) {
