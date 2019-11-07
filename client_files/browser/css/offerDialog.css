@@ -1,73 +1,165 @@
-#offerDialog {
-    bottom: 10%;
-    font-family: Montserrat;
-    left: 36%;
-    min-height: 10%;
+#offerDialog>div {
+    font-family: Ubuntu;
+    left: 50%;
+    transform: translate(-50%);
     position: absolute;
-    width: 28%;
-}
-
-#offerDialog > div {
-    display: flex;
-}
-
-#offerDialog .agree, #offerDialog .cancel {
-    align-items: center;
+    background: rgba(12, 12, 12, 0.6);
+    border-radius: 1vh;
+    /*backdrop-filter: blur(0.4vh);*/
     color: #fff;
-    display: flex;
-    font-family: monospace;
-    font-size: 5vh;
-    font-weight: bold;
-    justify-content: center;
-    transition: 0.2s font-size, 0.5s background;
-    width: 30%;
-}
-
-#offerDialog .agree:hover, #offerDialog .cancel:hover {
-    /* color: #000; */
-    font-size: 7vh;
-}
-
-#offerDialog .agree {
-    background: linear-gradient(to right, #0000, rgb(0, 255, 0, 0.6));
-}
-
-#offerDialog .agree:hover {
-    background: rgb(0, 255, 0, 0.6);
-    box-shadow: 0 0 10px green;
-}
-
-#offerDialog .cancel {
-    background: linear-gradient(to right, rgb(255, 0, 0, 0.6), #0000);
-}
-
-#offerDialog .cancel:hover {
-    background: rgb(255, 0, 0, 0.6);
-    box-shadow: 0 0 10px red;
-}
-
-#offerDialog .content {
-    background: rgb(0, 0, 0, 0.6);
-}
-
-#offerDialog .content div {
     text-align: center;
 }
 
-#offerDialog .content .header {
-    color: #f1d941;
-    font-size: 2vh;
-    font-weight: bold;
-    margin: 1vh 0;
+#offerDialog .quick {
+    bottom: 13.8vh;
+    min-height: 5.2vh;
+    max-width: 60vh;
+    display: grid;
+    grid-template-columns: min-content 1fr min-content;
+    font-size: 1.5vh;
+    font-weight: 400;
 }
 
-#offerDialog .content .message {
-    color: #fff;
-    margin-bottom: 1vh;
-    padding: 0 3vh;
+#offerDialog .quick img {
+    position: relative;
+    height: 3.5vh;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 1.3vh;
+    fill: none;
 }
 
-#offerDialog .content .price {
-    color: #a2dd03;
-    margin: 1vh 0;
+#offerDialog .quick svg {
+    position: relative;
+    height: 3.5vh;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 1.3vh;
+    fill: none;
+}
+
+#offerDialog .quick svg circle {
+    stroke: rgba(255, 255, 255, 0.6);
+}
+
+#offerDialog .quick svg .fill {
+    fill: none;/*rgba(255, 255, 255, 0.6);*/
+    stroke: none;
+}
+
+#offerDialog .quick .agree:hover svg circle,
+#offerDialog .quick svg.green circle {
+    stroke: #00FF19;
+}
+
+#offerDialog .quick .agree:hover svg .fill,
+#offerDialog .quick svg.green .fill {
+    fill: #00FF19;
+}
+
+#offerDialog .quick .cancel:hover svg circle,
+#offerDialog .quick svg.red circle {
+    stroke: #FF2525;
+}
+
+#offerDialog .quick .cancel:hover svg .fill,
+#offerDialog .quick svg.red .fill {
+    fill: #FF2525;
+}
+
+#offerDialog .quick .content {
+    height: 100%;
+}
+
+#offerDialog .quick .content .message {
+    margin: 0 2vh;
+    height: min-content;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 1vh 0;
+}
+
+#offerDialog .quick .content span {
+    font-weight: 500;
+}
+
+
+
+
+#offerDialog .offer {
+    filter: drop-shadow(0 0.5vh 0.5vh rgba(0, 0, 0, 0.25));
+    top: 50%;
+    transform: translate(-50%, -50%);
+    min-height: 19.8vh;
+    width: 49vh;
+    font-size: 1.5vh;
+    font-weight: 400;
+    display: grid;
+}
+#offerDialog .offer>div {
+    padding: 2.8vh 4vh;
+    display: grid;
+    grid-template-rows: min-content 1fr min-content;
+}
+
+#offerDialog .offer .head {
+    color: #FFD600;
+    font-weight: 700;
+    font-size: 2.2vh;
+}
+
+#offerDialog .offer .content {
+    margin-top: 2vh;
+    font-size: 1.67vh;
+}
+
+#offerDialog .offer .content span {
+    font-weight: 500;
+    color: #6EE425;
+    white-space: nowrap;
+}
+
+#offerDialog .offer .btns {
+    display: flex;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%);
+    width: min-content;
+}
+
+#offerDialog .offer .btns>div {
+    height: 3.9vh;
+    width: 14.8vh;
+    margin: 0 2.3vh;
+    border-radius: 1.3vh;
+    line-height: 3.9vh;
+}
+
+#offerDialog .offer .btns .agree {
+    border: 0.1vh solid #51FF25;
+}
+
+#offerDialog .offer .btns .agree:hover {
+    background-color: #51FF25;
+    color: #000;
+}
+
+#offerDialog .offer .btns .agree:active {
+    border: 0.1vh solid #3ABA1A;
+    background-color: #3ABA1A;
+}
+
+#offerDialog .offer .btns .cancel {
+    border: 0.1vh solid rgba(255, 255, 255, 0.6);
+}
+
+#offerDialog .offer .btns .cancel:hover {
+    border: 0.1vh solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.6);
+    color: #000;
+}
+
+#offerDialog .offer .btns .cancel:active {
+    background-color: rgba(255, 255, 255, 0.4);
 }

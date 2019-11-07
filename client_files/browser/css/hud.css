@@ -19,8 +19,8 @@
 
 #hud .keys {
     font-weight: bold;
-    right: 2vh;
-    top: 50%;
+    right: 2.99vh;
+    top: 50.6%;
     transform: translate(0, -50%);
 }
 
@@ -28,19 +28,20 @@
     align-items: center;
     display: flex;
     margin-bottom: 1vh;
+    font-weight: 500;
 }
 
 #hud .keys span {
     align-items: center;
     background: #fffa;
     border-radius: 0.5vh;
-    box-shadow: 0px 3px 0 #0005;
+    box-shadow: 0px 0.1vh 0.5vh #000;
     color: #000;
     display: flex;
-    height: 2.5vh;
+    height: 2.2vh;
     justify-content: center;
     margin-right: 1vh;
-    width: 2.75vh;
+    width: 2.3vh;
 }
 
 #hud .panel-right-top {
@@ -156,8 +157,8 @@
 
 
 #hud .panel-right-bottom {
-    right: 2.8vh;
-    bottom: 2.6vh;
+    right: 1.8vh;
+    bottom: 1.8vh;
     display: flex;
     height: 6.5vh;
 }
@@ -320,7 +321,7 @@
 
 #hud .weather {
     bottom: 1.8vh;
-    left: 31.1vh !important;
+    /*left: 31.1vh !important;*/
     width: fit-content;
     height: 11.6vh;
     min-width: 17.3vh;

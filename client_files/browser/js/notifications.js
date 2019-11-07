@@ -10,9 +10,10 @@ var notifications = new Vue({
         // Время показа уведомления
         showTime: 10000,
         // Макс. кол-во уведомлений на экране
-        maxCount: 7,
+        maxCount: 7, // set #notifications .notif-box:nth-last-child in notifications.css
         count: 0, //Для уникального ключа.
     },
+
     methods: {
         push(type, text, header) {
             if (header == 'undefined' || header == 'null') header = null;
@@ -21,18 +22,26 @@ var notifications = new Vue({
                 header: header,
                 text: text,
                 hash: ++this.count,
+                timer: null,
             });
-            if (this.messages.length > this.maxCount) this.messages.shift();
+
+            if (this.messages.length > this.maxCount) {
+                let message = this.messages.shift();
+                clearTimeout(message.timer);
+            }
             var self = this;
-            setTimeout(() => {
+            this.messages[this.messages.length-1].timer = setTimeout(() => {
                 self.messages.shift();
+                /*clearTimeout(message.timer);*/
             }, this.showTime);
         }
     }
 });
 
 // for tests
-// notifications.push("error", "зачисление + $500", "Банк Maze");
-// notifications.push("success", "зачисление + $500", "Банк Maze");
-// notifications.push("info", "зачисление + $500", "Банк Maze");
-// notifications.push("warning", "зачисление + $500", "Банк Maze");
+// function PushPullNotif () {
+//     notifications.push("error", "зачисление + $500"+notifications.count, "Банк Maze");
+//     notifications.push("success", "зачисление + $500"+notifications.count, "Банк Maze");
+//     notifications.push("info", "зачисление + $500"+notifications.count, "Банк Maze");
+//     notifications.push("warning", "зачисление + $500"+notifications.count, "Банк Maze");
+// }
