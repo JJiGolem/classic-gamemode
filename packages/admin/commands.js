@@ -51,9 +51,11 @@ module.exports = {
             }
             try {
                 player.backPosition = player.position;
+                player.backDimension = player.dimension;
                 player.position = new mp.Vector3(target.position.x + 2, target.position.y, target.position.z);
                 player.dimension = target.dimension;
                 mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} телепортировался к ${target.name}`);
+                player.call('chat.message.push', [`!{#ebd13d}Используйте /goback, чтобы вернуться на исходную позицию`]);
             } catch (err) {
                 player.call('chat.message.push', [`!{#ffffff}Игрок отключился`]);
             }
@@ -66,6 +68,7 @@ module.exports = {
         handler: (player, args) => {
             if (!player.backPosition) return notify.error(player, `У вас нет исходной позиции`);
             player.position = player.backPosition;
+            player.dimension = player.backDimension;
             notify.info(player, `Вы вернулись на исходную позицию`);
         }
     },
@@ -84,6 +87,7 @@ module.exports = {
             }
             try {
                 target.returnPosition = target.position;
+                target.returnDimension = target.dimension;
                 target.position = new mp.Vector3(player.position.x + 2, player.position.y, player.position.z);
                 target.dimension = player.dimension;
                 mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} телепортировал к себе ${target.name}`);
@@ -103,7 +107,9 @@ module.exports = {
             if (!target) return notify.error(player, `Игрок не найден`);
             if (!target.returnPosition) return notify.error(player, `У игрока нет исходной позиции`);
             target.position = target.returnPosition;
+            target.dimension = target.returnDimension;
             target.returnPosition = null;
+            target.returnDimension = null;
             notify.info(player, `Вы вернули игрока на исходную позицию`);
             notify.info(target, `${player.character.name} вернул вас на исходную позицию`);
         }
