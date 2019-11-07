@@ -17,6 +17,21 @@ let customTemperature;
 
 let timer = call('timer');
 
+let gameWeatherUpdater;
+
+let weatherConfig = {
+    'clear-day': 'EXTRASUNNY',
+    'clear-night': 'EXTRASUNNY',
+    'rain': 'RAIN',
+    'snow': 'SNOW',
+    'sleet': 'SNOWLIGHT',
+    'wind': 'OVERCAST',
+    'fog': 'FOGGY',
+    'cloudy': 'SMOG',
+    'partly-cloudy-day': 'CLOUDY',
+    'partly-cloudy-night': 'CLOUDY'
+}
+
 module.exports = {
 
     getCurrentWeather() {
@@ -40,6 +55,12 @@ module.exports = {
         } else {
             setWeather();
         }
+
+        gameWeatherUpdater = timer.addInterval(() => {
+            if (!weather.current) return;
+            let weatherName = this.getGameWeatherByIcon(weather.current.icon);
+            mp.world.setWeatherTransition(weatherName);
+        }, 60*1000);
 
         function requestWeather() {
             request(
@@ -155,7 +176,14 @@ module.exports = {
                 currentPlayer.call('weather.info.update', [forecast]);
             });
 
-            timer.add(() => { setWeather() }, (60 - now.getMinutes()) * 60 * 1000);
+            timer.add(() => {
+                try {
+                    setWeather();
+                } catch (err) {
+                    console.log(err)
+                }
+            }, (60 - now.getMinutes()) * 60 * 1000);
+
             console.log(`[WEATHER] Следующее обновление погоды через ${60 - now.getMinutes()} минут`);
         }
 
@@ -171,5 +199,10 @@ module.exports = {
         mp.players.forEach((currentPlayer) => {
             currentPlayer.call('weather.info.update', [this.getCurrentWeather()]);
         });
+    },
+    getGameWeatherByIcon(icon) {
+        let weather = weatherConfig[icon];
+        if (!weather) return 'SMOG';
+        return weather;
     }
 }

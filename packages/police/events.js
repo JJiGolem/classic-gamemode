@@ -31,7 +31,11 @@ module.exports = {
 
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
+        var rank = factions.getRankById(faction, character.factionRank);
         var header = `Склад ${faction.name}`;
+
+        var minRank = faction.clothesRanks.find(x => x.clothesIndex == index);
+        if (minRank && minRank.rank > rank.rank) return notifs.error(player, `Доступно с ранга ${factions.getRank(faction, minRank.rank).name}`, header);
 
         if (faction.ammo < police.clothesAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
         if (player.inventory.items.length) return notifs.error(player, `Необходимо раздеться, чтобы надеть форму`, header);
@@ -251,6 +255,7 @@ module.exports = {
         feetsParams.clime = '[-5,20]';
         topParams.name = `Рубашка ${faction.name}`;
         legsParams.name = `Брюки ${faction.name}`;
+        feetsParams.name = `Ботинки ${faction.name}`;
 
         hatParams.owner = character.id;
         topParams.owner = character.id;
@@ -281,10 +286,14 @@ module.exports = {
 
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
+        var rank = factions.getRankById(faction, character.factionRank);
         var header = `Склад ${faction.name}`;
 
         if (faction.ammo < police.armourAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
         var armours = inventory.getArrayByItemId(player, 3);
+
+        var minRank = faction.itemRanks.find(x => x.itemId == 3);
+        if (minRank && minRank.rank > rank.rank) return notifs.error(player, `Доступно с ранга ${factions.getRank(faction, minRank.rank).name}`, header);
 
         for (var key in armours) {
             var params = inventory.getParamsValues(armours[key]);
@@ -323,12 +332,17 @@ module.exports = {
 
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
+        var rank = factions.getRankById(faction, character.factionRank);
         var header = `Склад ${faction.name}`;
 
 
         var itemIds = [28, 24];
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
+
+        var minRank = faction.itemRanks.find(x => x.itemId == itemId);
+        if (minRank && minRank.rank > rank.rank) return notifs.error(player, `Доступно с ранга ${factions.getRank(faction, minRank.rank).name}`, header);
+
         if (itemId == 24) {
             if (faction.medicines < police.itemAmmo) return notifs.error(player, `Недостаточно медикаментов`, header);
         } else {
@@ -361,6 +375,7 @@ module.exports = {
 
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
+        var rank = factions.getRankById(faction, character.factionRank);
         var header = `Склад ${faction.name}`;
 
         if (faction.ammo < police.gunAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
@@ -372,6 +387,9 @@ module.exports = {
         ];
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
+
+        var minRank = faction.itemRanks.find(x => x.itemId == itemId);
+        if (minRank && minRank.rank > rank.rank) return notifs.error(player, `Доступно с ранга ${factions.getRank(faction, minRank.rank).name}`, header);
 
         var gunName = inventory.getName(itemId);
         var guns = inventory.getArrayByItemId(player, itemId);
@@ -402,10 +420,15 @@ module.exports = {
 
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
+        var rank = factions.getRankById(faction, character.factionRank)
         var header = `Склад ${faction.name}`;
 
         var itemIds = [37, 38, 40, 39];
         index = Math.clamp(index, 0, itemIds.length - 1);
+
+        var minRank = faction.itemRanks.find(x => x.itemId == itemIds[index]);
+        if (minRank && minRank.rank > rank.rank) return notifs.error(player, `Доступно с ранга ${factions.getRank(faction, minRank.rank).name}`, header);
+
         if (faction.ammo < police.ammoAmmo * ammo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
         // inventory.fullDeleteItemsByParams(itemIds[index], ["faction", "owner"], [character.factionId, character.id]);
@@ -430,20 +453,21 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Наручники`);
         var dist = player.dist(rec.position);
         if (dist > 5) return notifs.error(player, `${rec.name} далеко`, `Наручники`);
+        if (rec.getVariable("afk")) return notifs.error(player, `${rec.name} не активен`, `ANTI-AFK`);
         var character = player.character;
         if (!police.cuffsFactions.includes(character.factionId)) return notifs.error(player, `Нет прав для использования`, `Наручники`);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, `Наручники`);
 
         if (!rec.cuffs) {
-            var cuffs = (data.cuffsSqlId) ? inventory.getItem(player, data.cuffsSqlId) : inventory.getItemByItemId(player, 28);
-            if (!cuffs) return notifs.error(player, `Предмет ${inventory.getName(28)} не найден`, `Наручники`);
+            var cuffs = (data.cuffsSqlId) ? inventory.getItem(player, data.cuffsSqlId) : inventory.getItemByItemId(player, [28, 54]);
+            if (!cuffs) return notifs.error(player, `Предмет ${inventory.getName(cuffs.itemId)} не найден`, `Наручники`);
             inventory.deleteItem(player, cuffs);
             police.setCuffs(rec, cuffs);
 
             notifs.info(rec, `${player.name} задержал вас`, `Наручники`);
             notifs.success(player, `${rec.name} задержан`, `Наручники`);
         } else {
-            if (rec.cuffs.itemId != 28) return notifs.error(player, `${rec.name} был обездижен с помощью ${inventory.getName(rec.cuffs.itemId)}`, `Наручники`);
+            // if (rec.cuffs.itemId != 28) return notifs.error(player, `${rec.name} был обездижен с помощью ${inventory.getName(rec.cuffs.itemId)}`, `Наручники`);
             inventory.addOldItem(player, rec.cuffs, (e) => {
                 if (e) return notifs.error(player, e, `Наручники`);
             });
@@ -459,6 +483,7 @@ module.exports = {
     "police.follow": (player, recId) => {
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Следование`);
+        if (rec.getVariable("afk")) return notifs.error(player, `${rec.name} не активен`, `ANTI-AFK`);
         if (!police.cuffsFactions.includes(player.character.factionId)) return notifs.error(player, `Нет прав для использования`, `Наручники`);
         if (!rec.isFollowing) {
             if (!rec.cuffs) return notifs.error(player, `${rec.name} не в наручниках`, `Следование`);

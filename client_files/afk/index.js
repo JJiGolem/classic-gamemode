@@ -28,10 +28,13 @@ mp.afk = {
         mp.keys.bind(68, true, () => { // D
             this.action();
         });
+        mp.keys.bind(70, true, () => { // F
+            this.action();
+        });
     },
     action() {
         this.lastActiveTime = Date.now();
-        if (mp.players.local.getVariable("afk")) mp.events.callRemote(`afk.set`, null);
+        if (mp.players.local.getVariable("afk")) mp.events.callRemote(`afk.set`, false);
     },
     check() {
         if (mp.players.local.getVariable("afk")) return;
@@ -39,11 +42,20 @@ mp.afk = {
     },
     setAfk(player, enable) {
         player.setAlpha(enable ? this.alpha : 255);
+        mp.utils.setNoCollision(player, !enable);
+        if (player.vehicle) {
+            player.vehicle.setAlpha(enable ? this.alpha : 255);
+            mp.utils.setNoCollision(player.vehicle, !enable);
+        }
         if (player.remoteId == mp.players.local.remoteId) {
             if (enable) mp.notify.warning(`Режим AFK активирован`, `ANTI-AFK`);
             else mp.notify.success(`Режим AFK деактивирован`, `ANTI-AFK`);
+
+            player.setProofs(enable, enable, enable, enable, enable, enable, enable, enable);
+            if (player.vehicle) player.vehicle.setProofs(enable, enable, enable, enable, enable, enable, enable, enable);
         }
-    }
+    },
+
 };
 
 mp.events.add({
@@ -57,6 +69,16 @@ mp.events.add({
         if (player.type != "player") return;
         var value = player.getVariable("afk");
         mp.afk.setAfk(player, value);
+    },
+    "playerStartMeleeCombat": () => {
+        var player = mp.players.local;
+        if (!player.getVariable("afk")) return;
+        mp.afk.setAfk(player, false);
+    },
+    "playerWeaponShot": () => {
+        var player = mp.players.local;
+        if (!player.getVariable("afk")) return;
+        mp.afk.setAfk(player, false);
     },
 });
 

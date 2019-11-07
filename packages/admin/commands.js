@@ -748,6 +748,17 @@ module.exports = {
             player.call(`effect`, args);
         }
     },
+    "/sound": {
+        description: "Включить звуковой эффект.",
+        access: 1,
+        args: "[name] [set_name]",
+        handler: (player, args, out) => {
+            player.call(`sound`, [{
+                name: args[0],
+                setName: args[1]
+            }]);
+        }
+    },
     "/red": {
         description: "Включить/отключить красный ник",
         access: 2,
@@ -777,6 +788,60 @@ module.exports = {
                 admin.setMassTeleportPosition(player.position);
                 out.info(`${player.character.name} включил массовый телепорт`);
             }
+        }
+    },
+    "/hpall": {
+        access: 2,
+        description: "Пополнить здоровье игрокам в радиусе",
+        args: "[радиус]:n",
+        handler: (player, args, out) => {
+            let radius = args[0];
+            mp.players.forEachInRange(player.position, radius, (current) => {
+                if (!current.character) return;
+                if (current.dimension == player.dimension) {
+                    current.health = 100;
+                    notify.info(current, `Ваше здоровье восстановлено администратором`);
+                };
+            });
+            mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} пополнил HP игрокам в радиусе ${radius}`);
+        }
+    },
+    "/collision": {
+        access: 3,
+        description: "Уменьшить капсулу коллизии игрока.",
+        args: "",
+        handler: (player, args, out) => {
+            if (player.isCapsuleCollision) {
+                delete player.isCapsuleCollision;
+                player.call(`collision.set`, [false]);
+                out.info(`Коллизия включена`, player);
+            } else {
+                player.isCapsuleCollision = true;
+
+                player.call(`collision.set`, [true]);
+                out.info(`Коллизия отключена`, player);
+            }
+        }
+    },
+    "/slap": {
+        access: 2,
+        description: "Дать пинка игроку.",
+        args: "[ид_игрока]:n",
+        handler: (player, args, out) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
+
+            rec.call("slap");
+            notify.warning(rec, `Администратор пнул вас`);
+        }
+    },
+    "/skin": {
+        access: 1,
+        description: "Изменить скин.",
+        args: "[модель]",
+        handler: (player, args, out) => {
+            player.model = mp.joaat(args[0]);
+            out.log(`Скин изменен`, player);
         }
     },
 }

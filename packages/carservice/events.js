@@ -50,11 +50,11 @@ module.exports = {
     },
     "carservice.diagnostics.offer": (player, targetId) => {
         if (player.character.job != 1) return player.call('notifications.push.error', ['Вы не механик', 'Ошибка']);
-        if (player.currentCarServiceId == null) return;
+        if (player.currentCarServiceId == null) return console.log('car service id == null');
         let target = mp.players.at(targetId);
-        if (!target) return;
+        if (!target) return console.log('no target');
         let vehicle = target.vehicle;
-        if (!vehicle) return;
+        if (!vehicle) return console.log('no target vehicle');;
 
         if (vehicle.isBeingRepaired) return player.call('notifications.push.error', ['Транспорт уже ремонтируется', 'Ошибка']);
 
@@ -120,7 +120,7 @@ module.exports = {
                             sender.call('notifications.push.error', [`Ошибка выдачи зарплаты`, 'Автомастерская']);
                             console.log(`Ошибка начисления денег за диагностику игроку ${sender.name}`);
                         }
-                    }, `Зарплата за диагностику т/с #${vehicle.sqlId}`);
+                    }, `Зарплата за диагностику транспорта`);
                     delete target.diagnosticsOffer;
                     delete sender.senderDiagnosticsOffer;
                 } else {
@@ -129,7 +129,7 @@ module.exports = {
                     delete target.diagnosticsOffer;
                     delete sender.senderDiagnosticsOffer;
                 }
-            }, `Оплата диагностики т/с #${vehicle.sqlId}`);
+            }, `Оплата диагностики транспорта`);
         } else {
             delete target.diagnosticsOffer;
             delete sender.senderDiagnosticsOffer;
@@ -322,7 +322,7 @@ module.exports = {
                             mechanic.call('notifications.push.error', [`Ошибка выдачи зарплаты`, 'Автомастерская']);
                             console.log(`Ошибка выдачи зарплаты за починку ${mechanic.name}`);
                         }
-                    }, `Зарплата за ремонт т/с #${vehicle.sqlId}`);
+                    }, `Зарплата за ремонт транспорта`);
 
                     switch (mechanic.lastRepairAnim) {
                         case 0:
@@ -354,7 +354,7 @@ module.exports = {
                     mp.events.call('carservice.service.end.target', target, 1);
                     return;
                 }
-            }, `Оплата ремонта т/с #${vehicle.sqlId}`);
+            }, `Оплата ремонта транспорта`);
 
         } else {
             mechanic.call('notifications.push.warning', ['Клиент отказался от ремонта', 'Автомастерская'])

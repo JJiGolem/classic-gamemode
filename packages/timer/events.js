@@ -6,6 +6,10 @@ module.exports = {
     "init": () => {
         timer.init();
         inited(__dirname);
+        // timer.add(async function() {
+        //     throw new Error("BAD ERROR");
+        //     console.log("TIMER1");
+        // }, 5000);
     },
     "player.joined": (player) => {
         if (timer.getChecker() == null) {

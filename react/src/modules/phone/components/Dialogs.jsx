@@ -21,19 +21,30 @@ class Dialogs extends Component {
     componentWillMount() {
         const { dialogs, sortDialogsByDate } = this.props;
 
-        dialogs && sortDialogsByDate();
+        try {
+            dialogs.list.length > 0 && sortDialogsByDate();
+        } catch(e) {
+            console.log(e.message)
+        }
     }
 
-    /*componentDidMount() {
-        setTimeout(() => {
-            this.props.addMessage('Привет', Date.now(), '123', false, false)
-        }, 3000)
-    }*/
+    // componentDidMount() {
+    //     setTimeout(() => {
+    //         this.props.addMessage('h2222i', Date.now(), '232332', false, false);
+    //     }, 1000);
+    //     setTimeout(() => {
+    //         this.props.addMessage('hi', Date.now(), '4462', false, false);
+    //     }, 3000);
+    // }
 
     componentDidUpdate(prevProps, prevState) {
         const { dialogs, sortDialogsByDate } = this.props;
 
-        dialogs && !dialogs.isSorted && sortDialogsByDate();
+        try {
+            dialogs.list.length > 0 && !dialogs.isSorted && sortDialogsByDate();
+        } catch(e) {
+            console.log(e.message)
+        }
     }
 
     handleSearchInput(e) {
@@ -70,7 +81,7 @@ class Dialogs extends Component {
     }
 
     getDialogTitle(dialog) {
-        const { info, dialogs, renameDialog } = this.props;
+        const { info, renameDialog } = this.props;
 
         if (!dialog.name) {
             let contact = info.contacts.find(con => con.number === dialog.number);
@@ -90,7 +101,7 @@ class Dialogs extends Component {
         const { search } = this.state;
         const  { addApp } = this.props;
 
-        var dialogs = this.props.dialogs;
+        let dialogs = this.props.dialogs.list;
 
         if (search) {
             dialogs = dialogs.filter(dialog => (dialog.name && dialog.name.toLowerCase().startsWith(search)) || dialog.number.toLowerCase().startsWith(search))

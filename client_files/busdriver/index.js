@@ -107,7 +107,7 @@ mp.events.add('busdriver.route.start.ans', (ans, data) => {
             break;
         case 1:
             mp.notify.success('Маршрут построен', 'Автобус');
-            createCheckpoint(data);
+            createCheckpoint(data, 0);
             break;
     }
 });
@@ -130,11 +130,11 @@ function createCheckpoint(data, timeout) {
     checkpointTimer = mp.timer.add(() => {
         try {
             checkpoint = mp.checkpoints.new(5, new mp.Vector3(data.x, data.y, data.z), 10,
-            {
-                color: data.isStop ? [30, 206, 255, 255] : [255, 246, 0, 255],
-                visible: true,
-                dimension: 0
-            });
+                {
+                    color: data.isStop ? [30, 206, 255, 255] : [255, 246, 0, 255],
+                    visible: true,
+                    dimension: 0
+                });
             blip = mp.blips.new(1, new mp.Vector3(data.x, data.y, data.z), { color: data.isStop ? 26 : 71, name: "Остановка" });
             blip.setRoute(true);
             blip.setRouteColour(data.isStop ? 26 : 71);

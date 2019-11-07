@@ -64,6 +64,11 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
             mp.events.callRemote(`police.follow`, entity.remoteId);
         } else if (itemName == 'В авто') {
             mp.events.callRemote(`police.vehicle.put`, entity.remoteId);
+        } else if (itemName == 'Снять мешок') {
+            var data = {
+                recId: entity.remoteId
+            };
+            mp.events.callRemote(`mafia.bag`, JSON.stringify(data));
         }
     } else if (menuName == "police_gunlicense") {
         if (!entity) return;
@@ -96,6 +101,11 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
             mp.events.callRemote(`fib.spy`, JSON.stringify(data));
         } else if (itemName == 'В авто') {
             mp.events.callRemote(`police.vehicle.put`, entity.remoteId);
+        } else if (itemName == 'Снять мешок') {
+            var data = {
+                recId: entity.remoteId
+            };
+            mp.events.callRemote(`mafia.bag`, JSON.stringify(data));
         }
     } else if (menuName == "fib_vehicle") {
         if (!entity) return;
@@ -157,6 +167,8 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
                 recId: entity.remoteId
             };
             mp.events.callRemote(`mafia.bag`, JSON.stringify(data));
+        } else if (itemName == 'В авто') {
+            mp.events.callRemote(`police.vehicle.put`, entity.remoteId);
         }
     }
 });

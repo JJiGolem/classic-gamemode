@@ -167,17 +167,8 @@ module.exports = {
     "admin.report": (player, message) => {
         var media = player.character.Promocode.media;
         var color = (!media) ? "#ffe838" : "#ff3ec8";
-        //player.call('chat.message.push', [`!{#87c924}Ваш репорт:!{${color}} ${message}`]);
         player.call('chat.message.split', [message, `!{#87c924}Ваш репорт:!{${color}} `]);
-        //mp.events.call("admin.notify.all", `!{#87c924}${player.name}[${player.id}]:!{${color}} ${message}`);
-
-        mp.players.forEach((current) => {
-            if (current.character) {
-                if (current.character.admin > 0) {
-                        player.call('chat.message.split', [message, `!{#87c924}${player.name}[${player.id}]:!{${color}} `]);
-                }
-            }
-        });
+        mp.events.call('admin.notify.all.split', message, `!{#87c924}${player.name}[${player.id}]:!{${color}} `);
     },
     "characterInit.done": (player) => {
         let level = player.character.admin;

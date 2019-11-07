@@ -96,10 +96,10 @@ mp.events.add('render', () => {
                     mp.events.call('fishing.game.menu');
                 } else {
                     if (isShowPrompt) {
-                        bindButtons(false);
                         mp.events.call('prompt.hide');
                         isShowPrompt = false;
                     }
+                    if (!isEnter) bindButtons(false);
                 }
             }, 1000);
         }
@@ -109,6 +109,7 @@ mp.events.add('render', () => {
             isShowPrompt = false;
             mp.timer.remove(intervalFishing);
             isIntervalCreated = false;
+            if (!isEnter) bindButtons(false);
         }
     }
 });
@@ -127,12 +128,9 @@ mp.events.add('inventory.initItems', (items) => {
             });
         }
     }
-
-    // debug(countRods);
 });
 
 mp.events.add('inventory.deleteItem', (item) => {
-    debug(item);
     if (rods.includes(item)) {
         let index = rods.findIndex(rod => rod == item);
         rods.splice(index, 1);
@@ -145,9 +143,6 @@ mp.events.add('inventory.deleteItem', (item) => {
             mp.events.call('prompt.hide');
             isShowPrompt = false;
         }
-
-        debug('delete rod');
-        debug(rods.length);
     }
 });
 
@@ -176,11 +171,22 @@ mp.events.add('fishing.rod.buy', () => {
     mp.events.callRemote('fishing.rod.buy');
 });
 
-mp.events.add('fishing.rod.buy.ans', (ans) => {
+mp.events.add('fishing.rod.buy.ans', (ans, data) => {
     mp.callCEFV(`selectMenu.loader = false`);
 
-    if (ans == 1) {
-        mp.events.call('fishing.menu.close');
+    switch (ans) {
+        case 0:
+            mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
+            break;
+        case 1:
+            mp.events.call('fishing.menu.close');
+            break;
+        case 2:
+            mp.callCEFV(`selectMenu.notification = '${data}'`);
+            break;
+        case 3:
+            mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+            break;
     }
 });
 
@@ -212,12 +218,6 @@ mp.events.add('fishing.game.enter', () => {
     localPlayer.freezePosition(true);
     mp.callCEFVN({ "fishing.show": true });
     isEnter = true;
-});
-
-mp.events.add('fishing.game.start', () => {
-    playWaitAnimation(true);
-    mp.callCEFVN({ "fishing.isStarted": true });
-    mp.events.callRemote('fishing.game.start');
 });
 
 mp.events.add('fishing.game.fetch', (speed, zone, weight) => {

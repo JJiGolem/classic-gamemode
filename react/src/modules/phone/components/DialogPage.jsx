@@ -115,7 +115,7 @@ class DialogPage extends Component {
     getMessages(number) {
         const { dialogs } = this.props;
 
-        let messages = dialogs.find(d => d.number === number).PhoneMessages;
+        let messages = dialogs.list.find(d => d.number === number).PhoneMessages;
 
         if (messages.length !== 0) {
             return (
@@ -164,7 +164,7 @@ class DialogPage extends Component {
     back() {
         const { closeApp, deleteDialog, dialog, dialogs } = this.props;
 
-        if (dialogs.find(d => d.number === dialog.number).PhoneMessages.length === 0) {
+        if (dialogs.list.find(d => d.number === dialog.number).PhoneMessages.length === 0) {
             deleteDialog(dialog.number);
         }
 
@@ -190,7 +190,6 @@ class DialogPage extends Component {
     render() {
 
         const { dialog } = this.props;
-        const { isShowLoad } = this.state;
 
         return (
             <Fragment>

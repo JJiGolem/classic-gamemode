@@ -1,14 +1,24 @@
 mp.inventory = {
-    groundMaxDist: 2,
+    groundMaxDist: 1.8,
     lastArmour: 0,
     itemsInfo: null,
     animData: require('animations/data.js'),
+    ammoSync: {
+        need: false, // нужно ли синхронизировать кол-во патронов оружия в CEF
+        weaponHash: 0,
+    },
+    handsBlock: false,
+    groundItemMarker: {},
 
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
     },
     debug(enable) {
         mp.callCEFV(`inventory.debug = ${enable}`);
+    },
+    setHandsBlock(enable) {
+        if (this.handsBlock != enable) mp.callCEFV(`inventory.handsBlock = ${enable}`);
+        this.handsBlock = enable;
     },
     spin(enable) {
         mp.callCEFV(`inventory.spin = ${enable}`);
@@ -76,10 +86,7 @@ mp.inventory = {
         this.lastArmour = val;
         mp.callCEFV(`inventory.setArmour(${val})`);
     },
-    takeItemHandler() {
-        // поднятие предмета с земли
-        if (mp.busy.includes()) return;
-        var pos = mp.players.local.position;
+    getNearGroundItemObject(pos) {
         var itemObj, minDist = 9999;
         mp.objects.forEach((obj) => {
             var objPos = obj.position;
@@ -91,6 +98,14 @@ mp.inventory = {
             minDist = dist;
             itemObj = obj;
         });
+        return itemObj;
+    },
+    takeItemHandler() {
+        // поднятие предмета с земли
+        if (mp.busy.includes()) return;
+        if (mp.players.local.vehicle) return;
+        var pos = mp.players.local.getOffsetFromInWorldCoords(0, 0, 0);
+        var itemObj = this.getNearGroundItemObject(pos);
         if (!itemObj) return;
         // TODO: проверка на аттачи
         mp.events.callRemote("item.ground.take", itemObj.remoteId);
@@ -148,6 +163,7 @@ mp.inventory = {
     },
     hands(player, itemId) {
         if (!this.itemsInfo) return;
+        if (player.vehicle) return;
         if (itemId) {
             var info = this.itemsInfo[itemId];
             var object = mp.objects.new(mp.game.joaat(info.model), player.position);
@@ -155,8 +171,8 @@ mp.inventory = {
             var rot = info.attachInfo.rot;
             object.attachTo(player.handle,
                 player.getBoneIndex(info.attachInfo.bone),
-                pos.x, pos.y, pos.z,
-                rot.x, rot.y, rot.z,
+                pos[0], pos[1], pos[2],
+                rot[0], rot[1], rot[2],
                 false, false, false, false, 2, true);
 
             if (info.attachInfo.anim) {
@@ -180,11 +196,31 @@ mp.inventory = {
 
         }
     },
+    syncAmmo() {
+        if (!this.ammoSync.need) return;
+        var weapon = this.ammoSync.weaponHash;
+        if (!weapon) return;
+        var ammo = mp.weapons.getAmmoWeapon(weapon);
+        mp.callCEFV(`inventory.setAmmo('${weapon.toString()}', ${ammo})`);
+        this.ammoSync.need = false;
+        this.ammoSync.weaponHash = 0;
+    },
+    initGroundItemMarker() {
+        this.groundItemMarker = mp.markers.new(2, new mp.Vector3(0, 0, 0), 0.1, {
+            rotation: new mp.Vector3(0, 180, 0),
+            visible: false,
+            color: [255, 223, 41, 255],
+        });
+        this.groundItemMarker.ignoreCheckVisible = true;
+    },
 };
 
 mp.events.add("characterInit.done", () => {
     mp.inventory.enable(true);
-    mp.keys.bind(69, true, mp.inventory.takeItemHandler); // E
+    mp.keys.bind(69, true, () => { // E
+        mp.inventory.takeItemHandler();
+    });
+    mp.inventory.initGroundItemMarker();
 });
 
 mp.events.add("inventory.enable", mp.inventory.enable);
@@ -238,6 +274,12 @@ mp.events.add("inventory.saveHotkey", mp.inventory.saveHotkey);
 
 mp.events.add("inventory.removeHotkey", mp.inventory.removeHotkey);
 
+mp.events.add("inventory.ground.put", (sqlId) => {
+    var pos = mp.players.local.getOffsetFromInWorldCoords(0, 1, 2);
+    pos.z = mp.game.gameplay.getGroundZFor3dCoord(pos.x, pos.y, pos.z, false, false);
+    mp.events.callRemote(`item.ground.put`, sqlId, JSON.stringify(pos));
+});
+
 mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`enterBoot: #${vehicle.remoteId}`);
     if (!vehicle.getVariable("trunk")) return;
@@ -253,6 +295,26 @@ mp.events.add("playerExitVehicleBoot", (player, vehicle) => {
     mp.events.callRemote(`vehicle.boot.items.clear`, vehicle.remoteId);
 });
 
+mp.events.add("playerWeaponShot", (targetPos, targetEntity) => {
+    if (mp.inventory.ammoSync.need) return;
+    mp.inventory.ammoSync.need = true;
+    mp.inventory.ammoSync.weaponHash = mp.weapons.currentWeapon();
+});
+
+mp.events.add("playerStartFreeAiming", () => {
+    var weapon = mp.weapons.currentWeapon();
+    if (!weapon) return;
+    var ammo = mp.weapons.getAmmoWeapon(weapon);
+    if (ammo != 1) return; // слуай, когда остался 1 патрон, т.к. после его выстрела пушка убирается
+
+    mp.inventory.ammoSync.need = true;
+    mp.inventory.ammoSync.weaponHash = weapon;
+});
+
+mp.events.add("playerEndFreeAiming", () => {
+    mp.inventory.syncAmmo();
+});
+
 mp.events.add("entityStreamIn", (entity) => {
     if (entity.type != "player") return;
     var itemId = entity.getVariable("hands");
@@ -266,8 +328,10 @@ mp.events.add("entityStreamOut", (entity) => {
 });
 
 mp.events.add("time.main.tick", () => {
-    var value = mp.players.local.getArmour();
+    var player = mp.players.local;
+    var value = player.getArmour();
     mp.inventory.setArmour(value);
+    mp.inventory.setHandsBlock(player.vehicle != null);
 
     mp.objects.forEach(obj => {
         if (obj.getVariable("groundItem")) mp.utils.setNoCollision(obj, true);
@@ -276,6 +340,15 @@ mp.events.add("time.main.tick", () => {
 
 mp.events.add("render", () => {
     mp.inventory.disableControlActions();
+
+    var player = mp.players.local;
+    var itemObj = mp.inventory.getNearGroundItemObject(player.position);
+    if (itemObj && !player.vehicle) {
+        var pos = itemObj.position;
+        pos.z += 0.5;
+        mp.inventory.groundItemMarker.position = pos;
+        mp.inventory.groundItemMarker.visible = true;
+    } else mp.inventory.groundItemMarker.visible = false;
 });
 
 mp.events.addDataHandler("trunk", (vehicle, value) => {

@@ -131,7 +131,20 @@ let utils = {
     },
     vdist(posA, posB) {
         return (posA.x - posB.x) * (posA.x - posB.x) + (posA.y - posB.y) * (posA.y - posB.y) + (posA.z - posB.z) * (posA.z - posB.z);
-    }
+    },
+    // Сумма чисел в массиве
+    arraySum(array) {
+        var sum = 0;
+        array.forEach(num => sum += num);
+        return sum;
+    },
+    // Добавить текст над головой игрока
+    addOverheadText(player, text, color = [255, 255, 255, 255]) {
+        mp.players.forEachInRange(player.position, 20, rec => {
+            if (rec.id == player.id) return;
+            rec.call(`addOverheadText`, [player.id, text, color]);
+        });
+    },
 };
 module.exports = utils;
 

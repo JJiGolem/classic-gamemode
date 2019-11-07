@@ -27,7 +27,7 @@ module.exports = {
             for (let i = 0; i < timers.length; i++) {
                 try {
                     if (timers[i].time <= Date.now()) {
-                        timers[i].handler();
+                        let handler = timers[i].handler;
                         if (timers[i].interval != null) {
                             timers[i].time += timers[i].interval;
                         }
@@ -35,6 +35,7 @@ module.exports = {
                             timers.splice(i, 1);
                             i--;
                         }
+                        handler();
                     }
                 }
                 catch (error) {
@@ -50,12 +51,17 @@ module.exports = {
     /// handler желательно async
     /// return timer
     add(handler, time, isInterval = false) {
+        if (handler == null) throw new Error("handler is null");
+        if (typeof handler != "function") throw new Error("handler is not a function");
+        time = parseInt(time);
+        if (isNaN(time)) throw new Error("time is NaN");
+        if (isInterval == null) throw new Error("isInterval is null");
         let id = gId++;
         timers.push({
             id: id,
             handler: handler,
             time: Date.now() + time,
-            interval: isInterval ? time : null
+            interval: isInterval ? time : null,
         });
         return {
             id: id
@@ -72,5 +78,3 @@ module.exports = {
         return this.add(handler, time, true);
     },
 }
-/// obj.destroy()
-///

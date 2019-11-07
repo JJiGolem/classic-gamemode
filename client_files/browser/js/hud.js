@@ -24,12 +24,11 @@ var hud = new Vue({
         satiety: 0,
         thirst: 0,
         playerId: -1,
-        cold: false,    // TODO:  Игроку холодно
-        heat: false,    // TODO:  Игроку жарко
-        arrestProgress: 0, // TODO: 0 - 100 // сколько за решёткой сидеть.
-        arrestDescription: "Арест", // TODO: Описание
-        keys: [
-            {
+        cold: false,
+        heat: false,
+        arrestTime: 10, // секунды
+        arrestDescription: "До освобождения 999999 мин.", // TODO: Описание
+        keys: [{
                 key: "I",
                 name: "Инвентарь",
             },
@@ -62,13 +61,34 @@ var hud = new Vue({
                 name: "Обновления",
             },
         ],
+        coldTimer: -1,
+        heatTimer: -1,
     },
     computed: {
-        arrestProgressStyle () {
+        arrestProgressStyle() {
             return {
-                strokeDasharray: `${this.arrestProgress * 1.57}% 157%`,//78.5% 157%;
+                strokeDasharray: `${this.arrestProgress * 1.57}% 157%`, //78.5% 157%;
             }
         },
+        arrestProgress() {
+
+        }
+    },
+    watch: {
+        cold(val) {
+            if (!val) return;
+            clearTimeout(this.coldTimer);
+            this.coldTimer = setTimeout(() => {
+                this.cold = false;
+            }, 10000);
+        },
+        heat(val) {
+            if (!val) return;
+            clearTimeout(this.heatTimer);
+            this.heatTimer = setTimeout(() => {
+                this.heat = false;
+            }, 10000);
+        }
     },
     methods: {
         updateTime() {
@@ -77,7 +97,7 @@ var hud = new Vue({
                 this.setDate();
         },
         setDate() {
-            let date = new Date();
+            let date = convertToMoscowDate(new Date());
             let day = date.getDate();
             let month = date.getMonth() + 1;
             let year = date.getUTCFullYear();

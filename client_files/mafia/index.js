@@ -10,6 +10,8 @@
 mp.mafia = {
     // Блипы зон для рекетов
     mafiaZones: [],
+    // Показ блипов на карте
+    zonesShow: false,
     // Цвета блипов (factionId: blipColor)
     colors: {
         12: 43,
@@ -30,6 +32,7 @@ mp.mafia = {
         GET_BLIP_COLOUR: "0xDF729E8D20CF7327",
         _SET_BLIP_SHOW_HEADING_INDICATOR: "0x5FBCA48327B914DF",
     },
+    blipAlpha: 120,
     flashTimer: null,
     flashColor: 1,
     bizWarTimer: null,
@@ -42,7 +45,7 @@ mp.mafia = {
         zones.forEach(zone => {
             var blip = mp.game.ui.addBlipForRadius(zone.x, zone.y, 50, 150);
             mp.game.invoke(this.natives.SET_BLIP_SPRITE, blip, 5);
-            mp.game.invoke(this.natives.SET_BLIP_ALPHA, blip, 120);
+            mp.game.invoke(this.natives.SET_BLIP_ALPHA, blip, this.blipAlpha);
             mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, 4);
             this.mafiaZones.push(blip);
             this.saveBlip(blip);
@@ -194,6 +197,10 @@ mp.mafia = {
     stopFollowToPlayer() {
         this.followPlayer = null;
     },
+    hasBag(player) {
+        if (!player) player = mp.players.local;
+        return player.hasAttachment("headBag");
+    },
 };
 
 mp.events.add({
@@ -203,6 +210,13 @@ mp.events.add({
     },
     "mafia.mafiaZones.flash": (id, toggle) => {
         mp.mafia.flashBlip(id, toggle);
+    },
+    "mafia.mafiaZones.show": (enable) => {
+        var alpha = (enable) ? mp.mafia.blipAlpha : 0;
+        mp.mafia.mafiaZones.forEach(blip => {
+            mp.game.invoke(mp.bands.natives.SET_BLIP_ALPHA, blip, alpha);
+        });
+        mp.mafia.zonesShow = enable;
     },
     "mafia.bizWar.showMenu": (data) => {
         mp.mafia.showBizWarMenu(data);

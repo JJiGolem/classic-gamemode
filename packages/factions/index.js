@@ -4,6 +4,8 @@ var inventory = call('inventory');
 var mafia = call('mafia');
 var money = require('../money')
 var notifs = require('../notifications');
+var vehicles = call('vehicles');
+var utils = call('utils');
 
 module.exports = {
     // Организации
@@ -57,6 +59,10 @@ module.exports = {
     },
     // Кол-во минут онлайна, необходимых для получения ЗП
     payMins: 15,
+    // Стоимость респавна авто
+    vehRespawnPrice: 1000,
+    // Мин. время простоя, чтобы авто зареспавнилось лидером
+    vehWaitSpawn: 5 * 60 * 1000,
 
     async init() {
         await this.loadFactionsFromDB();
@@ -65,14 +71,35 @@ module.exports = {
         this.createMedicinesWarehouseMarker();
     },
     async loadFactionsFromDB() {
-        var dbFactons = await db.Models.Faction.findAll({
+        var dbFactions = await db.Models.Faction.findAll({
             include: [{
-                model: db.Models.FactionRank,
-                as: "ranks"
-            }]
+                    model: db.Models.FactionRank,
+                    as: "ranks",
+                },
+                {
+                    model: db.Models.FactionClothesRank,
+                    as: "clothesRanks",
+                },
+                {
+                    model: db.Models.FactionItemRank,
+                    as: "itemRanks",
+                },
+            ],
+            order: ['id']
         });
-        this.factions = dbFactons;
-        console.log(`[FACTIONS] Организации загужены (${dbFactons.length} шт.)`);
+        dbFactions.forEach(faction => {
+            faction.ranks.sort((a, b) => {
+                return a.id - b.id;
+            });
+            faction.clothesRanks.sort((a, b) => {
+                return a.id - b.id;
+            });
+            faction.itemRanks.sort((a, b) => {
+                return a.id - b.id;
+            });
+        });
+        this.factions = dbFactions;
+        console.log(`[FACTIONS] Организации загужены (${dbFactions.length} шт.)`);
     },
     initFactionMarkers() {
         for (var i = 0; i < this.factions.length; i++) {
@@ -139,6 +166,7 @@ module.exports = {
             color: [0, 187, 255, 70],
             dimension: faction.sD
         });
+        storage.isOpen = true;
         this.storages.push(storage);
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, storage.dimension);
@@ -292,6 +320,22 @@ module.exports = {
         }
         return names;
     },
+    getRanks(faction) {
+        if (!faction) return null;
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction.ranks;
+    },
+    getClientRanks(faction) {
+        if (!faction) return null;
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction.ranks.map(x => {
+            return {
+                name: x.name,
+                rank: x.rank,
+                pay: x.pay
+            }
+        });
+    },
     setLeader(faction, player) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         var character = player.character;
@@ -301,7 +345,7 @@ module.exports = {
         character.save();
 
         player.setVariable("factionId", character.factionId);
-        player.call(`factions.faction.set`, [character.factionId]);
+        player.call(`factions.faction.set`, [character.factionId, this.getClientRanks(faction)]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isGovernmentFaction(faction)) mp.events.call(`mapCase.gover.init`, player);
         else if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
@@ -343,7 +387,7 @@ module.exports = {
         character.save();
 
         player.setVariable("factionId", character.factionId);
-        player.call(`factions.faction.set`, [character.factionId]);
+        player.call(`factions.faction.set`, [character.factionId, this.getClientRanks(faction)]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isGovernmentFaction(faction)) mp.events.call(`mapCase.gover.init`, player);
         else if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
@@ -370,7 +414,7 @@ module.exports = {
         character.save();
 
         player.setVariable("factionId", character.factionId);
-        player.call(`factions.faction.set`, [null]);
+        player.call(`factions.faction.set`, [null, []]);
         player.call(`mapCase.enable`, [false]);
 
         mp.events.call(`player.faction.changed`, player, oldVal);
@@ -411,6 +455,15 @@ module.exports = {
             members.push(rec);
         });
         return members;
+    },
+    getVehicles(player) {
+        var vehicles = [];
+        mp.vehicles.forEach(veh => {
+            if (!veh.db || veh.db.key != 'faction') return;
+            if (veh.db.owner != player.character.factionId) return;
+            vehicles.push(veh);
+        });
+        return vehicles;
     },
     setRank(player, rank) {
         var character = player.character;
@@ -650,5 +703,33 @@ module.exports = {
 
         if (!count) return;
         notifs.warning(player, `Предмет из шкафа потеряны (${count} шт.)`, `Организация`);
+    },
+    respawnVehicles(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+
+        var start = new Date();
+        mp.vehicles.forEach(veh => {
+            if (!veh.db) return;
+            if (!veh.lastPlayerTime) return;
+            if (veh.db.key == 'private' || veh.db.key == 'market') return;
+            if (start.getTime() - veh.lastPlayerTime < this.vehWaitSpawn) return;
+            if (vehicles.getOccupants(veh).length) return;
+
+            var spawnPos = new mp.Vector3(veh.db.x, veh.db.y, veh.db.z);
+            var vehPos = veh.position;
+            var dist = utils.vdist(spawnPos, vehPos);
+            var isDead = vehicles.isDead(veh);
+            if (dist > 10 || isDead) {
+                vehicles.respawn(veh);
+            }
+        });
+    },
+    setVehicleMinRank(veh, rank) {
+        if (!veh.db.minRank) veh.db.minRank = db.Models.FactionVehicleRank.build({
+            vehicleId: veh.db.id,
+            rank: rank
+        });
+        veh.db.minRank.rank = rank;
+        veh.db.minRank.save();
     },
 };

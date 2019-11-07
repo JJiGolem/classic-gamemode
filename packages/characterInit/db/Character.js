@@ -350,7 +350,10 @@ module.exports = (sequelize, DataTypes) => {
         model.hasMany(models.FactionInventory, {
             as: "items",
             foreignKey: "playerId"
-		});
+        });
+        model.hasMany(models.CharacterTattoo, {
+            foreignKey: "characterId"
+        });
     };
     return model;
 };

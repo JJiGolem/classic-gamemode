@@ -75,9 +75,9 @@ var selectMenu = new Vue({
                                 mp.trigger('characterInit.create.continue');
                                 selectMenu.menu = selectMenu.menus["characterCreateNameMenu"];
                                 break;
-                            // case "Сбросить все изменения":
-                            //     selectMenu.menu = selectMenu.menus["characterCreateResetMenu"];
-                            //     break;
+                                // case "Сбросить все изменения":
+                                //     selectMenu.menu = selectMenu.menus["characterCreateResetMenu"];
+                                //     break;
                             case "Выйти без сохранения":
                                 selectMenu.menu = selectMenu.menus["characterCreateExitMenu"];
                                 break;
@@ -684,8 +684,7 @@ var selectMenu = new Vue({
                     if (eventName == "onItemFocusChanged") {
                         if (e.itemName == "Волосы на теле" || e.itemName == "Цвет волос на теле") {
                             mp.trigger("characterInit.showTorso", 1);
-                        }
-                        else {
+                        } else {
                             mp.trigger("characterInit.showTorso", 0);
                         }
                     }
@@ -1515,6 +1514,10 @@ var selectMenu = new Vue({
                         i: 0
                     },
                     {
+                        text: 'Помощь',
+                        i: 0
+                    },
+                    {
                         text: "Закрыть",
                         i: 0,
                     }
@@ -1539,6 +1542,9 @@ var selectMenu = new Vue({
                         }
                         if (e.itemName == 'Продать рыбу') {
                             mp.trigger(`fishing.fish.sell`);
+                        } else if (e.itemName == 'Помощь') {
+                            selectMenu.show = false;
+                            modal.showByName("fishing_help");
                         }
                     }
                 }
@@ -1595,6 +1601,15 @@ var selectMenu = new Vue({
                         text: "Полный состав"
                     },
                     {
+                        text: "Ранги"
+                    },
+                    {
+                        text: "Транспорт"
+                    },
+                    {
+                        text: "Доступ к складу"
+                    },
+                    {
                         text: "Закрыть"
                     }
                 ],
@@ -1617,6 +1632,23 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Полный состав') {
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.members.offline.show`);
+                        } else if (e.itemName == 'Ранги') {
+                            var ranks = selectMenu.menus["factionControlRanks"].ranks;
+                            var maxRankName = ranks[ranks.length - 1].name;
+                            if (statistics['factionRank'].value != maxRankName) return selectMenu.notification = "Вы не лидер";
+                            selectMenu.showByName("factionControlRanks");
+                        } else if (e.itemName == 'Транспорт') {
+                            var ranks = selectMenu.menus["factionControlRanks"].ranks;
+                            var maxRankName = ranks[ranks.length - 1].name;
+                            if (statistics['factionRank'].value != maxRankName) return selectMenu.notification = "Вы не лидер";
+                            selectMenu.loader = true;
+                            mp.trigger(`callRemote`, `factions.control.vehicles.show`);
+                        } else if (e.itemName == 'Доступ к складу') {
+                            var ranks = selectMenu.menus["factionControlRanks"].ranks;
+                            var maxRankName = ranks[ranks.length - 1].name;
+                            if (statistics['factionRank'].value != maxRankName) return selectMenu.notification = "Вы не лидер";
+                            selectMenu.loader = true;
+                            mp.trigger(`callRemote`, `factions.control.warehouse.show`);
                         }
                     }
                 }
@@ -1738,6 +1770,553 @@ var selectMenu = new Vue({
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlMembers");
                 }
             },
+            "factionControlRanks": {
+                name: "factionControlRanks",
+                header: "Ранги",
+                items: [{
+                        text: "Ранг 1",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Ранг 2",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Ранг 3",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Ранг 4",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Вернуться"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                ranks: [],
+                init(ranks) {
+                    if (typeof ranks == 'string') ranks = JSON.parse(ranks);
+
+                    var items = [];
+                    ranks.forEach(rank => {
+                        items.push({
+                            text: rank.name,
+                            values: [`$${rank.pay}`]
+                        });
+                    });
+                    items.push({
+                        text: `Вернуться`
+                    });
+
+                    selectMenu.setItems('factionControlRanks', items);
+                    this.ranks = ranks;
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControl");
+                        else {
+                            selectMenu.menus["factionControlRank"].init(this.ranks[e.itemIndex]);
+                            selectMenu.showByName("factionControlRank");
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControl");
+                }
+            },
+            "factionControlRank": {
+                name: "factionControlRank",
+                header: "Ранг 1",
+                items: [{
+                        text: "Название",
+                        values: [`Килла`],
+                        type: 'editable',
+                    },
+                    {
+                        text: "Зарплата",
+                        values: [`$9999`],
+                    },
+                    {
+                        text: "Сохранить"
+                    },
+                    {
+                        text: "Вернуться"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                rank: null,
+                init(rank) {
+                    if (typeof rank == 'string') rank = JSON.parse(rank);
+
+                    this.header = `Ранг ${rank.rank}`;
+                    this.items[0].values[0] = rank.name;
+                    this.items[1].values[0] = `$${rank.pay}`;
+
+                    this.rank = rank;
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlRanks");
+                        else if (e.itemName == 'Сохранить') {
+                            var data = {
+                                rank: this.rank.rank,
+                                name: this.items[0].values[0]
+                            };
+                            if (!data.name) return selectMenu.notification = "Введите название ранга";
+
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `factions.control.ranks.set`, JSON.stringify(data));
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlRanks");
+                }
+            },
+            "factionControlVehicles": {
+                name: "factionControlVehicles",
+                header: "Транспорт",
+                items: [{
+                        text: "Infernus",
+                        values: [`PM777`]
+                    },
+                    {
+                        text: "Вернуть авто",
+                        values: [`$999`],
+                    },
+                    {
+                        text: "Вернуться"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                respawnPrice: -1,
+                vehicles: [],
+                init(data) {
+                    if (typeof data == 'string') data = JSON.parse(data);
+
+                    var items = [];
+                    data.vehicles.forEach(veh => {
+                        items.push({
+                            text: veh.name,
+                            values: [veh.plate]
+                        });
+                    });
+                    items.push({
+                        text: `Вернуть авто`,
+                        values: [`$${this.respawnPrice}`]
+                    });
+                    items.push({
+                        text: `Вернуться`
+                    });
+                    selectMenu.setItems('factionControlVehicles', items);
+
+                    this.vehicles = data.vehicles;
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControl");
+                        else if (e.itemName == 'Вернуть авто') {
+                            mp.trigger(`callRemote`, `factions.control.vehicles.respawn`);
+                        } else {
+                            var rankNames = selectMenu.menus['factionControlRanks'].ranks.map(x => x.name);
+                            selectMenu.menus['factionControlVehicle'].init(this.vehicles[e.itemIndex], rankNames);
+                            selectMenu.showByName('factionControlVehicle');
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControl");
+                }
+            },
+            "factionControlVehicle": {
+                name: "factionControlVehicle",
+                header: "Infernus",
+                items: [{
+                        text: "Название",
+                        values: [`Infernus`],
+                    },
+                    {
+                        text: "Номер",
+                        values: [`PM7777`],
+                    },
+                    {
+                        text: "Мин. ранг",
+                        values: [`Ранг 1`, `Ранг 2`],
+                        i: 0
+                    },
+                    {
+                        text: "Сохранить"
+                    },
+                    {
+                        text: "Вернуться"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                vehicle: null,
+                init(vehicle, rankNames) {
+                    this.header = vehicle.name;
+                    this.items[0].values[0] = vehicle.name;
+                    this.items[1].values[0] = vehicle.plate;
+                    this.items[2].values = rankNames;
+                    this.items[2].i = (vehicle.minRank) ? vehicle.minRank - 1 : 0;
+
+                    this.vehicle = vehicle;
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlVehicles");
+                        else if (e.itemName == 'Сохранить') {
+                            var data = {
+                                vehId: this.vehicle.id,
+                                rank: this.items[2].i + 1
+                            };
+                            if (data.rank == this.vehicle.minRank) return selectMenu.notification = "Ранг уже установлен";
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `factions.control.vehicles.minRank.set`, JSON.stringify(data));
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlVehicles");
+                }
+            },
+            "factionControlStorage": {
+                name: "factionControlStorage",
+                header: "Доступ к складу",
+                items: [{
+                        text: "Форма",
+                    },
+                    {
+                        text: "Снаряжение",
+                    },
+                    {
+                        text: "Вооружение",
+                    },
+                    {
+                        text: "Патроны",
+                    },
+                    {
+                        text: "Вернуться"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                clothesRanks: [],
+                itemRanks: [],
+                init(data) {
+                    if (typeof data == 'string') data = JSON.parse(data);
+
+                    this.clothesRanks = data.clothesRanks;
+                    this.itemRanks = data.itemRanks;
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControl");
+                        else if (e.itemName == 'Форма') {
+                            var menu = selectMenu.menus[`factionControlStorageClothes`];
+                            menu.show(this.clothesRanks);
+                        } else if (e.itemName == 'Снаряжение') {
+                            var menu = selectMenu.menus[`factionControlStorageItems`];
+                            menu.show(this.itemRanks);
+                        } else if (e.itemName == 'Вооружение') {
+                            var menu = selectMenu.menus[`factionControlStorageGuns`];
+                            menu.show(this.itemRanks);
+                        } else if (e.itemName == 'Патроны') {
+                            var menu = selectMenu.menus[`factionControlStorageAmmo`];
+                            menu.show(this.itemRanks);
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControl");
+                }
+            },
+            "factionControlStorageClothes": {
+                name: "factionControlStorageClothes",
+                header: "Доступ к форме",
+                items: [{
+                    text: "Вернуться"
+                }],
+                i: 0,
+                j: 0,
+                show(clothesRanks) {
+                    var factionId = playerMenu.factionId;
+                    if (!factionId) return;
+                    var list = ["government", "lspd", "lssd", "fib", "hospital", "army", "news",
+                        "band", "band", "band", "band",
+                        "mafia", "mafia", "mafia"
+                    ];
+                    if (factionId > list.length) return;
+                    var str = list[factionId - 1];
+                    var menu = selectMenu.menus[`${str}Clothes`];
+                    if (!menu) return selectMenu.notification = "Формы нет в наличии";
+                    var rankNames = selectMenu.menus['factionControlRanks'].ranks.map(x => x.name);
+                    var items = [];
+                    for (var i = 0; i < menu.items.length - 1; i++) {
+                        items.push({
+                            text: menu.items[i].text,
+                            values: rankNames,
+                            i: 0,
+                        });
+                    }
+                    items.push({
+                        text: "Вернуться"
+                    });
+                    for (var i = 0; i < clothesRanks.length; i++) {
+                        var rank = clothesRanks[i];
+                        items[rank.clothesIndex].i = rank.rank - 1;
+                    }
+
+                    selectMenu.setItems(this.name, items);
+                    selectMenu.showByName(this.name);
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlStorage");
+                        else {
+                            selectMenu.show = false;
+                            var data = {
+                                index: e.itemIndex,
+                                rank: item.i + 1
+                            };
+                            mp.trigger(`callRemote`, `factions.control.clothes.rank.set`, JSON.stringify(data));
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlStorage");
+                }
+            },
+            "factionControlStorageItems": {
+                name: "factionControlStorageItems",
+                header: "Доступ к снаряжению",
+                items: [{
+                    text: "Вернуться"
+                }],
+                i: 0,
+                j: 0,
+                itemIds: [],
+                show(itemRanks) {
+                    var factionId = playerMenu.factionId;
+                    if (!factionId) return;
+                    var list = ["government", "lspd", "lssd", "fib", "hospital", "army", "news",
+                        "band", "band", "band", "band",
+                        "mafia", "mafia", "mafia"
+                    ];
+                    if (factionId > list.length) return;
+                    var str = list[factionId - 1];
+                    var menu = selectMenu.menus[`${str}Items`];
+                    if (!menu) return selectMenu.notification = "Снаряжения нет в наличии";
+                    var rankNames = selectMenu.menus['factionControlRanks'].ranks.map(x => x.name);
+                    var items = [];
+                    for (var i = 0; i < menu.items.length - 1; i++) {
+                        items.push({
+                            text: menu.items[i].text,
+                            values: rankNames,
+                            i: 0,
+                        });
+                    }
+                    items.push({
+                        text: "Вернуться"
+                    });
+
+                    for (var i = 0; i < menu.itemIds.length; i++) {
+                        var itemId = menu.itemIds[i];
+                        var minRank = itemRanks.find(x => x.itemId == itemId);
+                        items[i].i = (minRank) ? minRank.rank - 1 : 0;
+                    }
+
+                    this.itemIds = menu.itemIds;
+                    selectMenu.setItems(this.name, items);
+                    selectMenu.showByName(this.name);
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlStorage");
+                        else {
+                            selectMenu.show = false;
+                            var data = {
+                                itemId: this.itemIds[e.itemIndex],
+                                rank: item.i + 1
+                            };
+                            mp.trigger(`callRemote`, `factions.control.items.rank.set`, JSON.stringify(data));
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlStorage");
+                }
+            },
+            "factionControlStorageGuns": {
+                name: "factionControlStorageGuns",
+                header: "Доступ к вооружению",
+                items: [{
+                    text: "Вернуться"
+                }],
+                i: 0,
+                j: 0,
+                itemIds: [],
+                show(itemRanks) {
+                    var factionId = playerMenu.factionId;
+                    if (!factionId) return;
+                    var list = ["government", "lspd", "lssd", "fib", "hospital", "army", "news",
+                        "band", "band", "band", "band",
+                        "mafia", "mafia", "mafia"
+                    ];
+                    if (factionId > list.length) return;
+                    var str = list[factionId - 1];
+                    var menu = selectMenu.menus[`${str}Guns`];
+                    if (!menu) return selectMenu.notification = "Оружия нет в наличии";
+                    var rankNames = selectMenu.menus['factionControlRanks'].ranks.map(x => x.name);
+                    var items = [];
+                    for (var i = 0; i < menu.items.length - 1; i++) {
+                        items.push({
+                            text: menu.items[i].text,
+                            values: rankNames,
+                            i: 0,
+                        });
+                    }
+                    items.push({
+                        text: "Вернуться"
+                    });
+
+                    for (var i = 0; i < menu.itemIds.length; i++) {
+                        var itemId = menu.itemIds[i];
+                        var minRank = itemRanks.find(x => x.itemId == itemId);
+                        items[i].i = (minRank) ? minRank.rank - 1 : 0;
+                    }
+
+                    this.itemIds = menu.itemIds;
+                    selectMenu.setItems(this.name, items);
+                    selectMenu.showByName(this.name);
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlStorage");
+                        else {
+                            selectMenu.show = false;
+                            var data = {
+                                itemId: this.itemIds[e.itemIndex],
+                                rank: item.i + 1
+                            };
+                            mp.trigger(`callRemote`, `factions.control.items.rank.set`, JSON.stringify(data));
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlStorage");
+                }
+            },
+            "factionControlStorageAmmo": {
+                name: "factionControlStorageAmmo",
+                header: "Доступ к патронам",
+                items: [{
+                    text: "Вернуться"
+                }],
+                i: 0,
+                j: 0,
+                itemIds: [],
+                show(itemRanks) {
+                    var factionId = playerMenu.factionId;
+                    if (!factionId) return;
+                    var list = ["government", "lspd", "lssd", "fib", "hospital", "army", "news",
+                        "band", "band", "band", "band",
+                        "mafia", "mafia", "mafia"
+                    ];
+                    if (factionId > list.length) return;
+                    var str = list[factionId - 1];
+                    var menu = selectMenu.menus[`${str}Ammo`];
+                    if (!menu) return selectMenu.notification = "Патронов нет в наличии";
+                    var rankNames = selectMenu.menus['factionControlRanks'].ranks.map(x => x.name);
+                    var items = [];
+                    for (var i = 0; i < menu.items.length - 1; i++) {
+                        items.push({
+                            text: menu.items[i].text,
+                            values: rankNames,
+                            i: 0,
+                        });
+                    }
+                    items.push({
+                        text: "Вернуться"
+                    });
+
+                    for (var i = 0; i < menu.itemIds.length; i++) {
+                        var itemId = menu.itemIds[i];
+                        var minRank = itemRanks.find(x => x.itemId == itemId);
+                        items[i].i = (minRank) ? minRank.rank - 1 : 0;
+                    }
+
+                    this.itemIds = menu.itemIds;
+                    selectMenu.setItems(this.name, items);
+                    selectMenu.showByName(this.name);
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControlStorage");
+                        else {
+                            selectMenu.show = false;
+                            var data = {
+                                itemId: this.itemIds[e.itemIndex],
+                                rank: item.i + 1
+                            };
+                            mp.trigger(`callRemote`, `factions.control.items.rank.set`, JSON.stringify(data));
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlStorage");
+                }
+            },
             "governmentStorage": {
                 name: "governmentStorage",
                 header: "Склад Government",
@@ -1844,6 +2423,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [24, 28],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -1883,6 +2463,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [19, 80, 87, 100, 93],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -1923,6 +2504,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [37, 38, 40, 39],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2179,9 +2761,6 @@ var selectMenu = new Vue({
                         text: "Шеф"
                     },
                     {
-                        text: "Бронежилет"
-                    },
-                    {
                         text: "Вернуться"
                     },
                 ],
@@ -2198,7 +2777,6 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') return selectMenu.showByName("lspdStorage");
-                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `police.storage.armour.take`);
                         else mp.trigger(`callRemote`, `police.storage.clothes.take`, e.itemIndex);
                         selectMenu.show = false;
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
@@ -2214,11 +2792,15 @@ var selectMenu = new Vue({
                         text: "Аптечка",
                     },
                     {
+                        text: "Бронежилет"
+                    },
+                    {
                         text: "Вернуться"
                     },
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [28, 24, 3],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2230,6 +2812,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == "Вернуться") selectMenu.showByName("lspdStorage");
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `police.storage.armour.take`);
                         else mp.trigger(`callRemote`, `police.storage.items.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lspdStorage");
                 }
@@ -2264,6 +2847,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [18, 17, 19, 20, 48, 21, 22],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2304,6 +2888,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [37, 38, 40, 39],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2390,9 +2975,6 @@ var selectMenu = new Vue({
                         text: "Шеф"
                     },
                     {
-                        text: "Бронежилет"
-                    },
-                    {
                         text: "Вернуться"
                     },
                 ],
@@ -2409,7 +2991,6 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') return selectMenu.showByName("lssdStorage");
-                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `police.storage.armour.take`);
                         else mp.trigger(`callRemote`, `police.storage.clothes.take`, e.itemIndex);
                         selectMenu.show = false;
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lssdStorage");
@@ -2425,11 +3006,15 @@ var selectMenu = new Vue({
                         text: "Аптечка"
                     },
                     {
+                        text: "Бронежилет"
+                    },
+                    {
                         text: "Вернуться"
                     },
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [28, 24, 3],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2441,6 +3026,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == "Вернуться") selectMenu.showByName("lssdStorage");
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `police.storage.armour.take`);
                         else mp.trigger(`callRemote`, `police.storage.items.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("lssdStorage");
                 }
@@ -2475,6 +3061,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [18, 17, 19, 20, 48, 21, 22],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2515,6 +3102,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [37, 38, 40, 39],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2598,9 +3186,6 @@ var selectMenu = new Vue({
                         text: "Агент №3"
                     },
                     {
-                        text: "Бронежилет"
-                    },
-                    {
                         text: "Вернуться"
                     },
                 ],
@@ -2617,7 +3202,6 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') return selectMenu.showByName("fibStorage");
-                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `fib.storage.armour.take`);
                         else mp.trigger(`callRemote`, `fib.storage.clothes.take`, e.itemIndex);
                         selectMenu.show = false;
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("fibStorage");
@@ -2636,11 +3220,15 @@ var selectMenu = new Vue({
                         text: "Прослушка"
                     },
                     {
+                        text: "Бронежилет"
+                    },
+                    {
                         text: "Вернуться"
                     },
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [28, 24, 4, 3],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2652,6 +3240,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == "Вернуться") selectMenu.showByName("fibStorage");
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `fib.storage.armour.take`);
                         else mp.trigger(`callRemote`, `fib.storage.items.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("fibStorage");
                 }
@@ -2683,6 +3272,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [107, 99, 88, 46, 19, 91],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2723,6 +3313,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [37, 38, 40, 39],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2821,9 +3412,6 @@ var selectMenu = new Vue({
                         text: "Спецназ"
                     },
                     {
-                        text: "Бронежилет"
-                    },
-                    {
                         text: "Вернуться"
                     },
                 ],
@@ -2840,7 +3428,6 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') return selectMenu.showByName("armyStorage");
-                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `army.storage.armour.take`);
                         else mp.trigger(`callRemote`, `army.storage.clothes.take`, e.itemIndex);
                         selectMenu.show = false;
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
@@ -2856,11 +3443,18 @@ var selectMenu = new Vue({
                         text: "Наручники"
                     },
                     {
+                        text: "Сухпай"
+                    },
+                    {
+                        text: "Бронежилет"
+                    },
+                    {
                         text: "Вернуться"
                     },
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [24, 28, 132, 3],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2872,6 +3466,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == "Вернуться") selectMenu.showByName("armyStorage");
+                        else if (e.itemName == 'Бронежилет') mp.trigger(`callRemote`, `army.storage.armour.take`);
                         else mp.trigger(`callRemote`, `army.storage.items.take`, e.itemIndex);
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("armyStorage");
                 }
@@ -2900,6 +3495,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [17, 80, 48, 21, 22],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2940,6 +3536,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [37, 38, 40, 39],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -3057,6 +3654,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [24, 27, 25, 26],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -3162,6 +3760,9 @@ var selectMenu = new Vue({
                         text: "Общак"
                     },
                     {
+                        text: "Склад"
+                    },
+                    {
                         text: "Закрыть"
                     },
                 ],
@@ -3185,6 +3786,8 @@ var selectMenu = new Vue({
                             selectMenu.showByName("bandPower");
                         } else if (e.itemName == 'Общак') {
                             selectMenu.showByName("bandCash");
+                        } else if (e.itemName == 'Склад') {
+                            selectMenu.showByName("bandWarehouse");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
@@ -3221,6 +3824,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [41, 21, 44, 20, 47, 89, 52],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -3261,6 +3865,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [37, 38, 40, 39],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -3422,6 +4027,44 @@ var selectMenu = new Vue({
                         selectMenu.showByName("bandCash");
                 }
             },
+            "bandWarehouse": {
+                name: "bandWarehouse",
+                header: "Склад",
+                items: [{
+                        text: "Открыть",
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Открыть') {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `bands.storage.state`, true);
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `bands.storage.state`, false);
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("bandStorage");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("bandStorage");
+                }
+            },
             "mafiaStorage": {
                 name: "mafiaStorage",
                 header: "Склад мафии",
@@ -3436,6 +4079,9 @@ var selectMenu = new Vue({
                     },
                     {
                         text: "Общак"
+                    },
+                    {
+                        text: "Склад"
                     },
                     {
                         text: "Закрыть"
@@ -3461,6 +4107,8 @@ var selectMenu = new Vue({
                             selectMenu.showByName("mafiaPower");
                         } else if (e.itemName == 'Общак') {
                             selectMenu.showByName("mafiaCash");
+                        } else if (e.itemName == 'Склад') {
+                            selectMenu.showByName("mafiaWarehouse");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
@@ -3500,6 +4148,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [44, 46, 90, 48, 49, 96, 50, 22],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -3540,6 +4189,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                itemIds: [37, 38, 40, 39],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -3695,6 +4345,44 @@ var selectMenu = new Vue({
                         }
                     } else if (eventName == 'onBackspacePressed' && this.i > 1)
                         selectMenu.showByName("mafiaCash");
+                }
+            },
+            "mafiaWarehouse": {
+                name: "mafiaWarehouse",
+                header: "Склад",
+                items: [{
+                        text: "Открыть"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Открыть') {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `mafia.storage.state`, true);
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `mafia.storage.state`, false);
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("mafiaStorage");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("mafiaStorage");
                 }
             },
             "mafiaBizWar": {
@@ -5195,7 +5883,7 @@ var selectMenu = new Vue({
                 header: "Загрузка зерна",
                 items: [{
                         text: "Участок",
-                        values: ["Поле №1", "Поле №2", "Поле №3", "Поле №4"],
+                        values: ["Поле №999"],
                     },
                     {
                         text: "Тип зерна",
@@ -5210,6 +5898,11 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                init(fieldIds) {
+                    if (typeof fieldIds == 'string') fieldIds = JSON.parse(fieldIds);
+
+                    selectMenu.setItemValues(this.name, 'Участок', fieldIds.map(x => `Поле №${x}`));
+                },
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -7044,7 +7737,7 @@ var selectMenu = new Vue({
                 }
             },
             "vehiclePropAdd": {
-                name: "eateryMain",
+                name: "vehiclePropAdd",
                 header: "Добавление т/с",
                 items: [{
                         text: 'Модель',
@@ -7121,6 +7814,606 @@ var selectMenu = new Vue({
                     }
                     if (eventName == 'onEscapePressed') {
                         selectMenu.show = false;
+                    }
+                }
+            },
+            "woodman": {
+                name: "woodman",
+                header: "Лесопилка",
+                items: [{
+                        text: "Снаряжение",
+                    },
+                    {
+                        text: "Ресурсы"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                prices: [],
+                init(data) {
+                    if (typeof data == 'string') data = JSON.parse(data);
+                    var items = selectMenu.menus['woodmanItems'].items;
+                    items[0].values[0] = `$${data.itemPrices[0]}`;
+
+                    var clothesItems = selectMenu.menus['woodmanItemsClothes'].items;
+                    for (var i = 0; i < clothesItems.length - 1; i++) {
+                        clothesItems[i].values[0] = `$${data.itemPrices[i + 1]}`;
+                    }
+
+                    this.prices = data.itemPrices;
+
+                    selectMenu.menus['woodmanSell'].items[0].values[0] = `$${data.treePrice}`;
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Работа') {
+
+                        } else if (e.itemName == 'Снаряжение') {
+                            selectMenu.showByName("woodmanItems");
+                        } else if (e.itemName == 'Ресурсы') {
+                            selectMenu.showByName("woodmanSell");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
+            "woodmanItems": {
+                name: "woodmanItems",
+                header: "Снаряжение",
+                items: [{
+                        text: "Топор",
+                        values: ['$9999']
+                    },
+                    {
+                        text: "Форма"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Топор') {
+                            // selectMenu.show = false;
+                            mp.trigger(`callRemote`, `woodman.items.buy`, e.itemIndex);
+                        } else if (e.itemName == 'Форма') {
+                            selectMenu.showByName("woodmanItemsClothes");
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("woodman");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("woodman");
+                }
+            },
+            "woodmanItemsClothes": {
+                name: "woodmanItemsClothes",
+                header: "Форма дровосека",
+                items: [{
+                        text: "Жилетка",
+                        values: ['$9999']
+                    },
+                    {
+                        text: "Штаны",
+                        values: ['$9999']
+                    },
+                    {
+                        text: "Ботинки",
+                        values: ['$9999']
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("woodmanItems");
+                        } else {
+                            // selectMenu.show = false;
+                            mp.trigger(`callRemote`, `woodman.clothes.buy`, e.itemIndex);
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("woodmanItems");
+                }
+            },
+            "woodmanSell": {
+                name: "woodmanSell",
+                header: "Ресурсы",
+                items: [{
+                        text: "Дерево",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Продать"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Продать') {
+                            mp.trigger(`callRemote`, `woodman.items.sell`);
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("woodman");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("woodman");
+                }
+            },
+            "tattooMain": {
+                name: "tattooMain",
+                header: "Тату-салон",
+                headerImg: "",
+                items: [{
+                        text: 'Голова'
+                    },
+                    {
+                        text: 'Торс'
+                    },
+                    {
+                        text: 'Правая рука'
+                    },
+                    {
+                        text: 'Левая рука'
+                    },
+                    {
+                        text: 'Правая нога'
+                    },
+                    {
+                        text: 'Левая нога'
+                    },
+                    {
+                        text: 'Сведение татуировок'
+                    },
+                    {
+                        text: 'Закрыть'
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Закрыть') {
+                            mp.trigger('tattoo.exit');
+                        }
+                        if (e.itemName == 'Торс') {
+                            mp.trigger('tattoo.set', 0, 0);
+                            selectMenu.showByName('tattooTorso');
+                        }
+                        if (e.itemName == 'Голова') {
+                            mp.trigger('tattoo.set', 1, 0);
+                            selectMenu.showByName('tattooHead');
+                        }
+                        if (e.itemName == 'Левая рука') {
+                            mp.trigger('tattoo.set', 2, 0);
+                            selectMenu.showByName('tattooLeftArm');
+                        }
+                        if (e.itemName == 'Правая рука') {
+                            mp.trigger('tattoo.set', 3, 0);
+                            selectMenu.showByName('tattooRightArm');
+                        }
+                        if (e.itemName == 'Левая нога') {
+                            mp.trigger('tattoo.set', 4, 0);
+                            selectMenu.showByName('tattooLeftLeg');
+                        }
+                        if (e.itemName == 'Правая нога') {
+                            mp.trigger('tattoo.set', 5, 0);
+                            selectMenu.showByName('tattooRightLeg');
+                        }
+                        if (e.itemName == 'Сведение татуировок') {
+                            mp.trigger('tattoo.delete.show');
+                        }
+                    }
+
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        mp.trigger('tattoo.exit');
+                    }
+
+                }
+            },
+            "tattooTorso": {
+                name: "tattooTorso",
+                header: "Торс",
+                headerImg: "",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('tattoo.set', 0, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('tattooMain');
+                            selectMenu.menus["tattooTorso"].i = 0;
+                            selectMenu.menus["tattooTorso"].j = 0;
+                            mp.trigger('tattoo.clear');
+                        } else {
+                            selectMenu.loader = true;
+                            mp.trigger('tattoo.buy', 0, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('tattooMain');
+                        selectMenu.menus["tattooTorso"].i = 0;
+                        selectMenu.menus["tattooTorso"].j = 0;
+                        mp.trigger('tattoo.clear');
+                    }
+                }
+            },
+            "tattooHead": {
+                name: "tattooHead",
+                header: "Голова",
+                headerImg: "",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('tattoo.set', 1, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('tattooMain');
+                            selectMenu.menus["tattooHead"].i = 0;
+                            selectMenu.menus["tattooHead"].j = 0;
+                            mp.trigger('tattoo.clear');
+                        } else {
+                            selectMenu.loader = true;
+                            mp.trigger('tattoo.buy', 1, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('tattooMain');
+                        selectMenu.menus["tattooHead"].i = 0;
+                        selectMenu.menus["tattooHead"].j = 0;
+                        mp.trigger('tattoo.clear');
+                    }
+                }
+            },
+            "tattooLeftArm": {
+                name: "tattooLeftArm",
+                header: "Левая рука",
+                headerImg: "",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('tattoo.set', 2, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('tattooMain');
+                            selectMenu.menus["tattooLeftArm"].i = 0;
+                            selectMenu.menus["tattooLeftArm"].j = 0;
+                            mp.trigger('tattoo.clear');
+                        } else {
+                            selectMenu.loader = true;
+                            mp.trigger('tattoo.buy', 2, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('tattooMain');
+                        selectMenu.menus["tattooLeftArm"].i = 0;
+                        selectMenu.menus["tattooLeftArm"].j = 0;
+                        mp.trigger('tattoo.clear');
+                    }
+                }
+            },
+            "tattooRightArm": {
+                name: "tattooRightArm",
+                header: "Правая рука",
+                headerImg: "",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('tattoo.set', 3, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('tattooMain');
+                            selectMenu.menus["tattooRightArm"].i = 0;
+                            selectMenu.menus["tattooRightArm"].j = 0;
+                            mp.trigger('tattoo.clear');
+                        } else {
+                            selectMenu.loader = true;
+                            mp.trigger('tattoo.buy', 3, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('tattooMain');
+                        selectMenu.menus["tattooRightArm"].i = 0;
+                        selectMenu.menus["tattooRightArm"].j = 0;
+                        mp.trigger('tattoo.clear');
+                    }
+                }
+            },
+            "tattooLeftLeg": {
+                name: "tattooLeftLeg",
+                header: "Левая нога",
+                headerImg: "",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('tattoo.set', 4, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('tattooMain');
+                            selectMenu.menus["tattooLeftLeg"].i = 0;
+                            selectMenu.menus["tattooLeftLeg"].j = 0;
+                            mp.trigger('tattoo.clear');
+                        } else {
+                            selectMenu.loader = true;
+                            mp.trigger('tattoo.buy', 4, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('tattooMain');
+                        selectMenu.menus["tattooLeftLeg"].i = 0;
+                        selectMenu.menus["tattooLeftLeg"].j = 0;
+                        mp.trigger('tattoo.clear');
+                    }
+                }
+            },
+            "tattooRightLeg": {
+                name: "tattooRightLeg",
+                header: "Правая нога",
+                headerImg: "",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('tattoo.set', 5, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('tattooMain');
+                            selectMenu.menus["tattooRightLeg"].i = 0;
+                            selectMenu.menus["tattooRightLeg"].j = 0;
+                            mp.trigger('tattoo.clear');
+                        } else {
+                            selectMenu.loader = true;
+                            mp.trigger('tattoo.buy', 5, e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('tattooMain');
+                        selectMenu.menus["tattooRightLeg"].i = 0;
+                        selectMenu.menus["tattooRightLeg"].j = 0;
+                        mp.trigger('tattoo.clear');
+                    }
+                }
+            },
+            "tattooDelete": {
+                name: "tattooDelete",
+                header: "Сведение татуировок",
+                headerImg: "",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemFocusChanged') {
+                        if (e.itemName != 'Назад') {
+                            mp.trigger('tattoo.clear.single', e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('tattooMain');
+                            selectMenu.menus["tattooDelete"].i = 0;
+                            selectMenu.menus["tattooDelete"].j = 0;
+                            mp.trigger('tattoo.clear');
+                        } else {
+                            selectMenu.loader = true;
+                            mp.trigger('tattoo.delete', e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('tattooMain');
+                        selectMenu.menus["tattooDelete"].i = 0;
+                        selectMenu.menus["tattooDelete"].j = 0;
+                        mp.trigger('tattoo.clear');
+                    }
+                }
+            },
+            "ownVehiclesList": {
+                name: "ownVehiclesList",
+                header: "Личный транспорт",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        } else {
+                            mp.trigger('vehicles.own.menu.show', e.itemIndex);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.show = false;
+                    }
+                }
+            },
+            "ownVehicleMenu": {
+                name: "ownVehicleMenu",
+                header: "Личный транспорт",
+                items: [
+                    {
+                        text: 'Номер',
+                        values: ['0']
+                    },
+                    {
+                        text: 'Поиск по GPS'
+                    },
+                    {
+                        text: 'Доставить',
+                        values: ['$100']
+                    },
+                    {
+                        text: 'Назад'
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('ownVehiclesList');
+                        }
+                        if (e.itemName == 'Поиск по GPS') {
+                            selectMenu.show = false;
+                            mp.trigger('vehicles.own.find');
+                        }
+                        if (e.itemName == 'Доставить') {
+                            selectMenu.show = false;
+                            mp.trigger('vehicles.own.deliver');
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('ownVehiclesList');
                     }
                 }
             },
@@ -7234,6 +8527,8 @@ var selectMenu = new Vue({
             var item = this.getItemByName(itemName, menu.items);
             if (!item) return;
             Vue.set(item, 'values', values);
+            menu.i = 0;
+            menu.j = 0;
         },
         setItems(menuName, items) {
             if (typeof items == 'string') items = JSON.parse(items);
@@ -7320,7 +8615,7 @@ var selectMenu = new Vue({
             };
         },
         isEditing() {
-            return this.menu && this.valuesType(this.menu.i) == 3;
+            return this.show && this.menu && this.valuesType(this.menu.i) == 3;
         },
     },
     watch: {

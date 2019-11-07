@@ -14,12 +14,15 @@ mp.weapons = {
     lastData: {},
     hashes: [],
     weaponData: require('weapons/data.js'),
+    lastIsFreeAiming: false,
+    lastIsInMeleeCombat: false,
+    lastWeapon: null,
 
-    sync() {
+    sync(force = false) {
         var data = {};
         this.hashes.forEach(hash => {
             var ammo = this.getAmmoWeapon(hash);
-            if (this.lastData[hash] == ammo) return;
+            if (!force && this.lastData[hash] == ammo) return;
             this.lastData[hash] = ammo;
             data[hash] = ammo;
         });
@@ -64,6 +67,29 @@ mp.events.add({
         //     type: ${mp.weapons.getAmmoType()} slot: ${mp.weapons.getWeaponSlot(mp.weapons.currentWeapon())}`);
         // mp.utils.drawText2d(`hashes: ${JSON.stringify(mp.weapons.hashes)}`, [0.8, 0.6]);
         // mp.utils.drawText2d(`name: ${mp.weapons.getWeaponName(mp.weapons.currentWeapon())}`, [0.8, 0.65]);
+        // mp.utils.drawText2d(`mp.game.player.isFreeAiming(): ${mp.game.player.isFreeAiming()}`);
+
+        var isFreeAiming = mp.game.player.isFreeAiming();
+        if (isFreeAiming && !mp.weapons.lastIsFreeAiming) {
+            mp.events.call("playerStartFreeAiming");
+        }
+        if (!isFreeAiming && mp.weapons.lastIsFreeAiming) {
+            mp.events.call("playerEndFreeAiming");
+        }
+        mp.weapons.lastIsFreeAiming = isFreeAiming;
+
+        var isInMeleeCombat = mp.players.local.isInMeleeCombat();
+        if (isInMeleeCombat && !mp.weapons.lastIsInMeleeCombat) {
+            mp.events.call("playerStartMeleeCombat");
+        }
+        if (!isInMeleeCombat && mp.weapons.lastIsInMeleeCombat) {
+            mp.events.call("playerEndMeleeCombat");
+        }
+        mp.weapons.lastIsInMeleeCombat = isInMeleeCombat;
+
+        var weapon = mp.players.local.weapon;
+        if (weapon != mp.weapons.lastWeapon) mp.events.call("playerWeaponChanged", weapon);
+        mp.weapons.lastWeapon = weapon;
     },
     "time.main.tick": () => {
         if (!mp.weapons.needSync) return;
@@ -86,9 +112,10 @@ mp.events.add({
         var i = mp.weapons.hashes.indexOf(hash);
         if (i == -1) return;
         mp.weapons.hashes.splice(i, 1);
+        delete mp.weapons.lastData[hash];
     },
-    "weapons.ammo.sync": () => {
-        mp.weapons.sync();
+    "weapons.ammo.sync": (force = false) => {
+        mp.weapons.sync(force);
     },
     "weapons.ammo.remove": (sqlId, hash) => {
         hash = parseInt(hash);

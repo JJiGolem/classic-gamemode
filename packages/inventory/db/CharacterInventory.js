@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         playerId: {
             type: DataTypes.INTEGER(11),
-            allowNull: false
+            allowNull: true
         },
         itemId: {
             type: DataTypes.INTEGER(11),

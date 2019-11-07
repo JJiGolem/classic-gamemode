@@ -1,8 +1,9 @@
 #prompt {
     background: rgb(0, 0, 0, 0.6);
-    border-radius: 0px;
+    border-radius: 1vh;
     color: white;
-    font-family: "Chalet-LondonNineteenSixty";
+    font-family: Ubuntu;
+    font-size: 1.3vh;
     position: absolute;
     right: 2vh;
     top: 3vh;
@@ -16,7 +17,7 @@
 }
 
 #prompt span {
-    background: #fffd;
+    background: #FFDF29;
     border-radius: 5px;
     color: #000;
     font-weight: bold;

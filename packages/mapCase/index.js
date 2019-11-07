@@ -99,6 +99,7 @@ module.exports = {
             var rank = factions.getRankById(rec.character.factionId, rec.character.factionRank);
             result.push({
                 id: rec.character.id,
+                num: rec.id,
                 name: rec.name,
                 rank: rank.rank
             });
@@ -109,6 +110,7 @@ module.exports = {
         this.removePoliceCall(player.character.id);
         var call = {
             id: player.character.id,
+            num: player.id,
             name: player.name,
             description: description
         };
@@ -156,6 +158,7 @@ module.exports = {
             if (!factions.isPoliceFaction(rec.character.factionId)) return;
             rec.call(`mapCase.pd.wanted.add`, [{
                 id: player.character.id,
+                num: player.id,
                 name: player.name,
                 description: player.character.wantedCause || "-",
                 danger: player.character.wanted
@@ -304,6 +307,7 @@ module.exports = {
         this.removeHospitalCall(player.character.id);
         var call = {
             id: player.character.id,
+            num: player.id,
             name: player.name,
             description: description
         };

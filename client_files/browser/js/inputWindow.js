@@ -72,6 +72,16 @@ var inputWindow = new Vue({
                 this.show = false;
                 mp.trigger(`callRemote`, `fib.vehicle.plate.set`, JSON.stringify(data));
             }
+            if (this.name == 'dice') {
+                if (isNaN(this.value)) return notifications.push(`error`, `Требуется число`);
+                if (this.value <= 0 || this.value > 1000000) return notifications.push(`error`, `Некорректное число`);
+                var data = {
+                    targetId: this.playerId,
+                    amount: parseInt(this.value),
+                };
+                this.show = false;
+                mp.trigger(`callRemote`, `casino.dice.offer.send`, JSON.stringify(data));
+            }
         },
         decline() {
             if (this.name == 'money_giving') {
@@ -90,6 +100,9 @@ var inputWindow = new Vue({
                 this.show = false;
             }
             if (this.name == 'fib_veh_plate') {
+                this.show = false;
+            }
+            if (this.name == 'dice') {
                 this.show = false;
             }
         },

@@ -1,6 +1,7 @@
 "use strict";
 
 let playerMovingDisabled = false;
+let isCapsuleCollision = false;
 
 mp.utils = {
     /// Управление камерой
@@ -227,6 +228,19 @@ mp.utils = {
         });
         return nearObj;
     },
+    // Получить ближ. позицию
+    getNearPos(pos, positions, range = Number.MAX_VALUE) {
+        var nearPos = null;
+        var minDist = Number.MAX_VALUE;
+        for (var i = 0; i < positions.length; i++) {
+            var distance = mp.vdist(pos, positions[i]);
+            if (distance < minDist && distance < range) {
+                nearPos = positions[i];
+                minDist = distance;
+            }
+        }
+        return nearPos;
+    },
     // Рисовать текст на экране
     drawText2d(text, pos = [0.8, 0.5], color = [255, 255, 255, 255], scale = [0.3, 0.3]) {
         mp.game.graphics.drawText(text, pos, {
@@ -320,6 +334,34 @@ mp.utils = {
         array.forEach(num => sum += num);
         return sum;
     },
+    // Хеш объект перед игроком
+    getFrontObjectHash(player) {
+        var raycast = this.frontRaycast(player);
+        if (!raycast) return null;
+
+        return mp.game.invoke('0x9F47B058362C84B5', raycast.entity);
+    },
+    // Луч от игрок перед собой
+    frontRaycast(player) {
+        var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
+        var endPos = player.getOffsetFromInWorldCoords(0, 1, 0);
+        return mp.raycasting.testPointToPoint(startPos, endPos);
+    },
+    // Добавить текст над головой игрока
+    addOverheadText(player, text, color = [255, 255, 255, 255]) {
+        if (typeof player == 'number') player = mp.players.atRemoteId(player);
+        if (!player) return;
+        if (player.overheadText) mp.timer.remove(player.overheadText.timer);
+
+        player.overheadText = {
+            text: text,
+            color: color,
+            scale: [0.3, 0.3],
+        };
+        player.overheadText.timer = mp.timer.add(() => {
+            delete player.overheadText;
+        }, 5000);
+    },
 };
 
 
@@ -365,6 +407,14 @@ mp.events.add("godmode.set", (enable) => {
     mp.players.local.setProofs(enable, enable, enable, enable, enable, enable, enable, enable);
 });
 
+// Коллизия
+mp.events.add("collision.set", (enable) => {
+    isCapsuleCollision = enable;
+});
+
+mp.events.add("addOverheadText", (playerId, text, color) => {
+    mp.utils.addOverheadText(playerId, text, color);
+});
 
 /// Отключение движения игрока
 mp.events.add('render', () => {
@@ -382,4 +432,15 @@ mp.events.add('render', () => {
             mp.game.controls.disableControlAction(24, i, true); /// цифры 1-9
         }
     }
+    if (isCapsuleCollision) mp.players.local.setCapsule(0.00001);
+    mp.players.forEachInStreamRange(rec => {
+        if (rec.overheadText) {
+            var info = rec.overheadText;
+            var pos3d = rec.position;
+            pos3d.z += 1.5;
+            var pos2d = mp.game.graphics.world3dToScreen2d(pos3d);
+            if (!pos2d) return;
+            mp.utils.drawText2d(info.text, [pos2d.x, pos2d.y], info.color, info.scale);
+        }
+    });
 });
