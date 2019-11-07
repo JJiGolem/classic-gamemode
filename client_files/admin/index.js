@@ -17,7 +17,7 @@ mp.events.add({
     'render': () => {
         let isVanished = mp.players.local.getVariable('isVanished') || false;
         if (!isVanished) return;
-        mp.game.graphics.drawText("INVISIBILITY ON", [0.93, 0.1], {
+        mp.game.graphics.drawText("INVISIBILITY ON", [0.93, 0.12], {
             font: 0,
             color: [252, 223, 3, 200],
             scale: [0.37, 0.37],
