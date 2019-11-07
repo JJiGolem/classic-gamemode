@@ -153,8 +153,11 @@ module.exports = {
 
         if (count == order.prodCount) this.removeBizOrder(order);
         else {
+            var price = parseInt(order.orderPrice * (count / order.prodCount));
+            order.orderPrice -= price;
             order.prodCount -= count;
             order = Object.assign({}, order);
+            order.orderPrice = price;
             order.prodCount = count;
         }
 
@@ -185,7 +188,10 @@ module.exports = {
 
         // this.removeBizOrderByBizId(order.bizId);
         var oldOrder = this.getBizOrder(order.bizId);
-        if (oldOrder) oldOrder.prodCount += order.prodCount;
+        if (oldOrder) {
+            oldOrder.orderPrice += order.orderPrice;
+            oldOrder.prodCount += order.prodCount;
+        }
         else this.bizOrders.push(order);
 
         delete veh.products;
@@ -198,10 +204,10 @@ module.exports = {
         var order = veh.products.bizOrder;
         var biz = bizes.getBizById(order.bizId);
 
-        var max = biz.info.productsMaxCount - biz.info.productsCount;
+        var max = Math.max(biz.info.productsMaxCount - biz.info.productsCount, biz.info.productsOrder);
         var count = Math.clamp(order.prodCount, 1, max);
 
-        bizes.readyOrder(order.bizId);
+        bizes.readyOrder(order.bizId, count);
 
         delete veh.products;
         veh.setVariable("label", null);
