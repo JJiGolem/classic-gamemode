@@ -90,6 +90,7 @@ mp.events.add({
     },
     "police.follow.stop": () => {
         mp.police.stopFollowToPlayer();
+        mp.mafia.stopFollowToPlayer();
     },
     "police.search.blip.create": (name, pos) => {
         mp.police.searchBlipCreate(name, pos);

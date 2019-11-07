@@ -238,6 +238,7 @@ mp.events.add({
     },
     "mafia.follow.stop": () => {
         mp.mafia.stopFollowToPlayer();
+        mp.police.stopFollowToPlayer();
     },
     "mafia.storage.info.set": (data) => {
         mp.mafia.setStorageInfo(data);
