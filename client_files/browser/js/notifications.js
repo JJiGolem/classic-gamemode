@@ -10,7 +10,7 @@ var notifications = new Vue({
         // Время показа уведомления
         showTime: 10000,
         // Макс. кол-во уведомлений на экране
-        maxCount: 7, // set #notifications .notif-box:nth-last-child in notifications.css
+        maxCount: 5, // set #notifications .notif-box:nth-last-child in notifications.css
         count: 0, //Для уникального ключа.
     },
 
