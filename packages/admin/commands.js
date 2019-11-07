@@ -850,4 +850,20 @@ module.exports = {
             out.log(`Скин изменен`, player);
         }
     },
+    "/vanish": {
+        description: "Включить/отключить режим невидимки",
+        access: 2,
+        args: "",
+        handler: (player, args, out) => {
+            if (!player.isVanished) {
+                player.setVariable('isVanished', true);
+                player.isVanished = true;
+                out.info('Режим невидимки включен', player);
+            } else {
+                player.setVariable('isVanished', false);
+                player.isVanished = false;
+                out.info('Режим невидимки отключен', player);
+            }
+        }
+    },
 }

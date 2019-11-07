@@ -64,6 +64,10 @@ function getClosestPlayer(pos, range = INTERACTION_RANGE) {
     mp.players.forEachInStreamRange((current) => {
         if (current == mp.players.local) return; //for tests
         if (current.vehicle) return;
+
+        let isVanished = current.getVariable('isVanished') || false;
+        if (isVanished) return;
+        
         var distToPlayer = mp.vdist(pos, current.position);
         if (distToPlayer < range) {
             if (distToPlayer < minDist) {
