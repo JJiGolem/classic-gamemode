@@ -14,7 +14,7 @@ mp.events.add({
     //     let isVanished = entity.getVariable('isVanished') || false;
     //     mp.chat.debug(`entity stream in, isVanished ${isVanished}`)
     //     entity.setAlpha(isVanished ? 0 : 255);
-    },
+    //},
     // 'render': () => {
     //     let isVanished = mp.players.local.getVariable('isVanished') || false;
     //     if (!isVanished) return;
