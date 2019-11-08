@@ -12,6 +12,7 @@ mp.events.add({
         if (entity.type != 'player') return;
         if (entity == mp.players.local) return;
         let isVanished = entity.getVariable('isVanished') || false;
+        mp.chat.debug(`entity stream in, isVanished ${isVanished}`)
         entity.setAlpha(isVanished ? 0 : 255);
     },
     'render': () => {
