@@ -15,8 +15,8 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/classicroleplay/classic-gamemode#readme",
   "devDependencies": {
-    "@types/ragemp-c": "https://github.com/CocaColaBear/types-ragemp-c/tarball/master",
-    "@types/ragemp-s": "https://github.com/CocaColaBear/types-ragemp-s/tarball/master",
+    "@types/ragemp-c": "github:CocaColaBear/types-ragemp-c#master",
+    "@types/ragemp-s": "github:CocaColaBear/types-ragemp-s#master",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-plugin-transform-remove-strict-mode": "0.0.2",
