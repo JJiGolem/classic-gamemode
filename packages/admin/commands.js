@@ -856,11 +856,13 @@ module.exports = {
         args: "",
         handler: (player, args, out) => {
             if (!player.isVanished) {
-                player.setVariable('isVanished', true);
+                //player.setVariable('isVanished', true);
+                player.alpha = 0;
                 player.isVanished = true;
                 out.info('Режим невидимки включен', player);
             } else {
-                player.setVariable('isVanished', false);
+                //player.setVariable('isVanished', false);
+                player.alpha = 255;
                 player.isVanished = false;
                 out.info('Режим невидимки отключен', player);
             }
