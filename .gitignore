@@ -1,8 +1,8 @@
 bridge
 maps
-node_modules
-!node_modules/@types/ragemp-c/index.d.ts
-!node_modules/@types/ragemp-s/index.d.ts
+node_modules/*
+!node_modules/@types/
+node_modules/@types/node
 plugins
 bt.dat
 conf.json
