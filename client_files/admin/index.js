@@ -8,12 +8,12 @@ mp.events.add({
         var veh = mp.players.local.vehicle;
         (veh) ? veh.setVelocity(0, 0, 10) : mp.players.local.setVelocity(0, 0, 10);
     },
-    'entityStreamIn': (entity) => {
-        if (entity.type != 'player') return;
-        if (entity == mp.players.local) return;
-        let isVanished = entity.getVariable('isVanished') || false;
-        mp.chat.debug(`entity stream in, isVanished ${isVanished}`)
-        entity.setAlpha(isVanished ? 0 : 255);
+    // 'entityStreamIn': (entity) => {
+    //     if (entity.type != 'player') return;
+    //     if (entity == mp.players.local) return;
+    //     let isVanished = entity.getVariable('isVanished') || false;
+    //     mp.chat.debug(`entity stream in, isVanished ${isVanished}`)
+    //     entity.setAlpha(isVanished ? 0 : 255);
     },
     // 'render': () => {
     //     let isVanished = mp.players.local.getVariable('isVanished') || false;
