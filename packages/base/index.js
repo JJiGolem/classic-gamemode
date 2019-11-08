@@ -10,8 +10,8 @@ const isBuild = mp.config.isBuild;
 global.db = require('./db');
 global.ignoreModules = require('./ignoreModules');
 let ignoreClientModules = require('./ignoreClientModules');
-let activeClientModules = new Array();
-global.activeServerModules = new Array();
+let activeClientModules = [];
+global.activeServerModules = [];
 
 /// Подключение функций любого существующего, включенного модуля
 /// Если модуль существует, возвращаются его функции (те что в module.exports, в index.js)
@@ -40,20 +40,20 @@ global.call = (moduleName) => {
         return newObject;
     }
     return require(path.dirname(__dirname)+ "/" + moduleName + "/index.js");
-}
+};
 
 /// Функция, которая вызвается модулем, для указания того, что он инициализирован
 global.inited = (dirname) => {
     let path = dirname.split("\\");
     mp.events.call('inited', path[path.length - 1]);
-}
+};
 
 let modulesToLoad = [];
 let playersJoinPool = [];
 
 mp.events.add('inited', (moduleName) => {
     modulesToLoad.splice(modulesToLoad.findIndex(x => x == moduleName), 1);
-    if (modulesToLoad.length == 0) {
+    if (modulesToLoad.length === 0) {
         playersJoinPool.forEach(player => {
             if (player == null) return;
             player.call('init', [activeClientModules]);
@@ -64,7 +64,7 @@ mp.events.add('inited', (moduleName) => {
 // Дебаг
 global.debug = (text) => {
     require('../terminal').debug(text);
-}
+};
 
 if (!isBuild) {
     require('../../scripts/dev').compile();
@@ -89,15 +89,15 @@ db.connect(function() {
     });
 
     fs.readdirSync(path.dirname(__dirname) + "/../client_packages").forEach(file => {
-        !new Array('base', 'index.js', '.listcache', 'browser', 'utils').includes(file) && !ignoreClientModules.includes(file) && activeClientModules.push(file);
+        !['base', 'index.js', '.listcache', 'browser', 'utils'].includes(file) && !ignoreClientModules.includes(file) && activeClientModules.push(file);
     });
 
     mp.events.call('init');
 });
-
+console.log(mp.events);
 
 mp.events.add('playerJoin', (player) => {
-    if (modulesToLoad.length != 0) return playersJoinPool.push(player);
+    if (modulesToLoad.length !== 0) return playersJoinPool.push(player);
     player.call('init', [activeClientModules]);
 });
 

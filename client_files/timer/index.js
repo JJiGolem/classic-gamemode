@@ -80,12 +80,12 @@ mp.timer = {
         if (timer == null) return;
         if (timer.id == null) return;
         let index = timers.findIndex( x => x.id == timer.id);
-        index != -1 && timers.splice(index, 1);
+        index !== -1 && timers.splice(index, 1);
     },
     addInterval(handler, time) {
         return this.add(handler, time, true);
     },
-}
+};
 mp.timer.init();
 
 
