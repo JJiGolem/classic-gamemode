@@ -142,20 +142,16 @@ function createCheckpoint(data, timeout) {
     mp.chat.debug(timeout);
     mp.chat.debug(JSON.stringify(data));
     checkpointTimer = mp.timer.add(() => {
-        try {
-            mp.chat.debug('new checkpoint')
-            checkpoint = mp.checkpoints.new(5, new mp.Vector3(data.x, data.y, data.z), 10,
-                {
-                    color: data.isStop ? [30, 206, 255, 255] : [255, 246, 0, 255],
-                    visible: true,
-                    dimension: 0
-                });
-            blip = mp.blips.new(1, new mp.Vector3(data.x, data.y, data.z), { color: data.isStop ? 26 : 71, name: "Остановка" });
-            blip.setRoute(true);
-            blip.setRouteColour(data.isStop ? 26 : 71);
-        } catch (err) {
-            mp.console(JSON.stringify(err));
-        }
+        mp.chat.debug('new checkpoint');
+        checkpoint = mp.checkpoints.new(5, new mp.Vector3(data.x, data.y, data.z), 10,
+            {
+                color: data.isStop ? [30, 206, 255, 255] : [255, 246, 0, 255],
+                visible: true,
+                dimension: 0
+            });
+        blip = mp.blips.new(1, new mp.Vector3(data.x, data.y, data.z), { color: data.isStop ? 26 : 71, name: "Остановка" });
+        blip.setRoute(true);
+        blip.setRouteColour(data.isStop ? 26 : 71);
     }, timeout);
 }
 function deleteCheckpoint() {

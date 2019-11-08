@@ -2,7 +2,7 @@
 /// Глобальный таймер
 
 const duration = 1000;
-let timers = new Array();
+let timers = [];
 let gId = 0;
 
 let checker = null;
@@ -71,10 +71,10 @@ module.exports = {
     remove(timer) {
         if (timer == null) return;
         if (timer.id == null) return;
-        let index = timers.findIndex(x => x.id == timer.id);
-        index != -1 && timers.splice(index, 1);
+        let index = timers.findIndex(x => x.id === timer.id);
+        index !== -1 && timers.splice(index, 1);
     },
     addInterval(handler, time) {
         return this.add(handler, time, true);
     },
-}
+};
