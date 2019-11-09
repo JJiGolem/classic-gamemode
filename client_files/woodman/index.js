@@ -170,7 +170,7 @@ mp.woodman = {
             else mp.prompt.showByName('woodman_log_take_ax');
 
             this.logSquats = squats;
-            this.logObj = mp.objects.at(objId);
+            this.logObj = mp.objects.atRemoteId(objId);
         } else {
             mp.prompt.hide();
 
