@@ -850,4 +850,33 @@ module.exports = {
             out.log(`Скин изменен`, player);
         }
     },
+    "/vanish": {
+        description: "Включить/отключить режим невидимки",
+        access: 2,
+        args: "",
+        handler: (player, args, out) => {
+            if (!player.isVanished) {
+                player.setVariable('isVanished', true);
+                player.isVanished = true;
+                out.info('Режим невидимки включен', player);
+            } else {
+                player.setVariable('isVanished', false);
+                player.isVanished = false;
+                out.info('Режим невидимки отключен', player);
+            }
+        }
+    },
+    "/stats": {
+        description: "Статистика персонажа",
+        access: 5,
+        args: "[ID]:n",
+        handler: (player, args, out) => {
+            let target = mp.players.at(args[0]);
+            if (!target) return out.error('Игрок не найден', player);
+
+            let data = target.character.dataValues;
+            data.phone = target.phone ? target.phone.number : null;
+            player.call('admin.stats.show', [JSON.stringify(data)]);
+        }
+    },
 }

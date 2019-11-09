@@ -8381,8 +8381,7 @@ var selectMenu = new Vue({
             "ownVehicleMenu": {
                 name: "ownVehicleMenu",
                 header: "Личный транспорт",
-                items: [
-                    {
+                items: [{
                         text: 'Номер',
                         values: ['0']
                     },
@@ -8423,6 +8422,172 @@ var selectMenu = new Vue({
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
                         selectMenu.showByName('ownVehiclesList');
+                    }
+                }
+            },
+            "rentMenu": {
+                name: "rentMenu",
+                header: "Аренда",
+                items: [{
+                        text: "Арендовать транспорт",
+                        i: 0,
+                    },
+                    {
+                        text: "Отмена",
+                        i: 0,
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Арендовать транспорт') {
+                            mp.trigger('callRemote', `rent.vehicle.rent`);
+                        }
+                        if (e.itemName == 'Отмена') {
+                            mp.trigger(`rent.rentmenu.close`);
+                        }
+                    }
+                }
+            },
+            "animations": {
+                name: "animations",
+                header: "Анимации",
+                items: [{
+                        text: "Танцы",
+                    },
+                    {
+                        text: "Армия"
+                    },
+                    {
+                        text: "Полиция"
+                    },
+                    {
+                        text: "Гражданские"
+                    },
+                    {
+                        text: "Работы"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                list: {
+                    "Танцы": [
+                        {
+                            id: 926,
+                            name: "Дёргать руками и двигаться на месте"
+                        },
+                    ],
+                    "Армия": [
+                        {
+                            id: 1841,
+                            name: "Воинское приветствие"
+                        },
+                    ],
+                    "Полиция": [
+                        {
+                            id: 354,
+                            name: "Стойка, руки на поясе"
+                        },
+                    ],
+                    "Гражданские": [
+                        {
+                            id: 1016,
+                            name: "Демонстрация мышц"
+                        },
+                    ],
+                    "Работы": [
+                        {
+                            id: 543,
+                            name: "Залезть в двигатель"
+                        },
+                    ],
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        } else {
+                            var key = Object.keys(this.list)[e.itemIndex];
+                            selectMenu.menus["animationList"].init(key, this.list[key]);
+                            selectMenu.showByName("animationList");
+                        }
+                    }
+                }
+            },
+            "animationList": {
+                name: "animationList",
+                header: "Категория",
+                items: [{
+                        text: "Анимация 1",
+                    },
+                    {
+                        text: "Анимация 2"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                list: null,
+                isPlaying: false,
+                init(header, list) {
+                    this.header = header;
+                    this.list = list;
+                    this.isPlaying = false;
+
+                    var items = [];
+                    list.forEach(anim => {
+                        items.push({
+                            text: anim.name
+                        });
+                    });
+                    items.push({
+                        text: "Вернуться"
+                    });
+                    selectMenu.setItems("animationList", items);
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("animations");
+                            if (this.isPlaying) mp.trigger(`callRemote`, `animations.stop`);
+                        } else {
+                            var animId = this.list[e.itemIndex].id;
+                            mp.trigger(`callRemote`, `animations.playById`, animId);
+                            this.isPlaying = true;
+                        }
+                    } else if (eventName == 'onBackspacePressed') {
+                        selectMenu.showByName("animations");
+                        if (this.isPlaying) mp.trigger(`callRemote`, `animations.stop`);
                     }
                 }
             },

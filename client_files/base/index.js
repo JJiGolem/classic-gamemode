@@ -15,9 +15,9 @@ var debug = (text) => {
 };
 
 // Отображение в дискорде
-mp.discord.update('Classic Roleplay | Alpha', 'classic-rp.ru');
-
-
+mp.events.add('time.minute.tick', () => {
+    mp.discord.update('Classic Roleplay | Testing', 'classic-rp.ru');
+});
 
 
 /// Осноные клиентские события

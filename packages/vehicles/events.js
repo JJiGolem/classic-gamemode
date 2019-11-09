@@ -50,7 +50,7 @@ module.exports = {
                     console.log(err);
                     timer.remove(player.indicatorsUpdateTimer);
                 }
-            }, 1000);
+            }, 1000, true);
         }
         player.call('vehicles.mileage.start', [vehicle.mileage]);
 
@@ -462,7 +462,7 @@ module.exports = {
         mp.vehicles.forEach(veh => {
             if (!veh.db) return;
             if (!veh.lastPlayerTime) return;
-            if (veh.db.key == 'private' || veh.db.key == 'market') return;
+            if (veh.db.key == 'private' || veh.db.key == 'market' || veh.db.key == 'rent') return;
             if (start.getTime() - veh.lastPlayerTime < vehicles.vehWaitSpawn) return;
             if (vehicles.getOccupants(veh).length) return;
 

@@ -608,15 +608,14 @@ module.exports = {
     "death.spawn": (player, groundZ) => {
         if (!player.character) return;
 
-        var weapons = inventory.getArrayWeapons(player);
-        if (!weapons.length) return;
+        var handsItem = inventory.getHandsItem(player);
+        if (!handsItem || !inventory.isWeaponItem(handsItem)) return;
 
         var pos = player.position;
         pos.z = groundZ;
-        weapons.forEach(weapon => {
-            inventory.putGround(player, weapon, pos);
-        });
-        notifs.warning(player, `Вы потеряли оружие`, `Инвентарь`);
+        inventory.putGround(player, handsItem, pos);
+
+        notifs.warning(player, `Вы потеряли оружие из рук`, `Инвентарь`);
     },
     "playerQuit": (player) => {
         if (!player.character) return;

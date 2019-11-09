@@ -353,7 +353,7 @@ var offerDialog = new Vue({
     },
     watch: {
         dialog(val) {
-            if (val) busy.add("offerDialog", false, true);
+            if (val) busy.add("offerDialog", true, true);
             else busy.remove("offerDialog", true);
         }
     },

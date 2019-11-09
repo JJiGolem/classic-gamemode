@@ -1,6 +1,8 @@
 bridge
 maps
-node_modules
+node_modules/*
+!node_modules/@types/
+node_modules/@types/node
 plugins
 bt.dat
 conf.json
