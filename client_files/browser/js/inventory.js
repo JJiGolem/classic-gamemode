@@ -492,6 +492,7 @@ var inventory = new Vue({
                 columns: {},
                 bodyFocus: null,
                 hotkeyFocus: null,
+                binFocus: false,
             },
             x: 0,
             y: 0
@@ -848,6 +849,17 @@ var inventory = new Vue({
                     columns.columns = {};
                 },
             }
+            handlers[e.type](e);
+        },
+        binMouseHandler(e) {
+            var handlers = {
+                'mouseenter': (e) => {
+                    this.itemDrag.accessColumns.binFocus = true;
+                },
+                'mouseleave': (e) => {
+                    this.itemDrag.accessColumns.binFocus = false;
+                },
+            };
             handlers[e.type](e);
         },
         isColumnBusy(place, pocketI, index, item) {
@@ -1359,6 +1371,10 @@ var inventory = new Vue({
                     pocketI: columns.pocketI,
                     placeSqlId: columns.placeSqlId
                 });
+            } else if (columns.binFocus) {
+                self.deleteItem(self.itemDrag.item.sqlId);
+                mp.trigger(`inventory.ground.put`, item.sqlId);
+                columns.binFocus = false;
             } else {
                 var index = parseInt(Object.keys(columns.columns)[0]);
                 if (!columns.deny && columns.placeSqlId != null &&

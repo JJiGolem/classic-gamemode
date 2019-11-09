@@ -98,6 +98,13 @@ mp.events.add({
             mp.game.controls.disableControlAction(0, 24, true); /// удары
             mp.game.controls.disableControlAction(0, 257, true); /// стрельба
             mp.game.controls.disableControlAction(0, 140, true); /// удары R
+
+            if (mp.players.local.vehicle) {
+                mp.game.controls.disableControlAction(0, 59, true); /// INPUT_VEH_MOVE_LR
+                mp.game.controls.disableControlAction(0, 60, true); /// INPUT_VEH_MOVE_UD
+                mp.game.controls.disableControlAction(0, 71, true); /// INPUT_VEH_ACCELERATE
+                mp.game.controls.disableControlAction(0, 72, true); /// INPUT_VEH_BRAKE
+            }
         }
     },
     "police.follow.start": (playerId) => {

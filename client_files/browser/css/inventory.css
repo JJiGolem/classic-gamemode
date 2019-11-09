@@ -775,6 +775,7 @@
     pointer-events: none;
     padding: 0;
     position: absolute;
+    z-index: 1;
 }
 
 #inventory .item-menu {
