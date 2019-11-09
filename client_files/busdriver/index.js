@@ -139,10 +139,7 @@ mp.keys.bind(0x75, true, () => {
 
 function createCheckpoint(data, timeout) {
     deleteCheckpoint();
-    mp.chat.debug(timeout);
-    mp.chat.debug(JSON.stringify(data));
     checkpointTimer = mp.timer.add(() => {
-        mp.chat.debug('new checkpoint');
         checkpoint = mp.checkpoints.new(5, new mp.Vector3(data.x, data.y, data.z), 10,
             {
                 color: data.isStop ? [30, 206, 255, 255] : [255, 246, 0, 255],
