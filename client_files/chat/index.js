@@ -8,7 +8,7 @@ mp.chat = {
     },
     correctName(name) {
         if (name == mp.players.local.name) return name;
-        var player = mp.utils.getPlayerByName(name);
+        let player = mp.utils.getPlayerByName(name);
         if (player && !player.isFamiliar) return `Незнакомец`;
         return name;
     }
@@ -96,7 +96,7 @@ mp.events.add('chat.load', () => {
                 chatOpacity = 0.0;
                 break;
             case 0.0:
-                chatOpacity = 1.0
+                chatOpacity = 1.0;
                 break;
         }
         mp.callCEFR('setOpacityChat', [chatOpacity]);
@@ -224,7 +224,7 @@ mp.events.add('chat.action.try', (nickname, id, message, result) => {
 mp.events.add('chat.message.push', (message) => {
     if (message.length > 100) {
         message = message.slice(0, 100);
-    };
+    }
     mp.callCEFR('pushChatMessage', [message]);
 });
 
