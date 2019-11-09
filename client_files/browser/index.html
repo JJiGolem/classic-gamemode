@@ -146,7 +146,7 @@
     </div>
 
     <div v-cloak id="offerDialog" v-if="dialog">
-        <div class="quick" v-if="!dialog.price">
+        <div class="quick">
             <div class="agree" @click="dialog.yes(); hide()">
                 <svg :class="{green: green}" width="37" height="37" viewBox="0 0 37 37">
                     <circle  cx="18.5" cy="18.5" r="17.5" stroke-width="2"/>
@@ -165,16 +165,6 @@
                     <circle class="fill" cx="18.5" cy="18.5" r="10.5"/>
                     <path d="M13.1716 25V12.4H14.5036L22.4416 22.498V12.4H23.8276V25H22.6936L14.5576 14.668V25H13.1716Z" fill="white"/>
                 </svg>
-            </div>
-        </div>
-        <div class="offer" v-else>
-            <div>
-                <div class="head">Предложение от {{ dialog.name }}</div>
-                <div class="content" v-html="dialog.text"></div>
-                <div class="btns">
-                    <div class="agree" @click="dialog.yes(); hide()">Подтвердить</div>
-                    <div class="cancel" @click="dialog.no(); hide()">Отменить</div>
-                </div>
             </div>
         </div>
     </div>
@@ -818,12 +808,20 @@
     </div>
 
 
-    <div v-cloak="v-cloak" id="accept-window" v-if="show">
-        <div class="header">{{ header }}</div>
+    <div v-cloak id="accept-window" v-if="show" :style="{opacity: 1}">
+        <div>
+            <div class="head">{{ header }}</div>
+            <div class="content" v-html="text"></div>
+            <div class="btns">
+                <div class="agree" @click="accept()">Подтвердить</div>
+                <div class="cancel" @click="decline()">Отменить</div>
+            </div>
+        </div>
+        <!--<div class="header">{{ header }}</div>
         <div class="footer">
             <div class="left" @click="accept">{{ leftWord }}</div>
             <div class="right" @click="decline">{{ rightWord }}</div>
-        </div>
+        </div>-->
     </div>
 
 
@@ -1537,7 +1535,7 @@
             <div class="hint sec">Введите число CC, которые вы бы хотели обменять</div>
             <input placeholder="Введите число..." v-model="price" @keypress="inputCheck($event)" @keypress.enter="convert()" @focus="setFocus(true)" @blur="setFocus(false)" />
             <div class="equally">=</div>
-            <div class="coins">{{ virtualC+++oins | playerMenuMoneySplit(true) }}</div>
+            <div class="coins">{{ virtualCoins | playerMenuMoneySplit(true) }}</div>
             <div :class="['btn', {disable: !isEnable }]" @click="convert()">Конвертировать</div>
         </div>
     </script>
