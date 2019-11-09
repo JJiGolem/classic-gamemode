@@ -15,9 +15,10 @@ var debug = (text) => {
 };
 
 // Отображение в дискорде
-mp.timer.addInterval(() => {
+mp.events.add('time.minute.tick', () => {
     mp.discord.update('Classic Roleplay | Testing', 'classic-rp.ru');
-}, 60000);
+});
+
 
 /// Осноные клиентские события
 /// auth.init

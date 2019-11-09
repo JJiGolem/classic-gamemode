@@ -18,7 +18,7 @@ module.exports = {
             } else {
                 let data = {
                     name: vehicle.properties.name,
-                    price: vehicle.properties.price * rent.rentPriceMultiplier,
+                    price: parseInt(vehicle.properties.price * rent.rentPriceMultiplier),
                     mileage: vehicle.mileage,
                 }
                 player.call('rent.rentmenu.show', [data]);
@@ -41,7 +41,7 @@ module.exports = {
             let hasLicense = player.character[lic.licType];
             if (!hasLicense) return player.call('rent.vehicle.rent.ans', [2, lic.name]);
         }
-        let price = vehicle.properties.price * rent.rentPriceMultiplier;
+        let price = parseInt(vehicle.properties.price * rent.rentPriceMultiplier);
         if (player.character.cash < price) return player.call('rent.vehicle.rent.ans', [3]);
 
         money.removeCash(player, price, function (result) {

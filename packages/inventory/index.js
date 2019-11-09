@@ -858,6 +858,9 @@ module.exports = {
     isInHands(item) {
         return !item.parentId && item.index == 13;
     },
+    isWeaponItem(item) {
+        return item && this.getParam(item, 'weaponHash');
+    },
     getItemWeight(player, items, weight = 0) {
         if (!Array.isArray(items)) items = [items];
         for (var i = 0; i < items.length; i++) {
