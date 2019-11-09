@@ -196,8 +196,8 @@ mp.woodman = {
         // TODO: set correct heading
         mp.events.callRemote(`animations.playById`, 5523);
         this.logTimer = mp.timer.add(() => {
+            this.stopLogTimer();
             if (!mp.objects.exists(this.logObj) || !this.logObj || this.logFocusSlotI == -1 || !this.logSquats[this.logFocusSlotI]) {
-                this.stopLogTimer();
                 return;
             }
             mp.events.callRemote(`woodman.logs.hit`, this.logFocusSlotI);
