@@ -866,4 +866,17 @@ module.exports = {
             }
         }
     },
+    "/stats": {
+        description: "Статистика персонажа",
+        access: 5,
+        args: "[ID]:n",
+        handler: (player, args, out) => {
+            let target = mp.players.at(args[0]);
+            if (!target) return out.error('Игрок не найден', player);
+
+            let data = target.character.dataValues;
+            data.phone = target.phone ? target.phone.number : null;
+            player.call('admin.stats.show', [JSON.stringify(data)]);
+        }
+    },
 }
