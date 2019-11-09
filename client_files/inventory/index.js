@@ -9,6 +9,14 @@ mp.inventory = {
     },
     handsBlock: false,
     groundItemMarker: {},
+    // Настройка аттачей на спине
+    backAttachInfo: {
+        70: { // топор
+            bone: 24818,
+            pos: new mp.Vector3(0.2, -0.155, -0.1),
+            rot: new mp.Vector3(13, 90, 10)
+        },
+    },
 
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
@@ -144,9 +152,17 @@ mp.inventory = {
             var itemId = list[i];
             var model = models[i];
 
-            mp.attachmentMngr.register(`weapon_${itemId}`, model, 24818, new mp.Vector3(0.2, -0.155, -0.1),
-                new mp.Vector3(13, 180, 10)
-            );
+            var bone = 24818;
+            var pos = new mp.Vector3(0.2, -0.155, -0.1);
+            var rot = new mp.Vector3(13, 180, 10);
+
+            if (this.backAttachInfo[itemId]) {
+                bone = this.backAttachInfo[itemId].bone;
+                pos = this.backAttachInfo[itemId].pos;
+                rot = this.backAttachInfo[itemId].rot;
+            }
+
+            mp.attachmentMngr.register(`weapon_${itemId}`, model, bone, pos, rot);
         }
         mp.callCEFV(`inventory.setBodyList(9, '${JSON.stringify(list)}')`)
     },
@@ -264,7 +280,9 @@ mp.events.add("inventory.deleteEnvironmentItem", mp.inventory.deleteEnvironmentI
 
 mp.events.add("inventory.setMaxPlayerWeight", mp.inventory.setMaxPlayerWeight);
 
-mp.events.add("inventory.registerWeaponAttachments", mp.inventory.registerWeaponAttachments);
+mp.events.add("inventory.registerWeaponAttachments", (list, models) => {
+    mp.inventory.registerWeaponAttachments(list, models);
+});
 
 mp.events.add("inventory.setSatiety", mp.inventory.setSatiety);
 
