@@ -8426,6 +8426,39 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "rentMenu": {
+                name: "rentMenu",
+                header: "Аренда",
+                items: [{
+                        text: "Арендовать транспорт",
+                        i: 0,
+                    },
+                    {
+                        text: "Отмена",
+                        i: 0,
+                    }
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Арендовать транспорт') {
+                            mp.trigger('callRemote', `rent.vehicle.rent`);
+                        }
+                        if (e.itemName == 'Отмена') {
+                            mp.trigger(`rent.rentmenu.close`);
+                        }
+                    }
+                }
+            },
         },
         // Уведомление
         notification: null,
