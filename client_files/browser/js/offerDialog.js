@@ -26,7 +26,7 @@ var offerDialog = new Vue({
                 name: "Cyrus Raider",
                 on(values) {
                     this.name = values.name;
-                    this.text = `Вы желаете провести диагностику вашего транспорта за <span>${offerDialog.pretty(values.price)} $</span>?`;
+                    this.text = `Вы желаете провести диагностику вашего транспорта за <br /><span class="money">${offerDialog.pretty(values.price)} $</span>?`;
                 },
                 yes() {
                     mp.trigger("callRemote", "carservice.diagnostics.accept", 1);
@@ -48,7 +48,7 @@ var offerDialog = new Vue({
                 on(values) {
                     this.price = values.price;
                     this.name = values.name;
-                    this.text = `Вы желаете приобрести дом за <span>${offerDialog.pretty(values.price)} $</span>?`;
+                    this.text = `Вы желаете приобрести дом за <br /><span class="money">${offerDialog.pretty(values.price)} $</span>?`;
                 },
                 yes() {
                     mp.trigger("callRemote", "house.sell.ans", 1);
@@ -67,7 +67,7 @@ var offerDialog = new Vue({
                 on(values) {
                     this.price = values.price;
                     this.name = values.name;
-                    this.text = `Вы желаете приобрести бизнес за <span>${offerDialog.pretty(values.price)} $</span>?`;
+                    this.text = `Вы желаете приобрести бизнес за <br /><span class="money">${offerDialog.pretty(values.price)} $</span>?`;
                 },
                 yes() {
                     mp.trigger("callRemote", "biz.sell.ans", 1);
@@ -85,7 +85,7 @@ var offerDialog = new Vue({
                 on(values) {
                     this.price = values.price;
                     this.name = values.name
-                    this.text = `Вы желаете приобрести т/с ${values.model} (${values.plate}) за <span>${offerDialog.pretty(values.price)} $</span>?`;
+                    this.text = `Вы желаете приобрести т/с ${values.model} (${values.plate}) за <br /><span class="money">${offerDialog.pretty(values.price)} $</span>?`;
                 },
                 yes() {
                     mp.trigger("callRemote", "vehicles.sell.offer.accept", 1);
@@ -121,7 +121,7 @@ var offerDialog = new Vue({
                 price: 100,
                 on(values) {
                     this.name = values.name;
-                    this.text = `Вы желаете вылечиться за <span>${offerDialog.pretty(values.price)} $</span>?`;
+                    this.text = `Вы желаете вылечиться за <br /><span class="money">${offerDialog.pretty(values.price)} $</span>?`;
                     this.price = values.price;
                 },
                 yes() {
@@ -138,7 +138,7 @@ var offerDialog = new Vue({
                 text: `Carter Slade предлагает вам купить Ферму #99`,
                 price: 999,
                 on(values) {
-                    this.text = `Вы желаете приобрести Ферму #${values.farmId} за <span>${offerDialog.pretty(values.price)} $</span>?`;
+                    this.text = `Вы желаете приобрести Ферму #${values.farmId} за <br /><span class="money">${offerDialog.pretty(values.price)} $</span>?`;
                     this.price = values.price;
                     this.name = values.name;
                 },
@@ -157,7 +157,7 @@ var offerDialog = new Vue({
                 price: 999,
                 name: "Parking", // TODO: Необходимо имя!
                 on(values) {
-                    this.text = `Вы желаете арендовать грузовик за <span>${offerDialog.pretty(values.price)} $</span>?`;
+                    this.text = `Вы желаете арендовать грузовик за <br /><span class="money">${offerDialog.pretty(values.price)} $</span>?`;
                     this.price = values.price;
                 },
                 yes() {
@@ -269,7 +269,7 @@ var offerDialog = new Vue({
                 price: 999,
                 name: null,
                 on(values) {
-                    this.text = `Вы желаете выйти на свободу за <span>${offerDialog.pretty(values.price)} $</span>?`;
+                    this.text = `Вы желаете выйти на свободу за <br /><span class="money">${offerDialog.pretty(values.price)} $</span>?`;
                     this.price = values.price;
                     this.name = values.name;
                 },
@@ -360,4 +360,4 @@ var offerDialog = new Vue({
 });
 
 // for tests
- //offerDialog.show("documents", {name: "Kir", price: "200000"});
+ /*offerDialog.show("unarrest", {name: "Kir", price: "200000"});*/
