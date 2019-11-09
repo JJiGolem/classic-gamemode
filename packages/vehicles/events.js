@@ -50,7 +50,7 @@ module.exports = {
                     console.log(err);
                     timer.remove(player.indicatorsUpdateTimer);
                 }
-            }, 1000);
+            }, 1000, true);
         }
         player.call('vehicles.mileage.start', [vehicle.mileage]);
 
