@@ -239,5 +239,12 @@ module.exports = {
             console.log('quit -> respawn')
             vehicles.respawnVehicle(vehicle);
         }
-    }
+    },
+    "vehicle.respawned": (veh) => {
+        if (veh.isActiveBus) {
+            vehicle.isActiveBus = null;
+            vehicle.busDriverId = null;
+            veh.setVariable("label", null);
+        }
+    },
 }
