@@ -26,6 +26,7 @@ let modsConfig = {
 
 let priceConfig = { 
     repair: 125,
+    color: 100,
     default: 0.02,
     engine: 0.03,
     brake: 0.04,
@@ -34,7 +35,7 @@ let priceConfig = {
     armour: 0.05
 }
 
-let colorsPrice = 100;
+let colorsPrice = priceConfig.color;
 
 module.exports = {
     business: {

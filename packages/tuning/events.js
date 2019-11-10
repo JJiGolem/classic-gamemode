@@ -27,7 +27,8 @@ module.exports = {
             let secondary = player.vehicle.color2;
             let priceInfo = {
                 veh: player.vehicle.properties.price,
-                config: tuning.getPriceConfig()
+                config: tuning.getPriceConfig(),
+                priceMultiplier: tuning.getPriceMultiplier(shape.customsId)
             }
             player.call('tuning.start', [customs.id, primary, secondary, priceInfo]);
             player.call('vehicles.engine.toggle', [false]);
