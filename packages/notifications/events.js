@@ -6,7 +6,7 @@ module.exports = {
         var list = await notifs.popSavedNotifs(player);
         list.forEach(el => {
             notifs[el.type](player, el.text, el.header);
-            chat.push(player, `!{#ffffff} [${el.type}] ${el.text}`);
+            chat.push(player, `!{#ffc800} [${el.type}] ${el.text}`);
         });
     },
 };
