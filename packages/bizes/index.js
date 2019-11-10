@@ -135,6 +135,9 @@ let getBizInfoForBank = function(biz) {
 let getResourceName = function(type) {
     return bizesModules[type].business.productName;
 };
+let getResourcePos = function (type) {
+    return {x: 2703.896728515625, y: 1568.430419921875, z: 24.52433967590332};
+}
 let getTypeName = function(type) {
     return bizesModules[type].business.name;
 };
@@ -433,7 +436,7 @@ module.exports = {
     },
     // получить бизнесы с заказами
     getOrderBizes() {
-        var list = [];
+        let list = [];
         bizes.forEach(biz => {
             if (!biz.info.productsOrder || !biz.info.productsOrderPrice) return;
             list.push(biz);
