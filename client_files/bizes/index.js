@@ -8,6 +8,7 @@ let cost = null;
 mp.keys.bind(0x42, true, function() {           //B
     if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
+    if (mp.players.local.vehicle) return;
     mp.events.callRemote('biz.menu.open');
 });
 
