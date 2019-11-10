@@ -2,6 +2,7 @@ let bizes = call('bizes');
 let carrier = call('carrier');
 let money = call('money');
 let notifs = call('notifications');
+let vehicles = call('vehicles');
 
 module.exports = {
     "init": () => {
@@ -193,10 +194,9 @@ module.exports = {
     },
     "playerQuit": (player) => {
         if (!player.character || player.character.job != 4) return;
-        carrier.dropBizOrder(player);
 
         var veh = carrier.getVehByDriver(player);
-        if (veh) carrier.clearVeh(veh);
+        if (veh) vehicles.respawn(veh);
     },
     "vehicle.respawned": (veh) => {
         if (!veh.db || veh.db.key != "job" || veh.db.owner != 4) return;
