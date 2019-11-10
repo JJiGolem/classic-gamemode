@@ -301,6 +301,9 @@ mp.events.add('tuning.colors.set.ans', (ans) => {
         case 4:
             mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
             break;
+        case 5:
+            mp.callCEFV(`selectMenu.notification = 'В LSC кончились детали'`);
+            break;
     }
 });
 
@@ -356,6 +359,9 @@ mp.events.add('tuning.buy.ans', (ans, mod, index) => {
         case 4:
             mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
             break;
+        case 5:
+            mp.callCEFV(`selectMenu.notification = 'В LSC кончились детали'`);
+            break;
     }
 });
 
@@ -396,6 +402,9 @@ mp.events.add('tuning.repair.ans', (ans) => {
             break;
         case 4:
             mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
+            break;
+        case 5:
+            mp.callCEFV(`selectMenu.notification = 'В LSC кончились детали'`);
             break;
     }
 });
