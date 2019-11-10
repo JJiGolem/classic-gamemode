@@ -8793,11 +8793,15 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
+                            prompt.showByName("animations_stop");
                         } else {
                             var key = Object.keys(this.list)[e.itemIndex];
                             selectMenu.menus["animationList"].init(key, this.list[key]);
                             selectMenu.showByName("animationList");
                         }
+                    } else if (eventName == 'onBackspacePressed') {
+                        selectMenu.show = false;
+                        prompt.showByName("animations_stop");
                     }
                 }
             },
@@ -8817,11 +8821,9 @@ var selectMenu = new Vue({
                 i: 0,
                 j: 0,
                 list: null,
-                isPlaying: false,
                 init(header, list) {
                     this.header = header;
                     this.list = list;
-                    this.isPlaying = false;
 
                     var items = [];
                     list.forEach(anim => {
@@ -8846,15 +8848,13 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("animations");
-                            if (this.isPlaying) mp.trigger(`callRemote`, `animations.stop`);
                         } else {
                             var animId = this.list[e.itemIndex].id;
                             mp.trigger(`callRemote`, `animations.playById`, animId);
-                            this.isPlaying = true;
+                            mp.trigger(`animations.setOwnAnimPlaying`, true);
                         }
                     } else if (eventName == 'onBackspacePressed') {
                         selectMenu.showByName("animations");
-                        if (this.isPlaying) mp.trigger(`callRemote`, `animations.stop`);
                     }
                 }
             },
