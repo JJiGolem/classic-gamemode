@@ -236,20 +236,20 @@ mp.events.add({
         if (mp.woodman.treePos) {
             var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
             var endPos = player.getOffsetFromInWorldCoords(0, 1, 0);
-            mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
+            // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
 
             startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
             endPos = player.getOffsetFromInWorldCoords(-0.3, 1, 0);
-            mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
+            // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
 
             startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
             endPos = player.getOffsetFromInWorldCoords(0.3, 1, 0);
-            mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
+            // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
 
             if (mp.woodman.treePos) {
                 startPos = player.position;
                 endPos = mp.woodman.treePos;
-                mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 255, 0, 100);
+                // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 255, 0, 100);
             }
 
             if (mp.woodman.isFocusTree()) {
@@ -272,7 +272,7 @@ mp.events.add({
             }
             var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
             var endPos = player.getOffsetFromInWorldCoords(0, 0.5, -1);
-            mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 187, 255, 100);
+            // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 187, 255, 100);
         }
         if (mp.woodman.lastStartMelee && Date.now() > mp.woodman.lastStartMelee + mp.woodman.hitWaitTime) {
             mp.woodman.lastStartMelee = 0;

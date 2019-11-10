@@ -15,6 +15,7 @@ let bizesModules = new Array();
 /// 6 - Парикмахерская
 /// 7 - Магазин масок
 /// 8 - Тату-салон
+/// 9 - Los Santos Customs
 
 
 let utils;

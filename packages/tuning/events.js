@@ -1,6 +1,7 @@
 let tuning = require('./index.js');
 let money = call('money');
 let vehicles = call('vehicles');
+
 module.exports = {
     "init": () => {
         tuning.init();
@@ -18,6 +19,7 @@ module.exports = {
 
             player.call('tuning.fadeOut');
             let customs = tuning.getCustomsDataById(shape.customsId);
+            player.currentCustomsId = shape.customsId;
             player.vehicle.dimension = player.id + 10000;
             player.vehicle.position = new mp.Vector3(customs.tuneX, customs.tuneY, customs.tuneZ);
             player.call('vehicles.heading.set', [customs.tuneH])
@@ -55,7 +57,16 @@ module.exports = {
         let vehicle = player.vehicle;
         if (!vehicle) return player.call('tuning.colors.set.ans', [2]);
         if (vehicle.key != 'private' || vehicle.owner != player.character.id) return player.call('tuning.colors.set.ans', [3]);
-        let price = tuning.getColorsPrice();
+
+        let customsId = player.currentCustomsId;
+        if (customsId == null) return;
+
+        let defaultPrice = tuning.getColorsPrice();
+        let products = tuning.calculateProductsNeeded(defaultPrice);
+        let price = parseInt(defaultPrice * tuning.getPriceMultiplier(customsId));
+
+        let productsAvailable = tuning.getProductsAmount(customsId);
+        if (products > productsAvailable) return player.call('tuning.colors.set.ans', [5]);
 
         if (player.character.cash < price) return player.call('tuning.colors.set.ans', [1]);
 
@@ -69,6 +80,8 @@ module.exports = {
                     color2: secondary
                 });
                 player.call('tuning.colors.set.ans', [0]);
+                tuning.removeProducts(customsId, products);
+                tuning.updateCashbox(customsId, price);
             } else {
                 player.call('tuning.colors.set.ans', [4]);
             }
@@ -78,7 +91,18 @@ module.exports = {
         let vehicle = player.vehicle;
         if (!vehicle) return player.call('tuning.buy.ans', [2]);
         if (vehicle.key != 'private' || vehicle.owner != player.character.id) return player.call('tuning.buy.ans', [3]);
-        let price = tuning.calculateModPrice(vehicle.properties.price, type, index);
+
+        let customsId = player.currentCustomsId;
+        if (customsId == null) return;
+
+        let defaultPrice = tuning.calculateModPrice(vehicle.properties.price, type, index);
+        let products = tuning.calculateProductsNeeded(defaultPrice);
+        let price = parseInt(defaultPrice * tuning.getPriceMultiplier(customsId));
+        let income = parseInt(products * tuning.productPrice * tuning.getPriceMultiplier(customsId));
+        
+        let productsAvailable = tuning.getProductsAmount(customsId);
+        if (products > productsAvailable) return player.call('tuning.buy.ans', [5]);
+
         if (player.character.cash < price) return player.call('tuning.buy.ans', [1]);
 
         money.removeCash(player, price, function (result) {
@@ -88,6 +112,8 @@ module.exports = {
                 tuning.saveMod(vehicle, typeName, index);
                 vehicle.setMod(type, index);
                 player.call('tuning.buy.ans', [0, typeName, index]);
+                tuning.removeProducts(customsId, products);
+                tuning.updateCashbox(customsId, income);
             } else {
                 player.call('tuning.buy.ans', [4]);
             }
@@ -98,13 +124,25 @@ module.exports = {
         let vehicle = player.vehicle;
         if (!vehicle) return player.call('tuning.repair.ans', [2]);
         if (vehicle.key != 'private' || vehicle.owner != player.character.id) return player.call('tuning.repair.ans', [3]);
-        let price = tuning.getPriceConfig().repair;
+
+        let customsId = player.currentCustomsId;
+        if (customsId == null) return;
+
+        let defaultPrice = tuning.getPriceConfig().repair;
+        let products = tuning.calculateProductsNeeded(defaultPrice);
+        let price = parseInt(defaultPrice * tuning.getPriceMultiplier(customsId));
+
+        let productsAvailable = tuning.getProductsAmount(customsId);
+        if (products > productsAvailable) return player.call('tuning.repair.ans', [5]);
+
         if (player.character.cash < price) return player.call('tuning.repair.ans', [1]);
 
         money.removeCash(player, price, function (result) {
             if (result) {
                 player.vehicle.repair();
                 player.call('tuning.repair.ans', [0]);
+                tuning.removeProducts(customsId, products);
+                tuning.updateCashbox(customsId, price);
             } else {
                 player.call('tuning.repair.ans', [4]);
             }
