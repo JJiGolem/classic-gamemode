@@ -6,12 +6,12 @@ module.exports = {
     "init": () => {
         inited(__dirname);
     },
-    "death.wait": (player) => {
+    "death.wait": (player, time) => {
         player.spawn(player.position);
         player.health = death.health;
         if (player.character.arrestTime) return;
-        death.addKnocked(player);
-        mp.events.call(`mapCase.ems.calls.add`, player, `Ранение`);
+        death.addKnocked(player, time);
+        if (time > 5 * 60 * 1000) mp.events.call(`mapCase.ems.calls.add`, player, `Ранение`);
     },
     "death.spawn": (player) => {
         if (player.character.arrestTime) {

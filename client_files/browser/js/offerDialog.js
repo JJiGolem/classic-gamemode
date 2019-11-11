@@ -181,12 +181,18 @@ var offerDialog = new Vue({
             },
             "death": {
                 text: `Дождаться медиков?`,
-                on() {},
+                medKnockTime: 0,
+                knockTime: 0,
+                on(data) {
+                    this.medKnockTime = data.medKnockTime;
+                    this.knockTime = data.knockTime;
+                },
                 yes() {
-                    mp.trigger(`callRemote`, `death.wait`);
+                    mp.trigger(`callRemote`, `death.wait`, this.medKnockTime);
                 },
                 no() {
-                    mp.trigger(`death.callRemote.spawn`);
+                    mp.trigger(`callRemote`, `death.wait`, this.knockTime);
+                    // mp.trigger(`death.callRemote.spawn`);
                 },
                 ignore() {
                     mp.trigger(`callRemote`, `death.wait`);
