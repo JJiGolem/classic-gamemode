@@ -160,6 +160,7 @@
     border-radius: 1.8vh;
     border: 1px solid rgba(255, 255, 255, 0.3);
     padding: 1vh 5vh;
+    font-weight: 500;
     /*padding-bottom: 1.3vh;*/
 }
 
@@ -174,7 +175,7 @@
     border: 1px solid rgba(255, 223, 41, 0.1);
     background-color: #FFDF29;
     color: #151515;
-    font-weight: bold;
+    /*font-weight: bold;*/
 }
 
 #player-menu .body {
