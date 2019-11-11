@@ -655,7 +655,7 @@ var inventory = new Vue({
             });
             if (item.params.treeDamage) params.push({
                 name: "Урон по дереву",
-                value: `${item.params.treeDamage}%`
+                value: `${+item.params.treeDamage.toFixed(2)}%`
             });
 
             return params;
