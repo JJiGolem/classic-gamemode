@@ -503,11 +503,6 @@ var inventory = new Vue({
         handsBlock: false,
     },
     computed: {
-        // Тяжесть игрока (в %)
-        playerWeight() {
-            var weight = this.commonWeight;
-            return weight / this.maxPlayerWeight * 100;
-        },
         commonWeight() {
             return this.getItemWeight(Object.values(this.equipment));
         },
@@ -686,7 +681,8 @@ var inventory = new Vue({
         urlItemImg(itemId) {
             return `img/inventory/items/${itemId}.png`;
         },
-        itemStyle(item, isDraggable) {
+        itemStyle(item) {
+            var isDraggable = this.itemDrag.item && this.itemDrag.item.sqlId == item.sqlId;
             var url = this.urlItemImg(item.itemId);
             var style = {
                 backgroundImage: `url(${url})`,
@@ -1338,8 +1334,11 @@ var inventory = new Vue({
                 var rect = document.getElementById('inventory').getBoundingClientRect();
                 var itemDiv = self.itemDrag.div;
 
-                self.itemDrag.x = e.screenX - rect.x - itemDiv.offsetWidth / 2;
-                self.itemDrag.y = e.screenY - rect.y - itemDiv.offsetHeight / 2;
+                // self.itemDrag.x = e.screenX - rect.x - itemDiv.offsetWidth / 2;
+                // self.itemDrag.y = e.screenY - rect.y - itemDiv.offsetHeight / 2;
+
+                self.itemDrag.x = e.screenX - rect.x;
+                self.itemDrag.y = e.screenY - rect.y;
 
                 if (self.itemNotif.text) {
                     self.itemNotif.x = e.screenX - rect.x + 15;

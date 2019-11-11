@@ -4884,7 +4884,7 @@ var selectMenu = new Vue({
                     }
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
-                            selectMenu.menu = cloneObj(selectMenu.menus["tuningMain"]);
+                            mp.trigger('tuning.menu.show');
                             mp.trigger('tuning.params.set')
                         }
                         if (e.itemName == 'Покрасить') {

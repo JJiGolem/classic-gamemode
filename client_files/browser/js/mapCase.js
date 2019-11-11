@@ -151,6 +151,7 @@ var mapCase = new Vue({
         },
         show(val) {
             mp.trigger("blur", val, 300);
+            mp.trigger("mapCase.animation.show.play", val);
             if (val) busy.add("mapCase", true, true);
             else busy.remove("mapCase", true);
             this.lastShowTime = Date.now();

@@ -301,4 +301,10 @@ module.exports = {
             }
         }
     },
+    "vehicle.respawned": (veh) => {
+        if (veh.isActiveTaxi) {
+            vehicle.isActiveTaxi = null;
+            vehicle.taxiDriverId = null;
+        }
+    }
 }

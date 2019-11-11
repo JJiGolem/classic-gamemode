@@ -12,6 +12,7 @@ let vehicle;
 let vehPrice = 100;
 
 let priceConfig = {
+    color: 100,
     repair: 500,
     default: 0.01,
     engine: 0.01,
@@ -190,7 +191,7 @@ mp.events.add('tuning.menu.show', (index = lastIndex) => {
     let visibleIndex = index < 5 ? 0 : index - 4;
     mp.callCEFV(`selectMenu.menu.j = ${visibleIndex}`);
     mp.callCEFV(`selectMenu.menu.i = ${index}`);
-    mp.callCEFV(`selectMenu.menu.items[0].values = ['$${priceConfig.repair}']`);
+    mp.callCEFV(`selectMenu.menu.items[0].values = ['$${parseInt(priceConfig.repair)}']`);
     mp.callCEFV(`selectMenu.show = true`);
 });
 
@@ -232,6 +233,7 @@ mp.events.add('tuning.colorMenu.show', () => {
     mp.callCEFVN({ "selectMenu.menu.items[0].j": tuningParams.primaryColour });
     mp.callCEFVN({ "selectMenu.menu.items[1].i": tuningParams.secondaryColour });
     mp.callCEFVN({ "selectMenu.menu.items[1].j": tuningParams.secondaryColour });
+    mp.callCEFVN({ "selectMenu.menu.items[2].values": [`$${priceConfig.color}`] });
 
 });
 
@@ -477,6 +479,6 @@ function setMenuPrices(modType, lastIndex) {
 function initPrices(info) {
     vehPrice = info.veh;
     for (let key in info.config) {
-        priceConfig[key] = info.config[key];
+        priceConfig[key] = info.config[key] * info.priceMultiplier;
     }
 }
