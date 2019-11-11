@@ -33,12 +33,12 @@ let dmv = {
 let menuShape;
 
 const PRICE = {
-    CAR: 100,
-    PASSENGER: 200,
-    BIKE: 320,
-    TRUCK: 2121,
-    AIR: 228,
-    BOAT: 187
+    CAR: 250,
+    PASSENGER: 750,
+    BIKE: 200,
+    TRUCK: 1500,
+    AIR: 15000,
+    BOAT: 3500
 }
 module.exports = {
     init() {
