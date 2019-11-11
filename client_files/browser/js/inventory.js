@@ -598,7 +598,7 @@ var inventory = new Vue({
             ];
             if (item.params.health != null) params.push({
                 name: "Прочность",
-                value: item.params.health + "%"
+                value: +item.params.health.toFixed(2) + "%"
             });
             if (item.params.count) params.push({
                 name: "Количество",
@@ -655,7 +655,7 @@ var inventory = new Vue({
             });
             if (item.params.treeDamage) params.push({
                 name: "Урон по дереву",
-                value: `${+item.params.treeDamage.toFixed(2)}%`
+                value: `${item.params.treeDamage}%`
             });
 
             return params;
