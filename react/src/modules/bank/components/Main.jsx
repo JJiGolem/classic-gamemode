@@ -124,8 +124,8 @@ class Main extends Component {
         const { pages } = this.props;
 
         return (
-            pages.map(page => (
-                <div className='page-bank-react'>
+            pages.map((page, index) => (
+                <div className='page-bank-react' key={index}>
                     { page }
                 </div>
             ))

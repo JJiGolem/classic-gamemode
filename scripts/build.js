@@ -76,9 +76,9 @@ function copyChangedBrowserFiles(currentPath) {
         if (currentPath !== path.resolve(__dirname, PATHS.basePath, 'browser', 'js') && item != 'index.js') {
             let updatedPath = path.resolve(currentPath, item);
             if (fs.lstatSync(updatedPath).isDirectory()) {
-                let finalPahDir = updatedPath.replace('client_files', 'client_packages');
-                if (!fs.existsSync(finalPahDir)) {
-                    fs.mkdirSync(finalPahDir)
+                let finalPathDir = updatedPath.replace('client_files', 'client_packages');
+                if (!fs.existsSync(finalPathDir)) {
+                    fs.mkdirSync(finalPathDir)
                 }
                 copyChangedBrowserFiles(updatedPath);
             } else {

@@ -102,7 +102,7 @@ export default function bank(state = initialState, action) {
         case 'POP_CASHBOX_BANK':
             const newStateCashBoxPop = {
                 ...state,
-                money: money - payload.money
+                money: money + payload.money
             };
 
             newStateCashBoxPop.biz[0].cashBox -= payload.money;
