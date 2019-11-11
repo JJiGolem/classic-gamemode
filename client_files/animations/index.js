@@ -140,6 +140,17 @@ mp.events.add({
             mp.events.callRemote("animations.stop");
         }
     },
+    "time.main.tick": () => {
+        mp.players.forEachInStreamRange(rec => {
+            var a = rec.getVariable("anim");
+            if (!a) return;
+
+            if (rec.isPlayingAnim(a.dict, a.name, 3)) return;
+            mp.utils.requestAnimDict(a.dict, () => {
+                rec.taskPlayAnim(a.dict, a.name, a.speed, 0, -1, a.flag, 0, false, false, false);
+            });
+        });
+    },
 });
 
 mp.events.addDataHandler("anim", (player, a) => {
