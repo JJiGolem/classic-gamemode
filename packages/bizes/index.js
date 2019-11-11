@@ -135,9 +135,12 @@ let getBizInfoForBank = function(biz) {
 let getResourceName = function(type) {
     return bizesModules[type].business.productName;
 };
+let getResourcePrice = function(type) {
+    return bizesModules[type].productPrice;
+};
 let getResourcePos = function (type) {
     return {x: 2703.896728515625, y: 1568.430419921875, z: 24.52433967590332};
-}
+};
 let getTypeName = function(type) {
     return bizesModules[type].business.name;
 };
@@ -386,6 +389,8 @@ module.exports = {
     getBizByPlayerPos: getBizByPlayerPos,
     getTypeName: getTypeName,
     getResourceName: getResourceName,
+    getResourcePrice: getResourcePrice,
+    getResourcePos: getResourcePos,
     getRandomDate: getRandomDate,
     getBizInfoForApp: getBizInfoForApp,
     getBizInfoForBank: getBizInfoForBank,

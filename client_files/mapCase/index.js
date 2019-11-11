@@ -23,6 +23,21 @@ mp.mapCase = {
     showRedMessage(text) {
         mp.callCEFV(`mapCase.showRedMessage('${text}')`);
     },
+    registerAttachments() {
+        // планшет в руке
+        mp.attachmentMngr.register("mapCase", "prop_cs_tablet", 26610, new mp.Vector3(0.17, -0.042, 0.09),
+            new mp.Vector3(-3, 153, 170), {
+                dict: "amb@code_human_in_bus_passenger_idles@female@tablet@base",
+                name: "base",
+                speed: 10,
+                flag: 51
+            }
+        );
+    },
+    playShowAnimation(enable) {
+        if (enable) mp.attachmentMngr.addLocal("mapCase");
+        else mp.attachmentMngr.removeLocal("mapCase");
+    },
 };
 mp.mapCaseGover = {
     addMember(members) {
@@ -315,6 +330,8 @@ mp.events.add("mapCase.init", (name, factionId) => {
 
 mp.events.add("mapCase.enable", mp.mapCase.enable);
 
+mp.events.add("mapCase.animation.show.play", mp.mapCase.playShowAnimation);
+
 mp.events.add("mapCase.message.green.show", mp.mapCase.showGreenMessage);
 
 mp.events.add("mapCase.message.red.show", mp.mapCase.showRedMessage);
@@ -431,3 +448,5 @@ mp.events.add("mapCase.pd.emergencyBlips.add", (name, pos) => {
 mp.events.add("mapCase.fib.emergencyBlips.add", (name, pos) => {
     mp.mapCaseFib.addEmergencyBlip(name, pos);
 });
+
+mp.mapCase.registerAttachments();

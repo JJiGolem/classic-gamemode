@@ -6,8 +6,8 @@ module.exports = {
     // Список ID персонажей присмерти, которые вышли с сервера
     knockedList: [],
 
-    addKnocked(player) {
-        if (mp.players.exists(player)) player.setVariable("knocked", true);
+    addKnocked(player, time = 5 * 60 * 1000) {
+        if (mp.players.exists(player)) player.setVariable("knocked", time);
         if (this.knockedList.includes(player.character.id)) return;
         this.knockedList.push(player.character.id);
     },

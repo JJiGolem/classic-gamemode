@@ -17,7 +17,15 @@ module.exports = {
         if (typeof player == 'number') return this.save(player, 'info', text, header);
         player.call("notifications.push.info", [text, header]);
     },
-    save(characterId, type, text, header = null) {
+    async save(characterId, type, text, header = null) {
+        var oldNotification = await db.Models.Notification.findOne({
+            attributes: ['id'],
+            where: {
+                characterId: characterId,
+                text: text
+            }
+        });
+        if (oldNotification) return;
         db.Models.Notification.create({
             characterId: characterId,
             type: type,
@@ -29,7 +37,8 @@ module.exports = {
         var list = await db.Models.Notification.findAll({
             where: {
                 characterId: player.character.id
-            }
+            },
+            limit: 7,
         });
         list.forEach(el => el.destroy());
         return list;
