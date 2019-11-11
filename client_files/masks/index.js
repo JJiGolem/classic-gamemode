@@ -40,7 +40,7 @@ mp.events.add('masks.shop.enter', (data, list, appearanceData) => {
             values.push(`Вид №${i + 1}`);
         }
         items.push({
-            text: maskList[i].name == 'Маска' ? `${maskList[i].name} ${maskList[i].id} [$${maskList[i].price}]` : `${maskList[i].name} [$${maskList[i].price}]`,
+            text: maskList[i].name == 'Маска' ? `${maskList[i].name} ${maskList[i].id} [$${maskList[i].price}]` : `${maskList[i].name} [ID ${maskList[i].id}] [$${maskList[i].price}]`,
             values: values
         });
     }

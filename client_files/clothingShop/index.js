@@ -306,7 +306,7 @@ function initSubMenu(key, list) {
             values.push(`№${i + 1}`);
         }
         items.push({
-            text: `${current.name} [$${parseInt(current.price*priceMultiplier)}]`,
+            text: `${current.name} [ID ${current.id}] [$${parseInt(current.price*priceMultiplier)}]`,
             values: values
         });
     })
