@@ -97,6 +97,7 @@ db.connect(function() {
 
 mp.events.add('playerJoin', (player) => {
     if (modulesToLoad.length !== 0) return playersJoinPool.push(player);
+    console.log("playerInitSent" + JSON.stringify(activeClientModules));
     player.call('init', [activeClientModules]);
 });
 
