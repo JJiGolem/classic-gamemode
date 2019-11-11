@@ -109,7 +109,7 @@ mp.woodman = {
     },
     isAxInHands(player) {
         if (!player) player = mp.players.local;
-        return player.weapon == mp.game.joaat('weapon_battleaxe');
+        return player.weapon == mp.game.joaat('weapon_hatchet');
     },
     isFocusTree() {
         if (!this.treePos) return false;
@@ -170,7 +170,7 @@ mp.woodman = {
             else mp.prompt.showByName('woodman_log_take_ax');
 
             this.logSquats = squats;
-            this.logObj = mp.objects.at(objId);
+            this.logObj = mp.objects.atRemoteId(objId);
         } else {
             mp.prompt.hide();
 
@@ -196,8 +196,8 @@ mp.woodman = {
         // TODO: set correct heading
         mp.events.callRemote(`animations.playById`, 5523);
         this.logTimer = mp.timer.add(() => {
+            this.stopLogTimer();
             if (!mp.objects.exists(this.logObj) || !this.logObj || this.logFocusSlotI == -1 || !this.logSquats[this.logFocusSlotI]) {
-                this.stopLogTimer();
                 return;
             }
             mp.events.callRemote(`woodman.logs.hit`, this.logFocusSlotI);
@@ -236,20 +236,20 @@ mp.events.add({
         if (mp.woodman.treePos) {
             var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
             var endPos = player.getOffsetFromInWorldCoords(0, 1, 0);
-            mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
+            // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
 
             startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
             endPos = player.getOffsetFromInWorldCoords(-0.3, 1, 0);
-            mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
+            // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
 
             startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
             endPos = player.getOffsetFromInWorldCoords(0.3, 1, 0);
-            mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
+            // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
 
             if (mp.woodman.treePos) {
                 startPos = player.position;
                 endPos = mp.woodman.treePos;
-                mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 255, 0, 100);
+                // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 255, 0, 100);
             }
 
             if (mp.woodman.isFocusTree()) {
@@ -272,7 +272,7 @@ mp.events.add({
             }
             var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
             var endPos = player.getOffsetFromInWorldCoords(0, 0.5, -1);
-            mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 187, 255, 100);
+            // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 187, 255, 100);
         }
         if (mp.woodman.lastStartMelee && Date.now() > mp.woodman.lastStartMelee + mp.woodman.hitWaitTime) {
             mp.woodman.lastStartMelee = 0;

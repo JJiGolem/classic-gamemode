@@ -97,7 +97,7 @@ speedometerUpdateTimer = mp.timer.addInterval(() => { /// Обновление �
 }, 100);
 
 mp.keys.bind(0x32, true, function () {
-    if (mp.busy.includes('chat')) return;
+    if (mp.busy.includes(['chat', 'cuffs', 'terminal'])) return;
     if (mp.players.local.vehicle.getPedInSeat(-1) === mp.players.local.handle) {
         mp.events.callRemote('vehicles.engine.toggle');
     }
@@ -172,25 +172,20 @@ function startMileageCounter() {
     lastPos = player.position;
     stopMileageCounter();
     mileageTimer = mp.timer.addInterval(() => {
-        try {
-            var vehicle = player.vehicle;
-            if (!vehicle) return stopMileageCounter();
+        var vehicle = player.vehicle;
+        if (!vehicle) return stopMileageCounter();
 
-            var dist = (vehicle.position.x - lastPos.x) * (vehicle.position.x - lastPos.x) + (vehicle.position.y - lastPos.y) * (vehicle.position.y - lastPos.y) +
-                (vehicle.position.z - lastPos.z) * (vehicle.position.z - lastPos.z);
-            dist = Math.sqrt(dist);
-            if (dist > 200) dist = 50;
-            dist /= 1000;
+        var dist = (vehicle.position.x - lastPos.x) * (vehicle.position.x - lastPos.x) + (vehicle.position.y - lastPos.y) * (vehicle.position.y - lastPos.y) +
+            (vehicle.position.z - lastPos.z) * (vehicle.position.z - lastPos.z);
+        dist = Math.sqrt(dist);
+        if (dist > 200) dist = 50;
+        dist /= 1000;
 
-            currentDist += dist;
-            lastPos = vehicle.position;
+        currentDist += dist;
+        lastPos = vehicle.position;
 
-            var mileage = vehicle.mileage + currentDist;
-            mp.events.call('vehicles.speedometer.mileage.update', mileage);
-        } catch (err) {
-            mp.chat.debug('mileageTimer error');
-        }
-
+        var mileage = vehicle.mileage + currentDist;
+        mp.events.call('vehicles.speedometer.mileage.update', mileage);
     }, 1000);
     mileageUpdateTimer = mp.timer.addInterval(() => {
         try {

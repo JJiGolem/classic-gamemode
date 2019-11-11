@@ -11,6 +11,7 @@ mp.animations = {
     animatorActive: false,
     animId: 0,
     animationTimers: {},
+    isOwnAnimPlaying: false, // анимация из меню на L
 
     playAnimation(player, a, time = null) {
         mp.timer.remove(this.animationTimers[player.remoteId]);
@@ -95,9 +96,21 @@ mp.animations = {
             outline: true
         });
     },
+    stopAnimHandler() {
+        if (!this.isOwnAnimPlaying) return;
+        this.isOwnAnimPlaying = false;
+        mp.events.callRemote(`animations.stop`);
+    },
 };
 
 mp.events.add({
+    "characterInit.done": () => {
+        mp.keys.bind(32, true, () => { // SPACE
+            if (mp.game.ui.isPauseMenuActive()) return;
+            if (mp.busy.includes()) return;
+            mp.animations.stopAnimHandler();
+        });
+    },
     "animations.animator": () => {
         mp.animations.animator();
     },
@@ -105,6 +118,9 @@ mp.events.add({
         var player = mp.players.atRemoteId(playerId);
         if (!player) return;
         mp.animations.playAnimation(player, a, time);
+    },
+    "animations.setOwnAnimPlaying": (enable) => {
+        mp.animations.isOwnAnimPlaying = enable;
     },
     "render": () => {
         mp.animations.render();

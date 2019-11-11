@@ -123,9 +123,9 @@ module.exports = {
             params.litres = 0;
             params.max = 20;
         } else if (productName == 'water') {
-            params.thirst = 20;
+            params.thirst = 100;
         } else if (productName == 'chocolate') {
-            params.satiety = 15;
+            params.satiety = 20;
             params.thirst = -5;
         } else if (productName == 'duffleBag') {
             params.sex = !player.character.gender;

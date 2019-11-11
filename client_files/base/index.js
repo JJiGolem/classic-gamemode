@@ -15,9 +15,9 @@ var debug = (text) => {
 };
 
 // Отображение в дискорде
-mp.discord.update('Classic Roleplay | Alpha', 'classic-rp.ru');
-
-
+mp.events.add('time.minute.tick', () => {
+    mp.discord.update('Classic Roleplay | Testing', 'classic-rp.ru');
+});
 
 
 /// Осноные клиентские события
@@ -92,12 +92,12 @@ mp.busy.includes = function(name) {
 /// Удалить модуль
 mp.busy.remove = function(name, nocef = false) {
     if (!nocef) mp.callCEFV(`busy.remove('${name}')`);
-    let index = mp.busy.list.findIndex(x => x == name);
-    index != -1 && mp.busy.list.splice(index, 1);
+    let index = mp.busy.list.findIndex(x => x === name);
+    index !== -1 && mp.busy.list.splice(index, 1);
 
-    let mouseIndex = mp.busy.mouses.findIndex(x => x == name);
-    mouseIndex != -1 && mp.busy.mouses.splice(mouseIndex, 1);
-    if (mp.busy.mouses.length == 0) mp.gui.cursor.show(false, false);
+    let mouseIndex = mp.busy.mouses.findIndex(x => x === name);
+    mouseIndex !== -1 && mp.busy.mouses.splice(mouseIndex, 1);
+    if (mp.busy.mouses.length === 0) mp.gui.cursor.show(false, false);
 };
 
 mp.events.add({

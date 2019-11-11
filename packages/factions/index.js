@@ -634,6 +634,7 @@ module.exports = {
         if (minutes < this.payMins) return notifs.warning(player, `Зарплата не получена из-за низкой активности`, faction.name);
 
         if (this.isBandFaction(faction) || this.isMafiaFaction(faction)) {
+            if (this.isBandFaction(faction)) pay += parseInt(bands.bandZonesPrice * bands.getPowerBand(faction.id));
             if (faction.cash < pay) return notifs.error(player, `В общаке недостаточно средств для получения зарплаты`, faction.name);
 
             // TODO: не многовато запросов в БД получится?

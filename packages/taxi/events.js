@@ -280,13 +280,15 @@ module.exports = {
 
             let driver = mp.players.at(dest.driverId);
             if (!driver) return console.log('Нет водителя');
-            let entireDist = utils.vdist(dest.startPosition, dest.destination);
+            let entireDist = utils.vdistSqr(dest.startPosition, dest.destination);
             console.log(`entireDist = ${entireDist}`);
-            let currentDist = utils.vdist({ x: player.position.x, y: player.position.y, z: player.position.z }, dest.destination);
+            let currentDist = entireDist - utils.vdistSqr({ x: player.position.x, y: player.position.y, z: player.position.z }, dest.destination);
             console.log(`currentDist = ${currentDist}`);
             console.log(`currentDist / entireDist = ${currentDist / entireDist}`);
             if (currentDist / entireDist > 0.5) {
-                let sum = (entireDist - currentDist) * 0.5 * taxi.getPricePerKilometer();
+                let sum = Math.round((entireDist / 1000) * 0.5 * taxi.getPricePerKilometer());
+                //let sum = driver.taxiDriverDestination.price * 0.5;
+                if (!sum) return;
                 console.log(`Начисляем деньги водителю ${sum}`);
                 money.moveCash(player, driver, sum, function (result) {
                     if (result) {
@@ -299,4 +301,10 @@ module.exports = {
             }
         }
     },
+    "vehicle.respawned": (veh) => {
+        if (veh.isActiveTaxi) {
+            vehicle.isActiveTaxi = null;
+            vehicle.taxiDriverId = null;
+        }
+    }
 }

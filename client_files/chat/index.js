@@ -8,7 +8,7 @@ mp.chat = {
     },
     correctName(name) {
         if (name == mp.players.local.name) return name;
-        var player = mp.utils.getPlayerByName(name);
+        let player = mp.utils.getPlayerByName(name);
         if (player && !player.isFamiliar) return `Незнакомец`;
         return name;
     }
@@ -76,7 +76,7 @@ mp.events.add('chat.load', () => {
     mp.keys.bind(0x54, true, function() {
         if (mp.game.ui.isPauseMenuActive()) return;
         //if (mp.busy.includes()) return;
-        if (mp.busy.includes() && !mp.busy.includes('lostAttach') && !mp.busy.includes('cuffs')) return;
+        if (!(mp.busy.includes() === 0 || (mp.busy.includes() === 1 && (mp.busy.includes('lostAttach') || mp.busy.includes('cuffs'))))) return;
         mp.busy.add('chat', true);
         isOpen = true;
         mp.callCEFR('setFocusChat', [true]);
@@ -96,7 +96,7 @@ mp.events.add('chat.load', () => {
                 chatOpacity = 0.0;
                 break;
             case 0.0:
-                chatOpacity = 1.0
+                chatOpacity = 1.0;
                 break;
         }
         mp.callCEFR('setOpacityChat', [chatOpacity]);
@@ -151,6 +151,8 @@ function playChatAnimation(id) {
     var player = mp.players.atRemoteId(id);
     if (!player || player.vehicle || player.getVariable("knocked")) return;
     if (!player.getHealth()) return;
+    if (mp.farms.hasProduct(player)) return;
+    if (mp.factions.hasBox(player)) return;
     if (mp.farms.isCropping(player)) return;
     if (player.getVariable("cuffs")) return;
 
@@ -222,7 +224,7 @@ mp.events.add('chat.action.try', (nickname, id, message, result) => {
 mp.events.add('chat.message.push', (message) => {
     if (message.length > 100) {
         message = message.slice(0, 100);
-    };
+    }
     mp.callCEFR('pushChatMessage', [message]);
 });
 

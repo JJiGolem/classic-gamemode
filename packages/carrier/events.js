@@ -1,6 +1,8 @@
+let bizes = call('bizes');
 let carrier = call('carrier');
 let money = call('money');
 let notifs = call('notifications');
+let vehicles = call('vehicles');
 
 module.exports = {
     "init": () => {
@@ -115,12 +117,14 @@ module.exports = {
         var order = carrier.getBizOrder(bizId);
         if (!order) return out(`Заказ просрочен`);
 
-        var max = carrier.getProductsMax(player);
-        if (order.prodCount > max) return out(`Ваш навык не позволяет загрузить более ${max} ед.`);
-        var price = order.prodCount * order.prodPrice;
+        var type = bizes.getBizById(bizId).info.type;
+        if (!carrier.isCorrectProductType(veh.db.modelName, type)) return out(`Данный грузовик не перевозит "${bizes.getResourceName(type)}"`);
+
+        var count = Math.min(carrier.getProductsMax(player), order.prodCount);
+        var price = count * order.prodPrice;
         if (player.character.cash < price) return out(`Необходимо $${price}`);
 
-        carrier.takeBizOrder(player, veh, order);
+        carrier.takeBizOrder(player, veh, order, count);
 
         money.removeCash(player, price, (res) => {
             if (!res) return out(`Ошибка списания наличных`);
@@ -190,10 +194,9 @@ module.exports = {
     },
     "playerQuit": (player) => {
         if (!player.character || player.character.job != 4) return;
-        carrier.dropBizOrder(player);
 
         var veh = carrier.getVehByDriver(player);
-        if (veh) carrier.clearVeh(veh);
+        if (veh) vehicles.respawn(veh);
     },
     "vehicle.respawned": (veh) => {
         if (!veh.db || veh.db.key != "job" || veh.db.owner != 4) return;

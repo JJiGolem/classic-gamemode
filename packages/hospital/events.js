@@ -225,7 +225,7 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вам выданы ${itemName}`, header);
-            factions.setAmmo(faction, faction.ammo - hospital.itemAmmo);
+            factions.setMedicines(faction, faction.medicines - hospital.itemMedicines);
         });
     },
     // лечение игрока (пополнение ХП) | показ + принятие + отмена:

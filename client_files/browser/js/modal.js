@@ -189,6 +189,10 @@ var modal = new Vue({
                     </p>
                 `
             },
+            "admin_stats": {
+                header: "",
+                content: ``
+            },
         },
         modal: null,
     },

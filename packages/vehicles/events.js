@@ -28,7 +28,7 @@ module.exports = {
         }
         player.call('vehicles.enter.private', [isPrivate]);
 
-        if (!vehicle.engine && seat == -1 && !vehicle.isInGarage) {
+        if (!vehicle.engine && seat == -1 && !vehicle.isInGarage && vehicle.properties.vehType != 2) {
             player.call('prompt.showByName', ['vehicle_engine']);
         }
         if (seat == -1) {
@@ -50,7 +50,7 @@ module.exports = {
                     console.log(err);
                     timer.remove(player.indicatorsUpdateTimer);
                 }
-            }, 1000);
+            }, 1000, true);
         }
         player.call('vehicles.mileage.start', [vehicle.mileage]);
 
@@ -82,9 +82,11 @@ module.exports = {
     "vehicles.engine.toggle": (player) => { /// Включение/выключение двигателя
         if (!player.vehicle) return;
         if (player.vehicle.key == "market") return;
+        if (player.vehicle.key == "rent" && !player.vehicle.isActiveRent) return;
         if (player.vehicle.key == "job" && player.vehicle.owner == 2 && !player.vehicle.isActiveTaxi) return;
         if (player.vehicle.key == "job" && player.vehicle.owner == 3 && !player.vehicle.isActiveBus) return;
         if (player.vehicle.key == "job" && player.vehicle.owner == 4 && !player.vehicle.driver) return;
+        if (player.vehicle.properties.vehType == 2) return;
         if (player.vehicle.isBeingRepaired) return player.call('notifications.push.warning', ['Двигатель завести нельзя', 'Ремонт']);
         if (player.vehicle.isBeingTuned) return;
         if (player.vehicle.fuel <= 0) return player.call('notifications.push.error', ['Нет топлива', 'Транспорт']);
@@ -462,7 +464,7 @@ module.exports = {
         mp.vehicles.forEach(veh => {
             if (!veh.db) return;
             if (!veh.lastPlayerTime) return;
-            if (veh.db.key == 'private' || veh.db.key == 'market') return;
+            if (veh.db.key == 'private' || veh.db.key == 'market' || veh.db.key == 'rent') return;
             if (start.getTime() - veh.lastPlayerTime < vehicles.vehWaitSpawn) return;
             if (vehicles.getOccupants(veh).length) return;
 

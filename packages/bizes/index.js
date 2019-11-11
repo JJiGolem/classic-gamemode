@@ -15,6 +15,7 @@ let bizesModules = new Array();
 /// 6 - Парикмахерская
 /// 7 - Магазин масок
 /// 8 - Тату-салон
+/// 9 - Los Santos Customs
 
 
 let utils;
@@ -39,7 +40,7 @@ let getBizByCharId = function(characterId) {
 };
 let getBizByPlayerPos = function(player) {
     return bizes.find(x => player.dist(new mp.Vector3(x.info.x, x.info.y, x.info.z)) <= 10);
-}
+};
 let getDateDays = function(date) {
     let dateNowStringArray = new Date().toLocaleDateString().split('-');
     let dateStringArray = date.toLocaleDateString().split('-');
@@ -134,6 +135,12 @@ let getBizInfoForBank = function(biz) {
 let getResourceName = function(type) {
     return bizesModules[type].business.productName;
 };
+let getResourcePrice = function(type) {
+    return bizesModules[type].productPrice;
+};
+let getResourcePos = function (type) {
+    return {x: 2703.896728515625, y: 1568.430419921875, z: 24.52433967590332};
+};
 let getTypeName = function(type) {
     return bizesModules[type].business.name;
 };
@@ -162,7 +169,7 @@ let bizUpdateCashBox = async function(id, money) {
             bizId: biz.info.id,
             date: new Date(),
             money: bizMoney
-        }
+        };
         currentDay = await db.Models.BizStatistics.create(currentDay);
         biz.info.BizStatistics.unshift(currentDay);
     } else {
@@ -206,17 +213,17 @@ let createOrder = async function(biz, count, price) {
     carrier != null && carrier.addBizOrder(biz);
     await biz.info.save();
     return 1;
-}
+};
 let destroyOrder = async function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
     if (!biz.isOrderTaken) return false;
     biz.info.productsOrder = null;
     biz.info.productsOrderPrice = null;
-    carrier != null && carrier.removeBizOrder(biz.info.id);
+    carrier != null && carrier.removeBizOrderByBizId(biz.info.id);
     await biz.info.save();
     return true;
-}
+};
 let getOrder = function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
@@ -225,7 +232,7 @@ let getOrder = function(id) {
     let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
     player != null && player.call("biz.order.take", [true]);
     return true;
-}
+};
 let dropOrder = function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
@@ -234,7 +241,7 @@ let dropOrder = function(id) {
     let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
     player != null && player.call("biz.order.take", [false]);
     return true;
-}
+};
 let readyOrder = async function(id, productsNumber) {
     let biz = getBizById(id);
     if (biz == null) return null;
@@ -266,7 +273,7 @@ let readyOrder = async function(id, productsNumber) {
     let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
     player != null && player.call("biz.order.complete", [addedProducts]);
     return {productsOrder: biz.info.productsOrder, productsOrderPrice: biz.info.productsOrderPrice, pay: pay};
-}
+};
 
 module.exports = {
     maxProductPriceMultiplier: maxProductPriceMultiplier,
@@ -328,7 +335,7 @@ module.exports = {
         console.log("[BIZES] added new biz");
     },
     isHaveBiz(characterId) {
-        return bizes.findIndex(x => x.info.characterId == characterId) != -1;
+        return bizes.findIndex(x => x.info.characterId == characterId) !== -1;
     },
     async addBiz(bizInfo) {
         let colshape = mp.colshapes.newSphere(bizInfo.x, bizInfo.y, bizInfo.z, 4.0);
@@ -347,7 +354,7 @@ module.exports = {
             colshape: colshape,
             info: bizInfo
         });
-        if (bizInfo.BizStatistics.length != 0) {
+        if (bizInfo.BizStatistics.length !== 0) {
             if (bizInfo.BizStatistics[0].date.toLocaleDateString() != new Date().toLocaleDateString()) {
                 await bizUpdateCashBox(bizInfo.id, 0);
             }
@@ -382,6 +389,8 @@ module.exports = {
     getBizByPlayerPos: getBizByPlayerPos,
     getTypeName: getTypeName,
     getResourceName: getResourceName,
+    getResourcePrice: getResourcePrice,
+    getResourcePos: getResourcePos,
     getRandomDate: getRandomDate,
     getBizInfoForApp: getBizInfoForApp,
     getBizInfoForBank: getBizInfoForBank,
@@ -418,11 +427,11 @@ module.exports = {
         return bizes.length;
     },
     getNearBiz(player, range = 10) {
-        var nearBiz;
-        var minDist = 99999;
+        let nearBiz;
+        let minDist = 99999;
         bizes.forEach(biz => {
-            var bizPos = new mp.Vector3(biz.info.x, biz.info.y, biz.info.z);
-            var distance = player.dist(bizPos);
+            let bizPos = new mp.Vector3(biz.info.x, biz.info.y, biz.info.z);
+            let distance = player.dist(bizPos);
             if (distance < range && distance < minDist) {
                 nearBiz = biz;
                 minDist = distance;
@@ -432,7 +441,7 @@ module.exports = {
     },
     // получить бизнесы с заказами
     getOrderBizes() {
-        var list = [];
+        let list = [];
         bizes.forEach(biz => {
             if (!biz.info.productsOrder || !biz.info.productsOrderPrice) return;
             list.push(biz);
@@ -500,4 +509,4 @@ module.exports = {
             await biz.info.save();
         }
     },
-}
+};

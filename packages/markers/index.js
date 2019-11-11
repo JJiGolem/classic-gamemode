@@ -49,6 +49,12 @@ module.exports = {
             var target = colshapeA.marker.target;
             var pos = target.position;
             pos.z++;
+
+            mp.players.forEachInRange(player.position, 10, rec => {
+                if (player.id == rec.id) return;
+                rec.call(`markers.tp.player.teleported`, [player.id, pos, target.h]);
+            });
+
             player.position = pos;
             player.heading = target.h;
             player.dimension = target.dimension;
@@ -65,6 +71,12 @@ module.exports = {
             var target = colshapeB.marker.target;
             var pos = target.position;
             pos.z++;
+
+            mp.players.forEachInRange(player.position, 10, rec => {
+                if (player.id == rec.id) return;
+                rec.call(`markers.tp.player.teleported`, [player.id, pos, target.h]);
+            });
+
             player.position = pos;
             player.heading = target.h;
             player.dimension = target.dimension;

@@ -238,6 +238,7 @@ mp.events.add({
     },
     "mafia.follow.stop": () => {
         mp.mafia.stopFollowToPlayer();
+        mp.police.stopFollowToPlayer();
     },
     "mafia.storage.info.set": (data) => {
         mp.mafia.setStorageInfo(data);
@@ -246,6 +247,17 @@ mp.events.add({
         mp.mafia.mafiaZones.forEach(blip => {
             mp.game.invoke(mp.mafia.natives.SET_BLIP_ROTATION, blip, 0);
         });
+
+        if (mp.mafia.followPlayer) {
+            mp.game.controls.disableControlAction(0, 21, true); /// бег
+            mp.game.controls.disableControlAction(0, 22, true); /// прыжок
+            mp.game.controls.disableControlAction(0, 31, true); /// вперед назад
+            mp.game.controls.disableControlAction(0, 30, true); /// влево вправо
+            mp.game.controls.disableControlAction(0, 24, true); /// удары
+            mp.game.controls.disableControlAction(1, 200, true); // esc
+            mp.game.controls.disableControlAction(0, 140, true); /// удары R
+            mp.game.controls.disableControlAction(24, 37, true); /// Tab
+        }
     },
     "time.main.tick": () => {
         if (mp.mafia.followPlayer) {

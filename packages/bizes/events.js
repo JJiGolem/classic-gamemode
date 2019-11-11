@@ -88,10 +88,11 @@ module.exports = {
             info.characterId = player.character.id;
             info.characterNick = player.character.name;
             info.date = bizService.getRandomDate(1);
+            await bizService.destroyOrder(info.id);
             await info.save();
 
             let actions = [];
-            if (player.character.id == info.characterId) actions.push('finance');
+            if (player.character.id === info.characterId) actions.push('finance');
             player.call('biz.buy.ans', [1, player.character.name, actions]);
 
             bizService.setTimer(biz);
