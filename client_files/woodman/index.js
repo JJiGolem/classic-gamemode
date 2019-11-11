@@ -235,13 +235,6 @@ mp.woodman = {
 };
 
 mp.events.add({
-    "characterInit.done": () => {
-        mp.keys.bind(69, true, () => { // E
-            if (mp.game.ui.isPauseMenuActive()) return;
-            if (mp.busy.includes()) return;
-            mp.woodman.hitLogHandler();
-        });
-    },
     "render": () => {
         var player = mp.players.local;
         if (!mp.woodman.isAxInHands(player)) return;
@@ -287,8 +280,12 @@ mp.events.add({
                 var pos2d = mp.game.graphics.world3dToScreen2d(slot);
                 if (pos2d) mp.woodman.drawLogHealthBar(pos2d.x, pos2d.y, i);
             }
-            var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
-            var endPos = player.getOffsetFromInWorldCoords(0, 0.5, -1);
+
+            mp.game.controls.disableControlAction(0, 24, true); /// удары
+            mp.game.controls.disableControlAction(0, 140, true); /// удары R
+
+            // var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
+            // var endPos = player.getOffsetFromInWorldCoords(0, 0.5, -1);
             // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 187, 255, 100);
         }
         if (mp.woodman.lastStartMelee && Date.now() > mp.woodman.lastStartMelee + mp.woodman.hitWaitTime) {
@@ -363,6 +360,13 @@ mp.events.add({
         if (mp.woodman.treeHealth <= 0) return mp.notify.error(`Дерево исчерпало свой ресурс`);
 
         mp.woodman.lastStartMelee = Date.now();
+    },
+    "click": (x, y, upOrDown, leftOrRight, relativeX, relativeY, worldPosition, hitEntity) => {
+        if (upOrDown != 'down') return;
+
+        if (mp.game.ui.isPauseMenuActive()) return;
+        if (mp.busy.includes()) return;
+        mp.woodman.hitLogHandler();
     },
 });
 

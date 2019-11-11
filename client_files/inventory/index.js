@@ -367,6 +367,10 @@ mp.events.add("render", () => {
         mp.inventory.groundItemMarker.position = pos;
         mp.inventory.groundItemMarker.visible = true;
     } else mp.inventory.groundItemMarker.visible = false;
+    if (player.getVariable("hands")) {
+        mp.game.controls.disableControlAction(0, 24, true); /// удары
+        mp.game.controls.disableControlAction(0, 140, true); /// удары R
+    }
 });
 
 mp.events.addDataHandler("trunk", (vehicle, value) => {
