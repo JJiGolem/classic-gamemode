@@ -2,20 +2,19 @@
 /// Подключение всех модулей на сервере
 
 /// Служебные модули
-require('base');
-require('utils');
-require('browser');
 let browserLoaded = false;
 let initDone = false;
 let showLoadingText = true;
 
 /// Автоподключение клиентских модулей
 mp.events.add('init', (activeModules) => {
+    require('base');
+    require('utils');
+    require('browser');
     activeModules = JSON.parse(activeModules);
     mp.events.callRemote('console', JSON.stringify(activeModules));
     activeModules.forEach(moduleName => {
         require(moduleName);
-        mp.events.callRemote('console', `LOADED: ${moduleName}`);
     });
     mp.events.callRemote('console', "modules inited");
     initDone = true;
