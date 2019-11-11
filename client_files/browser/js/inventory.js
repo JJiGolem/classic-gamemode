@@ -681,7 +681,8 @@ var inventory = new Vue({
         urlItemImg(itemId) {
             return `img/inventory/items/${itemId}.png`;
         },
-        itemStyle(item, isDraggable) {
+        itemStyle(item) {
+            var isDraggable = this.itemDrag.item && this.itemDrag.item.sqlId == item.sqlId;
             var url = this.urlItemImg(item.itemId);
             var style = {
                 backgroundImage: `url(${url})`,

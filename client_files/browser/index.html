@@ -709,7 +709,7 @@
             </div>
         </div> -->
         <div class="item-drag" v-if="itemDrag.item" :style="{left: itemDrag.x + 'px', top: itemDrag.y + 'px'}">
-            <div class="item" v-if="itemDrag.item" :style="itemStyle(itemDrag.item, true)">
+            <div class="item" v-if="itemDrag.item" :style="itemStyle(itemDrag.item)">
                 <!-- <div class="count" v-if="itemDrag.item.params.count">{{ itemDrag.item.params.count }}</div>
                <div class="health" v-if="itemDrag.item.params.health" :style="{top: 100 - itemDrag.item.params.health + '%'}"></div>
                <div class="sqlid" v-if="debug">#{{ itemDrag.item.sqlId }}</div> -->
