@@ -6,6 +6,17 @@ let browserLoaded = false;
 let initDone = false;
 let showLoadingText = true;
 
+mp.events.add('render', () => {
+    if (showLoadingText) {
+        mp.game.graphics.drawText("Сервер загружается, подождите", [0.5, 0.5], {
+            font: 0,
+            color: [252, 223, 3, 200],
+            scale: [0.5, 0.5],
+            outline: true
+        });
+    }
+});
+
 /// Автоподключение клиентских модулей
 mp.events.add('init', (activeModules) => {
     require('base');
@@ -30,16 +41,5 @@ mp.events.add('browserDomReady', (browser) => {
     if (initDone) {
         showLoadingText = false;
         mp.events.callRemote('player.joined');
-    }
-});
-
-mp.events.add('render', () => {
-    if (showLoadingText) {
-        mp.game.graphics.drawText("Сервер загружается, подождите", [0.5, 0.5], { 
-            font: 0, 
-            color: [252, 223, 3, 200], 
-            scale: [0.5, 0.5], 
-            outline: true
-        });
     }
 });
