@@ -11,6 +11,7 @@ let showLoadingText = true;
 
 /// Автоподключение клиентских модулей
 mp.events.add('init', (activeModules) => {
+    activeModules = JSON.parse(activeModules);
     mp.events.callRemote('console', JSON.stringify(activeModules));
     activeModules.forEach(moduleName => {
         require(moduleName);
