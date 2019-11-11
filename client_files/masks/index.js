@@ -62,6 +62,7 @@ mp.events.add('masks.shop.exit', () => {
     mp.utils.cam.destroy();
     let player = mp.players.local;
     player.setComponentVariation(1, 0, 0, 0);
+    setHair();
     mp.events.call('hud.enable', true);
     mp.game.ui.displayRadar(true);
     mp.callCEFR('setOpacityChat', [1.0]);
