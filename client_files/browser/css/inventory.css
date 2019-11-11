@@ -826,7 +826,7 @@
     padding: 0 2vh;
     position: absolute;
     width: fit-content;
-    z-index: 1;
+    z-index: 2;
     border-radius: 1vh;
 }
 
