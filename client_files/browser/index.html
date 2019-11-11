@@ -604,7 +604,7 @@
         <div class="playerInventory">
             <div class="header">
                 <div class="title">Инвентарь</div>
-                <div>Тяжесть {{ +playerWeight.toFixed(1) }}%</div>
+                <div>Тяжесть {{ commonWeight }} из {{ maxPlayerWeight }} кг</div>
             </div>
             <div class="block">
                 <div class="container" v-for="item in equipment" v-bind:key="item.sqlId" v-if="item.pockets" :class="{drag: itemDrag.item && itemDrag.item.sqlId == item.sqlId}">

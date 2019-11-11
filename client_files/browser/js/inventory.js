@@ -503,11 +503,6 @@ var inventory = new Vue({
         handsBlock: false,
     },
     computed: {
-        // Тяжесть игрока (в %)
-        playerWeight() {
-            var weight = this.commonWeight;
-            return weight / this.maxPlayerWeight * 100;
-        },
         commonWeight() {
             return this.getItemWeight(Object.values(this.equipment));
         },
