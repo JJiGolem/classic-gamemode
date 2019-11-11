@@ -13,13 +13,32 @@ mp.woodman = {
         border: 0.0005,
         textColor: [255, 255, 255, 255],
         textScale: [0.2, 0.2],
+        getProgressColor() {
+            var player = mp.players.local;
+            return (player.isInMeleeCombat()) ? [255, 0, 0, 200] : [0, 0, 0, 200];
+        },
+        getFillColor(health) {
+            if (health > 50) return [52, 222, 59, 200];
+            if (health > 15) return [255, 187, 0, 200];
+
+            return [187, 68, 68, 200];
+        },
     },
     logHealthBar: {
         width: 0.05,
         height: 0.012,
         border: 0.0004,
-        textColor: [255, 255, 255, 255],
+        textColor: [255, 255, 255, 200],
         textScale: [0.17, 0.17],
+        getProgressColor() {
+            return [0, 0, 0, 50];
+        },
+        getFillColor(health) {
+            if (health > 50) return [52, 222, 59, 50];
+            if (health > 15) return [255, 187, 0, 50];
+
+            return [187, 68, 68, 50];
+        },
     },
     treesInfo: null,
     treesHash: [],
@@ -41,11 +60,11 @@ mp.woodman = {
 
     drawTreeHealthBar(x, y) {
         var info = this.treeHealthBar;
-        var color = this.getProgressColor();
+        var color = info.getProgressColor();
         var border = info.border;
-        var fillColor = this.getFillColor(this.treeHealth);
-        var textColor = info.textColor
-        var textScale = info.textScale
+        var fillColor = info.getFillColor(this.treeHealth);
+        var textColor = info.textColor;
+        var textScale = info.textScale;
         mp.game.graphics.drawRect(x, y, info.width + border * 2, info.height + border * 5, color[0], color[1], color[2], color[3]);
         mp.game.graphics.drawRect(x - (100 - this.treeHealth) * 0.0005, y,
             info.width * this.treeHealth / 100, info.height,
@@ -57,14 +76,17 @@ mp.woodman = {
             outline: false
         });
     },
-    drawLogHealthBar(x, y) {
+    drawLogHealthBar(x, y, index) {
         var info = this.logHealthBar;
-        var health = this.logSquats[this.logFocusSlotI];
-        var color = this.getProgressColor();
+        var health = this.logSquats[index];
+        var color = info.getProgressColor();
         var border = info.border;
-        var fillColor = this.getFillColor(health);
+        var fillColor = info.getFillColor(health);
         var textColor = info.textColor;
         var textScale = info.textScale;
+        if (this.logFocusSlotI == index) {
+            color[3] = fillColor[3] = 200;
+        }
         mp.game.graphics.drawRect(x, y, info.width + border * 2, info.height + border * 5, color[0], color[1], color[2], color[3]);
         mp.game.graphics.drawRect(x - (100 - health) * 0.00025, y,
             info.width * health / 100, info.height,
@@ -75,16 +97,6 @@ mp.woodman = {
             scale: textScale,
             outline: false
         });
-    },
-    getProgressColor() {
-        var player = mp.players.local;
-        return (player.isInMeleeCombat()) ? [255, 0, 0, 200] : [0, 0, 0, 200];
-    },
-    getFillColor(health) {
-        if (health > 50) return [52, 222, 59, 200];
-        if (health > 15) return [255, 187, 0, 200];
-
-        return [187, 68, 68, 200];
     },
     setTreesInfo(info) {
         this.treesInfo = info;
@@ -266,9 +278,14 @@ mp.events.add({
                 var frontPos = player.getOffsetFromInWorldCoords(0, 0.5, -1);
                 if (mp.vdist(playerPos, nearSlot) < mp.vdist(frontPos, nearSlot)) mp.woodman.logFocusSlotI = -1;
             }
-            if (mp.woodman.logFocusSlotI != -1) {
-                var pos2d = mp.game.graphics.world3dToScreen2d(slots[mp.woodman.logFocusSlotI]);
-                if (pos2d) mp.woodman.drawLogHealthBar(pos2d.x, pos2d.y);
+            // if (mp.woodman.logFocusSlotI != -1) {
+            //     var pos2d = mp.game.graphics.world3dToScreen2d(slots[mp.woodman.logFocusSlotI]);
+            //     if (pos2d) mp.woodman.drawLogHealthBar(pos2d.x, pos2d.y);
+            // }
+            for (var i = 0; i < slots.length; i++) {
+                var slot = slots[i];
+                var pos2d = mp.game.graphics.world3dToScreen2d(slot);
+                if (pos2d) mp.woodman.drawLogHealthBar(pos2d.x, pos2d.y, i);
             }
             var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
             var endPos = player.getOffsetFromInWorldCoords(0, 0.5, -1);
