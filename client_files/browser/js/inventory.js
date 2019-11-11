@@ -1334,8 +1334,11 @@ var inventory = new Vue({
                 var rect = document.getElementById('inventory').getBoundingClientRect();
                 var itemDiv = self.itemDrag.div;
 
-                self.itemDrag.x = e.screenX - rect.x - itemDiv.offsetWidth / 2;
-                self.itemDrag.y = e.screenY - rect.y - itemDiv.offsetHeight / 2;
+                // self.itemDrag.x = e.screenX - rect.x - itemDiv.offsetWidth / 2;
+                // self.itemDrag.y = e.screenY - rect.y - itemDiv.offsetHeight / 2;
+
+                self.itemDrag.x = e.screenX - rect.x;
+                self.itemDrag.y = e.screenY - rect.y;
 
                 if (self.itemNotif.text) {
                     self.itemNotif.x = e.screenX - rect.x + 15;
