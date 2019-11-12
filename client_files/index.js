@@ -22,9 +22,10 @@ mp.events.add('render', () => {
 });
 
 /// Автоподключение клиентских модулей
-mp.events.add('init', (activeModules) => {
+mp.events.add('init', () => {
     //mp.events.callRemote('console', activeModules);
-    activeModules = JSON.parse(activeModules);
+    //activeModules = JSON.parse(activeModules);
+    let activeModules = ["admin","afk","ammunation","animations","army","attaches","auth","bands","bank","barbershop","bins","bizes","busdriver","carmarket","carrier","carservice","carshow","casino","changelist","characterInit","chat","clothes","clothingShop","death","dev","dmv","documents","eatery","economy","factions","familiar","farms","fishing","fuelstations","government","houses","hud","infoTable","inhabitants","interaction","interactionMenu","inventory","mafia","mapCase","markers","masks","money","mood","nametags","noclip","notifications","NPC","offerDialog","parkings","phone","playerMenu","police","prompt","rent","routes","selectMenu","serializer","supermarket","tattoo","taxi","terminal","time","timer","tuning","vehicles","voiceChat","walking","watermark","weapons","weather","wedding","woodman","world"];
     activeModules.forEach(moduleName => {
         require(moduleName);
     });
