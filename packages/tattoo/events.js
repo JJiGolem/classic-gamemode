@@ -70,7 +70,7 @@ module.exports = {
         if (!tat) return player.call('tattoo.buy.ans', [1]);;
 
         let parlorId = player.currentTattooParlorId;
-        if (parlorId == null) return
+        if (parlorId == null) return;
         
         let products = tattoo.calculateProductsNeeded(tat.price);
         let price = parseInt(tat.price * tattoo.getPriceMultiplier(parlorId));

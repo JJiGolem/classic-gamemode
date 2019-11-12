@@ -6,7 +6,7 @@ var houses = call("houses");
 let money = call('money');
 let timer = call('timer');
 
-const PARKING_PRICE = 2; /// цена парковки за час
+const PARKING_PRICE = 7; /// цена парковки за час
 
 module.exports = {
     parkingBlips: [],
@@ -61,7 +61,7 @@ module.exports = {
         shape.isParking = true;
         shape.parkingId = parking.id;
 
-        let label = mp.labels.new(`Парковка \n ~y~${parking.name}\n~g~$2 ~w~в час`, new mp.Vector3(parking.x, parking.y, parking.z + 1.6),
+        let label = mp.labels.new(`Парковка \n ~y~${parking.name}\n~g~$${PARKING_PRICE} ~w~в час`, new mp.Vector3(parking.x, parking.y, parking.z + 1.6),
             {
                 los: false,
                 font: 0,

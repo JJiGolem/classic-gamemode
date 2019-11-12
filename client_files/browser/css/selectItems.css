@@ -1,0 +1,33 @@
+#selectItems {
+    color: #fff;
+    height: 45vh;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 45vh;
+}
+
+#selectItems .columns .column path:first-child {
+    fill-opacity: 0.6;
+    fill: #0c0c0c;
+}
+
+#selectItems .columns .column path:last-child {
+    fill-opacity: 0.8;
+    fill: #0c0c0c;
+}
+
+#selectItems .columns .column:hover path:first-child {
+    fill: #ffdf29aa;
+}
+
+#selectItems .columns .column:hover path:last-child {
+    fill: rgb(255, 223, 41);
+}
+
+#selectItems .items image {
+    height: 8%;
+    pointer-events: none;
+    /* transform: translate(-50%, -100%); */
+}

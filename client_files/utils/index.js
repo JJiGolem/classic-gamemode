@@ -367,12 +367,12 @@ mp.utils = {
 
 Math.clamp = function(value, min, max) {
     return Math.max(min, Math.min(max, value));
-}
+};
 
 /// Вывод информации в серверную консоль
 mp.console = function(object) {
     mp.events.callRemote('console', object);
-}
+};
 
 // Вкл/выкл блюр на экране
 mp.events.add("blur", (enable, time = 1000) => {

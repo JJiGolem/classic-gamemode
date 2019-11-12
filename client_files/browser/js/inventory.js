@@ -492,6 +492,7 @@ var inventory = new Vue({
                 columns: {},
                 bodyFocus: null,
                 hotkeyFocus: null,
+                binFocus: false,
             },
             x: 0,
             y: 0
@@ -502,11 +503,6 @@ var inventory = new Vue({
         handsBlock: false,
     },
     computed: {
-        // Тяжесть игрока (в %)
-        playerWeight() {
-            var weight = this.commonWeight;
-            return weight / this.maxPlayerWeight * 100;
-        },
         commonWeight() {
             return this.getItemWeight(Object.values(this.equipment));
         },
@@ -602,7 +598,7 @@ var inventory = new Vue({
             ];
             if (item.params.health != null) params.push({
                 name: "Прочность",
-                value: item.params.health + "%"
+                value: +item.params.health.toFixed(2) + "%"
             });
             if (item.params.count) params.push({
                 name: "Количество",
@@ -685,7 +681,8 @@ var inventory = new Vue({
         urlItemImg(itemId) {
             return `img/inventory/items/${itemId}.png`;
         },
-        itemStyle(item, isDraggable) {
+        itemStyle(item) {
+            var isDraggable = this.itemDrag.item && this.itemDrag.item.sqlId == item.sqlId;
             var url = this.urlItemImg(item.itemId);
             var style = {
                 backgroundImage: `url(${url})`,
@@ -848,6 +845,17 @@ var inventory = new Vue({
                     columns.columns = {};
                 },
             }
+            handlers[e.type](e);
+        },
+        binMouseHandler(e) {
+            var handlers = {
+                'mouseenter': (e) => {
+                    this.itemDrag.accessColumns.binFocus = true;
+                },
+                'mouseleave': (e) => {
+                    this.itemDrag.accessColumns.binFocus = false;
+                },
+            };
             handlers[e.type](e);
         },
         isColumnBusy(place, pocketI, index, item) {
@@ -1326,8 +1334,11 @@ var inventory = new Vue({
                 var rect = document.getElementById('inventory').getBoundingClientRect();
                 var itemDiv = self.itemDrag.div;
 
-                self.itemDrag.x = e.screenX - rect.x - itemDiv.offsetWidth / 2;
-                self.itemDrag.y = e.screenY - rect.y - itemDiv.offsetHeight / 2;
+                // self.itemDrag.x = e.screenX - rect.x - itemDiv.offsetWidth / 2;
+                // self.itemDrag.y = e.screenY - rect.y - itemDiv.offsetHeight / 2;
+
+                self.itemDrag.x = e.screenX - rect.x;
+                self.itemDrag.y = e.screenY - rect.y;
 
                 if (self.itemNotif.text) {
                     self.itemNotif.x = e.screenX - rect.x + 15;
@@ -1359,6 +1370,10 @@ var inventory = new Vue({
                     pocketI: columns.pocketI,
                     placeSqlId: columns.placeSqlId
                 });
+            } else if (columns.binFocus) {
+                self.deleteItem(self.itemDrag.item.sqlId);
+                mp.trigger(`inventory.ground.put`, item.sqlId);
+                columns.binFocus = false;
             } else {
                 var index = parseInt(Object.keys(columns.columns)[0]);
                 if (!columns.deny && columns.placeSqlId != null &&

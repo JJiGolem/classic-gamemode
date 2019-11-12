@@ -427,21 +427,20 @@ module.exports = {
     getHouseById(id) {
         return houses.find(x => {
             if (x == null) return false;
-            return x.info.id == id;
+            return x.info.id === id;
         });
     },
     getHouseByCharId(id) {
-        return houses.find(x => x.info.characterId == id);
+        return houses.find(x => x.info.characterId === id);
     },
     getDateDays(date) {
-        let dateNowStringArray = new Date().toLocaleDateString().split('-');
-        let dateStringArray = date.toLocaleDateString().split('-');
-        let dateNow = new Date(dateNowStringArray[0], dateNowStringArray[1], dateNowStringArray[2]);
-        date = new Date(dateStringArray[0], dateStringArray[1], dateStringArray[2]);
+        let dateNow = new Date();
+        dateNow = new Date(dateNow.getFullYear(), dateNow.getMonth(), dateNow.getDate());
+        date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         return Math.ceil(Math.abs(date.getTime() - dateNow.getTime()) / (1000 * 3600 * 24));
     },
     isHaveHouse(id) {
-        return houses.findIndex(x => x.info.characterId == id) != -1;
+        return houses.findIndex(x => x.info.characterId === id) !== -1;
     },
     getHouseInfoForApp(house) {
         let info = house.info;

@@ -37,7 +37,7 @@ module.exports = {
         if (player.account.donate < donate) return out(`Необходимо ${donate} CC`);
 
         var cash = donate * this.convertCash;
-        money.addMoney(player, cash, (res) => {
+        money.addCash(player, cash, (res) => {
             if (!res) return out(`Ошибка начисления на банк`);
 
             this.setDonate(player, player.account.donate - donate, `Конвертация валюты $${cash}`);

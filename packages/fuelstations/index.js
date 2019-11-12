@@ -85,16 +85,16 @@ module.exports = {
     getBizParamsById(id) {
         let station = dbFuelStations.find(x => x.bizId == id);
         if (!station) return;
-        let params = [
+        return [
             {
                 key: 'fuelPrice',
                 name: 'Цена топлива',
                 max: this.maxFuelPrice,
                 min: this.minFuelPrice,
-                current: station.fuelPrice
+                current: station.fuelPrice,
+                isInteger: true
             }
-        ]
-        return params;
+        ];
     },
     setBizParam(id, key, value) {
         let station = dbFuelStations.find(x => x.bizId == id);

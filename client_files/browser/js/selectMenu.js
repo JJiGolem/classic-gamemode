@@ -4884,7 +4884,7 @@ var selectMenu = new Vue({
                     }
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Назад') {
-                            selectMenu.menu = cloneObj(selectMenu.menus["tuningMain"]);
+                            mp.trigger('tuning.menu.show');
                             mp.trigger('tuning.params.set')
                         }
                         if (e.itemName == 'Покрасить') {
@@ -8483,34 +8483,301 @@ var selectMenu = new Vue({
                 i: 0,
                 j: 0,
                 list: {
-                    "Танцы": [
-                        {
+                    "Танцы": [{
                             id: 926,
                             name: "Дёргать руками и двигаться на месте"
                         },
-                    ],
-                    "Армия": [
                         {
+                            id: 1027,
+                            name: "Медленный танец"
+                        },
+                        {
+                            id: 924,
+                            name: "Танец «Кокетка»"
+                        },
+                        {
+                            id: 1213,
+                            name: "Танец «В такт музыке»"
+                        },
+                        {
+                            id: 925,
+                            name: "Танец «Ласточка»"
+                        },
+                        {
+                            id: 1047,
+                            name: "Стриптиз"
+                        },
+                    ],
+                    "Армия": [{
                             id: 1841,
                             name: "Воинское приветствие"
                         },
-                    ],
-                    "Полиция": [
                         {
+                            id: 557,
+                            name: "Подтягивания на перекладине"
+                        },
+                        {
+                            id: 1017,
+                            name: "Качать бицепсы «Штангой у груди»"
+                        },
+                        {
+                            id: 1060,
+                            name: "Отжиматься"
+                        },
+                        {
+                            id: 1126,
+                            name: "Качать пресс"
+                        },
+                    ],
+                    "Полиция": [{
                             id: 354,
                             name: "Стойка, руки на поясе"
                         },
-                    ],
-                    "Гражданские": [
                         {
+                            id: 1279,
+                            name: "Стоять, скрестив руки на груди"
+                        },
+                        {
+                            id: 518,
+                            name: "Стать на одно колено и что - то высматривать на земле"
+                        },
+                        {
+                            id: 407,
+                            name: "Держать руки на ремне"
+                        },
+                        {
+                            id: 1418,
+                            name: "Держаться руки на ремне и оглядываться"
+                        },
+                        {
+                            id: 1797,
+                            name: "Фотографировать на фотоаппарат"
+                        },
+                    ],
+                    "Гражданские": [{
                             id: 1016,
                             name: "Демонстрация мышц"
                         },
-                    ],
-                    "Работы": [
                         {
+                            id: 1280,
+                            name: "Заниматься йогой №1"
+                        },
+                        {
+                            id: 1281,
+                            name: "Заниматься йогой №2"
+                        },
+                        {
+                            id: 1487,
+                            name: "Размять мышки перед дракой"
+                        },
+                        {
+                            id: 367,
+                            name: "Стоять и держать в руке стаканчик с кофе"
+                        },
+                        {
+                            id: 548,
+                            name: "Облокотиться на перилла"
+                        },
+                        {
+                            id: 949,
+                            name: "Облокотиться об стену спиной"
+                        },
+                        {
+                            id: 953,
+                            name: "Облокотиться об стену спиной и говорить по телефону"
+                        },
+                        {
+                            id: 956,
+                            name: "Облокотиться об стену спиной и играть в телефон"
+                        },
+                        {
+                            id: 966,
+                            name: "Облокотиться об стену спиной и поставить ногу на стену"
+                        },
+                        {
+                            id: 983,
+                            name: "Облокотиться об стену спиной рука за руку на груди"
+                        },
+                        {
+                            id: 392,
+                            name: "Стоять с широко расставленными руками"
+                        },
+                        {
+                            id: 516,
+                            name: "Прилечь на боку"
+                        },
+                        {
+                            id: 286,
+                            name: "Почесать в паху"
+                        },
+                        {
+                            id: 310,
+                            name: "Курение сигареты"
+                        },
+                        {
+                            id: 1304,
+                            name: "Позвонить в дверной звонок"
+                        },
+                        {
+                            id: 1446,
+                            name: "Дать офицеру руки, чтобы тот смог надеть наручники"
+                        },
+                        {
+                            id: 1483,
+                            name: "Чесать сзади"
+                        },
+                        {
+                            id: 1642,
+                            name: "Удивление"
+                        },
+                        {
+                            id: 1694,
+                            name: "Пошлое движение рук"
+                        },
+                        {
+                            id: 1716,
+                            name: "Показать фак"
+                        },
+                        {
+                            id: 2414,
+                            name: "Встать на колени и завести руки за голову"
+                        },
+                        {
+                            id: 1033,
+                            name: "Кокетливо сидеть, опираясь на руку"
+                        },
+                        {
+                            id: 1037,
+                            name: "Сидеть опираясь на две руки за спиной"
+                        },
+                        {
+                            id: 1219,
+                            name: "Сидеть, облокотившись о стену"
+                        },
+                        {
+                            id: 1416,
+                            name: "Сидеть на полу и держаться за грудную клетку"
+                        },
+                        {
+                            id: 1228,
+                            name: "Лежать на спине, закрывая рукой лицо"
+                        },
+                        {
+                            id: 1232,
+                            name: "Лежать на животе, смотря в телефон"
+                        },
+                        {
+                            id: 1235,
+                            name: "Лежать на животе и болтать поднятыми ногами"
+                        },
+                        {
+                            id: 1239,
+                            name: "Лежать на спине"
+                        },
+                        {
+                            id: 1515,
+                            name: "Посылать воздушные поцелуи"
+                        },
+                        {
+                            id: 1511,
+                            name: "Радость победе с пошлым движением"
+                        },
+                        {
+                            id: 1509,
+                            name: "Энергичный гитарист"
+                        },
+                        {
+                            id: 1519,
+                            name: "Показывать всем «Факи»"
+                        },
+                        {
+                            id: 1526,
+                            name: "Наклониться и показывать жест «Тише»"
+                        },
+                        {
+                            id: 1539,
+                            name: "Facepalm"
+                        },
+                        {
+                            id: 1529,
+                            name: "Докурить и на показуху выкинуть бычёк"
+                        },
+                        {
+                            id: 1540,
+                            name: "Дерзко показывать фак"
+                        },
+                        {
+                            id: 1548,
+                            name: "Наигранно «Отдать честь»"
+                        },
+                        {
+                            id: 1554,
+                            name: "Наигранно показать палец вверх"
+                        },
+                        {
+                            id: 1596,
+                            name: "Чрезмерная радость"
+                        },
+                        {
+                            id: 1810,
+                            name: "Пальцы в стиле «Рок»"
+                        },
+                        {
+                            id: 1900,
+                            name: "Показать «Класс»"
+                        },
+                        {
+                            id: 1924,
+                            name: "Подрочи"
+                        },
+                        {
+                            id: 1937,
+                            name: "Всё окей"
+                        },
+                        {
+                            id: 1939,
+                            name: "Fuck you"
+                        },
+                        {
+                            id: 1942,
+                            name: "Виртуозный гитарист"
+                        },
+                        {
+                            id: 1952,
+                            name: "Боюсь - боюсь"
+                        },
+                        {
+                            id: 1954,
+                            name: "Разминать кулаки"
+                        },
+                        {
+                            id: 1963,
+                            name: "Медленно хлопать"
+                        },
+                        {
+                            id: 1968,
+                            name: "Махать рукой как «английская королева»"
+                        },
+                    ],
+                    "Работы": [{
                             id: 543,
                             name: "Залезть в двигатель"
+                        },
+                        {
+                            id: 551,
+                            name: "Что то прикручивать вверху"
+                        },
+                        {
+                            id: 829,
+                            name: "Дробить бетон"
+                        },
+                        {
+                            id: 918,
+                            name: "Копать"
+                        },
+                        {
+                            id: 1002,
+                            name: "Протирать стёкла"
                         },
                     ],
                 },
@@ -8526,11 +8793,15 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
+                            prompt.showByName("animations_stop");
                         } else {
                             var key = Object.keys(this.list)[e.itemIndex];
                             selectMenu.menus["animationList"].init(key, this.list[key]);
                             selectMenu.showByName("animationList");
                         }
+                    } else if (eventName == 'onBackspacePressed') {
+                        selectMenu.show = false;
+                        prompt.showByName("animations_stop");
                     }
                 }
             },
@@ -8550,11 +8821,9 @@ var selectMenu = new Vue({
                 i: 0,
                 j: 0,
                 list: null,
-                isPlaying: false,
                 init(header, list) {
                     this.header = header;
                     this.list = list;
-                    this.isPlaying = false;
 
                     var items = [];
                     list.forEach(anim => {
@@ -8579,15 +8848,13 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("animations");
-                            if (this.isPlaying) mp.trigger(`callRemote`, `animations.stop`);
                         } else {
                             var animId = this.list[e.itemIndex].id;
                             mp.trigger(`callRemote`, `animations.playById`, animId);
-                            this.isPlaying = true;
+                            mp.trigger(`animations.setOwnAnimPlaying`, true);
                         }
                     } else if (eventName == 'onBackspacePressed') {
                         selectMenu.showByName("animations");
-                        if (this.isPlaying) mp.trigger(`callRemote`, `animations.stop`);
                     }
                 }
             },
