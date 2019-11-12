@@ -104,6 +104,7 @@ mp.events.add({
                 mp.game.controls.disableControlAction(0, 60, true); /// INPUT_VEH_MOVE_UD
                 mp.game.controls.disableControlAction(0, 71, true); /// INPUT_VEH_ACCELERATE
                 mp.game.controls.disableControlAction(0, 72, true); /// INPUT_VEH_BRAKE
+                mp.game.controls.disableControlAction(0, 75, true); /// INPUT_VEH_EXIT
             }
         }
     },
