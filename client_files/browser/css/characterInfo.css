@@ -1,4 +1,4 @@
-#characterInfo {
+#characterInfo .info-box {
     background: rgb(0, 0, 0, 0.6);
     border-radius: 25px;
     box-shadow: 0px 5px 10px #0008;
@@ -78,6 +78,62 @@
     padding: 1.5vh;
     text-align: center;
 }
+
+#characterInfo .coins {
+    position: absolute;
+    right: 2.7vh;
+    top: 2.7vh;
+    display: flex;
+}
+
+#characterInfo .coins .panel {
+    display: flex;
+    font-family: Ubuntu;
+    background-color: rgba(12, 12, 12, 0.6);
+    border-radius: 1vh;
+    color: white;
+    padding: 1.2vh;
+    font-weight: 500;
+    font-size: 1.3vh;
+}
+
+#characterInfo .coins span {
+    font-size: 1.4vh;
+    color: #FFDF29;
+    margin: 0 1vh 0 3vh;
+}
+
+#characterInfo .coins .coin-logo {
+    background-color: #FFDF29;
+    border-radius: 50%;
+    color: #151515;
+    font-weight: 500;
+    text-align: center;
+    height: 1.7vh;
+    width: 1.7vh;
+    line-height: 1.7vh;
+    font-size: 1.3vh;
+}
+
+#characterInfo .add-coins {
+    font-family: Ubuntu;
+    background-color: #FFDF29;
+    border-radius: 1vh;
+    padding: 1.2vh;
+    font-weight: 500;
+    font-size: 1.3vh;
+    text-align: center;
+    width: 12.5vh;
+    line-height: 1vh;
+    height: 1vh;
+    margin: 0.5vh 1.1vh;
+}
+
+#characterInfo .add-coins:hover {
+    box-shadow: 0px 0px 0.3vh #FFDF29;
+}
+
+
 
 #characterSelector {
     bottom: 5vh;
@@ -162,4 +218,109 @@
     text-align: center;
     font-size: 1.5vh;
     font-weight: bold;
+}
+
+#characterAddSlot {
+    background: rgba(12, 12, 12, 0.6);
+    border-radius: 1vh;
+    position: absolute;
+    font-family: Ubuntu;
+    font-weight: 400;
+    font-size: 1.5vh;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    padding: 2.4vh 5.4vh;
+    opacity: 0;
+}
+
+#characterAddSlot .add-slot.step {
+    position: relative;
+    left: -2.7vh;
+}
+
+#characterAddSlot .add-slot>div {
+    display: flex;
+    color: white;
+}
+
+#characterAddSlot .add-slot span {
+    color: #FFDF29;
+    font-weight: 500;
+    margin: 0 0.6vh 0 1.3vh;
+}
+
+#characterAddSlot .coin-logo {
+    background-color: #FFDF29;
+    border-radius: 50%;
+    color: #151515;
+    font-weight: 500;
+    text-align: center;
+    height: 1.7vh;
+    width: 1.7vh;
+    line-height: 1.7vh;
+    font-size: 1.3vh;
+}
+
+#characterAddSlot .add-slot .btn {
+    height: 3.9vh;
+    width: 14.6vh;
+    margin: 0 2.2vh;
+    margin-top: 1.8vh;
+    border-radius: 1.3vh;
+    line-height: 3.9vh;
+    border: 0.1vh solid #FFDF29;
+    display: block;
+    text-align: center;
+}
+
+
+#characterAddSlot .add-slot .btn:hover {
+    background-color: #FFDF29;
+    color: #000;
+}
+
+#characterAddSlot .add-slot .btn:active {
+    background-color: #CCB21F;
+    border: 0.1vh solid #CCB21F;
+    color: #000;
+}
+
+#characterAddSlot .other {
+    color: white;
+    display: flex;
+    font-weight: 400;
+    width: 27vh;
+}
+
+#characterAddSlot .other .or {
+    font-size: 1.2vh;
+    text-align: center;
+    width: 8vh;
+    height: 100%;
+}
+
+#characterAddSlot .other .or>div {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0.7vh;
+}
+
+#characterAddSlot .other .info {
+    margin-left: 4.2vh;
+    text-align: center;
+}
+
+#characterAddSlot .other .info span {
+    font-weight: 700;
+    color: #FFDF29;
+}
+
+#characterAddSlot .other .info>div {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
