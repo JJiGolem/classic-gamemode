@@ -100,7 +100,7 @@ mp.events.add('playerJoin', (player) => {
     if (player.isCalledPlayerReadyToJoin) {
         if (modulesToLoad.length !== 0) return playersJoinPool.push(player);
         player.call('init', [JSON.stringify(activeClientModules)]);
-        console.log("playerInitSent" + JSON.stringify(activeClientModules));
+        //console.log("playerInitSent" + JSON.stringify(activeClientModules));
     }
 });
 mp.events.add('playerReadyToJoin', (player) => {
@@ -108,7 +108,7 @@ mp.events.add('playerReadyToJoin', (player) => {
     if (player.isCalledPlayerJoin) {
         if (modulesToLoad.length !== 0) return playersJoinPool.push(player);
         player.call('init', [JSON.stringify(activeClientModules)]);
-        console.log("playerInitSent" + JSON.stringify(activeClientModules));
+        //console.log("playerInitSent" + JSON.stringify(activeClientModules));
     }
 });
 

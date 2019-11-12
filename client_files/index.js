@@ -23,12 +23,12 @@ mp.events.add('render', () => {
 
 /// Автоподключение клиентских модулей
 mp.events.add('init', (activeModules) => {
-    mp.events.callRemote('console', activeModules);
+    //mp.events.callRemote('console', activeModules);
     activeModules = JSON.parse(activeModules);
     activeModules.forEach(moduleName => {
         require(moduleName);
     });
-    mp.events.callRemote('console', "modules inited");
+    //mp.events.callRemote('console', "modules inited");
     initDone = true;
     if (browserLoaded) {
         showLoadingText = false;
@@ -37,7 +37,7 @@ mp.events.add('init', (activeModules) => {
 });
 
 mp.events.add('browserDomReady', (browser) => {
-    mp.events.callRemote('console', "browser loaded");
+    //mp.events.callRemote('console', "browser loaded");
     browserLoaded = true;
     if (initDone) {
         showLoadingText = false;
