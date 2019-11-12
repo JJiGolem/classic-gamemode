@@ -2,6 +2,10 @@
 /// Подключение всех модулей на сервере
 
 /// Служебные модули
+require('base');
+require('utils');
+require('browser');
+
 let browserLoaded = false;
 let initDone = false;
 let showLoadingText = true;
@@ -19,11 +23,8 @@ mp.events.add('render', () => {
 
 /// Автоподключение клиентских модулей
 mp.events.add('init', (activeModules) => {
-    require('base');
-    require('utils');
-    require('browser');
+    mp.events.callRemote('console', activeModules);
     activeModules = JSON.parse(activeModules);
-    mp.events.callRemote('console', JSON.stringify(activeModules));
     activeModules.forEach(moduleName => {
         require(moduleName);
     });
@@ -36,10 +37,11 @@ mp.events.add('init', (activeModules) => {
 });
 
 mp.events.add('browserDomReady', (browser) => {
-    browserLoaded = true;
     mp.events.callRemote('console', "browser loaded");
+    browserLoaded = true;
     if (initDone) {
         showLoadingText = false;
         mp.events.callRemote('player.joined');
     }
 });
+mp.events.callRemote("playerReadyToJoin");
