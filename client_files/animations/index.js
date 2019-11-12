@@ -142,6 +142,7 @@ mp.events.add({
     },
     "time.main.tick": () => {
         mp.players.forEachInStreamRange(rec => {
+            if (!mp.players.exists(rec)) return;
             var a = rec.getVariable("anim");
             if (!a) return;
 
