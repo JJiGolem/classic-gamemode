@@ -20,6 +20,7 @@
             maxSpeed: 480,
             arrow: 0, //0-выкл,1-левый,2-правый (поворотики)
             emergency: 0,
+            isElectricCar: false, // Установить true для электрокаров.
 
             leftArrow: false,
             rightArrow: false,

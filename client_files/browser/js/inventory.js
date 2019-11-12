@@ -690,7 +690,7 @@ var inventory = new Vue({
                 width: `calc(${this.itemsInfo[item.itemId].width * 2.45}vh + ${(this.itemsInfo[item.itemId].width - 1) * 1}px)`,
                 pointerEvents: (this.itemDrag.item) ? 'none' : '',
             };
-            if (item.params && item.params.health && !isDraggable) {
+            if (item.params && item.params.health && !isDraggable && !item.found) {
                 style.backgroundImage = `url(${url}), ${this.itemGradient(item)}`;
                 style.backgroundColor = `#fff0`;
             }
@@ -1435,7 +1435,8 @@ var inventory = new Vue({
                     2: {
                         sqlId: 300,
                         itemId: 1,
-                        params: {}
+                        params: {},
+                        found: true,
                     }
                 }
             }

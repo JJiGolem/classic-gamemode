@@ -492,8 +492,13 @@
                             <stop :offset="perFuel + '%'" style="stop-color: rgba(255, 255, 255, 0.2)"></stop>
                             <stop :offset="perFuel + '%'" style="stop-color: #FFBC39"></stop>
                         </linearGradient>
+                        <linearGradient id="charge-gradient" x2="0" y2="1">
+                            <stop :offset="perFuel + '%'" style="stop-color: rgba(255, 255, 255, 0.2)"></stop>
+                            <stop :offset="perFuel + '%'" style="stop-color: #367BE3"></stop>
+                        </linearGradient>
                     </defs>
-                    <path fill="url(#fuel-gradient)" d="M18.3557 4.7L18.3724 4.68333L14.2335 0.555573L13.0557 1.73333L15.4002 4.07776C14.3557 4.47776 13.6113 5.48333 13.6113 6.66667C13.6113 8.2 14.8557 9.44443 16.389 9.44443C16.7834 9.44443 17.1613 9.36109 17.5001 9.21109V17.2222C17.5002 17.8333 17.0002 18.3333 16.3891 18.3333C15.778 18.3333 15.278 17.8333 15.278 17.2222V12.2222C15.278 10.9945 14.2835 10 13.0557 10H11.9446V2.22224C11.9446 0.994427 10.9502 0 9.7224 0H3.05574C1.82792 0 0.833496 0.994427 0.833496 2.22224V20H11.9446V11.6667H13.6113V17.2222C13.6113 18.7556 14.8557 20 16.389 20C17.9223 20 19.1668 18.7556 19.1668 17.2222V6.66667C19.1668 5.9 18.8557 5.20557 18.3557 4.7ZM9.7224 7.77776H3.05574V2.22224H9.7224V7.77776ZM16.3891 7.77776C15.778 7.77776 15.278 7.27776 15.278 6.66667C15.278 6.05557 15.778 5.55557 16.3891 5.55557C17.0002 5.55557 17.5002 6.05557 17.5002 6.66667C17.5002 7.27776 17.0002 7.77776 16.3891 7.77776Z" />
+                    <path v-if="!isElectricCar" fill="url(#fuel-gradient)" d="M18.3557 4.7L18.3724 4.68333L14.2335 0.555573L13.0557 1.73333L15.4002 4.07776C14.3557 4.47776 13.6113 5.48333 13.6113 6.66667C13.6113 8.2 14.8557 9.44443 16.389 9.44443C16.7834 9.44443 17.1613 9.36109 17.5001 9.21109V17.2222C17.5002 17.8333 17.0002 18.3333 16.3891 18.3333C15.778 18.3333 15.278 17.8333 15.278 17.2222V12.2222C15.278 10.9945 14.2835 10 13.0557 10H11.9446V2.22224C11.9446 0.994427 10.9502 0 9.7224 0H3.05574C1.82792 0 0.833496 0.994427 0.833496 2.22224V20H11.9446V11.6667H13.6113V17.2222C13.6113 18.7556 14.8557 20 16.389 20C17.9223 20 19.1668 18.7556 19.1668 17.2222V6.66667C19.1668 5.9 18.8557 5.20557 18.3557 4.7ZM9.7224 7.77776H3.05574V2.22224H9.7224V7.77776ZM16.3891 7.77776C15.778 7.77776 15.278 7.27776 15.278 6.66667C15.278 6.05557 15.778 5.55557 16.3891 5.55557C17.0002 5.55557 17.5002 6.05557 17.5002 6.66667C17.5002 7.27776 17.0002 7.77776 16.3891 7.77776Z" />
+                    <path v-else fill="url(#charge-gradient)" d="M18.3557 4.7L18.3724 4.68333L14.2335 0.555573L13.0557 1.73333L15.4002 4.07776C14.3557 4.47776 13.6113 5.48333 13.6113 6.66667C13.6113 8.2 14.8557 9.44443 16.389 9.44443C16.7834 9.44443 17.1613 9.36109 17.5001 9.21109V17.2222C17.5002 17.8333 17.0002 18.3333 16.3891 18.3333C15.778 18.3333 15.278 17.8333 15.278 17.2222V12.2222C15.278 10.9945 14.2835 10 13.0557 10H11.9446V2.22224C11.9446 0.994427 10.9502 0 9.7224 0H3.05574C1.82792 0 0.833496 0.994427 0.833496 2.22224V20H11.9446V11.6667H13.6113V17.2222C13.6113 18.7556 14.8557 20 16.389 20C17.9223 20 19.1668 18.7556 19.1668 17.2222V6.66667C19.1668 5.9 18.8557 5.20557 18.3557 4.7ZM5.27792 16.6667V11.6667H3.05574L7.50016 3.33333V8.88891H9.7224L5.27792 16.6667ZM16.3891 7.77776C15.778 7.77776 15.278 7.27776 15.278 6.66667C15.278 6.05557 15.778 5.55557 16.3891 5.55557C17.0002 5.55557 17.5002 6.05557 17.5002 6.66667C17.5002 7.27776 17.0002 7.77776 16.3891 7.77776Z" />
                 </svg>
             </div>
             <div class="fuel-unit">{{ fuel }}л</div>
@@ -548,8 +553,9 @@
                             <div class="column" v-for="n in pocket.cols * pocket.rows" :key="n-1" :class="columnClass(n-1, pocket, place)" @mouseenter="columnMouseHandler(place, pocket, n-1, $event)"
                                 @mouseleave="columnMouseHandler(place, pocket, n-1, $event)">
                                 <div class="item" v-if="pocket.items[n-1]" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
-                                    @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1])" :class="{dragging: pocket.items[n-1] == itemDrag.item}">
-                                    <div class="count" v-if="pocket.items[n-1].params.count">{{ pocket.items[n-1].params.count }}</div>
+                                    @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1])" :class="{dragging: pocket.items[n-1] == itemDrag.item, found: pocket.items[n-1].found }">
+                                    <div class="count" v-if="pocket.items[n-1].params.count && !pocket.items[n-1].found">{{ pocket.items[n-1].params.count }}</div>
+                                    <div class="eye" v-if="pocket.items[n-1].found"><img src="img/inventory/eye.svg" /></div>
                                     <!--<div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>-->
                                     <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
                                     <div v-if="pocket.items[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
@@ -626,9 +632,10 @@
                                 <div class="column" v-for="n in pocket.cols * pocket.rows" :key="n-1" :class="columnClass(n-1, pocket, item)" @mouseenter="columnMouseHandler(item, pocket, n-1, $event)"
                                     @mouseleave="columnMouseHandler(item, pocket, n-1, $event)">
                                     <div class="item" v-if="pocket.items[n-1]" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
-                                        @contextmenu="itemMouseHandler(pocket.items[n-1], $event)" @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1])" :class="{dragging: pocket.items[n-1] == itemDrag.item}">
-                                        <div class="count" v-if="pocket.items[n-1].params.count">{{ pocket.items[n-1].params.count }}</div>
-                                        <div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>
+                                        @contextmenu="itemMouseHandler(pocket.items[n-1], $event)" @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1])" :class="{dragging: pocket.items[n-1] == itemDrag.item, found: pocket.items[n-1].found }">
+                                        <div class="count" v-if="pocket.items[n-1].params.count && !pocket.items[n-1].found">{{ pocket.items[n-1].params.count }}</div>
+                                        <div class="eye" v-if="pocket.items[n-1].found"><img src="img/inventory/eye.svg" /></div>
+                                        <!--<div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>-->
                                         <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
                                         <div v-if="pocket.items[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
                                             <div class="lds-rolling">
