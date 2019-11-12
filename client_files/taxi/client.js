@@ -3,7 +3,7 @@ let waitMarker;
 
 let destination;
 
-const PRICE_PER_KM = 30;
+const PRICE_PER_KM = 50;
 
 let isActiveTaxiClient = false;
 mp.events.add('taxi.client.app.open', () => {

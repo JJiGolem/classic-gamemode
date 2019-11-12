@@ -1,5 +1,5 @@
 
-#accept-window {
+/*#accept-window {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -36,7 +36,6 @@
 
 #accept-window .left:hover {
     background-color: rgba(37, 216, 76, 0.6);
-    /*box-shadow: 0px 1px 5px rgba(37, 216, 76, 0.6);*/
 }
 
 #accept-window .right {
@@ -46,4 +45,90 @@
 
 #accept-window .right:hover {
     background-color: rgba(216, 37, 37, 0.6);
+}*/
+
+#accept-window {
+    font-family: Ubuntu;
+    left: 50%;
+    position: absolute;
+    background: rgba(12, 12, 12, 0.6);
+    border-radius: 1vh;
+    /*backdrop-filter: blur(0.4vh);*/
+    color: #fff;
+    text-align: center;
+    filter: drop-shadow(0 0.5vh 0.5vh rgba(0, 0, 0, 0.25));
+    top: 50%;
+    transform: translate(-50%, -50%);
+    min-height: 19.8vh;
+    width: 49vh;
+    font-size: 1.5vh;
+    font-weight: 400;
+    display: grid;
+    opacity: 0;
+}
+#accept-window>div {
+    padding: 2.8vh 4vh;
+    display: grid;
+    grid-template-rows: min-content 1fr min-content;
+}
+
+#accept-window .head {
+    color: #FFD600;
+    font-weight: 700;
+    font-size: 2.2vh;
+}
+
+#accept-window .content {
+    margin-top: 2vh;
+    font-size: 1.67vh;
+}
+
+#accept-window .content span {
+    font-weight: 500;
+    color: #6EE425;
+    white-space: nowrap;
+}
+
+#accept-window .btns {
+    display: flex;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%);
+    width: min-content;
+}
+
+#accept-window .btns>div {
+    height: 3.9vh;
+    width: 14.8vh;
+    margin: 0 2.3vh;
+    border-radius: 1.3vh;
+    line-height: 3.9vh;
+}
+
+#accept-window .btns .agree {
+    border: 0.1vh solid #51FF25;
+}
+
+#accept-window .btns .agree:hover {
+    background-color: #51FF25;
+    color: #000;
+}
+
+#accept-window .btns .agree:active {
+    border: 0.1vh solid #3ABA1A;
+    background-color: #3ABA1A;
+}
+
+#accept-window .btns .cancel {
+    border: 0.1vh solid rgba(255, 255, 255, 0.6);
+}
+
+#accept-window .btns .cancel:hover {
+    border: 0.1vh solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.6);
+    color: #000;
+}
+
+#accept-window .btns .cancel:active {
+    background-color: rgba(255, 255, 255, 0.4);
 }

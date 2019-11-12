@@ -1,5 +1,4 @@
-// let vehicles = call('vehicles');
-// let money = call('money');
+let bizes;
 
 let customs;
 
@@ -27,6 +26,7 @@ let modsConfig = {
 
 let priceConfig = { 
     repair: 125,
+    color: 100,
     default: 0.02,
     engine: 0.03,
     brake: 0.04,
@@ -35,10 +35,20 @@ let priceConfig = {
     armour: 0.05
 }
 
-let colorsPrice = 100;
+let colorsPrice = priceConfig.color;
 
 module.exports = {
+    business: {
+        type: 9,
+        name: "Los Santos Customs",
+        productName: "Детали",
+    },
+    rentPerDayMultiplier: 0.01,
+    minPriceMultiplier: 1.0,
+    maxPriceMultiplier: 2.0,
+    productPrice: 20,
     async init() {
+        bizes = call('bizes');
         await this.loadCustomsFromDB();
     },
     async loadCustomsFromDB() {
@@ -114,5 +124,54 @@ module.exports = {
     },
     getColorsPrice() {
         return colorsPrice;
+    },
+    getBizParamsById(id) {
+        let lsc = customs.find(x => x.bizId == id);
+        if (!lsc) return;
+        let params = [
+            {
+                key: 'priceMultiplier',
+                name: 'Наценка на услуги',
+                max: this.maxPriceMultiplier,
+                min: this.minPriceMultiplier,
+                current: lsc.priceMultiplier
+            }
+        ]
+        return params;
+    },
+    setBizParam(id, key, value) {
+        let lsc = customs.find(x => x.bizId == id);
+        if (!lsc) return;
+        lsc[key] = value;
+        lsc.save();
+    },
+    getProductsAmount(id) {
+        let lsc = customs.find(x => x.id == id);
+        let bizId = lsc.bizId;
+        let products = bizes.getProductsAmount(bizId);
+        return products;
+    },
+    removeProducts(id, products) {
+        let lsc = customs.find(x => x.id == id);
+        let bizId = lsc.bizId;
+        bizes.removeProducts(bizId, products);
+    },
+    getPriceMultiplier(id) {
+        let lsc = customs.find(x => x.id == id);
+        return lsc.priceMultiplier;
+    },
+    updateCashbox(id, money) {
+        let lsc = customs.find(x => x.id == id);
+        let bizId = lsc.bizId;
+        bizes.bizUpdateCashBox(bizId, money);
+    },
+    calculateProductsNeeded(price) {
+        switch (price) {
+            case price < 100:
+                return 3;
+            default:
+                let products = parseInt(price / this.productPrice);
+                return products > 300 ? 300 : products;
+        }
     } 
 }

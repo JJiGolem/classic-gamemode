@@ -69,8 +69,13 @@ module.exports = {
             targetPlayer: target
         };
 
+        let serviceId = player.currentCarServiceId;
+        let priceMultiplier = carservice.getPriceMultiplier(serviceId);
+        let price = parseInt(DEFAULT_DIAGNOSTICS_PRODUCTS * PRODUCT_PRICE * priceMultiplier);
+
         target.call('offerDialog.show', ["carservice_diagnostics", {
-            name: player.character.name
+            name: player.character.name,
+            price: price
         }]);
     },
     "carservice.diagnostics.accept": (player, accept) => {
@@ -146,6 +151,15 @@ module.exports = {
             target.vehicle.engine = false;
             target.call('vehicles.engine.toggle', [false]);
             target.vehicle.setVariable("engine", false);
+        }
+
+        /// Для обработки выхода из игры
+        player.mechanicRepairInfo = {
+            target: target
+        }
+
+        target.targetRepairInfo = {
+            mechanic: player
         }
 
         target.vehicle.isBeingRepaired = true;
@@ -366,6 +380,7 @@ module.exports = {
 
     },
     "carservice.service.end.mechanic": (player, result) => {
+        delete player.mechanicRepairInfo;
         switch (result) {
             /// Ремонт завершен удачно
             case 0:
@@ -386,6 +401,7 @@ module.exports = {
     "carservice.service.end.target": (player, result) => {
         let vehicle = player.repairVehicle;
         if (!vehicle) return;
+        delete player.targetRepairInfo;
         switch (result) {
             /// Ремонт завершен удачно
             case 0:
@@ -405,6 +421,17 @@ module.exports = {
                 vehicle.isBeingRepaired = false;
                 vehicle.setVariable('hood', false);
                 break;
+        }
+    },
+    "playerQuit": (player) => {
+        if (player.targetRepairInfo) {
+            mp.events.call('carservice.service.end.mechanic', player.targetRepairInfo.mechanic, 1);
+            mp.events.call('carservice.service.end.target', player, 1);
+        }
+
+        if (player.mechanicRepairInfo) {
+            mp.events.call('carservice.service.end.target', player.mechanicRepairInfo.target, 1);
+            mp.events.call('carservice.service.end.mechanic', player, 1);
         }
     }
 }

@@ -245,8 +245,8 @@ Vue.component('map-case-pd-over-wanted', {
     },
     data: () => ({
         causeValue: "",
-        danger: 1,
-        overDanger: 1,
+        danger: 0,
+        overDanger: 0,
         star: mapCaseSvgPaths.dangerStar,
     }),
     methods: {
@@ -320,7 +320,6 @@ var mapCasePdCallsData = {
         if (!Array.isArray(calls)) calls = [calls];
         for (var i = 0; i < calls.length; i++) {
             this.remove(calls[i].id);
-            calls[i].num = calls[i].id;
             this.list.push(calls[i]);
         }
     },
@@ -347,7 +346,6 @@ var mapCasePdWantedData = {
         if (!Array.isArray(wanted)) wanted = [wanted];
         for (var i = 0; i < wanted.length; i++) {
             this.remove(wanted[i].id);
-            wanted[i].num = wanted[i].id;
             if (!wanted[i].description) wanted[i].description = "-";
             this.list.push(wanted[i]);
         }
@@ -388,7 +386,6 @@ var mapCasePdMembersData = {
         if (!Array.isArray(members)) members = [members];
         for (var i = 0; i < members.length; i++) {
             this.remove(members[i].id);
-            members[i].num = members[i].id;
             this.list.push(members[i]);
         }
     },

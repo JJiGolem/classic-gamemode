@@ -1,6 +1,5 @@
 "use strict";
 
-let callerId = -1;
 let isBinding = false;
 
 mp.attachmentMngr.register("takePhone", "prop_npc_phone", 58867, new mp.Vector3(0.06, 0.04, 0.01), new mp.Vector3(-15, 0, -145)); /// Телефон в руке
@@ -51,11 +50,8 @@ mp.events.add('phone.call.start', function (number) {
 });
 
 /// Ответ на наше начало разговора
-mp.events.add('phone.call.start.ans', function (ans, targetId) {
-    if (ans == 0) {  /// 0 Вызов принят, 1 Нет номера, 2 Занято, 3 Сброс вызова, 4 Не поднял трубку
-        callerId = targetId;
-        mp.speechChanel.connect(mp.players.atRemoteId(callerId), "phone");
-    }
+/// 0 Вызов принят, 1 Нет номера, 2 Занято, 3 Сброс вызова, 4 Не поднял трубку
+mp.events.add('phone.call.start.ans', function (ans) {
     //playCallAnimation(false);
     playHoldAnimation(true, 1000);
     /// Ответ на звонок
@@ -64,69 +60,40 @@ mp.events.add('phone.call.start.ans', function (ans, targetId) {
 
 /// Сброс на нашем конце
 mp.events.add('phone.call.end', function () {
-    mp.events.callRemote('phone.call.end', callerId);
-    if (callerId != -1) {
-        mp.speechChanel.disconnect(mp.players.atRemoteId(callerId), "phone");
-        callerId = -1;
-    }
+    mp.events.callRemote('phone.call.end');
     //playCallAnimation(false);
     playHoldAnimation(true);
 });
 
 /// Сброс звонка на другом конце
 mp.events.add('phone.call.end.in', function () {
-    if (callerId != -1) {
-        mp.speechChanel.disconnect(mp.players.atRemoteId(callerId), "phone");
-        callerId = -1;
-    }
     mp.callCEFR('phone.call.end', []);
     //playCallAnimation(false);
     playHoldAnimation(true);
 });
 
 /// Уведомление о том, что нам звонят
-mp.events.add('phone.call.in', function (startedPlayerNumber, targetId) {
-    callerId = targetId;
+mp.events.add('phone.call.in', function (startedPlayerNumber) {
     /// Звонок игроку на телефон
     mp.callCEFR('phone.call.in', [startedPlayerNumber]);
 });
 
 /// Когда звонят нам и мы принимаем/отклоняем звонок
 mp.events.add('phone.call.in.ans', function (ans) {
-    mp.events.callRemote('phone.call.ans', ans, callerId);
+    mp.events.callRemote('phone.call.ans', ans);
     if (ans == 1) {
-        if (callerId != -1) {
-            mp.speechChanel.connect(mp.players.atRemoteId(callerId), "phone");
-            playHoldAnimation(false);
-            playCallAnimation(true);
-        }
-        else {
-            mp.callCEFR('phone.call.end', []);
-        }
-    }
-    else {
-        callerId = -1;
+        //playHoldAnimation(false);
+        playCallAnimation(true);
     }
 });
 
 mp.events.add("playerDeath", (player) => {
-    if (callerId != -1 && player.remoteId == mp.players.local.remoteId) {
-        mp.events.call('phone.call.end');
-        mp.callCEFR('phone.call.end', []);
+    if (player.remoteId == mp.players.local.remoteId) {
         if (mp.busy.includes('phone')) {
             hidePhone();
         }
     }
 });
-
-mp.events.add("playerQuit", (player) => {
-	if (player.remoteId == callerId) {
-        mp.callCEFR('phone.call.end', []);
-        callerId = -1;
-        mp.events.call('phone.call.end');
-    }
-});
-
 
 /// Отправка сообщения
 mp.events.add('phone.message.send', function (message, number) {
@@ -192,14 +159,10 @@ let bindButtons = (state) => {
 let showPhone = () => {
     if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
-    if (mp.police.haveCuffs) return;
-    var player = mp.players.local;
+    let player = mp.players.local;
     if (player.getVariable("knocked")) return;
     if (!player.getHealth()) return;
-    if (mp.farms.hasProduct(player)) return;
     if (mp.farms.isCropping(player)) return;
-    if (mp.factions.hasBox(player)) return;
-    if (player.getVariable("cuffs")) return;
 
     if (!mp.busy.add('phone')) return;
     mp.callCEFR('phone.show', [true]);

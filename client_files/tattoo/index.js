@@ -2,9 +2,12 @@ mp.game.ui.requestAdditionalText("tat_mnu", 9);
 
 let player = mp.players.local;
 let playerIsFrozen = false;
+let isInShape = false;
+let isAbleToEnter = false;
 let gender;
 let priceMultiplier;
 let deletePrice;
+let hairInfo = {};
 
 let tattoPacksLoaded = 0;
 
@@ -31,21 +34,19 @@ let characterTattoos = [];
 mp.events.add({
     'tattoo.pack.get': (pack, packsCount) => {
         tattooList = tattooList.concat(pack)
-        mp.chat.debug(`${pack.length} tattoos received`)
         tattoPacksLoaded++;
         if (tattoPacksLoaded == packsCount) {
             clothesLoaded = 0;
-            mp.chat.debug(`all tattoos received`)
-            mp.chat.debug(`final length ${tattooList.length}`)
             mp.events.callRemote('tattoo.enter');
         }
     },
     'tattoo.enter': (shopData, inputGender) => {
-        mp.chat.debug(inputGender);
         gender = inputGender;
         deletePrice = shopData.deleteTattooPrice;
         bindKeys(true);
         sortTattooList();
+        initCurrentHair(shopData.appearance);
+        setHair();
         clearClothes();
         setHeaders(shopData.bType);
         mp.events.call('hud.enable', false);
@@ -94,6 +95,7 @@ mp.events.add({
     'tattoo.buy': (zoneId, index) => {
         let currentList = sortedList.filter(x => x.zoneId == zoneId);
         let currentTattoo = currentList[index];
+        if (!isAbleToBuyTattoo(currentTattoo.name)) return mp.callCEFV(`selectMenu.notification = 'У вас уже есть эта тату'`);
         mp.events.callRemote('tattoo.buy', currentTattoo.id);
     },
     'tattoo.buy.ans': (ans) => {
@@ -119,7 +121,6 @@ mp.events.add({
     },
     'tattoo.characterTattoos.add': (list) => {
         characterTattoos = characterTattoos.concat(list);
-        mp.chat.debug(`${list.length} tattoos added`)
     },
     'tattoo.characterTattoos.remove': (id) => {
         removeTattoo(id);
@@ -174,13 +175,26 @@ mp.events.add({
                 break;
         }
     },
+    'tattoo.shape.state': (state) => {
+        isInShape = state;
+        isAbleToEnter = true;
+        if (state) {
+            mp.prompt.show('Нажмите <span>E</span> для того, чтобы посмотреть татуировки');
+        } else {
+            mp.prompt.hide();
+        }
+    },
     'render': () => {
         if (rotation.left) player.setHeading(player.getHeading() - 2);
         if (rotation.right) player.setHeading(player.getHeading() + 2);
     },
 });
 
-
+mp.keys.bind(0x45, true, () => {
+    if (!isInShape || !isAbleToEnter) return;
+    isAbleToEnter = false;
+    mp.events.callRemote('tattoo.shape.enter');
+});
 
 function bindKeys(bind) {
     if (bind) {
@@ -216,9 +230,7 @@ function stopRotationRight() {
 
 function sortTattooList() {
     let hash = gender ? 'hashNameFemale' : 'hashNameMale';
-    mp.chat.debug(hash);
     sortedList = tattooList.filter(x => x[hash].length != 0);
-    mp.chat.debug(`sortedList length ${sortedList.length}`);
 }
 
 function initMenus() {
@@ -261,6 +273,8 @@ function setTattoo(collection, hashName) {
 }
 
 function clearClothes() {
+    player.clearAllProps();
+    player.setComponentVariation(1, 0, 0, 0);
     player.setComponentVariation(3, 15, 0, 0);
     player.setComponentVariation(11, gender ? 18 : 15, 0, 2);
     player.setComponentVariation(8, gender ? 3 : 15, 0, 2);
@@ -294,4 +308,20 @@ function setHeaders(type) {
     }
     ['Main', 'Torso', 'Head', 'LeftArm', 'RightArm', 'LeftLeg', 'RightLeg', 'Delete']
     .forEach(name => mp.callCEFV(`selectMenu.menus["tattoo${name}"].headerImg = '${img}.png'`));
+}
+
+function isAbleToBuyTattoo(name) {
+    let tattoo = characterTattoos.find(x => x.name == name); 
+    return tattoo ? false : true;
+}
+
+function initCurrentHair(data) {
+    hairInfo.hairstyle = data.hairstyle;
+    hairInfo.hairColor = data.hairColor;
+    hairInfo.hairHighlightColor = data.hairHighlightColor;
+}
+
+function setHair() {
+    player.setComponentVariation(2, hairInfo.hairstyle, 0, 2);
+    player.setHairColor(hairInfo.hairColor, hairInfo.hairHighlightColor);
 }

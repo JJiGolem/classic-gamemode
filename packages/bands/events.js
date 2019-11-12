@@ -30,7 +30,11 @@ module.exports = {
 
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
+        var rank = factions.getRankById(faction, character.factionRank);
         var header = `Склад ${faction.name}`;
+
+        var storage = factions.getStorage(player.insideFactionWarehouse);
+        if (!storage.isOpen) return notifs.error(player, `Склад банды закрыт`, header);
 
         if (faction.ammo < bands.gunAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
@@ -38,6 +42,9 @@ module.exports = {
         var weaponIds = ["weapon_bat", "weapon_pumpshotgun", "weapon_pistol", "weapon_combatpistol", "weapon_microsmg", "weapon_machinepistol", "weapon_compactrifle"];
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
+
+        var minRank = faction.itemRanks.find(x => x.itemId == itemId);
+        if (minRank && minRank.rank > rank.rank) return notifs.error(player, `Доступно с ранга ${factions.getRank(faction, minRank.rank).name}`, header);
 
         var gunName = inventory.getInventoryItem(itemId).name;
         var guns = inventory.getArrayByItemId(player, itemId);
@@ -68,11 +75,18 @@ module.exports = {
 
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
+        var rank = factions.getRankById(faction, character.factionRank);
         var header = `Склад ${faction.name}`;
+
+        var storage = factions.getStorage(player.insideFactionWarehouse);
+        if (!storage.isOpen) return notifs.error(player, `Склад банды закрыт`, header);
 
         var itemIds = [37, 38, 40, 39];
         index = Math.clamp(index, 0, itemIds.length - 1);
         if (faction.ammo < bands.ammoAmmo * ammo) return notifs.error(player, `Недостаточно боеприпасов`, header);
+
+        var minRank = faction.itemRanks.find(x => x.itemId == itemIds[index]);
+        if (minRank && minRank.rank > rank.rank) return notifs.error(player, `Доступно с ранга ${factions.getRank(faction, minRank.rank).name}`, header);
 
         // inventory.fullDeleteItemsByParams(itemIds[index], ["faction", "owner"], [character.factionId, character.id]);
         var params = {
@@ -138,6 +152,32 @@ module.exports = {
             notifs.info(rec, `${player.name} снял $${sum}`, header);
         });
     },
+    "bands.storage.state": (player, open) => {
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Общак банды`);
+
+        var character = player.character;
+        var faction = factions.getFaction(character.factionId);
+        var header = `Склад ${faction.name}`;
+
+        if (!factions.isLeader(player)) return notifs.error(player, `Нет доступа`, header);
+
+        var storage = factions.getStorage(player.insideFactionWarehouse);
+
+        if (storage.isOpen == open) {
+            if (open) return notifs.error(player, `Склад уже открыт`, header);
+            else return notifs.error(player, `Склад уже закрыт`, header);
+        }
+
+        storage.isOpen = open;
+        var str = (open)? "открыл" : "закрыл";
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(rec, `${player.name} ${str} склад банды`, header);
+        });
+    },
     "bands.drugsStash.drugs.buy": (player, data) => {
         data = JSON.parse(data);
 
@@ -199,8 +239,7 @@ module.exports = {
         var killerZone = bands.getZoneByPos(killer.position);
         if (!killerZone) return;
         if (zone.id != killerZone.id) return;*/
-
-        var zoneId = Object.keys(bands.wars)[0];
+        var zoneId = parseInt(Object.keys(bands.wars)[0]);
 
         player.lastWarDeathTime = Date.now();
 

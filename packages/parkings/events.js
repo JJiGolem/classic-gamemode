@@ -32,7 +32,7 @@ module.exports = {
         if (!player) return;
         if (!vehicle) return;
 
-        let props = vehicles.setVehiclePropertiesByModel(vehicle.modelName);
+        let props = vehicles.getVehiclePropertiesByModel(vehicle.modelName);
         let parking = parkings.getParkingInfoById(vehicle.parkingId);
         
         switch (type) {

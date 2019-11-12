@@ -8,7 +8,6 @@ module.exports = {
         inited(__dirname);
     },
     "characterInit.done": async (player) => {
-        await tattoo.loadCharacterTattoos(player);
         tattoo.setCharacterTattoos(player);
         tattoo.sendTattoosDataToClient(player, player.character.tattoos);
     },
@@ -16,29 +15,47 @@ module.exports = {
         if (!player.character) return;
         if (shape.isTattooParlor) {
             player.currentTattooParlorId = shape.tattooParlorId;
-            player.dimension = player.id + 1;
-            if (player.hasValidTattooData) {
-                mp.events.call('tattoo.enter', player);
-            } else {
-                player.call('tattoo.player.freeze');
-                
-                let tattooList = tattoo.getRawTattooList();
-                let packsCount = tattooList.length % 100 == 0 ? 
-                parseInt(tattooList.length / 100) : parseInt(tattooList.length / 100) + 1;
-                while (tattooList.length > 0) {
-                    let pack = tattooList.slice(0, 100);
-                    console.log(pack.length);
-                    tattooList.splice(0, 100);
-                    player.call('tattoo.pack.get', [pack, packsCount]);
-                }
-                player.hasValidTattooData = true;
+            player.isInTattooParlorShape = true;
+            player.call('tattoo.shape.state', [true]);
+        }
+    },
+    "playerExitColshape": (player, shape) => {
+        if (!player.character) return;
+        if (shape.isTattooParlor) {
+            player.isInTattooParlorShape = false;
+            player.call('tattoo.shape.state', [false]);
+        }
+    },
+    "tattoo.shape.enter": (player) => {
+        if (!player.character) return;
+        if (!player.isInTattooParlorShape) return;
+
+        player.dimension = player.id + 1;
+        if (player.hasValidTattooData) {
+            mp.events.call('tattoo.enter', player);
+        } else {
+            player.call('tattoo.player.freeze');
+            
+            let tattooList = tattoo.getRawTattooList();
+            let packsCount = tattooList.length % 100 == 0 ? 
+            parseInt(tattooList.length / 100) : parseInt(tattooList.length / 100) + 1;
+            while (tattooList.length > 0) {
+                let pack = tattooList.slice(0, 100);
+                tattooList.splice(0, 100);
+                player.call('tattoo.pack.get', [pack, packsCount]);
             }
+            player.hasValidTattooData = true;
         }
     },
     "tattoo.enter": (player) => {
         let id = player.currentTattooParlorId;
         let data = tattoo.getRawShopData(id);
         data.deleteTattooPrice = tattoo.deleteTattooProducts * tattoo.productPrice;
+        data.appearance = {
+            hairColor: player.character.hairColor,
+            hairHighlightColor: player.character.hairHighlightColor,
+            hairstyle: player.character.hair
+        }
         let gender = player.character.gender;
         player.call('tattoo.enter', [data, gender]);
     },
@@ -53,7 +70,7 @@ module.exports = {
         if (!tat) return player.call('tattoo.buy.ans', [1]);;
 
         let parlorId = player.currentTattooParlorId;
-        if (parlorId == null) return
+        if (parlorId == null) return;
         
         let products = tattoo.calculateProductsNeeded(tat.price);
         let price = parseInt(tat.price * tattoo.getPriceMultiplier(parlorId));

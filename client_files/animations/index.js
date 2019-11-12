@@ -11,11 +11,13 @@ mp.animations = {
     animatorActive: false,
     animId: 0,
     animationTimers: {},
+    isOwnAnimPlaying: false, // анимация из меню на L
 
     playAnimation(player, a, time = null) {
         mp.timer.remove(this.animationTimers[player.remoteId]);
-        player.clearTasksImmediately();
         delete player.anim;
+        if (player.isJumping() || player.isShooting() || player.isSwimming() || player.isFalling()) return;
+        player.clearTasksImmediately();
         if (!a) return;
         mp.utils.requestAnimDict(a.dict, () => {
             player.taskPlayAnim(a.dict, a.name, a.speed, 0, -1, a.flag, 0, false, false, false);
@@ -94,9 +96,21 @@ mp.animations = {
             outline: true
         });
     },
+    stopAnimHandler() {
+        if (!this.isOwnAnimPlaying) return;
+        this.isOwnAnimPlaying = false;
+        mp.events.callRemote(`animations.stop`);
+    },
 };
 
 mp.events.add({
+    "characterInit.done": () => {
+        mp.keys.bind(32, true, () => { // SPACE
+            if (mp.game.ui.isPauseMenuActive()) return;
+            if (mp.busy.includes()) return;
+            mp.animations.stopAnimHandler();
+        });
+    },
     "animations.animator": () => {
         mp.animations.animator();
     },
@@ -104,6 +118,9 @@ mp.events.add({
         var player = mp.players.atRemoteId(playerId);
         if (!player) return;
         mp.animations.playAnimation(player, a, time);
+    },
+    "animations.setOwnAnimPlaying": (enable) => {
+        mp.animations.isOwnAnimPlaying = enable;
     },
     "render": () => {
         mp.animations.render();
@@ -122,6 +139,17 @@ mp.events.add({
             mp.animations.playAnimation(player, null);
             mp.events.callRemote("animations.stop");
         }
+    },
+    "time.main.tick": () => {
+        mp.players.forEachInStreamRange(rec => {
+            var a = rec.getVariable("anim");
+            if (!a) return;
+
+            if (rec.isPlayingAnim(a.dict, a.name, 3)) return;
+            mp.utils.requestAnimDict(a.dict, () => {
+                rec.taskPlayAnim(a.dict, a.name, a.speed, 0, -1, a.flag, 0, false, false, false);
+            });
+        });
     },
 });
 

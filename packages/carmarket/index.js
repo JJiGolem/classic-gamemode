@@ -3,8 +3,8 @@ let vehicles = call("vehicles");
 let money = call("money");
 let inventory = call("inventory");
 let timer = call("timer");
-// console.log("carmarket:");
-// console.log(vehicles);
+let notify = call("notifications");
+
 var marketSpots = [];
 var carMarketData;
 var marketCapacity;
@@ -139,7 +139,11 @@ module.exports = {
         vehicle.db.update({
             key: "market",
         });
-        this.addMarketVehicle(vehicle);
+        try {
+            this.addMarketVehicle(vehicle);
+        } catch (err) {
+            console.log(err);
+        }  
         if (vehicle.fuelTimer) {
             timer.remove(vehicle.fuelTimer);
         }
@@ -171,7 +175,7 @@ module.exports = {
 
         let fullPrice = 0;
         for (let i = 0; i < vehs.length; i++) {
-            let props = vehicles.setVehiclePropertiesByModel(vehs[i].modelName);
+            let props = vehicles.getVehiclePropertiesByModel(vehs[i].modelName);
             await vehs[i].update({
                 key: "market",
                 owners: vehs[i].owners + 1
@@ -206,6 +210,9 @@ module.exports = {
                     player.call('chat.message.push', [`!{#f3c800} Ваш дом продан государству за неуплату`]);
                     player.call('chat.message.push', [`!{#f3c800} Весь транспорт из гаража продан государству за !{#80c102}$${fullPrice}`]);
                     player.call('chat.message.push', [`!{#f3c800} Деньги поступили на ваш банковский счет`]);
+                } else {
+                    notify.warning(id, `За неуплату налогов на дом транспорт из гаража был продан государству`);
+                    notify.warning(id, `Деньги за транспорт ($${fullPrice}) поступили на ваш счет`);
                 }
             } else {
                 console.log(`Ошибка начисления денег за авто, слетевшее в гос для игрока с ID ${id}`);

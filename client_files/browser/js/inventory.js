@@ -50,8 +50,8 @@ var inventory = new Vue({
             18: {
                 name: 'Фонарь SureFire G2 Nitrolon',
                 description: 'Компактный, легкий и мощный фонарик, который можно использовать как подствольный целеуказатель.',
-                height: 6,
-                width: 8,
+                height: 3,
+                width: 4,
                 weight: 2,
             },
             21: {
@@ -441,7 +441,7 @@ var inventory = new Vue({
         // Огнестрельные оружия
         weaponsList: [19, 20, 21, 22, 41, 44, 46, 47, 48, 49, 50, 52, 80, 87, 88, 89, 90, 91, 93, 96, 99, 100, 107],
         // Еда
-        eatList: [35, 126, 127, 128, 129],
+        eatList: [35, 126, 127, 128, 129, 132],
         // Напитки
         drinkList: [34, 130],
         // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
@@ -492,6 +492,7 @@ var inventory = new Vue({
                 columns: {},
                 bodyFocus: null,
                 hotkeyFocus: null,
+                binFocus: false,
             },
             x: 0,
             y: 0
@@ -502,11 +503,6 @@ var inventory = new Vue({
         handsBlock: false,
     },
     computed: {
-        // Тяжесть игрока (в %)
-        playerWeight() {
-            var weight = this.commonWeight;
-            return weight / this.maxPlayerWeight * 100;
-        },
         commonWeight() {
             return this.getItemWeight(Object.values(this.equipment));
         },
@@ -571,7 +567,7 @@ var inventory = new Vue({
         descItemName() {
             var item = this.itemDesc.item;
             if (!item) return null;
-            if (item.itemId == 15 && item.params.name) // рыба
+            if ([6, 7, 8, 9, 15].includes(item.itemId) && item.params.name) // одежда, рыба
                 return `${item.params.name}`;
             if (item.itemId == 16 && item.params.name) // сигареты
                 return this.itemsInfo[item.itemId].name + " " + item.params.name;
@@ -602,7 +598,7 @@ var inventory = new Vue({
             ];
             if (item.params.health != null) params.push({
                 name: "Прочность",
-                value: item.params.health + "%"
+                value: +item.params.health.toFixed(2) + "%"
             });
             if (item.params.count) params.push({
                 name: "Количество",
@@ -657,6 +653,10 @@ var inventory = new Vue({
                 name: "Вместимость",
                 value: `${item.params.max} л.`
             });
+            if (item.params.treeDamage) params.push({
+                name: "Урон по дереву",
+                value: `${item.params.treeDamage}%`
+            });
 
             return params;
         },
@@ -681,20 +681,30 @@ var inventory = new Vue({
         urlItemImg(itemId) {
             return `img/inventory/items/${itemId}.png`;
         },
-        itemStyle(itemId) {
-            var url = this.urlItemImg(itemId);
+        itemStyle(item) {
+            var isDraggable = this.itemDrag.item && this.itemDrag.item.sqlId == item.sqlId;
+            var url = this.urlItemImg(item.itemId);
             var style = {
                 backgroundImage: `url(${url})`,
-                height: this.itemsInfo[itemId].height * 2 + "vh",
-                width: this.itemsInfo[itemId].width * 2 + "vh",
+                height: `calc(${this.itemsInfo[item.itemId].height * 2.45}vh + ${(this.itemsInfo[item.itemId].height - 1) * 1}px)`, // Высота + отступ ( минус один отступ)
+                width: `calc(${this.itemsInfo[item.itemId].width * 2.45}vh + ${(this.itemsInfo[item.itemId].width - 1) * 1}px)`,
                 pointerEvents: (this.itemDrag.item) ? 'none' : '',
             };
+            if (item.params && item.params.health && !isDraggable) {
+                style.backgroundImage = `url(${url}), ${this.itemGradient(item)}`;
+                style.backgroundColor = `#fff0`;
+            }
             return style;
         },
         valueColor(value) {
-            if (value > 50) return "#bf0";
-            if (value > 15) return "#fb0";
-            return "#b44";
+            if (value > 50) return "#6AC93D88";
+            if (value > 15) return "#C9783D88";
+            return "#C93D3D88";
+        },
+        itemGradient(item, transparent) {
+            if (item && item.params && item.params.health)
+                return `linear-gradient(0deg, ${this.valueColor(item.params.health)} ${item.params.health}%, rgba(255,255,255,${(transparent ? 0 : 0.3)}) ${item.params.health}%)`;
+
         },
         onBodyItemEnter(index) {
             if (!this.itemDrag.item) return;
@@ -835,6 +845,17 @@ var inventory = new Vue({
                     columns.columns = {};
                 },
             }
+            handlers[e.type](e);
+        },
+        binMouseHandler(e) {
+            var handlers = {
+                'mouseenter': (e) => {
+                    this.itemDrag.accessColumns.binFocus = true;
+                },
+                'mouseleave': (e) => {
+                    this.itemDrag.accessColumns.binFocus = false;
+                },
+            };
             handlers[e.type](e);
         },
         isColumnBusy(place, pocketI, index, item) {
@@ -1054,13 +1075,13 @@ var inventory = new Vue({
                 menu['Выкинуть'] = {
                     handler(item) {
                         // console.log(`выкинуть ${item}`)
-                        if (inventory.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`);
+                        if (inventory.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
                         else {
                             var children = inventory.getChildren(item);
                             var weapon = children.find(x => inventory.weaponsList.includes(x.itemId));
-                            if (weapon) mp.trigger(`weapons.ammo.sync`);
+                            if (weapon) mp.trigger(`weapons.ammo.sync`, true);
                         }
-                        mp.trigger(`callRemote`, `item.ground.put`, item.sqlId);
+                        mp.trigger(`inventory.ground.put`, item.sqlId);
                     }
                 };
             }
@@ -1313,12 +1334,13 @@ var inventory = new Vue({
                 var rect = document.getElementById('inventory').getBoundingClientRect();
                 var itemDiv = self.itemDrag.div;
 
-                self.itemDrag.x = e.screenX - rect.x - itemDiv.offsetWidth / 2;
-                self.itemDrag.y = e.screenY - rect.y - itemDiv.offsetHeight / 2;
+                // self.itemDrag.x = e.screenX - rect.x - itemDiv.offsetWidth / 2;
+                // self.itemDrag.y = e.screenY - rect.y - itemDiv.offsetHeight / 2;
+
+                self.itemDrag.x = e.screenX - rect.x;
+                self.itemDrag.y = e.screenY - rect.y;
 
                 if (self.itemNotif.text) {
-                    var rect = document.getElementById('inventory').getBoundingClientRect();
-
                     self.itemNotif.x = e.screenX - rect.x + 15;
                     self.itemNotif.y = e.screenY - rect.y + 15;
                 }
@@ -1331,7 +1353,7 @@ var inventory = new Vue({
             if (columns.bodyFocus != null) {
                 if (!self.getItem(item.sqlId)) self.setWaitItem(item, true);
                 self.addItem(item, null, columns.bodyFocus);
-                if (self.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`);
+                if (self.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
                 self.callRemote("item.add", {
                     sqlId: item.sqlId,
                     pocketI: null,
@@ -1348,6 +1370,10 @@ var inventory = new Vue({
                     pocketI: columns.pocketI,
                     placeSqlId: columns.placeSqlId
                 });
+            } else if (columns.binFocus) {
+                self.deleteItem(self.itemDrag.item.sqlId);
+                mp.trigger(`inventory.ground.put`, item.sqlId);
+                columns.binFocus = false;
             } else {
                 var index = parseInt(Object.keys(columns.columns)[0]);
                 if (!columns.deny && columns.placeSqlId != null &&
@@ -1356,12 +1382,11 @@ var inventory = new Vue({
                     if (columns.placeSqlId > 0) {
                         if (!self.getItem(item.sqlId)) self.setWaitItem(item, true);
                         self.addItem(item, columns.pocketI, index, columns.placeSqlId)
-                    }
-                    else {
+                    } else {
                         if (self.getItem(item.sqlId)) self.setWaitItem(item, true);
                         self.addEnvironmentItem(item, columns.pocketI, index, columns.placeSqlId);
                     }
-                    if (self.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`);
+                    if (self.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
                     self.callRemote("item.add", {
                         sqlId: item.sqlId,
                         pocketI: columns.pocketI,
@@ -1394,13 +1419,18 @@ var inventory = new Vue({
         itemId: 7,
         params: {},
         pockets: [{
-                cols: 9,
-                rows: 20,
+                cols: 3,
+                rows: 2,
                 items: {}
             },
             {
-                cols: 5,
-                rows: 5,
+                cols: 3,
+                rows: 2,
+                items: {}
+            },
+            {
+                cols: 15,
+                rows: 4,
                 items: {
                     2: {
                         sqlId: 300,
@@ -1517,8 +1547,8 @@ inventory.addEnvironmentPlace({
     sqlId: -10,
     header: "Шкаф",
     pockets: [{
-        cols: 19,
-        rows: 30,
+        cols: 18,
+        rows: 10,
         items: {
             0: {
                 sqlId: 1,
@@ -1530,7 +1560,7 @@ inventory.addEnvironmentPlace({
             },
             5: {
                 sqlId: 2,
-                itemId: 39,
+                itemId: 37,
                 // index: 5,
                 params: {
                     count: 10
@@ -1559,10 +1589,12 @@ inventory.addEnvironmentPlace({
                 // index: 10,
                 params: {}
             },
-            290: {
+            10: {
                 sqlId: 6,
                 itemId: 21,
-                params: {}
+                params: {
+                    health: 10,
+                }
             }
         }
     }]

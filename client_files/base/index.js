@@ -7,17 +7,17 @@ mp.events.add("render", () => {
 });
 
 // debug
-d = (text) => {
+var d = (text) => {
     mp.notify.info(text);
-}
-debug = (text) => {
+};
+var debug = (text) => {
     mp.terminal.debug(text);
-}
+};
 
 // Отображение в дискорде
-mp.discord.update('Classic Roleplay | Alpha', 'classic-rp.ru');
-
-
+mp.events.add('time.minute.tick', () => {
+    mp.discord.update('Classic Roleplay | Testing', 'classic-rp.ru');
+});
 
 
 /// Осноные клиентские события
@@ -46,8 +46,8 @@ mp.discord.update('Classic Roleplay | Alpha', 'classic-rp.ru');
 /// 1)
 /// Массив, которые показывает "занят" ли игрок. Для примера, если занят, не может быть открыт чат или телефон и т.п.
 mp.busy = {};
-mp.busy.list = new Array();
-mp.busy.mouses = new Array();
+mp.busy.list = [];
+mp.busy.mouses = [];
 /// В данный массив добавляется название модуля, которым занят игрок, если игрок освобождается от данного модуля, то название модуля удаляется из массива
 /// Название модуля записывать маленькими буквами, модули которые учитывают занятость(вписать свои):
 /// LIST
@@ -70,7 +70,7 @@ mp.busy.add = function(name, mouse = true, nocef = false) {
         mp.gui.cursor.show(true, true);
     }
     return true;
-}
+};
 /// Содержит ли массив данный модуль
 /// В случае если name = null, содержит ли массив какой-либо модуль
 mp.busy.includes = function(name) {
@@ -83,22 +83,22 @@ mp.busy.includes = function(name) {
         return false;
     } else {
         if (name == null) {
-            return mp.busy.list.length != 0;
+            return mp.busy.list.length;
         } else {
             return mp.busy.list.includes(name);
         }
     }
-}
+};
 /// Удалить модуль
 mp.busy.remove = function(name, nocef = false) {
     if (!nocef) mp.callCEFV(`busy.remove('${name}')`);
-    let index = mp.busy.list.findIndex(x => x == name);
-    index != -1 && mp.busy.list.splice(index, 1);
+    let index = mp.busy.list.findIndex(x => x === name);
+    index !== -1 && mp.busy.list.splice(index, 1);
 
-    let mouseIndex = mp.busy.mouses.findIndex(x => x == name);
-    mouseIndex != -1 && mp.busy.mouses.splice(mouseIndex, 1);
-    if (mp.busy.mouses.length == 0) mp.gui.cursor.show(false, false);
-}
+    let mouseIndex = mp.busy.mouses.findIndex(x => x === name);
+    mouseIndex !== -1 && mp.busy.mouses.splice(mouseIndex, 1);
+    if (mp.busy.mouses.length === 0) mp.gui.cursor.show(false, false);
+};
 
 mp.events.add({
     "busy.add": mp.busy.add,
@@ -115,4 +115,4 @@ mp.events.add({
 /// Событие для вызова серверного события из браузера
 mp.events.add("callRemote", (name, values) => {
     mp.events.callRemote(name, values);
-})
+});

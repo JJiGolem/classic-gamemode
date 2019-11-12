@@ -12,6 +12,8 @@ mp.factions = {
     enableTakeBox: false, // можно ли взять ящик на беск. складе
     typeBox: "",
     faction: null,
+    ranks: [],
+    vehRespawnPrice: 0,
 
     insideWarehouse(inside, type = null) {
         if (inside) mp.prompt.showByName(`take_${type}box`);
@@ -86,6 +88,14 @@ mp.factions = {
         mp.callCEFV(`selectMenu.menus['factionControlMembers'].init('${JSON.stringify(data)}')`);
         mp.callCEFV(`selectMenu.showByName('factionControlMembers')`);
     },
+    showVehiclesSelectMenu(data) {
+        mp.callCEFV(`selectMenu.menus['factionControlVehicles'].init('${JSON.stringify(data)}')`);
+        mp.callCEFV(`selectMenu.showByName('factionControlVehicles')`);
+    },
+    showWarehouseSelectMenu(data) {
+        mp.callCEFV(`selectMenu.menus['factionControlStorage'].init('${JSON.stringify(data)}')`);
+        mp.callCEFV(`selectMenu.showByName('factionControlStorage')`);
+    },
     isGovernmentFaction(factionId) {
         return factionId == 1;
     },
@@ -119,6 +129,16 @@ mp.factions = {
         mp.callCEFV(`interactionMenu.faction = ${factionId}`);
         mp.events.call("mapCase.init", mp.players.local.name, factionId);
     },
+    setRanks(ranks) {
+        this.ranks = ranks;
+        mp.callCEFV(`selectMenu.menus['factionControlRanks'].init('${JSON.stringify(ranks)}')`);
+    },
+    setRankName(rank, name) {
+        if (!this.ranks) return;
+
+        this.ranks[rank - 1].name = name;
+        mp.callCEFV(`selectMenu.menus['factionControlRanks'].init('${JSON.stringify(this.ranks)}')`);
+    },
     registerAttachments() {
         // коробка с боеприпасами в руках
         mp.attachmentMngr.register("ammoBox", "prop_box_ammo04a", 11363, new mp.Vector3(0.05, 0, -0.25),
@@ -141,6 +161,11 @@ mp.factions = {
             true
         );
     },
+    setInfo(info) {
+        this.vehRespawnPrice = info.vehRespawnPrice;
+
+        mp.callCEFV(`selectMenu.setProp('factionControlVehicles', 'respawnPrice', ${this.vehRespawnPrice})`);
+    },
 };
 
 mp.events.add({
@@ -160,11 +185,24 @@ mp.events.add({
     "factions.storage.showMenu": (factionId) => {
         mp.factions.showStorageSelectMenu(factionId);
     },
-    "factions.faction.set": (val) => {
+    "factions.faction.set": (val, ranks) => {
         mp.factions.setFaction(val);
+        mp.factions.setRanks(ranks);
+    },
+    "factions.ranks.name.set": (data) => {
+        mp.factions.setRankName(data.rank, data.name);
     },
     "factions.control.players.show": (data) => {
         mp.factions.showMembersSelectMenu(data);
+    },
+    "factions.control.vehicles.show": (data) => {
+        mp.factions.showVehiclesSelectMenu(data);
+    },
+    "factions.control.warehouse.show": (data) => {
+        mp.factions.showWarehouseSelectMenu(data);
+    },
+    "factions.info.set": (info) => {
+        mp.factions.setInfo(info);
     },
     "playerEnterVehicleBoot": (player, vehicle) => {
         if (mp.factions.hasBox()) {

@@ -22,7 +22,6 @@ mp.events.add('characterInit.done', () => {
 
 
 mp.events.add('taxi.jobmenu.show', (state) => {
-    mp.busy.add('taxi.jobmenu', false);
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["taxiJobMenu"])`);
     switch (state) {
         case 0:
@@ -37,7 +36,6 @@ mp.events.add('taxi.jobmenu.show', (state) => {
 
 
 mp.events.add('taxi.jobmenu.close', () => {
-    mp.busy.remove('taxi.jobmenu');
     mp.callCEFV(`selectMenu.show = false`);
 });
 

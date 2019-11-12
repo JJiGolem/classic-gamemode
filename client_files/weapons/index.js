@@ -18,11 +18,11 @@ mp.weapons = {
     lastIsInMeleeCombat: false,
     lastWeapon: null,
 
-    sync() {
+    sync(force = false) {
         var data = {};
         this.hashes.forEach(hash => {
             var ammo = this.getAmmoWeapon(hash);
-            if (this.lastData[hash] == ammo) return;
+            if (!force && this.lastData[hash] == ammo) return;
             this.lastData[hash] = ammo;
             data[hash] = ammo;
         });
@@ -54,6 +54,11 @@ mp.weapons = {
     },
     hashToValid(hash) {
         if (hash == 3675956304) return -619010992; // weapon_machinepistol
+        if (hash == 3173288789) return -1121678507; // weapon_minismg
+        if (hash == 2578377531) return -1716589765; // weapon_pistol50
+        if (hash == 3220176749) return -1074790547; // weapon_assaultrifle
+        if (hash == 4019527611) return -275439685; // weapon_dbshotgun
+        if (hash == 4208062921) return -86904375; // weapon_carbinerifle_mk2
         var hashes = [2210333304];
         if (hashes.includes(hash)) return -2084633992;
         return hash;
@@ -112,9 +117,10 @@ mp.events.add({
         var i = mp.weapons.hashes.indexOf(hash);
         if (i == -1) return;
         mp.weapons.hashes.splice(i, 1);
+        delete mp.weapons.lastData[hash];
     },
-    "weapons.ammo.sync": () => {
-        mp.weapons.sync();
+    "weapons.ammo.sync": (force = false) => {
+        mp.weapons.sync(force);
     },
     "weapons.ammo.remove": (sqlId, hash) => {
         hash = parseInt(hash);

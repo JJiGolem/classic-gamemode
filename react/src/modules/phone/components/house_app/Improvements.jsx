@@ -21,8 +21,6 @@ class Improvements extends Component {
         const { house, addApp, disableHome } = this.props;
         const { activeIndex, startIndex } = this.state;
 
-        if (house.improvements.length)
-
         return (
             <div className="house_improvements_list-react">
                 {
@@ -140,7 +138,6 @@ const mapDispatchToProps = dispatch => ({
     closeApp: () => dispatch(closeAppDisplay()),
     addApp: app => dispatch(addAppDisplay(app)),
     disableHome: state => dispatch(disableHomePhone(state)),
-    
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Improvements);

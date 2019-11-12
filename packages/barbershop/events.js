@@ -34,7 +34,8 @@ module.exports = {
         let appearanceData = {
             hairColor: player.character.hairColor,
             hairHighlightColor: player.character.hairHighlightColor,
-            facialHairColor: player.character.beardColor
+            facialHairColor: player.character.beardColor,
+            hairstyle: player.character.hair
         }
         let productPrice = barbershop.productPrice;
         let multiplier = barbershop.getPriceMultiplier(id);

@@ -34,7 +34,7 @@
 
 #player-menu .head .top-bar {
     display: grid;
-    grid-template-columns: 2fr 1fr 2fr;
+    grid-template-columns: 2fr min-content 2fr;
 }
 
 #player-menu .head .top-bar .info {
@@ -46,6 +46,7 @@
     font-size: 1.5vh;
     position: relative;
     top: -0.2vh;
+    white-space: nowrap;
 }
 
 #player-menu .head .top-bar .info img {
@@ -159,6 +160,7 @@
     border-radius: 1.8vh;
     border: 1px solid rgba(255, 255, 255, 0.3);
     padding: 1vh 5vh;
+    font-weight: 500;
     /*padding-bottom: 1.3vh;*/
 }
 
@@ -173,12 +175,16 @@
     border: 1px solid rgba(255, 223, 41, 0.1);
     background-color: #FFDF29;
     color: #151515;
-    font-weight: bold;
+    /*font-weight: bold;*/
 }
 
 #player-menu .body {
     margin-top: 2vh;
     overflow: hidden;
+}
+
+#player-menu .body.long-name {
+    height: 100%;
 }
 
 #player-menu .body .character {

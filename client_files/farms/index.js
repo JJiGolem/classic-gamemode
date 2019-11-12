@@ -91,7 +91,6 @@ mp.farms = {
         if (mp.busy.includes()) return;
         if (this.jobType == null) return;
         if (this.isCropping()) return;
-        if (this.hasProduct()) return;
         if (mp.players.local.vehicle) return;
         // TODO: проверка на состояние присмерти
         var object = mp.utils.getNearObject(mp.players.local.position, 3);
@@ -185,6 +184,7 @@ mp.farms = {
             },
         ];
         mp.callCEFV(`selectMenu.setItems('farmWarehouseInfo', '${JSON.stringify(items)}')`);
+        mp.callCEFV(`selectMenu.menus['farmGrainsTake'].init('${JSON.stringify(data.fieldIds)}')`);
     },
     setSoilsWarehouseInfo(data) {
         var items = [{

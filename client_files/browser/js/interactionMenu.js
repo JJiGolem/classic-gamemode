@@ -100,10 +100,14 @@ var interactionMenu = new Vue({
                         text: "Мои документы",
                         icon: "doc.png"
                     },
-                    // {
-                    //     text: "Анимации",
-                    //     icon: "activity.png"
-                    // }
+                    {
+                        text: "Мой транспорт",
+                        icon: "vehicle.svg"
+                    },
+                    {
+                        text: "Анимации",
+                        icon: "activity.png"
+                    }
                 ],
                 handler(index) {
                     var item = this.items[index];
@@ -128,6 +132,12 @@ var interactionMenu = new Vue({
                     } else if (item.text == "Эфир") {
                         mp.trigger(`interaction.menu.close`);
                         mp.trigger(`callRemote`, `news.stream`);
+                    } else if (item.text == "Мой транспорт") {
+                        mp.trigger(`interaction.menu.close`);
+                        mp.trigger(`callRemote`, `vehicles.own.list.show`);
+                    } else if (item.text == "Анимации") {
+                        mp.trigger(`interaction.menu.close`);
+                        selectMenu.showByName("animations");
                     }
                 }
             },
@@ -149,13 +159,13 @@ var interactionMenu = new Vue({
                 handler(index) {
                     var item = this.items[index];
                     if (item.text == 'Познакомиться') {
-                        interactionMenu.show = false;
+                        mp.trigger(`interaction.menu.close`);
                         mp.trigger(`interactionMenu.onClick`, this.name, item.text);
                     } else if (item.text == 'Документы') {
                         mp.trigger(`documents.list`);
                     } else if (item.text == 'Деньги') {
                         //mp.trigger(`interaction.menu.close`);
-                        interactionMenu.show = false;
+                        mp.trigger(`interaction.menu.close`);
                         mp.trigger(`interaction.money.show`);
 
                     } else if (item.text == 'Организация') {
@@ -174,6 +184,9 @@ var interactionMenu = new Vue({
                         interactionMenu.menu = interactionMenu.menus["news"];
                     } else if (item.text == 'Mafia') {
                         interactionMenu.menu = interactionMenu.menus["mafia"];
+                    } else if (item.text == 'Бросить кости') {
+                        mp.trigger(`interaction.menu.close`);
+                        mp.trigger(`casino.dice.offer.create`);
                     }
                 }
             },
@@ -435,6 +448,10 @@ var interactionMenu = new Vue({
                         text: "Мешок на голову",
                         icon: "hide.svg"
                     },
+                    {
+                        text: "В авто",
+                        icon: "vehicle.svg"
+                    },
                 ],
                 handler(index) {
                     var item = this.items[index];
@@ -444,6 +461,7 @@ var interactionMenu = new Vue({
             },
         },
         faction: null,
+        hasHeadBag: false,
     },
     methods: {
         imgSrc(index) {
@@ -601,7 +619,20 @@ var interactionMenu = new Vue({
                 this.deleteItem("player_interaction", "Mafia");
                 this.deleteItem('player_ownmenu', "Захват биз.");
             }
-        }
+        },
+        hasHeadBag(val) {
+            if (val) {
+                var item = {
+                    text: "Снять мешок",
+                    icon: "hide.svg",
+                };
+                this.addItems("police", item);
+                this.addItems("fib", item);
+            } else {
+                this.deleteItem("police", "Снять мешок");
+                this.deleteItem("fib", "Снять мешок");
+            }
+        },
     },
 });
 

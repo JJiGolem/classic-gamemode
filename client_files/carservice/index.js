@@ -72,7 +72,6 @@ mp.events.add('characterInit.done', () => {
 
 mp.events.add('carservice.jobshape.enter', () => {
     if (mp.busy.includes()) return;
-    mp.busy.add('carservice.jobshape', false);
     mp.events.callRemote('carservice.jobshape.enter');
 });
 
@@ -99,7 +98,6 @@ mp.events.add('carservice.jobmenu.show', (state) => {
 });
 
 mp.events.add('carservice.jobmenu.close', () => {
-    mp.busy.remove('carservice.jobshape');
     mp.callCEFV(`selectMenu.show = false`);
 });
 
@@ -112,23 +110,16 @@ mp.events.add('carservice.shape.leave', () => {
 });
 
 mp.events.add('carservice.diagnostics.offer', () => {
-    mp.chat.debug('offer');
-
     let veh = mp.getCurrentInteractionEntity();
-    mp.chat.debug(veh.type);
-    if (!veh) return mp.chat.debug('!veh');
-    if (veh.type != 'vehicle') return mp.chat.debug(`veh.type != 'vehicle'`);
+    if (!veh) return;
+    if (veh.type != 'vehicle') return;
     //setTimeout(() => {
-        mp.chat.debug('timeout')
         let driver = veh.getPedInSeat(-1);
-        mp.chat.debug(driver);
         if (!driver) return mp.notify.error('В т/с нет водителя', 'Ошибка');
         let targetId = mp.players.atHandle(driver).remoteId;
-        mp.chat.debug(mp.players.atHandle(driver).remoteId);
         mp.events.callRemote('carservice.diagnostics.offer', targetId);
         mp.notify.success('Вы предложили диагностику', 'Автомастерская');
     //}, 3000)
-
 });
 
 
@@ -157,7 +148,6 @@ mp.events.add('carservice.diagnostics.preparation', (vehId) => {
         if (isPreparingForDiagnostics) {
             if (!mp.players.local.isWalking()) {
                 isPreparingForDiagnostics = false;
-                mp.chat.debug('остановился');
 
                 mp.players.local.setHeading(currentRepairingVehicle.getHeading() - 180);
 

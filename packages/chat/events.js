@@ -98,6 +98,8 @@ module.exports = {
             case '/try':
             case '/gnews':
             case '/d':
+            case '/m':
+            case '/dice':
                 if (!/\S/.test(args.join(' '))) return;
                 if (command == '/b') command = '/n';
                 mp.events.call(command, player, args);
@@ -244,4 +246,29 @@ module.exports = {
         notify.success(player, 'Вы были телепортированы');
     },
 
+    "/dice": (player, args) => {
+        if (!player.character) return;
+        if (!args || args.length < 2) return notify.warning(player, `Используйте /dice [id] [сумма]`)
+        let targetId = parseInt(args[0]);
+        let amount = parseInt(args[1]);
+        if (isNaN(targetId) || isNaN(amount) || amount <= 0) return notify.warning(player, `Некорректные данные`);
+        let data = {
+            targetId: args[0],
+            amount: args[1]
+        }
+        mp.events.call('casino.dice.offer.send', player, data);
+    },
+
+    "/m": (player, message) => {
+        if (!player.character) return;
+        let factionId = player.character.factionId;
+        if (!factions.isPoliceFaction(factionId) &&
+            !factions.isFibFaction(factionId) && !factions.isArmyFaction(factionId)) return;
+        if (!player.vehicle ||
+            !(player.vehicle.key == 'faction' && player.vehicle.owner == factionId)) return notify.error(player, 'Вы не в служебном транспорте');
+        mp.players.forEachInRange(player.position, 15, (currentPlayer) => {
+            if (!currentPlayer.character) return;
+            currentPlayer.call('chat.message.split', [message.join(' '), `!{#ffcd45}[Мегафон] ${player.character.name}[${player.id}]: `]);
+        });
+    },
 }

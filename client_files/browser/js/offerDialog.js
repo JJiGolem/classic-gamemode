@@ -6,7 +6,7 @@ var offerDialog = new Vue({
             "documents": {
                 text: "Carter Slade хочет показать вам паспорт",
                 on(values) {
-                    this.text = `${values.name} хочет показать Вам ${values.doc}`;
+                    this.text = `<span>${values.name}</span> хочет показать Вам ${values.doc}`;
                 },
                 yes() {
                     mp.trigger("callRemote", "documents.offer.accept", 1);
@@ -21,10 +21,12 @@ var offerDialog = new Vue({
                 },
             },
             "carservice_diagnostics": {
-                text: "Dun Hill предлагает диагностику вашего транспорта",
+                text: "Вы желаете провести диагностику вашего транспорта",
                 price: 100,
+                name: "Cyrus Raider",
                 on(values) {
-                    this.text = `${values.name} предлагает вам диагностику транспорта`;
+                    this.name = values.name;
+                    this.text = `Вы желаете провести диагностику вашего транспорта за <br /><span class="money">${offerDialog.pretty(values.price)} $</span>?`;
                 },
                 yes() {
                     mp.trigger("callRemote", "carservice.diagnostics.accept", 1);
@@ -40,11 +42,13 @@ var offerDialog = new Vue({
                 },
             },
             "house_sell": {
-                text: "Swifty Swift предлагает вам купить его дом",
+                text: "Swifty Swift предлагает вам купить его дом за 1`",
                 price: 100,
+                name: "Cyrus Rader",
                 on(values) {
                     this.price = values.price;
-                    this.text = `${values.name} предлагает вам купить его дом`;
+                    this.name = values.name;
+                    this.text = `Вы желаете приобрести дом за <br /><span class="money">${offerDialog.pretty(values.price)} $</span>?`;
                 },
                 yes() {
                     mp.trigger("callRemote", "house.sell.ans", 1);
@@ -59,9 +63,11 @@ var offerDialog = new Vue({
             "biz_sell": {
                 text: "Swifty Swift предлагает вам купить его бизнес",
                 price: 100,
+                name: "Cy Raider",
                 on(values) {
                     this.price = values.price;
-                    this.text = `${values.name} предлагает вам купить его бизнес`;
+                    this.name = values.name;
+                    this.text = `Вы желаете приобрести бизнес за <br /><span class="money">${offerDialog.pretty(values.price)} $</span>?`;
                 },
                 yes() {
                     mp.trigger("callRemote", "biz.sell.ans", 1);
@@ -78,7 +84,8 @@ var offerDialog = new Vue({
                 price: 228,
                 on(values) {
                     this.price = values.price;
-                    this.text = `${values.name} предлагает вам купить т/с ${values.model} (${values.plate})`;
+                    this.name = values.name
+                    this.text = `Вы желаете приобрести т/с ${values.model} (${values.plate}) за <br /><span class="money">${offerDialog.pretty(values.price)} $</span>?`;
                 },
                 yes() {
                     mp.trigger("callRemote", "vehicles.sell.offer.accept", 1);
@@ -97,7 +104,7 @@ var offerDialog = new Vue({
             "faction_invite": {
                 text: `Carter Slade предлагает вам вступить в Groove Street`,
                 on(values) {
-                    this.text = `${values.name} предлагает вам вступить в ${values.faction}`;
+                    this.text = `<span>${values.name}</span> предлагает вам вступить в ${values.faction}`;
                 },
                 yes() {
                     mp.trigger("callRemote", "factions.invite.accept");
@@ -113,7 +120,8 @@ var offerDialog = new Vue({
                 text: `Carter Slade предлагает вам лечение`,
                 price: 100,
                 on(values) {
-                    this.text = `${values.name} предлагает вам лечение`;
+                    this.name = values.name;
+                    this.text = `Вы желаете вылечиться за <br /><span class="money">${offerDialog.pretty(values.price)} $</span>?`;
                     this.price = values.price;
                 },
                 yes() {
@@ -130,8 +138,9 @@ var offerDialog = new Vue({
                 text: `Carter Slade предлагает вам купить Ферму #99`,
                 price: 999,
                 on(values) {
-                    this.text = `${values.name} предлагает вам купить Ферму #${values.farmId}`;
+                    this.text = `Вы желаете приобрести Ферму #${values.farmId} за <br /><span class="money">${offerDialog.pretty(values.price)} $</span>?`;
                     this.price = values.price;
+                    this.name = values.name;
                 },
                 yes() {
                     mp.trigger("callRemote", "farms.sell.player.accept");
@@ -144,9 +153,11 @@ var offerDialog = new Vue({
                 },
             },
             "carrier_job": {
-                text: `Арендовать грузовик?`,
+                text: `Вы желаете арендовать рендовать грузовик за <span>100 $</span>?`,
                 price: 999,
+                name: "Parking", // TODO: Необходимо имя!
                 on(values) {
+                    this.text = `Вы желаете арендовать грузовик за <br /><span class="money">${offerDialog.pretty(values.price)} $</span>?`;
                     this.price = values.price;
                 },
                 yes() {
@@ -170,12 +181,18 @@ var offerDialog = new Vue({
             },
             "death": {
                 text: `Дождаться медиков?`,
-                on() {},
+                medKnockTime: 0,
+                knockTime: 0,
+                on(data) {
+                    this.medKnockTime = data.medKnockTime;
+                    this.knockTime = data.knockTime;
+                },
                 yes() {
-                    mp.trigger(`callRemote`, `death.wait`);
+                    mp.trigger(`callRemote`, `death.wait`, this.medKnockTime);
                 },
                 no() {
-                    mp.trigger(`callRemote`, `death.spawn`);
+                    mp.trigger(`callRemote`, `death.wait`, this.knockTime);
+                    // mp.trigger(`death.callRemote.spawn`);
                 },
                 ignore() {
                     mp.trigger(`callRemote`, `death.wait`);
@@ -198,7 +215,7 @@ var offerDialog = new Vue({
             "faction_cash_check": {
                 text: `Желаете пополнить общак The Ballas на сумму $999999?`,
                 on(values) {
-                    this.text = `Желаете пополнить общак ${values.name} на сумму $${values.sum}?`;
+                    this.text = `Желаете пополнить общак <span>${values.name}</span> на сумму $${values.sum}?`;
                 },
                 yes() {
                     mp.trigger(`callRemote`, `factions.cash.offer.accept`);
@@ -230,7 +247,7 @@ var offerDialog = new Vue({
                 recId: null,
                 on(values) {
                     this.recId = values.recId;
-                    this.text = `Вы хотите сделать ${values.name} предложение?`;
+                    this.text = `Вы хотите сделать <span>${values.name}</span> предложение?`;
                 },
                 yes() {
                     mp.trigger(`callRemote`, `wedding.add`, this.recId);
@@ -241,7 +258,7 @@ var offerDialog = new Vue({
             "wedding_female": {
                 text: `Carter Slade предлагает вам выйти замуж`,
                 on(values) {
-                    this.text = `${values.name} предлагает вам выйти замуж`;
+                    this.text = `<span>${values.name}</span> предлагает вам выйти замуж`;
                 },
                 yes() {
                     mp.trigger(`callRemote`, `wedding.add.accept`, this.recId);
@@ -256,9 +273,11 @@ var offerDialog = new Vue({
             "unarrest": {
                 text: `Carter Slade предлагает вас освободить`,
                 price: 999,
+                name: null,
                 on(values) {
-                    this.text = `${values.name} предлагает вас освободить`;
+                    this.text = `Вы желаете выйти на свободу за <br /><span class="money">${offerDialog.pretty(values.price)} $</span>?`;
                     this.price = values.price;
+                    this.name = values.name;
                 },
                 yes() {
                     mp.trigger(`callRemote`, `government.unarrest.accept`);
@@ -270,12 +289,32 @@ var offerDialog = new Vue({
                     mp.trigger(`callRemote`, `government.unarrest.cancel`);
                 },
             },
+            "dice": {
+                text: `Carter Slade предлагает вам сыграть в кости`,
+                price: 999,
+                on(values) {
+                    this.text = `ID: ${values.id} предлагает вам сыграть в кости`;
+                    this.price = values.amount;
+                },
+                yes() {
+                    mp.trigger(`callRemote`, `casino.dice.offer.accept`, 1);
+                },
+                no() {
+                    mp.trigger(`callRemote`, `casino.dice.offer.accept`, 0);
+                },
+                ignore() {
+                    mp.trigger(`callRemote`, `casino.dice.offer.accept`, 0);
+                },
+            },
         },
         dialog: null,
         timeout: null,
+        green: false,
+        red: false,
     },
     methods: {
         show(name, values) {
+            this.green = this.red = false;
             if (typeof values == 'string') values = JSON.parse(values);
             this.dialogs[name].on(values);
             this.dialog = this.dialogs[name];
@@ -298,6 +337,7 @@ var offerDialog = new Vue({
         let self = this;
         window.addEventListener('keyup', function(e) {
             if (!self.dialog) return;
+            self.green = self.red = false;
             if (busy.includes(["chat", "terminal", "mapCase", "phone"])) return;
             if (e.keyCode == 89) { // Y
                 self.dialog.yes();
@@ -307,14 +347,23 @@ var offerDialog = new Vue({
                 self.hide();
             }
         });
+        window.addEventListener('keydown', function(e) {
+            if (!self.dialog) return;
+            if (busy.includes(["chat", "terminal", "mapCase", "phone"])) return;
+            if (e.keyCode == 89) { // Y
+                self.green = true;
+            } else if (e.keyCode == 78) { // N
+                self.red = true;
+            }
+        });
     },
     watch: {
         dialog(val) {
-            if (val) busy.add("offerDialog", false, true);
+            if (val) busy.add("offerDialog", true, true);
             else busy.remove("offerDialog", true);
         }
     },
 });
 
 // for tests
-// offerDialog.show("documents", {name: "Carter Slade", doc: "Паспорт"});
+ /*offerDialog.show("unarrest", {name: "Kir", price: "200000"});*/

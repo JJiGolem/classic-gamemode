@@ -1,5 +1,5 @@
 mp.inventory = {
-    groundMaxDist: 2,
+    groundMaxDist: 1.8,
     lastArmour: 0,
     itemsInfo: null,
     animData: require('animations/data.js'),
@@ -8,6 +8,15 @@ mp.inventory = {
         weaponHash: 0,
     },
     handsBlock: false,
+    groundItemMarker: {},
+    // Настройка аттачей на спине
+    backAttachInfo: {
+        70: { // топор
+            bone: 24818,
+            pos: new mp.Vector3(0.2, -0.155, -0.1),
+            rot: new mp.Vector3(13, 90, 10)
+        },
+    },
 
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
@@ -85,10 +94,7 @@ mp.inventory = {
         this.lastArmour = val;
         mp.callCEFV(`inventory.setArmour(${val})`);
     },
-    takeItemHandler() {
-        // поднятие предмета с земли
-        if (mp.busy.includes()) return;
-        var pos = mp.players.local.position;
+    getNearGroundItemObject(pos) {
         var itemObj, minDist = 9999;
         mp.objects.forEach((obj) => {
             var objPos = obj.position;
@@ -100,6 +106,14 @@ mp.inventory = {
             minDist = dist;
             itemObj = obj;
         });
+        return itemObj;
+    },
+    takeItemHandler() {
+        // поднятие предмета с земли
+        if (mp.busy.includes()) return;
+        if (mp.players.local.vehicle) return;
+        var pos = mp.players.local.getOffsetFromInWorldCoords(0, 0, 0);
+        var itemObj = this.getNearGroundItemObject(pos);
         if (!itemObj) return;
         // TODO: проверка на аттачи
         mp.events.callRemote("item.ground.take", itemObj.remoteId);
@@ -138,9 +152,17 @@ mp.inventory = {
             var itemId = list[i];
             var model = models[i];
 
-            mp.attachmentMngr.register(`weapon_${itemId}`, model, 24818, new mp.Vector3(0.2, -0.155, -0.1),
-                new mp.Vector3(13, 180, 10)
-            );
+            var bone = 24818;
+            var pos = new mp.Vector3(0.2, -0.155, -0.1);
+            var rot = new mp.Vector3(13, 180, 10);
+
+            if (this.backAttachInfo[itemId]) {
+                bone = this.backAttachInfo[itemId].bone;
+                pos = this.backAttachInfo[itemId].pos;
+                rot = this.backAttachInfo[itemId].rot;
+            }
+
+            mp.attachmentMngr.register(`weapon_${itemId}`, model, bone, pos, rot);
         }
         mp.callCEFV(`inventory.setBodyList(9, '${JSON.stringify(list)}')`)
     },
@@ -199,11 +221,22 @@ mp.inventory = {
         this.ammoSync.need = false;
         this.ammoSync.weaponHash = 0;
     },
+    initGroundItemMarker() {
+        this.groundItemMarker = mp.markers.new(2, new mp.Vector3(0, 0, 0), 0.1, {
+            rotation: new mp.Vector3(0, 180, 0),
+            visible: false,
+            color: [255, 223, 41, 255],
+        });
+        this.groundItemMarker.ignoreCheckVisible = true;
+    },
 };
 
 mp.events.add("characterInit.done", () => {
     mp.inventory.enable(true);
-    mp.keys.bind(69, true, mp.inventory.takeItemHandler); // E
+    mp.keys.bind(69, true, () => { // E
+        mp.inventory.takeItemHandler();
+    });
+    mp.inventory.initGroundItemMarker();
 });
 
 mp.events.add("inventory.enable", mp.inventory.enable);
@@ -247,7 +280,9 @@ mp.events.add("inventory.deleteEnvironmentItem", mp.inventory.deleteEnvironmentI
 
 mp.events.add("inventory.setMaxPlayerWeight", mp.inventory.setMaxPlayerWeight);
 
-mp.events.add("inventory.registerWeaponAttachments", mp.inventory.registerWeaponAttachments);
+mp.events.add("inventory.registerWeaponAttachments", (list, models) => {
+    mp.inventory.registerWeaponAttachments(list, models);
+});
 
 mp.events.add("inventory.setSatiety", mp.inventory.setSatiety);
 
@@ -256,6 +291,12 @@ mp.events.add("inventory.setThirst", mp.inventory.setThirst);
 mp.events.add("inventory.saveHotkey", mp.inventory.saveHotkey);
 
 mp.events.add("inventory.removeHotkey", mp.inventory.removeHotkey);
+
+mp.events.add("inventory.ground.put", (sqlId) => {
+    var pos = mp.players.local.getOffsetFromInWorldCoords(0, 1, 2);
+    pos.z = mp.game.gameplay.getGroundZFor3dCoord(pos.x, pos.y, pos.z, false, false);
+    mp.events.callRemote(`item.ground.put`, sqlId, JSON.stringify(pos));
+});
 
 mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`enterBoot: #${vehicle.remoteId}`);
@@ -317,6 +358,19 @@ mp.events.add("time.main.tick", () => {
 
 mp.events.add("render", () => {
     mp.inventory.disableControlActions();
+
+    var player = mp.players.local;
+    var itemObj = mp.inventory.getNearGroundItemObject(player.position);
+    if (itemObj && !player.vehicle) {
+        var pos = itemObj.position;
+        pos.z += 0.5;
+        mp.inventory.groundItemMarker.position = pos;
+        mp.inventory.groundItemMarker.visible = true;
+    } else mp.inventory.groundItemMarker.visible = false;
+    if (player.getVariable("hands")) {
+        mp.game.controls.disableControlAction(0, 24, true); /// удары
+        mp.game.controls.disableControlAction(0, 140, true); /// удары R
+    }
 });
 
 mp.events.addDataHandler("trunk", (vehicle, value) => {

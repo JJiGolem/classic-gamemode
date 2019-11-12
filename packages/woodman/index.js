@@ -1,6 +1,7 @@
 "use strict";
 
 let inventory = call('inventory');
+let jobs = call('jobs');
 let money = call('money');
 let notifs = call('notifications');
 let utils = call('utils');
@@ -9,13 +10,13 @@ module.exports = {
     // Общая информация о типах деревьев
     treesInfo: null,
     // Позиция лесопилки
-    storagePos: new mp.Vector3(1568.9091796875, 1647.27392578125, 107.4094467163086 - 1),
+    storagePos: new mp.Vector3(-568.3031616210938, 5253.30322265625, 70.48751831054688 - 1),
     // Снаряжение лесопилки
     items: [{
         itemId: 70,
         params: {
             health: 100,
-            weaponHash: mp.joaat('weapon_battleaxe'),
+            weaponHash: mp.joaat('weapon_hatchet'),
         },
         price: 100
     }],
@@ -34,6 +35,8 @@ module.exports = {
                     sex: 1,
                     pockets: '[5,5,5,5,10,5]',
                     clime: '[-5,30]',
+                    name: 'Жилетка лесоруба',
+                    treeDamage: 5,
                 },
                 price: 100,
             },
@@ -45,6 +48,8 @@ module.exports = {
                     sex: 1,
                     pockets: '[5,5,5,5,10,5]',
                     clime: '[-5,30]',
+                    name: 'Штаны лесоруба',
+                    treeDamage: 5,
                 },
                 price: 100,
             },
@@ -55,12 +60,55 @@ module.exports = {
                     texture: 0,
                     sex: 1,
                     clime: '[-5,30]',
+                    name: 'Ботинки лесоруба',
+                    treeDamage: 5,
                 },
                 price: 100,
             }
         ],
         1: [ // жен.
-
+            {
+                itemId: 7,
+                params: {
+                    variation: 167,
+                    texture: 0,
+                    torso: 46,
+                    tTexture: 1,
+                    undershirt: 86,
+                    // uTexture: 0,
+                    sex: 0,
+                    pockets: '[5,5,5,5,10,5]',
+                    clime: '[-5,30]',
+                    name: 'Жилетка лесоруба',
+                    treeDamage: 5,
+                },
+                price: 100,
+            },
+            {
+                itemId: 8,
+                params: {
+                    variation: 100,
+                    texture: 13,
+                    sex: 0,
+                    pockets: '[5,5,5,5,10,5]',
+                    clime: '[-5,30]',
+                    name: 'Штаны лесоруба',
+                    treeDamage: 5,
+                },
+                price: 100,
+            },
+            {
+                itemId: 9,
+                params: {
+                    variation: 26,
+                    texture: 0,
+                    sex: 0,
+                    clime: '[-5,30]',
+                    name: 'Ботинки лесоруба',
+                    treeDamage: 5,
+                },
+                price: 100,
+            }
         ]
     },
     // Урон по дереву
@@ -71,6 +119,12 @@ module.exports = {
     axDamage: 1,
     // Бревна на земле
     logObjects: [],
+    // Стоимость продажи дерева
+    treePrice: 10,
+    // Опыт скилла за срубленное дерево/бревно
+    exp: 0.05,
+    // Прибавка к цене предмета в % (0.0-1.0) при фулл скилле
+    priceBonus: 0.5,
 
     init() {
         this.loadTreesInfoFromDB();
@@ -88,7 +142,11 @@ module.exports = {
         });
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
         colshape.onEnter = (player) => {
-            player.call(`woodman.storage.inside`, [this.getItemPrices(player.character.gender)]);
+            var data = {
+                itemPrices: this.getItemPrices(player.character.gender),
+                treePrice: this.treePrice
+            };
+            player.call(`woodman.storage.inside`, [data]);
             player.woodmanStorage = marker;
         };
         colshape.onExit = (player) => {
@@ -96,7 +154,7 @@ module.exports = {
             delete player.woodmanStorage;
         };
         marker.colshape = colshape;
-        mp.blips.new(1, pos, {
+        mp.blips.new(85, pos, {
             color: 71,
             name: `Лесопилка`,
             shortRange: 10,
@@ -157,6 +215,28 @@ module.exports = {
 
         notifs.success(player, `Вы приобрели ${inventory.getName(item.itemId)}`);
     },
+    sellItems(player) {
+        var header = 'Дровосек';
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.woodmanStorage) return out(`Вы не у лесопилки`);
+
+        var items = inventory.getArrayByItemId(player, 131);
+        if (!items.length) return out(`Вы не имеете ресурсы`);
+
+        var exp = jobs.getJobSkill(player, 7).exp;
+        var pay = items.length * this.treePrice;
+        pay *= (1 + this.priceBonus * (exp / 100));
+        money.addCash(player, pay, (res) => {
+            if (!res) out(`Ошибка начисления наличных`);
+
+            items.forEach(item => inventory.deleteItem(player, item));
+
+        }, `Продажа ${items.length} ед. дерева на лесопилке`);
+
+        notifs.success(player, `Продано ${items.length} ед. дерева`, header);
+    },
     hitTree(player, colshape) {
         var header = `Лесоруб`;
         var out = (text) => {
@@ -173,8 +253,7 @@ module.exports = {
         inventory.updateParam(player, ax, 'health', health.value);
 
 
-        var damage = this.treeDamage;
-        // TODO: зависеть урон от топора, формы и навыка
+        var damage = parseInt(this.treeDamage * this.getInventoryDamageBoost(player.inventory.items));
 
         colshape.health = Math.clamp(colshape.health - damage, 0, 100);
 
@@ -183,7 +262,10 @@ module.exports = {
             rec.call(`woodman.tree.health`, [colshape.health]);
         });
 
-        if (!colshape.health) player.call(`woodman.log.request`);
+        if (!colshape.health) {
+            player.call(`woodman.log.request`);
+            this.addJobExp(player);
+        }
     },
     addLogObject(colshape, slot) {
         var obj = mp.objects.new('prop_fence_log_02', slot.pos, {
@@ -221,8 +303,7 @@ module.exports = {
         health.value = Math.clamp(health.value - this.axDamage, 0, 100);
         inventory.updateParam(player, ax, 'health', health.value);
 
-        var damage = this.logDamage;
-        // TODO: зависеть урон от топора, формы и навыка
+        var damage = parseInt(this.logDamage * this.getInventoryDamageBoost(player.inventory.items));
         colshape.squats[index] = Math.clamp(colshape.squats[index] - damage, 0, 100);
 
         var obj = colshape.obj;
@@ -234,6 +315,7 @@ module.exports = {
         var allHealth = utils.arraySum(colshape.squats);
         if (!allHealth) {
             player.call(`woodman.items.request`);
+            this.addJobExp(player);
         }
     },
     addLogItems(colshape, slots) {
@@ -246,5 +328,18 @@ module.exports = {
         slots.forEach(slot => {
             inventory.addGroundItem(131, params, slot);
         });
+    },
+    getInventoryDamageBoost(list) {
+        var items = inventory.getItemsByParams(list, null, 'treeDamage', null).filter(x => !x.parentId);
+        var boost = 0;
+        items.forEach(item => {
+            var treeDamage = inventory.getParam(item, 'treeDamage').value;
+            boost += treeDamage;
+        });
+        return 1 + (boost / 100);
+    },
+    addJobExp(player) {
+        var skill = jobs.getJobSkill(player, 7);
+        jobs.setJobExp(player, skill, skill.exp + this.exp);
     },
 };

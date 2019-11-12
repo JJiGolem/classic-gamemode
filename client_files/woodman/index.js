@@ -13,13 +13,32 @@ mp.woodman = {
         border: 0.0005,
         textColor: [255, 255, 255, 255],
         textScale: [0.2, 0.2],
+        getProgressColor() {
+            var player = mp.players.local;
+            return (player.isInMeleeCombat()) ? [255, 0, 0, 200] : [0, 0, 0, 200];
+        },
+        getFillColor(health) {
+            if (health > 50) return [52, 222, 59, 200];
+            if (health > 15) return [255, 187, 0, 200];
+
+            return [187, 68, 68, 200];
+        },
     },
     logHealthBar: {
         width: 0.05,
         height: 0.012,
         border: 0.0004,
-        textColor: [255, 255, 255, 255],
+        textColor: [255, 255, 255, 200],
         textScale: [0.17, 0.17],
+        getProgressColor() {
+            return [0, 0, 0, 50];
+        },
+        getFillColor(health) {
+            if (health > 50) return [52, 222, 59, 50];
+            if (health > 15) return [255, 187, 0, 50];
+
+            return [187, 68, 68, 50];
+        },
     },
     treesInfo: null,
     treesHash: [],
@@ -41,11 +60,11 @@ mp.woodman = {
 
     drawTreeHealthBar(x, y) {
         var info = this.treeHealthBar;
-        var color = this.getProgressColor();
+        var color = info.getProgressColor();
         var border = info.border;
-        var fillColor = this.getFillColor(this.treeHealth);
-        var textColor = info.textColor
-        var textScale = info.textScale
+        var fillColor = info.getFillColor(this.treeHealth);
+        var textColor = info.textColor;
+        var textScale = info.textScale;
         mp.game.graphics.drawRect(x, y, info.width + border * 2, info.height + border * 5, color[0], color[1], color[2], color[3]);
         mp.game.graphics.drawRect(x - (100 - this.treeHealth) * 0.0005, y,
             info.width * this.treeHealth / 100, info.height,
@@ -57,14 +76,17 @@ mp.woodman = {
             outline: false
         });
     },
-    drawLogHealthBar(x, y) {
+    drawLogHealthBar(x, y, index) {
         var info = this.logHealthBar;
-        var health = this.logSquats[this.logFocusSlotI];
-        var color = this.getProgressColor();
+        var health = this.logSquats[index];
+        var color = info.getProgressColor();
         var border = info.border;
-        var fillColor = this.getFillColor(health);
+        var fillColor = info.getFillColor(health);
         var textColor = info.textColor;
         var textScale = info.textScale;
+        if (this.logFocusSlotI == index) {
+            color[3] = fillColor[3] = 200;
+        }
         mp.game.graphics.drawRect(x, y, info.width + border * 2, info.height + border * 5, color[0], color[1], color[2], color[3]);
         mp.game.graphics.drawRect(x - (100 - health) * 0.00025, y,
             info.width * health / 100, info.height,
@@ -75,16 +97,6 @@ mp.woodman = {
             scale: textScale,
             outline: false
         });
-    },
-    getProgressColor() {
-        var player = mp.players.local;
-        return (player.isInMeleeCombat()) ? [255, 0, 0, 200] : [0, 0, 0, 200];
-    },
-    getFillColor(health) {
-        if (health > 50) return [52, 222, 59, 200];
-        if (health > 15) return [255, 187, 0, 200];
-
-        return [187, 68, 68, 200];
     },
     setTreesInfo(info) {
         this.treesInfo = info;
@@ -109,7 +121,7 @@ mp.woodman = {
     },
     isAxInHands(player) {
         if (!player) player = mp.players.local;
-        return player.weapon == mp.game.joaat('weapon_battleaxe');
+        return player.weapon == mp.game.joaat('weapon_hatchet');
     },
     isFocusTree() {
         if (!this.treePos) return false;
@@ -122,10 +134,10 @@ mp.woodman = {
 
         return mp.vdist(player.position, this.treePos) > mp.vdist(frontPos, this.treePos);
     },
-    setInside(prices) {
-        if (!prices) return mp.callCEFV(`selectMenu.show = false`);
+    setInside(data) {
+        if (!data) return mp.callCEFV(`selectMenu.show = false`);
 
-        mp.callCEFV(`selectMenu.menus['woodman'].init('${JSON.stringify(prices)}')`);
+        mp.callCEFV(`selectMenu.menus['woodman'].init('${JSON.stringify(data)}')`);
         mp.callCEFV(`selectMenu.showByName('woodman')`);
     },
     setTreeInside(pos, health) {
@@ -170,7 +182,7 @@ mp.woodman = {
             else mp.prompt.showByName('woodman_log_take_ax');
 
             this.logSquats = squats;
-            this.logObj = mp.objects.at(objId);
+            this.logObj = mp.objects.atRemoteId(objId);
         } else {
             mp.prompt.hide();
 
@@ -196,8 +208,8 @@ mp.woodman = {
         // TODO: set correct heading
         mp.events.callRemote(`animations.playById`, 5523);
         this.logTimer = mp.timer.add(() => {
+            this.stopLogTimer();
             if (!mp.objects.exists(this.logObj) || !this.logObj || this.logFocusSlotI == -1 || !this.logSquats[this.logFocusSlotI]) {
-                this.stopLogTimer();
                 return;
             }
             mp.events.callRemote(`woodman.logs.hit`, this.logFocusSlotI);
@@ -208,36 +220,41 @@ mp.woodman = {
         this.logTimer = null;
         mp.events.callRemote(`animations.stop`);
     },
+    createJobPed() {
+        var pedInfo = {
+            model: "mp_m_counterfeit_01",
+            position: {
+                x: -567.8530883789062,
+                y: 5254.45556640625,
+                z: 70.46736907958984
+            },
+            heading: 146.89959716796875,
+        };
+        mp.events.call('NPC.create', pedInfo);
+    },
 };
 
 mp.events.add({
-    "characterInit.done": () => {
-        mp.keys.bind(69, true, () => { // E
-            if (mp.game.ui.isPauseMenuActive()) return;
-            if (mp.busy.includes()) return;
-            mp.woodman.hitLogHandler();
-        });
-    },
     "render": () => {
         var player = mp.players.local;
         if (!mp.woodman.isAxInHands(player)) return;
         if (mp.woodman.treePos) {
             var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
             var endPos = player.getOffsetFromInWorldCoords(0, 1, 0);
-            mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
+            // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
 
             startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
             endPos = player.getOffsetFromInWorldCoords(-0.3, 1, 0);
-            mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
+            // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
 
             startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
             endPos = player.getOffsetFromInWorldCoords(0.3, 1, 0);
-            mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
+            // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
 
             if (mp.woodman.treePos) {
                 startPos = player.position;
                 endPos = mp.woodman.treePos;
-                mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 255, 0, 100);
+                // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 255, 0, 100);
             }
 
             if (mp.woodman.isFocusTree()) {
@@ -254,13 +271,22 @@ mp.events.add({
                 var frontPos = player.getOffsetFromInWorldCoords(0, 0.5, -1);
                 if (mp.vdist(playerPos, nearSlot) < mp.vdist(frontPos, nearSlot)) mp.woodman.logFocusSlotI = -1;
             }
-            if (mp.woodman.logFocusSlotI != -1) {
-                var pos2d = mp.game.graphics.world3dToScreen2d(slots[mp.woodman.logFocusSlotI]);
-                if (pos2d) mp.woodman.drawLogHealthBar(pos2d.x, pos2d.y);
+            // if (mp.woodman.logFocusSlotI != -1) {
+            //     var pos2d = mp.game.graphics.world3dToScreen2d(slots[mp.woodman.logFocusSlotI]);
+            //     if (pos2d) mp.woodman.drawLogHealthBar(pos2d.x, pos2d.y);
+            // }
+            for (var i = 0; i < slots.length; i++) {
+                var slot = slots[i];
+                var pos2d = mp.game.graphics.world3dToScreen2d(slot);
+                if (pos2d) mp.woodman.drawLogHealthBar(pos2d.x, pos2d.y, i);
             }
-            var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
-            var endPos = player.getOffsetFromInWorldCoords(0, 0.5, -1);
-            mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 187, 255, 100);
+
+            mp.game.controls.disableControlAction(0, 24, true); /// удары
+            mp.game.controls.disableControlAction(0, 140, true); /// удары R
+
+            // var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
+            // var endPos = player.getOffsetFromInWorldCoords(0, 0.5, -1);
+            // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 187, 255, 100);
         }
         if (mp.woodman.lastStartMelee && Date.now() > mp.woodman.lastStartMelee + mp.woodman.hitWaitTime) {
             mp.woodman.lastStartMelee = 0;
@@ -291,8 +317,8 @@ mp.events.add({
     "woodman.setTreesInfo": (info) => {
         mp.woodman.setTreesInfo(info);
     },
-    "woodman.storage.inside": (prices) => {
-        mp.woodman.setInside(prices);
+    "woodman.storage.inside": (data) => {
+        mp.woodman.setInside(data);
     },
     "woodman.tree.inside": (pos, health) => {
         mp.woodman.setTreeInside(pos, health);
@@ -335,4 +361,13 @@ mp.events.add({
 
         mp.woodman.lastStartMelee = Date.now();
     },
+    "click": (x, y, upOrDown, leftOrRight, relativeX, relativeY, worldPosition, hitEntity) => {
+        if (upOrDown != 'down') return;
+
+        if (mp.game.ui.isPauseMenuActive()) return;
+        if (mp.busy.includes()) return;
+        mp.woodman.hitLogHandler();
+    },
 });
+
+mp.woodman.createJobPed();

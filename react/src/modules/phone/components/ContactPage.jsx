@@ -40,7 +40,7 @@ class ContactPage extends Component {
             renameContact(contact.number, name);
             // eslint-disable-next-line no-undef
             mp.trigger('phone.contact.rename', contact.number, name);
-            let dialog = dialogs.find(dialog => dialog.number === contact.number);
+            let dialog = dialogs.list.find(dialog => dialog.number === contact.number);
             if (dialog) {
                 renameDialog(dialog.number, name);
             }
@@ -72,7 +72,7 @@ class ContactPage extends Component {
     dialogContact() {
         const { addApp, contact, dialogs, addDialog } = this.props;
 
-        let dialog = dialogs.find(dialog => dialog.number === contact.number);
+        let dialog = dialogs.list.find(dialog => dialog.number === contact.number);
 
         if (dialog) {
             addApp({name: 'DialogPage', form: <DialogPage dialog={dialog} />})

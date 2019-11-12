@@ -319,7 +319,7 @@ function setCurrentAppearanceParams() {
 }
 
 function initCurrentAppearanceParams(data) {
-    appearance.hairstyle = player.getDrawableVariation(2);
+    appearance.hairstyle = data.hairstyle;
     appearance.facialHair = player.getHeadOverlayValue(1);
     appearance.hairColor = data.hairColor;
     appearance.hairHighlightColor = data.hairHighlightColor;

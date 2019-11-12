@@ -21,7 +21,7 @@ class Phone extends Component {
                     <img id="phone-background-react" src={require('../../../imgs/phone/new-back.png')}/>
 
                     <div className="display-phone-react">
-                        { apps.map(app => app.form) }
+                        { apps.map((app, index) => <Fragment key={index}>{ app.form }</Fragment>) }
                     </div>
 
                     <div className="panel_home-phone-react">
