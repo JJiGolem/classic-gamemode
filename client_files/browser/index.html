@@ -185,54 +185,60 @@
         </div>
     </div>
 
-    <div v-cloak="v-cloak" id="characterInfo" v-if="show && i < characters.length">
-        <div class="header">Статистика персонажа</div>
-        <div class="content">
-            <div class="name">{{ characters[i].name.split(' ')[0] }}<br />{{ characters[i].name.split(' ')[1] }}</div>
-            <div class="money">
-                <div class="cash">
-                    <img src="img/hud/cash.svg" />
-                    $
-                    {{ pretty(characters[i].cash) }}
+    <div v-cloak="v-cloak" id="characterInfo" v-if="show">
+        <div class="info-box" v-if="i < characters.length">
+            <div class="header">Статистика персонажа</div>
+            <div class="content">
+                <div class="name">{{ characters[i].name.split(' ')[0] }}<br />{{ characters[i].name.split(' ')[1] }}</div>
+                <div class="money">
+                    <div class="cash">
+                        <img src="img/hud/cash.svg" />
+                        $
+                        {{ pretty(characters[i].cash) }}
+                    </div>
+                    <div class="bank">
+                        <img src="img/hud/credit-card.svg" />
+                        $
+                        {{ pretty(characters[i].bank) }}
+                    </div>
                 </div>
-                <div class="bank">
-                    <img src="img/hud/credit-card.svg" />
-                    $
-                    {{ pretty(characters[i].bank) }}
+                <table class="info">
+                    <tr>
+                        <td>Игровой статус:
+                            <div>{{ characters[i].status }}</div>
+                        </td>
+                        <td>Отыграно:
+                            <div>{{ characters[i].hours }}
+                                часов</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Организация:
+                            <div>{{ characters[i].faction }}</div>
+                        </td>
+                        <td>Профессия:
+                            <div>{{ characters[i].job }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Проживание:
+                            <div>{{ characters[i].house }}</div>
+                        </td>
+                        <td>Бизнес:
+                            <div>{{ characters[i].biz }}</div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="warns" v-show="characters[i].warns">
+                    <img src="img/characterInfo/warn.svg" />
+                    Предупреждений:
+                    {{ characters[i].warns }}
                 </div>
             </div>
-            <table class="info">
-                <tr>
-                    <td>Игровой статус:
-                        <div>{{ characters[i].status }}</div>
-                    </td>
-                    <td>Отыграно:
-                        <div>{{ characters[i].hours }}
-                            часов</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Организация:
-                        <div>{{ characters[i].faction }}</div>
-                    </td>
-                    <td>Профессия:
-                        <div>{{ characters[i].job }}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Проживание:
-                        <div>{{ characters[i].house }}</div>
-                    </td>
-                    <td>Бизнес:
-                        <div>{{ characters[i].biz }}</div>
-                    </td>
-                </tr>
-            </table>
-            <div class="warns" v-show="characters[i].warns">
-                <img src="img/characterInfo/warn.svg" />
-                Предупреждений:
-                {{ characters[i].warns }}
-            </div>
+        </div>
+        <div class="coins">
+            <div class="add-coins" v-if="showAddCoins" @click="addCoins()">Пополнить счёт</div>
+            <div class="panel">Ваш счёт: <span>{{ pretty(coins) }}</span><div class="coin-logo">cc</div></div></div>
         </div>
     </div>
 
@@ -241,6 +247,17 @@
             <div class="arrow" @click="left" :class="{disabled: leftArrowDisabled}">&lt;</div>
             <button @click="enter" :class="{disabled: enterDisabled}">Выбрать</button>
             <div class="arrow" @click="right" :class="{disabled: rightArrowDisabled}">&gt;</div>
+        </div>
+    </div>
+
+    <div v-cloak="v-cloak" id="characterAddSlot" v-if="show" :style="{opacity: 1}">
+        <div class="add-slot" :class="{step: oneSlot}">
+            <div>Стоимоcть услуги: <span>{{ price }}</span><div class="coin-logo">cc</div></div>
+            <div class="btn" @click="addSlot()">Добавить слот</div>
+        </div>
+        <div class="other" v-if="oneSlot">
+            <div class="or"><div>ИЛИ</div></div>
+            <div class="info"><div>Отыграйте <span>{{ hours }}</span> часов<br/>на вашем первом персонаже</div></div>
         </div>
     </div>
 
