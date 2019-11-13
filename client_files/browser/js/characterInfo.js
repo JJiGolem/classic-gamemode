@@ -2,8 +2,13 @@ var characterInfo = new Vue({
     el: "#characterInfo",
     data: {
         show: false,
+
+        coins: 999, // Коинсы в углу
+        showAddCoins: false, // Скрыть копку пополнения счёта.
+
         characters: [], // массив с данными о персонажах
         slots: 1, // кол-во слотов
+        limitSlots: 3, // максимум слотов
         // Индекс текущего персонажа
         i: 0,
     },
@@ -20,6 +25,10 @@ var characterInfo = new Vue({
         addCharacter(character) {
             if (typeof character == 'string') character = JSON.parse(character);
             this.characters.push(character);
+        },
+        addCoins() {
+            // TODO:
+            console.log("characterInfo.addCoins()");
         }
     }
 });
@@ -76,8 +85,9 @@ var characterSelector = new Vue({
             return characterInfo.i <= 0;
         },
         rightArrowDisabled() {
-            if (characterInfo.i == characterInfo.characters.length - 1 && !characterInfo.canNewCharacter) return true;
-            return characterInfo.i > characterInfo.characters.length - 1;
+            return characterInfo.i == characterInfo.slots || characterInfo.i == characterInfo.limitSlots-1 || characterInfo.i == characterInfo.characters.length;
+            /*if (characterInfo.i == characterInfo.characters.length && characterInfo.canNewCharacter) return true;
+            return characterInfo.i > characterInfo.characters.length;*/
         },
         enterDisabled() {
             return characterInfo.i > characterInfo.characters.length - 1;
@@ -101,4 +111,26 @@ var createCharacter = new Vue({
             mp.trigger("characterInit.choose");
         }
     }
+});
+
+var characterAddSlot = new Vue({
+    el: "#characterAddSlot",
+    data: {
+        price: 500,
+        hours: "N",
+    },
+    computed: {
+        show() {
+            return !createCharacter.show && characterInfo.i > characterInfo.characters.length - 1 && characterInfo.show;
+        },
+        oneSlot() {
+            return characterInfo.slots == 1;
+        }
+    },
+    methods: {
+        addSlot() {
+            console.log('characterAddSlot.addSlot()'); // TODO: addSlot();
+        }
+    }
+
 });

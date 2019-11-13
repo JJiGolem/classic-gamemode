@@ -619,6 +619,14 @@
     opacity: 0.5;
 }
 
+#inventory .item.found {
+    background-color: rgba(0, 87, 255, 0.3)!important;
+}
+#inventory .item.found .eye img {
+    margin: 1vh 0.5vh;
+    height: 1.1vh;
+}
+
 #inventory .item .close {
     color: #888;
     position: absolute;
@@ -685,9 +693,9 @@
 #inventory .loader .lds-rolling div,
 #inventory .loader .lds-rolling div:after {
     position: absolute;
-    width: 2.2vh;
-    height: 2.2vh;
-    border: 0.4vh solid #FFDF29;
+    width: 2.3vh;
+    height: 2.3vh;
+    border: 0.5vh solid #FFDF29;
     border-top-color: transparent;
     border-radius: 50%;
 }
@@ -826,7 +834,7 @@
     padding: 0 2vh;
     position: absolute;
     width: fit-content;
-    z-index: 1;
+    z-index: 2;
     border-radius: 1vh;
 }
 

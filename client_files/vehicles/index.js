@@ -96,7 +96,7 @@ speedometerUpdateTimer = mp.timer.addInterval(() => { /// Обновление �
 
 }, 100);
 
-mp.keys.bind(0x32, true, function () {
+mp.keys.bind(0x32, true, function() {
     if (mp.busy.includes(['chat', 'cuffs', 'terminal'])) return;
     if (mp.players.local.vehicle.getPedInSeat(-1) === mp.players.local.handle) {
         mp.events.callRemote('vehicles.engine.toggle');
@@ -211,7 +211,7 @@ function stopMileageCounter() {
     currentDist = 0;
 };
 
-mp.keys.bind(0x25, true, function () {
+mp.keys.bind(0x25, true, function() {
     if (mp.busy.includes()) return;
     var player = mp.players.local;
     var vehicle = player.vehicle;
@@ -233,7 +233,7 @@ mp.keys.bind(0x25, true, function () {
     }
 });
 
-mp.keys.bind(0x27, true, function () {
+mp.keys.bind(0x27, true, function() {
     if (mp.busy.includes()) return;
     var player = mp.players.local;
     var vehicle = player.vehicle;
@@ -519,7 +519,17 @@ mp.events.add("time.main.tick", () => {
 
 mp.moduleVehicles = {
     nearBootVehicleId: null,
-    nearHoodVehicleId: null
+    nearHoodVehicleId: null,
+    getSeat(player) {
+        if (!player.vehicle) return null;
+
+        var seats = [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+        for (var i = 0; i < seats.length; i++) {
+            if (player.vehicle.getPedInSeat(seats[i]) == player.handle) return seats[i];
+        }
+
+        return null;
+    },
 }
 
 mp.events.add({

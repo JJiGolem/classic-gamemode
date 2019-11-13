@@ -52,7 +52,7 @@ module.exports = {
 
             mp.players.forEachInRange(player.position, 10, rec => {
                 if (player.id == rec.id) return;
-                rec.call(`markers.tp.player.teleported`, [player.id, pos, target.h]);
+                rec.call(`markers.tp.player.teleported`, [player.id, pos, target.h, colshapeA.marker.id]);
             });
 
             player.position = pos;
@@ -67,6 +67,7 @@ module.exports = {
         };
 
         colshapeB.onEnter = (player) => {
+            if (player.vehicle) return;
             if (player.lastTpMarkerId != null) return;
             var target = colshapeB.marker.target;
             var pos = target.position;
@@ -74,7 +75,7 @@ module.exports = {
 
             mp.players.forEachInRange(player.position, 10, rec => {
                 if (player.id == rec.id) return;
-                rec.call(`markers.tp.player.teleported`, [player.id, pos, target.h]);
+                rec.call(`markers.tp.player.teleported`, [player.id, pos, target.h, colshapeB.marker.id]);
             });
 
             player.position = pos;

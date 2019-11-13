@@ -8851,7 +8851,7 @@ var selectMenu = new Vue({
                         } else {
                             var animId = this.list[e.itemIndex].id;
                             mp.trigger(`callRemote`, `animations.playById`, animId);
-                            mp.trigger(`animations.setOwnAnimPlaying`, true);
+                            mp.trigger(`animations.setOwnPlayingAnimId`, animId);
                         }
                     } else if (eventName == 'onBackspacePressed') {
                         selectMenu.showByName("animations");
