@@ -129,7 +129,7 @@ module.exports = {
             params.thirst = -5;
         } else if (productName == 'duffleBag') {
             params.sex = !player.character.gender;
-            params.pockets = '[2,2,6,5,2,3,6,6,12,10]';
+            params.pockets = '[4,4,10,4,7,7,7,7,14,10]';
             params.texture = 0;
             bagColor == 'green' ? params.variation = 41 : params.variation = 45;
         }

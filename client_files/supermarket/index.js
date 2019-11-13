@@ -99,6 +99,7 @@ function setSupermarketHeaders(type) {
     mp.callCEFV(`selectMenu.menus["supermarketFood"].headerImg = '${img}'`);
     mp.callCEFV(`selectMenu.menus["supermarketTobacco"].headerImg = '${img}'`);
     mp.callCEFV(`selectMenu.menus["supermarketStuff"].headerImg = '${img}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketBags"].headerImg = '${img}'`);
 }
 
 function setPrices(config, multiplier) {
