@@ -11,7 +11,8 @@ mp.animations = {
     animatorActive: false,
     animId: 0,
     animationTimers: {},
-    isOwnAnimPlaying: false, // анимация из меню на L
+    isOwnPlayingAnimId: null, // анимация из меню на L
+    animationData: require('animations/data.js'),
 
     playAnimation(player, a, time = null) {
         mp.timer.remove(this.animationTimers[player.remoteId]);
@@ -97,8 +98,10 @@ mp.animations = {
         });
     },
     stopAnimHandler() {
-        if (!this.isOwnAnimPlaying) return;
-        this.isOwnAnimPlaying = false;
+        if (this.isOwnPlayingAnimId == null) return;
+        var a = this.animationData[this.isOwnPlayingAnimId];
+        this.isOwnPlayingAnimId = null;
+        if (!mp.players.local.isPlayingAnim(a.split(' ')[0], a.split(' ')[1], 3)) return;
         mp.events.callRemote(`animations.stop`);
     },
 };
@@ -119,8 +122,8 @@ mp.events.add({
         if (!player) return;
         mp.animations.playAnimation(player, a, time);
     },
-    "animations.setOwnAnimPlaying": (enable) => {
-        mp.animations.isOwnAnimPlaying = enable;
+    "animations.setOwnPlayingAnimId": (animId) => {
+        mp.animations.isOwnPlayingAnimId = animId;
     },
     "render": () => {
         mp.animations.render();
