@@ -20,7 +20,6 @@ mp.events.add('auth.login', (data) => {
 });
 /// Результат входа в аккаунт
 mp.events.add('auth.login.result', (result, data) => {
-    debug(data);
     mp.callCEFV(`characterInfo.coins = ${data.donate}`);
     mp.callCEFV(`auth.showLoginResult(${result})`);
 });
