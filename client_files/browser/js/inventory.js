@@ -712,7 +712,7 @@ var inventory = new Vue({
             if (item) return;
             if (this.bodyList[index] && !this.bodyList[index].includes(this.itemDrag.item.itemId)) return;
             var nextWeight = this.commonWeight + this.itemsInfo[this.itemDrag.item.itemId].weight;
-            if (nextWeight > this.maxPlayerWeight) return;
+            if (nextWeight > this.maxPlayerWeight && !this.getItem(this.itemDrag.item.sqlId)) return;
             if (index == 13 && this.handsBlock) return;
             var columns = this.itemDrag.accessColumns;
             columns.bodyFocus = index;
