@@ -263,6 +263,8 @@ module.exports = {
 
         if (player.vehicle.key != 'private' || player.vehicle.owner != player.character.id) return player.call('vehicles.sell.send.ans', [1]);
 
+        if (player.id == data.id) return player.call('vehicles.sell.send.ans', [6]);
+
         let price = parseInt(data.price);
         if (isNaN(price) || price < 1) return player.call('vehicles.sell.send.ans', [2]);
 
