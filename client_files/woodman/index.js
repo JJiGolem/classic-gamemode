@@ -282,6 +282,7 @@ mp.events.add({
             }
 
             mp.game.controls.disableControlAction(0, 24, true); /// удары
+            mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
             mp.game.controls.disableControlAction(0, 140, true); /// удары R
 
             // var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
