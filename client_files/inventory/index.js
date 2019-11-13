@@ -11,10 +11,40 @@ mp.inventory = {
     groundItemMarker: {},
     // Настройка аттачей на спине
     backAttachInfo: {
+        41: { // Бейсбольная бита
+            bone: 24818,
+            pos: new mp.Vector3(0.25, -0.155, -0.1),
+            rot: new mp.Vector3(13, -90, 7)
+        },
+        52: { // Compact Rifle
+            bone: 24818,
+            pos: new mp.Vector3(0.2, -0.165, -0.1),
+            rot: new mp.Vector3(13, 180, 10)
+        },
+        53: { // MG
+            bone: 24818,
+            pos: new mp.Vector3(0.2, -0.165, -0.1),
+            rot: new mp.Vector3(13, 180, 10)
+        },
+        68: { // Клюшка
+            bone: 24818,
+            pos: new mp.Vector3(0.2, -0.145, -0.1),
+            rot: new mp.Vector3(13, -90, 10)
+        },
         70: { // топор
             bone: 24818,
-            pos: new mp.Vector3(0.2, -0.155, -0.1),
-            rot: new mp.Vector3(13, 90, 10)
+            pos: new mp.Vector3(0.2, -0.15, -0.1),
+            rot: new mp.Vector3(13, -90, 10)
+        },
+        104: { // Combat MG
+            bone: 24818,
+            pos: new mp.Vector3(0.2, -0.165, -0.1),
+            rot: new mp.Vector3(13, 180, 10)
+        },
+        105: { // Combat MK II
+            bone: 24818,
+            pos: new mp.Vector3(0.2, -0.165, -0.1),
+            rot: new mp.Vector3(13, 180, 10)
         },
     },
 
