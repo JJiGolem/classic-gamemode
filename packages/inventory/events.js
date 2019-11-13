@@ -126,7 +126,7 @@ module.exports = {
         var item = inventory.getItem(player, sqlId);
         if (!item) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
 
-        if (player.vehicle) return notifs.error(player, `Недоступно в авто`, header);
+        // if (player.vehicle) return notifs.error(player, `Недоступно в авто`, header);
         if (player.cuffs) return notifs.error(player, `Недоступно в наручниках`, header);
 
         var itemName = inventory.getName(item.itemId);
