@@ -376,18 +376,23 @@ module.exports = {
         notifs.success(player, `Вы съели ${inventory.getName(eat.itemId)}`, header);
 
         if (!player.vehicle) {
+            var time = 7000;
             mp.players.forEachInRange(player.position, 20, rec => {
                 rec.call(`animations.play`, [player.id, {
                     dict: "amb@code_human_wander_eating_donut@male@idle_a",
                     name: "idle_c",
                     speed: 1,
                     flag: 49
-                }, 7000]);
+                }, time]);
             });
+            timer.add(() => {
+                inventory.deleteItem(player, eat);
+                inventory.notifyOverhead(player, `Съел '${inventory.getName(eat.itemId)}'`);
+            }, time);
+        } else {
+            inventory.deleteItem(player, eat);
+            inventory.notifyOverhead(player, `Съел '${inventory.getName(eat.itemId)}'`);
         }
-
-        inventory.deleteItem(player, eat);
-        inventory.notifyOverhead(player, `Съел '${inventory.getName(eat.itemId)}'`);
     },
     // употребить напиток
     "inventory.item.drink.use": (player, sqlId) => {
@@ -403,18 +408,23 @@ module.exports = {
         notifs.success(player, `Вы выпили ${inventory.getName(drink.itemId)}`, header);
 
         if (!player.vehicle) {
+            var time = 7000;
             mp.players.forEachInRange(player.position, 20, rec => {
                 rec.call(`animations.play`, [player.id, {
                     dict: "amb@code_human_wander_drinking_fat@female@idle_a",
                     name: "idle_c",
                     speed: 1,
                     flag: 49
-                }, 7000]);
+                }, time]);
             });
+            timer.add(() => {
+                inventory.deleteItem(player, drink);
+                inventory.notifyOverhead(player, `Выпил '${inventory.getName(drink.itemId)}'`);
+            }, time);
+        } else {
+            inventory.deleteItem(player, drink);
+            inventory.notifyOverhead(player, `Выпил '${inventory.getName(drink.itemId)}'`);
         }
-
-        inventory.deleteItem(player, drink);
-        inventory.notifyOverhead(player, `Выпил '${inventory.getName(drink.itemId)}'`);
     },
     // использовать предмет инвентаря
     "inventory.item.use": (player, data) => {
