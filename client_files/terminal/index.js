@@ -29,7 +29,7 @@ mp.terminal = {
     },
     initSavedCmds() {
         let cmds = mp.storage.data.terminal.savedCmds;
-        mp.callCEFV(`terminal.initSavedCmds(\`${JSON.stringify(cmds)}\`)`);
+        mp.callCEFV(`terminal.initSavedCmds(${JSON.stringify(cmds)})`);
     },
     saveCmd(text) {
         let cmds = mp.storage.data.terminal.savedCmds;

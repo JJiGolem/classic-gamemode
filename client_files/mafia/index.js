@@ -93,10 +93,10 @@ mp.mafia = {
         });
 
 
-        mp.callCEFV(`selectMenu.setItems('mafiaBizWar', \`${JSON.stringify(items)}\`)`);
+        mp.callCEFV(`selectMenu.setItems('mafiaBizWar', ${JSON.stringify(items)})`);
         mp.callCEFV(`selectMenu.setProp('mafiaBizWar', 'bizCount', ${data.bizCount})`);
-        mp.callCEFV(`selectMenu.setProp('mafiaBizWar', 'names', \`${JSON.stringify(data.names)}\`)`);
-        mp.callCEFV(`selectMenu.setProp('mafiaBizWar', 'counts', \`${JSON.stringify(counts)}\`)`);
+        mp.callCEFV(`selectMenu.setProp('mafiaBizWar', 'names', ${JSON.stringify(data.names)})`);
+        mp.callCEFV(`selectMenu.setProp('mafiaBizWar', 'counts', ${JSON.stringify(counts)})`);
         mp.callCEFV(`selectMenu.menus['mafiaBizWar'].update()`);
         mp.callCEFV(`selectMenu.showByName('mafiaBizWar')`);
     },
@@ -178,7 +178,7 @@ mp.mafia = {
             text: "Вернуться"
         });
 
-        mp.callCEFV(`selectMenu.setItems('mafiaPower', \`${JSON.stringify(items)}\`)`);
+        mp.callCEFV(`selectMenu.setItems('mafiaPower', ${JSON.stringify(items)})`);
 
         var cash = JSON.stringify([`$${data.cash}`]);
         mp.callCEFV(`selectMenu.setItemValues('mafiaCash', 'Баланс', '${cash}')`);

@@ -11,16 +11,16 @@ mp.playerMenu = {
     init(data) {
         if (data.house) data.house.street = mp.utils.getStreetName(data.house.pos);
         if (data.biz) data.biz.street = mp.utils.getStreetName(data.biz.pos);
-        mp.callCEFV(`playerMenu.init(\`${JSON.stringify(data)}\`)`);
+        mp.callCEFV(`playerMenu.init(${JSON.stringify(data)})`);
     },
     setFaction(data) {
-        mp.callCEFV(`playerMenu.setFaction(\`${JSON.stringify(data)}\`)`);
+        mp.callCEFV(`playerMenu.setFaction(${JSON.stringify(data)})`);
     },
     setFactionRank(data) {
-        mp.callCEFV(`playerMenu.setFactionRank(\`${JSON.stringify(data)}\`)`);
+        mp.callCEFV(`playerMenu.setFactionRank(${JSON.stringify(data)})`);
     },
     setJob(data) {
-        mp.callCEFV(`playerMenu.setJob(\`${JSON.stringify(data)}\`)`);
+        mp.callCEFV(`playerMenu.setJob(${JSON.stringify(data)})`);
     },
     setWanted(wanted) {
         mp.callCEFV(`playerMenu.setWanted(${wanted})`);
@@ -30,17 +30,17 @@ mp.playerMenu = {
     },
     setBiz(biz = null) {
         if (biz) biz.street = mp.utils.getStreetName(biz.pos);
-        mp.callCEFV(`playerMenu.setBiz(\`${JSON.stringify(biz)}\`)`);
+        mp.callCEFV(`playerMenu.setBiz(${JSON.stringify(biz)})`);
     },
     setHouse(house = null) {
         if (house) house.street = mp.utils.getStreetName(house.pos);
-        mp.callCEFV(`playerMenu.setHouse(\`${JSON.stringify(house)}\`)`);
+        mp.callCEFV(`playerMenu.setHouse(${JSON.stringify(house)})`);
     },
     setSkills(skills) {
-        mp.callCEFV(`playerMenu.setSkills(\`${JSON.stringify(skills)}\`)`);
+        mp.callCEFV(`playerMenu.setSkills(${JSON.stringify(skills)})`);
     },
     setSkill(skill) {
-        mp.callCEFV(`playerMenu.setSkill(\`${JSON.stringify(skill)}\`)`);
+        mp.callCEFV(`playerMenu.setSkill(${JSON.stringify(skill)})`);
     },
     setCash(cash) {
         mp.callCEFV(`playerMenu.setCash(${cash})`);
@@ -91,7 +91,7 @@ mp.playerMenu = {
         mp.callCEFV(`playerMenu.setNumber(${number})`);
     },
     setSpouse(spouse) {
-        mp.callCEFV(`playerMenu.setSpouse(\`${JSON.stringify(spouse)}\`)`);
+        mp.callCEFV(`playerMenu.setSpouse(${JSON.stringify(spouse)})`);
     },
     setFamiliar(count) {
         mp.callCEFV(`playerMenu.setFamiliar(${count})`);
