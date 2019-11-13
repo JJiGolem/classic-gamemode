@@ -85,15 +85,15 @@ mp.factions = {
     showMembersSelectMenu(data) {
         // debug(`showMembersSelectMenu`)
         // debug(data)
-        mp.callCEFV(`selectMenu.menus['factionControlMembers'].init('${JSON.stringify(data)}')`);
+        mp.callCEFV(`selectMenu.menus['factionControlMembers'].init(\`${JSON.stringify(data)}\`)`);
         mp.callCEFV(`selectMenu.showByName('factionControlMembers')`);
     },
     showVehiclesSelectMenu(data) {
-        mp.callCEFV(`selectMenu.menus['factionControlVehicles'].init('${JSON.stringify(data)}')`);
+        mp.callCEFV(`selectMenu.menus['factionControlVehicles'].init(\`${JSON.stringify(data)}\`)`);
         mp.callCEFV(`selectMenu.showByName('factionControlVehicles')`);
     },
     showWarehouseSelectMenu(data) {
-        mp.callCEFV(`selectMenu.menus['factionControlStorage'].init('${JSON.stringify(data)}')`);
+        mp.callCEFV(`selectMenu.menus['factionControlStorage'].init(\`${JSON.stringify(data)}\`)`);
         mp.callCEFV(`selectMenu.showByName('factionControlStorage')`);
     },
     isGovernmentFaction(factionId) {
@@ -131,13 +131,13 @@ mp.factions = {
     },
     setRanks(ranks) {
         this.ranks = ranks;
-        mp.callCEFV(`selectMenu.menus['factionControlRanks'].init('${JSON.stringify(ranks)}')`);
+        mp.callCEFV(`selectMenu.menus['factionControlRanks'].init(\`${JSON.stringify(ranks)}\`)`);
     },
     setRankName(rank, name) {
         if (!this.ranks) return;
 
         this.ranks[rank - 1].name = name;
-        mp.callCEFV(`selectMenu.menus['factionControlRanks'].init('${JSON.stringify(this.ranks)}')`);
+        mp.callCEFV(`selectMenu.menus['factionControlRanks'].init(\`${JSON.stringify(this.ranks)}\`)`);
     },
     registerAttachments() {
         // коробка с боеприпасами в руках

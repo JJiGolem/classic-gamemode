@@ -13,7 +13,7 @@ mp.changelist = {
         mp.callCEFV(`changelist.enable = ${enable}`);
     },
     initLikes(data) {
-        mp.callCEFV(`changelist.initLikes('${JSON.stringify(data)}')`);
+        mp.callCEFV(`changelist.initLikes(\`${JSON.stringify(data)}\`)`);
     },
     setLikes(id, likes) {
         mp.callCEFV(`changelist.setLikes(${id}, ${likes})`);

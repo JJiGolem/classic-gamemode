@@ -137,7 +137,7 @@ mp.woodman = {
     setInside(data) {
         if (!data) return mp.callCEFV(`selectMenu.show = false`);
 
-        mp.callCEFV(`selectMenu.menus['woodman'].init('${JSON.stringify(data)}')`);
+        mp.callCEFV(`selectMenu.menus['woodman'].init(\`${JSON.stringify(data)}\`)`);
         mp.callCEFV(`selectMenu.showByName('woodman')`);
     },
     setTreeInside(pos, health) {

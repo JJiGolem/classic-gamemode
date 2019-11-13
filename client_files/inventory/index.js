@@ -63,30 +63,30 @@ mp.inventory = {
     },
     initItems(items) {
         if (typeof items == 'object') items = JSON.stringify(items);
-        mp.callCEFV(`inventory.initItems('${items}')`);
+        mp.callCEFV(`inventory.initItems(\`${items}\`)`);
     },
     setItemsInfo(itemsInfo) {
         this.itemsInfo = itemsInfo;
 
         if (typeof itemsInfo == 'object') itemsInfo = JSON.stringify(itemsInfo);
-        mp.callCEFV(`inventory.setItemsInfo('${itemsInfo}')`);
+        mp.callCEFV(`inventory.setItemsInfo(\`${itemsInfo}\`)`);
     },
     setItemInfo(id, itemInfo) {
         this.itemsInfo[id] = itemInfo;
         if (typeof itemInfo == 'object') itemInfo = JSON.stringify(itemInfo);
-        mp.callCEFV(`inventory.setItemInfo(${id}, '${itemInfo}')`);
+        mp.callCEFV(`inventory.setItemInfo(${id}, \`${itemInfo}\`)`);
     },
     setMergeList(list) {
         if (typeof list == 'object') list = JSON.stringify(list);
-        mp.callCEFV(`inventory.setMergeList('${list}')`);
+        mp.callCEFV(`inventory.setMergeList(\`${list}\`)`);
     },
     setBlackList(list) {
         if (typeof list == 'object') list = JSON.stringify(list);
-        mp.callCEFV(`inventory.setBlackList('${list}')`);
+        mp.callCEFV(`inventory.setBlackList(\`${list}\`)`);
     },
     addItem(item, pocket, index, parent) {
         if (typeof item == 'object') item = JSON.stringify(item);
-        mp.callCEFV(`inventory.addItem('${item}', ${pocket}, ${index}, ${parent})`);
+        mp.callCEFV(`inventory.addItem(\`${item}\`, ${pocket}, ${index}, ${parent})`);
     },
     deleteItem(sqlId) {
         mp.callCEFV(`inventory.deleteItem(${sqlId})`);
@@ -99,7 +99,7 @@ mp.inventory = {
     },
     addEnvironmentPlace(place) {
         if (typeof place == 'object') place = JSON.stringify(place);
-        mp.callCEFV(`inventory.addEnvironmentPlace('${place}')`);
+        mp.callCEFV(`inventory.addEnvironmentPlace(\`${place}\`)`);
     },
     deleteEnvironmentPlace(sqlId) {
         mp.callCEFV(`inventory.deleteEnvironmentPlace(${sqlId})`);
@@ -194,7 +194,7 @@ mp.inventory = {
 
             mp.attachmentMngr.register(`weapon_${itemId}`, model, bone, pos, rot);
         }
-        mp.callCEFV(`inventory.setBodyList(9, '${JSON.stringify(list)}')`)
+        mp.callCEFV(`inventory.setBodyList(9, \`${JSON.stringify(list)}\`)`)
     },
     disableControlActions() {
         mp.game.controls.disableControlAction(1, 157, true);

@@ -19,8 +19,8 @@ mp.government = {
         items.push({
             text: "Вернуться"
         });
-        mp.callCEFV(`selectMenu.setItems('governmentServiceFines', '${JSON.stringify(items)}')`);
-        mp.callCEFV(`selectMenu.setProp('governmentServiceFines', 'fines', '${JSON.stringify(data.fines)}')`);
+        mp.callCEFV(`selectMenu.setItems('governmentServiceFines', \`${JSON.stringify(items)}\`)`);
+        mp.callCEFV(`selectMenu.setProp('governmentServiceFines', 'fines', \`${JSON.stringify(data.fines)}\`)`);
 
         var items = [];
         data.vehicles.forEach(veh => {
@@ -32,7 +32,7 @@ mp.government = {
         items.push({
             text: "Вернуться"
         });
-        mp.callCEFV(`selectMenu.setItems('governmentServiceVehKeys', '${JSON.stringify(items)}')`);
+        mp.callCEFV(`selectMenu.setItems('governmentServiceVehKeys', \`${JSON.stringify(items)}\`)`);
 
         mp.callCEFV(`selectMenu.showByName('governmentService')`);
     },

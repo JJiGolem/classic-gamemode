@@ -159,7 +159,7 @@ mp.bands = {
             text: "Вернуться"
         });
 
-        mp.callCEFV(`selectMenu.setItems('bandPower', '${JSON.stringify(items)}')`);
+        mp.callCEFV(`selectMenu.setItems('bandPower', \`${JSON.stringify(items)}\`)`);
 
         var cash = JSON.stringify([`$${data.cash}`]);
         mp.callCEFV(`selectMenu.setItemValues('bandCash', 'Баланс', '${cash}')`);
