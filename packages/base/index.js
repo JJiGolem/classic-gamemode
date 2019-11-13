@@ -94,10 +94,22 @@ db.connect(function() {
 
     mp.events.call('init');
 });
-
+console.log(JSON.stringify(activeClientModules));
 mp.events.add('playerJoin', (player) => {
-    if (modulesToLoad.length !== 0) return playersJoinPool.push(player);
-    player.call('init', [activeClientModules]);
+    player.isCalledPlayerJoin = true;
+    if (player.isCalledPlayerReadyToJoin) {
+        if (modulesToLoad.length !== 0) return playersJoinPool.push(player);
+        player.call('init', []);
+        //console.log("playerInitSent" + JSON.stringify(activeClientModules));
+    }
+});
+mp.events.add('playerReadyToJoin', (player) => {
+    player.isCalledPlayerReadyToJoin = true;
+    if (player.isCalledPlayerJoin) {
+        if (modulesToLoad.length !== 0) return playersJoinPool.push(player);
+        player.call('init', []);
+        //console.log("playerInitSent" + JSON.stringify(activeClientModules));
+    }
 });
 
 /// Main events list

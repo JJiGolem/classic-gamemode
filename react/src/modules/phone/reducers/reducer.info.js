@@ -65,6 +65,7 @@ const initialState = {
     //         resourcePriceMin: 10,
     //         resourcePriceMax: 50,
     //         price: 112000,
+    //         improvements: [],
     //         statistics: [
     //             {
     //                 date: new Date(2019, 6, 10),

@@ -138,7 +138,7 @@ var prompt = new Vue({
                 text: "Достаньте топор, чтобы разрубить бревно",
             },
             "woodman_log_start_ax": {
-                text: "Нажмите <span>E</span>, чтобы начать рубить бревно",
+                text: "Нажмите <span>ЛКМ</span>, чтобы начать рубить бревно",
             },
             "animations_stop": {
                 text: "Нажмите <span>SPACE</span>, чтобы остановить анимацию",

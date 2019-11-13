@@ -42,10 +42,9 @@ let getBizByPlayerPos = function(player) {
     return bizes.find(x => player.dist(new mp.Vector3(x.info.x, x.info.y, x.info.z)) <= 10);
 };
 let getDateDays = function(date) {
-    let dateNowStringArray = new Date().toLocaleDateString().split('-');
-    let dateStringArray = date.toLocaleDateString().split('-');
-    let dateNow = new Date(dateNowStringArray[0], dateNowStringArray[1], dateNowStringArray[2]);
-    date = new Date(dateStringArray[0], dateStringArray[1], dateStringArray[2]);
+    let dateNow = new Date();
+    dateNow = new Date(dateNow.getFullYear(), dateNow.getMonth(), dateNow.getDate());
+    date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     return Math.ceil(Math.abs(date.getTime() - dateNow.getTime()) / (1000 * 3600 * 24));
 };
 let getBizRent = function(biz) {
