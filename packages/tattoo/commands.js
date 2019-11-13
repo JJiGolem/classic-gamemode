@@ -45,4 +45,16 @@ module.exports = {
             out.info('Тату удалена', player);
         }
     },
+    "/divtatprices": {
+        description: "Разделить цены тату",
+        access: 6,
+        args: "[число]:n",
+        handler: async (player, args, out) => {
+            let list = await db.Models.Tattoo.findAll();
+            list.forEach((tat) => {
+                tat.price = tat.price / args[0];
+                tat.save();
+            });
+        }
+    },
 }
