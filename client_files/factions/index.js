@@ -31,7 +31,7 @@ mp.factions = {
         this.insideFactionWar = inside;
     },
     boxHandler() {
-        if (mp.busy.includes()) return;
+        if (!(mp.busy.includes() === 0 || (mp.busy.includes() === 1 && (mp.busy.includes('lostAttach'))))) return;
         if (this.enableTakeBox) {
             if (this.hasBox()) return mp.notify.error(`Нельзя нести больше`, `Склад`);
             mp.events.callRemote("factions.warehouse.takeBox", this.typeBox);
