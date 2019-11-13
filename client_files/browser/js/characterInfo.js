@@ -3,8 +3,8 @@ var characterInfo = new Vue({
     data: {
         show: false,
 
-        coins: 7500, // Коинсы в углу // TODO:
-        showAddCoins: true, // Скрыть копку пополнения счёта.
+        coins: 999, // Коинсы в углу
+        showAddCoins: false, // Скрыть копку пополнения счёта.
 
         characters: [], // массив с данными о персонажах
         slots: 1, // кол-во слотов

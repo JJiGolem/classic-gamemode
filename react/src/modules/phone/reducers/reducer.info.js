@@ -3,8 +3,9 @@
 /* eslint-disable default-case */
 const initialState = {
     // name: 'Ilya Maxin',
-    // isDriver: false,
+    // isDriver: true,
     // isHave: true,
+    // isLoad: true,
     // symbolPriceNews: 3,
     // contacts: [
     //     {
@@ -108,12 +109,21 @@ const initialState = {
     //                 money: 435567
     //             },
     //         ]
-    //         // order: {
-    //         //     productCount,
-    //         //     productPrice,
-    //         // }
     //     }
-    // ]
+    // ],
+    // factionBiz: {
+    //     id: 3,
+    //     name: 'QQQQQ',
+    //     type: 'Магазин жопы',
+    //     cashBox: 732101,
+    //     area: 'Палето Бэй',
+    //     resourcesMax: 2000,
+    //     resources: 228,
+    //     resourcePriceMin: 10,
+    //     resourcePriceMax: 50,
+    //     improvements: [],
+    //     statistics: []
+    // }
 };
 
 export default function info(state = initialState, action) {
@@ -132,7 +142,8 @@ export default function info(state = initialState, action) {
                         name: 'Мой номер',
                         number: payload.number
                     }
-                ]
+                ],
+                isLoad: true
             };
 
         case 'DISABLE_HOME_PHONE':
@@ -286,15 +297,61 @@ export default function info(state = initialState, action) {
 
             return newStateSellBiz;
 
+        case 'CREATE_ORDER_BUSINESS_FACTION':
+            newState = { ...state };
+            newState.factionBiz.order = payload;
+            newState.factionBiz.orderStatus = null;
+            return newState;
+
+        case 'CANCEL_ORDER_BUSINESS_FACTION':
+            newState = { ...state };
+            if (newState.factionBiz.order !== null) {
+                newState.factionBiz.order = null;
+            }
+            return newState;
+
+        case 'SET_ORDER_STATUS_BUSINESS_FACTION':
+            newState = { ...state };
+            newState.factionBiz.orderStatus = payload;
+            return newState;
+
+        case 'TAKE_ORDER_BUSINESS_FACTION':
+            newState = { ...state };
+            newState.factionBiz.order.isTake = payload;
+            return newState;
+
+        case 'ORDER_COMPLETE_BUSINESS_FACTION':
+            newState = { ...state };
+            newState.factionBiz.resources += payload;
+
+            if ((newState.factionBiz.order.productsCount - payload) > 0) {
+                newState.factionBiz.order.productsCount -= payload;
+                newState.factionBiz.order.productsPrice = parseInt((1 - payload/newState.factionBiz.order.productsCount) * newState.factionBiz.order.productsPrice)
+            } else {
+                newState.factionBiz.order = null;
+            }
+
+            return newState;
+
         case 'ADD_APP_TO_PHONE':
             const newStateAdd = {...state};
 
             if(payload.appName === 'house') {
-                newStateAdd.houses.push(payload.info);
+                if (newStateAdd.houses) {
+                    newStateAdd.houses.push(payload.info);
+                } else {
+                    newStateAdd.houses = [payload.info];
+                }
             } else if(payload.appName === 'biz') {
-                newStateAdd.biz.push(payload.info);
+                if (newStateAdd.biz) {
+                    newStateAdd.biz.push(payload.info);
+                } else {
+                    newStateAdd.biz = [payload.info];
+                }
             } else if (payload.appName === 'taxi') {
                 newStateAdd.isDriver = true;
+            } else if (payload.appName === 'factionBiz') {
+                newStateAdd.factionBiz = payload.info
             }
 
             return newStateAdd;
@@ -308,6 +365,8 @@ export default function info(state = initialState, action) {
                 newStateRemove.biz.length = 0;
             } else if (payload === 'taxi') {
                 newStateRemove.isDriver = false;
+            } else if (payload === 'factionBiz') {
+                newStateRemove.factionBiz = null;
             }
 
             return newStateRemove;
@@ -386,6 +445,42 @@ export default function info(state = initialState, action) {
             if (improvIndex !== -1) {
                 newState.houses[0].improvements[improvIndex].isBuyed = true;
                 newState.houses[0].buyStatus = null;
+            }
+
+            return newState;
+
+        case 'BUY_IMPROVEMENT_BUSINESS_ANS':
+            newState = { ...state };
+
+            newState.biz[0].buyStatus = payload;
+
+            return newState;
+
+        case 'BUY_IMPROVEMENT_BUSINESS':
+            newState = { ...state };
+            let improvIndexBiz = newState.biz[0].improvements.findIndex(imp => imp.type == payload);
+
+            if (improvIndexBiz !== -1) {
+                newState.biz[0].improvements[improvIndexBiz].isBuyed = true;
+                newState.biz[0].buyStatus = null;
+            }
+
+            return newState;
+
+        case 'BUY_IMPROVEMENT_BUSINESS_FACTION_ANS':
+            newState = { ...state };
+
+            newState.bizFaction.buyStatus = payload;
+
+            return newState;
+
+        case 'BUY_IMPROVEMENT_BUSINESS_FACTION':
+            newState = { ...state };
+            let improvBizFactionIndex = newState.bizFaction.improvements.findIndex(imp => imp.type == payload);
+
+            if (improvBizFactionIndex !== -1) {
+                newState.bizFaction.improvements[improvBizFactionIndex].isBuyed = true;
+                newState.bizFaction.buyStatus = null;
             }
 
             return newState;

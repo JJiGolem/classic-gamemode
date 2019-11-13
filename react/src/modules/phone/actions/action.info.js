@@ -87,6 +87,20 @@ export const setOrderStatusBusiness = status => ({
    payload: status
 });
 
+export const createOrderBusinessFaction = (productsCount, productsPrice) => ({
+    type: 'CREATE_ORDER_BUSINESS_FACTION',
+    payload: { productsCount, productsPrice }
+});
+
+export const cancelOrderBusinessFaction = () => ({
+    type: 'CANCEL_ORDER_BUSINESS_FACTION'
+});
+
+export const setOrderStatusBusinessFaction = status => ({
+   type: 'SET_ORDER_STATUS_BUSINESS_FACTION',
+   payload: status
+});
+
 export const sellBusiness = id => ({
     type: 'SELL_BUSINESS',
     payload: id
@@ -99,5 +113,25 @@ export const buyImprovementHouse = type => ({
 
 export const setBuyStatusHouse = status => ({
     type: 'BUY_IMPROVEMENT_HOUSE_ANS',
+    payload: status
+});
+
+export const buyImprovementBusiness = type => ({
+    type: 'BUY_IMPROVEMENT_BUSINESS',
+    payload: type
+});
+
+export const setBuyStatusBusiness = status => ({
+    type: 'BUY_IMPROVEMENT_BUSINESS_ANS',
+    payload: status
+});
+
+export const buyImprovementBusinessFaction = type => ({
+    type: 'BUY_IMPROVEMENT_BUSINESS_FACTION',
+    payload: type
+});
+
+export const setBuyStatusBusinessFaction = status => ({
+    type: 'BUY_IMPROVEMENT_BUSINESS_FACTION_ANS',
     payload: status
 });
