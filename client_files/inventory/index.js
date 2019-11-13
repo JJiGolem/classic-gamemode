@@ -179,8 +179,8 @@ mp.inventory = {
     },
     hands(player, itemId) {
         if (!this.itemsInfo) return;
-        if (player.vehicle) return;
         if (itemId) {
+            if (player.vehicle) return;
             var info = this.itemsInfo[itemId];
             var object = mp.objects.new(mp.game.joaat(info.model), player.position);
             var pos = info.attachInfo.pos;
@@ -209,7 +209,6 @@ mp.inventory = {
                 player.hands.object.destroy();
                 delete player.hands;
             }
-
         }
     },
     syncAmmo() {
@@ -228,6 +227,22 @@ mp.inventory = {
             color: [255, 223, 41, 255],
         });
         this.groundItemMarker.ignoreCheckVisible = true;
+    },
+    getGroundItemPos(player) {
+        var pos;
+        if (!player.vehicle) {
+            pos = player.getOffsetFromInWorldCoords(0, 1, 0);
+            pos.z = mp.game.gameplay.getGroundZFor3dCoord(pos.x, pos.y, pos.z, false, false);
+        } else {
+            var seat = mp.moduleVehicles.getSeat(player);
+            var offsetX = 0;
+            if (seat == -1 || seat == 1) offsetX = -1;
+            else if (seat === 0 || seat == 2) offsetX = 1;
+            pos = player.getOffsetFromInWorldCoords(offsetX, 0, 0);
+            pos.z = mp.game.gameplay.getGroundZFor3dCoord(pos.x, pos.y, pos.z, false, false);
+        }
+        if (mp.vdist(player.position, pos) > 10) pos = player.getOffsetFromInWorldCoords(0, 0, -1);
+        return pos;
     },
 };
 
@@ -293,8 +308,7 @@ mp.events.add("inventory.saveHotkey", mp.inventory.saveHotkey);
 mp.events.add("inventory.removeHotkey", mp.inventory.removeHotkey);
 
 mp.events.add("inventory.ground.put", (sqlId) => {
-    var pos = mp.players.local.getOffsetFromInWorldCoords(0, 1, 2);
-    pos.z = mp.game.gameplay.getGroundZFor3dCoord(pos.x, pos.y, pos.z, false, false);
+    var pos = mp.inventory.getGroundItemPos(mp.players.local);
     mp.events.callRemote(`item.ground.put`, sqlId, JSON.stringify(pos));
 });
 
@@ -369,6 +383,7 @@ mp.events.add("render", () => {
     } else mp.inventory.groundItemMarker.visible = false;
     if (player.getVariable("hands")) {
         mp.game.controls.disableControlAction(0, 24, true); /// удары
+        mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
         mp.game.controls.disableControlAction(0, 140, true); /// удары R
     }
 });

@@ -1,5 +1,5 @@
 /* eslint-disable default-case */
-const inittialState = {
+const initialState = {
     isSorted: false,
     list:  [
         // {
@@ -115,7 +115,7 @@ const inittialState = {
     ]
 };
 
-export default function dialogs(state = inittialState, action) {
+export default function dialogs(state = initialState, action) {
     const { type, payload } = action;
 
     switch(type) {

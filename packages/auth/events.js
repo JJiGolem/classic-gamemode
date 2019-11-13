@@ -109,7 +109,9 @@ module.exports = {
 
         player.account = account;
         /// Вход в аккаунт выполнен успешно
-        player.call('auth.login.result', [7]);
+        player.call('auth.login.result', [7, {
+            donate: player.account.donate
+        }]);
         mp.events.call('auth.done', player);
     },
     'auth.register': async (player, data) => {

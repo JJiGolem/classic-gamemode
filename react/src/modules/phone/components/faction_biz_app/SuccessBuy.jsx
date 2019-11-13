@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {closeAppDisplay} from "../../actions/action.apps";
-import {disableHomePhone, buyImprovementBusiness, setBuyStatusBusiness} from "../../actions/action.info";
+import {disableHomePhone, buyImprovementBusinessFaction, setBuyStatusBusinessFaction} from "../../actions/action.info";
 import Header from './Header';
 
 class SuccessBuy extends Component {
@@ -61,14 +61,14 @@ class SuccessBuy extends Component {
 
 const mapStateToProps = state => ({
     ...state,
-    business: state.info.biz[0]
+    business: state.info.factionBiz
 });
 
 const mapDispatchToProps = dispatch => ({
     closeApp: app => dispatch(closeAppDisplay(app)),
     disableHome: state => dispatch(disableHomePhone(state)),
-    setBuyStatus: status => dispatch(setBuyStatusBusiness(status)),
-    buyImprovement: type => dispatch(buyImprovementBusiness(type)),
+    setBuyStatus: status => dispatch(setBuyStatusBusinessFaction(status)),
+    buyImprovement: type => dispatch(buyImprovementBusinessFaction(type)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SuccessBuy);

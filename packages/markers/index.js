@@ -67,6 +67,7 @@ module.exports = {
         };
 
         colshapeB.onEnter = (player) => {
+            if (player.vehicle) return;
             if (player.lastTpMarkerId != null) return;
             var target = colshapeB.marker.target;
             var pos = target.position;
