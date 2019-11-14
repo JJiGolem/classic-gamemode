@@ -56,7 +56,7 @@ module.exports = {
             return;
         }
 
-        inventory.updateParam(player, rod, 'health', health - 5);
+        inventory.updateParam(player, rod, 'health', health - 1);
 
         fish = fishing.fishes[utils.randomInteger(0, fishing.fishes.length - 1)];
 
