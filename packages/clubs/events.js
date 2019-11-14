@@ -5,6 +5,12 @@ module.exports = {
         clubs.init();
         inited(__dirname);
     },
+    "characterInit.done": (player) => {
+        player.call(`clubs.drunkennessData.init`, [{
+            vfxDrunkenness: clubs.vfxDrunkenness,
+            vfxName: clubs.vfxName,
+        }]);
+    },
     "clubs.alcohol.buy": (player, index) => {
         clubs.buyAlcohol(player, index);
     },

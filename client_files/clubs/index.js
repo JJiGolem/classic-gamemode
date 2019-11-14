@@ -100,7 +100,15 @@ mp.clubs = {
     currentClub: null,
     // Опьянение (0-100)
     drunkenness: 0,
+    // Мин. значение опьянения, при котором будет визуальный эффект
+    vfxDrunkenness: 5,
+    // Визуальный эффект от опьянения
+    vfxName: "DrugsDrivingOut",
 
+    initDrunkennessData(data) {
+        this.vfxDrunkenness = data.vfxDrunkenness;
+        this.vfxName = data.vfxName;
+    },
     setCurrentClub(data) {
         this.currentClub = data;
         if (data) {
@@ -128,11 +136,18 @@ mp.clubs = {
         var oldIntensity = this.getShakeIntensity(this.drunkenness);
         var newIntensity = this.getShakeIntensity(value);
 
+        if (this.drunkenness < this.vfxDrunkenness && value >= this.vfxDrunkenness) this.setVFXDrunkenness(true);
+        else if (this.drunkenness >= this.vfxDrunkenness && value < this.vfxDrunkenness) this.setVFXDrunkenness(false);
+
         this.drunkenness = value;
         if (oldIntensity != newIntensity) mp.game.cam.shakeGameplayCam("DRUNK_SHAKE", parseInt(value / 20));
     },
     getShakeIntensity(drunkenness) {
         return parseInt(drunkenness / 20);
+    },
+    setVFXDrunkenness(enable) {
+        var duration = (enable) ? 60 * 60 * 1000 : 0;
+        mp.events.call('effect', this.vfxName, duration);
     },
 };
 
@@ -141,6 +156,9 @@ mp.events.add({
         mp.keys.bind(69, true, () => {
             mp.clubs.barHandler();
         }); // E
+    },
+    "clubs.drunkennessData.init": (data) => {
+        mp.clubs.initDrunkennessData(data);
     },
     "clubs.setCurrentClub": (data) => {
         mp.clubs.setCurrentClub(data)

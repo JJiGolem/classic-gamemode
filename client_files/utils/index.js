@@ -446,7 +446,8 @@ mp.events.add("radar.display", (enable) => {
 
 // Вкл визуальный эффект
 mp.events.add('effect', (effect, duration) => {
-    mp.game.graphics.startScreenEffect(effect, duration, false);
+    if (!duration) mp.game.graphics.stopScreenEffect(effect);
+    else mp.game.graphics.startScreenEffect(effect, duration, false);
 });
 
 // Проиграть звук

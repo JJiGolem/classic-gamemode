@@ -277,6 +277,10 @@ module.exports = {
     alcoholItemId: 133,
     snackItemId: 134,
     smokeItemId: 16,
+    // Мин. значение опьянения, при котором будет визуальный эффект
+    vfxDrunkenness: 20,
+    // Визуальный эффект от опьянения
+    vfxName: "DrugsDrivingOut",
 
     async init() {
         this.loadClubsFromDB();
@@ -446,7 +450,7 @@ module.exports = {
     addDrunkenness(player, value) {
         var oldValue = player.drunkenness || 0;
         var newValue = Math.clamp(oldValue + value, 0, 100);
-        
+
         player.drunkenness = newValue;
         player.call(`clubs.drunkenness.set`, [newValue]);
     },
