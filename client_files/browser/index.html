@@ -666,7 +666,7 @@
                     </transition>
                 </div>
             </div>
-            <div class="empty" v-show="!havePockets">Без карманов</div>
+            <!--<div class="empty" v-show="!havePockets">Без карманов</div>-->
         </div>
         <div class="hands" :class="{active: itemDrag.item, blocked: handsBlock}">
             <div class="slot" v-bind:class="{busy: equipment[13], focus: itemDrag.item && itemDrag.accessColumns.bodyFocus == 13}" @mouseenter="onBodyItemEnter(13)" @mouseleave="onBodyItemLeave(13)"

@@ -15,7 +15,7 @@ mp.events.add({
         // TODO: Обработка событий...
     },
     "selectMenu.show": (menuName) => {
-        mp.callCEFV(`selectMenu.showByName('${menuName}')`);
+        mp.callCEFV(`selectMenu.showByName(\`${menuName}\`)`);
     },
     "selectMenu.hide": () => {
         mp.callCEFV(`selectMenu.show = false`);
@@ -24,7 +24,7 @@ mp.events.add({
         mp.callCEFV(`selectMenu.loader = ${enable}`);
     },
     "selectMenu.notification": (text) => {
-        mp.callCEFV(`selectMenu.notification = '${text}'`);
+        mp.callCEFV(`selectMenu.notification = \`${text}\``);
     },
     "selectMenu.focusSound.play": () => {
         mp.game.audio.playSoundFrontend(-1, "NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET", true);

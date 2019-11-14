@@ -149,6 +149,41 @@ let utils = {
             rec.call(`addOverheadText`, [player.id, text, color]);
         });
     },
+    // принадлежит ли позиция полигону
+    inPolygon(pos, polygon) {
+        var parity = 0;
+        for (var i = 0; i < polygon.length - 1; i++) {
+            var v = {
+                x1: polygon[i].x,
+                y1: polygon[i].y,
+                x2: polygon[i + 1].x,
+                y2: polygon[i + 1].y
+            }
+            switch (edgeType(v, pos)) {
+                case 0:
+                    return 2;
+                    break;
+                case 1:
+                    parity = 1 - parity;
+                    break;
+            }
+        }
+        var v = {
+            x1: polygon[polygon.length - 1].x,
+            y1: polygon[polygon.length - 1].y,
+            x2: polygon[0].x,
+            y2: polygon[0].y
+        }
+        switch (edgeType(v, pos)) {
+            case 0:
+                return 2;
+                break;
+            case 1:
+                parity = 1 - parity;
+                break;
+        }
+        return parity;
+    },
 };
 module.exports = utils;
 
@@ -160,3 +195,28 @@ mp.players.getByName = utils.getPlayerByName;
 mp.players.getNear = utils.getNearPlayer;
 mp.vehicles.getBySqlId = utils.getVehicleBySqlId;
 mp.vehicles.getNear = utils.getNearVehicle;
+
+// ребро касается, пересекается или пох
+let edgeType = (vector, a) => {
+    switch (classify(vector, a.x, a.y)) {
+        case 1:
+            return ((vector.y1 < a.y) && (a.y <= vector.y2)) ? 1 : 2;
+            break;
+        case -1:
+            return ((vector.y2 < a.y) && (a.y <= vector.y1)) ? 1 : 2;
+            break;
+        case 0:
+            return 0;
+            break;
+    }
+};
+
+// слева от вектора, справа от вектора, или принадлежит вектору
+let classify = (vector, x1, y1) => {
+    var pr = (vector.x2 - vector.x1) * (y1 - vector.y1) - (vector.y2 - vector.y1) * (x1 - vector.x1);
+    if (pr > 0)
+        return 1;
+    if (pr < 0)
+        return -1;
+    return 0;
+};

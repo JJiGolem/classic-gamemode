@@ -47,7 +47,7 @@ mp.events.add({
                 mp.callCEFV(`selectMenu.notification = 'В магазине кончились ресурсы'`);
                 break;
             case 2:
-                mp.callCEFV(`selectMenu.notification = '${data}'`);
+                mp.callCEFV(`selectMenu.notification = \`${data}\``);
                 break;
             case 3:
                 mp.callCEFV(`selectMenu.notification = 'Вы приобрели ${data}'`);
@@ -70,7 +70,7 @@ mp.events.add({
                 mp.callCEFV(`selectMenu.notification = 'В магазине кончились ресурсы'`);
                 break;
             case 2:
-                mp.callCEFV(`selectMenu.notification = '${data}'`);
+                mp.callCEFV(`selectMenu.notification = \`${data}\``);
                 break;
             case 3:
                 mp.callCEFV(`selectMenu.notification = 'Вы приобрели боеприпасы'`);

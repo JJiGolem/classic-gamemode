@@ -51,7 +51,7 @@ module.exports = {
         }
 
         let apps = [];
-        if (player.character.job == 2) {
+        if (player.character.job === 2) {
             apps.push("taxi");
         }
 
@@ -95,5 +95,8 @@ module.exports = {
         player.call("phone.contact.mine.update", [oldNumber, newNumber]);
         mp.events.call("player.phone.number.changed", player);
         return true;
+    },
+    addApp(player, appName, info) {
+        player.call('phone.app.add', [appName, info]);
     }
 };

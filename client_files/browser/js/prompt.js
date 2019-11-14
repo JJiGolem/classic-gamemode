@@ -143,6 +143,9 @@ var prompt = new Vue({
             "animations_stop": {
                 text: "Нажмите <span>SPACE</span>, чтобы остановить анимацию",
             },
+            "clubs_buy": {
+                text: "Нажмите <span>E</span>, чтобы купить алкоголь",
+            },
         },
         text: null
     },

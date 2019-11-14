@@ -63,7 +63,7 @@ mp.events.add({
                     medKnockTime: mp.death.medKnockTime,
                     knockTime: mp.death.knockTime,
                 };
-                mp.callCEFV(`offerDialog.show('death', '${JSON.stringify(data)}')`);
+                mp.callCEFV(`offerDialog.show('death', ${JSON.stringify(data)})`);
             } else {
                 mp.events.call(`death.callRemote.spawn`);
             }

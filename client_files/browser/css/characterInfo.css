@@ -95,6 +95,7 @@
     padding: 1.2vh;
     font-weight: 500;
     font-size: 1.3vh;
+    line-height: 2vh;
 }
 
 #characterInfo .coins span {

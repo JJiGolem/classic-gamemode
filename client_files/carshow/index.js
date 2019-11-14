@@ -203,7 +203,7 @@ function updateSpecifications(i) {
 
     let maxSpeed = (mp.game.vehicle.getVehicleModelMaxSpeed(current.model) * 3.6 * 1.05).toFixed(0);
 
-    mp.callCEFV(`carSpecifications.body.maxSpeed.value = '${maxSpeed}'`);
+    mp.callCEFV(`carSpecifications.body.maxSpeed.value = \`${maxSpeed}\``);
     mp.callCEFV(`carSpecifications.body.name.value = '${list[i].properties.name}'`);
     mp.callCEFV(`carSpecifications.body.volume.value = '${list[i].properties.maxFuel}'`);
     //mp.callCEFV(`carSpecifications.body.consumption.value = '${list[i].properties.consumption}'`);
@@ -211,7 +211,7 @@ function updateSpecifications(i) {
         mp.callCEFV(`carSpecifications.body.volume.value = '—'`);
         mp.callCEFV(`carSpecifications.body.consumption.value = '—'`);
     }
-    mp.callCEFV(`carSpecifications.body.class.value = '${className}'`);
+    mp.callCEFV(`carSpecifications.body.class.value = \`${className}\``);
     mp.callCEFV(`carSpecifications.body.count.value = '${list[i].count}'`);
     mp.callCEFV(`carSpecifications.price = '${list[i].properties.price}'`);
     mp.callCEFV(`carSpecifications.show = true`);
