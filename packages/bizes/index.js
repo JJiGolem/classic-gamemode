@@ -434,7 +434,7 @@ module.exports = {
         return bizes.filter(x => x.info.factionId === factionId);
     },
     getBizesForBizWar(factionId) {
-        return bizes.filter(x => x.info.factionId !== factionId).map(x => {
+        return bizes.filter(x => x.info.factionId !== factionId && x.info.type != 10).map(x => {
             return {
                 id: x.info.id,
                 name: x.info.name,
