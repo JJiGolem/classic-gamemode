@@ -11,6 +11,7 @@ module.exports = {
         type: 10,
         name: "Клуб",
         productName: "Спиртное",
+        isFactionOwner: true,
     },
     productPrice: 1,
     rentPerDayMultiplier: 0.01,
