@@ -336,4 +336,30 @@ module.exports = {
 
         notifs.success(player, `Вы приобрели ${item.params.name}`, header);
     },
+    buySnack(player, index) {
+        if (!player.inClub) return notifs.error(player, `Вы не в клубе`);
+        var club = this.clubs.find(x => x.biz.info.factionId == player.inClub);
+        if (!club) return notifs.error(player, `Клуб не найден`);
+        var header = `Барная стойка ${club.biz.info.name}`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var snackList = this.snacks[club.biz.info.factionId];
+        index = Math.clamp(index, 0, snackList.length - 1);
+        var item = snackList[index];
+        if (player.character.cash < item.price) return out(`Необходимо $${item.price}`);
+
+        var cantAdd = inventory.cantAdd(player, this.snackItemId, item.params);
+        if (cantAdd) return out(cantAdd);
+
+        money.removeCash(player, item.price, (res) => {
+            if (!res) out(`Ошибка списания наличных`);
+        }, `Покупка закуски в клубе с bizId #${club.biz.info.id}`);
+
+        inventory.addItem(player, this.snackItemId, item.params, (e) => {
+            if (e) notifs.error(player, e);
+        });
+
+        notifs.success(player, `Вы приобрели ${item.params.name}`, header);
+    },
 };

@@ -9142,7 +9142,8 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("club");
                         } else {
-                            debug("todo")
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `clubs.snacks.buy`, e.itemIndex);
                         }
                     } else if (eventName == 'onBackspacePressed') {
                         selectMenu.showByName("club");
