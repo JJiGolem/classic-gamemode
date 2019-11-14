@@ -372,7 +372,7 @@ module.exports = {
         var params = inventory.getParamsValues(eat);
         var character = player.character;
 
-        satiety.set(player, character.satiety + (params.satiety || 10), character.thirst + (params.thirst || 10));
+        satiety.set(player, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
         notifs.success(player, `Вы съели ${inventory.getName(eat.itemId)}`, header);
 
         if (!player.vehicle) {
@@ -404,7 +404,7 @@ module.exports = {
         var params = inventory.getParamsValues(drink);
         var character = player.character;
 
-        satiety.set(player, character.satiety + (params.satiety || 10), character.thirst + (params.thirst || 10));
+        satiety.set(player, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
         notifs.success(player, `Вы выпили ${inventory.getName(drink.itemId)}`, header);
 
         if (!player.vehicle) {
