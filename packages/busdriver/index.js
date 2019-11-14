@@ -19,8 +19,8 @@ let busStops;
 let busRoutes;
 
 const RENT_PRICE = 50;
-const STOP_TIMEOUT = 10000;
-const RESPAWN_TIMEOUT = 30000;
+const STOP_TIMEOUT = 15000;
+const RESPAWN_TIMEOUT = 120000;
 
 module.exports = {
     init() {

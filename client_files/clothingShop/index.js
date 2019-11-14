@@ -210,7 +210,7 @@ mp.events.add({
                 mp.callCEFV(`selectMenu.notification = 'Предмет не найден'`);
                 break;
             case 2:
-                mp.callCEFV(`selectMenu.notification = '${data}'`);
+                mp.callCEFV(`selectMenu.notification = \`${data}\``);
                 break;
             case 4:
                 mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);

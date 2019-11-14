@@ -8471,6 +8471,9 @@ var selectMenu = new Vue({
                         text: "Полиция"
                     },
                     {
+                        text: "Медики"
+                    },
+                    {
                         text: "Гражданские"
                     },
                     {
@@ -8507,6 +8510,22 @@ var selectMenu = new Vue({
                             id: 1047,
                             name: "Стриптиз"
                         },
+                        {
+                            id: 7899,
+                            name: "Стриптиз №2"
+                        },
+                        {
+                            id: 10063,
+                            name: "Зажигательный танец"
+                        },
+                        {
+                            id: 10064,
+                            name: "Jenga"
+                        },
+                        {
+                            id: 10071,
+                            name: "Неудачный танец"
+                        },
                     ],
                     "Армия": [{
                             id: 1841,
@@ -8528,8 +8547,20 @@ var selectMenu = new Vue({
                             id: 1126,
                             name: "Качать пресс"
                         },
+                        {
+                            id: 9947,
+                            name: "Пытаться качать прес"
+                        },
+                        {
+                            id: 11003,
+                            name: "Проползать под проволкой"
+                        },
                     ],
                     "Полиция": [{
+                            id: 7016,
+                            name: "Держаться руку на кобуре"
+                        },
+                        {
                             id: 354,
                             name: "Стойка, руки на поясе"
                         },
@@ -8542,8 +8573,20 @@ var selectMenu = new Vue({
                             name: "Стать на одно колено и что - то высматривать на земле"
                         },
                         {
+                            id: 356,
+                            name: "Осматривать землю"
+                        },
+                        {
                             id: 407,
                             name: "Держать руки на ремне"
+                        },
+                        {
+                            id: 526,
+                            name: "Достать блокнот и начать записывать"
+                        },
+                        {
+                            id: 6215,
+                            name: "Остановить машину и показать на поворот"
                         },
                         {
                             id: 1418,
@@ -8554,9 +8597,42 @@ var selectMenu = new Vue({
                             name: "Фотографировать на фотоаппарат"
                         },
                     ],
+                    "Медики": [{
+                            id: 520,
+                            name: "Осматривать пострадавшего"
+                        },
+                        {
+                            id: 524,
+                            name: "Ощупать пострадавшего"
+                        },
+                        {
+                            id: 8247,
+                            name: "Схватиться за грудь в области сердца"
+                        },
+                        {
+                            id: 8276,
+                            name: "Зубная боль"
+                        },
+                        {
+                            id: 8306,
+                            name: "Лежать на боку при этом схватившись за голову"
+                        },
+                        {
+                            id: 1416,
+                            name: "Сидеть на полу и держаться за грудную клетку"
+                        },
+                    ],
                     "Гражданские": [{
+                            id: 7241,
+                            name: "Взять что-то"
+                        },
+                        {
                             id: 1016,
                             name: "Демонстрация мышц"
+                        },
+                        {
+                            id: 2414,
+                            name: "Встать на колени и завести руки за голову"
                         },
                         {
                             id: 1280,
@@ -8567,12 +8643,24 @@ var selectMenu = new Vue({
                             name: "Заниматься йогой №2"
                         },
                         {
+                            id: 6210,
+                            name: "Поднять руки в верх"
+                        },
+                        {
                             id: 1487,
-                            name: "Размять мышки перед дракой"
+                            name: "Размять мышцы перед дракой"
+                        },
+                        {
+                            id: 8668,
+                            name: "Указать направление"
                         },
                         {
                             id: 367,
                             name: "Стоять и держать в руке стаканчик с кофе"
+                        },
+                        {
+                            id: 7472,
+                            name: "Достать что-то из кармана и положить перед собой"
                         },
                         {
                             id: 548,
@@ -8603,6 +8691,14 @@ var selectMenu = new Vue({
                             name: "Стоять с широко расставленными руками"
                         },
                         {
+                            id: 9854,
+                            name: "Стоять сложив руки на поясе"
+                        },
+                        {
+                            id: 9125,
+                            name: "Стоять скромно, покачиваясь"
+                        },
+                        {
                             id: 516,
                             name: "Прилечь на боку"
                         },
@@ -8613,6 +8709,10 @@ var selectMenu = new Vue({
                         {
                             id: 310,
                             name: "Курение сигареты"
+                        },
+                        {
+                            id: 135,
+                            name: "Испуганно сидеть на корточках"
                         },
                         {
                             id: 1304,
@@ -8627,6 +8727,10 @@ var selectMenu = new Vue({
                             name: "Чесать сзади"
                         },
                         {
+                            id: 7412,
+                            name: "Взламывать замок"
+                        },
+                        {
                             id: 1642,
                             name: "Удивление"
                         },
@@ -8639,8 +8743,8 @@ var selectMenu = new Vue({
                             name: "Показать фак"
                         },
                         {
-                            id: 2414,
-                            name: "Встать на колени и завести руки за голову"
+                            id: 6300,
+                            name: "Приступ"
                         },
                         {
                             id: 1033,
@@ -8653,10 +8757,6 @@ var selectMenu = new Vue({
                         {
                             id: 1219,
                             name: "Сидеть, облокотившись о стену"
-                        },
-                        {
-                            id: 1416,
-                            name: "Сидеть на полу и держаться за грудную клетку"
                         },
                         {
                             id: 1228,
@@ -8675,8 +8775,20 @@ var selectMenu = new Vue({
                             name: "Лежать на спине"
                         },
                         {
+                            id: 8245,
+                            name: "Радоваться победе"
+                        },
+                        {
                             id: 1515,
                             name: "Посылать воздушные поцелуи"
+                        },
+                        {
+                            id: 8079,
+                            name: "Снова неудача"
+                        },
+                        {
+                            id: 8336,
+                            name: "Сожалеть о содеяном"
                         },
                         {
                             id: 1511,
@@ -8689,6 +8801,10 @@ var selectMenu = new Vue({
                         {
                             id: 1519,
                             name: "Показывать всем «Факи»"
+                        },
+                        {
+                            id: 8092,
+                            name: "Злиться на что-то"
                         },
                         {
                             id: 1526,
@@ -8719,12 +8835,20 @@ var selectMenu = new Vue({
                             name: "Чрезмерная радость"
                         },
                         {
+                            id: 8112,
+                            name: "Пъяный"
+                        },
+                        {
                             id: 1810,
                             name: "Пальцы в стиле «Рок»"
                         },
                         {
                             id: 1900,
                             name: "Показать «Класс»"
+                        },
+                        {
+                            id: 9896,
+                            name: "Крутить пятой точкой"
                         },
                         {
                             id: 1924,
@@ -8747,6 +8871,10 @@ var selectMenu = new Vue({
                             name: "Боюсь - боюсь"
                         },
                         {
+                            id: 7914,
+                            name: "Вести пактивный раговор при этом сложив руки на груди"
+                        },
+                        {
                             id: 1954,
                             name: "Разминать кулаки"
                         },
@@ -8757,6 +8885,10 @@ var selectMenu = new Vue({
                         {
                             id: 1968,
                             name: "Махать рукой как «английская королева»"
+                        },
+                        {
+                            id: 7411,
+                            name: "Упасть на колени и схватиться за голову"
                         },
                     ],
                     "Работы": [{
@@ -8773,11 +8905,23 @@ var selectMenu = new Vue({
                         },
                         {
                             id: 918,
-                            name: "Копать"
+                            name: "Мыть полы"
+                        },
+                        {
+                            id: 7054,
+                            name: "Мыть полы №2"
                         },
                         {
                             id: 1002,
                             name: "Протирать стёкла"
+                        },
+                        {
+                            id: 8081,
+                            name: "Копать"
+                        },
+                        {
+                            id: 9952,
+                            name: "Натирать горизонтальную поверхность"
                         },
                     ],
                 },
@@ -8855,6 +8999,211 @@ var selectMenu = new Vue({
                         }
                     } else if (eventName == 'onBackspacePressed') {
                         selectMenu.showByName("animations");
+                    }
+                }
+            },
+            "club": {
+                name: "club",
+                header: "Название клуба",
+                items: [{
+                        text: "Напитки",
+                    },
+                    {
+                        text: "Закуски"
+                    },
+                    {
+                        text: "Сигареты"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                name: "",
+                alcohol: [],
+                snacks: [],
+                smoke: [],
+                init(data) {
+                    if (typeof data == 'string') data = JSON.parse(data);
+
+                    this.header = data.name;
+                    this.alcohol = data.alcohol;
+                    this.snacks = data.snacks;
+                    this.smoke = data.smoke;
+
+                    var alcoholItems = [];
+                    this.alcohol.forEach(el => {
+                        alcoholItems.push({
+                            text: el.params.name,
+                            values: [`$${el.price}`],
+                        });
+                    });
+                    alcoholItems.push({
+                        text: "Вернуться"
+                    });
+
+                    var snackItems = [];
+                    this.snacks.forEach(el => {
+                        snackItems.push({
+                            text: el.params.name,
+                            values: [`$${el.price}`],
+                        });
+                    });
+                    snackItems.push({
+                        text: "Вернуться"
+                    });
+
+                    var smokeItems = [];
+                    this.smoke.forEach(el => {
+                        smokeItems.push({
+                            text: el.params.name,
+                            values: [`$${el.price}`],
+                        });
+                    });
+                    smokeItems.push({
+                        text: "Вернуться"
+                    });
+
+                    selectMenu.setItems('clubAlcohol', alcoholItems);
+                    selectMenu.setItems('clubSnacks', snackItems);
+                    selectMenu.setItems('clubSmoke', smokeItems);
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Напитки') {
+                            selectMenu.showByName("clubAlcohol");
+                        } else if (e.itemName == 'Закуски') {
+                            selectMenu.showByName("clubSnacks");
+                        } else if (e.itemName == 'Сигареты') {
+                            selectMenu.showByName("clubSmoke");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    } else if (eventName == 'onBackspacePressed') {
+                        selectMenu.show = false;
+                    }
+                }
+            },
+            "clubAlcohol": {
+                name: "clubAlcohol",
+                header: "Напитки",
+                items: [{
+                        text: "Напиток 1",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Напиток 2",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("club");
+                        } else {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `clubs.alcohol.buy`, e.itemIndex);
+                        }
+                    } else if (eventName == 'onBackspacePressed') {
+                        selectMenu.showByName("club");
+                    }
+                }
+            },
+            "clubSnacks": {
+                name: "clubSnacks",
+                header: "Закуски",
+                items: [{
+                        text: "Закуска 1",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Закуска 2",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("club");
+                        } else {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `clubs.snacks.buy`, e.itemIndex);
+                        }
+                    } else if (eventName == 'onBackspacePressed') {
+                        selectMenu.showByName("club");
+                    }
+                }
+            },
+            "clubSmoke": {
+                name: "clubSmoke",
+                header: "Сигареты",
+                items: [{
+                        text: "Сигарета 1",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Сигарета 2",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("club");
+                        } else {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `clubs.smoke.buy`, e.itemIndex);
+                        }
+                    } else if (eventName == 'onBackspacePressed') {
+                        selectMenu.showByName("club");
                     }
                 }
             },

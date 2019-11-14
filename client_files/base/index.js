@@ -62,7 +62,7 @@ mp.busy.mouses = [];
 /// END LIST
 /// Добавить модуль (true - операция провшла успешно, false - такой модуль уже содержится в массиве)
 mp.busy.add = function(name, mouse = true, nocef = false) {
-    if (!nocef) mp.callCEFV(`busy.add('${name}')`);
+    if (!nocef) mp.callCEFV(`busy.add(\`${name}\`)`);
     if (mp.busy.list.includes(name)) return false;
     mp.busy.list.push(name);
     if (mouse) {
@@ -91,7 +91,7 @@ mp.busy.includes = function(name) {
 };
 /// Удалить модуль
 mp.busy.remove = function(name, nocef = false) {
-    if (!nocef) mp.callCEFV(`busy.remove('${name}')`);
+    if (!nocef) mp.callCEFV(`busy.remove(\`${name}\`)`);
     let index = mp.busy.list.findIndex(x => x === name);
     index !== -1 && mp.busy.list.splice(index, 1);
 

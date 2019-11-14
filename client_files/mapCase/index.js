@@ -12,16 +12,16 @@ mp.mapCase = {
         mp.callCEFV(`mapCase.enable = ${val}`);
     },
     type(val) {
-        mp.callCEFV(`mapCase.type = "${val}"`);
+        mp.callCEFV(`mapCase.type = \`${val}\``);
     },
     userName(val) {
-        mp.callCEFV(`mapCase.userName = "${val}"`);
+        mp.callCEFV(`mapCase.userName = \`${val}\``);
     },
     showGreenMessage(text) {
-        mp.callCEFV(`mapCase.showGreenMessage('${text}')`);
+        mp.callCEFV(`mapCase.showGreenMessage(\`${text}\`)`);
     },
     showRedMessage(text) {
-        mp.callCEFV(`mapCase.showRedMessage('${text}')`);
+        mp.callCEFV(`mapCase.showRedMessage(\`${text}\`)`);
     },
     registerAttachments() {
         // планшет в руке
@@ -42,14 +42,14 @@ mp.mapCase = {
 mp.mapCaseGover = {
     addMember(members) {
         if (typeof members == 'object') members = JSON.stringify(members);
-        mp.callCEFV(`mapCaseGoverMembersData.add('${members}')`);
+        mp.callCEFV(`mapCaseGoverMembersData.add(\`${members}\`)`);
     },
     removeMember(id) {
         mp.callCEFV(`mapCaseGoverMembersData.remove(${id})`);
     },
     setRanks(ranks) {
         if (typeof ranks == 'object') ranks = JSON.stringify(ranks);
-        mp.callCEFV(`mapCaseGoverMembersData.setRanks('${ranks}')`);
+        mp.callCEFV(`mapCaseGoverMembersData.setRanks(\`${ranks}\`)`);
     },
     setMemberRank(id, rank) {
         mp.callCEFV(`mapCaseGoverMembersData.setMemberRank(${id}, ${rank})`);
@@ -70,7 +70,7 @@ mp.mapCasePd = {
     emergencyBlips: [],
 
     menuHeader(text) {
-        mp.callCEFV(`mapCasePdData.menuHeader = "${text}"`);
+        mp.callCEFV(`mapCasePdData.menuHeader = \`${text}\``);
     },
     setResultData(array) {
         for (var i = 0; i < array.length; i++) {
@@ -79,7 +79,7 @@ mp.mapCasePd = {
             array[i].address = mp.utils.getStreetName(pos) || "-";
         }
         if (typeof array == 'object') array = JSON.stringify(array);
-        mp.callCEFV(`mapCasePdDBResultData.setResult('${array}')`);
+        mp.callCEFV(`mapCasePdDBResultData.setResult(\`${array}\`)`);
     },
     setProfileData(data) {
         var pos = data.housePos;
@@ -91,32 +91,32 @@ mp.mapCasePd = {
         data.gender = (data.gender) ? "Ж" : "М";
 
         if (typeof data == 'object') data = JSON.stringify(data);
-        mp.callCEFV(`mapCasePdProfileData.setProfileData('${data}')`);
+        mp.callCEFV(`mapCasePdProfileData.setProfileData(\`${data}\`)`);
     },
     addCall(calls) {
         if (typeof calls == 'object') calls = JSON.stringify(calls);
-        mp.callCEFV(`mapCasePdCallsData.add('${calls}')`);
+        mp.callCEFV(`mapCasePdCallsData.add(\`${calls}\`)`);
     },
     removeCall(id) {
         mp.callCEFV(`mapCasePdCallsData.remove(${id})`);
     },
     addWanted(wanted) {
         if (typeof wanted == 'object') wanted = JSON.stringify(wanted);
-        mp.callCEFV(`mapCasePdWantedData.add('${wanted}')`);
+        mp.callCEFV(`mapCasePdWantedData.add(\`${wanted}\`)`);
     },
     removeWanted(id) {
         mp.callCEFV(`mapCasePdWantedData.remove(${id})`);
     },
     addMember(members) {
         if (typeof members == 'object') members = JSON.stringify(members);
-        mp.callCEFV(`mapCasePdMembersData.add('${members}')`);
+        mp.callCEFV(`mapCasePdMembersData.add(\`${members}\`)`);
     },
     removeMember(id) {
         mp.callCEFV(`mapCasePdMembersData.remove(${id})`);
     },
     setRanks(ranks) {
         if (typeof ranks == 'object') ranks = JSON.stringify(ranks);
-        mp.callCEFV(`mapCasePdMembersData.setRanks('${ranks}')`);
+        mp.callCEFV(`mapCasePdMembersData.setRanks(\`${ranks}\`)`);
     },
     setMemberRank(id, rank) {
         mp.callCEFV(`mapCasePdMembersData.setMemberRank(${id}, ${rank})`);
@@ -153,14 +153,14 @@ mp.mapCasePd = {
 mp.mapCaseArmy = {
     addMember(members) {
         if (typeof members == 'object') members = JSON.stringify(members);
-        mp.callCEFV(`mapCaseNgMembersData.add('${members}')`);
+        mp.callCEFV(`mapCaseNgMembersData.add(\`${members}\`)`);
     },
     removeMember(id) {
         mp.callCEFV(`mapCaseNgMembersData.remove(${id})`);
     },
     setRanks(ranks) {
         if (typeof ranks == 'object') ranks = JSON.stringify(ranks);
-        mp.callCEFV(`mapCaseNgMembersData.setRanks('${ranks}')`);
+        mp.callCEFV(`mapCaseNgMembersData.setRanks(\`${ranks}\`)`);
     },
     setMemberRank(id, rank) {
         mp.callCEFV(`mapCaseNgMembersData.setMemberRank(${id}, ${rank})`);
@@ -187,7 +187,7 @@ mp.mapCaseFib = {
             array[i].address = mp.utils.getStreetName(pos) || "-";
         }
         if (typeof array == 'object') array = JSON.stringify(array);
-        mp.callCEFV(`mapCaseFIBDBResultData.setResult('${array}')`);
+        mp.callCEFV(`mapCaseFIBDBResultData.setResult(\`${array}\`)`);
     },
     setProfileData(data) {
         var pos = data.housePos;
@@ -199,32 +199,32 @@ mp.mapCaseFib = {
         data.gender = (data.gender) ? "Ж" : "М";
 
         if (typeof data == 'object') data = JSON.stringify(data);
-        mp.callCEFV(`mapCaseFIBProfileData.setProfileData('${data}')`);
+        mp.callCEFV(`mapCaseFIBProfileData.setProfileData(\`${data}\`)`);
     },
     addCall(calls) {
         if (typeof calls == 'object') calls = JSON.stringify(calls);
-        mp.callCEFV(`mapCaseFIBCallsData.add('${calls}')`);
+        mp.callCEFV(`mapCaseFIBCallsData.add(\`${calls}\`)`);
     },
     removeCall(id) {
         mp.callCEFV(`mapCaseFIBCallsData.remove(${id})`);
     },
     addWanted(wanted) {
         if (typeof wanted == 'object') wanted = JSON.stringify(wanted);
-        mp.callCEFV(`mapCaseFIBWantedData.add('${wanted}')`);
+        mp.callCEFV(`mapCaseFIBWantedData.add(\`${wanted}\`)`);
     },
     removeWanted(id) {
         mp.callCEFV(`mapCaseFIBWantedData.remove(${id})`);
     },
     addMember(members) {
         if (typeof members == 'object') members = JSON.stringify(members);
-        mp.callCEFV(`mapCaseFIBMembersData.add('${members}')`);
+        mp.callCEFV(`mapCaseFIBMembersData.add(\`${members}\`)`);
     },
     removeMember(id) {
         mp.callCEFV(`mapCaseFIBMembersData.remove(${id})`);
     },
     setRanks(ranks) {
         if (typeof ranks == 'object') ranks = JSON.stringify(ranks);
-        mp.callCEFV(`mapCaseFIBMembersData.setRanks('${ranks}')`);
+        mp.callCEFV(`mapCaseFIBMembersData.setRanks(\`${ranks}\`)`);
     },
     setMemberRank(id, rank) {
         mp.callCEFV(`mapCaseFIBMembersData.setMemberRank(${id}, ${rank})`);
@@ -261,21 +261,21 @@ mp.mapCaseFib = {
 mp.mapCaseEms = {
     addCall(calls) {
         if (typeof calls == 'object') calls = JSON.stringify(calls);
-        mp.callCEFV(`mapCaseEmsCallsData.add('${calls}')`);
+        mp.callCEFV(`mapCaseEmsCallsData.add(\`${calls}\`)`);
     },
     removeCall(id) {
         mp.callCEFV(`mapCaseEmsCallsData.remove(${id})`);
     },
     addMember(members) {
         if (typeof members == 'object') members = JSON.stringify(members);
-        mp.callCEFV(`mapCaseEmsMembersData.add('${members}')`);
+        mp.callCEFV(`mapCaseEmsMembersData.add(\`${members}\`)`);
     },
     removeMember(id) {
         mp.callCEFV(`mapCaseEmsMembersData.remove(${id})`);
     },
     setRanks(ranks) {
         if (typeof ranks == 'object') ranks = JSON.stringify(ranks);
-        mp.callCEFV(`mapCaseEmsMembersData.setRanks('${ranks}')`);
+        mp.callCEFV(`mapCaseEmsMembersData.setRanks(\`${ranks}\`)`);
     },
     setMemberRank(id, rank) {
         mp.callCEFV(`mapCaseEmsMembersData.setMemberRank(${id}, ${rank})`);
@@ -287,18 +287,18 @@ mp.mapCaseNews = {
     },
     showAd(ad) {
         if (typeof ad == 'object') ad = JSON.stringify(ad);
-        mp.callCEFV(`mapCaseWnewsAdsData.setAd('${ad}')`);
+        mp.callCEFV(`mapCaseWnewsAdsData.setAd(\`${ad}\`)`);
     },
     addMember(members) {
         if (typeof members == 'object') members = JSON.stringify(members);
-        mp.callCEFV(`mapCaseWnewsMembersData.add('${members}')`);
+        mp.callCEFV(`mapCaseWnewsMembersData.add(\`${members}\`)`);
     },
     removeMember(id) {
         mp.callCEFV(`mapCaseWnewsMembersData.remove(${id})`);
     },
     setRanks(ranks) {
         if (typeof ranks == 'object') ranks = JSON.stringify(ranks);
-        mp.callCEFV(`mapCaseWnewsMembersData.setRanks('${ranks}')`);
+        mp.callCEFV(`mapCaseWnewsMembersData.setRanks(\`${ranks}\`)`);
     },
     setMemberRank(id, rank) {
         mp.callCEFV(`mapCaseWnewsMembersData.setMemberRank(${id}, ${rank})`);

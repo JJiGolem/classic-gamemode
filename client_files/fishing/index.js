@@ -197,7 +197,7 @@ mp.events.add('fishing.rod.buy.ans', (ans, data) => {
             mp.events.call('fishing.menu.close');
             break;
         case 2:
-            mp.callCEFV(`selectMenu.notification = '${data}'`);
+            mp.callCEFV(`selectMenu.notification = \`${data}\``);
             break;
         case 3:
             mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
