@@ -99,24 +99,45 @@ mp.clubs = {
     // Клуб, в котором находится игрок (ид организации клуба)
     currentClub: null,
 
+    setCurrentClub(data) {
+        this.currentClub = data;
+        if (data) {
+            mp.callCEFV(`selectMenu.menus['club'].init(${JSON.stringify(data)})`);
+        }
+    },
     setNearBar(enable) {
         if (enable == this.isNearBar) return;
         this.isNearBar = enable;
         if (this.isNearBar) mp.prompt.showByName("clubs_buy");
-        else mp.prompt.hide();
+        else {
+            mp.prompt.hide();
+            mp.callCEFV(`selectMenu.show = false`);
+        }
+    },
+    barHandler() {
+        if (mp.game.ui.isPauseMenuActive()) return;
+        if (mp.busy.includes()) return;
+        if (!this.currentClub || !this.isNearBar) return;
+
+        mp.callCEFV(`selectMenu.showByName('club')`);
     },
 };
 
 mp.events.add({
-    "clubs.setCurrentClub": (factionId) => {
-        mp.clubs.currentClub = factionId;
+    "characterInit.done": () => {
+        mp.keys.bind(69, true, () => {
+            mp.clubs.barHandler();
+        }); // E
+    },
+    "clubs.setCurrentClub": (data) => {
+        mp.clubs.setCurrentClub(data)
     },
     "time.main.tick": () => {
         if (!mp.clubs.currentClub) return;
 
         var pos = mp.players.local.position;
         var isNearBar = false;
-        mp.clubs.bars[mp.clubs.currentClub].forEach(polygon => {
+        mp.clubs.bars[mp.clubs.currentClub.factionId].forEach(polygon => {
             if (mp.utils.inPolygon(pos, polygon)) isNearBar = true;
         });
         mp.clubs.setNearBar(isNearBar);

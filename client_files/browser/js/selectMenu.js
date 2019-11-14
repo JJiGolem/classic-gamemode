@@ -9002,6 +9002,152 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "club": {
+                name: "club",
+                header: "Название клуба",
+                items: [{
+                        text: "Напитки",
+                    },
+                    {
+                        text: "Закуски"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                name: "",
+                alcohol: [],
+                snacks: [],
+                init(data) {
+                    if (typeof data == 'string') data = JSON.parse(data);
+
+                    this.header = data.name;
+                    this.alcohol = data.alcohol;
+                    this.snacks = data.snacks;
+
+                    var alcoholItems = [];
+                    this.alcohol.forEach(el => {
+                        alcoholItems.push({
+                            text: el.name,
+                            values: [`$${el.price}`],
+                        });
+                    });
+                    alcoholItems.push({
+                        text: "Вернуться"
+                    });
+
+                    var snackItems = [];
+                    this.snacks.forEach(el => {
+                        snackItems.push({
+                            text: el.name,
+                            values: [`$${el.price}`],
+                        });
+                    });
+                    snackItems.push({
+                        text: "Вернуться"
+                    });
+
+                    selectMenu.setItems('clubAlcohol', alcoholItems);
+                    selectMenu.setItems('clubSnacks', snackItems);
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Напитки') {
+                            selectMenu.showByName("clubAlcohol");
+                        } else if (e.itemName == 'Закуски') {
+                            selectMenu.showByName("clubSnacks");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    } else if (eventName == 'onBackspacePressed') {
+                        selectMenu.show = false;
+                    }
+                }
+            },
+            "clubAlcohol": {
+                name: "clubAlcohol",
+                header: "Напитки",
+                items: [{
+                        text: "Напиток 1",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Напиток 2",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("club");
+                        } else {
+                            debug("todo")
+                        }
+                    } else if (eventName == 'onBackspacePressed') {
+                        selectMenu.showByName("club");
+                    }
+                }
+            },
+            "clubSnacks": {
+                name: "clubSnacks",
+                header: "Закуски",
+                items: [{
+                        text: "Закуска 1",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Закуска 2",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("club");
+                        } else {
+                            debug("todo")
+                        }
+                    } else if (eventName == 'onBackspacePressed') {
+                        selectMenu.showByName("club");
+                    }
+                }
+            },
         },
         // Уведомление
         notification: null,
