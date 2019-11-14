@@ -15,7 +15,7 @@ module.exports = {
                 enterMarker: this.createEnterMarker(db),
                 exitMarker: this.createExitMarker(db),
             };
-            this.clubs.push();
+            this.clubs.push(club);
         });
 
         console.log(`[CLUBS] Клубы загружены (${this.clubs.length} шт.)`);

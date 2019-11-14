@@ -46,6 +46,10 @@ mp.clubs = {
                 {
                     x: -1381.6634521484375,
                     y: -632.8622436523438
+                },
+                {
+                    x: -1372.8597412109375,
+                    y: -626.2239379882812
                 }
             ],
         ],
@@ -94,10 +98,27 @@ mp.clubs = {
     isNearBar: false,
     // Клуб, в котором находится игрок (ид организации клуба)
     currentClub: null,
+
+    setNearBar(enable) {
+        if (enable == this.isNearBar) return;
+        this.isNearBar = enable;
+        if (this.isNearBar) mp.prompt.showByName("clubs_buy");
+        else mp.prompt.hide();
+    },
 };
 
 mp.events.add({
     "clubs.setCurrentClub": (factionId) => {
         mp.clubs.currentClub = factionId;
+    },
+    "time.main.tick": () => {
+        if (!mp.clubs.currentClub) return;
+
+        var pos = mp.players.local.position;
+        var isNearBar = false;
+        mp.clubs.bars[mp.clubs.currentClub].forEach(polygon => {
+            if (mp.utils.inPolygon(pos, polygon)) isNearBar = true;
+        });
+        mp.clubs.setNearBar(isNearBar);
     },
 });
