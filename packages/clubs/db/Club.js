@@ -10,18 +10,38 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: null,
             allowNull: true
         },
-        x: {
+        enterX: {
             type: DataTypes.FLOAT,
             allowNull: false
         },
-        y: {
+        enterY: {
             type: DataTypes.FLOAT,
             allowNull: false
         },
-        z: {
+        enterZ: {
             type: DataTypes.FLOAT,
             allowNull: false
-        }
+        },
+        enterH: {
+            type: DataTypes.FLOAT,
+            allowNull: false
+        },
+        exitX: {
+            type: DataTypes.FLOAT,
+            allowNull: false
+        },
+        exitY: {
+            type: DataTypes.FLOAT,
+            allowNull: false
+        },
+        exitZ: {
+            type: DataTypes.FLOAT,
+            allowNull: false
+        },
+        exitH: {
+            type: DataTypes.FLOAT,
+            allowNull: false
+        },
     }, {
         timestamps: false
     });
