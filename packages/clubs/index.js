@@ -295,7 +295,10 @@ module.exports = {
                 player.call(`clubs.setCurrentClub`);
                 return;
             }
-            if (!enterMarker.isOpen && player.character.factionId != club.biz.info.factionId) return notifs.error(player, `Клуб закрыт`, club.biz.info.name);
+            if (!enterMarker.isOpen) {
+                if (player.character.factionId != club.biz.info.factionId) return notifs.error(player, `Клуб закрыт`, club.biz.info.name);
+                notifs.warning(player, `Вы вошли в закрытый клуб как член мафии`, club.biz.info.name);
+            }
 
             player.dimension = club.biz.info.factionId;
             player.position = new mp.Vector3(club.db.exitX, club.db.exitY, club.db.exitZ);
@@ -419,5 +422,9 @@ module.exports = {
         });
 
         notifs.success(player, `Вы приобрели пачку ${item.params.name}`, header);
+    },
+    openClub(factionId, isOpen) {
+        var club = this.clubs.find(x => x.biz.info.factionId == factionId);
+        club.enterMarker.isOpen = isOpen;
     },
 };
