@@ -4,6 +4,7 @@ let bizes = call('bizes');
 let inventory = call('inventory');
 let money = call('money');
 let notifs = call('notifications');
+let walking = call('walking');
 
 module.exports = {
     // Инфо о бизнесе
@@ -277,6 +278,10 @@ module.exports = {
     alcoholItemId: 133,
     snackItemId: 134,
     smokeItemId: 16,
+    // Ид пьяной походки
+    drunkWalkingId: 7,
+    // Мин. значение опьянения, при котором меняется походка
+    walkingDrunkenness: 70,
     // Мин. значение опьянения, при котором будет визуальный эффект
     vfxDrunkenness: 20,
     // Визуальный эффект от опьянения
@@ -451,7 +456,14 @@ module.exports = {
         var oldValue = player.drunkenness || 0;
         var newValue = Math.clamp(oldValue + value, 0, 100);
 
+        if (oldValue < this.walkingDrunkenness && newValue >= this.walkingDrunkenness) this.setDrunkWalking(player, true);
+        else if (oldValue >= this.walkingDrunkenness && newValue < this.walkingDrunkenness) this.setDrunkWalking(player, false);
+
         player.drunkenness = newValue;
         player.call(`clubs.drunkenness.set`, [newValue]);
+    },
+    setDrunkWalking(player, enable) {
+        var style = (enable) ? this.drunkWalkingId : player.character.settings.walking;
+        walking.set(player, style);
     },
 };

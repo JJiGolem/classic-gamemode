@@ -7,6 +7,7 @@ module.exports = {
     },
     "characterInit.done": (player) => {
         player.call(`clubs.drunkennessData.init`, [{
+            walkingDrunkenness: clubs.walkingDrunkenness,
             vfxDrunkenness: clubs.vfxDrunkenness,
             vfxName: clubs.vfxName,
         }]);

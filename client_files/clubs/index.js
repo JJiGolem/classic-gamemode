@@ -100,12 +100,15 @@ mp.clubs = {
     currentClub: null,
     // Опьянение (0-100)
     drunkenness: 0,
+    // Мин. значение опьянения, при котором меняется походка
+    walkingDrunkenness: 5,
     // Мин. значение опьянения, при котором будет визуальный эффект
     vfxDrunkenness: 5,
     // Визуальный эффект от опьянения
     vfxName: "DrugsDrivingOut",
 
     initDrunkennessData(data) {
+        this.walkingDrunkenness = data.walkingDrunkenness;
         this.vfxDrunkenness = data.vfxDrunkenness;
         this.vfxName = data.vfxName;
     },
