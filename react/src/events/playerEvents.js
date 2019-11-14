@@ -567,28 +567,28 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
-    myEventEmmiter.on('factionBiz.order.ans', (ans) => {
+    myEventEmmiter.on('biz.faction.order.ans', (ans) => {
         dispatch({
             type: 'SET_ORDER_STATUS_BUSINESS_FACTION',
             payload: ans
         });
     });
 
-    myEventEmmiter.on('factionBiz.order.complete', (resources) => {
+    myEventEmmiter.on('biz.faction.order.complete', (resources) => {
         dispatch({
             type: 'ORDER_COMPLETE_BUSINESS_FACTION',
             payload: resources
         });
     });
 
-    myEventEmmiter.on('factionBiz.order.take', (flag) => {
+    myEventEmmiter.on('biz.faction.order.take', (flag) => {
         dispatch({
             type: 'TAKE_ORDER_BUSINESS_FACTION',
             payload: flag
         });
     });
 
-    myEventEmmiter.on('factionBiz.improvements.buy.ans', (ans) => {
+    myEventEmmiter.on('biz.faction.improvements.buy.ans', (ans) => {
         dispatch({
             type: 'BUY_IMPROVEMENT_BUSINESS_FACTION_ANS',
             payload: ans

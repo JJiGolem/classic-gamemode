@@ -68,11 +68,11 @@ class Business extends Component {
             blurForm(true);
 
             // eslint-disable-next-line no-undef
-            // mp.trigger('biz.buy');
+            mp.trigger('biz.buy');
 
-             setTimeout(() => {
-                 setAnswer({answer: 1, owner: 'Dun Hill'});
-             }, 1000)
+            //  setTimeout(() => {
+            //      setAnswer({answer: 1, owner: 'Dun Hill'});
+            //  }, 1000)
         }
     }
 
@@ -204,7 +204,7 @@ class Business extends Component {
         } else {
             return (
                 <Fragment>
-                    { this.getButton('buy') }
+                    { business.price && this.getButton('buy') }
                     { this.getButton('actions') }
                 </Fragment>
             )
