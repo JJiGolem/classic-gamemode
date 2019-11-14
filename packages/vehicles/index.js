@@ -99,6 +99,10 @@ module.exports = {
             vehicle.fuel = vehicle.properties.maxFuel;
         }
 
+        if (veh.key == 'rent') {
+            vehicle.fuel = parseInt(vehicle.properties.maxFuel / 2);
+        }
+
         if (veh.key == 'private' || veh.key == 'market') { // temp
             if (!veh.tuning) {
                 await this.initTuning(vehicle);
