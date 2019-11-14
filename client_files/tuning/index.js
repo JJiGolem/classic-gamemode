@@ -341,7 +341,7 @@ mp.events.add('tuning.buy.ans', (ans, mod, index) => {
             tuningParams[mod].current = index;
             mp.callCEFV(`count = -1;
             selectMenu.menu.items.forEach((item) => {
-                if (item.values[0] == 'уст.') mp.trigger('tuning.item.update', '${mod}', count)
+                if (item.values[0] == 'уст.') mp.trigger('tuning.item.update', \`${mod}\`, count)
                 count++;
             });
             `);

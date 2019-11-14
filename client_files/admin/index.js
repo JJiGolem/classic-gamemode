@@ -67,7 +67,7 @@ mp.events.add({
             }
         }
        
-        mp.callCEFV(`modal.modals["admin_stats"].content = '${content}'`);
+        mp.callCEFV(`modal.modals["admin_stats"].content = \`${content}\``);
         mp.callCEFV('modal.showByName("admin_stats")')
     }
 });

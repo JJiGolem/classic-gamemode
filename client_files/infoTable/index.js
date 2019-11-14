@@ -22,11 +22,11 @@ mp.infoTable = {
 
 
 mp.events.add("infoTable.setValues", (name, values) => {
-    menu.execute(`infoTable.setValues('${name}', ${JSON.stringify(values)})`);
+    menu.execute(`infoTable.setValues(\`${name}\`, ${JSON.stringify(values)})`);
 });
 
 mp.events.add("infoTable.showByName", (name, values) => {
-    menu.execute(`infoTable.showByName('${name}', ${JSON.stringify(values)})`);
+    menu.execute(`infoTable.showByName(\`${name}\`, ${JSON.stringify(values)})`);
 });
 
 mp.events.add("infoTable.hide", () => {

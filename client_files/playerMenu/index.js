@@ -55,7 +55,7 @@ mp.playerMenu = {
         mp.callCEFV(`playerMenu.setSlots(${slots})`);
     },
     setPromocode(code) {
-        mp.callCEFV(`playerMenu.setPromocode('${code}')`);
+        mp.callCEFV(`playerMenu.setPromocode(\`${code}\`)`);
     },
     setInvited(invited) {
         mp.callCEFV(`playerMenu.setInvited(${invited})`);
@@ -70,10 +70,10 @@ mp.playerMenu = {
         mp.callCEFV(`playerMenu.setPasswordDate(${time})`);
     },
     setEmail(email, confirm = 0) {
-        mp.callCEFV(`playerMenu.setEmail('${email}', ${confirm})`);
+        mp.callCEFV(`playerMenu.setEmail(\`${email}\`, ${confirm})`);
     },
     setName(name) {
-        mp.callCEFV(`playerMenu.setName('${name}')`);
+        mp.callCEFV(`playerMenu.setName(\`${name}\`)`);
     },
     setAdmin(admin) {
         mp.callCEFV(`playerMenu.setAdmin(${admin})`);

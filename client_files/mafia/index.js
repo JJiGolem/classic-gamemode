@@ -130,15 +130,15 @@ mp.mafia = {
         if (typeof target == 'object') target = JSON.stringify(target);
         if (typeof killer == 'object') killer = JSON.stringify(killer);
         // самоубийство
-        if (reason == 3452007600) return mp.callCEFV(`killList.add('${target}')`);
+        if (reason == 3452007600) return mp.callCEFV(`killList.add(\`${target}\`)`);
         // на авто
-        if (reason == 2741846334) return mp.callCEFV(`killList.add('${target}', '${killer}', 'car')`);
+        if (reason == 2741846334) return mp.callCEFV(`killList.add(\`${target}\`, \`${killer}\`, 'car')`);
         // рукопашка
-        if (reason == 2725352035) return mp.callCEFV(`killList.add('${target}', '${killer}', 'hand')`);
+        if (reason == 2725352035) return mp.callCEFV(`killList.add(\`${target}\`, \`${killer}\`, 'hand')`);
 
         // огнестрел, либо что-то еще? :D
         var name = mp.weapons.getWeaponName(reason);
-        mp.callCEFV(`killList.add('${target}', '${killer}', '${name}')`);
+        mp.callCEFV(`killList.add(\`${target}\`, \`${killer}\`, \`${name}\`)`);
     },
     createPlayerBlip(player) {
         if (!this.bizWarFactions.length) return;
@@ -181,7 +181,7 @@ mp.mafia = {
         mp.callCEFV(`selectMenu.setItems('mafiaPower', ${JSON.stringify(items)})`);
 
         var cash = JSON.stringify([`$${data.cash}`]);
-        mp.callCEFV(`selectMenu.setItemValues('mafiaCash', 'Баланс', '${cash}')`);
+        mp.callCEFV(`selectMenu.setItemValues('mafiaCash', 'Баланс', \`${cash}\`)`);
     },
     registerAttachments() {
         // мешок на голове

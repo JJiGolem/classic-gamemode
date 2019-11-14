@@ -55,8 +55,8 @@ mp.factions = {
     },
     showGiveRankSelectMenu(factionName, rankNames, rank, playerId) {
         if (typeof rankNames == 'object') rankNames = JSON.stringify(rankNames);
-        mp.callCEFV(`selectMenu.setItemValues('factionGiveRank', 'Ранг', '${rankNames}')`);
-        mp.callCEFV(`selectMenu.menus['factionGiveRank'].header = '${factionName}'`);
+        mp.callCEFV(`selectMenu.setItemValues('factionGiveRank', 'Ранг', \`${rankNames}\`)`);
+        mp.callCEFV(`selectMenu.menus['factionGiveRank'].header = \`${factionName}\``);
         mp.callCEFV(`selectMenu.menus['factionGiveRank'].items[0].i = ${rank - 1}`);
         mp.callCEFV(`selectMenu.menus['factionGiveRank'].playerId = ${playerId}`);
         mp.callCEFV(`selectMenu.showByName('factionGiveRank')`);

@@ -16,7 +16,7 @@ mp.terminal = {
     },
     push(type, text) {
         if (typeof text == 'object') text = JSON.stringify(text);
-        mp.callCEFV(`terminal.push('${type}', '${text}')`);
+        mp.callCEFV(`terminal.push(\`${type}\`, \`${text}\`)`);
     },
     debug(text) {
         this.push(`debug`, text);

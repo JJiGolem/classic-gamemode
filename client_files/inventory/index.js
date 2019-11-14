@@ -95,7 +95,7 @@ mp.inventory = {
         mp.callCEFV(`inventory.setItemSqlId(${id}, ${sqlId})`);
     },
     setItemParam(sqlId, key, value) {
-        mp.callCEFV(`inventory.setItemParam(${sqlId}, '${key}', '${value}')`);
+        mp.callCEFV(`inventory.setItemParam(${sqlId}, \`${key}\`, \`${value}\`)`);
     },
     addEnvironmentPlace(place) {
         if (typeof place == 'object') place = JSON.stringify(place);

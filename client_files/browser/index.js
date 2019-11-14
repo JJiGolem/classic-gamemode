@@ -8,7 +8,7 @@ mp.callCEFR = function (eventName, args) {
     args.forEach(arg => {
         switch(typeof arg) {
             case 'string': {
-                argumentsString += `, '${arg}'`;
+                argumentsString += `, \`${arg}\``;
                 break;
             }
             case 'number': {
@@ -25,7 +25,7 @@ mp.callCEFR = function (eventName, args) {
             }
         }
     });
-    browser.execute(`mp.events.call('${eventName}'${argumentsString});`);
+    browser.execute(`mp.events.call(\`${eventName}\`${argumentsString});`);
 }
 
 /// Передача значений в браузер на VUE
