@@ -9012,6 +9012,9 @@ var selectMenu = new Vue({
                         text: "Закуски"
                     },
                     {
+                        text: "Сигареты"
+                    },
+                    {
                         text: "Закрыть"
                     },
                 ],
@@ -9020,12 +9023,14 @@ var selectMenu = new Vue({
                 name: "",
                 alcohol: [],
                 snacks: [],
+                smoke: [],
                 init(data) {
                     if (typeof data == 'string') data = JSON.parse(data);
 
                     this.header = data.name;
                     this.alcohol = data.alcohol;
                     this.snacks = data.snacks;
+                    this.smoke = data.smoke;
 
                     var alcoholItems = [];
                     this.alcohol.forEach(el => {
@@ -9049,8 +9054,20 @@ var selectMenu = new Vue({
                         text: "Вернуться"
                     });
 
+                    var smokeItems = [];
+                    this.smoke.forEach(el => {
+                        smokeItems.push({
+                            text: el.params.name,
+                            values: [`$${el.price}`],
+                        });
+                    });
+                    smokeItems.push({
+                        text: "Вернуться"
+                    });
+
                     selectMenu.setItems('clubAlcohol', alcoholItems);
                     selectMenu.setItems('clubSnacks', snackItems);
+                    selectMenu.setItems('clubSmoke', smokeItems);
                 },
                 handler(eventName) {
                     var item = this.items[this.i];
@@ -9066,6 +9083,8 @@ var selectMenu = new Vue({
                             selectMenu.showByName("clubAlcohol");
                         } else if (e.itemName == 'Закуски') {
                             selectMenu.showByName("clubSnacks");
+                        } else if (e.itemName == 'Сигареты') {
+                            selectMenu.showByName("clubSmoke");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
@@ -9144,6 +9163,44 @@ var selectMenu = new Vue({
                         } else {
                             selectMenu.show = false;
                             mp.trigger(`callRemote`, `clubs.snacks.buy`, e.itemIndex);
+                        }
+                    } else if (eventName == 'onBackspacePressed') {
+                        selectMenu.showByName("club");
+                    }
+                }
+            },
+            "clubSmoke": {
+                name: "clubSmoke",
+                header: "Сигареты",
+                items: [{
+                        text: "Сигарета 1",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Сигарета 2",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("club");
+                        } else {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `clubs.smoke.buy`, e.itemIndex);
                         }
                     } else if (eventName == 'onBackspacePressed') {
                         selectMenu.showByName("club");

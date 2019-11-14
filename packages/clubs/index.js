@@ -227,9 +227,40 @@ module.exports = {
             }
         ],
     },
+    // Сигареты
+    smoke: {
+        // Багама (La Cosa Nostra)
+        12: [{
+                price: 10000,
+                params: {
+                    name: "Arturo Fuente",
+                    count: 20,
+                }
+            }
+        ],
+        // Текила (La Eme)
+        13: [{
+                price: 10000,
+                params: {
+                    name: "Te Amo",
+                    count: 20,
+                }
+            }
+        ],
+        // Ванила (Russian Mafia)
+        14: [{
+                price: 10000,
+                params: {
+                    name: "Погарская сигара",
+                    count: 20,
+                }
+            }
+        ],
+    },
     // Ид предметов инвентаря
     alcoholItemId: 133,
     snackItemId: 134,
+    smokeItemId: 16,
 
     async init() {
         this.loadClubsFromDB();
@@ -295,6 +326,7 @@ module.exports = {
                     name: club.biz.info.name,
                     alcohol: this.alcohol[player.inClub],
                     snacks: this.snacks[player.inClub],
+                    smoke: this.smoke[player.inClub],
                 }]);
                 return;
             }
@@ -361,5 +393,31 @@ module.exports = {
         });
 
         notifs.success(player, `Вы приобрели ${item.params.name}`, header);
+    },
+    buySmoke(player, index) {
+        if (!player.inClub) return notifs.error(player, `Вы не в клубе`);
+        var club = this.clubs.find(x => x.biz.info.factionId == player.inClub);
+        if (!club) return notifs.error(player, `Клуб не найден`);
+        var header = `Барная стойка ${club.biz.info.name}`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var smokeList = this.smoke[club.biz.info.factionId];
+        index = Math.clamp(index, 0, smokeList.length - 1);
+        var item = smokeList[index];
+        if (player.character.cash < item.price) return out(`Необходимо $${item.price}`);
+
+        var cantAdd = inventory.cantAdd(player, this.smokeItemId, item.params);
+        if (cantAdd) return out(cantAdd);
+
+        money.removeCash(player, item.price, (res) => {
+            if (!res) out(`Ошибка списания наличных`);
+        }, `Покупка сигарет в клубе с bizId #${club.biz.info.id}`);
+
+        inventory.addItem(player, this.smokeItemId, item.params, (e) => {
+            if (e) notifs.error(player, e);
+        });
+
+        notifs.success(player, `Вы приобрели пачку ${item.params.name}`, header);
     },
 };

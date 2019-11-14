@@ -11,4 +11,7 @@ module.exports = {
     "clubs.snacks.buy": (player, index) => {
         clubs.buySnack(player, index);
     },
+    "clubs.smoke.buy": (player, index) => {
+        clubs.buySmoke(player, index);
+    },
 };
