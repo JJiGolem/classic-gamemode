@@ -4,7 +4,7 @@ let bizes = call('bizes');
 let inventory = call('inventory');
 let money = call('money');
 let notifs = call('notifications');
-let walking = call('walking');
+let walking;
 
 module.exports = {
     // Инфо о бизнесе
@@ -288,6 +288,7 @@ module.exports = {
     vfxName: "DrugsDrivingOut",
 
     async init() {
+        walking = call('walking');
         this.loadClubsFromDB();
     },
     async loadClubsFromDB() {
