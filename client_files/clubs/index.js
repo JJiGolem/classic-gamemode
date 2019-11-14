@@ -98,6 +98,8 @@ mp.clubs = {
     isNearBar: false,
     // Клуб, в котором находится игрок (ид организации клуба)
     currentClub: null,
+    // Опьянение (0-100)
+    drunkenness: 0,
 
     setCurrentClub(data) {
         this.currentClub = data;
@@ -121,6 +123,17 @@ mp.clubs = {
 
         mp.callCEFV(`selectMenu.showByName('club')`);
     },
+    setDrunkenness(value) {
+        value = Math.clamp(value, 0, 100);
+        var oldIntensity = this.getShakeIntensity(this.drunkenness);
+        var newIntensity = this.getShakeIntensity(value);
+
+        this.drunkenness = value;
+        if (oldIntensity != newIntensity) mp.game.cam.shakeGameplayCam("DRUNK_SHAKE", parseInt(value / 20));
+    },
+    getShakeIntensity(drunkenness) {
+        return parseInt(drunkenness / 20);
+    },
 };
 
 mp.events.add({
@@ -131,6 +144,9 @@ mp.events.add({
     },
     "clubs.setCurrentClub": (data) => {
         mp.clubs.setCurrentClub(data)
+    },
+    "clubs.drunkenness.set": (value) => {
+        mp.clubs.setDrunkenness(value);
     },
     "time.main.tick": () => {
         if (!mp.clubs.currentClub) return;

@@ -1,5 +1,6 @@
 let bands = call('bands');
 let bizes = call('bizes');
+let clubs = call('clubs');
 let death = call('death');
 let factions = call('factions');
 let fuelstations = call('fuelstations');
@@ -404,6 +405,7 @@ module.exports = {
         var params = inventory.getParamsValues(drink);
         var character = player.character;
 
+        if (params.alcohol) clubs.addDrunkenness(player, params.alcohol);
         satiety.set(player, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
         notifs.success(player, `Вы выпили ${inventory.getName(drink.itemId)}`, header);
 

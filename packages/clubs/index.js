@@ -24,36 +24,42 @@ module.exports = {
                 price: 10000,
                 params: {
                     name: "Мохито",
+                    alcohol: 5
                 },
             },
             {
                 price: 10000,
                 params: {
                     name: "Апероль Шпритц",
+                    alcohol: 5
                 },
             },
             {
                 price: 10000,
                 params: {
                     name: "Негрони",
+                    alcohol: 5
                 },
             },
             {
                 price: 10000,
                 params: {
                     name: "Мартини & Тоник",
+                    alcohol: 5
                 },
             },
             {
                 price: 10000,
                 params: {
                     name: "Бьянко Санрайз",
+                    alcohol: 5
                 },
             },
             {
                 price: 10000,
                 params: {
                     name: "Валентино",
+                    alcohol: 5
                 },
             },
         ],
@@ -62,36 +68,42 @@ module.exports = {
                 price: 10000,
                 params: {
                     name: "Амиго",
+                    alcohol: 5
                 },
             },
             {
                 price: 10000,
                 params: {
                     name: "Эль-бандито",
+                    alcohol: 5
                 },
             },
             {
                 price: 10000,
                 params: {
                     name: "Маргарита",
+                    alcohol: 5
                 },
             },
             {
                 price: 10000,
                 params: {
                     name: "Пина-колада",
+                    alcohol: 5
                 },
             },
             {
                 price: 10000,
                 params: {
                     name: "Сангрита",
+                    alcohol: 5
                 },
             },
             {
                 price: 10000,
                 params: {
                     name: "Палома",
+                    alcohol: 5
                 },
             },
 
@@ -101,36 +113,42 @@ module.exports = {
                 price: 10000,
                 params: {
                     name: "Отвёртка",
+                    alcohol: 5
                 },
             },
             {
                 price: 10000,
                 params: {
                     name: "Холодное лето 1986 года",
+                    alcohol: 5
                 },
             },
             {
                 price: 10000,
                 params: {
                     name: "Российский флаг",
+                    alcohol: 5
                 },
             },
             {
                 price: 10000,
                 params: {
                     name: "Балалайка",
+                    alcohol: 5
                 },
             },
             {
                 price: 10000,
                 params: {
                     name: "Кровавая мэри",
+                    alcohol: 5
                 },
             },
             {
                 price: 10000,
                 params: {
                     name: "Белый туман",
+                    alcohol: 5
                 },
             },
         ],
@@ -232,31 +250,28 @@ module.exports = {
     smoke: {
         // Багама (La Cosa Nostra)
         12: [{
-                price: 10000,
-                params: {
-                    name: "Arturo Fuente",
-                    count: 20,
-                }
+            price: 10000,
+            params: {
+                name: "Arturo Fuente",
+                count: 20,
             }
-        ],
+        }],
         // Текила (La Eme)
         13: [{
-                price: 10000,
-                params: {
-                    name: "Te Amo",
-                    count: 20,
-                }
+            price: 10000,
+            params: {
+                name: "Te Amo",
+                count: 20,
             }
-        ],
+        }],
         // Ванила (Russian Mafia)
         14: [{
-                price: 10000,
-                params: {
-                    name: "Погарская сигара",
-                    count: 20,
-                }
+            price: 10000,
+            params: {
+                name: "Погарская сигара",
+                count: 20,
             }
-        ],
+        }],
     },
     // Ид предметов инвентаря
     alcoholItemId: 133,
@@ -427,5 +442,12 @@ module.exports = {
     openClub(factionId, isOpen) {
         var club = this.clubs.find(x => x.biz.info.factionId == factionId);
         club.enterMarker.isOpen = isOpen;
+    },
+    addDrunkenness(player, value) {
+        var oldValue = player.drunkenness || 0;
+        var newValue = Math.clamp(oldValue + value, 0, 100);
+        
+        player.drunkenness = newValue;
+        player.call(`clubs.drunkenness.set`, [newValue]);
     },
 };

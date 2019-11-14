@@ -567,7 +567,7 @@ var inventory = new Vue({
         descItemName() {
             var item = this.itemDesc.item;
             if (!item) return null;
-            if ([6, 7, 8, 9, 15].includes(item.itemId) && item.params.name) // одежда, рыба
+            if ([6, 7, 8, 9, 15, 133].includes(item.itemId) && item.params.name) // одежда, рыба, алко-напиток
                 return `${item.params.name}`;
             if (item.itemId == 16 && item.params.name) // сигареты
                 return this.itemsInfo[item.itemId].name + " " + item.params.name;
@@ -656,6 +656,10 @@ var inventory = new Vue({
             if (item.params.treeDamage) params.push({
                 name: "Урон по дереву",
                 value: `${item.params.treeDamage}%`
+            });
+            if (item.params.alcohol) params.push({
+                name: "Алкоголь",
+                value: `${item.params.alcohol}%`
             });
 
             return params;
