@@ -1,6 +1,9 @@
 "use strict";
 
 let bizes = call('bizes');
+let inventory = call('inventory');
+let money = call('money');
+let notifs = call('notifications');
 
 module.exports = {
     // Инфо о бизнесе
@@ -17,81 +20,117 @@ module.exports = {
     alcohol: {
         // Багама (La Cosa Nostra)
         12: [{
-                name: "Мохито",
                 price: 10000,
+                params: {
+                    name: "Мохито",
+                },
             },
             {
-                name: "Апероль Шпритц",
                 price: 10000,
+                params: {
+                    name: "Апероль Шпритц",
+                },
             },
             {
-                name: "Негрони",
                 price: 10000,
+                params: {
+                    name: "Негрони",
+                },
             },
             {
-                name: "Мартини & Тоник",
                 price: 10000,
+                params: {
+                    name: "Мартини & Тоник",
+                },
             },
             {
-                name: "Бьянко Санрайз",
                 price: 10000,
+                params: {
+                    name: "Бьянко Санрайз",
+                },
             },
             {
-                name: "Валентино",
                 price: 10000,
+                params: {
+                    name: "Валентино",
+                },
             },
         ],
         // Текила (La Eme)
         13: [{
-                name: "Амиго",
                 price: 10000,
+                params: {
+                    name: "Амиго",
+                },
             },
             {
-                name: "Эль-бандито",
                 price: 10000,
+                params: {
+                    name: "Эль-бандито",
+                },
             },
             {
-                name: "Маргарита",
                 price: 10000,
+                params: {
+                    name: "Маргарита",
+                },
             },
             {
-                name: "Пина-колада",
                 price: 10000,
+                params: {
+                    name: "Пина-колада",
+                },
             },
             {
-                name: "Сангрита",
                 price: 10000,
+                params: {
+                    name: "Сангрита",
+                },
             },
             {
-                name: "Палома",
                 price: 10000,
+                params: {
+                    name: "Палома",
+                },
             },
 
         ],
         // Ванила (Russian Mafia)
         14: [{
-                name: "Отвёртка",
                 price: 10000,
+                params: {
+                    name: "Отвёртка",
+                },
             },
             {
-                name: "Холодное лето 1986 года",
                 price: 10000,
+                params: {
+                    name: "Холодное лето 1986 года",
+                },
             },
             {
-                name: "Российский флаг",
                 price: 10000,
+                params: {
+                    name: "Российский флаг",
+                },
             },
             {
-                name: "Балалайка",
                 price: 10000,
+                params: {
+                    name: "Балалайка",
+                },
             },
             {
-                name: "Кровавая мэри",
                 price: 10000,
+                params: {
+                    name: "Кровавая мэри",
+                },
             },
             {
-                name: "Белый туман",
                 price: 10000,
+                params: {
+                    name: "Белый туман",
+                },
             },
         ],
     },
@@ -99,59 +138,98 @@ module.exports = {
     snacks: {
         // Багама (La Cosa Nostra)
         12: [{
-                name: "Брускетта с помидорами",
                 price: 10000,
+                params: {
+                    name: "Брускетта с помидорами",
+                    satiety: 10,
+                }
             },
             {
-                name: "Аранчини",
                 price: 10000,
+                params: {
+                    name: "Аранчини",
+                    satiety: 10,
+                }
             },
             {
-                name: "Моцарелла с базаликом",
                 price: 10000,
+                params: {
+                    name: "Моцарелла с базаликом",
+                    satiety: 10,
+                }
             },
             {
-                name: "Креветки в соусе песто",
                 price: 10000,
+                params: {
+                    name: "Креветки в соусе песто",
+                    satiety: 10,
+                }
             }
         ],
         // Текила (La Eme)
         13: [{
-                name: "Кесадилья с курицей",
                 price: 10000,
+                params: {
+                    name: "Кесадилья с курицей",
+                    satiety: 10,
+                }
             },
             {
-                name: "Сэндвич с каперсами",
                 price: 10000,
+                params: {
+                    name: "Сэндвич с каперсами",
+                    satiety: 10,
+                }
             },
             {
-                name: "Бурритос с курицей",
                 price: 10000,
+                params: {
+                    name: "Бурритос с курицей",
+                    satiety: 10,
+                }
             },
             {
-                name: "Гуакамоле с грушей",
                 price: 10000,
+                params: {
+                    name: "Гуакамоле с грушей",
+                    satiety: 10,
+                }
             }
         ],
         // Ванила (Russian Mafia)
         14: [{
-                name: "Селёдка с солёным огурцом",
                 price: 10000,
+                params: {
+                    name: "Селёдка с солёным огурцом",
+                    satiety: 10,
+                }
             },
             {
-                name: "Рулетики из ветчины с сыром",
                 price: 10000,
+                params: {
+                    name: "Рулетики из ветчины с сыром",
+                    satiety: 10,
+                }
             },
             {
-                name: "Бутерброд со шпротами",
                 price: 10000,
+                params: {
+                    name: "Бутерброд со шпротами",
+                    satiety: 10,
+                }
             },
             {
-                name: "Шаурма в пите",
                 price: 10000,
+                params: {
+                    name: "Шаурма в пите",
+                    satiety: 10,
+                }
             }
         ],
     },
+    // Ид предметов инвентаря
+    alcoholItemId: 133,
+    snackItemId: 134,
 
     async init() {
         this.loadClubsFromDB();
@@ -231,5 +309,31 @@ module.exports = {
         exitMarker.colshape = colshape;
 
         return exitMarker;
+    },
+    buyAlcohol(player, index) {
+        if (!player.inClub) return notifs.error(player, `Вы не в клубе`);
+        var club = this.clubs.find(x => x.biz.info.factionId == player.inClub);
+        if (!club) return notifs.error(player, `Клуб не найден`);
+        var header = `Барная стойка ${club.biz.info.name}`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var alcoholList = this.alcohol[club.biz.info.factionId];
+        index = Math.clamp(index, 0, alcoholList.length - 1);
+        var item = alcoholList[index];
+        if (player.character.cash < item.price) return out(`Необходимо $${item.price}`);
+
+        var cantAdd = inventory.cantAdd(player, this.alcoholItemId, item.params);
+        if (cantAdd) return out(cantAdd);
+
+        money.removeCash(player, item.price, (res) => {
+            if (!res) out(`Ошибка списания наличных`);
+        }, `Покупка напитка в клубе с bizId #${club.biz.info.id}`);
+
+        inventory.addItem(player, this.alcoholItemId, item.params, (e) => {
+            if (e) notifs.error(player, e);
+        });
+
+        notifs.success(player, `Вы приобрели ${item.params.name}`, header);
     },
 };

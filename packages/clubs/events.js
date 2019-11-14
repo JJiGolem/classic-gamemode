@@ -5,4 +5,7 @@ module.exports = {
         clubs.init();
         inited(__dirname);
     },
+    "clubs.alcohol.buy": (player, index) => {
+        clubs.buyAlcohol(player, index);
+    },
 };

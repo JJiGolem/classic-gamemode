@@ -9030,7 +9030,7 @@ var selectMenu = new Vue({
                     var alcoholItems = [];
                     this.alcohol.forEach(el => {
                         alcoholItems.push({
-                            text: el.name,
+                            text: el.params.name,
                             values: [`$${el.price}`],
                         });
                     });
@@ -9041,7 +9041,7 @@ var selectMenu = new Vue({
                     var snackItems = [];
                     this.snacks.forEach(el => {
                         snackItems.push({
-                            text: el.name,
+                            text: el.params.name,
                             values: [`$${el.price}`],
                         });
                     });
@@ -9104,7 +9104,8 @@ var selectMenu = new Vue({
                         if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("club");
                         } else {
-                            debug("todo")
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `clubs.alcohol.buy`, e.itemIndex);
                         }
                     } else if (eventName == 'onBackspacePressed') {
                         selectMenu.showByName("club");
