@@ -1,6 +1,16 @@
 "use strict";
 
+let bizes = call('bizes');
+
 module.exports = {
+    // Инфо о бизнесе
+    business: {
+        type: 10,
+        name: "Клуб",
+        productName: "Спиртное",
+    },
+    productPrice: 1,
+    rentPerDayMultiplier: 0.01,
     // Клубы
     clubs: [],
     // Алкогольные напитки
@@ -151,16 +161,17 @@ module.exports = {
         dbClubs.forEach(db => {
             var club = {
                 db: db,
-                enterMarker: this.createEnterMarker(db),
-                exitMarker: this.createExitMarker(db),
+                biz: bizes.getBizById(db.bizId)
             };
+            club.enterMarker = this.createEnterMarker(club);
+            club.exitMarker = this.createExitMarker(club);
             this.clubs.push(club);
         });
 
         console.log(`[CLUBS] Клубы загружены (${this.clubs.length} шт.)`);
     },
     createEnterMarker(club) {
-        var pos = new mp.Vector3(club.enterX, club.enterY, club.enterZ - 1);
+        var pos = new mp.Vector3(club.db.enterX, club.db.enterY, club.db.enterZ - 1);
 
         var enterMarker = mp.markers.new(1, pos, 0.5, {
             color: [0, 187, 255, 70]
@@ -175,13 +186,11 @@ module.exports = {
                 player.call(`clubs.setCurrentClub`);
                 return;
             }
-            // TODO: Прикрутить ид фракции
-            if (!enterMarker.isOpen && player.character.factionId != 12) return notifs.error(player, `Клуб закрыт`, `Название клуба (TODO)`);
+            if (!enterMarker.isOpen && player.character.factionId != club.biz.info.factionId) return notifs.error(player, `Клуб закрыт`, club.biz.info.name);
 
-            // TODO: Прикрутить ид фракции
-            player.dimension = 12;
-            player.position = new mp.Vector3(club.exitX, club.exitY, club.exitZ);
-            player.heading = club.exitH;
+            player.dimension = club.biz.info.factionId;
+            player.position = new mp.Vector3(club.db.exitX, club.db.exitY, club.db.exitZ);
+            player.heading = club.db.exitH;
         };
         colshape.onExit = (player) => {
 
@@ -191,32 +200,30 @@ module.exports = {
         return enterMarker;
     },
     createExitMarker(club) {
-        var pos = new mp.Vector3(club.exitX, club.exitY, club.exitZ - 1);
+        var pos = new mp.Vector3(club.db.exitX, club.db.exitY, club.db.exitZ - 1);
 
-        // TODO: Прикрутить ид фракции
         var exitMarker = mp.markers.new(1, pos, 0.5, {
             color: [0, 187, 255, 70],
-            dimension: 12
+            dimension: club.biz.info.factionId
         });
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, exitMarker.dimension);
         colshape.onEnter = (player) => {
             if (player.vehicle) return;
             if (!player.inClub) {
-                // TODO: Прикрутить ид фракции
-                player.inClub = 12;
+                player.inClub = club.biz.info.factionId;
                 player.call(`clubs.setCurrentClub`, [{
                     factionId: player.inClub,
-                    name: "Имя клуба (TODO)",
+                    name: club.biz.info.name,
                     alcohol: this.alcohol[player.inClub],
                     snacks: this.snacks[player.inClub],
                 }]);
                 return;
             }
 
-            player.heading = club.enterH;
+            player.heading = club.db.enterH;
             player.dimension = 0;
-            player.position = new mp.Vector3(club.enterX, club.enterY, club.enterZ);
+            player.position = new mp.Vector3(club.db.enterX, club.db.enterY, club.db.enterZ);
         };
         colshape.onExit = (player) => {
 

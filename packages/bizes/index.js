@@ -16,6 +16,7 @@ let bizesModules = [];
 /// 7 - Магазин масок
 /// 8 - Тату-салон
 /// 9 - Los Santos Customs
+/// 10 - Клубы
 
 
 let utils;
@@ -285,7 +286,7 @@ let readyOrder = async function(id, productsNumber) {
         biz.info.productsOrder = null;
         biz.info.productsOrderPrice = null;
     }
-    
+
     await biz.info.save();
     let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
     player != null && player.call("biz.order.complete", [addedProducts]);
@@ -327,7 +328,7 @@ module.exports = {
             setTimer(biz);
             loadedCount++;
         }
-        mp.events.call("biz.done");
+        mp.events.call("bizes.done");
         console.log("[BIZES] " + loadedCount + " bizes loaded");
     },
     async createBiz(name, price, type, position) {

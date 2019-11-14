@@ -153,7 +153,7 @@ module.exports = {
 
         notifs.success(player, `Урожай продан (+$${price})`, header);
     },
-    "biz.done": () => {
+    "bizes.done": () => {
         carrier.initBizOrders();
     },
     "death.spawn": (player) => {

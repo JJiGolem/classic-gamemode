@@ -1,7 +1,7 @@
 let clubs = call('clubs');
 
 module.exports = {
-    "init": () => {
+    "bizes.done": () => {
         clubs.init();
         inited(__dirname);
     },
