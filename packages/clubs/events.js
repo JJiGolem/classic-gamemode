@@ -10,6 +10,7 @@ module.exports = {
             walkingDrunkenness: clubs.walkingDrunkenness,
             vfxDrunkenness: clubs.vfxDrunkenness,
             vfxName: clubs.vfxName,
+            drunkennessWaitClear: clubs.drunkennessWaitClear,
         }]);
     },
     "clubs.alcohol.buy": (player, index) => {
@@ -20,5 +21,8 @@ module.exports = {
     },
     "clubs.smoke.buy": (player, index) => {
         clubs.buySmoke(player, index);
+    },
+    "clubs.drunkenness.sync": (player) => {
+        clubs.deleteDrunkenness(player, clubs.drunkennessDec);
     },
 };
