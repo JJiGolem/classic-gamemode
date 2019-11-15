@@ -358,24 +358,33 @@ mp.events.add("playerExitVehicleBoot", (player, vehicle) => {
 });
 
 mp.events.add("playerWeaponShot", (targetPos, targetEntity) => {
-    if (mp.inventory.ammoSync.need) return;
-    mp.inventory.ammoSync.need = true;
-    mp.inventory.ammoSync.weaponHash = mp.weapons.currentWeapon();
-});
+    // if (mp.inventory.ammoSync.need) return;
+    // mp.inventory.ammoSync.need = true;
+    // mp.inventory.ammoSync.weaponHash = mp.weapons.currentWeapon();
 
-mp.events.add("playerStartFreeAiming", () => {
     var weapon = mp.weapons.currentWeapon();
     if (!weapon) return;
     var ammo = mp.weapons.getAmmoWeapon(weapon);
-    if (ammo != 1) return; // слуай, когда остался 1 патрон, т.к. после его выстрела пушка убирается
+    // if (ammo != 1) return; // слуай, когда остался 1 патрон, т.к. после его выстрела пушка убирается
 
     mp.inventory.ammoSync.need = true;
     mp.inventory.ammoSync.weaponHash = weapon;
-});
-
-mp.events.add("playerEndFreeAiming", () => {
     mp.inventory.syncAmmo();
 });
+
+// mp.events.add("playerStartFreeAiming", () => {
+//     var weapon = mp.weapons.currentWeapon();
+//     if (!weapon) return;
+//     var ammo = mp.weapons.getAmmoWeapon(weapon);
+//     if (ammo != 1) return; // слуай, когда остался 1 патрон, т.к. после его выстрела пушка убирается
+//
+//     mp.inventory.ammoSync.need = true;
+//     mp.inventory.ammoSync.weaponHash = weapon;
+// });
+//
+// mp.events.add("playerEndFreeAiming", () => {
+//     mp.inventory.syncAmmo();
+// });
 
 mp.events.add("entityStreamIn", (entity) => {
     if (entity.type != "player") return;
