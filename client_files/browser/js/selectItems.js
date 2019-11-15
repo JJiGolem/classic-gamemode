@@ -9,6 +9,24 @@ var selectItems = new Vue({
 
         centerX: 0,
         centerY: 0,
+        sounds: {
+            "open": {
+                name: "Whoosh_1s_L_to_R",
+                setName: "MP_LOBBY_SOUNDS"
+            },
+            "close": {
+                name: "Whoosh_1s_R_to_L",
+                setName: "MP_LOBBY_SOUNDS"
+            },
+            "focus": {
+                name: "NAV",
+                setName: "HUD_AMMO_SHOP_SOUNDSET"
+            },
+            "select": {
+                name: "WEAPON_SELECT_ARMOR",
+                setName: "HUD_AMMO_SHOP_SOUNDSET"
+            },
+        },
     },
     computed: {
         descItemName() {
@@ -42,7 +60,11 @@ var selectItems = new Vue({
             let angle = Math.atan(vectY / vectX) * 180 / Math.PI + delta - 70;
             let id = parseInt(angle / 36);
             this.select = (id == 10) ? 0 : id;
-        }
+        },
+        playSound(name) {
+            if (!this.sounds[name]) return;
+            mp.trigger(`sound`, JSON.stringify(this.sounds[name]));
+        },
     },
     watch: {
         // focus(val) {
@@ -53,12 +75,15 @@ var selectItems = new Vue({
             // this.tempFocus = this.focus;
             if (val) {
                 busy.add("selectItems", true, true);
+                this.playSound("open");
             } else {
                 busy.remove("selectItems", true);
+                this.playSound("close");
             }
         },
         select(val) {
             this.tempFocus = val;
+            if (val != -1) this.playSound("focus");
         }
     },
     mounted() {
@@ -76,7 +101,10 @@ var selectItems = new Vue({
         window.addEventListener('keyup', function(e) {
             if (e.keyCode != 9 || !self.show) return;
             // TODO: Обработка выбора self.select id ячейки (жёлтой)
-            console.log(self.select);
+            // debug("selectItems.select: " + self.select);
+            if (self.select != -1) {
+                self.playSound("select")
+            }
 
             self.show = false;
         });
