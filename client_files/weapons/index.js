@@ -94,7 +94,7 @@ mp.events.add({
         mp.weapons.lastIsInMeleeCombat = isInMeleeCombat;
 
         var weapon = mp.players.local.weapon;
-        if (weapon != mp.weapons.lastWeapon) mp.events.call("playerWeaponChanged", weapon);
+        if (weapon != mp.weapons.lastWeapon) mp.events.call("playerWeaponChanged", weapon, mp.weapons.lastWeapon);
         mp.weapons.lastWeapon = weapon;
     },
     "time.main.tick": () => {

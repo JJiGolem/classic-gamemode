@@ -3,10 +3,6 @@ mp.inventory = {
     lastArmour: 0,
     itemsInfo: null,
     animData: require('animations/data.js'),
-    ammoSync: {
-        need: false, // нужно ли синхронизировать кол-во патронов оружия в CEF
-        weaponHash: 0,
-    },
     handsBlock: false,
     groundItemMarker: {},
     // Настройка аттачей на спине
@@ -241,14 +237,10 @@ mp.inventory = {
             }
         }
     },
-    syncAmmo() {
-        if (!this.ammoSync.need) return;
-        var weapon = this.ammoSync.weaponHash;
+    syncAmmo(weapon) {
         if (!weapon) return;
         var ammo = mp.weapons.getAmmoWeapon(weapon);
         mp.callCEFV(`inventory.setAmmo('${weapon.toString()}', ${ammo})`);
-        this.ammoSync.need = false;
-        this.ammoSync.weaponHash = 0;
     },
     initGroundItemMarker() {
         this.groundItemMarker = mp.markers.new(2, new mp.Vector3(0, 0, 0), 0.1, {
@@ -358,33 +350,12 @@ mp.events.add("playerExitVehicleBoot", (player, vehicle) => {
 });
 
 mp.events.add("playerWeaponShot", (targetPos, targetEntity) => {
-    // if (mp.inventory.ammoSync.need) return;
-    // mp.inventory.ammoSync.need = true;
-    // mp.inventory.ammoSync.weaponHash = mp.weapons.currentWeapon();
-
-    var weapon = mp.weapons.currentWeapon();
-    if (!weapon) return;
-    var ammo = mp.weapons.getAmmoWeapon(weapon);
-    // if (ammo != 1) return; // слуай, когда остался 1 патрон, т.к. после его выстрела пушка убирается
-
-    mp.inventory.ammoSync.need = true;
-    mp.inventory.ammoSync.weaponHash = weapon;
-    mp.inventory.syncAmmo();
+    mp.inventory.syncAmmo(mp.players.local.weapon);
 });
 
-// mp.events.add("playerStartFreeAiming", () => {
-//     var weapon = mp.weapons.currentWeapon();
-//     if (!weapon) return;
-//     var ammo = mp.weapons.getAmmoWeapon(weapon);
-//     if (ammo != 1) return; // слуай, когда остался 1 патрон, т.к. после его выстрела пушка убирается
-//
-//     mp.inventory.ammoSync.need = true;
-//     mp.inventory.ammoSync.weaponHash = weapon;
-// });
-//
-// mp.events.add("playerEndFreeAiming", () => {
-//     mp.inventory.syncAmmo();
-// });
+mp.events.add("playerWeaponChanged", (weapon, oldWeapon) => {
+    mp.inventory.syncAmmo(oldWeapon);
+});
 
 mp.events.add("entityStreamIn", (entity) => {
     if (entity.type != "player") return;

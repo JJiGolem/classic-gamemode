@@ -227,6 +227,7 @@ var inventory = new Vue({
             37: {
                 'Зарядить': {
                     handler(item) {
+                        mp.trigger(`weapons.ammo.sync`, true);
                         mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
                     }
                 }
@@ -234,6 +235,7 @@ var inventory = new Vue({
             38: {
                 'Зарядить': {
                     handler(item) {
+                        mp.trigger(`weapons.ammo.sync`, true);
                         mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
                     }
                 }
@@ -241,6 +243,7 @@ var inventory = new Vue({
             39: {
                 'Зарядить': {
                     handler(item) {
+                        mp.trigger(`weapons.ammo.sync`, true);
                         mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
                     }
                 }
@@ -248,6 +251,7 @@ var inventory = new Vue({
             40: {
                 'Зарядить': {
                     handler(item) {
+                        mp.trigger(`weapons.ammo.sync`, true);
                         mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
                     }
                 }
@@ -1045,6 +1049,7 @@ var inventory = new Vue({
                 if (this.weaponsList.includes(itemId)) {
                     menu['Зарядить'] = {
                         handler(item) {
+                            mp.trigger(`weapons.ammo.sync`, true);
                             mp.trigger(`callRemote`, `weapons.weapon.ammo.fill`, item.sqlId);
                         }
                     };
@@ -1155,6 +1160,7 @@ var inventory = new Vue({
             this.setWaitItem(item, false);
         },
         setItemParam(item, key, value) {
+            // d(`setItemParam: ${key} => ${value}`)
             if (typeof item == 'number') item = this.getItem(item);
             if (!item) return /*this.notify(`setItemParam: Предмет ${item} не найден`)*/;
             if (!isNaN(value)) value = parseFloat(value);
@@ -1189,6 +1195,7 @@ var inventory = new Vue({
             item.params.health = value;
         },
         setAmmo(weaponHash, ammo) {
+            // d(`setAmmo: ${weaponHash} (${ammo})`)
             weaponHash = parseInt(weaponHash);
             var item = this.getItemByParams('weaponHash', weaponHash);
             if (!item) return;
