@@ -19,7 +19,12 @@ var selectItems = new Vue({
         descItemCount() {
             var item = (this.tempFocus != -1) ? this.items[this.tempFocus] : inventory.equipment[13];
             if (!item) return null;
-            return item.params.count;
+
+            var count;
+            if (item.params.weaponHash) count = (item.params.ammo != null) ? item.params.ammo + " патронов" : null;
+            else count = (item.params.count) ? item.params.count + " ед." : null;
+
+            return count;
         },
     },
     methods: {
