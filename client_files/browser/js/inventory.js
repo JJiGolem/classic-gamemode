@@ -725,10 +725,11 @@ var inventory = new Vue({
         },
         onHotkeyItemEnter(key) {
             // console.log("onHotkeyItemEnter")
-            if (!this.itemDrag.item || !this.getItem(this.itemDrag.item.sqlId)) return;
-            var item = this.hotkeys[key];
-            if (item && this.getItem(item.sqlId)) return;
-            if (!this.hotkeysList[this.itemDrag.item.itemId]) return;
+            var item = this.itemDrag.item;
+            if (!item || !this.getItem(item.sqlId)) return;
+            if (this.hotkeys[key] && this.getItem(this.hotkeys[key].sqlId)) return;
+            // if (!this.hotkeysList[item.itemId]) return;
+            if (!this.hotkeysList[item.itemId] && !item.params.weaponHash) return;
             var columns = this.itemDrag.accessColumns;
             columns.hotkeyFocus = key;
         },
