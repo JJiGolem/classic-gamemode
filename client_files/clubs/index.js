@@ -98,6 +98,8 @@ mp.clubs = {
     isNearBar: false,
     // Клуб, в котором находится игрок (ид организации клуба)
     currentClub: null,
+    // Последнее время синхронизации значения опьянения с сервером
+    drunkennessLastSync: 0,
     // Опьянение (0-100)
     drunkenness: 0,
     // Мин. значение опьянения, при котором меняется походка
@@ -106,11 +108,14 @@ mp.clubs = {
     vfxDrunkenness: 5,
     // Визуальный эффект от опьянения
     vfxName: "DrugsDrivingOut",
+    // Ожидание снятия опьянения
+    drunkennessWaitClear: 2 * 60 * 1000,
 
     initDrunkennessData(data) {
         this.walkingDrunkenness = data.walkingDrunkenness;
         this.vfxDrunkenness = data.vfxDrunkenness;
         this.vfxName = data.vfxName;
+        this.drunkennessWaitClear = data.drunkennessWaitClear;
     },
     setCurrentClub(data) {
         this.currentClub = data;
@@ -143,7 +148,8 @@ mp.clubs = {
         else if (this.drunkenness >= this.vfxDrunkenness && value < this.vfxDrunkenness) this.setVFXDrunkenness(false);
 
         this.drunkenness = value;
-        if (oldIntensity != newIntensity) mp.game.cam.shakeGameplayCam("DRUNK_SHAKE", parseInt(value / 20));
+        if (oldIntensity != newIntensity) mp.game.cam.shakeGameplayCam("DRUNK_SHAKE", newIntensity);
+        this.drunkennessLastSync = Date.now();
     },
     getShakeIntensity(drunkenness) {
         return parseInt(drunkenness / 20);
@@ -151,6 +157,10 @@ mp.clubs = {
     setVFXDrunkenness(enable) {
         var duration = (enable) ? 60 * 60 * 1000 : 0;
         mp.events.call('effect', this.vfxName, duration);
+    },
+    drunkennessSync() {
+        if (!this.drunkenness) return;
+        mp.events.callRemote(`clubs.drunkenness.sync`);
     },
 };
 
@@ -170,13 +180,23 @@ mp.events.add({
         mp.clubs.setDrunkenness(value);
     },
     "time.main.tick": () => {
-        if (!mp.clubs.currentClub) return;
+        if (mp.clubs.currentClub) {
+            var pos = mp.players.local.position;
+            var isNearBar = false;
+            mp.clubs.bars[mp.clubs.currentClub.factionId].forEach(polygon => {
+                if (mp.utils.inPolygon(pos, polygon)) isNearBar = true;
+            });
+            mp.clubs.setNearBar(isNearBar);
+        }
 
-        var pos = mp.players.local.position;
-        var isNearBar = false;
-        mp.clubs.bars[mp.clubs.currentClub.factionId].forEach(polygon => {
-            if (mp.utils.inPolygon(pos, polygon)) isNearBar = true;
-        });
-        mp.clubs.setNearBar(isNearBar);
+        if (mp.clubs.drunkenness) {
+            if (Date.now() - mp.clubs.drunkennessLastSync > mp.clubs.drunkennessWaitClear) {
+                mp.clubs.drunkennessSync();
+            }
+        }
+    },
+    "render": () => {
+        // TODO: Удалить дебаг.
+        mp.utils.drawText2d(`Опьянение: ${mp.clubs.drunkenness}%`, [0.8, 0.6]);
     },
 });

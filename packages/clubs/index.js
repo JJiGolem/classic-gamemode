@@ -283,9 +283,13 @@ module.exports = {
     // Мин. значение опьянения, при котором меняется походка
     walkingDrunkenness: 70,
     // Мин. значение опьянения, при котором будет визуальный эффект
-    vfxDrunkenness: 20,
+    vfxDrunkenness: 30,
     // Визуальный эффект от опьянения
     vfxName: "DrugsDrivingOut",
+    // Ожидание снятия опьянения
+    drunkennessWaitClear: 2 * 60 * 1000,
+    // Кол-во ед. опьянения, отнимаемых в таймере
+    drunkennessDec: 10,
 
     async init() {
         walking = call('walking');
@@ -457,11 +461,19 @@ module.exports = {
         var oldValue = player.drunkenness || 0;
         var newValue = Math.clamp(oldValue + value, 0, 100);
 
+        player.drunkenness = newValue;
+        player.call(`clubs.drunkenness.set`, [newValue]);
+
         if (oldValue < this.walkingDrunkenness && newValue >= this.walkingDrunkenness) this.setDrunkWalking(player, true);
-        else if (oldValue >= this.walkingDrunkenness && newValue < this.walkingDrunkenness) this.setDrunkWalking(player, false);
+    },
+    deleteDrunkenness(player, value) {
+        var oldValue = player.drunkenness || 0;
+        var newValue = Math.clamp(oldValue - value, 0, 100);
 
         player.drunkenness = newValue;
         player.call(`clubs.drunkenness.set`, [newValue]);
+
+        if (oldValue >= this.walkingDrunkenness && newValue < this.walkingDrunkenness) this.setDrunkWalking(player, false);
     },
     setDrunkWalking(player, enable) {
         var style = (enable) ? this.drunkWalkingId : player.character.settings.walking;
