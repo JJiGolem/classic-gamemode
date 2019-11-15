@@ -1223,9 +1223,11 @@ var inventory = new Vue({
             Vue.delete(this.hotkeys, key);
         },
         onUseHotkey(key) {
-            if (!key) key = 10; // для клавиши '0'
+            // if (!key) key = 10; // для клавиши '0'
             var item = this.hotkeys[key];
             if (!item || !this.getItem(item.sqlId)) return;
+            if (item.params.weaponHash) return this.notify(`Недоступно для оружия`);
+            if (item != this.equipment[13]) return this.notify(`${this.getItemName(item)} не в руках`);
             this.hotkeysList[item.itemId].handler(item);
         },
         clearHotkeys(item) {
@@ -1335,7 +1337,7 @@ var inventory = new Vue({
             if (selectMenu.isEditing) return;
             if (Date.now() - self.lastShowTime < 500) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;
-            if (e.keyCode > 47 && e.keyCode < 58) {
+            if (e.keyCode > 47 && e.keyCode < 57) {
                 if (!self.enable) return;
                 var num = e.keyCode - 48;
                 self.onUseHotkey(num);
