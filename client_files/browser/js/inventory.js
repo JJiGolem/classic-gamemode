@@ -47,6 +47,13 @@ var inventory = new Vue({
                 width: 8,
                 weight: 2
             },
+            16: {
+                name: 'Сигареты',
+                description: 'Описание.',
+                height: 2,
+                width: 2,
+                weight: 0.1
+            },
             18: {
                 name: 'Фонарь SureFire G2 Nitrolon',
                 description: 'Компактный, легкий и мощный фонарик, который можно использовать как подствольный целеуказатель.',
@@ -566,16 +573,7 @@ var inventory = new Vue({
         },
         descItemName() {
             var item = this.itemDesc.item;
-            if (!item) return null;
-            if ([6, 7, 8, 9, 15, 133].includes(item.itemId) && item.params.name) // одежда, рыба, алко-напиток
-                return `${item.params.name}`;
-            if (item.itemId == 16 && item.params.name) // сигареты
-                return this.itemsInfo[item.itemId].name + " " + item.params.name;
-            if (item.itemId == 33 && item.params.vehName) // ключи авто
-                return `Ключи от ${item.params.vehName}`;
-            if (item.itemId == 131 && item.params.name) // ресурс - дерево
-                return `Дерево ${item.params.name}`;
-            return this.itemsInfo[item.itemId].name;
+            return this.getItemName(item);
         },
         descItemWeight() {
             var item = this.itemDesc.item;
@@ -1195,6 +1193,18 @@ var inventory = new Vue({
             if (!item) return;
             this.setItemParam(item, 'ammo', ammo);
         },
+        getItemName(item) {
+            if (!item) return null;
+            if ([6, 7, 8, 9, 15, 133].includes(item.itemId) && item.params.name) // одежда, рыба, алко-напиток
+                return `${item.params.name}`;
+            if (item.itemId == 16 && item.params.name) // сигареты
+                return this.itemsInfo[item.itemId].name + " " + item.params.name;
+            if (item.itemId == 33 && item.params.vehName) // ключи авто
+                return `Ключи от ${item.params.vehName}`;
+            if (item.itemId == 131 && item.params.name) // ресурс - дерево
+                return `Дерево ${item.params.name}`;
+            return this.itemsInfo[item.itemId].name;
+        },
 
         // ******************  [ Hotkeys ] ******************
         bindHotkey(itemSqlId, key) {
@@ -1300,7 +1310,7 @@ var inventory = new Vue({
     },
     watch: {
         enable(val) {
-            if (!val) this.show = false;
+            if (!val) this.show = selectItems.show = false;
         },
         show(val) {
             mp.trigger("blur", val, 300);
@@ -1320,7 +1330,7 @@ var inventory = new Vue({
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
-            if (busy.includes(["auth", "chat", "terminal", "interaction", "mapCase", "phone", "playerMenu", "inputWindow", "fishing.game"])) return;
+            if (busy.includes(["auth", "chat", "terminal", "interaction", "mapCase", "phone", "playerMenu", "inputWindow", "fishing.game", "selectItems"])) return;
             if (selectMenu.isEditing) return;
             if (Date.now() - self.lastShowTime < 500) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;
@@ -1434,14 +1444,28 @@ var inventory = new Vue({
             },
             {
                 cols: 15,
-                rows: 4,
+                rows: 20,
                 items: {
                     2: {
                         sqlId: 300,
                         itemId: 1,
                         params: {},
                         found: true,
-                    }
+                    },
+                    6: {
+                        sqlId: 301,
+                        itemId: 16,
+                        params: {
+                            count: 20
+                        },
+                    },
+                    30: {
+                        sqlId: 302,
+                        itemId: 24,
+                        params: {
+                            count: 2
+                        },
+                    },
                 }
             }
         ]
