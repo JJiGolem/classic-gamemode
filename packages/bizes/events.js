@@ -24,6 +24,10 @@ module.exports = {
             sellingBizCost: null
         };
     },
+    "characterInit.done": (player) => {
+        //todo
+        //Добавлять приложение лидеру фракции на телефон
+    },
     "player.name.changed": (player) => {
         let biz = bizService.getBizByCharId(player.character.id);
         if(biz != null) {
@@ -48,28 +52,40 @@ module.exports = {
         let info = biz.info;
         if (prompt != null) prompt.hide(player);
         let actions = [];
-        if (info.characterId == null) {
+
+        if (bizService.bizesModules[info.type].business.isFactionOwner) {
             player.call("biz.menu.open", [{
                 name: info.name,
-                faction: info.factionId != null ? factions && factions.getFaction(info.factionId).name : "",
+                owner: info.factionId != null ? factions.getFaction(info.factionId).name : "Нет",
                 type: bizService.getTypeName(info.type),
-                rent: info.price * bizService.bizesModules[info.type].rentPerDayMultiplier,
-                price: info.price,
                 actions: actions,
                 pos: [info.x, info.y, info.z]
             }]);
         }
         else {
-            if (player.character.id == info.characterId) actions.push('finance');
-            player.call("biz.menu.open", [{
-                name: info.name,
-                faction: info.factionId != null ? factions && factions.getFaction(info.factionId).name : "",
-                type: bizService.getTypeName(info.type),
-                rent: info.price * bizService.bizesModules[info.type].rentPerDayMultiplier,
-                owner: info.characterNick,
-                actions: actions,
-                pos: [info.x, info.y, info.z]
-            }]);
+            if (info.characterId == null) {
+                player.call("biz.menu.open", [{
+                    name: info.name,
+                    faction: info.factionId != null ? factions && factions.getFaction(info.factionId).name : "",
+                    type: bizService.getTypeName(info.type),
+                    rent: info.price * bizService.bizesModules[info.type].rentPerDayMultiplier,
+                    price: info.price,
+                    actions: actions,
+                    pos: [info.x, info.y, info.z]
+                }]);
+            }
+            else {
+                if (player.character.id === info.characterId) actions.push('finance');
+                player.call("biz.menu.open", [{
+                    name: info.name,
+                    faction: info.factionId != null ? factions && factions.getFaction(info.factionId).name : "",
+                    type: bizService.getTypeName(info.type),
+                    rent: info.price * bizService.bizesModules[info.type].rentPerDayMultiplier,
+                    owner: info.characterNick,
+                    actions: actions,
+                    pos: [info.x, info.y, info.z]
+                }]);
+            }
         }
     },
     "biz.buy": (player) => {
@@ -78,6 +94,7 @@ module.exports = {
         let biz = bizService.getBizById(player.biz.at);
         if (biz == null) return;
         let info = biz.info;
+        if (bizService.bizesModules[info.type].business.isFactionOwner) return;
         if (info.characterId != null) return player.call('biz.buy.ans', [0, ""]);
         if (player.dist(new mp.Vector3(info.x, info.y, info.z)) > 10) return player.call('biz.buy.ans', [0, ""]);
         if (player.character.cash < info.price) return player.call('biz.buy.ans', [0, ""]);
@@ -110,8 +127,9 @@ module.exports = {
         let biz = bizService.getBizById(id);
         if (biz == null) return player.call('biz.sell.toGov.ans', [0]);
         let info = biz.info;
+        if (bizService.bizesModules[info.type].business.isFactionOwner) return;
         if (player.dist(new mp.Vector3(info.x, info.y, info.z)) > 10) return player.call('biz.sell.toGov.ans', [3]);
-        if (info.characterId != player.character.id) return player.call('biz.sell.toGov.ans', [0]);
+        if (info.characterId !== player.character.id) return player.call('biz.sell.toGov.ans', [0]);
         bizService.dropBiz(biz, true);
     },
     "biz.sell.check": (player, idOrNick) => {
@@ -228,4 +246,4 @@ module.exports = {
             notifications != null && notifications.error(player, "Экономические параметры бизнеса недоступны", "Ошибка");
         }
     },
-}
+};

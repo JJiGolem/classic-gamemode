@@ -11,7 +11,7 @@ mp.events.add({
         }
         mp.callCEFV(`carSpecifications.body = {
             name: { header: 'Название', value: '${data.name}', unit: '' },
-            maxSpeed: { header: 'Макс. скорость', value: '${maxSpeed}', unit: 'км/ч' },
+            maxSpeed: { header: 'Макс. скорость', value: \`${maxSpeed}\`, unit: 'км/ч' },
             mileage: { header: 'Пробег', value: '${data.mileage.toFixed()}', unit: 'км' },
         };
         carSpecifications.price = '${data.price.toFixed()}'

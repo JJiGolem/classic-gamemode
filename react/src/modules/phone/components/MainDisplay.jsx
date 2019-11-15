@@ -7,7 +7,7 @@ import { setCallStatus, setCall } from "../actions/action.info";
 import Contacts from "./Contacts";
 import Dialogs from "./Dialogs";
 import DialingNumber from "./DialingNumber";
-import IncomingCall from "./IncomingCall";
+import BusinessFactionApp from './faction_biz_app/BusinessApp';
 import HouseApp from "./house_app/HouseApp";
 import BusinessApp from "./business_app/BusinessApp";
 import TaxiClient from "./taxi_app/taxi_client/TaxiClient";
@@ -133,6 +133,20 @@ class MainDisplay extends Component {
                              <svg xmlns="http://www.w3.org/2000/svg" width="110%" height="110%" viewBox="0 0 88 88">
                                 <g id="Group_1" data-name="Group 1" transform="translate(-1604 -378)">
                                     <rect id="Rectangle_4" data-name="Rectangle 4" width="88" height="84" rx="20" transform="translate(1604 378)" fill="#0f2641"/>
+                                    <path id="portfolio" d="M48.091,6.047H34.925V4.535A4.452,4.452,0,0,0,30.571,0H18.961a4.452,4.452,0,0,0-4.354,4.535V6.047H1.451A1.486,1.486,0,0,0,0,7.559v33.26a4.452,4.452,0,0,0,4.354,4.535H45.179a4.452,4.452,0,0,0,4.354-4.535V7.585a1.411,1.411,0,0,0-.38-1.077,1.467,1.467,0,0,0-1.062-.46ZM17.511,4.535a1.484,1.484,0,0,1,1.451-1.511H30.571a1.484,1.484,0,0,1,1.451,1.511V6.047H17.511ZM46.064,9.07l-4.5,14.085a1.455,1.455,0,0,1-1.378,1.034H32.022V22.677a1.482,1.482,0,0,0-1.451-1.514H18.961a1.482,1.482,0,0,0-1.451,1.511v1.511H9.348a1.455,1.455,0,0,1-1.378-1.034L3.465,9.071ZM29.119,24.189v3.024H20.413V24.189ZM46.63,40.819a1.484,1.484,0,0,1-1.451,1.511H4.354A1.484,1.484,0,0,1,2.9,40.819V16.875l2.316,7.237a4.365,4.365,0,0,0,4.129,3.1h8.163v1.511a1.482,1.482,0,0,0,1.451,1.511H30.571a1.482,1.482,0,0,0,1.451-1.511V27.213h8.163a4.365,4.365,0,0,0,4.129-3.1l2.316-7.236Zm0,0" transform="translate(1622.817 399.548)" fill="#e7b900"/>
+                                </g>
+                            </svg>                           
+                            <div>Бизнес</div>
+                        </div>
+                    }
+
+                    {
+                        info.factionBiz &&
+                        <div className="menu_panel_app-phone-react"
+                             onClick={() => addApp({name: 'BusinessFactionApp', form: <BusinessFactionApp/>})}>
+                             <svg xmlns="http://www.w3.org/2000/svg" width="110%" height="110%" viewBox="0 0 88 88">
+                                <g id="Group_1" data-name="Group 1" transform="translate(-1604 -378)">
+                                    <rect id="Rectangle_4" data-name="Rectangle 4" width="88" height="84" rx="20" transform="translate(1604 378)" fill="#3d1111"/>
                                     <path id="portfolio" d="M48.091,6.047H34.925V4.535A4.452,4.452,0,0,0,30.571,0H18.961a4.452,4.452,0,0,0-4.354,4.535V6.047H1.451A1.486,1.486,0,0,0,0,7.559v33.26a4.452,4.452,0,0,0,4.354,4.535H45.179a4.452,4.452,0,0,0,4.354-4.535V7.585a1.411,1.411,0,0,0-.38-1.077,1.467,1.467,0,0,0-1.062-.46ZM17.511,4.535a1.484,1.484,0,0,1,1.451-1.511H30.571a1.484,1.484,0,0,1,1.451,1.511V6.047H17.511ZM46.064,9.07l-4.5,14.085a1.455,1.455,0,0,1-1.378,1.034H32.022V22.677a1.482,1.482,0,0,0-1.451-1.514H18.961a1.482,1.482,0,0,0-1.451,1.511v1.511H9.348a1.455,1.455,0,0,1-1.378-1.034L3.465,9.071ZM29.119,24.189v3.024H20.413V24.189ZM46.63,40.819a1.484,1.484,0,0,1-1.451,1.511H4.354A1.484,1.484,0,0,1,2.9,40.819V16.875l2.316,7.237a4.365,4.365,0,0,0,4.129,3.1h8.163v1.511a1.482,1.482,0,0,0,1.451,1.511H30.571a1.482,1.482,0,0,0,1.451-1.511V27.213h8.163a4.365,4.365,0,0,0,4.129-3.1l2.316-7.236Zm0,0" transform="translate(1622.817 399.548)" fill="#e7b900"/>
                                 </g>
                             </svg>                           

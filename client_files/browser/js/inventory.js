@@ -441,9 +441,9 @@ var inventory = new Vue({
         // Огнестрельные оружия
         weaponsList: [19, 20, 21, 22, 41, 44, 46, 47, 48, 49, 50, 52, 80, 87, 88, 89, 90, 91, 93, 96, 99, 100, 107],
         // Еда
-        eatList: [35, 126, 127, 128, 129, 132],
+        eatList: [35, 126, 127, 128, 129, 132, 134],
         // Напитки
-        drinkList: [34, 130],
+        drinkList: [34, 130, 133],
         // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
         environment: [],
         // Предметы на игроке (экипировка)
@@ -567,7 +567,7 @@ var inventory = new Vue({
         descItemName() {
             var item = this.itemDesc.item;
             if (!item) return null;
-            if ([6, 7, 8, 9, 15].includes(item.itemId) && item.params.name) // одежда, рыба
+            if ([6, 7, 8, 9, 15, 133].includes(item.itemId) && item.params.name) // одежда, рыба, алко-напиток
                 return `${item.params.name}`;
             if (item.itemId == 16 && item.params.name) // сигареты
                 return this.itemsInfo[item.itemId].name + " " + item.params.name;
@@ -657,6 +657,10 @@ var inventory = new Vue({
                 name: "Урон по дереву",
                 value: `${item.params.treeDamage}%`
             });
+            if (item.params.alcohol) params.push({
+                name: "Алкоголь",
+                value: `${item.params.alcohol}%`
+            });
 
             return params;
         },
@@ -712,7 +716,7 @@ var inventory = new Vue({
             if (item) return;
             if (this.bodyList[index] && !this.bodyList[index].includes(this.itemDrag.item.itemId)) return;
             var nextWeight = this.commonWeight + this.itemsInfo[this.itemDrag.item.itemId].weight;
-            if (nextWeight > this.maxPlayerWeight) return;
+            if (nextWeight > this.maxPlayerWeight && !this.getItem(this.itemDrag.item.sqlId)) return;
             if (index == 13 && this.handsBlock) return;
             var columns = this.itemDrag.accessColumns;
             columns.bodyFocus = index;
@@ -801,18 +805,18 @@ var inventory = new Vue({
                     columns.deny = place.sqlId == item.sqlId ||
                         place.itemId == item.itemId ||
                         (place.sqlId < 0 && this.getItemsCount(item) > 0) ||
-                        (place.sqlId > 0 && nextWeight > this.maxPlayerWeight) ||
+                        (place.sqlId > 0 && nextWeight > this.maxPlayerWeight && !this.getItem(item.sqlId)) ||
                         (this.blackList[place.itemId] && this.blackList[place.itemId].includes(item.itemId));
 
                     if (place.sqlId == item.sqlId) {
                         this.itemNotif.text = `Предмет не может быть размещен в своем кармане`;
                     } else if (place.itemId == item.itemId) {
                         this.itemNotif.text = `Предмет не может быть размещен в предмете такого же типа`;
-                    } else if ((place.sqlId < 0 && this.getItemsCount(item) > 0)) {
+                    } else if (place.sqlId < 0 && this.getItemsCount(item) > 0) {
                         this.itemNotif.text = "Освободите вещь";
-                    } else if ((place.sqlId > 0 && nextWeight > this.maxPlayerWeight)) {
+                    } else if (place.sqlId > 0 && nextWeight > this.maxPlayerWeight && !this.getItem(item.sqlId)) {
                         this.itemNotif.text = `Превышение по весу ${nextWeight} из ${this.maxPlayerWeight} кг`;
-                    } else if ((this.blackList[place.itemId] && this.blackList[place.itemId].includes(item.itemId))) {
+                    } else if (this.blackList[place.itemId] && this.blackList[place.itemId].includes(item.itemId)) {
                         this.itemNotif.text = `Нельзя положить ${this.itemsInfo[item.itemId].name} в ${this.itemsInfo[place.itemId].name}`;
                     } else this.itemNotif.text = null;
 

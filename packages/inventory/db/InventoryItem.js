@@ -10,10 +10,10 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             get() {
                 var value = this.getDataValue('name');
-                if (typeof value == 'string') {
-                    value = value.replace(/(\\)/g, "");
-                    value = value.replace(/(["'])/g, "\\$1");
-                }
+                // if (typeof value == 'string') {
+                //     value = value.replace(/(\\)/g, "");
+                //     value = value.replace(/(["'])/g, "\\$1");
+                // }
                 return value;
             },
         },
@@ -22,10 +22,10 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             get() {
                 var value = this.getDataValue('description');
-                if (typeof value == 'string') {
-                    value = value.replace(/(\\)/g, "");
-                    value = value.replace(/(["'])/g, "\\$1");
-                }
+                // if (typeof value == 'string') {
+                //     value = value.replace(/(\\)/g, "");
+                //     value = value.replace(/(["'])/g, "\\$1");
+                // }
                 return value;
             },
         },

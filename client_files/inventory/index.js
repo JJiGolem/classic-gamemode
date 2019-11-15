@@ -11,10 +11,40 @@ mp.inventory = {
     groundItemMarker: {},
     // Настройка аттачей на спине
     backAttachInfo: {
+        41: { // Бейсбольная бита
+            bone: 24818,
+            pos: new mp.Vector3(0.25, -0.155, -0.1),
+            rot: new mp.Vector3(13, -90, 7)
+        },
+        52: { // Compact Rifle
+            bone: 24818,
+            pos: new mp.Vector3(0.2, -0.165, -0.1),
+            rot: new mp.Vector3(13, 180, 10)
+        },
+        53: { // MG
+            bone: 24818,
+            pos: new mp.Vector3(0.2, -0.165, -0.1),
+            rot: new mp.Vector3(13, 180, 10)
+        },
+        68: { // Клюшка
+            bone: 24818,
+            pos: new mp.Vector3(0.2, -0.145, -0.1),
+            rot: new mp.Vector3(13, -90, 10)
+        },
         70: { // топор
             bone: 24818,
-            pos: new mp.Vector3(0.2, -0.155, -0.1),
-            rot: new mp.Vector3(13, 90, 10)
+            pos: new mp.Vector3(0.2, -0.15, -0.1),
+            rot: new mp.Vector3(13, -90, 10)
+        },
+        104: { // Combat MG
+            bone: 24818,
+            pos: new mp.Vector3(0.2, -0.165, -0.1),
+            rot: new mp.Vector3(13, 180, 10)
+        },
+        105: { // Combat MK II
+            bone: 24818,
+            pos: new mp.Vector3(0.2, -0.165, -0.1),
+            rot: new mp.Vector3(13, 180, 10)
         },
     },
 
@@ -33,30 +63,30 @@ mp.inventory = {
     },
     initItems(items) {
         if (typeof items == 'object') items = JSON.stringify(items);
-        mp.callCEFV(`inventory.initItems('${items}')`);
+        mp.callCEFV(`inventory.initItems(${items})`);
     },
     setItemsInfo(itemsInfo) {
         this.itemsInfo = itemsInfo;
 
         if (typeof itemsInfo == 'object') itemsInfo = JSON.stringify(itemsInfo);
-        mp.callCEFV(`inventory.setItemsInfo('${itemsInfo}')`);
+        mp.callCEFV(`inventory.setItemsInfo(${itemsInfo})`);
     },
     setItemInfo(id, itemInfo) {
         this.itemsInfo[id] = itemInfo;
         if (typeof itemInfo == 'object') itemInfo = JSON.stringify(itemInfo);
-        mp.callCEFV(`inventory.setItemInfo(${id}, '${itemInfo}')`);
+        mp.callCEFV(`inventory.setItemInfo(${id}, ${itemInfo})`);
     },
     setMergeList(list) {
         if (typeof list == 'object') list = JSON.stringify(list);
-        mp.callCEFV(`inventory.setMergeList('${list}')`);
+        mp.callCEFV(`inventory.setMergeList(${list})`);
     },
     setBlackList(list) {
         if (typeof list == 'object') list = JSON.stringify(list);
-        mp.callCEFV(`inventory.setBlackList('${list}')`);
+        mp.callCEFV(`inventory.setBlackList(${list})`);
     },
     addItem(item, pocket, index, parent) {
         if (typeof item == 'object') item = JSON.stringify(item);
-        mp.callCEFV(`inventory.addItem('${item}', ${pocket}, ${index}, ${parent})`);
+        mp.callCEFV(`inventory.addItem(${item}, ${pocket}, ${index}, ${parent})`);
     },
     deleteItem(sqlId) {
         mp.callCEFV(`inventory.deleteItem(${sqlId})`);
@@ -65,11 +95,11 @@ mp.inventory = {
         mp.callCEFV(`inventory.setItemSqlId(${id}, ${sqlId})`);
     },
     setItemParam(sqlId, key, value) {
-        mp.callCEFV(`inventory.setItemParam(${sqlId}, '${key}', '${value}')`);
+        mp.callCEFV(`inventory.setItemParam(${sqlId}, \`${key}\`, \`${value}\`)`);
     },
     addEnvironmentPlace(place) {
         if (typeof place == 'object') place = JSON.stringify(place);
-        mp.callCEFV(`inventory.addEnvironmentPlace('${place}')`);
+        mp.callCEFV(`inventory.addEnvironmentPlace(${place})`);
     },
     deleteEnvironmentPlace(sqlId) {
         mp.callCEFV(`inventory.deleteEnvironmentPlace(${sqlId})`);
@@ -164,7 +194,7 @@ mp.inventory = {
 
             mp.attachmentMngr.register(`weapon_${itemId}`, model, bone, pos, rot);
         }
-        mp.callCEFV(`inventory.setBodyList(9, '${JSON.stringify(list)}')`)
+        mp.callCEFV(`inventory.setBodyList(9, ${JSON.stringify(list)})`)
     },
     disableControlActions() {
         mp.game.controls.disableControlAction(1, 157, true);
@@ -179,8 +209,8 @@ mp.inventory = {
     },
     hands(player, itemId) {
         if (!this.itemsInfo) return;
-        if (player.vehicle) return;
         if (itemId) {
+            if (player.vehicle) return;
             var info = this.itemsInfo[itemId];
             var object = mp.objects.new(mp.game.joaat(info.model), player.position);
             var pos = info.attachInfo.pos;
@@ -209,7 +239,6 @@ mp.inventory = {
                 player.hands.object.destroy();
                 delete player.hands;
             }
-
         }
     },
     syncAmmo() {
@@ -228,6 +257,22 @@ mp.inventory = {
             color: [255, 223, 41, 255],
         });
         this.groundItemMarker.ignoreCheckVisible = true;
+    },
+    getGroundItemPos(player) {
+        var pos;
+        if (!player.vehicle) {
+            pos = player.getOffsetFromInWorldCoords(0, 1, 0);
+            pos.z = mp.game.gameplay.getGroundZFor3dCoord(pos.x, pos.y, pos.z, false, false);
+        } else {
+            var seat = mp.moduleVehicles.getSeat(player);
+            var offsetX = 0;
+            if (seat == -1 || seat == 1) offsetX = -1;
+            else if (seat === 0 || seat == 2) offsetX = 1;
+            pos = player.getOffsetFromInWorldCoords(offsetX, 0, 0);
+            pos.z = mp.game.gameplay.getGroundZFor3dCoord(pos.x, pos.y, pos.z, false, false);
+        }
+        if (mp.vdist(player.position, pos) > 10) pos = player.getOffsetFromInWorldCoords(0, 0, -1);
+        return pos;
     },
 };
 
@@ -293,8 +338,7 @@ mp.events.add("inventory.saveHotkey", mp.inventory.saveHotkey);
 mp.events.add("inventory.removeHotkey", mp.inventory.removeHotkey);
 
 mp.events.add("inventory.ground.put", (sqlId) => {
-    var pos = mp.players.local.getOffsetFromInWorldCoords(0, 1, 2);
-    pos.z = mp.game.gameplay.getGroundZFor3dCoord(pos.x, pos.y, pos.z, false, false);
+    var pos = mp.inventory.getGroundItemPos(mp.players.local);
     mp.events.callRemote(`item.ground.put`, sqlId, JSON.stringify(pos));
 });
 
@@ -369,6 +413,7 @@ mp.events.add("render", () => {
     } else mp.inventory.groundItemMarker.visible = false;
     if (player.getVariable("hands")) {
         mp.game.controls.disableControlAction(0, 24, true); /// удары
+        mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
         mp.game.controls.disableControlAction(0, 140, true); /// удары R
     }
 });

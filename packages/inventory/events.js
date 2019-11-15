@@ -1,5 +1,6 @@
 let bands = call('bands');
 let bizes = call('bizes');
+let clubs = call('clubs');
 let death = call('death');
 let factions = call('factions');
 let fuelstations = call('fuelstations');
@@ -126,7 +127,7 @@ module.exports = {
         var item = inventory.getItem(player, sqlId);
         if (!item) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
 
-        if (player.vehicle) return notifs.error(player, `Недоступно в авто`, header);
+        // if (player.vehicle) return notifs.error(player, `Недоступно в авто`, header);
         if (player.cuffs) return notifs.error(player, `Недоступно в наручниках`, header);
 
         var itemName = inventory.getName(item.itemId);
@@ -238,9 +239,9 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         if (!rec.getVariable("knocked")) return notifs.error(player, `${rec.name} не нуждается в реанимации`, header);
         if (player.dist(rec.position) > 5) return notifs.error(player, `${rec.name} далеко`, header);
-        var adrenalin = (data.itemSqlId) ? inventory.getItem(player, data.itemSqlId) : inventory.getItemByItemId(player, 26);
-        if (!adrenalin) return notifs.error(player, `Необходим предмет`, header);
-        if (!inventory.isInHands(adrenalin)) return notifs.error(player, `${inventory.getName(adrenalin.itemId)} не в руках`, header);
+        var adrenalin = (data.itemSqlId) ? inventory.getItem(player, data.itemSqlId) : inventory.getHandsItem(player);
+        if (!adrenalin) return notifs.error(player, `Необходим предмет в руках`, header);
+        if (!inventory.isInHands(adrenalin) || adrenalin.itemId != 26) return notifs.error(player, `${inventory.getName(26)} не в руках`, header);
         var count = inventory.getParam(adrenalin, 'count').value;
         if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
 
@@ -372,22 +373,27 @@ module.exports = {
         var params = inventory.getParamsValues(eat);
         var character = player.character;
 
-        satiety.set(player, character.satiety + (params.satiety || 10), character.thirst + (params.thirst || 10));
+        satiety.set(player, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
         notifs.success(player, `Вы съели ${inventory.getName(eat.itemId)}`, header);
 
         if (!player.vehicle) {
+            var time = 7000;
             mp.players.forEachInRange(player.position, 20, rec => {
                 rec.call(`animations.play`, [player.id, {
                     dict: "amb@code_human_wander_eating_donut@male@idle_a",
                     name: "idle_c",
                     speed: 1,
                     flag: 49
-                }, 7000]);
+                }, time]);
             });
+            timer.add(() => {
+                inventory.deleteItem(player, eat);
+                inventory.notifyOverhead(player, `Съел '${inventory.getName(eat.itemId)}'`);
+            }, time);
+        } else {
+            inventory.deleteItem(player, eat);
+            inventory.notifyOverhead(player, `Съел '${inventory.getName(eat.itemId)}'`);
         }
-
-        inventory.deleteItem(player, eat);
-        inventory.notifyOverhead(player, `Съел '${inventory.getName(eat.itemId)}'`);
     },
     // употребить напиток
     "inventory.item.drink.use": (player, sqlId) => {
@@ -399,22 +405,28 @@ module.exports = {
         var params = inventory.getParamsValues(drink);
         var character = player.character;
 
-        satiety.set(player, character.satiety + (params.satiety || 10), character.thirst + (params.thirst || 10));
+        if (params.alcohol) clubs.addDrunkenness(player, params.alcohol);
+        satiety.set(player, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
         notifs.success(player, `Вы выпили ${inventory.getName(drink.itemId)}`, header);
 
         if (!player.vehicle) {
+            var time = 7000;
             mp.players.forEachInRange(player.position, 20, rec => {
                 rec.call(`animations.play`, [player.id, {
                     dict: "amb@code_human_wander_drinking_fat@female@idle_a",
                     name: "idle_c",
                     speed: 1,
                     flag: 49
-                }, 7000]);
+                }, time]);
             });
+            timer.add(() => {
+                inventory.deleteItem(player, drink);
+                inventory.notifyOverhead(player, `Выпил '${inventory.getName(drink.itemId)}'`);
+            }, time);
+        } else {
+            inventory.deleteItem(player, drink);
+            inventory.notifyOverhead(player, `Выпил '${inventory.getName(drink.itemId)}'`);
         }
-
-        inventory.deleteItem(player, drink);
-        inventory.notifyOverhead(player, `Выпил '${inventory.getName(drink.itemId)}'`);
     },
     // использовать предмет инвентаря
     "inventory.item.use": (player, data) => {

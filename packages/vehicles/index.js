@@ -95,6 +95,14 @@ module.exports = {
             vehicle.properties = veh.properties;
         }
 
+        if (veh.key == 'job' || veh.key == 'newbie') {
+            vehicle.fuel = vehicle.properties.maxFuel;
+        }
+
+        if (veh.key == 'rent') {
+            vehicle.fuel = parseInt(vehicle.properties.maxFuel / 2);
+        }
+
         if (veh.key == 'private' || veh.key == 'market') { // temp
             if (!veh.tuning) {
                 await this.initTuning(vehicle);

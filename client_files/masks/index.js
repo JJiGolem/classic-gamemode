@@ -99,7 +99,7 @@ mp.events.add('masks.buy.ans', (ans, data) => {
             mp.callCEFV(`selectMenu.notification = 'Маска не найдена'`);
             break;
         case 2:
-            mp.callCEFV(`selectMenu.notification = '${data}'`);
+            mp.callCEFV(`selectMenu.notification = \`${data}\``);
             break;
         case 3:
             mp.callCEFV(`selectMenu.notification = 'Маска недоступна'`);

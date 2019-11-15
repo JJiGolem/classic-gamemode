@@ -411,8 +411,8 @@ module.exports = {
             sex: sex,
             variation: pants[0],
             texture: pants[1],
-            pockets: '[5, 5, 5, 5, 4, 4, 4, 4]',
-            clime: '[15,25]',
+            pockets: '[4,5,10,5,10,5,4,5]',
+            clime: '[10,30]',
             name: (pants[0] == 15 && sex == 1) || (pants[0] == 14 && sex == 0) ? 'Шорты' : 'Брюки'
         }
         inventory.addItem(player, PANTS_ID, pantsParams, (e) => {
@@ -426,7 +426,7 @@ module.exports = {
             sex: sex,
             variation: shoes[0],
             texture: shoes[1],
-            clime: '[15,25]',
+            clime: '[10,30]',
             name: 'Кроссовки'
         }
         inventory.addItem(player, SHOES_ID, shoesParams, (e) => {
@@ -444,7 +444,8 @@ module.exports = {
             tTexture: top[3],
             undershirt: top[4],
             uTexture: top[5],
-            clime: '[15,25]',
+            pockets: '[5,5,5,5,4,5]',
+            clime: '[10,30]',
             name: 'Футболка'
         }
         inventory.addItem(player, TOP_ID, topParams, (e) => {

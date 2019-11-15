@@ -36,6 +36,7 @@ mp.events.add('vehicles.sell.id', (id) => {
     id = parseInt(id);
 
     if (isNaN(id) || id < 0) return mp.notify.error('Некорректный ID', 'Ошибка');
+    if (id == mp.players.local.remoteId) return mp.notify.error('Нельзя продать транспорт себе', 'Ошибка');
 
     let isFound = false;
 
@@ -99,6 +100,9 @@ mp.events.add('vehicles.sell.send.ans', (ans, data) => {
             mp.callCEFV(`acceptWindow.name = 'carsell';`);
             mp.callCEFV(`acceptWindow.show = true;`);
             mp.busy.add('vehicle_seller_accept', true);
+            break;
+        case 6:
+            mp.notify.error('Нельзя продать транспорт себе', 'Ошибка');
             break;
     }
 

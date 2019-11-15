@@ -137,7 +137,7 @@ mp.woodman = {
     setInside(data) {
         if (!data) return mp.callCEFV(`selectMenu.show = false`);
 
-        mp.callCEFV(`selectMenu.menus['woodman'].init('${JSON.stringify(data)}')`);
+        mp.callCEFV(`selectMenu.menus['woodman'].init(${JSON.stringify(data)})`);
         mp.callCEFV(`selectMenu.showByName('woodman')`);
     },
     setTreeInside(pos, health) {
@@ -206,6 +206,7 @@ mp.woodman = {
         if (!this.logSquats[this.logFocusSlotI]) return mp.notify.error(`Перейдите к другой части бревна`, `Лесоруб`);
 
         // TODO: set correct heading
+        mp.busy.add("chopping", false);
         mp.events.callRemote(`animations.playById`, 5523);
         this.logTimer = mp.timer.add(() => {
             this.stopLogTimer();
@@ -218,6 +219,7 @@ mp.woodman = {
     stopLogTimer() {
         mp.timer.remove(this.logTimer);
         this.logTimer = null;
+        mp.busy.remove("chopping");
         mp.events.callRemote(`animations.stop`);
     },
     createJobPed() {
@@ -282,6 +284,7 @@ mp.events.add({
             }
 
             mp.game.controls.disableControlAction(0, 24, true); /// удары
+            mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
             mp.game.controls.disableControlAction(0, 140, true); /// удары R
 
             // var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);

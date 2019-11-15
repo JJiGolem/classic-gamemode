@@ -362,8 +362,67 @@ mp.utils = {
             delete player.overheadText;
         }, 5000);
     },
+    // принадлежит ли позиция полигону
+    inPolygon(pos, polygon) {
+        var parity = 0;
+        for (var i = 0; i < polygon.length - 1; i++) {
+            var v = {
+                x1: polygon[i].x,
+                y1: polygon[i].y,
+                x2: polygon[i + 1].x,
+                y2: polygon[i + 1].y
+            }
+            switch (edgeType(v, pos)) {
+                case 0:
+                    return 2;
+                    break;
+                case 1:
+                    parity = 1 - parity;
+                    break;
+            }
+        }
+        var v = {
+            x1: polygon[polygon.length - 1].x,
+            y1: polygon[polygon.length - 1].y,
+            x2: polygon[0].x,
+            y2: polygon[0].y
+        }
+        switch (edgeType(v, pos)) {
+            case 0:
+                return 2;
+                break;
+            case 1:
+                parity = 1 - parity;
+                break;
+        }
+        return parity;
+    },
 };
 
+// ребро касается, пересекается или пох
+let edgeType = (vector, a) => {
+    switch (classify(vector, a.x, a.y)) {
+        case 1:
+            return ((vector.y1 < a.y) && (a.y <= vector.y2)) ? 1 : 2;
+            break;
+        case -1:
+            return ((vector.y2 < a.y) && (a.y <= vector.y1)) ? 1 : 2;
+            break;
+        case 0:
+            return 0;
+            break;
+    }
+};
+
+// слева от вектора, справа от вектора, или принадлежит вектору
+let classify = (vector, x1, y1) => {
+    var pr = (vector.x2 - vector.x1) * (y1 - vector.y1) - (vector.y2 - vector.y1) * (x1 - vector.x1);
+    if (pr > 0)
+        return 1;
+    if (pr < 0)
+        return -1;
+    return 0;
+};
 
 Math.clamp = function(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -387,7 +446,8 @@ mp.events.add("radar.display", (enable) => {
 
 // Вкл визуальный эффект
 mp.events.add('effect', (effect, duration) => {
-    mp.game.graphics.startScreenEffect(effect, duration, false);
+    if (!duration) mp.game.graphics.stopScreenEffect(effect);
+    else mp.game.graphics.startScreenEffect(effect, duration, false);
 });
 
 // Проиграть звук
@@ -424,6 +484,7 @@ mp.events.add('render', () => {
         mp.game.controls.disableControlAction(0, 31, true); /// вперед назад
         mp.game.controls.disableControlAction(0, 30, true); /// влево вправо
         mp.game.controls.disableControlAction(0, 24, true); /// удары
+        mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
         mp.game.controls.disableControlAction(0, 257, true); /// стрельба
         mp.game.controls.disableControlAction(1, 200, true); // esc
         mp.game.controls.disableControlAction(0, 140, true); /// удары R

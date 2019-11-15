@@ -148,6 +148,11 @@ mp.events.add("entityStreamOut", (entity) => {
 });
 
 mp.events.add("render", () => {
+    if (mp.busy.includes("lostAttach")) {
+        mp.game.controls.disableControlAction(0, 24, true); /// удары
+        mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
+        mp.game.controls.disableControlAction(0, 140, true); /// удары R
+    }
     var player = mp.players.local;
     if (!player.__attachmentObjects) return;
     for (var id in player.__attachmentObjects) {

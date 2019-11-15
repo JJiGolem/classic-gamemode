@@ -24,6 +24,7 @@ mp.events.add('phone.load', function (phoneInfo, phoneDialogs, apps) {
 /// Добавление приложения
 /// house
 /// biz
+/// factionBiz
 /// taxi
 mp.events.add('phone.app.add', function (appName, info) {
     if (info != null) {

@@ -213,6 +213,7 @@ module.exports = {
 
         var biz = bizes.getNearBiz(player);
         if (!biz) return out(`Необходимо находиться у бизнеса`);
+        if (biz.info.type == 10) return out(`Нельзя продать крышу клуба`);
         if (biz.info.factionId != player.character.factionId) return out(`${biz.info.name} находится не под вашей крышей`);
 
         rec.offer = {
@@ -242,6 +243,7 @@ module.exports = {
         if (player.character.cash < offer.sum) return out(`Необходимо $${sum}`);
 
         var biz = bizes.getBizById(offer.bizId);
+        if (biz.info.type == 10) return out(`Нельзя продать крышу клуба`);
         if (biz.info.factionId != seller.character.factionId) return out(`${biz.info.name} не под крышей ${seller.name}`);
 
         money.removeCash(player, offer.sum, (res) => {

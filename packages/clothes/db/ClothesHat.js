@@ -8,11 +8,11 @@ module.exports = (sequelize, DataTypes) => {
         name: {
             type: DataTypes.STRING(30),
             allowNull: false,
-            get() {
-                var value = this.getDataValue('name');
-                value = value.replace(/(\\)/g, "");
-                return value.replace(/(["'])/g, "\\$1");
-            }
+            // get() {
+            //     var value = this.getDataValue('name');
+            //     value = value.replace(/(\\)/g, "");
+            //     return value.replace(/(["'])/g, "\\$1");
+            // }
         },
         variation: {
             type: DataTypes.INTEGER(11),

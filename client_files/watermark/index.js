@@ -7,7 +7,7 @@
 
 mp.watermark = {
     init(id) {
-        mp.callCEFV(`watermark.id = '${id}'`);
+        mp.callCEFV(`watermark.id = \`${id}\``);
     },
 };
 

@@ -16,7 +16,7 @@ mp.terminal = {
     },
     push(type, text) {
         if (typeof text == 'object') text = JSON.stringify(text);
-        mp.callCEFV(`terminal.push('${type}', '${text}')`);
+        mp.callCEFV(`terminal.push(\`${type}\`, \`${text}\`)`);
     },
     debug(text) {
         this.push(`debug`, text);
@@ -29,7 +29,7 @@ mp.terminal = {
     },
     initSavedCmds() {
         let cmds = mp.storage.data.terminal.savedCmds;
-        mp.callCEFV(`terminal.initSavedCmds('${JSON.stringify(cmds)}')`);
+        mp.callCEFV(`terminal.initSavedCmds(${JSON.stringify(cmds)})`);
     },
     saveCmd(text) {
         let cmds = mp.storage.data.terminal.savedCmds;

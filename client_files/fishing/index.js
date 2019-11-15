@@ -1,6 +1,6 @@
 "use strict"
 
-mp.attachmentMngr.register("takeRod", "prop_fishing_rod_01", 26611, new mp.Vector3(0, -0.05, -0.03), new mp.Vector3(-40, 10, -50));
+// mp.attachmentMngr.register("takeRod", "prop_fishing_rod_01", 26611, new mp.Vector3(0, -0.05, -0.03), new mp.Vector3(-40, 10, -50));
 
 let peds = [
     {
@@ -197,7 +197,7 @@ mp.events.add('fishing.rod.buy.ans', (ans, data) => {
             mp.events.call('fishing.menu.close');
             break;
         case 2:
-            mp.callCEFV(`selectMenu.notification = '${data}'`);
+            mp.callCEFV(`selectMenu.notification = \`${data}\``);
             break;
         case 3:
             mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
@@ -327,10 +327,10 @@ function playBaseAnimation(state, timeout) { /// Анимация держани
         if (!timeout) timeout = 0;
         mp.timer.add(()=> {
             mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@base', 'base', 1, 49);
-            mp.attachmentMngr.addLocal("takeRod");
+            // mp.attachmentMngr.addLocal("takeRod");
         }, timeout);
     } else {
-        mp.attachmentMngr.removeLocal("takeRod");
+        // mp.attachmentMngr.removeLocal("takeRod");
         mp.events.callRemote('animations.stop');
     }
 }
@@ -340,10 +340,10 @@ function playWaitAnimation(state, timeout) { /// Анимация начала �
         if (!timeout) timeout = 0;
         mp.timer.add(()=> {
             mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@idle_a', 'idle_a', 1, 49);
-            mp.attachmentMngr.addLocal("takeRod");
+            // mp.attachmentMngr.addLocal("takeRod");
         }, timeout);
     } else {
-        mp.attachmentMngr.removeLocal("takeRod");
+        // mp.attachmentMngr.removeLocal("takeRod");
         mp.events.callRemote('animations.stop');
     }
 }
@@ -353,10 +353,10 @@ function playFetchAnimation(state, timeout) { /// Анимация вытяги�
         if (!timeout) timeout = 0;
         mp.timer.add(()=> {
             mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@idle_a', 'idle_c', 1, 49);
-            mp.attachmentMngr.addLocal("takeRod");
+            // mp.attachmentMngr.addLocal("takeRod");
         }, timeout);
     } else {
-        mp.attachmentMngr.removeLocal("takeRod");
+        // mp.attachmentMngr.removeLocal("takeRod");
         mp.events.callRemote('animations.stop');
     }
 }
