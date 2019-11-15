@@ -13,7 +13,7 @@ let buildDirectory;
 let DATE_CHANGE = null;
 
 let ignoreModules = ['attaches'];
-let ignoreFiles = [ '.listcache', 'babel-polyfill.js' ];
+let ignoreFiles = [ '.listcache', 'babelPolyfill.js' ];
 let changedFiles = [];
 
 function deleteUnusedFiles(currentPath) {

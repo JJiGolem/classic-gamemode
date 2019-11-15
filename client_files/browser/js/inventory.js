@@ -441,9 +441,9 @@ var inventory = new Vue({
         // Огнестрельные оружия
         weaponsList: [19, 20, 21, 22, 41, 44, 46, 47, 48, 49, 50, 52, 80, 87, 88, 89, 90, 91, 93, 96, 99, 100, 107],
         // Еда
-        eatList: [35, 126, 127, 128, 129, 132],
+        eatList: [35, 126, 127, 128, 129, 132, 134],
         // Напитки
-        drinkList: [34, 130],
+        drinkList: [34, 130, 133],
         // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
         environment: [],
         // Предметы на игроке (экипировка)
@@ -567,7 +567,7 @@ var inventory = new Vue({
         descItemName() {
             var item = this.itemDesc.item;
             if (!item) return null;
-            if ([6, 7, 8, 9, 15].includes(item.itemId) && item.params.name) // одежда, рыба
+            if ([6, 7, 8, 9, 15, 133].includes(item.itemId) && item.params.name) // одежда, рыба, алко-напиток
                 return `${item.params.name}`;
             if (item.itemId == 16 && item.params.name) // сигареты
                 return this.itemsInfo[item.itemId].name + " " + item.params.name;
@@ -656,6 +656,10 @@ var inventory = new Vue({
             if (item.params.treeDamage) params.push({
                 name: "Урон по дереву",
                 value: `${item.params.treeDamage}%`
+            });
+            if (item.params.alcohol) params.push({
+                name: "Алкоголь",
+                value: `${item.params.alcohol}%`
             });
 
             return params;

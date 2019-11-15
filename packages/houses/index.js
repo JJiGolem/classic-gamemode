@@ -480,7 +480,7 @@ module.exports = {
         house.info.characterNick = buyer.character.name;
         house.info.save().then(() => {
             if (money == null) return;
-            money.moveCash(buyer, seller, cost, function(result) {
+            money.moveCash(buyer, seller, cost, (result) => {
                 if (result) {
                     callback(true);
                     mp.events.call('player.house.changed', seller);
@@ -493,7 +493,7 @@ module.exports = {
                         carPlaces: house.info.Interior.Garage != null ? house.info.Interior.Garage.carPlaces : 1,
                         rent: this.getRent(house),
                         isOpened: house.info.isOpened,
-                        improvements: new Array(),
+                        improvements: [],
                         price: house.info.price,
                         days: this.getDateDays(house.info.date),
                         pos: [house.info.pickupX, house.info.pickupY, house.info.pickupZ]

@@ -23,7 +23,6 @@ class BusinessApp extends Component {
                         <div style={{ marginLeft: '5%' }}>Информация</div>
                         <div className='table_info-phone-react'>
                             <div>Тип: <span>{ business.type }</span></div>
-                            <div>В кассе: <span style={{ color: '#47a80f' }}>${ business.cashBox }</span></div>
                             <div>Склад: <span>{ business.resources }/{ business.resourcesMax }</span></div>
                         </div>
                     </div>

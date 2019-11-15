@@ -103,7 +103,7 @@ let getBizInfoForApp = function(biz) {
     if (bizesModules[biz.info.type] == null) return null;
     let minMultiplier = bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
     let maxMultiplier = bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
-    if (bizService.bizesModules[biz.info.type].business.isFactionOwner) {
+    if (bizesModules[biz.info.type].business.isFactionOwner) {
         return {
             id: biz.info.id,
             name: biz.info.name,
@@ -434,7 +434,7 @@ module.exports = {
         return bizes.filter(x => x.info.factionId === factionId);
     },
     getBizesForBizWar(factionId) {
-        return bizes.filter(x => x.info.factionId !== factionId).map(x => {
+        return bizes.filter(x => x.info.factionId !== factionId && x.info.type != 10).map(x => {
             return {
                 id: x.info.id,
                 name: x.info.name,
