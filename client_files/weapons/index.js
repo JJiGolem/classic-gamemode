@@ -62,7 +62,12 @@ mp.weapons = {
         var hashes = [2210333304];
         if (hashes.includes(hash)) return -2084633992;
         return hash;
-    }
+    },
+    setCurrentWeapon(weaponhash) {
+        // d(`setCurrentWeapon: ${weaponhash}`)
+        weaponhash = this.hashToValid(weaponhash);
+        return mp.game.invoke('0xADF692B254977C0C', mp.players.local.handle, weaponhash, true);
+    },
 };
 
 mp.events.add({
@@ -127,5 +132,11 @@ mp.events.add({
         hash = parseInt(hash);
         var ammo = mp.weapons.getAmmoWeapon(hash);
         mp.events.callRemote("weapons.ammo.remove", sqlId, ammo);
+    },
+    "time.main.tick": () => {
+        // фикс пропажи оружия при достижении 0 патронов
+        if (mp.weapons.hashes.length && mp.players.local.weapon != mp.weapons.hashes[0]) {
+            mp.weapons.setCurrentWeapon(mp.weapons.hashes[0]);
+        }
     },
 });
