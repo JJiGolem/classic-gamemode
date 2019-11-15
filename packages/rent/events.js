@@ -41,6 +41,10 @@ module.exports = {
             let hasLicense = player.character[lic.licType];
             if (!hasLicense) return player.call('rent.vehicle.rent.ans', [2, lic.name]);
         }
+
+        if (player.rentVehicles + 1 > rent.maxRentVehicles)
+            return player.call('rent.vehicle.rent.ans', [5, rent.maxRentVehicles]);
+
         let price = parseInt(vehicle.properties.price * rent.rentPriceMultiplier);
         if (player.character.cash < price) return player.call('rent.vehicle.rent.ans', [3]);
 
@@ -49,6 +53,11 @@ module.exports = {
                 player.call('rent.vehicle.rent.ans', [1]);
                 vehicle.isActiveRent = true;
                 vehicle.rentBy = player.character.id;
+                if (!isNaN(player.rentVehicles)) {
+                    player.rentVehicles++;
+                } else {
+                    player.rentVehicles = 1;
+                }
             } else {
                 player.call('rent.vehicle.rent.ans', [4]);
             }
@@ -61,5 +70,13 @@ module.exports = {
             if (!veh.rentBy || veh.rentBy != id) return;
             vehicles.respawnVehicle(veh);
         });
+    },
+    "vehicles.respawn.full": (vehicle) => {
+        if (vehicle.key != 'rent' || !vehicle.isActiveRent) return;
+        let id = vehicle.rentBy;
+        let player = mp.players.getBySqlId(id);
+        if (!player) return;
+        notify.warning(player, 'Арендованное т/с уничтожено');
+        player.rentVehicles--;
     }
 }
