@@ -1,5 +1,5 @@
 mp.events.add({
-    "ammunation.enter": (data, weaponsConfig, ammoProducts) => {
+    "ammunation.enter": (data, weaponsConfig, ammoProducts, armourProducts) => {
         let items = [];
         for (let key in weaponsConfig) {
             let current = weaponsConfig[key];
@@ -11,7 +11,7 @@ mp.events.add({
         }
         items.push({ text: 'Назад' });
         mp.callCEFV(`selectMenu.setItems('ammunationFirearms', ${JSON.stringify(items)});`)
-        let price = data.productPrice;
+        let price = data.productPrice * data.priceMultiplier;
         items = [{
             text: "Патроны - 9mm",
             values: [`12 ед. - $${12 * ammoProducts * price}`, `24 ед. - $${24 * ammoProducts * price}`, `32 ед. - $${32 * ammoProducts * price}`],
@@ -32,6 +32,32 @@ mp.events.add({
             text: "Назад"
         }];
         mp.callCEFV(`selectMenu.setItems('ammunationAmmo', ${JSON.stringify(items)});`)
+
+        items = [{
+            text: "Серый бронежилет",
+            values: [`$${armourProducts * data.productPrice * data.priceMultiplier}`]
+        },
+        {
+            text: "Черный бронежилет",
+            values: [`$${armourProducts * data.productPrice * data.priceMultiplier}`]
+        },
+        {
+            text: "Зеленый бронежилет",
+            values: [`$${armourProducts * data.productPrice * data.priceMultiplier}`]
+        },
+        {
+            text: "Камуфляжный бронежилет",
+            values: [`$${armourProducts * data.productPrice * data.priceMultiplier}`]
+        },
+        {
+            text: "Камуфляжный бронежилет №2",
+            values: [`$${armourProducts * data.productPrice * data.priceMultiplier}`]
+        },
+        {
+            text: "Назад"
+        }
+    ]
+        mp.callCEFV(`selectMenu.setItems('ammunationArmour', ${JSON.stringify(items)});`)
         mp.events.call('selectMenu.show', 'ammunationMain');
     },
     "ammunation.exit": () => {
@@ -80,6 +106,26 @@ mp.events.add({
                 break;
             case 4:
                 mp.callCEFV(`selectMenu.notification = 'У вас нет лицензии на оружие'`);
+                break;
+        }
+    },
+    "ammunation.armour.buy.ans": (ans, data) => {
+        mp.callCEFV(`selectMenu.loader = false`);
+        switch (ans) {
+            case 0:
+                mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+                break;
+            case 1:
+                mp.callCEFV(`selectMenu.notification = 'В магазине кончились ресурсы'`);
+                break;
+            case 2:
+                mp.callCEFV(`selectMenu.notification = \`${data}\``);
+                break;
+            case 3:
+                mp.callCEFV(`selectMenu.notification = 'Вы купили бронежилет'`);
+                break;
+            case 3:
+                mp.callCEFV(`selectMenu.notification = 'Ошибка финансовой операции'`);
                 break;
         }
     }

@@ -13,7 +13,7 @@ module.exports = {
             let id = shape.ammunationId;
             let data = ammunation.getRawShopData(id);
             let weaponsConfig = ammunation.getWeaponsConfig();
-            player.call('ammunation.enter', [data, weaponsConfig, ammunation.ammoProducts]);
+            player.call('ammunation.enter', [data, weaponsConfig, ammunation.ammoProducts, ammunation.armourProducts]);
             player.currentAmmunationId = shape.ammunationId;
         }
     },
@@ -91,5 +91,38 @@ module.exports = {
                 }
             }, `Покупка боеприпасов с itemId #${itemIds[ammoIndex]} (${ammoCount} шт.)`);
         });
-    }
+    },
+    "ammunation.armour.buy": (player, armourId) => {
+        let ammunationId = player.currentAmmunationId;
+        if (ammunationId == null) return;
+
+        if (!player.character) return;
+        
+        let price = ammunation.armourProducts * ammunation.productPrice * ammunation.getPriceMultiplier(ammunationId);
+        if (player.character.cash < price) return player.call('ammunation.armour.buy.ans', [0]);
+        let productsAvailable = ammunation.getProductsAmount(ammunationId);
+        if (ammunation.armourProducts > productsAvailable) return player.call('ammunation.armour.buy.ans', [1]);
+
+        let params = {
+            variation: 12,
+            texture: armourId,
+            health: 100,
+            pockets: '[3,3,3,3,3,3,3,3,10,5,3,5,10,3,3,3]',
+            sex: !player.character.gender
+        };
+
+        inventory.addItem(player, 3, params, (e) => {
+            if (e) return player.call('ammunation.armour.buy.ans', [2, e]);
+
+            money.removeCash(player, price, function (result) {
+                if (result) {
+                    ammunation.removeProducts(ammunationId, ammunation.armourProducts);
+                    ammunation.updateCashbox(ammunationId, price);
+                    player.call('ammunation.armour.buy.ans', [3]);
+                } else {
+                    player.call('ammunation.armour.buy.ans', [4]);
+                }
+            }, `Покупка бронежилета`);
+        });
+    },
 }
