@@ -8,6 +8,7 @@ require('browser');
 
 let browserLoaded = false;
 let initDone = false;
+let isJoin = false;
 
 mp.events.add('render', () => {
     if (!browserLoaded || !initDone) {
@@ -37,4 +38,7 @@ mp.events.add('browserDomReady', (browser) => {
         mp.events.callRemote('player.joined');
     }
 });
-mp.events.callRemote('player.join');
+if (!isJoin) {
+    mp.events.callRemote('player.join');
+    isJoin = true;
+}
