@@ -12,6 +12,7 @@ module.exports = {
     maxPriceMultiplier: 2.0,
     productPrice: 10,
     ammoProducts: 1,
+    armourProducts: 100,
     weaponsConfig: {
         1: {
             name: 'Combat Pistol',

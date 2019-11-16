@@ -20,6 +20,9 @@ function getCorrectName(player) {
 
 mp.events.add('render', (nametags) => {
 
+    // mp.game.graphics.drawSprite("mpleaderboard", "leaderboard_audio_inactive", 0.5, 0.5, 0.025, 0.045, 0, 255, 255, 255, 100);
+    // mp.game.graphics.drawSprite("mpleaderboard", "leaderboard_audio_3", 0.5, 0.6, 0.025, 0.045, 0, 255, 255, 255, 100);
+
     if (!showNametags) return;
 
     const graphics = mp.game.graphics;
@@ -54,6 +57,13 @@ mp.events.add('render', (nametags) => {
                     scale: [SIZE, SIZE],
                     outline: true
                 });
+
+                if (mp.game.graphics.hasStreamedTextureDictLoaded("mpleaderboard")) {
+                    let sprite = player.isVoiceActive ? "leaderboard_audio_3" : "leaderboard_audio_inactive";
+                    mp.game.graphics.drawSprite("mpleaderboard", sprite, x + 0.045, y + 0.0135, 0.02, 0.04, 0, 255, 255, 255, 255);
+                } else {
+                    loadStreamedTextureDict();
+                }
 
             if (mp.game.player.isFreeAimingAtEntity(player.handle)) {
                 let y2 = y + 0.042;
@@ -94,3 +104,17 @@ mp.events.add({
         showNametags = val;
     },
 });
+
+//temp
+let spriteOn = false;
+mp.events.add('chat.message.get', (type, message) => {
+    if (message == '/spriteon') {
+        mp.chat.debug('sprite on');
+        spriteOn = true;
+    }
+});
+
+
+function loadStreamedTextureDict() {
+    mp.game.graphics.requestStreamedTextureDict("mpleaderboard", true);
+}

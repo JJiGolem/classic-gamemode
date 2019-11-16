@@ -24,8 +24,6 @@ const PRICE_CONFIG = {
 module.exports = {
     async init() {
         await this.createCarMarket();
-        // await this.loadCarMarketData();
-        // await this.loadCarMarketVehicles();
 
     },
     createCarMarket() {

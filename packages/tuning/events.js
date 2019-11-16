@@ -3,8 +3,8 @@ let money = call('money');
 let vehicles = call('vehicles');
 
 module.exports = {
-    "init": () => {
-        tuning.init();
+    "init": async () => {
+        await tuning.init();
         inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {

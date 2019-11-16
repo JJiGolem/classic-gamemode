@@ -3,8 +3,8 @@ let inventory = call('inventory');
 let money = call('money');
 
 module.exports = {
-    "init": () => {
-        tattoo.init();
+    "init": async () => {
+        await tattoo.init();
         inited(__dirname);
     },
     "characterInit.done": async (player) => {

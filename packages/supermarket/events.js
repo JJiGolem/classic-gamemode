@@ -4,8 +4,8 @@ let inventory = call('inventory');
 let phone = call('phone');
 
 module.exports = {
-    "init": () => {
-        supermarket.init();
+    "init": async () => {
+        await supermarket.init();
         inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
