@@ -8,7 +8,6 @@ require('browser');
 
 let browserLoaded = false;
 let initDone = false;
-let isJoin = false;
 
 mp.events.add('render', () => {
     if (!browserLoaded || !initDone) {
@@ -23,22 +22,20 @@ mp.events.add('render', () => {
 
 /// Автоподключение клиентских модулей
 mp.events.add('init', (activeModules) => {
+    mp.console("init");
     activeModules.forEach(moduleName => {
         require(moduleName);
     });
-    initDone = true;
     if (browserLoaded) {
         mp.events.callRemote('player.joined');
     }
+    initDone = true;
 });
 
 mp.events.add('browserDomReady', (browser) => {
-    browserLoaded = true;
     if (initDone) {
         mp.events.callRemote('player.joined');
     }
+    browserLoaded = true;
 });
-// if (!isJoin) {
-    mp.events.callRemote('player.join');
-//     isJoin = true;
-// }
+mp.events.callRemote('player.join');
