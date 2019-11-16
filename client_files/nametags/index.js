@@ -20,8 +20,19 @@ function getCorrectName(player) {
 
 mp.events.add('render', (nametags) => {
 
-    // mp.game.graphics.drawSprite("mpleaderboard", "leaderboard_audio_inactive", 0.5, 0.5, 0.025, 0.045, 0, 255, 255, 255, 100);
-    // mp.game.graphics.drawSprite("mpleaderboard", "leaderboard_audio_3", 0.5, 0.6, 0.025, 0.045, 0, 255, 255, 255, 100);
+    // // TEMP
+    // let testX = 0.5;
+    // let testY = 0.5;
+    // let offset = getSpriteOffsetByNickname(testNick);
+    // mp.game.graphics.drawText(testNick, [testX, testY],
+    //     {
+    //         font: FONT,
+    //         color: [255, 255, 255, 255],
+    //         scale: [SIZE, SIZE],
+    //         outline: true
+    //     });
+    // let sprite = "leaderboard_audio_3";
+    // mp.game.graphics.drawSprite("mpleaderboard", sprite, testX + offset, testY + 0.0133, 0.018, 0.036, 0, 255, 255, 255, 255);
 
     if (!showNametags) return;
 
@@ -59,8 +70,9 @@ mp.events.add('render', (nametags) => {
                 });
 
                 if (mp.game.graphics.hasStreamedTextureDictLoaded("mpleaderboard")) {
+                    let offset = getSpriteOffsetByNickname(playerName);
                     let sprite = player.isVoiceActive ? "leaderboard_audio_3" : "leaderboard_audio_inactive";
-                    mp.game.graphics.drawSprite("mpleaderboard", sprite, x + 0.045, y + 0.0135, 0.02, 0.04, 0, 255, 255, 255, 255);
+                    mp.game.graphics.drawSprite("mpleaderboard", sprite, x + offset, y + 0.0133, 0.018, 0.036, 0, 255, 255, 255, 255);
                 } else {
                     loadStreamedTextureDict();
                 }
@@ -105,16 +117,25 @@ mp.events.add({
     },
 });
 
-//temp
+// TEMP
 let spriteOn = false;
+let testNick = "ID: 1";
 mp.events.add('chat.message.get', (type, message) => {
     if (message == '/spriteon') {
         mp.chat.debug('sprite on');
         spriteOn = true;
+    }
+    let args = message.split(' ');
+    if (args[0] == '/testnick') {
+        testNick = `${args[1]} ${args[2]}`;
     }
 });
 
 
 function loadStreamedTextureDict() {
     mp.game.graphics.requestStreamedTextureDict("mpleaderboard", true);
+}
+
+function getSpriteOffsetByNickname(nickname) {
+    return 0.025 + (nickname.length - 8) * 0.002;
 }
