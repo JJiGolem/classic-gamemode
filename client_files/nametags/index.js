@@ -58,14 +58,12 @@ mp.events.add('render', (nametags) => {
                     outline: true
                 });
 
-            if (spriteOn) {
                 if (mp.game.graphics.hasStreamedTextureDictLoaded("mpleaderboard")) {
                     let sprite = player.isVoiceActive ? "leaderboard_audio_3" : "leaderboard_audio_inactive";
-                    mp.game.graphics.drawSprite("mpleaderboard", sprite, x + 0.01, y, 0.025, 0.045, 0, 255, 255, 255, 255);
+                    mp.game.graphics.drawSprite("mpleaderboard", sprite, x + 0.03, y - 0.005, 0.025, 0.045, 0, 255, 255, 255, 255);
                 } else {
                     loadStreamedTextureDict();
                 }
-            }
 
             if (mp.game.player.isFreeAimingAtEntity(player.handle)) {
                 let y2 = y + 0.042;
