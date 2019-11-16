@@ -6,6 +6,7 @@ let exec = require('exec');
 let childProcess = require('child_process');
 
 const isBuild = mp.config.isBuild;
+let isInited = false;
 
 global.db = require('./db');
 global.ignoreModules = require('./ignoreModules');
@@ -48,9 +49,8 @@ global.inited = (dirname) => {
     let moduleName = path[path.length - 1];
     modulesToLoad.splice(modulesToLoad.findIndex(x => x === moduleName), 1);
     if (modulesToLoad.length === 0) {
-        console.log(moduleName);
-        console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSERVER inited");
-        console.log(playersJoinPool);
+        if (isInited) throw new Error(`Сервер уже был проинициализирован. Попытка повторной инициализации от модуля ${moduleName}`);
+        isInited = true;
         playersJoinPool.forEach(player => {
             if (player == null) return;
             player.call('init', [activeClientModules]);
