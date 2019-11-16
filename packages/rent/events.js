@@ -42,22 +42,19 @@ module.exports = {
             if (!hasLicense) return player.call('rent.vehicle.rent.ans', [2, lic.name]);
         }
 
-        if (player.rentVehicles + 1 > rent.maxRentVehicles)
-            return player.call('rent.vehicle.rent.ans', [5, rent.maxRentVehicles]);
-
         let price = parseInt(vehicle.properties.price * rent.rentPriceMultiplier);
         if (player.character.cash < price) return player.call('rent.vehicle.rent.ans', [3]);
 
         money.removeCash(player, price, function (result) {
             if (result) {
                 player.call('rent.vehicle.rent.ans', [1]);
+                if (player.hasRentVehicle) {
+                    let vehicle = mp.vehicles.toArray().find(x => x.rentBy == player.character.id);
+                    if (vehicle) vehicles.respawnVehicle(vehicle);
+                }
                 vehicle.isActiveRent = true;
                 vehicle.rentBy = player.character.id;
-                if (!isNaN(player.rentVehicles)) {
-                    player.rentVehicles++;
-                } else {
-                    player.rentVehicles = 1;
-                }
+                player.hasRentVehicle = true;
             } else {
                 player.call('rent.vehicle.rent.ans', [4]);
             }
@@ -76,7 +73,6 @@ module.exports = {
         let id = vehicle.rentBy;
         let player = mp.players.getBySqlId(id);
         if (!player) return;
-        notify.warning(player, 'Арендованное т/с уничтожено');
-        player.rentVehicles--;
+        player.hasRentVehicle = false;
     }
 }

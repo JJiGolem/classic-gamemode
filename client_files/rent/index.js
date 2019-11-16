@@ -46,9 +46,6 @@ mp.events.add({
             case 4:
                 mp.notify.error('Ошибка финансовой операции');
                 return;
-            case 5:
-                mp.notify.error(`Нельзя арендовать больше ${data} транспортных средств`);
-                return;
         }
     }
 });
