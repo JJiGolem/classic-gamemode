@@ -8,13 +8,14 @@ mp.events.add('characterInit.done', function() {
         if (!mp.busy.add('voicechat', false)) return;
         mp.voiceChat.muted = false;
         mp.callCEFV("hud.voice = true");
+        playVoiceAnimation(mp.players.local);
 	});
 
     mp.keys.bind(0x4E, false, function() {		// N
         if (mp.game.ui.isPauseMenuActive()) return;
         mp.voiceChat.muted = true;
         mp.callCEFV("hud.voice = false");
-		mp.busy.remove('voicechat');
+        mp.busy.remove('voicechat');
     });
 
     mp.keys.bind(0x73, false, function() {      // F4
@@ -172,3 +173,14 @@ mp.events.add("playerDeath", (player) => {
         mp.speechChanel.disconnect(player, null, true);
     }
 });
+
+mp.timer.addInterval(() => {
+    mp.players.forEachInStreamRange((player) => {
+        if (player == mp.players.local || mp.vdist(mp.players.local.position, player.position) > 20) return;
+        if (player.isVoiceActive) playVoiceAnimation(player);
+    });
+}, 250);
+
+function playVoiceAnimation(player) {
+    player.playFacialAnim("mic_chatter", "mp_facial");
+}
