@@ -474,6 +474,14 @@ export const PlayerEvents = (dispatch, getState) => {
         });
     });
 
+    myEventEmmiter.on('bank.update', (bankInfo) => {
+        dispatch({
+            type: 'UPDATE_BANK',
+            payload: bankInfo
+        });
+    });
+
+
     myEventEmmiter.on('bank.close', () => {
         dispatch({
             type: 'CLOSE_BANK'
