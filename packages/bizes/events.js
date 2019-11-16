@@ -4,6 +4,7 @@ let factions;
 let prompt;
 let money;
 let notifications;
+let phone;
 
 let bizService = require('./index.js');
 module.exports = {
@@ -12,6 +13,7 @@ module.exports = {
         prompt = call("prompt");
         money = call("money");
         notifications = call('notifications');
+        phone = call("phone");
         await bizService.init();
         inited(__dirname);
     },
@@ -25,8 +27,14 @@ module.exports = {
         };
     },
     "characterInit.done": (player) => {
-        //todo
-        //Добавлять приложение лидеру фракции на телефон
+        if (factions.isLeader(player)) {
+            if (player.character.factionId) {
+                let biz = bizService.getBizesByFactionId(player.character.factionId);
+                if (biz) {
+                    phone.addApp(player, "factionBiz",bizService.getBizInfoForApp(biz));
+                }
+            }
+        }
     },
     "player.name.changed": (player) => {
         let biz = bizService.getBizByCharId(player.character.id);
