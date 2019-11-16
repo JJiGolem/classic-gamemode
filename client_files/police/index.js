@@ -85,7 +85,7 @@ mp.events.add({
     "render": () => {
         if (mp.police.followPlayer) {
             mp.game.controls.disableControlAction(0, 21, true); /// бег
-            mp.game.controls.diАsableControlAction(0, 22, true); /// прыжок
+            mp.game.controls.disableControlAction(0, 22, true); /// прыжок
             mp.game.controls.disableControlAction(0, 31, true); /// вперед назад
             mp.game.controls.disableControlAction(0, 30, true); /// влево вправо
             mp.game.controls.disableControlAction(0, 24, true); /// удары

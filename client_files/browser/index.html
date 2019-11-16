@@ -1754,18 +1754,18 @@
                 <stop offset="100%" stop-color="rgba(255, 223, 41, 0.6)" />
             </linearGradient>
             <circle class="center"/>
-            <g class="container" :class="{ focus: n-1 == focus, select: n-1 == select }" v-for="n in 10" :style="{transform: 'rotate('+ (n + 1) * 36 +'deg)'}">
+            <g class="container" :class="{ focus: items[n-1] && items[n-1] == inventory.equipment[13], select: n-1 == select }" v-for="n in 10" :style="{transform: 'rotate('+ (n + 1) * 36 +'deg)'}">
                 <circle class="node" />
                 <circle class="stroke" />
             </g>
             <g class="container" v-for="n in 10" :style="{transform: 'rotate('+ (n + 1) * 36 +'deg)'}">
-                <g v-if="cItems[n-1] && n != 1"><image :xlink:href="'img/inventory/items/'+cItems[n-1].img+'.png'" :style="{transform: 'rotate('+ (n + 1) * -36 +'deg)'}" /></g>
-                <g v-if="n == 1"><image class="hand" xlink:href="img/selectItems/hand.svg" :style="{transform: 'rotate('+ (n + 1) * -36 +'deg)'}" /></g>
+                <g v-if="items[n-1] && inventory.getItem(items[n-1].sqlId) && n != 1"><image :xlink:href="inventory.urlItemImg(items[n-1].itemId)" :style="{transform: 'rotate('+ (n + 1) * -36 +'deg)'}" /></g>
+                <g v-else-if="n == 1"><image class="hand" xlink:href="img/selectItems/hand.svg" :style="{transform: 'rotate('+ (n + 1) * -36 +'deg)'}" /></g>
             </g>
         </svg>
-        <div class="description" v-if="cItems[tempFocus]">
-            <div class="head">{{cItems[tempFocus].name}}</div>
-            <div class="amount">{{cItems[tempFocus].amount}}</div>
+        <div class="description" v-if="descItemName">
+            <div class="head">{{ descItemName }}</div>
+            <div class="amount">{{ descItemCount }}</div>
         </div>
     </div>
 

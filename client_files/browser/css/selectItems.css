@@ -66,11 +66,11 @@
 }
 
 #selectItems .container.focus .node {
-    stroke: rgba(147, 147, 147, 0.6);
+    /* stroke: rgba(147, 147, 147, 0.6); */
 }
 
 #selectItems .container.focus .stroke {
-    stroke: rgba(255, 255, 255, 0.6);
+    stroke: #FFDF29;
 }
 
 #selectItems .description {

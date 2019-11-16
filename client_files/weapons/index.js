@@ -62,7 +62,12 @@ mp.weapons = {
         var hashes = [2210333304];
         if (hashes.includes(hash)) return -2084633992;
         return hash;
-    }
+    },
+    setCurrentWeapon(weaponhash) {
+        // d(`setCurrentWeapon: ${weaponhash}`)
+        weaponhash = this.hashToValid(weaponhash);
+        return mp.game.invoke('0xADF692B254977C0C', mp.players.local.handle, weaponhash, true);
+    },
 };
 
 mp.events.add({
@@ -72,7 +77,8 @@ mp.events.add({
         //     type: ${mp.weapons.getAmmoType()} slot: ${mp.weapons.getWeaponSlot(mp.weapons.currentWeapon())}`);
         // mp.utils.drawText2d(`hashes: ${JSON.stringify(mp.weapons.hashes)}`, [0.8, 0.6]);
         // mp.utils.drawText2d(`name: ${mp.weapons.getWeaponName(mp.weapons.currentWeapon())}`, [0.8, 0.65]);
-        // mp.utils.drawText2d(`mp.game.player.isFreeAiming(): ${mp.game.player.isFreeAiming()}`);
+        // mp.utils.drawText2d(`isShooting: ${mp.players.local.isShooting()}`, [0.8, 0.67]);
+        // mp.utils.drawText2d(`mp.game.player.isFreeAiming(): ${mp.game.player.isFreeAiming()}`, [0.8, 0.69]);
 
         var isFreeAiming = mp.game.player.isFreeAiming();
         if (isFreeAiming && !mp.weapons.lastIsFreeAiming) {
@@ -93,7 +99,7 @@ mp.events.add({
         mp.weapons.lastIsInMeleeCombat = isInMeleeCombat;
 
         var weapon = mp.players.local.weapon;
-        if (weapon != mp.weapons.lastWeapon) mp.events.call("playerWeaponChanged", weapon);
+        if (weapon != mp.weapons.lastWeapon) mp.events.call("playerWeaponChanged", weapon, mp.weapons.lastWeapon);
         mp.weapons.lastWeapon = weapon;
     },
     "time.main.tick": () => {
@@ -126,5 +132,11 @@ mp.events.add({
         hash = parseInt(hash);
         var ammo = mp.weapons.getAmmoWeapon(hash);
         mp.events.callRemote("weapons.ammo.remove", sqlId, ammo);
+    },
+    "time.main.tick": () => {
+        // фикс пропажи оружия при достижении 0 патронов
+        if (mp.weapons.hashes.length && mp.players.local.weapon != mp.weapons.hashes[0]) {
+            mp.weapons.setCurrentWeapon(mp.weapons.hashes[0]);
+        }
     },
 });
