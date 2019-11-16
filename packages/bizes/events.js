@@ -30,6 +30,7 @@ module.exports = {
         if (factions.isLeader(player)) {
             if (player.character.factionId) {
                 let biz = bizService.getBizesByFactionId(player.character.factionId);
+                console.log(biz);
                 if (biz) {
                     phone.addApp(player, "factionBiz",bizService.getBizInfoForApp(biz));
                 }
