@@ -56,6 +56,7 @@ mp.events.add('inited', (moduleName) => {
     if (modulesToLoad.length === 0) {
         playersJoinPool.forEach(player => {
             if (player == null) return;
+            console.log('init');
             player.call('init', [activeClientModules]);
         });
     }
@@ -96,7 +97,9 @@ db.connect(function() {
 });
 
 mp.events.add('player.join', (player) => {
+    console.log('player.join');
     if (modulesToLoad.length !== 0) return playersJoinPool.push(player);
+    console.log('init');
     player.call('init', [activeClientModules]);
 });
 
