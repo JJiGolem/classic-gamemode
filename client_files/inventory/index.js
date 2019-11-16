@@ -247,6 +247,7 @@ mp.inventory = {
             rotation: new mp.Vector3(0, 180, 0),
             visible: false,
             color: [255, 223, 41, 255],
+            dimension: -1
         });
         this.groundItemMarker.ignoreCheckVisible = true;
     },
