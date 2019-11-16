@@ -1336,6 +1336,7 @@ var inventory = new Vue({
             weaponHash = parseInt(weaponHash);
             var item = this.getItemByParams('weaponHash', weaponHash);
             if (!item) return;
+            if (!this.weaponsList.includes(item.itemId)) return;
             this.setItemParam(item, 'ammo', ammo);
         },
         getItemName(item) {

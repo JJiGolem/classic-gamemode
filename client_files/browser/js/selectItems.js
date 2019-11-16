@@ -31,12 +31,12 @@ var selectItems = new Vue({
     computed: {
         descItemName() {
             var item = (this.tempFocus != -1) ? this.items[this.tempFocus] : inventory.equipment[13];
-            if (!item) return null;
+            if (!item || !inventory.getItem(item.sqlId)) return null;
             return inventory.getItemName(item);
         },
         descItemCount() {
             var item = (this.tempFocus != -1) ? this.items[this.tempFocus] : inventory.equipment[13];
-            if (!item) return null;
+            if (!item || !inventory.getItem(item.sqlId)) return null;
 
             var count;
             if (item.params.weaponHash) count = (item.params.ammo != null) ? item.params.ammo + " патронов" : null;
@@ -74,7 +74,7 @@ var selectItems = new Vue({
                 d(`очистить руки`)
             } else {
                 var item = this.items[this.select];
-                if (!item) return;
+                if (!item || !inventory.getItem(item.sqlId)) return;
                 if (inventory.equipment[13] == item) return;
                 inventory.moveItemToBody(item, 13);
             }

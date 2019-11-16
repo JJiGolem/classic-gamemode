@@ -1759,7 +1759,7 @@
                 <circle class="stroke" />
             </g>
             <g class="container" v-for="n in 10" :style="{transform: 'rotate('+ (n + 1) * 36 +'deg)'}">
-                <g v-if="items[n-1] && n != 1"><image :xlink:href="inventory.urlItemImg(items[n-1].itemId)" :style="{transform: 'rotate('+ (n + 1) * -36 +'deg)'}" /></g>
+                <g v-if="items[n-1] && inventory.getItem(items[n-1].sqlId) && n != 1"><image :xlink:href="inventory.urlItemImg(items[n-1].itemId)" :style="{transform: 'rotate('+ (n + 1) * -36 +'deg)'}" /></g>
                 <g v-else-if="n == 1"><image class="hand" xlink:href="img/selectItems/hand.svg" :style="{transform: 'rotate('+ (n + 1) * -36 +'deg)'}" /></g>
             </g>
         </svg>
