@@ -55,6 +55,14 @@ mp.events.add('render', (nametags) => {
                     outline: true
                 });
 
+            if (spriteOn) {
+                if (mp.game.graphics.hasStreamedTextureDictLoaded("mpleaderboard")) {
+                    mp.game.graphics.drawSprite("mpleaderboard", "leaderboard_audio_inactive", x, y, 0.1, 0.1, 0, 255, 255, 255, 100);
+                } else {
+                    loadStreamedTextureDict();
+                }
+            }
+
             if (mp.game.player.isFreeAimingAtEntity(player.handle)) {
                 let y2 = y + 0.042;
 
@@ -94,3 +102,16 @@ mp.events.add({
         showNametags = val;
     },
 });
+
+//temp
+let spriteOn = false;
+mp.events.add('chat.message.get', (type, message) => {
+    if (message == '/spriteon') {
+        spriteOn = true;
+    }
+});
+
+
+function loadStreamedTextureDict() {
+    mp.game.graphics.requestStreamedTextureDict("mpleaderboard", true);
+}
