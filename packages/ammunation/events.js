@@ -3,8 +3,8 @@ let inventory = call('inventory');
 let money = call('money');
 
 module.exports = {
-    "init": () => {
-        ammunation.init();
+    "init": async () => {
+        await ammunation.init();
         inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {

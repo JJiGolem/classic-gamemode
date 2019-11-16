@@ -9,8 +9,8 @@ let money = call('money');
 let houses = call('houses');
 
 module.exports = {
-    "init": () => {
-        vehicles.init();
+    "init": async () => {
+        await vehicles.init();
         inited(__dirname);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
