@@ -60,7 +60,7 @@ mp.events.add('render', (nametags) => {
 
                 if (mp.game.graphics.hasStreamedTextureDictLoaded("mpleaderboard")) {
                     let sprite = player.isVoiceActive ? "leaderboard_audio_3" : "leaderboard_audio_inactive";
-                    mp.game.graphics.drawSprite("mpleaderboard", sprite, x + 0.045, y + 0.014, 0.02, 0.04, 0, 255, 255, 255, 255);
+                    mp.game.graphics.drawSprite("mpleaderboard", sprite, x + 0.045, y + 0.0135, 0.02, 0.04, 0, 255, 255, 255, 255);
                 } else {
                     loadStreamedTextureDict();
                 }
