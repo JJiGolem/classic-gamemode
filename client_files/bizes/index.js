@@ -101,7 +101,7 @@ mp.events.add("biz.sell.check.ans", (nick) => {
 });
 
 mp.events.add("biz.sell", () => {
-    mp.events.callRemote('biz.sell');
+    mp.events.callRemote('biz.sell', idBiz, cost);
 });
 mp.events.add("biz.sell.stop", () => {
     mp.events.callRemote("biz.sell.stop");
