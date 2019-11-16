@@ -30,7 +30,7 @@ module.exports = {
             }
         }
 
-        var ban = await db.Models.Ban.findOne({
+        let ban = await db.Models.Ban.findOne({
             where: {
                 [Op.or]: {
                     ip: player.id,

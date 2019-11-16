@@ -41,14 +41,20 @@ module.exports = {
             let hasLicense = player.character[lic.licType];
             if (!hasLicense) return player.call('rent.vehicle.rent.ans', [2, lic.name]);
         }
+
         let price = parseInt(vehicle.properties.price * rent.rentPriceMultiplier);
         if (player.character.cash < price) return player.call('rent.vehicle.rent.ans', [3]);
 
         money.removeCash(player, price, function (result) {
             if (result) {
                 player.call('rent.vehicle.rent.ans', [1]);
+                if (player.hasRentVehicle) {
+                    let vehicle = mp.vehicles.toArray().find(x => x.rentBy == player.character.id);
+                    if (vehicle) vehicles.respawnVehicle(vehicle);
+                }
                 vehicle.isActiveRent = true;
                 vehicle.rentBy = player.character.id;
+                player.hasRentVehicle = true;
             } else {
                 player.call('rent.vehicle.rent.ans', [4]);
             }
@@ -61,5 +67,12 @@ module.exports = {
             if (!veh.rentBy || veh.rentBy != id) return;
             vehicles.respawnVehicle(veh);
         });
+    },
+    "vehicles.respawn.full": (vehicle) => {
+        if (vehicle.key != 'rent' || !vehicle.isActiveRent) return;
+        let id = vehicle.rentBy;
+        let player = mp.players.getBySqlId(id);
+        if (!player) return;
+        player.hasRentVehicle = false;
     }
 }
