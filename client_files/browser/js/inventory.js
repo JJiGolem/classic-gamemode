@@ -865,6 +865,38 @@ var inventory = new Vue({
             };
             handlers[e.type](e);
         },
+        moveItemToBody(item, bodyIndex) {
+            var oldItem = this.equipment[bodyIndex];
+            var canAdd = true;
+            if (oldItem) {
+                var freeSlot = this.findFreeSlot(oldItem.itemId);
+                if (!freeSlot) {
+                    this.notify(`Нет места для ${this.getItemName(oldItem)}`);
+                    canAdd = false;
+                } else {
+                    this.addItem(oldItem, freeSlot.pocketIndex, freeSlot.index, freeSlot.parentId);
+                    if (freeSlot.pocketIndex == null && freeSlot.placeSqlId == null && this.weaponsList.includes(oldItem.itemId)) mp.trigger(`weapons.ammo.sync`, true);
+                    this.callRemote("item.add", {
+                        sqlId: oldItem.sqlId,
+                        pocketI: freeSlot.pocketIndex,
+                        index: freeSlot.index,
+                        placeSqlId: freeSlot.parentId
+                    });
+                }
+            }
+            if (canAdd) {
+                if (!this.getItem(item.sqlId)) this.setWaitItem(item, true);
+                this.addItem(item, null, bodyIndex);
+                if (this.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
+                this.callRemote("item.add", {
+                    sqlId: item.sqlId,
+
+                    pocketI: null,
+                    index: parseInt(bodyIndex),
+                    placeSqlId: null
+                });
+            }
+        },
         isColumnBusy(place, pocketI, index, item) {
             var cols = (place.sqlId > 0) ? this.equipmentBusyColumns : this.environmentBusyColumns;
             if (!cols[place.sqlId][pocketI]) return false;
@@ -1480,37 +1512,7 @@ var inventory = new Vue({
             var columns = self.itemDrag.accessColumns;
             var item = self.itemDrag.item;
             if (columns.bodyFocus != null) {
-                var oldItem = self.equipment[columns.bodyFocus];
-                var canAdd = true;
-                if (oldItem) {
-                    var freeSlot = self.findFreeSlot(oldItem.itemId);
-                    if (!freeSlot) {
-                        self.notify(`Нет места для ${self.getItemName(oldItem)}`);
-                        canAdd = false;
-                    } else {
-                        self.addItem(oldItem, freeSlot.pocketIndex, freeSlot.index, freeSlot.parentId);
-                        if (freeSlot.pocketIndex == null && freeSlot.placeSqlId == null && self.weaponsList.includes(oldItem.itemId)) mp.trigger(`weapons.ammo.sync`, true);
-                        self.callRemote("item.add", {
-                            sqlId: oldItem.sqlId,
-                            pocketI: freeSlot.pocketIndex,
-                            index: freeSlot.index,
-                            placeSqlId: freeSlot.parentId
-                        });
-                    }
-                }
-
-
-                if (canAdd) {
-                    if (!self.getItem(item.sqlId)) self.setWaitItem(item, true);
-                    self.addItem(item, null, columns.bodyFocus);
-                    if (self.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
-                    self.callRemote("item.add", {
-                        sqlId: item.sqlId,
-                        pocketI: null,
-                        index: parseInt(columns.bodyFocus),
-                        placeSqlId: null
-                    });
-                }
+                self.moveItemToBody(item, columns.bodyFocus);
             } else if (columns.hotkeyFocus) {
                 self.bindHotkey(self.itemDrag.item.sqlId, columns.hotkeyFocus);
             } else if (columns.targetSqlId) {

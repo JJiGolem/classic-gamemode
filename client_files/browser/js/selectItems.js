@@ -65,6 +65,20 @@ var selectItems = new Vue({
             if (!this.sounds[name]) return;
             mp.trigger(`sound`, JSON.stringify(this.sounds[name]));
         },
+        selectHandler() {
+            if (this.select == -1) return;
+            this.playSound("select")
+
+            if (this.select == 0) {
+                if (!inventory.equipment[13]) return;
+                d(`очистить руки`)
+            } else {
+                var item = this.items[this.select];
+                if (!item) return;
+                if (inventory.equipment[13] == item) return;
+                inventory.moveItemToBody(item, 13);
+            }
+        },
     },
     watch: {
         // focus(val) {
@@ -102,10 +116,7 @@ var selectItems = new Vue({
             if (e.keyCode != 9 || !self.show) return;
             // TODO: Обработка выбора self.select id ячейки (жёлтой)
             // debug("selectItems.select: " + self.select);
-            if (self.select != -1) {
-                self.playSound("select")
-            }
-
+            self.selectHandler();
             self.show = false;
         });
         window.addEventListener('mousemove', self.mousemove);
