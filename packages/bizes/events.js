@@ -29,8 +29,9 @@ module.exports = {
     "characterInit.done": (player) => {
         if (factions.isLeader(player)) {
             if (player.character.factionId) {
-                let biz = bizService.getBizesByFactionId(player.character.factionId);
-                console.log(biz);
+                let bizes = bizService.getBizesByFactionId(player.character.factionId);
+                if (bizes.length === 0) return;
+                let biz = bizes.find(biz => bizesModules[biz.info.type].business.isFactionOwner);
                 if (biz) {
                     phone.addApp(player, "factionBiz",bizService.getBizInfoForApp(biz));
                 }
