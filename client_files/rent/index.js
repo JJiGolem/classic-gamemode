@@ -25,6 +25,7 @@ mp.events.add({
         mp.events.call('selectMenu.hide');
     },
     'rent.vehicle.rent.ans': (ans, data) => {
+        if (ans != 1) mp.events.call('rent.rentmenu.close');
         switch (ans) {
             case 0:
                 mp.notify.error('Вы не в т/с аренды');
@@ -38,15 +39,12 @@ mp.events.add({
                 return;
             case 2:
                 mp.notify.error(`Необходима лицензия на ${data}`);
-                mp.events.call('selectMenu.hide');
                 return;
             case 3:
                 mp.notify.error('Недостаточно денег');
-                mp.events.call('selectMenu.hide');
                 return;
             case 4:
                 mp.notify.error('Ошибка финансовой операции');
-                mp.events.call('selectMenu.hide');
                 return;
         }
     }
