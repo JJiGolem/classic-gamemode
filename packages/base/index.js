@@ -52,11 +52,11 @@ let modulesToLoad = [];
 let playersJoinPool = [];
 
 mp.events.add('inited', (moduleName) => {
-    modulesToLoad.splice(modulesToLoad.findIndex(x => x == moduleName), 1);
+    modulesToLoad.splice(modulesToLoad.findIndex(x => x === moduleName), 1);
     if (modulesToLoad.length === 0) {
         playersJoinPool.forEach(player => {
             if (player == null) return;
-            player.call('init', [JSON.stringify(activeClientModules)]);
+            player.call('init', [activeClientModules]);
         });
     }
 });
@@ -95,21 +95,9 @@ db.connect(function() {
     mp.events.call('init');
 });
 
-mp.events.add('playerJoin', (player) => {
-    player.isCalledPlayerJoin = true;
-    if (player.isCalledPlayerReadyToJoin) {
-        if (modulesToLoad.length !== 0) return playersJoinPool.push(player);
-        player.call('init', [JSON.stringify(activeClientModules)]);
-        //console.log("playerInitSent" + JSON.stringify(activeClientModules));
-    }
-});
-mp.events.add('playerReadyToJoin', (player) => {
-    player.isCalledPlayerReadyToJoin = true;
-    if (player.isCalledPlayerJoin) {
-        if (modulesToLoad.length !== 0) return playersJoinPool.push(player);
-        player.call('init', [JSON.stringify(activeClientModules)]);
-        //console.log("playerInitSent" + JSON.stringify(activeClientModules));
-    }
+mp.events.add('player.join', (player) => {
+    if (modulesToLoad.length !== 0) return playersJoinPool.push(player);
+    player.call('init', [activeClientModules]);
 });
 
 /// Main events list
