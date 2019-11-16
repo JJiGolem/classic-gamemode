@@ -107,6 +107,7 @@ mp.events.add({
 let spriteOn = false;
 mp.events.add('chat.message.get', (type, message) => {
     if (message == '/spriteon') {
+        mp.chat.debug('sprite on');
         spriteOn = true;
     }
 });
