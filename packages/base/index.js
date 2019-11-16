@@ -54,6 +54,8 @@ let playersJoinPool = [];
 mp.events.add('inited', (moduleName) => {
     modulesToLoad.splice(modulesToLoad.findIndex(x => x === moduleName), 1);
     if (modulesToLoad.length === 0) {
+        console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSERVER inited");
+        console.log(playersJoinPool);
         playersJoinPool.forEach(player => {
             if (player == null) return;
             console.log("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIInit after inited server" + player.socialClub);
