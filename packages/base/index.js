@@ -45,24 +45,21 @@ global.call = (moduleName) => {
 /// Функция, которая вызвается модулем, для указания того, что он инициализирован
 global.inited = (dirname) => {
     let path = dirname.split("\\");
-    mp.events.call('inited', path[path.length - 1]);
-};
-
-let modulesToLoad = [];
-let playersJoinPool = [];
-
-mp.events.add('inited', (moduleName) => {
+    let moduleName = path[path.length - 1];
     modulesToLoad.splice(modulesToLoad.findIndex(x => x === moduleName), 1);
     if (modulesToLoad.length === 0) {
+        console.log(moduleName);
         console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSERVER inited");
         console.log(playersJoinPool);
         playersJoinPool.forEach(player => {
             if (player == null) return;
-            console.log("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIInit after inited server" + player.socialClub);
             player.call('init', [activeClientModules]);
         });
     }
-});
+};
+
+let modulesToLoad = [];
+let playersJoinPool = [];
 
 // Дебаг
 global.debug = (text) => {
@@ -99,9 +96,7 @@ db.connect(function() {
 });
 
 mp.events.add('player.join', (player) => {
-    console.log(`player.join ${player.socialClub}`);
     if (modulesToLoad.length !== 0) return playersJoinPool.push(player);
-    console.log("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIInit when joined to server server" + player.socialClub);
     player.call('init', [activeClientModules]);
 });
 
