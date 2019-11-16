@@ -20,6 +20,9 @@ function getCorrectName(player) {
 
 mp.events.add('render', (nametags) => {
 
+    // mp.game.graphics.drawSprite("mpleaderboard", "leaderboard_audio_inactive", 0.5, 0.5, 0.025, 0.045, 0, 255, 255, 255, 100);
+    // mp.game.graphics.drawSprite("mpleaderboard", "leaderboard_audio_3", 0.5, 0.6, 0.025, 0.045, 0, 255, 255, 255, 100);
+
     if (!showNametags) return;
 
     const graphics = mp.game.graphics;
@@ -57,7 +60,8 @@ mp.events.add('render', (nametags) => {
 
             if (spriteOn) {
                 if (mp.game.graphics.hasStreamedTextureDictLoaded("mpleaderboard")) {
-                    mp.game.graphics.drawSprite("mpleaderboard", "leaderboard_audio_inactive", x, y, 0.1, 0.1, 0, 255, 255, 255, 100);
+                    let sprite = player.isVoiceActive ? "leaderboard_audio_3" : "leaderboard_audio_inactive";
+                    mp.game.graphics.drawSprite("mpleaderboard", sprite, x + 0.01, y, 0.1, 0.1, 0, 255, 255, 255, 100);
                 } else {
                     loadStreamedTextureDict();
                 }
