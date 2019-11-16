@@ -1278,7 +1278,7 @@ var inventory = new Vue({
             for (var index in items) {
                 var item = items[index];
                 if (item.sqlId == sqlId) {
-                    this.clearHotkeys(item);
+                    // this.clearHotkeys(item);
                     Vue.delete(items, index);
                 }
                 if (item.pockets) {
@@ -1356,7 +1356,8 @@ var inventory = new Vue({
             var item = this.getItem(itemSqlId);
             if (!item) {
                 this.unbindHotkey(key);
-                return this.notify(`Предмет должен находиться в инвентаре`);
+                return;
+                // return this.notify(`Предмет должен находиться в инвентаре`);
             }
             this.clearHotkeys(item);
             Vue.set(this.hotkeys, key, item);
