@@ -875,7 +875,7 @@ var inventory = new Vue({
                     canAdd = false;
                 } else {
                     this.addItem(oldItem, freeSlot.pocketIndex, freeSlot.index, freeSlot.parentId);
-                    if (freeSlot.pocketIndex == null && freeSlot.placeSqlId == null && this.weaponsList.includes(oldItem.itemId)) mp.trigger(`weapons.ammo.sync`, true);
+                    if (this.weaponsList.includes(oldItem.itemId)) mp.trigger(`weapons.ammo.sync`, true);
                     this.callRemote("item.add", {
                         sqlId: oldItem.sqlId,
                         pocketI: freeSlot.pocketIndex,
@@ -1161,7 +1161,7 @@ var inventory = new Vue({
         },
         notify(message) {
             // console.log("[Inventory] " + message);
-            notifications.push(`info`, message, `[Inventory]`);
+            notifications.push(`info`, message, `Инвентарь`);
         },
         callRemote(eventName, values) {
             // console.log(`callRemote: ${eventName}`);
@@ -1485,7 +1485,11 @@ var inventory = new Vue({
             if (e.keyCode > 47 && e.keyCode < 57) {
                 if (!self.enable) return;
                 var num = e.keyCode - 48;
-                self.onUseHotkey(num);
+
+                var item = self.hotkeys[num];
+                if (!item || !self.getItem(item.sqlId)) return;
+                if (item == self.equipment[13]) return;
+                self.moveItemToBody(item, 13);
             }
         });
         window.addEventListener('click', function(e) {
