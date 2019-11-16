@@ -5,9 +5,9 @@ let timer;
 
 module.exports = {
     /// Событие инициализации сервера
-    "init": () => {
+    "init": async () => {
         timer = call("timer");
-        phone.init();
+        await phone.init();
         inited(__dirname);
     },
     'player.joined': player => {

@@ -5,8 +5,8 @@ let notifs = call('notifications');
 let fs = require('fs');
 
 module.exports = {
-    "init": () => {
-        economy.init();
+    "init": async () => {
+        await economy.init();
         inited(__dirname);
     },
     "economy.change": (player, data) => {
