@@ -38,7 +38,7 @@ mp.events.add('browserDomReady', (browser) => {
         mp.events.callRemote('player.joined');
     }
 });
-if (!isJoin) {
+// if (!isJoin) {
     mp.events.callRemote('player.join');
-    isJoin = true;
-}
+//     isJoin = true;
+// }
