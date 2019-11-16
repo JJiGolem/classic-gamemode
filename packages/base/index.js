@@ -6,6 +6,7 @@ let exec = require('exec');
 let childProcess = require('child_process');
 
 const isBuild = mp.config.isBuild;
+let isInited = false;
 
 global.db = require('./db');
 global.ignoreModules = require('./ignoreModules');
@@ -45,21 +46,20 @@ global.call = (moduleName) => {
 /// Функция, которая вызвается модулем, для указания того, что он инициализирован
 global.inited = (dirname) => {
     let path = dirname.split("\\");
-    mp.events.call('inited', path[path.length - 1]);
+    let moduleName = path[path.length - 1];
+    modulesToLoad.splice(modulesToLoad.findIndex(x => x === moduleName), 1);
+    if (modulesToLoad.length === 0) {
+        if (isInited) throw new Error(`Сервер уже был проинициализирован. Попытка повторной инициализации от модуля ${moduleName}`);
+        isInited = true;
+        playersJoinPool.forEach(player => {
+            if (player == null) return;
+            player.call('init', [activeClientModules]);
+        });
+    }
 };
 
 let modulesToLoad = [];
 let playersJoinPool = [];
-
-mp.events.add('inited', (moduleName) => {
-    modulesToLoad.splice(modulesToLoad.findIndex(x => x == moduleName), 1);
-    if (modulesToLoad.length === 0) {
-        playersJoinPool.forEach(player => {
-            if (player == null) return;
-            player.call('init', [JSON.stringify(activeClientModules)]);
-        });
-    }
-});
 
 // Дебаг
 global.debug = (text) => {
@@ -95,21 +95,9 @@ db.connect(function() {
     mp.events.call('init');
 });
 
-mp.events.add('playerJoin', (player) => {
-    player.isCalledPlayerJoin = true;
-    if (player.isCalledPlayerReadyToJoin) {
-        if (modulesToLoad.length !== 0) return playersJoinPool.push(player);
-        player.call('init', [JSON.stringify(activeClientModules)]);
-        //console.log("playerInitSent" + JSON.stringify(activeClientModules));
-    }
-});
-mp.events.add('playerReadyToJoin', (player) => {
-    player.isCalledPlayerReadyToJoin = true;
-    if (player.isCalledPlayerJoin) {
-        if (modulesToLoad.length !== 0) return playersJoinPool.push(player);
-        player.call('init', [JSON.stringify(activeClientModules)]);
-        //console.log("playerInitSent" + JSON.stringify(activeClientModules));
-    }
+mp.events.add('player.join', (player) => {
+    if (modulesToLoad.length !== 0) return playersJoinPool.push(player);
+    player.call('init', [activeClientModules]);
 });
 
 /// Main events list

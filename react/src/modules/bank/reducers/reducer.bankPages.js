@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 import React from 'react'
 import BankMenu from "../components/BankMenu";
 
@@ -24,9 +25,6 @@ export default function bankPages(state = initialState, action) {
             return newState;
 
         case 'CLOSE_BANK':
-            return [];
-
-        case 'SHOW_BANK':
             return [ <BankMenu /> ];
     }
 

@@ -1,8 +1,11 @@
-let clubs = call('clubs');
+let clubs = require('./index.js');
 
 module.exports = {
-    "bizes.done": () => {
+    "init": () => {
         clubs.init();
+    },
+    "bizes.done": () => {
+        clubs.initAfterBiz();
         inited(__dirname);
     },
     "characterInit.done": (player) => {

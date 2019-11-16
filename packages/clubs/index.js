@@ -1,9 +1,9 @@
 "use strict";
 
-let bizes = call('bizes');
-let inventory = call('inventory');
-let money = call('money');
-let notifs = call('notifications');
+let bizes;
+let inventory;
+let money;
+let notifs;
 let walking;
 
 module.exports = {
@@ -291,14 +291,21 @@ module.exports = {
     // Кол-во ед. опьянения, отнимаемых в таймере
     drunkennessDec: 10,
 
-    async init() {
+    init() {
+        bizes = call('bizes');
+        inventory = call('inventory');
+        money = call('money');
+        notifs = call('notifications');
+    },
+
+    async initAfterBiz() {
         walking = call('walking');
         this.loadClubsFromDB();
     },
     async loadClubsFromDB() {
-        var dbClubs = await db.Models.Club.findAll();
+        let dbClubs = await db.Models.Club.findAll();
         dbClubs.forEach(db => {
-            var club = {
+            let club = {
                 db: db,
                 biz: bizes.getBizById(db.bizId)
             };
@@ -310,14 +317,14 @@ module.exports = {
         console.log(`[CLUBS] Клубы загружены (${this.clubs.length} шт.)`);
     },
     createEnterMarker(club) {
-        var pos = new mp.Vector3(club.db.enterX, club.db.enterY, club.db.enterZ - 1);
+        let pos = new mp.Vector3(club.db.enterX, club.db.enterY, club.db.enterZ - 1);
 
-        var enterMarker = mp.markers.new(1, pos, 0.5, {
+        let enterMarker = mp.markers.new(1, pos, 0.5, {
             color: [0, 187, 255, 70]
         });
         enterMarker.isOpen = true;
 
-        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, 0);
+        let colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, 0);
         colshape.onEnter = (player) => {
             if (player.vehicle) return;
             if (player.inClub) {

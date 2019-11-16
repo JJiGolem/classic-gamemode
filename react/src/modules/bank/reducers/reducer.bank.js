@@ -12,6 +12,12 @@ export default function bank(state = initialState, action) {
         case 'LOAD_BANK_INFO':
             return payload;
 
+        case 'UPDATE_BANK':
+            return {
+                ...state,
+                ...payload
+            };
+
         case 'CLOSE_BANK':
             return {};
 
