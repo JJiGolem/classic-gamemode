@@ -96,7 +96,7 @@ db.connect(function() {
 });
 
 mp.events.add('player.join', (player) => {
-    console.log('player.join');
+    console.log(`player.join ${player.socialClub}`);
     if (modulesToLoad.length !== 0) return playersJoinPool.push(player);
     player.call('init', [activeClientModules]);
 });
