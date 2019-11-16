@@ -3,8 +3,6 @@ let util = require('util');
 
 /// Утилиты и функции использующиеся в нескольких модулях
 let utils = {
-
-    init() {},
     /// Отправка писем на почту
     sendMail(to, subject, message) {
         var nodemailer = require("nodemailer");

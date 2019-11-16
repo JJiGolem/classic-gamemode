@@ -7,12 +7,12 @@ let notifications;
 
 let bizService = require('./index.js');
 module.exports = {
-    "init": () => {
+    "init": async () => {
         factions = call("factions");
         prompt = call("prompt");
         money = call("money");
         notifications = call('notifications');
-        bizService.init();
+        await bizService.init();
         inited(__dirname);
     },
     "player.joined": (player) => {

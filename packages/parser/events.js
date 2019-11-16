@@ -4,8 +4,8 @@ let parser = require("./index.js");
 
 module.exports = {
     /// Событие инициализации сервера
-    "init": () => {
-        parser.init();
+    "init": async () => {
+        await parser.init();
         inited(__dirname);
     },
 };

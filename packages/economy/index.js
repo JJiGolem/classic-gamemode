@@ -1,7 +1,7 @@
 "use strict";
 /// Модуль для взаимодействия со всеми экономическими показателями на сервере
 
-let economicIndicators = new Array();
+let economicIndicators = [];
 module.exports = {
     async init() {
         console.log("[ECONOMY] load economic indicators...");
