@@ -714,8 +714,8 @@ var inventory = new Vue({
         },
         onBodyItemEnter(index) {
             if (!this.itemDrag.item) return;
-            var item = this.equipment[index];
-            if (item) return;
+            // var item = this.equipment[index];
+            // if (item) return;
             if (this.bodyList[index] && !this.bodyList[index].includes(this.itemDrag.item.itemId)) return;
             var nextWeight = this.commonWeight + this.itemsInfo[this.itemDrag.item.itemId].weight;
             if (nextWeight > this.maxPlayerWeight && !this.getItem(this.itemDrag.item.sqlId)) return;
@@ -1480,15 +1480,37 @@ var inventory = new Vue({
             var columns = self.itemDrag.accessColumns;
             var item = self.itemDrag.item;
             if (columns.bodyFocus != null) {
-                if (!self.getItem(item.sqlId)) self.setWaitItem(item, true);
-                self.addItem(item, null, columns.bodyFocus);
-                if (self.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
-                self.callRemote("item.add", {
-                    sqlId: item.sqlId,
-                    pocketI: null,
-                    index: parseInt(columns.bodyFocus),
-                    placeSqlId: null
-                });
+                var oldItem = self.equipment[columns.bodyFocus];
+                var canAdd = true;
+                if (oldItem) {
+                    var freeSlot = self.findFreeSlot(oldItem.itemId);
+                    if (!freeSlot) {
+                        self.notify(`Нет места для ${self.getItemName(oldItem)}`);
+                        canAdd = false;
+                    } else {
+                        self.addItem(oldItem, freeSlot.pocketIndex, freeSlot.index, freeSlot.parentId);
+                        if (freeSlot.pocketIndex == null && freeSlot.placeSqlId == null && self.weaponsList.includes(oldItem.itemId)) mp.trigger(`weapons.ammo.sync`, true);
+                        self.callRemote("item.add", {
+                            sqlId: oldItem.sqlId,
+                            pocketI: freeSlot.pocketIndex,
+                            index: freeSlot.index,
+                            placeSqlId: freeSlot.parentId
+                        });
+                    }
+                }
+
+
+                if (canAdd) {
+                    if (!self.getItem(item.sqlId)) self.setWaitItem(item, true);
+                    self.addItem(item, null, columns.bodyFocus);
+                    if (self.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
+                    self.callRemote("item.add", {
+                        sqlId: item.sqlId,
+                        pocketI: null,
+                        index: parseInt(columns.bodyFocus),
+                        placeSqlId: null
+                    });
+                }
             } else if (columns.hotkeyFocus) {
                 self.bindHotkey(self.itemDrag.item.sqlId, columns.hotkeyFocus);
             } else if (columns.targetSqlId) {
