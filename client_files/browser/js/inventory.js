@@ -512,6 +512,10 @@ var inventory = new Vue({
         spin: false,
         // Блокировка слот рук
         handsBlock: false,
+        // Последнее использование хоткея
+        lastUseHotkey: 0,
+        // Анти-флуд использования хоткея
+        waitUseHotkey: 1000,
     },
     computed: {
         commonWeight() {
@@ -1389,9 +1393,13 @@ var inventory = new Vue({
             Vue.delete(this.hotkeys, key);
         },
         onUseHotkey(key) {
+            if (Date.now() - this.lastUseHotkey < this.waitUseHotkey) return;
+
             var item = this.hotkeys[key];
             if (!item || !this.getItem(item.sqlId)) return;
             if (item == this.equipment[13]) return;
+
+            this.lastUseHotkey = Date.now();
             this.moveItemToBody(item, 13);
         },
         onUseHandsItem() {
