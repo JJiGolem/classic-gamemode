@@ -3,8 +3,8 @@ let money = call('money');
 let inventory = call('inventory');
 let clothes = call('clothes');
 module.exports = {
-    "init": () => {
-        clothingShop.init();
+    "init": async () => {
+        await clothingShop.init();
         inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {

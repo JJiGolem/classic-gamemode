@@ -3,8 +3,8 @@ let vehicles = call('vehicles');
 let money = call('money');
 
 module.exports = {
-    "init": () => {
-        fuelstations.init();
+    "init": async () => {
+        await fuelstations.init();
         inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {

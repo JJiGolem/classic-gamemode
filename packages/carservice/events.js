@@ -9,8 +9,8 @@ let DEFAULT_DIAGNOSTICS_PRODUCTS = DEFAULT_PRODUCTS.DIAGNOSTICS;
 let PRODUCT_PRICE = carservice.productPrice;
 
 module.exports = {
-    "init": () => {
-        carservice.init();
+    "init": async () => {
+        await carservice.init();
         inited(__dirname);
     },
     "carservice.jobshape.enter": (player) => {

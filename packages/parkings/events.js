@@ -1,8 +1,8 @@
 var parkings = require('./index.js');
 var vehicles = call('vehicles');
 module.exports = {
-    "init": () => {
-        parkings.init();
+    "init": async () => {
+        await parkings.init();
         inited(__dirname);
     },
     "vehicleDeath": (vehicle) => {

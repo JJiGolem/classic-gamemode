@@ -7,8 +7,8 @@ var inventory = call('inventory');
 let PRICE_CONFIG = carmarket.getPriceConfig();
 
 module.exports = {
-    "init": () => {
-        carmarket.init();
+    "init": async () => {
+        await carmarket.init();
         inited(__dirname);
     },
     "vehicles.loaded": async () => {

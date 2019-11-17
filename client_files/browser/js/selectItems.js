@@ -71,7 +71,7 @@ var selectItems = new Vue({
 
             if (this.select == 0) {
                 if (!inventory.equipment[13]) return;
-                d(`очистить руки`)
+                inventory.clearHands();
             } else {
                 var item = this.items[this.select];
                 if (!item || !inventory.getItem(item.sqlId)) return;

@@ -161,6 +161,8 @@ module.exports = {
                 if (slot) obj = sObj;
             });
         }
+        var cant = inventory.cantAdd(player, obj.item.itemId, inventory.getParamsValues(obj.item));
+        if (cant) return notifs.error(player, cant, header);
         obj.children.forEach((item) => {
             var params = inventory.getParamsValues(item);
             if (params.weaponHash) {
@@ -179,8 +181,6 @@ module.exports = {
             delete obj.denyTake;
             if (e) return notifs.error(player, e, header);
 
-            // TODO: проиграть анимацию
-            // mp.events.call("anim", player, "random@domestic", "pickup_low", 0, 1000);
             notifs.success(player, `Предмет ${inventory.getName(obj.item.itemId)} в инвентаре`, header);
             timer.remove(obj.destroyTimer);
             obj.destroy();

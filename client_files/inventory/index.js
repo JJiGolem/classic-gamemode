@@ -43,6 +43,8 @@ mp.inventory = {
             rot: new mp.Vector3(13, 180, 10)
         },
     },
+    lastActionTime: 0,
+    waitActionTime: 1000,
 
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
@@ -141,7 +143,7 @@ mp.inventory = {
         var pos = mp.players.local.getOffsetFromInWorldCoords(0, 0, 0);
         var itemObj = this.getNearGroundItemObject(pos);
         if (!itemObj) return;
-        // TODO: проверка на аттачи
+        if (this.isFlood()) return;
         mp.events.callRemote("item.ground.take", itemObj.remoteId);
     },
     loadHotkeys() {
@@ -205,6 +207,14 @@ mp.inventory = {
     },
     hands(player, itemId) {
         if (!this.itemsInfo) return;
+
+        if (player.hands) {
+            if (this.itemsInfo[player.hands.itemId].attachInfo.anim) player.clearTasksImmediately();
+            if (mp.objects.exists(player.hands.object)) {
+                player.hands.object.destroy();
+                delete player.hands;
+            }
+        }
         if (itemId) {
             if (player.vehicle) return;
             var info = this.itemsInfo[itemId];
@@ -228,13 +238,6 @@ mp.inventory = {
                 object: object,
                 itemId: itemId
             };
-        } else {
-            if (!player.hands) return;
-            if (this.itemsInfo[player.hands.itemId].attachInfo.anim) player.clearTasksImmediately();
-            if (mp.objects.exists(player.hands.object)) {
-                player.hands.object.destroy();
-                delete player.hands;
-            }
         }
     },
     syncAmmo(weapon) {
@@ -267,6 +270,14 @@ mp.inventory = {
         if (mp.vdist(player.position, pos) > 10) pos = player.getOffsetFromInWorldCoords(0, 0, -1);
         return pos;
     },
+    isFlood() {
+        if (Date.now() - this.lastActionTime < this.waitActionTime) {
+            mp.inventory.lastActionTime = Date.now();
+            return true;
+        }
+        mp.inventory.lastActionTime = Date.now();
+        return false;
+    }
 };
 
 mp.events.add("characterInit.done", () => {
@@ -275,6 +286,18 @@ mp.events.add("characterInit.done", () => {
         mp.inventory.takeItemHandler();
     });
     mp.inventory.initGroundItemMarker();
+});
+
+mp.events.add("click", (x, y, upOrDown, leftOrRight, relativeX, relativeY, worldPosition, hitEntity) => {
+    if (upOrDown != 'down') return;
+    if (mp.game.ui.isPauseMenuActive()) return;
+    if (mp.busy.includes()) return;
+    if (!mp.players.local.getVariable("hands")) return;
+    if (mp.inventory.isFlood()) {
+        mp.callCEFV(`inventory.clearHands()`);
+        return;
+    }
+    mp.callCEFV(`inventory.onUseHandsItem()`);
 });
 
 mp.events.add("inventory.enable", mp.inventory.enable);

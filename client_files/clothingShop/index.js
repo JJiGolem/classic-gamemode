@@ -127,6 +127,9 @@ let rotation = {
     right: false
 }
 
+let debugMode = true;
+let debugText;
+
 mp.events.add({
     'clothingShop.enter': (shopData) => {
         getInputClothes();
@@ -164,12 +167,23 @@ mp.events.add({
         mp.callCEFR('setOpacityChat', [1.0]);
         player.freezePosition(false);
         mp.utils.disablePlayerMoving(false);
+        
+        debugText = null;
 
         mp.events.callRemote('clothingShop.exit');
     },
     'render': () => {
         if (rotation.left) player.setHeading(player.getHeading() - 2);
         if (rotation.right) player.setHeading(player.getHeading() + 2);
+
+        if (debugText) {
+            mp.game.graphics.drawText(debugText, [0.2, 0.5], {
+                font: 0,
+                color: [255, 240, 28, 255],
+                scale: [0.4, 0.4],
+                outline: true
+            });
+        }
     },
     'clothingShop.list.get': (key, list) => {
         clothesList[key] = list;
@@ -192,6 +206,17 @@ mp.events.add({
 
         let sortedList = clothesList[group].filter(x => x.class == shopClass);
         let item = sortedList[index];
+
+        if (debugMode) {
+            debugText = '';
+            if (item.pockets) {
+                debugText += `Карманы ${item.pockets} \n`
+            }
+            if (item.clime) {
+                debugText += `Климат ${item.clime}`
+            }
+        }
+             
         setClothes(group, item, textureIndex);
     },
     'clothingShop.inputClothes.set': setInputClothes,

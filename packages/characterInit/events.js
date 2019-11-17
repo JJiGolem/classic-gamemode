@@ -12,7 +12,7 @@ module.exports = {
     "auth.done": (player) => {
         player.characterInit = {
             created: false,
-        }
+        };
         mp.events.call('characterInit.start', player);
     },
     "characterInit.debug": (player, text) => {

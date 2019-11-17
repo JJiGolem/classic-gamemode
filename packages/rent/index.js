@@ -8,6 +8,8 @@ module.exports = {
     rentPriceMultiplier: 0.05,
     /// Время, спустя которое респавнится т/с
     respawnTime: 20 * 60 * 1000,
+    /// Максимальное количество транспорта, доступное для аренды за раз
+    maxRentVehicles: 2,
     licenseConfig: {
         0: {
             licType: 'carLicense',

@@ -190,7 +190,7 @@ module.exports = {
                 veh.isInGarage = true;
             }
         }
-
+        mp.events.call('vehicles.respawn.full', veh);
         this.spawnVehicle(veh, 1);
         veh.destroy();
     },

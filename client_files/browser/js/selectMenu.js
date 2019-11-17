@@ -7078,6 +7078,9 @@ var selectMenu = new Vue({
                         text: 'Боеприпасы'
                     },
                     {
+                        text: 'Бронежилеты'
+                    },
+                    {
                         text: 'Закрыть'
                     },
                 ],
@@ -7101,6 +7104,9 @@ var selectMenu = new Vue({
                         }
                         if (e.itemName == 'Боеприпасы') {
                             selectMenu.showByName('ammunationAmmo');
+                        }
+                        if (e.itemName == 'Бронежилеты') {
+                            selectMenu.showByName('ammunationArmour');
                         }
                     }
 
@@ -7162,6 +7168,35 @@ var selectMenu = new Vue({
                             selectMenu.loader = true;
                             let values = JSON.stringify([e.itemIndex, parseInt(e.itemValue)]);
                             mp.trigger('callRemote', 'ammunation.ammo.buy', values);
+                        }
+                    }
+                    if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
+                        selectMenu.showByName('ammunationMain');
+                    }
+                }
+            },
+            "ammunationArmour": {
+                name: "ammunationArmour",
+                header: "Бронежилеты",
+                headerImg: "ammunation.png",
+                items: [],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Назад') {
+                            selectMenu.showByName('ammunationMain');
+                        } else {
+                            selectMenu.loader = true;
+                            mp.trigger('callRemote', 'ammunation.armour.buy', e.itemIndex);
                         }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
