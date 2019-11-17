@@ -34,7 +34,19 @@ var notifications = new Vue({
                 self.messages.shift();
                 /*clearTimeout(message.timer);*/
             }, this.showTime);
-        }
+        },
+        info(text, header) {
+            this.push(`info`, text, header);
+        },
+        warning(text, header) {
+            this.push(`warning`, text, header);
+        },
+        success(text, header) {
+            this.push(`success`, text, header);
+        },
+        error(text, header) {
+            this.push(`error`, text, header);
+        },
     }
 });
 

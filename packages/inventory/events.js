@@ -368,13 +368,10 @@ module.exports = {
         var header = `Еда`;
         var eat = inventory.getItem(player, sqlId);
         if (!eat) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
-        if (!inventory.isInHands(eat)) return notifs.error(player, `${inventory.getName(eat.itemId)} не в руках`, header);
+        // if (!inventory.isInHands(eat)) return notifs.error(player, `${inventory.getName(eat.itemId)} не в руках`, header);
 
         var params = inventory.getParamsValues(eat);
         var character = player.character;
-
-        satiety.set(player, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
-        notifs.success(player, `Вы съели ${inventory.getName(eat.itemId)}`, header);
 
         if (!player.vehicle) {
             var time = 7000;
@@ -386,13 +383,22 @@ module.exports = {
                     flag: 49
                 }, time]);
             });
+            var playerId = player.id;
+            var characterId = player.character.id;
             timer.add(() => {
-                inventory.deleteItem(player, eat);
-                inventory.notifyOverhead(player, `Съел '${inventory.getName(eat.itemId)}'`);
+                var rec = mp.players.at(playerId);
+                if (!rec || !rec.character || rec.character.id != characterId) return;
+
+                inventory.deleteItem(rec, eat);
+                inventory.notifyOverhead(rec, `Съел '${inventory.getName(eat.itemId)}'`);
+                satiety.set(rec, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
+                notifs.success(rec, `Вы съели ${inventory.getName(eat.itemId)}`, header);
             }, time);
         } else {
             inventory.deleteItem(player, eat);
             inventory.notifyOverhead(player, `Съел '${inventory.getName(eat.itemId)}'`);
+            satiety.set(player, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
+            notifs.success(player, `Вы съели ${inventory.getName(eat.itemId)}`, header);
         }
     },
     // употребить напиток
@@ -405,10 +411,6 @@ module.exports = {
         var params = inventory.getParamsValues(drink);
         var character = player.character;
 
-        if (params.alcohol) clubs.addDrunkenness(player, params.alcohol);
-        satiety.set(player, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
-        notifs.success(player, `Вы выпили ${inventory.getName(drink.itemId)}`, header);
-
         if (!player.vehicle) {
             var time = 7000;
             mp.players.forEachInRange(player.position, 20, rec => {
@@ -419,13 +421,24 @@ module.exports = {
                     flag: 49
                 }, time]);
             });
+            var playerId = player.id;
+            var characterId = player.character.id;
             timer.add(() => {
-                inventory.deleteItem(player, drink);
-                inventory.notifyOverhead(player, `Выпил '${inventory.getName(drink.itemId)}'`);
+                var rec = mp.players.at(playerId);
+                if (!rec || !rec.character || rec.character.id != characterId) return;
+
+                inventory.deleteItem(rec, drink);
+                inventory.notifyOverhead(rec, `Выпил '${inventory.getName(drink.itemId)}'`);
+                if (params.alcohol) clubs.addDrunkenness(rec, params.alcohol);
+                satiety.set(rec, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
+                notifs.success(rec, `Вы выпили ${inventory.getName(drink.itemId)}`, header);
             }, time);
         } else {
             inventory.deleteItem(player, drink);
             inventory.notifyOverhead(player, `Выпил '${inventory.getName(drink.itemId)}'`);
+            if (params.alcohol) clubs.addDrunkenness(player, params.alcohol);
+            satiety.set(player, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
+            notifs.success(player, `Вы выпили ${inventory.getName(drink.itemId)}`, header);
         }
     },
     // использовать предмет инвентаря

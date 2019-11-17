@@ -1241,6 +1241,8 @@ var inventory = new Vue({
                     };
                 } else if (this.eatList.includes(itemId)) {
                     var handler = (item) => {
+                        if (inventory.equipment[13] != item) return notifications.error(`Еда не в руках`, inventory.getItemName(item));
+                        inventory.deleteItem(item.sqlId);
                         mp.trigger(`callRemote`, `inventory.item.eat.use`, item.sqlId);
                     };
                     menu['Съесть'] = {
@@ -1251,6 +1253,8 @@ var inventory = new Vue({
                     };
                 } else if (this.drinkList.includes(itemId)) {
                     var handler = (item) => {
+                        if (inventory.equipment[13] != item) return notifications.error(`Напиток не в руках`, inventory.getItemName(item));
+                        inventory.deleteItem(item.sqlId);
                         mp.trigger(`callRemote`, `inventory.item.drink.use`, item.sqlId);
                     };
                     menu['Выпить'] = {
