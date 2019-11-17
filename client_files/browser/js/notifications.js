@@ -48,6 +48,18 @@ var notifications = new Vue({
         error(text, header) {
             this.push(`error`, text, header);
         },
+        addCash(text, header) {
+            this.push(`add cash`, text, header);
+        },
+        removeCash(text, header) {
+            this.push(`remove cash`, text, header);
+        },
+        addMoney(text, header) {
+            this.push(`add money`, text, header);
+        },
+        removeMoney(text, header) {
+            this.push(`remove money`, text, header);
+        },
     }
 });
 
