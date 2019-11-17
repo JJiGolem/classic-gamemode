@@ -51,6 +51,7 @@ global.inited = (dirname) => {
     if (modulesToLoad.length === 0) {
         if (isInited) throw new Error(`Сервер уже был проинициализирован. Попытка повторной инициализации от модуля ${moduleName}`);
         isInited = true;
+        console.log("[BASE] Все модули загружены")
         playersJoinPool.forEach(player => {
             if (player == null) return;
             player.call('init', [activeClientModules]);
