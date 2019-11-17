@@ -75,7 +75,7 @@
                 <img v-if="cold" src="img/hud/cold.svg" />
                 <img v-if="heat" src="img/hud/heat.svg" />
             </div>
-            <div class="arrest" v-if="arrestProgress">
+            <div class="arrest" v-if="arrestTime > 0">
                 <div class="wrap">
                     <svg>
                         <circle :style="arrestProgressStyle"/>
