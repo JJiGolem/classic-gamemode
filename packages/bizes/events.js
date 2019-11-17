@@ -27,16 +27,16 @@ module.exports = {
         };
     },
     "characterInit.done": (player) => {
-        // if (factions.isLeader(player)) {
-        //     if (player.character.factionId) {
-        //         let bizes = bizService.getBizesByFactionId(player.character.factionId);
-        //         if (bizes.length === 0) return;
-        //         let biz = bizes.find(biz => bizesModules[biz.info.type].business.isFactionOwner);
-        //         if (biz) {
-        //             phone.addApp(player, "factionBiz",bizService.getBizInfoForApp(biz));
-        //         }
-        //     }
-        // }
+        if (factions.isLeader(player)) {
+            if (player.character.factionId) {
+                let bizes = bizService.getBizesByFactionId(player.character.factionId);
+                if (bizes.length === 0) return;
+                let biz = bizes.find(biz => bizService.bizesModules[biz.info.type].business.isFactionOwner);
+                if (biz) {
+                    phone.addApp(player, "factionBiz",bizService.getBizInfoForApp(biz));
+                }
+            }
+        }
     },
     "player.name.changed": (player) => {
         let biz = bizService.getBizByCharId(player.character.id);
