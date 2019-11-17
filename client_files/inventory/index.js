@@ -207,6 +207,14 @@ mp.inventory = {
     },
     hands(player, itemId) {
         if (!this.itemsInfo) return;
+
+        if (player.hands) {
+            if (this.itemsInfo[player.hands.itemId].attachInfo.anim) player.clearTasksImmediately();
+            if (mp.objects.exists(player.hands.object)) {
+                player.hands.object.destroy();
+                delete player.hands;
+            }
+        }
         if (itemId) {
             if (player.vehicle) return;
             var info = this.itemsInfo[itemId];
@@ -230,13 +238,6 @@ mp.inventory = {
                 object: object,
                 itemId: itemId
             };
-        } else {
-            if (!player.hands) return;
-            if (this.itemsInfo[player.hands.itemId].attachInfo.anim) player.clearTasksImmediately();
-            if (mp.objects.exists(player.hands.object)) {
-                player.hands.object.destroy();
-                delete player.hands;
-            }
         }
     },
     syncAmmo(weapon) {
