@@ -28,14 +28,24 @@ module.exports = {
                 try {
                     if (timers[i].time <= Date.now()) {
                         let handler = timers[i].handler;
+                        let logId = timers[i].isLog ? timers[i].id : null;
                         if (timers[i].interval != null) {
                             timers[i].time += timers[i].interval;
                         }
                         else {
+                            if (logId) {
+                                console.log(`Timer with id ${logId} removed before work`);
+                            }
                             timers.splice(i, 1);
                             i--;
                         }
+                        if (logId) {
+                            console.log(`Timer with id ${logId} start`);
+                        }
                         handler();
+                        if (logId) {
+                            console.log(`Timer with id ${logId} done`);
+                        }
                     }
                 }
                 catch (error) {
@@ -50,18 +60,33 @@ module.exports = {
     /// Добавление нового таймера
     /// handler желательно async
     /// return timer
-    add(handler, time, isInterval = false) {
+    add(handler, time, isInterval = false, isLog = false) {
         if (handler == null) throw new Error("handler is null");
         if (typeof handler != "function") throw new Error("handler is not a function");
         time = parseInt(time);
         if (isNaN(time)) throw new Error("time is NaN");
         if (isInterval == null) throw new Error("isInterval is null");
+        if (time === 0) {
+            if (isLog) console.log(`Timer with timeout = 0 done`);
+            handler();
+            return;
+        }
         let id = gId++;
+        if (isLog) {
+            console.log(`Add timer ${JSON.stringify({
+                id: id,
+                handler: handler,
+                time: Date.now() + time,
+                interval: isInterval ? time : null,
+                isLog: isLog
+            })}`);
+        }
         timers.push({
             id: id,
             handler: handler,
             time: Date.now() + time,
             interval: isInterval ? time : null,
+            isLog: isLog
         });
         return {
             id: id
@@ -72,7 +97,12 @@ module.exports = {
         if (timer == null) return;
         if (timer.id == null) return;
         let index = timers.findIndex(x => x.id === timer.id);
-        index !== -1 && timers.splice(index, 1);
+        if (index !== -1) {
+            if (timers[index].isLog) {
+                console.log(`Remove timer with id ${timers[index].id}`);
+            }
+            timers.splice(index, 1);
+        }
     },
     addInterval(handler, time) {
         return this.add(handler, time, true);
