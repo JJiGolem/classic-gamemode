@@ -137,7 +137,8 @@ var inventory = new Vue({
                         var data = {
                             itemSqlId: item.sqlId,
                         };
-                        mp.trigger(`callRemote`, `inventory.item.adrenalin.use`, JSON.stringify(data));
+                        // mp.trigger(`callRemote`, `inventory.item.adrenalin.use`, JSON.stringify(data));
+                        mp.trigger(`inventory.item.adrenalin.use.callRemote`, JSON.stringify(data));
                     }
                 }
             },
@@ -349,7 +350,8 @@ var inventory = new Vue({
                     var data = {
                         itemSqlId: item.sqlId,
                     };
-                    mp.trigger(`callRemote`, `inventory.item.adrenalin.use`, JSON.stringify(data));
+                    // mp.trigger(`callRemote`, `inventory.item.adrenalin.use`, JSON.stringify(data));
+                    mp.trigger(`inventory.item.adrenalin.use.callRemote`, JSON.stringify(data));
                 }
             },
             27: { // большая аптечка
