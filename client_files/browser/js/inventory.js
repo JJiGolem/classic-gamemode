@@ -274,7 +274,8 @@ var inventory = new Vue({
                         var data = {
                             bagSqlId: item.sqlId
                         };
-                        mp.trigger(`callRemote`, `mafia.bag`, JSON.stringify(data));
+                        // mp.trigger(`callRemote`, `mafia.bag`, JSON.stringify(data));
+                        mp.trigger(`mafia.bag.callRemote`, JSON.stringify(data));
                     }
                 }
             },
@@ -421,7 +422,8 @@ var inventory = new Vue({
                     var data = {
                         bagSqlId: item.sqlId
                     };
-                    mp.trigger(`callRemote`, `mafia.bag`, JSON.stringify(data));
+                    // mp.trigger(`callRemote`, `mafia.bag`, JSON.stringify(data));
+                    mp.trigger(`mafia.bag.callRemote`, JSON.stringify(data));
                 }
             },
             56: { // канистра
