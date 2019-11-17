@@ -56,6 +56,48 @@ module.exports = {
             gameId: 'weapon_compactrifle',
             products: 10
         },
+        8: {
+            name: 'Heavy Sniper',
+            itemId: 107,
+            gameId: 'weapon_compactrifle',
+            products: 10
+        },
+        9: {
+            name: 'Carbine Rifle Mk II',
+            itemId: 99,
+            gameId: 'weapon_compactrifle',
+            products: 10
+        },
+        10: {
+            name: 'Combat PDW',
+            itemId: 88,
+            gameId: 'weapon_combatpdw',
+            products: 10
+        },
+        11: {
+            name: 'Pump Shotgun Mk II',
+            itemId: 91,
+            gameId: 'weapon_pumpshotgun_mk2',
+            products: 10
+        },
+        12: {
+            name: 'Heavy Pistol',
+            itemId: 80,
+            gameId: 'weapon_compactrifle',
+            products: 10
+        },
+        13: {
+            name: 'Advanced Rifle',
+            itemId: 100,
+            gameId: 'weapon_advancedrifle',
+            products: 10
+        },
+        14: {
+            name: 'Assault SMG',
+            itemId: 87,
+            gameId: 'weapon_assaultsmg',
+            products: 10
+        },
     },
     async init() {
         bizes = call('bizes');
