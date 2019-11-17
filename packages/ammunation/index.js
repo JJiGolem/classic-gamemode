@@ -59,13 +59,13 @@ module.exports = {
         8: {
             name: 'Heavy Sniper',
             itemId: 107,
-            gameId: 'weapon_compactrifle',
+            gameId: 'weapon_heavysniper',
             products: 10
         },
         9: {
             name: 'Carbine Rifle Mk II',
             itemId: 99,
-            gameId: 'weapon_compactrifle',
+            gameId: 'weapon_carbinerifle_mk2',
             products: 10
         },
         10: {
@@ -83,7 +83,7 @@ module.exports = {
         12: {
             name: 'Heavy Pistol',
             itemId: 80,
-            gameId: 'weapon_compactrifle',
+            gameId: 'weapon_heavypistol',
             products: 10
         },
         13: {
