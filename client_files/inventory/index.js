@@ -43,8 +43,8 @@ mp.inventory = {
             rot: new mp.Vector3(13, 180, 10)
         },
     },
-    lastUseHandsItem: 0,
-    waitUseHandsItem: 1000,
+    lastActionTime: 0,
+    waitActionTime: 1000,
 
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
@@ -143,7 +143,7 @@ mp.inventory = {
         var pos = mp.players.local.getOffsetFromInWorldCoords(0, 0, 0);
         var itemObj = this.getNearGroundItemObject(pos);
         if (!itemObj) return;
-        // TODO: проверка на аттачи
+        if (this.isFlood()) return;
         mp.events.callRemote("item.ground.take", itemObj.remoteId);
     },
     loadHotkeys() {
@@ -270,6 +270,14 @@ mp.inventory = {
         if (mp.vdist(player.position, pos) > 10) pos = player.getOffsetFromInWorldCoords(0, 0, -1);
         return pos;
     },
+    isFlood() {
+        if (Date.now() - this.lastActionTime < this.waitActionTime) {
+            mp.inventory.lastActionTime = Date.now();
+            return true;
+        }
+        mp.inventory.lastActionTime = Date.now();
+        return false;
+    }
 };
 
 mp.events.add("characterInit.done", () => {
@@ -285,12 +293,10 @@ mp.events.add("click", (x, y, upOrDown, leftOrRight, relativeX, relativeY, world
     if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
     if (!mp.players.local.getVariable("hands")) return;
-    if (Date.now() - mp.inventory.lastUseHandsItem < mp.inventory.waitUseHandsItem) {
+    if (mp.inventory.isFlood()) {
         mp.callCEFV(`inventory.clearHands()`);
-        mp.inventory.lastUseHandsItem = Date.now();
         return;
     }
-    mp.inventory.lastUseHandsItem = Date.now();
     mp.callCEFV(`inventory.onUseHandsItem()`);
 });
 
