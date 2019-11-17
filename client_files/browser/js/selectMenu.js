@@ -9283,7 +9283,11 @@ var selectMenu = new Vue({
                 this.onItemValueChanged();
             } else if (e.keyCode == 13) { // ENTER
                 this.onItemSelected();
-            } else if (e.keyCode == 8) { // BACKSPACE
+            }
+        },
+        onKeyUp(e) {
+            if (!this.show || this.loader) return;
+            if (e.keyCode == 8) { // BACKSPACE
                 this.onBackspacePressed();
             } else if (e.keyCode == 27) { // ESCAPE
                 this.onEscapePressed();
@@ -9490,6 +9494,11 @@ var selectMenu = new Vue({
             if (!self.menu) return;
             if (busy.includes(["inventory", "chat", "terminal", "phone"])) return;
             self.onKeyDown(e);
+        });
+        window.addEventListener('keyup', function(e) {
+            if (!self.menu) return;
+            if (busy.includes(["inventory", "chat", "terminal", "phone"])) return;
+            self.onKeyUp(e);
         });
     }
 });
