@@ -296,11 +296,11 @@ module.exports = {
         inventory = call('inventory');
         money = call('money');
         notifs = call('notifications');
+        walking = call('walking');
     },
 
     async initAfterBiz() {
-        walking = call('walking');
-        this.loadClubsFromDB();
+        await this.loadClubsFromDB();
     },
     async loadClubsFromDB() {
         let dbClubs = await db.Models.Club.findAll();

@@ -1,8 +1,8 @@
 let markers = call('markers');
 
 module.exports = {
-    "init": () => {
-        markers.init();
+    "init": async () => {
+        await markers.init();
         inited(__dirname);
     },
 };

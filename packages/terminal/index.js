@@ -10,10 +10,10 @@ module.exports = {
     commands: {},
 
 
-    init() {
+    async init() {
         admin = call('admin');
         this.commands = admin.getCommands();
-        this.loadCommandsFromDB();
+        await this.loadCommandsFromDB();
     },
     async loadCommandsFromDB() {
         var dbCommands = await db.Models.Command.findAll();

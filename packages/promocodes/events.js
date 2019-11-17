@@ -1,8 +1,8 @@
 let promocodes = call("promocodes");
 
 module.exports = {
-    "init": () => {
-        promocodes.init();
+    "init": async () => {
+        await promocodes.init();
         inited(__dirname);
     },
     "characterInit.done": (player) => {

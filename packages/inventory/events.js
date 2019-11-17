@@ -16,8 +16,8 @@ let timer = call('timer');
 let vehicles = call('vehicles');
 
 module.exports = {
-    "init": () => {
-        inventory.init();
+    "init": async () => {
+        await inventory.init();
         inited(__dirname);
     },
     "auth.done": (player) => {

@@ -4,8 +4,8 @@ module.exports = {
     "init": () => {
         clubs.init();
     },
-    "bizes.done": () => {
-        clubs.initAfterBiz();
+    "bizes.done": async () => {
+        await clubs.initAfterBiz();
         inited(__dirname);
     },
     "characterInit.done": (player) => {
