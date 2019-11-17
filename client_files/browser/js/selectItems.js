@@ -51,6 +51,14 @@ var selectItems = new Vue({
             let vectX = e.pageX - this.centerX;
             let vectY = e.pageY - this.centerY;
 
+            let len = Math.sqrt(vectX*vectX + vectY*vectY);
+            // console.log(len);
+
+            if (len < 0.2 * this.centerY) {
+                this.select = -1;
+                return;
+            }
+
             let delta = 0;
             if (vectY < 0 && vectX < 0) delta = 180;
             else if (vectY > 0 && vectX < 0) delta = 180;
