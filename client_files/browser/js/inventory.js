@@ -461,6 +461,8 @@ var inventory = new Vue({
         equipment: {},
         // Предметы на горячих клавишах
         hotkeys: {},
+        // Фокус мышки на горячей клавише
+        hotkeyFocus: null,
         // Сытость игрока
         satiety: 0,
         // Жажда игрока
@@ -733,6 +735,7 @@ var inventory = new Vue({
         },
         onHotkeyItemEnter(key) {
             // console.log("onHotkeyItemEnter")
+            this.hotkeyFocus = key;
             var item = this.itemDrag.item;
             if (!item || !this.getItem(item.sqlId)) return;
             if (this.hotkeys[key] && this.getItem(this.hotkeys[key].sqlId)) return;
@@ -743,6 +746,7 @@ var inventory = new Vue({
         },
         onHotkeyItemLeave(key) {
             // console.log("onHotkeyItemLeave")
+            this.hotkeyFocus = null;
             var columns = this.itemDrag.accessColumns;
             columns.hotkeyFocus = null;
         },
@@ -786,6 +790,7 @@ var inventory = new Vue({
                         this.itemDrag.div = e.target;
                         this.itemDrag.x = e.screenX - rect.x - e.target.offsetWidth / 2;
                         this.itemDrag.y = e.screenY - rect.y - e.target.offsetHeight / 2;
+                        if (this.hotkeyFocus && this.hotkeys[this.hotkeyFocus] == item) this.itemDrag.accessColumns.hotkeyUnbind = this.hotkeyFocus;
                     }
                 },
             };
@@ -1584,6 +1589,8 @@ var inventory = new Vue({
                 }
             }
 
+            if (columns.hotkeyUnbind) self.unbindHotkey(columns.hotkeyUnbind);
+
             self.itemDrag.item = null;
             self.itemDrag.div = null;
             self.itemNotif.text = null;
@@ -1591,6 +1598,7 @@ var inventory = new Vue({
             columns.pocketI = null;
             columns.columns = {};
             columns.bodyFocus = null;
+            columns.hotkeyUnbind = null;
         });
     }
 });
