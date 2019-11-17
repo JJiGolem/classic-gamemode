@@ -10,6 +10,10 @@ module.exports = {
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;
         if (shape.isClothingShop) {
+
+            let isCuffed = player.getVariable('cuffs') || false;
+            if (isCuffed) return;
+
             player.currentClothingShopId = shape.clothingShopId;
             player.dimension = player.id + 1;
             if (player.hasValidClothesData) {
