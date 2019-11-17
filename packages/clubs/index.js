@@ -309,12 +309,24 @@ module.exports = {
                 db: db,
                 biz: bizes.getBizById(db.bizId)
             };
+            club.blip = this.createBlip(club);
             club.enterMarker = this.createEnterMarker(club);
             club.exitMarker = this.createExitMarker(club);
             this.clubs.push(club);
         });
 
         console.log(`[CLUBS] Клубы загружены (${this.clubs.length} шт.)`);
+    },
+    createBlip(club) {
+        let pos = new mp.Vector3(club.db.enterX, club.db.enterY, club.db.enterZ - 1);
+        let blip = mp.blips.new(club.db.blip, pos, {
+            color: 1,
+            name: club.biz.info.name,
+            shortRange: 10,
+            scale: 1
+        })
+
+        return blip;
     },
     createEnterMarker(club) {
         let pos = new mp.Vector3(club.db.enterX, club.db.enterY, club.db.enterZ - 1);
