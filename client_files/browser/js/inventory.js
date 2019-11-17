@@ -669,6 +669,11 @@ var inventory = new Vue({
                 name: "Алкоголь",
                 value: `${item.params.alcohol}%`
             });
+            if (item.params.sex != null) params.push({
+                name: "Пол",
+                value: (item.params.sex) ? "Мужской" : "Женский"
+            });
+
 
             return params;
         },
