@@ -19,6 +19,7 @@ var notifications = new Vue({
             if (header == 'undefined' || header == 'null') header = null;
             this.messages.push({
                 type: type,
+                img: (type.split(" ").length > 1) ? type.split(" ")[1] : type,
                 header: header,
                 text: text,
                 hash: ++this.count,
@@ -44,4 +45,8 @@ var notifications = new Vue({
 //     notifications.push("success", "зачисление + $500"+notifications.count, "Банк Maze");
 //     notifications.push("info", "зачисление + $500"+notifications.count, "Банк Maze");
 //     notifications.push("warning", "зачисление + $500"+notifications.count, "Банк Maze");
+//     notifications.push("add cash", "зачисление + $500"+notifications.count, "Банк Maze");
+//     notifications.push("add money", "зачисление + $500"+notifications.count, "Банк Maze");
+//     notifications.push("remove cash", "зачисление + $500"+notifications.count, "Банк Maze");
+//     notifications.push("remove money", "зачисление + $500"+notifications.count, "Банк Maze");
 // }

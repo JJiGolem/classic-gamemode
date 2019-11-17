@@ -137,7 +137,7 @@
     <div id="notifications">
         <transition-group name="notif" tag="div">
             <div :class="[notif.type, 'notif-box']" v-for="notif, in messages" :key="notif.hash">
-                <img :src="'img/notifs/' + notif.type + '.svg'" />
+                <img :src="'img/notifs/' + notif.img + '.svg'" />
                 <div v-cloak="v-cloak" class="message">
                     <div class="header" v-if="notif.header">{{ notif.header }}</div>
                     {{ notif.text }}
