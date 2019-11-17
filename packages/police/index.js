@@ -155,6 +155,9 @@ module.exports = {
         delete player.isFollowing;
         player.call(`police.follow.stop`);
         player.call(`inventory.enable`, [false]);
+        player.call(`hud.setData`, [{
+            arrestTimeMax: parseInt(player.character.arrestTime / 1000)
+        }]);
         (!player.health) ? player.spawn(cell) : player.position = cell;
         player.heading = cell.h;
         var playerId = player.id;
@@ -195,6 +198,9 @@ module.exports = {
         delete player.isFollowing;
         player.call(`police.follow.stop`);
         player.call(`inventory.enable`, [false]);
+        player.call(`hud.setData`, [{
+            arrestTimeMax: parseInt(player.character.arrestTime / 1000)
+        }]);
         player.position = cell;
         player.heading = cell.h;
         var playerId = player.id;
@@ -229,6 +235,9 @@ module.exports = {
         timer.remove(player.cellArrestTimer);
         delete player.cellArrestTimer;
         player.call(`inventory.enable`, [true]);
+        player.call(`hud.setData`, [{
+            arrestTimeMax: 0
+        }]);
 
         player.position = this.cellExit;
         player.heading = this.cellExit.h;

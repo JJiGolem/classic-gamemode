@@ -5,8 +5,8 @@ module.exports = {
     // Работы
     jobs: [],
 
-    init() {
-        this.loadJobsFromDB();
+    async init() {
+        await this.loadJobsFromDB();
     },
     async loadJobsFromDB() {
         var dbJobs = await db.Models.Job.findAll();

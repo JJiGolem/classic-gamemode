@@ -3,8 +3,8 @@ let notifs = require('../notifications');
 let money = call('money');
 
 module.exports = {
-    "init": () => {
-        factions.init();
+    "init": async () => {
+        await factions.init();
         inited(__dirname);
     },
     "characterInit.done": (player) => {

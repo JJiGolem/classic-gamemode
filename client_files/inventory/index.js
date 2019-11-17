@@ -3,10 +3,6 @@ mp.inventory = {
     lastArmour: 0,
     itemsInfo: null,
     animData: require('animations/data.js'),
-    ammoSync: {
-        need: false, // нужно ли синхронизировать кол-во патронов оружия в CEF
-        weaponHash: 0,
-    },
     handsBlock: false,
     groundItemMarker: {},
     // Настройка аттачей на спине
@@ -47,6 +43,8 @@ mp.inventory = {
             rot: new mp.Vector3(13, 180, 10)
         },
     },
+    lastActionTime: 0,
+    waitActionTime: 1000,
 
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
@@ -145,7 +143,7 @@ mp.inventory = {
         var pos = mp.players.local.getOffsetFromInWorldCoords(0, 0, 0);
         var itemObj = this.getNearGroundItemObject(pos);
         if (!itemObj) return;
-        // TODO: проверка на аттачи
+        if (this.isFlood()) return;
         mp.events.callRemote("item.ground.take", itemObj.remoteId);
     },
     loadHotkeys() {
@@ -209,6 +207,15 @@ mp.inventory = {
     },
     hands(player, itemId) {
         if (!this.itemsInfo) return;
+
+        player.taskSwapWeapon(true)
+        if (player.hands) {
+            if (this.itemsInfo[player.hands.itemId].attachInfo.anim) player.clearTasksImmediately();
+            if (mp.objects.exists(player.hands.object)) {
+                player.hands.object.destroy();
+                delete player.hands;
+            }
+        }
         if (itemId) {
             if (player.vehicle) return;
             var info = this.itemsInfo[itemId];
@@ -232,29 +239,19 @@ mp.inventory = {
                 object: object,
                 itemId: itemId
             };
-        } else {
-            if (!player.hands) return;
-            if (this.itemsInfo[player.hands.itemId].attachInfo.anim) player.clearTasksImmediately();
-            if (mp.objects.exists(player.hands.object)) {
-                player.hands.object.destroy();
-                delete player.hands;
-            }
         }
     },
-    syncAmmo() {
-        if (!this.ammoSync.need) return;
-        var weapon = this.ammoSync.weaponHash;
+    syncAmmo(weapon) {
         if (!weapon) return;
         var ammo = mp.weapons.getAmmoWeapon(weapon);
         mp.callCEFV(`inventory.setAmmo('${weapon.toString()}', ${ammo})`);
-        this.ammoSync.need = false;
-        this.ammoSync.weaponHash = 0;
     },
     initGroundItemMarker() {
         this.groundItemMarker = mp.markers.new(2, new mp.Vector3(0, 0, 0), 0.1, {
             rotation: new mp.Vector3(0, 180, 0),
             visible: false,
             color: [255, 223, 41, 255],
+            dimension: -1
         });
         this.groundItemMarker.ignoreCheckVisible = true;
     },
@@ -274,6 +271,14 @@ mp.inventory = {
         if (mp.vdist(player.position, pos) > 10) pos = player.getOffsetFromInWorldCoords(0, 0, -1);
         return pos;
     },
+    isFlood() {
+        if (Date.now() - this.lastActionTime < this.waitActionTime) {
+            mp.inventory.lastActionTime = Date.now();
+            return true;
+        }
+        mp.inventory.lastActionTime = Date.now();
+        return false;
+    }
 };
 
 mp.events.add("characterInit.done", () => {
@@ -282,6 +287,18 @@ mp.events.add("characterInit.done", () => {
         mp.inventory.takeItemHandler();
     });
     mp.inventory.initGroundItemMarker();
+});
+
+mp.events.add("click", (x, y, upOrDown, leftOrRight, relativeX, relativeY, worldPosition, hitEntity) => {
+    if (upOrDown != 'down') return;
+    if (mp.game.ui.isPauseMenuActive()) return;
+    if (mp.busy.includes()) return;
+    if (!mp.players.local.getVariable("hands")) return;
+    if (mp.inventory.isFlood()) {
+        mp.callCEFV(`inventory.clearHands()`);
+        return;
+    }
+    mp.callCEFV(`inventory.onUseHandsItem()`);
 });
 
 mp.events.add("inventory.enable", mp.inventory.enable);
@@ -342,6 +359,11 @@ mp.events.add("inventory.ground.put", (sqlId) => {
     mp.events.callRemote(`item.ground.put`, sqlId, JSON.stringify(pos));
 });
 
+mp.events.add("playerEnterVehicle", () => {
+    if (!mp.players.local.getVariable("hands")) return;
+    mp.callCEFV(`inventory.clearHands()`);
+});
+
 mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`enterBoot: #${vehicle.remoteId}`);
     if (!vehicle.getVariable("trunk")) return;
@@ -358,23 +380,11 @@ mp.events.add("playerExitVehicleBoot", (player, vehicle) => {
 });
 
 mp.events.add("playerWeaponShot", (targetPos, targetEntity) => {
-    if (mp.inventory.ammoSync.need) return;
-    mp.inventory.ammoSync.need = true;
-    mp.inventory.ammoSync.weaponHash = mp.weapons.currentWeapon();
+    mp.inventory.syncAmmo(mp.players.local.weapon);
 });
 
-mp.events.add("playerStartFreeAiming", () => {
-    var weapon = mp.weapons.currentWeapon();
-    if (!weapon) return;
-    var ammo = mp.weapons.getAmmoWeapon(weapon);
-    if (ammo != 1) return; // слуай, когда остался 1 патрон, т.к. после его выстрела пушка убирается
-
-    mp.inventory.ammoSync.need = true;
-    mp.inventory.ammoSync.weaponHash = weapon;
-});
-
-mp.events.add("playerEndFreeAiming", () => {
-    mp.inventory.syncAmmo();
+mp.events.add("playerWeaponChanged", (weapon, oldWeapon) => {
+    mp.inventory.syncAmmo(oldWeapon);
 });
 
 mp.events.add("entityStreamIn", (entity) => {

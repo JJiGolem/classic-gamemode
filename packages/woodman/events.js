@@ -2,8 +2,8 @@ let notifs = call('notifications');
 let woodman = call('woodman');
 
 module.exports = {
-    "init": () => {
-        woodman.init();
+    "init": async () => {
+        await woodman.init();
         inited(__dirname);
     },
     "auth.done": (player) => {

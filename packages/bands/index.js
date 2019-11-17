@@ -45,14 +45,14 @@ module.exports = {
     // Повторное использование наркотика
     drugsInterval: [10 * 6000, 20 * 6000, 30 * 6000, 60 * 6000],
 
-    init() {
+    async init() {
         factions = call('factions');
         notifs = call('notifications');
         terminal = call('terminal');
         timer = call('timer');
 
-        this.loadBandZonesFromDB();
         this.createDrugsStashMarker();
+        await this.loadBandZonesFromDB();
     },
 
     async loadBandZonesFromDB() {

@@ -6,8 +6,8 @@ module.exports = {
     // Колшейпы объектов (objId: colshape)
     colshapes: {},
 
-    init() {
-        this.loadWorldObjectsFromDB();
+    async init() {
+        await this.loadWorldObjectsFromDB();
     },
     async loadWorldObjectsFromDB() {
         var objects = await db.Models.WorldObject.findAll();

@@ -61,9 +61,9 @@ module.exports = {
     // Прибавка к цене предмета в % (0.0-1.0) при фулл скилле
     priceBonus: 0.5,
 
-    init() {
-        this.initBinsFromDB();
+    async init() {
         this.createDumpMarker();
+        await this.initBinsFromDB();
     },
     async initBinsFromDB() {
         var list = await db.Models.Bin.findAll();

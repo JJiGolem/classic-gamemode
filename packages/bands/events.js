@@ -5,8 +5,8 @@ let money = call('money');
 let notifs = call('notifications');
 
 module.exports = {
-    "init": () => {
-        bands.init();
+    "init": async () => {
+        await bands.init();
         inited(__dirname);
     },
     "characterInit.done": (player) => {

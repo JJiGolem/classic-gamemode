@@ -19,7 +19,7 @@ var out = {
 };
 
 module.exports = {
-    "init": async () => {
+    "init": () => {
         inited(__dirname);
     },
     "characterInit.done": (player) => {
