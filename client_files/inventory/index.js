@@ -208,6 +208,7 @@ mp.inventory = {
     hands(player, itemId) {
         if (!this.itemsInfo) return;
 
+        player.taskSwapWeapon(true)
         if (player.hands) {
             if (this.itemsInfo[player.hands.itemId].attachInfo.anim) player.clearTasksImmediately();
             if (mp.objects.exists(player.hands.object)) {
