@@ -54,6 +54,8 @@ module.exports = {
                 player.backDimension = player.dimension;
                 player.position = new mp.Vector3(target.position.x + 2, target.position.y, target.position.z);
                 player.dimension = target.dimension;
+                player.house.place = target.house.place;
+                player.house.id = target.house.id;
                 mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} телепортировался к ${target.name}`);
                 player.call('chat.message.push', [`!{#ebd13d}Используйте /goback, чтобы вернуться на исходную позицию`]);
             } catch (err) {
@@ -90,6 +92,8 @@ module.exports = {
                 target.returnDimension = target.dimension;
                 target.position = new mp.Vector3(player.position.x + 2, player.position.y, player.position.z);
                 target.dimension = player.dimension;
+                target.house.place = player.house.place;
+                target.house.id = player.house.id;
                 mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} телепортировал к себе ${target.name}`);
                 player.call('chat.message.push', [`!{#ebd13d}Используйте /return, чтобы вернуть игрока обратно`]);
                 target.call('chat.message.push', [`!{#ffffff}${player.name} телепортировал вас к себе`]);
@@ -212,7 +216,7 @@ module.exports = {
                     mileage: 0,
                     plate: vehicles.generateVehiclePlate(),
                     destroys: 0
-                }
+                };
                 veh = await vehicles.spawnVehicle(veh);
                 veh.spawnedBy = player.name;
                 mp.events.call("admin.notify.all", `!{#e0bc43}[A] ${player.name} создал транспорт ${veh.modelName}`);
