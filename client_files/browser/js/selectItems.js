@@ -115,7 +115,7 @@ var selectItems = new Vue({
 
         window.addEventListener('keydown', function(e) {
             if (e.keyCode != 9 || this.show) return;
-            if (busy.includes() || !inventory.enable) return;
+            if (busy.includes() || !inventory.enable || inventory.handsBlock) return;
 
             self.show = true;
         });

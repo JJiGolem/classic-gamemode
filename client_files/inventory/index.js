@@ -358,6 +358,11 @@ mp.events.add("inventory.ground.put", (sqlId) => {
     mp.events.callRemote(`item.ground.put`, sqlId, JSON.stringify(pos));
 });
 
+mp.events.add("playerEnterVehicle", () => {
+    if (!mp.players.local.getVariable("hands")) return;
+    mp.callCEFV(`inventory.clearHands()`);
+});
+
 mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`enterBoot: #${vehicle.remoteId}`);
     if (!vehicle.getVariable("trunk")) return;
