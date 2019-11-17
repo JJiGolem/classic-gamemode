@@ -10,8 +10,8 @@ mp.utils = {
     /// Возвращает имя улицы
     getStreetName(pos) {
         if (!pos) return null;
-        var getStreet = mp.game.pathfind.getStreetNameAtCoord(pos.x, pos.y, pos.z, 0, 0);
-        var streetName = mp.game.ui.getStreetNameFromHashKey(getStreet["streetName"]);
+        let getStreet = mp.game.pathfind.getStreetNameAtCoord(pos.x, pos.y, pos.z, 0, 0);
+        let streetName = mp.game.ui.getStreetNameFromHashKey(getStreet["streetName"]);
         return streetName;
     },
     /// Возвращает название района
@@ -298,7 +298,7 @@ mp.utils = {
     },
     // Очистить внешний вид игрока
     clearAllView(player, hair) {
-        var gender = (mp.game.joaat("mp_m_freemode_01") == player.model) ? 0 : 1; // 0 - муж, 1 - жен
+        let gender = (mp.game.joaat("mp_m_freemode_01") == player.model) ? 0 : 1; // 0 - муж, 1 - жен
         player.setComponentVariation(7, 0, 0, 0);
         player.setComponentVariation(5, 0, 0, 0);
         player.setComponentVariation(9, 0, 0, 0);

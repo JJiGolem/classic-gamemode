@@ -4,11 +4,11 @@ require("characterInit/characterCreate.js");
 const freemodeCharacters = [mp.game.joaat("mp_m_freemode_01"), mp.game.joaat("mp_f_freemode_01")];
 
 let charNum;
-let charClothes = new Array();
-let charInfos = new Array();
+let charClothes = [];
+let charInfos = [];
 
-let peds = new Array();
-let selectMarkers = new Array();
+let peds = [];
+let selectMarkers = [];
 let currentCharacter = 0;
 
 /// ИЗМЕНЯТЬ ДАННЫЕ НАСТРОЙки ДЛЯ УСТАНОВКИ ПЕДОВ
@@ -85,16 +85,14 @@ mp.events.add("characterInit.done", () => {
     mp.game.ui.displayHud(true);
     mp.utils.disablePlayerMoving(false);
 
-    mp.game.controls.disableControlAction(1, 199, false);    //ESC
-
     mp.utils.cam.destroy();
 
     for (let i = 0; i < selectMarkers.length; i++) {
         selectMarkers[i].destroy();
         peds[i].destroy();
     }
-    selectMarkers = new Array();
-    peds = new Array();
+    selectMarkers = [];
+    peds = [];
 
     // Отключение регенарции здоровья
     mp.game.player.setHealthRechargeMultiplier(0);
