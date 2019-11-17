@@ -865,6 +865,16 @@ var inventory = new Vue({
             };
             handlers[e.type](e);
         },
+        putGroundHandler(item) {
+            // console.log(`выкинуть ${item}`)
+            if (this.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
+            else {
+                var children = this.getChildren(item);
+                var weapon = children.find(x => this.weaponsList.includes(x.itemId));
+                if (weapon) mp.trigger(`weapons.ammo.sync`, true);
+            }
+            mp.trigger(`inventory.ground.put`, item.sqlId);
+        },
         moveItemToBody(item, bodyIndex) {
             var oldItem = this.equipment[bodyIndex];
             var canAdd = true;
@@ -1218,16 +1228,7 @@ var inventory = new Vue({
                     };
                 }
                 menu['Выкинуть'] = {
-                    handler(item) {
-                        // console.log(`выкинуть ${item}`)
-                        if (inventory.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
-                        else {
-                            var children = inventory.getChildren(item);
-                            var weapon = children.find(x => inventory.weaponsList.includes(x.itemId));
-                            if (weapon) mp.trigger(`weapons.ammo.sync`, true);
-                        }
-                        mp.trigger(`inventory.ground.put`, item.sqlId);
-                    }
+                    handler: this.putGroundHandler
                 };
             }
         },
@@ -1531,7 +1532,8 @@ var inventory = new Vue({
                 });
             } else if (columns.binFocus) {
                 self.deleteItem(self.itemDrag.item.sqlId);
-                mp.trigger(`inventory.ground.put`, item.sqlId);
+                // mp.trigger(`inventory.ground.put`, item.sqlId);
+                self.putGroundHandler(item);
                 columns.binFocus = false;
             } else {
                 var index = parseInt(Object.keys(columns.columns)[0]);
