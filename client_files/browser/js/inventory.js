@@ -154,7 +154,8 @@ var inventory = new Vue({
                         var data = {
                             cuffsSqlId: item.sqlId
                         };
-                        mp.trigger(`callRemote`, `police.cuffs`, JSON.stringify(data));
+                        // mp.trigger(`callRemote`, `police.cuffs`, JSON.stringify(data));
+                        mp.trigger(`police.cuffs.callRemote`, JSON.stringify(data));
                     }
                 }
             },
@@ -262,7 +263,8 @@ var inventory = new Vue({
                         var data = {
                             cuffsSqlId: item.sqlId
                         };
-                        mp.trigger(`callRemote`, `mafia.cuffs`, JSON.stringify(data));
+                        // mp.trigger(`callRemote`, `mafia.cuffs`, JSON.stringify(data));
+                        mp.trigger(`mafia.cuffs.callRemote`, JSON.stringify(data));
                     }
                 }
             },
@@ -359,7 +361,8 @@ var inventory = new Vue({
                     var data = {
                         cuffsSqlId: item.sqlId
                     };
-                    mp.trigger(`callRemote`, `police.cuffs`, JSON.stringify(data));
+                    // mp.trigger(`callRemote`, `police.cuffs`, JSON.stringify(data));
+                    mp.trigger(`police.cuffs.callRemote`, JSON.stringify(data));
                 }
             },
             // наркотики
@@ -409,7 +412,8 @@ var inventory = new Vue({
                     var data = {
                         cuffsSqlId: item.sqlId
                     };
-                    mp.trigger(`callRemote`, `mafia.cuffs`, JSON.stringify(data));
+                    // mp.trigger(`callRemote`, `mafia.cuffs`, JSON.stringify(data));
+                    mp.trigger(`mafia.cuffs.callRemote`, JSON.stringify(data));
                 }
             },
             55: { // мешок
