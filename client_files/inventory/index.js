@@ -43,6 +43,8 @@ mp.inventory = {
             rot: new mp.Vector3(13, 180, 10)
         },
     },
+    lastUseHandsItem: 0,
+    waitUseHandsItem: 1000,
 
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
@@ -275,6 +277,20 @@ mp.events.add("characterInit.done", () => {
         mp.inventory.takeItemHandler();
     });
     mp.inventory.initGroundItemMarker();
+});
+
+mp.events.add("click", (x, y, upOrDown, leftOrRight, relativeX, relativeY, worldPosition, hitEntity) => {
+    if (upOrDown != 'down') return;
+    if (mp.game.ui.isPauseMenuActive()) return;
+    if (mp.busy.includes()) return;
+    if (!mp.players.local.getVariable("hands")) return;
+    if (Date.now() - mp.inventory.lastUseHandsItem < mp.inventory.waitUseHandsItem) {
+        mp.callCEFV(`inventory.clearHands()`);
+        mp.inventory.lastUseHandsItem = Date.now();
+        return;
+    }
+    mp.inventory.lastUseHandsItem = Date.now();
+    mp.callCEFV(`inventory.onUseHandsItem()`);
 });
 
 mp.events.add("inventory.enable", mp.inventory.enable);

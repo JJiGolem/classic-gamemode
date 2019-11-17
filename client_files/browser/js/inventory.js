@@ -907,6 +907,25 @@ var inventory = new Vue({
                 });
             }
         },
+        clearHands() {
+            var item = this.equipment[13];
+            if (!item) return;
+
+            var freeSlot = this.findFreeSlot(item.itemId);
+            if (!freeSlot) {
+                this.putGroundHandler(item);
+            } else {
+                this.addItem(item, freeSlot.pocketIndex, freeSlot.index, freeSlot.parentId);
+                if (this.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
+                this.callRemote("item.add", {
+                    sqlId: item.sqlId,
+                    pocketI: freeSlot.pocketIndex,
+                    index: freeSlot.index,
+                    placeSqlId: freeSlot.parentId
+                });
+                this.notify(`Предмет спрятан`);
+            }
+        },
         isColumnBusy(place, pocketI, index, item) {
             var cols = (place.sqlId > 0) ? this.equipmentBusyColumns : this.environmentBusyColumns;
             if (!cols[place.sqlId][pocketI]) return false;
@@ -1370,11 +1389,15 @@ var inventory = new Vue({
             Vue.delete(this.hotkeys, key);
         },
         onUseHotkey(key) {
-            // if (!key) key = 10; // для клавиши '0'
             var item = this.hotkeys[key];
             if (!item || !this.getItem(item.sqlId)) return;
-            if (item.params.weaponHash) return this.notify(`Недоступно для оружия`);
-            if (item != this.equipment[13]) return this.notify(`${this.getItemName(item)} не в руках`);
+            if (item == this.equipment[13]) return;
+            this.moveItemToBody(item, 13);
+        },
+        onUseHandsItem() {
+            var item = this.equipment[13];
+            if (!item) return;
+            if (!this.hotkeysList[item.itemId]) return;
             this.hotkeysList[item.itemId].handler(item);
         },
         clearHotkeys(item) {
@@ -1487,11 +1510,7 @@ var inventory = new Vue({
             if (e.keyCode > 47 && e.keyCode < 57) {
                 if (!self.enable) return;
                 var num = e.keyCode - 48;
-
-                var item = self.hotkeys[num];
-                if (!item || !self.getItem(item.sqlId)) return;
-                if (item == self.equipment[13]) return;
-                self.moveItemToBody(item, 13);
+                self.onUseHotkey(num);
             }
         });
         window.addEventListener('click', function(e) {
