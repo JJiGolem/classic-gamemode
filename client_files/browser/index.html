@@ -1200,7 +1200,7 @@
         <div class="over verification fine" @keypress="enterHandler($event)">
             <div class="header"> Выдача штрафа {{ profileData[currentMenuFocus].name}}</div>
             <div class="title">Введите причину</div>
-            <div class="input"><input placeholder="Введите причину выдачи штрафа..." v-model="causeValue" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
+            <div class="input"><input maxlength="30" placeholder="Введите причину выдачи штрафа..." v-model="causeValue" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
             <div class="title">Введите сумму штрафа</div>
             <div class="input"><input placeholder="Введите сумму..." v-model="amountValue" @keypress="inputCheck($event)" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
             <div class="btns">
@@ -1214,7 +1214,7 @@
         <div class="over verification fine" @keypress="enterHandler($event)">
             <div class="header"> Выдача розыска {{ profileData[currentMenuFocus].name}}</div>
             <div class="title">Введите причину</div>
-            <div class="input"><input placeholder="Введите причину выдачи розыска..." v-model="causeValue" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
+            <div class="input"><input maxlength="30" placeholder="Введите причину выдачи розыска..." v-model="causeValue" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
             <div class="title">Выберите степень опасности</div>
             <div class="stars" @click.self="over(0); setDanger()"><svg
                                 :class="{ fill: overDanger >= n }"
