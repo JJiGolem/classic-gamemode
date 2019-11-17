@@ -43,7 +43,7 @@ module.exports = {
             if (!rec.character) return;
             if (rec.getVariable("afk")) return notifs.error(rec, `PayDay не засчитан`, `ANTI-AFK`);
             var minutes = parseInt((Date.now() - rec.authTime) / 1000 / 60 % 60);
-            // notifs.info(rec, `Минуты: ${rec.character.minutes} + ${minutes}`, `PayDay`)
+            notifs.info(rec, `Вы отыграли ${minutes} минут`, `PayDay`)
             rec.character.minutes += minutes;
             rec.character.law++;
             rec.character.save();
