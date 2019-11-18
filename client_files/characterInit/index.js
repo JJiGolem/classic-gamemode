@@ -234,13 +234,8 @@ let setInfo = function() {
 
 let chooseLeft = function() {
     if (mp.game.ui.isPauseMenuActive()) return;
-    if (currentCharacter > 0) {
-        currentCharacter--;
-    }
-    else {
-        return;
-    }
-
+    if (currentCharacter <= 0) return;
+    currentCharacter--;
     updateMarkers();
     mp.callCEFV(`characterInfo.i = ${currentCharacter};`);
     mp.utils.cam.moveTo(
@@ -255,12 +250,8 @@ let chooseLeft = function() {
 
 let chooseRight = function() {
     if (mp.game.ui.isPauseMenuActive()) return;
-    if (currentCharacter < charNum) {
-        currentCharacter++;
-    }
-    else {
-        return;
-    }
+    if (currentCharacter >= charNum || currentCharacter >= 2) return;
+    currentCharacter++;
     updateMarkers();
     mp.callCEFV(`characterInfo.i = ${currentCharacter};`);
     mp.utils.cam.moveTo(
