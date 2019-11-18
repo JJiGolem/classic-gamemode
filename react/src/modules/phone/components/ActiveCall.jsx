@@ -1,7 +1,8 @@
+/* eslint-disable default-case */
 import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
 
-import {setCall, setCallStatus, startMyCall} from "../actions/action.info";
+import {setCall, setCallStatus, setActiveCall} from "../actions/action.info";
 import {closeAppDisplay} from "../actions/action.apps";
 
 class ActiveCall extends Component {
@@ -24,7 +25,7 @@ class ActiveCall extends Component {
         const { setCall, info, setCallStatus } = this.props;
         setCall(true);
 
-        if(info.callStatus === 0) {
+        if(info.activeCall.callStatus != null && info.activeCall.callStatus === 0) {
             if(!this.state.isStart) {
                 this.setState({time: '00:00'});
                 this.startCall();
@@ -32,29 +33,28 @@ class ActiveCall extends Component {
             }
         }
 
-        /*setTimeout(() => {
-            setCallStatus(0);
-        }, 1500)*/
+        // setTimeout(() => {
+        //     setCallStatus(0);
+        // }, 1500)
+
+        // setTimeout(() => {
+        //     setCallStatus(5);
+        // }, 4500)
     }
 
     componentDidUpdate() {
-        const { info, closeApp } = this.props;
+        const { info, closeApp, setActiveCall } = this.props;
 
-        if(info.callStatus === 1
-            || info.callStatus === 2
-            || info.callStatus === 3
-            || info.callStatus === 4
-            || info.callStatus === 5) {
+        if (info.activeCall.callStatus == null) return;
 
+        if(info.activeCall.callStatus !== 0) {
             if (!this.state.isEnd) {
                 this.setState({isEnd: true});
                 setTimeout(() => {
-                    this.props.closeApp()
+                    setActiveCall(false);
                 }, 1500)
             }
-        }
-
-        if(info.callStatus === 0) {
+        } else {
             if(!this.state.isStart) {
                 this.setState({time: '00:00'});
                 this.startCall();
@@ -66,7 +66,6 @@ class ActiveCall extends Component {
     componentWillUnmount() {
         this.props.setCallStatus(null);
         this.props.setCall(false);
-        this.props.startMyCall(false);
     }
 
     increment() {
@@ -137,7 +136,7 @@ class ActiveCall extends Component {
     endCall(event) {
         event.preventDefault();
 
-        const { setCall, setCallStatus, closeApp } = this.props;
+        const { setCall, setCallStatus, closeApp, setActiveCall } = this.props;
 
         setCall(false);
         setCallStatus(5);
@@ -147,7 +146,7 @@ class ActiveCall extends Component {
         mp.trigger('phone.call.end');
 
         setTimeout(() => {
-            closeApp();
+            setActiveCall(false);
             setCallStatus(null);
         }, 1500);
     }
@@ -166,19 +165,21 @@ class ActiveCall extends Component {
                 return 'Абонент не поднял трубку';
             case 5:
                 return 'Звонок завершен';
+            default:
+                return 'Набор номера';
         }
     }
 
     render() {
 
-        const { number, info } = this.props;
+        const { number, info, isMine } = this.props;
         const { time } = this.state;
 
         return (
             <Fragment>
                 <div className="incoming_call-phone-react">
-                    <div className='number_filed-phone-react'>{ info.isMyCall ? 'Исходящий вызов' : 'Входящий вызов' }</div>
-                    <div className='number_filed-phone-react' style={{ color: 'gray', marginTop: '20%' }}>{ this.convertCallStatus(info.callStatus) }</div>
+                    <div className='number_filed-phone-react'>{ isMine ? 'Исходящий вызов' : 'Входящий вызов' }</div>
+                    <div className='number_filed-phone-react' style={{ color: 'gray', marginTop: '20%' }}>{ this.convertCallStatus(info.activeCall.callStatus) }</div>
 
                     <div style={{ width: '100%', textAlign: 'center', marginTop: '35%', height: '20%' }}>
                         <div className='back_icon_contact-phone-react' style={{ height: '85%', margin: '0' }}>
@@ -220,7 +221,7 @@ const mapDispatchToProps = dispatch => ({
     setCallStatus: status => dispatch(setCallStatus(status)),
     setCall: flag => dispatch(setCall(flag)),
     closeApp: () => dispatch(closeAppDisplay()),
-    startMyCall: flag => dispatch(startMyCall(flag))
+    setActiveCall: (state, number, isMine) => dispatch(setActiveCall(state, number, isMine))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ActiveCall);

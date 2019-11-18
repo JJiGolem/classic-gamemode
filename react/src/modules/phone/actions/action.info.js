@@ -22,6 +22,16 @@ export const deleteContact = (number) => ({
     payload: number
 });
 
+export const setIncomingCall = (state, number) => ({
+    type: 'INCOMING_CALL',
+    payload: { state, number }
+});
+
+export const setActiveCall = (state, number, isMine) => ({
+    type: 'ACTIVE_CALL',
+    payload: { state, number, isMine }
+});
+
 export const setCallStatus = (status) => ({
     type: 'SET_CALL_STATUS',
     payload: status
@@ -29,11 +39,6 @@ export const setCallStatus = (status) => ({
 
 export const setCall = (flag) => ({
     type: 'SET_CALL',
-    payload: flag
-});
-
-export const startMyCall = (flag) => ({
-    type: 'START_MY_CALL',
     payload: flag
 });
 

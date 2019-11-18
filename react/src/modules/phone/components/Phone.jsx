@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 import '../styles/phone.css';
 import MainDisplay from "./MainDisplay";
 import {addAppDisplay, setAppDisplay} from '../actions/action.apps';
+import IncomingCall from './IncomingCall';
+import ActiveCall from './ActiveCall';
+import { setIncomingCall } from '../actions/action.info';
 
 class Phone extends Component {
     constructor(props) {
@@ -11,8 +14,13 @@ class Phone extends Component {
         this.state = {};
     }
 
-    render() {
+    componentDidMount() {
+        // setTimeout(() => {
+        //     this.props.setIncomingCall(true, 88988);
+        // }, 1000);
+    }
 
+    render() {
         const { apps, setApp, info } = this.props;
 
         return (
@@ -22,6 +30,8 @@ class Phone extends Component {
 
                     <div className="display-phone-react">
                         { apps.map((app, index) => <Fragment key={index}>{ app.form }</Fragment>) }
+                        { info.incomingCall && info.incomingCall.state && <IncomingCall number={info.incomingCall.number} /> }
+                        { info.activeCall && info.activeCall.state && <ActiveCall number={info.activeCall.number} isMine={info.activeCall.isMine}/> }
                     </div>
 
                     <div className="panel_home-phone-react">
@@ -43,7 +53,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setApp: app => dispatch(setAppDisplay(app))
+    setApp: app => dispatch(setAppDisplay(app)),
+    setIncomingCall: (state, number) => dispatch(setIncomingCall(state, number))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Phone);

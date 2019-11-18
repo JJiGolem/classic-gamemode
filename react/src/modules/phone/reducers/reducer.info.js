@@ -206,19 +206,34 @@ export default function info(state = initialState, action) {
             return newState;
 
         case 'SET_CALL_STATUS':
-            newState = { ...state };
-            newState.callStatus = payload;
-            return newState;
+            return {
+                ...state,
+                activeCall: {
+                    ...state.activeCall,
+                    callStatus: payload
+                }
+            }
 
         case 'SET_CALL':
-            newState = { ...state };
-            newState.isCall = payload;
-            return newState;
+            return {
+                ...state,
+                isCall: payload
+            }
 
-        case 'START_MY_CALL':
-            newState = { ...state };
-            newState.isMyCall = payload;
-            return newState;
+        case 'INCOMING_CALL':
+            return {
+                ...state,
+                incomingCall: payload
+            }
+
+        case 'ACTIVE_CALL':
+            return {
+                ...state,
+                activeCall: {
+                    ...state.activeCall,
+                    ...payload
+                }
+            }
 
         case 'CHANGE_STATE_HOUSE':
             newState = { ...state };
@@ -285,6 +300,11 @@ export default function info(state = initialState, action) {
                 newState.biz[0].order = null;
             }
 
+            return newState;
+
+        case 'UPDATE_PRODUCTS_BUSINESS':
+            newState = { ...state };
+            newState.biz[0].resources = payload;
             return newState;
 
         case 'SELL_BUSINESS':
