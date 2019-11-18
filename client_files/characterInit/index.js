@@ -36,7 +36,7 @@ let creatorTimer = null;
 let slotsNumber;
 
 
-mp.events.add('characterInit.init', (characters, slots) => {
+mp.events.add('characterInit.init', (characters, accountInfo) => {
     mp.console("На клиенте вызван characterInit.init");
     mp.gui.cursor.show(true, true);
     if (characters != null) {
@@ -62,8 +62,17 @@ mp.events.add('characterInit.init', (characters, slots) => {
         mp.utils.cam.create(camPos[0], camPos[1], camPos[2], camPos[0] + camDist * sinCamRot, camPos[1] + camDist * cosCamRot, camPos[2] + camPosZDelta, 60);
         createPeds();
         setInfo();
-        slotsNumber = slots;
-        mp.callCEFV(`characterInfo.slots = ${slots}`);
+        slotsNumber = accountInfo.slots;
+        mp.callCEFV(`characterInfo.slots = ${accountInfo.slots}`);
+        mp.callCEFV(`characterInfo.coins = ${accountInfo.coins}`);
+        mp.callCEFV(`characterAddSlot.hours = ${accountInfo.timeForSecondSlot}`);
+        if (slotsNumber == 1) {
+            mp.callCEFV(`characterAddSlot.price = ${accountInfo.costSecondSlot}`);
+        }
+        else {
+            mp.callCEFV(`characterAddSlot.price = ${accountInfo.costThirdSlot}`);
+        }
+
     }
     else {
         mp.utils.cam.tpTo(camPos[0] + currentCharacter * pedDist * sinPedRot,
@@ -102,6 +111,21 @@ mp.events.add("characterInit.done", () => {
     mp.utils.requestIpls();
 });
 
+mp.events.add('characterInit.slot.buy', () => {
+    mp.events.callRemote('characterInit.slot.buy');
+});
+mp.events.add('characterInit.slot.buy.ans', (result, slots, coins) => {
+    mp.callCEFV(`characterInfo.slots = ${slots}`);
+    mp.callCEFV(`characterInfo.coins = ${coins}`);
+    if (result === 0) {
+        mp.notify.error("Недостаточно коинов на счете");
+    }
+    if (result === 2) {
+        mp.notify.error("Невозможно иметь более 3 слотов");
+    }
+    mp.callCEFV(`loader.show = false;`);
+});
+
 mp.events.add('characterInit.choose', () => {
     if(isBinding) {
         binding(false);
@@ -109,9 +133,8 @@ mp.events.add('characterInit.choose', () => {
         mp.events.callRemote('characterInit.choose', currentCharacter);
     }
 });
-
 mp.events.add('characterInit.choose.ans', (ans) => {     //0 - не успешно     1 - успешно
-    if (ans == 0) {
+    if (ans === 0) {
         if(!isBinding){
             binding(true);
             isBinding = true;
@@ -130,7 +153,7 @@ mp.events.add('characterInit.chooseLeft', () => {
 
 let createPeds = function() {
     mp.console(`Создаем педов`);
-    if (peds.length != 0) return;
+    if (peds.length !== 0) return;
     creatorTimer = mp.timer.add(async () => {
         for (let i = 0; i < charNum; i++) {
             setCharCustom(i);
@@ -150,7 +173,7 @@ let createPeds = function() {
             {
                 direction: 0,
                 rotation: new mp.Vector3(0, 180, 0),
-                color: (i == currentCharacter) ? [255, 221, 85, 255] : [255, 255, 255, 120],
+                color: (i === currentCharacter) ? [255, 221, 85, 255] : [255, 255, 255, 120],
                 visible: true,
                 dimension: mp.players.local.dimension
             }));
@@ -173,7 +196,7 @@ let updateMarkers = function() {
             0.2, {
             direction: 0,
             rotation: new mp.Vector3(0, 180, 0),
-            color: (i == currentCharacter) ? [255, 221, 85, 255] : [255, 255, 255, 120],
+            color: (i === currentCharacter) ? [255, 221, 85, 255] : [255, 255, 255, 120],
             visible: true,
             dimension: mp.players.local.dimension
         });

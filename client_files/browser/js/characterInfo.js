@@ -129,7 +129,8 @@ var characterAddSlot = new Vue({
     },
     methods: {
         addSlot() {
-            console.log('characterAddSlot.addSlot()'); // TODO: addSlot();
+            loader.show = true;
+            mp.trigger("characterInit.slot.buy");
         }
     }
 

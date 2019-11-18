@@ -19,7 +19,7 @@ mp.events.add("characterInit.camera.head", applyHeadCamera);
 
 function showTorso(state) {
     if (state) {
-        if (charData.gender == 0) {
+        if (charData.gender === 0) {
             localPlayer.setComponentVariation(3, 15, 0, 2);
             localPlayer.setComponentVariation(8, 15, 0, 2);
             localPlayer.setComponentVariation(11, 15, 0, 2);
@@ -32,7 +32,7 @@ function showTorso(state) {
         applyTorsoCamera();
     }
     else {
-        if (charData.gender == 0) {
+        if (charData.gender === 0) {
             localPlayer.setComponentVariation(3, 0, 0, 2);
             localPlayer.setComponentVariation(8, 15, 0, 2);
             localPlayer.setComponentVariation(11, 0, 0, 2);
@@ -48,7 +48,7 @@ function showTorso(state) {
 mp.events.add("characterInit.showTorso", showTorso);
 
 function setDefWear() {
-    if (charData.gender == 0) {
+    if (charData.gender === 0) {
         localPlayer.setComponentVariation(3, 0, 0, 2);
         localPlayer.setComponentVariation(8, 15, 0, 2);
         localPlayer.setComponentVariation(11, 0, 0, 2);
@@ -157,7 +157,7 @@ mp.events.add('characterInit.create.check', (name, surname) => {
 });
 
 mp.events.add('characterInit.create.check.ans', (ans) => {
-    if (ans == 1) {
+    if (ans === 1) {
         mp.callCEFV(`selectMenu.loader = false;`);
         mp.callCEFV(`selectMenu.show = false`);
         mp.events.call('characterInit.create', false);
@@ -212,10 +212,10 @@ mp.events.add('characterInit.create.setGender', gender => {
     setGenderTimer = mp.timer.add(function() {
         try {
             charData.gender = parseInt(gender);
-            if (charData.gender == 0 || charData.gender == 1) {
+            if (charData.gender === 0 || charData.gender === 1) {
                 mp.players.local.model = freemodeCharacters[charData.gender];
             }
-            if (charData.gender == 0) {
+            if (charData.gender === 0) {
                 charData.similarity = 1;
             }
             else {
@@ -353,7 +353,7 @@ const FACE_FETURE_STEP = 0.1;
 //FaceFeatures events
 for (let i = 0; i < Data.faceFeaturesNames.length; i++) {
     const eventName = `characterInit.create.set${Data.faceFeaturesNames[i].replace(' ', '')}`;
-    if ('characterInit.create.setNoseBroken' == eventName) {
+    if ('characterInit.create.setNoseBroken' === eventName) {
         mp.events.add(eventName, value => {
             value = 20 - value;
             value = parseInt(value);
@@ -379,7 +379,7 @@ for (let i = 0; i < Data.faceFeaturesNames.length; i++) {
 //HeadOverlays events
 for (let i = 0; i < Data.headOverlays.length; i++) {
     const eventName = `characterInit.create.set${Data.headOverlays[i].replace(' ', '')}`;
-    mp.events.add(eventName, (value, chest) => {
+    mp.events.add(eventName, (value) => {
         value = parseInt(value);
         const opacityScale = 1.0;
         if (opacityScale >= 0 && opacityScale <= 1 && value >= 0 && value <= Data.headOverlayItems[i].length) {
