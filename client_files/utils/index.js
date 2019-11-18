@@ -72,6 +72,7 @@ mp.utils = {
     },
     // Зыкрытие дверей
     closeDoors() {
+        return;
         mp.game.object.doorControl(631614199, 461.8065, -994.4086, 25.06443, true, 0.0, 0.0, 0.0);
         mp.game.object.doorControl(631614199, 461.8065, -997.6583, 25.06443, true, 0.0, 0.0, 0.0);
         mp.game.object.doorControl(631614199, 461.8065, -1001.302, 25.06443, true, 0.0, 0.0, 0.0);
@@ -342,9 +343,10 @@ mp.utils = {
         return mp.game.invoke('0x9F47B058362C84B5', raycast.entity);
     },
     // Луч от игрок перед собой
-    frontRaycast(player) {
+    frontRaycast(player, draw = false) {
         var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
         var endPos = player.getOffsetFromInWorldCoords(0, 1, 0);
+        if (draw) mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 255, 0, 100);
         return mp.raycasting.testPointToPoint(startPos, endPos);
     },
     // Добавить текст над головой игрока
