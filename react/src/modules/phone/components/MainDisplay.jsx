@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 import {addAppDisplay, setAppDisplay} from '../actions/action.apps';
 import { setCallStatus, setCall } from "../actions/action.info";
@@ -75,7 +75,7 @@ class MainDisplay extends Component {
         return (
             <Fragment>
                 <div className="clock-phone-react">
-                    <div>{time.format('HH:mm')}</div>
+                    <div>{time.tz('Europe/Moscow').format('HH:mm')}</div>
                     <div style={{ fontSize: '.4em' }}>
                         {days[date.getDay()]}, {date.getDate()} {months[date.getMonth()]}
                     </div>
