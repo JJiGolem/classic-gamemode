@@ -208,12 +208,15 @@ export default function info(state = initialState, action) {
         case 'SET_CALL_STATUS':
             return {
                 ...state,
+                incomingCall: {
+                    ...state.incomingCall,
+                    state: false
+                },
                 activeCall: {
                     ...state.activeCall,
                     callStatus: payload
                 }
             }
-
         case 'SET_CALL':
             return {
                 ...state,

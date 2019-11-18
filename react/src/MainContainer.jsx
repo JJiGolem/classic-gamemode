@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable default-case */
 import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
 

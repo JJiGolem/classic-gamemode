@@ -2,11 +2,15 @@
 /// Модуль телефона
 let phone = require("./index.js");
 let timer;
+let bizService;
+let factions;
 
 module.exports = {
     /// Событие инициализации сервера
     "init": async () => {
         timer = call("timer");
+        bizService = call("bizes");
+        factions = call("factions");
         await phone.init();
         inited(__dirname);
     },
@@ -45,6 +49,34 @@ module.exports = {
         phone.loadPhoneOnClient(player);
         mp.events.call(`phoneInit.done`, player);
     },
+    'player.faction.changed': (player) => {
+        if (factions.isLeader(player)) {
+            if (player.character.factionId) {
+                let bizes = bizService.getBizesByFactionId(player.character.factionId);
+                if (bizes.length === 0) return;
+                let biz = bizes.find(biz => bizService.bizesModules[biz.info.type].business.isFactionOwner);
+                if (biz) {
+                    phone.addApp(player, "factionBiz",bizService.getBizInfoForApp(biz));
+                    return;
+                }
+            }
+        }
+        player.call('phone.app.remove', ["factionBiz"]);
+    },
+    'player.factionRank.changed': (player) => {
+        if (factions.isLeader(player)) {
+            if (player.character.factionId) {
+                let bizes = bizService.getBizesByFactionId(player.character.factionId);
+                if (bizes.length === 0) return;
+                let biz = bizes.find(biz => bizService.bizesModules[biz.info.type].business.isFactionOwner);
+                if (biz) {
+                    phone.addApp(player, "factionBiz",bizService.getBizInfoForApp(biz));
+                    return;
+                }
+            }
+        }
+        player.call('phone.app.remove', ["factionBiz"]);
+    },
     /// Покупка телефона
     "phone.buy": async (player) => {
         if (player.phone != null) return;
@@ -71,10 +103,10 @@ module.exports = {
     'phone.call.ask': (player, number) => {
         if (player.phone == null) return;
         if (player.phoneState.talkWithId != null) return player.call('phone.call.start.ans', [2]);
-        if (player.phone.number == number) player.call('phone.call.start.ans', [2]);
+        if (player.phone.number === number) return player.call('phone.call.start.ans', [2]);
         if (!phone.isExists(number)) return player.call('phone.call.start.ans', [1]);
 
-        let calledPlayer = mp.players.toArray().find(x => x.phone != null && x.phone.number == number);
+        let calledPlayer = mp.players.toArray().find(x => x.phone != null && x.phone.number === number);
         if (calledPlayer != null) {
             if (calledPlayer.phoneState.talkWithId != null) {
                 player.call('phone.call.start.ans', [2]);
@@ -102,7 +134,7 @@ module.exports = {
         timer.remove(callerPlayer.phoneState.callTimer);
         callerPlayer.phoneState.callTimer = null;
 
-        if (ans === 1) {
+        if (ans == 1) {
             callerPlayer.call('voiceChat.connect', [player.id, 'phone']);
             player.call('voiceChat.connect', [callerPlayer.id, 'phone']);
 
@@ -110,6 +142,8 @@ module.exports = {
         }
         else {
             callerPlayer.call('phone.call.start.ans', [3]);
+            player.phoneState.talkWithId = null;
+            callerPlayer.phoneState.talkWithId = null;
         }
     },
     /// Окончание звонка с игроком
@@ -124,6 +158,7 @@ module.exports = {
                     playerTalkWith.phoneState.callTimer = null;
                 }
                 playerTalkWith.call('phone.call.end.in', []);
+
             }
             player.call('voiceChat.disconnect', [player.phoneState.talkWithId, 'phone']);
             player.phoneState.talkWithId = null;

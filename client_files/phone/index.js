@@ -89,7 +89,7 @@ mp.events.add('phone.call.in.ans', function (ans) {
 });
 
 mp.events.add("playerDeath", (player) => {
-    if (player.remoteId == mp.players.local.remoteId) {
+    if (player.remoteId === mp.players.local.remoteId) {
         if (mp.busy.includes('phone')) {
             hidePhone();
         }
@@ -155,8 +155,15 @@ let bindButtons = (state) => {
         mp.keys.unbind(0x26, true, showPhone);        // UP ARROW key
         mp.keys.unbind(0x28, true, hidePhone);        // DOWN ARROW key
     }
-}
-
+};
+mp.events.add("phone.show", (state) => {
+    if (state) {
+        showPhone();
+    }
+    else {
+        hidePhone();
+    }
+});
 let showPhone = () => {
     if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
@@ -169,7 +176,7 @@ let showPhone = () => {
     mp.callCEFR('phone.show', [true]);
     playCallAnimation(false);
     playHoldAnimation(true);
-}
+};
 
 let hidePhone = () => {
     if (mp.game.ui.isPauseMenuActive()) return;
@@ -182,7 +189,7 @@ let hidePhone = () => {
     if (!mp.players.local.vehicle) {
         mp.events.callRemote('animations.stop');
     }
-}
+};
 
 function playHoldAnimation(state, timeout) { /// Анимация держания телефона
     if (mp.players.local.vehicle) return;

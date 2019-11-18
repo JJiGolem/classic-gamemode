@@ -15,17 +15,17 @@ let currentCharacter = 0;
 /// Начальная координата камеры
 const camPos = [-222.94, 6584.72, 8];//[1220.15, 195.36, 80.5];//[-1828.8, -870.1, 3.1];
 /// На сколько ниже камера смотрит, чем находится
-const camPosZDelta = -0.6;
+const camPosZDelta = -0.4;
 /// Расстояние от камеры до текущего педа
 const camDist = 2.5;
 /// Расстояние между педами
 const pedDist = 2.5;
 /// Поворот линии педов
-const pedsRotation = 45;
+const pedsRotation = 225;
 /// Поворот педа
-const pedRotation = 330;
+const pedRotation = 120;
 /// Поворот камеры
-const camRotation = 230;
+const camRotation = 70;
 
 const cosCamRot = Math.cos(camRotation * Math.PI/180);
 const sinCamRot = Math.sin(camRotation * Math.PI/180);
