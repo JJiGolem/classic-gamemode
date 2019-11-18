@@ -1,13 +1,23 @@
 "use strict";
 
+let utils = call('utils');
+
 module.exports = {
+    // Двери
+    doors: [],
     // Объекты мира ГТА
     objects: {},
     // Колшейпы объектов (objId: colshape)
     colshapes: {},
 
     async init() {
+        this.loadDoorsFromDB();
         await this.loadWorldObjectsFromDB();
+    },
+    async loadDoorsFromDB() {
+        this.doors = await db.Models.Door.findAll();
+
+        console.log(`[WORLD] Двери загружены (${this.doors.length} шт.)`);
     },
     async loadWorldObjectsFromDB() {
         var objects = await db.Models.WorldObject.findAll();
@@ -106,5 +116,41 @@ module.exports = {
         obj.save();
 
         this.createObjColshape(obj);
+    },
+    setDoorLocked(id, locked) {
+        var door = this.doors.find(x => x.id == id);
+        if (!door) return
+        door.locked = locked;
+        door.save();
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            rec.call(`world.doors.set`, [door.id, door.locked]);
+        });
+    },
+    async createDoor(hash, pos) {
+        var door = await db.Models.Door.create({
+            hash: hash,
+            pos: pos
+        });
+        this.doors.push(door);
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            rec.call(`world.doors.new`, [door]);
+        });
+    },
+    getDoor(hash, pos) {
+        var range = 2;
+        var nearDoor = null;
+        var minDist = Number.MAX_VALUE;
+        for (var i = 0; i < this.doors.length; i++) {
+            var door = this.doors[i];
+            if (door.hash != hash) continue;
+            var distance = utils.vdist(pos, door.pos);
+            if (distance < minDist && distance < range) {
+                nearDoor = door;
+                minDist = distance;
+            }
+        }
+        return nearDoor;
     },
 }
