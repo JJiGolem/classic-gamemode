@@ -196,7 +196,7 @@ let bizUpdateCashBox = async function(id, money) {
     }
     await biz.info.save();
     let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id === biz.info.characterId);
-    player != null && player.call("biz.cashbox.update", [biz.info.cashBox, biz.info.productsCount]);
+    player != null && player.call("biz.app.update", [biz.info.cashBox, biz.info.productsCount]);
 };
 let addProducts = async function(id, count) {
     let biz = getBizById(id);

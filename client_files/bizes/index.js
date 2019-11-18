@@ -41,7 +41,7 @@ mp.events.add("biz.actions", (action) => {
     mp.events.callRemote("biz.actions", action);
 });
 
-mp.events.add("biz.cashbox.update", (cashBox, productsCount) => {
+mp.events.add("biz.app.update", (cashBox, productsCount) => {
     mp.callCEFR("biz.cashbox.update", [cashBox]);
     mp.callCEFR("biz.products.update", [productsCount]);
 });
