@@ -12,11 +12,8 @@ module.exports = {
     "auth.done": (player) => {
         player.characterInit = {
             created: false,
-        }
+        };
         mp.events.call('characterInit.start', player);
-    },
-    "characterInit.debug": (player, text) => {
-        logger.debug(text, "characterInit", player);
     },
     "characterInit.start": async (player) => {
         let charInfos = await characterInit.init(player);
@@ -33,6 +30,7 @@ module.exports = {
             characterInit.applyCharacter(player);
 
             player.call('characterInit.choose.ans', [1]);
+            characterInit.spawn(player);
             mp.events.call('characterInit.done', player);
         } else {
             player.call('characterInit.choose.ans', [1]);
@@ -42,7 +40,6 @@ module.exports = {
     /// Разморозка игрока после выбора персоонажа
     "characterInit.done": (player) => {
         player.call('characterInit.done');
-        characterInit.spawn(player);
         player.authTime = Date.now();
         logger.log(`Авторизовал персонажа (IP: ${player.ip})`, "characterInit", player);
     },

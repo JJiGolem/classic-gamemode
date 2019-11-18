@@ -5,8 +5,8 @@ module.exports = {
     // Работы
     jobs: [],
 
-    init() {
-        this.loadJobsFromDB();
+    async init() {
+        await this.loadJobsFromDB();
     },
     async loadJobsFromDB() {
         var dbJobs = await db.Models.Job.findAll();
@@ -79,7 +79,7 @@ module.exports = {
 
         money.addMoney(player, player.character.pay, (res) => {
             if (!res) return console.log(`[jobs] Ошибка выдачи ЗП для ${player.name}`);
-            notifs.info(player, `Зарплата: $${player.character.pay}`, `Работа`);
+            notifs.info(player, `Получена зарплата`, `Работа`);
             player.character.pay = 0;
             player.character.save();
         }, `Зарплата работ`);

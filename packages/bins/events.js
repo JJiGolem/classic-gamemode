@@ -5,8 +5,8 @@ let money = call('money');
 let notifs = call('notifications');
 
 module.exports = {
-    "init": () => {
-        bins.init();
+    "init": async () => {
+        await bins.init();
         inited(__dirname);
     },
     "bins.trash.take": (player) => {

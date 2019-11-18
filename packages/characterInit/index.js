@@ -69,7 +69,7 @@ module.exports = {
         jobs = call('jobs');
     },
     async init(player) {
-        if (player.character != null) delete player.character;
+        if (player.character != null) player.character = null;
         if (player.characters == null) {
             // var start = Date.now();
             player.characters = await db.Models.Character.findAll({
@@ -129,16 +129,16 @@ module.exports = {
                 character.Appearances.sort((x, y) => {
                     if (x.order > y.order) return 1;
                     if (x.order < y.order) return -1;
-                    if (x.order == y.order) return 0;
+                    if (x.order === y.order) return 0;
                 });
                 character.Features.sort((x, y) => {
                     if (x.order > y.order) return 1;
                     if (x.order < y.order) return -1;
-                    if (x.order == y.order) return 0;
+                    if (x.order === y.order) return 0;
                 });
             });
         }
-        let charInfos = new Array();
+        let charInfos = [];
         for (let i = 0; i < player.characters.length; i++) {
             let house = houses.getHouseByCharId(player.characters[i].id);
             let biz = bizes.getBizByCharId(player.characters[i].id);
@@ -205,7 +205,7 @@ module.exports = {
                 PromocodeReward: {},
             },
             settings: {},
-        }
+        };
         for (let i = 0; i < 20; i++) player.characterInfo.Features.push({
             value: 0.0,
             order: i
@@ -228,7 +228,7 @@ module.exports = {
                 name: fullname
             }
         });
-        if (characters.length != 0) return player.call('characterInit.create.check.ans', [0]);
+        if (characters.length !== 0) return player.call('characterInit.create.check.ans', [0]);
         player.characterInfo = JSON.parse(charData);
         player.characterInfo.name = fullname;
         let pos = this.getSpawn();
@@ -261,6 +261,7 @@ module.exports = {
         this.applyCharacter(player);
         player.characterInit.created = true;
         player.call('characterInit.create.check.ans', [1]);
+        this.spawn(player);
         mp.events.call('characterInit.done', player);
     },
     sendToCreator(player) {
@@ -270,12 +271,12 @@ module.exports = {
     },
     applyCharacter(player) {
         if (player.character != null) {
-            let features = new Array();
+            let features = [];
             player.character.Features.forEach((element) => {
                 features.push(element.value);
             });
             player.setCustomization(
-                player.character.gender == 0,
+                player.character.gender === 0,
 
                 player.character.mother,
                 player.character.father,
@@ -304,12 +305,12 @@ module.exports = {
                 ]);
             }
         } else {
-            let features = new Array();
+            let features = [];
             player.characterInfo.Features.forEach((element) => {
                 features.push(element.value);
             });
             player.setCustomization(
-                player.characterInfo.gender == 0,
+                player.characterInfo.gender === 0,
 
                 player.characterInfo.mother,
                 player.characterInfo.father,
@@ -413,8 +414,8 @@ module.exports = {
             texture: pants[1],
             pockets: '[4,5,10,5,10,5,4,5]',
             clime: '[10,30]',
-            name: (pants[0] == 15 && sex == 1) || (pants[0] == 14 && sex == 0) ? 'Шорты' : 'Брюки'
-        }
+            name: (pants[0] === 15 && sex === 1) || (pants[0] === 14 && sex === 0) ? 'Шорты' : 'Брюки'
+        };
         inventory.addItem(player, PANTS_ID, pantsParams, (e) => {
             //if (e) return notifs.error(player, e);
             if (e) return console.log(e);
@@ -428,7 +429,7 @@ module.exports = {
             texture: shoes[1],
             clime: '[10,30]',
             name: 'Кроссовки'
-        }
+        };
         inventory.addItem(player, SHOES_ID, shoesParams, (e) => {
             //if (e) return notifs.error(player, e);
             if (e) return console.log(e);
@@ -447,7 +448,7 @@ module.exports = {
             pockets: '[5,5,5,5,4,5]',
             clime: '[10,30]',
             name: 'Футболка'
-        }
+        };
         inventory.addItem(player, TOP_ID, topParams, (e) => {
             //if (e) return notifs.error(player, e);
             if (e) return console.log(e);
@@ -458,8 +459,8 @@ module.exports = {
         var settings = player.character.settings;
         var house = houses.getHouseByCharId(player.character.id);
 
-        if (settings.spawn == 1 && !house) settings.spawn = 0;
-        if (settings.spawn == 2 && !player.character.factionId) settings.spawn = 0;
+        if (settings.spawn === 1 && !house) settings.spawn = 0;
+        if (settings.spawn === 2 && !player.character.factionId) settings.spawn = 0;
         switch (settings.spawn) {
             case 0: // улица
                 player.spawn(new mp.Vector3(player.character.x, player.character.y, player.character.z));

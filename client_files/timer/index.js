@@ -77,7 +77,7 @@ mp.timer = {
         if (isNaN(time)) throw new Error("time is NaN");
         if (isInterval == null) throw new Error("isInterval is null");
         if (time === 0) {
-            mp.console(`Timer with timeout = 0 done`);
+            if (isLog) mp.console(`Timer with timeout = 0 done`);
             handler();
             return;
         }

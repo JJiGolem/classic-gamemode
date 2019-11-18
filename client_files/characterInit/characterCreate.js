@@ -123,7 +123,7 @@ let rotateLeft = function() {
     }
     localPlayer.setRotation(0, 0, newHeading, 0, true);
     localPlayer.position = localPlayer.position;
-}
+};
 let rotateRight = function() {
     let newHeading = localPlayer.getHeading() + deltaRot;
     if (newHeading > 360) {
@@ -131,7 +131,7 @@ let rotateRight = function() {
     }
     localPlayer.setRotation(0, 0, newHeading, 0, true);
     localPlayer.position = localPlayer.position;
-}
+};
 
 function binding(active) {
     if (active) {

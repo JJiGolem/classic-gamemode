@@ -3,13 +3,17 @@ let money = call('money');
 let inventory = call('inventory');
 let clothes = call('clothes');
 module.exports = {
-    "init": () => {
-        clothingShop.init();
+    "init": async () => {
+        await clothingShop.init();
         inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;
         if (shape.isClothingShop) {
+
+            let isCuffed = player.getVariable('cuffs') || false;
+            if (isCuffed) return;
+
             player.currentClothingShopId = shape.clothingShopId;
             player.dimension = player.id + 1;
             if (player.hasValidClothesData) {

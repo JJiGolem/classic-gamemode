@@ -1,6 +1,7 @@
 "use strict";
 
 let bizes;
+let factions;
 let inventory;
 let money;
 let notifs;
@@ -293,14 +294,15 @@ module.exports = {
 
     init() {
         bizes = call('bizes');
+        factions = call('factions');
         inventory = call('inventory');
         money = call('money');
         notifs = call('notifications');
+        walking = call('walking');
     },
 
     async initAfterBiz() {
-        walking = call('walking');
-        this.loadClubsFromDB();
+        await this.loadClubsFromDB();
     },
     async loadClubsFromDB() {
         let dbClubs = await db.Models.Club.findAll();
@@ -309,12 +311,24 @@ module.exports = {
                 db: db,
                 biz: bizes.getBizById(db.bizId)
             };
+            club.blip = this.createBlip(club);
             club.enterMarker = this.createEnterMarker(club);
             club.exitMarker = this.createExitMarker(club);
             this.clubs.push(club);
         });
 
         console.log(`[CLUBS] Клубы загружены (${this.clubs.length} шт.)`);
+    },
+    createBlip(club) {
+        let pos = new mp.Vector3(club.db.enterX, club.db.enterY, club.db.enterZ - 1);
+        let blip = mp.blips.new(club.db.blip, pos, {
+            color: 1,
+            name: club.biz.info.name,
+            shortRange: 10,
+            scale: 1
+        })
+
+        return blip;
     },
     createEnterMarker(club) {
         let pos = new mp.Vector3(club.db.enterX, club.db.enterY, club.db.enterZ - 1);
@@ -364,6 +378,7 @@ module.exports = {
                 player.call(`clubs.setCurrentClub`, [{
                     factionId: player.inClub,
                     name: club.biz.info.name,
+                    hasControl: factions.isLeader(player, player.inClub),
                     alcohol: this.alcohol[player.inClub],
                     snacks: this.snacks[player.inClub],
                     smoke: this.smoke[player.inClub],
@@ -460,9 +475,18 @@ module.exports = {
 
         notifs.success(player, `Вы приобрели пачку ${item.params.name}`, header);
     },
-    openClub(factionId, isOpen) {
-        var club = this.clubs.find(x => x.biz.info.factionId == factionId);
+    openClub(player, isOpen) {
+        if (!player.inClub) return notifs.error(player, `Вы не в клубе`);
+        var club = this.clubs.find(x => x.biz.info.factionId == player.inClub);
+        if (!club) return notifs.error(player, `Клуб не найден`);
+        var header = `Управление ${club.biz.info.name}`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!factions.isLeader(player, player.inClub)) return out(`Вы не владелец клуба`);
+
         club.enterMarker.isOpen = isOpen;
+        notifs.success(player, `Клуб ${isOpen? 'открыт' : 'закрыт'}`, header);
     },
     addDrunkenness(player, value) {
         var oldValue = player.drunkenness || 0;

@@ -8,8 +8,8 @@ let routes = call('routes');
 let timer = call('timer');
 
 module.exports = {
-    "init": () => {
-        farms.init();
+    "init": async () => {
+        await farms.init();
         inited(__dirname);
     },
     "farms.buy": (player) => {

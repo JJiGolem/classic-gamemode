@@ -3,8 +3,8 @@ let money = call('money');
 let inventory = call('inventory');
 
 module.exports = {
-    "init": () => {
-        barbershop.init();
+    "init": async () => {
+        await barbershop.init();
         inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {

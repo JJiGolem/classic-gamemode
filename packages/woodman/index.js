@@ -126,9 +126,9 @@ module.exports = {
     // Прибавка к цене предмета в % (0.0-1.0) при фулл скилле
     priceBonus: 0.5,
 
-    init() {
-        this.loadTreesInfoFromDB();
+    async init() {
         this.createStorageMarker();
+        await this.loadTreesInfoFromDB();
     },
     async loadTreesInfoFromDB() {
         this.treesInfo = await db.Models.Tree.findAll();

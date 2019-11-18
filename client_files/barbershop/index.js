@@ -35,6 +35,10 @@ mp.events.add('barbershop.shape', (enter) => {
 mp.keys.bind(0x45, true, () => {
     if (isInBarbershopShape) {
         if (mp.busy.includes()) return;
+
+        let isCuffed = mp.players.local.getVariable('cuffs') || false;
+        if (isCuffed) return;
+
         mp.events.callRemote('barbershop.enter');
     }
 });

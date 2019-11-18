@@ -13,9 +13,9 @@ module.exports = {
     rentPerDayMultiplier: 0.01,
     minFuelPrice: 1,
     maxFuelPrice: 8,
-    init() {
+    async init() {
         bizes = call('bizes');
-        this.loadFuelStationsFromDB();
+        await this.loadFuelStationsFromDB();
     },
     async loadFuelStationsFromDB() {
         dbFuelStations = await db.Models.FuelStation.findAll();

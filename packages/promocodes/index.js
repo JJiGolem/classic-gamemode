@@ -21,9 +21,9 @@ module.exports = {
     // Подарочные промокоды
     giftPromocodes: [],
 
-    init() {
+    async init() {
         this.fillCodes();
-        this.loadGiftPromocodesFromDB();
+        await this.loadGiftPromocodesFromDB();
     },
     async fillCodes() {
         var codes = [];

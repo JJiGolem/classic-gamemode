@@ -22,7 +22,6 @@ mp.events.add('render', () => {
 
 /// Автоподключение клиентских модулей
 mp.events.add('init', (activeModules) => {
-    mp.console("init");
     activeModules.forEach(moduleName => {
         require(moduleName);
     });

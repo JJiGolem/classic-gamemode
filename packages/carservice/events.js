@@ -9,8 +9,8 @@ let DEFAULT_DIAGNOSTICS_PRODUCTS = DEFAULT_PRODUCTS.DIAGNOSTICS;
 let PRODUCT_PRICE = carservice.productPrice;
 
 module.exports = {
-    "init": () => {
-        carservice.init();
+    "init": async () => {
+        await carservice.init();
         inited(__dirname);
     },
     "carservice.jobshape.enter": (player) => {
@@ -143,7 +143,7 @@ module.exports = {
     "carservice.diagnostics.preparation": (player, target) => {
         console.log('preparation');
         if (player.character.job != 1) return;
-        //if (!target.vehicle) return;
+        if (!target.vehicle) return console.log('[CARSERVICE | DEBUG] У цели не было автомобиля (events: 146)');
         let vehId = target.vehicle.id;
         player.repairTargetVehicle = target.vehicle;
         target.repairVehicle = target.vehicle;

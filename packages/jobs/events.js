@@ -3,8 +3,8 @@ let jobs = require('./index.js');
 let notifs = require('../notifications');
 
 module.exports = {
-    "init": () => {
-        jobs.init();
+    "init": async () => {
+        await jobs.init();
         inited(__dirname);
     },
     "characterInit.done": (player) => {

@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: null,
             allowNull: true
         },
+        blip: {
+            type: DataTypes.INTEGER(11),
+            allowNull: false
+        },
         enterX: {
             type: DataTypes.FLOAT,
             allowNull: false

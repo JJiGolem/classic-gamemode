@@ -41,8 +41,9 @@ mp.events.add("biz.actions", (action) => {
     mp.events.callRemote("biz.actions", action);
 });
 
-mp.events.add("biz.cashbox.update", (number) => {
-    mp.callCEFR("biz.cashbox.update", [number]);
+mp.events.add("biz.app.update", (cashBox, productsCount) => {
+    mp.callCEFR("biz.cashbox.update", [cashBox]);
+    mp.callCEFR("biz.products.update", [productsCount]);
 });
 
 
@@ -101,11 +102,7 @@ mp.events.add("biz.sell.check.ans", (nick) => {
 });
 
 mp.events.add("biz.sell", () => {
-    if (name != null && cost != null) {
-        mp.events.callRemote('biz.sell', name, cost);
-    }
-    name = null;
-    cost = null;
+    mp.events.callRemote('biz.sell', idBiz, cost);
 });
 mp.events.add("biz.sell.stop", () => {
     mp.events.callRemote("biz.sell.stop");

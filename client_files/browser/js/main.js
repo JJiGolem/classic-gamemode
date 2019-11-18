@@ -36,6 +36,10 @@ function debug(text) {
     terminal.debug(text);
 }
 
+function d(text) {
+    notifications.push('info', text, `DEBUG-LOG`);
+}
+
 function convertToMoscowDate(date) {
     var offsetMs = date.getTimezoneOffset() * 60 * 1000;
     var moscowOffsetMs = 3 * 60 * 60 * 1000;

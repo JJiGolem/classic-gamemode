@@ -2,8 +2,8 @@ let terminal = call('terminal');
 let world = call('world');
 
 module.exports = {
-    "init": () => {
-        world.init();
+    "init": async () => {
+        await world.init();
         inited(__dirname);
     },
     "world.objects.add": (player, data) => {
