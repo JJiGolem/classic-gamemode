@@ -69,7 +69,7 @@ module.exports = {
         jobs = call('jobs');
     },
     async init(player) {
-        if (player.character != null) delete player.character;
+        if (player.character != null) player.character = null;
         if (player.characters == null) {
             // var start = Date.now();
             player.characters = await db.Models.Character.findAll({
@@ -129,12 +129,12 @@ module.exports = {
                 character.Appearances.sort((x, y) => {
                     if (x.order > y.order) return 1;
                     if (x.order < y.order) return -1;
-                    if (x.order == y.order) return 0;
+                    if (x.order === y.order) return 0;
                 });
                 character.Features.sort((x, y) => {
                     if (x.order > y.order) return 1;
                     if (x.order < y.order) return -1;
-                    if (x.order == y.order) return 0;
+                    if (x.order === y.order) return 0;
                 });
             });
         }

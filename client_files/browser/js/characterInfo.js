@@ -3,7 +3,7 @@ var characterInfo = new Vue({
     data: {
         show: false,
 
-        coins: 999, // Коинсы в углу
+        coins: 0, // Коинсы в углу
         showAddCoins: false, // Скрыть копку пополнения счёта.
 
         characters: [], // массив с данными о персонажах
