@@ -46,6 +46,8 @@
     padding-right: 1vh;
 }
 
+#notifications .cash.remove,
+#notifications .money.remove,
 #notifications .error {
     background: linear-gradient(to right, #AC3737, #0000);
     /*border-left: 2px solid #c22;*/
@@ -65,6 +67,18 @@
     background: linear-gradient(to right, #AC6F37, #0000);
     /*border-left: 2px solid #c82;*/
 }
+
+#notifications .money.add {
+    background: linear-gradient(to right, #26CE69, #0000);
+    /*border-left: 2px solid #c82;*/
+}
+
+#notifications .cash.add {
+    background: linear-gradient(to right, #E4DD31, #0000);
+    /*border-left: 2px solid #c82;*/
+}
+
+
 
 .notif-enter-active {
   transition: all 0.25s;

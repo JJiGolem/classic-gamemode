@@ -218,6 +218,14 @@ mp.events.add({
         });
         mp.mafia.zonesShow = enable;
     },
+    "mafia.bag.callRemote": (data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+
+        var rec = mp.utils.getNearPlayer(mp.players.local.position);
+        if (!rec) return mp.notify.error(`Рядом никого нет`, `Мешок`);
+        data.recId = rec.remoteId;
+        mp.events.callRemote(`mafia.bag`, data);
+    },
     "mafia.bizWar.showMenu": (data) => {
         mp.mafia.showBizWarMenu(data);
     },
@@ -232,6 +240,14 @@ mp.events.add({
     },
     "mafia.bizWar.killList.log": (target, killer, reason) => {
         mp.mafia.logKill(target, killer, reason);
+    },
+    "mafia.cuffs.callRemote": (data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+
+        var rec = mp.utils.getNearPlayer(mp.players.local.position);
+        if (!rec) return mp.notify.error(`Рядом никого нет`, `Веревка`);
+        data.recId = rec.remoteId;
+        mp.events.callRemote(`mafia.cuffs`, data);
     },
     "mafia.follow.start": (playerId) => {
         mp.mafia.startFollowToPlayer(playerId);
