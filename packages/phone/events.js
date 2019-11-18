@@ -45,6 +45,34 @@ module.exports = {
         phone.loadPhoneOnClient(player);
         mp.events.call(`phoneInit.done`, player);
     },
+    'player.faction.changed': (player) => {
+        if (factions.isLeader(player)) {
+            if (player.character.factionId) {
+                let bizes = bizService.getBizesByFactionId(player.character.factionId);
+                if (bizes.length === 0) return;
+                let biz = bizes.find(biz => bizService.bizesModules[biz.info.type].business.isFactionOwner);
+                if (biz) {
+                    phone.addApp(player, "factionBiz",bizService.getBizInfoForApp(biz));
+                    return;
+                }
+            }
+        }
+        player.call('phone.app.remove', ["factionBiz"]);
+    },
+    'player.factionRank.changed': (player) => {
+        if (factions.isLeader(player)) {
+            if (player.character.factionId) {
+                let bizes = bizService.getBizesByFactionId(player.character.factionId);
+                if (bizes.length === 0) return;
+                let biz = bizes.find(biz => bizService.bizesModules[biz.info.type].business.isFactionOwner);
+                if (biz) {
+                    phone.addApp(player, "factionBiz",bizService.getBizInfoForApp(biz));
+                    return;
+                }
+            }
+        }
+        player.call('phone.app.remove', ["factionBiz"]);
+    },
     /// Покупка телефона
     "phone.buy": async (player) => {
         if (player.phone != null) return;
@@ -71,10 +99,10 @@ module.exports = {
     'phone.call.ask': (player, number) => {
         if (player.phone == null) return;
         if (player.phoneState.talkWithId != null) return player.call('phone.call.start.ans', [2]);
-        if (player.phone.number == number) player.call('phone.call.start.ans', [2]);
+        if (player.phone.number === number) player.call('phone.call.start.ans', [2]);
         if (!phone.isExists(number)) return player.call('phone.call.start.ans', [1]);
 
-        let calledPlayer = mp.players.toArray().find(x => x.phone != null && x.phone.number == number);
+        let calledPlayer = mp.players.toArray().find(x => x.phone != null && x.phone.number === number);
         if (calledPlayer != null) {
             if (calledPlayer.phoneState.talkWithId != null) {
                 player.call('phone.call.start.ans', [2]);
