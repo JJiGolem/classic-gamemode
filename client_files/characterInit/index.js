@@ -38,9 +38,10 @@ let slotsNumber;
 
 mp.events.add('characterInit.init', (characters, accountInfo) => {
     mp.console("На клиенте вызван characterInit.init");
+    mp.players.local.position = new mp.Vector3(camPos[0], camPos[1], camPos[2] + 10);
     mp.gui.cursor.show(true, true);
+    currentCharacter = 0;
     if (characters != null) {
-        currentCharacter = 0;
         charNum = characters.length;
         mp.console(`Персонажей: ${charNum} шт.`);
         for (let i = 0; i < characters.length; i++) {
@@ -49,19 +50,29 @@ mp.events.add('characterInit.init', (characters, accountInfo) => {
         }
         mp.console(`Для них иниц-ны инфо и шмот`);
     }
+    else {
+        for (let i = 0; i < selectMarkers.length; i++) {
+            selectMarkers[i].destroy();
+            peds[i].destroy();
+        }
+        selectMarkers = [];
+        peds = [];
+        mp.callCEFV(`characterInfo.characters = []`);
+        mp.callCEFV(`characterInfo.i = 0`);
+    }
     if (!isBinding){
         binding(true);
         isBinding = true;
     }
     mp.console(`ТПшим игрока по позиции камеры`);
     mp.console(`Позиция: ${JSON.stringify(camPos)}`);
-    mp.players.local.position = new mp.Vector3(camPos[0], camPos[1], camPos[2] + 10);
+
+    createPeds();
+    setInfo();
 
     if (characters != null) {
         mp.console(`Создаем камеру`);
         mp.utils.cam.create(camPos[0], camPos[1], camPos[2], camPos[0] + camDist * sinCamRot, camPos[1] + camDist * cosCamRot, camPos[2] + camPosZDelta, 60);
-        createPeds();
-        setInfo();
         slotsNumber = accountInfo.slots;
         mp.callCEFV(`characterInfo.slots = ${accountInfo.slots}`);
         mp.callCEFV(`characterInfo.coins = ${accountInfo.coins}`);
