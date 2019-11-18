@@ -14,7 +14,7 @@ let inventory = call('inventory');
 const ROD_ID = 5;
 
 module.exports = {
-    async init() {
+    init() {
         this.initFishersFromDB();
         this.initFishesFromDB();
     },

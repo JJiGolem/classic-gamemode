@@ -61,7 +61,8 @@ let isIntervalCreated = false;
 const checkConditions = () => {
     return (
         !mp.busy.includes() && 
-        isHaveRod && 
+        isHaveRod &&
+        localPlayer.hands && localPlayer.hands.itemId == 5 &&
         !isEnter && 
         !localPlayer.isInWater() && 
         !localPlayer.vehicle &&
@@ -166,11 +167,12 @@ mp.events.add('inventory.addItem', (item) => {
     }
 });
 
-mp.events.add('fishing.menu.show', () => {
+mp.events.add('fishing.menu.show', (rodPrice) => {
    if (mp.busy.includes()) return;
 
    mp.busy.add('fishing.menu', false);
    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["fishingMenu"])`);
+   mp.callCEFV(`selectMenu.items[0].values = ["${rodPrice}$"]`);
    mp.callCEFV(`selectMenu.show = true`);
 });
 
