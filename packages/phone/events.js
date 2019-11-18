@@ -2,11 +2,13 @@
 /// Модуль телефона
 let phone = require("./index.js");
 let timer;
+let bizService;
 
 module.exports = {
     /// Событие инициализации сервера
     "init": async () => {
         timer = call("timer");
+        bizService = call("bizes");
         await phone.init();
         inited(__dirname);
     },
