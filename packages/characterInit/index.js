@@ -138,7 +138,7 @@ module.exports = {
                 });
             });
         }
-        let charInfos = new Array();
+        let charInfos = [];
         for (let i = 0; i < player.characters.length; i++) {
             let house = houses.getHouseByCharId(player.characters[i].id);
             let biz = bizes.getBizByCharId(player.characters[i].id);

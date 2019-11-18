@@ -361,4 +361,4 @@ function binding(active) {
         mp.keys.unbind(0x0D, true, choose);
         mp.authDebug.push("- выключили");
     }
-};
+}
