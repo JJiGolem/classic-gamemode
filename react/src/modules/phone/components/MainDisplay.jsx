@@ -75,7 +75,7 @@ class MainDisplay extends Component {
         return (
             <Fragment>
                 <div className="clock-phone-react">
-                    <div>{time.tz('Europe/Moscow').format('HH:mm')}</div>
+                    <div>{time.format('HH:mm')}</div>
                     <div style={{ fontSize: '.4em' }}>
                         {days[date.getDay()]}, {date.getDate()} {months[date.getMonth()]}
                     </div>
