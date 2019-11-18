@@ -143,7 +143,7 @@ module.exports = {
         else {
             callerPlayer.call('phone.call.start.ans', [3]);
             player.phoneState.talkWithId = null;
-            calledPlayer.phoneState.talkWithId = null;
+            callerPlayer.phoneState.talkWithId = null;
         }
     },
     /// Окончание звонка с игроком
