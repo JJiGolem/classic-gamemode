@@ -359,6 +359,15 @@ mp.events.add("inventory.ground.put", (sqlId) => {
     mp.events.callRemote(`item.ground.put`, sqlId, JSON.stringify(pos));
 });
 
+mp.events.add("inventory.item.adrenalin.use.callRemote", (data) => {
+    if (typeof data == 'string') data = JSON.parse(data);
+
+    var rec = mp.utils.getNearPlayer(mp.players.local.position);
+    if (!rec) return mp.notify.error(`Рядом никого нет`, `Адреналин`);
+    data.recId = rec.remoteId;
+    mp.events.callRemote(`inventory.item.adrenalin.use`, data);
+});
+
 mp.events.add("playerEnterVehicle", () => {
     if (!mp.players.local.getVariable("hands")) return;
     mp.callCEFV(`inventory.clearHands()`);
@@ -395,7 +404,7 @@ mp.events.add("entityStreamIn", (entity) => {
 
 mp.events.add("entityStreamOut", (entity) => {
     if (entity.type != "player") return;
-    if (!entity.handsObject) return;
+    if (!entity.hands) return;
     mp.inventory.hands(entity, null);
 });
 

@@ -16,11 +16,13 @@ module.exports = {
     "death.spawn": (player) => {
         if (player.character.arrestTime) {
             player.spawn(player.position);
+            player.dimension = 0;
             player.health = 10;
             return;
         }
         var hospitalPos = factions.getMarker(5).position;
         player.spawn(hospitalPos);
+        player.dimension = 0;
         player.health = 10;
         death.removeKnocked(player);
         mp.events.call(`mapCase.ems.calls.remove`, player, player.character.id);

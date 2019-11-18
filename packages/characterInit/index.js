@@ -57,6 +57,10 @@ const SHOES_ID = 9;
 
 /// Функции модуля выбора и создания персоонажа
 module.exports = {
+    timeForSecondSlot: 100,
+    costSecondSlot: 500,
+    costThirdSlot: 1000,
+
     moduleInit() {
         houses = call('houses');
         bizes = call('bizes');
@@ -69,7 +73,7 @@ module.exports = {
         jobs = call('jobs');
     },
     async init(player) {
-        if (player.character != null) delete player.character;
+        if (player.character != null) player.character = null;
         if (player.characters == null) {
             // var start = Date.now();
             player.characters = await db.Models.Character.findAll({
@@ -129,16 +133,16 @@ module.exports = {
                 character.Appearances.sort((x, y) => {
                     if (x.order > y.order) return 1;
                     if (x.order < y.order) return -1;
-                    if (x.order == y.order) return 0;
+                    if (x.order === y.order) return 0;
                 });
                 character.Features.sort((x, y) => {
                     if (x.order > y.order) return 1;
                     if (x.order < y.order) return -1;
-                    if (x.order == y.order) return 0;
+                    if (x.order === y.order) return 0;
                 });
             });
         }
-        let charInfos = new Array();
+        let charInfos = [];
         for (let i = 0; i < player.characters.length; i++) {
             let house = houses.getHouseByCharId(player.characters[i].id);
             let biz = bizes.getBizByCharId(player.characters[i].id);

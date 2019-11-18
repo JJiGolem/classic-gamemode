@@ -16,6 +16,9 @@ module.exports = {
             drunkennessWaitClear: clubs.drunkennessWaitClear,
         }]);
     },
+    "clubs.control.open": (player, isOpen) => {
+        clubs.openClub(player, isOpen);
+    },
     "clubs.alcohol.buy": (player, index) => {
         clubs.buyAlcohol(player, index);
     },

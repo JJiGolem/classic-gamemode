@@ -356,10 +356,11 @@ module.exports = {
 
         mp.events.call(`player.faction.changed`, player, oldVal);
     },
-    isLeader(player) {
-        if (!player.character.factionId) return false;
+    isLeader(player, factionId = null) {
+        if (!factionId) factionId = player.character.factionId;
+        if (!factionId) return false;
 
-        var maxRank = this.getMaxRank(player.character.factionId);
+        var maxRank = this.getMaxRank(factionId);
         return player.character.factionRank == maxRank.id;
     },
     setBlip(faction, type, color) {
@@ -641,9 +642,10 @@ module.exports = {
             faction.save();
         } else if (this.isBandFaction(faction)) pay += parseInt(bands.bandZonesPrice * bands.getPowerBand(faction.id));
 
+        if (!pay) return;
         money.addMoney(player, pay, (res) => {
             if (!res) return console.log(`[factions] Ошибка выдачи ЗП для ${player.name}`);
-            notifs.info(player, `Зарплата: $${pay}`, faction.name);
+            notifs.info(player, `Получена зарплата`, faction.name);
         }, `Зарплата организации ${faction.name}`);
     },
     fullDeleteItems(owner, faction) {

@@ -78,6 +78,14 @@ mp.events.add({
     "police.cuffs.set": (enable) => {
         mp.police.setCuffs(enable);
     },
+    "police.cuffs.callRemote": (data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+
+        var rec = mp.utils.getNearPlayer(mp.players.local.position);
+        if (!rec) return mp.notify.error(`Рядом никого нет`, `Наручники`);
+        data.recId = rec.remoteId;
+        mp.events.callRemote(`police.cuffs`, data);
+    },
     "police.wanted.set": (val) => {
         mp.police.setWanted(val);
         mp.game.gameplay.setFakeWantedLevel(val);

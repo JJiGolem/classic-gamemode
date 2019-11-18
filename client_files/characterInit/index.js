@@ -36,34 +36,54 @@ let creatorTimer = null;
 let slotsNumber;
 
 
-mp.events.add('characterInit.init', (characters, slots) => {
-    mp.authDebug = ["На клиенте вызван characterInit.init"];
+mp.events.add('characterInit.init', (characters, accountInfo) => {
+    mp.console("На клиенте вызван characterInit.init");
+    mp.players.local.position = new mp.Vector3(camPos[0], camPos[1], camPos[2] + 10);
     mp.gui.cursor.show(true, true);
+    currentCharacter = 0;
     if (characters != null) {
-        currentCharacter = 0;
         charNum = characters.length;
-        mp.authDebug.push(`Персонажей: ${charNum} шт.`);
+        mp.console(`Персонажей: ${charNum} шт.`);
         for (let i = 0; i < characters.length; i++) {
             charInfos.push(characters[i].charInfo);
             charClothes.push(characters[i].charClothes);
         }
-        mp.authDebug.push(`Для них иниц-ны инфо и шмот`);
+        mp.console(`Для них иниц-ны инфо и шмот`);
+    }
+    else {
+        for (let i = 0; i < selectMarkers.length; i++) {
+            selectMarkers[i].destroy();
+            peds[i].destroy();
+        }
+        selectMarkers = [];
+        peds = [];
+        mp.callCEFV(`characterInfo.characters = []`);
+        mp.callCEFV(`characterInfo.i = 0`);
     }
     if (!isBinding){
         binding(true);
         isBinding = true;
     }
-    mp.authDebug.push(`ТПшим игрока по позиции камеры`);
-    mp.authDebug.push(`Позиция: ${JSON.stringify(camPos)}`);
-    mp.players.local.position = new mp.Vector3(camPos[0], camPos[1], camPos[2] + 10);
+    mp.console(`ТПшим игрока по позиции камеры`);
+    mp.console(`Позиция: ${JSON.stringify(camPos)}`);
+
+    createPeds();
+    setInfo();
 
     if (characters != null) {
-        mp.authDebug.push(`Создаем камеру`);
+        mp.console(`Создаем камеру`);
         mp.utils.cam.create(camPos[0], camPos[1], camPos[2], camPos[0] + camDist * sinCamRot, camPos[1] + camDist * cosCamRot, camPos[2] + camPosZDelta, 60);
-        createPeds();
-        setInfo();
-        slotsNumber = slots;
-        mp.callCEFV(`characterInfo.slots = ${slots}`);
+        slotsNumber = accountInfo.slots;
+        mp.callCEFV(`characterInfo.slots = ${accountInfo.slots}`);
+        mp.callCEFV(`characterInfo.coins = ${accountInfo.coins}`);
+        mp.callCEFV(`characterAddSlot.hours = ${accountInfo.timeForSecondSlot}`);
+        if (slotsNumber == 1) {
+            mp.callCEFV(`characterAddSlot.price = ${accountInfo.costSecondSlot}`);
+        }
+        else {
+            mp.callCEFV(`characterAddSlot.price = ${accountInfo.costThirdSlot}`);
+        }
+
     }
     else {
         mp.utils.cam.tpTo(camPos[0] + currentCharacter * pedDist * sinPedRot,
@@ -100,8 +120,21 @@ mp.events.add("characterInit.done", () => {
     mp.utils.closeDoors();
 
     mp.utils.requestIpls();
+});
 
-    mp.events.callRemote(`characterInit.debug`, JSON.stringify(mp.authDebug));
+mp.events.add('characterInit.slot.buy', () => {
+    mp.events.callRemote('characterInit.slot.buy');
+});
+mp.events.add('characterInit.slot.buy.ans', (result, slots, coins) => {
+    mp.callCEFV(`characterInfo.slots = ${slots}`);
+    mp.callCEFV(`characterInfo.coins = ${coins}`);
+    if (result === 0) {
+        mp.notify.error("Недостаточно коинов на счете");
+    }
+    if (result === 2) {
+        mp.notify.error("Невозможно иметь более 3 слотов");
+    }
+    mp.callCEFV(`loader.show = false;`);
 });
 
 mp.events.add('characterInit.choose', () => {
@@ -111,9 +144,8 @@ mp.events.add('characterInit.choose', () => {
         mp.events.callRemote('characterInit.choose', currentCharacter);
     }
 });
-
 mp.events.add('characterInit.choose.ans', (ans) => {     //0 - не успешно     1 - успешно
-    if (ans == 0) {
+    if (ans === 0) {
         if(!isBinding){
             binding(true);
             isBinding = true;
@@ -131,8 +163,8 @@ mp.events.add('characterInit.chooseLeft', () => {
 });
 
 let createPeds = function() {
-    mp.authDebug.push(`Создаем педов`);
-    if (peds.length != 0) return;
+    mp.console(`Создаем педов`);
+    if (peds.length !== 0) return;
     creatorTimer = mp.timer.add(async () => {
         for (let i = 0; i < charNum; i++) {
             setCharCustom(i);
@@ -142,21 +174,21 @@ let createPeds = function() {
             let x = (camPos[0] + i * pedDist * sinPedRot) + camDist * sinCamRot;
             let y = (camPos[1] + i * pedDist * cosPedRot) + camDist * cosCamRot;
             let z = mp.game.gameplay.getGroundZFor3dCoord(x, y, camPos[2] + 1, 0.0, false) + 1;
-            mp.authDebug.push(`Создаем педа`);
+            mp.console(`Создаем педа`);
             let ped = mp.peds.new(mp.players.local.model, new mp.Vector3(x, y, z), pedRotation, mp.players.local.dimension);
-            mp.authDebug.push(`Клонируем на него внешку игрока`);
+            mp.console(`Клонируем на него внешку игрока`);
             mp.players.local.cloneToTarget(ped.handle);
 
-            mp.authDebug.push(`Создаем маркер`);
+            mp.console(`Создаем маркер`);
             selectMarkers.push(mp.markers.new(2, new mp.Vector3(x, y, z + 1), 0.2,
             {
                 direction: 0,
                 rotation: new mp.Vector3(0, 180, 0),
-                color: (i == currentCharacter) ? [255, 221, 85, 255] : [255, 255, 255, 120],
+                color: (i === currentCharacter) ? [255, 221, 85, 255] : [255, 255, 255, 120],
                 visible: true,
                 dimension: mp.players.local.dimension
             }));
-            mp.authDebug.push(`Кладем педа в массив`);
+            mp.console(`Кладем педа в массив`);
             peds.push(ped);
         }
         creatorTimer = null;
@@ -175,7 +207,7 @@ let updateMarkers = function() {
             0.2, {
             direction: 0,
             rotation: new mp.Vector3(0, 180, 0),
-            color: (i == currentCharacter) ? [255, 221, 85, 255] : [255, 255, 255, 120],
+            color: (i === currentCharacter) ? [255, 221, 85, 255] : [255, 255, 255, 120],
             visible: true,
             dimension: mp.players.local.dimension
         });
@@ -254,7 +286,7 @@ let choose = function() {
 };
 
 let setCharClothes = function(indexPed) {
-    mp.authDebug.push(`Ставим на игрока шмот от педа ${indexPed}`);
+    mp.console(`Ставим на игрока шмот от педа ${indexPed}`);
     if (charClothes.length <= indexPed) return;
     mp.utils.clearAllView(mp.players.local, charInfos[indexPed].hair); // раздеваем игрока полностью
     let clothes = charClothes[indexPed].clothes;
@@ -265,21 +297,21 @@ let setCharClothes = function(indexPed) {
     for (let i = 0; i < props.length; i++) {
         mp.players.local.setPropIndex(props[i][0], props[i][1], props[i][2], false);
     }
-    mp.authDebug.push(`- поставили`);
+    mp.console(`- поставили`);
 };
 
 let setCharTattoos = function(indexPed) {
-    mp.authDebug.push(`Ставим на игрока татуировки от педа ${indexPed}`);
+    mp.console(`Ставим на игрока татуировки от педа ${indexPed}`);
     if (charInfos.length <= indexPed) return;
     let tattoos = charInfos[indexPed].tattoos;
     tattoos.forEach((tattoo) => {
         mp.players.local.setDecoration(mp.game.joaat(tattoo.collection), mp.game.joaat(tattoo.hashName));
     });
-    mp.authDebug.push(`- поставили`);
+    mp.console(`- поставили`);
 };
 
 let setCharCustom = function (indexPed) {
-    mp.authDebug.push(`Ставим кастомку на игрока от педа ${indexPed}`);
+    mp.console(`Ставим кастомку на игрока от педа ${indexPed}`);
     if (charInfos.length <= indexPed) return;
     mp.players.local.model = freemodeCharacters[charInfos[indexPed].gender];
     mp.players.local.setHeadBlendData(
@@ -311,7 +343,7 @@ let setCharCustom = function (indexPed) {
     for (let i = 0; i < 20; i++) {
         mp.players.local.setFaceFeature(i, charInfos[indexPed].Features[i].value);
     }
-    mp.authDebug.push(`- поставили`);
+    mp.console(`- поставили`);
 };
 
 let colorForOverlayIdx = function(index, indexPed) {
@@ -348,17 +380,17 @@ let colorForOverlayIdx = function(index, indexPed) {
 
 function binding(active) {
     if (active) {
-        mp.authDebug.push("Включаем обработчик клавиш");
+        mp.console("Включаем обработчик клавиш");
         mp.keys.bind(0x27, true, chooseRight);   // Right arrow
         mp.keys.bind(0x25, true, chooseLeft);    // Left arrow
         mp.keys.bind(0x0D, true, choose);        // Enter
-        mp.authDebug.push("- включили");
+        mp.console("- включили");
     }
     else {
-        mp.authDebug.push("Выключаем обработчик клавиш");
+        mp.console("Выключаем обработчик клавиш");
         mp.keys.unbind(0x27, true, chooseRight);
         mp.keys.unbind(0x25, true, chooseLeft);
         mp.keys.unbind(0x0D, true, choose);
-        mp.authDebug.push("- выключили");
+        mp.console("- выключили");
     }
-};
+}

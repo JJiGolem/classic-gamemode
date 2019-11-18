@@ -15,12 +15,15 @@ module.exports = {
         };
         mp.events.call('characterInit.start', player);
     },
-    "characterInit.debug": (player, text) => {
-        logger.debug(text, "characterInit", player);
-    },
     "characterInit.start": async (player) => {
         let charInfos = await characterInit.init(player);
-        player.call('characterInit.init', [charInfos, player.account.slots]);
+        player.call('characterInit.init', [charInfos, {
+            slots: player.account.slots,
+            coins: player.account.donate,
+            costSecondSlot: characterInit.costSecondSlot,
+            timeForSecondSlot: characterInit.timeForSecondSlot,
+            costThirdSlot: characterInit.costThirdSlot,
+        }]);
     },
     "characterInit.choose": (player, charnumber) => {
         if (charnumber == null || isNaN(charnumber)) return player.call('characterInit.choose.ans', [0]);
@@ -38,6 +41,23 @@ module.exports = {
         } else {
             player.call('characterInit.choose.ans', [1]);
             characterInit.create(player);
+        }
+    },
+    "characterInit.slot.buy": async (player) => {
+        let price = player.account.slots === 3 ? null : player.account.slots === 2 ? characterInit.costThirdSlot : characterInit.costSecondSlot;
+        if (price) {
+            if (player.account.donate >= price) {
+                player.account.donate -= price;
+                player.account.slots++;
+                await player.account.save();
+                player.call("characterInit.slot.buy.ans", [1, player.account.slots, player.account.donate]);
+            }
+            else {
+                player.call("characterInit.slot.buy.ans", [0, player.account.slots, player.account.donate]);
+            }
+        }
+        else {
+            player.call("characterInit.slot.buy.ans", [2, player.account.slots, player.account.donate]);
         }
     },
     /// Разморозка игрока после выбора персоонажа
@@ -74,4 +94,4 @@ module.exports = {
         player.account.save();
         logger.log(`Деавторизовал персонажа`, "characterInit", player);
     },
-}
+};

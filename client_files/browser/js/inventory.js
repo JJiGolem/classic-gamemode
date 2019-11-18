@@ -137,7 +137,8 @@ var inventory = new Vue({
                         var data = {
                             itemSqlId: item.sqlId,
                         };
-                        mp.trigger(`callRemote`, `inventory.item.adrenalin.use`, JSON.stringify(data));
+                        // mp.trigger(`callRemote`, `inventory.item.adrenalin.use`, JSON.stringify(data));
+                        mp.trigger(`inventory.item.adrenalin.use.callRemote`, JSON.stringify(data));
                     }
                 }
             },
@@ -154,7 +155,8 @@ var inventory = new Vue({
                         var data = {
                             cuffsSqlId: item.sqlId
                         };
-                        mp.trigger(`callRemote`, `police.cuffs`, JSON.stringify(data));
+                        // mp.trigger(`callRemote`, `police.cuffs`, JSON.stringify(data));
+                        mp.trigger(`police.cuffs.callRemote`, JSON.stringify(data));
                     }
                 }
             },
@@ -262,7 +264,8 @@ var inventory = new Vue({
                         var data = {
                             cuffsSqlId: item.sqlId
                         };
-                        mp.trigger(`callRemote`, `mafia.cuffs`, JSON.stringify(data));
+                        // mp.trigger(`callRemote`, `mafia.cuffs`, JSON.stringify(data));
+                        mp.trigger(`mafia.cuffs.callRemote`, JSON.stringify(data));
                     }
                 }
             },
@@ -272,7 +275,8 @@ var inventory = new Vue({
                         var data = {
                             bagSqlId: item.sqlId
                         };
-                        mp.trigger(`callRemote`, `mafia.bag`, JSON.stringify(data));
+                        // mp.trigger(`callRemote`, `mafia.bag`, JSON.stringify(data));
+                        mp.trigger(`mafia.bag.callRemote`, JSON.stringify(data));
                     }
                 }
             },
@@ -346,7 +350,8 @@ var inventory = new Vue({
                     var data = {
                         itemSqlId: item.sqlId,
                     };
-                    mp.trigger(`callRemote`, `inventory.item.adrenalin.use`, JSON.stringify(data));
+                    // mp.trigger(`callRemote`, `inventory.item.adrenalin.use`, JSON.stringify(data));
+                    mp.trigger(`inventory.item.adrenalin.use.callRemote`, JSON.stringify(data));
                 }
             },
             27: { // большая аптечка
@@ -359,7 +364,8 @@ var inventory = new Vue({
                     var data = {
                         cuffsSqlId: item.sqlId
                     };
-                    mp.trigger(`callRemote`, `police.cuffs`, JSON.stringify(data));
+                    // mp.trigger(`callRemote`, `police.cuffs`, JSON.stringify(data));
+                    mp.trigger(`police.cuffs.callRemote`, JSON.stringify(data));
                 }
             },
             // наркотики
@@ -409,7 +415,8 @@ var inventory = new Vue({
                     var data = {
                         cuffsSqlId: item.sqlId
                     };
-                    mp.trigger(`callRemote`, `mafia.cuffs`, JSON.stringify(data));
+                    // mp.trigger(`callRemote`, `mafia.cuffs`, JSON.stringify(data));
+                    mp.trigger(`mafia.cuffs.callRemote`, JSON.stringify(data));
                 }
             },
             55: { // мешок
@@ -417,7 +424,8 @@ var inventory = new Vue({
                     var data = {
                         bagSqlId: item.sqlId
                     };
-                    mp.trigger(`callRemote`, `mafia.bag`, JSON.stringify(data));
+                    // mp.trigger(`callRemote`, `mafia.bag`, JSON.stringify(data));
+                    mp.trigger(`mafia.bag.callRemote`, JSON.stringify(data));
                 }
             },
             56: { // канистра

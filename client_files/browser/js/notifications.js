@@ -19,6 +19,7 @@ var notifications = new Vue({
             if (header == 'undefined' || header == 'null') header = null;
             this.messages.push({
                 type: type,
+                img: (type.split(" ").length > 1) ? type.split(" ")[1] : type,
                 header: header,
                 text: text,
                 hash: ++this.count,
@@ -47,6 +48,18 @@ var notifications = new Vue({
         error(text, header) {
             this.push(`error`, text, header);
         },
+        addCash(text, header) {
+            this.push(`add cash`, text, header);
+        },
+        removeCash(text, header) {
+            this.push(`remove cash`, text, header);
+        },
+        addMoney(text, header) {
+            this.push(`add money`, text, header);
+        },
+        removeMoney(text, header) {
+            this.push(`remove money`, text, header);
+        },
     }
 });
 
@@ -56,4 +69,8 @@ var notifications = new Vue({
 //     notifications.push("success", "зачисление + $500"+notifications.count, "Банк Maze");
 //     notifications.push("info", "зачисление + $500"+notifications.count, "Банк Maze");
 //     notifications.push("warning", "зачисление + $500"+notifications.count, "Банк Maze");
+//     notifications.push("add cash", "зачисление + $500"+notifications.count, "Банк Maze");
+//     notifications.push("add money", "зачисление + $500"+notifications.count, "Банк Maze");
+//     notifications.push("remove cash", "зачисление + $500"+notifications.count, "Банк Maze");
+//     notifications.push("remove money", "зачисление + $500"+notifications.count, "Банк Maze");
 // }
