@@ -193,6 +193,7 @@ mp.events.add('characterInit.create.exit', () => {
     charData.father = 0;
     charData.skin = 0;
     updateParents();
+    binding(false);
     mp.events.call('characterInit.init');
 });
 
