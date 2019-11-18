@@ -9050,12 +9050,15 @@ var selectMenu = new Vue({
                         text: "Сигареты"
                     },
                     {
+                        text: "Управление"
+                    },
+                    {
                         text: "Закрыть"
                     },
                 ],
                 i: 0,
                 j: 0,
-                name: "",
+                hasControl: false,
                 alcohol: [],
                 snacks: [],
                 smoke: [],
@@ -9063,9 +9066,16 @@ var selectMenu = new Vue({
                     if (typeof data == 'string') data = JSON.parse(data);
 
                     this.header = data.name;
+                    this.hasControl = data.hasControl;
                     this.alcohol = data.alcohol;
                     this.snacks = data.snacks;
                     this.smoke = data.smoke;
+
+                    if (this.hasControl) {
+                        selectMenu.addItem('club', {
+                            text: "Управление"
+                        }, 3);
+                    } else selectMenu.deleteItem('club', "Управление");
 
                     var alcoholItems = [];
                     this.alcohol.forEach(el => {
@@ -9120,6 +9130,8 @@ var selectMenu = new Vue({
                             selectMenu.showByName("clubSnacks");
                         } else if (e.itemName == 'Сигареты') {
                             selectMenu.showByName("clubSmoke");
+                        } else if (e.itemName == 'Управление') {
+                            selectMenu.showByName("clubControl");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
@@ -9236,6 +9248,41 @@ var selectMenu = new Vue({
                         } else {
                             selectMenu.show = false;
                             mp.trigger(`callRemote`, `clubs.smoke.buy`, e.itemIndex);
+                        }
+                    } else if (eventName == 'onBackspacePressed') {
+                        selectMenu.showByName("club");
+                    }
+                }
+            },
+            "clubControl": {
+                name: "clubControl",
+                header: "Управление",
+                items: [{
+                        text: "Двери",
+                        values: [`Открыть`, `Закрыть`]
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("club");
+                        } else if (e.itemName == 'Двери') {
+                            var isOpen = (e.valueIndex) ? false : true;
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `clubs.control.open`, isOpen);
                         }
                     } else if (eventName == 'onBackspacePressed') {
                         selectMenu.showByName("club");
