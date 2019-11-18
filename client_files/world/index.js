@@ -534,6 +534,7 @@ mp.events.add({
         mp.notify.info(`Режим ${mp.world.doorControl? 'включен' : 'выключен'}`, `Контроль дверей`);
     },
     "world.doors.init": (doors) => {
+        mp.utils.closeDoors(); // обрабатываем старые двери (до введения управления)
         mp.world.initDoors(doors);
     },
     "world.doors.set": (id, locked) => {

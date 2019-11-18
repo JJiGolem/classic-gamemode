@@ -119,8 +119,6 @@ mp.events.add("characterInit.done", () => {
     // Отключение регенарции здоровья
     mp.game.player.setHealthRechargeMultiplier(0);
 
-    mp.utils.closeDoors();
-
     mp.utils.requestIpls();
 });
 
