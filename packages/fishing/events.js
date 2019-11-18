@@ -12,15 +12,15 @@ let timeoutFetch;
 let fish;
 
 module.exports = {
-    "init": () => {
-        fishing.init();
+    "init": async () => {
+        await fishing.init();
         inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;
 
         if (shape.isFisher) {
-            player.call('fishing.menu.show');
+            player.call('fishing.menu.show', [fishing.rodPrice]);
             player.currentColshape = shape;
         }
     },

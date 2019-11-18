@@ -1511,8 +1511,7 @@ var selectMenu = new Vue({
                 header: "Рыбалка",
                 items: [{
                         text: 'Купить удочку',
-                        i: 0,
-                        values: ["$100"]
+                        i: 0
                     },
                     {
                         text: 'Продать рыбу',
