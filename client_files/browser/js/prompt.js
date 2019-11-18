@@ -144,7 +144,7 @@ var prompt = new Vue({
                 text: "Нажмите <span>SPACE</span>, чтобы остановить анимацию",
             },
             "clubs_buy": {
-                text: "Нажмите <span>E</span>, чтобы купить алкоголь",
+                text: "Нажмите <span>E</span>, чтобы просмотреть ассортимент",
             },
         },
         text: null
