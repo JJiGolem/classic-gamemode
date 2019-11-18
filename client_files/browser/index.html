@@ -1772,22 +1772,6 @@
     <!-- ------------------------ REACT ------------------------------ -->
     <script async src="build/js/build.js" type="text/javascript"></script>
     <div id="root"></div>
-    <script language="javascript" type="text/javascript">
-        let root = document.getElementById('root');
-
-        document.onkeydown = function handleKeyDown(event) {
-            const code = event.keyCode;
-
-            switch(code) {
-                case 38:
-                    mp.trigger('phone.show', true);
-                    break;
-                case 40: 
-                    mp.trigger('phone.show', false);
-                    break;
-            }
-        }
-    </script>
     <!-- ------------------------------------------------------------- -->
     <script src="js/fontawesome.js"></script>
     <script src="js/hud.js"></script>
