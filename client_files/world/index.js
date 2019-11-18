@@ -517,7 +517,6 @@ mp.world = {
         var hash = mp.game.invoke('0x9F47B058362C84B5', raycast.entity);
         if (!this.isDoor(hash)) return;
         var door = this.getDoor(hash, raycast.position);
-        d(raycast.position)
         if (!door) mp.events.callRemote(`world.doors.create`, hash, JSON.stringify(raycast.position));
         else mp.events.callRemote(`world.doors.set`, door.id, !door.locked);
     },
@@ -529,6 +528,10 @@ mp.events.add({
             if (mp.game.ui.isPauseMenuActive()) return;
             mp.world.lockDoorHandler();
         });
+    },
+    "world.doors.control.toggle": () => {
+        mp.world.doorControl = !mp.world.doorControl;
+        mp.notify.info(`Режим ${mp.world.doorControl? 'включен' : 'выключен'}`, `Контроль дверей`);
     },
     "world.doors.init": (doors) => {
         mp.world.initDoors(doors);
@@ -628,6 +631,3 @@ mp.events.add({
         }
     },
 });
-
-// for tests
-mp.world.doorControl = true;
