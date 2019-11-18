@@ -16,28 +16,13 @@ class MainContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {};
-
-        this.keyDownHandler = this.keyDownHandler.bind(this);
-    }
-
-    keyDownHandler(e) {
-        const code = e.keyCode;
-
-        switch(code) {
-            case 38:
-                mp.trigger('phone.show', true);
-                break;
-            case 40: 
-                mp.trigger('phone.show', false);
-                break;
-        }
     }
 
     render() {
         const { forms, enterMenu, info } = this.props;
 
         return (
-            <div onKeyDown={this.keyDownHandler}>
+            <Fragment onKeyDown={this.keyDownHandler}>
                 <ErrorBoundary><Chat /></ErrorBoundary>
                 { info.isLoad && <ErrorBoundary><div style={{ display: (!forms.phone) && 'none' }}><Phone /></div></ErrorBoundary> }
                 { forms.house && <ErrorBoundary><House /></ErrorBoundary> }
@@ -45,7 +30,7 @@ class MainContainer extends Component {
                 { forms.business && <ErrorBoundary><Business /> </ErrorBoundary>}
                 { forms.bank && <ErrorBoundary><Bank /></ErrorBoundary> }
                 { forms.players && <ErrorBoundary><Players /> </ErrorBoundary>}
-            </div>
+            </Fragment>
         );
     }
 }
