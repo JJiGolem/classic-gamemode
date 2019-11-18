@@ -3,12 +3,14 @@
 let phone = require("./index.js");
 let timer;
 let bizService;
+let factions;
 
 module.exports = {
     /// Событие инициализации сервера
     "init": async () => {
         timer = call("timer");
         bizService = call("bizes");
+        factions = call("factions");
         await phone.init();
         inited(__dirname);
     },
