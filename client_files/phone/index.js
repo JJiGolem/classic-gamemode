@@ -173,7 +173,7 @@ let showPhone = () => {
     if (mp.farms.isCropping(player)) return;
 
     if (!mp.busy.add('phone')) return;
-    //mp.callCEFR('phone.show', [true]);
+    mp.callCEFR('phone.show', [true]);
     playCallAnimation(false);
     playHoldAnimation(true);
 };
@@ -182,7 +182,7 @@ let hidePhone = () => {
     if (mp.game.ui.isPauseMenuActive()) return;
     if (!mp.busy.includes('phone')) return;
 
-    //mp.callCEFR('phone.show', [false]);
+    mp.callCEFR('phone.show', [false]);
     mp.busy.remove('phone');
     playHoldAnimation(false);
     playCallAnimation(false);
