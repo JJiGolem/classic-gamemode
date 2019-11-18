@@ -1,7 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import HeadAppPhone from "./HeadAppPhone";
-import ActiveCall from "./ActiveCall";
-import {setCall, setCallStatus, startMyCall} from "../actions/action.info";
+import {setCall, setCallStatus, setActiveCall} from "../actions/action.info";
 import {addAppDisplay, closeAppDisplay, setAppDisplay} from "../actions/action.apps";
 import {connect} from "react-redux";
 import DialogPage from "./DialogPage";
@@ -34,7 +33,7 @@ class DialingNumber extends Component {
     }
 
     startCall() {
-        const { addApp, setCall, info, startMyCall } = this.props;
+        const { addApp, setCall, info, setActiveCall } = this.props;
         const { inputNumber } = this.state;
 
         let outputNumber;
@@ -53,18 +52,10 @@ class DialingNumber extends Component {
             }
 
             setCall(true);
-            startMyCall(true);
             // eslint-disable-next-line no-undef
             mp.trigger('phone.call.start', inputNumber);
 
-            addApp(
-                {
-                    name: 'ActiveCall',
-                    form: <ActiveCall
-                        number={outputNumber}
-                    />
-                }
-            )
+            setActiveCall(true, outputNumber, true);
         }
     }
 
@@ -153,7 +144,7 @@ const mapDispatchToProps = dispatch => ({
     addApp: app => dispatch(addAppDisplay(app)),
     closeApp: () => dispatch(closeAppDisplay()),
     addDialog: (name, number) => dispatch(addDialog(name, number)),
-    startMyCall: flag => dispatch(startMyCall(flag))
+    setActiveCall: (state, number, isMine) => dispatch(setActiveCall(state, number, isMine))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DialingNumber);

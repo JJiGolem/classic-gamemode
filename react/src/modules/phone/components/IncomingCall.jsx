@@ -1,7 +1,6 @@
 import React, {Component, Fragment} from 'react';
-import {setCall, setCallStatus} from "../actions/action.info";
+import {setCall, setCallStatus, setActiveCall, setIncomingCall} from "../actions/action.info";
 import {connect} from "react-redux";
-import ActiveCall from "./ActiveCall";
 import {addAppDisplay, closeAppDisplay, setAppDisplay} from "../actions/action.apps";
 
 class IncomingCall extends Component {
@@ -19,12 +18,12 @@ class IncomingCall extends Component {
 
     startCall(event) {
         event.preventDefault();
-        const { number, addApp, closeApp, setCallStatus, setCall, info } = this.props;
+        const { number, setCallStatus, setCall, info, setIncomingCall, setActiveCall } = this.props;
         // eslint-disable-next-line no-undef
         mp.trigger('phone.call.in.ans', 1);
+        setIncomingCall(false);
         setCallStatus(0);
         setCall(true);
-        closeApp();
 
         let contact = info.contacts.find(con => con.number === number);
         let outputNumber = number;
@@ -33,15 +32,15 @@ class IncomingCall extends Component {
             outputNumber = contact.name
         }
 
-        addApp({name: 'ActiveCall', form: <ActiveCall number={outputNumber}/>});
+        setActiveCall(true, outputNumber, false);
     }
 
     endCall(event) {
         event.preventDefault();
         // eslint-disable-next-line no-undef
         mp.trigger('phone.call.in.ans', 0);
-        this.props.closeApp();
         this.props.setCall(false);
+        this.props.setIncomingCall(false);
     }
 
     render() {
@@ -97,6 +96,8 @@ const mapDispatchToProps = dispatch => ({
     setApp: app => dispatch(setAppDisplay(app)),
     addApp: app => dispatch(addAppDisplay(app)),
     closeApp: () => dispatch(closeAppDisplay()),
+    setActiveCall: (state, number, isMine) => dispatch(setActiveCall(state, number, isMine)),
+    setIncomingCall: (state, number) => dispatch(setIncomingCall(state, number))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(IncomingCall);
