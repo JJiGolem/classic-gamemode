@@ -101,7 +101,7 @@ module.exports = {
     'phone.call.ask': (player, number) => {
         if (player.phone == null) return;
         if (player.phoneState.talkWithId != null) return player.call('phone.call.start.ans', [2]);
-        if (player.phone.number === number) player.call('phone.call.start.ans', [2]);
+        if (player.phone.number === number) return player.call('phone.call.start.ans', [2]);
         if (!phone.isExists(number)) return player.call('phone.call.start.ans', [1]);
 
         let calledPlayer = mp.players.toArray().find(x => x.phone != null && x.phone.number === number);
@@ -140,6 +140,8 @@ module.exports = {
         }
         else {
             callerPlayer.call('phone.call.start.ans', [3]);
+            player.phoneState.talkWithId = null;
+            calledPlayer.phoneState.talkWithId = null;
         }
     },
     /// Окончание звонка с игроком
