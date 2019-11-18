@@ -18,7 +18,7 @@ mp.events.add('phone.load', function (phoneInfo, phoneDialogs, apps) {
     apps.forEach(app => {
         mp.callCEFR('phone.app.add', [app, null]);
     });
-    bindButtons(phoneInfo.isHave);
+    //bindButtons(phoneInfo.isHave);
 });
 
 /// Добавление приложения
