@@ -22,7 +22,7 @@ class MainContainer extends Component {
         const { forms, enterMenu, info } = this.props;
 
         return (
-            <Fragment onKeyDown={this.keyDownHandler}>
+            <Fragment>
                 <ErrorBoundary><Chat /></ErrorBoundary>
                 { info.isLoad && <ErrorBoundary><div style={{ display: (!forms.phone) && 'none' }}><Phone /></div></ErrorBoundary> }
                 { forms.house && <ErrorBoundary><House /></ErrorBoundary> }
