@@ -158,9 +158,9 @@ module.exports = {
                     playerTalkWith.phoneState.callTimer = null;
                 }
                 playerTalkWith.call('phone.call.end.in', []);
-                player.call('voiceChat.disconnect', [player.phoneState.talkWithId, 'phone']);
-            }
 
+            }
+            player.call('voiceChat.disconnect', [player.phoneState.talkWithId, 'phone']);
             player.phoneState.talkWithId = null;
             if (player.phoneState.callTimer != null) {
                 timer.remove(player.phoneState.callTimer);
