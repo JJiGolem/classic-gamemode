@@ -404,7 +404,7 @@ mp.events.add("entityStreamIn", (entity) => {
 
 mp.events.add("entityStreamOut", (entity) => {
     if (entity.type != "player") return;
-    if (!entity.handsObject) return;
+    if (!entity.hands) return;
     mp.inventory.hands(entity, null);
 });
 
