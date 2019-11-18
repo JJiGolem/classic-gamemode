@@ -319,7 +319,7 @@ module.exports = {
         params.health = 100;
         //params.pockets = '[2,3,1,3,1,3,6,3,3,2,4,2,2,2,2,2,4,2,3,2]';
         params.pockets = '[3,3,3,3,3,3,3,3,10,5,3,5,10,3,3,3]';
-        params.sex = !character.gender;
+        params.sex = character.gender ? 0 : 1;
 
         inventory.addItem(player, 3, params, (e) => {
             if (e) return notifs.error(player, e, header);
