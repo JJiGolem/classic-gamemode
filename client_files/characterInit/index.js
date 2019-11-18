@@ -13,22 +13,24 @@ let currentCharacter = 0;
 
 /// ИЗМЕНЯТЬ ДАННЫЕ НАСТРОЙки ДЛЯ УСТАНОВКИ ПЕДОВ
 /// Начальная координата камеры
-const camPos = [1220.15, 195.36, 80.5];//[-1828.8, -870.1, 3.1];
+const camPos = [-222.94, 6584.72, 8];//[1220.15, 195.36, 80.5];//[-1828.8, -870.1, 3.1];
 /// На сколько ниже камера смотрит, чем находится
-const camPosZDelta = -0.5;
+const camPosZDelta = -0.6;
 /// Расстояние от камеры до текущего педа
 const camDist = 2.5;
 /// Расстояние между педами
 const pedDist = 2.5;
+/// Поворот линии педов
+const pedsRotation = 45;
 /// Поворот педа
-const pedRotation = 180;
+const pedRotation = 330;
 /// Поворот камеры
-const camRotation = 30;
+const camRotation = 230;
 
 const cosCamRot = Math.cos(camRotation * Math.PI/180);
 const sinCamRot = Math.sin(camRotation * Math.PI/180);
-const cosPedRot = Math.cos((pedRotation - 90) * Math.PI/180);
-const sinPedRot = Math.sin((pedRotation - 90) * Math.PI/180);
+const cosPedRot = Math.cos((pedsRotation - 90) * Math.PI/180);
+const sinPedRot = Math.sin((pedsRotation - 90) * Math.PI/180);
 
 let isBinding = false;
 
