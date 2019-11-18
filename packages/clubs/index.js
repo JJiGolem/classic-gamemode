@@ -23,134 +23,133 @@ module.exports = {
     alcohol: {
         // Багама (La Cosa Nostra)
         12: [{
-                price: 10000,
+                price: 390,
                 params: {
                     name: "Мохито",
-                    alcohol: 5
+                    alcohol: 30
                 },
             },
             {
-                price: 10000,
+                price: 400,
                 params: {
                     name: "Апероль Шпритц",
-                    alcohol: 5
+                    alcohol: 35
                 },
             },
             {
-                price: 10000,
+                price: 395,
                 params: {
                     name: "Негрони",
-                    alcohol: 5
+                    alcohol: 40
                 },
             },
             {
-                price: 10000,
+                price: 410,
                 params: {
                     name: "Мартини & Тоник",
-                    alcohol: 5
+                    alcohol: 25
                 },
             },
             {
-                price: 10000,
+                price: 415,
                 params: {
                     name: "Бьянко Санрайз",
-                    alcohol: 5
+                    alcohol: 45
                 },
             },
             {
-                price: 10000,
+                price: 385,
                 params: {
                     name: "Валентино",
-                    alcohol: 5
+                    alcohol: 30
                 },
             },
         ],
         // Текила (La Eme)
         13: [{
-                price: 10000,
+                price: 390,
                 params: {
                     name: "Амиго",
-                    alcohol: 5
+                    alcohol: 40
                 },
             },
             {
-                price: 10000,
+                price: 415,
                 params: {
                     name: "Эль-бандито",
-                    alcohol: 5
+                    alcohol: 45
                 },
             },
             {
-                price: 10000,
+                price: 395,
                 params: {
                     name: "Маргарита",
-                    alcohol: 5
+                    alcohol: 30
                 },
             },
             {
-                price: 10000,
+                price: 410,
                 params: {
                     name: "Пина-колада",
-                    alcohol: 5
+                    alcohol: 25
                 },
             },
             {
-                price: 10000,
+                price: 385,
                 params: {
                     name: "Сангрита",
-                    alcohol: 5
+                    alcohol: 30
                 },
             },
             {
-                price: 10000,
+                price: 400,
                 params: {
                     name: "Палома",
-                    alcohol: 5
+                    alcohol: 35
                 },
             },
-
         ],
         // Ванила (Russian Mafia)
         14: [{
-                price: 10000,
+                price: 395,
                 params: {
                     name: "Отвёртка",
-                    alcohol: 5
+                    alcohol: 40
                 },
             },
             {
-                price: 10000,
+                price: 385,
                 params: {
                     name: "Холодное лето 1986 года",
-                    alcohol: 5
+                    alcohol: 30
                 },
             },
             {
-                price: 10000,
+                price: 400,
                 params: {
                     name: "Российский флаг",
-                    alcohol: 5
+                    alcohol: 45
                 },
             },
             {
-                price: 10000,
+                price: 390,
                 params: {
                     name: "Балалайка",
-                    alcohol: 5
+                    alcohol: 25
                 },
             },
             {
-                price: 10000,
+                price: 415,
                 params: {
                     name: "Кровавая мэри",
-                    alcohol: 5
+                    alcohol: 35
                 },
             },
             {
-                price: 10000,
+                price: 410,
                 params: {
                     name: "Белый туман",
-                    alcohol: 5
+                    alcohol: 30
                 },
             },
         ],
@@ -159,91 +158,91 @@ module.exports = {
     snacks: {
         // Багама (La Cosa Nostra)
         12: [{
-                price: 10000,
+                price: 420,
                 params: {
                     name: "Брускетта с помидорами",
-                    satiety: 10,
+                    satiety: 55,
                 }
             },
             {
-                price: 10000,
+                price: 340,
                 params: {
                     name: "Аранчини",
-                    satiety: 10,
+                    satiety: 50,
                 }
             },
             {
-                price: 10000,
+                price: 450,
                 params: {
                     name: "Моцарелла с базаликом",
-                    satiety: 10,
+                    satiety: 60,
                 }
             },
             {
-                price: 10000,
+                price: 650,
                 params: {
                     name: "Креветки в соусе песто",
-                    satiety: 10,
+                    satiety: 70,
                 }
             }
         ],
         // Текила (La Eme)
         13: [{
-                price: 10000,
+                price: 450,
                 params: {
                     name: "Кесадилья с курицей",
-                    satiety: 10,
+                    satiety: 60,
                 }
             },
             {
-                price: 10000,
+                price: 420,
                 params: {
                     name: "Сэндвич с каперсами",
-                    satiety: 10,
+                    satiety: 55,
                 }
             },
             {
-                price: 10000,
+                price: 650,
                 params: {
                     name: "Бурритос с курицей",
-                    satiety: 10,
+                    satiety: 70,
                 }
             },
             {
-                price: 10000,
+                price: 340,
                 params: {
                     name: "Гуакамоле с грушей",
-                    satiety: 10,
+                    satiety: 50,
                 }
             }
         ],
         // Ванила (Russian Mafia)
         14: [{
-                price: 10000,
+                price: 420,
                 params: {
                     name: "Селёдка с солёным огурцом",
-                    satiety: 10,
+                    satiety: 55,
                 }
             },
             {
-                price: 10000,
+                price: 450,
                 params: {
                     name: "Рулетики из ветчины с сыром",
-                    satiety: 10,
+                    satiety: 60,
                 }
             },
             {
-                price: 10000,
+                price: 340,
                 params: {
                     name: "Бутерброд со шпротами",
-                    satiety: 10,
+                    satiety: 50,
                 }
             },
             {
-                price: 10000,
+                price: 650,
                 params: {
                     name: "Шаурма в пите",
-                    satiety: 10,
+                    satiety: 70,
                 }
             }
         ],
@@ -252,7 +251,7 @@ module.exports = {
     smoke: {
         // Багама (La Cosa Nostra)
         12: [{
-            price: 10000,
+            price: 630,
             params: {
                 name: "Arturo Fuente",
                 count: 20,
@@ -260,7 +259,7 @@ module.exports = {
         }],
         // Текила (La Eme)
         13: [{
-            price: 10000,
+            price: 630,
             params: {
                 name: "Te Amo",
                 count: 20,
@@ -268,7 +267,7 @@ module.exports = {
         }],
         // Ванила (Russian Mafia)
         14: [{
-            price: 10000,
+            price: 630,
             params: {
                 name: "Погарская сигара",
                 count: 20,
