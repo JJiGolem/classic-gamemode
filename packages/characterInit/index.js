@@ -57,6 +57,10 @@ const SHOES_ID = 9;
 
 /// Функции модуля выбора и создания персоонажа
 module.exports = {
+    timeForSecondSlot: 100,
+    costSecondSlot: 500,
+    costThirdSlot: 1000,
+
     moduleInit() {
         houses = call('houses');
         bizes = call('bizes');

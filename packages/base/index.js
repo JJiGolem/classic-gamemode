@@ -54,7 +54,7 @@ global.inited = (dirname) => {
         console.log("[BASE] Все модули загружены")
         playersJoinPool.forEach(player => {
             if (player == null) return;
-            if (mp.players.toArray().find(element => element === player) == null) return;
+            if (!mp.players.exists(player)) return;
             player.call('init', [activeClientModules]);
         });
     }

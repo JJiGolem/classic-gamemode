@@ -8,6 +8,7 @@ module.exports = {
         inited(__dirname);
     },
     "characterInit.done": async (player) => {
+        if (!player.character.tattoos) player.character.tattoos = [];
         tattoo.setCharacterTattoos(player);
         tattoo.sendTattoosDataToClient(player, player.character.tattoos);
     },

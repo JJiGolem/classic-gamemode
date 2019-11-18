@@ -108,8 +108,10 @@ module.exports = {
             texture: armourId,
             health: 100,
             pockets: '[3,3,3,3,3,3,3,3,10,5,3,5,10,3,3,3]',
-            sex: !player.character.gender
+            sex: player.character.gender ? 0 : 1
         };
+
+        console.log(params.sex)
 
         inventory.addItem(player, 3, params, (e) => {
             if (e) return player.call('ammunation.armour.buy.ans', [2, e]);
