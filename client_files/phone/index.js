@@ -18,6 +18,7 @@ mp.events.add('phone.load', function (phoneInfo, phoneDialogs, apps) {
     apps.forEach(app => {
         mp.callCEFR('phone.app.add', [app, null]);
     });
+    bindButtons(phoneInfo.isHave);
 });
 
 /// Добавление приложения
@@ -141,20 +142,20 @@ mp.events.add('phone.error', function (number) {
 
 
 
-// let bindButtons = (state) => {
-// //     if (state) {
-// //         if (isBinding) return;
-// //         isBinding = true;
-// //         mp.keys.bind(0x26, true, showPhone);        // UP ARROW key
-// //         mp.keys.bind(0x28, true, hidePhone);        // DOWN ARROW key
-// //     }
-// //     else {
-// //         if (!isBinding) return;
-// //         isBinding = false;
-// //         mp.keys.unbind(0x26, true, showPhone);        // UP ARROW key
-// //         mp.keys.unbind(0x28, true, hidePhone);        // DOWN ARROW key
-// //     }
-// // };
+let bindButtons = (state) => {
+    if (state) {
+        if (isBinding) return;
+        isBinding = true;
+        mp.keys.bind(0x26, true, showPhone);        // UP ARROW key
+        mp.keys.bind(0x28, true, hidePhone);        // DOWN ARROW key
+    }
+    else {
+        if (!isBinding) return;
+        isBinding = false;
+        mp.keys.unbind(0x26, true, showPhone);        // UP ARROW key
+        mp.keys.unbind(0x28, true, hidePhone);        // DOWN ARROW key
+    }
+};
 mp.events.add("phone.show", (state) => {
     if (state) {
         showPhone();
