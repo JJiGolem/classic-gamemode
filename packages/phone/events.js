@@ -134,7 +134,7 @@ module.exports = {
         timer.remove(callerPlayer.phoneState.callTimer);
         callerPlayer.phoneState.callTimer = null;
 
-        if (ans === 1) {
+        if (ans == 1) {
             callerPlayer.call('voiceChat.connect', [player.id, 'phone']);
             player.call('voiceChat.connect', [callerPlayer.id, 'phone']);
 
@@ -158,8 +158,9 @@ module.exports = {
                     playerTalkWith.phoneState.callTimer = null;
                 }
                 playerTalkWith.call('phone.call.end.in', []);
+                player.call('voiceChat.disconnect', [player.phoneState.talkWithId, 'phone']);
             }
-            player.call('voiceChat.disconnect', [player.phoneState.talkWithId, 'phone']);
+
             player.phoneState.talkWithId = null;
             if (player.phoneState.callTimer != null) {
                 timer.remove(player.phoneState.callTimer);

@@ -82,7 +82,7 @@ mp.events.add('phone.call.in', function (startedPlayerNumber) {
 /// Когда звонят нам и мы принимаем/отклоняем звонок
 mp.events.add('phone.call.in.ans', function (ans) {
     mp.events.callRemote('phone.call.ans', ans);
-    if (ans === 1) {
+    if (ans == 1) {
         //playHoldAnimation(false);
         playCallAnimation(true);
     }
