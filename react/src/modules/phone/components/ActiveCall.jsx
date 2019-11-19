@@ -178,6 +178,8 @@ class ActiveCall extends Component {
         const { number, info, isMine } = this.props;
         const { time } = this.state;
 
+        mp.trigger('chat.message.get', 1, info.activeCall.callStatus.toString());
+
         return (
             <Fragment>
                 <div className="incoming_call-phone-react">
