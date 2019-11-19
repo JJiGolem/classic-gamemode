@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable default-case */
 import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
@@ -25,6 +26,8 @@ class ActiveCall extends Component {
         const { setCall, info, setCallStatus } = this.props;
         setCall(true);
 
+        mp.trigger('chat.message.get', 1, info.activeCall.callStatus.toString());
+
         if(info.activeCall.callStatus != null && info.activeCall.callStatus === 0) {
             if(!this.state.isStart) {
                 this.setState({time: '00:00'});
@@ -38,8 +41,8 @@ class ActiveCall extends Component {
         // }, 1500)
 
         // setTimeout(() => {
-        //     setCallStatus(5);
-        // }, 4500)
+        //     setCallStatus(2);
+        // }, 2500)
     }
 
     componentDidUpdate() {
