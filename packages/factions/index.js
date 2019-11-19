@@ -281,6 +281,7 @@ module.exports = {
     },
     getBlipsPos(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
+        if (!faction) return null;
         var positions = {
             "holder": this.getHolder(faction.id).position,
             "storage": this.getStorage(faction.id).position,
