@@ -13,6 +13,8 @@ module.exports = {
     ammoAmmo: 1,
     // Позиция маркера с услугами правительства
     servicePos: new mp.Vector3(246.3321533203125, 222.69009399414062, 106.28681182861328 - 1),
+    // Блип на маркере с услугами правительства
+    serviceBlip: 525,
     // Стоимость восстановления ключей от авто
     restoreVehKeysPrice: 1000,
 
@@ -39,6 +41,13 @@ module.exports = {
             player.call(`selectMenu.hide`);
         };
         service.colshape = colshape;
+        service.blip = mp.blips.new(this.serviceBlip, pos, {
+            color: 0,
+            name: `Услуги`,
+            shortRange: 10,
+            scale: 1,
+            dimension: service.dimension
+        });
     },
 
 };
