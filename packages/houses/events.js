@@ -169,7 +169,7 @@ module.exports = {
         }
         else {
             if (id > 1000000) return player.call("house.sell.check.ans", [null]);
-            if (player.id === id) return player.call("biz.sell.check.ans", [null]);
+            if (player.id === id) return player.call("house.sell.check.ans", [null]);
             if (mp.players.at(id).character != null) {
                 player.house.buyerId = id;
                 player.call("house.sell.check.ans", [mp.players.at(id).character.name]);
@@ -181,24 +181,26 @@ module.exports = {
     },
     "house.sell": (player, name, cost) => {
         if (player.house.buyerId == null) return player.call("house.sell.ans", [0]);
-        if (mp.players.at(player.house.buyerId) == null) return player.call("house.sell.ans", [0]);
+        let buyer = mp.players.at(player.house.buyerId);
+        if (buyer == null) return player.call("house.sell.ans", [0]);
+        if (!mp.players.exists(buyer)) return player.call("house.sell.ans", [0]);
         if (vehicles == null) return player.call('house.sell.ans', [0]);
         if (vehicles.doesPlayerHaveHomeVehicles(player)) return player.call('house.sell.ans', [5]);
         name = parseInt(name);
         cost = parseInt(cost);
         if (isNaN(name) || isNaN(cost)) return player.call("house.sell.ans", [0]);
-        if (mp.players.at(player.house.buyerId).character.cash < cost) return player.call("house.sell.ans", [6]);
-        if (housesService.isHaveHouse(mp.players.at(player.house.buyerId).character.id)) return player.call("house.sell.ans", [7]);
+        if (buyer.character.cash < cost) return player.call("house.sell.ans", [6]);
+        if (housesService.isHaveHouse(buyer.character.id)) return player.call("house.sell.ans", [7]);
         let house = housesService.getHouseById(name);
         if (house == null) return player.call("house.sell.ans", [0]);
         let info = house.info;
         if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10 ||
-            mp.players.at(player.house.buyerId).dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return player.call("house.sell.ans", [3]);
+            buyer.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return player.call("house.sell.ans", [3]);
         if (cost < info.price || cost > 1000000000) return player.call("house.sell.ans", [4]);
-        mp.players.at(player.house.buyerId).house.sellerId = player.id;
+        buyer.house.sellerId = player.id;
         player.house.sellingHouseId = info.id;
         player.house.sellingHouseCost = cost;
-        mp.players.at(player.house.buyerId).call('offerDialog.show', ["house_sell", {
+        buyer.call('offerDialog.show', ["house_sell", {
             name: player.character.name,
             price: cost
         }]);
@@ -235,6 +237,7 @@ module.exports = {
     },
     "house.sell.stop": (player) => {
         if (player.house.buyerId != null) {
+            if (!mp.players.exists(mp.players.at(player.house.buyerId))) return;
             mp.players.at(player.house.buyerId).call("offerDialog.hide");
             mp.players.at(player.house.buyerId).house.sellerId = null;
         }
