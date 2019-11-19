@@ -71,7 +71,7 @@ module.exports = {
         var rec = mp.players.at(data.playerId);
         if (!rec || !rec.character) return out(`Игрок #${data.playerId} не найден`);
         if (rec.id == player.id) return out(`Нельзя продать самому себе`);
-        if (player.dist(rec.position) > 10) return out(`${rec.name} далеко`);
+        if (player.dist(rec.position) > 10) return out(`Игрок далеко`);
 
         rec.offer = {
             type: "farm_sell",

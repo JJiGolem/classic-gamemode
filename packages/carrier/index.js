@@ -125,6 +125,7 @@ module.exports = {
         return this.bizOrders.find(x => x.bizId == bizId);
     },
     addBizOrder(biz) {
+        if (!biz.info.productsOrderPrice) return debug(`[CARRIER] addBizOrder: некорректная цена, обратитесь к разработчикам CRP :) | ${biz.info}`);
         var vdistance = utils.vdist(this.loadPos, new mp.Vector3(biz.info.x, biz.info.y, biz.info.z));
         var order = {
             bizId: biz.info.id,

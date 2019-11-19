@@ -573,7 +573,7 @@ var selectMenu = new Vue({
                     },
                     {
                         text: "Цвет помады",
-                        values: [ "#b83e47", "#d45a85", "#d27f94", "#d094a3",
+                        values: ["#b83e47", "#d45a85", "#d27f94", "#d094a3",
                             "#be758d", "#c8646a", "#9c4140", "#c18b7b",
                             "#d7b9a7", "#d8c3ba", "#d7b9b3", "#c69c8c",
                             "#cc8d76", "#be6e4d", "#c5979c", "#dbb4bd",
@@ -588,7 +588,8 @@ var selectMenu = new Vue({
                             "#df7205", "#a34520", "#e7d7a5", "#eae6d5",
                             "#e2e5e2", "#cccfcd", "#acb0ae", "#5b4d4b",
                             "#221111", "#7aadb0", "#64839e", "#212d5c",
-                            "#c3ac92", "#9f8876", "#7d5e53", "#46322a" ],
+                            "#c3ac92", "#9f8876", "#7d5e53", "#46322a"
+                        ],
                         i: 0,
                         j: 0
                     },
@@ -5558,6 +5559,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                cropsPrice: [],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -5580,6 +5582,8 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmControl");
                         }
+                    } else if (eventName == 'onItemValueChanged') {
+                        this.items[1].values[0] = this.cropsPrice[e.valueIndex];
                     } else if (eventName == 'onBackspacePressed' && this.i != 1)
                         selectMenu.showByName("farmControl");
                 }
@@ -5653,6 +5657,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                pays: [],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -5675,6 +5680,8 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmControl");
                         }
+                    } else if (eventName == 'onItemValueChanged') {
+                        this.items[1].values[0] = this.pays[e.valueIndex];
                     } else if (eventName == 'onBackspacePressed' && this.i != 1)
                         selectMenu.showByName("farmControl");
                 }
