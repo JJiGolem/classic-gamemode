@@ -1320,6 +1320,7 @@
     <!-- ------------------------ ПЛАНШЕТ ПД ------------------------ -->
 
     <div v-cloak id="fishing" v-if="show">
+        <!-- <button @click="fishFetch(40, 20, 3)">start</button> -->
         <div class="fishing-line" v-if="isFetch">
             <div class="fishing-zone" v-bind:style="{ width: zone + '%', marginLeft: ((100 - zone) / 2) + '%' }"></div>
             <div id="fishing-cursor" v-bind:style="{ marginLeft: position + '%' }">

@@ -1,6 +1,3 @@
-// import React from 'react';
-// import IncomingCall from "../modules/phone/components/IncomingCall";
-
 export default (myEventEmmiter, dispatch) => {
     myEventEmmiter.on('phone.show', (flag) => {
         dispatch({

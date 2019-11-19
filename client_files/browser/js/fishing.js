@@ -9,7 +9,8 @@ var fishing = new Vue({
         isStarted: false,
         isFetch: false,
         direction: 'right',
-        weight: null
+        weight: null,
+        isEnd: false
     },
     watch: {
         position: function (newPosition, oldPosition) {
@@ -18,9 +19,19 @@ var fishing = new Vue({
             }
 
             if (oldPosition === 1) {
+                if (this.direction === 'left') {
+                    return this.isEnd = true;
+                }
+
               this.direction = 'right';
             }
         },
+        isEnd: function(newState, oldState) {
+            if (newState) {
+                clearInterval(intervalFishingB);
+                mp.trigger('fishing.game.end', false);
+            }
+        }
     },
     methods: {
         moveCursor() {
