@@ -101,21 +101,29 @@ module.exports = {
     },
     /// Начало звонка игроку
     'phone.call.ask': (player, number) => {
+        console.log(1);
         if (player.phone == null) return;
+        console.log(2);
         if (player.phoneState.talkWithId != null) return player.call('phone.call.start.ans', [2]);
+        console.log(3);
         if (player.phone.number === number) return player.call('phone.call.start.ans', [2]);
+        console.log(4);
         if (!phone.isExists(number)) return player.call('phone.call.start.ans', [1]);
-
-        let calledPlayer = mp.players.toArray().find(x => x.phone != null && x.phone.number === number);
+        console.log(5);
+        let calledPlayer = mp.players.toArray().find(x => x.phone != null && x.phone.number == number);
         if (calledPlayer != null) {
+            console.log(6);
             if (calledPlayer.phoneState.talkWithId != null) {
+                console.log(7);
                 player.call('phone.call.start.ans', [2]);
             }
             else {
+                console.log(8);
                 player.phoneState.talkWithId = calledPlayer.id;
                 calledPlayer.phoneState.talkWithId = player.id;
                 calledPlayer.call('phone.call.in', [player.phone.number]);
                 player.phoneState.callTimer = timer.add(() => {
+                    console.log(10);
                     player.phoneState.talkWithId = null;
                     calledPlayer.phoneState.talkWithId = null;
                     player.call('phone.call.start.ans', [4]);
@@ -124,23 +132,30 @@ module.exports = {
             }
         }
         else {
+            console.log(9);
             player.call('phone.call.start.ans', [4]);
         }
     },
     /// Ответ на начало звонка игроку
     'phone.call.ans': (player, ans) => {
+        console.log(11);
         if (player.phoneState.talkWithId == null) return;
+        console.log(12);
         let callerPlayer = mp.players.at(player.phoneState.talkWithId);
+        console.log(13);
         timer.remove(callerPlayer.phoneState.callTimer);
+        console.log(14);
         callerPlayer.phoneState.callTimer = null;
 
         if (ans == 1) {
+            console.log(15);
             callerPlayer.call('voiceChat.connect', [player.id, 'phone']);
             player.call('voiceChat.connect', [callerPlayer.id, 'phone']);
 
             callerPlayer.call('phone.call.start.ans', [0]);
         }
         else {
+            console.log(16);
             callerPlayer.call('phone.call.start.ans', [3]);
             player.phoneState.talkWithId = null;
             callerPlayer.phoneState.talkWithId = null;
@@ -148,25 +163,34 @@ module.exports = {
     },
     /// Окончание звонка с игроком
     'phone.call.end': (player) => {
+        console.log(17);
         if (player.phoneState.talkWithId != null) {
+            console.log(18);
             let playerTalkWith = mp.players.at(player.phoneState.talkWithId);
+            console.log(20);
             if (playerTalkWith != null && playerTalkWith.phone != null && playerTalkWith.phoneState.talkWithId != null) {
+                console.log(21);
                 playerTalkWith.call('voiceChat.disconnect', [playerTalkWith.phoneState.talkWithId, 'phone']);
                 playerTalkWith.phoneState.talkWithId = null;
                 if (playerTalkWith.phoneState.callTimer != null) {
+                    console.log(22);
                     timer.remove(playerTalkWith.phoneState.callTimer);
                     playerTalkWith.phoneState.callTimer = null;
                 }
+                console.log(23);
                 playerTalkWith.call('phone.call.end.in', []);
 
             }
+            console.log(24);
             player.call('voiceChat.disconnect', [player.phoneState.talkWithId, 'phone']);
             player.phoneState.talkWithId = null;
             if (player.phoneState.callTimer != null) {
+                console.log(25);
                 timer.remove(player.phoneState.callTimer);
                 player.phoneState.callTimer = null;
             }
         }
+        console.log(19);
     },
     /// Отправка сообщения игроку данным номером
     'phone.message.send': async (player, message, number) => {
