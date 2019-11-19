@@ -110,8 +110,7 @@ module.exports = {
         console.log(4);
         if (!phone.isExists(number)) return player.call('phone.call.start.ans', [1]);
         console.log(5);
-        let calledPlayer = mp.players.toArray().find(x => x.phone != null && x.phone.number === number);
-        console.log(calledPlayer);
+        let calledPlayer = mp.players.toArray().find(x => x.phone != null && x.phone.number == number);
         if (calledPlayer != null) {
             console.log(6);
             if (calledPlayer.phoneState.talkWithId != null) {
