@@ -246,6 +246,11 @@ module.exports = {
         var d = veh.driver;
         return mp.players.toArray().find(x => x.character && x.id == d.playerId && x.character.id == d.characterId);
     },
+    getProductsNameByVeh(veh) {
+        if (!veh.products) return null;
+        if (!veh.products.bizOrder) return veh.products.name;
+        return veh.products.bizOrder.prodName;
+    },
     // полностью очистить грузовик от товара и водителя
     clearVeh(veh) {
         var driver = this.getDriverByVeh(veh);
