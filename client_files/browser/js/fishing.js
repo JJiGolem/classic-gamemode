@@ -63,6 +63,7 @@ var fishing = new Vue({
             this.direction = 'right',
             this.isStarted = false;
             this.isFetch = false;
+            this.isEnd = false;
         }
     },
 });
