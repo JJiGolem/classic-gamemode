@@ -473,6 +473,8 @@ var inventory = new Vue({
         eatList: [35, 126, 127, 128, 129, 132, 134],
         // Напитки
         drinkList: [34, 130, 133],
+        // Предметы, которые можно изымать при обыске
+        searchList: [1],
         // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
         environment: [],
         // Предметы на игроке (экипировка)
@@ -536,6 +538,12 @@ var inventory = new Vue({
         lastUseHotkey: 0,
         // Анти-флуд использования хоткея
         waitUseHotkey: 1000,
+        // Режим обыска
+        searchMode: {
+            playerId: null,
+            playerName: null,
+            myEquipment: null,
+        },
     },
     computed: {
         commonWeight() {
@@ -598,6 +606,11 @@ var inventory = new Vue({
             }
 
             return cols;
+        },
+        equipmentTitle() {
+            var title = 'Экипировка';
+            if (this.searchMode) title += " " + this.searchMode.playerName;
+            return title;
         },
         descItemName() {
             var item = this.itemDesc.item;
@@ -739,7 +752,20 @@ var inventory = new Vue({
         itemGradient(item, transparent) {
             if (item && item.params && item.params.health)
                 return `linear-gradient(0deg, ${this.valueColor(item.params.health)} ${item.params.health}%, rgba(255,255,255,${(transparent ? 0 : 0.3)}) ${item.params.health}%)`;
-
+        },
+        getItemsMenu(itemId) {
+            if (!this.searchMode) return this.itemsMenu[itemId];
+            var menu = {
+                'Изъять': {
+                    handler(item) {
+                        mp.trigger(`callRemote`, `inventory.search.item.take`, item.sqlId);
+                    }
+                },
+                'Выкинуть': {
+                    handler: this.putGroundHandler
+                }
+            };
+            return menu;
         },
         onBodyItemEnter(index) {
             if (!this.itemDrag.item) return;
@@ -802,12 +828,14 @@ var inventory = new Vue({
                     this.itemDesc.y = y - rect.y;
                 },
                 'contextmenu': (e) => {
+                    if (this.searchMode && !this.searchList.includes(item.itemId)) return;
                     this.itemMenu.item = item;
                     this.itemMenu.x = e.clientX - rect.x;
                     this.itemMenu.y = e.clientY - rect.y;
                 },
                 'mousedown': (e) => {
                     if (item.wait) return;
+                    if (this.searchMode) return;
                     if (e.which == 1) { // Left Mouse Button
                         this.itemDrag.item = item;
                         this.itemDrag.div = e.target;
@@ -1330,6 +1358,24 @@ var inventory = new Vue({
                 this.addItem(item, null, index);
             }
         },
+        initSearchItems(data) {
+            if (typeof data == 'string') data = JSON.parse(data);
+
+            this.searchMode = {
+                playerId: data.playerId,
+                playerName: data.playerName,
+                myEquipment: Object.assign({}, this.equipment)
+            };
+            for (var index in this.equipment) {
+                this.deleteItem(this.equipment[index].sqlId);
+            }
+            for (var index in data.items) {
+                var item = data.items[index];
+                this.addItem(item, null, index);
+            }
+
+            // TODO: запуск исследования
+        },
         deleteItem(sqlId, items = this.equipment) {
             for (var index in items) {
                 var item = items[index];
@@ -1539,6 +1585,11 @@ var inventory = new Vue({
             }
             this.lastShowTime = Date.now();
         },
+        searchMode(val, oldVal) {
+            if (oldVal && !val) {
+                this.initItems(oldVal.myEquipment);
+            }
+        },
     },
     mounted() {
         let self = this;
@@ -1659,7 +1710,7 @@ var inventory = new Vue({
                         sqlId: 300,
                         itemId: 1,
                         params: {},
-                        found: true,
+                        // found: true,
                     },
                     6: {
                         sqlId: 301,
@@ -1836,6 +1887,59 @@ inventory.addEnvironmentPlace({
             }
         }
     }]
+});
+inventory.initSearchItems({
+    playerId: 11,
+    playerName: "Alex Cortez",
+    items: {
+        0: {
+            sqlId: 53,
+            itemId: 1,
+            params: {}
+        },
+        5: {
+            sqlId: 54,
+            itemId: 7,
+            params: {},
+            pockets: [{
+                    cols: 3,
+                    rows: 2,
+                    items: {}
+                },
+                {
+                    cols: 3,
+                    rows: 2,
+                    items: {}
+                },
+                {
+                    cols: 15,
+                    rows: 20,
+                    items: {
+                        20: {
+                            sqlId: 79,
+                            itemId: 1,
+                            params: {},
+                            // found: true,
+                        },
+                        60: {
+                            sqlId: 80,
+                            itemId: 16,
+                            params: {
+                                count: 20
+                            },
+                        },
+                        80: {
+                            sqlId: 81,
+                            itemId: 24,
+                            params: {
+                                count: 2
+                            },
+                        },
+                    }
+                }
+            ]
+        }
+    },
 });
 inventory.debug = true;
 inventory.show = true;
