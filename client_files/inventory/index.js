@@ -290,7 +290,7 @@ mp.events.add("characterInit.done", () => {
 });
 
 mp.events.add("click", (x, y, upOrDown, leftOrRight, relativeX, relativeY, worldPosition, hitEntity) => {
-    if (upOrDown != 'down') return;
+    if (upOrDown != 'down' || leftOrRight != 'left') return;
     if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
     if (!mp.players.local.getVariable("hands")) return;
@@ -411,6 +411,7 @@ mp.events.add("entityStreamOut", (entity) => {
 mp.events.add("time.main.tick", () => {
     var player = mp.players.local;
     var value = player.getArmour();
+    if (mp.busy.includes("lostAttach")) return;
     mp.inventory.setArmour(value);
     mp.inventory.setHandsBlock(player.vehicle != null);
 
