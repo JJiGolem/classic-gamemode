@@ -46,7 +46,9 @@ mp.events.add({
     "death.callRemote.spawn": () => {
         var pos = mp.players.local.position;
         var groundZ = mp.game.gameplay.getGroundZFor3dCoord(pos.x, pos.y, pos.z + 2, false, false);
-        mp.events.callRemote(`death.spawn`, groundZ);
+        var dimension = mp.players.local.dimension;
+        mp.events.call(`weapons.ammo.sync`, true);
+        mp.events.callRemote(`death.spawn`, groundZ, dimension);
     },
     "playerDeath": (player, reason, killer) => {
         mp.death.disableControls(true);
