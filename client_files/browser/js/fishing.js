@@ -1,4 +1,4 @@
-let interval;
+let intervalFishingB;
 
 var fishing = new Vue({
     el: '#fishing',
@@ -13,7 +13,7 @@ var fishing = new Vue({
     },
     watch: {
         position: function (newPosition, oldPosition) {
-            if (oldPosition === 96) {
+            if (oldPosition === 93) {
               this.direction = 'left';
             }
 
@@ -36,17 +36,12 @@ var fishing = new Vue({
             this.isFetch = true;
             this.zone = zone;
             this.weight = weight;
-            interval = setInterval(this.moveCursor, speed);
+            intervalFishingB = setInterval(this.moveCursor, speed);
         },
         endFishing() {
-            clearInterval(interval);
+            clearInterval(intervalFishingB);
 
-            let result;
-            if (Math.abs(this.position - 50) < parseInt(this.zone / 2)) {
-                result = true;
-            } else {
-                result = false;
-            }
+            let result = (Math.abs((this.position + 3) - 50) < parseInt(this.zone / 2))
 
             mp.trigger('fishing.game.end', result);
         },
