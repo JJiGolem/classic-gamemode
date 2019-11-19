@@ -187,8 +187,8 @@ module.exports = {
         name = parseInt(name);
         cost = parseInt(cost);
         if (isNaN(name) || isNaN(cost)) return player.call("house.sell.ans", [0]);
-        if (mp.players.at(player.house.buyerId).character.cash < cost) return player.call("house.sell.ans", [2]);
-        if (housesService.isHaveHouse(mp.players.at(player.house.buyerId).character.id)) return player.call("house.sell.ans", [2]);
+        if (mp.players.at(player.house.buyerId).character.cash < cost) return player.call("house.sell.ans", [6]);
+        if (housesService.isHaveHouse(mp.players.at(player.house.buyerId).character.id)) return player.call("house.sell.ans", [7]);
         let house = housesService.getHouseById(name);
         if (house == null) return player.call("house.sell.ans", [0]);
         let info = house.info;
@@ -205,32 +205,33 @@ module.exports = {
     },
     "house.sell.ans": (player, result) => {
         if (player.house.sellerId == null) return;
-        if (mp.players.at(player.house.sellerId) == null) return;
-        if (mp.players.at(player.house.sellerId).house == null) return;
-        if (mp.players.at(player.house.sellerId).house.buyerId == null) return;
-        let house = housesService.getHouseById(mp.players.at(player.house.sellerId).house.sellingHouseId);
-        if (house == null) return mp.players.at(player.house.sellerId).call("house.sell.ans", [0]);
+        let seller = mp.players.at(player.house.sellerId);
+        if (seller == null) return;
+        if (!mp.players.exists(seller)) return;
+        if (seller.house == null) return;
+        if (seller.house.buyerId == null) return;
+        let house = housesService.getHouseById(seller.house.sellingHouseId);
+        if (house == null) return seller.call("house.sell.ans", [0]);
         let info = house.info;
-        if (info.characterId !== mp.players.at(player.house.sellerId).character.id) return mp.players.at(player.house.sellerId).call("house.sell.ans", [0]);
+        if (info.characterId !== seller.character.id) return seller.call("house.sell.ans", [0]);
         if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10 ||
-            mp.players.at(player.house.sellerId).dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return mp.players.at(player.house.sellerId).call("house.sell.ans", [3]);
-        if (player.character.cash < info.price) return mp.players.at(player.house.sellerId).call("house.sell.ans", [2]);
-        if (housesService.isHaveHouse(player.character.id)) return mp.players.at(player.house.sellerId).call("house.sell.ans", [2]);
-        if (result === 2) return  mp.players.at(player.house.sellerId).call("house.sell.ans", [2]);
+            seller.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return seller.call("house.sell.ans", [3]);
+        if (player.character.cash < info.price) return seller.call("house.sell.ans", [6]);
+        if (housesService.isHaveHouse(player.character.id)) return seller.call("house.sell.ans", [7]);
+        if (result === 2) return  seller.call("house.sell.ans", [2]);
 
-        housesService.sellHouse(house, mp.players.at(player.house.sellerId).house.sellingHouseCost,
-            mp.players.at(player.house.sellerId), player, function(ans) {
-                if (ans) {
-                    mp.players.at(player.house.sellerId).call("house.sell.ans", [1]);
-                }
-                else {
-                    mp.players.at(player.house.sellerId).call("house.sell.ans", [0]);
-                }
-            });
-        mp.players.at(player.house.sellerId).house.buyerId = null;
-        mp.players.at(player.house.sellerId).house.sellingHouseId = null;
-        mp.players.at(player.house.sellerId).house.sellingHouseCost = null;
-        player.house.sellerId = null;
+        housesService.sellHouse(house, seller.house.sellingHouseCost, seller, player, (ans) => {
+            if (ans) {
+                seller.call("house.sell.ans", [1]);
+            }
+            else {
+                seller.call("house.sell.ans", [0]);
+            }
+            seller.house.buyerId = null;
+            seller.house.sellingHouseId = null;
+            seller.house.sellingHouseCost = null;
+            player.house.sellerId = null;
+        });
     },
     "house.sell.stop": (player) => {
         if (player.house.buyerId != null) {
