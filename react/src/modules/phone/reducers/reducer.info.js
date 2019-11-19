@@ -436,7 +436,7 @@ export default function info(state = initialState, action) {
 
         case 'UPDATE_CASHBOX_BUSINESS':
             newState = { ...state };
-            newState.biz[0].cashBox = money;
+            newState.biz[0].cashBox = payload;
 
             return newState;
 

@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 /* eslint-disable default-case */
 import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
@@ -26,7 +25,8 @@ class ActiveCall extends Component {
         const { setCall, info, setCallStatus } = this.props;
         setCall(true);
 
-        mp.trigger('chat.message.get', 1, info.activeCall.callStatus.toString());
+        // eslint-disable-next-line no-undef
+        // mp.trigger('chat.message.get', 1, info.activeCall.callStatus.toString());
 
         if(info.activeCall.callStatus != null && info.activeCall.callStatus === 0) {
             if(!this.state.isStart) {
@@ -178,7 +178,8 @@ class ActiveCall extends Component {
         const { number, info, isMine } = this.props;
         const { time } = this.state;
 
-        mp.trigger('chat.message.get', 1, info.activeCall.callStatus.toString());
+        // eslint-disable-next-line no-undef
+        // mp.trigger('chat.message.get', 1, info.activeCall.callStatus.toString());
 
         return (
             <Fragment>
