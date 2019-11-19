@@ -290,7 +290,7 @@ mp.events.add("characterInit.done", () => {
 });
 
 mp.events.add("click", (x, y, upOrDown, leftOrRight, relativeX, relativeY, worldPosition, hitEntity) => {
-    if (upOrDown != 'down') return;
+    if (upOrDown != 'down' || leftOrRight != 'left') return;
     if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
     if (!mp.players.local.getVariable("hands")) return;
