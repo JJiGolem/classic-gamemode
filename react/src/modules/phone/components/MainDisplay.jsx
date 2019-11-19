@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 import {addAppDisplay, setAppDisplay} from '../actions/action.apps';
 import { setCallStatus, setCall } from "../actions/action.info";

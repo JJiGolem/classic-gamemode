@@ -279,6 +279,20 @@ module.exports = {
     getBlip(id) {
         return this.blips[id - 1];
     },
+    getBlipsPos(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        if (!faction) return null;
+        var positions = {
+            "holder": this.getHolder(faction.id).position,
+            "storage": this.getStorage(faction.id).position,
+            "warehouse": this.getWarehouse(faction.id).position,
+            "blipColor": faction.blipColor
+        };
+        positions.holder.d = this.getHolder(faction.id).dimension;
+        positions.storage.d = this.getStorage(faction.id).dimension;
+        positions.warehouse.d = this.getWarehouse(faction.id).dimension;
+        return positions;
+    },
     getFactionName(player) {
         if (!player.character.factionId) return null;
         return this.getFaction(player.character.factionId).name;
@@ -345,7 +359,7 @@ module.exports = {
         character.save();
 
         player.setVariable("factionId", character.factionId);
-        player.call(`factions.faction.set`, [character.factionId, this.getClientRanks(faction)]);
+        player.call(`factions.faction.set`, [character.factionId, this.getClientRanks(faction), this.getBlipsPos(faction)]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isGovernmentFaction(faction)) mp.events.call(`mapCase.gover.init`, player);
         else if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
@@ -388,7 +402,7 @@ module.exports = {
         character.save();
 
         player.setVariable("factionId", character.factionId);
-        player.call(`factions.faction.set`, [character.factionId, this.getClientRanks(faction)]);
+        player.call(`factions.faction.set`, [character.factionId, this.getClientRanks(faction), this.getBlipsPos(faction)]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isGovernmentFaction(faction)) mp.events.call(`mapCase.gover.init`, player);
         else if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);

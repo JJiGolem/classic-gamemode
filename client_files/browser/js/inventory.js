@@ -299,6 +299,16 @@ var inventory = new Vue({
                         mp.trigger(`callRemote`, `inventory.item.use`, JSON.stringify(data));
                     }
                 },
+                'Слить': {
+                    handler(item) {
+                        if (!item.params.litres) return notifications.error(`Канистра пустая`);
+                        var data = {
+                            sqlId: item.sqlId,
+                            index: 2
+                        };
+                        mp.trigger(`callRemote`, `inventory.item.use`, JSON.stringify(data));
+                    }
+                },
             },
         },
         // Вайт-лист предметов, которые можно надеть

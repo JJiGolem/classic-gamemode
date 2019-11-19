@@ -26,7 +26,7 @@ class AnsSell extends Component {
             let area = house.area;
             setApps([
                 { name: 'MainDisplay', form: <MainDisplay /> },
-                { name: 'Success', form: <Success name={name} area={area}/> }
+                { name: 'SuccessSell', form: <Success name={name} area={area}/> }
             ]);
         }
         else if (status == 2) {

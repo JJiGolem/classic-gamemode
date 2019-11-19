@@ -25,6 +25,7 @@ module.exports = {
             var pos = marker.position;
             pos.z++;
             player.position = pos;
+            player.dimension = marker.dimension;
             out.info(`Вы телепортировались к организации #${args[0]}`, player);
         }
     },

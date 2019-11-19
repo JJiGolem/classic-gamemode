@@ -481,9 +481,9 @@ module.exports = {
                 };
                 break;
             case 2: //организация
-                var pos = factions.getMarker(player.character.factionId).position;
-                player.spawn(pos);
-                player.dimension = 0;
+                var marker = factions.getMarker(player.character.factionId);
+                player.spawn(marker.position);
+                player.dimension = marker.dimension;
                 break;
         }
 
