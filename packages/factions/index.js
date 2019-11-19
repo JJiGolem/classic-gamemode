@@ -571,6 +571,7 @@ module.exports = {
         if (!player.insideWarehouse) return notifs.error(player, `Вы далеко`, header);
         var haveBox = player.hasAttachment("ammoBox") || player.hasAttachment("medicinesBox");
         if (haveBox) return notifs.error(player, `[S] Нельзя нести больше`, header);
+        if (inventory.getHandsItem(player)) return notifs.error(player, `Освободите руки`, header);
         player.addAttachment(type + "Box");
     },
     putBox(player) {

@@ -411,6 +411,7 @@ mp.events.add("entityStreamOut", (entity) => {
 mp.events.add("time.main.tick", () => {
     var player = mp.players.local;
     var value = player.getArmour();
+    if (mp.busy.includes("lostAttach")) return;
     mp.inventory.setArmour(value);
     mp.inventory.setHandsBlock(player.vehicle != null);
 
