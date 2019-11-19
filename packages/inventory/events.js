@@ -509,6 +509,12 @@ module.exports = {
 
                     notifs.success(player, `Канистра заправлена на ${fuel} л.`, header);
                     inventory.notifyOverhead(player, `Заправил канистру`);
+                } else if (data.index == 2) { // слить содержимое канистры
+                    var params = inventory.getParamsValues(item);
+                    if (!params.litres) return out(`Канистра пустая`);
+                    inventory.updateParam(player, item, 'litres', 0);
+                    notifs.success(player, `Содержимое канистры слито`, header);
+                    inventory.notifyOverhead(player, `Слил канистру`);
                 }
                 break;
         }

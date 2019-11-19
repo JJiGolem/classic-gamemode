@@ -59,6 +59,9 @@ mp.weapons = {
         if (hash == 3220176749) return -1074790547; // weapon_assaultrifle
         if (hash == 4019527611) return -275439685; // weapon_dbshotgun
         if (hash == 4208062921) return -86904375; // weapon_carbinerifle_mk2
+        if (hash == 4024951519) return -270015777; // Assult SMG
+        if (hash == 2937143193) return -1357824103; // Advanced Rifle
+        if (hash == 3523564046) return -771403250; // Heavy Pistol
         var hashes = [2210333304];
         if (hashes.includes(hash)) return -2084633992;
         return hash;
