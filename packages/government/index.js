@@ -12,7 +12,7 @@ module.exports = {
     // Кол-во боеприпасов, списываемое за выдачу патронов
     ammoAmmo: 1,
     // Позиция маркера с услугами правительства
-    servicePos: new mp.Vector3(-541.71, -209.9, 37.65 - 1),
+    servicePos: new mp.Vector3(246.3321533203125, 222.69009399414062, 106.28681182861328 - 1),
     // Стоимость восстановления ключей от авто
     restoreVehKeysPrice: 1000,
 
@@ -22,10 +22,11 @@ module.exports = {
     createServiceMarker() {
         var pos = this.servicePos;
         var service = mp.markers.new(1, pos, 0.5, {
-            color: [0, 187, 255, 70]
+            color: [0, 187, 255, 70],
+            dimension: 1
         });
 
-        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, service.dimension);
         colshape.onEnter = (player) => {
             if (player.vehicle) return;
             var data = {
