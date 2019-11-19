@@ -52,6 +52,18 @@ class AnsSell extends Component {
             closeApp();
             addApp({ name: 'Error', form: <Error status='Вы не можете продать дом с машинами в гараже'/> });
         }
+
+        else if (status === 6) {
+            closeApp();
+            closeApp();
+            addApp({ name: 'Error', form: <Error status='У покупателя недостаточно денег'/> });
+        }
+
+        else if (status === 7) {
+            closeApp();
+            closeApp();
+            addApp({ name: 'Error', form: <Error status='У покупателя уже есть дом'/> });
+        }
     }
 
     render() {
