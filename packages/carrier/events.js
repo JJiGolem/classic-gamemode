@@ -88,6 +88,7 @@ module.exports = {
         if (veh.driver) return out(`Уже арендован`);
         if (player.character.cash < carrier.vehPrice) return out(`Необходимо $${carrier.vehPrice}`);
 
+        vehicles.disableControl(player, false);
         money.removeCash(player, carrier.vehPrice, (res) => {
             if (!res) return out(`Ошибка списания наличных`);
 
@@ -181,10 +182,11 @@ module.exports = {
             player.removeFromVehicle();
             notifs.error(player, text, `Аренда грузовика`);
         };
+        var characterId = player.character.id;
+        vehicles.disableControl(player, !vehicle.driver || vehicle.driver.characterId != characterId);
         if (!vehicle.driver) return player.call(`offerDialog.show`, ["carrier_job", {
             price: carrier.vehPrice
         }]);
-        var characterId = player.character.id;
         if (vehicle.driver.characterId != characterId) {
             var driver = carrier.getDriverByVeh(vehicle);
             if (!driver) delete vehicle.driver;
