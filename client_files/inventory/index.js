@@ -140,6 +140,7 @@ mp.inventory = {
         // поднятие предмета с земли
         if (mp.busy.includes()) return;
         if (mp.players.local.vehicle) return;
+        if (!mp.players.local.getHealth()) return;
         var pos = mp.players.local.getOffsetFromInWorldCoords(0, 0, 0);
         var itemObj = this.getNearGroundItemObject(pos);
         if (!itemObj) return;
