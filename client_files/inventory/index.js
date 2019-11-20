@@ -393,7 +393,7 @@ mp.events.add("playerWeaponShot", (targetPos, targetEntity) => {
 });
 
 mp.events.add("playerWeaponChanged", (weapon, oldWeapon) => {
-    mp.inventory.syncAmmo(oldWeapon);
+    mp.inventory.syncAmmo(weapon);
 });
 
 mp.events.add("entityStreamIn", (entity) => {
@@ -411,8 +411,8 @@ mp.events.add("entityStreamOut", (entity) => {
 mp.events.add("time.main.tick", () => {
     var player = mp.players.local;
     var value = player.getArmour();
-    if (mp.busy.includes("lostAttach")) return;
     mp.inventory.setArmour(value);
+    if (mp.busy.includes("lostAttach")) return;
     mp.inventory.setHandsBlock(player.vehicle != null);
 
     mp.objects.forEach(obj => {
