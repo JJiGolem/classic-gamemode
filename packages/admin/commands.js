@@ -1,7 +1,8 @@
 /// Базовые админские команды, описание их структуры находится в модуле test
+let admin = require('./index.js');
+
 var vehicles = call("vehicles");
 let notify = call('notifications');
-let admin = call('admin');
 let factions = call('factions');
 let timer = call('timer');
 let death = call('death');
@@ -104,7 +105,7 @@ module.exports = {
     },
     "/return": {
         access: 2,
-        description: "Вернуть игрока на исходную позицию (после /gethere)",
+        description: "Вернуть игрока на исходную позицию (после /gethere или /masstp)",
         args: "[ID]:n",
         handler: (player, args) => {
             let target = mp.players.at(args[0]);
@@ -116,6 +117,28 @@ module.exports = {
             target.returnDimension = null;
             notify.info(player, `Вы вернули игрока на исходную позицию`);
             notify.info(target, `${player.character.name} вернул вас на исходную позицию`);
+        }
+    },
+    "/returnall": {
+        access: 2,
+        description: "Вернуть игроков в радиусе на исходную позицию (после /gethere или /masstp)",
+        args: "[радиус]:n",
+        handler: (player, args) => {
+            let count = 0;
+            mp.players.forEachInRange(player.position, args[0], (target) => {
+                if (!target.character) return;
+                if (target.dimension != player.dimension) return;
+                if (!target.returnPosition) return;
+                if (target.getVariable('knocked')) return;
+                target.position = target.returnPosition;
+                target.dimension = target.returnDimension;
+                target.returnPosition = null;
+                target.returnDimension = null;
+                notify.info(target, `${player.character.name} вернул вас на исходную позицию`);
+                count++;
+            });
+            mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} вернул ${count} чел. на исходную позицию (Радиус: ${args[0]})`);
+            notify.info(player, `Вы вернули ${count} чел. на исходную позицию`); 
         }
     },
     "/hp": {
@@ -790,12 +813,12 @@ module.exports = {
         access: 4,
         args: "",
         handler: (player, args, out) => {
-            let pos = admin.getMassTeleportPosition();
-            if (pos) {
-                admin.setMassTeleportPosition(null);
+            let data = admin.getMassTeleportData();
+            if (data.position) {
+                admin.setMassTeleportData(null, null);
                 out.info(`${player.character.name} отключил массовый телепорт`);
             } else {
-                admin.setMassTeleportPosition(player.position);
+                admin.setMassTeleportData(player.position, player.dimension);
                 out.info(`${player.character.name} включил массовый телепорт`);
             }
         }
