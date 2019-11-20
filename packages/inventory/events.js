@@ -636,7 +636,7 @@ module.exports = {
         mp.events.call("faction.holder.items.clear", player);
         mp.events.call("faction.holder.items.init", player);
     },
-    "death.spawn": (player, groundZ) => {
+    "death.spawn": (player, groundZ, dimension) => {
         if (!player.character) return;
 
         var handsItem = inventory.getHandsItem(player);
@@ -644,7 +644,7 @@ module.exports = {
 
         var pos = player.position;
         pos.z = groundZ;
-        inventory.putGround(player, handsItem, pos);
+        inventory.putGround(player, handsItem, pos, dimension);
 
         notifs.warning(player, `Вы потеряли оружие из рук`, `Инвентарь`);
     },

@@ -1185,7 +1185,8 @@ module.exports = {
     canMerge(itemId, targetId) {
         return this.mergeList[itemId] && this.mergeList[itemId].includes(targetId);
     },
-    putGround(player, item, pos) {
+    putGround(player, item, pos, dimension = null) {
+        if (dimension == null) dimension = player.dimension;
         var children = this.getArrayItems(player, item);
         this.deleteItem(player, item);
 
@@ -1194,7 +1195,7 @@ module.exports = {
 
         var newObj = mp.objects.new(mp.joaat(info.model), pos, {
             rotation: new mp.Vector3(info.rX, info.rY, player.heading),
-            dimension: player.dimension
+            dimension: dimension
         });
         newObj.playerId = player.id;
         newObj.item = item;

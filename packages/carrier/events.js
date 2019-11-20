@@ -190,7 +190,7 @@ module.exports = {
             if (!driver) delete vehicle.driver;
             else return out(`Грузовик арендован другим игроком`);
         }
-        if (vehicle.products) return notifs.info(player, `Загружено: ${vehicle.products.name}`, `Товар`);
+        if (vehicle.products) return notifs.info(player, `Загружено: ${carrier.getProductsNameByVeh(vehicle)}`, `Товар`);
     },
     "playerQuit": (player) => {
         if (!player.character || player.character.job != 4) return;

@@ -106,6 +106,11 @@ mp.events.add({
         mp.weapons.lastWeapon = weapon;
     },
     "time.main.tick": () => {
+        // фикс пропажи оружия при достижении 0 патронов
+        if (mp.weapons.hashes.length && mp.players.local.weapon != mp.weapons.hashes[0]) {
+            mp.weapons.setCurrentWeapon(mp.weapons.hashes[0]);
+        }
+        
         if (!mp.weapons.needSync) return;
         if (Date.now() - mp.weapons.lastSync < mp.weapons.waitSync) return;
         mp.weapons.sync();
@@ -135,11 +140,5 @@ mp.events.add({
         hash = parseInt(hash);
         var ammo = mp.weapons.getAmmoWeapon(hash);
         mp.events.callRemote("weapons.ammo.remove", sqlId, ammo);
-    },
-    "time.main.tick": () => {
-        // фикс пропажи оружия при достижении 0 патронов
-        if (mp.weapons.hashes.length && mp.players.local.weapon != mp.weapons.hashes[0]) {
-            mp.weapons.setCurrentWeapon(mp.weapons.hashes[0]);
-        }
     },
 });
