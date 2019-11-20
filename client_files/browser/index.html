@@ -575,7 +575,7 @@
                                     <div class="eye" v-if="pocket.items[n-1].found"><img src="img/inventory/eye.svg" /></div>
                                     <!--<div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>-->
                                     <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
-                                    <div v-if="pocket.items[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
+                                    <div v-if="pocket.items[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope">
                                         <div class="lds-rolling">
                                             <div></div>
                                         </div>
@@ -610,7 +610,7 @@
                         <div class="count" v-if="equipment[n-1].params.count">{{ equipment[n-1].params.count }}</div>
                         <!--<div class="health" v-if="equipment[n-1].params.health" v-bind:style="{top: 100 - equipment[n-1].params.health + '%', 'border-color': valueColor(equipment[n-1].params.health)}"></div>-->
                         <div class="sqlid" v-if="debug">#{{ equipment[n-1].sqlId }}</div>
-                        <div v-if="equipment[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
+                        <div v-if="equipment[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope">
                             <div class="lds-rolling">
                                 <div></div>
                             </div>
@@ -640,21 +640,21 @@
                 <div class="container" v-for="item in equipment" v-bind:key="item.sqlId" v-if="item.pockets" :class="{drag: itemDrag.item && itemDrag.item.sqlId == item.sqlId}">
                     <div class="header" @click="item.showPockets = !item.showPockets" :class="{hidden: !item.showPockets}">
                         <img :class="{hidden: !item.showPockets}" src="img/inventory/arrow.svg" />
-                        <div class="title">{{ item.params.name || itemsInfo[item.itemId].name }}</div>
+                        <div class="title">{{ getItemName(item) }}</div>
                         <div>{{ +getPlaceWeight(item).toFixed(1) }} кг</div>
                     </div>
                     <transition name="slide">
                         <div class="pockets" v-show="item.showPockets">
-                            <div class="items" v-for="pocket in item.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
+                            <div class="items" v-show="!pocket.search" v-for="pocket in item.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
                                 <div class="column" v-for="n in pocket.cols * pocket.rows" :key="n-1" :class="columnClass(n-1, pocket, item)" @mouseenter="columnMouseHandler(item, pocket, n-1, $event)"
                                     @mouseleave="columnMouseHandler(item, pocket, n-1, $event)">
-                                    <div class="item" v-if="pocket.items[n-1]" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
+                                    <div class="item" v-if="pocket.items[n-1] && !pocket.items[n-1].search" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
                                         @contextmenu="itemMouseHandler(pocket.items[n-1], $event)" @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1])" :class="{dragging: pocket.items[n-1] == itemDrag.item, found: pocket.items[n-1].found }">
                                         <div class="count" v-if="pocket.items[n-1].params.count && !pocket.items[n-1].found">{{ pocket.items[n-1].params.count }}</div>
                                         <div class="eye" v-if="pocket.items[n-1].found"><img src="img/inventory/eye.svg" /></div>
                                         <!--<div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>-->
                                         <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
-                                        <div v-if="pocket.items[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
+                                        <div v-if="pocket.items[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope">
                                             <div class="lds-rolling">
                                                 <div></div>
                                             </div>
@@ -677,7 +677,7 @@
                     <div class="count" v-if="equipment[13].params.count">{{ equipment[13].params.count }}</div>
                     <!--<div class="health" v-if="equipment[13].params.health" v-bind:style="{top: 100 - equipment[13].params.health + '%', 'border-color': valueColor(equipment[13].params.health)}"></div>-->
                     <div class="sqlid" v-if="debug">#{{ equipment[13].sqlId }}</div>
-                    <div v-if="equipment[13].wait" v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
+                    <div v-if="equipment[13].wait" v-cloak="v-cloak" class="loader lds-css ng-scope">
                         <div class="lds-rolling">
                             <div></div>
                         </div>
@@ -697,7 +697,7 @@
                     <div class="count" v-if="hotkeys[n].params.count">{{ hotkeys[n].params.count }}</div>
                     <!--<div class="health" v-if="hotkeys[n].params.health" v-bind:style="{top: 100 - hotkeys[n].params.health + '%', 'border-color': valueColor(hotkeys[n].params.health)}"></div>-->
                     <div class="sqlid" v-if="debug">#{{ hotkeys[n].sqlId }}</div>
-                    <div v-if="hotkeys[n].wait" v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
+                    <div v-if="hotkeys[n].wait" v-cloak="v-cloak" class="loader lds-css ng-scope">
                         <div class="lds-rolling">
                             <div></div>
                         </div>

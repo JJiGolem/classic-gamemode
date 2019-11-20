@@ -539,11 +539,11 @@ var inventory = new Vue({
         // Анти-флуд использования хоткея
         waitUseHotkey: 1000,
         // Режим обыска
-        searchMode: {
-            playerId: null,
-            playerName: null,
-            myEquipment: null,
-        },
+        searchMode: null,
+        // Время исследования при обыске
+        searchWait: 5000,
+        // Таймер исследования при обыске
+        searchTimer: null,
     },
     computed: {
         commonWeight() {
@@ -645,9 +645,9 @@ var inventory = new Vue({
             });
             if (item.pockets) params.push({
                 name: "Карманы",
-                value: item.pockets.length + " ед."
+                value: item.pockets.filter(x => !x.search).length + " ед."
             });
-            if (this.getItemsCount(item)) params.push({
+            if (item.pockets) params.push({
                 name: "Содержит",
                 value: this.getItemsCount(item) + " предметов"
             });
@@ -1014,7 +1014,9 @@ var inventory = new Vue({
             if (!item.pockets) return 0;
             var count = 0;
             item.pockets.forEach((pocket) => {
+                if (pocket.search) return;
                 for (var index in pocket.items) {
+                    if (pocket.items[index].search) continue;
                     count++;
                 }
             });
@@ -1262,6 +1264,36 @@ var inventory = new Vue({
         setWaitItem(item, enable) {
             Vue.set(item, 'wait', enable);
         },
+        // Предмет был найден при обыске
+        setFoundItem(item, enable) {
+            Vue.set(item, 'found', enable);
+        },
+        // Ожидание исследования предметов при обыске
+        setSearchItems(items, enable) {
+            var searchList = [];
+            items.forEach(item => {
+                Vue.set(item, 'search', enable);
+                if (item.pockets) {
+                    item.pockets.forEach(pocket => {
+                        Vue.set(pocket, 'search', enable);
+                        searchList.push(pocket);
+                        for (var index in pocket.items) {
+                            var child = pocket.items[index];
+                            Vue.set(child, 'search', enable);
+                            searchList.push(child);
+                        }
+                    });
+                }
+                searchList.push(item);
+            });
+            clearInterval(this.searchTimer);
+            if (!enable) return;
+            this.searchTimer = setInterval(() => {
+                var el = searchList.shift();
+                if (!el) return clearInterval(this.searchTimer);
+                Vue.set(el, 'search', false);
+            }, this.searchWait);
+        },
 
         // ******************  [ Inventory Config ] ******************
         setItemsInfo(itemsInfo) {
@@ -1359,6 +1391,7 @@ var inventory = new Vue({
             }
         },
         initSearchItems(data) {
+            if (this.searchMode) return this.notify(`Режим обыска уже активирован`);
             if (typeof data == 'string') data = JSON.parse(data);
 
             this.searchMode = {
@@ -1369,12 +1402,17 @@ var inventory = new Vue({
             for (var index in this.equipment) {
                 this.deleteItem(this.equipment[index].sqlId);
             }
+            // запуск исследования
+            this.setSearchItems(Object.values(data.items), true);
             for (var index in data.items) {
                 var item = data.items[index];
                 this.addItem(item, null, index);
             }
+        },
+        stopSearchMode() {
+            if (!this.searchMode) return this.notify(`Режим обыска не активирован`);
 
-            // TODO: запуск исследования
+            this.searchMode = null;
         },
         deleteItem(sqlId, items = this.equipment) {
             for (var index in items) {
@@ -1443,6 +1481,7 @@ var inventory = new Vue({
         },
         getItemName(item) {
             if (!item) return null;
+            if (item.search) return 'Обыск...';
             if ([6, 7, 8, 9, 15, 133].includes(item.itemId) && item.params.name) // одежда, рыба, алко-напиток
                 return `${item.params.name}`;
             if (item.itemId == 16 && item.params.name) // сигареты
@@ -1938,7 +1977,48 @@ inventory.initSearchItems({
                     }
                 }
             ]
-        }
+        },
+        11: {
+            sqlId: 56,
+            itemId: 8,
+            params: {},
+            pockets: [{
+                    cols: 5,
+                    rows: 5,
+                    items: {}
+                },
+                {
+                    cols: 5,
+                    rows: 5,
+                    items: {}
+                },
+                {
+                    cols: 15,
+                    rows: 20,
+                    items: {
+                        20: {
+                            sqlId: 179,
+                            itemId: 1,
+                            params: {},
+                        },
+                        60: {
+                            sqlId: 180,
+                            itemId: 16,
+                            params: {
+                                count: 20
+                            },
+                        },
+                        80: {
+                            sqlId: 181,
+                            itemId: 24,
+                            params: {
+                                count: 2
+                            },
+                        },
+                    }
+                }
+            ]
+        },
     },
 });
 inventory.debug = true;
