@@ -147,11 +147,16 @@ mp.farms = {
                 var item = {
                     text: "Управление",
                 };
+                var cropsPrice = [data.productAPrice, data.productBPrice, data.productCPrice];
+                var pays = [data.pay, data.farmerPay, data.tractorPay, data.pilotPay];
                 mp.callCEFV(`selectMenu.addItem('farm',${JSON.stringify(item)}, 2)`);
                 mp.callCEFV(`selectMenu.menus['farmControlGrains'].items[0].values[0] = "${data.grainPrice}"`);
                 mp.callCEFV(`selectMenu.menus['farmControlSoils'].items[0].values[0] = "${data.soilPrice}"`);
                 mp.callCEFV(`selectMenu.menus['farmControlCrops'].items[1].values[0] = "${data.productAPrice}"`);
+                mp.callCEFV(`selectMenu.menus['farmControlPays'].items[1].values[0] = "${data.pay}"`);
                 mp.callCEFV(`selectMenu.menus['farmControlSell'].items[0].values[0] = "$${data.statePrice}"`);
+                mp.callCEFV(`selectMenu.setProp('farmControlCrops', 'cropsPrice', ${JSON.stringify(cropsPrice)})`);
+                mp.callCEFV(`selectMenu.setProp('farmControlPays', 'pays', ${JSON.stringify(pays)})`);
             }
         } else {
             mp.callCEFV(`selectMenu.deleteItem('farm', 'Управление')`);

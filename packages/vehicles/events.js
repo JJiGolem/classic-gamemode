@@ -75,12 +75,14 @@ module.exports = {
         player.call('prompt.hide');
 
         vehicle.lastPlayerTime = Date.now();
+        if (player.vehicleDisabledControl) vehicles.disableControl(player, false);
     },
     "playerStartExitVehicle": (player) => {
         if (player.vehicle.engine) player.vehicle.engine = true;
     },
     "vehicles.engine.toggle": (player) => { /// Включение/выключение двигателя
         if (!player.vehicle) return;
+        if (player.vehicleDisabledControl) return;
         if (player.vehicle.key == "market") return;
         if (player.vehicle.key == "rent" && !player.vehicle.isActiveRent) return;
         if (player.vehicle.key == "job" && player.vehicle.owner == 2 && !player.vehicle.isActiveTaxi) return;
@@ -478,10 +480,10 @@ module.exports = {
                 vehicles.respawn(veh);
             }
         });
-        var diff = Date.now() - start.getTime();
-        debug(`time now: ${new Date()}`)
-        debug(`free vehicles was spawned: ${diff} ms`)
-        debug(`all vehicles: ${mp.vehicles.length}`)
+        // var diff = Date.now() - start.getTime();
+        // debug(`time now: ${new Date()}`)
+        // debug(`free vehicles was spawned: ${diff} ms`)
+        // debug(`all vehicles: ${mp.vehicles.length}`)
     },
     "vehicles.props.add": async (player, data) => {
         console.log(data);
@@ -529,27 +531,27 @@ module.exports = {
         let hasHouse = houses.isHaveHouse(player.character.id);
         let vehicle = mp.vehicles.toArray().find(x => x.sqlId == id);
         let price = vehicles.ownVehicleRespawnPrice;
-        if (player.character.cash < price) return notifs.error(player, `Недостаточно денег`); 
-        if (!vehicle) return hasHouse ? notifs.warning(player, `Транспорт не найден`) : 
-        notifs.warning(player, `Не удалось отследить ваше т/с, ищите его на парковке`);
+        if (player.character.cash < price) return notifs.error(player, `Недостаточно денег`);
+        if (!vehicle) return hasHouse ? notifs.warning(player, `Транспорт не найден`) :
+            notifs.warning(player, `Не удалось отследить ваше т/с, ищите его на парковке`);
 
         if (vehicle.key != 'private' || vehicle.owner != player.character.id) return;
         money.removeCash(player, price, function(result) {
             if (result) {
                 vehicles.respawnVehicle(vehicle);
             } else {
-                notifs.error(player, `Ошибка финансовой операции`); 
+                notifs.error(player, `Ошибка финансовой операции`);
             }
         }, `Доставка т/с к дому`)
-        
+
         notifs.success(player, `Транспортное средство доставлено ${hasHouse ? 'к дому' : 'на парковку'}`, 'Доставка');
     },
     "vehicles.own.find": (player, id) => {
         if (!player.character) return;
         let hasHouse = houses.isHaveHouse(player.character.id);
         let vehicle = mp.vehicles.toArray().find(x => x.sqlId == id);
-        if (!vehicle) return hasHouse ? notifs.error(player, `Транспорт не найден`, `GPS`) : 
-        notifs.warning(player, `Не удалось отследить ваше т/с, ищите его на парковке`, `GPS`);
+        if (!vehicle) return hasHouse ? notifs.error(player, `Транспорт не найден`, `GPS`) :
+            notifs.warning(player, `Не удалось отследить ваше т/с, ищите его на парковке`, `GPS`);
 
         if (vehicle.key != 'private' || vehicle.owner != player.character.id) return;
 

@@ -67,6 +67,12 @@ let playersJoinPool = [];
 global.debug = (text) => {
     require('../terminal').debug(text);
 };
+global.d = (text) => {
+    mp.players.forEach(rec => {
+        if (!rec.character) return;
+        require('../notifications').info(rec, text, `Server DEBUG-LOG`);
+    });
+};
 
 if (!isBuild) {
     require('../../scripts/dev').compile();
@@ -87,7 +93,7 @@ db.connect(function() {
             if (events["init"] != null) {
                 modulesToLoad.push(file);
             }
-        } 
+        }
     });
 
     fs.readdirSync(path.dirname(__dirname) + "/../client_packages").forEach(file => {

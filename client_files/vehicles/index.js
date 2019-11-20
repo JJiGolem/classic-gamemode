@@ -520,6 +520,8 @@ mp.events.add("time.main.tick", () => {
 mp.moduleVehicles = {
     nearBootVehicleId: null,
     nearHoodVehicleId: null,
+    disabledControl: false,
+
     getSeat(player) {
         if (!player.vehicle) return null;
 
@@ -530,9 +532,15 @@ mp.moduleVehicles = {
 
         return null;
     },
+    disableControl(enable) {
+        this.disabledControl = enable;
+    },
 }
 
 mp.events.add({
+    "vehicles.disableControl": (enable) => {
+        mp.moduleVehicles.disableControl(enable);
+    },
     "playerEnterVehicleBoot": (player, vehicle) => {
         if (player.vehicle) return;
         if (vehicle.getVariable("static")) return;
@@ -586,6 +594,13 @@ mp.events.add('render', () => {
             });
         }
     });
+    if (mp.moduleVehicles.disabledControl) {
+        mp.game.controls.disableControlAction(0, 59, true); /// INPUT_VEH_MOVE_LR
+        mp.game.controls.disableControlAction(0, 60, true); /// INPUT_VEH_MOVE_UD
+        mp.game.controls.disableControlAction(0, 71, true); /// INPUT_VEH_ACCELERATE
+        mp.game.controls.disableControlAction(0, 72, true); /// INPUT_VEH_BRAKE
+        // mp.game.controls.disableControlAction(0, 75, true); /// INPUT_VEH_EXIT
+    }
 });
 
 mp.events.add('vehicles.add.menu.show', () => {

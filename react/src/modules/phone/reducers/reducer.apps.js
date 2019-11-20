@@ -71,6 +71,17 @@ export default function apps(state = initialState, action) {
             }
 
             return newStateOrder;
+
+        case 'SHOW_PHONE':
+            if (!payload) {
+                const newStateSell = [ ...state ];
+
+                const indexSellApp = newStateSell.findIndex(app => app.name === 'SuccessSell');
+
+                if (indexSellApp !== -1) {
+                    return [ { name: 'MainDisplay', form: <MainDisplay /> } ]
+                }
+            }
     }
 
     return state;

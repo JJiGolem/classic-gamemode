@@ -69,6 +69,8 @@ module.exports = {
     unarrestPrice: 1000,
     // Процент адвокату за освобождение (от 0.00 до 1.00)
     unarrestPayK: 0.05,
+    // Мин. ранг, с которого можно выдавать лицению на оружие
+    giveGunLicenseRank: 10,
 
 
     setCuffs(player, cuffs) {

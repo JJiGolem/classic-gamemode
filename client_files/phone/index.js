@@ -18,7 +18,7 @@ mp.events.add('phone.load', function (phoneInfo, phoneDialogs, apps) {
     apps.forEach(app => {
         mp.callCEFR('phone.app.add', [app, null]);
     });
-    //bindButtons(phoneInfo.isHave);
+    bindButtons(phoneInfo.isHave);
 });
 
 /// Добавление приложения
@@ -82,7 +82,7 @@ mp.events.add('phone.call.in', function (startedPlayerNumber) {
 /// Когда звонят нам и мы принимаем/отклоняем звонок
 mp.events.add('phone.call.in.ans', function (ans) {
     mp.events.callRemote('phone.call.ans', ans);
-    if (ans === 1) {
+    if (ans == 1) {
         //playHoldAnimation(false);
         playCallAnimation(true);
     }
@@ -142,20 +142,20 @@ mp.events.add('phone.error', function (number) {
 
 
 
-// let bindButtons = (state) => {
-// //     if (state) {
-// //         if (isBinding) return;
-// //         isBinding = true;
-// //         mp.keys.bind(0x26, true, showPhone);        // UP ARROW key
-// //         mp.keys.bind(0x28, true, hidePhone);        // DOWN ARROW key
-// //     }
-// //     else {
-// //         if (!isBinding) return;
-// //         isBinding = false;
-// //         mp.keys.unbind(0x26, true, showPhone);        // UP ARROW key
-// //         mp.keys.unbind(0x28, true, hidePhone);        // DOWN ARROW key
-// //     }
-// // };
+let bindButtons = (state) => {
+    if (state) {
+        if (isBinding) return;
+        isBinding = true;
+        mp.keys.bind(0x26, true, showPhone);        // UP ARROW key
+        mp.keys.bind(0x28, true, hidePhone);        // DOWN ARROW key
+    }
+    else {
+        if (!isBinding) return;
+        isBinding = false;
+        mp.keys.unbind(0x26, true, showPhone);        // UP ARROW key
+        mp.keys.unbind(0x28, true, hidePhone);        // DOWN ARROW key
+    }
+};
 mp.events.add("phone.show", (state) => {
     if (state) {
         showPhone();
@@ -173,7 +173,7 @@ let showPhone = () => {
     if (mp.farms.isCropping(player)) return;
 
     if (!mp.busy.add('phone')) return;
-    //mp.callCEFR('phone.show', [true]);
+    mp.callCEFR('phone.show', [true]);
     playCallAnimation(false);
     playHoldAnimation(true);
 };
@@ -182,7 +182,7 @@ let hidePhone = () => {
     if (mp.game.ui.isPauseMenuActive()) return;
     if (!mp.busy.includes('phone')) return;
 
-    //mp.callCEFR('phone.show', [false]);
+    mp.callCEFR('phone.show', [false]);
     mp.busy.remove('phone');
     playHoldAnimation(false);
     playCallAnimation(false);

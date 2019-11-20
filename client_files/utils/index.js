@@ -342,9 +342,10 @@ mp.utils = {
         return mp.game.invoke('0x9F47B058362C84B5', raycast.entity);
     },
     // Луч от игрок перед собой
-    frontRaycast(player) {
+    frontRaycast(player, draw = false) {
         var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
         var endPos = player.getOffsetFromInWorldCoords(0, 1, 0);
+        if (draw) mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 255, 0, 100);
         return mp.raycasting.testPointToPoint(startPos, endPos);
     },
     // Добавить текст над головой игрока

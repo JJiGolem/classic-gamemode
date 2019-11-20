@@ -140,6 +140,7 @@ mp.inventory = {
         // поднятие предмета с земли
         if (mp.busy.includes()) return;
         if (mp.players.local.vehicle) return;
+        if (!mp.players.local.getHealth()) return;
         var pos = mp.players.local.getOffsetFromInWorldCoords(0, 0, 0);
         var itemObj = this.getNearGroundItemObject(pos);
         if (!itemObj) return;
@@ -290,7 +291,7 @@ mp.events.add("characterInit.done", () => {
 });
 
 mp.events.add("click", (x, y, upOrDown, leftOrRight, relativeX, relativeY, worldPosition, hitEntity) => {
-    if (upOrDown != 'down') return;
+    if (upOrDown != 'down' || leftOrRight != 'left') return;
     if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
     if (!mp.players.local.getVariable("hands")) return;
@@ -393,7 +394,7 @@ mp.events.add("playerWeaponShot", (targetPos, targetEntity) => {
 });
 
 mp.events.add("playerWeaponChanged", (weapon, oldWeapon) => {
-    mp.inventory.syncAmmo(oldWeapon);
+    mp.inventory.syncAmmo(weapon);
 });
 
 mp.events.add("entityStreamIn", (entity) => {
@@ -412,6 +413,7 @@ mp.events.add("time.main.tick", () => {
     var player = mp.players.local;
     var value = player.getArmour();
     mp.inventory.setArmour(value);
+    if (mp.busy.includes("lostAttach")) return;
     mp.inventory.setHandsBlock(player.vehicle != null);
 
     mp.objects.forEach(obj => {
