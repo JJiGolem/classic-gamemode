@@ -46,6 +46,18 @@ class AnsSell extends Component {
             closeApp();
             addApp({ name: 'Error', form: <Error status='Нельзя продать бизнес дешевле гос.стоимости'/> });
         }
+
+        else if (status === 5) {
+            closeApp();
+            closeApp();
+            addApp({ name: 'Error', form: <Error status='У покупателя недостаточно денег'/> });
+        }
+
+        else if (status === 6) {
+            closeApp();
+            closeApp();
+            addApp({ name: 'Error', form: <Error status='У покупателя уже есть бизнес'/> });
+        }
     }
 
     render() {
