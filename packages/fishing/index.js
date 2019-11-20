@@ -17,7 +17,7 @@ module.exports = {
         this.initFishesFromDB();
     },
 
-    rodPrice: null,
+    rodPrice: 100,
 
     fishes: [],
 
