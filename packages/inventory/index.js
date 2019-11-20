@@ -430,7 +430,7 @@ module.exports = {
         if (typeof item == 'number') item = this.getItem(player, item);
         if (!item) return console.log(`[inventory.deleteItem] Предмет #${item} у ${player.name} не найден`);
         var params = this.getParamsValues(item);
-        if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
+        // if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
         if (!item.parentId) this.clearView(player, item.itemId);
         if (!item.parentId && item.index == 13) this.syncHandsItem(player, null);
         item.destroy();
@@ -455,7 +455,7 @@ module.exports = {
             var child = children[i];
             child.destroy(); // из-за paranoid: true
             var params = this.getParamsValues(child);
-            if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
+            // if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
             this.clearArrayItems(player, child);
         }
         var index = items.indexOf(item);
@@ -602,7 +602,7 @@ module.exports = {
             otherItems[item.itemId](params);
         } else if (params.weaponHash) {
             player.addAttachment(`weapon_${item.itemId}`);
-            this.removeWeapon(player, params.weaponHash);
+            // this.removeWeapon(player, params.weaponHash);
         } else return debug(`Неподходящий тип предмета для тела, item.id: ${item.id}`);
 
     },
@@ -1179,6 +1179,7 @@ module.exports = {
         if (!item) return;
         var param = this.getParam(item, 'weaponHash');
         if (!param || param.value != hash) return;
+        if (player.weapon == hash) this.updateParam(player, item, 'ammo', player.weaponAmmo);
         player.removeWeapon(hash);
         player.call(`weapons.removeWeapon`, [hash.toString()]);
     },
@@ -1341,7 +1342,14 @@ module.exports = {
 
         if (item) { // вкл. синх. предмета/гана в руках
             var params = this.getParamsValues(item);
-            if (params.weaponHash) this.giveWeapon(player, params.weaponHash, params.ammo);
+            if (params.weaponHash) {
+                var ammo = params.ammo;
+                if (player.weapon == params.weaponHash && ammo != player.weaponAmmo) {
+                    this.updateParam(player, item, 'ammo', player.weaponAmmo);
+                    ammo = player.weaponAmmo;
+                }
+                this.giveWeapon(player, params.weaponHash, ammo);
+            }
             else player.setVariable("hands", item.itemId);
         } else { // выкл. синх. предмета/гана в руках
             var handsItem = this.getHandsItem(player);

@@ -664,5 +664,12 @@ module.exports = {
                 delete holder.playerId;
             }
         }
+        var item = inventory.getHandsItem(player);
+        if (item) {
+            var param = inventory.getParam(item, 'weaponHash');
+            if (param) {
+                inventory.updateParam(player, item, 'ammo', player.weaponAmmo);
+            }
+        }
     },
 };
