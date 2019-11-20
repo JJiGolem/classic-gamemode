@@ -33,7 +33,7 @@ class DialingNumber extends Component {
     }
 
     startCall() {
-        const { addApp, setCall, info, setActiveCall } = this.props;
+        const { addApp, setCall, info, setActiveCall, setCallStatus } = this.props;
         const { inputNumber } = this.state;
 
         let outputNumber;
@@ -52,10 +52,11 @@ class DialingNumber extends Component {
             }
 
             setCall(true);
+            setCallStatus(null);
+            setActiveCall(true, outputNumber, true);
+
             // eslint-disable-next-line no-undef
             mp.trigger('phone.call.start', inputNumber);
-
-            setActiveCall(true, outputNumber, true);
         }
     }
 

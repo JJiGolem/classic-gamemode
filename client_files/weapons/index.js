@@ -32,7 +32,7 @@ mp.weapons = {
         if (!Object.keys(data).length) return;
         // mp.terminal.push(`debug`, `sync weapons ammo:`);
         // mp.terminal.push(`debug`, data);
-        mp.events.callRemote(`weapons.ammo.sync`, JSON.stringify(data));
+        // mp.events.callRemote(`weapons.ammo.sync`, JSON.stringify(data));
     },
     getAmmoWeapon(weaponhash) {
         weaponhash = this.hashToValid(weaponhash);
@@ -106,12 +106,17 @@ mp.events.add({
         mp.weapons.lastWeapon = weapon;
     },
     "time.main.tick": () => {
-        if (!mp.weapons.needSync) return;
-        if (Date.now() - mp.weapons.lastSync < mp.weapons.waitSync) return;
-        mp.weapons.sync();
+        // фикс пропажи оружия при достижении 0 патронов
+        if (mp.weapons.hashes.length && mp.players.local.weapon != mp.weapons.hashes[0]) {
+            mp.weapons.setCurrentWeapon(mp.weapons.hashes[0]);
+        }
+
+        // if (!mp.weapons.needSync) return;
+        // if (Date.now() - mp.weapons.lastSync < mp.weapons.waitSync) return;
+        // mp.weapons.sync();
     },
     "playerWeaponShot": (targetPos, targetEntity) => {
-        mp.weapons.needSync = true;
+        // mp.weapons.needSync = true;
     },
     "weapons.giveWeapon": (hash) => {
         hash = parseInt(hash);
@@ -129,17 +134,11 @@ mp.events.add({
         delete mp.weapons.lastData[hash];
     },
     "weapons.ammo.sync": (force = false) => {
-        mp.weapons.sync(force);
+        // mp.weapons.sync(force);
     },
     "weapons.ammo.remove": (sqlId, hash) => {
         hash = parseInt(hash);
         var ammo = mp.weapons.getAmmoWeapon(hash);
         mp.events.callRemote("weapons.ammo.remove", sqlId, ammo);
-    },
-    "time.main.tick": () => {
-        // фикс пропажи оружия при достижении 0 патронов
-        if (mp.weapons.hashes.length && mp.players.local.weapon != mp.weapons.hashes[0]) {
-            mp.weapons.setCurrentWeapon(mp.weapons.hashes[0]);
-        }
     },
 });

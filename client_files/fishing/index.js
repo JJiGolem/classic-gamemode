@@ -64,7 +64,8 @@ const checkConditions = () => {
         isHaveRod &&
         localPlayer.hands && localPlayer.hands.itemId == 5 &&
         !isEnter && 
-        !localPlayer.isInWater() && 
+        // !localPlayer.isInWater() && 
+        !localPlayer.isSwimming() &&
         !localPlayer.vehicle &&
         !localPlayer.getVehicleIsTryingToEnter() &&
         !localPlayer.isInAir() &&

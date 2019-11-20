@@ -229,7 +229,7 @@ var inventory = new Vue({
             37: {
                 'Зарядить': {
                     handler(item) {
-                        mp.trigger(`weapons.ammo.sync`, true);
+                        // mp.trigger(`weapons.ammo.sync`, true);
                         mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
                     }
                 }
@@ -237,7 +237,7 @@ var inventory = new Vue({
             38: {
                 'Зарядить': {
                     handler(item) {
-                        mp.trigger(`weapons.ammo.sync`, true);
+                        // mp.trigger(`weapons.ammo.sync`, true);
                         mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
                     }
                 }
@@ -245,7 +245,7 @@ var inventory = new Vue({
             39: {
                 'Зарядить': {
                     handler(item) {
-                        mp.trigger(`weapons.ammo.sync`, true);
+                        // mp.trigger(`weapons.ammo.sync`, true);
                         mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
                     }
                 }
@@ -253,7 +253,7 @@ var inventory = new Vue({
             40: {
                 'Зарядить': {
                     handler(item) {
-                        mp.trigger(`weapons.ammo.sync`, true);
+                        // mp.trigger(`weapons.ammo.sync`, true);
                         mp.trigger(`callRemote`, `weapons.ammo.fill`, item.sqlId);
                     }
                 }
@@ -927,12 +927,12 @@ var inventory = new Vue({
         },
         putGroundHandler(item) {
             // console.log(`выкинуть ${item}`)
-            if (this.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
-            else {
+            // if (this.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
+            // else {
                 var children = this.getChildren(item);
                 var weapon = children.find(x => this.weaponsList.includes(x.itemId));
-                if (weapon) mp.trigger(`weapons.ammo.sync`, true);
-            }
+                // if (weapon) mp.trigger(`weapons.ammo.sync`, true);
+            // }
             mp.trigger(`inventory.ground.put`, item.sqlId);
         },
         moveItemToBody(item, bodyIndex) {
@@ -945,7 +945,7 @@ var inventory = new Vue({
                     canAdd = false;
                 } else {
                     this.addItem(oldItem, freeSlot.pocketIndex, freeSlot.index, freeSlot.parentId);
-                    if (this.weaponsList.includes(oldItem.itemId)) mp.trigger(`weapons.ammo.sync`, true);
+                    // if (this.weaponsList.includes(oldItem.itemId)) mp.trigger(`weapons.ammo.sync`, true);
                     this.callRemote("item.add", {
                         sqlId: oldItem.sqlId,
                         pocketI: freeSlot.pocketIndex,
@@ -957,7 +957,7 @@ var inventory = new Vue({
             if (canAdd) {
                 if (!this.getItem(item.sqlId)) this.setWaitItem(item, true);
                 this.addItem(item, null, bodyIndex);
-                if (this.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
+                // if (this.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
                 this.callRemote("item.add", {
                     sqlId: item.sqlId,
 
@@ -976,7 +976,7 @@ var inventory = new Vue({
                 this.putGroundHandler(item);
             } else {
                 this.addItem(item, freeSlot.pocketIndex, freeSlot.index, freeSlot.parentId);
-                if (this.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
+                // if (this.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
                 this.callRemote("item.add", {
                     sqlId: item.sqlId,
                     pocketI: freeSlot.pocketIndex,
@@ -1307,7 +1307,7 @@ var inventory = new Vue({
                 if (this.weaponsList.includes(itemId)) {
                     menu['Зарядить'] = {
                         handler(item) {
-                            mp.trigger(`weapons.ammo.sync`, true);
+                            // mp.trigger(`weapons.ammo.sync`, true);
                             mp.trigger(`callRemote`, `weapons.weapon.ammo.fill`, item.sqlId);
                         }
                     };
@@ -1696,7 +1696,7 @@ var inventory = new Vue({
                         if (self.getItem(item.sqlId)) self.setWaitItem(item, true);
                         self.addEnvironmentItem(item, columns.pocketI, index, columns.placeSqlId);
                     }
-                    if (self.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
+                    // if (self.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
                     self.callRemote("item.add", {
                         sqlId: item.sqlId,
                         pocketI: columns.pocketI,
