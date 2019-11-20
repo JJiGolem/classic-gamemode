@@ -56,12 +56,6 @@ module.exports = {
             gameId: 'weapon_compactrifle',
             products: 305
         },
-        8: {
-            name: 'Heavy Sniper',
-            itemId: 107,
-            gameId: 'weapon_heavysniper',
-            products: 380
-        },
         9: {
             name: 'Carbine Rifle Mk II',
             itemId: 99,

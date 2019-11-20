@@ -644,4 +644,10 @@ module.exports = {
         delete veh.lastPlayerTime;
         mp.events.call("vehicle.respawned", veh);
     },
+    // Вкл/откл управление авто игроку
+    disableControl(player, enable) {
+        if (enable) player.vehicleDisabledControl = true;
+        else delete player.vehicleDisabledControl;
+        player.call(`vehicles.disableControl`, [enable]);
+    }
 }

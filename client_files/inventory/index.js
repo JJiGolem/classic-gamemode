@@ -140,6 +140,7 @@ mp.inventory = {
         // поднятие предмета с земли
         if (mp.busy.includes()) return;
         if (mp.players.local.vehicle) return;
+        if (!mp.players.local.getHealth()) return;
         var pos = mp.players.local.getOffsetFromInWorldCoords(0, 0, 0);
         var itemObj = this.getNearGroundItemObject(pos);
         if (!itemObj) return;
@@ -393,7 +394,7 @@ mp.events.add("playerWeaponShot", (targetPos, targetEntity) => {
 });
 
 mp.events.add("playerWeaponChanged", (weapon, oldWeapon) => {
-    mp.inventory.syncAmmo(oldWeapon);
+    mp.inventory.syncAmmo(weapon);
 });
 
 mp.events.add("entityStreamIn", (entity) => {
@@ -411,8 +412,8 @@ mp.events.add("entityStreamOut", (entity) => {
 mp.events.add("time.main.tick", () => {
     var player = mp.players.local;
     var value = player.getArmour();
-    if (mp.busy.includes("lostAttach")) return;
     mp.inventory.setArmour(value);
+    if (mp.busy.includes("lostAttach")) return;
     mp.inventory.setHandsBlock(player.vehicle != null);
 
     mp.objects.forEach(obj => {

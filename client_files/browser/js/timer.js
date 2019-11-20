@@ -23,6 +23,15 @@ var timer = new Vue({
             return this.time / this.allTime * 100;
         },
     },
+    watch: {
+        timer(val) {
+            if (val) {
+                busy.add("timer", false, true);
+            } else {
+                busy.remove("timer", true);
+            }
+        },
+    },
     methods: {
         start(name, time) {
             if (!this.timers[name]) return;

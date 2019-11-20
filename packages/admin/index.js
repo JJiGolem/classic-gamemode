@@ -2,7 +2,10 @@
 /// Модуль реализующий админские функции
 let commands = {};
 
-let massTeleportPosition;
+let massTeleportData = {
+    position: null,
+    dimension: null
+};
 
 module.exports = {
     // Кол-во варнов, при которых игрок улетаем в бан
@@ -40,10 +43,11 @@ module.exports = {
     isTerminalCommand(args) {
         return args.indexOf(':') != -1;
     },
-    getMassTeleportPosition() {
-        return massTeleportPosition;
+    getMassTeleportData() {
+        return massTeleportData;
     },
-    setMassTeleportPosition(pos) {
-        massTeleportPosition = pos;
+    setMassTeleportData(pos, dimension) {
+        massTeleportData.position = pos;
+        massTeleportData.dimension = dimension;
     }
 };

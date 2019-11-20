@@ -135,6 +135,10 @@ mp.events.add({
 
         mp.animations.playAnimation(player, a);
     },
+    "police.cuffs.set": (enable) => {
+        if (!enable || !mp.players.local.getVariable("anim")) return;
+        mp.animations.playAnimation(mp.players.local, null);
+    },
     "playerEnterVehicle": () => {
         // чтобы игрока не скручивало по-всякому когда садится на мотик во время проигрывания анимации
         var player = mp.players.local;

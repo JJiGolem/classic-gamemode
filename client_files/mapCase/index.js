@@ -8,7 +8,8 @@
 
 mp.mapCase = {
     enable(val) {
-        if (val && !mp.factions.faction) return;
+        var faction = mp.factions.faction;
+        if (val && (!faction || faction > 7)) return;
         mp.callCEFV(`mapCase.enable = ${val}`);
     },
     type(val) {

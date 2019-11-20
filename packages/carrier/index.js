@@ -125,6 +125,7 @@ module.exports = {
         return this.bizOrders.find(x => x.bizId == bizId);
     },
     addBizOrder(biz) {
+        if (!biz.info.productsOrderPrice) return debug(`[CARRIER] addBizOrder: некорректная цена, обратитесь к разработчикам CRP :) | ${biz.info}`);
         var vdistance = utils.vdist(this.loadPos, new mp.Vector3(biz.info.x, biz.info.y, biz.info.z));
         var order = {
             bizId: biz.info.id,
@@ -245,6 +246,11 @@ module.exports = {
         if (!veh.driver) return;
         var d = veh.driver;
         return mp.players.toArray().find(x => x.character && x.id == d.playerId && x.character.id == d.characterId);
+    },
+    getProductsNameByVeh(veh) {
+        if (!veh.products) return null;
+        if (!veh.products.bizOrder) return veh.products.name;
+        return veh.products.bizOrder.prodName;
     },
     // полностью очистить грузовик от товара и водителя
     clearVeh(veh) {
