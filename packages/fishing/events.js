@@ -1,18 +1,16 @@
-"use strict"
-
 let fishing = require('./index.js');
-let inventory = call('inventory');
-let notifs = call('notifications');
-let utils = require('../utils');
-let timer = call('timer');
+let inventory;
+let notifs;
+let utils;
 
 let weight;
-// let timeoutFetch;
-
 let fish;
 
 module.exports = {
     "init": async () => {
+        inventory = call('inventory');
+        notifs = call('notifications');
+        utils = call('utils');
         await fishing.init();
         inited(__dirname);
     },

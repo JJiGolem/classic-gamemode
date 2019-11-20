@@ -2,24 +2,22 @@
 
 "use strict"
 
-// "amb@world_human_stand_fishing@base base" - стоит
-// "amb@world_human_stand_fishing@idle_a idle_a" - медленно крутит
-// "amb@world_human_stand_fishing@idle_a idle_b" - медленно крутит и иногда тянет
-// "amb@world_human_stand_fishing@idle_a idle_c" - быстро крутит и тянет (вытягивает рыбу)
-
-let money = call('money');
-let notifs = call('notifications');
-let inventory = call('inventory');
+let money;
+let notifs;
+let inventory;
 
 const ROD_ID = 5;
 
 module.exports = {
     init() {
+        money = call('money');
+        notifs = call('notifications');
+        inventory = call('inventory');
         this.initFishersFromDB();
         this.initFishesFromDB();
     },
 
-    rodPrice: 100,
+    rodPrice: null,
 
     fishes: [],
 
