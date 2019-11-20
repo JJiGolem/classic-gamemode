@@ -10,7 +10,7 @@ module.exports = {
     /// Подключение к БД
     connect: function(callback) {
         console.log("[DATABASE] db connect...")
-        this.sequelize = new Sequelize('classic_db', 'root', mp.config.dbPassword, {
+        this.sequelize = new Sequelize('classic_db', mp.config.dbUser, mp.config.dbPassword, {
             host: 'localhost',
             dialect: 'mysql',
             logging: false,
