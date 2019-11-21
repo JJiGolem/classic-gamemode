@@ -149,7 +149,7 @@ module.exports = {
 
         if (ans == 1) {
             console.log(15);
-            callerPlayer.call('voiceChat.connect', [player.id, 'phone']);
+            //callerPlayer.call('voiceChat.connect', [player.id, 'phone']);
             player.call('voiceChat.connect', [callerPlayer.id, 'phone']);
 
             callerPlayer.call('phone.call.start.ans', [0]);
