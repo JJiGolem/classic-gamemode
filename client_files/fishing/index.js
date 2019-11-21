@@ -218,6 +218,8 @@ mp.events.add('fishing.fish.sell.ans', (ans) => {
 });
 
 mp.events.add('fishing.game.menu', () => {
+    if (mp.busy.includes()) return;
+    
     mp.events.call('prompt.showByName', 'fishing');
     bindButtons(true);
 });
@@ -226,6 +228,7 @@ mp.events.add('click', (x, y, upOrDown, leftOrRight, relativeX, relativeY, world
     if (upOrDown != 'down' || leftOrRight != 'left') return;
     if (!localPlayer.hands) return;
     if (localPlayer.hands.itemId !== 5) return;
+    if (mp.busy.includes()) return;
 
     if (!isEnter) return fishingEnter();
     if (!isStarted) return fishingStart();
