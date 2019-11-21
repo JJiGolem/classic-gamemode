@@ -529,7 +529,7 @@ module.exports = {
     "police.cells.arrest": (player, recId) => {
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Арест`);
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции`, `Арест`);
+        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Арест`);
 
         if (!rec.character.wanted) return notifs.error(player, `${rec.name} не преступник`, `Арест`);
 
