@@ -107,6 +107,9 @@ module.exports = {
                 productName = 'duffleBag';
                 bagColor = 'black';
                 break;
+            case 8:
+                productName = 'healthPack';
+                break;
         }
         let price = supermarket.productsConfig[productName] * supermarket.productPrice * supermarket.getPriceMultiplier(supermarketId);
         if (player.character.cash < price) return player.call('supermarket.products.buy.ans', [2]);
@@ -132,6 +135,8 @@ module.exports = {
             params.pockets = '[4,4,10,4,7,7,7,7,14,10]';
             params.texture = 0;
             bagColor == 'green' ? params.variation = 41 : params.variation = 45;
+        } else if (productName == 'healthPack') {
+            params.count = 1;
         }
 
         inventory.addItem(player, itemId, params, (e) => {
