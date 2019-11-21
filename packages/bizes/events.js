@@ -172,8 +172,8 @@ module.exports = {
         bizId = parseInt(bizId);
         cost = parseInt(cost);
         if (isNaN(bizId) || isNaN(cost)) return player.call("biz.sell.ans", [0]);
-        if (buyer.character.cash < cost) return player.call("biz.sell.ans", [6]);
-        if (bizService.isHaveBiz(buyer.character.id)) return player.call("biz.sell.ans", [7]);
+        if (buyer.character.cash < cost) return player.call("biz.sell.ans", [5]);
+        if (bizService.isHaveBiz(buyer.character.id)) return player.call("biz.sell.ans", [6]);
         let biz = bizService.getBizById(bizId);
         if (biz == null) return player.call("biz.sell.ans", [0]);
         let info = biz.info;
@@ -201,8 +201,8 @@ module.exports = {
         if (info.characterId != seller.character.id) return seller.call("biz.sell.ans", [0]);
         if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10 ||
             seller.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return seller.call("biz.sell.ans", [3]);
-        if (player.character.cash < info.price) return seller.call("biz.sell.ans", [6]);
-        if (bizService.isHaveBiz(player.character.id)) return seller.call("biz.sell.ans", [7]);
+        if (player.character.cash < info.price) return seller.call("biz.sell.ans", [5]);
+        if (bizService.isHaveBiz(player.character.id)) return seller.call("biz.sell.ans", [6]);
         if (result == 2) return  seller.call("biz.sell.ans", [2]);
 
         bizService.sellBiz(biz, seller.biz.sellingBizCost, seller, player, function(ans) {

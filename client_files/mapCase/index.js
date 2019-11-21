@@ -30,7 +30,7 @@ mp.mapCase = {
             new mp.Vector3(-3, 153, 170), {
                 dict: "amb@code_human_in_bus_passenger_idles@female@tablet@base",
                 name: "base",
-                speed: 10,
+                speed: 1,
                 flag: 51
             }
         );

@@ -195,8 +195,7 @@ mp.events.add({
             }
         }
     },
-    "render": () => {
-        // TODO: Удалить дебаг.
-        mp.utils.drawText2d(`Опьянение: ${mp.clubs.drunkenness}%`, [0.8, 0.6]);
-    },
+    // "render": () => {
+    //     mp.utils.drawText2d(`Опьянение: ${mp.clubs.drunkenness}%`, [0.8, 0.6]);
+    // },
 });

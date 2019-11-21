@@ -1,18 +1,16 @@
-"use strict"
-
 let fishing = require('./index.js');
-let inventory = call('inventory');
-let notifs = call('notifications');
-let utils = require('../utils');
-let timer = call('timer');
+let inventory;
+let notifs;
+let utils;
 
 let weight;
-// let timeoutFetch;
-
 let fish;
 
 module.exports = {
     "init": async () => {
+        inventory = call('inventory');
+        notifs = call('notifications');
+        utils = call('utils');
         await fishing.init();
         inited(__dirname);
     },
@@ -34,27 +32,21 @@ module.exports = {
     },
     "fishing.game.enter": (player) => {
         if (!player.character) return;
-        if (!inventory.getItemByItemId(player, fishing.getRodId())) {
-            notifs.error(player, "У вас нет удочки", "Ошибка");
-            player.call('fishing.game.exit');
-            player.call('fishing.rod.set', [false]);
-            return;
-        }
+        if (inventory.getItemByItemId(player, fishing.getRodId())) return player.call('fishing.game.enter');
 
-        player.call('fishing.game.enter');
+        notifs.error(player, "У вас нет удочки", "Ошибка");
+        player.call('fishing.game.exit');
     },
     "fishing.game.start": async (player) => {
         if (!player.character) return;
 
         clearTimeout(player.timeoutFetch);
 
-        let rod = inventory.getItemByItemId(player, fishing.getRodId());
+        let rod = inventory.getHandsItem(player);
+        // console.log(inventory.getHandsItem(player));
         let health = inventory.getParam(rod, 'health').value;
 
-        if (health <= 0) {
-            mp.events.call('fishing.game.exit', player);
-            return;
-        }
+        if (health <= 0) return mp.events.call('fishing.game.exit', player);
 
         inventory.updateParam(player, rod, 'health', health - 1);
 

@@ -64,7 +64,6 @@ const checkConditions = () => {
         isHaveRod &&
         localPlayer.hands && localPlayer.hands.itemId == 5 &&
         !isEnter && 
-        // !localPlayer.isInWater() && 
         !localPlayer.isSwimming() &&
         !localPlayer.vehicle &&
         !localPlayer.getVehicleIsTryingToEnter() &&
@@ -223,6 +222,15 @@ mp.events.add('fishing.game.menu', () => {
     bindButtons(true);
 });
 
+mp.events.add('click', (x, y, upOrDown, leftOrRight, relativeX, relativeY, worldPosition, hitEntity) => {
+    if (upOrDown != 'down' || leftOrRight != 'left') return;
+    if (!localPlayer.hands) return;
+    if (localPlayer.hands.itemId !== 5) return;
+
+    if (!isEnter) return fishingEnter();
+    if (!isStarted) return fishingStart();
+});
+
 mp.events.add('fishing.game.enter', () => {
     if (mp.busy.includes()) return;
 
@@ -248,6 +256,7 @@ mp.events.add('fishing.game.end', (result) => {
     timeoutEndFishing = mp.timer.add(() => {
         try {
             isStarted = false;
+            isFetch = false;
             mp.callCEFV(`fishing.clearData();`);
             mp.callCEFVN({ "fishing.isStarted": false });
         } catch (e) {
@@ -273,17 +282,17 @@ let bindButtons = (state) => {
     if (state) {
         if (isBinding) return;
         isBinding = true;
-        mp.keys.bind(0x45, true, fishingEnter);
+        // mp.keys.bind(0x45, true, fishingEnter);
         mp.keys.bind(0x20, true, fishingEnd);
-        mp.keys.bind(0x46, true, fishingStart);
+        // mp.keys.bind(0x45, true, fishingStart);
         mp.keys.bind(0x1B, false, fishingExit);
     }
     else {
         if (!isBinding) return;
         isBinding = false;
-        mp.keys.unbind(0x45, true, fishingEnter);
+        // mp.keys.unbind(0x45, true, fishingEnter);
         mp.keys.unbind(0x20, true, fishingEnd);
-        mp.keys.unbind(0x46, true, fishingStart);
+        // mp.keys.unbind(0x45, true, fishingStart);
         mp.keys.unbind(0x1B, false, fishingExit);
     }
 }
