@@ -101,10 +101,6 @@ mp.events.add('render', () => {
                 let ground = mp.game.gameplay.getGroundZFor3dCoord(point.x, point.y, point.z, 0.0, false);
                 let water = Math.abs(mp.game.water.getWaterHeight(point.x, point.y, point.z, 0));
 
-                // mp.console('z: ' + point.z);
-                // mp.console('ground: ' + ground);
-                // mp.console('water: ' + water);
-
                 if (water > 0 && ground < water && ground != 0) {
                     isShowPrompt = true;
                     mp.events.call('fishing.game.menu');
@@ -219,7 +215,7 @@ mp.events.add('fishing.fish.sell.ans', (ans) => {
 
 mp.events.add('fishing.game.menu', () => {
     if (mp.busy.includes()) return;
-    
+
     mp.events.call('prompt.showByName', 'fishing');
     bindButtons(true);
 });
@@ -285,17 +281,13 @@ let bindButtons = (state) => {
     if (state) {
         if (isBinding) return;
         isBinding = true;
-        // mp.keys.bind(0x45, true, fishingEnter);
         mp.keys.bind(0x20, true, fishingEnd);
-        // mp.keys.bind(0x45, true, fishingStart);
         mp.keys.bind(0x1B, false, fishingExit);
     }
     else {
         if (!isBinding) return;
         isBinding = false;
-        // mp.keys.unbind(0x45, true, fishingEnter);
         mp.keys.unbind(0x20, true, fishingEnd);
-        // mp.keys.unbind(0x45, true, fishingStart);
         mp.keys.unbind(0x1B, false, fishingExit);
     }
 }
@@ -340,10 +332,8 @@ function playBaseAnimation(state, timeout) { /// Анимация держани
         if (!timeout) timeout = 0;
         mp.timer.add(()=> {
             mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@base', 'base', 1, 49);
-            // mp.attachmentMngr.addLocal("takeRod");
         }, timeout);
     } else {
-        // mp.attachmentMngr.removeLocal("takeRod");
         mp.events.callRemote('animations.stop');
     }
 }
@@ -353,10 +343,8 @@ function playWaitAnimation(state, timeout) { /// Анимация начала �
         if (!timeout) timeout = 0;
         mp.timer.add(()=> {
             mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@idle_a', 'idle_a', 1, 49);
-            // mp.attachmentMngr.addLocal("takeRod");
         }, timeout);
     } else {
-        // mp.attachmentMngr.removeLocal("takeRod");
         mp.events.callRemote('animations.stop');
     }
 }
