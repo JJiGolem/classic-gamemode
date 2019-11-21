@@ -90,7 +90,7 @@ mp.events.add('render', () => {
         if (!isIntervalCreated) {
             isIntervalCreated = true;
             intervalFishing = mp.timer.addInterval(() => {
-                mp.chat.debug('bind ' + isBinding);
+                // mp.chat.debug('bind ' + isBinding);
                 let heading = localPlayer.getHeading() + 90;
                 let point = {
                     x: localPlayer.position.x + 15*Math.cos(heading * Math.PI / 180.0),
@@ -321,7 +321,7 @@ let fishingEnd = () => {
 }
 
 let fishingExit = () => {
-    mp.chat.debug('exit ' + isFetch);
+    // mp.chat.debug('exit ' + isFetch);
     if (mp.game.ui.isPauseMenuActive()) return;
     if (!isFetch) {
         mp.events.call('fishing.game.exit');
