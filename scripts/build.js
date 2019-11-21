@@ -6,8 +6,11 @@ const wrench = require('wrench');
 const rimraf = require('rimraf');
 const obfuscator = require('javascript-obfuscator');
 const PATHS = require('./paths');
+require('babel-polyfill');
 
-let entry = {};
+let entry = {
+    babelPolyfill: 'babel-polyfill'
+};
 let buildDirectory;
 
 let DATE_CHANGE = null;
@@ -120,7 +123,7 @@ function copyOnlyChangedFiles() {
         fs.mkdirSync(path.resolve(__dirname, PATHS.finalPath, 'browser'));
         fs.mkdirSync(path.resolve(__dirname, PATHS.finalPath, 'browser', 'js'));
         DATE_CHANGE = 0;
-        entry['babelPolyfill'] = 'babel-polyfill';
+        // entry['babelPolyfill'] = 'babel-polyfill';
     }
 
     wrench.copyDirSyncRecursive(path.resolve(__dirname, PATHS.basePath), path.resolve(__dirname, PATHS.buildPath), {
@@ -137,6 +140,8 @@ function copyOnlyChangedFiles() {
     }
 
     deleteUnusedFiles(path.resolve(__dirname, PATHS.finalPath));
+
+    console.log('[WEBPACK] COPY DONE');
 }
 
 function rewriteFile(dir, file) {
@@ -160,6 +165,8 @@ function rewriteFile(dir, file) {
 
 function getEntry() {
     buildDirectory = fs.readdirSync(path.resolve(__dirname, PATHS.buildPath));
+
+    // if (!entry.babelPolyfill) entry.babelPolyfill = 'babel-polyfill';
     
     buildDirectory.forEach(dir => {
         if (fs.lstatSync(path.resolve(__dirname, PATHS.buildPath, dir)).isDirectory() && !ignoreModules.includes(dir) && dir != 'browser') {
@@ -182,7 +189,16 @@ function getEntry() {
             }
         }
     });
+
+    console.log('[WEBPACK] ENTRIES CREATE');
 }
+
+// async function start() {
+//     await copyOnlyChangedFiles();
+//     await getEntry();
+// }
+
+// start();
 
 copyOnlyChangedFiles();
 getEntry();
