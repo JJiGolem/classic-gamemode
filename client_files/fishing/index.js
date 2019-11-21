@@ -67,7 +67,7 @@ const checkConditions = () => {
         !localPlayer.vehicle &&
         !localPlayer.getVehicleIsTryingToEnter() &&
         !localPlayer.isInAir() &&
-        !localPlayer.isPlayingAnim() &&
+        // !localPlayer.isPlayingAnim() &&
         !localPlayer.isJumping() &&
         !localPlayer.isDiving() &&
         !localPlayer.isEvasiveDiving() &&
