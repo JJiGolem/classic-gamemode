@@ -31,7 +31,7 @@ mp.animations = {
         mp.timer.remove(this.animationTimers[id]);
         this.animationTimers[id] = mp.timer.add(() => {
             var rec = mp.players.atRemoteId(id);
-            if (rec) rec.clearTasksImmediately();
+            if (rec && rec.anim) rec.stopAnimTask(rec.anim.dict, rec.anim.name, 3);
             delete this.animationTimers[id];
             delete rec.anim;
         }, time);
