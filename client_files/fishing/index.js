@@ -90,6 +90,7 @@ mp.events.add('render', () => {
         if (!isIntervalCreated) {
             isIntervalCreated = true;
             intervalFishing = mp.timer.addInterval(() => {
+                mp.chat.debug('bind ' + isBinding);
                 let heading = localPlayer.getHeading() + 90;
                 let point = {
                     x: localPlayer.position.x + 15*Math.cos(heading * Math.PI / 180.0),
