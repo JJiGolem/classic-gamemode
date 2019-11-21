@@ -142,6 +142,7 @@ mp.timer.addInterval(() => {
         let player = mp.players.atRemoteId(listeners[i].playerId);
         mp.console(`isPlayer ${player != null}`);
         if (player == null) return;
+        mp.console(`player.handle ${player.handle}`);
 		// if (player.handle !== 0) {
             if (channels[listeners[i].current].maxRange != 0) {
                 let dist = mp.game.system.vdist(player.position.x, player.position.y, player.position.z,
