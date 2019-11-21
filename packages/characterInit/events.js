@@ -1,11 +1,13 @@
 "use strict";
 /// Модуль выбора и создания персоонажа
+let admin;
 let characterInit = require("./index.js");
 let logger = call("logger");
 let utils = call("utils");
 
 module.exports = {
     "init": () => {
+        admin = call('admin');
         characterInit.moduleInit();
         inited(__dirname);
     },
@@ -37,6 +39,7 @@ module.exports = {
 
             player.call('characterInit.choose.ans', [1]);
             characterInit.spawn(player);
+            admin.checkClearWarns(player);
             mp.events.call('characterInit.done', player);
         } else {
             player.call('characterInit.choose.ans', [1]);
