@@ -71,6 +71,8 @@ module.exports = {
     unarrestPayK: 0.05,
     // Мин. ранг, с которого можно выдавать лицению на оружие
     giveGunLicenseRank: 10,
+    // Мин. ранг, с которого можно забирать лицению на оружие
+    takeGunLicenseRank: 10,
 
 
     setCuffs(player, cuffs) {
