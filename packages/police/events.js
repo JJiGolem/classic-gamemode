@@ -664,6 +664,8 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         var character = rec.character;
         if (!character.gunLicenseDate) return notifs.error(player, `${rec.name} не имеет лицензию`, header);
+        var rank = factions.getRankById(player.character.factionId, player.character.factionRank);
+        if (rank.rank < police.takeGunLicenseRank) return notifs.error(player, `Нет прав`, header);
 
         character.gunLicenseDate = null;
         character.save();
