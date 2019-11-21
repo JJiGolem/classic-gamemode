@@ -41,6 +41,7 @@ mp.speechChanel.addChannel = (name, maxRange = 0, autoConnection = false, use3d 
 /// Подключить выбранного игрока к каналу связи
 mp.speechChanel.connect = (player, channel) => {
     if (player == null) return;
+    mp.console("speechChanel.connect");
     let index = listeners.findIndex( x => x.playerId == player.remoteId);
     if (index != -1) {
         if (!listeners[index].channels.includes(channel)) {
@@ -63,9 +64,11 @@ mp.events.add("voiceChat.connect", (playerId, channel) => {
 /// Отключить выбранного игрока от канала связи
 mp.speechChanel.disconnect = (player, channel, isSend = false) => {
     if (player == null) return;
+    mp.console("speechChanel.disconnect");
     let index = listeners.findIndex( x => x.playerId == player.remoteId);
+    if (index == -1) return;
     if (channel == null) {
-        index != -1 && listeners.splice(index, 1);
+        listeners.splice(index, 1);
     }
     else {
         let channelIndex = listeners[index].channels.findIndex(x => x == channel);
