@@ -214,6 +214,12 @@ var modal = new Vue({
                 header: "",
                 content: ``
             },
+            "newbie_help": {
+                header: "Информация",
+                content: `
+                todo
+                `
+            },
         },
         modal: null,
     },
