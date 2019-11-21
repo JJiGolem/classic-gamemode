@@ -41,7 +41,9 @@ mp.speechChanel.addChannel = (name, maxRange = 0, autoConnection = false, use3d 
 /// Подключить выбранного игрока к каналу связи
 mp.speechChanel.connect = (player, channel) => {
     if (player == null) return;
+    if (channel == 'phone') mp.console(`speechChanel.connect ${channel}`);
     let index = listeners.findIndex( x => x.playerId === player.remoteId);
+    if (channel == 'phone') mp.console(`speechChanel.connect ${index}`);
     if (index !== -1) {
         if (!listeners[index].channels.includes(channel)) {
             listeners[index].channels.push(channel);
@@ -57,14 +59,15 @@ mp.speechChanel.connect = (player, channel) => {
     player.voiceVolume = 1.0;
 };
 mp.events.add("voiceChat.connect", (playerId, channel) => {
-    mp.console(`speechChanel.connect ${channel}`);
     mp.speechChanel.connect(mp.players.atRemoteId(playerId), channel);
 });
 
 /// Отключить выбранного игрока от канала связи
 mp.speechChanel.disconnect = (player, channel, isSend = false) => {
     if (player == null) return;
+    if (channel == 'phone') mp.console(`speechChanel.disconnect ${playerId}`);
     let index = listeners.findIndex( x => x.playerId === player.remoteId);
+    if (channel == 'phone') mp.console(`speechChanel.disconnect ${index}`);
     if (index === -1) return;
     if (channel == null) {
         listeners.splice(index, 1);
@@ -138,12 +141,11 @@ mp.timer.addInterval(() => {
         let player = mp.players.atRemoteId(listeners[i].playerId);
         if (player == null) return;
 		if (player.handle !== 0) {
-            if (channels[listeners[i].current].maxRange !== 0) {
+            if (channels[listeners[i].current].maxRange != 0) {
                 let dist = mp.game.system.vdist(player.position.x, player.position.y, player.position.z,
                     mp.players.local.position.x,  mp.players.local.position.y,  mp.players.local.position.z);
 
                 if(dist > channels[listeners[i].current].maxRange || player.dimension !== mp.players.local.dimension) {
-                    mp.console(`speechChanel.disconnect ${listeners[i].current}`);
                     mp.speechChanel.disconnect(player, listeners[i].current);
                     i--;
                 }
