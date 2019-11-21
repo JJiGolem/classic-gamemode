@@ -51,9 +51,6 @@ module.exports = {
 
         if (!item) return player.call('clothingShop.item.buy.ans', [1]);
 
-        // let products = clothingShop.calculateProductsNeeded(item.price);
-        // let price = parseInt(item.price * clothingShop.getPriceMultiplier(shopId));
-
         let defaultPrice = item.price;
         let products = clothingShop.calculateProductsNeeded(item.price);
         let price = parseInt(defaultPrice * clothingShop.getPriceMultiplier(shopId));

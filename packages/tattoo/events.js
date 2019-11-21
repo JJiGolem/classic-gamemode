@@ -73,8 +73,14 @@ module.exports = {
         let parlorId = player.currentTattooParlorId;
         if (parlorId == null) return;
         
+        // let products = tattoo.calculateProductsNeeded(tat.price);
+        // let price = parseInt(tat.price * tattoo.getPriceMultiplier(parlorId));
+
+        let defaultPrice = tat.price;
         let products = tattoo.calculateProductsNeeded(tat.price);
-        let price = parseInt(tat.price * tattoo.getPriceMultiplier(parlorId));
+        let price = parseInt(defaultPrice * tattoo.getPriceMultiplier(parlorId));
+        let income = parseInt(products * tattoo.productPrice * tattoo.getPriceMultiplier(parlorId));
+
         if (player.character.cash < price) return player.call('tattoo.buy.ans', [2]);
         let productsAvailable = tattoo.getProductsAmount(parlorId);
         if (products > productsAvailable) return player.call('tattoo.buy.ans', [4]);
@@ -85,7 +91,7 @@ module.exports = {
                 await tattoo.addCharacterTattoo(player, tat.collection, tat[hash], tat.zoneId, tat.name);
                 player.call('tattoo.buy.ans', [0]);
                 tattoo.removeProducts(parlorId, products);
-                tattoo.updateCashbox(parlorId, price);
+                tattoo.updateCashbox(parlorId, income);
             } else {
                 player.call('tattoo.buy.ans', [3]);
             }
