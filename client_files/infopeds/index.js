@@ -42,14 +42,14 @@ let peds = [
         defaultScenario: 'WORLD_HUMAN_DRINKING'
     },
     {
-        model: "u_m_y_hippie_01",
+        model: "ig_old_man1a",
         position: {
-            x: -166.9871826171875,
-            y: 6439.5498046875,
-            z: 31.91590118408203,
+            x: -185.68223571777344,
+            y: 6430.361328125,
+            z: 31.915056228637695,
         },
-        heading: 149.6638641357422,
-        defaultScenario: 'WORLD_HUMAN_HANG_OUT_STREET'
+        heading: 281.2537841796875,
+        defaultScenario: 'WORLD_HUMAN_AA_SMOKE'
     },
     {
         model: "ig_russiandrunk",

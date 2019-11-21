@@ -130,8 +130,7 @@ mp.events.add('playerLeaveVehicle', () => {
 mp.events.add('characterInit.done', () => { /// E
     mp.keys.bind(0x45, true, function () {
         if (mp.game.ui.isPauseMenuActive()) return;
-        if (isOpen) mp.busy.remove('interaction');
-        if (mp.busy.includes()) return;
+        if (mp.busy.includes() && !mp.busy.includes('interaction')) return;
         if (isOpen) return mp.events.call('interaction.menu.close');
 
         let veh = mp.players.local.getVehicleIsTryingToEnter();
@@ -176,10 +175,9 @@ mp.events.add('characterInit.done', () => { /// E
 
     mp.keys.bind(0x4C, true, function () { /// L
         if (mp.game.ui.isPauseMenuActive()) return;
-        if (isOpen) mp.busy.remove('interaction');
-        if (mp.busy.includes()) return;
-        if (isOpen) return mp.events.call('interaction.menu.close');;
-
+        if (mp.busy.includes() && !mp.busy.includes('interaction')) return;
+        if (isOpen) return mp.events.call('interaction.menu.close');
+        
         if (!mp.players.local.vehicle) {
             personalInteractionEntity = mp.players.local;
             mp.callCEFV(`interactionMenu.left = ${defaultLeft}`);
