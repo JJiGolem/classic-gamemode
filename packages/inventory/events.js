@@ -406,7 +406,7 @@ module.exports = {
         var header = `Напиток`;
         var drink = inventory.getItem(player, sqlId);
         if (!drink) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
-        if (!inventory.isInHands(drink)) return notifs.error(player, `${inventory.getName(drink.itemId)} не в руках`, header);
+        // if (!inventory.isInHands(drink)) return notifs.error(player, `${inventory.getName(drink.itemId)} не в руках`, header);
 
         var params = inventory.getParamsValues(drink);
         var character = player.character;
