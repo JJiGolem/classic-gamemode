@@ -90,7 +90,7 @@ mp.events.add('render', () => {
         if (!isIntervalCreated) {
             isIntervalCreated = true;
             intervalFishing = mp.timer.addInterval(() => {
-                mp.chat.debug('bind ' + isBinding);
+                // mp.chat.debug('bind ' + isBinding);
                 let heading = localPlayer.getHeading() + 90;
                 let point = {
                     x: localPlayer.position.x + 15*Math.cos(heading * Math.PI / 180.0),
@@ -217,7 +217,7 @@ mp.events.add('fishing.game.menu', () => {
     if (mp.busy.includes()) return;
 
     mp.events.call('prompt.showByName', 'fishing');
-    bindButtons(true);
+    // bindButtons(true);
 });
 
 mp.events.add('click', (x, y, upOrDown, leftOrRight, relativeX, relativeY, worldPosition, hitEntity) => {
@@ -237,6 +237,7 @@ mp.events.add('fishing.game.enter', () => {
 
     mp.timer.remove(timeoutEndFishing);
 
+    bindButtons(true);
     mp.busy.add('fishing.game', false);
     playBaseAnimation(true);
     mp.utils.disablePlayerMoving(true);
@@ -321,7 +322,7 @@ let fishingEnd = () => {
 }
 
 let fishingExit = () => {
-    mp.chat.debug('exit ' + isFetch);
+    // mp.chat.debug('exit ' + isFetch);
     if (mp.game.ui.isPauseMenuActive()) return;
     if (!isFetch) {
         mp.events.call('fishing.game.exit');
