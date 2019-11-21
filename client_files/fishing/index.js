@@ -217,7 +217,7 @@ mp.events.add('fishing.game.menu', () => {
     if (mp.busy.includes()) return;
 
     mp.events.call('prompt.showByName', 'fishing');
-    bindButtons(true);
+    // bindButtons(true);
 });
 
 mp.events.add('click', (x, y, upOrDown, leftOrRight, relativeX, relativeY, worldPosition, hitEntity) => {
@@ -237,6 +237,7 @@ mp.events.add('fishing.game.enter', () => {
 
     mp.timer.remove(timeoutEndFishing);
 
+    bindButtons(true);
     mp.busy.add('fishing.game', false);
     playBaseAnimation(true);
     mp.utils.disablePlayerMoving(true);
