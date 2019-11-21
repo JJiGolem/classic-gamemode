@@ -845,8 +845,11 @@ var inventory = new Vue({
                     if (e.which == 1) { // Left Mouse Button
                         this.itemDrag.item = item;
                         this.itemDrag.div = e.target;
-                        this.itemDrag.x = e.screenX - rect.x - e.target.offsetWidth / 2;
-                        this.itemDrag.y = e.screenY - rect.y - e.target.offsetHeight / 2;
+                        // до сжатых иконок
+                        // this.itemDrag.x = e.screenX - rect.x - e.target.offsetWidth / 2;
+                        // this.itemDrag.y = e.screenY - rect.y - e.target.offsetHeight / 2;
+                        this.itemDrag.x = e.screenX - rect.x;
+                        this.itemDrag.y = e.screenY - rect.y;
                         if (this.hotkeyFocus && this.hotkeys[this.hotkeyFocus] == item) this.itemDrag.accessColumns.hotkeyUnbind = this.hotkeyFocus;
                     }
                 },
