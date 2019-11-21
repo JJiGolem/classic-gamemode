@@ -47,7 +47,7 @@ module.exports = {
             if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
             var mins = Math.clamp(args[1], 1, 60 * 12); // 12 часов макс.
 
-            police.startJailArrest(player, null, mins * 60 * 1000);
+            police.startJailArrest(rec, null, mins * 60 * 1000);
             args.shift();
             args.shift();
             out.info(`${player.name} посадил ${rec.name} в тюрьму на ${mins} мин. Причина: ${args.join(" ")}`);
