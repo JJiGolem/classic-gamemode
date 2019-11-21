@@ -405,6 +405,7 @@ module.exports = {
             faction: character.factionId,
             owner: character.id
         };
+        if (index == 2) delete params.ammo; // for Stun Gun
 
         inventory.addItem(player, itemId, params, (e) => {
             if (e) return notifs.error(player, e, header);
@@ -646,7 +647,7 @@ module.exports = {
         if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции`, header);
         var rank = factions.getRankById(player.character.factionId, player.character.factionRank);
         if (rank.rank < police.giveGunLicenseRank) return notifs.error(player, `Нет прав`, header);
-        
+
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         var character = rec.character;
         if (character.gunLicenseDate) return notifs.error(player, `${rec.name} уже имеет лицензию`, header);
