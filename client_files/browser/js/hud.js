@@ -125,7 +125,7 @@ var hud = new Vue({
             return prettyMoney(val);
         },
         isKeyShow(name) {
-            if (name == 'Планшет') return mapCase.enable;
+            if (name == 'Планшет') return playerMenu.factionId && playerMenu.factionId < 8;
             return true;
         },
     },
