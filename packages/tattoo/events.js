@@ -72,9 +72,6 @@ module.exports = {
 
         let parlorId = player.currentTattooParlorId;
         if (parlorId == null) return;
-        
-        // let products = tattoo.calculateProductsNeeded(tat.price);
-        // let price = parseInt(tat.price * tattoo.getPriceMultiplier(parlorId));
 
         let defaultPrice = tat.price;
         let products = tattoo.calculateProductsNeeded(tat.price);
