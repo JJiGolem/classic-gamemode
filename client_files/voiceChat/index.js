@@ -142,7 +142,7 @@ mp.timer.addInterval(() => {
         let player = mp.players.atRemoteId(listeners[i].playerId);
         mp.console(`isPlayer ${player != null}`);
         if (player == null) return;
-		if (player.handle !== 0) {
+		// if (player.handle !== 0) {
             if (channels[listeners[i].current].maxRange != 0) {
                 let dist = mp.game.system.vdist(player.position.x, player.position.y, player.position.z,
                     mp.players.local.position.x,  mp.players.local.position.y,  mp.players.local.position.z);
@@ -158,10 +158,10 @@ mp.timer.addInterval(() => {
             else {
                 player.voiceVolume = 1;
             }
-		}
-		else {
-			mp.speechChanel.disconnect(player, null, true);
-		}
+		// }
+		// else {
+		// 	mp.speechChanel.disconnect(player, null, true);
+		// }
     }
 }, 250);
 
