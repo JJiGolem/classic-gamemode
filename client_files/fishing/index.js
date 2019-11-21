@@ -216,7 +216,7 @@ mp.events.add('fishing.game.menu', () => {
     if (mp.busy.includes()) return;
 
     mp.events.call('prompt.showByName', 'fishing');
-    // bindButtons(true);
+    bindButtons(true);
 });
 
 mp.events.add('click', (x, y, upOrDown, leftOrRight, relativeX, relativeY, worldPosition, hitEntity) => {
