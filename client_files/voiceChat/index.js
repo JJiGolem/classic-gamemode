@@ -63,15 +63,17 @@ mp.events.add("voiceChat.connect", (playerId, channel) => {
 /// Отключить выбранного игрока от канала связи
 mp.speechChanel.disconnect = (player, channel, isSend = false) => {
     if (player == null) return;
-    if (channel == 'phone') mp.console(`speechChanel.disconnect ${player.remoteId}`);
+    if (channel == 'phone') mp.console(`speechChanel.disconnect remoteId ${player.remoteId}`);
     let index = listeners.findIndex( x => x.playerId === player.remoteId);
-    if (channel == 'phone') mp.console(`speechChanel.disconnect ${index}`);
+    if (channel == 'phone') mp.console(`speechChanel.disconnect index ${index}`);
     if (index === -1) return;
     if (channel == null) {
         listeners.splice(index, 1);
     }
     else {
-        let channelIndex = listeners[index].channels.findIndex(x => x === channel);
+        let channelIndex = listeners[index].channels.findIndex(x => x == channel);
+        if (channel == 'phone') mp.console(`speechChanel.disconnect channels ${JSON.stringify(listeners[index].channels)}`);
+        if (channel == 'phone') mp.console(`speechChanel.disconnect channelIndex ${channelIndex}`);
         channelIndex !== -1 && listeners[index].channels.splice(channelIndex, 1);
 
         if (listeners[index].channels.length === 0) {
