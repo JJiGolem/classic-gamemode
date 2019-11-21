@@ -60,7 +60,6 @@ let isIntervalCreated = false;
 
 const checkConditions = () => {
     return (
-        !mp.busy.includes() && 
         isHaveRod &&
         localPlayer.hands && localPlayer.hands.itemId == 5 &&
         !isEnter && 
@@ -224,9 +223,11 @@ mp.events.add('click', (x, y, upOrDown, leftOrRight, relativeX, relativeY, world
     if (upOrDown != 'down' || leftOrRight != 'left') return;
     if (!localPlayer.hands) return;
     if (localPlayer.hands.itemId !== 5) return;
-    if (mp.busy.includes()) return;
 
-    if (!isEnter) return fishingEnter();
+    if (!isEnter) {
+        if (mp.busy.includes()) return;
+        return fishingEnter()
+    };
     if (!isStarted) return fishingStart();
 });
 
@@ -319,6 +320,7 @@ let fishingEnd = () => {
 }
 
 let fishingExit = () => {
+    mp.chat.debug('exit ' + isFetch);
     if (mp.game.ui.isPauseMenuActive()) return;
     if (!isFetch) {
         mp.events.call('fishing.game.exit');
