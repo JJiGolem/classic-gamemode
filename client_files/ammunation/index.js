@@ -5,13 +5,13 @@ mp.events.add({
             let current = weaponsConfig[key];
             items.push({
                 text: current.name,
-                values: [`$${current.products * data.productPrice * data.priceMultiplier}`],
+                values: [`$${parseInt(current.products * data.productPrice * data.priceMultiplier)}`],
                 weaponId: key
             });
         }
         items.push({ text: 'Назад' });
         mp.callCEFV(`selectMenu.setItems('ammunationFirearms', ${JSON.stringify(items)});`)
-        let price = data.productPrice * data.priceMultiplier;
+        let price = parseInt(data.productPrice * data.priceMultiplier);
         items = [{
             text: "Патроны - 9mm",
             values: [`12 ед. - $${12 * ammoProducts * price}`, `24 ед. - $${24 * ammoProducts * price}`, `32 ед. - $${32 * ammoProducts * price}`],
@@ -32,26 +32,26 @@ mp.events.add({
             text: "Назад"
         }];
         mp.callCEFV(`selectMenu.setItems('ammunationAmmo', ${JSON.stringify(items)});`)
-
+        let armourPrice = parseInt(armourProducts * data.productPrice * data.priceMultiplier);
         items = [{
             text: "Серый бронежилет",
-            values: [`$${armourProducts * data.productPrice * data.priceMultiplier}`]
+            values: [`$${armourPrice}`]
         },
         {
             text: "Черный бронежилет",
-            values: [`$${armourProducts * data.productPrice * data.priceMultiplier}`]
+            values: [`$${armourPrice}`]
         },
         {
             text: "Зеленый бронежилет",
-            values: [`$${armourProducts * data.productPrice * data.priceMultiplier}`]
+            values: [`$${armourPrice}`]
         },
         {
             text: "Камуфляжный бронежилет",
-            values: [`$${armourProducts * data.productPrice * data.priceMultiplier}`]
+            values: [`$${armourPrice}`]
         },
         {
             text: "Камуфляжный бронежилет №2",
-            values: [`$${armourProducts * data.productPrice * data.priceMultiplier}`]
+            values: [`$${armourPrice}`]
         },
         {
             text: "Назад"
