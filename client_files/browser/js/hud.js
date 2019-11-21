@@ -124,7 +124,10 @@ var hud = new Vue({
         pretty(val) {
             return prettyMoney(val);
         },
-
+        isKeyShow(name) {
+            if (name == 'Планшет') return playerMenu.factionId && playerMenu.factionId < 8;
+            return true;
+        },
     },
     mounted() {
         setInterval(this.updateTime, 1000);

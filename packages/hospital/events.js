@@ -251,6 +251,7 @@ module.exports = {
             name: player.name,
             price: parseInt(hospital.healingPrice * rec.offer.health)
         }]);
+        notifs.success(player, `Вы предложили игроку с ID: ${player.id} вылечиться`, header);
     },
     "hospital.healing.accept": (player) => {
         var header = `Лечение`;

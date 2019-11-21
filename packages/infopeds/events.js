@@ -1,0 +1,16 @@
+let infopeds = require('./index.js');
+
+module.exports = {
+    "init": async () => {
+        await infopeds.init();
+        inited(__dirname);
+    },
+    "playerEnterColshape": (player, shape) => {
+        if (!shape.isInfoPointShape) return;
+        player.call('infopeds.info.show', [true]);
+    },
+    "playerExitColshape": (player, shape) => {
+        if (!shape.isInfoPointShape) return;
+        player.call('infopeds.info.show', [false]);
+    },
+}

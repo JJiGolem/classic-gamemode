@@ -46,7 +46,8 @@ mp.attachmentMngr = {
             if (mp.objects.exists(obj)) {
                 obj.destroy();
             }
-            if (attInfo.anim) entity.clearTasksImmediately();
+            // if (attInfo.anim) entity.clearTasksImmediately();
+            if (attInfo.anim) entity.stopAnimTask(attInfo.anim.dict, attInfo.anim.name, 3);
             if (attInfo.lost) {
                 mp.inventory.hands(entity, entity.getVariable("hands"));
                 if (entity.remoteId == mp.players.local.remoteId) {

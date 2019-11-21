@@ -1,4 +1,7 @@
 "use strict";
+
+let notifs;
+
 /// Модуль реализующий админские функции
 let commands = {};
 
@@ -12,11 +15,13 @@ module.exports = {
     banWarns: 3,
     // Время снятия бана за варны
     warnsBanDays: 30,
-    // Время снятия варна от последнего
+    // Время снятия всех варнов от последнего
     warnDays: 14,
 
     /// Инициализация админских команд из всех модулей
     init() {
+        notifs = call('notifications');
+        
         console.log("[COMMANDS] load commands...");
         fs.readdirSync(path.dirname(__dirname)).forEach(file => {
             if (file != 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname) + "/" + file + '/commands.js')) {
@@ -49,5 +54,14 @@ module.exports = {
     setMassTeleportData(pos, dimension) {
         massTeleportData.position = pos;
         massTeleportData.dimension = dimension;
-    }
+    },
+    checkClearWarns(player) {
+        if (!player.character.warnNumber) return;
+        if (!player.character.warnDate || Date.now() - player.character.warnDate.getTime() > this.warnDays * 24 * 60 * 60 * 1000) {
+            player.character.warnNumber = 0;
+            player.character.warnDate = null;
+            player.character.save();
+            notifs.success(player, `Варны были анулированы. Не нарушайте правила.`);
+        }
+    },
 };
