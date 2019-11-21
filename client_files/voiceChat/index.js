@@ -90,6 +90,8 @@ mp.events.add("voiceChat.disconnect", (playerId, channel) => {
 });
 
 let updateCurrent = function(player, index, newCh) {
+    mp.console(`updateCurrent curr: ${listeners[index].current}`);
+    mp.console(`updateCurrent currMaxRange: ${channels[listeners[index].current].maxRange}`);
     if (channels[listeners[index].current].maxRange === 0) return;
     let maxChannel = listeners[index].current;
     if (newCh) {
