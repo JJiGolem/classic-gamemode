@@ -75,7 +75,7 @@ mp.speechChanel.disconnect = (player, channel, isSend = false) => {
         if (channel == 'phone') mp.console(`speechChanel.disconnect channels ${JSON.stringify(listeners[index].channels)}`);
         if (channel == 'phone') mp.console(`speechChanel.disconnect channelIndex ${channelIndex}`);
         channelIndex !== -1 && listeners[index].channels.splice(channelIndex, 1);
-
+        if (channel == 'phone') mp.console(`speechChanel.disconnect channels ${JSON.stringify(listeners[index].channels)}`);
         if (listeners[index].channels.length === 0) {
             listeners.splice(index, 1);
             mp.events.callRemote("voiceChat.remove", player);
