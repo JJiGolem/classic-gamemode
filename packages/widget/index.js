@@ -1,4 +1,4 @@
-const timer = call('timer');
+let timer;
 const request = require('request');
 const param = require('jquery-param');
 
@@ -13,6 +13,7 @@ const VERSION = 5.103;
 
 module.exports = {
     init() {
+        timer = call('timer');
         widgetConfig = {
             online: mp.players ? mp.players.length : 0,
             maxplayers: mp.config.maxplayers,
