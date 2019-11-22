@@ -604,7 +604,7 @@
                        <div class="health" v-if="equipment[n-1].params.health" v-bind:style="{top: 100 - equipment[n-1].params.health + '%'}"></div>
                        <div class="sqlid" v-if="debug">#{{ equipment[n-1].sqlId }}</div>
                    </div> -->
-                    <div class="item" v-if="equipment[n-1]" @mouseenter="itemMouseHandler(equipment[n-1], $event)" @mouseleave="itemMouseHandler(equipment[n-1], $event)" @mousemove="itemMouseHandler(equipment[n-1], $event)"
+                    <div class="item" v-if="equipment[n-1] && !equipment[n-1].search" @mouseenter="itemMouseHandler(equipment[n-1], $event)" @mouseleave="itemMouseHandler(equipment[n-1], $event)" @mousemove="itemMouseHandler(equipment[n-1], $event)"
                         @contextmenu="itemMouseHandler(equipment[n-1], $event)" :style="{backgroundImage: 'url('+urlItemImg(equipment[n-1].itemId)+')' }" @mousedown="itemMouseHandler(equipment[n-1], $event)"
                         :class="{dragging: equipment[n-1] == itemDrag.item}">
                         <div class="count" v-if="equipment[n-1].params.count">{{ equipment[n-1].params.count }}</div>
@@ -633,7 +633,7 @@
         </div>
         <div class="playerInventory">
             <div class="header">
-                <div class="title">Инвентарь</div>
+                <div class="title">{{ searchMode && searchList.length ? 'Обыск...' : 'Инвентарь' }}</div>
                 <div>Тяжесть {{ commonWeight }} из {{ maxPlayerWeight }} кг</div>
             </div>
             <div class="block">
