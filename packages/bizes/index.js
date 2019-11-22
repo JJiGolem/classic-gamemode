@@ -112,7 +112,7 @@ let getBizInfoForApp = function(biz) {
             resourcesMax: biz.info.productsMaxCount,
             resources: biz.info.productsCount,
             statistics: biz.info.BizStatistics,
-            order: { productsCount: biz.info.productsOrder, productsPrice: biz.info.productsOrderPrice },
+            order: biz.info.productsOrder && { productsCount: biz.info.productsOrder, productsPrice: biz.info.productsOrderPrice },
             resourcePriceMin: bizesModules[biz.info.type].productPrice * minMultiplier,
             resourcePriceMax: bizesModules[biz.info.type].productPrice * maxMultiplier,
             improvements: []
