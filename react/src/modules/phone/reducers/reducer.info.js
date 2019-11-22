@@ -129,6 +129,7 @@ const initialState = {
 };
 
 let phoneIsShow = false;
+let phoneIsShow2 = false;
 
 export default function info(state = initialState, action) {
 
@@ -147,6 +148,8 @@ export default function info(state = initialState, action) {
                     ...state,
                     incomingCall: null
                 }
+            } else if (payload) {
+                phoneIsShow2 = false;
             }
 
             return state;
@@ -225,6 +228,11 @@ export default function info(state = initialState, action) {
             return newState;
 
         case 'SET_CALL_STATUS':
+            if (state.incomingCall && state.incomingCall.state && phoneIsShow && phoneIsShow2) {
+                $('#phone-form-react').animate({ bottom: '-50%' }, 100);
+                phoneIsShow2 = false;
+            }
+
             return {
                 ...state,
                 incomingCall: {
@@ -245,6 +253,7 @@ export default function info(state = initialState, action) {
         case 'INCOMING_CALL':
             if (!phoneIsShow && payload.state) {
                 $('#phone-form-react').animate({ bottom: '-20%' }, 100);
+                phoneIsShow2 = true;
             }
             return {
                 ...state,
