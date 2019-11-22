@@ -1,8 +1,8 @@
 const widget = require('./index');
 
 module.exports = {
-    "init": () => {
-        widget.init();
+    "init": async () => {
+        await widget.init();
         inited(__dirname);
     }
 }
