@@ -811,9 +811,6 @@ var playerMenu = new Vue({
         setNumber(number) {
             statistics["number"].value = number;
         },
-        getNumber() {
-            return statistics["number"].value;
-        },
         setSpouse(spouse) {
             if (typeof spouse == 'string') spouse = JSON.parse(spouse);
             if (spouse) {

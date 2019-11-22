@@ -126,7 +126,6 @@ var hud = new Vue({
         },
         isKeyShow(name) {
             if (name == 'Планшет') return playerMenu.factionId && playerMenu.factionId < 8;
-            if (name == 'Телефон') return !isNaN(player.getNumber());
             return true;
         },
     },
