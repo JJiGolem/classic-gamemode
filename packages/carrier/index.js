@@ -8,7 +8,7 @@ let utils = call('utils');
 
 module.exports = {
     // Место мониторинга складов бизнесов/ферм и заказа товара
-    loadPos: new mp.Vector3(916.1118774414062, -1560.7391357421875, 30.748455047607422 - 10),
+    loadPos: new mp.Vector3(916.1118774414062, -1560.7391357421875, 30.748455047607422 - 13),
     // loadPos: new mp.Vector3(-77.97127532958984, -1784.080810546875, 28.418481826782227 - 1), // for tests
     // Место разгрузки урожая
     cropUnloadPos: new mp.Vector3(85.55198669433594, 6331.1318359375, 31.225765228271484 - 1),
@@ -44,10 +44,10 @@ module.exports = {
     },
     createLoadMarker() {
         var pos = this.loadPos;
-        var marker = mp.markers.new(1, pos, 10, {
+        var marker = mp.markers.new(1, pos, 15, {
             color: [255, 187, 0, 70]
         });
-        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z + 10, 5);
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z + 9, 10);
         colshape.onEnter = (player) => {
             if (player.character.job != 4) return notifs.error(player, `Отказано в доступе`, `Склад`);
             player.call(`carrier.load.info.set`, [this.getLoadData()]);
