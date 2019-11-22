@@ -1,7 +1,5 @@
 "use strict";
 const freemodeCharacters = [mp.joaat("mp_m_freemode_01"), mp.joaat("mp_f_freemode_01")];
-const creatorPlayerPos = new mp.Vector3(402.8664, -996.4108, -99.00027);
-const creatorPlayerHeading = -185.0;
 
 let houses;
 let bizes;
@@ -269,8 +267,6 @@ module.exports = {
         mp.events.call('characterInit.done', player);
     },
     sendToCreator(player) {
-        player.position = creatorPlayerPos;
-        player.heading = creatorPlayerHeading;
         player.call("characterInit.create", [true, JSON.stringify(player.characterInfo)]);
     },
     applyCharacter(player) {

@@ -27,13 +27,14 @@ module.exports = {
         };
     },
     "characterInit.done": (player) => {
+        if (player.character.admin !== 0 || player.character.admin !== 6) return;
         if (factions.isLeader(player)) {
             if (player.character.factionId) {
                 let bizes = bizService.getBizesByFactionId(player.character.factionId);
                 if (bizes.length === 0) return;
                 let biz = bizes.find(biz => bizService.bizesModules[biz.info.type].business.isFactionOwner);
                 if (biz) {
-                    phone.addApp(player, "factionBiz",bizService.getBizInfoForApp(biz));
+                    phone.addApp(player, "factionBiz", bizService.getBizInfoForApp(biz));
                 }
             }
         }
