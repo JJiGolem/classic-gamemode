@@ -181,9 +181,9 @@ module.exports = {
         if (buyer.character.cash < cost) return player.call("biz.sell.ans", [5]);
         if (bizService.isHaveBiz(buyer.character.id)) return player.call("biz.sell.ans", [6]);
         let biz = bizService.getBizById(bizId);
-        if (bizService.bizesModules[info.type].business.isFactionOwner) return player.call("biz.sell.ans", [0]);
         if (biz == null) return player.call("biz.sell.ans", [0]);
         let info = biz.info;
+        if (bizService.bizesModules[info.type].business.isFactionOwner) return player.call("biz.sell.ans", [0]);
         if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10 ||
             buyer.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return player.call("biz.sell.ans", [3]);
         if (cost < info.price || cost > 1000000000) return player.call("biz.sell.ans", [4]);
