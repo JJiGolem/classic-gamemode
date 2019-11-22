@@ -215,25 +215,21 @@ mp.events.add('characterInit.create.setGender', gender => {
         mp.timer.remove(setGenderTimer);
     }
     setGenderTimer = mp.timer.add(function() {
-        try {
-            charData.gender = parseInt(gender);
-            if (charData.gender === 0 || charData.gender === 1) {
-                mp.players.local.model = freemodeCharacters[charData.gender];
-            }
-            if (charData.gender === 0) {
-                charData.similarity = 1;
-            }
-            else {
-                charData.similarity = 0;
-            }
-            charData.mother = 21;
-            charData.father = 0;
-            charData.skin = 0;
-            updateParents();
-            setDefWear();
-        } catch (error) {
-            mp.console(JSON.stringify(error));
+        charData.gender = parseInt(gender);
+        if (charData.gender === 0 || charData.gender === 1) {
+            mp.players.local.model = freemodeCharacters[charData.gender];
         }
+        if (charData.gender === 0) {
+            charData.similarity = 1;
+        }
+        else {
+            charData.similarity = 0;
+        }
+        charData.mother = 21;
+        charData.father = 0;
+        charData.skin = 0;
+        updateParents();
+        setDefWear();
     }, 100);
 });
 
