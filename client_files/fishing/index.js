@@ -287,6 +287,10 @@ mp.events.add('fishing.game.exit', () => {
     mp.busy.remove('fishing.game');
 });
 
+mp.events.addDataHandler("knocked", (player, knocked) => {
+    mp.events.call('fishing.game.exit');
+});
+
 let bindButtons = (state) => {
     if (state) {
         if (isBinding) return;
