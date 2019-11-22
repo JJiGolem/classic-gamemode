@@ -47,7 +47,10 @@ mp.attachmentMngr = {
                 obj.destroy();
             }
             // if (attInfo.anim) entity.clearTasksImmediately();
-            if (attInfo.anim) entity.stopAnimTask(attInfo.anim.dict, attInfo.anim.name, 3);
+            if (attInfo.anim) {
+                if (entity.remoteId == mp.players.local.remoteId) entity.stopAnimTask(attInfo.anim.dict, attInfo.anim.name, 3);
+                else entity.clearTasksImmediately();
+            }
             if (attInfo.lost) {
                 mp.inventory.hands(entity, entity.getVariable("hands"));
                 if (entity.remoteId == mp.players.local.remoteId) {
