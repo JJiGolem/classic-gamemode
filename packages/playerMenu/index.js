@@ -168,7 +168,7 @@ module.exports = {
     },
     setCompleted(player) {
         var data = {
-            invited: player.character.Promocode.completed,
+            completed: player.character.Promocode.completed,
         };
         player.call(`playerMenu.setCompleted`, [data]);
     },

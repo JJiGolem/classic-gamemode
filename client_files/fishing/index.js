@@ -60,7 +60,6 @@ let isIntervalCreated = false;
 
 const checkConditions = () => {
     return (
-        !mp.busy.includes() && 
         isHaveRod &&
         localPlayer.hands && localPlayer.hands.itemId == 5 &&
         !isEnter && 
@@ -68,7 +67,7 @@ const checkConditions = () => {
         !localPlayer.vehicle &&
         !localPlayer.getVehicleIsTryingToEnter() &&
         !localPlayer.isInAir() &&
-        !localPlayer.isPlayingAnim() &&
+        // !localPlayer.isPlayingAnim() &&
         !localPlayer.isJumping() &&
         !localPlayer.isDiving() &&
         !localPlayer.isEvasiveDiving() &&
@@ -91,6 +90,7 @@ mp.events.add('render', () => {
         if (!isIntervalCreated) {
             isIntervalCreated = true;
             intervalFishing = mp.timer.addInterval(() => {
+                // mp.chat.debug('bind ' + isBinding);
                 let heading = localPlayer.getHeading() + 90;
                 let point = {
                     x: localPlayer.position.x + 15*Math.cos(heading * Math.PI / 180.0),
@@ -100,10 +100,6 @@ mp.events.add('render', () => {
 
                 let ground = mp.game.gameplay.getGroundZFor3dCoord(point.x, point.y, point.z, 0.0, false);
                 let water = Math.abs(mp.game.water.getWaterHeight(point.x, point.y, point.z, 0));
-
-                // mp.console('z: ' + point.z);
-                // mp.console('ground: ' + ground);
-                // mp.console('water: ' + water);
 
                 if (water > 0 && ground < water && ground != 0) {
                     isShowPrompt = true;
@@ -218,8 +214,10 @@ mp.events.add('fishing.fish.sell.ans', (ans) => {
 });
 
 mp.events.add('fishing.game.menu', () => {
+    if (mp.busy.includes()) return;
+
     mp.events.call('prompt.showByName', 'fishing');
-    bindButtons(true);
+    // bindButtons(true);
 });
 
 mp.events.add('click', (x, y, upOrDown, leftOrRight, relativeX, relativeY, worldPosition, hitEntity) => {
@@ -227,7 +225,10 @@ mp.events.add('click', (x, y, upOrDown, leftOrRight, relativeX, relativeY, world
     if (!localPlayer.hands) return;
     if (localPlayer.hands.itemId !== 5) return;
 
-    if (!isEnter) return fishingEnter();
+    if (!isEnter) {
+        if (mp.busy.includes()) return;
+        return fishingEnter()
+    };
     if (!isStarted) return fishingStart();
 });
 
@@ -236,6 +237,7 @@ mp.events.add('fishing.game.enter', () => {
 
     mp.timer.remove(timeoutEndFishing);
 
+    bindButtons(true);
     mp.busy.add('fishing.game', false);
     playBaseAnimation(true);
     mp.utils.disablePlayerMoving(true);
@@ -282,17 +284,13 @@ let bindButtons = (state) => {
     if (state) {
         if (isBinding) return;
         isBinding = true;
-        // mp.keys.bind(0x45, true, fishingEnter);
         mp.keys.bind(0x20, true, fishingEnd);
-        // mp.keys.bind(0x45, true, fishingStart);
         mp.keys.bind(0x1B, false, fishingExit);
     }
     else {
         if (!isBinding) return;
         isBinding = false;
-        // mp.keys.unbind(0x45, true, fishingEnter);
         mp.keys.unbind(0x20, true, fishingEnd);
-        // mp.keys.unbind(0x45, true, fishingStart);
         mp.keys.unbind(0x1B, false, fishingExit);
     }
 }
@@ -324,6 +322,7 @@ let fishingEnd = () => {
 }
 
 let fishingExit = () => {
+    // mp.chat.debug('exit ' + isFetch);
     if (mp.game.ui.isPauseMenuActive()) return;
     if (!isFetch) {
         mp.events.call('fishing.game.exit');
@@ -337,10 +336,8 @@ function playBaseAnimation(state, timeout) { /// Анимация держани
         if (!timeout) timeout = 0;
         mp.timer.add(()=> {
             mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@base', 'base', 1, 49);
-            // mp.attachmentMngr.addLocal("takeRod");
         }, timeout);
     } else {
-        // mp.attachmentMngr.removeLocal("takeRod");
         mp.events.callRemote('animations.stop');
     }
 }
@@ -350,10 +347,8 @@ function playWaitAnimation(state, timeout) { /// Анимация начала �
         if (!timeout) timeout = 0;
         mp.timer.add(()=> {
             mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@idle_a', 'idle_a', 1, 49);
-            // mp.attachmentMngr.addLocal("takeRod");
         }, timeout);
     } else {
-        // mp.attachmentMngr.removeLocal("takeRod");
         mp.events.callRemote('animations.stop');
     }
 }

@@ -84,7 +84,7 @@ mp.events.add({
         var rec = mp.utils.getNearPlayer(mp.players.local.position);
         if (!rec) return mp.notify.error(`Рядом никого нет`, `Наручники`);
         data.recId = rec.remoteId;
-        mp.events.callRemote(`police.cuffs`, data);
+        mp.events.callRemote(`police.cuffs`, JSON.stringify(data));
     },
     "police.wanted.set": (val) => {
         mp.police.setWanted(val);
