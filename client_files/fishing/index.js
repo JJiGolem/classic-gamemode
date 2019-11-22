@@ -103,7 +103,6 @@ mp.events.add('render', () => {
 
                 if (water > 0 && ground < water && ground != 0) {
                     isShowPrompt = true;
-                    mp.chat.debug('show prompt');
                     mp.events.call('fishing.game.menu');
                 } else {
                     if (isShowPrompt) {
@@ -226,7 +225,7 @@ mp.events.add('click', (x, y, upOrDown, leftOrRight, relativeX, relativeY, world
     if (!localPlayer.hands) return;
     if (localPlayer.hands.itemId !== 5) return;
 
-    if (checkConditions()) {
+    if (!isEnter) {
         if (mp.busy.includes()) return;
         return fishingEnter()
     };
@@ -298,10 +297,10 @@ let bindButtons = (state) => {
 
 let fishingEnter = () => {
     if (mp.game.ui.isPauseMenuActive()) return;
-    if (!isEnter) return;
-
-    mp.events.callRemote('fishing.game.enter');
-    mp.events.call('prompt.hide');
+    if (!isEnter) {
+        mp.events.callRemote('fishing.game.enter');
+        mp.events.call('prompt.hide');
+    }
 }
 
 let fishingStart = () => {
