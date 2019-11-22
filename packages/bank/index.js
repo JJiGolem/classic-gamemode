@@ -46,7 +46,7 @@ module.exports = {
             z: position.z - 1
         }, {});
         await this.addBank(bankInfo);
-        console.log("[BANK] added new bank");
+        console.log("[BANK] Добавлен новый банк");
     },
     async deleteBank(player) {
         let bankIndex = banks.findIndex(x => {

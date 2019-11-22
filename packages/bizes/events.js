@@ -27,13 +27,14 @@ module.exports = {
         };
     },
     "characterInit.done": (player) => {
+        if (player.character.admin !== 0 || player.character.admin !== 6) return;
         if (factions.isLeader(player)) {
             if (player.character.factionId) {
                 let bizes = bizService.getBizesByFactionId(player.character.factionId);
                 if (bizes.length === 0) return;
                 let biz = bizes.find(biz => bizService.bizesModules[biz.info.type].business.isFactionOwner);
                 if (biz) {
-                    phone.addApp(player, "factionBiz",bizService.getBizInfoForApp(biz));
+                    phone.addApp(player, "factionBiz", bizService.getBizInfoForApp(biz));
                 }
             }
         }
@@ -64,6 +65,11 @@ module.exports = {
         let actions = [];
 
         if (bizService.bizesModules[info.type].business.isFactionOwner) {
+            if (factions.isLeader(player)) {
+                if (player.character.factionId) {
+                    actions.push('finance');
+                }
+            }
             player.call("biz.menu.open", [{
                 name: info.name,
                 owner: info.factionId != null ? factions.getFaction(info.factionId).name : "Нет",
@@ -175,6 +181,7 @@ module.exports = {
         if (buyer.character.cash < cost) return player.call("biz.sell.ans", [5]);
         if (bizService.isHaveBiz(buyer.character.id)) return player.call("biz.sell.ans", [6]);
         let biz = bizService.getBizById(bizId);
+        if (bizService.bizesModules[info.type].business.isFactionOwner) return player.call("biz.sell.ans", [0]);
         if (biz == null) return player.call("biz.sell.ans", [0]);
         let info = biz.info;
         if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10 ||

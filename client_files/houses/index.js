@@ -38,7 +38,6 @@ mp.events.add('house.enter', (place) => {
 });
 
 mp.events.add('house.enter.ans', (isInfoPanel, pos, rot) => {
-    mp.console(JSON.stringify({isInfoPanel, pos, rot}));
     if (pos) {
         mp.players.local.setHeading(rot);
         mp.players.local.position = pos;
