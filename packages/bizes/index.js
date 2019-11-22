@@ -358,8 +358,11 @@ module.exports = {
     },
     async addBiz(bizInfo) {
         let colshape = mp.colshapes.newSphere(bizInfo.x, bizInfo.y, bizInfo.z, 4.0);
+        let colshapeOrder = mp.colshapes.newSphere(bizInfo.x, bizInfo.y, bizInfo.z, 20.0);
         colshape.isBiz = true;
         colshape.bizId = bizInfo.id;
+        colshapeOrder.isOrderBiz = true;
+        colshapeOrder.bizId = bizInfo.id;
         bizInfo.BizStatistics = bizInfo.BizStatistics.sort((x, y) => {
             if (x.date.getTime() < y.date.getTime()) {
                 return 1;
@@ -371,6 +374,7 @@ module.exports = {
         });
         bizes.push({
             colshape: colshape,
+            colshapeOrder: colshapeOrder,
             info: bizInfo
         });
         if (bizInfo.BizStatistics.length !== 0) {
