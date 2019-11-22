@@ -288,11 +288,13 @@ mp.events.add('fishing.game.exit', () => {
 });
 
 mp.events.addDataHandler("knocked", (player, knocked) => {
-    mp.chat.debug('knocked ' + isEnter + ', ' + isInZone );
+    // mp.chat.debug('knocked ' + isEnter + ', ' + isInZone );
     if (!isEnter) return;
-    if (!isInZone) return;
+    // if (!isInZone) return;
 
-    mp.events.call('fishing.game.exit');
+    if (player.remoteId == localPlayer.remoteId) {
+        mp.events.call('fishing.game.exit');
+    }
 });
 
 let bindButtons = (state) => {
