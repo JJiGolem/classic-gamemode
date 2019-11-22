@@ -58,16 +58,16 @@ module.exports = {
             let winner, loser, isDraw;
             let targetCount = utils.randomInteger(1, 6);
             let senderCount = utils.randomInteger(1, 6);
-            console.log(`sender ${senderCount} : target ${targetCount}`);
+            //console.log(`sender ${senderCount} : target ${targetCount}`);
 
             if (senderCount > targetCount) {
                 winner = sender;
                 loser = target;
-                console.log('sender win')
+                //console.log('sender win')
             } else if (targetCount > senderCount) {
                 winner = target;
                 loser = sender;
-                console.log('target win')
+                //console.log('target win')
             } else {
                 
                 notify.info(target, `Вы сыграли в ничью`);
@@ -97,7 +97,7 @@ module.exports = {
             }
 
             mp.players.forEachInRange(target.position, 5, (current) => {
-                console.log('push txt')
+                //console.log('push txt')
                 current.call(`casino.dice.text.show`, [JSON.stringify(data)]);
             });
         } else {
