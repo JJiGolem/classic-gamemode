@@ -56,6 +56,7 @@ let isStarted = false;
 let isFetch = false;
 let isHaveRod = false;
 let isShowPrompt = false;
+let isDead = false;
 
 let intervalFishing;
 let isIntervalCreated = false;
@@ -63,6 +64,7 @@ let isIntervalCreated = false;
 const checkConditions = () => {
     return (
         isHaveRod &&
+        !isDead &&
         localPlayer.hands && localPlayer.hands.itemId == 5 &&
         !isEnter && 
         !localPlayer.isSwimming() &&
@@ -92,7 +94,6 @@ mp.events.add('render', () => {
         if (!isIntervalCreated) {
             isIntervalCreated = true;
             intervalFishing = mp.timer.addInterval(() => {
-                // mp.chat.debug('zone ' + isInZone);
                 let heading = localPlayer.getHeading() + 90;
                 let point = {
                     x: localPlayer.position.x + 15*Math.cos(heading * Math.PI / 180.0),
@@ -287,11 +288,22 @@ mp.events.add('fishing.game.exit', () => {
     mp.busy.remove('fishing.game');
 });
 
+mp.events.add("playerDeath", (player) => {
+    if (player.remoteId === localPlayer.remoteId) {
+        if (mp.busy.includes('fishing.game')) {
+            isDead = true;
+            mp.events.call('fishing.game.exit');
+            mp.events.callRemote('animations.stop');
+        }
+    }
+});
+
 mp.events.addDataHandler("knocked", (player, knocked) => {
-    if (!isEnter) return;
-    if (!isInZone) return;
-    
-    mp.events.call('fishing.game.exit');
+    if (player.remoteId == mp.players.local.remoteId) {
+        if (!knocked) {
+            isDead = false;
+        }
+    }
 });
 
 let bindButtons = (state) => {
@@ -336,7 +348,6 @@ let fishingEnd = () => {
 }
 
 let fishingExit = () => {
-    // mp.chat.debug('exit ' + isFetch);
     if (mp.game.ui.isPauseMenuActive()) return;
     if (!isFetch) {
         mp.events.call('fishing.game.exit');

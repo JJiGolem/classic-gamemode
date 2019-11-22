@@ -246,10 +246,13 @@ class Business extends Component {
                         <div className='info-house-react'>
                             <div>Район: <span>{ business.area }</span></div>
                             <div>Тип: <span>{ business.type }</span></div>
-                            <div>Налог:
-                                <span style={{ color: '#a2dd03 ' }}> ${ business.rent }</span>
-                                <span> в сутки</span>
-                            </div>
+                            {
+                                business.rent &&
+                                <div>Налог:
+                                    <span style={{ color: '#a2dd03 ' }}> ${ business.rent }</span>
+                                    <span> в сутки</span>
+                                </div>
+                            }
                             { business.owner && <div>Владелец: <span>{ business.owner }</span></div> }
                             { business.faction && <div>Крыша: <span>{ business.faction }</span></div> }
                         </div>

@@ -27,13 +27,14 @@ module.exports = {
         };
     },
     "characterInit.done": (player) => {
+        if (player.character.admin !== 0 || player.character.admin !== 6) return;
         if (factions.isLeader(player)) {
             if (player.character.factionId) {
                 let bizes = bizService.getBizesByFactionId(player.character.factionId);
                 if (bizes.length === 0) return;
                 let biz = bizes.find(biz => bizService.bizesModules[biz.info.type].business.isFactionOwner);
                 if (biz) {
-                    phone.addApp(player, "factionBiz",bizService.getBizInfoForApp(biz));
+                    phone.addApp(player, "factionBiz", bizService.getBizInfoForApp(biz));
                 }
             }
         }
@@ -64,6 +65,11 @@ module.exports = {
         let actions = [];
 
         if (bizService.bizesModules[info.type].business.isFactionOwner) {
+            if (factions.isLeader(player)) {
+                if (player.character.factionId) {
+                    actions.push('finance');
+                }
+            }
             player.call("biz.menu.open", [{
                 name: info.name,
                 owner: info.factionId != null ? factions.getFaction(info.factionId).name : "Нет",
@@ -154,6 +160,7 @@ module.exports = {
         else {
             if (id > 1000000) return player.call("biz.sell.check.ans", [null]);
             if (player.id == id) return player.call("biz.sell.check.ans", [null]);
+            if (mp.players.at(id) == null) return player.call("biz.sell.check.ans", [null]);
             if (mp.players.at(id).character != null) {
                 player.biz.buyerId = id;
                 player.call("biz.sell.check.ans", [mp.players.at(id).character.name]);
@@ -168,7 +175,6 @@ module.exports = {
         let buyer = mp.players.at(player.biz.buyerId);
         if (buyer == null) return player.call("biz.sell.ans", [0]);
         if (!mp.players.exists(buyer)) return player.call("biz.sell.ans", [0]);
-        if (vehicles == null) return player.call('biz.sell.ans', [0]);
         bizId = parseInt(bizId);
         cost = parseInt(cost);
         if (isNaN(bizId) || isNaN(cost)) return player.call("biz.sell.ans", [0]);
@@ -177,8 +183,9 @@ module.exports = {
         let biz = bizService.getBizById(bizId);
         if (biz == null) return player.call("biz.sell.ans", [0]);
         let info = biz.info;
-        if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10 ||
-            buyer.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return player.call("biz.sell.ans", [3]);
+        if (bizService.bizesModules[info.type].business.isFactionOwner) return player.call("biz.sell.ans", [0]);
+        if (player.dist(new mp.Vector3(info.x, info.y, info.z)) > 10 ||
+            buyer.dist(new mp.Vector3(info.x, info.y, info.z)) > 10) return player.call("biz.sell.ans", [3]);
         if (cost < info.price || cost > 1000000000) return player.call("biz.sell.ans", [4]);
         buyer.biz.sellerId = player.id;
         player.biz.sellingBizId = info.id;
@@ -199,8 +206,8 @@ module.exports = {
         if (biz == null) return seller.call("biz.sell.ans", [0]);
         let info = biz.info;
         if (info.characterId != seller.character.id) return seller.call("biz.sell.ans", [0]);
-        if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10 ||
-            seller.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return seller.call("biz.sell.ans", [3]);
+        if (player.dist(new mp.Vector3(info.x, info.y, info.z)) > 10 ||
+            seller.dist(new mp.Vector3(info.x, info.y, info.z)) > 10) return seller.call("biz.sell.ans", [3]);
         if (player.character.cash < info.price) return seller.call("biz.sell.ans", [5]);
         if (bizService.isHaveBiz(player.character.id)) return seller.call("biz.sell.ans", [6]);
         if (result == 2) return  seller.call("biz.sell.ans", [2]);

@@ -2,6 +2,8 @@
 /// Создание персоонажа
 const Data = require("characterInit/data.js");
 const freemodeCharacters = [mp.game.joaat("mp_m_freemode_01"), mp.game.joaat("mp_f_freemode_01")];
+const creatorPlayerPos = new mp.Vector3(402.8664, -996.4108, -99.00027);
+const creatorPlayerHeading = -185.0;
 const localPlayer = mp.players.local;
 
 let charData;
@@ -175,6 +177,8 @@ mp.events.add("characterInit.create", (active, rawCharData) => {
         mp.gui.cursor.show(true, false);
         mp.utils.disablePlayerMoving(true);
 
+        localPlayer.position = creatorPlayerPos;
+        localPlayer.setHeading(creatorPlayerHeading);
         mp.utils.cam.tpTo(localPlayer.position.x, localPlayer.position.y - 1.25, localPlayer.position.z + 0.5,
             localPlayer.position.x, localPlayer.position.y, localPlayer.position.z + 0.5, 45);
 
@@ -211,25 +215,21 @@ mp.events.add('characterInit.create.setGender', gender => {
         mp.timer.remove(setGenderTimer);
     }
     setGenderTimer = mp.timer.add(function() {
-        try {
-            charData.gender = parseInt(gender);
-            if (charData.gender === 0 || charData.gender === 1) {
-                mp.players.local.model = freemodeCharacters[charData.gender];
-            }
-            if (charData.gender === 0) {
-                charData.similarity = 1;
-            }
-            else {
-                charData.similarity = 0;
-            }
-            charData.mother = 21;
-            charData.father = 0;
-            charData.skin = 0;
-            updateParents();
-            setDefWear();
-        } catch (error) {
-            mp.console(JSON.stringify(error));
+        charData.gender = parseInt(gender);
+        if (charData.gender === 0 || charData.gender === 1) {
+            mp.players.local.model = freemodeCharacters[charData.gender];
         }
+        if (charData.gender === 0) {
+            charData.similarity = 1;
+        }
+        else {
+            charData.similarity = 0;
+        }
+        charData.mother = 21;
+        charData.father = 0;
+        charData.skin = 0;
+        updateParents();
+        setDefWear();
     }, 100);
 });
 

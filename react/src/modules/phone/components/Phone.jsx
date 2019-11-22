@@ -35,7 +35,7 @@ class Phone extends Component {
                     </div>
 
                     <div className="panel_home-phone-react">
-                        <button id="but_home-phone-react"
+                        <button tabIndex='-1' id="but_home-phone-react"
                                 onClick={() => setApp({name: 'MainDisplay', form: <MainDisplay/>})}
                                 disabled={info.isDisabled || info.isCall}
                         >
