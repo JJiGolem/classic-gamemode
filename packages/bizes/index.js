@@ -212,12 +212,12 @@ let removeProducts = async function(id, count) {
     if (biz.info.productsCount < count) return false;
     biz.info.productsCount -= count;
     await biz.info.save();
-    if (biz.info.characterId == null && biz.info.productsCount < biz.info.productsMaxCount / 2) {
-        let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
-        let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
-        let countOrder = biz.info.productsMaxCount -  biz.info.productsCount;
-        if (await createOrder(biz, countOrder, parseInt(((max + min) / 2) * countOrder)) !== 1) console.log("[BIZES] Auto creating order error");
-    }
+    // if (biz.info.characterId == null && biz.info.productsCount < biz.info.productsMaxCount / 2 && biz.info.productsOrder == null) {
+    //     let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
+    //     let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
+    //     let countOrder = biz.info.productsMaxCount -  biz.info.productsCount;
+    //     if (await createOrder(biz, countOrder, parseInt(((max + min) / 2) * countOrder)) !== 1) console.log("[BIZES] Auto creating order error");
+    // }
     return true;
 };
 let createOrder = async function(biz, count, price) {
@@ -225,7 +225,7 @@ let createOrder = async function(biz, count, price) {
     if (biz.info.productsCount + count > biz.info.productsMaxCount) return 3;
     let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
     let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
-    if (price < min || price > max) return 0;
+    if (price <= min || price >= max) return 0;
     biz.info.productsOrder = count;
     biz.info.productsOrderPrice = parseInt(price * count);
     carrier != null && carrier.addBizOrder(biz);
@@ -239,6 +239,7 @@ let destroyOrder = async function(id) {
     biz.info.productsOrder = null;
     biz.info.productsOrderPrice = null;
     carrier != null && carrier.removeBizOrderByBizId(biz.info.id);
+    console.log("destroyOrder");
     await biz.info.save();
     return true;
 };
