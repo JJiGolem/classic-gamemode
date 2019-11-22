@@ -160,6 +160,7 @@ module.exports = {
         else {
             if (id > 1000000) return player.call("biz.sell.check.ans", [null]);
             if (player.id == id) return player.call("biz.sell.check.ans", [null]);
+            if (mp.players.at(id) == null) return player.call("biz.sell.check.ans", [null]);
             if (mp.players.at(id).character != null) {
                 player.biz.buyerId = id;
                 player.call("biz.sell.check.ans", [mp.players.at(id).character.name]);
