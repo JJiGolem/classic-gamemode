@@ -63,9 +63,7 @@ mp.events.add("voiceChat.connect", (playerId, channel) => {
 /// Отключить выбранного игрока от канала связи
 mp.speechChanel.disconnect = (player, channel, isSend = false) => {
     if (player == null) return;
-    if (channel == 'phone') mp.console(`speechChanel.disconnect remoteId ${player.remoteId}`);
     let index = listeners.findIndex( x => x.playerId === player.remoteId);
-    if (channel == 'phone') mp.console(`speechChanel.disconnect index ${index}`);
     if (index === -1) return;
     if (channel == null) {
         listeners.splice(index, 1);
@@ -74,7 +72,10 @@ mp.speechChanel.disconnect = (player, channel, isSend = false) => {
         let channelIndex = listeners[index].channels.findIndex(x => x == channel);
         if (channel == 'phone') mp.console(`speechChanel.disconnect channels ${JSON.stringify(listeners[index].channels)}`);
         if (channel == 'phone') mp.console(`speechChanel.disconnect channelIndex ${channelIndex}`);
-        channelIndex !== -1 && listeners[index].channels.splice(channelIndex, 1);
+        if (channelIndex !== -1) {
+            listeners[index].channels.splice(channelIndex, 1);
+            listeners[index].current = null;
+        }
         if (channel == 'phone') mp.console(`speechChanel.disconnect channels ${JSON.stringify(listeners[index].channels)}`);
         if (listeners[index].channels.length === 0) {
             listeners.splice(index, 1);
@@ -94,10 +95,12 @@ mp.events.add("voiceChat.disconnect", (playerId, channel) => {
 
 let updateCurrent = function(player, index, newCh) {
     mp.console(`updateCurrent curr: ${listeners[index].current}`);
-    mp.console(`updateCurrent currMaxRange: ${channels[listeners[index].current].maxRange}`);
-    if (channels[listeners[index].current].maxRange === 0) return;
+    if (listeners[index].current != null) {
+        if (channels[listeners[index].current].maxRange === 0) return;
+    }
+
     let maxChannel = listeners[index].current;
-    if (newCh) {
+    if (newCh && listeners[index].current != null) {
         if (channels[newCh].maxRange === 0 || channels[newCh].maxRange > channels[listeners[index].current].maxRange) {
             maxChannel = newCh;
         }
