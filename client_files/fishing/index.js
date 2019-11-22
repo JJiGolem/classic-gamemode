@@ -289,7 +289,7 @@ mp.events.add('fishing.game.exit', () => {
 mp.events.add("playerDeath", (player) => {
     if (!isEnter) return;
 
-    if (player.remoteId == localPlayer.remoteId && knocked) {
+    if (player.remoteId == localPlayer.remoteId) {
         mp.events.call('fishing.game.exit');
     }
 });
