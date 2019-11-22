@@ -131,7 +131,7 @@ let getBizInfoForApp = function(biz) {
             resources: biz.info.productsCount,
             price: biz.info.price,
             statistics: biz.info.BizStatistics,
-            order: { productsCount: biz.info.productsOrder, productsPrice: biz.info.productsOrderPrice },
+            order: biz.info.productsOrder && { productsCount: biz.info.productsOrder, productsPrice: biz.info.productsOrderPrice },
             resourcePriceMin: bizesModules[biz.info.type].productPrice * minMultiplier,
             resourcePriceMax: bizesModules[biz.info.type].productPrice * maxMultiplier,
             improvements: []
@@ -358,8 +358,11 @@ module.exports = {
     },
     async addBiz(bizInfo) {
         let colshape = mp.colshapes.newSphere(bizInfo.x, bizInfo.y, bizInfo.z, 4.0);
+        let colshapeOrder = mp.colshapes.newSphere(bizInfo.x, bizInfo.y, bizInfo.z, 20.0);
         colshape.isBiz = true;
         colshape.bizId = bizInfo.id;
+        colshapeOrder.isOrderBiz = true;
+        colshapeOrder.bizId = bizInfo.id;
         bizInfo.BizStatistics = bizInfo.BizStatistics.sort((x, y) => {
             if (x.date.getTime() < y.date.getTime()) {
                 return 1;
@@ -371,6 +374,7 @@ module.exports = {
         });
         bizes.push({
             colshape: colshape,
+            colshapeOrder: colshapeOrder,
             info: bizInfo
         });
         if (bizInfo.BizStatistics.length !== 0) {
