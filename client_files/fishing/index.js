@@ -277,6 +277,7 @@ mp.events.add('fishing.game.exit', () => {
     mp.events.callRemote('fishing.game.exit');
     bindButtons(false);
     isEnter = false;
+    isStarted = false;
     mp.events.call('prompt.hide');
     playBaseAnimation(false);
     mp.utils.disablePlayerMoving(false);
@@ -332,8 +333,6 @@ let fishingExit = () => {
     if (mp.game.ui.isPauseMenuActive()) return;
     if (!isFetch) {
         mp.events.call('fishing.game.exit');
-        isEnter = false;
-        isStarted = false;
     }
 }
 

@@ -1,6 +1,8 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-fallthrough */
 /* eslint-disable default-case */
+import $ from 'jquery';
+
 const initialState = {
     // name: 'Ilya Maxin',
     // isDriver: true,
@@ -126,12 +128,24 @@ const initialState = {
     // }
 };
 
+let phoneIsShow = false;
+
 export default function info(state = initialState, action) {
 
     const { type, payload } = action;
     var newState;
 
     switch (type) {
+        case 'SHOW_PHONE':
+            phoneIsShow = payload;
+
+            if (!payload && state.incomingCall.state) {
+                // eslint-disable-next-line no-undef
+                mp.trigger('phone.call.in.ans', 0);
+            }
+
+            return state;
+
         case 'LOAD_INFO_TO_PHONE':
             return {
                 ...state,
@@ -224,6 +238,9 @@ export default function info(state = initialState, action) {
             }
 
         case 'INCOMING_CALL':
+            if (!phoneIsShow && payload.state) {
+                $('#phone-form-react').animate({ bottom: '-20%' }, 100);
+            }
             return {
                 ...state,
                 incomingCall: payload
