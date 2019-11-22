@@ -485,7 +485,7 @@ module.exports = {
                     callback(true);
                     mp.events.call('player.house.changed', seller);
                     mp.events.call('player.house.changed', buyer);
-                    updateHouse(house);
+                    this.updateHouse(house);
                     buyer.call('phone.app.add', ["house", {
                         name: house.info.id,
                         class: house.info.Interior.class,
