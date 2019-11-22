@@ -70,7 +70,10 @@ Vue.component('map-case-fib-dbSearch', {
             if (e.keyCode == 13 && !mapCase.loadMod) {
                 this.search();
             }
-        }
+        },
+        setFocus(enable) {
+            mapCase.inputFocus = enable;
+        },
     },
 });
 
@@ -184,8 +187,11 @@ Vue.component('map-case-fib-identification', {
             if (e.keyCode == 13 && !mapCase.loadMod) {
                 this.search();
             }
-        }
-    }
+        },
+        setFocus(enable) {
+            mapCase.inputFocus = enable;
+        },
+    },
 });
 
 Vue.component('map-case-fib-over-fine', {
@@ -221,7 +227,10 @@ Vue.component('map-case-fib-over-fine', {
             if (e.keyCode == 13 && !mapCase.loadMod) {
                 this.give();
             }
-        }
+        },
+        setFocus(enable) {
+            mapCase.inputFocus = enable;
+        },
     }
 
 });
@@ -236,8 +245,8 @@ Vue.component('map-case-fib-over-wanted', {
     },
     data: () => ({
         causeValue: "",
-        danger: 1,
-        overDanger: 1,
+        danger: 0,
+        overDanger: 0,
         star: mapCaseSvgPaths.dangerStar,
     }),
     methods: {
@@ -245,7 +254,7 @@ Vue.component('map-case-fib-over-wanted', {
             mapCase.currentOverWindow = null;
         },
         give() {
-            if (!this.causeValue) return;
+            if (!this.causeValue && this.danger) return;
 
             mapCase.showLoad();
             mapCase.currentOverWindow = null;
@@ -254,7 +263,7 @@ Vue.component('map-case-fib-over-wanted', {
             this.danger = 1;
         },
         over(n) {
-            if (!n)
+            if (n < 0)
                 this.overDanger = this.danger;
             else
                 this.overDanger = n;
@@ -266,7 +275,10 @@ Vue.component('map-case-fib-over-wanted', {
             if (e.keyCode == 13 && !mapCase.loadMod) {
                 this.give();
             }
-        }
+        },
+        setFocus(enable) {
+            mapCase.inputFocus = enable;
+        },
     }
 
 });
@@ -308,7 +320,6 @@ var mapCaseFIBCallsData = {
         if (!Array.isArray(calls)) calls = [calls];
         for (var i = 0; i < calls.length; i++) {
             this.remove(calls[i].id);
-            calls[i].num = calls[i].id;
             this.list.push(calls[i]);
         }
     },
@@ -335,7 +346,6 @@ var mapCaseFIBWantedData = {
         if (!Array.isArray(wanted)) wanted = [wanted];
         for (var i = 0; i < wanted.length; i++) {
             this.remove(wanted[i].id);
-            wanted[i].num = wanted[i].id;
             if (!wanted[i].description) wanted[i].description = "-";
             this.list.push(wanted[i]);
         }
@@ -376,7 +386,6 @@ var mapCaseFIBMembersData = {
         if (!Array.isArray(members)) members = [members];
         for (var i = 0; i < members.length; i++) {
             this.remove(members[i].id);
-            members[i].num = members[i].id;
             this.list.push(members[i]);
         }
     },

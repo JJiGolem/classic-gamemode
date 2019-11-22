@@ -2,6 +2,7 @@ let breakdowns = require('vehicles/breakdowns.js');
 let sell = require('vehicles/sell.js');
 let garage = require('vehicles/garage.js');
 let radiosync = require('vehicles/radiosync.js');
+let own = require('vehicles/own.js');
 let currentSirenState = false;
 
 mp.speedometerEnabled = true;
@@ -95,8 +96,9 @@ speedometerUpdateTimer = mp.timer.addInterval(() => { /// Обновление �
 
 }, 100);
 
-mp.keys.bind(0x32, true, function () {
-    if (mp.busy.includes('chat')) return;
+mp.keys.bind(0x32, true, function() {
+    if (mp.busy.includes(['chat', 'cuffs', 'terminal'])) return;
+    if (!mp.players.local.vehicle) return;
     if (mp.players.local.vehicle.getPedInSeat(-1) === mp.players.local.handle) {
         mp.events.callRemote('vehicles.engine.toggle');
     }
@@ -171,25 +173,20 @@ function startMileageCounter() {
     lastPos = player.position;
     stopMileageCounter();
     mileageTimer = mp.timer.addInterval(() => {
-        try {
-            var vehicle = player.vehicle;
-            if (!vehicle) return stopMileageCounter();
+        var vehicle = player.vehicle;
+        if (!vehicle) return stopMileageCounter();
 
-            var dist = (vehicle.position.x - lastPos.x) * (vehicle.position.x - lastPos.x) + (vehicle.position.y - lastPos.y) * (vehicle.position.y - lastPos.y) +
-                (vehicle.position.z - lastPos.z) * (vehicle.position.z - lastPos.z);
-            dist = Math.sqrt(dist);
-            if (dist > 200) dist = 50;
-            dist /= 1000;
+        var dist = (vehicle.position.x - lastPos.x) * (vehicle.position.x - lastPos.x) + (vehicle.position.y - lastPos.y) * (vehicle.position.y - lastPos.y) +
+            (vehicle.position.z - lastPos.z) * (vehicle.position.z - lastPos.z);
+        dist = Math.sqrt(dist);
+        if (dist > 200) dist = 50;
+        dist /= 1000;
 
-            currentDist += dist;
-            lastPos = vehicle.position;
+        currentDist += dist;
+        lastPos = vehicle.position;
 
-            var mileage = vehicle.mileage + currentDist;
-            mp.events.call('vehicles.speedometer.mileage.update', mileage);
-        } catch (err) {
-            mp.chat.debug('mileageTimer error');
-        }
-
+        var mileage = vehicle.mileage + currentDist;
+        mp.events.call('vehicles.speedometer.mileage.update', mileage);
     }, 1000);
     mileageUpdateTimer = mp.timer.addInterval(() => {
         try {
@@ -215,7 +212,7 @@ function stopMileageCounter() {
     currentDist = 0;
 };
 
-mp.keys.bind(0x25, true, function () {
+mp.keys.bind(0x25, true, function() {
     if (mp.busy.includes()) return;
     var player = mp.players.local;
     var vehicle = player.vehicle;
@@ -237,7 +234,7 @@ mp.keys.bind(0x25, true, function () {
     }
 });
 
-mp.keys.bind(0x27, true, function () {
+mp.keys.bind(0x27, true, function() {
     if (mp.busy.includes()) return;
     var player = mp.players.local;
     var vehicle = player.vehicle;
@@ -462,15 +459,16 @@ mp.events.add('vehicles.speedometer.enabled', (enabled) => {
     mp.speedometerEnabled = enabled;
 });
 mp.events.add("time.main.tick", () => {
-    var entity = mp.utils.getNearPlayerOrVehicle(mp.players.local.position, 10);
+    // var entity = mp.utils.getNearPlayerOrVehicle(mp.players.local.position, 10);
+    var vehicle = mp.utils.getNearVehicle(mp.players.local.position, 10);
 
-    if (entity && entity.type == "vehicle") {
-        var bootPos = mp.utils.getBootPosition(entity);
+    if (vehicle && vehicle.type == "vehicle") {
+        var bootPos = mp.utils.getBootPosition(vehicle);
         var distToBoot = mp.vdist(mp.players.local.position, bootPos);
         if (distToBoot < 1) {
             if (mp.moduleVehicles.nearBootVehicleId == null) {
-                mp.moduleVehicles.nearBootVehicleId = entity.remoteId;
-                mp.events.call("playerEnterVehicleBoot", mp.players.local, entity);
+                mp.moduleVehicles.nearBootVehicleId = vehicle.remoteId;
+                mp.events.call("playerEnterVehicleBoot", mp.players.local, vehicle);
             }
         } else {
             if (mp.moduleVehicles.nearBootVehicleId != null) {
@@ -479,12 +477,12 @@ mp.events.add("time.main.tick", () => {
             }
         }
 
-        var hoodPos = mp.utils.getHoodPosition(entity);
+        var hoodPos = mp.utils.getHoodPosition(vehicle);
         var distToHood = mp.vdist(mp.players.local.position, hoodPos);
         if (distToHood < 1) {
             if (mp.moduleVehicles.nearHoodVehicleId == null) {
-                mp.moduleVehicles.nearHoodVehicleId = entity.remoteId;
-                mp.events.call("playerEnterVehicleHood", mp.players.local, entity);
+                mp.moduleVehicles.nearHoodVehicleId = vehicle.remoteId;
+                mp.events.call("playerEnterVehicleHood", mp.players.local, vehicle);
             }
         } else {
             if (mp.moduleVehicles.nearHoodVehicleId != null) {
@@ -523,10 +521,28 @@ mp.events.add("time.main.tick", () => {
 
 mp.moduleVehicles = {
     nearBootVehicleId: null,
-    nearHoodVehicleId: null
+    nearHoodVehicleId: null,
+    disabledControl: false,
+
+    getSeat(player) {
+        if (!player.vehicle) return null;
+
+        var seats = [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+        for (var i = 0; i < seats.length; i++) {
+            if (player.vehicle.getPedInSeat(seats[i]) == player.handle) return seats[i];
+        }
+
+        return null;
+    },
+    disableControl(enable) {
+        this.disabledControl = enable;
+    },
 }
 
 mp.events.add({
+    "vehicles.disableControl": (enable) => {
+        mp.moduleVehicles.disableControl(enable);
+    },
     "playerEnterVehicleBoot": (player, vehicle) => {
         if (player.vehicle) return;
         if (vehicle.getVariable("static")) return;
@@ -580,6 +596,13 @@ mp.events.add('render', () => {
             });
         }
     });
+    if (mp.moduleVehicles.disabledControl) {
+        mp.game.controls.disableControlAction(0, 59, true); /// INPUT_VEH_MOVE_LR
+        mp.game.controls.disableControlAction(0, 60, true); /// INPUT_VEH_MOVE_UD
+        mp.game.controls.disableControlAction(0, 71, true); /// INPUT_VEH_ACCELERATE
+        mp.game.controls.disableControlAction(0, 72, true); /// INPUT_VEH_BRAKE
+        // mp.game.controls.disableControlAction(0, 75, true); /// INPUT_VEH_EXIT
+    }
 });
 
 mp.events.add('vehicles.add.menu.show', () => {

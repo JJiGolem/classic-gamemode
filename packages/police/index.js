@@ -64,11 +64,15 @@ module.exports = {
     // Время, через которое можно повторно искать преступника
     searchTime: 2 * 60 * 1000,
     // Организации, которые могут использовать наручники
-    cuffsFactions: [1, 2, 3, 4, 6],
+    cuffsFactions: [1, 2, 3, 4, 6, 12, 13, 14],
     // Стоимость освобождения игрока за 1 ур. розыска (ms)
     unarrestPrice: 1000,
     // Процент адвокату за освобождение (от 0.00 до 1.00)
     unarrestPayK: 0.05,
+    // Мин. ранг, с которого можно выдавать лицению на оружие
+    giveGunLicenseRank: 10,
+    // Мин. ранг, с которого можно забирать лицению на оружие
+    takeGunLicenseRank: 10,
 
 
     setCuffs(player, cuffs) {
@@ -155,7 +159,10 @@ module.exports = {
         delete player.isFollowing;
         player.call(`police.follow.stop`);
         player.call(`inventory.enable`, [false]);
-        player.position = cell;
+        player.call(`hud.setData`, [{
+            arrestTimeMax: parseInt(player.character.arrestTime / 1000)
+        }]);
+        (!player.health) ? player.spawn(cell) : player.position = cell;
         player.heading = cell.h;
         var playerId = player.id;
         var characterId = player.character.id;
@@ -195,6 +202,9 @@ module.exports = {
         delete player.isFollowing;
         player.call(`police.follow.stop`);
         player.call(`inventory.enable`, [false]);
+        player.call(`hud.setData`, [{
+            arrestTimeMax: parseInt(player.character.arrestTime / 1000)
+        }]);
         player.position = cell;
         player.heading = cell.h;
         var playerId = player.id;
@@ -229,6 +239,9 @@ module.exports = {
         timer.remove(player.cellArrestTimer);
         delete player.cellArrestTimer;
         player.call(`inventory.enable`, [true]);
+        player.call(`hud.setData`, [{
+            arrestTimeMax: 0
+        }]);
 
         player.position = this.cellExit;
         player.heading = this.cellExit.h;

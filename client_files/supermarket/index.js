@@ -85,7 +85,7 @@ mp.events.add({
                 mp.callCEFV(`selectMenu.notification = 'В магазине кончились продукты'`);
                 break;
             case 4:
-                mp.callCEFV(`selectMenu.notification = '${data}'`);
+                mp.callCEFV(`selectMenu.notification = \`${data}\``);
                 break;
         }
     }
@@ -93,12 +93,13 @@ mp.events.add({
 
 function setSupermarketHeaders(type) {
     let img = type ? 'ltd.png' : 'supermarket.png';
-    mp.callCEFV(`selectMenu.menus["supermarketMain"].headerImg = '${img}'`);
-    mp.callCEFV(`selectMenu.menus["supermarketMobile"].headerImg = '${img}'`);
-    mp.callCEFV(`selectMenu.menus["supermarketNumberChange"].headerImg = '${img}'`);
-    mp.callCEFV(`selectMenu.menus["supermarketFood"].headerImg = '${img}'`);
-    mp.callCEFV(`selectMenu.menus["supermarketTobacco"].headerImg = '${img}'`);
-    mp.callCEFV(`selectMenu.menus["supermarketStuff"].headerImg = '${img}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketMain"].headerImg = \`${img}\``);
+    mp.callCEFV(`selectMenu.menus["supermarketMobile"].headerImg = \`${img}\``);
+    mp.callCEFV(`selectMenu.menus["supermarketNumberChange"].headerImg = \`${img}\``);
+    mp.callCEFV(`selectMenu.menus["supermarketFood"].headerImg = \`${img}\``);
+    mp.callCEFV(`selectMenu.menus["supermarketTobacco"].headerImg = \`${img}\``);
+    mp.callCEFV(`selectMenu.menus["supermarketStuff"].headerImg = \`${img}\``);
+    mp.callCEFV(`selectMenu.menus["supermarketBags"].headerImg = \`${img}\``);
 }
 
 function setPrices(config, multiplier) {
@@ -116,4 +117,5 @@ function setPrices(config, multiplier) {
     mp.callCEFV(`selectMenu.menus["supermarketStuff"].items[2].values[0] = '$${config.canister}'`);
     mp.callCEFV(`selectMenu.menus["supermarketBags"].items[0].values[0] = '$${config.duffleBag}'`);
     mp.callCEFV(`selectMenu.menus["supermarketBags"].items[1].values[0] = '$${config.duffleBag}'`);
+    mp.callCEFV(`selectMenu.menus["supermarketStuff"].items[3].values[0] = '$${config.healthPack}'`);
 }

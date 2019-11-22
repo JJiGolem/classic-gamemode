@@ -12,48 +12,85 @@ module.exports = {
     maxPriceMultiplier: 2.0,
     productPrice: 10,
     ammoProducts: 1,
+    armourProducts: 100,
     weaponsConfig: {
         1: {
             name: 'Combat Pistol',
             itemId: 20,
             gameId: 'weapon_combatpistol',
-            products: 10
+            products: 95
         },
         2: {
             name: 'SMG',
             itemId: 48,
             gameId: 'weapon_smg',
-            products: 10
+            products: 260
         },
         3: {
             name: 'Pump Shotgun',
             itemId: 21,
             gameId: 'weapon_pumpshotgun',
-            products: 10
+            products: 270
         },
         4: {
             name: 'Carbine Rifle',
             itemId: 22,
             gameId: 'weapon_carbinerifle',
-            products: 10
+            products: 320
         },
         5: {
             name: 'Micro SMG',
             itemId: 47,
             gameId: 'weapon_microsmg',
-            products: 10
+            products: 235
         },
         6: {
             name: 'Machine Pistol',
             itemId: 89,
             gameId: 'weapon_machinepistol',
-            products: 10
+            products: 245
         },
         7: {
             name: 'Compact Rifle',
             itemId: 52,
             gameId: 'weapon_compactrifle',
-            products: 10
+            products: 305
+        },
+        9: {
+            name: 'Carbine Rifle Mk II',
+            itemId: 99,
+            gameId: 'weapon_carbinerifle_mk2',
+            products: 355
+        },
+        10: {
+            name: 'Combat PDW',
+            itemId: 88,
+            gameId: 'weapon_combatpdw',
+            products: 355
+        },
+        11: {
+            name: 'Pump Shotgun Mk II',
+            itemId: 91,
+            gameId: 'weapon_pumpshotgun_mk2',
+            products: 290
+        },
+        12: {
+            name: 'Heavy Pistol',
+            itemId: 80,
+            gameId: 'weapon_heavypistol',
+            products: 175
+        },
+        13: {
+            name: 'Advanced Rifle',
+            itemId: 100,
+            gameId: 'weapon_advancedrifle',
+            products: 390
+        },
+        14: {
+            name: 'Assault SMG',
+            itemId: 87,
+            gameId: 'weapon_assaultsmg',
+            products: 375
         },
     },
     async init() {

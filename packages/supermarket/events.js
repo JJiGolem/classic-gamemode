@@ -4,8 +4,8 @@ let inventory = call('inventory');
 let phone = call('phone');
 
 module.exports = {
-    "init": () => {
-        supermarket.init();
+    "init": async () => {
+        await supermarket.init();
         inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
@@ -107,6 +107,9 @@ module.exports = {
                 productName = 'duffleBag';
                 bagColor = 'black';
                 break;
+            case 8:
+                productName = 'healthPack';
+                break;
         }
         let price = supermarket.productsConfig[productName] * supermarket.productPrice * supermarket.getPriceMultiplier(supermarketId);
         if (player.character.cash < price) return player.call('supermarket.products.buy.ans', [2]);
@@ -123,15 +126,17 @@ module.exports = {
             params.litres = 0;
             params.max = 20;
         } else if (productName == 'water') {
-            params.thirst = 20;
+            params.thirst = 100;
         } else if (productName == 'chocolate') {
-            params.satiety = 15;
+            params.satiety = 20;
             params.thirst = -5;
         } else if (productName == 'duffleBag') {
             params.sex = !player.character.gender;
-            params.pockets = '[2,2,6,5,2,3,6,6,12,10]';
+            params.pockets = '[4,4,10,4,7,7,7,7,14,10]';
             params.texture = 0;
             bagColor == 'green' ? params.variation = 41 : params.variation = 45;
+        } else if (productName == 'healthPack') {
+            params.count = 1;
         }
 
         inventory.addItem(player, itemId, params, (e) => {

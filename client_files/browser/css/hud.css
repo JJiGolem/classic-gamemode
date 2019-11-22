@@ -1,6 +1,6 @@
 #hud {
     color: #fff;
-    font-family: Montserrat;
+    font-family: Ubuntu;
     height: 100%;
     pointer-events: none;
     position: absolute;
@@ -11,10 +11,16 @@
     position: absolute;
 }
 
+#hud .block {
+    background: rgba(12, 12, 12, 0.6);
+    border-radius: 1vh;
+    backdrop-filter: blur(0.4vh);
+}
+
 #hud .keys {
     font-weight: bold;
-    right: 2vh;
-    top: 50%;
+    right: 2.99vh;
+    top: 50.6%;
     transform: translate(0, -50%);
 }
 
@@ -22,51 +28,232 @@
     align-items: center;
     display: flex;
     margin-bottom: 1vh;
+    font-weight: 500;
 }
 
-#hud span {
+#hud .keys span {
     align-items: center;
-    background: #fff7;
+    background: #fffa;
     border-radius: 0.5vh;
-    box-shadow: 0px 3px 0 #0005;
+    box-shadow: 0px 0.1vh 0.5vh #000;
     color: #000;
     display: flex;
-    height: 2.5vh;
+    height: 2.2vh;
     justify-content: center;
     margin-right: 1vh;
-    width: 2.75vh;
+    width: 2.3vh;
+}
+
+#hud .panel-right-top {
+    right: 2vh;
+    top: 2vh;
+}
+
+#hud .info-logo {
+    display: flex;
+}
+
+#hud .info-logo .info {
+    font-size: 1.2vh;
+    font-weight: 500;
+    text-align: right;
+    height: min-content;
+    margin: auto;
+}
+
+#hud .info-logo .info div {
+    margin: 0.3vh 0;
+}
+
+#hud .info-logo .info span {
+    font-weight: 700;
 }
 
 #hud .logo {
     width: 7vh;
+    margin-left: 2vh;
+    margin-top: 0.7vh;
+}
+
+#hud .wanted {
+    display: flex;
+    margin-left: auto;
+    width: fit-content;
+    margin-top: 1vh;
+}
+
+#hud .wanted svg {
+    height: 3vh;
+    width: 3vh;
+    fill: white;
+    opacity: 0.4;
+}
+
+#hud .wanted svg.paint {
+    opacity: 1;
+    fill: #FFDF29;
+}
+
+#hud .player-state {
+    margin-top: 1vh;
+    margin-left: auto;
+    width: fit-content;
+}
+
+#hud .player-state img {
+    width: 4vh;
+}
+
+#hud .arrest {
+    position: relative;
+    margin-top: 1vh;
+}
+
+#hud .arrest .wrap {
+    height: 5vh;
+    width: 5vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    margin-left: auto;
+    border-radius: 100%;
+    overflow: hidden;
+}
+
+#hud .arrest svg {
+    transform: rotate(-90deg);
+    position: relative;
+    top: -1%;
+    left: -1%;
+    height: calc(100% + 2%);
+    width: calc(100% + 2%);
+    border-radius: 100%;
+}
+
+#hud .arrest circle {
+    fill: rgba(0,0,0,0);
+    stroke: #1A5AFF;
+    stroke-width: 50%;
+    stroke-dasharray: 78.5% 157%;
+    cy: 50%;
+    cx: 50%;
+    r: 25%
+}
+
+#hud .arrest img {
+    height: 50%;
+    position: absolute;
+    top: 25%;
+    right: 6%;
+}
+
+#hud .arrest .description {
+    width: max-content;
+    position: absolute;
+    right: 7vh;
+    top: 1.5vh;
+    font-size: 1.6vh;
+    font-weight: 700;
+}
+
+
+
+#hud .panel-right-bottom {
+    right: 1.8vh;
+    bottom: 1.8vh;
+    display: flex;
+    height: 6.5vh;
+}
+
+#hud .starvation {
+    padding: 0.7vh;
+    margin-right: 1.9vh;
+    display: grid;
+    grid-template-rows: min-content min-content;
+}
+
+#hud .starvation .record {
+    display: grid;
+    grid-template-columns: min-content 1fr min-content;
+    grid-gap: 1vh;
+    height: 2.5vh;
+    /*margin: 0.8vh 0 1.2vh 0;*/
+}
+
+#hud .starvation img {
+    width: 1.3vh;
+    margin-bottom: -1vh;
+}
+
+#hud .starvation .record .progress {
+    position: relative;
+    height: 0.6vh;
+    width: 9.4vh;
+    background-color: rgba(255, 255, 255, 0.2);
+    grid-row: 1/2;
+    grid-column: 2/4;
+    top: calc(100% - 0.7vh);
+    border-radius: 0.2vh;
+    overflow: hidden;
+}
+
+#hud .starvation .record.red .progress {
+    background-color: rgba(255, 56, 56, 0.2);
+}
+
+#hud .starvation .record.satiety .progress div {
+    width: 50%;
+    height: 100%;
+    background-color: #FFB72B;
+}
+
+#hud .starvation .record.thirst .progress div {
+    width: 50%;
+    height: 100%;
+    background-color: #2BC6C6;
+}
+
+#hud .starvation .record .percent {
+    font-size: 1.2vh;
+    grid-row: 1/2;
+    grid-column: 3/4;
+    font-weight: 500;
+    margin-top: 0.2vh;
+}
+
+#hud .starvation .record.red .percent {
+    color: rgb(255, 56, 56);
 }
 
 #hud .money {
-    background: rgb(0, 0, 0, 0.6);
     bottom: 2vh;
-    display: flex;
-    font-size: 2vh;
-    justify-content: space-around;
-    padding: 1vh;
+    display: grid;
+    grid-template-columns: 2fr min-content;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 0.5vh;
+    grid-column-gap: 3vh;
+    padding: 1.2vh;
     right: 2vh;
-    width: 40vh;
+    min-width: 22.6vh;
+    font-size: 1.5vh;
+    font-weight: 400;
 }
 
 #hud .money img {
-    margin-bottom: -0.1vh;
-    margin-right: 1vh;
-    width: 2vh;
+    margin-bottom: -0.3vh;
+    margin-right: 0.8vh;
+    width: 1.6vh;
 }
 
 #hud .money .cash {
-    color: #a2dd03;
+    color: #78FF25;
+    font-weight: 500;
 }
 
 #hud .money .time {
-    color: #ddd;
+    text-align: right;
+    font-weight: 500;
 }
 
-#hud .server-online {
+/*#hud .server-online {
     right: 2vh;
     text-align: right;
     top: 2vh;
@@ -84,7 +271,7 @@
 #hud .server-online .wanted img {
     height: 2vh;
     margin-top: 1vh;
-}
+}*/
 
 #hud .server-online p {
     font-size: 1vh;
@@ -93,41 +280,77 @@
 }
 
 #hud .voice {
-    left: 48%;
-    bottom: 2vh;
+    height: 4.1vh;
+    width: 4vh;
+    transform: translateY(-50%);
+    position: absolute;
+    top: 50%;
+    left: -6vh; /*Ширина + отступ (.panel-right-bottom>div)*/
 }
 
-#hud .voice img {
-    height: 7vh;
+#hud .voice svg {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-55%, -50%);
+    width: 35%;
+    fill: none;
+}
+
+#hud .voice svg path {
+    fill: white;
+    opacity: 0.6;
+}
+
+#hud .voice svg.on path {
+    fill: inherit;
+    opacity: 1;
+}
+
+#hud .voice svg.on {
+    fill: #FFDF29;
+}
+
+#hud .voice .symb {
+    position: absolute;
+    font-size: 1.2vh;
+    font-weight: 700;
+    top: 55%;
+    left: 65%;
 }
 
 #hud .weather {
-    background: linear-gradient(to left, #0000, rgb(0, 0, 0, 0.6));
-    bottom: 2vh;
-    left: 35vh;
-    min-width: 18vh;
-    padding: 3vh 2vh;
+    bottom: 1.8vh;
+    /*left: 31.1vh !important;*/
     width: fit-content;
+    height: 11.6vh;
+    min-width: 17.3vh;
 }
 
-#hud .weather>img {
-    bottom: 4vh;
-    left: 13vh;
+#hud .weather>div {
+    padding: 1.7vh 1.9vh;
+
+}
+
+#hud .weather img {
+    bottom: 1.3vh;
+    left: 7.8vh;
     position: absolute;
-    width: 5vh;
+    width: 4vh;
 }
 
-#hud .weather .city {
-    margin-top: -0.5vh;
+#hud .weather .street {
+    color: #A9A9A9;
+    font-size: 1.3vh;
 }
 
 #hud .weather .temperature {
-    font-size: 3.5vh;
-    margin-top: 2vh;
+    font-size: 2.3vh;
+    margin-top: 1.5vh;
 }
 
 #hud .weather .region {
-    color: #f1d941;
+    color: #FFDF29;
     font-size: 2.2vh;
-    font-weight: bold;
+    font-weight: 700;
 }

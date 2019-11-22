@@ -1,26 +1,31 @@
 "use strict";
 /// Модуль выбора и создания персоонажа
+let admin;
 let characterInit = require("./index.js");
 let logger = call("logger");
 let utils = call("utils");
 
 module.exports = {
     "init": () => {
+        admin = call('admin');
         characterInit.moduleInit();
         inited(__dirname);
     },
     "auth.done": (player) => {
         player.characterInit = {
             created: false,
-        }
+        };
         mp.events.call('characterInit.start', player);
-    },
-    "characterInit.debug": (player, text) => {
-        logger.debug(text, "characterInit", player);
     },
     "characterInit.start": async (player) => {
         let charInfos = await characterInit.init(player);
-        player.call('characterInit.init', [charInfos, player.account.slots]);
+        player.call('characterInit.init', [charInfos, {
+            slots: player.account.slots,
+            coins: player.account.donate,
+            costSecondSlot: characterInit.costSecondSlot,
+            timeForSecondSlot: characterInit.timeForSecondSlot,
+            costThirdSlot: characterInit.costThirdSlot,
+        }]);
     },
     "characterInit.choose": (player, charnumber) => {
         if (charnumber == null || isNaN(charnumber)) return player.call('characterInit.choose.ans', [0]);
@@ -33,16 +38,34 @@ module.exports = {
             characterInit.applyCharacter(player);
 
             player.call('characterInit.choose.ans', [1]);
+            characterInit.spawn(player);
+            admin.checkClearWarns(player);
             mp.events.call('characterInit.done', player);
         } else {
             player.call('characterInit.choose.ans', [1]);
             characterInit.create(player);
         }
     },
+    "characterInit.slot.buy": async (player) => {
+        let price = player.account.slots === 3 ? null : player.account.slots === 2 ? characterInit.costThirdSlot : characterInit.costSecondSlot;
+        if (price) {
+            if (player.account.donate >= price) {
+                player.account.donate -= price;
+                player.account.slots++;
+                await player.account.save();
+                player.call("characterInit.slot.buy.ans", [1, player.account.slots, player.account.donate]);
+            }
+            else {
+                player.call("characterInit.slot.buy.ans", [0, player.account.slots, player.account.donate]);
+            }
+        }
+        else {
+            player.call("characterInit.slot.buy.ans", [2, player.account.slots, player.account.donate]);
+        }
+    },
     /// Разморозка игрока после выбора персоонажа
     "characterInit.done": (player) => {
         player.call('characterInit.done');
-        characterInit.spawn(player);
         player.authTime = Date.now();
         logger.log(`Авторизовал персонажа (IP: ${player.ip})`, "characterInit", player);
     },
@@ -61,7 +84,7 @@ module.exports = {
 
         var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60 % 60);
         player.character.minutes += minutes;
-        if (!player.dimension) {
+        if (!player.dimension && !player.character.arrestTime) {
             player.character.x = player.position.x;
             player.character.y = player.position.y;
             player.character.z = player.position.z;
@@ -74,4 +97,4 @@ module.exports = {
         player.account.save();
         logger.log(`Деавторизовал персонажа`, "characterInit", player);
     },
-}
+};

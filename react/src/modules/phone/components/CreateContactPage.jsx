@@ -29,7 +29,7 @@ class CreateContactPage extends Component {
         if (this.validateForm()) {
             let contact = { name, number };
             addContact(contact);
-            let dialogIndex = dialogs.findIndex(d => d.number === number);
+            let dialogIndex = dialogs.list.findIndex(d => d.number === number);
 
             if (dialogIndex !== -1) {
                 renameDialog(number, name);

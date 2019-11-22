@@ -100,6 +100,7 @@ module.exports = {
         if (!zone) return out(`Вы не в зоне, где можно забить стрелку`);
         var biz = bizes.getBizById(bizId);
         if (!biz) return out(`Бизнес #${bizId} не найден`);
+        if (biz.info.type == 10) return out(`Нельзя захватить клуб`);
         if (biz.info.factionId == faction.id) return out(`${biz.info.name} уже под вашей крышей`);
         if (Object.keys(this.wars).length) return out(`В штате уже идет война за бизнес`);
         var diff = Date.now() - this.lastWarTime;

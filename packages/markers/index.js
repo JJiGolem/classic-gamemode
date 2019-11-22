@@ -2,8 +2,8 @@
 
 module.exports = {
 
-    init() {
-        this.loadTpMarkersFromDB();
+    async init() {
+        await this.loadTpMarkersFromDB();
     },
     async loadTpMarkersFromDB() {
         var list = await db.Models.TpMarker.findAll();
@@ -44,10 +44,17 @@ module.exports = {
         colshapeB.marker = markerB;
 
         colshapeA.onEnter = (player) => {
+            if (player.vehicle) return;
             if (player.lastTpMarkerId != null) return;
             var target = colshapeA.marker.target;
             var pos = target.position;
             pos.z++;
+
+            mp.players.forEachInRange(player.position, 10, rec => {
+                if (player.id == rec.id) return;
+                rec.call(`markers.tp.player.teleported`, [player.id, pos, target.h, colshapeA.marker.id]);
+            });
+
             player.position = pos;
             player.heading = target.h;
             player.dimension = target.dimension;
@@ -60,10 +67,17 @@ module.exports = {
         };
 
         colshapeB.onEnter = (player) => {
+            if (player.vehicle) return;
             if (player.lastTpMarkerId != null) return;
             var target = colshapeB.marker.target;
             var pos = target.position;
             pos.z++;
+
+            mp.players.forEachInRange(player.position, 10, rec => {
+                if (player.id == rec.id) return;
+                rec.call(`markers.tp.player.teleported`, [player.id, pos, target.h, colshapeB.marker.id]);
+            });
+
             player.position = pos;
             player.heading = target.h;
             player.dimension = target.dimension;

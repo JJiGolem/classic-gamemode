@@ -151,6 +151,7 @@ var mapCase = new Vue({
         },
         show(val) {
             mp.trigger("blur", val, 300);
+            mp.trigger("mapCase.animation.show.play", val);
             if (val) busy.add("mapCase", true, true);
             else busy.remove("mapCase", true);
             this.lastShowTime = Date.now();
@@ -178,7 +179,7 @@ var mapCase = new Vue({
     mounted() {
         let self = this;
         window.addEventListener('keyup', function(e) {
-            if (busy.includes(["auth", "chat", "terminal", "inventory", "playerMenu", "phone", "inputWindow"])) return;
+            if (busy.includes(["auth", "chat", "terminal", "inventory", "playerMenu", "phone", "inputWindow", "jobProcess", "timer"])) return;
             if (selectMenu.isEditing) return;
             if (Date.now() - self.lastShowTime < 500) return;
             if (self.inputFocus) return;

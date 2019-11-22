@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable default-case */
 import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
 
@@ -8,6 +10,7 @@ import Business from "./modules/business";
 import Bank from './modules/bank';
 import EnterMenu from "./modules/house/components/EnterMenu";
 import Players from './modules/players';
+import ErrorBoundary from './Error';
 
 class MainContainer extends Component {
     constructor(props) {
@@ -20,13 +23,13 @@ class MainContainer extends Component {
 
         return (
             <Fragment>
-                <Chat />
-                { Object.keys(info).length > 1 && <div style={{ display: (!forms.phone) && 'none' }}><Phone /></div> }
-                { forms.house && <House /> }
-                { enterMenu.isShow && <EnterMenu /> }
-                { forms.business && <Business /> }
-                { forms.bank && <Bank /> }
-                { forms.players && <Players /> }
+                <ErrorBoundary><Chat /></ErrorBoundary>
+                { info.isLoad && <ErrorBoundary><div><Phone /></div></ErrorBoundary> }
+                { forms.house && <ErrorBoundary><House /></ErrorBoundary> }
+                { enterMenu.isShow && <ErrorBoundary><EnterMenu /></ErrorBoundary> }
+                { forms.business && <ErrorBoundary><Business /> </ErrorBoundary>}
+                { forms.bank && <ErrorBoundary><Bank /></ErrorBoundary> }
+                { forms.players && <ErrorBoundary><Players /> </ErrorBoundary>}
             </Fragment>
         );
     }

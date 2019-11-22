@@ -45,7 +45,7 @@ class Business extends Component {
         const { blurForm } = this.props;
 
         return (
-            <div className='message_back-house-react'>
+            <div className='message_back-house-react' style={{ height: '35%' }}>
                 Вы действительно хотите приобрести бизнес?
                 <div>
                     <button onClick={this.startBuy}>Да</button>
@@ -94,7 +94,7 @@ class Business extends Component {
             )
         } else {
             return (
-                <div className='message_back-house-react' onClick={() => {
+                <div className='message_back-house-react' style={{ height: '40%' }} onClick={() => {
                     this.setState({ isActionsMenu: false });
                     this.props.blurForm(false);
                 }}>
@@ -204,7 +204,7 @@ class Business extends Component {
         } else {
             return (
                 <Fragment>
-                    { this.getButton('buy') }
+                    { business.price && this.getButton('buy') }
                     { this.getButton('actions') }
                 </Fragment>
             )
@@ -246,12 +246,15 @@ class Business extends Component {
                         <div className='info-house-react'>
                             <div>Район: <span>{ business.area }</span></div>
                             <div>Тип: <span>{ business.type }</span></div>
-                            <div>Налог:
-                                <span style={{ color: '#a2dd03 ' }}> ${ business.rent }</span>
-                                <span> в сутки</span>
-                            </div>
-                            <div>Владелец: <span>{ business.owner ? business.owner : 'нет' }</span></div>
-                            <div>Крыша: <span>{ business.faction ? business.faction : 'нет' }</span></div>
+                            {
+                                business.rent &&
+                                <div>Налог:
+                                    <span style={{ color: '#a2dd03 ' }}> ${ business.rent }</span>
+                                    <span> в сутки</span>
+                                </div>
+                            }
+                            { business.owner && <div>Владелец: <span>{ business.owner }</span></div> }
+                            { business.faction && <div>Крыша: <span>{ business.faction }</span></div> }
                         </div>
 
                         <div className='buttons-house-react' style={{ top: '40%' }}>
@@ -273,7 +276,7 @@ class Business extends Component {
     getMessage(answer) {
         if (answer === 0 || answer === 2) {
             return (
-                <div className='message_back-house-react' onClick={this.closeMenu}>
+                <div className='message_back-house-react' onClick={this.closeMenu} style={{ height: '35%' }}>
                     <div className='exitEnterBusiness' name='exit'></div>
                     {answer === 0 ? 'У Вас недостаточно денег для покупки' : 'У Вас уже есть бизнес'}<br/>
                     <div>
@@ -289,7 +292,7 @@ class Business extends Component {
 
         if (answer === 1) {
             return (
-                <div className='message_back-house-react' onClick={this.closeMenu}>
+                <div className='message_back-house-react' onClick={this.closeMenu} style={{ height: '35%' }}>
                     <div className='exitEnterBusiness' name='exit' ></div>
                     Бизнес успешно куплен<br/>
                     <div>

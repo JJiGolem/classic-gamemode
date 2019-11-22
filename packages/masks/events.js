@@ -17,8 +17,13 @@ module.exports = {
             return current;
         });
         let data = masks.getShopData();
+        let appearanceData = {
+            hairColor: player.character.hairColor,
+            hairHighlightColor: player.character.hairHighlightColor,
+            hairstyle: player.character.hair
+        }
         player.dimension = player.id + 1;
-        player.call("masks.shop.enter", [data, list]);
+        player.call("masks.shop.enter", [data, list, appearanceData]);
     },
     "masks.shop.exit": (player) => {
         player.dimension = 0;
@@ -30,8 +35,14 @@ module.exports = {
         if (!mask) return player.call('masks.buy.ans', [1]);
         if (!mask.isAvailable) return player.call('masks.buy.ans', [3]);
 
+        // let products = masks.calculateProductsNeeded(mask.price);
+        // let price = mask.price * masks.getPriceMultiplier();
+
+        let defaultPrice = mask.price;
         let products = masks.calculateProductsNeeded(mask.price);
-        let price = mask.price * masks.getPriceMultiplier();
+        let price = parseInt(defaultPrice * masks.getPriceMultiplier());
+        let income = parseInt(products * masks.productPrice * masks.getPriceMultiplier());
+
         if (player.character.cash < price) return player.call('masks.buy.ans', [4]);
         let productsAvailable = masks.getProductsAmount();
         if (products > productsAvailable) return player.call('masks.buy.ans', [6]);
@@ -45,7 +56,7 @@ module.exports = {
             money.removeCash(player, price, function (result) {
                 if (result) {
                     masks.removeProducts(products);
-                    masks.updateCashbox(price);
+                    masks.updateCashbox(income);
                     player.call('masks.buy.ans', [0]);
                 } else {
                     player.call('masks.buy.ans', [5]);

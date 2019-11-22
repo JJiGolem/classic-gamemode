@@ -11,13 +11,13 @@ module.exports = (sequelize, DataTypes) => {
         // Награда владельцу промокода
         ownerSum: {
             type: DataTypes.INTEGER(11),
-            defaultValue: 1000,
+            defaultValue: 10000,
             allowNull: false
         },
         // Награда тому, кто выполнил условия
         playerSum: {
             type: DataTypes.INTEGER(11),
-            defaultValue: 1000,
+            defaultValue: 10000,
             allowNull: false
         },
     }, {

@@ -1,7 +1,7 @@
 "use strict";
 
-let callerId = -1;
 let isBinding = false;
+let isCall = false;
 
 mp.attachmentMngr.register("takePhone", "prop_npc_phone", 58867, new mp.Vector3(0.06, 0.04, 0.01), new mp.Vector3(-15, 0, -145)); /// Телефон в руке
 mp.attachmentMngr.register("callPhone", "prop_npc_phone", 58867, new mp.Vector3(0.01, 0.05, -0.02), new mp.Vector3(-5, -65, 165)); /// Телефон у уха
@@ -25,6 +25,7 @@ mp.events.add('phone.load', function (phoneInfo, phoneDialogs, apps) {
 /// Добавление приложения
 /// house
 /// biz
+/// factionBiz
 /// taxi
 mp.events.add('phone.app.add', function (appName, info) {
     if (info != null) {
@@ -51,11 +52,8 @@ mp.events.add('phone.call.start', function (number) {
 });
 
 /// Ответ на наше начало разговора
-mp.events.add('phone.call.start.ans', function (ans, targetId) {
-    if (ans == 0) {  /// 0 Вызов принят, 1 Нет номера, 2 Занято, 3 Сброс вызова, 4 Не поднял трубку
-        callerId = targetId;
-        mp.speechChanel.connect(mp.players.atRemoteId(callerId), "phone");
-    }
+/// 0 Вызов принят, 1 Нет номера, 2 Занято, 3 Сброс вызова, 4 Не поднял трубку
+mp.events.add('phone.call.start.ans', function (ans) {
     //playCallAnimation(false);
     playHoldAnimation(true, 1000);
     /// Ответ на звонок
@@ -64,69 +62,42 @@ mp.events.add('phone.call.start.ans', function (ans, targetId) {
 
 /// Сброс на нашем конце
 mp.events.add('phone.call.end', function () {
-    mp.events.callRemote('phone.call.end', callerId);
-    if (callerId != -1) {
-        mp.speechChanel.disconnect(mp.players.atRemoteId(callerId), "phone");
-        callerId = -1;
-    }
+    mp.events.callRemote('phone.call.end');
     //playCallAnimation(false);
     playHoldAnimation(true);
 });
 
 /// Сброс звонка на другом конце
 mp.events.add('phone.call.end.in', function () {
-    if (callerId != -1) {
-        mp.speechChanel.disconnect(mp.players.atRemoteId(callerId), "phone");
-        callerId = -1;
-    }
+    isCall = false;
     mp.callCEFR('phone.call.end', []);
     //playCallAnimation(false);
     playHoldAnimation(true);
 });
 
 /// Уведомление о том, что нам звонят
-mp.events.add('phone.call.in', function (startedPlayerNumber, targetId) {
-    callerId = targetId;
+mp.events.add('phone.call.in', function (startedPlayerNumber) {
+    isCall = true;
     /// Звонок игроку на телефон
     mp.callCEFR('phone.call.in', [startedPlayerNumber]);
 });
 
 /// Когда звонят нам и мы принимаем/отклоняем звонок
 mp.events.add('phone.call.in.ans', function (ans) {
-    mp.events.callRemote('phone.call.ans', ans, callerId);
+    mp.events.callRemote('phone.call.ans', ans);
     if (ans == 1) {
-        if (callerId != -1) {
-            mp.speechChanel.connect(mp.players.atRemoteId(callerId), "phone");
-            playHoldAnimation(false);
-            playCallAnimation(true);
-        }
-        else {
-            mp.callCEFR('phone.call.end', []);
-        }
-    }
-    else {
-        callerId = -1;
+        //playHoldAnimation(false);
+        playCallAnimation(true);
     }
 });
 
 mp.events.add("playerDeath", (player) => {
-    if (callerId != -1 && player.remoteId == mp.players.local.remoteId) {
-        mp.events.call('phone.call.end');
-        mp.callCEFR('phone.call.end', []);
+    if (player.remoteId === mp.players.local.remoteId) {
         if (mp.busy.includes('phone')) {
             hidePhone();
         }
     }
 });
-
-mp.events.add("playerQuit", (player) => {
-	if (player.remoteId == callerId) {
-        mp.callCEFR('phone.call.end', []);
-        callerId = -1;
-        mp.events.call('phone.call.end');
-    }
-});
-
 
 /// Отправка сообщения
 mp.events.add('phone.message.send', function (message, number) {
@@ -135,6 +106,7 @@ mp.events.add('phone.message.send', function (message, number) {
 
 /// Получение сообщения
 mp.events.add('phone.message.set', function (message, number) {
+    mp.notify.info("Новое сообщение", "Телефон");
     mp.callCEFR('phone.message.set', [message, number]);
 });
 
@@ -187,29 +159,36 @@ let bindButtons = (state) => {
         mp.keys.unbind(0x26, true, showPhone);        // UP ARROW key
         mp.keys.unbind(0x28, true, hidePhone);        // DOWN ARROW key
     }
-}
-
+};
+mp.events.add("phone.show", (state) => {
+    if (state) {
+        showPhone();
+    }
+    else {
+        hidePhone();
+    }
+});
 let showPhone = () => {
     if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
-    if (mp.police.haveCuffs) return;
-    var player = mp.players.local;
+    let player = mp.players.local;
     if (player.getVariable("knocked")) return;
     if (!player.getHealth()) return;
-    if (mp.farms.hasProduct(player)) return;
     if (mp.farms.isCropping(player)) return;
-    if (mp.factions.hasBox(player)) return;
-    if (player.getVariable("cuffs")) return;
+    isCall = false;
 
     if (!mp.busy.add('phone')) return;
     mp.callCEFR('phone.show', [true]);
     playCallAnimation(false);
     playHoldAnimation(true);
-}
+};
 
 let hidePhone = () => {
     if (mp.game.ui.isPauseMenuActive()) return;
-    if (!mp.busy.includes('phone')) return;
+    if (!isCall) {
+        if (!mp.busy.includes('phone')) return;
+    }
+    isCall = false;
 
     mp.callCEFR('phone.show', [false]);
     mp.busy.remove('phone');
@@ -218,7 +197,7 @@ let hidePhone = () => {
     if (!mp.players.local.vehicle) {
         mp.events.callRemote('animations.stop');
     }
-}
+};
 
 function playHoldAnimation(state, timeout) { /// Анимация держания телефона
     if (mp.players.local.vehicle) return;

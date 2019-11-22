@@ -7,7 +7,7 @@ require('babel-core').transform("code", {
 
 require('babel-polyfill');
 
-const finalPath = './client_packages';
+const finalPath = 'client_packages';
 
 let config = {
     output: {

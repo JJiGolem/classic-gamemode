@@ -12,6 +12,7 @@ let vehicle;
 let vehPrice = 100;
 
 let priceConfig = {
+    color: 100,
     repair: 500,
     default: 0.01,
     engine: 0.01,
@@ -190,7 +191,7 @@ mp.events.add('tuning.menu.show', (index = lastIndex) => {
     let visibleIndex = index < 5 ? 0 : index - 4;
     mp.callCEFV(`selectMenu.menu.j = ${visibleIndex}`);
     mp.callCEFV(`selectMenu.menu.i = ${index}`);
-    mp.callCEFV(`selectMenu.menu.items[0].values = ['$${priceConfig.repair}']`);
+    mp.callCEFV(`selectMenu.menu.items[0].values = ['$${parseInt(priceConfig.repair)}']`);
     mp.callCEFV(`selectMenu.show = true`);
 });
 
@@ -232,6 +233,7 @@ mp.events.add('tuning.colorMenu.show', () => {
     mp.callCEFVN({ "selectMenu.menu.items[0].j": tuningParams.primaryColour });
     mp.callCEFVN({ "selectMenu.menu.items[1].i": tuningParams.secondaryColour });
     mp.callCEFVN({ "selectMenu.menu.items[1].j": tuningParams.secondaryColour });
+    mp.callCEFVN({ "selectMenu.menu.items[2].values": [`$${priceConfig.color}`] });
 
 });
 
@@ -301,6 +303,9 @@ mp.events.add('tuning.colors.set.ans', (ans) => {
         case 4:
             mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
             break;
+        case 5:
+            mp.callCEFV(`selectMenu.notification = 'В LSC кончились детали'`);
+            break;
     }
 });
 
@@ -336,7 +341,7 @@ mp.events.add('tuning.buy.ans', (ans, mod, index) => {
             tuningParams[mod].current = index;
             mp.callCEFV(`count = -1;
             selectMenu.menu.items.forEach((item) => {
-                if (item.values[0] == 'уст.') mp.trigger('tuning.item.update', '${mod}', count)
+                if (item.values[0] == 'уст.') mp.trigger('tuning.item.update', \`${mod}\`, count)
                 count++;
             });
             `);
@@ -355,6 +360,9 @@ mp.events.add('tuning.buy.ans', (ans, mod, index) => {
             break;
         case 4:
             mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
+            break;
+        case 5:
+            mp.callCEFV(`selectMenu.notification = 'В LSC кончились детали'`);
             break;
     }
 });
@@ -396,6 +404,9 @@ mp.events.add('tuning.repair.ans', (ans) => {
             break;
         case 4:
             mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
+            break;
+        case 5:
+            mp.callCEFV(`selectMenu.notification = 'В LSC кончились детали'`);
             break;
     }
 });
@@ -468,6 +479,6 @@ function setMenuPrices(modType, lastIndex) {
 function initPrices(info) {
     vehPrice = info.veh;
     for (let key in info.config) {
-        priceConfig[key] = info.config[key];
+        priceConfig[key] = info.config[key] * info.priceMultiplier;
     }
 }

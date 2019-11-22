@@ -22,6 +22,16 @@ export const deleteContact = (number) => ({
     payload: number
 });
 
+export const setIncomingCall = (state, number) => ({
+    type: 'INCOMING_CALL',
+    payload: { state, number }
+});
+
+export const setActiveCall = (state, number, isMine) => ({
+    type: 'ACTIVE_CALL',
+    payload: { state, number, isMine }
+});
+
 export const setCallStatus = (status) => ({
     type: 'SET_CALL_STATUS',
     payload: status
@@ -29,11 +39,6 @@ export const setCallStatus = (status) => ({
 
 export const setCall = (flag) => ({
     type: 'SET_CALL',
-    payload: flag
-});
-
-export const startMyCall = (flag) => ({
-    type: 'START_MY_CALL',
     payload: flag
 });
 
@@ -87,6 +92,20 @@ export const setOrderStatusBusiness = status => ({
    payload: status
 });
 
+export const createOrderBusinessFaction = (productsCount, productsPrice) => ({
+    type: 'CREATE_ORDER_BUSINESS_FACTION',
+    payload: { productsCount, productsPrice }
+});
+
+export const cancelOrderBusinessFaction = () => ({
+    type: 'CANCEL_ORDER_BUSINESS_FACTION'
+});
+
+export const setOrderStatusBusinessFaction = status => ({
+   type: 'SET_ORDER_STATUS_BUSINESS_FACTION',
+   payload: status
+});
+
 export const sellBusiness = id => ({
     type: 'SELL_BUSINESS',
     payload: id
@@ -99,5 +118,25 @@ export const buyImprovementHouse = type => ({
 
 export const setBuyStatusHouse = status => ({
     type: 'BUY_IMPROVEMENT_HOUSE_ANS',
+    payload: status
+});
+
+export const buyImprovementBusiness = type => ({
+    type: 'BUY_IMPROVEMENT_BUSINESS',
+    payload: type
+});
+
+export const setBuyStatusBusiness = status => ({
+    type: 'BUY_IMPROVEMENT_BUSINESS_ANS',
+    payload: status
+});
+
+export const buyImprovementBusinessFaction = type => ({
+    type: 'BUY_IMPROVEMENT_BUSINESS_FACTION',
+    payload: type
+});
+
+export const setBuyStatusBusinessFaction = status => ({
+    type: 'BUY_IMPROVEMENT_BUSINESS_FACTION_ANS',
     payload: status
 });

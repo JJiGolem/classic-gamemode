@@ -6,7 +6,14 @@ mp.attachmentMngr = {
             if (entity && entity.__attachmentObjects && !entity.__attachmentObjects.hasOwnProperty(id)) {
                 let attInfo = this.attachments[id];
                 let object = mp.objects.new(attInfo.model, entity.position);
-                if (attInfo.lost) object.lost = attInfo.lost;
+                if (attInfo.lost) {
+                    object.lost = attInfo.lost;
+                    mp.inventory.hands(entity, null);
+                    if (entity.remoteId == mp.players.local.remoteId) {
+                        mp.busy.add("lostAttach", false);
+                        mp.inventory.setHandsBlock(true);
+                    }
+                }
 
                 object.attachTo(entity.handle,
                     (typeof(attInfo.boneName) === 'string') ? entity.getBoneIndexByName(attInfo.boneName) : entity.getBoneIndex(attInfo.boneName),
@@ -17,7 +24,8 @@ mp.attachmentMngr = {
                 entity.__attachmentObjects[id] = object;
 
                 var a = attInfo.anim;
-                if (a) {
+                if (a && !entity.vehicle &&
+                    !entity.isJumping() && !entity.isShooting() && !entity.isSwimming() && !entity.isFalling()) {
                     entity.clearTasksImmediately();
                     mp.utils.requestAnimDict(a.dict, () => {
                         entity.taskPlayAnim(a.dict, a.name, a.speed, 0, -1, a.flag, 0, false, false, false);
@@ -31,13 +39,25 @@ mp.attachmentMngr = {
 
     removeFor: function(entity, id) {
         if (entity && entity.__attachmentObjects && entity.__attachmentObjects.hasOwnProperty(id)) {
+            let attInfo = this.attachments[id];
             let obj = entity.__attachmentObjects[id];
             delete entity.__attachmentObjects[id];
 
             if (mp.objects.exists(obj)) {
                 obj.destroy();
             }
-            entity.clearTasksImmediately();
+            // if (attInfo.anim) entity.clearTasksImmediately();
+            if (attInfo.anim) {
+                if (entity.remoteId == mp.players.local.remoteId) entity.stopAnimTask(attInfo.anim.dict, attInfo.anim.name, 3);
+                else entity.clearTasksImmediately();
+            }
+            if (attInfo.lost) {
+                mp.inventory.hands(entity, entity.getVariable("hands"));
+                if (entity.remoteId == mp.players.local.remoteId) {
+                    mp.busy.remove("lostAttach");
+                    mp.inventory.setHandsBlock(false);
+                }
+            }
         }
     },
 
@@ -138,6 +158,11 @@ mp.events.add("entityStreamOut", (entity) => {
 });
 
 mp.events.add("render", () => {
+    if (mp.busy.includes("lostAttach")) {
+        mp.game.controls.disableControlAction(0, 24, true); /// удары
+        mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
+        mp.game.controls.disableControlAction(0, 140, true); /// удары R
+    }
     var player = mp.players.local;
     if (!player.__attachmentObjects) return;
     for (var id in player.__attachmentObjects) {
@@ -161,6 +186,7 @@ mp.events.add("playerStartEnterVehicle", () => {
         if (!object.lost) continue;
         mp.attachmentMngr.removeLocal(id);
         mp.attachmentMngr.removeFor(player, id);
+        mp.notify.error(`Вы уронили груз`);
     }
 });
 
@@ -233,9 +259,20 @@ mp.events.add({
     },
     "time.main.tick": () => {
         var player = mp.players.local;
+        if (player.vehicle) return;
         for (let id of player.__attachments) {
             let attInfo = mp.attachmentMngr.attachments[id];
-            var a  = attInfo.anim;
+            let object = player.__attachmentObjects[id];
+
+            if (!object.isAttached()) {
+                object.attachTo(player.handle,
+                    (typeof(attInfo.boneName) === 'string') ? player.getBoneIndexByName(attInfo.boneName) : player.getBoneIndex(attInfo.boneName),
+                    attInfo.offset.x, attInfo.offset.y, attInfo.offset.z,
+                    attInfo.rotation.x, attInfo.rotation.y, attInfo.rotation.z,
+                    false, false, false, false, 2, true);
+            }
+
+            var a = attInfo.anim;
             if (!a) continue;
             if (player.isPlayingAnim(a.dict, a.name, 3)) return;
             mp.utils.requestAnimDict(a.dict, () => {

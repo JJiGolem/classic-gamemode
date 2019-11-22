@@ -1,169 +1,178 @@
 /* eslint-disable default-case */
-const inittialState = [
-    {
-        name: 'Данила',
-        number: '134432',
-        PhoneMessages: [
-            {
-                text: 'ты как',
-                isMine: false,
-                date: Date.now()
-            },
-            {
-                text: '?',
-                isMine: false
-            },
-            {
-                text: 'пиздец меня разъебало вчера',
-                isMine: true
-            },
-            {
-                text: 'ну ясен хуй епт',
-                isMine: false
-            },
-            {
-                text: 'унесло так унесло',
-                isMine: true,
-            },
-            {
-                text: 'я думал вообще откинусь ))000 ладно хоть не блевал',
-                isMine: true
-            },
-            {
-                text: 'ввхвхвхdgshhssssssskkdawawd',
-                isMine: true
-            },
-        ]
-    },
-    {
-        name: null,
-        number: '1212333',
-        PhoneMessages: [
-            {
-                text: 'ты как',
-                isMine: false
-            },
-            {
-                text: '?',
-                isMine: false
-            },
-            {
-                text: 'пиздец меня разъебало вчера',
-                isMine: true
-            },
-            {
-                text: 'ну ясен хуй епт',
-                isMine: false
-            },
-            {
-                text: 'унесло так унесло',
-                isMine: true
-            },
-            {
-                text: 'я думал вообще откинусь ))000 ладно хоть не блевал',
-                isMine: true
-            },
-            {
-                text: '121в',
-                isMine: true
-            },
-        ]
-    },
-    {
-        name: 'Влад',
-        number: '0982',
-        PhoneMessages: [
-            {
-                text: 'ты как',
-                isRead: true,
-                isMine: false
-            },
-            {
-                text: '?',
-                isRead: true,
-                isMine: false
-            },
-            {
-                text: 'пиздец меня разъебало вчера',
-                isRead: true,
-                isMine: true
-            },
-            {
-                text: 'ну ясен хуй епт',
-                isRead: true,
-                isMine: false
-            },
-            {
-                text: 'унесло так унесло',
-                isRead: true,
-                isMine: true
-            },
-            {
-                text: 'я думал вообще откинусь ))000 ладно хоть не блевал',
-                isRead: false,
-                isMine: false
-            },
-            {
-                text: 'в',
-                isMine: false,
-                isRead: false
-            },
-        ]
-    },
-];
+const initialState = {
+    isSorted: false,
+    list:  [
+        // {
+        //     name: 'Данила',
+        //     number: '134432',
+        //     PhoneMessages: [
+        //         {
+        //             text: 'ты как',
+        //             isMine: false,
+        //             date: Date.now()
+        //         },
+        //         {
+        //             text: '?',
+        //             isMine: false
+        //         },
+        //         {
+        //             text: 'пиздец меня разъебало вчера',
+        //             isMine: true
+        //         },
+        //         {
+        //             text: 'ну ясен хуй епт',
+        //             isMine: false
+        //         },
+        //         {
+        //             text: 'унесло так унесло',
+        //             isMine: true,
+        //         },
+        //         {
+        //             text: 'я думал вообще откинусь ))000 ладно хоть не блевал',
+        //             isMine: true
+        //         },
+        //         {
+        //             text: 'ввхвхвхdgshhssssssskkdawawd',
+        //             isMine: true
+        //         },
+        //     ]
+        // },
+        // {
+        //     name: null,
+        //     number: '1212333',
+        //     PhoneMessages: [
+        //         {
+        //             text: 'ты как',
+        //             isMine: false
+        //         },
+        //         {
+        //             text: '?',
+        //             isMine: false
+        //         },
+        //         {
+        //             text: 'пиздец меня разъебало вчера',
+        //             isMine: true
+        //         },
+        //         {
+        //             text: 'ну ясен хуй епт',
+        //             isMine: false
+        //         },
+        //         {
+        //             text: 'унесло так унесло',
+        //             isMine: true
+        //         },
+        //         {
+        //             text: 'я думал вообще откинусь ))000 ладно хоть не блевал',
+        //             isMine: true
+        //         },
+        //         {
+        //             text: '121в',
+        //             isMine: true
+        //         },
+        //     ]
+        // },
+        // {
+        //     name: 'Влад',
+        //     number: '0982',
+        //     PhoneMessages: [
+        //         {
+        //             text: 'ты как',
+        //             isRead: true,
+        //             isMine: false
+        //         },
+        //         {
+        //             text: '?',
+        //             isRead: true,
+        //             isMine: false
+        //         },
+        //         {
+        //             text: 'пиздец меня разъебало вчера',
+        //             isRead: true,
+        //             isMine: true
+        //         },
+        //         {
+        //             text: 'ну ясен хуй епт',
+        //             isRead: true,
+        //             isMine: false
+        //         },
+        //         {
+        //             text: 'унесло так унесло',
+        //             isRead: true,
+        //             isMine: true
+        //         },
+        //         {
+        //             text: 'я думал вообще откинусь ))000 ладно хоть не блевал',
+        //             isRead: false,
+        //             isMine: false
+        //         },
+        //         {
+        //             text: 'в',
+        //             isMine: false,
+        //             isRead: false
+        //         },
+        //     ]
+        // },
+    ]
+};
 
-export default function dialogs(state = inittialState, action) {
+export default function dialogs(state = initialState, action) {
     const { type, payload } = action;
-    var newState;
 
     switch(type) {
         case 'LOAD_DIALOGS':
-            return payload;
+            return {
+                isSorted: false,
+                list: payload
+            };
 
         case 'ADD_DIALOG':
-            newState = [ ...state ];
-            newState.push({
-                name: payload.name,
-                number: payload.number,
-                PhoneMessages: []
-            });
-            return newState;
+            return {
+                ...state,
+                list: [
+                    ...state.list,
+                    {
+                        name: payload.name,
+                        number: payload.number,
+                        PhoneMessages: []
+                    }
+                ]
+            }
 
         case 'RENAME_DIALOG':
-            newState = [ ...state ];
-            let renameDialogIndex = newState.findIndex(dialog => dialog.number === payload.number);
+            const newStateRename = { ...state };
+            let renameDialogIndex = newStateRename.list.findIndex(dialog => dialog.number === payload.number);
 
             if (renameDialogIndex !== -1) {
-                newState[renameDialogIndex].name = payload.newName;
+                newStateRename.list[renameDialogIndex].name = payload.newName;
             }
 
-            return newState;
+            return newStateRename;
 
         case 'DELETE_DIALOG':
-            newState = [ ...state ];
-            let removeIndex = newState.findIndex(dialog => dialog.number === payload);
+            const newStateDelete = { ...state };
+            let deleteIndex = newStateDelete.list.findIndex(dialog => dialog.number === payload);
 
-            if (removeIndex !== -1) {
-                newState.splice(removeIndex, 1);
+            if (deleteIndex !== -1) {
+                newStateDelete.list.splice(deleteIndex, 1);
             }
 
-            return newState;
+            return newStateDelete;
 
         case 'ADD_MESSAGE_TO_PHONE':
-            let ind = state.findIndex(con => con.number === payload.number);
-            newState = [ ...state ];
+            const newStateAdd = { ...state };
 
-            if(ind !== -1) {
-                newState[ind].PhoneMessages.push(
+            let dialogIndex = newStateAdd.list.findIndex(con => con.number === payload.number);
+
+            if(dialogIndex !== -1) {
+                newStateAdd.list[dialogIndex].PhoneMessages.push(
                     {
                         text: payload.text,
                         date: Date.now(),
                         isMine: payload.isMine,
                         isRead: payload.isRead
                     });
-                return newState;
             } else {
-                newState.push({
+                newStateAdd.list.push({
                     name: '',
                     number: payload.number,
                     PhoneMessages: [
@@ -177,42 +186,44 @@ export default function dialogs(state = inittialState, action) {
                 })
             }
 
-            newState.isSorted = false;
+            newStateAdd.isSorted = false;
 
-            return newState;
+            return newStateAdd;
 
         case 'LOAD_MESSAGES_TO_DIALOG':
-            newState = [ ...state ];
-            let loadDialogIndex = newState.findIndex(dialog => dialog.number == payload.number);
+            const newStateLoad = { ...state };
+            let loadDialogIndex = newStateLoad.list.findIndex(dialog => dialog.number == payload.number);
             
             if (loadDialogIndex !== -1) {
-                newState[loadDialogIndex].PhoneMessages = payload.messages.concat(newState[loadDialogIndex].PhoneMessages);
+                newStateLoad.list[loadDialogIndex].PhoneMessages = 
+                    payload.messages
+                    .concat(newStateLoad.list[loadDialogIndex].PhoneMessages);
             }
 
-            return newState;
+            return newStateLoad;
 
         case 'SORT_DIALOGS_BY_DATE':
-            newState = [ ...state ];
-            newState.sort((a, b) =>
+            const newStateSorted = { ...state };
+            newStateSorted.list.sort((a, b) =>
                 a.PhoneMessages.length !== 0 && b.PhoneMessages.length !== 0 &&
                 new Date(a.PhoneMessages[a.PhoneMessages.length - 1].date).toLocaleString()
                     .localeCompare(new Date(b.PhoneMessages[b.PhoneMessages.length - 1].date).toLocaleString()) * -1
             );
 
-            newState.isSorted = true;
+            newStateSorted.isSorted = true;
 
-            return newState;
+            return newStateSorted;
 
         case 'READ_DIALOG_MESSAGES':
-            newState = [ ...state ];
-            let readIndex = newState.findIndex(dialog => dialog.number === payload);
+            const newStateRead = { ...state };
+            let readIndex = newStateRead.list.findIndex(dialog => dialog.number === payload);
 
             if (readIndex !== -1) {
-                newState[readIndex].PhoneMessages &&
-                newState[readIndex].PhoneMessages.forEach(message => message.isRead = true);
+                newStateRead.list[readIndex].PhoneMessages &&
+                newStateRead.list[readIndex].PhoneMessages.forEach(message => message.isRead = true);
             }
 
-            return newState;
+            return newStateRead;
     }
 
     return state;

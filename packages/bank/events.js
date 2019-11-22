@@ -7,12 +7,12 @@ let houseService;
 let bizService;
 
 module.exports = {
-    "init": () => {
+    "init": async () => {
         money = call("money");
         notifications = call("notifications");
         houseService = call("houses");
         bizService = call("bizes");
-        bank.init();
+        await bank.init();
         inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {

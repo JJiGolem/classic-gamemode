@@ -35,6 +35,10 @@ mp.events.add('barbershop.shape', (enter) => {
 mp.keys.bind(0x45, true, () => {
     if (isInBarbershopShape) {
         if (mp.busy.includes()) return;
+
+        let isCuffed = mp.players.local.getVariable('cuffs') || false;
+        if (isCuffed) return;
+
         mp.events.callRemote('barbershop.enter');
     }
 });
@@ -319,7 +323,7 @@ function setCurrentAppearanceParams() {
 }
 
 function initCurrentAppearanceParams(data) {
-    appearance.hairstyle = player.getDrawableVariation(2);
+    appearance.hairstyle = data.hairstyle;
     appearance.facialHair = player.getHeadOverlayValue(1);
     appearance.hairColor = data.hairColor;
     appearance.hairHighlightColor = data.hairHighlightColor;

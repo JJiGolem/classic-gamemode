@@ -1,8 +1,8 @@
 var parkings = require('./index.js');
 var vehicles = call('vehicles');
 module.exports = {
-    "init": () => {
-        parkings.init();
+    "init": async () => {
+        await parkings.init();
         inited(__dirname);
     },
     "vehicleDeath": (vehicle) => {
@@ -32,7 +32,7 @@ module.exports = {
         if (!player) return;
         if (!vehicle) return;
 
-        let props = vehicles.setVehiclePropertiesByModel(vehicle.modelName);
+        let props = vehicles.getVehiclePropertiesByModel(vehicle.modelName);
         let parking = parkings.getParkingInfoById(vehicle.parkingId);
         
         switch (type) {

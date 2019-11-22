@@ -22,6 +22,8 @@ module.exports = {
     warTime: 5 * 60 * 1000,
     // Промежуток часов, в который можно начать захват
     captureInterval: [14, 23],
+    // ЗП за владние 100% гетто (PayDay)
+    bandZonesPrice: 100,
     // Кол-во боеприпасов, списываемое за выдачу оружия
     gunAmmo: 100,
     // Кол-во боеприпасов, списываемое за выдачу патронов
@@ -43,14 +45,14 @@ module.exports = {
     // Повторное использование наркотика
     drugsInterval: [10 * 6000, 20 * 6000, 30 * 6000, 60 * 6000],
 
-    init() {
+    async init() {
         factions = call('factions');
         notifs = call('notifications');
         terminal = call('terminal');
         timer = call('timer');
 
-        this.loadBandZonesFromDB();
         this.createDrugsStashMarker();
+        await this.loadBandZonesFromDB();
     },
 
     async loadBandZonesFromDB() {

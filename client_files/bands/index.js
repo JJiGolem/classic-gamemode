@@ -10,6 +10,8 @@
 mp.bands = {
     // Блипы зон гетто
     bandZones: [],
+    // Показ блипов на карте
+    zonesShow: false,
     // Цвета блипов (factionId: blipColor)
     colors: {
         8: 2,
@@ -31,6 +33,7 @@ mp.bands = {
         GET_BLIP_COLOUR: "0xDF729E8D20CF7327",
         _SET_BLIP_SHOW_HEADING_INDICATOR: "0x5FBCA48327B914DF",
     },
+    blipAlpha: 175,
     flashTimer: null,
     flashColor: 1,
     captureTimer: null,
@@ -42,7 +45,7 @@ mp.bands = {
         zones.forEach(zone => {
             var blip = mp.game.ui.addBlipForRadius(zone.x, zone.y, 50, 100);
             mp.game.invoke(this.natives.SET_BLIP_SPRITE, blip, 5);
-            mp.game.invoke(this.natives.SET_BLIP_ALPHA, blip, 175);
+            mp.game.invoke(this.natives.SET_BLIP_ALPHA, blip, this.blipAlpha);
             mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, this.colors[zone.factionId]);
             this.bandZones.push(blip);
             this.saveBlip(blip);
@@ -108,15 +111,15 @@ mp.bands = {
         if (typeof target == 'object') target = JSON.stringify(target);
         if (typeof killer == 'object') killer = JSON.stringify(killer);
         // самоубийство
-        if (reason == 3452007600) return mp.callCEFV(`killList.add('${target}')`);
+        if (reason == 3452007600) return mp.callCEFV(`killList.add(\`${target}\`)`);
         // на авто
-        if (reason == 2741846334) return mp.callCEFV(`killList.add('${target}', '${killer}', 'car')`);
+        if (reason == 2741846334) return mp.callCEFV(`killList.add(\`${target}\`, \`${killer}\`, 'car')`);
         // рукопашка
-        if (reason == 2725352035) return mp.callCEFV(`killList.add('${target}', '${killer}', 'hand')`);
+        if (reason == 2725352035) return mp.callCEFV(`killList.add(\`${target}\`, \`${killer}\`, 'hand')`);
 
         // огнестрел, либо что-то еще? :D
         var name = mp.weapons.getWeaponName(reason);
-        mp.callCEFV(`killList.add('${target}', '${killer}', '${name}')`);
+        mp.callCEFV(`killList.add(\`${target}\`, \`${killer}\`, \`${name}\`)`);
     },
     createPlayerBlip(player) {
         if (!this.captureFactions.length) return;
@@ -156,10 +159,10 @@ mp.bands = {
             text: "Вернуться"
         });
 
-        mp.callCEFV(`selectMenu.setItems('bandPower', '${JSON.stringify(items)}')`);
+        mp.callCEFV(`selectMenu.setItems('bandPower', ${JSON.stringify(items)})`);
 
         var cash = JSON.stringify([`$${data.cash}`]);
-        mp.callCEFV(`selectMenu.setItemValues('bandCash', 'Баланс', '${cash}')`);
+        mp.callCEFV(`selectMenu.setItemValues('bandCash', 'Баланс', \`${cash}\`)`);
     },
 };
 
@@ -173,6 +176,13 @@ mp.events.add({
     },
     "bands.bandZones.set": (id, factionId) => {
         mp.bands.setOwner(id, factionId);
+    },
+    "bands.bandZones.show": (enable) => {
+        var alpha = (enable) ? mp.bands.blipAlpha : 0;
+        mp.bands.bandZones.forEach(blip => {
+            mp.game.invoke(mp.bands.natives.SET_BLIP_ALPHA, blip, alpha);
+        });
+        mp.bands.zonesShow = enable;
     },
     "bands.capture.start": (bandId, enemyBandId, time, bandScore = 0, enemyBandScore = 0) => {
         mp.bands.startCapture(bandId, enemyBandId, time, bandScore, enemyBandScore);

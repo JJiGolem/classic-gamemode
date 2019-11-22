@@ -91,7 +91,6 @@ mp.farms = {
         if (mp.busy.includes()) return;
         if (this.jobType == null) return;
         if (this.isCropping()) return;
-        if (this.hasProduct()) return;
         if (mp.players.local.vehicle) return;
         // TODO: проверка на состояние присмерти
         var object = mp.utils.getNearObject(mp.players.local.position, 3);
@@ -141,18 +140,23 @@ mp.farms = {
                 text: "Вернуться"
             },
         ];
-        mp.callCEFV(`selectMenu.setItems('farmInfo', '${JSON.stringify(items)}')`);
+        mp.callCEFV(`selectMenu.setItems('farmInfo',${JSON.stringify(items)})`);
         if (data.owner) {
             mp.callCEFV(`selectMenu.deleteItem('farm', 'Купить')`);
             if (mp.players.local.name == data.owner) {
                 var item = {
                     text: "Управление",
                 };
-                mp.callCEFV(`selectMenu.addItem('farm', '${JSON.stringify(item)}', 2)`);
+                var cropsPrice = [data.productAPrice, data.productBPrice, data.productCPrice];
+                var pays = [data.pay, data.farmerPay, data.tractorPay, data.pilotPay];
+                mp.callCEFV(`selectMenu.addItem('farm',${JSON.stringify(item)}, 2)`);
                 mp.callCEFV(`selectMenu.menus['farmControlGrains'].items[0].values[0] = "${data.grainPrice}"`);
                 mp.callCEFV(`selectMenu.menus['farmControlSoils'].items[0].values[0] = "${data.soilPrice}"`);
                 mp.callCEFV(`selectMenu.menus['farmControlCrops'].items[1].values[0] = "${data.productAPrice}"`);
+                mp.callCEFV(`selectMenu.menus['farmControlPays'].items[1].values[0] = "${data.pay}"`);
                 mp.callCEFV(`selectMenu.menus['farmControlSell'].items[0].values[0] = "$${data.statePrice}"`);
+                mp.callCEFV(`selectMenu.setProp('farmControlCrops', 'cropsPrice', ${JSON.stringify(cropsPrice)})`);
+                mp.callCEFV(`selectMenu.setProp('farmControlPays', 'pays', ${JSON.stringify(pays)})`);
             }
         } else {
             mp.callCEFV(`selectMenu.deleteItem('farm', 'Управление')`);
@@ -160,7 +164,7 @@ mp.farms = {
                 text: "Купить",
                 values: [`$${data.price}`],
             };
-            mp.callCEFV(`selectMenu.addItem('farm', '${JSON.stringify(item)}', 0)`);
+            mp.callCEFV(`selectMenu.addItem('farm',${JSON.stringify(item)}, 0)`);
         }
     },
     setWarehouseInfo(data) {
@@ -184,7 +188,8 @@ mp.farms = {
                 text: "Вернуться"
             },
         ];
-        mp.callCEFV(`selectMenu.setItems('farmWarehouseInfo', '${JSON.stringify(items)}')`);
+        mp.callCEFV(`selectMenu.setItems('farmWarehouseInfo', ${JSON.stringify(items)})`);
+        mp.callCEFV(`selectMenu.menus['farmGrainsTake'].init(${JSON.stringify(data.fieldIds)})`);
     },
     setSoilsWarehouseInfo(data) {
         var items = [{
@@ -195,7 +200,7 @@ mp.farms = {
                 text: "Вернуться"
             },
         ];
-        mp.callCEFV(`selectMenu.setItems('farmSoilsWarehouseInfo', '${JSON.stringify(items)}')`);
+        mp.callCEFV(`selectMenu.setItems('farmSoilsWarehouseInfo', ${JSON.stringify(items)})`);
     },
     registerAttachments() {
         // лопатка в руках при сборе урожка

@@ -1,8 +1,8 @@
 "use strict";
 /// Массив всех домов на сервере
-let houses = new Array();
-let interiors = new Array();
-let garages = new Array();
+let houses = [];
+let interiors = [];
+let garages = [];
 
 let inventory;
 let money;
@@ -26,7 +26,7 @@ let changeBlip = function(house) {
     }
     mp.players.forEach(player => {
         if (player && player.character) {
-            if (player.character.id == house.info.characterId) {
+            if (player.character.id === house.info.characterId) {
                 player.call("house.blip.color", [house.blip.id, 3]);
             } else {
                 player.call("house.blip.color", [house.blip.id, house.blip.color]);
@@ -37,7 +37,7 @@ let changeBlip = function(house) {
 let createBlip = function(house) {
     mp.players.forEach(player => {
         if (player && player.character) {
-            if (player.character.id == house.info.characterId) {
+            if (player.character.id === house.info.characterId) {
                 player.call("house.blip.create", [
                     [{
                         info: house.blip,
@@ -55,10 +55,10 @@ let createBlip = function(house) {
     });
 };
 let loadBlips = function(player) {
-    let blipsInfo = new Array();
+    let blipsInfo = [];
     houses.forEach(house => {
         if (!house) return;
-        if (player.character.id == house.info.characterId) {
+        if (player.character.id === house.info.characterId) {
             blipsInfo.push({
                 info: house.blip,
                 specialColor: 3
@@ -90,7 +90,7 @@ let dropHouse = function(house, sellToGov) {
             money.addMoneyById(characterId, house.info.price * dropHouseMultiplier, function(result) {
                 if (result) {
                     console.log("[HOUSES] House dropped " + house.info.id);
-                    let player = mp.players.toArray().find(x => x != null && x.character != null && characterId == x.character.id);
+                    let player = mp.players.toArray().find(x => x != null && x.character != null && characterId === x.character.id);
                     if (player != null) {
                         mp.events.call('player.house.changed', player);
                         if (sellToGov) {
@@ -153,7 +153,7 @@ module.exports = {
         return garages;
     },
     initHouseAdding(player) {
-        let interiorsClasses = new Array();
+        let interiorsClasses = [];
         for (let i = 0; i < interiors.length; i++) {
             interiorsClasses.push({
                 id: interiors[i].id,
@@ -161,7 +161,7 @@ module.exports = {
             });
         }
 
-        let garagesIdCarPlaces = new Array();
+        let garagesIdCarPlaces = [];
         for (let i = 0; i < garages.length; i++) {
             garagesIdCarPlaces.push({
                 id: garages[i].id,
@@ -225,8 +225,8 @@ module.exports = {
         house.blip.destroy();
         await house.info.destroy();
 
-        let houseIndex = houses.findIndex(x => x.info.id == id);
-        houseIndex != -1 && houses.splice(houseIndex, 1);
+        let houseIndex = houses.findIndex(x => x.info.id === id);
+        houseIndex !== -1 && houses.splice(houseIndex, 1);
 
         if (player != null) player.call('notifications.push.success', ["Вы удалили дом с id " + id, "Успешно"]);
     },
@@ -254,8 +254,8 @@ module.exports = {
         }
         house.blip.destroy();
         let info = house.info;
-        let houseIndex = houses.findIndex(x => x.info.id == id);
-        houseIndex != -1 && houses.splice(houseIndex, 1);
+        let houseIndex = houses.findIndex(x => x.info.id === id);
+        houseIndex !== -1 && houses.splice(houseIndex, 1);
 
         info.interiorId = interiorId;
         await info.save();
@@ -427,21 +427,20 @@ module.exports = {
     getHouseById(id) {
         return houses.find(x => {
             if (x == null) return false;
-            return x.info.id == id;
+            return x.info.id === id;
         });
     },
     getHouseByCharId(id) {
-        return houses.find(x => x.info.characterId == id);
+        return houses.find(x => x.info.characterId === id);
     },
     getDateDays(date) {
-        let dateNowStringArray = new Date().toLocaleDateString().split('-');
-        let dateStringArray = date.toLocaleDateString().split('-');
-        let dateNow = new Date(dateNowStringArray[0], dateNowStringArray[1], dateNowStringArray[2]);
-        date = new Date(dateStringArray[0], dateStringArray[1], dateStringArray[2]);
+        let dateNow = new Date();
+        dateNow = new Date(dateNow.getFullYear(), dateNow.getMonth(), dateNow.getDate());
+        date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         return Math.ceil(Math.abs(date.getTime() - dateNow.getTime()) / (1000 * 3600 * 24));
     },
     isHaveHouse(id) {
-        return houses.findIndex(x => x.info.characterId == id) != -1;
+        return houses.findIndex(x => x.info.characterId === id) !== -1;
     },
     getHouseInfoForApp(house) {
         let info = house.info;
@@ -481,11 +480,12 @@ module.exports = {
         house.info.characterNick = buyer.character.name;
         house.info.save().then(() => {
             if (money == null) return;
-            money.moveCash(buyer, seller, cost, function(result) {
+            money.moveCash(buyer, seller, cost, (result) => {
                 if (result) {
                     callback(true);
                     mp.events.call('player.house.changed', seller);
                     mp.events.call('player.house.changed', buyer);
+                    this.updateHouse(house);
                     buyer.call('phone.app.add', ["house", {
                         name: house.info.id,
                         class: house.info.Interior.class,
@@ -494,7 +494,7 @@ module.exports = {
                         carPlaces: house.info.Interior.Garage != null ? house.info.Interior.Garage.carPlaces : 1,
                         rent: this.getRent(house),
                         isOpened: house.info.isOpened,
-                        improvements: new Array(),
+                        improvements: [],
                         price: house.info.price,
                         days: this.getDateDays(house.info.date),
                         pos: [house.info.pickupX, house.info.pickupY, house.info.pickupZ]
@@ -563,10 +563,10 @@ module.exports = {
         return garagePlaces;
     },
     createHolderMarker(house) {
-        var interior = house.Interior;
-        var pos = new mp.Vector3(interior.hX, interior.hY, interior.hZ - 1);
+        let interior = house.Interior;
+        let pos = new mp.Vector3(interior.hX, interior.hY, interior.hZ - 1);
 
-        var holder = mp.markers.new(1, pos, 0.5, {
+        let holder = mp.markers.new(1, pos, 0.5, {
             color: [0, 187, 255, 70],
             dimension: house.id,
         });
@@ -575,10 +575,10 @@ module.exports = {
         };
         holder.houseInfo = house;
 
-        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, holder.dimension);
+        let colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, holder.dimension);
         colshape.onEnter = (player) => {
             if (player.vehicle) return;
-            if (player.character.id != house.info.characterId) return notifs.error(player, `Отказано в доступе`, `Шкаф`);
+            if (player.character.id !== house.characterId) return notifs.error(player, `Отказано в доступе`, `Шкаф`);
 
             player.call("prompt.showByName", [`house_items_holder`]);
             mp.events.call("house.holder.items.request", player, holder);

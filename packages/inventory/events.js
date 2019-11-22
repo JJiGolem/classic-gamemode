@@ -1,5 +1,7 @@
 let bands = call('bands');
 let bizes = call('bizes');
+let clubs = call('clubs');
+let death = call('death');
 let factions = call('factions');
 let fuelstations = call('fuelstations');
 let inventory = require('./index.js');
@@ -14,8 +16,8 @@ let timer = call('timer');
 let vehicles = call('vehicles');
 
 module.exports = {
-    "init": () => {
-        inventory.init();
+    "init": async () => {
+        await inventory.init();
         inited(__dirname);
     },
     "auth.done": (player) => {
@@ -31,17 +33,46 @@ module.exports = {
     // срабатывает, когда игрок переместил предмет (в любом месте)
     "item.add": (player, data) => {
         data = JSON.parse(data);
-        console.log(`item.add: ${player.name}`)
-        console.log(data)
+        // debug(`item.add: ${player.name}`)
+        // debug(data)
         var item = inventory.getItem(player, data.sqlId);
         if (data.placeSqlId > 0 || data.placeSqlId == null) { // переместил в свой карман или на себя
             if (item) { // предмет уже есть у игрока
                 if (item.parentId == null && data.placeSqlId) { // снял вещь
-                    inventory.clearView(player, item.itemId);
-                    var params = inventory.getParamsValues(item);
-                    if (params.weaponHash) inventory.giveWeapon(player, params.weaponHash, params.ammo);
+                    // debug(`снял вещь`)
+                    if (item.index == 13) { // снял из рук
+                        // debug(`снял из рук`)
+                        inventory.syncHandsItem(player, null);
+                        inventory.notifyOverhead(player, `Спрятал '${inventory.getName(item.itemId)}'`);
+                    } else { // снял с тела
+                        // debug(`снял с тела`)
+                        inventory.clearView(player, item.itemId);
+                        inventory.notifyOverhead(player, `Снял '${inventory.getName(item.itemId)}'`);
+                    }
                 } else if (item.parentId && data.placeSqlId == null) { // надел вещь
-                    inventory.updateView(player, item);
+                    // debug(`надел вещь`)
+                    if (data.index == 13) { // на руки
+                        // debug(`на руки`)
+                        inventory.syncHandsItem(player, item);
+                        inventory.notifyOverhead(player, `Взял '${inventory.getName(item.itemId)}'`);
+                    } else { // на тело
+                        // debug(`на тело`)
+                        inventory.updateView(player, item);
+                        inventory.notifyOverhead(player, `Надел '${inventory.getName(item.itemId)}'`);
+                    }
+                } else if (!item.parentId && data.placeSqlId == null) { // переместил внутри слотов тела
+                    // debug(`внутри слотов тела`)
+                    if (data.index == 13) { // переместил из тела в руки
+                        // debug(`из тела в руки`)
+                        inventory.clearView(player, item.itemId);
+                        inventory.syncHandsItem(player, item);
+                        inventory.notifyOverhead(player, `Взял '${inventory.getName(item.itemId)}'`);
+                    } else if (item.index == 13) { // переместил из рук на тело
+                        // debug(`из рук на тело`)
+                        inventory.syncHandsItem(player, null);
+                        inventory.updateView(player, item);
+                        inventory.notifyOverhead(player, `Надел '${inventory.getName(item.itemId)}'`);
+                    }
                 }
                 item.pocketIndex = data.pocketI;
                 item.index = data.index;
@@ -54,17 +85,20 @@ module.exports = {
                 inventory.addPlayerItem(player, item, data.placeSqlId, data.pocketI, data.index);
                 item.destroy();
                 player.inventory.place.items.splice(i, 1);
+                inventory.notifyOverhead(player, `Забрал '${inventory.getName(item.itemId)}'`);
             }
         } else { // переместил в окруж. среду
             if (item) { // переместил из своего инвентаря в окруж. среду
                 inventory.addEnvironmentItem(player, item, data.pocketI, data.index);
                 inventory.deleteItem(player, item);
+                inventory.notifyOverhead(player, `Положил '${inventory.getName(item.itemId)}'`);
             } else { // предмет уже находится в окруж. среде
                 item = player.inventory.place.items.find(x => x.id == data.sqlId);
                 if (!item) return notifs.error(player, `Предмет #${data.sqlId} в среде не найден. Сообщите разработчикам CRP. :)`, `Код 2`);
                 item.pocketIndex = data.pocketI;
                 item.index = data.index;
                 item.save();
+                inventory.notifyOverhead(player, `Копается`);
             }
         }
     },
@@ -83,20 +117,23 @@ module.exports = {
         var params = inventory.getParamsValues(target);
         if (params.weaponHash) { // зарядка оружия
             mp.events.call("weapons.ammo.fill", player, item, target);
+            inventory.notifyOverhead(player, `Зарядил '${inventory.getName(item.itemId)}'`);
         }
     },
     // срабатывает, когда игрок выкидывает предмет
-    "item.ground.put": (player, sqlId) => {
-        // console.log(`item.ground.put: ${sqlId}`)
+    "item.ground.put": (player, sqlId, pos) => {
+        pos = JSON.parse(pos);
         var header = `Выброс предмета`;
         var item = inventory.getItem(player, sqlId);
         if (!item) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
 
-        if (player.vehicle) return notifs.error(player, `Недоступно в авто`, header);
-        if (player.cuffs) return notifs.error(`Недоступно в наручниках`, header);
+        // if (player.vehicle) return notifs.error(player, `Недоступно в авто`, header);
+        if (player.cuffs) return notifs.error(player, `Недоступно в наручниках`, header);
 
-        inventory.putGround(player, item);
-        notifs.success(player, `Предмет ${inventory.getName(item.itemId)} на земле`, header);
+        var itemName = inventory.getName(item.itemId);
+        inventory.putGround(player, item, pos);
+        notifs.success(player, `Предмет ${itemName} на земле`, header);
+        inventory.notifyOverhead(player, `Выкинул '${itemName}'`);
     },
     // срабатывает, когда игрок поднимает предмет
     "item.ground.take": (player, objId) => {
@@ -124,6 +161,8 @@ module.exports = {
                 if (slot) obj = sObj;
             });
         }
+        var cant = inventory.cantAdd(player, obj.item.itemId, inventory.getParamsValues(obj.item));
+        if (cant) return notifs.error(player, cant, header);
         obj.children.forEach((item) => {
             var params = inventory.getParamsValues(item);
             if (params.weaponHash) {
@@ -135,15 +174,13 @@ module.exports = {
             // из-за paranoid: true
             item.restore();
             player.inventory.items.push(item);
-            inventory.giveWeapon(player, params.weaponHash, params.ammo);
+            // inventory.giveWeapon(player, params.weaponHash, params.ammo);
         });
         obj.denyTake = true;
         inventory.addOldItem(player, obj.item, (e) => {
             delete obj.denyTake;
             if (e) return notifs.error(player, e, header);
 
-            // TODO: проиграть анимацию
-            // mp.events.call("anim", player, "random@domestic", "pickup_low", 0, 1000);
             notifs.success(player, `Предмет ${inventory.getName(obj.item.itemId)} в инвентаре`, header);
             timer.remove(obj.destroyTimer);
             obj.destroy();
@@ -161,12 +198,14 @@ module.exports = {
                 flag: 1
             }, 1500]);
         });
+        inventory.notifyOverhead(player, `Поднял '${inventory.getName(obj.item.itemId)}'`);
     },
     // вылечиться аптечкой
     "inventory.item.med.use": (player, sqlId) => {
         var header = `Аптечка`;
         var med = inventory.getItem(player, sqlId);
         if (!med) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        if (!inventory.isInHands(med)) return notifs.error(player, `${inventory.getName(med.itemId)} не в руках`, header);
         var count = inventory.getParam(med, 'count').value;
         if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
         if (player.health >= hospital.medMaxHealth) {
@@ -190,6 +229,7 @@ module.exports = {
         else inventory.updateParam(player, med, 'count', count);
 
         notifs.success(player, `Вы вылечились`, header);
+        inventory.notifyOverhead(player, `Вылечился (${inventory.getName(med.itemId)})`);
     },
     // реанимировать адреналином
     "inventory.item.adrenalin.use": (player, data) => {
@@ -199,14 +239,15 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         if (!rec.getVariable("knocked")) return notifs.error(player, `${rec.name} не нуждается в реанимации`, header);
         if (player.dist(rec.position) > 5) return notifs.error(player, `${rec.name} далеко`, header);
-        var adrenalin = (data.itemSqlId) ? inventory.getItem(player, data.itemSqlId) : inventory.getItemByItemId(player, 26);
-        if (!adrenalin) return notifs.error(player, `Необходим предмет`, header);
+        var adrenalin = (data.itemSqlId) ? inventory.getItem(player, data.itemSqlId) : inventory.getHandsItem(player);
+        if (!adrenalin) return notifs.error(player, `Необходим предмет в руках`, header);
+        if (!inventory.isInHands(adrenalin) || adrenalin.itemId != 26) return notifs.error(player, `${inventory.getName(26)} не в руках`, header);
         var count = inventory.getParam(adrenalin, 'count').value;
         if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
 
         rec.spawn(rec.position);
         rec.health = 10;
-        rec.setVariable("knocked", false);
+        death.removeKnocked(rec);
         mp.events.call(`mapCase.ems.calls.remove`, rec, rec.character.id);
 
         count--;
@@ -215,12 +256,14 @@ module.exports = {
 
         notifs.success(player, `${rec.name} реанимирован`, header);
         notifs.success(rec, `${player.name} вас реанимировал`, header);
+        inventory.notifyOverhead(player, `Использовал '${inventory.getName(adrenalin.itemId)}'`);
     },
     // вылечиться пластырем
     "inventory.item.patch.use": (player, sqlId) => {
         var header = `Пластырь`;
         var patch = inventory.getItem(player, sqlId);
         if (!patch) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        if (!inventory.isInHands(patch)) return notifs.error(player, `${inventory.getName(patch.itemId)} не в руках`, header);
         var count = inventory.getParam(patch, 'count').value;
         if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
         if (player.health >= hospital.medMaxHealth) {
@@ -244,12 +287,14 @@ module.exports = {
         else inventory.updateParam(player, patch, 'count', count);
 
         notifs.success(player, `Вы вылечились`, header);
+        inventory.notifyOverhead(player, `Накинул '${inventory.getName(patch.itemId)}'`);
     },
     // употребить наркотик
     "inventory.item.drugs.use": (player, sqlId) => {
         var header = `Наркотики`;
         var drugs = inventory.getItem(player, sqlId);
         if (!drugs) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        if (!inventory.isInHands(drugs)) return notifs.error(player, `${inventory.getName(drugs.itemId)} не в руках`, header);
         var count = inventory.getParam(drugs, 'count').value;
         if (!count) return notifs.error(player, `Количество: 0 г.`, header);
         if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
@@ -274,12 +319,14 @@ module.exports = {
         player.character.narcotism += bands.drugsNarcotism[i];
         player.character.save();
         mp.events.call("player.narcotism.changed", player);
+        inventory.notifyOverhead(player, `Употребил '${inventory.getName(drugs.itemId)}'`);
     },
     // употребить сигарету
     "inventory.item.smoke.use": (player, sqlId) => {
         var header = `Сигарета`;
         var smoke = inventory.getItem(player, sqlId);
         if (!smoke) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        if (!inventory.isInHands(smoke)) return notifs.error(player, `${inventory.getName(smoke.itemId)} не в руках`, header);
         var count = inventory.getParam(smoke, 'count').value;
         if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
         if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
@@ -314,65 +361,95 @@ module.exports = {
         player.character.nicotine++;
         player.character.save();
         mp.events.call("player.nicotine.changed", player);
+        inventory.notifyOverhead(player, `Курит '${inventory.getName(smoke.itemId)}'`);
     },
     // употребить еду
     "inventory.item.eat.use": (player, sqlId) => {
         var header = `Еда`;
         var eat = inventory.getItem(player, sqlId);
         if (!eat) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        // if (!inventory.isInHands(eat)) return notifs.error(player, `${inventory.getName(eat.itemId)} не в руках`, header);
 
         var params = inventory.getParamsValues(eat);
         var character = player.character;
 
-        satiety.set(player, character.satiety + (params.satiety || 10), character.thirst + (params.thirst || 10));
-        notifs.success(player, `Вы съели ${inventory.getName(eat.itemId)}`, header);
-
         if (!player.vehicle) {
+            var time = 7000;
             mp.players.forEachInRange(player.position, 20, rec => {
                 rec.call(`animations.play`, [player.id, {
                     dict: "amb@code_human_wander_eating_donut@male@idle_a",
                     name: "idle_c",
                     speed: 1,
                     flag: 49
-                }, 7000]);
+                }, time]);
             });
-        }
+            var playerId = player.id;
+            var characterId = player.character.id;
+            timer.add(() => {
+                var rec = mp.players.at(playerId);
+                if (!rec || !rec.character || rec.character.id != characterId) return;
 
-        inventory.deleteItem(player, eat);
+                inventory.deleteItem(rec, eat);
+                inventory.notifyOverhead(rec, `Съел '${inventory.getName(eat.itemId)}'`);
+                satiety.set(rec, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
+                notifs.success(rec, `Вы съели ${inventory.getName(eat.itemId)}`, header);
+            }, time);
+        } else {
+            inventory.deleteItem(player, eat);
+            inventory.notifyOverhead(player, `Съел '${inventory.getName(eat.itemId)}'`);
+            satiety.set(player, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
+            notifs.success(player, `Вы съели ${inventory.getName(eat.itemId)}`, header);
+        }
     },
     // употребить напиток
     "inventory.item.drink.use": (player, sqlId) => {
         var header = `Напиток`;
         var drink = inventory.getItem(player, sqlId);
         if (!drink) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        // if (!inventory.isInHands(drink)) return notifs.error(player, `${inventory.getName(drink.itemId)} не в руках`, header);
 
         var params = inventory.getParamsValues(drink);
         var character = player.character;
 
-        satiety.set(player, character.satiety + (params.satiety || 10), character.thirst + (params.thirst || 10));
-        notifs.success(player, `Вы выпили ${inventory.getName(drink.itemId)}`, header);
-
         if (!player.vehicle) {
+            var time = 7000;
             mp.players.forEachInRange(player.position, 20, rec => {
                 rec.call(`animations.play`, [player.id, {
                     dict: "amb@code_human_wander_drinking_fat@female@idle_a",
                     name: "idle_c",
                     speed: 1,
                     flag: 49
-                }, 7000]);
+                }, time]);
             });
-        }
+            var playerId = player.id;
+            var characterId = player.character.id;
+            timer.add(() => {
+                var rec = mp.players.at(playerId);
+                if (!rec || !rec.character || rec.character.id != characterId) return;
 
-        inventory.deleteItem(player, drink);
+                inventory.deleteItem(rec, drink);
+                inventory.notifyOverhead(rec, `Выпил '${inventory.getName(drink.itemId)}'`);
+                if (params.alcohol) clubs.addDrunkenness(rec, params.alcohol);
+                satiety.set(rec, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
+                notifs.success(rec, `Вы выпили ${inventory.getName(drink.itemId)}`, header);
+            }, time);
+        } else {
+            inventory.deleteItem(player, drink);
+            inventory.notifyOverhead(player, `Выпил '${inventory.getName(drink.itemId)}'`);
+            if (params.alcohol) clubs.addDrunkenness(player, params.alcohol);
+            satiety.set(player, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
+            notifs.success(player, `Вы выпили ${inventory.getName(drink.itemId)}`, header);
+        }
     },
     // использовать предмет инвентаря
     "inventory.item.use": (player, data) => {
-        debug(`item.use`)
-        debug(data)
+        // debug(`item.use`)
+        // debug(data)
         data = JSON.parse(data);
 
         var item = inventory.getItem(player, data.sqlId);
         if (!item) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        if (!inventory.isInHands(item)) return notifs.error(player, `${inventory.getName(item.itemId)} не в руках`, header);
 
         var header = inventory.getName(item.itemId);
         var out = (text) => {
@@ -399,6 +476,7 @@ module.exports = {
                     inventory.updateParam(player, item, 'litres', params.litres - fuel);
 
                     notifs.success(player, `Авто ${vehName} заправлено на ${fuel} л.`, header);
+                    inventory.notifyOverhead(player, `Заправил '${vehName}'`);
                 } else if (data.index == 1) { // пополнить канистру
                     var biz = bizes.getBizByPlayerPos(player);
                     if (!biz || biz.info.type != 0) return out(`Вы не у бизнеса`);
@@ -430,6 +508,13 @@ module.exports = {
                     }, `Заправка канистры на АЗС #${biz.info.id}`);
 
                     notifs.success(player, `Канистра заправлена на ${fuel} л.`, header);
+                    inventory.notifyOverhead(player, `Заправил канистру`);
+                } else if (data.index == 2) { // слить содержимое канистры
+                    var params = inventory.getParamsValues(item);
+                    if (!params.litres) return out(`Канистра пустая`);
+                    inventory.updateParam(player, item, 'litres', 0);
+                    notifs.success(player, `Содержимое канистры слито`, header);
+                    inventory.notifyOverhead(player, `Слил канистру`);
                 }
                 break;
         }
@@ -551,15 +636,17 @@ module.exports = {
         mp.events.call("faction.holder.items.clear", player);
         mp.events.call("faction.holder.items.init", player);
     },
-    "death.spawn": (player) => {
+    "death.spawn": (player, groundZ, dimension) => {
         if (!player.character) return;
-        // TODO: включить выкидывание оружия в новой сис-ме расчет кор объекта
-        // var weapons = inventory.getArrayWeapons(player);
-        // if (!weapons.length) return;
-        // weapons.forEach(weapon => {
-        //     inventory.putGround(player, weapon);
-        // });
-        // notifs.warning(player, `Вы потеряли оружие`, `Инвентарь`);
+
+        var handsItem = inventory.getHandsItem(player);
+        if (!handsItem || !inventory.isWeaponItem(handsItem)) return;
+
+        var pos = player.position;
+        pos.z = groundZ;
+        inventory.putGround(player, handsItem, pos, dimension);
+
+        notifs.warning(player, `Вы потеряли оружие из рук`, `Инвентарь`);
     },
     "playerQuit": (player) => {
         if (!player.character) return;
@@ -575,6 +662,13 @@ module.exports = {
                 var holder = houses.getHouseById(-player.inventory.place.sqlId).holder;
                 if (!holder) return;
                 delete holder.playerId;
+            }
+        }
+        var item = inventory.getHandsItem(player);
+        if (item) {
+            var param = inventory.getParam(item, 'weaponHash');
+            if (param) {
+                inventory.updateParam(player, item, 'ammo', player.weaponAmmo);
             }
         }
     },

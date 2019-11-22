@@ -10,10 +10,10 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             get() {
                 var value = this.getDataValue('name');
-                if (typeof value == 'string') {
-                    value = value.replace(/(\\)/g, "");
-                    value = value.replace(/(["'])/g, "\\$1");
-                }
+                // if (typeof value == 'string') {
+                //     value = value.replace(/(\\)/g, "");
+                //     value = value.replace(/(["'])/g, "\\$1");
+                // }
                 return value;
             },
         },
@@ -22,10 +22,10 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             get() {
                 var value = this.getDataValue('description');
-                if (typeof value == 'string') {
-                    value = value.replace(/(\\)/g, "");
-                    value = value.replace(/(["'])/g, "\\$1");
-                }
+                // if (typeof value == 'string') {
+                //     value = value.replace(/(\\)/g, "");
+                //     value = value.replace(/(["'])/g, "\\$1");
+                // }
                 return value;
             },
         },
@@ -63,6 +63,25 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.FLOAT,
             defaultValue: 0,
             allowNull: false
+        },
+        attachInfo: {
+            type: DataTypes.STRING(128),
+            defaultValue: JSON.stringify({
+                bone: 11363,
+                pos: [0.08, -0.15, -0.25],
+                rot: [-100, 0, 0],
+                anim: 0
+            }),
+            allowNull: false,
+            get() {
+                var val = this.getDataValue('attachInfo');
+                return JSON.parse(val);
+            },
+            set(val) {
+                if (typeof val == 'object') val = JSON.stringify(val);
+
+                this.setDataValue('attachInfo', val);
+            }
         }
     }, {
         timestamps: false

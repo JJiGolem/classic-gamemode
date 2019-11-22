@@ -10,8 +10,29 @@ var SIZE = 0.4;
 mp.nametags.enabled = false;
 
 let showNametags = true;
+let localPlayer = mp.players.local;
+
+function getCorrectName(player) {
+    var factionId = localPlayer.getVariable("factionId");
+    var isMember = factionId && factionId == player.getVariable("factionId");
+    return (player.isFamiliar || isMember)? `${player.name} (${player.remoteId})` : `ID: ${player.remoteId}`;
+}
 
 mp.events.add('render', (nametags) => {
+
+    // // TEMP
+    // let testX = 0.5;
+    // let testY = 0.5;
+    // let offset = getSpriteOffsetByNickname(testNick);
+    // mp.game.graphics.drawText(testNick, [testX, testY],
+    //     {
+    //         font: FONT,
+    //         color: [255, 255, 255, 255],
+    //         scale: [SIZE, SIZE],
+    //         outline: true
+    //     });
+    // let sprite = "leaderboard_audio_3";
+    // mp.game.graphics.drawSprite("mpleaderboard", sprite, testX + offset, testY + 0.0133, 0.018, 0.036, 0, 255, 255, 255, 255);
 
     if (!showNametags) return;
 
@@ -21,6 +42,9 @@ mp.events.add('render', (nametags) => {
     nametags.forEach(nametag => {
         let [player, x, y, distance] = nametag;
 
+        let isVanished = player.getVariable('isVanished') || false;
+        if (isVanished) return;
+        
         if (distance <= maxDistance) {
             let scale = (distance / maxDistance);
             if (scale < 0.6) scale = 0.6;
@@ -31,8 +55,12 @@ mp.events.add('render', (nametags) => {
             var armour = player.getArmour() / 100;
 
             y -= scale * (0.005 * (screenRes.y / 1080));
-            var playerName = (player.isFamiliar)? `${player.name} (${player.remoteId})` : `ID: ${player.remoteId}`;
+            var playerName = getCorrectName(player);
             var nameColor = player.nameColor || [255, 255, 255, 255];
+
+            let redNick = player.getVariable(`redNick`) || false;
+            if (redNick) nameColor = [255, 85, 66, 255];
+            
             mp.game.graphics.drawText(playerName, [x, y],
                 {
                     font: FONT,
@@ -40,6 +68,14 @@ mp.events.add('render', (nametags) => {
                     scale: [SIZE, SIZE],
                     outline: true
                 });
+
+                if (mp.game.graphics.hasStreamedTextureDictLoaded("mpleaderboard")) {
+                    let offset = getSpriteOffsetByNickname(playerName);
+                    let sprite = player.isVoiceActive ? "leaderboard_audio_3" : "leaderboard_audio_inactive";
+                    mp.game.graphics.drawSprite("mpleaderboard", sprite, x + offset, y + 0.0133, 0.018, 0.036, 0, 255, 255, 255, 255);
+                } else {
+                    loadStreamedTextureDict();
+                }
 
             if (mp.game.player.isFreeAimingAtEntity(player.handle)) {
                 let y2 = y + 0.042;
@@ -80,3 +116,26 @@ mp.events.add({
         showNametags = val;
     },
 });
+
+// TEMP
+let spriteOn = false;
+let testNick = "ID: 1";
+mp.events.add('chat.message.get', (type, message) => {
+    if (message == '/spriteon') {
+        mp.chat.debug('sprite on');
+        spriteOn = true;
+    }
+    let args = message.split(' ');
+    if (args[0] == '/testnick') {
+        testNick = `${args[1]} ${args[2]}`;
+    }
+});
+
+
+function loadStreamedTextureDict() {
+    mp.game.graphics.requestStreamedTextureDict("mpleaderboard", true);
+}
+
+function getSpriteOffsetByNickname(nickname) {
+    return 0.025 + (nickname.length - 8) * 0.002;
+}

@@ -16,7 +16,7 @@ module.exports = {
                 text += Object.values(el.dataValues).join(" | ") + "<br/>";
             });
 
-            out.log(text.replace(/(["'])/g, "\\$1"), player);
+            out.log(text, player);
         }
     },
     "/clname": {
@@ -272,5 +272,27 @@ module.exports = {
             clothes.updateClientList();
             out.info('Список одежды обновлен', player);
         }
-    }
+    },
+    "/cltexts": {
+        access: 3,
+        description: "Изменить кол-во текстур одежды.<br/>Типы:<br/>bracelets, ears, glasses, hats, masks, pants, shoes, ties, tops, watches",
+        args: "[тип_одежды] [ид_одежды]:n [кол-во_текстур]:n",
+        handler: (player, args, out) => {
+            if (!clothes.getTypes().includes(args[0])) return out.error(`Неверный тип одежды`, player);
+
+            let el = clothes.getClothes(args[0], args[1]);
+            if (!el) return out.error(`Одежда типа ${args[0]} #${args[1]} не найдена`, player);
+
+            let textures = [];
+            for (let i = 0; i < args[2]; i++) {
+                textures.push(i);
+            }
+
+            el.textures = textures;
+            el.save();
+
+            out.info(`${player.name} изменил кол-во текстур у одежды типа ${args[0]} #${args[1]} (${args[2]} шт.)`);
+            clothes.updateClientList();
+        }
+    },
 }

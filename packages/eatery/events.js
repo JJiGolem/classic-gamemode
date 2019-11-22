@@ -3,8 +3,8 @@ let money = call('money');
 let inventory = call('inventory');
 
 module.exports = {
-    "init": () => {
-        eatery.init();
+    "init": async () => {
+        await eatery.init();
         inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
@@ -54,20 +54,19 @@ module.exports = {
         let params = {};
 
         if (productName == 'hamburger') {
-            params.satiety = 50;
+            params.satiety = 60;
             params.thirst = -10;
         } else if (productName == 'pizza') {
-            params.satiety = 40;
+            params.satiety = 50;
             params.thirst = -5;
         } else if (productName == 'hotdog') {
-            params.satiety = 45;
+            params.satiety = 55;
             params.thirst = -10;
         } else if (productName == 'chips') {
-            params.satiety = 20;
+            params.satiety = 30;
             params.thirst = -5;
         } else if (productName == 'cola') {
-            params.satiety = 5;
-            params.thirst = 30;
+            params.thirst = 50;
         }
 
         inventory.addItem(player, itemId, params, (e) => {

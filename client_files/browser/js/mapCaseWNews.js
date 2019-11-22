@@ -11,7 +11,7 @@ Vue.component('map-case-wnews-ads', {
     methods: {
         get () {
             if (!this.adsAmount) {
-                mapCase.showRedMessage("Нет объявлений<br />для редактироания!");
+                mapCase.showRedMessage("Нет объявлений<br />для редактирования!");
                 return;
             }
 
@@ -70,6 +70,9 @@ Vue.component("map-case-wnews-over-ads", {
             this.editMod = true;
             this.refuseMod = true;
         },
+        setFocus(enable) {
+            mapCase.inputFocus = enable;
+        },
     },
     mounted () {
         this.text = this.adData.ad.text;
@@ -82,7 +85,7 @@ var mapCaseWnewsAdsData = {
     adsAmount: 0,
     adData: {
         ad: { text: "", author: "" },
-        maxLength: 380,
+        maxLength: 60,
         send: (adData) => {},
         refuse: (adData) => {},
     },
@@ -122,7 +125,6 @@ var mapCaseWnewsMembersData = {
         if (!Array.isArray(members)) members = [members];
         for (var i = 0; i < members.length; i++) {
             this.remove(members[i].id);
-            members[i].num = members[i].id;
             this.list.push(members[i]);
         }
     },

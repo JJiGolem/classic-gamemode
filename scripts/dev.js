@@ -81,6 +81,9 @@ module.exports = {
 
             let endTime = new Date();
             console.log('END COPY CLIENT-SIDE | SUCCESS | CHANGED : ' + changedFiles.length + ' FILES');
+            changedFiles.forEach(file => {
+                console.log(file);
+            });
             console.log('TIME: ', endTime - startTime + ' ms');
         } catch (e) {
             console.log('ERROR COPY CLIENT-SIDE: ' + e);

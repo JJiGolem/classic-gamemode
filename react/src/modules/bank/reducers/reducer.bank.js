@@ -12,6 +12,12 @@ export default function bank(state = initialState, action) {
         case 'LOAD_BANK_INFO':
             return payload;
 
+        case 'UPDATE_BANK':
+            return {
+                ...state,
+                ...payload
+            };
+
         case 'CLOSE_BANK':
             return {};
 
@@ -102,7 +108,7 @@ export default function bank(state = initialState, action) {
         case 'POP_CASHBOX_BANK':
             const newStateCashBoxPop = {
                 ...state,
-                money: money - payload.money
+                money: money + payload.money
             };
 
             newStateCashBoxPop.biz[0].cashBox -= payload.money;

@@ -3,7 +3,7 @@
 let bizService;
 let houseService;
 
-let banks = new Array();
+let banks = [];
 module.exports = {
     async init() {
         bizService = call('bizes');
@@ -15,7 +15,7 @@ module.exports = {
         }
     },
     getBankById(id) {
-        return banks.find(x => x.info.id == id);
+        return banks.find(x => x.info.id === id);
     },
     getInfo(player) {
         if (player == null || player.character == null) return;
@@ -46,7 +46,7 @@ module.exports = {
             z: position.z - 1
         }, {});
         await this.addBank(bankInfo);
-        console.log("[BANK] added new bank");
+        console.log("[BANK] Добавлен новый банк");
     },
     async deleteBank(player) {
         let bankIndex = banks.findIndex(x => {

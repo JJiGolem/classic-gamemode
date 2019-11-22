@@ -10,6 +10,8 @@
 mp.mafia = {
     // Блипы зон для рекетов
     mafiaZones: [],
+    // Показ блипов на карте
+    zonesShow: false,
     // Цвета блипов (factionId: blipColor)
     colors: {
         12: 43,
@@ -30,6 +32,7 @@ mp.mafia = {
         GET_BLIP_COLOUR: "0xDF729E8D20CF7327",
         _SET_BLIP_SHOW_HEADING_INDICATOR: "0x5FBCA48327B914DF",
     },
+    blipAlpha: 120,
     flashTimer: null,
     flashColor: 1,
     bizWarTimer: null,
@@ -42,7 +45,7 @@ mp.mafia = {
         zones.forEach(zone => {
             var blip = mp.game.ui.addBlipForRadius(zone.x, zone.y, 50, 150);
             mp.game.invoke(this.natives.SET_BLIP_SPRITE, blip, 5);
-            mp.game.invoke(this.natives.SET_BLIP_ALPHA, blip, 120);
+            mp.game.invoke(this.natives.SET_BLIP_ALPHA, blip, this.blipAlpha);
             mp.game.invoke(this.natives.SET_BLIP_COLOUR, blip, 4);
             this.mafiaZones.push(blip);
             this.saveBlip(blip);
@@ -90,10 +93,10 @@ mp.mafia = {
         });
 
 
-        mp.callCEFV(`selectMenu.setItems('mafiaBizWar', '${JSON.stringify(items)}')`);
+        mp.callCEFV(`selectMenu.setItems('mafiaBizWar', ${JSON.stringify(items)})`);
         mp.callCEFV(`selectMenu.setProp('mafiaBizWar', 'bizCount', ${data.bizCount})`);
-        mp.callCEFV(`selectMenu.setProp('mafiaBizWar', 'names', '${JSON.stringify(data.names)}')`);
-        mp.callCEFV(`selectMenu.setProp('mafiaBizWar', 'counts', '${JSON.stringify(counts)}')`);
+        mp.callCEFV(`selectMenu.setProp('mafiaBizWar', 'names', ${JSON.stringify(data.names)})`);
+        mp.callCEFV(`selectMenu.setProp('mafiaBizWar', 'counts', ${JSON.stringify(counts)})`);
         mp.callCEFV(`selectMenu.menus['mafiaBizWar'].update()`);
         mp.callCEFV(`selectMenu.showByName('mafiaBizWar')`);
     },
@@ -127,15 +130,15 @@ mp.mafia = {
         if (typeof target == 'object') target = JSON.stringify(target);
         if (typeof killer == 'object') killer = JSON.stringify(killer);
         // самоубийство
-        if (reason == 3452007600) return mp.callCEFV(`killList.add('${target}')`);
+        if (reason == 3452007600) return mp.callCEFV(`killList.add(\`${target}\`)`);
         // на авто
-        if (reason == 2741846334) return mp.callCEFV(`killList.add('${target}', '${killer}', 'car')`);
+        if (reason == 2741846334) return mp.callCEFV(`killList.add(\`${target}\`, \`${killer}\`, 'car')`);
         // рукопашка
-        if (reason == 2725352035) return mp.callCEFV(`killList.add('${target}', '${killer}', 'hand')`);
+        if (reason == 2725352035) return mp.callCEFV(`killList.add(\`${target}\`, \`${killer}\`, 'hand')`);
 
         // огнестрел, либо что-то еще? :D
         var name = mp.weapons.getWeaponName(reason);
-        mp.callCEFV(`killList.add('${target}', '${killer}', '${name}')`);
+        mp.callCEFV(`killList.add(\`${target}\`, \`${killer}\`, \`${name}\`)`);
     },
     createPlayerBlip(player) {
         if (!this.bizWarFactions.length) return;
@@ -175,10 +178,10 @@ mp.mafia = {
             text: "Вернуться"
         });
 
-        mp.callCEFV(`selectMenu.setItems('mafiaPower', '${JSON.stringify(items)}')`);
+        mp.callCEFV(`selectMenu.setItems('mafiaPower', ${JSON.stringify(items)})`);
 
         var cash = JSON.stringify([`$${data.cash}`]);
-        mp.callCEFV(`selectMenu.setItemValues('mafiaCash', 'Баланс', '${cash}')`);
+        mp.callCEFV(`selectMenu.setItemValues('mafiaCash', 'Баланс', \`${cash}\`)`);
     },
     registerAttachments() {
         // мешок на голове
@@ -194,6 +197,10 @@ mp.mafia = {
     stopFollowToPlayer() {
         this.followPlayer = null;
     },
+    hasBag(player) {
+        if (!player) player = mp.players.local;
+        return player.hasAttachment("headBag");
+    },
 };
 
 mp.events.add({
@@ -203,6 +210,21 @@ mp.events.add({
     },
     "mafia.mafiaZones.flash": (id, toggle) => {
         mp.mafia.flashBlip(id, toggle);
+    },
+    "mafia.mafiaZones.show": (enable) => {
+        var alpha = (enable) ? mp.mafia.blipAlpha : 0;
+        mp.mafia.mafiaZones.forEach(blip => {
+            mp.game.invoke(mp.bands.natives.SET_BLIP_ALPHA, blip, alpha);
+        });
+        mp.mafia.zonesShow = enable;
+    },
+    "mafia.bag.callRemote": (data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+
+        var rec = mp.utils.getNearPlayer(mp.players.local.position);
+        if (!rec) return mp.notify.error(`Рядом никого нет`, `Мешок`);
+        data.recId = rec.remoteId;
+        mp.events.callRemote(`mafia.bag`, JSON.stringify(data));
     },
     "mafia.bizWar.showMenu": (data) => {
         mp.mafia.showBizWarMenu(data);
@@ -219,11 +241,20 @@ mp.events.add({
     "mafia.bizWar.killList.log": (target, killer, reason) => {
         mp.mafia.logKill(target, killer, reason);
     },
+    "mafia.cuffs.callRemote": (data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+
+        var rec = mp.utils.getNearPlayer(mp.players.local.position);
+        if (!rec) return mp.notify.error(`Рядом никого нет`, `Веревка`);
+        data.recId = rec.remoteId;
+        mp.events.callRemote(`mafia.cuffs`, JSON.stringify(data));
+    },
     "mafia.follow.start": (playerId) => {
         mp.mafia.startFollowToPlayer(playerId);
     },
     "mafia.follow.stop": () => {
         mp.mafia.stopFollowToPlayer();
+        mp.police.stopFollowToPlayer();
     },
     "mafia.storage.info.set": (data) => {
         mp.mafia.setStorageInfo(data);
@@ -232,6 +263,18 @@ mp.events.add({
         mp.mafia.mafiaZones.forEach(blip => {
             mp.game.invoke(mp.mafia.natives.SET_BLIP_ROTATION, blip, 0);
         });
+
+        if (mp.mafia.followPlayer) {
+            mp.game.controls.disableControlAction(0, 21, true); /// бег
+            mp.game.controls.disableControlAction(0, 22, true); /// прыжок
+            mp.game.controls.disableControlAction(0, 31, true); /// вперед назад
+            mp.game.controls.disableControlAction(0, 30, true); /// влево вправо
+            mp.game.controls.disableControlAction(0, 24, true); /// удары
+            mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
+            mp.game.controls.disableControlAction(1, 200, true); // esc
+            mp.game.controls.disableControlAction(0, 140, true); /// удары R
+            mp.game.controls.disableControlAction(24, 37, true); /// Tab
+        }
     },
     "time.main.tick": () => {
         if (mp.mafia.followPlayer) {

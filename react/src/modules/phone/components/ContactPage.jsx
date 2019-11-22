@@ -1,8 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
 import {addAppDisplay, closeAppDisplay, setAppDisplay} from "../actions/action.apps";
-import {deleteContact, renameContact, sortContacts, startMyCall} from "../actions/action.info";
-import ActiveCall from "./ActiveCall";
+import {deleteContact, renameContact, sortContacts, setActiveCall } from "../actions/action.info";
 import {addDialog, renameDialog} from "../actions/action.dialogs";
 import DialogPage from "./DialogPage";
 
@@ -40,7 +39,7 @@ class ContactPage extends Component {
             renameContact(contact.number, name);
             // eslint-disable-next-line no-undef
             mp.trigger('phone.contact.rename', contact.number, name);
-            let dialog = dialogs.find(dialog => dialog.number === contact.number);
+            let dialog = dialogs.list.find(dialog => dialog.number === contact.number);
             if (dialog) {
                 renameDialog(dialog.number, name);
             }
@@ -61,18 +60,18 @@ class ContactPage extends Component {
     }
 
     callContact() {
-        const { addApp, contact, startMyCall } = this.props;
+        const { setActiveCall, contact } = this.props;
 
         // eslint-disable-next-line no-undef
         mp.trigger('phone.call.start', contact.number);
-        startMyCall(true);
-        addApp({name: 'ActiveCall', form: <ActiveCall number={contact.name} />})
+
+        setActiveCall(true, contact.name, true);
     }
 
     dialogContact() {
         const { addApp, contact, dialogs, addDialog } = this.props;
 
-        let dialog = dialogs.find(dialog => dialog.number === contact.number);
+        let dialog = dialogs.list.find(dialog => dialog.number === contact.number);
 
         if (dialog) {
             addApp({name: 'DialogPage', form: <DialogPage dialog={dialog} />})
@@ -181,8 +180,8 @@ const mapDispatchToProps = dispatch => ({
     deleteContact: number => dispatch(deleteContact(number)),
     addDialog: (name, number) => dispatch(addDialog(name, number)),
     closeApp: () => dispatch(closeAppDisplay()),
-    startMyCall: flag => dispatch(startMyCall(flag)),
-    sortContacts: () => dispatch(sortContacts())
+    sortContacts: () => dispatch(sortContacts()),
+    setActiveCall: (state, number, isMine) => dispatch(setActiveCall(state, number, isMine))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContactPage);

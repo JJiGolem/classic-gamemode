@@ -1,5 +1,6 @@
 "use strict";
 var notifs = require('../notifications');
+let clubs = call('clubs');
 let timer = call('timer');
 
 module.exports = {
@@ -17,6 +18,8 @@ module.exports = {
     healthMin: 5,
     // Список активных таймеров (player.id: timer)
     timers: {},
+    // Кол-во ед. понижения алкоголя за употребление 1 ед. сытости
+    satietyAlcohol: 0.2,
 
     startTimer(player) {
         var playerId = player.id;
@@ -62,10 +65,16 @@ module.exports = {
     },
     set(player, satiety, thirst) {
         var character = player.character;
+        if (player.drunkenness && character.satiety < satiety) clubs.deleteDrunkenness(player, (satiety - character.satiety) * this.satietyAlcohol);
         character.satiety = satiety;
         character.thirst = thirst;
         character.save();
         player.call("inventory.setSatiety", [character.satiety])
         player.call("inventory.setThirst", [character.thirst]);
+
+        player.call(`hud.setData`, [{
+            satiety: character.satiety,
+            thirst: character.thirst
+        }]);
     }
 };

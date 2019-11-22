@@ -6,8 +6,12 @@ const wrench = require('wrench');
 const rimraf = require('rimraf');
 const obfuscator = require('javascript-obfuscator');
 const PATHS = require('./paths');
+require('babel-polyfill');
 
-let entry = {};
+let entry = {
+    babelPolyfill: 'babel-polyfill'
+};
+let buildDirectory;
 
 let DATE_CHANGE = null;
 
@@ -72,12 +76,12 @@ function obfuscateBrowserScripts() {
 
 function copyChangedBrowserFiles(currentPath) {
     fs.readdirSync(currentPath).forEach(item => {
-        if (!currentPath.includes('browser/js') && item != 'index.js') {
+        if (currentPath !== path.resolve(__dirname, PATHS.basePath, 'browser', 'js') && item != 'index.js') {
             let updatedPath = path.resolve(currentPath, item);
             if (fs.lstatSync(updatedPath).isDirectory()) {
-                let finalPahDir = updatedPath.replace('client_files', 'client_packages');
-                if (!fs.existsSync(finalPahDir)) {
-                    fs.mkdirSync(finalPahDir)
+                let finalPathDir = updatedPath.replace('client_files', 'client_packages');
+                if (!fs.existsSync(finalPathDir)) {
+                    fs.mkdirSync(finalPathDir)
                 }
                 copyChangedBrowserFiles(updatedPath);
             } else {
@@ -119,7 +123,7 @@ function copyOnlyChangedFiles() {
         fs.mkdirSync(path.resolve(__dirname, PATHS.finalPath, 'browser'));
         fs.mkdirSync(path.resolve(__dirname, PATHS.finalPath, 'browser', 'js'));
         DATE_CHANGE = 0;
-        entry.babelPolyfill = 'babel-polyfill';
+        // entry['babelPolyfill'] = 'babel-polyfill';
     }
 
     wrench.copyDirSyncRecursive(path.resolve(__dirname, PATHS.basePath), path.resolve(__dirname, PATHS.buildPath), {
@@ -136,6 +140,8 @@ function copyOnlyChangedFiles() {
     }
 
     deleteUnusedFiles(path.resolve(__dirname, PATHS.finalPath));
+
+    console.log('[WEBPACK] COPY DONE');
 }
 
 function rewriteFile(dir, file) {
@@ -144,11 +150,13 @@ function rewriteFile(dir, file) {
     let regImport = new RegExp(dir + '\/', 'g');
     let regExport = new RegExp(`exports`, 'g');
 
-    if (dir != 'tuning') {
-        content = content.replace(regImport, `./`);
-    } else {
-        content = content.replace('carshow/', '../carshow/')
-    }
+    content = content.replace(regImport, `./`);
+
+    buildDirectory.forEach(module => {
+        if (module !== dir) {
+            content = content.replace(`require('${module}`, `require('../${module}`);
+        }
+    });
 
     content = content.replace(regExport, 'module.exports');
 
@@ -156,7 +164,11 @@ function rewriteFile(dir, file) {
 }
 
 function getEntry() {
-    fs.readdirSync(path.resolve(__dirname, PATHS.buildPath)).forEach(dir => {
+    buildDirectory = fs.readdirSync(path.resolve(__dirname, PATHS.buildPath));
+
+    // if (!entry.babelPolyfill) entry.babelPolyfill = 'babel-polyfill';
+    
+    buildDirectory.forEach(dir => {
         if (fs.lstatSync(path.resolve(__dirname, PATHS.buildPath, dir)).isDirectory() && !ignoreModules.includes(dir) && dir != 'browser') {
             let directory = fs.readdirSync(path.resolve(__dirname, PATHS.buildPath, dir));
             let isChange = false;
@@ -177,22 +189,32 @@ function getEntry() {
             }
         }
     });
+
+    console.log('[WEBPACK] ENTRIES CREATE');
 }
+
+// async function start() {
+//     await copyOnlyChangedFiles();
+//     await getEntry();
+// }
+
+// start();
 
 copyOnlyChangedFiles();
 getEntry();
 
 if (Object.keys(entry).length > 0) {
     config.entry = entry;
+    console.log(config);
     let compiler = webpack(config);
 
     compiler.run((err, stats) => {
         if (err) console.log(err);
 
         console.log('CHANGED FILES: ', changedFiles.length);
-        changedFiles.forEach(file => {
-            console.log(file);
-        });
+        // changedFiles.forEach(file => {
+        //     console.log(file);
+        // });
 
     });
 } else {
@@ -200,8 +222,8 @@ if (Object.keys(entry).length > 0) {
         rimraf.sync(path.resolve(__dirname, PATHS.buildPath));
     }
     console.log('CHANGED FILES: ', changedFiles.length);
-    changedFiles.forEach(file => {
-        console.log(file);
-    });
+    // changedFiles.forEach(file => {
+    //     console.log(file);
+    // });
     console.log('Webpack не был запущен, поскольку изменений в клиентских файлах, кроме браузера, нет');
 }

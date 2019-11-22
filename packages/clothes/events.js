@@ -4,8 +4,8 @@ let notifs = call('notifications');
 let weather = call('weather');
 
 module.exports = {
-    "init": () => {
-        clothes.init();
+    "init": async () => {
+        await clothes.init();
         inited(__dirname);
     },
     "clothes.clime.check": (player) => {

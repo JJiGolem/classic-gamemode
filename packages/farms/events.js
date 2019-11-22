@@ -8,8 +8,8 @@ let routes = call('routes');
 let timer = call('timer');
 
 module.exports = {
-    "init": () => {
-        farms.init();
+    "init": async () => {
+        await farms.init();
         inited(__dirname);
     },
     "farms.buy": (player) => {
@@ -71,7 +71,7 @@ module.exports = {
         var rec = mp.players.at(data.playerId);
         if (!rec || !rec.character) return out(`Игрок #${data.playerId} не найден`);
         if (rec.id == player.id) return out(`Нельзя продать самому себе`);
-        if (player.dist(rec.position) > 10) return out(`${rec.name} далеко`);
+        if (player.dist(rec.position) > 10) return out(`Игрок далеко`);
 
         rec.offer = {
             type: "farm_sell",
@@ -365,7 +365,7 @@ module.exports = {
         if (data.field < 0 || data.field >= farm.fields.length) return notifs.error(player, `Поле #${data.field} не найдено`, header);
         var field = farm.fields[data.field];
         if (!field) return notifs.error(player, `Поле #${data.field} не найдено`, header);
-        if (field.count) return notifs.error(player, `Поле #${data.field + 1} уже засеяно`, header);
+        if (field.count) return notifs.error(player, `Поле #${field.id} уже засеяно`, header);
         var count = 600;
         if (farm.grains < count) return notifs.error(player, `Недостаточно для загрузки`, header);
 

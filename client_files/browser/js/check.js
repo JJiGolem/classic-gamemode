@@ -29,7 +29,6 @@ var check = new Vue({
             mp.trigger('carservice.check.close');
         },
         pay () {
-            mp.trigger('chat.message.push', '!{#ffffff} pay')
             mp.trigger("callRemote", "carservice.check.accept", 1);
             mp.trigger('carservice.check.close');
         },

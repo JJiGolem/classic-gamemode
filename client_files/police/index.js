@@ -26,6 +26,7 @@ mp.police = {
         mp.inventory.enable(!enable);
         mp.mapCase.enable(!enable);
         mp.callCEFR('phone.show', [false]);
+        enable ? mp.busy.add("cuffs", false) : mp.busy.remove("cuffs");
     },
     setWanted(val) {
         this.wanted = val;
@@ -77,18 +78,52 @@ mp.events.add({
     "police.cuffs.set": (enable) => {
         mp.police.setCuffs(enable);
     },
+    "police.cuffs.callRemote": (data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+
+        var rec = mp.utils.getNearPlayer(mp.players.local.position);
+        if (!rec) return mp.notify.error(`Рядом никого нет`, `Наручники`);
+        data.recId = rec.remoteId;
+        mp.events.callRemote(`police.cuffs`, JSON.stringify(data));
+    },
     "police.wanted.set": (val) => {
         mp.police.setWanted(val);
         mp.game.gameplay.setFakeWantedLevel(val);
     },
     "render": () => {
-        if (mp.police.haveCuffs) mp.game.controls.disableAllControlActions(0);
+        if (mp.police.followPlayer) {
+            mp.game.controls.disableControlAction(0, 21, true); /// бег
+            mp.game.controls.disableControlAction(0, 22, true); /// прыжок
+            mp.game.controls.disableControlAction(0, 31, true); /// вперед назад
+            mp.game.controls.disableControlAction(0, 30, true); /// влево вправо
+            mp.game.controls.disableControlAction(0, 24, true); /// удары
+            mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
+            mp.game.controls.disableControlAction(0, 257, true); /// стрельба
+            mp.game.controls.disableControlAction(1, 200, true); // esc
+            mp.game.controls.disableControlAction(0, 140, true); /// удары R
+            mp.game.controls.disableControlAction(24, 37, true); /// Tab
+        }
+        if (mp.police.haveCuffs) {
+            mp.game.controls.disableControlAction(0, 24, true); /// удары
+            mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
+            mp.game.controls.disableControlAction(0, 257, true); /// стрельба
+            mp.game.controls.disableControlAction(0, 140, true); /// удары R
+
+            if (mp.players.local.vehicle) {
+                mp.game.controls.disableControlAction(0, 59, true); /// INPUT_VEH_MOVE_LR
+                mp.game.controls.disableControlAction(0, 60, true); /// INPUT_VEH_MOVE_UD
+                mp.game.controls.disableControlAction(0, 71, true); /// INPUT_VEH_ACCELERATE
+                mp.game.controls.disableControlAction(0, 72, true); /// INPUT_VEH_BRAKE
+                mp.game.controls.disableControlAction(0, 75, true); /// INPUT_VEH_EXIT
+            }
+        }
     },
     "police.follow.start": (playerId) => {
         mp.police.startFollowToPlayer(playerId);
     },
     "police.follow.stop": () => {
         mp.police.stopFollowToPlayer();
+        mp.mafia.stopFollowToPlayer();
     },
     "police.search.blip.create": (name, pos) => {
         mp.police.searchBlipCreate(name, pos);
@@ -107,6 +142,14 @@ mp.events.add({
             if (dist < 5) speed = 1;
             mp.players.local.taskFollowNavMeshToCoord(pos.x, pos.y, pos.z, speed, -1, 1, true, 0);
         }
+        mp.players.forEachInStreamRange(rec => {
+            if (rec.vehicle) return;
+            if (!rec.getVariable("cuffs")) return;
+            if (rec.isPlayingAnim('mp_arresting', 'idle', 3)) return;
+            mp.utils.requestAnimDict('mp_arresting', () => {
+                rec.taskPlayAnim('mp_arresting', 'idle', 1, 0, -1, 49, 0, false, false, false);
+            });
+        });
     },
     "entityStreamOut": (entity) => {
         if (entity.type != "player") return;

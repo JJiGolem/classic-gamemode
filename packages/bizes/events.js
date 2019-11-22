@@ -4,15 +4,17 @@ let factions;
 let prompt;
 let money;
 let notifications;
+let phone;
 
 let bizService = require('./index.js');
 module.exports = {
-    "init": () => {
+    "init": async () => {
         factions = call("factions");
         prompt = call("prompt");
         money = call("money");
         notifications = call('notifications');
-        bizService.init();
+        phone = call("phone");
+        await bizService.init();
         inited(__dirname);
     },
     "player.joined": (player) => {
@@ -23,6 +25,19 @@ module.exports = {
             sellingBizId: null,
             sellingBizCost: null
         };
+    },
+    "characterInit.done": (player) => {
+        if (player.character.admin !== 0 || player.character.admin !== 6) return;
+        if (factions.isLeader(player)) {
+            if (player.character.factionId) {
+                let bizes = bizService.getBizesByFactionId(player.character.factionId);
+                if (bizes.length === 0) return;
+                let biz = bizes.find(biz => bizService.bizesModules[biz.info.type].business.isFactionOwner);
+                if (biz) {
+                    phone.addApp(player, "factionBiz", bizService.getBizInfoForApp(biz));
+                }
+            }
+        }
     },
     "player.name.changed": (player) => {
         let biz = bizService.getBizByCharId(player.character.id);
@@ -48,28 +63,45 @@ module.exports = {
         let info = biz.info;
         if (prompt != null) prompt.hide(player);
         let actions = [];
-        if (info.characterId == null) {
+
+        if (bizService.bizesModules[info.type].business.isFactionOwner) {
+            if (factions.isLeader(player)) {
+                if (player.character.factionId) {
+                    actions.push('finance');
+                }
+            }
             player.call("biz.menu.open", [{
                 name: info.name,
-                faction: info.factionId != null ? factions && factions.getFaction(info.factionId).name : "",
+                owner: info.factionId != null ? factions.getFaction(info.factionId).name : "Нет",
                 type: bizService.getTypeName(info.type),
-                rent: info.price * bizService.bizesModules[info.type].rentPerDayMultiplier,
-                price: info.price,
                 actions: actions,
                 pos: [info.x, info.y, info.z]
             }]);
         }
         else {
-            if (player.character.id == info.characterId) actions.push('finance');
-            player.call("biz.menu.open", [{
-                name: info.name,
-                faction: info.factionId != null ? factions && factions.getFaction(info.factionId).name : "",
-                type: bizService.getTypeName(info.type),
-                rent: info.price * bizService.bizesModules[info.type].rentPerDayMultiplier,
-                owner: info.characterNick,
-                actions: actions,
-                pos: [info.x, info.y, info.z]
-            }]);
+            if (info.characterId == null) {
+                player.call("biz.menu.open", [{
+                    name: info.name,
+                    faction: info.factionId != null ? factions && factions.getFaction(info.factionId).name : "",
+                    type: bizService.getTypeName(info.type),
+                    rent: info.price * bizService.bizesModules[info.type].rentPerDayMultiplier,
+                    price: info.price,
+                    actions: actions,
+                    pos: [info.x, info.y, info.z]
+                }]);
+            }
+            else {
+                if (player.character.id === info.characterId) actions.push('finance');
+                player.call("biz.menu.open", [{
+                    name: info.name,
+                    faction: info.factionId != null ? factions && factions.getFaction(info.factionId).name : "",
+                    type: bizService.getTypeName(info.type),
+                    rent: info.price * bizService.bizesModules[info.type].rentPerDayMultiplier,
+                    owner: info.characterNick,
+                    actions: actions,
+                    pos: [info.x, info.y, info.z]
+                }]);
+            }
         }
     },
     "biz.buy": (player) => {
@@ -78,6 +110,7 @@ module.exports = {
         let biz = bizService.getBizById(player.biz.at);
         if (biz == null) return;
         let info = biz.info;
+        if (bizService.bizesModules[info.type].business.isFactionOwner) return;
         if (info.characterId != null) return player.call('biz.buy.ans', [0, ""]);
         if (player.dist(new mp.Vector3(info.x, info.y, info.z)) > 10) return player.call('biz.buy.ans', [0, ""]);
         if (player.character.cash < info.price) return player.call('biz.buy.ans', [0, ""]);
@@ -88,10 +121,11 @@ module.exports = {
             info.characterId = player.character.id;
             info.characterNick = player.character.name;
             info.date = bizService.getRandomDate(1);
+            await bizService.destroyOrder(info.id);
             await info.save();
 
             let actions = [];
-            if (player.character.id == info.characterId) actions.push('finance');
+            if (player.character.id === info.characterId) actions.push('finance');
             player.call('biz.buy.ans', [1, player.character.name, actions]);
 
             bizService.setTimer(biz);
@@ -109,8 +143,9 @@ module.exports = {
         let biz = bizService.getBizById(id);
         if (biz == null) return player.call('biz.sell.toGov.ans', [0]);
         let info = biz.info;
+        if (bizService.bizesModules[info.type].business.isFactionOwner) return;
         if (player.dist(new mp.Vector3(info.x, info.y, info.z)) > 10) return player.call('biz.sell.toGov.ans', [3]);
-        if (info.characterId != player.character.id) return player.call('biz.sell.toGov.ans', [0]);
+        if (info.characterId !== player.character.id) return player.call('biz.sell.toGov.ans', [0]);
         bizService.dropBiz(biz, true);
     },
     "biz.sell.check": (player, idOrNick) => {
@@ -125,6 +160,7 @@ module.exports = {
         else {
             if (id > 1000000) return player.call("biz.sell.check.ans", [null]);
             if (player.id == id) return player.call("biz.sell.check.ans", [null]);
+            if (mp.players.at(id) == null) return player.call("biz.sell.check.ans", [null]);
             if (mp.players.at(id).character != null) {
                 player.biz.buyerId = id;
                 player.call("biz.sell.check.ans", [mp.players.at(id).character.name]);
@@ -136,58 +172,62 @@ module.exports = {
     },
     "biz.sell": (player, bizId, cost) => {
         if (player.biz.buyerId == null) return player.call("biz.sell.ans", [0]);
-        if (mp.players.at(player.biz.buyerId) == null) return player.call("biz.sell.ans", [0]);
-        if (vehicles == null) return player.call('biz.sell.ans', [0]);
+        let buyer = mp.players.at(player.biz.buyerId);
+        if (buyer == null) return player.call("biz.sell.ans", [0]);
+        if (!mp.players.exists(buyer)) return player.call("biz.sell.ans", [0]);
         bizId = parseInt(bizId);
         cost = parseInt(cost);
         if (isNaN(bizId) || isNaN(cost)) return player.call("biz.sell.ans", [0]);
-        if (mp.players.at(player.biz.buyerId).character.cash < cost) return player.call("biz.sell.ans", [2]);
-        if (bizService.isHaveBiz(mp.players.at(player.biz.buyerId).character.id)) return player.call("biz.sell.ans", [2]);
+        if (buyer.character.cash < cost) return player.call("biz.sell.ans", [5]);
+        if (bizService.isHaveBiz(buyer.character.id)) return player.call("biz.sell.ans", [6]);
         let biz = bizService.getBizById(bizId);
         if (biz == null) return player.call("biz.sell.ans", [0]);
         let info = biz.info;
-        if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10 || 
-            mp.players.at(player.biz.buyerId).dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return player.call("biz.sell.ans", [3]);
+        if (bizService.bizesModules[info.type].business.isFactionOwner) return player.call("biz.sell.ans", [0]);
+        if (player.dist(new mp.Vector3(info.x, info.y, info.z)) > 10 ||
+            buyer.dist(new mp.Vector3(info.x, info.y, info.z)) > 10) return player.call("biz.sell.ans", [3]);
         if (cost < info.price || cost > 1000000000) return player.call("biz.sell.ans", [4]);
-        mp.players.at(player.biz.buyerId).biz.sellerId = player.id;
+        buyer.biz.sellerId = player.id;
         player.biz.sellingBizId = info.id;
         player.biz.sellingBizCost = cost;
-        mp.players.at(player.biz.buyerId).call('offerDialog.show', ["biz_sell", {
+        buyer.call('offerDialog.show', ["biz_sell", {
             name: player.character.name,
             price: cost
         }]);
     },
     "biz.sell.ans": (player, result) => {
         if (player.biz.sellerId == null) return;
-        if (mp.players.at(player.biz.sellerId) == null) return;
-        if (mp.players.at(player.biz.sellerId).biz == null) return;
-        if (mp.players.at(player.biz.sellerId).biz.buyerId == null) return;
-        let biz = bizService.getBizById(mp.players.at(player.biz.sellerId).biz.sellingBizId);
-        if (biz == null) return mp.players.at(player.biz.sellerId).call("biz.sell.ans", [0]);
+        let seller = mp.players.at(player.biz.sellerId);
+        if (seller == null) return;
+        if (!mp.players.exists(seller)) return;
+        if (seller.biz == null) return;
+        if (seller.biz.buyerId == null) return;
+        let biz = bizService.getBizById(seller.biz.sellingBizId);
+        if (biz == null) return seller.call("biz.sell.ans", [0]);
         let info = biz.info;
-        if (info.characterId != mp.players.at(player.biz.sellerId).character.id) return mp.players.at(player.biz.sellerId).call("biz.sell.ans", [0]);
-        if (player.dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10 || 
-            mp.players.at(player.biz.sellerId).dist(new mp.Vector3(info.pickupX, info.pickupY, info.pickupZ)) > 10) return mp.players.at(player.biz.sellerId).call("biz.sell.ans", [3]);
-        if (player.character.cash < info.price) return mp.players.at(player.biz.sellerId).call("biz.sell.ans", [2]);
-        if (bizService.isHaveBiz(player.character.id)) return mp.players.at(player.biz.sellerId).call("biz.sell.ans", [2]);
-        if (result == 2) return  mp.players.at(player.biz.sellerId).call("biz.sell.ans", [2]);
+        if (info.characterId != seller.character.id) return seller.call("biz.sell.ans", [0]);
+        if (player.dist(new mp.Vector3(info.x, info.y, info.z)) > 10 ||
+            seller.dist(new mp.Vector3(info.x, info.y, info.z)) > 10) return seller.call("biz.sell.ans", [3]);
+        if (player.character.cash < info.price) return seller.call("biz.sell.ans", [5]);
+        if (bizService.isHaveBiz(player.character.id)) return seller.call("biz.sell.ans", [6]);
+        if (result == 2) return  seller.call("biz.sell.ans", [2]);
 
-        bizService.sellBiz(biz, mp.players.at(player.biz.sellerId).biz.sellingBizCost,
-            mp.players.at(player.biz.sellerId), player, function(ans) {
-                if (ans) {
-                    mp.players.at(player.biz.sellerId).call("biz.sell.ans", [1]);
-                }
-                else {
-                    mp.players.at(player.biz.sellerId).call("biz.sell.ans", [0]);
-                }
-            });
-        mp.players.at(player.biz.sellerId).biz.buyerId = null;
-        mp.players.at(player.biz.sellerId).biz.sellingBizId = null;
-        mp.players.at(player.biz.sellerId).biz.sellingBizCost = null;
-        player.biz.sellerId = null;
+        bizService.sellBiz(biz, seller.biz.sellingBizCost, seller, player, function(ans) {
+            if (ans) {
+                seller.call("biz.sell.ans", [1]);
+            }
+            else {
+                seller.call("biz.sell.ans", [0]);
+            }
+            seller.biz.buyerId = null;
+            seller.biz.sellingBizId = null;
+            seller.biz.sellingBizCost = null;
+            player.biz.sellerId = null;
+        });
     },
     "biz.sell.stop": (player) => {
         if (player.biz.buyerId != null) {
+            if (!mp.players.exists(mp.players.at(player.biz.buyerId))) return;
             mp.players.at(player.biz.buyerId).call("offerDialog.hide");
             mp.players.at(player.biz.buyerId).biz.sellerId = null;
         }
@@ -227,4 +267,4 @@ module.exports = {
             notifications != null && notifications.error(player, "Экономические параметры бизнеса недоступны", "Ошибка");
         }
     },
-}
+};

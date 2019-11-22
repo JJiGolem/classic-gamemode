@@ -21,6 +21,8 @@ let priceMultiplier;
 //     textureIndex: 0
 // };
 
+let hairInfo = {};
+
 let input = {
     clothes: {
         4: {
@@ -125,12 +127,17 @@ let rotation = {
     right: false
 }
 
+let debugMode = false;
+let debugText;
+
 mp.events.add({
     'clothingShop.enter': (shopData) => {
         getInputClothes();
         player.setComponentVariation(1, 0, 0, 0); /// убираем маску
         bindKeys(true);
         setHeaders(shopData.bType);
+        initCurrentHair(shopData.appearance);
+        setHair();
         mp.events.call('hud.enable', false);
         mp.game.ui.displayRadar(false);
         mp.callCEFR('setOpacityChat', [0.0]);
@@ -160,12 +167,23 @@ mp.events.add({
         mp.callCEFR('setOpacityChat', [1.0]);
         player.freezePosition(false);
         mp.utils.disablePlayerMoving(false);
+        
+        debugText = null;
 
         mp.events.callRemote('clothingShop.exit');
     },
     'render': () => {
         if (rotation.left) player.setHeading(player.getHeading() - 2);
         if (rotation.right) player.setHeading(player.getHeading() + 2);
+
+        if (debugText) {
+            mp.game.graphics.drawText(debugText, [0.2, 0.5], {
+                font: 0,
+                color: [255, 240, 28, 255],
+                scale: [0.4, 0.4],
+                outline: true
+            });
+        }
     },
     'clothingShop.list.get': (key, list) => {
         clothesList[key] = list;
@@ -188,6 +206,17 @@ mp.events.add({
 
         let sortedList = clothesList[group].filter(x => x.class == shopClass);
         let item = sortedList[index];
+
+        if (debugMode) {
+            debugText = '';
+            if (item.pockets) {
+                debugText += `Карманы ${item.pockets} \n`
+            }
+            if (item.clime) {
+                debugText += `Климат ${item.clime}`
+            }
+        }
+             
         setClothes(group, item, textureIndex);
     },
     'clothingShop.inputClothes.set': setInputClothes,
@@ -206,7 +235,7 @@ mp.events.add({
                 mp.callCEFV(`selectMenu.notification = 'Предмет не найден'`);
                 break;
             case 2:
-                mp.callCEFV(`selectMenu.notification = '${data}'`);
+                mp.callCEFV(`selectMenu.notification = \`${data}\``);
                 break;
             case 4:
                 mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
@@ -354,4 +383,15 @@ function setInputClothes() {
         player.setPropIndex(key, item.drawable, item.texture, true);
         if (item.drawable == -1) player.clearProp(key);
     }
+}
+
+function initCurrentHair(data) {
+    hairInfo.hairstyle = data.hairstyle;
+    hairInfo.hairColor = data.hairColor;
+    hairInfo.hairHighlightColor = data.hairHighlightColor;
+}
+
+function setHair() {
+    player.setComponentVariation(2, hairInfo.hairstyle, 0, 2);
+    player.setHairColor(hairInfo.hairColor, hairInfo.hairHighlightColor);
 }

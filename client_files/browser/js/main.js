@@ -3,8 +3,8 @@ Math.clamp = function(value, min, max) {
 }
 
 // var mp = {
-//     trigger(name)  {
-//         console.log(`mp.trigger: ${JSON.stringify(arguments)}`);
+//     trigger(name, values)  {
+//         console.log(`mp.trigger: ${name} ${JSON.stringify(values)}`);
 //     },
 // };
 
@@ -34,6 +34,10 @@ function cloneObj(inObj) {
 
 function debug(text) {
     terminal.debug(text);
+}
+
+function d(text) {
+    notifications.push('info', text, `DEBUG-LOG`);
 }
 
 function convertToMoscowDate(date) {

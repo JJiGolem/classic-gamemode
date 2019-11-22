@@ -1,0 +1,114 @@
+#selectItems {
+    color: #fff;
+    height: 70vh;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 70vh;
+}
+
+#selectItems svg {
+    height: 100%;
+    width: 100%;
+}
+
+#selectItems .center {
+    r: 24%;
+    cx: 50%;
+    cy: 50%;
+    fill: rgba(12, 12, 12, 0.6);
+}
+
+#selectItems g {
+    transform-origin: 50% 50%;
+}
+
+#selectItems .container circle {
+    stroke: rgba(12, 12, 12, 0.6);
+    cx: 50%;
+    cy: 50%;
+    fill: none;
+}
+
+#selectItems .node {
+    r: 33.6%;
+    stroke-width: 12.8%;
+    stroke-dasharray: calc(6.28*34%/10 - 2%) calc(6.28*34%);
+}
+
+#selectItems .stroke {
+    r: 39.6%;
+    stroke-width: 1.2%;
+    stroke-dasharray: calc(6.28*39.6%/10 - 2%) calc(6.28*39.6%); /**/
+}
+
+#selectItems .container.select .node {
+    stroke: url('#select-items-gradient')!important;
+}
+
+#selectItems .container.select .stroke {
+    stroke: #FFDF29!important;
+}
+
+#selectItems image {
+    transform-origin: 81% 59%;
+    height: 13%;
+    width: 26%;
+    x: 68%;
+    y: 52.5%;
+    pointer-events: none;
+}
+
+#selectItems .hand {
+    height: 7%;
+    y: 56.5%;
+}
+
+#selectItems .container.focus .node {
+    /* stroke: rgba(147, 147, 147, 0.6); */
+}
+
+#selectItems .container.focus .stroke {
+    stroke: #FFDF29;
+}
+
+#selectItems .description {
+    font-family: Ubuntu;
+    position: absolute;
+    top: 48.4%;
+    left: 50%;
+    transform: translate(-50%);
+    font-weight: 500;
+    font-size: 2.1vh;
+    text-align: center;
+}
+
+#selectItems .description .amount {
+    margin-top: 1.4vh;
+    font-weight: 400;
+    font-size: 1.5vh;
+}
+
+/*#selectItems .columns .column path:first-child {
+    fill-opacity: 0.6;
+    fill: #0c0c0c;
+}
+
+#selectItems .columns .column path:last-child {
+    fill-opacity: 0.8;
+    fill: #0c0c0c;
+}
+
+#selectItems .columns .column:hover path:first-child {
+    fill: #ffdf29aa;
+}
+
+#selectItems .columns .column:hover path:last-child {
+    fill: rgb(255, 223, 41);
+}
+
+#selectItems .items image {
+    height: 8%;
+    pointer-events: none;
+}*/

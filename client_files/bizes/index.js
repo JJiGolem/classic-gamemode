@@ -8,6 +8,7 @@ let cost = null;
 mp.keys.bind(0x42, true, function() {           //B
     if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
+    if (mp.players.local.vehicle) return;
     mp.events.callRemote('biz.menu.open');
 });
 
@@ -40,8 +41,9 @@ mp.events.add("biz.actions", (action) => {
     mp.events.callRemote("biz.actions", action);
 });
 
-mp.events.add("biz.cashbox.update", (number) => {
-    mp.callCEFR("biz.cashbox.update", [number]);
+mp.events.add("biz.app.update", (cashBox, productsCount) => {
+    mp.callCEFR("biz.cashbox.update", [cashBox]);
+    mp.callCEFR("biz.products.update", [productsCount]);
 });
 
 
@@ -50,8 +52,9 @@ let bizId = null;
 mp.events.add("biz.finance.show", (bizParameters) => {
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["bizEconomic"]);`);
     bizParameters.params.forEach(param => {
-        let values = new Array();
-        for (let i = param.min; i < param.max + 0.1; i += 0.1) {
+        let values = [];
+        let step = param.isInteger ? 1 : 0.1;
+        for (let i = param.min; i < param.max + step; i += step) {
             values.push(i.toFixed(1));
         }
         let index = values.findIndex(x => x == param.current);
@@ -72,7 +75,7 @@ mp.events.add("biz.finance.save", (params) => {
         let bizParameters = {
             bizId: bizId,
             params: JSON.parse(params)
-        }
+        };
         bizId = null;
         mp.events.callRemote("biz.finance.save", JSON.stringify(bizParameters));
     }
@@ -95,16 +98,11 @@ mp.events.add("biz.sell.check", (idBizT, idOrNick, costT) => {
     mp.events.callRemote("biz.sell.check", idOrNick);
 });
 mp.events.add("biz.sell.check.ans", (nick) => {
-    mp.console(nick, cost)
     mp.callCEFR("biz.sell.check.ans", [nick, cost]);
 });
 
 mp.events.add("biz.sell", () => {
-    if (name != null && cost != null) {
-        mp.events.callRemote('biz.sell', name, cost);
-    }
-    name = null;
-    cost = null;
+    mp.events.callRemote('biz.sell', idBiz, cost);
 });
 mp.events.add("biz.sell.stop", () => {
     mp.events.callRemote("biz.sell.stop");

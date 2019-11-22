@@ -38,7 +38,9 @@ module.exports = {
         args: `["newbie"/"job"/"faction"/"farm"] [id фракции/работы/фермы]`,
         handler: async (player, args) => {
 
-            if ((args[0] != "newbie") && (args[0] != "job") && (args[0] != "faction") && (args[0] != "farm")) return player.call('notifications.push.error', ['Неверный синтаксис', 'Ошибка']);
+            if ((args[0] != "newbie") && (args[0] != "job") &&
+                (args[0] != "faction") && (args[0] != "farm") && (args[0] != "rent"))
+                return player.call('notifications.push.error', ['Неверный синтаксис', 'Ошибка']);
 
             if (!args[1] && args[0] != "newbie") return player.call('notifications.push.error', ['Неверный синтаксис', 'Ошибка']);
             if (!player.vehicle) return player.call('notifications.push.error', ['Вы должны быть в транспорте', 'Ошибка']);
@@ -103,6 +105,9 @@ module.exports = {
                     break;
                 case "farm":
                     mp.events.call('admin.notify.all', `!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для фермы с ID ${args[1]}`);
+                    break;
+                case "rent":
+                    mp.events.call('admin.notify.all', `!{#f0ff9e}[A] ${player.name} создал/обновил транспорт для аренды`);
                     break;
             }
         }

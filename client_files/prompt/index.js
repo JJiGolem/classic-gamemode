@@ -20,7 +20,7 @@ mp.prompt = {
 
 
 mp.events.add("prompt.show", (text) => {
-    mp.callCEFV(`prompt.show('${text}')`);
+    mp.callCEFV(`prompt.show(\`${text}\`)`);
 });
 
 mp.events.add("prompt.hide", () => {
@@ -28,11 +28,11 @@ mp.events.add("prompt.hide", () => {
 });
 
 mp.events.add("prompt.showByName", (name) => {
-    mp.callCEFV(`prompt.showByName('${name}')`);
+    mp.callCEFV(`prompt.showByName(\`${name}\`)`);
 });
 
 mp.events.add("prompt.waitShowByName", (name, time = 5000) => {
     mp.timer.add(() => {
-        mp.callCEFV(`prompt.showByName('${name}')`);
+        mp.callCEFV(`prompt.showByName(\`${name}\`)`);
     }, time);
 });

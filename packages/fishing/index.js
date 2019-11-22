@@ -2,19 +2,17 @@
 
 "use strict"
 
-// "amb@world_human_stand_fishing@base base" - стоит
-// "amb@world_human_stand_fishing@idle_a idle_a" - медленно крутит
-// "amb@world_human_stand_fishing@idle_a idle_b" - медленно крутит и иногда тянет
-// "amb@world_human_stand_fishing@idle_a idle_c" - быстро крутит и тянет (вытягивает рыбу)
-
-let money = call('money');
-let notifs = call('notifications');
-let inventory = call('inventory');
+let money;
+let notifs;
+let inventory;
 
 const ROD_ID = 5;
 
 module.exports = {
-    async init() {
+    init() {
+        money = call('money');
+        notifs = call('notifications');
+        inventory = call('inventory');
         this.initFishersFromDB();
         this.initFishesFromDB();
     },
@@ -85,21 +83,22 @@ module.exports = {
     },
 
     async buyRod(player) {
+
+        if (player.character.cash < this.rodPrice) {
+            return player.call('fishing.rod.buy.ans', [3]);
+        }
+
         inventory.addItem(player, ROD_ID, { health: 100 }, (e) => {
-            if (!e) {
-                money.removeCash(player, this.rodPrice, (result) => {
-                    if (result) {
-                        player.call('fishing.rod.buy.ans', [1]);
-                        notifs.success(player, "Удочка добавлена в инвентарь", "Покупка");
-                    } else {
-                        player.call('fishing.rod.buy.ans', [0]);
-                        notifs.error(player, "Недостаточно денег", "Ошибка");
-                    }
-                }, `Buy fishing rod by player with id ${player.id}`);
-            } else {
-                notifs.error(player, e, "Ошибка");
-                player.call('fishing.rod.buy.ans', [0]);
-            }
+            if (e) return player.call('fishing.rod.buy.ans', [2, e]);
+
+            money.removeCash(player, this.rodPrice, (result) => {
+                if (result) {
+                    player.call('fishing.rod.buy.ans', [1]);
+                    notifs.success(player, "Удочка добавлена в инвентарь", "Рыбалка");
+                } else {
+                    player.call('fishing.rod.buy.ans', [0]);
+                }
+            }, `Buy fishing rod by player with id ${player.id}`);
         });
     },
 
@@ -136,10 +135,12 @@ module.exports = {
     getFisherPosition(id) {
         let fisher = this.fishers.find(fisher => fisher.id == id);
 
-        return {
-            x: fisher.x,
-            y: fisher.y,
-            z: fisher.z
-        };
+        if (fisher) {
+            return {
+                x: fisher.x,
+                y: fisher.y,
+                z: fisher.z
+            };
+        }
     }
 }

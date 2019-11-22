@@ -1,6 +1,7 @@
 "use strict";
 
 let playerMovingDisabled = false;
+let isCapsuleCollision = false;
 
 mp.utils = {
     /// Управление камерой
@@ -9,8 +10,8 @@ mp.utils = {
     /// Возвращает имя улицы
     getStreetName(pos) {
         if (!pos) return null;
-        var getStreet = mp.game.pathfind.getStreetNameAtCoord(pos.x, pos.y, pos.z, 0, 0);
-        var streetName = mp.game.ui.getStreetNameFromHashKey(getStreet["streetName"]);
+        let getStreet = mp.game.pathfind.getStreetNameAtCoord(pos.x, pos.y, pos.z, 0, 0);
+        let streetName = mp.game.ui.getStreetNameFromHashKey(getStreet["streetName"]);
         return streetName;
     },
     /// Возвращает название района
@@ -227,6 +228,19 @@ mp.utils = {
         });
         return nearObj;
     },
+    // Получить ближ. позицию
+    getNearPos(pos, positions, range = Number.MAX_VALUE) {
+        var nearPos = null;
+        var minDist = Number.MAX_VALUE;
+        for (var i = 0; i < positions.length; i++) {
+            var distance = mp.vdist(pos, positions[i]);
+            if (distance < minDist && distance < range) {
+                nearPos = positions[i];
+                minDist = distance;
+            }
+        }
+        return nearPos;
+    },
     // Рисовать текст на экране
     drawText2d(text, pos = [0.8, 0.5], color = [255, 255, 255, 255], scale = [0.3, 0.3]) {
         mp.game.graphics.drawText(text, pos, {
@@ -284,7 +298,7 @@ mp.utils = {
     },
     // Очистить внешний вид игрока
     clearAllView(player, hair) {
-        var gender = (mp.game.joaat("mp_m_freemode_01") == player.model) ? 0 : 1; // 0 - муж, 1 - жен
+        let gender = (mp.game.joaat("mp_m_freemode_01") == player.model) ? 0 : 1; // 0 - муж, 1 - жен
         player.setComponentVariation(7, 0, 0, 0);
         player.setComponentVariation(5, 0, 0, 0);
         player.setComponentVariation(9, 0, 0, 0);
@@ -314,17 +328,111 @@ mp.utils = {
         };
         return null;
     },
+    // Сумма чисел в массиве
+    arraySum(array) {
+        var sum = 0;
+        array.forEach(num => sum += num);
+        return sum;
+    },
+    // Хеш объект перед игроком
+    getFrontObjectHash(player) {
+        var raycast = this.frontRaycast(player);
+        if (!raycast) return null;
+
+        return mp.game.invoke('0x9F47B058362C84B5', raycast.entity);
+    },
+    // Луч от игрок перед собой
+    frontRaycast(player, draw = false) {
+        var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
+        var endPos = player.getOffsetFromInWorldCoords(0, 1, 0);
+        if (draw) mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 255, 0, 100);
+        return mp.raycasting.testPointToPoint(startPos, endPos);
+    },
+    // Добавить текст над головой игрока
+    addOverheadText(player, text, color = [255, 255, 255, 255]) {
+        if (typeof player == 'number') player = mp.players.atRemoteId(player);
+        if (!player) return;
+        if (player.overheadText) mp.timer.remove(player.overheadText.timer);
+
+        player.overheadText = {
+            text: text,
+            color: color,
+            scale: [0.3, 0.3],
+        };
+        player.overheadText.timer = mp.timer.add(() => {
+            delete player.overheadText;
+        }, 5000);
+    },
+    // принадлежит ли позиция полигону
+    inPolygon(pos, polygon) {
+        var parity = 0;
+        for (var i = 0; i < polygon.length - 1; i++) {
+            var v = {
+                x1: polygon[i].x,
+                y1: polygon[i].y,
+                x2: polygon[i + 1].x,
+                y2: polygon[i + 1].y
+            }
+            switch (edgeType(v, pos)) {
+                case 0:
+                    return 2;
+                    break;
+                case 1:
+                    parity = 1 - parity;
+                    break;
+            }
+        }
+        var v = {
+            x1: polygon[polygon.length - 1].x,
+            y1: polygon[polygon.length - 1].y,
+            x2: polygon[0].x,
+            y2: polygon[0].y
+        }
+        switch (edgeType(v, pos)) {
+            case 0:
+                return 2;
+                break;
+            case 1:
+                parity = 1 - parity;
+                break;
+        }
+        return parity;
+    },
 };
 
+// ребро касается, пересекается или пох
+let edgeType = (vector, a) => {
+    switch (classify(vector, a.x, a.y)) {
+        case 1:
+            return ((vector.y1 < a.y) && (a.y <= vector.y2)) ? 1 : 2;
+            break;
+        case -1:
+            return ((vector.y2 < a.y) && (a.y <= vector.y1)) ? 1 : 2;
+            break;
+        case 0:
+            return 0;
+            break;
+    }
+};
+
+// слева от вектора, справа от вектора, или принадлежит вектору
+let classify = (vector, x1, y1) => {
+    var pr = (vector.x2 - vector.x1) * (y1 - vector.y1) - (vector.y2 - vector.y1) * (x1 - vector.x1);
+    if (pr > 0)
+        return 1;
+    if (pr < 0)
+        return -1;
+    return 0;
+};
 
 Math.clamp = function(value, min, max) {
     return Math.max(min, Math.min(max, value));
-}
+};
 
 /// Вывод информации в серверную консоль
 mp.console = function(object) {
     mp.events.callRemote('console', object);
-}
+};
 
 // Вкл/выкл блюр на экране
 mp.events.add("blur", (enable, time = 1000) => {
@@ -339,7 +447,8 @@ mp.events.add("radar.display", (enable) => {
 
 // Вкл визуальный эффект
 mp.events.add('effect', (effect, duration) => {
-    mp.game.graphics.startScreenEffect(effect, duration, false);
+    if (!duration) mp.game.graphics.stopScreenEffect(effect);
+    else mp.game.graphics.startScreenEffect(effect, duration, false);
 });
 
 // Проиграть звук
@@ -359,6 +468,14 @@ mp.events.add("godmode.set", (enable) => {
     mp.players.local.setProofs(enable, enable, enable, enable, enable, enable, enable, enable);
 });
 
+// Коллизия
+mp.events.add("collision.set", (enable) => {
+    isCapsuleCollision = enable;
+});
+
+mp.events.add("addOverheadText", (playerId, text, color) => {
+    mp.utils.addOverheadText(playerId, text, color);
+});
 
 /// Отключение движения игрока
 mp.events.add('render', () => {
@@ -368,12 +485,25 @@ mp.events.add('render', () => {
         mp.game.controls.disableControlAction(0, 31, true); /// вперед назад
         mp.game.controls.disableControlAction(0, 30, true); /// влево вправо
         mp.game.controls.disableControlAction(0, 24, true); /// удары
+        mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
+        mp.game.controls.disableControlAction(0, 257, true); /// стрельба
         mp.game.controls.disableControlAction(1, 200, true); // esc
         mp.game.controls.disableControlAction(0, 140, true); /// удары R
         mp.game.controls.disableControlAction(24, 37, true); /// Tab
 
-        for (let i = 157; i <= 165; i++) {
-            mp.game.controls.disableControlAction(24, i, true); /// цифры 1-9
-        }
+        // for (let i = 157; i <= 165; i++) {
+        //     mp.game.controls.disableControlAction(24, i, true); /// цифры 1-9
+        // }
     }
+    if (isCapsuleCollision) mp.players.local.setCapsule(0.00001);
+    mp.players.forEachInStreamRange(rec => {
+        if (rec.overheadText) {
+            var info = rec.overheadText;
+            var pos3d = rec.position;
+            pos3d.z += 1.5;
+            var pos2d = mp.game.graphics.world3dToScreen2d(pos3d);
+            if (!pos2d) return;
+            mp.utils.drawText2d(info.text, [pos2d.x, pos2d.y], info.color, info.scale);
+        }
+    });
 });

@@ -5,6 +5,7 @@ var acceptWindow = new Vue({
         show: false,
         name: '',
         header: '',
+        text: '', // поддерживает хтмл.
         leftWord: 'Принять', //Слово на зелёном фоне.
         rightWord: 'Отменить', //Слово на красном фоне.
         value: '',//Значеие из поя ввода.
@@ -44,6 +45,7 @@ var acceptWindow = new Vue({
 });
 
 //for tests
-//acceptWindow.show = true;
-// inputWindow.name = 'carsell';
-//acceptWindow.header = `Вы действительно хотите продать т/с "Glendale" игроку Swifty Swift за $35000?`;
+/*acceptWindow.show = true;
+inputWindow.name = 'carsell';
+acceptWindow.header = 'Предложение от Cy Raider';
+acceptWindow.text = `Вы действительно хотите продать т/с "Glendale" игроку Swifty Swift за <span>$35000?</span>`;*/

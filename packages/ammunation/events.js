@@ -3,8 +3,8 @@ let inventory = call('inventory');
 let money = call('money');
 
 module.exports = {
-    "init": () => {
-        ammunation.init();
+    "init": async () => {
+        await ammunation.init();
         inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
@@ -13,7 +13,7 @@ module.exports = {
             let id = shape.ammunationId;
             let data = ammunation.getRawShopData(id);
             let weaponsConfig = ammunation.getWeaponsConfig();
-            player.call('ammunation.enter', [data, weaponsConfig, ammunation.ammoProducts]);
+            player.call('ammunation.enter', [data, weaponsConfig, ammunation.ammoProducts, ammunation.armourProducts]);
             player.currentAmmunationId = shape.ammunationId;
         }
     },
@@ -31,7 +31,7 @@ module.exports = {
         if (!player.character.gunLicenseDate) return player.call('ammunation.weapon.buy.ans', [4]);
         let weaponData = ammunation.weaponsConfig[weaponId];
 
-        let price = weaponData.products * ammunation.productPrice * ammunation.getPriceMultiplier(ammunationId);
+        let price = parseInt(weaponData.products * ammunation.productPrice * ammunation.getPriceMultiplier(ammunationId));
         if (player.character.cash < price) return player.call('ammunation.weapon.buy.ans', [0]);
         let productsAvailable = ammunation.getProductsAmount(ammunationId);
         if (weaponData.products > productsAvailable) return player.call('ammunation.weapon.buy.ans', [1]);
@@ -67,7 +67,7 @@ module.exports = {
         let ammoIndex = values[0];
         let ammoCount = values[1];
 
-        let price = ammunation.ammoProducts * ammoCount * ammunation.productPrice * ammunation.getPriceMultiplier(ammunationId);
+        let price = parseInt(ammunation.ammoProducts * ammoCount * ammunation.productPrice * ammunation.getPriceMultiplier(ammunationId));
         if (player.character.cash < price) return player.call('ammunation.ammo.buy.ans', [0]);
         let productsAvailable = ammunation.getProductsAmount(ammunationId);
         if (ammunation.ammoProducts * ammoCount > productsAvailable) return player.call('ammunation.ammo.buy.ans', [1]);
@@ -91,5 +91,40 @@ module.exports = {
                 }
             }, `Покупка боеприпасов с itemId #${itemIds[ammoIndex]} (${ammoCount} шт.)`);
         });
-    }
+    },
+    "ammunation.armour.buy": (player, armourId) => {
+        let ammunationId = player.currentAmmunationId;
+        if (ammunationId == null) return;
+
+        if (!player.character) return;
+        
+        let price = parseInt(ammunation.armourProducts * ammunation.productPrice * ammunation.getPriceMultiplier(ammunationId));
+        if (player.character.cash < price) return player.call('ammunation.armour.buy.ans', [0]);
+        let productsAvailable = ammunation.getProductsAmount(ammunationId);
+        if (ammunation.armourProducts > productsAvailable) return player.call('ammunation.armour.buy.ans', [1]);
+
+        let params = {
+            variation: 12,
+            texture: armourId,
+            health: 100,
+            pockets: '[3,3,3,3,3,3,3,3,10,5,3,5,10,3,3,3]',
+            sex: player.character.gender ? 0 : 1
+        };
+
+        console.log(params.sex)
+
+        inventory.addItem(player, 3, params, (e) => {
+            if (e) return player.call('ammunation.armour.buy.ans', [2, e]);
+
+            money.removeCash(player, price, function (result) {
+                if (result) {
+                    ammunation.removeProducts(ammunationId, ammunation.armourProducts);
+                    ammunation.updateCashbox(ammunationId, price);
+                    player.call('ammunation.armour.buy.ans', [3]);
+                } else {
+                    player.call('ammunation.armour.buy.ans', [4]);
+                }
+            }, `Покупка бронежилета`);
+        });
+    },
 }

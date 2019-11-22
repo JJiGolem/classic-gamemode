@@ -93,7 +93,12 @@ module.exports = (sequelize, DataTypes) => {
         minutes: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
-            allowNull: false
+            allowNull: false,
+            set(val) {
+                var oldVal = this.getDataValue('minutes');
+                if (val <= oldVal) return;
+                this.setDataValue('minutes', val);
+            }
         },
         creationDate: {
             type: DataTypes.DATE,
@@ -350,7 +355,10 @@ module.exports = (sequelize, DataTypes) => {
         model.hasMany(models.FactionInventory, {
             as: "items",
             foreignKey: "playerId"
-		});
+        });
+        model.hasMany(models.CharacterTattoo, {
+            foreignKey: "characterId"
+        });
     };
     return model;
 };

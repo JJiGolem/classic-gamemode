@@ -20,7 +20,11 @@ module.exports = {
 
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
+        var rank = factions.getRankById(faction, character.factionRank)
         var header = `Склад ${faction.name}`;
+
+        var minRank = faction.clothesRanks.find(x => x.clothesIndex == index);
+        if (minRank && minRank.rank > rank.rank) return notifs.error(player, `Доступно с ранга ${factions.getRank(faction, minRank.rank).name}`, header);
 
         if (faction.ammo < hospital.clothesAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
         if (player.inventory.items.length) return notifs.error(player, `Необходимо раздеться, чтобы надеть форму`, header);
@@ -147,10 +151,10 @@ module.exports = {
 
         topParams.pockets = '[5,5,5,5,10,5]';
         legsParams.pockets = '[5,5,5,5,10,5]';
-        hatParams.clime = '[-5,20]';
-        topParams.clime = '[-5,20]';
-        legsParams.clime = '[-5,20]';
-        feetsParams.clime = '[-5,20]';
+        hatParams.clime = '[-5,30]';
+        topParams.clime = '[-5,30]';
+        legsParams.clime = '[-5,30]';
+        feetsParams.clime = '[-5,30]';
         topParams.name = `Рубашка ${faction.name}`;
         legsParams.name = `Брюки ${faction.name}`;
 
@@ -185,6 +189,7 @@ module.exports = {
 
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
+        var rank = factions.getRankById(faction, character.factionRank);
         var header = `Склад ${faction.name}`;
 
         if (faction.medicines < hospital.itemMedicines) return notifs.error(player, `Недостаточно медикаментов`, header);
@@ -193,6 +198,9 @@ module.exports = {
 
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
+
+        var minRank = faction.itemRanks.find(x => x.itemId == itemId);
+        if (minRank && minRank.rank > rank.rank) return notifs.error(player, `Доступно с ранга ${factions.getRank(faction, minRank.rank).name}`, header);
 
         var itemName = inventory.getInventoryItem(itemId).name;
         // var items = inventory.getArrayByItemId(player, itemId);
@@ -217,7 +225,7 @@ module.exports = {
             if (e) return notifs.error(player, e, header);
 
             notifs.success(player, `Вам выданы ${itemName}`, header);
-            factions.setAmmo(faction, faction.ammo - hospital.itemAmmo);
+            factions.setMedicines(faction, faction.medicines - hospital.itemMedicines);
         });
     },
     // лечение игрока (пополнение ХП) | показ + принятие + отмена:
@@ -243,6 +251,7 @@ module.exports = {
             name: player.name,
             price: parseInt(hospital.healingPrice * rec.offer.health)
         }]);
+        notifs.success(player, `Вы предложили игроку с ID: ${player.id} вылечиться`, header);
     },
     "hospital.healing.accept": (player) => {
         var header = `Лечение`;

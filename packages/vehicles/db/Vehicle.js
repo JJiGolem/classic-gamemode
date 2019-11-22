@@ -122,9 +122,14 @@ module.exports = (sequelize, DataTypes) => {
             as: "items",
             foreignKey: "vehicleId"
 		});
-		
+
 		model.hasOne(models.VehicleTuning, {
 			foreignKey: "vehicleId",
+		});
+
+		model.hasOne(models.FactionVehicleRank, {
+			foreignKey: "vehicleId",
+            as: "minRank"
 		});
     };
 

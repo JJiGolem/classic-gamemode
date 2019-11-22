@@ -1,6 +1,9 @@
+let bizes = call('bizes');
 let carrier = call('carrier');
+let factions = call('factions');
 let money = call('money');
 let notifs = call('notifications');
+let vehicles = call('vehicles');
 
 module.exports = {
     "init": () => {
@@ -86,8 +89,12 @@ module.exports = {
         if (veh.driver) return out(`Уже арендован`);
         if (player.character.cash < carrier.vehPrice) return out(`Необходимо $${carrier.vehPrice}`);
 
+        vehicles.disableControl(player, false);
         money.removeCash(player, carrier.vehPrice, (res) => {
             if (!res) return out(`Ошибка списания наличных`);
+
+            var driverVeh = carrier.getVehByDriver(player);
+            if (driverVeh) carrier.clearVeh(driverVeh);
 
             veh.driver = {
                 playerId: player.id,
@@ -112,12 +119,14 @@ module.exports = {
         var order = carrier.getBizOrder(bizId);
         if (!order) return out(`Заказ просрочен`);
 
-        var max = carrier.getProductsMax(player);
-        if (order.prodCount > max) return out(`Ваш навык не позволяет загрузить более ${max} ед.`);
-        var price = order.prodCount * order.prodPrice;
+        var type = bizes.getBizById(bizId).info.type;
+        if (!carrier.isCorrectProductType(veh.db.modelName, type)) return out(`Данный грузовик не перевозит "${bizes.getResourceName(type)}"`);
+
+        var count = Math.min(carrier.getProductsMax(player), order.prodCount);
+        var price = count * order.prodPrice;
         if (player.character.cash < price) return out(`Необходимо $${price}`);
 
-        carrier.takeBizOrder(player, veh, order);
+        carrier.takeBizOrder(player, veh, order, count);
 
         money.removeCash(player, price, (res) => {
             if (!res) return out(`Ошибка списания наличных`);
@@ -135,7 +144,8 @@ module.exports = {
         if (!veh.db || veh.db.key != "job" || veh.db.owner != 4) return out(`Вы не в грузовике`);
         if (veh.products && veh.products.bizOrder) return out(`Отмените заказ`);
         if (!veh.products || !veh.products.count) return out(`Грузовик пустой`);
-        if (!["productA", "productB"].includes(veh.products.type)) return out(`Неверный тип урожая`);
+        if (!["productA", "productB", "productC"].includes(veh.products.type)) return out(`Неверный тип урожая`);
+        if (veh.products.type == 'productC' && !factions.isMafiaFaction(player.character.factionId)) return out(`Доступно только членам мафии`);
 
         var price = carrier.cropPrice * veh.products.count;
         player.character.pay += price;
@@ -146,7 +156,7 @@ module.exports = {
 
         notifs.success(player, `Урожай продан (+$${price})`, header);
     },
-    "biz.done": () => {
+    "bizes.done": () => {
         carrier.initBizOrders();
     },
     "death.spawn": (player) => {
@@ -154,7 +164,7 @@ module.exports = {
         carrier.dropBizOrder(player);
     },
     "playerEnterColshape": (player, colshape) => {
-        if (!colshape.isBiz) return;
+        if (!colshape.isOrderBiz) return;
         if (!player.character || player.character.job != 4) return;
         var veh = player.vehicle;
 
@@ -174,36 +184,31 @@ module.exports = {
             player.removeFromVehicle();
             notifs.error(player, text, `Аренда грузовика`);
         };
+        var characterId = player.character.id;
+        vehicles.disableControl(player, !vehicle.driver || vehicle.driver.characterId != characterId);
         if (!vehicle.driver) return player.call(`offerDialog.show`, ["carrier_job", {
             price: carrier.vehPrice
         }]);
-        var characterId = player.character.id;
         if (vehicle.driver.characterId != characterId) {
             var driver = carrier.getDriverByVeh(vehicle);
             if (!driver) delete vehicle.driver;
             else return out(`Грузовик арендован другим игроком`);
         }
-        if (vehicle.products) return notifs.info(player, `Загружено: ${vehicle.products.name}`, `Товар`);
+        if (vehicle.products) return notifs.info(player, `Загружено: ${carrier.getProductsNameByVeh(vehicle)}`, `Товар`);
     },
     "playerQuit": (player) => {
         if (!player.character || player.character.job != 4) return;
-        carrier.dropBizOrder(player);
 
         var veh = carrier.getVehByDriver(player);
-        if (veh) delete veh.driver;
+        if (veh) vehicles.respawn(veh);
     },
     "vehicle.respawned": (veh) => {
         if (!veh.db || veh.db.key != "job" || veh.db.owner != 4) return;
-        carrier.dropBizOrderByVeh(veh);
-        delete veh.driver;
-        if (veh.products) {
-            delete veh.products;
-            veh.setVariable("label", null);
-        }
+        carrier.clearVeh(veh);
     },
     "jobs.leave": (player) => {
         if (player.character.job != 4) return;
         var veh = carrier.getVehByDriver(player);
-        if (veh) delete veh.driver;
+        if (veh) carrier.clearVeh(veh);
     },
 }

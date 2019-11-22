@@ -3,8 +3,8 @@ let money = call('money');
 let inventory = call('inventory');
 
 module.exports = {
-    "init": () => {
-        barbershop.init();
+    "init": async () => {
+        await barbershop.init();
         inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
@@ -34,7 +34,8 @@ module.exports = {
         let appearanceData = {
             hairColor: player.character.hairColor,
             hairHighlightColor: player.character.hairHighlightColor,
-            facialHairColor: player.character.beardColor
+            facialHairColor: player.character.beardColor,
+            hairstyle: player.character.hair
         }
         let productPrice = barbershop.productPrice;
         let multiplier = barbershop.getPriceMultiplier(id);

@@ -8,6 +8,8 @@
 */
 
 mp.carrier = {
+    bizOrderBlip: null,
+
     initStartJob() {
         var pedInfo = {
             model: "s_m_m_cntrybar_01",
@@ -33,15 +35,15 @@ mp.carrier = {
         var price = [`$${data.productPrice}`];
         var sell = [`-${Math.ceil((1 - data.productSellK) * 100)}%`];
 
-        mp.callCEFV(`selectMenu.setProp('carrierLoadFarms', 'farms', '${JSON.stringify(data.farms)}')`);
-        mp.callCEFV(`selectMenu.setItemValues('carrierLoadProducts', 'Купить', '${JSON.stringify(price)}')`);
-        mp.callCEFV(`selectMenu.setItemValues('carrierLoadProducts', 'Списать', '${JSON.stringify(sell)}')`);
+        mp.callCEFV(`selectMenu.setProp('carrierLoadFarms', 'farms', ${JSON.stringify(data.farms)})`);
+        mp.callCEFV(`selectMenu.setItemValues('carrierLoadProducts', 'Купить', ${JSON.stringify(price)})`);
+        mp.callCEFV(`selectMenu.setItemValues('carrierLoadProducts', 'Списать', ${JSON.stringify(sell)})`);
         mp.callCEFV(`selectMenu.showByName('carrierLoad')`);
     },
     setCropUnloadInfo(data) {
         var price = [`$${data.cropPrice}`];
 
-        mp.callCEFV(`selectMenu.setItemValues('carrierCropUnload', 'Цена за 1 ед.', '${JSON.stringify(price)}')`);
+        mp.callCEFV(`selectMenu.setItemValues('carrierCropUnload', 'Цена за 1 ед.', ${JSON.stringify(price)})`);
         mp.callCEFV(`selectMenu.showByName('carrierCropUnload')`);
     },
     initBizOrdersInfo(data) {
@@ -56,8 +58,21 @@ mp.carrier = {
         items.push({
             text: `Вернуться`
         });
-        mp.callCEFV(`selectMenu.setItems('carrierLoadBizOrders', '${JSON.stringify(items)}')`);
-        mp.callCEFV(`selectMenu.setProp('carrierLoadBizOrders', 'bizOrders', '${JSON.stringify(data.bizOrders)}')`);
+        mp.callCEFV(`selectMenu.setItems('carrierLoadBizOrders', ${JSON.stringify(items)})`);
+        mp.callCEFV(`selectMenu.setProp('carrierLoadBizOrders', 'bizOrders', ${JSON.stringify(data.bizOrders)})`);
+    },
+    setBizOrderWaypoint(pos) {
+        if (this.bizOrderBlip && mp.blips.exists(this.bizOrderBlip)) {
+            this.bizOrderBlip.destroy();
+            this.bizOrderBlip = null;
+        }
+        if (!pos) return;
+
+        this.bizOrderBlip = mp.blips.new(1, pos, {
+            name: "Заказ",
+            color: 60
+        });
+        this.bizOrderBlip.setRoute(true);
     },
 };
 
@@ -76,5 +91,8 @@ mp.events.add({
     },
     "carrier.jobshape.leave": () => {
         mp.events.call(`selectMenu.hide`);
+    },
+    "carrier.bizOrder.waypoint.set": (pos) => {
+        mp.carrier.setBizOrderWaypoint(pos);
     },
 });

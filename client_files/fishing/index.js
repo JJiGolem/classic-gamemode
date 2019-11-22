@@ -1,7 +1,5 @@
 "use strict"
 
-mp.attachmentMngr.register("takeRod", "prop_fishing_rod_01", 26611, new mp.Vector3(0, -0.05, -0.03), new mp.Vector3(-40, 10, -50));
-
 let peds = [
     {
         model: "cs_old_man2",
@@ -50,18 +48,37 @@ let rods = [];
 
 let timeoutEndFishing;
 
+let isInZone = false;
+
 let isBinding = false;
 let isEnter = false;
 let isStarted = false;
 let isFetch = false;
 let isHaveRod = false;
 let isShowPrompt = false;
+let isDead = false;
 
 let intervalFishing;
 let isIntervalCreated = false;
 
 const checkConditions = () => {
-    return (!mp.busy.includes() && isHaveRod && !isEnter && !localPlayer.isInWater() && !localPlayer.vehicle);
+    return (
+        isHaveRod &&
+        !isDead &&
+        localPlayer.hands && localPlayer.hands.itemId == 5 &&
+        !isEnter && 
+        !localPlayer.isSwimming() &&
+        !localPlayer.vehicle &&
+        !localPlayer.getVehicleIsTryingToEnter() &&
+        !localPlayer.isInAir() &&
+        // !localPlayer.isPlayingAnim() &&
+        !localPlayer.isJumping() &&
+        !localPlayer.isDiving() &&
+        !localPlayer.isEvasiveDiving() &&
+        !localPlayer.isFalling() &&
+        !localPlayer.isSwimmingUnderWater() &&
+        !localPlayer.isClimbing()
+    );
 }
 
 mp.events.add('characterInit.done', () => {
@@ -87,28 +104,29 @@ mp.events.add('render', () => {
                 let ground = mp.game.gameplay.getGroundZFor3dCoord(point.x, point.y, point.z, 0.0, false);
                 let water = Math.abs(mp.game.water.getWaterHeight(point.x, point.y, point.z, 0));
 
-                // mp.console('z: ' + point.z);
-                // mp.console('ground: ' + ground);
-                // mp.console('water: ' + water);
-
                 if (water > 0 && ground < water && ground != 0) {
                     isShowPrompt = true;
+                    isInZone = true;
                     mp.events.call('fishing.game.menu');
                 } else {
                     if (isShowPrompt) {
-                        bindButtons(false);
                         mp.events.call('prompt.hide');
                         isShowPrompt = false;
                     }
+                    if (!isEnter) bindButtons(false);
+
+                    isInZone = false;
                 }
             }, 1000);
         }
     } else {
         if (isIntervalCreated) {
             mp.events.call('prompt.hide');
+            isInZone = false;
             isShowPrompt = false;
             mp.timer.remove(intervalFishing);
             isIntervalCreated = false;
+            if (!isEnter) bindButtons(false);
         }
     }
 });
@@ -127,12 +145,9 @@ mp.events.add('inventory.initItems', (items) => {
             });
         }
     }
-
-    // debug(countRods);
 });
 
 mp.events.add('inventory.deleteItem', (item) => {
-    debug(item);
     if (rods.includes(item)) {
         let index = rods.findIndex(rod => rod == item);
         rods.splice(index, 1);
@@ -145,9 +160,6 @@ mp.events.add('inventory.deleteItem', (item) => {
             mp.events.call('prompt.hide');
             isShowPrompt = false;
         }
-
-        debug('delete rod');
-        debug(rods.length);
     }
 });
 
@@ -158,11 +170,12 @@ mp.events.add('inventory.addItem', (item) => {
     }
 });
 
-mp.events.add('fishing.menu.show', () => {
+mp.events.add('fishing.menu.show', (rodPrice) => {
    if (mp.busy.includes()) return;
 
    mp.busy.add('fishing.menu', false);
    mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["fishingMenu"])`);
+   mp.callCEFV(`selectMenu.items[0].values = ["${rodPrice}$"]`);
    mp.callCEFV(`selectMenu.show = true`);
 });
 
@@ -176,11 +189,22 @@ mp.events.add('fishing.rod.buy', () => {
     mp.events.callRemote('fishing.rod.buy');
 });
 
-mp.events.add('fishing.rod.buy.ans', (ans) => {
+mp.events.add('fishing.rod.buy.ans', (ans, data) => {
     mp.callCEFV(`selectMenu.loader = false`);
 
-    if (ans == 1) {
-        mp.events.call('fishing.menu.close');
+    switch (ans) {
+        case 0:
+            mp.callCEFV(`selectMenu.notification = 'Ошибка покупки'`);
+            break;
+        case 1:
+            mp.events.call('fishing.menu.close');
+            break;
+        case 2:
+            mp.callCEFV(`selectMenu.notification = \`${data}\``);
+            break;
+        case 3:
+            mp.callCEFV(`selectMenu.notification = 'Недостаточно денег'`);
+            break;
     }
 });
 
@@ -197,8 +221,22 @@ mp.events.add('fishing.fish.sell.ans', (ans) => {
 });
 
 mp.events.add('fishing.game.menu', () => {
+    if (mp.busy.includes()) return;
+
     mp.events.call('prompt.showByName', 'fishing');
-    bindButtons(true);
+    // bindButtons(true);
+});
+
+mp.events.add('click', (x, y, upOrDown, leftOrRight, relativeX, relativeY, worldPosition, hitEntity) => {
+    if (upOrDown != 'down' || leftOrRight != 'left') return;
+    if (!localPlayer.hands) return;
+    if (localPlayer.hands.itemId !== 5) return;
+
+    if (!isEnter && isInZone) {
+        if (mp.busy.includes()) return;
+        return fishingEnter()
+    };
+    if (!isStarted && isEnter) return fishingStart();
 });
 
 mp.events.add('fishing.game.enter', () => {
@@ -206,18 +244,13 @@ mp.events.add('fishing.game.enter', () => {
 
     mp.timer.remove(timeoutEndFishing);
 
+    bindButtons(true);
     mp.busy.add('fishing.game', false);
     playBaseAnimation(true);
     mp.utils.disablePlayerMoving(true);
     localPlayer.freezePosition(true);
     mp.callCEFVN({ "fishing.show": true });
     isEnter = true;
-});
-
-mp.events.add('fishing.game.start', () => {
-    playWaitAnimation(true);
-    mp.callCEFVN({ "fishing.isStarted": true });
-    mp.events.callRemote('fishing.game.start');
 });
 
 mp.events.add('fishing.game.fetch', (speed, zone, weight) => {
@@ -232,6 +265,7 @@ mp.events.add('fishing.game.end', (result) => {
     timeoutEndFishing = mp.timer.add(() => {
         try {
             isStarted = false;
+            isFetch = false;
             mp.callCEFV(`fishing.clearData();`);
             mp.callCEFVN({ "fishing.isStarted": false });
         } catch (e) {
@@ -244,6 +278,7 @@ mp.events.add('fishing.game.exit', () => {
     mp.events.callRemote('fishing.game.exit');
     bindButtons(false);
     isEnter = false;
+    isStarted = false;
     mp.events.call('prompt.hide');
     playBaseAnimation(false);
     mp.utils.disablePlayerMoving(false);
@@ -253,21 +288,35 @@ mp.events.add('fishing.game.exit', () => {
     mp.busy.remove('fishing.game');
 });
 
+mp.events.add("playerDeath", (player) => {
+    if (player.remoteId === localPlayer.remoteId) {
+        if (mp.busy.includes('fishing.game')) {
+            isDead = true;
+            mp.events.call('fishing.game.exit');
+            mp.events.callRemote('animations.stop');
+        }
+    }
+});
+
+mp.events.addDataHandler("knocked", (player, knocked) => {
+    if (player.remoteId == mp.players.local.remoteId) {
+        if (!knocked) {
+            isDead = false;
+        }
+    }
+});
+
 let bindButtons = (state) => {
     if (state) {
         if (isBinding) return;
         isBinding = true;
-        mp.keys.bind(0x45, true, fishingEnter);
         mp.keys.bind(0x20, true, fishingEnd);
-        mp.keys.bind(0x46, true, fishingStart);
         mp.keys.bind(0x1B, false, fishingExit);
     }
     else {
         if (!isBinding) return;
         isBinding = false;
-        mp.keys.unbind(0x45, true, fishingEnter);
         mp.keys.unbind(0x20, true, fishingEnd);
-        mp.keys.unbind(0x46, true, fishingStart);
         mp.keys.unbind(0x1B, false, fishingExit);
     }
 }
@@ -302,8 +351,6 @@ let fishingExit = () => {
     if (mp.game.ui.isPauseMenuActive()) return;
     if (!isFetch) {
         mp.events.call('fishing.game.exit');
-        isEnter = false;
-        isStarted = false;
     }
 }
 
@@ -312,10 +359,8 @@ function playBaseAnimation(state, timeout) { /// Анимация держани
         if (!timeout) timeout = 0;
         mp.timer.add(()=> {
             mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@base', 'base', 1, 49);
-            mp.attachmentMngr.addLocal("takeRod");
         }, timeout);
     } else {
-        mp.attachmentMngr.removeLocal("takeRod");
         mp.events.callRemote('animations.stop');
     }
 }
@@ -325,10 +370,8 @@ function playWaitAnimation(state, timeout) { /// Анимация начала �
         if (!timeout) timeout = 0;
         mp.timer.add(()=> {
             mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@idle_a', 'idle_a', 1, 49);
-            mp.attachmentMngr.addLocal("takeRod");
         }, timeout);
     } else {
-        mp.attachmentMngr.removeLocal("takeRod");
         mp.events.callRemote('animations.stop');
     }
 }
@@ -338,10 +381,8 @@ function playFetchAnimation(state, timeout) { /// Анимация вытяги�
         if (!timeout) timeout = 0;
         mp.timer.add(()=> {
             mp.events.callRemote('animations.play', 'amb@world_human_stand_fishing@idle_a', 'idle_c', 1, 49);
-            mp.attachmentMngr.addLocal("takeRod");
         }, timeout);
     } else {
-        mp.attachmentMngr.removeLocal("takeRod");
         mp.events.callRemote('animations.stop');
     }
 }

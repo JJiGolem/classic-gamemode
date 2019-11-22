@@ -17,6 +17,7 @@ class Success extends Component {
         this.state = {};
 
         this.back = this.back.bind(this);
+        this.getButton = this.getButton.bind(this);
     }
 
     componentDidMount() {
@@ -38,9 +39,11 @@ class Success extends Component {
     }
 
     getButton(status) {
+        const { setApp } = this.props;
+
         if (status === 'Бизнес успешно продан') {
             return (
-                <div className='house_button-phone-react' onClick={this.back}>
+                <div className='house_button-phone-react' onClick={() => { setApp({ name: 'MainDisplay', form: <MainDisplay /> }) }}>
                     <span className='ico_button_house-phone-react'>
                         <svg xmlns="http://www.w3.org/2000/svg" width="80%" height="80%" viewBox="0 0 16.223 17.142">
                             <g id="Group_107" data-name="Group 107" transform="translate(-1.501 0)">

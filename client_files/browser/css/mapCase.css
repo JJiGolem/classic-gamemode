@@ -87,6 +87,7 @@
     left: 50%;
     transform: translate(-50%);
     width: 55%;
+    word-wrap: break-word;
 }
 
 #map-case .popup-message .body {

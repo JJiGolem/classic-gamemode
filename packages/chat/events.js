@@ -2,6 +2,8 @@
 var factions = require('../factions');
 var chat = require('./index');
 let news = call('news');
+let admin = call('admin');
+let notify = call('notifications');
 
 module.exports = {
 
@@ -30,7 +32,6 @@ module.exports = {
     },
 
 
-    //TODO: добавить проверки на мут, организацию, знакомство (???)
     "chat.message.get": (player, type, message) => {
 
         if (message.length > 100) {
@@ -89,12 +90,22 @@ module.exports = {
         switch (command) {
             case '/s':
             case '/r':
+            case '/f':
             case '/n':
+            case '/b':
             case '/me':
             case '/do':
             case '/try':
+            case '/gnews':
+            case '/d':
+            case '/m':
+            case '/dice':
                 if (!/\S/.test(args.join(' '))) return;
+                if (command == '/b') command = '/n';
                 mp.events.call(command, player, args);
+                break;
+            case '/tp':
+                mp.events.call('/tp', player);
                 break;
             default:
                 if (!player.character.admin) return;
@@ -163,6 +174,14 @@ module.exports = {
         factions.sayRadio(player, message.join(' '));
     },
 
+    "/f": (player, message) => {
+        if (factions.isStateFaction(player.character.factionId) || !factions.isLeader(player)) {
+            mp.events.call('/d', player, message);
+        } else {
+            factions.sayRadio(player, message.join(' '));
+        }
+    },
+
     "/n": (player, message) => {
         mp.players.forEachInRange(player.position, 10, (currentPlayer) => {
             if (currentPlayer.dimension == player.dimension) {
@@ -186,12 +205,27 @@ module.exports = {
         });
     },
 
+    "/gnews": (player, message) => {
+        if (!player.character) return;
+        if (!factions.isStateFaction(player.character.factionId) || !factions.isLeader(player)) return;
 
-    // "/gnews": (player, message) => {
-    //     mp.players.forEach((currentPlayer) => {
-    //         currentPlayer.call('playerGnews', [player.name, player.id, message]);
-    //     });
-    // },
+        mp.players.forEach((currentPlayer) => {
+            if (!currentPlayer.character) return;
+            currentPlayer.call('chat.message.split', [message.join(' '), `!{#498fff}[Гос. новости] ${player.character.name}[${player.id}]: `]);
+        });
+    },
+
+    "/d": (player, message) => {
+        if (!player.character) return;
+        if (!factions.isStateFaction(player.character.factionId)) return;
+
+        let rank = factions.getRankById(player.character.factionId, player.character.factionRank).name;
+        mp.players.forEach((currentPlayer) => {
+            if (!currentPlayer.character) return;
+            if (!factions.isStateFaction(currentPlayer.character.factionId)) return;
+            currentPlayer.call('chat.message.split', [message.join(' '), `!{#59b3cf}[D] ${rank} ${player.character.name}[${player.id}]: `]);
+        });
+    },
 
     "/try": (player, message) => {
 
@@ -203,6 +237,41 @@ module.exports = {
                 currentPlayer.call('chat.action.try', [player.name, player.id, message, result]);
             };
         });
-    }
+    },
 
+    "/tp": (player) => {
+        let data = admin.getMassTeleportData();
+        if (!data || !data.position) return notify.error(player, 'Массовый телепорт отключен');
+        player.returnPosition = player.position;
+        player.returnDimension = player.dimension;
+        player.position = data.position;
+        player.dimension = data.dimension;
+        notify.success(player, 'Вы были телепортированы');
+    },
+
+    "/dice": (player, args) => {
+        if (!player.character) return;
+        if (!args || args.length < 2) return notify.warning(player, `Используйте /dice [id] [сумма]`)
+        let targetId = parseInt(args[0]);
+        let amount = parseInt(args[1]);
+        if (isNaN(targetId) || isNaN(amount) || amount <= 0) return notify.warning(player, `Некорректные данные`);
+        let data = {
+            targetId: args[0],
+            amount: args[1]
+        }
+        mp.events.call('casino.dice.offer.send', player, data);
+    },
+
+    "/m": (player, message) => {
+        if (!player.character) return;
+        let factionId = player.character.factionId;
+        if (!factions.isPoliceFaction(factionId) &&
+            !factions.isFibFaction(factionId) && !factions.isArmyFaction(factionId)) return;
+        if (!player.vehicle ||
+            !(player.vehicle.key == 'faction' && player.vehicle.owner == factionId)) return notify.error(player, 'Вы не в служебном транспорте');
+        mp.players.forEachInRange(player.position, 15, (currentPlayer) => {
+            if (!currentPlayer.character) return;
+            currentPlayer.call('chat.message.split', [message.join(' '), `!{#ffcd45}[Мегафон] ${player.character.name}[${player.id}]: `]);
+        });
+    },
 }

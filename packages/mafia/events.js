@@ -45,7 +45,11 @@ module.exports = {
 
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
+        var rank = factions.getRankById(faction, character.factionRank);
         var header = `Склад ${faction.name}`;
+
+        var storage = factions.getStorage(player.insideFactionWarehouse);
+        if (!storage.isOpen) return notifs.error(player, `Склад мафии закрыт`, header);
 
         if (faction.ammo < mafia.gunAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
@@ -53,6 +57,9 @@ module.exports = {
         var weaponIds = ["weapon_pistol", "weapon_pistol50", "weapon_minismg", "weapon_smg", "weapon_sawnoffshotgun", "weapon_dbshotgun", "weapon_assaultrifle", "weapon_carbinerifle"];
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
+
+        var minRank = faction.itemRanks.find(x => x.itemId == itemId);
+        if (minRank && minRank.rank > rank.rank) return notifs.error(player, `Доступно с ранга ${factions.getRank(faction, minRank.rank).name}`, header);
 
         var gunName = inventory.getInventoryItem(itemId).name;
         var guns = inventory.getArrayByItemId(player, itemId);
@@ -83,11 +90,18 @@ module.exports = {
 
         var character = player.character;
         var faction = factions.getFaction(character.factionId);
+        var rank = factions.getRankById(faction, character.factionRank);
         var header = `Склад ${faction.name}`;
+
+        var storage = factions.getStorage(player.insideFactionWarehouse);
+        if (!storage.isOpen) return notifs.error(player, `Склад мафии закрыт`, header);
 
         var itemIds = [37, 38, 40, 39];
         index = Math.clamp(index, 0, itemIds.length - 1);
         if (faction.ammo < mafia.ammoAmmo * ammo) return notifs.error(player, `Недостаточно боеприпасов`, header);
+
+        var minRank = faction.itemRanks.find(x => x.itemId == itemIds[index]);
+        if (minRank && minRank.rank > rank.rank) return notifs.error(player, `Доступно с ранга ${factions.getRank(faction, minRank.rank).name}`, header);
 
         // inventory.fullDeleteItemsByParams(itemIds[index], ["faction", "owner"], [character.factionId, character.id]);
         var params = {
@@ -153,6 +167,32 @@ module.exports = {
             notifs.info(rec, `${player.name} снял $${sum}`, header);
         });
     },
+    "mafia.storage.state": (player, open) => {
+        if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Общак мафии`);
+
+        var character = player.character;
+        var faction = factions.getFaction(character.factionId);
+        var header = `Склад ${faction.name}`;
+
+        if (!factions.isLeader(player)) return notifs.error(player, `Нет доступа`, header);
+
+        var storage = factions.getStorage(player.insideFactionWarehouse);
+
+        if (storage.isOpen == open) {
+            if (open) return notifs.error(player, `Склад уже открыт`, header);
+            else return notifs.error(player, `Склад уже закрыт`, header);
+        }
+
+        storage.isOpen = open;
+        var str = (open) ? "открыл" : "закрыл";
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+
+            notifs.info(rec, `${player.name} ${str} склад мафии`, header);
+        });
+    },
     "mafia.power.sell": (player, data) => {
         data = JSON.parse(data);
         data.sum = Math.clamp(data.sum, 100, 100000);
@@ -173,6 +213,7 @@ module.exports = {
 
         var biz = bizes.getNearBiz(player);
         if (!biz) return out(`Необходимо находиться у бизнеса`);
+        if (biz.info.type == 10) return out(`Нельзя продать крышу клуба`);
         if (biz.info.factionId != player.character.factionId) return out(`${biz.info.name} находится не под вашей крышей`);
 
         rec.offer = {
@@ -202,6 +243,7 @@ module.exports = {
         if (player.character.cash < offer.sum) return out(`Необходимо $${sum}`);
 
         var biz = bizes.getBizById(offer.bizId);
+        if (biz.info.type == 10) return out(`Нельзя продать крышу клуба`);
         if (biz.info.factionId != seller.character.factionId) return out(`${biz.info.name} не под крышей ${seller.name}`);
 
         money.removeCash(player, offer.sum, (res) => {
@@ -233,11 +275,12 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Игрок не найден`, header);
         var dist = player.dist(rec.position);
         if (dist > 5) return notifs.error(player, `${rec.name} далеко`, header);
+        if (rec.getVariable("afk")) return notifs.error(player, `${rec.name} не активен`, `ANTI-AFK`);
         var character = player.character;
-        if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, header);
 
         if (!rec.cuffs) {
+            if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
             var cuffs = (data.cuffsSqlId) ? inventory.getItem(player, data.cuffsSqlId) : inventory.getItemByItemId(player, 54);
             if (!cuffs) return notifs.error(player, `Предмет ${inventory.getName(54)} не найден`, header);
             inventory.deleteItem(player, cuffs);
@@ -246,6 +289,7 @@ module.exports = {
             notifs.info(rec, `${player.name} связал вас`, header);
             notifs.success(player, `${rec.name} связан`, header);
         } else {
+            if (!factions.isMafiaFaction(character.factionId) && !factions.isPoliceFaction(character.factionId) && !factions.isFibFaction(character.factionId)) return notifs.error(player, `Вы не член мафии/порядка`, header);
             if (rec.cuffs.itemId != 54) return notifs.error(player, `${rec.name} был обездижен с помощью ${inventory.getName(rec.cuffs.itemId)}`, header);
             inventory.addOldItem(player, rec.cuffs, (e) => {
                 if (e) return notifs.error(player, e, header);
@@ -273,10 +317,10 @@ module.exports = {
         var dist = player.dist(rec.position);
         if (dist > 5) return out(`${rec.name} далеко`);
         var character = player.character;
-        if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
         if (rec.vehicle) return notifs.error(player, `${rec.name} находится в авто`, header);
 
         if (!rec.bag) {
+            if (!factions.isMafiaFaction(character.factionId)) return notifs.error(player, `Вы не член мафии`, header);
             var bag = (data.bagSqlId) ? inventory.getItem(player, data.bagSqlId) : inventory.getItemByItemId(player, 55);
             if (!bag) return out(`Предмет ${inventory.getName(55)} не найден`);
             inventory.deleteItem(player, bag);
@@ -285,6 +329,7 @@ module.exports = {
             notifs.info(rec, `${player.name} надел на вас мешок`, header);
             notifs.success(player, `${rec.name} с мешком на голове`, header);
         } else {
+            if (!factions.isMafiaFaction(character.factionId) && !factions.isPoliceFaction(character.factionId) && !factions.isFibFaction(character.factionId)) return notifs.error(player, `Вы не член мафии/порядка`, header);
             if (rec.bag.itemId != 55) return out(`${rec.name} имеет на голове ${inventory.getName(rec.bag.itemId)}`);
             inventory.addOldItem(player, rec.bag, (e) => {
                 if (e) return out(player, e, header);
@@ -303,6 +348,7 @@ module.exports = {
         };
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return out(`Гражданин не найден`);
+        if (rec.getVariable("afk")) return notifs.error(player, `${rec.name} не активен`, `ANTI-AFK`);
         if (!factions.isMafiaFaction(player.character.factionId)) return out(`Нет прав для использования`);
         if (!rec.isFollowing) {
             if (!rec.cuffs || rec.cuffs.itemId != 54) return out(`${rec.name} не связан`);

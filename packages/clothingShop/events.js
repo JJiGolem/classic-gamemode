@@ -3,13 +3,17 @@ let money = call('money');
 let inventory = call('inventory');
 let clothes = call('clothes');
 module.exports = {
-    "init": () => {
-        clothingShop.init();
+    "init": async () => {
+        await clothingShop.init();
         inited(__dirname);
     },
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;
         if (shape.isClothingShop) {
+
+            let isCuffed = player.getVariable('cuffs') || false;
+            if (isCuffed) return;
+
             player.currentClothingShopId = shape.clothingShopId;
             player.dimension = player.id + 1;
             if (player.hasValidClothesData) {
@@ -28,6 +32,11 @@ module.exports = {
     "clothingShop.enter": (player) => {
         let id = player.currentClothingShopId;
         let data = clothingShop.getRawShopData(id);
+        data.appearance = {
+            hairColor: player.character.hairColor,
+            hairHighlightColor: player.character.hairHighlightColor,
+            hairstyle: player.character.hair
+        }
         player.call('clothingShop.enter', [data]);
     },
     "clothingShop.exit": (player) => {
@@ -42,8 +51,12 @@ module.exports = {
 
         if (!item) return player.call('clothingShop.item.buy.ans', [1]);
 
+        let defaultPrice = item.price;
         let products = clothingShop.calculateProductsNeeded(item.price);
-        let price = parseInt(item.price * clothingShop.getPriceMultiplier(shopId));
+        let price = parseInt(defaultPrice * clothingShop.getPriceMultiplier(shopId));
+        let income = parseInt(products * clothingShop.productPrice * clothingShop.getPriceMultiplier(shopId));
+
+
         if (player.character.cash < price) return player.call('clothingShop.item.buy.ans', [4]);
         let productsAvailable = clothingShop.getProductsAmount(shopId);
         if (products > productsAvailable) return player.call('clothingShop.item.buy.ans', [6]);
@@ -67,7 +80,7 @@ module.exports = {
                 money.removeCash(player, price, function (result) {
                     if (result) {
                         clothingShop.removeProducts(shopId, products);
-                        clothingShop.updateCashbox(shopId, price);
+                        clothingShop.updateCashbox(shopId, income);
                         player.call('clothingShop.item.buy.ans', [0]);
                     } else {
                         player.call('clothingShop.item.buy.ans', [5]);

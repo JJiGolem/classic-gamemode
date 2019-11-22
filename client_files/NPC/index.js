@@ -5,6 +5,7 @@ mp.events.add("NPC.create", (data) => {
 
     if (data.defaultScenario) {
         ped.defaultScenario = data.defaultScenario;
+        ped.taskStartScenarioInPlace(data.defaultScenario, 0, false);
     }
 
     if (data.marker) {

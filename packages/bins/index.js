@@ -1,5 +1,6 @@
 "use strict";
 
+let jobs = call('jobs');
 let utils = call('utils');
 
 module.exports = {
@@ -55,10 +56,14 @@ module.exports = {
     ],
     // Не найдено - 15% (в 3 из 20 мусорок)
     emptyChance: 15,
+    // Опыт скилла за найденный предмет в мусорке
+    exp: 0.05,
+    // Прибавка к цене предмета в % (0.0-1.0) при фулл скилле
+    priceBonus: 0.5,
 
-    init() {
-        this.initBinsFromDB();
+    async init() {
         this.createDumpMarker();
+        await this.initBinsFromDB();
     },
     async initBinsFromDB() {
         var list = await db.Models.Bin.findAll();
@@ -153,5 +158,9 @@ module.exports = {
             }
         });
         return nearBin;
+    },
+    addJobExp(player) {
+        var skill = jobs.getJobSkill(player, 6);
+        jobs.setJobExp(player, skill, skill.exp + this.exp);
     },
 };

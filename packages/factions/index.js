@@ -4,6 +4,8 @@ var inventory = call('inventory');
 var mafia = call('mafia');
 var money = require('../money')
 var notifs = require('../notifications');
+var vehicles = call('vehicles');
+var utils = call('utils');
 
 module.exports = {
     // Организации
@@ -57,6 +59,10 @@ module.exports = {
     },
     // Кол-во минут онлайна, необходимых для получения ЗП
     payMins: 15,
+    // Стоимость респавна авто
+    vehRespawnPrice: 1000,
+    // Мин. время простоя, чтобы авто зареспавнилось лидером
+    vehWaitSpawn: 5 * 60 * 1000,
 
     async init() {
         await this.loadFactionsFromDB();
@@ -65,14 +71,35 @@ module.exports = {
         this.createMedicinesWarehouseMarker();
     },
     async loadFactionsFromDB() {
-        var dbFactons = await db.Models.Faction.findAll({
+        var dbFactions = await db.Models.Faction.findAll({
             include: [{
-                model: db.Models.FactionRank,
-                as: "ranks"
-            }]
+                    model: db.Models.FactionRank,
+                    as: "ranks",
+                },
+                {
+                    model: db.Models.FactionClothesRank,
+                    as: "clothesRanks",
+                },
+                {
+                    model: db.Models.FactionItemRank,
+                    as: "itemRanks",
+                },
+            ],
+            order: ['id']
         });
-        this.factions = dbFactons;
-        console.log(`[FACTIONS] Организации загужены (${dbFactons.length} шт.)`);
+        dbFactions.forEach(faction => {
+            faction.ranks.sort((a, b) => {
+                return a.id - b.id;
+            });
+            faction.clothesRanks.sort((a, b) => {
+                return a.id - b.id;
+            });
+            faction.itemRanks.sort((a, b) => {
+                return a.id - b.id;
+            });
+        });
+        this.factions = dbFactions;
+        console.log(`[FACTIONS] Организации загужены (${dbFactions.length} шт.)`);
     },
     initFactionMarkers() {
         for (var i = 0; i < this.factions.length; i++) {
@@ -87,13 +114,15 @@ module.exports = {
         var pos = new mp.Vector3(faction.x, faction.y, faction.z - 1);
 
         this.markers.push(mp.markers.new(1, pos, 0.5, {
-            color: [255, 187, 0, 70]
+            color: [255, 187, 0, 70],
+            dimension: faction.d
         }));
         this.blips.push(mp.blips.new(faction.blip, pos, {
             color: faction.blipColor,
             name: faction.name,
             shortRange: 10,
-            scale: 1
+            scale: 1,
+            dimension: faction.d
         }));
     },
     createWarehouseMarker(faction) {
@@ -102,10 +131,11 @@ module.exports = {
         var pos = new mp.Vector3(faction.wX, faction.wY, faction.wZ - 1);
 
         var warehouse = mp.markers.new(1, pos, 0.5, {
-            color: [0, 187, 255, 70]
+            color: [0, 187, 255, 70],
+            dimension: faction.wD
         });
 
-        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, warehouse.dimension);
         colshape.onEnter = (player) => {
             if (player.vehicle) return;
 
@@ -125,6 +155,7 @@ module.exports = {
                 los: false,
                 font: 0,
                 drawDistance: 10,
+                dimension: warehouse.dimension
             });
         this.warehouses.push(warehouse);
     },
@@ -132,11 +163,13 @@ module.exports = {
         var pos = new mp.Vector3(faction.sX, faction.sY, faction.sZ - 1);
 
         var storage = mp.markers.new(1, pos, 0.5, {
-            color: [0, 187, 255, 70]
+            color: [0, 187, 255, 70],
+            dimension: faction.sD
         });
+        storage.isOpen = true;
         this.storages.push(storage);
 
-        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, storage.dimension);
         colshape.onEnter = (player) => {
             if (player.vehicle) return;
             if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
@@ -157,14 +190,15 @@ module.exports = {
         var pos = new mp.Vector3(faction.hX, faction.hY, faction.hZ - 1);
 
         var holder = mp.markers.new(1, pos, 0.5, {
-            color: [0, 187, 255, 70]
+            color: [0, 187, 255, 70],
+            dimension: faction.hD
         });
         holder.inventory = {
             items: {}, // предметов игроков в шкафе
         };
         this.holders.push(holder);
 
-        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5);
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, holder.dimension);
         colshape.onEnter = (player) => {
             if (player.vehicle) return;
             if (player.character.factionId != faction.id) return notifs.error(player, `Отказано в доступе`, faction.name);
@@ -245,6 +279,20 @@ module.exports = {
     getBlip(id) {
         return this.blips[id - 1];
     },
+    getBlipsPos(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        if (!faction) return null;
+        var positions = {
+            "holder": this.getHolder(faction.id).position,
+            "storage": this.getStorage(faction.id).position,
+            "warehouse": this.getWarehouse(faction.id).position,
+            "blipColor": faction.blipColor
+        };
+        positions.holder.d = this.getHolder(faction.id).dimension;
+        positions.storage.d = this.getStorage(faction.id).dimension;
+        positions.warehouse.d = this.getWarehouse(faction.id).dimension;
+        return positions;
+    },
     getFactionName(player) {
         if (!player.character.factionId) return null;
         return this.getFaction(player.character.factionId).name;
@@ -286,6 +334,22 @@ module.exports = {
         }
         return names;
     },
+    getRanks(faction) {
+        if (!faction) return null;
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction.ranks;
+    },
+    getClientRanks(faction) {
+        if (!faction) return null;
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction.ranks.map(x => {
+            return {
+                name: x.name,
+                rank: x.rank,
+                pay: x.pay
+            }
+        });
+    },
     setLeader(faction, player) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         var character = player.character;
@@ -295,7 +359,7 @@ module.exports = {
         character.save();
 
         player.setVariable("factionId", character.factionId);
-        player.call(`factions.faction.set`, [character.factionId]);
+        player.call(`factions.faction.set`, [character.factionId, this.getClientRanks(faction), this.getBlipsPos(faction)]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isGovernmentFaction(faction)) mp.events.call(`mapCase.gover.init`, player);
         else if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
@@ -306,10 +370,11 @@ module.exports = {
 
         mp.events.call(`player.faction.changed`, player, oldVal);
     },
-    isLeader(player) {
-        if (!player.character.factionId) return false;
+    isLeader(player, factionId = null) {
+        if (!factionId) factionId = player.character.factionId;
+        if (!factionId) return false;
 
-        var maxRank = this.getMaxRank(player.character.factionId);
+        var maxRank = this.getMaxRank(factionId);
         return player.character.factionRank == maxRank.id;
     },
     setBlip(faction, type, color) {
@@ -337,7 +402,7 @@ module.exports = {
         character.save();
 
         player.setVariable("factionId", character.factionId);
-        player.call(`factions.faction.set`, [character.factionId]);
+        player.call(`factions.faction.set`, [character.factionId, this.getClientRanks(faction), this.getBlipsPos(faction)]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isGovernmentFaction(faction)) mp.events.call(`mapCase.gover.init`, player);
         else if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
@@ -364,7 +429,7 @@ module.exports = {
         character.save();
 
         player.setVariable("factionId", character.factionId);
-        player.call(`factions.faction.set`, [null]);
+        player.call(`factions.faction.set`, [null, []]);
         player.call(`mapCase.enable`, [false]);
 
         mp.events.call(`player.faction.changed`, player, oldVal);
@@ -405,6 +470,15 @@ module.exports = {
             members.push(rec);
         });
         return members;
+    },
+    getVehicles(player) {
+        var vehicles = [];
+        mp.vehicles.forEach(veh => {
+            if (!veh.db || veh.db.key != 'faction') return;
+            if (veh.db.owner != player.character.factionId) return;
+            vehicles.push(veh);
+        });
+        return vehicles;
     },
     setRank(player, rank) {
         var character = player.character;
@@ -466,6 +540,10 @@ module.exports = {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         return faction && (faction.id >= 1 && faction.id <= 7);
     },
+    isCrimeFaction(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        return faction && (faction.id >= 8 && faction.id <= 14);
+    },
     isBandFaction(faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);
         return faction && (faction.id >= 8 && faction.id <= 11);
@@ -493,6 +571,7 @@ module.exports = {
         if (!player.insideWarehouse) return notifs.error(player, `Вы далеко`, header);
         var haveBox = player.hasAttachment("ammoBox") || player.hasAttachment("medicinesBox");
         if (haveBox) return notifs.error(player, `[S] Нельзя нести больше`, header);
+        if (inventory.getHandsItem(player)) return notifs.error(player, `Освободите руки`, header);
         player.addAttachment(type + "Box");
     },
     putBox(player) {
@@ -551,7 +630,7 @@ module.exports = {
     sayRadio(player, text) {
         var factionId = player.character.factionId;
         if (!factionId) return notifs.error(player, `Вы не состоите в организации`, `Рация`);
-        if (!this.isStateFaction(factionId)) return notifs.error(player, `Вы не в гос. структуре`, `Рация`);
+        // if (!this.isStateFaction(factionId)) return notifs.error(player, `Вы не в гос. структуре`, `Рация`);
 
         var rank = this.getRankById(factionId, player.character.factionRank);
         mp.players.forEach((rec) => {
@@ -570,17 +649,18 @@ module.exports = {
         var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60 % 60);
         if (minutes < this.payMins) return notifs.warning(player, `Зарплата не получена из-за низкой активности`, faction.name);
 
-        if (this.isBandFaction(faction) || this.isMafiaFaction(faction)) {
+        if (this.isMafiaFaction(faction)) {
             if (faction.cash < pay) return notifs.error(player, `В общаке недостаточно средств для получения зарплаты`, faction.name);
 
             // TODO: не многовато запросов в БД получится?
             faction.cash -= pay;
             faction.save();
-        }
+        } else if (this.isBandFaction(faction)) pay += parseInt(bands.bandZonesPrice * bands.getPowerBand(faction.id));
 
+        if (!pay) return;
         money.addMoney(player, pay, (res) => {
             if (!res) return console.log(`[factions] Ошибка выдачи ЗП для ${player.name}`);
-            notifs.info(player, `Зарплата: $${pay}`, faction.name);
+            notifs.info(player, `Получена зарплата`, faction.name);
         }, `Зарплата организации ${faction.name}`);
     },
     fullDeleteItems(owner, faction) {
@@ -640,5 +720,33 @@ module.exports = {
 
         if (!count) return;
         notifs.warning(player, `Предмет из шкафа потеряны (${count} шт.)`, `Организация`);
+    },
+    respawnVehicles(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+
+        var start = new Date();
+        mp.vehicles.forEach(veh => {
+            if (!veh.db) return;
+            if (!veh.lastPlayerTime) return;
+            if (veh.db.key == 'private' || veh.db.key == 'market') return;
+            if (start.getTime() - veh.lastPlayerTime < this.vehWaitSpawn) return;
+            if (vehicles.getOccupants(veh).length) return;
+
+            var spawnPos = new mp.Vector3(veh.db.x, veh.db.y, veh.db.z);
+            var vehPos = veh.position;
+            var dist = utils.vdist(spawnPos, vehPos);
+            var isDead = vehicles.isDead(veh);
+            if (dist > 10 || isDead) {
+                vehicles.respawn(veh);
+            }
+        });
+    },
+    setVehicleMinRank(veh, rank) {
+        if (!veh.db.minRank) veh.db.minRank = db.Models.FactionVehicleRank.build({
+            vehicleId: veh.db.id,
+            rank: rank
+        });
+        veh.db.minRank.rank = rank;
+        veh.db.minRank.save();
     },
 };

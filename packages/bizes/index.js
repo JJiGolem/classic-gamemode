@@ -2,8 +2,8 @@
 
 let fs = require('fs');
 
-let bizes = new Array();
-let bizesModules = new Array();
+let bizes = [];
+let bizesModules = [];
 
 /// biz types
 /// 0 - АЗС
@@ -14,6 +14,9 @@ let bizesModules = new Array();
 /// 5 - Магазин оружия
 /// 6 - Парикмахерская
 /// 7 - Магазин масок
+/// 8 - Тату-салон
+/// 9 - Los Santos Customs
+/// 10 - Клубы
 
 
 let utils;
@@ -38,12 +41,11 @@ let getBizByCharId = function(characterId) {
 };
 let getBizByPlayerPos = function(player) {
     return bizes.find(x => player.dist(new mp.Vector3(x.info.x, x.info.y, x.info.z)) <= 10);
-}
+};
 let getDateDays = function(date) {
-    let dateNowStringArray = new Date().toLocaleDateString().split('-');
-    let dateStringArray = date.toLocaleDateString().split('-');
-    let dateNow = new Date(dateNowStringArray[0], dateNowStringArray[1], dateNowStringArray[2]);
-    date = new Date(dateStringArray[0], dateStringArray[1], dateStringArray[2]);
+    let dateNow = new Date();
+    dateNow = new Date(dateNow.getFullYear(), dateNow.getMonth(), dateNow.getDate());
+    date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     return Math.ceil(Math.abs(date.getTime() - dateNow.getTime()) / (1000 * 3600 * 24));
 };
 let getBizRent = function(biz) {
@@ -101,22 +103,40 @@ let getBizInfoForApp = function(biz) {
     if (bizesModules[biz.info.type] == null) return null;
     let minMultiplier = bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
     let maxMultiplier = bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
-    return {
-        id: biz.info.id,
-        name: biz.info.name,
-        type: getTypeName(biz.info.type),
-        cashBox: biz.info.cashBox,
-        pos: [biz.info.x, biz.info.y, biz.info.z],
-        days: getDateDays(biz.info.date),
-        rent: getBizRent(biz),
-        resourcesMax: biz.info.productsMaxCount,
-        resources: biz.info.productsCount,
-        price: biz.info.price,
-        statistics: biz.info.BizStatistics,
-        order: { productsCount: biz.info.productsOrder, productsPrice: biz.info.productsOrderPrice },
-        resourcePriceMin: bizesModules[biz.info.type].productPrice * minMultiplier,
-        resourcePriceMax: bizesModules[biz.info.type].productPrice * maxMultiplier
-    };
+    if (bizesModules[biz.info.type].business.isFactionOwner) {
+        return {
+            id: biz.info.id,
+            name: biz.info.name,
+            type: getTypeName(biz.info.type),
+            pos: [biz.info.x, biz.info.y, biz.info.z],
+            resourcesMax: biz.info.productsMaxCount,
+            resources: biz.info.productsCount,
+            statistics: biz.info.BizStatistics,
+            order: biz.info.productsOrder && { productsCount: biz.info.productsOrder, productsPrice: biz.info.productsOrderPrice },
+            resourcePriceMin: bizesModules[biz.info.type].productPrice * minMultiplier,
+            resourcePriceMax: bizesModules[biz.info.type].productPrice * maxMultiplier,
+            improvements: []
+        };
+    }
+    else {
+        return {
+            id: biz.info.id,
+            name: biz.info.name,
+            type: getTypeName(biz.info.type),
+            cashBox: biz.info.cashBox,
+            pos: [biz.info.x, biz.info.y, biz.info.z],
+            days: getDateDays(biz.info.date),
+            rent: getBizRent(biz),
+            resourcesMax: biz.info.productsMaxCount,
+            resources: biz.info.productsCount,
+            price: biz.info.price,
+            statistics: biz.info.BizStatistics,
+            order: biz.info.productsOrder && { productsCount: biz.info.productsOrder, productsPrice: biz.info.productsOrderPrice },
+            resourcePriceMin: bizesModules[biz.info.type].productPrice * minMultiplier,
+            resourcePriceMax: bizesModules[biz.info.type].productPrice * maxMultiplier,
+            improvements: []
+        };
+    }
 };
 let getBizInfoForBank = function(biz) {
     if (biz == null) return null;
@@ -132,6 +152,12 @@ let getBizInfoForBank = function(biz) {
 };
 let getResourceName = function(type) {
     return bizesModules[type].business.productName;
+};
+let getResourcePrice = function(type) {
+    return bizesModules[type].productPrice;
+};
+let getResourcePos = function (type) {
+    return {x: 2703.896728515625, y: 1568.430419921875, z: 24.52433967590332};
 };
 let getTypeName = function(type) {
     return bizesModules[type].business.name;
@@ -161,7 +187,7 @@ let bizUpdateCashBox = async function(id, money) {
             bizId: biz.info.id,
             date: new Date(),
             money: bizMoney
-        }
+        };
         currentDay = await db.Models.BizStatistics.create(currentDay);
         biz.info.BizStatistics.unshift(currentDay);
     } else {
@@ -169,8 +195,8 @@ let bizUpdateCashBox = async function(id, money) {
         currentDay.save();
     }
     await biz.info.save();
-    let player = mp.players.toArray().find(player => player && player.character && player.character.id == biz.info.characterId);
-    player != null && player.call("biz.cashbox.update", [biz.info.cashBox]);
+    let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id === biz.info.characterId);
+    player != null && player.call("biz.app.update", [biz.info.cashBox, biz.info.productsCount]);
 };
 let addProducts = async function(id, count) {
     let biz = getBizById(id);
@@ -190,7 +216,7 @@ let removeProducts = async function(id, count) {
         let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
         let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
         let countOrder = biz.info.productsMaxCount -  biz.info.productsCount;
-        if (await createOrder(biz, countOrder, parseInt(((max + min) / 2) * countOrder)) != 1) console.log("[BIZES] Auto creating order error");
+        if (await createOrder(biz, countOrder, parseInt(((max + min) / 2) * countOrder)) !== 1) console.log("[BIZES] Auto creating order error");
     }
     return true;
 };
@@ -205,17 +231,17 @@ let createOrder = async function(biz, count, price) {
     carrier != null && carrier.addBizOrder(biz);
     await biz.info.save();
     return 1;
-}
+};
 let destroyOrder = async function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
     if (!biz.isOrderTaken) return false;
     biz.info.productsOrder = null;
     biz.info.productsOrderPrice = null;
-    carrier != null && carrier.removeBizOrder(biz.info.id);
+    carrier != null && carrier.removeBizOrderByBizId(biz.info.id);
     await biz.info.save();
     return true;
-}
+};
 let getOrder = function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
@@ -224,7 +250,7 @@ let getOrder = function(id) {
     let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
     player != null && player.call("biz.order.take", [true]);
     return true;
-}
+};
 let dropOrder = function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
@@ -233,7 +259,7 @@ let dropOrder = function(id) {
     let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
     player != null && player.call("biz.order.take", [false]);
     return true;
-}
+};
 let readyOrder = async function(id, productsNumber) {
     let biz = getBizById(id);
     if (biz == null) return null;
@@ -260,12 +286,12 @@ let readyOrder = async function(id, productsNumber) {
         biz.info.productsOrder = null;
         biz.info.productsOrderPrice = null;
     }
-    
+
     await biz.info.save();
     let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
     player != null && player.call("biz.order.complete", [addedProducts]);
     return {productsOrder: biz.info.productsOrder, productsOrderPrice: biz.info.productsOrderPrice, pay: pay};
-}
+};
 
 module.exports = {
     maxProductPriceMultiplier: maxProductPriceMultiplier,
@@ -282,7 +308,7 @@ module.exports = {
         carrier = call("carrier");
 
         for (let file of fs.readdirSync(path.dirname(__dirname))) {
-            if (file != 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname) + "/" + file + '/index.js')) {
+            if (file !== 'base' && !ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname) + "/" + file + '/index.js')) {
                 let objects = require('../' + file + '/index');
                 if (objects.business != null && objects.business.type != null && objects.business.name != null && objects.business.productName != null && objects.rentPerDayMultiplier != null && objects.productPrice != null) {
                     bizesModules[objects.business.type] = call(file);
@@ -297,11 +323,12 @@ module.exports = {
         let loadedCount = 0;
         for (let i = 0; i < bizesInfo.length; i++) {
             if (!bizesModules[bizesInfo[i].type]) continue;
+
             let biz = await this.addBiz(bizesInfo[i]);
             setTimer(biz);
             loadedCount++;
         }
-        mp.events.call("biz.done");
+        mp.events.call("bizes.done");
         console.log("[BIZES] " + loadedCount + " bizes loaded");
     },
     async createBiz(name, price, type, position) {
@@ -327,12 +354,15 @@ module.exports = {
         console.log("[BIZES] added new biz");
     },
     isHaveBiz(characterId) {
-        return bizes.findIndex(x => x.info.characterId == characterId) != -1;
+        return bizes.findIndex(x => x.info.characterId === characterId) !== -1;
     },
     async addBiz(bizInfo) {
         let colshape = mp.colshapes.newSphere(bizInfo.x, bizInfo.y, bizInfo.z, 4.0);
+        let colshapeOrder = mp.colshapes.newSphere(bizInfo.x, bizInfo.y, bizInfo.z, 20.0);
         colshape.isBiz = true;
         colshape.bizId = bizInfo.id;
+        colshapeOrder.isOrderBiz = true;
+        colshapeOrder.bizId = bizInfo.id;
         bizInfo.BizStatistics = bizInfo.BizStatistics.sort((x, y) => {
             if (x.date.getTime() < y.date.getTime()) {
                 return 1;
@@ -344,9 +374,10 @@ module.exports = {
         });
         bizes.push({
             colshape: colshape,
+            colshapeOrder: colshapeOrder,
             info: bizInfo
         });
-        if (bizInfo.BizStatistics.length != 0) {
+        if (bizInfo.BizStatistics.length !== 0) {
             if (bizInfo.BizStatistics[0].date.toLocaleDateString() != new Date().toLocaleDateString()) {
                 await bizUpdateCashBox(bizInfo.id, 0);
             }
@@ -381,6 +412,8 @@ module.exports = {
     getBizByPlayerPos: getBizByPlayerPos,
     getTypeName: getTypeName,
     getResourceName: getResourceName,
+    getResourcePrice: getResourcePrice,
+    getResourcePos: getResourcePos,
     getRandomDate: getRandomDate,
     getBizInfoForApp: getBizInfoForApp,
     getBizInfoForBank: getBizInfoForBank,
@@ -393,7 +426,7 @@ module.exports = {
         return getBizById(bizId).info.factionId;
     },
     setFactionId(bizId, factionId) {
-        let biz = getBizById(bizId)
+        let biz = getBizById(bizId);
         if (biz == null) return;
         biz.info.factionId = factionId;
         biz.info.save();
@@ -402,10 +435,10 @@ module.exports = {
         return bizes.length;
     },
     getBizesByFactionId(factionId) {
-        return bizes.filter(x => x.info.factionId == factionId);
+        return bizes.filter(x => x.info.factionId === factionId);
     },
     getBizesForBizWar(factionId) {
-        return bizes.filter(x => x.info.factionId != factionId).map(x => {
+        return bizes.filter(x => x.info.factionId !== factionId && x.info.type != 10).map(x => {
             return {
                 id: x.info.id,
                 name: x.info.name,
@@ -417,11 +450,11 @@ module.exports = {
         return bizes.length;
     },
     getNearBiz(player, range = 10) {
-        var nearBiz;
-        var minDist = 99999;
+        let nearBiz;
+        let minDist = 99999;
         bizes.forEach(biz => {
-            var bizPos = new mp.Vector3(biz.info.x, biz.info.y, biz.info.z);
-            var distance = player.dist(bizPos);
+            let bizPos = new mp.Vector3(biz.info.x, biz.info.y, biz.info.z);
+            let distance = player.dist(bizPos);
             if (distance < range && distance < minDist) {
                 nearBiz = biz;
                 minDist = distance;
@@ -431,7 +464,7 @@ module.exports = {
     },
     // получить бизнесы с заказами
     getOrderBizes() {
-        var list = [];
+        let list = [];
         bizes.forEach(biz => {
             if (!biz.info.productsOrder || !biz.info.productsOrderPrice) return;
             list.push(biz);
@@ -458,7 +491,10 @@ module.exports = {
     getBizParameters(charId, id) {
         let biz = getBizById(id);
         if (biz == null) return null;
-        if (biz.info.characterId != charId) return null;
+        if (!bizesModules[biz.info.type].business.isFactionOwner) {
+            if (biz.info.characterId !== charId) return null;
+        }
+
         let params = bizesModules[biz.info.type].getBizParamsById(biz.info.id);
         if (params == null) return null;
         return {bizId: biz.info.id, params: params};
@@ -466,7 +502,7 @@ module.exports = {
     setBizParameters(charId, bizParameters) {
         let biz = getBizById(bizParameters.bizId);
         if (biz == null) return false;
-        if (biz.info.characterId != charId) return false;
+        if (biz.info.characterId !== charId) return false;
         bizParameters.params.forEach(param => {
             bizesModules[biz.info.type].setBizParam(bizParameters.bizId, param.key, param.value);
         });
@@ -494,9 +530,9 @@ module.exports = {
     async setBizesTypeMaxProducts(type, amount) {
         for (let index = 0; index < bizes.length; index++) {
             let biz = bizes[index];
-            if (biz.info.type != type) continue;
+            if (biz.info.type !== type) continue;
             biz.info.productsMaxCount = amount;
             await biz.info.save();
         }
     },
-}
+};

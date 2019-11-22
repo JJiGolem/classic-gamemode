@@ -30,7 +30,7 @@ module.exports = {
             }
         }
 
-        var ban = await db.Models.Ban.findOne({
+        let ban = await db.Models.Ban.findOne({
             where: {
                 [Op.or]: {
                     ip: player.id,
@@ -109,7 +109,9 @@ module.exports = {
 
         player.account = account;
         /// Вход в аккаунт выполнен успешно
-        player.call('auth.login.result', [7]);
+        player.call('auth.login.result', [7, {
+            donate: player.account.donate
+        }]);
         mp.events.call('auth.done', player);
     },
     'auth.register': async (player, data) => {

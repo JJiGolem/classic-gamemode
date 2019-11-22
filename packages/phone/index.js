@@ -1,6 +1,6 @@
 "use strict";
 
-let phoneNumbers = new Array();
+let phoneNumbers = [];
 let utils;
 let houseServise;
 let bizService;
@@ -36,13 +36,13 @@ module.exports = {
         if (player.phone != null) jsonPhone = player.phone.toJSON();
 
         let houses = [];
-        if (houseServise) {
+        if (!houseServise.isEmpty) {
             let house = houseServise.getHouseByCharId(player.character.id);
             houses = house != null ? [houseServise.getHouseInfoForApp(house)] : [];
         }
 
         let bizes = [];
-        if (bizService) {
+        if (!bizService.isEmpty) {
             let biz = bizService.getBizByCharId(player.character.id);
             if (biz != null) {
                 let bizInfo = bizService.getBizInfoForApp(biz);
@@ -51,7 +51,7 @@ module.exports = {
         }
 
         let apps = [];
-        if (player.character.job == 2) {
+        if (player.character.job === 2) {
             apps.push("taxi");
         }
 
@@ -83,11 +83,11 @@ module.exports = {
         else {
             phoneNumbers.push(newNumber);
         }
-        for (let mycontactCopyIndex = player.phone.PhoneContacts.findIndex(x => x.number == newNumber);
-            mycontactCopyIndex != -1;
-            mycontactCopyIndex = player.phone.PhoneContacts.findIndex(x => x.number == newNumber)) {
-                await player.phone.PhoneContacts[mycontactCopyIndex].destroy();
-                player.phone.PhoneContacts.splice(mycontactCopyIndex, 1);
+        for (let myContactCopyIndex = player.phone.PhoneContacts.findIndex(x => x.number == newNumber);
+            myContactCopyIndex != -1;
+            myContactCopyIndex = player.phone.PhoneContacts.findIndex(x => x.number == newNumber)) {
+                await player.phone.PhoneContacts[myContactCopyIndex].destroy();
+                player.phone.PhoneContacts.splice(myContactCopyIndex, 1);
         }
         let oldNumber = player.phone.number;
         player.phone.number = newNumber;
@@ -95,5 +95,8 @@ module.exports = {
         player.call("phone.contact.mine.update", [oldNumber, newNumber]);
         mp.events.call("player.phone.number.changed", player);
         return true;
+    },
+    addApp(player, appName, info) {
+        player.call('phone.app.add', [appName, info]);
     }
 };

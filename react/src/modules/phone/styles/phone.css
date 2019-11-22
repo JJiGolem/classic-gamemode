@@ -1,7 +1,25 @@
+/* @keyframes show-phone {
+    0% {
+        bottom: -50%;
+    }
+    100% {
+        bottom: 7%;
+    }
+}
+
+@keyframes hide-phone {
+    0% {
+        bottom: 7%;
+    }
+    100% {
+        bottom: -50%;
+    }
+} */
+
 #phone-form-react {
     font-family: bank-font;
     position: absolute;
-    bottom: 7%;
+    bottom: -50%;
     right: 3%;
     /*width: 16vw;*/
     /*height: 31.9vw;*/
@@ -14,6 +32,8 @@
     transform: scale(.9);
     overflow: hidden;
     color: #343c47;
+    display: none;
+    animation: show-phone .5s ease-in-out;
 }
 
 #phone-background-react {
@@ -60,7 +80,7 @@
     /*overflow-x: hidden;*/
     /* overflow: hidden; */
     /*overflow-y: hidden;*/
-    animation: show-react .1s ease-in-out;
+    /* animation: show-react .1s ease-in-out; */
 }
 
 .menu_panel-display-react {

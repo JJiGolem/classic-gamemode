@@ -23,7 +23,7 @@ mp.events.add({
                 mp.callCEFV(`selectMenu.notification = 'В закусочной кончились продукты'`);
                 break;
             case 4:
-                mp.callCEFV(`selectMenu.notification = '${data}'`);
+                mp.callCEFV(`selectMenu.notification = \`${data}\``);
                 break;
         }
     }

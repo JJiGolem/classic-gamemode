@@ -13,9 +13,9 @@ module.exports = {
     rentPerDayMultiplier: 0.01,
     minFuelPrice: 1,
     maxFuelPrice: 8,
-    init() {
+    async init() {
         bizes = call('bizes');
-        this.loadFuelStationsFromDB();
+        await this.loadFuelStationsFromDB();
     },
     async loadFuelStationsFromDB() {
         dbFuelStations = await db.Models.FuelStation.findAll();
@@ -85,22 +85,23 @@ module.exports = {
     getBizParamsById(id) {
         let station = dbFuelStations.find(x => x.bizId == id);
         if (!station) return;
-        let params = [
+        return [
             {
                 key: 'fuelPrice',
                 name: 'Цена топлива',
                 max: this.maxFuelPrice,
                 min: this.minFuelPrice,
-                current: station.fuelPrice
+                current: station.fuelPrice,
+                isInteger: true
             }
-        ]
-        return params;
+        ];
     },
     setBizParam(id, key, value) {
         let station = dbFuelStations.find(x => x.bizId == id);
         if (!station) return;
         station[key] = value;
         station.save();
+        if (key == 'fuelPrice') this.updateLabel(id);
     },
     getProductsAmount(id) {
         let station = dbFuelStations.find(x => x.id == id);

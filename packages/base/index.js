@@ -6,12 +6,13 @@ let exec = require('exec');
 let childProcess = require('child_process');
 
 const isBuild = mp.config.isBuild;
+let isInited = false;
 
 global.db = require('./db');
 global.ignoreModules = require('./ignoreModules');
 let ignoreClientModules = require('./ignoreClientModules');
-let activeClientModules = new Array();
-global.activeServerModules = new Array();
+let activeClientModules = [];
+global.activeServerModules = [];
 
 /// Подключение функций любого существующего, включенного модуля
 /// Если модуль существует, возвращаются его функции (те что в module.exports, в index.js)
@@ -40,36 +41,45 @@ global.call = (moduleName) => {
         return newObject;
     }
     return require(path.dirname(__dirname)+ "/" + moduleName + "/index.js");
-}
+};
 
 /// Функция, которая вызвается модулем, для указания того, что он инициализирован
 global.inited = (dirname) => {
     let path = dirname.split("\\");
-    mp.events.call('inited', path[path.length - 1]);
-}
+    let moduleName = path[path.length - 1];
+    modulesToLoad.splice(modulesToLoad.findIndex(x => x === moduleName), 1);
+    if (modulesToLoad.length === 0) {
+        if (isInited) throw new Error(`Сервер уже был проинициализирован. Попытка повторной инициализации от модуля ${moduleName}`);
+        isInited = true;
+        console.log("[BASE] Все модули загружены")
+        playersJoinPool.forEach(player => {
+            if (player == null) return;
+            if (!mp.players.exists(player)) return;
+            player.call('init', [activeClientModules]);
+        });
+    }
+};
 
 let modulesToLoad = [];
 let playersJoinPool = [];
 
-mp.events.add('inited', (moduleName) => {
-    modulesToLoad.splice(modulesToLoad.findIndex(x => x == moduleName), 1);
-    if (modulesToLoad.length == 0) {
-        playersJoinPool.forEach(player => {
-            if (player == null) return;
-            player.call('init', [activeClientModules]);
-        });
-    }
-});
-
 // Дебаг
 global.debug = (text) => {
     require('../terminal').debug(text);
-}
+};
+global.d = (text) => {
+    mp.players.forEach(rec => {
+        if (!rec.character) return;
+        require('../notifications').info(rec, text, `Server DEBUG-LOG`);
+    });
+};
 
 if (!isBuild) {
     require('../../scripts/dev').compile();
 } else {
+    console.log('START BUILD CLIENT-SIDE');
     childProcess.execSync('npm run build');
+    console.log('END BUILD CLIENT-SIDE');
 }
 
 /// Вызов подключения к БД, подключение всех модулей и вызов их инициализации
@@ -83,19 +93,18 @@ db.connect(function() {
             if (events["init"] != null) {
                 modulesToLoad.push(file);
             }
-        } 
+        }
     });
 
     fs.readdirSync(path.dirname(__dirname) + "/../client_packages").forEach(file => {
-        !new Array('base', 'index.js', '.listcache', 'browser', 'utils').includes(file) && !ignoreClientModules.includes(file) && activeClientModules.push(file);
+        !['base', 'index.js', '.listcache', 'browser', 'utils'].includes(file) && !ignoreClientModules.includes(file) && activeClientModules.push(file);
     });
 
     mp.events.call('init');
 });
 
-
-mp.events.add('playerJoin', (player) => {
-    if (modulesToLoad.length != 0) return playersJoinPool.push(player);
+mp.events.add('player.join', (player) => {
+    if (modulesToLoad.length !== 0) return playersJoinPool.push(player);
     player.call('init', [activeClientModules]);
 });
 

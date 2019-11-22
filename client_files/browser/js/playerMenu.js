@@ -101,6 +101,12 @@ let settingsmainWindowData = {
             pull: ["Выкл", "Вкл"],
             value: 0,
         },
+        ghetto: {
+            type: 'scroll',
+            head: 'Гетто/рекеты на карте',
+            pull: ["Выкл", "Вкл"],
+            value: 0,
+        },
         walking: {
             type: 'scroll',
             head: 'Походка',
@@ -491,6 +497,14 @@ let helpMessages = [
         answer: `Любой дом или бизнес (кроме фермы) можно оплатить в одном из отделений банка по всей карте.
         Чтобы оплатить ферму, нужно пополнить ее налоговый счет в меню управления фермой.`
     },
+    {
+        question: "Как скрыть чат и/или HUD?",
+        answer: `Чат можно скрыть нажатием клавиши F7, а худ - нажатием F5.`
+    },
+    {
+        question: "Как перезагрузить голосовой чат?",
+        answer: `Если вы не слышите других игроков или игроки не слышат вас, вы можете попробовать перезагрузить войс-чат нажатием клавиши F4.`
+    },
 ];
 
 var playerMenu = new Vue({
@@ -503,8 +517,8 @@ var playerMenu = new Vue({
         menuBar: menuBar,
         socialData: socialData,
         menuBarFocus: menuBar[0],
-        name: "Jonathan Rockfall", // API: Имя игрока
-        admin: 0,
+        name: "Cyrus Raider", // API: Имя игрока
+        admin: 1,
         factionId: 0,
         media: 0,
         coins: 1000, // API: СС
@@ -515,6 +529,7 @@ var playerMenu = new Vue({
         confirmation: null,
         codeMod: false,
         code: '',
+        longName: false,
     },
     computed: {
         blurMod() {
@@ -738,8 +753,8 @@ var playerMenu = new Vue({
             skill.value = data.exp;
 
             if (parseInt(skill.value) == parseInt(oldExp)) return;
-            if (parseInt(skill.value) > parseInt(oldExp)) prompt.show(`Навык '${skill.head}' повысился до ${skill.value}%`);
-            else prompt.show(`Навык '${skill.head}' понизился до ${skill.value}%`);
+            if (parseInt(skill.value) > parseInt(oldExp)) prompt.show(`Навык '${skill.head}' повысился до ${parseInt(skill.value)}%`);
+            else prompt.show(`Навык '${skill.head}' понизился до ${parseInt(skill.value)}%`);
         },
         setCash(cash) {
             statistics["cash"].value = cash;
@@ -777,6 +792,10 @@ var playerMenu = new Vue({
                 if (key == 'chatTimestamp') mp.events.call("setTimeChat", !!settings[key]);
                 else if (key == 'nicknames') mp.trigger(`nametags.show`, !!settings[key]);
                 else if (key == 'hudKeys') hud.keysShow = !!settings[key];
+                else if (key == 'ghetto') {
+                    mp.trigger(`bands.bandZones.show`, !!settings[key]);
+                    mp.trigger(`mafia.mafiaZones.show`, !!settings[key]);
+                }
             }
         },
         setEmail(email, confirm = 0) {
@@ -845,6 +864,12 @@ var playerMenu = new Vue({
         },
         codeMod(val) {
             if (val) this.code = '';
+        },
+        name(val) {
+            setTimeout(() => {
+                if (this.$refs.name)
+                    this.longName = this.$refs.name.offsetHeight > this.$refs.def.offsetHeight;
+            }, 100);
         }
     },
     filters: {
@@ -1034,19 +1059,22 @@ Vue.component('player-menu-donate-convert', {
             if (isNaN(this.price) || this.price <= 0) return 0;
             return this.price * this.coefficient;
         },
+        isEnable() {
+            return this.price && this.price != 0 && (this.price <= playerMenu.coins);
+        }
     },
     methods: {
         inputCheck(event) {
             let regex = new RegExp("[0-9]")
             if (!regex.test(event.key))
                 event.preventDefault();
-            if (this.price + event.key > playerMenu.coins) {
+            /*if (this.price + event.key > playerMenu.coins) {
                 this.price = playerMenu.coins;
                 event.preventDefault();
-            }
+            }*/
         },
         convert() {
-            if (!this.virtualCoins) return;
+            if (!this.isEnable) return;
             playerMenu.showConfirmWindow(
                 "Подтверждение действия",
                 `Вы действительно хотите ковертировать <br />
@@ -1377,6 +1405,6 @@ Vue.component('player-menu-settings-protection', {
     }*/
 });
 
-// playerMenu.show = true;
-
+//playerMenu.show = true;
+// playerMenu.name = "Looooooonnnnnng Naaaaaaammeeeeee";
 //playerMenu.showConfirmWindow("Head ex", "description <br /> description")

@@ -16,8 +16,8 @@ let taxiStation = {
 }
 
 const RENT_PRICE = 50;
-const PRICE_PER_KM = 30;
-const RESPAWN_TIMEOUT = 30000;
+const PRICE_PER_KM = 60;
+const RESPAWN_TIMEOUT = 120000;
 
 let orders = [];
 

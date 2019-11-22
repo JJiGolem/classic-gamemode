@@ -28,6 +28,7 @@
     <link rel="stylesheet" type="text/css" href="css/carSpecifications.css" />
     <link rel="stylesheet" type="text/css" href="css/check.css" />
     <link rel="stylesheet" type="text/css" href="css/inputWindow.css" />
+    <link rel="stylesheet" type="text/css" href="css/selectionWindow.css" />
     <link rel="stylesheet" type="text/css" href="css/acceptWindow.css" />
     <link rel="stylesheet" type="text/css" href="css/terminal.css" />
     <!-- <link rel="stylesheet" type="text/css" href="css/playersList.css" /> -->
@@ -39,6 +40,7 @@
     <link rel="stylesheet" type="text/css" href="css/timer.css" />
     <link rel="stylesheet" type="text/css" href="css/changelist.css" />
     <link rel="stylesheet" type="text/css" href="css/modal.css" />
+    <link rel="stylesheet" type="text/css" href="css/selectItems.css" />
     <script src="js/main.js"></script>
 
     <!-- development version, includes helpful console warnings -->
@@ -54,50 +56,77 @@
     <!-- ************************** VUE JS ************************** -->
     <!-- v-cloak в контейнерах VUE используется для того, что бы решить проблему мерцания UI при запуске -->
     <div v-cloak="v-cloak" id="hud" v-show="show">
-        <div class="server-online" v-show="showOnline">
-            <div class="content">
-                <img class="logo" src="img/logo.png" />
-                <p>Онлайн:
-                    {{ players }}
-                    /
-                    {{ maxPlayers }}</p>
-                <p v-if="build">{{ build }} <i class="fab fa-git-alt"></i></p>
-                <p v-if="branch && build">{{ branch }} <i class="fas fa-code-branch"></i></p>
+        <div v-show="keysShow && !selectMenu.show" class="keys">
+            <div v-show="isKeyShow(key.name)" v-for="key in keys" v-bind:key="key.key"><span v-html="key.key"></span>{{ key.name }}</div>
+        </div>
+        <div class="panel-right-top" v-show="!prompt.text">
+            <div class="info-logo">
+                <div class="info">
+                    <div v-if="build">Build: <span>{{ build }} ({{ branch }})</span></div>
+                    <div>Онлайн: <span>{{ players }}/{{ maxPlayers }}</span></div>
+                    <div>Ваш ID: <span>{{ playerId }}</span></div>
+                </div>
+                <div><img class="logo" src="img/logo.png" /></div>
             </div>
             <div class="wanted" v-if="wanted">
-                <img src="img/hud/star.svg" :style="{opacity: (wanted < 5)? 0.2 : 1}" />
-                <img src="img/hud/star.svg" :style="{opacity: (wanted < 4)? 0.2 : 1}" />
-                <img src="img/hud/star.svg" :style="{opacity: (wanted < 3)? 0.2 : 1}" />
-                <img src="img/hud/star.svg" :style="{opacity: (wanted < 2)? 0.2 : 1}" />
-                <img src="img/hud/star.svg" />
+                <svg :class="{ paint: wanted > 5 - n }" v-for="n in 5" viewBox="0 0 26 24"><path :d="star"/></svg>
+            </div>
+            <div class="player-state">
+                <img v-if="cold" src="img/hud/cold.svg" />
+                <img v-if="heat" src="img/hud/heat.svg" />
+            </div>
+            <div class="arrest" v-if="arrestTime > 0">
+                <div class="wrap">
+                    <svg>
+                        <circle :style="arrestProgressStyle"/>
+                    </svg>
+                    <img src="img/hud/jail.svg"/>
+                </div>
+                <div class="description">{{ arrestDescription }}</div>
             </div>
         </div>
-        <div v-show="keysShow && !selectMenu.show" class="keys">
-            <div v-for="key in keys"><span v-html="key.key"></span>{{ key.name }}</div>
-        </div>
-        <div class="money">
-            <div class="cash">
-                <img src="img/hud/cash.svg" />
-                $
-                {{ pretty(cash) }}
+        <div class="panel-right-bottom">
+            <div class="voice block">
+                <svg :class="{ on: voice }" viewBox="0 0 13 19" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6.72898 12.2246C8.46895 12.2246 9.85821 10.6324 9.82572 8.67313L9.74348 4.31009C9.71113 2.35894 8.27365 0.771667 6.53906 0.771667C4.80461 0.771667 3.41983 2.35894 3.45215 4.30807L3.51473 8.67525C3.54718 10.6324 4.98905 12.2246 6.72898 12.2246Z" />
+                    <path d="M12.2591 9.22286C12.2517 8.77101 11.9199 8.40479 11.5183 8.40479C11.1167 8.40479 10.7971 8.77101 10.8046 9.22286C10.8469 11.7715 9.04476 13.8462 6.78234 13.8622C6.77356 13.8619 6.76501 13.8608 6.75614 13.8608C6.74721 13.8608 6.73875 13.8619 6.72993 13.8622C4.46717 13.8463 2.59631 11.7715 2.55405 9.22286C2.54655 8.77101 2.21481 8.40479 1.81321 8.40479C1.41156 8.40479 1.09201 8.77101 1.0995 9.22286C1.15229 12.4063 3.31423 15.0438 6.05515 15.4459L6.08313 17.1331H4.48322C4.08158 17.1331 3.76203 17.4993 3.76952 17.9511C3.77701 18.4029 4.10871 18.7692 4.51036 18.7692H9.16499C9.56659 18.7692 9.88619 18.4029 9.8787 17.9511C9.87121 17.4993 9.53946 17.1331 9.13786 17.1331H7.53767L7.50969 15.4459C10.2374 15.0437 12.3119 12.4063 12.2591 9.22286Z" />
+                </svg>
+                <div class="symb">N</div>
             </div>
-            <div class="bank">
-                <img src="img/hud/credit-card.svg" />
-                $
-                {{ pretty(bank) }}
+            <div class="starvation block">
+                <div :class="['satiety', 'record', { red: satiety <= 10 } ]">
+                    <div><img src="img/hud/burger.svg"/></div>
+                    <div class="progress"><div :style="{ width: satiety+'%' }"></div></div>
+                    <div class="percent">{{ +satiety.toFixed(1) }}%</div>
+                </div>
+                <div :class="['thirst', 'record', { red: thirst <= 10 } ]">
+                    <div><img src="img/hud/glass.svg"/></div>
+                    <div class="progress"><div :style="{ width: thirst+'%' }"></div></div>
+                    <div class="percent">{{ +thirst.toFixed(1) }}%</div>
+                </div>
             </div>
-            <div class="time">{{ time }}</div>
+            <div class="money block">
+                <div class="cash">
+                    <img src="img/hud/cash.svg" />
+                    {{ pretty(cash) }}
+                    $
+                </div>
+                <div class="time">{{ time }}</div>
+                <div class="bank">
+                    <img src="img/hud/credit-card.svg" />
+                    {{ pretty(bank) }}
+                    $
+                </div>
+                <div class="date">{{ date }}</div>
+            </div>
         </div>
-        <div class="voice">
-            <img :src="(voice)? 'img/hud/voice-on.png' : 'img/hud/voice-off.png'" />
-        </div>
-        <div class="weather" v-bind:style="{left: leftWeather + 'px'}">
-            <div class="region">{{ region }}</div>
-            <div class="street">{{ street }}</div>
-            <div class="temperature">{{ temperature }}
-                C°</div>
-            <div class="city">{{ city }}</div>
-            <img :src="'img/weather/' + weather + '.svg'" />
+        <div class="weather block" v-bind:style="{left: leftWeather + 'px'}">
+            <div>
+                <div class="region">{{ region }}</div>
+                <div class="street">{{ street }}</div>
+                <div class="temperature">{{ temperature }}°C</div>
+                <img :src="'img/weather/' + weather + '.svg'" />
+            </div>
         </div>
     </div>
 
@@ -105,28 +134,39 @@
         <div class="text" v-html="text"></div>
     </div>
 
-    <div id="notifications" v-if="messages.length">
-        <div :class="notif.type" v-for="notif in messages">
-            <img :src="'img/notifs/' + notif.type + '.svg'" />
-            <div v-cloak="v-cloak" class="message">
-                <div class="header" v-if="notif.header">{{ notif.header }}</div>
-                {{ notif.text }}
+    <div id="notifications">
+        <transition-group name="notif" tag="div">
+            <div :class="[notif.type, 'notif-box']" v-for="notif, in messages" :key="notif.hash">
+                <img :src="'img/notifs/' + notif.img + '.svg'" />
+                <div v-cloak="v-cloak" class="message">
+                    <div class="header" v-if="notif.header">{{ notif.header }}</div>
+                    {{ notif.text }}
+                </div>
             </div>
-        </div>
+        </transition-group>
     </div>
 
     <div v-cloak id="offerDialog" v-if="dialog">
-        <div>
-            <div class="agree" @click="dialog.yes(); hide()">Y</div>
-            <div class="content">
-                <div class="header">Предложение</div>
-                <div class="message">
-                    {{ dialog.text }}
-                </div>
-                <div class="price" v-if="dialog.price">
-                    ${{ pretty(dialog.price) }}</div>
+        <div class="quick">
+            <div class="agree" @click="dialog.yes(); hide()">
+                <svg :class="{green: green}" width="37" height="37" viewBox="0 0 37 37">
+                    <circle  cx="18.5" cy="18.5" r="17.5" stroke-width="2"/>
+                    <circle class="fill" cx="18.5" cy="18.5" r="10.5" />
+                    <path d="M17.7816 25V20.014L12.5436 12.4H14.2716L18.5196 18.7L22.8036 12.4H24.4596L19.2216 19.996V25H17.7816Z" fill="white"/>
+                </svg>
             </div>
-            <div class="cancel" @click="dialog.no(); hide()">N</div>
+            <div class="content">
+                <div class="message" v-html="dialog.text"><span>Swift Dunhill</span> желает с вами познакомиться</div>
+                <!--<div class="price" v-if="dialog.price">
+                    ${{ pretty(dialog.price) }}</div>-->
+            </div>
+            <div class="cancel" @click="dialog.no(); hide()">
+                <svg :class="{red: red}" width="37" height="37" viewBox="0 0 37 37">
+                    <circle cx="18.5" cy="18.5" r="17.5" stroke-width="2"/>
+                    <circle class="fill" cx="18.5" cy="18.5" r="10.5"/>
+                    <path d="M13.1716 25V12.4H14.5036L22.4416 22.498V12.4H23.8276V25H22.6936L14.5576 14.668V25H13.1716Z" fill="white"/>
+                </svg>
+            </div>
         </div>
     </div>
 
@@ -145,54 +185,60 @@
         </div>
     </div>
 
-    <div v-cloak="v-cloak" id="characterInfo" v-if="show && i < characters.length">
-        <div class="header">Статистика персонажа</div>
-        <div class="content">
-            <div class="name">{{ characters[i].name.split(' ')[0] }}<br />{{ characters[i].name.split(' ')[1] }}</div>
-            <div class="money">
-                <div class="cash">
-                    <img src="img/hud/cash.svg" />
-                    $
-                    {{ pretty(characters[i].cash) }}
+    <div v-cloak="v-cloak" id="characterInfo" v-if="show">
+        <div class="info-box" v-if="i < characters.length">
+            <div class="header">Статистика персонажа</div>
+            <div class="content">
+                <div class="name">{{ characters[i].name.split(' ')[0] }}<br />{{ characters[i].name.split(' ')[1] }}</div>
+                <div class="money">
+                    <div class="cash">
+                        <img src="img/hud/cash.svg" />
+                        $
+                        {{ pretty(characters[i].cash) }}
+                    </div>
+                    <div class="bank">
+                        <img src="img/hud/credit-card.svg" />
+                        $
+                        {{ pretty(characters[i].bank) }}
+                    </div>
                 </div>
-                <div class="bank">
-                    <img src="img/hud/credit-card.svg" />
-                    $
-                    {{ pretty(characters[i].bank) }}
+                <table class="info">
+                    <tr>
+                        <td>Игровой статус:
+                            <div>{{ characters[i].status }}</div>
+                        </td>
+                        <td>Отыграно:
+                            <div>{{ characters[i].hours }}
+                                часов</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Организация:
+                            <div>{{ characters[i].faction }}</div>
+                        </td>
+                        <td>Профессия:
+                            <div>{{ characters[i].job }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Проживание:
+                            <div>{{ characters[i].house }}</div>
+                        </td>
+                        <td>Бизнес:
+                            <div>{{ characters[i].biz }}</div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="warns" v-show="characters[i].warns">
+                    <img src="img/characterInfo/warn.svg" />
+                    Предупреждений:
+                    {{ characters[i].warns }}
                 </div>
             </div>
-            <table class="info">
-                <tr>
-                    <td>Игровой статус:
-                        <div>{{ characters[i].status }}</div>
-                    </td>
-                    <td>Отыграно:
-                        <div>{{ characters[i].hours }}
-                            часов</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Организация:
-                        <div>{{ characters[i].faction }}</div>
-                    </td>
-                    <td>Профессия:
-                        <div>{{ characters[i].job }}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Проживание:
-                        <div>{{ characters[i].house }}</div>
-                    </td>
-                    <td>Бизнес:
-                        <div>{{ characters[i].biz }}</div>
-                    </td>
-                </tr>
-            </table>
-            <div class="warns" v-show="characters[i].warns">
-                <img src="img/characterInfo/warn.svg" />
-                Предупреждений:
-                {{ characters[i].warns }}
-            </div>
+        </div>
+        <div class="coins">
+            <div class="add-coins" v-if="showAddCoins" @click="addCoins()">Пополнить счёт</div>
+            <div class="panel">Ваш счёт: <span>{{ pretty(coins) }}</span><div class="coin-logo">cc</div></div></div>
         </div>
     </div>
 
@@ -201,6 +247,17 @@
             <div class="arrow" @click="left" :class="{disabled: leftArrowDisabled}">&lt;</div>
             <button @click="enter" :class="{disabled: enterDisabled}">Выбрать</button>
             <div class="arrow" @click="right" :class="{disabled: rightArrowDisabled}">&gt;</div>
+        </div>
+    </div>
+
+    <div v-cloak="v-cloak" id="characterAddSlot" v-if="show" :style="{opacity: 1}">
+        <div class="add-slot" :class="{step: oneSlot}">
+            <div>Стоимоcть услуги: <span>{{ price }}</span><div class="coin-logo">cc</div></div>
+            <div class="btn" @click="addSlot()">Добавить слот</div>
+        </div>
+        <div class="other" v-if="oneSlot">
+            <div class="or"><div>ИЛИ</div></div>
+            <div class="info"><div>Отыграйте <span>{{ hours }}</span> часов<br/>на вашем первом персонаже</div></div>
         </div>
     </div>
 
@@ -420,62 +477,73 @@
     </div>
 
     <div v-cloak id="speedometer" :class="{ noActive: !isActive }" v-if="isShow">
-        <svg class="scale" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="766.625" height="387.906" viewBox="0 0 766.625 387.906">
+        <!--<svg class="scale" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="766.625" height="387.906" viewBox="0 0 766.625 387.906">
             <path v-for="path in svgScalePaths" :class="{ fill: path.isFill }" :d="path.d" transform="translate(-116.688 -293.5)" />
-        </svg>
+        </svg>-->
         <div class="content">
             <div class="speed">
-                <div class="value">{{ compSpeed }}</div>
+                <div class="value">{{ speed }}</div>
                 <div class="unit">км/ч</div>
             </div>
             <div class="headlights">
-                <svg :class=" { white: (headlights && headlights != 3), yellow: (headlights == 3) }" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 492.031 492.031" width="512" height="512">
-                    <path d="M157.551,88.436c-87.313,0-157.881,70.853-157.55,158.2c0.33,86.55,71.85,156.96,159.44,156.96h73.83   c39.62-100.7,39.62-214.46,0-315.16H157.551z" />
-                    <path d="M265.371,88.436c18.48,50.56,27.83,103.46,27.83,157.58s-9.35,107.02-27.83,157.58h36.339   c6.278,0,11.922-3.898,14.075-9.795c34.668-94.968,34.668-200.602,0-295.57c-2.153-5.897-7.797-9.795-14.075-9.795H265.371z" />
-
-                    <path v-if="headlights > 1" v-for="path in svgLightPaths" :d="path.d" :style="(headlights == 2) ? path : ''" />
+                <svg viewBox="0 0 30 30" fill="none" :class="{ yellow: headlights == 3, white: headlights == 1 || headlights == 2 }">
+                    <path d="M23.5009 10.5005H20.183C18.2537 10.5005 17.2441 13.7702 17.2441 17C17.2441 20.2298 18.2537 23.4995 20.183 23.4995H23.5009C27.0846 23.4995 30.0003 20.5837 30.0003 17C30.0003 13.4163 27.0846 10.5005 23.5009 10.5005Z" />
+                    <path v-if="headlights == 3" d="M11.7162 16.3136H10.6865C10.3074 16.3136 10 16.621 10 17C10 17.3791 10.3074 17.6865 10.6865 17.6865H11.7162C12.0952 17.6865 12.4026 17.3791 12.4026 17C12.4026 16.621 12.0952 16.3136 11.7162 16.3136Z" />
+                    <path v-if="headlights > 0" d="M15.3772 16.3136H14.3476C13.9685 16.3136 13.6611 16.621 13.6611 17C13.6611 17.3791 13.9685 17.6865 14.3476 17.6865H15.3772C15.7564 17.6865 16.0638 17.3791 16.0638 17C16.0638 16.621 15.7564 16.3136 15.3772 16.3136Z" />
+                    <path v-if="headlights == 3" d="M11.6058 20.9769L10.5868 21.1261C10.2117 21.1806 9.95242 21.5293 10.0073 21.9046C10.0572 22.2459 10.3506 22.4915 10.6854 22.4915C10.7186 22.4915 10.7521 22.4892 10.786 22.4843L11.8049 22.3351C12.1799 22.2804 12.4393 21.9318 12.3845 21.5564C12.3294 21.1817 11.9798 20.9225 11.6058 20.9769Z" />
+                    <path v-if="headlights > 0" d="M15.2782 20.4396L14.2592 20.5887C13.8842 20.6434 13.6248 20.9919 13.6797 21.3674C13.7296 21.7086 14.0229 21.9542 14.3577 21.9542C14.3909 21.9542 14.4245 21.9519 14.4583 21.9469L15.4773 21.7978C15.8524 21.7431 16.1117 21.3945 16.0568 21.0191C16.0022 20.644 15.6533 20.3837 15.2782 20.4396Z" />
+                    <path v-if="headlights == 3" d="M10.5868 12.874L11.6058 13.0231C11.6396 13.0282 11.6732 13.0305 11.7063 13.0305C12.0412 13.0305 12.3344 12.7848 12.3845 12.4436C12.4394 12.0682 12.1799 11.7197 11.8049 11.665L10.7859 11.5158C10.4109 11.4612 10.0623 11.7203 10.0073 12.0953C9.95242 12.4708 10.2118 12.8193 10.5868 12.874Z" />
+                    <path v-if="headlights > 0" d="M14.2592 13.4113L15.2782 13.5604C15.312 13.5655 15.3456 13.5678 15.3787 13.5678C15.7135 13.5678 16.0068 13.3222 16.0568 12.9809C16.1117 12.6055 15.8524 12.2569 15.4773 12.2022L14.4583 12.0531C14.0842 11.9964 13.7347 12.2576 13.6797 12.6327C13.6248 13.0081 13.8842 13.3566 14.2592 13.4113Z" />
                 </svg>
+
             </div>
             <div class="lock">
-                <svg :class="svgLockPaths[lock].class" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 490.1 490.1">
+                <svg :class="svgLockPaths[lock].class" viewBox="0 0 16 20">
                     <path :d="svgLockPaths[lock].d" />
-                    <path d="M245.05,416.3c11.4,0,20.8-9.3,20.8-20.8v-54c0-11.4-9.3-20.8-20.8-20.8c-11.5,0-20.8,9.3-20.8,20.8v54C224.25,407,233.65,416.3,245.05,416.3z" />
                 </svg>
             </div>
             <div class="fuel">
-                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 384 384">
+                <svg viewBox="0 0 20 20" fill="none">
                     <defs>
                         <linearGradient id="fuel-gradient" x2="0" y2="1">
-                            <stop :offset="perFuel + '%'" style="stop-color: white"></stop>
-                            <stop :offset="perFuel + '%'" style="stop-color: #e1a030"></stop>
+                            <stop :offset="perFuel + '%'" style="stop-color: rgba(255, 255, 255, 0.2)"></stop>
+                            <stop :offset="perFuel + '%'" style="stop-color: #FFBC39"></stop>
+                        </linearGradient>
+                        <linearGradient id="charge-gradient" x2="0" y2="1">
+                            <stop :offset="perFuel + '%'" style="stop-color: rgba(255, 255, 255, 0.2)"></stop>
+                            <stop :offset="perFuel + '%'" style="stop-color: #367BE3"></stop>
                         </linearGradient>
                     </defs>
-                    <path fill="url(#fuel-gradient)" :d="svgFuelPath" />
+                    <path v-if="!isElectricCar" fill="url(#fuel-gradient)" d="M18.3557 4.7L18.3724 4.68333L14.2335 0.555573L13.0557 1.73333L15.4002 4.07776C14.3557 4.47776 13.6113 5.48333 13.6113 6.66667C13.6113 8.2 14.8557 9.44443 16.389 9.44443C16.7834 9.44443 17.1613 9.36109 17.5001 9.21109V17.2222C17.5002 17.8333 17.0002 18.3333 16.3891 18.3333C15.778 18.3333 15.278 17.8333 15.278 17.2222V12.2222C15.278 10.9945 14.2835 10 13.0557 10H11.9446V2.22224C11.9446 0.994427 10.9502 0 9.7224 0H3.05574C1.82792 0 0.833496 0.994427 0.833496 2.22224V20H11.9446V11.6667H13.6113V17.2222C13.6113 18.7556 14.8557 20 16.389 20C17.9223 20 19.1668 18.7556 19.1668 17.2222V6.66667C19.1668 5.9 18.8557 5.20557 18.3557 4.7ZM9.7224 7.77776H3.05574V2.22224H9.7224V7.77776ZM16.3891 7.77776C15.778 7.77776 15.278 7.27776 15.278 6.66667C15.278 6.05557 15.778 5.55557 16.3891 5.55557C17.0002 5.55557 17.5002 6.05557 17.5002 6.66667C17.5002 7.27776 17.0002 7.77776 16.3891 7.77776Z" />
+                    <path v-else fill="url(#charge-gradient)" d="M18.3557 4.7L18.3724 4.68333L14.2335 0.555573L13.0557 1.73333L15.4002 4.07776C14.3557 4.47776 13.6113 5.48333 13.6113 6.66667C13.6113 8.2 14.8557 9.44443 16.389 9.44443C16.7834 9.44443 17.1613 9.36109 17.5001 9.21109V17.2222C17.5002 17.8333 17.0002 18.3333 16.3891 18.3333C15.778 18.3333 15.278 17.8333 15.278 17.2222V12.2222C15.278 10.9945 14.2835 10 13.0557 10H11.9446V2.22224C11.9446 0.994427 10.9502 0 9.7224 0H3.05574C1.82792 0 0.833496 0.994427 0.833496 2.22224V20H11.9446V11.6667H13.6113V17.2222C13.6113 18.7556 14.8557 20 16.389 20C17.9223 20 19.1668 18.7556 19.1668 17.2222V6.66667C19.1668 5.9 18.8557 5.20557 18.3557 4.7ZM5.27792 16.6667V11.6667H3.05574L7.50016 3.33333V8.88891H9.7224L5.27792 16.6667ZM16.3891 7.77776C15.778 7.77776 15.278 7.27776 15.278 6.66667C15.278 6.05557 15.778 5.55557 16.3891 5.55557C17.0002 5.55557 17.5002 6.05557 17.5002 6.66667C17.5002 7.27776 17.0002 7.77776 16.3891 7.77776Z" />
                 </svg>
             </div>
-            <div class="fuel-unit">{{ fuel }} л</div>
+            <div class="fuel-unit">{{ fuel }}л</div>
             <div class="danger">
-                <svg :class="{ red: danger }" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512">
-                    <path :d="svgDangerPath" />
+                <svg :class="{ orange: danger }" viewBox="0 0 20 16" fill="none" >
+                    <path d="M19.735 7.64186L17.4907 5.938C17.2878 5.78393 17.016 5.75779 16.7876 5.87163C16.5599 5.98446 16.4157 6.21708 16.4157 6.47171V7.51427H15.7518V6.4606C15.7518 6.09051 15.4518 5.79043 15.0818 5.79043H13.748V3.30216C13.748 2.93199 13.4479 2.63199 13.078 2.63199H10.994V1.92078H11.555C11.925 1.92078 12.2251 1.62071 12.2251 1.25068C12.2251 0.880655 11.925 0.580719 11.555 0.580719H7.22625C6.85629 0.580719 6.55621 0.880655 6.55621 1.25068C6.55621 1.62071 6.85629 1.92078 7.22625 1.92078H7.78765V2.63199H5.19732C4.82729 2.63199 4.52722 2.93199 4.52722 3.30216V4.61006H3.21865C2.84855 4.61006 2.54855 4.91006 2.54855 5.28009V6.81289H1.34V4.91175C1.34 4.54172 1.03999 4.24172 0.669965 4.24172C0.299937 4.24165 0 4.54172 0 4.91168V11.9201C0 12.2902 0.299937 12.5901 0.670032 12.5901C1.04006 12.5901 1.34006 12.2901 1.34006 11.9201V10.0189H2.54868V11.5903C2.54868 11.9604 2.84869 12.2603 3.21878 12.2603H4.90375L7.26769 15.1716C7.39494 15.3282 7.58605 15.4192 7.78779 15.4192H15.082C15.452 15.4192 15.7519 15.119 15.7519 14.7491V13.8637H16.4158V14.7491C16.4158 15.0108 16.5681 15.2483 16.8057 15.3579C16.8953 15.399 16.9909 15.4191 17.0858 15.4191C17.2428 15.4191 17.3979 15.3638 17.5219 15.2577L19.7663 13.3342C19.9148 13.2067 20.0001 13.0209 20.0001 12.8253V8.17537C20 7.96611 19.9019 7.7685 19.735 7.64186Z" />
                 </svg>
+
             </div>
             <div class="left-arrow">
-                <svg :class="{ green: leftArrow }" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="0.736in" height="0.5in" viewBox="0 0 51.657 35.688">
-                    <path d="M52.581,9.487 L25.498,9.487 L25.498,0.248 L0.933,18.099 L25.498,35.949 L25.498,26.710 L52.581,26.710 L52.581,9.487 Z" />
+                <svg :class="{ green: leftArrow }" viewBox="0 0 24 18" fill="none" >
+                    <path d="M10.6955 17.7064C10.8824 17.6414 11.0044 17.4898 11.0044 17.3215L11.0044 12.7572L23.5002 12.7572C23.7761 12.7572 24 12.5706 24 12.3407L24 5.6762C24 5.44628 23.7761 5.25966 23.5002 5.25966L11.0043 5.25966L11.0043 0.677874C11.0043 0.509609 10.8823 0.35798 10.6964 0.293002C10.5095 0.228844 10.2945 0.263832 10.1516 0.382972L0.146906 8.6927C0.0529514 8.77099 -4.6153e-05 8.87681 -4.61578e-05 8.9876C-4.61626e-05 9.09838 0.0529514 9.20421 0.145921 9.2825L10.1506 17.6164C10.2936 17.7355 10.5085 17.7713 10.6955 17.7064Z" />
                 </svg>
             </div>
             <div class="right-arrow">
-                <svg :class="{ green: rightArrow }" xmlns="http://www.w3.org/2000/svg" width="51.657" height="35.688" viewBox="0 0 51.657 35.688">
-                    <path d="M683.418,679.71H710.5v9.239l24.565-17.85L710.5,653.248v9.24H683.418V679.71Z" transform="translate(-683.406 -653.25)" />
+                <svg :class="{ green: rightArrow }" viewBox="0 0 24 18" fill="none">
+                    <path d="M13.3045 0.293638C13.1176 0.358615 12.9956 0.510244 12.9956 0.678508L12.9956 5.2428L0.499848 5.2428C0.22394 5.2428 -5.38054e-07 5.42942 -5.28004e-07 5.65934L-2.36691e-07 12.3238C-2.26641e-07 12.5537 0.223941 12.7403 0.499848 12.7403L12.9957 12.7403L12.9957 17.3221C12.9957 17.4904 13.1177 17.642 13.3036 17.707C13.4905 17.7712 13.7055 17.7362 13.8484 17.617L23.8531 9.3073C23.947 9.22901 24 9.12319 24 9.0124C24 8.90162 23.947 8.79579 23.8541 8.7175L13.8494 0.383607C13.7064 0.264467 13.4915 0.228658 13.3045 0.293638Z" />
                 </svg>
+
             </div>
             <div class="bottom-panel">
                 <div class="road-perspective">
-                    <svg class="white" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 34.2 34.2">
-                        <path d="M25.243,0h-5.869l0.332,5.4h-4.984L15.096,0H9.228L0.725,34.2h12l0.607-8.774h7.604l0.539,8.774h12L25.243,0zM13.675,20.475l0.702-10.125h5.631l0.621,10.125H13.675z" />
+                    <svg class="white" viewBox="0 0 16 12" fill="none" >
+                        <path d="M15.7712 9.96479L12.1053 0.786878C12.0584 0.675505 11.9822 0.57882 11.8768 0.496853C11.7712 0.414702 11.6598 0.373718 11.5426 0.373718H8.56242C8.63854 0.373718 8.70594 0.401492 8.76454 0.457132C8.8231 0.512927 8.85534 0.578728 8.86128 0.654906L8.99319 2.34292C8.99907 2.42498 8.9757 2.49238 8.92314 2.54504C8.87024 2.59778 8.80583 2.62411 8.72956 2.62411H7.27023C7.19405 2.62411 7.12966 2.59778 7.07689 2.54504C7.02414 2.49241 7.00071 2.42498 7.00665 2.34292L7.13853 0.654906C7.14432 0.578728 7.1765 0.512927 7.23522 0.457132C7.29381 0.401585 7.36115 0.373718 7.43743 0.373718H4.45715C4.33996 0.373718 4.22859 0.414702 4.12307 0.496853C4.01764 0.578728 3.94152 0.675505 3.89456 0.786878L0.228565 9.96479C0.076178 10.3281 0 10.668 0 10.9846C0 11.4124 0.134774 11.6263 0.404415 11.6263H6.59337C6.51719 11.6263 6.45281 11.5985 6.4 11.5428C6.34725 11.487 6.32382 11.4213 6.32976 11.345L6.50552 9.09471C6.51137 9.01841 6.54361 8.95255 6.60221 8.89682C6.66077 8.84105 6.72824 8.81347 6.80441 8.81347H9.19549C9.27179 8.81347 9.33901 8.84105 9.39779 8.89682C9.45639 8.95255 9.48863 9.01841 9.49445 9.09471L9.67042 11.345C9.67642 11.4213 9.65271 11.487 9.60015 11.5428C9.54747 11.5985 9.48296 11.6263 9.40669 11.6263H15.5956C15.8651 11.6263 16 11.4124 16 10.9846C16 10.6682 15.9237 10.3282 15.7712 9.96479ZM9.32753 6.87902C9.33322 6.94941 9.30982 7.00798 9.25714 7.05478C9.20455 7.10177 9.14281 7.12517 9.07254 7.12517H6.92746C6.8571 7.12517 6.79545 7.10177 6.74283 7.05478C6.69002 7.00779 6.66662 6.9492 6.67244 6.87902V6.84383L6.88349 4.03085C6.88934 3.95464 6.92158 3.88874 6.98017 3.83304C7.03877 3.77734 7.1062 3.74954 7.18238 3.74954H8.8174C8.89371 3.74954 8.96114 3.77725 9.0197 3.83304C9.07827 3.88874 9.11054 3.95464 9.11645 4.03085L9.32743 6.84383V6.87902H9.32753Z" />
                     </svg>
+
                 </div>
-                <div class="mileage">{{ mileage }} км</div>
+                <div class="mileage">{{ mileage | split }} км</div>
 
             </div>
         </div>
@@ -489,119 +557,162 @@
         </div>
     </div>
 
-    <div id="inventory" v-show="show" :class="{spin: spin}" :style="{opacity: 1}">
-        <div class="environment">
+    <div id="inventory" v-show="show" :class="{spin: spin, 'non-environment': !environment.length || searchMode}" :style="{opacity: 1}">
+        <div class="environment" v-if="environment.length && !searchMode">
             <div class="container" v-for="place in environment" v-bind:key="place.header">
                 <div class="header" @click="place.showPockets = !place.showPockets" :class="{hidden: !place.showPockets}">
                     <div class="title">{{ place.header }} {{ (debug)? place.sqlId : "" }}</div>
                     <div>{{ +getPlaceWeight(place).toFixed(1) }} кг</div>
                 </div>
-                <div class="pockets" v-show="place.showPockets">
-                    <div class="items" v-for="pocket in place.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
-                        <div class="column" v-for="n in pocket.cols * pocket.rows" :key="n-1" :class="columnClass(n-1, pocket, place)" @mouseenter="columnMouseHandler(place, pocket, n-1, $event)"
-                            @mouseleave="columnMouseHandler(place, pocket, n-1, $event)">
-                            <div class="item" v-if="pocket.items[n-1]" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
-                                @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1].itemId)" :class="{dragging: pocket.items[n-1] == itemDrag.item}">
-                                <div class="count" v-if="pocket.items[n-1].params.count">{{ pocket.items[n-1].params.count }}</div>
-                                <div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>
-                                <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
+                <transition name="slide">
+                    <div class="pockets" v-show="place.showPockets">
+                        <div class="items" v-for="pocket in place.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
+                            <div class="column" v-for="n in pocket.cols * pocket.rows" :key="n-1" :class="columnClass(n-1, pocket, place)" @mouseenter="columnMouseHandler(place, pocket, n-1, $event)"
+                                @mouseleave="columnMouseHandler(place, pocket, n-1, $event)">
+                                <div class="item" v-if="pocket.items[n-1]" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
+                                    @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1])" :class="{dragging: pocket.items[n-1] == itemDrag.item, found: pocket.items[n-1].found }">
+                                    <div class="count" v-if="pocket.items[n-1].params.count && !pocket.items[n-1].found">{{ pocket.items[n-1].params.count }}</div>
+                                    <div class="eye" v-if="pocket.items[n-1].found"><img src="img/inventory/eye.svg" /></div>
+                                    <!--<div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>-->
+                                    <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
+                                    <div v-if="pocket.items[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope">
+                                        <div class="lds-rolling">
+                                            <div></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </transition>
             </div>
             <div class="empty" v-show="!environment.length">Без взаимодействия</div>
         </div>
         <div class="equipment">
             <div class="header">
-                <div class="title">Экипировка</div>
-                <img src="img/inventory/satiety.png" /><span class="satiety" :style="{color: valueColor(satiety)}">{{ Math.ceil(satiety) }}%</span>
-                <img src="img/inventory/thirst.png" /><span class="thirst" :style="{color: valueColor(thirst)}">{{ Math.ceil(thirst) }}%</span>
+                <div class="title">{{ equipmentTitle }}</div>
+                <!--<img src="img/inventory/satiety.png" /><span class="satiety" :style="{color: valueColor(satiety)}">{{ Math.ceil(satiety) }}%</span>
+                <img src="img/inventory/thirst.png" /><span class="thirst" :style="{color: valueColor(thirst)}">{{ Math.ceil(thirst) }}%</span>-->
                 <!-- <div>Голод <span class="satiety">{{ satiety }}</span>%</div> -->
                 <!-- <div>Жажда <span class="thirst">{{ thirst }}</span>%</div> -->
             </div>
             <div class="body-items">
-                <div class="column" :class="{focus: itemDrag.item && itemDrag.accessColumns.bodyFocus == n-1}" v-for="n in 13" @mouseenter="onBodyItemEnter(n-1)" @mouseleave="onBodyItemLeave(n-1)">
+                <div class="column" :class="{focus: itemDrag.item && itemDrag.accessColumns.bodyFocus == n-1, active: itemDrag.item && bodyList[n-1] && bodyList[n-1].includes(itemDrag.item.itemId)}" v-for="n in 13" @mouseenter="onBodyItemEnter(n-1)" @mouseleave="onBodyItemLeave(n-1)"
+                    :style="{backgroundImage: itemGradient(equipment[n-1], true) }">
                     <!-- <div class="item" v-if="equipment[n-1]" v-bind:style="{backgroundImage: 'url(' + urlItemImg(equipment[n-1].itemId) + ')'}">
                        <div class="count" v-if="equipment[n-1].params.count">{{ equipment[n-1].params.count }}</div>
                        <div class="health" v-if="equipment[n-1].params.health" v-bind:style="{top: 100 - equipment[n-1].params.health + '%'}"></div>
                        <div class="sqlid" v-if="debug">#{{ equipment[n-1].sqlId }}</div>
                    </div> -->
-                    <div class="item" v-if="equipment[n-1]" @mouseenter="itemMouseHandler(equipment[n-1], $event)" @mouseleave="itemMouseHandler(equipment[n-1], $event)" @mousemove="itemMouseHandler(equipment[n-1], $event)"
-                        @contextmenu="itemMouseHandler(equipment[n-1], $event)" :style="{backgroundImage: 'url('+urlItemImg(equipment[n-1].itemId)+')'}" @mousedown="itemMouseHandler(equipment[n-1], $event)"
+                    <div class="item" v-if="equipment[n-1] && !equipment[n-1].search" @mouseenter="itemMouseHandler(equipment[n-1], $event)" @mouseleave="itemMouseHandler(equipment[n-1], $event)" @mousemove="itemMouseHandler(equipment[n-1], $event)"
+                        @contextmenu="itemMouseHandler(equipment[n-1], $event)" :style="{backgroundImage: 'url('+urlItemImg(equipment[n-1].itemId)+')' }" @mousedown="itemMouseHandler(equipment[n-1], $event)"
                         :class="{dragging: equipment[n-1] == itemDrag.item}">
                         <div class="count" v-if="equipment[n-1].params.count">{{ equipment[n-1].params.count }}</div>
-                        <div class="health" v-if="equipment[n-1].params.health" v-bind:style="{top: 100 - equipment[n-1].params.health + '%', 'border-color': valueColor(equipment[n-1].params.health)}"></div>
+                        <!--<div class="health" v-if="equipment[n-1].params.health" v-bind:style="{top: 100 - equipment[n-1].params.health + '%', 'border-color': valueColor(equipment[n-1].params.health)}"></div>-->
                         <div class="sqlid" v-if="debug">#{{ equipment[n-1].sqlId }}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="playerInventory">
-            <div class="header">
-                <div class="title">Инвентарь</div>
-                <div>Тяжесть {{ +playerWeight.toFixed(1) }}%</div>
-            </div>
-            <div class="container" v-for="item in equipment" v-if="item.pockets" :class="{drag: itemDrag.item && itemDrag.item.sqlId == item.sqlId}">
-                <div class="header" @click="item.showPockets = !item.showPockets" :class="{hidden: !item.showPockets}">
-                    <div class="title">{{ item.params.name || itemsInfo[item.itemId].name }}</div>
-                    <div>{{ +getPlaceWeight(item).toFixed(1) }} кг</div>
-                </div>
-                <div class="pockets" v-show="item.showPockets">
-                    <div class="items" v-for="pocket in item.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
-                        <div class="column" v-for="n in pocket.cols * pocket.rows" :key="n-1" :class="columnClass(n-1, pocket, item)" @mouseenter="columnMouseHandler(item, pocket, n-1, $event)"
-                            @mouseleave="columnMouseHandler(item, pocket, n-1, $event)">
-                            <div class="item" v-if="pocket.items[n-1]" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
-                                @contextmenu="itemMouseHandler(pocket.items[n-1], $event)" @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1].itemId)" :class="{dragging: pocket.items[n-1] == itemDrag.item}">
-                                <div class="count" v-if="pocket.items[n-1].params.count">{{ pocket.items[n-1].params.count }}</div>
-                                <div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>
-                                <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
+                        <div v-if="equipment[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope">
+                            <div class="lds-rolling">
+                                <div></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="empty" v-show="!havePockets">Без карманов</div>
-        </div>
-        <div class="hands">
-            <div class="left-slot" v-bind:class="{busy: hands}">
-                <div class="item" v-if="hands && getItem(hands.sqlId)" v-bind:style="{backgroundImage: 'url(' + urlItemImg(hands.itemId) + ')'}">
-                    <div class="count" v-if="hands.params.count">{{ hands.params.count }}</div>
-                    <div class="health" v-if="hands.params.health" v-bind:style="{top: 100 - hands.params.health + '%', 'border-color': valueColor(hands.params.health)}"></div>
-                    <div class="sqlid" v-if="debug">#{{ hands.sqlId }}</div>
+            <div class="starvation" v-if="!searchMode">
+                <div :class="['satiety', 'record', { red: satiety <= 10 } ]">
+                    <div class="img"><img src="img/hud/burger.svg"/></div>
+                    <div class="progress"><div :style="{ width: satiety+'%' }"></div></div>
+                    <div class="percent">{{ +satiety.toFixed(1) }}%</div>
                 </div>
-                <img v-if="!hands" src="img/inventory/hand.png" />
-                <!-- <span v-if="!hands.left">в левой <br />руке</span> -->
-            </div>
-            <div class="right-slot" v-show="!hands" v-bind:class="{busy: hands}">
-                <!-- <div class="item" v-if="hands" v-bind:style="{backgroundImage: 'url(' + urlItemImg(hands.itemId) + ')'}">
-                    <div class="count" v-if="hands.params.count">{{ hands.params.count }}</div>
-                    <div class="health" v-if="hands.params.health" v-bind:style="{top: 100 - hands.params.health + '%', 'border-color': valueColor(hands.params.health)}"></div>
-                    <div class="sqlid" v-if="debug">#{{ hands.sqlId }}</div>
-                </div> -->
-                <!-- <span v-else>в правой <br />руке</span> -->
-                <img v-if="!hands" src="img/inventory/hand.png" />
+                <div :class="['thirst', 'record', { red: thirst <= 10 } ]">
+                    <div class="img"><img src="img/hud/glass.svg"/></div>
+                    <div class="progress"><div :style="{ width: thirst+'%' }"></div></div>
+                    <div class="percent">{{ +thirst.toFixed(1) }}%</div>
+                </div>
             </div>
         </div>
-        <div class="hotkeys" :class="{active: itemDrag.item && hotkeysList[itemDrag.item.itemId]}">
-            <div class="key" :class="{focus: itemDrag.item && itemDrag.accessColumns.hotkeyFocus == n}" v-for="n in 10" @mouseenter="onHotkeyItemEnter(n)" @mouseleave="onHotkeyItemLeave(n)">
-                <div class="item" v-if="hotkeys[n] && getItem(hotkeys[n].sqlId)" v-bind:style="{backgroundImage: 'url('+urlItemImg(hotkeys[n].itemId)+')'}">
-                    <span class="close" @click="unbindHotkey(n)">x</span>
-                    <span class="hotkey">{{ (n == 10)? 0 : n }}</span>
+        <div class="playerInventory">
+            <div class="header">
+                <div class="title">{{ searchMode && searchList.length ? 'Обыск...' : 'Инвентарь' }}</div>
+                <div>Тяжесть {{ commonWeight }} из {{ maxPlayerWeight }} кг</div>
+            </div>
+            <div class="block">
+                <div class="container" v-for="item in equipment" v-bind:key="item.sqlId" v-if="item.pockets" :class="{drag: itemDrag.item && itemDrag.item.sqlId == item.sqlId}">
+                    <div class="header" @click="item.showPockets = !item.showPockets" :class="{hidden: !item.showPockets}">
+                        <img :class="{hidden: !item.showPockets}" src="img/inventory/arrow.svg" />
+                        <div class="title">{{ getItemName(item) }}</div>
+                        <div>{{ +getPlaceWeight(item).toFixed(1) }} кг</div>
+                    </div>
+                    <transition name="slide">
+                        <div class="pockets" v-show="item.showPockets">
+                            <div class="items" v-show="!pocket.search" v-for="pocket in item.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
+                                <div class="column" v-for="n in pocket.cols * pocket.rows" :key="n-1" :class="columnClass(n-1, pocket, item)" @mouseenter="columnMouseHandler(item, pocket, n-1, $event)"
+                                    @mouseleave="columnMouseHandler(item, pocket, n-1, $event)">
+                                    <div class="item" v-if="pocket.items[n-1] && !pocket.items[n-1].search" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
+                                        @contextmenu="itemMouseHandler(pocket.items[n-1], $event)" @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1])" :class="{dragging: pocket.items[n-1] == itemDrag.item, found: pocket.items[n-1].found }">
+                                        <div class="count" v-if="pocket.items[n-1].params.count && !pocket.items[n-1].found">{{ pocket.items[n-1].params.count }}</div>
+                                        <div class="eye" v-if="pocket.items[n-1].found"><img src="img/inventory/eye.svg" /></div>
+                                        <!--<div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>-->
+                                        <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
+                                        <div v-if="pocket.items[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope">
+                                            <div class="lds-rolling">
+                                                <div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
+            </div>
+            <!--<div class="empty" v-show="!havePockets">Без карманов</div>-->
+        </div>
+        <div class="hands" :class="{active: itemDrag.item, blocked: handsBlock}">
+            <div class="slot" v-bind:class="{busy: equipment[13], focus: itemDrag.item && itemDrag.accessColumns.bodyFocus == 13}" @mouseenter="onBodyItemEnter(13)" @mouseleave="onBodyItemLeave(13)"
+                :style="{backgroundImage: itemGradient(equipment[13], true)}">
+                <div class="item" v-if="equipment[13]" v-bind:style="{backgroundImage: 'url(' + urlItemImg(equipment[13].itemId) + ')'}"
+                    @mousedown="itemMouseHandler(equipment[13], $event)"
+                    @contextmenu="itemMouseHandler(equipment[13], $event)" :class="{dragging: equipment[13] == itemDrag.item}">
+                    <div class="count" v-if="equipment[13].params.count">{{ equipment[13].params.count }}</div>
+                    <!--<div class="health" v-if="equipment[13].params.health" v-bind:style="{top: 100 - equipment[13].params.health + '%', 'border-color': valueColor(equipment[13].params.health)}"></div>-->
+                    <div class="sqlid" v-if="debug">#{{ equipment[13].sqlId }}</div>
+                    <div v-if="equipment[13].wait" v-cloak="v-cloak" class="loader lds-css ng-scope">
+                        <div class="lds-rolling">
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+                <img v-if="!equipment[13]" src="img/inventory/hand.svg" />
+                <img v-if="!equipment[13]" src="img/inventory/hand.svg" />
+            </div>
+        </div>
+        <div class="hotkeys">
+            <div class="key" v-if="!searchMode" :class="{focus: itemDrag.item && itemDrag.accessColumns.hotkeyFocus == n, active: itemDrag.item && hotkeysList[itemDrag.item.itemId] && !(hotkeys[n] && getItem(hotkeys[n].sqlId)), has: hotkeys[n] && getItem(hotkeys[n].sqlId) }" v-for="n in 9" @mouseenter="onHotkeyItemEnter(n)" @mouseleave="onHotkeyItemLeave(n)">
+                <div class="item" v-if="hotkeys[n] && getItem(hotkeys[n].sqlId)"
+                    v-bind:style="{backgroundImage: 'url('+urlItemImg(hotkeys[n].itemId)+')'}"
+                    @mousedown="itemMouseHandler(hotkeys[n], $event)">
+                    <!--<span class="close" @click="unbindHotkey(n)">x</span>-->
 
                     <div class="count" v-if="hotkeys[n].params.count">{{ hotkeys[n].params.count }}</div>
-                    <div class="health" v-if="hotkeys[n].params.health" v-bind:style="{top: 100 - hotkeys[n].params.health + '%', 'border-color': valueColor(hotkeys[n].params.health)}"></div>
+                    <!--<div class="health" v-if="hotkeys[n].params.health" v-bind:style="{top: 100 - hotkeys[n].params.health + '%', 'border-color': valueColor(hotkeys[n].params.health)}"></div>-->
                     <div class="sqlid" v-if="debug">#{{ hotkeys[n].sqlId }}</div>
+                    <div v-if="hotkeys[n].wait" v-cloak="v-cloak" class="loader lds-css ng-scope">
+                        <div class="lds-rolling">
+                            <div></div>
+                        </div>
+                    </div>
                 </div>
+                <span class="hotkey">{{ (n == 10)? 0 : n }}</span>
             </div>
         </div>
         <div class="item-desc" v-if="itemDesc.item && !itemMenu.item && !itemDrag.item && (getItem(itemDesc.item.sqlId) || getEnvironmentItem(itemDesc.item.sqlId))" :style="{left: itemDesc.x + 'px', top: itemDesc.y + 'px'}">
             <div class="title">{{ descItemName }}</div>
             <div v-if="debug">itemId: #{{ itemDesc.item.itemId }}</div>
-            <div class="item" v-if="itemDesc.item" :style="itemStyle(itemDesc.item.itemId)">
+            <div class="item" v-if="itemDesc.item" :style="itemStyle(itemDesc.item)">
                 <div class="sqlid" v-if="debug">#{{ itemDesc.item.sqlId }}</div>
                 <div class="count" v-if="itemDesc.item.params.count">{{ itemDesc.item.params.count }}</div>
-                <div class="health" v-if="itemDesc.item.params.health" :style="{top: 100 - itemDesc.item.params.health + '%', 'border-color': valueColor(itemDesc.item.params.health)}"></div>
+                <!--<div class="health" v-if="itemDesc.item.params.health" :style="{top: 100 - itemDesc.item.params.health + '%', 'border-color': valueColor(itemDesc.item.params.health)}"></div>-->
             </div>
             <div class="description">{{ itemsInfo[itemDesc.item.itemId].description }}</div>
             <div class="params">
@@ -611,11 +722,13 @@
                 </div>
             </div>
         </div>
+
         <div class="item-notif" v-if="itemNotif.text" :style="{left: itemNotif.x + 'px', top: itemNotif.y + 'px'}">
             {{ itemNotif.text }}
         </div>
+
         <div class="item-menu" v-if="itemMenu.item && !itemDrag.item" :style="{left: itemMenu.x + 'px', top: itemMenu.y + 'px'}">
-            <div class="menu-item" v-for="(value, key) in itemsMenu[itemMenu.item.itemId]" @click="value.handler(itemMenu.item)">
+            <div class="menu-item" v-for="(value, key) in getItemsMenu(itemMenu.item.itemId)" @click="value.handler(itemMenu.item)">
                 {{ key }}
                 <div class="arrow" v-if="value.items">></div>
             </div>
@@ -627,11 +740,18 @@
             </div>
         </div> -->
         <div class="item-drag" v-if="itemDrag.item" :style="{left: itemDrag.x + 'px', top: itemDrag.y + 'px'}">
-            <div class="item" v-if="itemDrag.item" :style="itemStyle(itemDrag.item.itemId)">
+            <div class="item" v-if="itemDrag.item" :style="itemStyle(itemDrag.item)">
                 <!-- <div class="count" v-if="itemDrag.item.params.count">{{ itemDrag.item.params.count }}</div>
                <div class="health" v-if="itemDrag.item.params.health" :style="{top: 100 - itemDrag.item.params.health + '%'}"></div>
                <div class="sqlid" v-if="debug">#{{ itemDrag.item.sqlId }}</div> -->
             </div>
+        </div>
+
+        <div class="bin" v-if="itemDrag.item && getItem(itemDrag.item.sqlId)" @mouseenter="binMouseHandler($event)" @mouseleave="binMouseHandler($event)">
+            <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.8557 4.54545C16.8557 3.05494 18.019 1.9656 19.5095 1.9656H30.4187C31.9087 1.9656 33.072 3.05494 33.072 4.54545V7.37101H35.0376V4.54545C35.0376 1.97136 32.9928 0 30.4187 0H19.5095C16.9354 0 14.8901 1.97136 14.8901 4.54545V7.37101H16.8557V4.54545Z" fill="white"/>
+                <path d="M13.341 50.0001H36.5841C38.8252 50.0001 40.5643 48.0287 40.5643 45.5775V15.2335H9.36035V45.5775C9.36035 48.0287 11.0994 50.0001 13.341 50.0001ZM31.2277 19.9263C31.2277 19.3835 31.6677 18.9435 32.2105 18.9435C32.7532 18.9435 33.1933 19.3835 33.1933 19.9263V43.1449C33.1933 43.6877 32.7532 44.1277 32.2105 44.1277C31.6677 44.1277 31.2277 43.6877 31.2277 43.1449V19.9263ZM23.9795 19.9263C23.9795 19.3835 24.4196 18.9435 24.9623 18.9435C25.5051 18.9435 25.9451 19.3835 25.9451 19.9263V43.1449C25.9451 43.6877 25.5051 44.1277 24.9623 44.1277C24.4196 44.1277 23.9795 43.6877 23.9795 43.1449V19.9263ZM16.7314 19.9263C16.7314 19.3835 17.1714 18.9435 17.7142 18.9435C18.2569 18.9435 18.697 19.3835 18.697 19.9263V43.1449C18.697 43.6877 18.2569 44.1277 17.7142 44.1277C17.1714 44.1277 16.7314 43.6877 16.7314 43.1449V19.9263Z" fill="white"/>
+                <path d="M8.353 13.2679H41.5715C42.9286 13.2679 44.0285 12.168 44.0285 10.8109C44.0285 9.45378 42.9286 8.35388 41.5715 8.35388H8.353C6.99589 8.35388 5.896 9.45378 5.896 10.8109C5.896 12.168 6.99589 13.2679 8.353 13.2679Z" fill="white"/>
         </div>
     </div>
 
@@ -696,6 +816,7 @@
     <div v-cloak="v-cloak" id="input-window" v-if="show">
         <div class="header">{{ header }}</div>
         <div class="body">
+            <div class="description" v-html="description"></div>
             <div class="hint">{{ hint }}</div>
             <input :placeholder="inputHint" v-model="value" />
         </div>
@@ -705,13 +826,33 @@
         </div>
     </div>
 
-
-    <div v-cloak="v-cloak" id="accept-window" v-if="show">
+    <div v-cloak="v-cloak" id="selection-window" v-if="show">
         <div class="header">{{ header }}</div>
+        <div class="description" v-html="description"></div>
+        <div class="body">
+            <div :class="['record', { selected: record == selected }]" v-for="record in records" :key="record.text" @click="select(record)">{{ record.text }}</div>
+        </div>
+        <div class="footer">
+            <div class="left" @click="accept">Принять</div>
+            <div class="right" @click="decline">Отменить</div>
+        </div>
+    </div>
+
+
+    <div v-cloak id="accept-window" v-if="show" :style="{opacity: 1}">
+        <div>
+            <div class="head">{{ header }}</div>
+            <div class="content" v-html="text"></div>
+            <div class="btns">
+                <div class="agree" @click="accept()">Подтвердить</div>
+                <div class="cancel" @click="decline()">Отменить</div>
+            </div>
+        </div>
+        <!--<div class="header">{{ header }}</div>
         <div class="footer">
             <div class="left" @click="accept">{{ leftWord }}</div>
             <div class="right" @click="decline">{{ rightWord }}</div>
-        </div>
+        </div>-->
     </div>
 
 
@@ -1044,7 +1185,7 @@
     <script type="text/x-template" id="map-case-wnews-over-ads">
         <div class="over ads">
             <div class="title">{{ header }}</div>
-            <div :class="['text', { focus: editMod }]" :contenteditable="editMod" @input="update" @keypress="inputCheck($event)"></div>
+            <div :class="['text', { focus: editMod }]" :contenteditable="editMod" @input="update" @keypress="inputCheck($event)" @focus="setFocus(true)" @blur="setFocus(false)"></div>
             <div class="line"></div>
             <div class="author"><span>Автор:</span> {{ adData.ad.author }}</div>
             <div :class="['btns', { refuse: refuseMod }]">
@@ -1059,7 +1200,7 @@
         <div class="over verification fine" @keypress="enterHandler($event)">
             <div class="header"> Выдача штрафа {{ profileData[currentMenuFocus].name}}</div>
             <div class="title">Введите причину</div>
-            <div class="input"><input placeholder="Введите причину выдачи штрафа..." v-model="causeValue" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
+            <div class="input"><input maxlength="30" placeholder="Введите причину выдачи штрафа..." v-model="causeValue" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
             <div class="title">Введите сумму штрафа</div>
             <div class="input"><input placeholder="Введите сумму..." v-model="amountValue" @keypress="inputCheck($event)" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
             <div class="btns">
@@ -1073,14 +1214,15 @@
         <div class="over verification fine" @keypress="enterHandler($event)">
             <div class="header"> Выдача розыска {{ profileData[currentMenuFocus].name}}</div>
             <div class="title">Введите причину</div>
-            <div class="input"><input placeholder="Введите причину выдачи розыска..." v-model="causeValue" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
+            <div class="input"><input maxlength="30" placeholder="Введите причину выдачи розыска..." v-model="causeValue" @focus="setFocus(true)" @blur="setFocus(false)" /></div>
             <div class="title">Выберите степень опасности</div>
-            <div class="stars" @click="setDanger()"><svg
+            <div class="stars" @click.self="over(0); setDanger()"><svg
                                 :class="{ fill: overDanger >= n }"
                                 v-for="n in 5"
                                 viewBox="0 0 14 14"
+                                @click="setDanger()"
                                 @mouseover="over(n)"
-                                @mouseout="over(0)">
+                                @mouseout="over(-1)">
                                 <path :d="star"/></svg></div>
             <div class="btns">
                 <div class="btn" @click="give()">Выдать</div>
@@ -1178,20 +1320,33 @@
     <!-- ------------------------ ПЛАНШЕТ ПД ------------------------ -->
 
     <div v-cloak id="fishing" v-if="show">
+        <!-- <button @click="fishFetch(40, 20, 3)">start</button> -->
         <div class="fishing-line" v-if="isFetch">
             <div class="fishing-zone" v-bind:style="{ width: zone + '%', marginLeft: ((100 - zone) / 2) + '%' }"></div>
-            <div id="fishing-cursor" v-bind:style="{ marginLeft: position + '%' }"></div>
+            <div id="fishing-cursor" v-bind:style="{ marginLeft: position + '%' }">
+                <svg width="100%" height="135%" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g>
+                        <path d="M36.3633 32.7272C40.0457 34.9833 42.5206 39.0192 42.5922 43.6372C42.7033 50.8062 36.9178 56.772 29.7491 56.8704C22.4709 56.9702 16.5391 51.0991 16.5391 43.8432C16.5391 41.2314 17.3077 38.7993 18.6309 36.7604C20.0183 34.6228 20.7305 32.1172 20.7305 29.5687H26.9609V31.1244C26.9609 34.2679 25.916 37.3053 24.0672 39.8476C24.0598 39.8578 24.0524 39.8679 24.0451 39.8781C23.211 41.0385 22.7323 42.4733 22.7718 44.0209C22.8666 47.7338 25.991 50.7131 29.7042 50.6393C33.3948 50.5659 36.3633 48.2616 36.3633 42.7104H31.0391C31.0391 42.7103 36.3633 40.4446 36.3633 32.7272Z" fill="#188FED"/>
+                        <path d="M28.0938 22.3459V29.5403H19.5977V22.3187H19.6622C20.9095 23.0391 22.3583 23.4515 23.9023 23.4515C25.4271 23.4515 26.8567 23.0493 28.0938 22.3459Z" fill="#0B66AD"/>
+                        <path d="M23.9023 6.45746C19.2101 6.45746 15.4062 10.2616 15.4062 14.9542C15.4062 19.6469 19.2101 23.451 23.9023 23.451C28.5946 23.451 32.3984 19.6469 32.3984 14.9542C32.3984 10.2616 28.5946 6.45746 23.9023 6.45746ZM23.9023 18.9194C21.7126 18.9194 19.9375 17.1442 19.9375 14.9542C19.9375 12.7643 21.7126 10.989 23.9023 10.989C26.0921 10.989 27.8672 12.7643 27.8672 14.9542C27.8672 17.1442 26.0921 18.9194 23.9023 18.9194Z" fill="#188FED"/>
+                        <path d="M26.7344 11.5556V1.13293H21.0703V11.5556C21.0703 13.1198 22.3383 14.3879 23.9023 14.3879C25.4664 14.3879 26.7344 13.1198 26.7344 11.5556Z" fill="#0B66AD"/>
+                    </g>
+                </svg>
+            </div>
         </div>
         <div v-if="isStarted && !isFetch">
             <div class="fishing-wait">
-                Ждите, пока рыба не клюнет...
+                <div>
+                    <img style="width: 13%; margin-bottom: 3%" src='img/fishing/fish.png'/>
+                </div>
+                Ждите, пока рыба клюнет...
             </div>
         </div>
         <div class="fishing-help">
             <table>
                 <tr v-if="!isStarted">
                     <th>
-                        <span class="fishing-help-button">F</span>
+                        <span class="fishing-help-button">ЛКМ</span>
                     </th>
                     <th>
                         <span>Забросить удочку</span>
@@ -1225,7 +1380,7 @@
             <div class="head">
                 <div class="top-bar">
                     <div class="info">
-                        <div>{{ name }} |
+                        <div ref="name"><d ref="def">{{ name }} |</d>
                             <span :class="'social-status'+socialStatus">{{ socialData[socialStatus].head }}
                                 <img :src="socialData[socialStatus].img" />
                             </span>
@@ -1250,7 +1405,7 @@
                     </div>
                 </div>
             </div>
-            <div class="body">
+            <div :class="['body', {'long-name': longName}]">
                 <keep-alive>
                     <component :is="menuBarFocus.window" v-bind="menuBarFocus.windowData"></component>
                 </keep-alive>
@@ -1375,11 +1530,11 @@
                 </div>
                 <div class="record">
                     <div class="circle"><img src="img/playerMenu/clock.svg" /></div>
-                    <div class="text">А также отыграть на нашем сервере 10 часов</div>
+                    <div class="text">А также отыграть на нашем сервере 24 часа</div>
                 </div>
                 <div class="record">
                     <div class="circle"><img src="img/playerMenu/smile.svg" /></div>
-                    <div>По достижении онлайна 10 часов вам и вашему другу<br />будет начислена игровая валюта</div>
+                    <div>По достижении онлайна 24 часов вам и вашему другу<br />будет начислена игровая валюта</div>
                 </div>
             </div>
             <div class="right">
@@ -1425,7 +1580,7 @@
             <input placeholder="Введите число..." v-model="price" @keypress="inputCheck($event)" @keypress.enter="convert()" @focus="setFocus(true)" @blur="setFocus(false)" />
             <div class="equally">=</div>
             <div class="coins">{{ virtualCoins | playerMenuMoneySplit(true) }}</div>
-            <div :class="['btn', {disable: !virtualCoins }]" @click="convert()">Конвертировать</div>
+            <div :class="['btn', {disable: !isEnable }]" @click="convert()">Конвертировать</div>
         </div>
     </script>
 
@@ -1605,6 +1760,28 @@
         <div class="content" v-html="modal.content"></div>
     </div>
 
+    <div v-cloak id="selectItems" v-show="show && inventory.enable && !inventory.handsBlock">
+        <svg>
+            <linearGradient id="select-items-gradient" x1="0%" y1="23%" x2="100%" y2="50%">
+                <stop offset="85%" stop-color="#rgba(12, 12, 12, 0.6)" />
+                <stop offset="100%" stop-color="rgba(255, 223, 41, 0.6)" />
+            </linearGradient>
+            <circle class="center"/>
+            <g class="container" :class="{ focus: items[n-1] && items[n-1] == inventory.equipment[13], select: n-1 == select }" v-for="n in 10" :style="{transform: 'rotate('+ (n + 1) * 36 +'deg)'}">
+                <circle class="node" />
+                <circle class="stroke" />
+            </g>
+            <g class="container" v-for="n in 10" :style="{transform: 'rotate('+ (n + 1) * 36 +'deg)'}">
+                <g v-if="items[n-1] && inventory.getItem(items[n-1].sqlId) && n != 1"><image :xlink:href="inventory.urlItemImg(items[n-1].itemId)" :style="{transform: 'rotate('+ (n + 1) * -36 +'deg)'}" /></g>
+                <g v-else-if="n == 1"><image class="hand" xlink:href="img/selectItems/hand.svg" :style="{transform: 'rotate('+ (n + 1) * -36 +'deg)'}" /></g>
+            </g>
+        </svg>
+        <div class="description" v-if="descItemName">
+            <div class="head">{{ descItemName }}</div>
+            <div class="amount">{{ descItemCount }}</div>
+        </div>
+    </div>
+
     <!-- ------------------------ REACT ------------------------------ -->
     <script async src="build/js/build.js" type="text/javascript"></script>
     <div id="root"></div>
@@ -1629,6 +1806,7 @@
     <script src="js/carSpecifications.js"></script>
     <script src="js/check.js"></script>
     <script src="js/inputWindow.js"></script>
+    <script src="js/selectionWindow.js"></script>
     <script src="js/acceptWindow.js"></script>
     <script src="js/terminal.js"></script>
     <script src="js/playersList.js"></script>
@@ -1639,6 +1817,7 @@
     <script src="js/watermark.js"></script>
     <script src="js/timer.js"></script>
     <script src="js/modal.js"></script>
+    <script src="js/selectItems.js"></script>
 
 </body>
 

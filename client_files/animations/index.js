@@ -11,11 +11,20 @@ mp.animations = {
     animatorActive: false,
     animId: 0,
     animationTimers: {},
+    isOwnPlayingAnimId: null, // анимация из меню на L
+    animationData: require('animations/data.js'),
 
     playAnimation(player, a, time = null) {
+        var localId = mp.players.local.remoteId;
         mp.timer.remove(this.animationTimers[player.remoteId]);
-        player.clearTasksImmediately();
+        var oldAnim = player.anim;
         delete player.anim;
+        if (player.isJumping() || player.isShooting() || player.isSwimming() || player.isFalling()) return;
+        // player.clearTasksImmediately();
+        if (oldAnim) {
+            if (localId == player.remoteId) player.stopAnimTask(oldAnim.dict, oldAnim.name, 3);
+            else player.clearTasksImmediately();
+        }
         if (!a) return;
         mp.utils.requestAnimDict(a.dict, () => {
             player.taskPlayAnim(a.dict, a.name, a.speed, 0, -1, a.flag, 0, false, false, false);
@@ -26,7 +35,10 @@ mp.animations = {
         mp.timer.remove(this.animationTimers[id]);
         this.animationTimers[id] = mp.timer.add(() => {
             var rec = mp.players.atRemoteId(id);
-            if (rec) rec.clearTasksImmediately();
+            if (rec && rec.anim) {
+                if (localId == rec.remoteId) rec.stopAnimTask(rec.anim.dict, rec.anim.name, 3);
+                else rec.clearTasksImmediately();
+            }
             delete this.animationTimers[id];
             delete rec.anim;
         }, time);
@@ -94,9 +106,24 @@ mp.animations = {
             outline: true
         });
     },
+    stopAnimHandler() {
+        if (this.isOwnPlayingAnimId == null) return;
+        var a = this.animationData[this.isOwnPlayingAnimId];
+        this.isOwnPlayingAnimId = null;
+        if (!mp.players.local.isPlayingAnim(a.split(' ')[0], a.split(' ')[1], 3)) return;
+        mp.events.callRemote(`animations.stop`);
+        mp.prompt.hide();
+    },
 };
 
 mp.events.add({
+    "characterInit.done": () => {
+        mp.keys.bind(32, true, () => { // SPACE
+            if (mp.game.ui.isPauseMenuActive()) return;
+            if (mp.busy.includes()) return;
+            mp.animations.stopAnimHandler();
+        });
+    },
     "animations.animator": () => {
         mp.animations.animator();
     },
@@ -104,6 +131,9 @@ mp.events.add({
         var player = mp.players.atRemoteId(playerId);
         if (!player) return;
         mp.animations.playAnimation(player, a, time);
+    },
+    "animations.setOwnPlayingAnimId": (animId) => {
+        mp.animations.isOwnPlayingAnimId = animId;
     },
     "render": () => {
         mp.animations.render();
@@ -115,6 +145,10 @@ mp.events.add({
 
         mp.animations.playAnimation(player, a);
     },
+    "police.cuffs.set": (enable) => {
+        if (!enable || !mp.players.local.getVariable("anim")) return;
+        mp.animations.playAnimation(mp.players.local, null);
+    },
     "playerEnterVehicle": () => {
         // чтобы игрока не скручивало по-всякому когда садится на мотик во время проигрывания анимации
         var player = mp.players.local;
@@ -123,6 +157,18 @@ mp.events.add({
             mp.events.callRemote("animations.stop");
         }
     },
+    // "time.main.tick": () => {
+    //     mp.players.forEachInStreamRange(rec => {
+    //         if (!mp.players.exists(rec)) return;
+    //         var a = rec.getVariable("anim");
+    //         if (!a) return;
+    //
+    //         if (rec.isPlayingAnim(a.dict, a.name, 3)) return;
+    //         mp.utils.requestAnimDict(a.dict, () => {
+    //             rec.taskPlayAnim(a.dict, a.name, a.speed, 0, -1, a.flag, 0, false, false, false);
+    //         });
+    //     });
+    // },
 });
 
 mp.events.addDataHandler("anim", (player, a) => {

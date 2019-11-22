@@ -6,6 +6,11 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
+        bizId: {
+			type: DataTypes.INTEGER(11),
+            defaultValue: null,
+			allowNull: true
+        },
         x: {
             type: DataTypes.FLOAT(11),
             defaultValue: 100,
@@ -60,9 +65,19 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.FLOAT(11),
             defaultValue: 100,
 			allowNull: false
+        },
+        priceMultiplier: {
+            type: DataTypes.FLOAT,
+            defaultValue: 1.0,
+            allowNull: false
         }
 	}, {timestamps: false});
 
+    model.associate = (models) => {
+        model.belongsTo(models.Biz, {
+            foreignKey: "bizId"
+        });
+    };
 
 	return model;
 };
