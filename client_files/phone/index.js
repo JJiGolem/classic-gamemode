@@ -106,6 +106,7 @@ mp.events.add('phone.message.send', function (message, number) {
 
 /// Получение сообщения
 mp.events.add('phone.message.set', function (message, number) {
+    mp.notify.info("Новое сообщение", "Телефон");
     mp.callCEFR('phone.message.set', [message, number]);
 });
 
