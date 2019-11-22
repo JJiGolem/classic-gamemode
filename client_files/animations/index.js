@@ -112,6 +112,7 @@ mp.animations = {
         this.isOwnPlayingAnimId = null;
         if (!mp.players.local.isPlayingAnim(a.split(' ')[0], a.split(' ')[1], 3)) return;
         mp.events.callRemote(`animations.stop`);
+        mp.prompt.hide();
     },
 };
 
