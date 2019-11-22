@@ -142,6 +142,11 @@ export default function info(state = initialState, action) {
             if (!payload && state.incomingCall.state) {
                 // eslint-disable-next-line no-undef
                 mp.trigger('phone.call.in.ans', 0);
+
+                return {
+                    ...state,
+                    incomingCall: null
+                }
             }
 
             return state;
