@@ -1,4 +1,6 @@
 /* eslint-disable default-case */
+import $ from 'jquery';
+
 const initialState = {
     // phone: true,
     // house: true,
@@ -12,6 +14,11 @@ export default function forms(state = initialState, action) {
 
     switch (type) {
         case 'SHOW_PHONE':
+            if (payload) {
+                $('#phone-form-react').animate({ bottom: '7%' }, 100);
+            } else {
+                $('#phone-form-react').animate({ bottom: '-50%' }, 100)
+            }
             return {
                 ...state,
                 phone: payload

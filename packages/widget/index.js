@@ -5,7 +5,7 @@ const param = require('jquery-param');
 let widgetConfig = {};
 let widgetInterval;
 
-const SERVER_IP = '127.0.0.1';
+const SERVER_IP = '55.89.96.156';
 const UPDATE_TIME_WIDGET = 60000;
 
 const ACCESS_TOKEN = 'a76a14300173c02400a547063e1c9c4aaedcedc69eb3f7da762a734356196bd48b963a0f9147ecc6454a9';

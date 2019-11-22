@@ -48,6 +48,8 @@ let rods = [];
 
 let timeoutEndFishing;
 
+let isInZone = false;
+
 let isBinding = false;
 let isEnter = false;
 let isStarted = false;
@@ -90,7 +92,7 @@ mp.events.add('render', () => {
         if (!isIntervalCreated) {
             isIntervalCreated = true;
             intervalFishing = mp.timer.addInterval(() => {
-                // mp.chat.debug('bind ' + isBinding);
+                // mp.chat.debug('zone ' + isInZone);
                 let heading = localPlayer.getHeading() + 90;
                 let point = {
                     x: localPlayer.position.x + 15*Math.cos(heading * Math.PI / 180.0),
@@ -103,6 +105,7 @@ mp.events.add('render', () => {
 
                 if (water > 0 && ground < water && ground != 0) {
                     isShowPrompt = true;
+                    isInZone = true;
                     mp.events.call('fishing.game.menu');
                 } else {
                     if (isShowPrompt) {
@@ -110,12 +113,15 @@ mp.events.add('render', () => {
                         isShowPrompt = false;
                     }
                     if (!isEnter) bindButtons(false);
+
+                    isInZone = false;
                 }
             }, 1000);
         }
     } else {
         if (isIntervalCreated) {
             mp.events.call('prompt.hide');
+            isInZone = false;
             isShowPrompt = false;
             mp.timer.remove(intervalFishing);
             isIntervalCreated = false;
@@ -225,11 +231,11 @@ mp.events.add('click', (x, y, upOrDown, leftOrRight, relativeX, relativeY, world
     if (!localPlayer.hands) return;
     if (localPlayer.hands.itemId !== 5) return;
 
-    if (!isEnter) {
+    if (!isEnter && isInZone) {
         if (mp.busy.includes()) return;
         return fishingEnter()
     };
-    if (!isStarted) return fishingStart();
+    if (!isStarted && isEnter) return fishingStart();
 });
 
 mp.events.add('fishing.game.enter', () => {
@@ -271,6 +277,7 @@ mp.events.add('fishing.game.exit', () => {
     mp.events.callRemote('fishing.game.exit');
     bindButtons(false);
     isEnter = false;
+    isStarted = false;
     mp.events.call('prompt.hide');
     playBaseAnimation(false);
     mp.utils.disablePlayerMoving(false);
@@ -278,6 +285,10 @@ mp.events.add('fishing.game.exit', () => {
     mp.callCEFV(`fishing.clearData()`);
     mp.callCEFVN({ "fishing.show": false });
     mp.busy.remove('fishing.game');
+});
+
+mp.events.addDataHandler("knocked", (player, knocked) => {
+    mp.events.call('fishing.game.exit');
 });
 
 let bindButtons = (state) => {
@@ -326,8 +337,6 @@ let fishingExit = () => {
     if (mp.game.ui.isPauseMenuActive()) return;
     if (!isFetch) {
         mp.events.call('fishing.game.exit');
-        isEnter = false;
-        isStarted = false;
     }
 }
 

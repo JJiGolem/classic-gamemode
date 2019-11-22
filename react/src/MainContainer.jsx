@@ -24,7 +24,7 @@ class MainContainer extends Component {
         return (
             <Fragment>
                 <ErrorBoundary><Chat /></ErrorBoundary>
-                { info.isLoad && <ErrorBoundary><div style={{ display: (!forms.phone) && 'none' }}><Phone /></div></ErrorBoundary> }
+                { info.isLoad && <ErrorBoundary><div><Phone /></div></ErrorBoundary> }
                 { forms.house && <ErrorBoundary><House /></ErrorBoundary> }
                 { enterMenu.isShow && <ErrorBoundary><EnterMenu /></ErrorBoundary> }
                 { forms.business && <ErrorBoundary><Business /> </ErrorBoundary>}
