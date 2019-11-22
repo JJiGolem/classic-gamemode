@@ -240,9 +240,12 @@ module.exports = {
     },
 
     "/tp": (player) => {
-        let pos = admin.getMassTeleportPosition();
-        if (!pos) return notify.error(player, 'Массовый телепорт отключен');
-        player.position = pos;
+        let data = admin.getMassTeleportData();
+        if (!data || !data.position) return notify.error(player, 'Массовый телепорт отключен');
+        player.returnPosition = player.position;
+        player.returnDimension = player.dimension;
+        player.position = data.position;
+        player.dimension = data.dimension;
         notify.success(player, 'Вы были телепортированы');
     },
 

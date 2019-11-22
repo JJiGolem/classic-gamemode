@@ -458,15 +458,16 @@ mp.events.add('vehicles.speedometer.enabled', (enabled) => {
     mp.speedometerEnabled = enabled;
 });
 mp.events.add("time.main.tick", () => {
-    var entity = mp.utils.getNearPlayerOrVehicle(mp.players.local.position, 10);
+    // var entity = mp.utils.getNearPlayerOrVehicle(mp.players.local.position, 10);
+    var vehicle = mp.utils.getNearVehicle(mp.players.local.position, 10);
 
-    if (entity && entity.type == "vehicle") {
-        var bootPos = mp.utils.getBootPosition(entity);
+    if (vehicle && vehicle.type == "vehicle") {
+        var bootPos = mp.utils.getBootPosition(vehicle);
         var distToBoot = mp.vdist(mp.players.local.position, bootPos);
         if (distToBoot < 1) {
             if (mp.moduleVehicles.nearBootVehicleId == null) {
-                mp.moduleVehicles.nearBootVehicleId = entity.remoteId;
-                mp.events.call("playerEnterVehicleBoot", mp.players.local, entity);
+                mp.moduleVehicles.nearBootVehicleId = vehicle.remoteId;
+                mp.events.call("playerEnterVehicleBoot", mp.players.local, vehicle);
             }
         } else {
             if (mp.moduleVehicles.nearBootVehicleId != null) {
@@ -475,12 +476,12 @@ mp.events.add("time.main.tick", () => {
             }
         }
 
-        var hoodPos = mp.utils.getHoodPosition(entity);
+        var hoodPos = mp.utils.getHoodPosition(vehicle);
         var distToHood = mp.vdist(mp.players.local.position, hoodPos);
         if (distToHood < 1) {
             if (mp.moduleVehicles.nearHoodVehicleId == null) {
-                mp.moduleVehicles.nearHoodVehicleId = entity.remoteId;
-                mp.events.call("playerEnterVehicleHood", mp.players.local, entity);
+                mp.moduleVehicles.nearHoodVehicleId = vehicle.remoteId;
+                mp.events.call("playerEnterVehicleHood", mp.players.local, vehicle);
             }
         } else {
             if (mp.moduleVehicles.nearHoodVehicleId != null) {

@@ -79,11 +79,8 @@ module.exports = {
         if (price >= 500000 && price < 1000000) {
             multiplier = 120;
         }
-        if (price >= 1000000 && price < 3000000) {
+        if (price >= 1000000) {
             multiplier = 250;
-        }
-        if (price >= 3000000) {
-            multiplier = 500;
         }
         return multiplier;
     },

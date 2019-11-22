@@ -177,6 +177,6 @@ module.exports = {
             if (!rec.character) return;
             if (this.haveAccess(rec)) rec.call(`terminal.push`, [type, text]);
         });
-        if (type != "debug") logger.log(`[${type}] ${text}`, `terminal`);
+        if (type != "debug" && text) logger.log(`[${type}] ${text}`, `terminal`);
     },
 };

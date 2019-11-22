@@ -211,7 +211,8 @@ mp.inventory = {
 
         player.taskSwapWeapon(true)
         if (player.hands) {
-            if (this.itemsInfo[player.hands.itemId].attachInfo.anim) player.clearTasksImmediately();
+            var oldAnim = this.itemsInfo[player.hands.itemId].attachInfo.anim;
+            if (oldAnim) player.stopAnimTask(oldAnim.dict, oldAnim.name, 3);
             if (mp.objects.exists(player.hands.object)) {
                 player.hands.object.destroy();
                 delete player.hands;

@@ -468,7 +468,7 @@ var inventory = new Vue({
             40: [22, 99],
         },
         // Огнестрельные оружия
-        weaponsList: [19, 20, 21, 22, 41, 44, 46, 47, 48, 49, 50, 52, 80, 87, 88, 89, 90, 91, 93, 96, 99, 100, 107],
+        weaponsList: [20, 21, 22, 41, 44, 46, 47, 48, 49, 50, 52, 80, 87, 88, 89, 90, 91, 93, 96, 99, 100, 107],
         // Еда
         eatList: [35, 126, 127, 128, 129, 132, 134],
         // Напитки
@@ -538,6 +538,12 @@ var inventory = new Vue({
         lastUseHotkey: 0,
         // Анти-флуд использования хоткея
         waitUseHotkey: 1000,
+        // Анти-флуд на использование еды (ms)
+        eatWaitTime: 30000,
+        lastUseEat: 0,
+        // Анти-флуд на использование напитка (ms)
+        drinkWaitTime: 30000,
+        lastUseDrink: 0,
         // Режим обыска
         searchMode: null,
         // Время исследования при обыске
@@ -841,8 +847,11 @@ var inventory = new Vue({
                     if (e.which == 1) { // Left Mouse Button
                         this.itemDrag.item = item;
                         this.itemDrag.div = e.target;
-                        this.itemDrag.x = e.screenX - rect.x - e.target.offsetWidth / 2;
-                        this.itemDrag.y = e.screenY - rect.y - e.target.offsetHeight / 2;
+                        // до сжатых иконок
+                        // this.itemDrag.x = e.screenX - rect.x - e.target.offsetWidth / 2;
+                        // this.itemDrag.y = e.screenY - rect.y - e.target.offsetHeight / 2;
+                        this.itemDrag.x = e.screenX - rect.x;
+                        this.itemDrag.y = e.screenY - rect.y;
                         if (this.hotkeyFocus && this.hotkeys[this.hotkeyFocus] == item) this.itemDrag.accessColumns.hotkeyUnbind = this.hotkeyFocus;
                     }
                 },
@@ -931,9 +940,9 @@ var inventory = new Vue({
             // console.log(`выкинуть ${item}`)
             // if (this.weaponsList.includes(item.itemId)) mp.trigger(`weapons.ammo.sync`, true);
             // else {
-                var children = this.getChildren(item);
-                var weapon = children.find(x => this.weaponsList.includes(x.itemId));
-                // if (weapon) mp.trigger(`weapons.ammo.sync`, true);
+            var children = this.getChildren(item);
+            var weapon = children.find(x => this.weaponsList.includes(x.itemId));
+            // if (weapon) mp.trigger(`weapons.ammo.sync`, true);
             // }
             mp.trigger(`inventory.ground.put`, item.sqlId);
         },
@@ -1323,6 +1332,12 @@ var inventory = new Vue({
                 } else if (this.eatList.includes(itemId)) {
                     var handler = (item) => {
                         if (inventory.equipment[13] != item) return notifications.error(`Еда не в руках`, inventory.getItemName(item));
+
+                        var diff = Date.now() - inventory.lastUseEat;
+                        var wait = inventory.eatWaitTime;
+                        if (diff < wait) return notifications.error(`Повторная трапеза доступно через ${parseInt((wait - diff) / 1000)} сек.`, inventory.getItemName(item));
+                        inventory.lastUseEat = Date.now();
+
                         inventory.deleteItem(item.sqlId);
                         mp.trigger(`callRemote`, `inventory.item.eat.use`, item.sqlId);
                     };
@@ -1335,6 +1350,12 @@ var inventory = new Vue({
                 } else if (this.drinkList.includes(itemId)) {
                     var handler = (item) => {
                         if (inventory.equipment[13] != item) return notifications.error(`Напиток не в руках`, inventory.getItemName(item));
+
+                        var diff = Date.now() - inventory.lastUseDrink;
+                        var wait = inventory.drinkWaitTime;
+                        if (diff < wait) return notifications.error(`Повторное выпивание доступно через ${parseInt((wait - diff) / 1000)} сек.`, inventory.getItemName(item));
+                        inventory.lastUseDrink = Date.now();
+
                         inventory.deleteItem(item.sqlId);
                         mp.trigger(`callRemote`, `inventory.item.drink.use`, item.sqlId);
                     };

@@ -405,6 +405,7 @@ module.exports = {
             faction: character.factionId,
             owner: character.id
         };
+        if (index == 2) delete params.ammo; // for Stun Gun
 
         inventory.addItem(player, itemId, params, (e) => {
             if (e) return notifs.error(player, e, header);
@@ -528,7 +529,7 @@ module.exports = {
     "police.cells.arrest": (player, recId) => {
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Арест`);
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции`, `Арест`);
+        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Арест`);
 
         if (!rec.character.wanted) return notifs.error(player, `${rec.name} не преступник`, `Арест`);
 
@@ -646,7 +647,7 @@ module.exports = {
         if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции`, header);
         var rank = factions.getRankById(player.character.factionId, player.character.factionRank);
         if (rank.rank < police.giveGunLicenseRank) return notifs.error(player, `Нет прав`, header);
-        
+
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         var character = rec.character;
         if (character.gunLicenseDate) return notifs.error(player, `${rec.name} уже имеет лицензию`, header);
@@ -663,6 +664,8 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         var character = rec.character;
         if (!character.gunLicenseDate) return notifs.error(player, `${rec.name} не имеет лицензию`, header);
+        var rank = factions.getRankById(player.character.factionId, player.character.factionRank);
+        if (rank.rank < police.takeGunLicenseRank) return notifs.error(player, `Нет прав`, header);
 
         character.gunLicenseDate = null;
         character.save();

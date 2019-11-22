@@ -106,8 +106,9 @@ mp.events.add({
         mp.weapons.lastWeapon = weapon;
     },
     "time.main.tick": () => {
+        var player = mp.players.local;
         // фикс пропажи оружия при достижении 0 патронов
-        if (mp.weapons.hashes.length && mp.players.local.weapon != mp.weapons.hashes[0]) {
+        if (mp.weapons.hashes.length && player.weapon != mp.weapons.hashes[0] && player.getHealth() > 0) {
             mp.weapons.setCurrentWeapon(mp.weapons.hashes[0]);
         }
 

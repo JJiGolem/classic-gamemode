@@ -416,7 +416,7 @@ module.exports = {
             sex: sex,
             variation: pants[0],
             texture: pants[1],
-            pockets: '[4,5,10,5,10,5,4,5]',
+            pockets: '[7,8,7,8,14,8,14,8]',
             clime: '[10,30]',
             name: (pants[0] === 15 && sex === 1) || (pants[0] === 14 && sex === 0) ? 'Шорты' : 'Брюки'
         };
@@ -449,7 +449,7 @@ module.exports = {
             tTexture: top[3],
             undershirt: top[4],
             uTexture: top[5],
-            pockets: '[5,5,5,5,4,5]',
+            pockets: '[7,7,7,7,14,7]',
             clime: '[10,30]',
             name: 'Футболка'
         };

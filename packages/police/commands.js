@@ -1,3 +1,4 @@
+var chat = require('../chat');
 var factions = require('../factions');
 var notifs = require('../notifications');
 var police = require('./index');
@@ -21,32 +22,36 @@ module.exports = {
             mp.events.call(`police.follow`, player, args[0]);
         }
     },
-    "/pcellarrest": {
+    "/cell": {
         access: 6,
         description: "Посадить игрока в КПЗ ЛСПД.",
-        args: "[ид_игрока]:n [минуты]:n",
+        args: "[ид_игрока]:n [минуты]:n [причина]",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
             if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
             var mins = Math.clamp(args[1], 1, 60 * 12); // 12 суток макс.
 
-            notifs.info(rec, `${player.name} посадил вас на ${mins} минут`, `КПЗ`);
-            out.info(`${player.name} посадил ${rec.name} в КПЗ на ${mins} минут`);
             police.startCellArrest(rec, null, mins * 60 * 1000);
+            args.shift();
+            args.shift();
+            out.info(`${player.name} посадил ${rec.name} в КПЗ на ${mins} мин. Причина: ${args.join(" ")}`);
+            chat.push(rec, `!{#ff8819} Администратор ${player.name} посадил Вас в КПЗ на ${mins} мин. Причина: ${args.join(" ")}`);
         }
     },
-    "/pjailarrest": {
+    "/jail": {
         access: 6,
         description: "Посадить игрока в тюрьму за городом.",
-        args: "[ид_игрока]:n [минуты]:n",
+        args: "[ид_игрока]:n [минуты]:n [причина]",
         handler: (player, args, out) => {
             var rec = mp.players.at(args[0]);
             if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
-            var mins = Math.clamp(args[1], 1, 60 * 12); // 12 суток макс.
+            var mins = Math.clamp(args[1], 1, 60 * 12); // 12 часов макс.
 
-            notifs.info(rec, `${player.name} посадил вас на ${mins} минут`, `Тюрьма`);
-            out.info(`${player.name} посадил ${rec.name} в тюрьму на ${mins} минут`);
-            police.startJailArrest(player, null, mins * 60 * 1000);
+            police.startJailArrest(rec, null, mins * 60 * 1000);
+            args.shift();
+            args.shift();
+            out.info(`${player.name} посадил ${rec.name} в тюрьму на ${mins} мин. Причина: ${args.join(" ")}`);
+            chat.push(rec, `!{#ff8819} Администратор ${player.name} посадил Вас в тюрьму на ${mins} мин. Причина: ${args.join(" ")}`);
         }
     },
     "/pwanted": {

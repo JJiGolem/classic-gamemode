@@ -57,7 +57,7 @@
     <!-- v-cloak в контейнерах VUE используется для того, что бы решить проблему мерцания UI при запуске -->
     <div v-cloak="v-cloak" id="hud" v-show="show">
         <div v-show="keysShow && !selectMenu.show" class="keys">
-            <div v-for="key in keys"><span v-html="key.key"></span>{{ key.name }}</div>
+            <div v-show="isKeyShow(key.name)" v-for="key in keys" v-bind:key="key.key"><span v-html="key.key"></span>{{ key.name }}</div>
         </div>
         <div class="panel-right-top" v-show="!prompt.text">
             <div class="info-logo">
@@ -1346,7 +1346,7 @@
             <table>
                 <tr v-if="!isStarted">
                     <th>
-                        <span class="fishing-help-button">F</span>
+                        <span class="fishing-help-button">ЛКМ</span>
                     </th>
                     <th>
                         <span>Забросить удочку</span>
