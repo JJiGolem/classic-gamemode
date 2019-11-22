@@ -293,6 +293,7 @@ mp.events.add("playerDeath", (player) => {
         if (mp.busy.includes('fishing.game')) {
             isDead = true;
             mp.events.call('fishing.game.exit');
+            mp.events.callRemote('animations.stop');
         }
     }
 });
