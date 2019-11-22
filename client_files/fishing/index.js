@@ -103,6 +103,7 @@ mp.events.add('render', () => {
 
                 if (water > 0 && ground < water && ground != 0) {
                     isShowPrompt = true;
+                    mp.chat.debug('show prompt');
                     mp.events.call('fishing.game.menu');
                 } else {
                     if (isShowPrompt) {
