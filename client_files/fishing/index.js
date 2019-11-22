@@ -288,11 +288,9 @@ mp.events.add('fishing.game.exit', () => {
 });
 
 mp.events.addDataHandler("knocked", (player, knocked) => {
-    // mp.chat.debug('knocked ' + isEnter + ', ' + isInZone );
     if (!isEnter) return;
-    // if (!isInZone) return;
 
-    if (player.remoteId == localPlayer.remoteId) {
+    if (player.remoteId == localPlayer.remoteId && knocked) {
         mp.events.call('fishing.game.exit');
     }
 });
