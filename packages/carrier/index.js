@@ -27,7 +27,7 @@ module.exports = {
     // Заказы бизнесов
     bizOrders: [],
     // Цена урожая при продаже
-    cropPrice: 1,
+    cropPrice: 11,
     // Модели авто и их типы товара
     vehModels: {
         "boxville2": [1, 2, 3, 4, 6, 7, 8],
