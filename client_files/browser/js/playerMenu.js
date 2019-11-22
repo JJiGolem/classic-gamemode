@@ -753,8 +753,8 @@ var playerMenu = new Vue({
             skill.value = data.exp;
 
             if (parseInt(skill.value) == parseInt(oldExp)) return;
-            if (parseInt(skill.value) > parseInt(oldExp)) prompt.show(`Навык '${skill.head}' повысился до ${skill.value}%`);
-            else prompt.show(`Навык '${skill.head}' понизился до ${skill.value}%`);
+            if (parseInt(skill.value) > parseInt(oldExp)) prompt.show(`Навык '${skill.head}' повысился до ${parseInt(skill.value)}%`);
+            else prompt.show(`Навык '${skill.head}' понизился до ${parseInt(skill.value)}%`);
         },
         setCash(cash) {
             statistics["cash"].value = cash;

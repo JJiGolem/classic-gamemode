@@ -13,6 +13,7 @@ module.exports = {
         this.sequelize = new Sequelize('classic_db', mp.config.dbUser, mp.config.dbPassword, {
             host: 'localhost',
             dialect: 'mysql',
+            port: mp.config.dbPort || 3306,
             logging: false,
             pool: {
                 max: 100,

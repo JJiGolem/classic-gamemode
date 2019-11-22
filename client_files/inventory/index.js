@@ -212,7 +212,10 @@ mp.inventory = {
         player.taskSwapWeapon(true)
         if (player.hands) {
             var oldAnim = this.itemsInfo[player.hands.itemId].attachInfo.anim;
-            if (oldAnim) player.stopAnimTask(oldAnim.dict, oldAnim.name, 3);
+            if (oldAnim) {
+                if (mp.players.local.remoteId == player.remoteId) player.stopAnimTask(oldAnim.dict, oldAnim.name, 3);
+                else player.clearTasksImmediately();
+            }
             if (mp.objects.exists(player.hands.object)) {
                 player.hands.object.destroy();
                 delete player.hands;
@@ -367,7 +370,7 @@ mp.events.add("inventory.item.adrenalin.use.callRemote", (data) => {
     var rec = mp.utils.getNearPlayer(mp.players.local.position);
     if (!rec) return mp.notify.error(`Рядом никого нет`, `Адреналин`);
     data.recId = rec.remoteId;
-    mp.events.callRemote(`inventory.item.adrenalin.use`, data);
+    mp.events.callRemote(`inventory.item.adrenalin.use`, JSON.stringify(data));
 });
 
 mp.events.add("playerEnterVehicle", () => {

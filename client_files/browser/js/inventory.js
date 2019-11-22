@@ -550,6 +550,8 @@ var inventory = new Vue({
         searchWait: 5000,
         // Таймер исследования при обыске
         searchTimer: null,
+        // Список предметов для исследования при обыске
+        searchList: [],
     },
     computed: {
         commonWeight() {
@@ -1065,6 +1067,7 @@ var inventory = new Vue({
             if (!Array.isArray(items)) items = [items];
             for (var index in items) {
                 var item = items[index];
+                if (item.search) continue;
                 var info = this.itemsInfo[item.itemId];
                 // if (!info) return weight;
                 weight += info.weight;
@@ -1279,27 +1282,27 @@ var inventory = new Vue({
         },
         // Ожидание исследования предметов при обыске
         setSearchItems(items, enable) {
-            var searchList = [];
+            this.searchList = [];
             items.forEach(item => {
                 Vue.set(item, 'search', enable);
+                this.searchList.push(item);
                 if (item.pockets) {
                     item.pockets.forEach(pocket => {
                         Vue.set(pocket, 'search', enable);
-                        searchList.push(pocket);
+                        this.searchList.push(pocket);
                         for (var index in pocket.items) {
                             var child = pocket.items[index];
                             Vue.set(child, 'search', enable);
-                            searchList.push(child);
+                            this.searchList.push(child);
                         }
                     });
                 }
-                searchList.push(item);
             });
             clearInterval(this.searchTimer);
             if (!enable) return;
             this.searchTimer = setInterval(() => {
-                var el = searchList.shift();
-                if (!el) return clearInterval(this.searchTimer);
+                var el = this.searchList.shift();
+                if (!el || !this.searchMode) return clearInterval(this.searchTimer);
                 Vue.set(el, 'search', false);
             }, this.searchWait);
         },
@@ -1502,7 +1505,7 @@ var inventory = new Vue({
         },
         getItemName(item) {
             if (!item) return null;
-            if (item.search) return 'Обыск...';
+            if (item.pockets && item.pockets.findIndex(x => x.search || Object.values(x.items).findIndex(y => y.search) != -1) != -1) return 'Обыск...';
             if ([6, 7, 8, 9, 15, 133].includes(item.itemId) && item.params.name) // одежда, рыба, алко-напиток
                 return `${item.params.name}`;
             if (item.itemId == 16 && item.params.name) // сигареты
@@ -1648,6 +1651,7 @@ var inventory = new Vue({
         searchMode(val, oldVal) {
             if (oldVal && !val) {
                 this.initItems(oldVal.myEquipment);
+                clearInterval(this.searchTimer);
             }
         },
     },

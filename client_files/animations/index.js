@@ -15,12 +15,16 @@ mp.animations = {
     animationData: require('animations/data.js'),
 
     playAnimation(player, a, time = null) {
+        var localId = mp.players.local.remoteId;
         mp.timer.remove(this.animationTimers[player.remoteId]);
         var oldAnim = player.anim;
         delete player.anim;
         if (player.isJumping() || player.isShooting() || player.isSwimming() || player.isFalling()) return;
         // player.clearTasksImmediately();
-        if (oldAnim) player.stopAnimTask(oldAnim.dict, oldAnim.name, 3);
+        if (oldAnim) {
+            if (localId == player.remoteId) player.stopAnimTask(oldAnim.dict, oldAnim.name, 3);
+            else player.clearTasksImmediately();
+        }
         if (!a) return;
         mp.utils.requestAnimDict(a.dict, () => {
             player.taskPlayAnim(a.dict, a.name, a.speed, 0, -1, a.flag, 0, false, false, false);
@@ -31,7 +35,10 @@ mp.animations = {
         mp.timer.remove(this.animationTimers[id]);
         this.animationTimers[id] = mp.timer.add(() => {
             var rec = mp.players.atRemoteId(id);
-            if (rec && rec.anim) rec.stopAnimTask(rec.anim.dict, rec.anim.name, 3);
+            if (rec && rec.anim) {
+                if (localId == rec.remoteId) rec.stopAnimTask(rec.anim.dict, rec.anim.name, 3);
+                else rec.clearTasksImmediately();
+            }
             delete this.animationTimers[id];
             delete rec.anim;
         }, time);
@@ -105,6 +112,7 @@ mp.animations = {
         this.isOwnPlayingAnimId = null;
         if (!mp.players.local.isPlayingAnim(a.split(' ')[0], a.split(' ')[1], 3)) return;
         mp.events.callRemote(`animations.stop`);
+        mp.prompt.hide();
     },
 };
 

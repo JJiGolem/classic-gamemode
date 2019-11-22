@@ -206,7 +206,7 @@ mp.woodman = {
         if (!this.logSquats[this.logFocusSlotI]) return mp.notify.error(`Перейдите к другой части бревна`, `Лесоруб`);
 
         // TODO: set correct heading
-        mp.busy.add("chopping", false);
+        mp.busy.add("jobProcess", false);
         mp.events.callRemote(`animations.playById`, 5523);
         this.logTimer = mp.timer.add(() => {
             this.stopLogTimer();
@@ -219,7 +219,7 @@ mp.woodman = {
     stopLogTimer() {
         mp.timer.remove(this.logTimer);
         this.logTimer = null;
-        mp.busy.remove("chopping");
+        mp.busy.remove("jobProcess");
         mp.events.callRemote(`animations.stop`);
     },
     createJobPed() {

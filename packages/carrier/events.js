@@ -1,5 +1,6 @@
 let bizes = call('bizes');
 let carrier = call('carrier');
+let factions = call('factions');
 let money = call('money');
 let notifs = call('notifications');
 let vehicles = call('vehicles');
@@ -143,7 +144,8 @@ module.exports = {
         if (!veh.db || veh.db.key != "job" || veh.db.owner != 4) return out(`Вы не в грузовике`);
         if (veh.products && veh.products.bizOrder) return out(`Отмените заказ`);
         if (!veh.products || !veh.products.count) return out(`Грузовик пустой`);
-        if (!["productA", "productB"].includes(veh.products.type)) return out(`Неверный тип урожая`);
+        if (!["productA", "productB", "productC"].includes(veh.products.type)) return out(`Неверный тип урожая`);
+        if (veh.products.type == 'productC' && !factions.isMafiaFaction(player.character.factionId)) return out(`Доступно только членам мафии`);
 
         var price = carrier.cropPrice * veh.products.count;
         player.character.pay += price;
