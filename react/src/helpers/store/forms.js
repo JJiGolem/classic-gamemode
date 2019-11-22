@@ -18,8 +18,9 @@ export default function forms(state = initialState, action) {
                 $('#phone-form-react').animate({ bottom: '7%' }, 100);
                 $('#phone-form-react').css({ "display": "block" });
             } else {
-                $('#phone-form-react').animate({ bottom: '-50%' }, 100);
-                $('#phone-form-react').css({ "display": "none" });
+                $('#phone-form-react').animate({ bottom: '-50%' }, 100, function() {
+                    $('#phone-form-react').css({ "display": "none" })
+                });
             }
             return {
                 ...state,

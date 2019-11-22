@@ -143,6 +143,7 @@ export default function info(state = initialState, action) {
             if (!payload && state.incomingCall.state) {
                 // eslint-disable-next-line no-undef
                 mp.trigger('phone.call.in.ans', 0);
+                phoneIsShow2 = false;
 
                 return {
                     ...state,
@@ -228,8 +229,10 @@ export default function info(state = initialState, action) {
             return newState;
 
         case 'SET_CALL_STATUS':
-            if (state.incomingCall && state.incomingCall.state && phoneIsShow && phoneIsShow2) {
-                $('#phone-form-react').animate({ bottom: '-50%' }, 100);
+            if (state.incomingCall && state.incomingCall.state && phoneIsShow2) {
+                $('#phone-form-react').animate({ bottom: '-50%' }, 100, function() {
+                    $('#phone-form-react').css({ "display": "none" });
+                });
                 phoneIsShow2 = false;
             }
 
@@ -253,6 +256,7 @@ export default function info(state = initialState, action) {
         case 'INCOMING_CALL':
             if (!phoneIsShow && payload.state) {
                 $('#phone-form-react').animate({ bottom: '-20%' }, 100);
+                $('#phone-form-react').css({ "display": "block" });
                 phoneIsShow2 = true;
             }
             return {

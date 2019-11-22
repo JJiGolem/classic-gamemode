@@ -16,6 +16,10 @@ class IncomingCall extends Component {
         this.props.setCall(true);
     }
 
+    componentWillUnmount() {
+        this.props.setCall(false);
+    }
+
     startCall(event) {
         event.preventDefault();
         const { number, setCallStatus, setCall, info, setIncomingCall, setActiveCall } = this.props;
