@@ -41,9 +41,7 @@ mp.speechChanel.addChannel = (name, maxRange = 0, autoConnection = false, use3d 
 /// Подключить выбранного игрока к каналу связи
 mp.speechChanel.connect = (player, channel) => {
     if (player == null) return;
-    if (channel == 'phone') mp.console(`speechChanel.connect ${channel}`);
     let index = listeners.findIndex( x => x.playerId === player.remoteId);
-    if (channel == 'phone') mp.console(`speechChanel.connect ${index}`);
     if (index !== -1) {
         if (!listeners[index].channels.includes(channel)) {
             listeners[index].channels.push(channel);
@@ -65,17 +63,19 @@ mp.events.add("voiceChat.connect", (playerId, channel) => {
 /// Отключить выбранного игрока от канала связи
 mp.speechChanel.disconnect = (player, channel, isSend = false) => {
     if (player == null) return;
-    if (channel == 'phone') mp.console(`speechChanel.disconnect ${player.remoteId}`);
+    if (channel == 'phone') mp.console(`speechChanel.disconnect remoteId ${player.remoteId}`);
     let index = listeners.findIndex( x => x.playerId === player.remoteId);
-    if (channel == 'phone') mp.console(`speechChanel.disconnect ${index}`);
+    if (channel == 'phone') mp.console(`speechChanel.disconnect index ${index}`);
     if (index === -1) return;
     if (channel == null) {
         listeners.splice(index, 1);
     }
     else {
-        let channelIndex = listeners[index].channels.findIndex(x => x === channel);
+        let channelIndex = listeners[index].channels.findIndex(x => x == channel);
+        if (channel == 'phone') mp.console(`speechChanel.disconnect channels ${JSON.stringify(listeners[index].channels)}`);
+        if (channel == 'phone') mp.console(`speechChanel.disconnect channelIndex ${channelIndex}`);
         channelIndex !== -1 && listeners[index].channels.splice(channelIndex, 1);
-
+        if (channel == 'phone') mp.console(`speechChanel.disconnect channels ${JSON.stringify(listeners[index].channels)}`);
         if (listeners[index].channels.length === 0) {
             listeners.splice(index, 1);
             mp.events.callRemote("voiceChat.remove", player);
@@ -138,12 +138,8 @@ mp.timer.addInterval(() => {
     });
     /// Автоматическое отключение заданных каналов всех игроков
     for (let i = 0; i < listeners.length; i++) {
-        mp.console(`remoteId ${listeners[i].playerId}`);
         let player = mp.players.atRemoteId(listeners[i].playerId);
-        mp.console(`isPlayer ${player != null}`);
         if (player == null) return;
-        mp.console(`player.handle ${player.handle}`);
-		// if (player.handle !== 0) {
             if (channels[listeners[i].current].maxRange != 0) {
                 let dist = mp.game.system.vdist(player.position.x, player.position.y, player.position.z,
                     mp.players.local.position.x,  mp.players.local.position.y,  mp.players.local.position.z);
@@ -159,10 +155,6 @@ mp.timer.addInterval(() => {
             else {
                 player.voiceVolume = 1;
             }
-		// }
-		// else {
-		// 	mp.speechChanel.disconnect(player, null, true);
-		// }
     }
 }, 250);
 
