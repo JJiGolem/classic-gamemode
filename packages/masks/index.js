@@ -99,7 +99,7 @@ module.exports = {
     },
     setBizParam(id, key, value) {
         dbData[key] = value;
-        shop.save();
+        dbData.save();
     },
     getProductsAmount() {
         let bizId = dbData.bizId;
@@ -118,8 +118,12 @@ module.exports = {
         bizes.bizUpdateCashBox(bizId, money);
     },
     calculateProductsNeeded(price) {
-        if (price < 100) return 5;
-        if (price >= 100) return 8;
-        return 3;
+        switch (price) {
+            case price < 100:
+                return 5;
+            default:
+                let products = parseInt(price / this.productPrice);
+                return products > 100 ? 100 : products;
+        }
     }
 }
