@@ -98,6 +98,7 @@ speedometerUpdateTimer = mp.timer.addInterval(() => { /// Обновление �
 
 mp.keys.bind(0x32, true, function() {
     if (mp.busy.includes(['chat', 'cuffs', 'terminal'])) return;
+    if (!mp.players.local.vehicle) return;
     if (mp.players.local.vehicle.getPedInSeat(-1) === mp.players.local.handle) {
         mp.events.callRemote('vehicles.engine.toggle');
     }
