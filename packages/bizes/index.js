@@ -487,7 +487,10 @@ module.exports = {
     getBizParameters(charId, id) {
         let biz = getBizById(id);
         if (biz == null) return null;
-        if (biz.info.characterId !== charId) return null;
+        if (!bizesModules[biz.info.type].business.isFactionOwner) {
+            if (biz.info.characterId !== charId) return null;
+        }
+
         let params = bizesModules[biz.info.type].getBizParamsById(biz.info.id);
         if (params == null) return null;
         return {bizId: biz.info.id, params: params};

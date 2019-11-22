@@ -94,7 +94,7 @@ module.exports = {
                 min: this.minPriceMultiplier,
                 current: dbData.priceMultiplier
             }
-        ]
+        ];
         return params;
     },
     setBizParam(id, key, value) {
