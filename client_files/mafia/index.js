@@ -224,7 +224,7 @@ mp.events.add({
         var rec = mp.utils.getNearPlayer(mp.players.local.position);
         if (!rec) return mp.notify.error(`Рядом никого нет`, `Мешок`);
         data.recId = rec.remoteId;
-        mp.events.callRemote(`mafia.bag`, data);
+        mp.events.callRemote(`mafia.bag`, JSON.stringify(data));
     },
     "mafia.bizWar.showMenu": (data) => {
         mp.mafia.showBizWarMenu(data);
@@ -247,7 +247,7 @@ mp.events.add({
         var rec = mp.utils.getNearPlayer(mp.players.local.position);
         if (!rec) return mp.notify.error(`Рядом никого нет`, `Веревка`);
         data.recId = rec.remoteId;
-        mp.events.callRemote(`mafia.cuffs`, data);
+        mp.events.callRemote(`mafia.cuffs`, JSON.stringify(data));
     },
     "mafia.follow.start": (playerId) => {
         mp.mafia.startFollowToPlayer(playerId);

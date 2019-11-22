@@ -367,7 +367,7 @@ mp.events.add("inventory.item.adrenalin.use.callRemote", (data) => {
     var rec = mp.utils.getNearPlayer(mp.players.local.position);
     if (!rec) return mp.notify.error(`Рядом никого нет`, `Адреналин`);
     data.recId = rec.remoteId;
-    mp.events.callRemote(`inventory.item.adrenalin.use`, data);
+    mp.events.callRemote(`inventory.item.adrenalin.use`, JSON.stringify(data));
 });
 
 mp.events.add("playerEnterVehicle", () => {
