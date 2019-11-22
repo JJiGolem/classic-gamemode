@@ -286,7 +286,7 @@ mp.events.add('fishing.game.exit', () => {
     mp.busy.remove('fishing.game');
 });
 
-mp.events.addDataHandler("knocked", (player, knocked) => {
+mp.events.add("playerDeath", (player) => {
     if (!isEnter) return;
 
     if (player.remoteId == localPlayer.remoteId && knocked) {
