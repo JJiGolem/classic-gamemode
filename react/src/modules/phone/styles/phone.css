@@ -32,6 +32,7 @@
     transform: scale(.9);
     overflow: hidden;
     color: #343c47;
+    display: none;
     animation: show-phone .5s ease-in-out;
 }
 

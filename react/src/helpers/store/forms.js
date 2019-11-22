@@ -16,8 +16,10 @@ export default function forms(state = initialState, action) {
         case 'SHOW_PHONE':
             if (payload) {
                 $('#phone-form-react').animate({ bottom: '7%' }, 100);
+                $('#phone-form-react').css({ "display": "block" });
             } else {
-                $('#phone-form-react').animate({ bottom: '-50%' }, 100)
+                $('#phone-form-react').animate({ bottom: '-50%' }, 100);
+                $('#phone-form-react').css({ "display": "none" });
             }
             return {
                 ...state,
