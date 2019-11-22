@@ -21,7 +21,7 @@ var debug = (text) => {
 
 // Отображение в дискорде
 mp.events.add('time.minute.tick', () => {
-    mp.discord.update('Classic Roleplay | Testing', 'classic-rp.ru');
+    mp.discord.update('Classic Roleplay', 'classic-rp.ru');
 });
 
 
