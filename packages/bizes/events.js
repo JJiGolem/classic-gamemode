@@ -175,7 +175,6 @@ module.exports = {
         let buyer = mp.players.at(player.biz.buyerId);
         if (buyer == null) return player.call("biz.sell.ans", [0]);
         if (!mp.players.exists(buyer)) return player.call("biz.sell.ans", [0]);
-        if (vehicles == null) return player.call('biz.sell.ans', [0]);
         bizId = parseInt(bizId);
         cost = parseInt(cost);
         if (isNaN(bizId) || isNaN(cost)) return player.call("biz.sell.ans", [0]);
