@@ -47,7 +47,7 @@ module.exports = {
         let productsAvailable = masks.getProductsAmount();
         if (products > productsAvailable) return player.call('masks.buy.ans', [6]);
         let params = {
-            sex: !player.character.gender,
+            sex: player.character.gender ? 0 : 1,
             variation: mask.drawable,
             texture: textureId
         }

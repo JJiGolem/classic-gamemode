@@ -226,8 +226,10 @@ let createOrder = async function(biz, count, price) {
     let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
     let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
     if (price <= min || price >= max) return 0;
+    if (biz.info.productsOrderPrice > biz.info.cashBox) return 0;
     biz.info.productsOrder = count;
     biz.info.productsOrderPrice = parseInt(price * count);
+    biz.info.cashBox -= biz.info.productsOrderPrice;
     carrier != null && carrier.addBizOrder(biz);
     await biz.info.save();
     return 1;

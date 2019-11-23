@@ -329,11 +329,11 @@ export default function info(state = initialState, action) {
 
         case 'ORDER_COMPLETE_BUSINESS':
             newState = { ...state };
-            newState.biz[0].resources += payload;
+            newState.biz[0].resources += payload.count;
 
-            if ((newState.biz[0].order.productsCount - payload) > 0) {
-                newState.biz[0].order.productsCount -= payload;
-                newState.biz[0].order.productsPrice = parseInt((1 - payload/newState.biz[0].order.productsCount) * newState.biz[0].order.productsPrice)
+            if ((newState.biz[0].order.productsCount - payload.count) > 0) {
+                newState.biz[0].order.productsCount -= payload.count;
+                newState.biz[0].order.productsPrice -= payload.sum
             } else {
                 newState.biz[0].order = null;
             }
@@ -379,17 +379,17 @@ export default function info(state = initialState, action) {
             return newState;
 
         case 'ORDER_COMPLETE_BUSINESS_FACTION':
-            newState = { ...state };
-            newState.factionBiz.resources += payload;
-
-            if ((newState.factionBiz.order.productsCount - payload) > 0) {
-                newState.factionBiz.order.productsCount -= payload;
-                newState.factionBiz.order.productsPrice = parseInt((1 - payload/newState.factionBiz.order.productsCount) * newState.factionBiz.order.productsPrice)
-            } else {
-                newState.factionBiz.order = null;
-            }
-
-            return newState;
+                newState = { ...state };
+                newState.factionBiz[0].resources += payload.count;
+    
+                if ((newState.factionBiz[0].order.productsCount - payload.count) > 0) {
+                    newState.factionBiz[0].order.productsCount -= payload.count;
+                    newState.factionBiz[0].order.productsPrice -= payload.sum
+                } else {
+                    newState.factionBiz[0].order = null;
+                }
+    
+                return newState;
 
         case 'ADD_APP_TO_PHONE':
             const newStateAdd = {...state};
