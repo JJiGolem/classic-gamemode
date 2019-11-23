@@ -2,7 +2,7 @@ var hud = new Vue({
     el: "#hud",
     data: {
         players: 0,
-        maxPlayers: 1000,
+        maxPlayers: 1500,
         build: 0,
         branch: "",
         wanted: 0,
