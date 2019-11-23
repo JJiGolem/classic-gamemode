@@ -99,7 +99,7 @@ module.exports = {
         let defaultPrice = tuning.calculateModPrice(vehicle.properties.price, type, index);
         let products = tuning.calculateProductsNeeded(defaultPrice);
         let price = parseInt(defaultPrice * tuning.getPriceMultiplier(customsId));
-        let income = parseInt(products * tuning.productPrice * tuning.getPriceMultiplier(customsId));
+       // let income = parseInt(products * tuning.productPrice * tuning.getPriceMultiplier(customsId));
         
         let productsAvailable = tuning.getProductsAmount(customsId);
         if (products > productsAvailable) return player.call('tuning.buy.ans', [5]);
@@ -114,7 +114,7 @@ module.exports = {
                 vehicle.setMod(type, index);
                 player.call('tuning.buy.ans', [0, typeName, index]);
                 tuning.removeProducts(customsId, products);
-                tuning.updateCashbox(customsId, income);
+                tuning.updateCashbox(customsId, price);
             } else {
                 player.call('tuning.buy.ans', [4]);
             }

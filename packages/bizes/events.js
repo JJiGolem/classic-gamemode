@@ -120,7 +120,7 @@ module.exports = {
             if (!result) return player.call('biz.buy.ans', [0, ""]);
             info.characterId = player.character.id;
             info.characterNick = player.character.name;
-            info.date = bizService.getRandomDate(1);
+            info.date = bizService.getDropDate(1);
             info.cashBox = 0;
             await bizService.destroyOrder(info.id);
             await info.save();

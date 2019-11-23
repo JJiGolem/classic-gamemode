@@ -122,7 +122,7 @@ module.exports = {
         if (daysNumber + bizService.getDateDays(biz.info.date) > 30) return player.call("bank.biz.push.ans", [0]);
         money.removeMoney(player, price, function(resultMoney) {
             if (resultMoney) {
-                biz.info.date = bizService.getRandomDate(daysNumber + bizService.getDateDays(biz.info.date));
+                biz.info.date = bizService.getDropDate(daysNumber + bizService.getDateDays(biz.info.date));
                 bizService.setTimer(biz);
                 biz.info.save();
                 player.call("bank.biz.push.ans", [1]);
@@ -144,7 +144,7 @@ module.exports = {
         if (daysNumber + houseService.getDateDays(house.info.date) > 30) return player.call("bank.house.push.ans", [0]);
         money.removeMoney(player, price, function(resultMoney) {
             if (resultMoney) {
-                house.info.date = houseService.getRandomDate(daysNumber + houseService.getDateDays(house.info.date));
+                house.info.date = houseService.getDropDate(daysNumber + houseService.getDateDays(house.info.date));
                 houseService.setTimer(house);
                 house.info.save();
                 player.call("bank.house.push.ans", [1]);
