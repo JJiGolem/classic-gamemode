@@ -125,6 +125,8 @@ module.exports = {
     exp: 0.05,
     // Прибавка к цене предмета в % (0.0-1.0) при фулл скилле
     priceBonus: 0.5,
+    // Время, через которое у дерева пополнится ХП
+    respawnTreeTime: 30 * 60 * 1000,
 
     async init() {
         this.createStorageMarker();
@@ -263,6 +265,7 @@ module.exports = {
         });
 
         if (!colshape.health) {
+            colshape.destroyTime = Date.now();
             player.call(`woodman.log.request`);
             this.addJobExp(player);
         }
