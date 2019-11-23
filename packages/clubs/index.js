@@ -290,6 +290,8 @@ module.exports = {
     drunkennessWaitClear: 2 * 60 * 1000,
     // Кол-во ед. опьянения, отнимаемых в таймере
     drunkennessDec: 10,
+    minAlcoholPrice: 1,
+    maxAlcoholPrice: 8,
 
     init() {
         bizes = call('bizes');
@@ -508,5 +510,25 @@ module.exports = {
     setDrunkWalking(player, enable) {
         var style = (enable) ? this.drunkWalkingId : player.character.settings.walking;
         walking.set(player, style);
+    },
+    getBizParamsById(id) {
+        let club = this.clubs.find(x => x.biz.info.id == id);
+        if (!club) return;
+        return [
+            {
+                key: 'alcoholPrice',
+                name: 'Цена спиртного',
+                max: this.maxAlcoholPrice,
+                min: this.minAlcoholPrice,
+                current: club.db.alcoholPrice,
+                isInteger: true
+            }
+        ];
+    },
+    setBizParam(id, key, value) {
+        let club = this.clubs.find(x => x.biz.info.id == id);
+        if (!club) return;
+        club.db[key] = value;
+        club.db.save();
     },
 };
