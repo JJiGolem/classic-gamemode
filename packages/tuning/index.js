@@ -167,8 +167,8 @@ module.exports = {
     },
     calculateProductsNeeded(price) {
         switch (price) {
-            case price <= this.productPrice:
-                return 1;
+            // case price <= this.productPrice:
+            //     return 1;
             default:
                 let products = parseInt((price / 3) / this.productPrice);
                 return products;
