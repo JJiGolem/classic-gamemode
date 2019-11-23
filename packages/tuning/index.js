@@ -170,7 +170,7 @@ module.exports = {
             case price <= this.productPrice:
                 return 1;
             default:
-                let products = parseInt(price / this.productPrice);
+                let products = parseInt((price / 3) / this.productPrice);
                 return products;
         }
     } 
