@@ -601,6 +601,10 @@ module.exports = {
             player.addAttachment(type + "Box");
         }
     },
+    canSetStorageState(player) {
+        var maxRank = this.getMaxRank(player.character.factionId);
+        return player.character.factionRank == maxRank.id || player.character.factionRank == maxRank.id - 1;
+    },
     canFillWarehouse(player, boxType, faction) {
         if (!this.whiteListWarehouse[boxType]) return false;
         if (!this.whiteListWarehouse[boxType][player.character.factionId]) return false;
@@ -653,8 +657,8 @@ module.exports = {
             if (faction.cash < pay) return notifs.error(player, `В общаке недостаточно средств для получения зарплаты`, faction.name);
 
             // TODO: не многовато запросов в БД получится?
-            faction.cash -= pay;
-            faction.save();
+            // faction.cash -= pay;
+            // faction.save();
         } else if (this.isBandFaction(faction)) pay += parseInt(bands.bandZonesPrice * bands.getPowerBand(faction.id));
 
         if (!pay) return;

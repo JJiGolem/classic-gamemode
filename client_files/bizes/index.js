@@ -120,8 +120,8 @@ mp.events.add("biz.order.ans", (result) => {
 mp.events.add("biz.order.cancel", (id) => {
     mp.events.callRemote("biz.order.cancel", id);
 });
-mp.events.add("biz.order.complete", (resources) => {
-    mp.callCEFR("biz.order.complete", [resources]);
+mp.events.add("biz.order.complete", (resources, sum) => {
+    mp.callCEFR("biz.order.complete", [resources, sum]);
 });
 mp.events.add("biz.order.take", (flag) => {
     mp.callCEFR("biz.order.take", [flag]);
