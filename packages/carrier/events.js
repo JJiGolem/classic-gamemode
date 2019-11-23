@@ -164,7 +164,7 @@ module.exports = {
         carrier.dropBizOrder(player);
     },
     "playerEnterColshape": (player, colshape) => {
-        if (!colshape.isBiz) return;
+        if (!colshape.isOrderBiz) return;
         if (!player.character || player.character.job != 4) return;
         var veh = player.vehicle;
 

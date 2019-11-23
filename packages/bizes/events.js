@@ -121,6 +121,7 @@ module.exports = {
             info.characterId = player.character.id;
             info.characterNick = player.character.name;
             info.date = bizService.getRandomDate(1);
+            info.cashBox = 0;
             await bizService.destroyOrder(info.id);
             await info.save();
 
