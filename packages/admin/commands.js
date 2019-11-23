@@ -390,7 +390,7 @@ module.exports = {
             var days = Math.clamp(args[1], 1, 30);
             args.splice(0, 2);
 
-            mp.events.call('admin.notify.players', `!{#db5e4a}[A] Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${args.join(" ")} `);
+            mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${args.join(" ")} `);
 
             rec.account.clearBanDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
             rec.account.save();
@@ -420,7 +420,7 @@ module.exports = {
 
             var rec = mp.players.getByName(name);
             if (rec) {
-                mp.events.call('admin.notify.players', `!{#db5e4a}[A] Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${reason} `);
+                mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${reason} `);
                 rec.kick();
             }
 
@@ -436,7 +436,7 @@ module.exports = {
             if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
 
             args.shift();
-            mp.events.call('admin.notify.players', `!{#db5e4a}[A] Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${args.join(" ")} (PERMANENT)`);
+            mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${args.join(" ")} (PERMANENT)`);
 
             db.Models.Ban.create({
                 ip: rec.ip,
