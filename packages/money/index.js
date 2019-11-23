@@ -63,7 +63,7 @@ module.exports = {
             catch(e) {
                 console.log(e);
             }
-        }
+        };
         id = parseInt(id);
         number = parseInt(number);
         if (isNaN(number) || isNaN(id)) return callback(false);

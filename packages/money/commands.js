@@ -19,6 +19,21 @@ module.exports = {
             }, `Команда от админа #${player.character.id}`);
         }
     },
+    "/addcashbynick": {
+        access: 6,
+        description: "Дать наличности",
+        args: "[Кол-во]:n [nick]:s",
+        handler: async (player, args) => {
+            let character = await db.Models.Character.findOne({
+                where: {
+                    name: `${args[1]} ${args[2]}`
+                }
+            });
+            money.addCashById(character.id, args[0], () => {
+
+            }, `Команда от админа #${player.character.id}`)
+        }
+    },
     "/addmoney": {
         access: 6,
         description: "Пополнить банковский счет",
@@ -81,4 +96,4 @@ module.exports = {
             player.call('notifications.push.success', ["У игрока " + mp.players.at(id).character.cash + "$ наличными и " + mp.players.at(id).character.bank + "$ на банковском счете", "Состояние наличных и счета игрока"]);
         }
     },
-}
+};
