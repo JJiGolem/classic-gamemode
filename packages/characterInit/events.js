@@ -82,7 +82,7 @@ module.exports = {
     "playerQuit": (player) => {
         if (!player.character) return;
 
-        var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60 % 60);
+        var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60);
         player.character.minutes += minutes;
         if (!player.dimension && !player.character.arrestTime) {
             player.character.x = player.position.x;

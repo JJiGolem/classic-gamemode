@@ -31,10 +31,10 @@ module.exports = {
         }, 60000);
     },
     payDay() {
-        this.allBroadcast();
         this.factionPay();
         this.jobsPay();
         this.farmsTax();
+        this.allBroadcast();
         // TODO: Налоги на дома
         // TODO: Налоги на бизы
     },
@@ -42,7 +42,8 @@ module.exports = {
         mp.players.forEach((rec) => {
             if (!rec.character) return;
             if (rec.getVariable("afk")) return notifs.error(rec, `PayDay не засчитан`, `ANTI-AFK`);
-            var minutes = parseInt((Date.now() - rec.authTime) / 1000 / 60 % 60);
+            var minutes = parseInt((Date.now() - rec.authTime) / 1000 / 60);
+            rec.authTime = Date.now();
             notifs.info(rec, `Вы отыграли ${minutes} минут`, `PayDay`)
             rec.character.minutes += minutes;
             rec.character.law++;

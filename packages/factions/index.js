@@ -646,7 +646,7 @@ module.exports = {
         var faction = this.getFaction(player.character.factionId);
         var pay = this.getRankById(faction, player.character.factionRank).pay;
 
-        var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60 % 60);
+        var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60);
         if (minutes < this.payMins) return notifs.warning(player, `Зарплата не получена из-за низкой активности`, faction.name);
 
         if (this.isMafiaFaction(faction)) {
