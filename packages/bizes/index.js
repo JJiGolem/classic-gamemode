@@ -503,7 +503,9 @@ module.exports = {
     setBizParameters(charId, bizParameters) {
         let biz = getBizById(bizParameters.bizId);
         if (biz == null) return false;
-        if (biz.info.characterId !== charId) return false;
+        if (!bizesModules[biz.info.type].business.isFactionOwner) {
+            if (biz.info.characterId !== charId) return false;
+        }
         bizParameters.params.forEach(param => {
             bizesModules[biz.info.type].setBizParam(bizParameters.bizId, param.key, param.value);
         });
