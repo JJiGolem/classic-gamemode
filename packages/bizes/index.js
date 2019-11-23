@@ -290,7 +290,7 @@ let readyOrder = async function(id, productsNumber) {
 
     await biz.info.save();
     let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
-    player != null && player.call("biz.order.complete", [addedProducts]);
+    player != null && player.call("biz.order.complete", [addedProducts, pay]);
     return {productsOrder: biz.info.productsOrder, productsOrderPrice: biz.info.productsOrderPrice, pay: pay};
 };
 
