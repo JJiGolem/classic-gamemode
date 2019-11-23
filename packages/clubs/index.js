@@ -290,6 +290,8 @@ module.exports = {
     drunkennessWaitClear: 2 * 60 * 1000,
     // Кол-во ед. опьянения, отнимаемых в таймере
     drunkennessDec: 10,
+    minAlcoholPrice: 1,
+    maxAlcoholPrice: 8,
 
     init() {
         bizes = call('bizes');
@@ -377,6 +379,7 @@ module.exports = {
                 player.call(`clubs.setCurrentClub`, [{
                     factionId: player.inClub,
                     name: club.biz.info.name,
+                    alcoholPrice: club.db.alcoholPrice,
                     hasControl: factions.isLeader(player, player.inClub),
                     alcohol: this.alcohol[player.inClub],
                     snacks: this.snacks[player.inClub],
@@ -407,12 +410,13 @@ module.exports = {
         var alcoholList = this.alcohol[club.biz.info.factionId];
         index = Math.clamp(index, 0, alcoholList.length - 1);
         var item = alcoholList[index];
-        if (player.character.cash < item.price) return out(`Необходимо $${item.price}`);
+        var price = item.price * club.db.alcoholPrice;
+        if (player.character.cash < price) return out(`Необходимо $${price}`);
 
         var cantAdd = inventory.cantAdd(player, this.alcoholItemId, item.params);
         if (cantAdd) return out(cantAdd);
 
-        money.removeCash(player, item.price, (res) => {
+        money.removeCash(player, price, (res) => {
             if (!res) out(`Ошибка списания наличных`);
         }, `Покупка напитка в клубе с bizId #${club.biz.info.id}`);
 
@@ -433,12 +437,13 @@ module.exports = {
         var snackList = this.snacks[club.biz.info.factionId];
         index = Math.clamp(index, 0, snackList.length - 1);
         var item = snackList[index];
-        if (player.character.cash < item.price) return out(`Необходимо $${item.price}`);
+        var price = item.price * club.db.alcoholPrice;
+        if (player.character.cash < price) return out(`Необходимо $${price}`);
 
         var cantAdd = inventory.cantAdd(player, this.snackItemId, item.params);
         if (cantAdd) return out(cantAdd);
 
-        money.removeCash(player, item.price, (res) => {
+        money.removeCash(player, price, (res) => {
             if (!res) out(`Ошибка списания наличных`);
         }, `Покупка закуски в клубе с bizId #${club.biz.info.id}`);
 
@@ -459,12 +464,13 @@ module.exports = {
         var smokeList = this.smoke[club.biz.info.factionId];
         index = Math.clamp(index, 0, smokeList.length - 1);
         var item = smokeList[index];
-        if (player.character.cash < item.price) return out(`Необходимо $${item.price}`);
+        var price = item.price * club.db.alcoholPrice;
+        if (player.character.cash < price) return out(`Необходимо $${price}`);
 
         var cantAdd = inventory.cantAdd(player, this.smokeItemId, item.params);
         if (cantAdd) return out(cantAdd);
 
-        money.removeCash(player, item.price, (res) => {
+        money.removeCash(player, price, (res) => {
             if (!res) out(`Ошибка списания наличных`);
         }, `Покупка сигарет в клубе с bizId #${club.biz.info.id}`);
 
@@ -508,5 +514,25 @@ module.exports = {
     setDrunkWalking(player, enable) {
         var style = (enable) ? this.drunkWalkingId : player.character.settings.walking;
         walking.set(player, style);
+    },
+    getBizParamsById(id) {
+        let club = this.clubs.find(x => x.biz.info.id == id);
+        if (!club) return;
+        return [
+            {
+                key: 'alcoholPrice',
+                name: 'Цена спиртного',
+                max: this.maxAlcoholPrice,
+                min: this.minAlcoholPrice,
+                current: club.db.alcoholPrice,
+                isInteger: true
+            }
+        ];
+    },
+    setBizParam(id, key, value) {
+        let club = this.clubs.find(x => x.biz.info.id == id);
+        if (!club) return;
+        club.db[key] = value;
+        club.db.save();
     },
 };

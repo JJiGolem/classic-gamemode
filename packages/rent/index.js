@@ -16,7 +16,7 @@ module.exports = {
             name: 'легковые т/с'
         },
         1: {
-            licType: 'carLicense',
+            licType: 'bikeLicense',
             name: 'мотоциклы'
         },
         2: null, // велосипеды
