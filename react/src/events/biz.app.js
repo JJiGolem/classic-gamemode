@@ -27,10 +27,10 @@ export default (myEventEmmiter, dispatch) => {
         });
     });
 
-    myEventEmmiter.on('biz.order.complete', (resources) => {
+    myEventEmmiter.on('biz.order.complete', (resources, sum) => {
         dispatch({
             type: 'ORDER_COMPLETE_BUSINESS',
-            payload: resources
+            payload: { count: resources, sum: sum }
         });
     });
 

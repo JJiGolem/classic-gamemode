@@ -5,6 +5,9 @@ let destination;
 
 const PRICE_PER_KM = 60;
 
+let lastCallTime;
+let minCallTime = 60*1000; /// промежуток для вызова
+
 let isActiveTaxiClient = false;
 mp.events.add('taxi.client.app.open', () => {
     mp.callCEFR('taxi.client.location', getClientLocation())
@@ -16,6 +19,13 @@ mp.events.add('taxi.client.app.search', () => {
         mp.callCEFR('taxi.client.order.cancel', []);
         return;
     }
+    let diff = Date.now() - lastCallTime;
+    if (diff < minCallTime) {
+        mp.notify.error(`Ожидайте ${parseInt((minCallTime - diff)/ 1000)} секунд`, 'Такси');
+        mp.callCEFR('taxi.client.order.cancel', []);
+        return;
+    } 
+    lastCallTime = Date.now();
     mp.events.callRemote('taxi.client.order.send');
 });
 

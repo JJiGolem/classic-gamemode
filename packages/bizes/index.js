@@ -226,8 +226,10 @@ let createOrder = async function(biz, count, price) {
     let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
     let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
     if (price <= min || price >= max) return 0;
+    if (biz.info.productsOrderPrice > biz.info.cashBox) return 0;
     biz.info.productsOrder = count;
     biz.info.productsOrderPrice = parseInt(price * count);
+    biz.info.cashBox -= biz.info.productsOrderPrice;
     carrier != null && carrier.addBizOrder(biz);
     await biz.info.save();
     return 1;
@@ -290,7 +292,7 @@ let readyOrder = async function(id, productsNumber) {
 
     await biz.info.save();
     let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
-    player != null && player.call("biz.order.complete", [addedProducts]);
+    player != null && player.call("biz.order.complete", [addedProducts, pay]);
     return {productsOrder: biz.info.productsOrder, productsOrderPrice: biz.info.productsOrderPrice, pay: pay};
 };
 
@@ -503,7 +505,9 @@ module.exports = {
     setBizParameters(charId, bizParameters) {
         let biz = getBizById(bizParameters.bizId);
         if (biz == null) return false;
-        if (biz.info.characterId !== charId) return false;
+        if (!bizesModules[biz.info.type].business.isFactionOwner) {
+            if (biz.info.characterId !== charId) return false;
+        }
         bizParameters.params.forEach(param => {
             bizesModules[biz.info.type].setBizParam(bizParameters.bizId, param.key, param.value);
         });
