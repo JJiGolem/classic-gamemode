@@ -601,6 +601,10 @@ module.exports = {
             player.addAttachment(type + "Box");
         }
     },
+    canSetStorageState(player) {
+        var maxRank = this.getMaxRank(player.character.factionId);
+        return player.character.factionRank == maxRank.id || player.character.factionRank == maxRank.id - 1;
+    },
     canFillWarehouse(player, boxType, faction) {
         if (!this.whiteListWarehouse[boxType]) return false;
         if (!this.whiteListWarehouse[boxType][player.character.factionId]) return false;

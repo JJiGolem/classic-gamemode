@@ -159,7 +159,7 @@ module.exports = {
         var faction = factions.getFaction(character.factionId);
         var header = `Склад ${faction.name}`;
 
-        if (!factions.isLeader(player)) return notifs.error(player, `Нет доступа`, header);
+        if (!factions.canSetStorageState(player)) return notifs.error(player, `Нет доступа`, header);
 
         var storage = factions.getStorage(player.insideFactionWarehouse);
 
