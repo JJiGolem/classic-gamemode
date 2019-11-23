@@ -93,9 +93,9 @@ let setTimer = function(biz) {
         dropBiz(biz);
     }, biz.info.date.getTime() - new Date().getTime());
 };
-let getRandomDate = function(daysNumber) {
+let getDropDate = function(daysNumber) {
     let date = new Date();
-    date.setTime(Date.now() - (date.getHours() * 1000 * 3600) + (daysNumber * 1000 * 3600 * 24) + (utils.randomInteger(0, 23) * 1000 * 3600));
+    date.setTime(Date.now() + (daysNumber * 1000 * 3600 * 24));
     return date;
 };
 let getBizInfoForApp = function(biz) {
@@ -393,7 +393,7 @@ module.exports = {
         biz.info.characterId = buyer.character.id;
         biz.info.characterNick = buyer.character.name;
         biz.info.cashBox = 0;
-        biz.info.date = getRandomDate(1);
+        biz.info.date = getDropDate(1);
         setTimer(biz);
         biz.info.save().then(() => {
             if (money == null) return;
@@ -417,7 +417,7 @@ module.exports = {
     getResourceName: getResourceName,
     getResourcePrice: getResourcePrice,
     getResourcePos: getResourcePos,
-    getRandomDate: getRandomDate,
+    getDropDate: getDropDate,
     getBizInfoForApp: getBizInfoForApp,
     getBizInfoForBank: getBizInfoForBank,
     getDateDays: getDateDays,
