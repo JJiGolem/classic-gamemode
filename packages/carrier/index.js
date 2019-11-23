@@ -133,7 +133,7 @@ module.exports = {
             ownerName: biz.info.characterNick,
             prodName: bizes.getResourceName(biz.info.type),
             prodCount: biz.info.productsOrder,
-            prodPrice: this.productPrice,
+            prodPrice: bizes.getResourcePrice(biz.info.type),
             orderPrice: biz.info.productsOrderPrice,
             distance: +Math.sqrt(vdistance).toFixed(1),
         };
