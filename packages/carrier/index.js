@@ -27,7 +27,7 @@ module.exports = {
     // Заказы бизнесов
     bizOrders: [],
     // Цена урожая при продаже
-    cropPrice: 1,
+    cropPrice: 11,
     // Модели авто и их типы товара
     vehModels: {
         "boxville2": [1, 2, 3, 4, 6, 7, 8],
@@ -133,7 +133,7 @@ module.exports = {
             ownerName: biz.info.characterNick,
             prodName: bizes.getResourceName(biz.info.type),
             prodCount: biz.info.productsOrder,
-            prodPrice: this.productPrice,
+            prodPrice: bizes.getResourcePrice(biz.info.type),
             orderPrice: biz.info.productsOrderPrice,
             distance: +Math.sqrt(vdistance).toFixed(1),
         };

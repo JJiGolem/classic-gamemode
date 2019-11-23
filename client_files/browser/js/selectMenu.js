@@ -9093,7 +9093,7 @@ var selectMenu = new Vue({
                     this.alcohol.forEach(el => {
                         alcoholItems.push({
                             text: el.params.name,
-                            values: [`$${el.price}`],
+                            values: [`$${el.price * data.alcoholPrice}`],
                         });
                     });
                     alcoholItems.push({
@@ -9104,7 +9104,7 @@ var selectMenu = new Vue({
                     this.snacks.forEach(el => {
                         snackItems.push({
                             text: el.params.name,
-                            values: [`$${el.price}`],
+                            values: [`$${el.price * data.alcoholPrice}`],
                         });
                     });
                     snackItems.push({
@@ -9115,7 +9115,7 @@ var selectMenu = new Vue({
                     this.smoke.forEach(el => {
                         smokeItems.push({
                             text: el.params.name,
-                            values: [`$${el.price}`],
+                            values: [`$${el.price * data.alcoholPrice}`],
                         });
                     });
                     smokeItems.push({

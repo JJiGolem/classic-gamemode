@@ -112,7 +112,7 @@ let getBizInfoForApp = function(biz) {
             resourcesMax: biz.info.productsMaxCount,
             resources: biz.info.productsCount,
             statistics: biz.info.BizStatistics,
-            order: { productsCount: biz.info.productsOrder, productsPrice: biz.info.productsOrderPrice },
+            order: biz.info.productsOrder && { productsCount: biz.info.productsOrder, productsPrice: biz.info.productsOrderPrice },
             resourcePriceMin: bizesModules[biz.info.type].productPrice * minMultiplier,
             resourcePriceMax: bizesModules[biz.info.type].productPrice * maxMultiplier,
             improvements: []
@@ -131,7 +131,7 @@ let getBizInfoForApp = function(biz) {
             resources: biz.info.productsCount,
             price: biz.info.price,
             statistics: biz.info.BizStatistics,
-            order: { productsCount: biz.info.productsOrder, productsPrice: biz.info.productsOrderPrice },
+            order: biz.info.productsOrder && { productsCount: biz.info.productsOrder, productsPrice: biz.info.productsOrderPrice },
             resourcePriceMin: bizesModules[biz.info.type].productPrice * minMultiplier,
             resourcePriceMax: bizesModules[biz.info.type].productPrice * maxMultiplier,
             improvements: []
@@ -212,12 +212,12 @@ let removeProducts = async function(id, count) {
     if (biz.info.productsCount < count) return false;
     biz.info.productsCount -= count;
     await biz.info.save();
-    if (biz.info.characterId == null && biz.info.productsCount < biz.info.productsMaxCount / 2) {
-        let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
-        let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
-        let countOrder = biz.info.productsMaxCount -  biz.info.productsCount;
-        if (await createOrder(biz, countOrder, parseInt(((max + min) / 2) * countOrder)) !== 1) console.log("[BIZES] Auto creating order error");
-    }
+    // if (biz.info.characterId == null && biz.info.productsCount < biz.info.productsMaxCount / 2 && biz.info.productsOrder == null) {
+    //     let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
+    //     let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
+    //     let countOrder = biz.info.productsMaxCount -  biz.info.productsCount;
+    //     if (await createOrder(biz, countOrder, parseInt(((max + min) / 2) * countOrder)) !== 1) console.log("[BIZES] Auto creating order error");
+    // }
     return true;
 };
 let createOrder = async function(biz, count, price) {
@@ -225,9 +225,11 @@ let createOrder = async function(biz, count, price) {
     if (biz.info.productsCount + count > biz.info.productsMaxCount) return 3;
     let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
     let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
-    if (price < min || price > max) return 0;
+    if (price <= min || price >= max) return 0;
+    if (biz.info.productsOrderPrice > biz.info.cashBox) return 0;
     biz.info.productsOrder = count;
     biz.info.productsOrderPrice = parseInt(price * count);
+    biz.info.cashBox -= biz.info.productsOrderPrice;
     carrier != null && carrier.addBizOrder(biz);
     await biz.info.save();
     return 1;
@@ -239,6 +241,7 @@ let destroyOrder = async function(id) {
     biz.info.productsOrder = null;
     biz.info.productsOrderPrice = null;
     carrier != null && carrier.removeBizOrderByBizId(biz.info.id);
+    console.log("destroyOrder");
     await biz.info.save();
     return true;
 };
@@ -289,7 +292,7 @@ let readyOrder = async function(id, productsNumber) {
 
     await biz.info.save();
     let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
-    player != null && player.call("biz.order.complete", [addedProducts]);
+    player != null && player.call("biz.order.complete", [addedProducts, pay]);
     return {productsOrder: biz.info.productsOrder, productsOrderPrice: biz.info.productsOrderPrice, pay: pay};
 };
 
@@ -358,8 +361,11 @@ module.exports = {
     },
     async addBiz(bizInfo) {
         let colshape = mp.colshapes.newSphere(bizInfo.x, bizInfo.y, bizInfo.z, 4.0);
+        let colshapeOrder = mp.colshapes.newSphere(bizInfo.x, bizInfo.y, bizInfo.z, 20.0);
         colshape.isBiz = true;
         colshape.bizId = bizInfo.id;
+        colshapeOrder.isOrderBiz = true;
+        colshapeOrder.bizId = bizInfo.id;
         bizInfo.BizStatistics = bizInfo.BizStatistics.sort((x, y) => {
             if (x.date.getTime() < y.date.getTime()) {
                 return 1;
@@ -371,6 +377,7 @@ module.exports = {
         });
         bizes.push({
             colshape: colshape,
+            colshapeOrder: colshapeOrder,
             info: bizInfo
         });
         if (bizInfo.BizStatistics.length !== 0) {
@@ -498,7 +505,9 @@ module.exports = {
     setBizParameters(charId, bizParameters) {
         let biz = getBizById(bizParameters.bizId);
         if (biz == null) return false;
-        if (biz.info.characterId !== charId) return false;
+        if (!bizesModules[biz.info.type].business.isFactionOwner) {
+            if (biz.info.characterId !== charId) return false;
+        }
         bizParameters.params.forEach(param => {
             bizesModules[biz.info.type].setBizParam(bizParameters.bizId, param.key, param.value);
         });

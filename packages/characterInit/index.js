@@ -237,6 +237,7 @@ module.exports = {
         player.characterInfo.x = pos[0];
         player.characterInfo.y = pos[1];
         player.characterInfo.z = pos[2];
+        player.characterInfo.cash = 300;
         player.characterInfo.Promocode.promocode = await promocodes.getPromocode();
 
         player.character = await db.Models.Character.create(player.characterInfo, {

@@ -127,7 +127,7 @@ let rotation = {
     right: false
 }
 
-let debugMode = true;
+let debugMode = false;
 let debugText;
 
 mp.events.add({
@@ -331,7 +331,7 @@ function initSubMenu(key, list) {
             values.push(`№${i + 1}`);
         }
         items.push({
-            text: `${current.name} [ID ${current.id}] [$${parseInt(current.price*priceMultiplier)}]`,
+            text: `${current.name} [$${parseInt(current.price*priceMultiplier)}]`,
             values: values
         });
     })

@@ -2,6 +2,8 @@ var selectItems = new Vue({
     el: "#selectItems",
     data: {
         show: false,
+        // Время последнего открытия/закрытия (ms)
+        lastShowTime: 0,
         items: inventory.hotkeys,
         // focus: 3,
         tempFocus: -1,
@@ -102,6 +104,7 @@ var selectItems = new Vue({
                 busy.remove("selectItems", true);
                 this.playSound("close");
             }
+            this.lastShowTime = Date.now();
         },
         select(val) {
             this.tempFocus = val;
@@ -114,8 +117,9 @@ var selectItems = new Vue({
         this.centerY = window.innerHeight / 2;
 
         window.addEventListener('keydown', function(e) {
-            if (e.keyCode != 9 || this.show) return;
+            if (e.keyCode != 9 || self.show) return;
             if (busy.includes() || !inventory.enable || inventory.handsBlock) return;
+            if (Date.now() - self.lastShowTime < 1000) return;
 
             self.show = true;
         });

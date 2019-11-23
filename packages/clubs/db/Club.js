@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: false
         },
+        alcoholPrice: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 1,
+            allowNull: false
+        },
         enterX: {
             type: DataTypes.FLOAT,
             allowNull: false
