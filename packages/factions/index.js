@@ -657,8 +657,8 @@ module.exports = {
             if (faction.cash < pay) return notifs.error(player, `В общаке недостаточно средств для получения зарплаты`, faction.name);
 
             // TODO: не многовато запросов в БД получится?
-            faction.cash -= pay;
-            faction.save();
+            // faction.cash -= pay;
+            // faction.save();
         } else if (this.isBandFaction(faction)) pay += parseInt(bands.bandZonesPrice * bands.getPowerBand(faction.id));
 
         if (!pay) return;
