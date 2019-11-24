@@ -150,6 +150,14 @@ module.exports = {
         });
     },
 
+    "chat.mute.clear": (player) => {
+        if (player.mute && Date.now() - player.mute.startTime > player.mute.time) {
+            delete player.mute;
+            player.character.muteTime = 0;
+            player.character.save();
+        }
+    },
+
     "/s": (player, message) => {
         var playerInStream = news.isInStream(player);
 

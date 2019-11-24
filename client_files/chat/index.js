@@ -169,10 +169,11 @@ function playChatAnimation(id) {
 
 mp.events.add('chat.message.get', (type, message) => {
     mp.afk.action();
-    if (mp.chat.clearMuteTime && message[0] != '/') {
+    if (mp.chat.clearMuteTime && (message[0] != '/' || ["/s", "/r", "/f", "/n", "/me", "/do", "/gnews", "/d", "/try", "/m"].includes(message.split(' ')[0]))) {
         if (mp.chat.clearMuteTime < Date.now()) {
             mp.chat.clearMuteTime = 0;
             mp.notify.success(`Использование чатов снова доступно. Не нарушайте правила сервера.`, `MUTE`);
+            mp.events.callRemote(`chat.mute.clear`);
         } else {
             return mp.notify.error(`Чат заблокирован!`);
         }
