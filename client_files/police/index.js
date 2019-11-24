@@ -88,7 +88,7 @@ mp.events.add({
     },
     "police.wanted.set": (val) => {
         mp.police.setWanted(val);
-        mp.game.gameplay.setFakeWantedLevel(val);
+        // mp.game.gameplay.setFakeWantedLevel(val);
     },
     "render": () => {
         if (mp.police.followPlayer) {
