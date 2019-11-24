@@ -32,11 +32,13 @@ module.exports = {
         let price = supermarket.productsConfig.phone * supermarket.productPrice * supermarket.getPriceMultiplier(supermarketId);
         if (player.character.cash < price) return player.call('supermarket.phone.buy.ans', [2]);
         let productsAvailable = supermarket.getProductsAmount(supermarketId);
-        if (supermarket.productsConfig.phone > productsAvailable) return player.call('supermarket.phone.buy.ans', [3]);
+        
+        let finalProducts = parseInt(supermarket.productsConfig.phone / 2);
+        if (finalProducts > productsAvailable) return player.call('supermarket.phone.buy.ans', [3]);
 
         money.removeCash(player, price, function (result) {
             if (result) {
-                supermarket.removeProducts(supermarketId, supermarket.productsConfig.phone);
+                supermarket.removeProducts(supermarketId, finalProducts);
                 supermarket.updateCashbox(supermarketId, price);
                 mp.events.call('phone.buy', player);
                 player.call('supermarket.phone.buy.ans', [1]);
@@ -53,8 +55,11 @@ module.exports = {
 
         let price = supermarket.productsConfig.numberChange * supermarket.productPrice * supermarket.getPriceMultiplier(supermarketId);
         if (player.character.cash < price) return player.call('supermarket.number.change.ans', [2]);
+
+        let finalProducts = parseInt(supermarket.productsConfig.numberChange / 2);
+
         let productsAvailable = supermarket.getProductsAmount(supermarketId);
-        if (supermarket.productsConfig.numberChange > productsAvailable) return player.call('supermarket.number.change.ans', [3]);
+        if (finalProducts > productsAvailable) return player.call('supermarket.number.change.ans', [3]);
 
         let changed = await phone.changeNumber(player, number);
         if (!changed) {
@@ -62,7 +67,7 @@ module.exports = {
         } else {
             money.removeCash(player, price, function (result) {
                 if (result) {
-                    supermarket.removeProducts(supermarketId, supermarket.productsConfig.numberChange);
+                    supermarket.removeProducts(supermarketId, finalProducts);
                     supermarket.updateCashbox(supermarketId, price);
                     player.call('supermarket.number.change.ans', [1, number]);
                 } else {
@@ -113,8 +118,9 @@ module.exports = {
         }
         let price = supermarket.productsConfig[productName] * supermarket.productPrice * supermarket.getPriceMultiplier(supermarketId);
         if (player.character.cash < price) return player.call('supermarket.products.buy.ans', [2]);
+        let finalProducts = parseInt(supermarket.productsConfig[productName] / 2);
         let productsAvailable = supermarket.getProductsAmount(supermarketId);
-        if (supermarket.productsConfig[productName] > productsAvailable) return player.call('supermarket.products.buy.ans', [3]);
+        if (finalProducts > productsAvailable) return player.call('supermarket.products.buy.ans', [3]);
 
         let itemId = supermarket.itemIds[productName];
         let params = {};
@@ -143,7 +149,7 @@ module.exports = {
             if (e) return player.call('supermarket.products.buy.ans', [4, e]);
             money.removeCash(player, price, function (result) {
                 if (result) {
-                        supermarket.removeProducts(supermarketId, supermarket.productsConfig[productName]);
+                        supermarket.removeProducts(supermarketId, finalProducts);
                         supermarket.updateCashbox(supermarketId, price);
                         player.call('supermarket.products.buy.ans', [1]);
                 } else {
