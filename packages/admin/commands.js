@@ -1,6 +1,7 @@
 /// Базовые админские команды, описание их структуры находится в модуле test
 let admin = require('./index.js');
 
+var chat = call("chat");
 var vehicles = call("vehicles");
 let notify = call('notifications');
 let factions = call('factions');
@@ -138,7 +139,7 @@ module.exports = {
                 count++;
             });
             mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} вернул ${count} чел. на исходную позицию (Радиус: ${args[0]})`);
-            notify.info(player, `Вы вернули ${count} чел. на исходную позицию`); 
+            notify.info(player, `Вы вернули ${count} чел. на исходную позицию`);
         }
     },
     "/hp": {
@@ -351,6 +352,25 @@ module.exports = {
             rec.kick();
         }
     },
+    "/mute": {
+        access: 2,
+        description: "Запретить текстовый + голосовой чат игроку.",
+        args: "[ид_игрока]:n [минуты]:n [причина]",
+        handler: (player, args) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
+
+            args.shift();
+            var mins = args.shift();
+            var reason = args.join(" ");
+            var time = mins * 60 * 1000;
+
+            rec.character.muteTime = time;
+            rec.character.save();
+            chat.setMute(rec, time);
+            mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] выдал мут игроку ${rec.name}[${rec.id}] (${mins} мин): ${reason}`);
+        }
+    },
     "/kick": {
         access: 2,
         description: "Кик игрока",
@@ -390,7 +410,7 @@ module.exports = {
             var days = Math.clamp(args[1], 1, 30);
             args.splice(0, 2);
 
-            mp.events.call('admin.notify.players', `!{#db5e4a}[A] Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${args.join(" ")} `);
+            mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${args.join(" ")} `);
 
             rec.account.clearBanDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
             rec.account.save();
@@ -420,7 +440,7 @@ module.exports = {
 
             var rec = mp.players.getByName(name);
             if (rec) {
-                mp.events.call('admin.notify.players', `!{#db5e4a}[A] Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${reason} `);
+                mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${reason} `);
                 rec.kick();
             }
 
@@ -436,7 +456,7 @@ module.exports = {
             if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
 
             args.shift();
-            mp.events.call('admin.notify.players', `!{#db5e4a}[A] Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${args.join(" ")} (PERMANENT)`);
+            mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${args.join(" ")} (PERMANENT)`);
 
             db.Models.Ban.create({
                 ip: rec.ip,
