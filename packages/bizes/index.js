@@ -31,6 +31,7 @@ let maxProductPriceMultiplier = 2.0;
 let minProductPriceMultiplier = 1.2;
 let factionPayMultiplier = 0.01;
 let dropBizMultiplier = 0.6;
+let dropBizOrderMultiplier = 0.8;
 
 
 let getBizById = function(id) {
@@ -238,6 +239,7 @@ let destroyOrder = async function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
     if (!biz.isOrderTaken) return false;
+    biz.info.cashBox += biz.info.productsOrderPrice * dropBizOrderMultiplier;
     biz.info.productsOrder = null;
     biz.info.productsOrderPrice = null;
     carrier != null && carrier.removeBizOrderByBizId(biz.info.id);
@@ -301,6 +303,7 @@ module.exports = {
     minProductPriceMultiplier: minProductPriceMultiplier,
     factionPayMultiplier: factionPayMultiplier,
     dropBizMultiplier: dropBizMultiplier,
+    dropBizOrderMultiplier: dropBizOrderMultiplier,
 
     async init() {
         utils = call("utils");
