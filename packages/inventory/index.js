@@ -375,6 +375,7 @@ module.exports = {
         if (place.type == "Vehicle") key = "vehicleId";
         else if (place.type == "Faction") key = "playerId";
         else if (place.type == "House") key = "houseId";
+        else return notifs.error(player, `Вы далеко от окружения`, `Инвентарь`);
         conf[key] = -place.sqlId;
         var table = `${place.type}Inventory`;
         var newItem = db.Models[table].build(conf, {
