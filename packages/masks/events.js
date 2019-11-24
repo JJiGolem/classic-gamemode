@@ -41,7 +41,7 @@ module.exports = {
         let defaultPrice = mask.price;
         let products = masks.calculateProductsNeeded(mask.price);
         let price = parseInt(defaultPrice * masks.getPriceMultiplier());
-        let income = parseInt(products * masks.productPrice * masks.getPriceMultiplier());
+        //let income = parseInt(products * masks.productPrice * masks.getPriceMultiplier());
 
         if (player.character.cash < price) return player.call('masks.buy.ans', [4]);
         let productsAvailable = masks.getProductsAmount();
@@ -56,7 +56,7 @@ module.exports = {
             money.removeCash(player, price, function (result) {
                 if (result) {
                     masks.removeProducts(products);
-                    masks.updateCashbox(income);
+                    masks.updateCashbox(price);
                     player.call('masks.buy.ans', [0]);
                 } else {
                     player.call('masks.buy.ans', [5]);

@@ -325,6 +325,7 @@ module.exports = {
 
         var farm = player.farm;
         var key = ["productA", "productB", "productC"][data.index];
+        if (key == 'productC' && !factions.isMafiaFaction(player.character.factionId)) return out(`Доступно только членам мафии`);
         if (farm[key] < 100) return out(`На складе недостаточно урожая`);
 
 

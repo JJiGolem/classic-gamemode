@@ -36,7 +36,8 @@ module.exports = {
         if (player.character.job == 2) {
             mp.events.call("jobs.leave", player);
         } else {
-            if (!player.character.carLicense) return player.call('notifications.push.error', ['У вас нет прав на легковой транспорт', 'Такси'])
+            if (!player.character.carLicense) return player.call('notifications.push.error', ['У вас нет прав на легковой транспорт', 'Такси']);
+            if (!player.phone) return player.call('notifications.push.error', ['Вам нужно иметь мобильный телефон', 'Такси'])
             mp.events.call("jobs.set", player, 2);
             player.call('phone.app.add', ['taxi', null]);
         }

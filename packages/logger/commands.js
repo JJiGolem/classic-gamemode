@@ -6,7 +6,7 @@ module.exports = {
         description: "Посмотреть логи персонажа. Формат даты: ГГГГ-ММ-ДД",
         args: "[ид_персонажа]:n [начало] [конец]",
         handler: async (player, args, out) => {
-            out.log(`Загрузка логов персонажа #${args[0]}...`);
+            out.log(`Загрузка логов персонажа #${args[0]}...`, player);
             var dateA = new Date(args[1]);
             var dateB = new Date(args[2]);
             if (dateA == "Invalid Date") return out.error(`Неверная дата ${args[0]}`, player);
@@ -38,7 +38,7 @@ module.exports = {
 
             var text = `Логи (${date.toDateString()}):<br/>`;
             logs.forEach(log => {
-                text += `[ID: ${log.characterId}] ${log.text} ${log.date.toTimeString()}<br/>`;
+                text += `${log.Character.name}: ${log.text} ${log.date.toTimeString()}<br/>`;
             });
 
             out.log(text, player);

@@ -406,9 +406,9 @@ module.exports = {
         changeBlip(house);
         this.setTimer(house);
     },
-    getRandomDate(daysNumber) {
+    getDropDate(daysNumber) {
         let date = new Date();
-        date.setTime(Date.now() - (date.getHours() * 1000 * 3600) + (daysNumber * 1000 * 3600 * 24) + (utils.randomInteger(0, 23) * 1000 * 3600));
+        date.setTime(Date.now() + (daysNumber * 1000 * 3600 * 24));
         return date;
     },
     setTimer(house) {

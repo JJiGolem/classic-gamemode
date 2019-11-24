@@ -19,6 +19,23 @@ module.exports = {
             }, `Команда от админа #${player.character.id}`);
         }
     },
+    "/addcashbynick": {
+        access: 6,
+        description: "Дать наличности",
+        args: "[Кол-во]:n [nick]:s",
+        handler: async (player, args) => {
+            let character = await db.Models.Character.findOne({
+                where: {
+                    name: `${args[1]} ${args[2]}`
+                }
+            });
+            if (character == null) player.call('notifications.push.error', ["Игрока с таким ником не существует", "Ошибка выдачи денег"]);
+            money.addCashById(character.id, args[0], (result) => {
+                if (!result) return player.call('notifications.push.error', ["По неизвестным причинам", "Ошибка выдачи денег"]);
+                player.call('notifications.push.success', ["Вы выдали " + args[0] + "$ наличными", "Выдача денежных средств"]);
+            }, `Команда от админа #${player.character.id}`)
+        }
+    },
     "/addmoney": {
         access: 6,
         description: "Пополнить банковский счет",
@@ -81,4 +98,4 @@ module.exports = {
             player.call('notifications.push.success', ["У игрока " + mp.players.at(id).character.cash + "$ наличными и " + mp.players.at(id).character.bank + "$ на банковском счете", "Состояние наличных и счета игрока"]);
         }
     },
-}
+};

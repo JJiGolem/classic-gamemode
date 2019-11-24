@@ -54,7 +54,7 @@ module.exports = {
         let defaultPrice = item.price;
         let products = clothingShop.calculateProductsNeeded(item.price);
         let price = parseInt(defaultPrice * clothingShop.getPriceMultiplier(shopId));
-        let income = parseInt(products * clothingShop.productPrice * clothingShop.getPriceMultiplier(shopId));
+        //let income = parseInt(products * clothingShop.productPrice * clothingShop.getPriceMultiplier(shopId));
 
 
         if (player.character.cash < price) return player.call('clothingShop.item.buy.ans', [4]);
@@ -80,7 +80,7 @@ module.exports = {
                 money.removeCash(player, price, function (result) {
                     if (result) {
                         clothingShop.removeProducts(shopId, products);
-                        clothingShop.updateCashbox(shopId, income);
+                        clothingShop.updateCashbox(shopId, price);
                         player.call('clothingShop.item.buy.ans', [0]);
                     } else {
                         player.call('clothingShop.item.buy.ans', [5]);

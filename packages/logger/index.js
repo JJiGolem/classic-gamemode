@@ -61,9 +61,13 @@ module.exports = {
                         }
                     ],
                 }
+            },
+            include: {
+                model: db.Models.Character,
+                attributes: ['name'],
             }
         });
-
+        
         return logs;
     },
 };

@@ -14,6 +14,14 @@ module.exports = {
         if (player.character.admin > 0) {
             mp.events.call('admin.notify.all', `!{#f7f692}[A] Администратор ${player.character.admin} уровня ${player.name} авторизовался`);
         }
+        if (player.character.muteTime) chat.setMute(player, player.character.muteTime);
+    },
+
+    "playerQuit": (player) => {
+        if (!player.character || !player.mute) return;
+
+        player.character.muteTime -= Date.now() - player.mute.startTime;
+        player.character.save();
     },
 
     // "playerJoin": (player) => {
@@ -140,6 +148,14 @@ module.exports = {
                 }
             };
         });
+    },
+
+    "chat.mute.clear": (player) => {
+        if (player.mute && Date.now() - player.mute.startTime > player.mute.time) {
+            delete player.mute;
+            player.character.muteTime = 0;
+            player.character.save();
+        }
     },
 
     "/s": (player, message) => {

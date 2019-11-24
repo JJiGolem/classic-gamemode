@@ -7,7 +7,7 @@ module.exports = {
         /// Список всех команд на сервере
         admin.init();
         commands = admin.getCommands();
-        
+
         inited(__dirname);
     },
     /// обработка админ команд

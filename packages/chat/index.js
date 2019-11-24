@@ -16,5 +16,12 @@ module.exports = {
             if (!current.character) return;
             current.call('chat.message.split', [message, fixed, color]);
         });
-    }
+    },
+    setMute(player, time) {
+        player.mute = {
+            startTime: Date.now(),
+            time: time
+        };
+        player.call(`chat.mute.set`, [time]);
+    },
 };

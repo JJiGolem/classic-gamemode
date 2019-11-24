@@ -123,7 +123,7 @@ module.exports = {
             if (!result) return player.call('house.buy.ans', [0, ""]);
             info.characterId = player.character.id;
             info.characterNick = player.character.name;
-            info.date = housesService.getRandomDate(1);
+            info.date = housesService.getDropDate(1);
             await info.save();
             player.call('house.buy.ans', [1, player.character.name]);
 

@@ -33,7 +33,8 @@ mp.attachmentMngr = {
                 }
             }
         } else {
-            mp.game.graphics.notify(`Static Attachments Error: ~r~Unknown Attachment Used: ~w~0x${id.toString(16)}`);
+            //temp
+            //mp.game.graphics.notify(`Static Attachments Error: ~r~Unknown Attachment Used: ~w~0x${id.toString(16)}`);
         }
     },
 
@@ -94,10 +95,12 @@ mp.attachmentMngr = {
                     lost: lost,
                 };
             } else {
-                mp.game.graphics.notify(`Static Attachments Error: ~r~Invalid Model (0x${model.toString(16)})`);
+                //temp
+                //mp.game.graphics.notify(`Static Attachments Error: ~r~Invalid Model (0x${model.toString(16)})`);
             }
         } else {
-            mp.game.graphics.notify("Static Attachments Error: ~r~Duplicate Entry");
+            //temp
+            //mp.game.graphics.notify("Static Attachments Error: ~r~Duplicate Entry");
         }
     },
 
