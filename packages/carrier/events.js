@@ -148,13 +148,13 @@ module.exports = {
         if (veh.products.type == 'productC' && !factions.isMafiaFaction(player.character.factionId)) return out(`Доступно только членам мафии`);
 
         var price = carrier.cropPrice * veh.products.count;
-        player.character.pay += price;
-        player.character.save();
+        money.addCash(player, price, (res) => {
+            if (!res) return notifs.error(player, `Ошибка начисления наличных`);
+        }, `Продажа урожая (${veh.products.count} ед.)`);
 
         delete veh.products;
         veh.setVariable("label", null);
-
-        notifs.success(player, `Урожай продан (+$${price})`, header);
+        notifs.success(player, `Урожай продан`, header);
     },
     "bizes.done": () => {
         carrier.initBizOrders();

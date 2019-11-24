@@ -518,6 +518,7 @@ module.exports = {
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (seat != -1 || vehicle.key != 'faction') return;
+        if (!player.character) return;
         if (player.character.factionId != vehicle.owner) {
             notifs.error(player, `Вы не состоите в организации`, factions.getFaction(vehicle.owner).name);
             player.removeFromVehicle();

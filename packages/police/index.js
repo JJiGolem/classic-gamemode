@@ -163,6 +163,7 @@ module.exports = {
             arrestTimeMax: parseInt(player.character.arrestTime / 1000)
         }]);
         (!player.health) ? player.spawn(cell) : player.position = cell;
+        player.dimension = 0;
         player.heading = cell.h;
         var playerId = player.id;
         var characterId = player.character.id;
@@ -205,7 +206,8 @@ module.exports = {
         player.call(`hud.setData`, [{
             arrestTimeMax: parseInt(player.character.arrestTime / 1000)
         }]);
-        player.position = cell;
+        (!player.health) ? player.spawn(cell) : player.position = cell;
+        player.dimension = 0;
         player.heading = cell.h;
         var playerId = player.id;
         var characterId = player.character.id;

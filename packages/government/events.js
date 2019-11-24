@@ -242,8 +242,8 @@ module.exports = {
         var params = {
             weaponHash: mp.joaat(weaponIds[index]),
             ammo: 0,
-            faction: character.factionId,
-            owner: character.id
+            // faction: character.factionId,
+            // owner: character.id
         };
 
         inventory.addItem(player, itemId, params, (e) => {

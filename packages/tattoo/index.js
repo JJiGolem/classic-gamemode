@@ -177,12 +177,7 @@ module.exports = {
         player.call('tattoo.characterTattoos.remove', [tattooId]);
     },
     calculateProductsNeeded(price) {
-        switch (price) {
-            case price < 100:
-                return 3;
-            default:
-                let products = parseInt(price / this.productPrice);
-                return products > 200 ? 200 : products;
-        }
+        let products = parseInt(price * 0.5 / this.productPrice);
+        return products;
     }
 }

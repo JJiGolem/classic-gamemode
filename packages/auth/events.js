@@ -14,7 +14,7 @@ module.exports = {
     },
     /// Заморозка игрока перед авторизацией
     'player.joined': async (player) => {
-        player.dimension = player.id;
+        player.dimension = player.id + 1;
 
         if (!whitelist.isEmpty) {
             if (whitelist.isEnabled()) {
