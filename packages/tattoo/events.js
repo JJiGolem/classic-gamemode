@@ -76,7 +76,7 @@ module.exports = {
         let defaultPrice = tat.price;
         let products = tattoo.calculateProductsNeeded(tat.price);
         let price = parseInt(defaultPrice * tattoo.getPriceMultiplier(parlorId));
-        let income = parseInt(products * tattoo.productPrice * tattoo.getPriceMultiplier(parlorId));
+        //let income = parseInt(products * tattoo.productPrice * tattoo.getPriceMultiplier(parlorId));
 
         if (player.character.cash < price) return player.call('tattoo.buy.ans', [2]);
         let productsAvailable = tattoo.getProductsAmount(parlorId);
@@ -88,7 +88,7 @@ module.exports = {
                 await tattoo.addCharacterTattoo(player, tat.collection, tat[hash], tat.zoneId, tat.name);
                 player.call('tattoo.buy.ans', [0]);
                 tattoo.removeProducts(parlorId, products);
-                tattoo.updateCashbox(parlorId, income);
+                tattoo.updateCashbox(parlorId, price);
             } else {
                 player.call('tattoo.buy.ans', [3]);
             }
@@ -107,13 +107,14 @@ module.exports = {
         let price = parseInt(products * tattoo.productPrice * tattoo.getPriceMultiplier(parlorId));
         if (player.character.cash < price) return player.call('tattoo.delete.ans', [2]);
         let productsAvailable = tattoo.getProductsAmount(parlorId);
-        if (products > productsAvailable) return player.call('tattoo.delete.ans', [4]);
+        let finalProducts = parseInt(products / 2);
+        if (finalProducts > productsAvailable) return player.call('tattoo.delete.ans', [4]);
         
         money.removeCash(player, price, async function (result) {
             if (result) {
                 tattoo.removeCharacterTattoo(player, tattooId)
                 player.call('tattoo.delete.ans', [0, tattooId]);
-                tattoo.removeProducts(parlorId, products);
+                tattoo.removeProducts(parlorId, finalProducts);
                 tattoo.updateCashbox(parlorId, price);
             } else {
                 player.call('tattoo.buy.ans', [3]);
