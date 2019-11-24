@@ -27,6 +27,15 @@ module.exports = {
         };
     },
     "characterInit.done": (player) => {
+        let biz = bizService.getBizByCharId(player.character.id);
+        if (biz != null) {
+            if (bizService.getDateDays(biz.info.date) === 1) {
+                notifications.info(player, "Ваш бизнес будет продан государству на следующий день за неуплату налогов", "Внимание");
+            }
+            if (bizService.getDateDays(biz.info.date) === 0) {
+                notifications.info(player, "Ваш бизнес будет продан государству сегодня за неуплату налогов", "Внимание");
+            }
+        }
         if (player.character.admin !== 0 || player.character.admin !== 6) return;
         if (factions.isLeader(player)) {
             if (player.character.factionId) {
@@ -134,6 +143,7 @@ module.exports = {
 
             let bizInfo = bizService.getBizInfoForApp(biz);
             bizInfo != null && player.call('phone.app.add', ["biz", bizInfo]);
+            notifications.info(player, "Оплатите имущество в банке в течение 24 часов, иначе оно будет продано", "Внимание");
         }, `Покупка бизнеса #${info.id} у государства`);
     },
     "biz.sell.toGov": (player, id) => {
@@ -216,6 +226,7 @@ module.exports = {
         bizService.sellBiz(biz, seller.biz.sellingBizCost, seller, player, function(ans) {
             if (ans) {
                 seller.call("biz.sell.ans", [1]);
+                notifications.info(player, "Оплатите имущество в банке в течение 24 часов, иначе оно будет продано", "Внимание");
             }
             else {
                 seller.call("biz.sell.ans", [0]);
