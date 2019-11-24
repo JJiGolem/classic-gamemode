@@ -14,6 +14,7 @@ module.exports = {
         inited(__dirname);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
+        if (!player.character) return;
         player.call('vehicles.garage', [vehicle.isInGarage]);
 
         if (vehicle.key == 'job' && vehicle.owner != player.character.job && seat == -1) {
