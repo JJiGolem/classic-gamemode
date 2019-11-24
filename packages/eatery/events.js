@@ -48,7 +48,7 @@ module.exports = {
         let price = eatery.productsConfig[productName] * eatery.productPrice * eatery.getPriceMultiplier(eateryId);
         if (player.character.cash < price) return player.call('eatery.products.buy.ans', [2]);
         let productsAvailable = eatery.getProductsAmount(eateryId);
-        if (eatery.productsConfig[productName] > productsAvailable) return player.call('eatery.products.buy.ans', [3]);
+        if (eatery.defaultProductsAmount > productsAvailable) return player.call('eatery.products.buy.ans', [3]);
 
         let itemId = eatery.itemIds[productName];
         let params = {};
@@ -73,7 +73,7 @@ module.exports = {
             if (e) return player.call('eatery.products.buy.ans', [4, e]);
             money.removeCash(player, price, function (result) {
                 if (result) {
-                        eatery.removeProducts(eateryId, eatery.productsConfig[productName]);
+                        eatery.removeProducts(eateryId, eatery.defaultProductsAmount);
                         eatery.updateCashbox(eateryId, price);
                         player.call('eatery.products.buy.ans', [1]);
                 } else {
