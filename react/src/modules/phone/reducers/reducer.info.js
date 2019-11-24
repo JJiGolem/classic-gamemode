@@ -307,6 +307,7 @@ export default function info(state = initialState, action) {
         case 'CREATE_ORDER_BUSINESS':
             newState = { ...state };
             newState.biz[0].order = payload;
+            newState.biz[0].cashBox -= payload.productsPrice;
             newState.biz[0].orderStatus = null;
             return newState;
 
@@ -358,6 +359,7 @@ export default function info(state = initialState, action) {
         case 'CREATE_ORDER_BUSINESS_FACTION':
             newState = { ...state };
             newState.factionBiz.order = payload;
+            newState.factionBiz.cashBox -= payload.productsPrice;
             newState.factionBiz.orderStatus = null;
             return newState;
 
