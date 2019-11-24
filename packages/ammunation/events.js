@@ -34,7 +34,8 @@ module.exports = {
         let price = parseInt(weaponData.products * ammunation.productPrice * ammunation.getPriceMultiplier(ammunationId));
         if (player.character.cash < price) return player.call('ammunation.weapon.buy.ans', [0]);
         let productsAvailable = ammunation.getProductsAmount(ammunationId);
-        if (weaponData.products > productsAvailable) return player.call('ammunation.weapon.buy.ans', [1]);
+        let finalProducts = parseInt(weaponData.products / 2);
+        if (finalProducts > productsAvailable) return player.call('ammunation.weapon.buy.ans', [1]);
 
         let params = {
             weaponHash: mp.joaat(weaponData.gameId),
@@ -47,7 +48,7 @@ module.exports = {
 
             money.removeCash(player, price, function (result) {
                 if (result) {
-                    ammunation.removeProducts(ammunationId, weaponData.products);
+                    ammunation.removeProducts(ammunationId, finalProducts);
                     ammunation.updateCashbox(ammunationId, price);
                     player.call('ammunation.weapon.buy.ans', [3, weaponData.name]);
                 } else {
