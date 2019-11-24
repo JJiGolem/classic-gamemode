@@ -392,7 +392,6 @@ module.exports = {
     sellBiz(biz, cost, seller, buyer, callback) {
         biz.info.characterId = buyer.character.id;
         biz.info.characterNick = buyer.character.name;
-        biz.info.cashBox = 0;
         biz.info.date = getDropDate(1);
         setTimer(biz);
         biz.info.save().then(() => {
