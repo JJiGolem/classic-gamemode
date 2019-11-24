@@ -38,7 +38,7 @@ module.exports = {
 
             var text = `Логи (${date.toDateString()}):<br/>`;
             logs.forEach(log => {
-                text += `[ID: ${log.characterId}] ${log.text} ${log.date.toTimeString()}<br/>`;
+                text += `${log.Character.name}: ${log.text} ${log.date.toTimeString()}<br/>`;
             });
 
             out.log(text, player);
