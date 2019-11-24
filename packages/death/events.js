@@ -9,7 +9,7 @@ module.exports = {
     "death.wait": (player, time) => {
         player.spawn(player.position);
         player.health = death.health;
-        if (player.character.arrestTime) return;
+        if (player.character && player.character.arrestTime) return;
         death.addKnocked(player, time);
         if (time > 5 * 60 * 1000) mp.events.call(`mapCase.ems.calls.add`, player, `Ранение`);
     },

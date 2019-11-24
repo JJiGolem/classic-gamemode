@@ -379,7 +379,7 @@ module.exports = {
             if (isNaN(parseInt(args[0]))) return; //temp
             let target = mp.players.at(args[0]);
             if (!target || !mp.players.exists(target)) return notify.warning(player, 'Игрок не найден');
-            if (!target.character) return notify.warning(player, 'Игрок не найден');
+            // if (!target.character) return notify.warning(player, 'Игрок не найден');
             args.shift();
             let message = args.join(' ');
             mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] кикнул игрока ${target.name}[${target.id}]: ${message}`);
@@ -394,7 +394,7 @@ module.exports = {
             if (isNaN(parseInt(args[0]))) return; //temp
             let target = mp.players.at(args[0]);
             if (!target || !mp.players.exists(target)) return notify.warning(player, 'Игрок не найден');
-            if (!target.character) return notify.warning(player, 'Игрок не найден');
+            // if (!target.character) return notify.warning(player, 'Игрок не найден');
             mp.events.call('admin.notify.all', `!{#9e9e9e}[A] Администратор ${player.name}[${player.id}] кикнул игрока ${target.name}[${target.id}] без лишнего шума`);
             target.kick("kicked");
         }

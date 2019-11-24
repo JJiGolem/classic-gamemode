@@ -11,7 +11,7 @@ module.exports = {
     },
     "bins.trash.take": (player) => {
         var colshape = player.insideBin;
-        if (!colshape) return out(`Вы не возле мусорки`);
+        if (!colshape) return notifs.error(player, `Вы не возле мусорки`);
         if (colshape.lastFindTime) {
             var diff = Date.now() - colshape.lastFindTime;
             if (diff < bins.findInterval) return notifs.error(player, `Эту мусорку уже вычистили до вас`);
