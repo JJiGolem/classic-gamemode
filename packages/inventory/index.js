@@ -1,5 +1,6 @@
 "use strict";
 
+let notifs = call('notifications');
 let timer = call('timer');
 
 module.exports = {
@@ -395,7 +396,7 @@ module.exports = {
         var params = this.getParamsValues(item);
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, item.itemId);
-            if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
+            if (weapon) return notifs.error(player, `Оружие ${this.getName(item.itemId)} уже имеется`, `Инвентарь`);
             // if (parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
         }
         var struct = [];
