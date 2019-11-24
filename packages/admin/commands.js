@@ -1,6 +1,7 @@
 /// Базовые админские команды, описание их структуры находится в модуле test
 let admin = require('./index.js');
 
+var chat = call("chat");
 var vehicles = call("vehicles");
 let notify = call('notifications');
 let factions = call('factions');
@@ -138,7 +139,7 @@ module.exports = {
                 count++;
             });
             mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} вернул ${count} чел. на исходную позицию (Радиус: ${args[0]})`);
-            notify.info(player, `Вы вернули ${count} чел. на исходную позицию`); 
+            notify.info(player, `Вы вернули ${count} чел. на исходную позицию`);
         }
     },
     "/hp": {
@@ -349,6 +350,25 @@ module.exports = {
             }
             rec.character.save();
             rec.kick();
+        }
+    },
+    "/mute": {
+        access: 2,
+        description: "Запретить текстовый + голосовой чат игроку.",
+        args: "[ид_игрока]:n [минуты]:n [причина]",
+        handler: (player, args) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
+
+            args.shift();
+            var mins = args.shift();
+            var reason = args.join(" ");
+            var time = mins * 60 * 1000;
+
+            rec.character.muteTime = time;
+            rec.character.save();
+            chat.setMute(rec, time);
+            mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] выдал mute игроку ${rec.name}[${rec.id}]: ${reason}`);
         }
     },
     "/kick": {
