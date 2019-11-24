@@ -10,6 +10,9 @@
 mp.anticheat = {
     // Параметры анти-чита
     weapon: false,
+    // Анти-флуд
+    lastTriggerTime: 0,
+    waitTime: 10000,
 
     // анти-чит на оружие
     checkWeapon() {
@@ -18,12 +21,14 @@ mp.anticheat = {
         if (player.weapon == 2725352035) return;
         if (mp.weapons.hashes.length && mp.weapons.hashes[0] == player.weapon) return;
 
-        this.weapon = false;
-        this.trigger(`Начитерил ган ${mp.weapons.getWeaponName(player.weapon) || ''}`);
+        this.trigger(`weapon`, `Начитерил ган ${mp.weapons.getWeaponName(player.weapon) || ''}`);
     },
-    trigger(reason) {
+    trigger(name, reason) {
+        if (Date.now() - this.lastTriggerTime < this.waitTime) return;
+        this.lastTriggerTime = Date.now();
+
         mp.notify.warning(reason, `ANTICHEAT`);
-        mp.events.callRemote(`anticheat.trigger`, reason);
+        mp.events.callRemote(`anticheat.trigger`, name, reason);
     },
     enableParam(name, enable) {
         this[name] = enable;

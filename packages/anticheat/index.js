@@ -13,9 +13,16 @@ module.exports = {
         this.params = await db.Models.AntiCheatParam.findAll();
         console.log(`[ANTICHEAT] Параметры загружены (${this.params.length} шт.)`);
     },
-    trigger(player, reason) {
-        mp.events.call("admin.notify.all", `!{#ff0000} ANTICHEAT: ${player.name} kicked (${reason})`);
-        player.kick();
+    trigger(player, name, reason) {
+        var text = `!{#ff0000} ANTICHEAT (${name}): ${player.name} (${reason})`;
+        var param = this.params.find(x => x.name == name);
+        if (param) {
+            if (param.punish == 'kick') {
+                player.kick();
+                text += ` kicked`;
+            }
+        }
+        mp.events.call("admin.notify.all", text);
     },
     enableParam(id, enable) {
         var param = this.params.find(x => x.id == id);

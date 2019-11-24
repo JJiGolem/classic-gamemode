@@ -14,7 +14,7 @@ module.exports = {
     "characterInit.done": (player) => {
         anticheat.initForPlayer(player);
     },
-    "anticheat.trigger": (player, reason) => {
-        anticheat.trigger(player, reason);
+    "anticheat.trigger": (player, name, reason) => {
+        anticheat.trigger(player, name, reason);
     },
 }
