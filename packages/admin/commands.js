@@ -368,7 +368,7 @@ module.exports = {
             rec.character.muteTime = time;
             rec.character.save();
             chat.setMute(rec, time);
-            mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] выдал mute игроку ${rec.name}[${rec.id}]: ${reason}`);
+            mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] выдал мут игроку ${rec.name}[${rec.id}] (${mins} мин): ${reason}`);
         }
     },
     "/kick": {

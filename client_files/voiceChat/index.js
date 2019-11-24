@@ -12,7 +12,8 @@ mp.events.add('characterInit.done', function() {
                 mp.notify.success(`Использование чатов снова доступно. Не нарушайте правила сервера.`, `MUTE`);
                 mp.events.callRemote(`chat.mute.clear`);
             } else {
-                return mp.notify.error(`Голосовой чат заблокирован!`);
+                var mins = Math.ceil((mp.chat.clearMuteTime - Date.now()) / 1000 / 60);
+                return mp.notify.error(`До разблокировка войс-чата осталось ${mins} мин!`);
             }
         }
         mp.voiceChat.muted = false;

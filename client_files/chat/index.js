@@ -175,7 +175,8 @@ mp.events.add('chat.message.get', (type, message) => {
             mp.notify.success(`Использование чатов снова доступно. Не нарушайте правила сервера.`, `MUTE`);
             mp.events.callRemote(`chat.mute.clear`);
         } else {
-            return mp.notify.error(`Чат заблокирован!`);
+            var mins = Math.ceil((mp.chat.clearMuteTime - Date.now()) / 1000 / 60);
+            return mp.notify.error(`До разблокировка чата осталось ${mins} мин!`);
         }
     }
     mp.events.callRemote('chat.message.get', type, message);
