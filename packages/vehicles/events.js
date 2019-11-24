@@ -184,10 +184,12 @@ module.exports = {
     "vehicles.lock": (player, vehicleId) => {
         let vehicle = mp.vehicles.at(vehicleId);
         if (!vehicle) return;
-        // TEMP
-        if (vehicle.key != 'private') return player.call('notifications.push.error', ['Это не ваше т/с', 'Ошибка']);
-        // if (vehicle.owner != player.character.id) return player.call('notifications.push.error', ['Это не ваше т/с', 'Транспорт']);
-        if (!vehicles.haveKeys(player, vehicle)) return notifs.error(player, `Вы не имеете ключи`, vehicle.properties.name);
+        
+        let allowedKeys = ['faction', 'private'];
+        if (!allowedKeys.includes(vehicle.key)) return notifs.error(player, `Это не ваш транспорт`);
+        
+        if (vehicle.key == 'faction' && vehicle.owner != player.character.factionId) return notifs.error(player, `Это не ваш транспорт`);
+        if (vehicle.key == 'private' && !vehicles.haveKeys(player, vehicle)) return notifs.error(player, `У вас нет ключей`, vehicle.properties.name);
 
         let state = vehicle.locked;
         if (state) {

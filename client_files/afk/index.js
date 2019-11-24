@@ -41,6 +41,9 @@ mp.afk = {
         if (Date.now() - this.lastActiveTime > this.minAfkTime) mp.events.callRemote(`afk.set`, true);
     },
     setAfk(player, enable) {
+        let isVanished = player.getVariable('isVanished') || false;
+        if (isVanished) return;
+
         player.setAlpha(enable ? this.alpha : 255);
         mp.utils.setNoCollision(player, !enable);
         if (player.vehicle) {
