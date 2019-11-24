@@ -29,6 +29,7 @@ module.exports = {
                     name: `${args[1]} ${args[2]}`
                 }
             });
+            if (character == null) player.call('notifications.push.error', ["Игрока с таким ником не существует", "Ошибка выдачи денег"]);
             money.addCashById(character.id, args[0], (result) => {
                 if (!result) return player.call('notifications.push.error', ["По неизвестным причинам", "Ошибка выдачи денег"]);
                 player.call('notifications.push.success', ["Вы выдали " + args[0] + "$ наличными", "Выдача денежных средств"]);
