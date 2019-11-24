@@ -29,4 +29,17 @@ module.exports = {
             out.info(`${player.name} ${param.enable? 'включил' : 'отключил'} параметр ${param.name}`);
         }
     },
+    "/acpunish": {
+        description: "Изменить наказание параметра анти-чита (см. /aclist).",
+        access: 3,
+        args: "[ид_параметра]:n [наказание]",
+        handler: (player, args, out) => {
+            var param = anticheat.params.find(x => x.id == args[0]);
+            if (!param) return out.error(`Параметр #${args[0]} не найден`, player);
+            if (!anticheat.punishments.includes(args[1])) return out.error(`Неверное наказание`, player);
+
+            anticheat.setPunishParam(param.id, args[1]);
+            out.info(`${player.name} изменил наказание параметра ${param.name} на ${param.punish}`);
+        }
+    },
 }

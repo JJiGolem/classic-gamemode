@@ -3,6 +3,8 @@
 module.exports = {
     // Параметры анти-чита
     params: [],
+    // Наказания
+    punishments: ['notify', 'kick'],
 
     async init() {
         await this.loadParamsFromDB();
@@ -26,6 +28,13 @@ module.exports = {
             if (!rec.character) return;
             rec.call(`anticheat.param.set`, [param.name, enable]);
         });
+    },
+    setPunishParam(id, punish) {
+        var param = this.params.find(x => x.id == id);
+        if (!param) return;
+
+        param.punish = punish;
+        param.save();
     },
     initForPlayer(player) {
         var params = {};
