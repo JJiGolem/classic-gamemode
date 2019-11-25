@@ -9,6 +9,7 @@ module.exports = {
     },
     "playerEnterColshape": (player, shape) => {
         if (shape.isCarShow) {
+            if (!player.character) return;
             if (player.vehicle) return;
             let isCuffed = player.getVariable('cuffs') || false;
             if (isCuffed) return;
