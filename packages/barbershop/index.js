@@ -15,6 +15,7 @@ module.exports = {
     hairstyleProducts: 10,
     facialHairProducts: 7,
     colorChangeProducts: 5,
+    finalProductsMultiplier: 0.8,
     async init() {
         bizes = call('bizes');
         await this.loadBarbershopsFromDB();

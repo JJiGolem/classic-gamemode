@@ -118,7 +118,7 @@ module.exports = {
         bizes.bizUpdateCashBox(bizId, money);
     },
     calculateProductsNeeded(price) {
-        let products = parseInt(price * 0.5 / this.productPrice);
+        let products = parseInt(price * 0.7 / this.productPrice);
         return products;
     }
 }
