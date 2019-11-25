@@ -33,7 +33,7 @@ module.exports = {
         if (player.character.cash < price) return player.call('supermarket.phone.buy.ans', [2]);
         let productsAvailable = supermarket.getProductsAmount(supermarketId);
         
-        let finalProducts = parseInt(supermarket.productsConfig.phone / 2);
+        let finalProducts = parseInt(supermarket.productsConfig.phone * 0.7);
         if (finalProducts > productsAvailable) return player.call('supermarket.phone.buy.ans', [3]);
 
         money.removeCash(player, price, function (result) {
@@ -56,7 +56,7 @@ module.exports = {
         let price = supermarket.productsConfig.numberChange * supermarket.productPrice * supermarket.getPriceMultiplier(supermarketId);
         if (player.character.cash < price) return player.call('supermarket.number.change.ans', [2]);
 
-        let finalProducts = parseInt(supermarket.productsConfig.numberChange / 2);
+        let finalProducts = parseInt(supermarket.productsConfig.numberChange * 0.7);
 
         let productsAvailable = supermarket.getProductsAmount(supermarketId);
         if (finalProducts > productsAvailable) return player.call('supermarket.number.change.ans', [3]);
@@ -118,7 +118,7 @@ module.exports = {
         }
         let price = supermarket.productsConfig[productName] * supermarket.productPrice * supermarket.getPriceMultiplier(supermarketId);
         if (player.character.cash < price) return player.call('supermarket.products.buy.ans', [2]);
-        let finalProducts = parseInt(supermarket.productsConfig[productName] / 2);
+        let finalProducts = parseInt(supermarket.productsConfig[productName] * 0.7);
         let productsAvailable = supermarket.getProductsAmount(supermarketId);
         if (finalProducts > productsAvailable) return player.call('supermarket.products.buy.ans', [3]);
 
