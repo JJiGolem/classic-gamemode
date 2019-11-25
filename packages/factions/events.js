@@ -110,6 +110,7 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Игрок #${recId} не найден`, `Приглашение`);
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, `Приглашение`);
         if (rec.character.factionId) return notifs.error(player, `${rec.name} уже в организации`, `Приглашение`);
+        if (rec.character.warnNumber) return notifs.error(player, `${rec.name} имеет варн`, `Приглашение`);
         if (!player.character.factionId) return notifs.error(player, `Вы не состоите в организации`, `Приглашение`);
         if (!factions.canInvite(player)) return notifs.error(player, `Недостаточно прав`, `Приглашение`);
         var faction = factions.getFaction(player.character.factionId);
