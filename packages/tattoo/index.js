@@ -177,7 +177,7 @@ module.exports = {
         player.call('tattoo.characterTattoos.remove', [tattooId]);
     },
     calculateProductsNeeded(price) {
-        let products = parseInt(price * 0.5 / this.productPrice);
+        let products = parseInt(price * 0.8 / this.productPrice);
         return products;
     }
 }
