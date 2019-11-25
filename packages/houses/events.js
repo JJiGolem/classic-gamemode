@@ -1,15 +1,20 @@
 "use strict";
 /// Модуль системы домов
 let housesService = require("./index.js");
-let money = call('money');
-let timer = call("timer");
-let vehicles = call("vehicles");
+let money;
+let timer;
+let vehicles;
+let notifications;
 
 let carPlaceVehicle = [];
 
 module.exports = {
     /// Событие инициализации сервера
     "init": () => {
+        money = call('money');
+        timer = call("timer");
+        vehicles = call("vehicles");
+        notifications = call('notifications');
         housesService.init();
         inited(__dirname);
     },
@@ -21,8 +26,18 @@ module.exports = {
     },
     "characterInit.done": (player) => {
         housesService.loadBlips(player);
+        let house = housesService.getHouseByCharId(player.character.id);
+        if (house != null) {
+            if (housesService.getDateDays(house.info.date) === 1) {
+                notifications.info(player, "Ваш дом будет продан государству на следующий день за неуплату налогов", "Внимание");
+            }
+            if (housesService.getDateDays(house.info.date) === 0) {
+                notifications.info(player, "Ваш дом будет продан государству сегодня за неуплату налогов", "Внимание");
+            }
+        }
         if (player.character.admin < 5) return;
         housesService.initHouseAdding(player);
+
     },
     "player.name.changed": (player) => {
         let house = housesService.getHouseByCharId(player.character.id);
@@ -132,6 +147,7 @@ module.exports = {
 
             player.call('phone.app.add', ["house", housesService.getHouseInfoForApp(house)]);
             vehicles != null && vehicles.setPlayerCarPlaces(player);
+            notifications.info(player, "Оплатите имущество в банке в течение 24 часов, иначе оно будет продано", "Внимание");
         }, `Покупка дома #${info.id} у государства`);
     },
     /// Phone app events
@@ -225,6 +241,7 @@ module.exports = {
         housesService.sellHouse(house, seller.house.sellingHouseCost, seller, player, (ans) => {
             if (ans) {
                 seller.call("house.sell.ans", [1]);
+                notifications.info(player, "Оплатите имущество в банке в течение 24 часов, иначе оно будет продано", "Внимание");
             }
             else {
                 seller.call("house.sell.ans", [0]);

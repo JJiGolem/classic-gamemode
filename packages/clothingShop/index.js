@@ -122,7 +122,7 @@ module.exports = {
         return priceConfig;
     },
     calculateProductsNeeded(price) {
-        let products = parseInt(price * 0.3 / this.productPrice);
+        let products = parseInt(price * 0.8 / this.productPrice);
         return products;
     }
 }

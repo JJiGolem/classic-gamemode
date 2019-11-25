@@ -8031,6 +8031,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Продать') {
+                            selectMenu.show = false;
                             mp.trigger(`callRemote`, `woodman.items.sell`);
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("woodman");

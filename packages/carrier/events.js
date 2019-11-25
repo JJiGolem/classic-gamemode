@@ -1,6 +1,7 @@
 let bizes = call('bizes');
 let carrier = call('carrier');
 let factions = call('factions');
+let jobs = call('jobs');
 let money = call('money');
 let notifs = call('notifications');
 let vehicles = call('vehicles');
@@ -150,6 +151,7 @@ module.exports = {
         var price = carrier.cropPrice * veh.products.count;
         money.addCash(player, price, (res) => {
             if (!res) return notifs.error(player, `Ошибка начисления наличных`);
+            jobs.addJobExp(player, carrier.exp);
         }, `Продажа урожая (${veh.products.count} ед.)`);
 
         delete veh.products;
