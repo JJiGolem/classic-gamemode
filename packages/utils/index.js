@@ -107,6 +107,7 @@ let utils = {
         if (!sqlId) return null;
         var result;
         mp.vehicles.forEach((veh) => {
+            if (!veh.db) return;
             if (veh.db.id == sqlId) {
                 result = veh;
                 return;
