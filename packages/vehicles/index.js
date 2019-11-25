@@ -638,7 +638,7 @@ module.exports = {
         return dbVehicleProperties;
     },
     respawn(veh) {
-        var fuel = (veh.db.key == 'job')? veh.properties.maxFuel : Math.max(veh.db.fuel, this.respawnFuel);
+        var fuel = (veh.db.key == 'job' || veh.db.key == 'newbie') ? veh.properties.maxFuel : Math.max(veh.db.fuel, this.respawnFuel);
 
         veh.repair();
         veh.position = new mp.Vector3(veh.db.x, veh.db.y, veh.db.z);
