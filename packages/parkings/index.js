@@ -98,6 +98,15 @@ module.exports = {
 
         if (!vehicleFound) return player.call('notifications.push.error', ["На парковке нет вашего т/c", "Ошибка"]);
 
+        let checkId;
+        if (!vehicleFound.sqlId) {
+            checkId = vehicleFound.id;
+        } else {
+            checkId = vehicleFound.sqlId;
+        }
+        let checkedVeh = mp.vehicles.getBySqlId(checkId);
+        if (checkedVeh) return player.call('notifications.push.error', ["Сработала анти-дюп система", "Ошибка"]);
+
         let index = this.findParkingIndexById(vehicleFound.parkingId);
         let date = vehicleFound.parkingDate;
         let now = new Date();
