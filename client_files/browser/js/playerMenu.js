@@ -879,7 +879,7 @@ var playerMenu = new Vue({
     },
     mounted() {
         window.addEventListener('keyup', (e) => {
-            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "inventory", "inputWindow"])) return;
+            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "inventory", "inputWindow", "playersList"])) return;
             if (selectMenu.isEditing) return;
             if (Date.now() - this.lastShowTime < 500) return;
             if (!this.enable) return;

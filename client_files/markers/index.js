@@ -8,7 +8,7 @@
 */
 
 mp.moduleMarkers = {
-    drawRadius: 30,
+    drawRadius: 60,
 };
 
 mp.events.add({
