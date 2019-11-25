@@ -103,6 +103,10 @@ db.connect(function() {
     mp.events.call('init');
 });
 
+mp.events.add("playerJoin", (player) => {
+    player.dimension = player.id + 1;
+});
+
 mp.events.add('player.join', (player) => {
     if (modulesToLoad.length !== 0) return playersJoinPool.push(player);
     player.call('init', [activeClientModules]);

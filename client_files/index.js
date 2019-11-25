@@ -1,6 +1,8 @@
 "use strict";
 /// Подключение всех модулей на сервере
 
+mp.gui.cursor.show(true, false);
+
 /// Служебные модули
 require('base');
 require('utils');
