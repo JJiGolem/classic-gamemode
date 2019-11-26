@@ -424,7 +424,10 @@ module.exports = {
         });
 
         player.inventory.items.push(newItem);
-        if (!newItem.parentId) this.updateView(player, newItem);
+        if (!newItem.parentId) {
+            if (newItem.index == 13) this.syncHandsItem(player, newItem);
+            else this.updateView(player, newItem);
+        }
         await newItem.save();
         player.call(`inventory.setItemSqlId`, [item.id, newItem.id]);
     },
