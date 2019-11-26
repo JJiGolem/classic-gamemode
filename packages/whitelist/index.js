@@ -1,11 +1,11 @@
 "use strict";
 
-let enabled = true; /// Включение/отключение вайтлиста
 let allowed;
 
 module.exports = {
+    enabled: true, /// Включение/отключение вайтлиста
     isEnabled() {
-        return enabled;
+        return this.enabled;
     },
     getAllowed() {
         return allowed;
@@ -16,7 +16,7 @@ module.exports = {
     async loadWhiteList() {
         allowed = await db.Models.WhiteList.findAll();
         console.log(`[WHITELIST] Загружено ${allowed.length} записей вайтлиста.`);
-        console.log(`[WHITELIST] Вход ${enabled ? 'по вайтлисту': 'свободный'}.`);
+        console.log(`[WHITELIST] Вход ${this.enabled ? 'по вайтлисту': 'свободный'}.`);
     },
     isInWhiteList(socialClub) {
         let nick = allowed.find(x => x.socialClub == socialClub);

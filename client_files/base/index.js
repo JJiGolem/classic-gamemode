@@ -1,9 +1,14 @@
 "use strict";
 
+let isEscDisabled = false;
+
 mp.events.add("render", () => {
     /// Отключение не используемых клавиш
     mp.game.controls.disableControlAction(1, 199, true); //Pause Menu (P)
     mp.game.controls.disableControlAction(1, 243, true); //Cheat Code (~)
+    if (isEscDisabled) {
+        mp.game.controls.disableControlAction(1, 200, true);    //ESC
+    }
 });
 
 // debug
@@ -16,9 +21,25 @@ var debug = (text) => {
 
 // Отображение в дискорде
 mp.events.add('time.minute.tick', () => {
-    mp.discord.update('Classic Roleplay | Testing', 'classic-rp.ru');
+    mp.discord.update('Classic Roleplay', 'classic-rp.ru');
 });
 
+// Чекер нагрузки render'ов в модулях
+mp.renderChecker = false;
+// Чекер нагрузки time.main.tick в модулях
+mp.timeMainChecker = {
+    enable: false,
+    modules: {
+        attaches: 0,
+    }
+};
+mp.events.add("render", () => {
+    if (!mp.timeMainChecker.enable) return;
+    var y = 0.2;
+    for (var name in mp.timeMainChecker.modules) {
+        mp.utils.drawText2d(`${name} tick: ${mp.timeMainChecker.modules[name]} ms`, [0.8, y += 0.02]);
+    }
+});
 
 /// Осноные клиентские события
 /// auth.init
@@ -69,6 +90,7 @@ mp.busy.add = function(name, mouse = true, nocef = false) {
         mp.busy.mouses.push(name);
         mp.gui.cursor.show(true, true);
     }
+    isEscDisabled = true;
     return true;
 };
 /// Содержит ли массив данный модуль
@@ -98,6 +120,8 @@ mp.busy.remove = function(name, nocef = false) {
     let mouseIndex = mp.busy.mouses.findIndex(x => x === name);
     mouseIndex !== -1 && mp.busy.mouses.splice(mouseIndex, 1);
     if (mp.busy.mouses.length === 0) mp.gui.cursor.show(false, false);
+
+    if (mp.busy.list.length === 0) isEscDisabled = false;
 };
 
 mp.events.add({

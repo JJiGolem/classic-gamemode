@@ -5,8 +5,8 @@ let money = call('money');
 let notifs = call('notifications');
 
 module.exports = {
-    "init": () => {
-        bands.init();
+    "init": async () => {
+        await bands.init();
         inited(__dirname);
     },
     "characterInit.done": (player) => {
@@ -55,8 +55,8 @@ module.exports = {
         var params = {
             weaponHash: mp.joaat(weaponIds[index]),
             ammo: 0,
-            faction: character.factionId,
-            owner: character.id
+            // faction: character.factionId,
+            // owner: character.id
         };
 
         inventory.addItem(player, itemId, params, (e) => {
@@ -159,7 +159,7 @@ module.exports = {
         var faction = factions.getFaction(character.factionId);
         var header = `Склад ${faction.name}`;
 
-        if (!factions.isLeader(player)) return notifs.error(player, `Нет доступа`, header);
+        if (!factions.canSetStorageState(player)) return notifs.error(player, `Нет доступа`, header);
 
         var storage = factions.getStorage(player.insideFactionWarehouse);
 

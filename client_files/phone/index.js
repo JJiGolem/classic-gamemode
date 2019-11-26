@@ -1,6 +1,7 @@
 "use strict";
 
 let isBinding = false;
+let isCall = false;
 
 mp.attachmentMngr.register("takePhone", "prop_npc_phone", 58867, new mp.Vector3(0.06, 0.04, 0.01), new mp.Vector3(-15, 0, -145)); /// Телефон в руке
 mp.attachmentMngr.register("callPhone", "prop_npc_phone", 58867, new mp.Vector3(0.01, 0.05, -0.02), new mp.Vector3(-5, -65, 165)); /// Телефон у уха
@@ -68,6 +69,7 @@ mp.events.add('phone.call.end', function () {
 
 /// Сброс звонка на другом конце
 mp.events.add('phone.call.end.in', function () {
+    isCall = false;
     mp.callCEFR('phone.call.end', []);
     //playCallAnimation(false);
     playHoldAnimation(true);
@@ -75,6 +77,7 @@ mp.events.add('phone.call.end.in', function () {
 
 /// Уведомление о том, что нам звонят
 mp.events.add('phone.call.in', function (startedPlayerNumber) {
+    isCall = true;
     /// Звонок игроку на телефон
     mp.callCEFR('phone.call.in', [startedPlayerNumber]);
 });
@@ -89,7 +92,7 @@ mp.events.add('phone.call.in.ans', function (ans) {
 });
 
 mp.events.add("playerDeath", (player) => {
-    if (player.remoteId == mp.players.local.remoteId) {
+    if (player.remoteId === mp.players.local.remoteId) {
         if (mp.busy.includes('phone')) {
             hidePhone();
         }
@@ -103,6 +106,7 @@ mp.events.add('phone.message.send', function (message, number) {
 
 /// Получение сообщения
 mp.events.add('phone.message.set', function (message, number) {
+    mp.notify.info("Новое сообщение", "Телефон");
     mp.callCEFR('phone.message.set', [message, number]);
 });
 
@@ -155,8 +159,15 @@ let bindButtons = (state) => {
         mp.keys.unbind(0x26, true, showPhone);        // UP ARROW key
         mp.keys.unbind(0x28, true, hidePhone);        // DOWN ARROW key
     }
-}
-
+};
+mp.events.add("phone.show", (state) => {
+    if (state) {
+        showPhone();
+    }
+    else {
+        hidePhone();
+    }
+});
 let showPhone = () => {
     if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
@@ -164,16 +175,20 @@ let showPhone = () => {
     if (player.getVariable("knocked")) return;
     if (!player.getHealth()) return;
     if (mp.farms.isCropping(player)) return;
+    isCall = false;
 
     if (!mp.busy.add('phone')) return;
     mp.callCEFR('phone.show', [true]);
     playCallAnimation(false);
     playHoldAnimation(true);
-}
+};
 
 let hidePhone = () => {
     if (mp.game.ui.isPauseMenuActive()) return;
-    if (!mp.busy.includes('phone')) return;
+    if (!isCall) {
+        if (!mp.busy.includes('phone')) return;
+    }
+    isCall = false;
 
     mp.callCEFR('phone.show', [false]);
     mp.busy.remove('phone');
@@ -182,7 +197,7 @@ let hidePhone = () => {
     if (!mp.players.local.vehicle) {
         mp.events.callRemote('animations.stop');
     }
-}
+};
 
 function playHoldAnimation(state, timeout) { /// Анимация держания телефона
     if (mp.players.local.vehicle) return;

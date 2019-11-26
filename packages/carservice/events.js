@@ -143,7 +143,7 @@ module.exports = {
     "carservice.diagnostics.preparation": (player, target) => {
         console.log('preparation');
         if (player.character.job != 1) return;
-        //if (!target.vehicle) return;
+        if (!target.vehicle) return console.log('[CARSERVICE | DEBUG] У цели не было автомобиля (events: 146)');
         let vehId = target.vehicle.id;
         player.repairTargetVehicle = target.vehicle;
         target.repairVehicle = target.vehicle;

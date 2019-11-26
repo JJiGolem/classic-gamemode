@@ -101,7 +101,7 @@ module.exports = {
         if (!station) return;
         station[key] = value;
         station.save();
-        if (key == 'fuelPrice') this.updateLabel(id);
+        if (key == 'fuelPrice') this.updateLabel(station.id);
     },
     getProductsAmount(id) {
         let station = dbFuelStations.find(x => x.id == id);

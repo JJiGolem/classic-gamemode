@@ -41,9 +41,12 @@ mp.afk = {
         if (Date.now() - this.lastActiveTime > this.minAfkTime) mp.events.callRemote(`afk.set`, true);
     },
     setAfk(player, enable) {
+        let isVanished = player.getVariable('isVanished') || false;
+        if (isVanished) return;
+
         player.setAlpha(enable ? this.alpha : 255);
         mp.utils.setNoCollision(player, !enable);
-        if (player.vehicle) {
+        if (player.vehicle && player.vehicle.getPedInSeat(-1) == player.handle) {
             player.vehicle.setAlpha(enable ? this.alpha : 255);
             mp.utils.setNoCollision(player.vehicle, !enable);
         }
@@ -52,7 +55,7 @@ mp.afk = {
             else mp.notify.success(`Режим AFK деактивирован`, `ANTI-AFK`);
 
             player.setProofs(enable, enable, enable, enable, enable, enable, enable, enable);
-            if (player.vehicle) player.vehicle.setProofs(enable, enable, enable, enable, enable, enable, enable, enable);
+            if (player.vehicle && player.vehicle.getPedInSeat(-1) == player.handle) player.vehicle.setProofs(enable, enable, enable, enable, enable, enable, enable, enable);
         }
     },
 

@@ -2,8 +2,8 @@ let notifs = call('notifications');
 let woodman = call('woodman');
 
 module.exports = {
-    "init": () => {
-        woodman.init();
+    "init": async () => {
+        await woodman.init();
         inited(__dirname);
     },
     "auth.done": (player) => {
@@ -53,10 +53,18 @@ module.exports = {
         woodman.addLogItems(player.treeLog, slots);
     },
     "playerEnterWorldObject": (player, colshape) => {
+        if (colshape.db.type != 1) return;
+        if (colshape.destroyTime) {
+            if (Date.now() - colshape.destroyTime > woodman.respawnTreeTime) {
+                colshape.health = 100;
+                delete colshape.destroyTime;
+            }
+        }
         player.tree = colshape;
         player.call(`woodman.tree.inside`, [colshape.db.pos, colshape.health]);
     },
     "playerExitWorldObject": (player, obj) => {
+        if (!player.tree) return;
         delete player.tree;
         player.call(`woodman.tree.inside`);
     },

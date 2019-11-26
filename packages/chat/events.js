@@ -14,6 +14,14 @@ module.exports = {
         if (player.character.admin > 0) {
             mp.events.call('admin.notify.all', `!{#f7f692}[A] Администратор ${player.character.admin} уровня ${player.name} авторизовался`);
         }
+        if (player.character.muteTime) chat.setMute(player, player.character.muteTime);
+    },
+
+    "playerQuit": (player) => {
+        if (!player.character || !player.mute) return;
+
+        player.character.muteTime -= Date.now() - player.mute.startTime;
+        player.character.save();
     },
 
     // "playerJoin": (player) => {
@@ -142,6 +150,14 @@ module.exports = {
         });
     },
 
+    "chat.mute.clear": (player) => {
+        if (player.mute && Date.now() - player.mute.startTime > player.mute.time) {
+            delete player.mute;
+            player.character.muteTime = 0;
+            player.character.save();
+        }
+    },
+
     "/s": (player, message) => {
         var playerInStream = news.isInStream(player);
 
@@ -240,9 +256,12 @@ module.exports = {
     },
 
     "/tp": (player) => {
-        let pos = admin.getMassTeleportPosition();
-        if (!pos) return notify.error(player, 'Массовый телепорт отключен');
-        player.position = pos;
+        let data = admin.getMassTeleportData();
+        if (!data || !data.position) return notify.error(player, 'Массовый телепорт отключен');
+        player.returnPosition = player.position;
+        player.returnDimension = player.dimension;
+        player.position = data.position;
+        player.dimension = data.dimension;
         notify.success(player, 'Вы были телепортированы');
     },
 

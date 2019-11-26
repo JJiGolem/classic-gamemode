@@ -5,13 +5,13 @@ let money = call('money');
 let notifs = call('notifications');
 
 module.exports = {
-    "init": () => {
-        bins.init();
+    "init": async () => {
+        await bins.init();
         inited(__dirname);
     },
     "bins.trash.take": (player) => {
         var colshape = player.insideBin;
-        if (!colshape) return out(`Вы не возле мусорки`);
+        if (!colshape) return notifs.error(player, `Вы не возле мусорки`);
         if (colshape.lastFindTime) {
             var diff = Date.now() - colshape.lastFindTime;
             if (diff < bins.findInterval) return notifs.error(player, `Эту мусорку уже вычистили до вас`);

@@ -1,6 +1,7 @@
 "use strict";
 
 let bizes;
+let factions;
 let inventory;
 let money;
 let notifs;
@@ -22,134 +23,133 @@ module.exports = {
     alcohol: {
         // Багама (La Cosa Nostra)
         12: [{
-                price: 10000,
+                price: 390,
                 params: {
                     name: "Мохито",
-                    alcohol: 5
+                    alcohol: 30
                 },
             },
             {
-                price: 10000,
+                price: 400,
                 params: {
                     name: "Апероль Шпритц",
-                    alcohol: 5
+                    alcohol: 35
                 },
             },
             {
-                price: 10000,
+                price: 395,
                 params: {
                     name: "Негрони",
-                    alcohol: 5
+                    alcohol: 40
                 },
             },
             {
-                price: 10000,
+                price: 410,
                 params: {
                     name: "Мартини & Тоник",
-                    alcohol: 5
+                    alcohol: 25
                 },
             },
             {
-                price: 10000,
+                price: 415,
                 params: {
                     name: "Бьянко Санрайз",
-                    alcohol: 5
+                    alcohol: 45
                 },
             },
             {
-                price: 10000,
+                price: 385,
                 params: {
                     name: "Валентино",
-                    alcohol: 5
+                    alcohol: 30
                 },
             },
         ],
         // Текила (La Eme)
         13: [{
-                price: 10000,
+                price: 390,
                 params: {
                     name: "Амиго",
-                    alcohol: 5
+                    alcohol: 40
                 },
             },
             {
-                price: 10000,
+                price: 415,
                 params: {
                     name: "Эль-бандито",
-                    alcohol: 5
+                    alcohol: 45
                 },
             },
             {
-                price: 10000,
+                price: 395,
                 params: {
                     name: "Маргарита",
-                    alcohol: 5
+                    alcohol: 30
                 },
             },
             {
-                price: 10000,
+                price: 410,
                 params: {
                     name: "Пина-колада",
-                    alcohol: 5
+                    alcohol: 25
                 },
             },
             {
-                price: 10000,
+                price: 385,
                 params: {
                     name: "Сангрита",
-                    alcohol: 5
+                    alcohol: 30
                 },
             },
             {
-                price: 10000,
+                price: 400,
                 params: {
                     name: "Палома",
-                    alcohol: 5
+                    alcohol: 35
                 },
             },
-
         ],
         // Ванила (Russian Mafia)
         14: [{
-                price: 10000,
+                price: 395,
                 params: {
                     name: "Отвёртка",
-                    alcohol: 5
+                    alcohol: 40
                 },
             },
             {
-                price: 10000,
+                price: 385,
                 params: {
                     name: "Холодное лето 1986 года",
-                    alcohol: 5
+                    alcohol: 30
                 },
             },
             {
-                price: 10000,
+                price: 400,
                 params: {
                     name: "Российский флаг",
-                    alcohol: 5
+                    alcohol: 45
                 },
             },
             {
-                price: 10000,
+                price: 390,
                 params: {
                     name: "Балалайка",
-                    alcohol: 5
+                    alcohol: 25
                 },
             },
             {
-                price: 10000,
+                price: 415,
                 params: {
                     name: "Кровавая мэри",
-                    alcohol: 5
+                    alcohol: 35
                 },
             },
             {
-                price: 10000,
+                price: 410,
                 params: {
                     name: "Белый туман",
-                    alcohol: 5
+                    alcohol: 30
                 },
             },
         ],
@@ -158,91 +158,91 @@ module.exports = {
     snacks: {
         // Багама (La Cosa Nostra)
         12: [{
-                price: 10000,
+                price: 420,
                 params: {
                     name: "Брускетта с помидорами",
-                    satiety: 10,
+                    satiety: 55,
                 }
             },
             {
-                price: 10000,
+                price: 340,
                 params: {
                     name: "Аранчини",
-                    satiety: 10,
+                    satiety: 50,
                 }
             },
             {
-                price: 10000,
+                price: 450,
                 params: {
                     name: "Моцарелла с базаликом",
-                    satiety: 10,
+                    satiety: 60,
                 }
             },
             {
-                price: 10000,
+                price: 650,
                 params: {
                     name: "Креветки в соусе песто",
-                    satiety: 10,
+                    satiety: 70,
                 }
             }
         ],
         // Текила (La Eme)
         13: [{
-                price: 10000,
+                price: 450,
                 params: {
                     name: "Кесадилья с курицей",
-                    satiety: 10,
+                    satiety: 60,
                 }
             },
             {
-                price: 10000,
+                price: 420,
                 params: {
                     name: "Сэндвич с каперсами",
-                    satiety: 10,
+                    satiety: 55,
                 }
             },
             {
-                price: 10000,
+                price: 650,
                 params: {
                     name: "Бурритос с курицей",
-                    satiety: 10,
+                    satiety: 70,
                 }
             },
             {
-                price: 10000,
+                price: 340,
                 params: {
                     name: "Гуакамоле с грушей",
-                    satiety: 10,
+                    satiety: 50,
                 }
             }
         ],
         // Ванила (Russian Mafia)
         14: [{
-                price: 10000,
+                price: 420,
                 params: {
                     name: "Селёдка с солёным огурцом",
-                    satiety: 10,
+                    satiety: 55,
                 }
             },
             {
-                price: 10000,
+                price: 450,
                 params: {
                     name: "Рулетики из ветчины с сыром",
-                    satiety: 10,
+                    satiety: 60,
                 }
             },
             {
-                price: 10000,
+                price: 340,
                 params: {
                     name: "Бутерброд со шпротами",
-                    satiety: 10,
+                    satiety: 50,
                 }
             },
             {
-                price: 10000,
+                price: 650,
                 params: {
                     name: "Шаурма в пите",
-                    satiety: 10,
+                    satiety: 70,
                 }
             }
         ],
@@ -251,7 +251,7 @@ module.exports = {
     smoke: {
         // Багама (La Cosa Nostra)
         12: [{
-            price: 10000,
+            price: 630,
             params: {
                 name: "Arturo Fuente",
                 count: 20,
@@ -259,7 +259,7 @@ module.exports = {
         }],
         // Текила (La Eme)
         13: [{
-            price: 10000,
+            price: 630,
             params: {
                 name: "Te Amo",
                 count: 20,
@@ -267,7 +267,7 @@ module.exports = {
         }],
         // Ванила (Russian Mafia)
         14: [{
-            price: 10000,
+            price: 630,
             params: {
                 name: "Погарская сигара",
                 count: 20,
@@ -290,17 +290,20 @@ module.exports = {
     drunkennessWaitClear: 2 * 60 * 1000,
     // Кол-во ед. опьянения, отнимаемых в таймере
     drunkennessDec: 10,
+    minAlcoholPrice: 1,
+    maxAlcoholPrice: 8,
 
     init() {
         bizes = call('bizes');
+        factions = call('factions');
         inventory = call('inventory');
         money = call('money');
         notifs = call('notifications');
+        walking = call('walking');
     },
 
     async initAfterBiz() {
-        walking = call('walking');
-        this.loadClubsFromDB();
+        await this.loadClubsFromDB();
     },
     async loadClubsFromDB() {
         let dbClubs = await db.Models.Club.findAll();
@@ -309,12 +312,24 @@ module.exports = {
                 db: db,
                 biz: bizes.getBizById(db.bizId)
             };
+            club.blip = this.createBlip(club);
             club.enterMarker = this.createEnterMarker(club);
             club.exitMarker = this.createExitMarker(club);
             this.clubs.push(club);
         });
 
         console.log(`[CLUBS] Клубы загружены (${this.clubs.length} шт.)`);
+    },
+    createBlip(club) {
+        let pos = new mp.Vector3(club.db.enterX, club.db.enterY, club.db.enterZ - 1);
+        let blip = mp.blips.new(club.db.blip, pos, {
+            color: 1,
+            name: club.biz.info.name,
+            shortRange: 10,
+            scale: 1
+        })
+
+        return blip;
     },
     createEnterMarker(club) {
         let pos = new mp.Vector3(club.db.enterX, club.db.enterY, club.db.enterZ - 1);
@@ -364,6 +379,8 @@ module.exports = {
                 player.call(`clubs.setCurrentClub`, [{
                     factionId: player.inClub,
                     name: club.biz.info.name,
+                    alcoholPrice: club.db.alcoholPrice,
+                    hasControl: factions.isLeader(player, player.inClub),
                     alcohol: this.alcohol[player.inClub],
                     snacks: this.snacks[player.inClub],
                     smoke: this.smoke[player.inClub],
@@ -393,13 +410,17 @@ module.exports = {
         var alcoholList = this.alcohol[club.biz.info.factionId];
         index = Math.clamp(index, 0, alcoholList.length - 1);
         var item = alcoholList[index];
-        if (player.character.cash < item.price) return out(`Необходимо $${item.price}`);
+        var price = item.price * club.db.alcoholPrice;
+        if (player.character.cash < price) return out(`Необходимо $${price}`);
+        if (club.biz.info.productsCount < price) return out(`У клуба недостаточно продуктов`);
 
         var cantAdd = inventory.cantAdd(player, this.alcoholItemId, item.params);
         if (cantAdd) return out(cantAdd);
 
-        money.removeCash(player, item.price, (res) => {
+        money.removeCash(player, price, (res) => {
             if (!res) out(`Ошибка списания наличных`);
+            factions.addCash(player.inClub, price);
+            bizes.removeProducts(club.biz.info.id, price);
         }, `Покупка напитка в клубе с bizId #${club.biz.info.id}`);
 
         inventory.addItem(player, this.alcoholItemId, item.params, (e) => {
@@ -419,13 +440,17 @@ module.exports = {
         var snackList = this.snacks[club.biz.info.factionId];
         index = Math.clamp(index, 0, snackList.length - 1);
         var item = snackList[index];
-        if (player.character.cash < item.price) return out(`Необходимо $${item.price}`);
+        var price = item.price * club.db.alcoholPrice;
+        if (player.character.cash < price) return out(`Необходимо $${price}`);
+        if (club.biz.info.productsCount < price) return out(`У клуба недостаточно продуктов`);
 
         var cantAdd = inventory.cantAdd(player, this.snackItemId, item.params);
         if (cantAdd) return out(cantAdd);
 
-        money.removeCash(player, item.price, (res) => {
+        money.removeCash(player, price, (res) => {
             if (!res) out(`Ошибка списания наличных`);
+            factions.addCash(player.inClub, price);
+            bizes.removeProducts(club.biz.info.id, price);
         }, `Покупка закуски в клубе с bizId #${club.biz.info.id}`);
 
         inventory.addItem(player, this.snackItemId, item.params, (e) => {
@@ -445,13 +470,17 @@ module.exports = {
         var smokeList = this.smoke[club.biz.info.factionId];
         index = Math.clamp(index, 0, smokeList.length - 1);
         var item = smokeList[index];
-        if (player.character.cash < item.price) return out(`Необходимо $${item.price}`);
+        var price = item.price * club.db.alcoholPrice;
+        if (player.character.cash < price) return out(`Необходимо $${price}`);
+        if (club.biz.info.productsCount < price) return out(`У клуба недостаточно продуктов`);
 
         var cantAdd = inventory.cantAdd(player, this.smokeItemId, item.params);
         if (cantAdd) return out(cantAdd);
 
-        money.removeCash(player, item.price, (res) => {
+        money.removeCash(player, price, (res) => {
             if (!res) out(`Ошибка списания наличных`);
+            factions.addCash(player.inClub, price);
+            bizes.removeProducts(club.biz.info.id, price);
         }, `Покупка сигарет в клубе с bizId #${club.biz.info.id}`);
 
         inventory.addItem(player, this.smokeItemId, item.params, (e) => {
@@ -460,9 +489,18 @@ module.exports = {
 
         notifs.success(player, `Вы приобрели пачку ${item.params.name}`, header);
     },
-    openClub(factionId, isOpen) {
-        var club = this.clubs.find(x => x.biz.info.factionId == factionId);
+    openClub(player, isOpen) {
+        if (!player.inClub) return notifs.error(player, `Вы не в клубе`);
+        var club = this.clubs.find(x => x.biz.info.factionId == player.inClub);
+        if (!club) return notifs.error(player, `Клуб не найден`);
+        var header = `Управление ${club.biz.info.name}`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!factions.isLeader(player, player.inClub)) return out(`Вы не владелец клуба`);
+
         club.enterMarker.isOpen = isOpen;
+        notifs.success(player, `Клуб ${isOpen? 'открыт' : 'закрыт'}`, header);
     },
     addDrunkenness(player, value) {
         var oldValue = player.drunkenness || 0;
@@ -485,5 +523,25 @@ module.exports = {
     setDrunkWalking(player, enable) {
         var style = (enable) ? this.drunkWalkingId : player.character.settings.walking;
         walking.set(player, style);
+    },
+    getBizParamsById(id) {
+        let club = this.clubs.find(x => x.biz.info.id == id);
+        if (!club) return;
+        return [
+            {
+                key: 'alcoholPrice',
+                name: 'Цена спиртного',
+                max: this.maxAlcoholPrice,
+                min: this.minAlcoholPrice,
+                current: club.db.alcoholPrice,
+                isInteger: true
+            }
+        ];
+    },
+    setBizParam(id, key, value) {
+        let club = this.clubs.find(x => x.biz.info.id == id);
+        if (!club) return;
+        club.db[key] = value;
+        club.db.save();
     },
 };

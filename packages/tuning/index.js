@@ -27,12 +27,12 @@ let modsConfig = {
 let priceConfig = { 
     repair: 125,
     color: 100,
-    default: 0.02,
-    engine: 0.03,
-    brake: 0.04,
+    default: 0.005,
+    engine: 0.02,
+    brake: 0.02,
     transmission: 0.01,
     suspension: 0.01,
-    armour: 0.05
+    armour: 0.03
 }
 
 let colorsPrice = priceConfig.color;
@@ -167,11 +167,11 @@ module.exports = {
     },
     calculateProductsNeeded(price) {
         switch (price) {
-            case price < 100:
-                return 3;
+            // case price <= this.productPrice:
+            //     return 1;
             default:
-                let products = parseInt(price / this.productPrice);
-                return products > 300 ? 300 : products;
+                let products = parseInt((price * 0.8) / this.productPrice);
+                return products;
         }
     } 
 }

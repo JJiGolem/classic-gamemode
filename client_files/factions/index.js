@@ -14,6 +14,16 @@ mp.factions = {
     faction: null,
     ranks: [],
     vehRespawnPrice: 0,
+    blips: {
+        "holder": null,
+        "storage": null,
+        "warehouse": null,
+    },
+    blipSprites: {
+        "holder": 73,
+        "storage": 567,
+        "warehouse": 478,
+    },
 
     insideWarehouse(inside, type = null) {
         if (inside) mp.prompt.showByName(`take_${type}box`);
@@ -26,8 +36,7 @@ mp.factions = {
             var type = this.getTypeBox();
             if (!type) mp.prompt.showByName(`take_ammobox`);
             else mp.prompt.showByName(`put_${type}box`);
-        }
-        else mp.prompt.hide();
+        } else mp.prompt.hide();
         this.insideFactionWar = inside;
     },
     boxHandler() {
@@ -139,6 +148,26 @@ mp.factions = {
         this.ranks[rank - 1].name = name;
         mp.callCEFV(`selectMenu.menus['factionControlRanks'].init(${JSON.stringify(this.ranks)})`);
     },
+    setBlips(positions) {
+        Object.values(this.blips).forEach(blip => {
+            if (!blip || !mp.blips.exists(blip)) return;
+            blip.destroy();
+        });
+        if (!positions) return;
+        for (var name in positions) {
+            if (name == 'blipColor') continue;
+            this.blips[name] = mp.blips.new(this.getBlipSprite(name), positions[name], {
+                color: positions['blipColor'],
+                dimension: positions[name].d,
+                shortRange: 10,
+                name: name,
+            });
+        }
+    },
+    getBlipSprite(name) {
+        if (name != 'storage') return this.blipSprites[name];
+        return [0, 567, 175, 175, 175, 498, 175, 498, 110, 110, 110, 110, 110, 110, 110][this.faction];
+    },
     registerAttachments() {
         // коробка с боеприпасами в руках
         mp.attachmentMngr.register("ammoBox", "prop_box_ammo04a", 11363, new mp.Vector3(0.05, 0, -0.25),
@@ -185,9 +214,10 @@ mp.events.add({
     "factions.storage.showMenu": (factionId) => {
         mp.factions.showStorageSelectMenu(factionId);
     },
-    "factions.faction.set": (val, ranks) => {
+    "factions.faction.set": (val, ranks, blipsPos) => {
         mp.factions.setFaction(val);
         mp.factions.setRanks(ranks);
+        mp.factions.setBlips(blipsPos);
     },
     "factions.ranks.name.set": (data) => {
         mp.factions.setRankName(data.rank, data.name);

@@ -218,6 +218,14 @@ mp.events.add({
         });
         mp.mafia.zonesShow = enable;
     },
+    "mafia.bag.callRemote": (data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+
+        var rec = mp.utils.getNearPlayer(mp.players.local.position);
+        if (!rec) return mp.notify.error(`Рядом никого нет`, `Мешок`);
+        data.recId = rec.remoteId;
+        mp.events.callRemote(`mafia.bag`, JSON.stringify(data));
+    },
     "mafia.bizWar.showMenu": (data) => {
         mp.mafia.showBizWarMenu(data);
     },
@@ -233,6 +241,14 @@ mp.events.add({
     "mafia.bizWar.killList.log": (target, killer, reason) => {
         mp.mafia.logKill(target, killer, reason);
     },
+    "mafia.cuffs.callRemote": (data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+
+        var rec = mp.utils.getNearPlayer(mp.players.local.position);
+        if (!rec) return mp.notify.error(`Рядом никого нет`, `Веревка`);
+        data.recId = rec.remoteId;
+        mp.events.callRemote(`mafia.cuffs`, JSON.stringify(data));
+    },
     "mafia.follow.start": (playerId) => {
         mp.mafia.startFollowToPlayer(playerId);
     },
@@ -244,9 +260,11 @@ mp.events.add({
         mp.mafia.setStorageInfo(data);
     },
     "render": () => {
-        mp.mafia.mafiaZones.forEach(blip => {
-            mp.game.invoke(mp.mafia.natives.SET_BLIP_ROTATION, blip, 0);
-        });
+        if (mp.mafia.zonesShow) {
+            mp.mafia.mafiaZones.forEach(blip => {
+                mp.game.invoke(mp.mafia.natives.SET_BLIP_ROTATION, blip, 0);
+            });
+        }
 
         if (mp.mafia.followPlayer) {
             mp.game.controls.disableControlAction(0, 21, true); /// бег
@@ -261,6 +279,7 @@ mp.events.add({
         }
     },
     "time.main.tick": () => {
+        var start = Date.now();
         if (mp.mafia.followPlayer) {
             var pos = mp.mafia.followPlayer.position;
             var localPos = mp.players.local.position;
@@ -274,6 +293,7 @@ mp.events.add({
             if (dist < 5) speed = 1;
             mp.players.local.taskFollowNavMeshToCoord(pos.x, pos.y, pos.z, speed, -1, 1, true, 0);
         }
+        mp.timeMainChecker.modules.mafia = Date.now() - start;
     },
     "entityStreamIn": (player) => {
         if (player.type != "player") return;

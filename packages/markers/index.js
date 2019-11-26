@@ -2,8 +2,8 @@
 
 module.exports = {
 
-    init() {
-        this.loadTpMarkersFromDB();
+    async init() {
+        await this.loadTpMarkersFromDB();
     },
     async loadTpMarkersFromDB() {
         var list = await db.Models.TpMarker.findAll();

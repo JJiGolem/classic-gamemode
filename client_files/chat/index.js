@@ -3,6 +3,8 @@
 mp.gui.chat.activate(false);
 mp.gui.chat.show(false);
 mp.chat = {
+    clearMuteTime: 0,
+
     debug: (message) => { /// выводит в чат строку белым цветом (для дебага)
         mp.events.call('chat.message.push', `!{#ffffff} ${message}`);
     },
@@ -76,7 +78,7 @@ mp.events.add('chat.load', () => {
     mp.keys.bind(0x54, true, function() {
         if (mp.game.ui.isPauseMenuActive()) return;
         //if (mp.busy.includes()) return;
-        if (!(mp.busy.includes() === 0 || (mp.busy.includes() === 1 && (mp.busy.includes('lostAttach') || mp.busy.includes('cuffs') || mp.busy.includes('chopping'))))) return;
+        if (!(mp.busy.includes() === 0 || (mp.busy.includes() === 1 && (mp.busy.includes('lostAttach') || mp.busy.includes('cuffs') || mp.busy.includes('jobProcess') || mp.busy.includes('timer'))))) return;
         mp.busy.add('chat', true);
         isOpen = true;
         mp.callCEFR('setFocusChat', [true]);
@@ -155,6 +157,7 @@ function playChatAnimation(id) {
     if (mp.factions.hasBox(player)) return;
     if (mp.farms.isCropping(player)) return;
     if (player.getVariable("cuffs")) return;
+    if (player.getVariable("anim")) return;
 
     mp.animations.playAnimation(player, {
         dict: "special_ped@baygor@monologue_3@monologue_3e",
@@ -166,6 +169,16 @@ function playChatAnimation(id) {
 
 mp.events.add('chat.message.get', (type, message) => {
     mp.afk.action();
+    if (mp.chat.clearMuteTime && (message[0] != '/' || ["/s", "/r", "/f", "/n", "/me", "/do", "/gnews", "/d", "/try", "/m"].includes(message.split(' ')[0]))) {
+        if (mp.chat.clearMuteTime < Date.now()) {
+            mp.chat.clearMuteTime = 0;
+            mp.notify.success(`Использование чатов снова доступно. Не нарушайте правила сервера.`, `MUTE`);
+            mp.events.callRemote(`chat.mute.clear`);
+        } else {
+            var mins = Math.ceil((mp.chat.clearMuteTime - Date.now()) / 1000 / 60);
+            return mp.notify.error(`До разблокировка чата осталось ${mins} мин!`);
+        }
+    }
     mp.events.callRemote('chat.message.get', type, message);
 });
 
@@ -230,6 +243,10 @@ mp.events.add('chat.message.push', (message) => {
 
 mp.events.add('chat.message.split', (message, fixed, color) => {
     splitChatMessage(message, fixed, color);
+});
+
+mp.events.add('chat.mute.set', (time) => {
+    mp.chat.clearMuteTime = Date.now() + time;
 });
 
 function splitChatMessage(message, fixed, color) {

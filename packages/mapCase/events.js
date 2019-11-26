@@ -19,7 +19,7 @@ var out = {
 };
 
 module.exports = {
-    "init": async () => {
+    "init": () => {
         inited(__dirname);
     },
     "characterInit.done": (player) => {
@@ -774,6 +774,12 @@ module.exports = {
         if (!player.phone) return notifs.error(player, `Необходим телефон`, header);
         var price = news.symbolPrice * text.length;
         if (player.character.cash < price) return notifs.error(player, `Необходимо $${price}`, header);
+        if (player.lastAddAd) {
+            var diff = Date.now() - player.lastAddAd;
+            var wait = news.waitAddAd;
+            if (diff < wait) return notifs.error(player, `Повторная отправка доступна через ${parseInt((wait - diff) / 1000)} сек.`, header);
+        }
+        player.lastAddAd = Date.now();
         money.removeCash(player, price, (res) => {
             if (!res) return notifs.error(player, `Ошибка списания наличных`, header);
         }, `Отправка объявления`);

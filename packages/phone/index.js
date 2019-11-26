@@ -1,6 +1,6 @@
 "use strict";
 
-let phoneNumbers = new Array();
+let phoneNumbers = [];
 let utils;
 let houseServise;
 let bizService;

@@ -14,7 +14,7 @@ module.exports = {
     },
     /// Заморозка игрока перед авторизацией
     'player.joined': async (player) => {
-        player.dimension = player.id;
+        player.dimension = player.id + 1;
 
         if (!whitelist.isEmpty) {
             if (whitelist.isEnabled()) {
@@ -33,7 +33,7 @@ module.exports = {
         let ban = await db.Models.Ban.findOne({
             where: {
                 [Op.or]: {
-                    ip: player.id,
+                    ip: player.ip,
                     socialClub: player.socialClub,
                     serial: player.serial,
                 }

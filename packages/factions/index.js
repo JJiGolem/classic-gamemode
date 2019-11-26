@@ -166,7 +166,7 @@ module.exports = {
             color: [0, 187, 255, 70],
             dimension: faction.sD
         });
-        storage.isOpen = true;
+        storage.isOpen = false;
         this.storages.push(storage);
 
         var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z, 1.5, storage.dimension);
@@ -279,6 +279,20 @@ module.exports = {
     getBlip(id) {
         return this.blips[id - 1];
     },
+    getBlipsPos(faction) {
+        if (typeof faction == 'number') faction = this.getFaction(faction);
+        if (!faction) return null;
+        var positions = {
+            "holder": this.getHolder(faction.id).position,
+            "storage": this.getStorage(faction.id).position,
+            "warehouse": this.getWarehouse(faction.id).position,
+            "blipColor": faction.blipColor
+        };
+        positions.holder.d = this.getHolder(faction.id).dimension;
+        positions.storage.d = this.getStorage(faction.id).dimension;
+        positions.warehouse.d = this.getWarehouse(faction.id).dimension;
+        return positions;
+    },
     getFactionName(player) {
         if (!player.character.factionId) return null;
         return this.getFaction(player.character.factionId).name;
@@ -345,7 +359,7 @@ module.exports = {
         character.save();
 
         player.setVariable("factionId", character.factionId);
-        player.call(`factions.faction.set`, [character.factionId, this.getClientRanks(faction)]);
+        player.call(`factions.faction.set`, [character.factionId, this.getClientRanks(faction), this.getBlipsPos(faction)]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isGovernmentFaction(faction)) mp.events.call(`mapCase.gover.init`, player);
         else if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
@@ -356,10 +370,11 @@ module.exports = {
 
         mp.events.call(`player.faction.changed`, player, oldVal);
     },
-    isLeader(player) {
-        if (!player.character.factionId) return false;
+    isLeader(player, factionId = null) {
+        if (!factionId) factionId = player.character.factionId;
+        if (!factionId) return false;
 
-        var maxRank = this.getMaxRank(player.character.factionId);
+        var maxRank = this.getMaxRank(factionId);
         return player.character.factionRank == maxRank.id;
     },
     setBlip(faction, type, color) {
@@ -387,7 +402,7 @@ module.exports = {
         character.save();
 
         player.setVariable("factionId", character.factionId);
-        player.call(`factions.faction.set`, [character.factionId, this.getClientRanks(faction)]);
+        player.call(`factions.faction.set`, [character.factionId, this.getClientRanks(faction), this.getBlipsPos(faction)]);
         // player.call(`mapCase.init`, [player.name, faction.id]);
         if (this.isGovernmentFaction(faction)) mp.events.call(`mapCase.gover.init`, player);
         else if (this.isPoliceFaction(faction)) mp.events.call(`mapCase.pd.init`, player);
@@ -556,6 +571,7 @@ module.exports = {
         if (!player.insideWarehouse) return notifs.error(player, `Вы далеко`, header);
         var haveBox = player.hasAttachment("ammoBox") || player.hasAttachment("medicinesBox");
         if (haveBox) return notifs.error(player, `[S] Нельзя нести больше`, header);
+        if (inventory.getHandsItem(player)) return notifs.error(player, `Освободите руки`, header);
         player.addAttachment(type + "Box");
     },
     putBox(player) {
@@ -584,6 +600,10 @@ module.exports = {
             this.setProducts(faction, type, faction[type] - this[type + "Box"]);
             player.addAttachment(type + "Box");
         }
+    },
+    canSetStorageState(player) {
+        var maxRank = this.getMaxRank(player.character.factionId);
+        return player.character.factionRank == maxRank.id || player.character.factionRank == maxRank.id - 1;
     },
     canFillWarehouse(player, boxType, faction) {
         if (!this.whiteListWarehouse[boxType]) return false;
@@ -630,21 +650,21 @@ module.exports = {
         var faction = this.getFaction(player.character.factionId);
         var pay = this.getRankById(faction, player.character.factionRank).pay;
 
-        var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60 % 60);
+        var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60);
         if (minutes < this.payMins) return notifs.warning(player, `Зарплата не получена из-за низкой активности`, faction.name);
 
-        if (this.isBandFaction(faction) || this.isMafiaFaction(faction)) {
-            if (this.isBandFaction(faction)) pay += parseInt(bands.bandZonesPrice * bands.getPowerBand(faction.id));
+        if (this.isMafiaFaction(faction)) {
             if (faction.cash < pay) return notifs.error(player, `В общаке недостаточно средств для получения зарплаты`, faction.name);
 
             // TODO: не многовато запросов в БД получится?
-            faction.cash -= pay;
-            faction.save();
-        }
+            // faction.cash -= pay;
+            // faction.save();
+        } else if (this.isBandFaction(faction)) pay += parseInt(bands.bandZonesPrice * bands.getPowerBand(faction.id));
 
+        if (!pay) return;
         money.addMoney(player, pay, (res) => {
             if (!res) return console.log(`[factions] Ошибка выдачи ЗП для ${player.name}`);
-            notifs.info(player, `Зарплата: $${pay}`, faction.name);
+            notifs.info(player, `Получена зарплата`, faction.name);
         }, `Зарплата организации ${faction.name}`);
     },
     fullDeleteItems(owner, faction) {

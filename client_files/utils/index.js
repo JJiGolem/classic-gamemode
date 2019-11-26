@@ -10,8 +10,8 @@ mp.utils = {
     /// Возвращает имя улицы
     getStreetName(pos) {
         if (!pos) return null;
-        var getStreet = mp.game.pathfind.getStreetNameAtCoord(pos.x, pos.y, pos.z, 0, 0);
-        var streetName = mp.game.ui.getStreetNameFromHashKey(getStreet["streetName"]);
+        let getStreet = mp.game.pathfind.getStreetNameAtCoord(pos.x, pos.y, pos.z, 0, 0);
+        let streetName = mp.game.ui.getStreetNameFromHashKey(getStreet["streetName"]);
         return streetName;
     },
     /// Возвращает название района
@@ -298,7 +298,7 @@ mp.utils = {
     },
     // Очистить внешний вид игрока
     clearAllView(player, hair) {
-        var gender = (mp.game.joaat("mp_m_freemode_01") == player.model) ? 0 : 1; // 0 - муж, 1 - жен
+        let gender = (mp.game.joaat("mp_m_freemode_01") == player.model) ? 0 : 1; // 0 - муж, 1 - жен
         player.setComponentVariation(7, 0, 0, 0);
         player.setComponentVariation(5, 0, 0, 0);
         player.setComponentVariation(9, 0, 0, 0);
@@ -342,9 +342,10 @@ mp.utils = {
         return mp.game.invoke('0x9F47B058362C84B5', raycast.entity);
     },
     // Луч от игрок перед собой
-    frontRaycast(player) {
+    frontRaycast(player, draw = false) {
         var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
         var endPos = player.getOffsetFromInWorldCoords(0, 1, 0);
+        if (draw) mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 255, 0, 100);
         return mp.raycasting.testPointToPoint(startPos, endPos);
     },
     // Добавить текст над головой игрока
@@ -478,6 +479,7 @@ mp.events.add("addOverheadText", (playerId, text, color) => {
 
 /// Отключение движения игрока
 mp.events.add('render', () => {
+    var start = Date.now();
     if (playerMovingDisabled) {
         mp.game.controls.disableControlAction(0, 21, true); /// бег
         mp.game.controls.disableControlAction(0, 22, true); /// прыжок
@@ -505,4 +507,5 @@ mp.events.add('render', () => {
             mp.utils.drawText2d(info.text, [pos2d.x, pos2d.y], info.color, info.scale);
         }
     });
+    if (mp.renderChecker) mp.utils.drawText2d(`utils rend: ${Date.now() - start} ms`, [0.8, 0.65]);
 });

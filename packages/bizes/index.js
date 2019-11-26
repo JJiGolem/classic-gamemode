@@ -31,6 +31,7 @@ let maxProductPriceMultiplier = 2.0;
 let minProductPriceMultiplier = 1.2;
 let factionPayMultiplier = 0.01;
 let dropBizMultiplier = 0.6;
+let dropBizOrderMultiplier = 0.8;
 
 
 let getBizById = function(id) {
@@ -93,9 +94,9 @@ let setTimer = function(biz) {
         dropBiz(biz);
     }, biz.info.date.getTime() - new Date().getTime());
 };
-let getRandomDate = function(daysNumber) {
+let getDropDate = function(daysNumber) {
     let date = new Date();
-    date.setTime(Date.now() - (date.getHours() * 1000 * 3600) + (daysNumber * 1000 * 3600 * 24) + (utils.randomInteger(0, 23) * 1000 * 3600));
+    date.setTime(Date.now() + (daysNumber * 1000 * 3600 * 24));
     return date;
 };
 let getBizInfoForApp = function(biz) {
@@ -112,7 +113,7 @@ let getBizInfoForApp = function(biz) {
             resourcesMax: biz.info.productsMaxCount,
             resources: biz.info.productsCount,
             statistics: biz.info.BizStatistics,
-            order: { productsCount: biz.info.productsOrder, productsPrice: biz.info.productsOrderPrice },
+            order: biz.info.productsOrder && { productsCount: biz.info.productsOrder, productsPrice: biz.info.productsOrderPrice },
             resourcePriceMin: bizesModules[biz.info.type].productPrice * minMultiplier,
             resourcePriceMax: bizesModules[biz.info.type].productPrice * maxMultiplier,
             improvements: []
@@ -131,7 +132,7 @@ let getBizInfoForApp = function(biz) {
             resources: biz.info.productsCount,
             price: biz.info.price,
             statistics: biz.info.BizStatistics,
-            order: { productsCount: biz.info.productsOrder, productsPrice: biz.info.productsOrderPrice },
+            order: biz.info.productsOrder && { productsCount: biz.info.productsOrder, productsPrice: biz.info.productsOrderPrice },
             resourcePriceMin: bizesModules[biz.info.type].productPrice * minMultiplier,
             resourcePriceMax: bizesModules[biz.info.type].productPrice * maxMultiplier,
             improvements: []
@@ -195,8 +196,8 @@ let bizUpdateCashBox = async function(id, money) {
         currentDay.save();
     }
     await biz.info.save();
-    let player = mp.players.toArray().find(player => player && player.character && player.character.id == biz.info.characterId);
-    player != null && player.call("biz.cashbox.update", [biz.info.cashBox]);
+    let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id === biz.info.characterId);
+    player != null && player.call("biz.app.update", [biz.info.cashBox, biz.info.productsCount]);
 };
 let addProducts = async function(id, count) {
     let biz = getBizById(id);
@@ -212,12 +213,12 @@ let removeProducts = async function(id, count) {
     if (biz.info.productsCount < count) return false;
     biz.info.productsCount -= count;
     await biz.info.save();
-    if (biz.info.characterId == null && biz.info.productsCount < biz.info.productsMaxCount / 2) {
-        let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
-        let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
-        let countOrder = biz.info.productsMaxCount -  biz.info.productsCount;
-        if (await createOrder(biz, countOrder, parseInt(((max + min) / 2) * countOrder)) !== 1) console.log("[BIZES] Auto creating order error");
-    }
+    // if (biz.info.characterId == null && biz.info.productsCount < biz.info.productsMaxCount / 2 && biz.info.productsOrder == null) {
+    //     let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
+    //     let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
+    //     let countOrder = biz.info.productsMaxCount -  biz.info.productsCount;
+    //     if (await createOrder(biz, countOrder, parseInt(((max + min) / 2) * countOrder)) !== 1) console.log("[BIZES] Auto creating order error");
+    // }
     return true;
 };
 let createOrder = async function(biz, count, price) {
@@ -225,9 +226,11 @@ let createOrder = async function(biz, count, price) {
     if (biz.info.productsCount + count > biz.info.productsMaxCount) return 3;
     let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
     let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
-    if (price < min || price > max) return 0;
+    if (price <= min || price >= max) return 0;
+    if (biz.info.productsOrderPrice > biz.info.cashBox) return 0;
     biz.info.productsOrder = count;
     biz.info.productsOrderPrice = parseInt(price * count);
+    biz.info.cashBox -= biz.info.productsOrderPrice;
     carrier != null && carrier.addBizOrder(biz);
     await biz.info.save();
     return 1;
@@ -236,9 +239,11 @@ let destroyOrder = async function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
     if (!biz.isOrderTaken) return false;
+    biz.info.cashBox += biz.info.productsOrderPrice * dropBizOrderMultiplier;
     biz.info.productsOrder = null;
     biz.info.productsOrderPrice = null;
     carrier != null && carrier.removeBizOrderByBizId(biz.info.id);
+    console.log("destroyOrder");
     await biz.info.save();
     return true;
 };
@@ -289,7 +294,7 @@ let readyOrder = async function(id, productsNumber) {
 
     await biz.info.save();
     let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
-    player != null && player.call("biz.order.complete", [addedProducts]);
+    player != null && player.call("biz.order.complete", [addedProducts, pay]);
     return {productsOrder: biz.info.productsOrder, productsOrderPrice: biz.info.productsOrderPrice, pay: pay};
 };
 
@@ -298,6 +303,7 @@ module.exports = {
     minProductPriceMultiplier: minProductPriceMultiplier,
     factionPayMultiplier: factionPayMultiplier,
     dropBizMultiplier: dropBizMultiplier,
+    dropBizOrderMultiplier: dropBizOrderMultiplier,
 
     async init() {
         utils = call("utils");
@@ -358,8 +364,11 @@ module.exports = {
     },
     async addBiz(bizInfo) {
         let colshape = mp.colshapes.newSphere(bizInfo.x, bizInfo.y, bizInfo.z, 4.0);
+        let colshapeOrder = mp.colshapes.newSphere(bizInfo.x, bizInfo.y, bizInfo.z, 20.0);
         colshape.isBiz = true;
         colshape.bizId = bizInfo.id;
+        colshapeOrder.isOrderBiz = true;
+        colshapeOrder.bizId = bizInfo.id;
         bizInfo.BizStatistics = bizInfo.BizStatistics.sort((x, y) => {
             if (x.date.getTime() < y.date.getTime()) {
                 return 1;
@@ -371,6 +380,7 @@ module.exports = {
         });
         bizes.push({
             colshape: colshape,
+            colshapeOrder: colshapeOrder,
             info: bizInfo
         });
         if (bizInfo.BizStatistics.length !== 0) {
@@ -385,8 +395,7 @@ module.exports = {
     sellBiz(biz, cost, seller, buyer, callback) {
         biz.info.characterId = buyer.character.id;
         biz.info.characterNick = buyer.character.name;
-        biz.info.cashBox = 0;
-        biz.info.date = getRandomDate(1);
+        biz.info.date = getDropDate(1);
         setTimer(biz);
         biz.info.save().then(() => {
             if (money == null) return;
@@ -410,7 +419,7 @@ module.exports = {
     getResourceName: getResourceName,
     getResourcePrice: getResourcePrice,
     getResourcePos: getResourcePos,
-    getRandomDate: getRandomDate,
+    getDropDate: getDropDate,
     getBizInfoForApp: getBizInfoForApp,
     getBizInfoForBank: getBizInfoForBank,
     getDateDays: getDateDays,
@@ -487,7 +496,10 @@ module.exports = {
     getBizParameters(charId, id) {
         let biz = getBizById(id);
         if (biz == null) return null;
-        if (biz.info.characterId !== charId) return null;
+        if (!bizesModules[biz.info.type].business.isFactionOwner) {
+            if (biz.info.characterId !== charId) return null;
+        }
+
         let params = bizesModules[biz.info.type].getBizParamsById(biz.info.id);
         if (params == null) return null;
         return {bizId: biz.info.id, params: params};
@@ -495,7 +507,9 @@ module.exports = {
     setBizParameters(charId, bizParameters) {
         let biz = getBizById(bizParameters.bizId);
         if (biz == null) return false;
-        if (biz.info.characterId !== charId) return false;
+        if (!bizesModules[biz.info.type].business.isFactionOwner) {
+            if (biz.info.characterId !== charId) return false;
+        }
         bizParameters.params.forEach(param => {
             bizesModules[biz.info.type].setBizParam(bizParameters.bizId, param.key, param.value);
         });

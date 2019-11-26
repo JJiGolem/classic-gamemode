@@ -1,5 +1,6 @@
 "use strict";
 
+let notifs = call('notifications');
 let timer = call('timer');
 
 module.exports = {
@@ -374,6 +375,7 @@ module.exports = {
         if (place.type == "Vehicle") key = "vehicleId";
         else if (place.type == "Faction") key = "playerId";
         else if (place.type == "House") key = "houseId";
+        else return notifs.error(player, `Вы далеко от окружения`, `Инвентарь`);
         conf[key] = -place.sqlId;
         var table = `${place.type}Inventory`;
         var newItem = db.Models[table].build(conf, {
@@ -390,12 +392,12 @@ module.exports = {
     async addPlayerItem(player, item, parentId, pocketIndex, index) {
         // console.log(`addPlayerItem`)
         var nextWeight = this.getCommonWeight(player) + this.getItemWeight(player, item);
-        if (nextWeight > this.maxPlayerWeight) return debug(`Превышение по весу (${nextWeight.toFixed(2)} из ${this.maxPlayerWeight} кг)`);
+        // if (nextWeight > this.maxPlayerWeight) return debug(`Превышение по весу (${nextWeight.toFixed(2)} из ${this.maxPlayerWeight} кг)`);
         var place = player.inventory.place;
         var params = this.getParamsValues(item);
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, item.itemId);
-            if (weapon) return callback(`Оружие ${this.getName(item.itemId)} уже имеется`);
+            // if (weapon) return notifs.error(player, `Оружие ${this.getName(item.itemId)} уже имеется`, `Инвентарь`);
             // if (parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
         }
         var struct = [];
@@ -422,7 +424,10 @@ module.exports = {
         });
 
         player.inventory.items.push(newItem);
-        if (!newItem.parentId) this.updateView(player, newItem);
+        if (!newItem.parentId) {
+            if (newItem.index == 13) this.syncHandsItem(player, newItem);
+            else this.updateView(player, newItem);
+        }
         await newItem.save();
         player.call(`inventory.setItemSqlId`, [item.id, newItem.id]);
     },
@@ -430,7 +435,7 @@ module.exports = {
         if (typeof item == 'number') item = this.getItem(player, item);
         if (!item) return console.log(`[inventory.deleteItem] Предмет #${item} у ${player.name} не найден`);
         var params = this.getParamsValues(item);
-        if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
+        // if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
         if (!item.parentId) this.clearView(player, item.itemId);
         if (!item.parentId && item.index == 13) this.syncHandsItem(player, null);
         item.destroy();
@@ -455,7 +460,7 @@ module.exports = {
             var child = children[i];
             child.destroy(); // из-за paranoid: true
             var params = this.getParamsValues(child);
-            if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
+            // if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
             this.clearArrayItems(player, child);
         }
         var index = items.indexOf(item);
@@ -602,7 +607,7 @@ module.exports = {
             otherItems[item.itemId](params);
         } else if (params.weaponHash) {
             player.addAttachment(`weapon_${item.itemId}`);
-            this.removeWeapon(player, params.weaponHash);
+            // this.removeWeapon(player, params.weaponHash);
         } else return debug(`Неподходящий тип предмета для тела, item.id: ${item.id}`);
 
     },
@@ -1179,13 +1184,15 @@ module.exports = {
         if (!item) return;
         var param = this.getParam(item, 'weaponHash');
         if (!param || param.value != hash) return;
+        if (player.weapon == hash) this.updateParam(player, item, 'ammo', player.weaponAmmo);
         player.removeWeapon(hash);
         player.call(`weapons.removeWeapon`, [hash.toString()]);
     },
     canMerge(itemId, targetId) {
         return this.mergeList[itemId] && this.mergeList[itemId].includes(targetId);
     },
-    putGround(player, item, pos) {
+    putGround(player, item, pos, dimension = null) {
+        if (dimension == null) dimension = player.dimension;
         var children = this.getArrayItems(player, item);
         this.deleteItem(player, item);
 
@@ -1194,7 +1201,7 @@ module.exports = {
 
         var newObj = mp.objects.new(mp.joaat(info.model), pos, {
             rotation: new mp.Vector3(info.rX, info.rY, player.heading),
-            dimension: player.dimension
+            dimension: dimension
         });
         newObj.playerId = player.id;
         newObj.item = item;
@@ -1340,7 +1347,14 @@ module.exports = {
 
         if (item) { // вкл. синх. предмета/гана в руках
             var params = this.getParamsValues(item);
-            if (params.weaponHash) this.giveWeapon(player, params.weaponHash, params.ammo);
+            if (params.weaponHash) {
+                var ammo = params.ammo;
+                if (player.weapon == params.weaponHash && ammo != player.weaponAmmo) {
+                    this.updateParam(player, item, 'ammo', player.weaponAmmo);
+                    ammo = player.weaponAmmo;
+                }
+                this.giveWeapon(player, params.weaponHash, ammo);
+            }
             else player.setVariable("hands", item.itemId);
         } else { // выкл. синх. предмета/гана в руках
             var handsItem = this.getHandsItem(player);

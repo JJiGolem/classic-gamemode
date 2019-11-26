@@ -10,6 +10,10 @@ module.exports = {
     "playerEnterColshape": (player, shape) => {
         if (!player.character) return;
         if (shape.isClothingShop) {
+
+            let isCuffed = player.getVariable('cuffs') || false;
+            if (isCuffed) return;
+
             player.currentClothingShopId = shape.clothingShopId;
             player.dimension = player.id + 1;
             if (player.hasValidClothesData) {
@@ -47,8 +51,12 @@ module.exports = {
 
         if (!item) return player.call('clothingShop.item.buy.ans', [1]);
 
+        let defaultPrice = item.price;
         let products = clothingShop.calculateProductsNeeded(item.price);
-        let price = parseInt(item.price * clothingShop.getPriceMultiplier(shopId));
+        let price = parseInt(defaultPrice * clothingShop.getPriceMultiplier(shopId));
+        //let income = parseInt(products * clothingShop.productPrice * clothingShop.getPriceMultiplier(shopId));
+
+
         if (player.character.cash < price) return player.call('clothingShop.item.buy.ans', [4]);
         let productsAvailable = clothingShop.getProductsAmount(shopId);
         if (products > productsAvailable) return player.call('clothingShop.item.buy.ans', [6]);

@@ -95,6 +95,7 @@ let utils = {
         var minDist = 99999;
         mp.players.forEach((rec) => {
             if (rec.id == player.id) return;
+            if (rec.dimension != player.dimension) return;
             var distance = player.dist(rec.position);
             if (distance < minDist) {
                 nearPlayer = rec;
@@ -107,6 +108,7 @@ let utils = {
         if (!sqlId) return null;
         var result;
         mp.vehicles.forEach((veh) => {
+            if (!veh.db) return;
             if (veh.db.id == sqlId) {
                 result = veh;
                 return;
@@ -118,7 +120,7 @@ let utils = {
         var nearVehicle;
         var minDist = 99999;
         mp.vehicles.forEach((veh) => {
-            if (veh.id == player.id) return;
+            if (veh.dimension != player.dimension) return;
             var distance = player.dist(veh.position);
             if (distance < minDist && distance < range) {
                 nearVehicle = veh;

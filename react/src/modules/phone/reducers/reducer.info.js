@@ -1,6 +1,8 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-fallthrough */
 /* eslint-disable default-case */
+import $ from 'jquery';
+
 const initialState = {
     // name: 'Ilya Maxin',
     // isDriver: true,
@@ -126,12 +128,33 @@ const initialState = {
     // }
 };
 
+let phoneIsShow = false;
+let phoneIsShow2 = false;
+
 export default function info(state = initialState, action) {
 
     const { type, payload } = action;
     var newState;
 
     switch (type) {
+        case 'SHOW_PHONE':
+            phoneIsShow = payload;
+
+            if (!payload && state.incomingCall.state) {
+                // eslint-disable-next-line no-undef
+                mp.trigger('phone.call.in.ans', 0);
+                phoneIsShow2 = false;
+
+                return {
+                    ...state,
+                    incomingCall: null
+                }
+            } else if (payload) {
+                phoneIsShow2 = false;
+            }
+
+            return state;
+
         case 'LOAD_INFO_TO_PHONE':
             return {
                 ...state,
@@ -206,19 +229,49 @@ export default function info(state = initialState, action) {
             return newState;
 
         case 'SET_CALL_STATUS':
-            newState = { ...state };
-            newState.callStatus = payload;
-            return newState;
+            if (state.incomingCall && state.incomingCall.state && phoneIsShow2) {
+                $('#phone-form-react').animate({ bottom: '-50%' }, 100, function() {
+                    $('#phone-form-react').css({ "display": "none" });
+                });
+                phoneIsShow2 = false;
+            }
 
+            return {
+                ...state,
+                incomingCall: {
+                    ...state.incomingCall,
+                    state: false
+                },
+                activeCall: {
+                    ...state.activeCall,
+                    callStatus: payload
+                }
+            }
         case 'SET_CALL':
-            newState = { ...state };
-            newState.isCall = payload;
-            return newState;
+            return {
+                ...state,
+                isCall: payload
+            }
 
-        case 'START_MY_CALL':
-            newState = { ...state };
-            newState.isMyCall = payload;
-            return newState;
+        case 'INCOMING_CALL':
+            if (!phoneIsShow && payload.state) {
+                $('#phone-form-react').animate({ bottom: '-20%' }, 100);
+                $('#phone-form-react').css({ "display": "block" });
+                phoneIsShow2 = true;
+            }
+            return {
+                ...state,
+                incomingCall: payload
+            }
+
+        case 'ACTIVE_CALL':
+            return {
+                ...state,
+                activeCall: {
+                    ...state.activeCall,
+                    ...payload
+                }
+            }
 
         case 'CHANGE_STATE_HOUSE':
             newState = { ...state };
@@ -254,6 +307,7 @@ export default function info(state = initialState, action) {
         case 'CREATE_ORDER_BUSINESS':
             newState = { ...state };
             newState.biz[0].order = payload;
+            newState.biz[0].cashBox -= payload.productsPrice;
             newState.biz[0].orderStatus = null;
             return newState;
 
@@ -276,15 +330,20 @@ export default function info(state = initialState, action) {
 
         case 'ORDER_COMPLETE_BUSINESS':
             newState = { ...state };
-            newState.biz[0].resources += payload;
+            newState.biz[0].resources += payload.count;
 
-            if ((newState.biz[0].order.productsCount - payload) > 0) {
-                newState.biz[0].order.productsCount -= payload;
-                newState.biz[0].order.productsPrice = parseInt((1 - payload/newState.biz[0].order.productsCount) * newState.biz[0].order.productsPrice)
+            if ((newState.biz[0].order.productsCount - payload.count) > 0) {
+                newState.biz[0].order.productsCount -= payload.count;
+                newState.biz[0].order.productsPrice -= payload.sum
             } else {
                 newState.biz[0].order = null;
             }
 
+            return newState;
+
+        case 'UPDATE_PRODUCTS_BUSINESS':
+            newState = { ...state };
+            newState.biz[0].resources = payload;
             return newState;
 
         case 'SELL_BUSINESS':
@@ -300,6 +359,7 @@ export default function info(state = initialState, action) {
         case 'CREATE_ORDER_BUSINESS_FACTION':
             newState = { ...state };
             newState.factionBiz.order = payload;
+            newState.factionBiz.cashBox -= payload.productsPrice;
             newState.factionBiz.orderStatus = null;
             return newState;
 
@@ -321,17 +381,17 @@ export default function info(state = initialState, action) {
             return newState;
 
         case 'ORDER_COMPLETE_BUSINESS_FACTION':
-            newState = { ...state };
-            newState.factionBiz.resources += payload;
-
-            if ((newState.factionBiz.order.productsCount - payload) > 0) {
-                newState.factionBiz.order.productsCount -= payload;
-                newState.factionBiz.order.productsPrice = parseInt((1 - payload/newState.factionBiz.order.productsCount) * newState.factionBiz.order.productsPrice)
-            } else {
-                newState.factionBiz.order = null;
-            }
-
-            return newState;
+                newState = { ...state };
+                newState.factionBiz[0].resources += payload.count;
+    
+                if ((newState.factionBiz[0].order.productsCount - payload.count) > 0) {
+                    newState.factionBiz[0].order.productsCount -= payload.count;
+                    newState.factionBiz[0].order.productsPrice -= payload.sum
+                } else {
+                    newState.factionBiz[0].order = null;
+                }
+    
+                return newState;
 
         case 'ADD_APP_TO_PHONE':
             const newStateAdd = {...state};
@@ -413,7 +473,7 @@ export default function info(state = initialState, action) {
 
         case 'UPDATE_CASHBOX_BUSINESS':
             newState = { ...state };
-            newState.biz[0].cashBox = money;
+            newState.biz[0].cashBox = payload;
 
             return newState;
 

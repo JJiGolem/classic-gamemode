@@ -10,11 +10,11 @@ mp.events.add('money.change', (cash, bank) => {
     });
 
     if (prevCash != null && prevBank != null) {
-        if (prevCash < cash) mp.notify.success(`+$${cash - prevCash}`, `Наличные`);
-        else if (prevCash > cash) mp.notify.error(`-$${prevCash - cash}`, `Наличные`);
+        if (prevCash < cash) mp.notify.addCash(`+$${cash - prevCash}`, `Наличные`);
+        else if (prevCash > cash) mp.notify.removeCash(`-$${prevCash - cash}`, `Наличные`);
 
-        if (prevBank < bank) mp.notify.success(`+$${bank - prevBank}`, `Банк`);
-        else if (prevBank > bank) mp.notify.error(`-$${prevBank - bank}`, `Банк`);
+        if (prevBank < bank) mp.notify.addMoney(`+$${bank - prevBank}`, `Банк`);
+        else if (prevBank > bank) mp.notify.removeMoney(`-$${prevBank - bank}`, `Банк`);
     }
 
     prevCash = cash;

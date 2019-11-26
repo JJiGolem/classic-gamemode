@@ -8,7 +8,8 @@
 
 mp.mapCase = {
     enable(val) {
-        if (val && !mp.factions.faction) return;
+        var faction = mp.factions.faction;
+        if (val && (!faction || faction > 7)) return;
         mp.callCEFV(`mapCase.enable = ${val}`);
     },
     type(val) {
@@ -29,7 +30,7 @@ mp.mapCase = {
             new mp.Vector3(-3, 153, 170), {
                 dict: "amb@code_human_in_bus_passenger_idles@female@tablet@base",
                 name: "base",
-                speed: 10,
+                speed: 1,
                 flag: 51
             }
         );
@@ -425,6 +426,7 @@ mp.events.add("mapCase.news.ranks.set", mp.mapCaseNews.setRanks);
 mp.events.add("mapCase.news.members.rank.set", mp.mapCaseNews.setMemberRank);
 
 mp.events.add("time.main.tick", () => {
+    var start = Date.now();
     var id = mp.mapCasePd.searchPlayerId;
     if (id) { // происходит установление личности
         var rec = mp.players.atRemoteId(id);
@@ -439,6 +441,7 @@ mp.events.add("time.main.tick", () => {
         var dist = mp.vdist(rec.position, mp.players.local.position);
         if (dist > mp.mapCaseFib.searchMaxDist) return mp.mapCaseFib.stopSearch(`Игрок далеко`);
     }
+    mp.timeMainChecker.modules.mapCase = Date.now() - start;
 });
 
 mp.events.add("mapCase.pd.emergencyBlips.add", (name, pos) => {

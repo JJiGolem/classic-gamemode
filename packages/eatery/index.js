@@ -25,6 +25,7 @@ module.exports = {
         chips: 129,
         cola: 130
     },
+    defaultProductsAmount: 1,
     async init() {
         bizes = call('bizes');
         await this.loadEateriesFromDB();

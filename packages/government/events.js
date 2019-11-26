@@ -144,10 +144,10 @@ module.exports = {
 
         topParams.pockets = '[5,5,5,5,10,5]';
         legsParams.pockets = '[5,5,5,5,10,5]';
-        hatParams.clime = '[-5,20]';
-        topParams.clime = '[-5,20]';
-        legsParams.clime = '[-5,20]';
-        feetsParams.clime = '[-5,20]';
+        hatParams.clime = '[-5,30]';
+        topParams.clime = '[-5,30]';
+        legsParams.clime = '[-5,30]';
+        feetsParams.clime = '[-5,30]';
         topParams.name = `Рубашка ${faction.name}`;
         legsParams.name = `Брюки ${faction.name}`;
 
@@ -242,8 +242,8 @@ module.exports = {
         var params = {
             weaponHash: mp.joaat(weaponIds[index]),
             ammo: 0,
-            faction: character.factionId,
-            owner: character.id
+            // faction: character.factionId,
+            // owner: character.id
         };
 
         inventory.addItem(player, itemId, params, (e) => {

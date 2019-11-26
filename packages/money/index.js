@@ -63,7 +63,7 @@ module.exports = {
             catch(e) {
                 console.log(e);
             }
-        }
+        };
         id = parseInt(id);
         number = parseInt(number);
         if (isNaN(number) || isNaN(id)) return callback(false);
@@ -104,7 +104,7 @@ module.exports = {
             catch(e) {
                 console.log(e);
             }
-        }
+        };
         number = parseInt(number);
         if (isNaN(number)) return callback(false);
         if (number < 0 || number > 1000000000) return callback(false);
@@ -135,7 +135,7 @@ module.exports = {
             catch(e) {
                 console.log(e);
             }
-        }
+        };
         id = parseInt(id);
         number = parseInt(number);
         if (isNaN(number) || isNaN(id)) return callback(false);
@@ -176,7 +176,7 @@ module.exports = {
             catch(e) {
                 console.log(e);
             }
-        }
+        };
         number = parseInt(number);
         if (isNaN(number)) return callback(false);
         if (number < 0 || number > 1000000000) return callback(false);
@@ -366,7 +366,7 @@ module.exports = {
             catch(e) {
                 console.log(e);
             }
-        }
+        };
 
         idFrom = parseInt(idFrom);
         idTo = parseInt(idTo);

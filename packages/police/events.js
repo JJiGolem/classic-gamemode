@@ -249,10 +249,10 @@ module.exports = {
 
         topParams.pockets = '[5,5,5,5,10,5]';
         legsParams.pockets = '[5,5,5,5,10,5]';
-        hatParams.clime = '[-5,20]';
-        topParams.clime = '[-5,20]';
-        legsParams.clime = '[-5,20]';
-        feetsParams.clime = '[-5,20]';
+        hatParams.clime = '[-5,30]';
+        topParams.clime = '[-5,30]';
+        legsParams.clime = '[-5,30]';
+        feetsParams.clime = '[-5,30]';
         topParams.name = `Рубашка ${faction.name}`;
         legsParams.name = `Брюки ${faction.name}`;
         feetsParams.name = `Ботинки ${faction.name}`;
@@ -319,7 +319,7 @@ module.exports = {
         params.health = 100;
         //params.pockets = '[2,3,1,3,1,3,6,3,3,2,4,2,2,2,2,2,4,2,3,2]';
         params.pockets = '[3,3,3,3,3,3,3,3,10,5,3,5,10,3,3,3]';
-        params.sex = !character.gender;
+        params.sex = character.gender ? 0 : 1;
 
         inventory.addItem(player, 3, params, (e) => {
             if (e) return notifs.error(player, e, header);
@@ -402,9 +402,10 @@ module.exports = {
         var params = {
             weaponHash: mp.joaat(weaponIds[index]),
             ammo: 0,
-            faction: character.factionId,
-            owner: character.id
+            // faction: character.factionId,
+            // owner: character.id
         };
+        if (index == 2) delete params.ammo; // for Stun Gun
 
         inventory.addItem(player, itemId, params, (e) => {
             if (e) return notifs.error(player, e, header);
@@ -528,7 +529,7 @@ module.exports = {
     "police.cells.arrest": (player, recId) => {
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Арест`);
-        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции`, `Арест`);
+        if (!factions.isPoliceFaction(player.character.factionId) && !factions.isFibFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции/агент`, `Арест`);
 
         if (!rec.character.wanted) return notifs.error(player, `${rec.name} не преступник`, `Арест`);
 
@@ -643,6 +644,10 @@ module.exports = {
     "police.licenses.gun.give": (player, recId) => {
         var header = `Лицензия на оружие`;
         var rec = mp.players.at(recId);
+        if (!factions.isPoliceFaction(player.character.factionId)) return notifs.error(player, `Вы не сотрудник полиции`, header);
+        var rank = factions.getRankById(player.character.factionId, player.character.factionRank);
+        if (rank.rank < police.giveGunLicenseRank) return notifs.error(player, `Нет прав`, header);
+
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         var character = rec.character;
         if (character.gunLicenseDate) return notifs.error(player, `${rec.name} уже имеет лицензию`, header);
@@ -659,6 +664,8 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         var character = rec.character;
         if (!character.gunLicenseDate) return notifs.error(player, `${rec.name} не имеет лицензию`, header);
+        var rank = factions.getRankById(player.character.factionId, player.character.factionRank);
+        if (rank.rank < police.takeGunLicenseRank) return notifs.error(player, `Нет прав`, header);
 
         character.gunLicenseDate = null;
         character.save();

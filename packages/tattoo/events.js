@@ -8,6 +8,7 @@ module.exports = {
         inited(__dirname);
     },
     "characterInit.done": async (player) => {
+        if (!player.character.tattoos) player.character.tattoos = [];
         tattoo.setCharacterTattoos(player);
         tattoo.sendTattoosDataToClient(player, player.character.tattoos);
     },
@@ -71,9 +72,12 @@ module.exports = {
 
         let parlorId = player.currentTattooParlorId;
         if (parlorId == null) return;
-        
+
+        let defaultPrice = tat.price;
         let products = tattoo.calculateProductsNeeded(tat.price);
-        let price = parseInt(tat.price * tattoo.getPriceMultiplier(parlorId));
+        let price = parseInt(defaultPrice * tattoo.getPriceMultiplier(parlorId));
+        //let income = parseInt(products * tattoo.productPrice * tattoo.getPriceMultiplier(parlorId));
+
         if (player.character.cash < price) return player.call('tattoo.buy.ans', [2]);
         let productsAvailable = tattoo.getProductsAmount(parlorId);
         if (products > productsAvailable) return player.call('tattoo.buy.ans', [4]);
@@ -103,13 +107,14 @@ module.exports = {
         let price = parseInt(products * tattoo.productPrice * tattoo.getPriceMultiplier(parlorId));
         if (player.character.cash < price) return player.call('tattoo.delete.ans', [2]);
         let productsAvailable = tattoo.getProductsAmount(parlorId);
-        if (products > productsAvailable) return player.call('tattoo.delete.ans', [4]);
+        let finalProducts = parseInt(products / 2);
+        if (finalProducts > productsAvailable) return player.call('tattoo.delete.ans', [4]);
         
         money.removeCash(player, price, async function (result) {
             if (result) {
                 tattoo.removeCharacterTattoo(player, tattooId)
                 player.call('tattoo.delete.ans', [0, tattooId]);
-                tattoo.removeProducts(parlorId, products);
+                tattoo.removeProducts(parlorId, finalProducts);
                 tattoo.updateCashbox(parlorId, price);
             } else {
                 player.call('tattoo.buy.ans', [3]);

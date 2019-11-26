@@ -9,7 +9,10 @@ mp.attachmentMngr = {
                 if (attInfo.lost) {
                     object.lost = attInfo.lost;
                     mp.inventory.hands(entity, null);
-                    if (entity.remoteId == mp.players.local.remoteId) mp.busy.add("lostAttach", false);
+                    if (entity.remoteId == mp.players.local.remoteId) {
+                        mp.busy.add("lostAttach", false);
+                        mp.inventory.setHandsBlock(true);
+                    }
                 }
 
                 object.attachTo(entity.handle,
@@ -30,7 +33,8 @@ mp.attachmentMngr = {
                 }
             }
         } else {
-            mp.game.graphics.notify(`Static Attachments Error: ~r~Unknown Attachment Used: ~w~0x${id.toString(16)}`);
+            //temp
+            //mp.game.graphics.notify(`Static Attachments Error: ~r~Unknown Attachment Used: ~w~0x${id.toString(16)}`);
         }
     },
 
@@ -43,10 +47,17 @@ mp.attachmentMngr = {
             if (mp.objects.exists(obj)) {
                 obj.destroy();
             }
-            if (attInfo.anim) entity.clearTasksImmediately();
+            // if (attInfo.anim) entity.clearTasksImmediately();
+            if (attInfo.anim) {
+                if (entity.remoteId == mp.players.local.remoteId) entity.stopAnimTask(attInfo.anim.dict, attInfo.anim.name, 3);
+                else entity.clearTasksImmediately();
+            }
             if (attInfo.lost) {
                 mp.inventory.hands(entity, entity.getVariable("hands"));
-                if (entity.remoteId == mp.players.local.remoteId) mp.busy.remove("lostAttach");
+                if (entity.remoteId == mp.players.local.remoteId) {
+                    mp.busy.remove("lostAttach");
+                    mp.inventory.setHandsBlock(false);
+                }
             }
         }
     },
@@ -84,10 +95,12 @@ mp.attachmentMngr = {
                     lost: lost,
                 };
             } else {
-                mp.game.graphics.notify(`Static Attachments Error: ~r~Invalid Model (0x${model.toString(16)})`);
+                //temp
+                //mp.game.graphics.notify(`Static Attachments Error: ~r~Invalid Model (0x${model.toString(16)})`);
             }
         } else {
-            mp.game.graphics.notify("Static Attachments Error: ~r~Duplicate Entry");
+            //temp
+            //mp.game.graphics.notify("Static Attachments Error: ~r~Duplicate Entry");
         }
     },
 
@@ -248,6 +261,7 @@ mp.events.add({
         }
     },
     "time.main.tick": () => {
+        var start = Date.now();
         var player = mp.players.local;
         if (player.vehicle) return;
         for (let id of player.__attachments) {
@@ -269,5 +283,6 @@ mp.events.add({
                 player.taskPlayAnim(a.dict, a.name, a.speed, 0, -1, a.flag, 0, false, false, false);
             });
         }
+        mp.timeMainChecker.modules.attaches = Date.now() - start;
     },
 });

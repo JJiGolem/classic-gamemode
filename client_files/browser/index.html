@@ -59,7 +59,7 @@
     <!-- v-cloak в контейнерах VUE используется для того, что бы решить проблему мерцания UI при запуске -->
     <div v-cloak="v-cloak" id="hud" v-show="show">
         <div v-show="keysShow && !selectMenu.show" class="keys">
-            <div v-for="key in keys"><span v-html="key.key"></span>{{ key.name }}</div>
+            <div v-show="isKeyShow(key.name)" v-for="key in keys" v-bind:key="key.key"><span v-html="key.key"></span>{{ key.name }}</div>
         </div>
         <div class="panel-right-top" v-show="!prompt.text">
             <div class="info-logo">
@@ -77,7 +77,7 @@
                 <img v-if="cold" src="img/hud/cold.svg" />
                 <img v-if="heat" src="img/hud/heat.svg" />
             </div>
-            <div class="arrest" v-if="arrestProgress">
+            <div class="arrest" v-if="arrestTime > 0">
                 <div class="wrap">
                     <svg>
                         <circle :style="arrestProgressStyle"/>
@@ -592,8 +592,8 @@
         </div>
     </div>
 
-    <div id="inventory" v-show="show" :class="{spin: spin, 'non-environment': !environment.length}" :style="{opacity: 1}">
-        <div class="environment" v-if="environment.length">
+    <div id="inventory" v-show="show" :class="{spin: spin, 'non-environment': !environment.length || searchMode}" :style="{opacity: 1}">
+        <div class="environment" v-if="environment.length && !searchMode">
             <div class="container" v-for="place in environment" v-bind:key="place.header">
                 <div class="header" @click="place.showPockets = !place.showPockets" :class="{hidden: !place.showPockets}">
                     <div class="title">{{ place.header }} {{ (debug)? place.sqlId : "" }}</div>
@@ -610,7 +610,7 @@
                                     <div class="eye" v-if="pocket.items[n-1].found"><img src="img/inventory/eye.svg" /></div>
                                     <!--<div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>-->
                                     <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
-                                    <div v-if="pocket.items[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
+                                    <div v-if="pocket.items[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope">
                                         <div class="lds-rolling">
                                             <div></div>
                                         </div>
@@ -625,7 +625,7 @@
         </div>
         <div class="equipment">
             <div class="header">
-                <div class="title">Экипировка</div>
+                <div class="title">{{ equipmentTitle }}</div>
                 <!--<img src="img/inventory/satiety.png" /><span class="satiety" :style="{color: valueColor(satiety)}">{{ Math.ceil(satiety) }}%</span>
                 <img src="img/inventory/thirst.png" /><span class="thirst" :style="{color: valueColor(thirst)}">{{ Math.ceil(thirst) }}%</span>-->
                 <!-- <div>Голод <span class="satiety">{{ satiety }}</span>%</div> -->
@@ -639,13 +639,13 @@
                        <div class="health" v-if="equipment[n-1].params.health" v-bind:style="{top: 100 - equipment[n-1].params.health + '%'}"></div>
                        <div class="sqlid" v-if="debug">#{{ equipment[n-1].sqlId }}</div>
                    </div> -->
-                    <div class="item" v-if="equipment[n-1]" @mouseenter="itemMouseHandler(equipment[n-1], $event)" @mouseleave="itemMouseHandler(equipment[n-1], $event)" @mousemove="itemMouseHandler(equipment[n-1], $event)"
+                    <div class="item" v-if="equipment[n-1] && !equipment[n-1].search" @mouseenter="itemMouseHandler(equipment[n-1], $event)" @mouseleave="itemMouseHandler(equipment[n-1], $event)" @mousemove="itemMouseHandler(equipment[n-1], $event)"
                         @contextmenu="itemMouseHandler(equipment[n-1], $event)" :style="{backgroundImage: 'url('+urlItemImg(equipment[n-1].itemId)+')' }" @mousedown="itemMouseHandler(equipment[n-1], $event)"
                         :class="{dragging: equipment[n-1] == itemDrag.item}">
                         <div class="count" v-if="equipment[n-1].params.count">{{ equipment[n-1].params.count }}</div>
                         <!--<div class="health" v-if="equipment[n-1].params.health" v-bind:style="{top: 100 - equipment[n-1].params.health + '%', 'border-color': valueColor(equipment[n-1].params.health)}"></div>-->
                         <div class="sqlid" v-if="debug">#{{ equipment[n-1].sqlId }}</div>
-                        <div v-if="equipment[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
+                        <div v-if="equipment[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope">
                             <div class="lds-rolling">
                                 <div></div>
                             </div>
@@ -653,7 +653,7 @@
                     </div>
                 </div>
             </div>
-            <div class="starvation">
+            <div class="starvation" v-if="!searchMode">
                 <div :class="['satiety', 'record', { red: satiety <= 10 } ]">
                     <div class="img"><img src="img/hud/burger.svg"/></div>
                     <div class="progress"><div :style="{ width: satiety+'%' }"></div></div>
@@ -668,28 +668,28 @@
         </div>
         <div class="playerInventory">
             <div class="header">
-                <div class="title">Инвентарь</div>
+                <div class="title">{{ searchMode && searchList.length ? 'Обыск...' : 'Инвентарь' }}</div>
                 <div>Тяжесть {{ commonWeight }} из {{ maxPlayerWeight }} кг</div>
             </div>
             <div class="block">
                 <div class="container" v-for="item in equipment" v-bind:key="item.sqlId" v-if="item.pockets" :class="{drag: itemDrag.item && itemDrag.item.sqlId == item.sqlId}">
                     <div class="header" @click="item.showPockets = !item.showPockets" :class="{hidden: !item.showPockets}">
                         <img :class="{hidden: !item.showPockets}" src="img/inventory/arrow.svg" />
-                        <div class="title">{{ item.params.name || itemsInfo[item.itemId].name }}</div>
+                        <div class="title">{{ getItemName(item) }}</div>
                         <div>{{ +getPlaceWeight(item).toFixed(1) }} кг</div>
                     </div>
                     <transition name="slide">
                         <div class="pockets" v-show="item.showPockets">
-                            <div class="items" v-for="pocket in item.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
+                            <div class="items" v-show="!pocket.search" v-for="pocket in item.pockets" v-bind:style="{gridTemplateColumns: 'repeat(' + pocket.cols + ', 1fr)'}">
                                 <div class="column" v-for="n in pocket.cols * pocket.rows" :key="n-1" :class="columnClass(n-1, pocket, item)" @mouseenter="columnMouseHandler(item, pocket, n-1, $event)"
                                     @mouseleave="columnMouseHandler(item, pocket, n-1, $event)">
-                                    <div class="item" v-if="pocket.items[n-1]" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
+                                    <div class="item" v-if="pocket.items[n-1] && !pocket.items[n-1].search" @mouseenter="itemMouseHandler(pocket.items[n-1], $event)" @mouseleave="itemMouseHandler(pocket.items[n-1], $event)" @mousemove="itemMouseHandler(pocket.items[n-1], $event)"
                                         @contextmenu="itemMouseHandler(pocket.items[n-1], $event)" @mousedown="itemMouseHandler(pocket.items[n-1], $event)" :style="itemStyle(pocket.items[n-1])" :class="{dragging: pocket.items[n-1] == itemDrag.item, found: pocket.items[n-1].found }">
                                         <div class="count" v-if="pocket.items[n-1].params.count && !pocket.items[n-1].found">{{ pocket.items[n-1].params.count }}</div>
                                         <div class="eye" v-if="pocket.items[n-1].found"><img src="img/inventory/eye.svg" /></div>
                                         <!--<div class="health" v-if="pocket.items[n-1].params.health" v-bind:style="{top: 100 - pocket.items[n-1].params.health + '%', 'border-color': valueColor(pocket.items[n-1].params.health)}"></div>-->
                                         <div class="sqlid" v-if="debug">#{{ pocket.items[n-1].sqlId }}</div>
-                                        <div v-if="pocket.items[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
+                                        <div v-if="pocket.items[n-1].wait" v-cloak="v-cloak" class="loader lds-css ng-scope">
                                             <div class="lds-rolling">
                                                 <div></div>
                                             </div>
@@ -712,7 +712,7 @@
                     <div class="count" v-if="equipment[13].params.count">{{ equipment[13].params.count }}</div>
                     <!--<div class="health" v-if="equipment[13].params.health" v-bind:style="{top: 100 - equipment[13].params.health + '%', 'border-color': valueColor(equipment[13].params.health)}"></div>-->
                     <div class="sqlid" v-if="debug">#{{ equipment[13].sqlId }}</div>
-                    <div v-if="equipment[13].wait" v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
+                    <div v-if="equipment[13].wait" v-cloak="v-cloak" class="loader lds-css ng-scope">
                         <div class="lds-rolling">
                             <div></div>
                         </div>
@@ -723,7 +723,7 @@
             </div>
         </div>
         <div class="hotkeys">
-            <div class="key" :class="{focus: itemDrag.item && itemDrag.accessColumns.hotkeyFocus == n, active: itemDrag.item && hotkeysList[itemDrag.item.itemId] && !(hotkeys[n] && getItem(hotkeys[n].sqlId)), has: hotkeys[n] && getItem(hotkeys[n].sqlId) }" v-for="n in 9" @mouseenter="onHotkeyItemEnter(n)" @mouseleave="onHotkeyItemLeave(n)">
+            <div class="key" v-if="!searchMode" :class="{focus: itemDrag.item && itemDrag.accessColumns.hotkeyFocus == n, active: itemDrag.item && hotkeysList[itemDrag.item.itemId] && !(hotkeys[n] && getItem(hotkeys[n].sqlId)), has: hotkeys[n] && getItem(hotkeys[n].sqlId) }" v-for="n in 9" @mouseenter="onHotkeyItemEnter(n)" @mouseleave="onHotkeyItemLeave(n)">
                 <div class="item" v-if="hotkeys[n] && getItem(hotkeys[n].sqlId)"
                     v-bind:style="{backgroundImage: 'url('+urlItemImg(hotkeys[n].itemId)+')'}"
                     @mousedown="itemMouseHandler(hotkeys[n], $event)">
@@ -732,7 +732,7 @@
                     <div class="count" v-if="hotkeys[n].params.count">{{ hotkeys[n].params.count }}</div>
                     <!--<div class="health" v-if="hotkeys[n].params.health" v-bind:style="{top: 100 - hotkeys[n].params.health + '%', 'border-color': valueColor(hotkeys[n].params.health)}"></div>-->
                     <div class="sqlid" v-if="debug">#{{ hotkeys[n].sqlId }}</div>
-                    <div v-if="hotkeys[n].wait" v-cloak="v-cloak" class="loader lds-css ng-scope" v-if="loader">
+                    <div v-if="hotkeys[n].wait" v-cloak="v-cloak" class="loader lds-css ng-scope">
                         <div class="lds-rolling">
                             <div></div>
                         </div>
@@ -763,7 +763,7 @@
         </div>
 
         <div class="item-menu" v-if="itemMenu.item && !itemDrag.item" :style="{left: itemMenu.x + 'px', top: itemMenu.y + 'px'}">
-            <div class="menu-item" v-for="(value, key) in itemsMenu[itemMenu.item.itemId]" @click="value.handler(itemMenu.item)">
+            <div class="menu-item" v-for="(value, key) in getItemsMenu(itemMenu.item.itemId)" @click="value.handler(itemMenu.item)">
                 {{ key }}
                 <div class="arrow" v-if="value.items">></div>
             </div>
@@ -1355,20 +1355,33 @@
     <!-- ------------------------ ПЛАНШЕТ ПД ------------------------ -->
 
     <div v-cloak id="fishing" v-if="show">
+        <!-- <button @click="fishFetch(40, 20, 3)">start</button> -->
         <div class="fishing-line" v-if="isFetch">
             <div class="fishing-zone" v-bind:style="{ width: zone + '%', marginLeft: ((100 - zone) / 2) + '%' }"></div>
-            <div id="fishing-cursor" v-bind:style="{ marginLeft: position + '%' }"></div>
+            <div id="fishing-cursor" v-bind:style="{ marginLeft: position + '%' }">
+                <svg width="100%" height="135%" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g>
+                        <path d="M36.3633 32.7272C40.0457 34.9833 42.5206 39.0192 42.5922 43.6372C42.7033 50.8062 36.9178 56.772 29.7491 56.8704C22.4709 56.9702 16.5391 51.0991 16.5391 43.8432C16.5391 41.2314 17.3077 38.7993 18.6309 36.7604C20.0183 34.6228 20.7305 32.1172 20.7305 29.5687H26.9609V31.1244C26.9609 34.2679 25.916 37.3053 24.0672 39.8476C24.0598 39.8578 24.0524 39.8679 24.0451 39.8781C23.211 41.0385 22.7323 42.4733 22.7718 44.0209C22.8666 47.7338 25.991 50.7131 29.7042 50.6393C33.3948 50.5659 36.3633 48.2616 36.3633 42.7104H31.0391C31.0391 42.7103 36.3633 40.4446 36.3633 32.7272Z" fill="#188FED"/>
+                        <path d="M28.0938 22.3459V29.5403H19.5977V22.3187H19.6622C20.9095 23.0391 22.3583 23.4515 23.9023 23.4515C25.4271 23.4515 26.8567 23.0493 28.0938 22.3459Z" fill="#0B66AD"/>
+                        <path d="M23.9023 6.45746C19.2101 6.45746 15.4062 10.2616 15.4062 14.9542C15.4062 19.6469 19.2101 23.451 23.9023 23.451C28.5946 23.451 32.3984 19.6469 32.3984 14.9542C32.3984 10.2616 28.5946 6.45746 23.9023 6.45746ZM23.9023 18.9194C21.7126 18.9194 19.9375 17.1442 19.9375 14.9542C19.9375 12.7643 21.7126 10.989 23.9023 10.989C26.0921 10.989 27.8672 12.7643 27.8672 14.9542C27.8672 17.1442 26.0921 18.9194 23.9023 18.9194Z" fill="#188FED"/>
+                        <path d="M26.7344 11.5556V1.13293H21.0703V11.5556C21.0703 13.1198 22.3383 14.3879 23.9023 14.3879C25.4664 14.3879 26.7344 13.1198 26.7344 11.5556Z" fill="#0B66AD"/>
+                    </g>
+                </svg>
+            </div>
         </div>
         <div v-if="isStarted && !isFetch">
             <div class="fishing-wait">
-                Ждите, пока рыба не клюнет...
+                <div>
+                    <img style="width: 13%; margin-bottom: 3%" src='img/fishing/fish.png'/>
+                </div>
+                Ждите, пока рыба клюнет...
             </div>
         </div>
         <div class="fishing-help">
             <table>
                 <tr v-if="!isStarted">
                     <th>
-                        <span class="fishing-help-button">F</span>
+                        <span class="fishing-help-button">ЛКМ</span>
                     </th>
                     <th>
                         <span>Забросить удочку</span>
@@ -1552,11 +1565,11 @@
                 </div>
                 <div class="record">
                     <div class="circle"><img src="img/playerMenu/clock.svg" /></div>
-                    <div class="text">А также отыграть на нашем сервере 10 часов</div>
+                    <div class="text">А также отыграть на нашем сервере 24 часа</div>
                 </div>
                 <div class="record">
                     <div class="circle"><img src="img/playerMenu/smile.svg" /></div>
-                    <div>По достижении онлайна 10 часов вам и вашему другу<br />будет начислена игровая валюта</div>
+                    <div>По достижении онлайна 24 часов вам и вашему другу<br />будет начислено по $10 000</div>
                 </div>
             </div>
             <div class="right">
@@ -1782,7 +1795,7 @@
         <div class="content" v-html="modal.content"></div>
     </div>
 
-    <div v-cloak id="selectItems" v-show="show">
+    <div v-cloak id="selectItems" v-show="show && inventory.enable && !inventory.handsBlock">
         <svg>
             <linearGradient id="select-items-gradient" x1="0%" y1="23%" x2="100%" y2="50%">
                 <stop offset="85%" stop-color="#rgba(12, 12, 12, 0.6)" />

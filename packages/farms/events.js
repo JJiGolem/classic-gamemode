@@ -8,8 +8,8 @@ let routes = call('routes');
 let timer = call('timer');
 
 module.exports = {
-    "init": () => {
-        farms.init();
+    "init": async () => {
+        await farms.init();
         inited(__dirname);
     },
     "farms.buy": (player) => {
@@ -71,7 +71,7 @@ module.exports = {
         var rec = mp.players.at(data.playerId);
         if (!rec || !rec.character) return out(`Игрок #${data.playerId} не найден`);
         if (rec.id == player.id) return out(`Нельзя продать самому себе`);
-        if (player.dist(rec.position) > 10) return out(`${rec.name} далеко`);
+        if (player.dist(rec.position) > 10) return out(`Игрок далеко`);
 
         rec.offer = {
             type: "farm_sell",
@@ -325,6 +325,7 @@ module.exports = {
 
         var farm = player.farm;
         var key = ["productA", "productB", "productC"][data.index];
+        if (key == 'productC' && !factions.isMafiaFaction(player.character.factionId)) return out(`Доступно только членам мафии`);
         if (farm[key] < 100) return out(`На складе недостаточно урожая`);
 
 

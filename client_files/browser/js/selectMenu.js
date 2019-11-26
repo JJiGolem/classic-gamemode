@@ -573,22 +573,22 @@ var selectMenu = new Vue({
                     },
                     {
                         text: "Цвет помады",
-                        values: ["#211f1c", "#55362f", "#4b382e", "#4d291b",
-                            "#70351e", "#904422", "#a55c36", "#a56944",
-                            "#ac744f", "#ae7d57", "#be9161", "#cda670",
-                            "#c8a370", "#d5a861", "#e0b775", "#e8c487",
-                            "#b78457", "#a85d3d", "#963523", "#7c1411",
-                            "#921812", "#a81c14", "#cb371e", "#de411b",
-                            "#be532f", "#d34d21", "#907867", "#a78e7a",
-                            "#d4bda9", "#e4cfbe", "#775262", "#8f5973",
-                            "#ad4a6b", "#f845cc", "#fc5794", "#f9a1b2",
-                            "#09a497", "#08828e", "#084e7c", "#63a15a",
-                            "#379665", "#25705d", "#bec22f", "#9ab516",
-                            "#61a526", "#e8bd56", "#f2c20e", "#f2980e",
-                            "#fc8b14", "#f76415", "#fe771c", "#f1501f",
-                            "#ef3c17", "#c81414", "#9b0a0e", "#291a14",
-                            "#3f241c", "#502c1e", "#47271d", "#4d2c1f",
-                            "#39251c", "#080a0e", "#ad8d67", "#c59762"
+                        values: ["#b83e47", "#d45a85", "#d27f94", "#d094a3",
+                            "#be758d", "#c8646a", "#9c4140", "#c18b7b",
+                            "#d7b9a7", "#d8c3ba", "#d7b9b3", "#c69c8c",
+                            "#cc8d76", "#be6e4d", "#c5979c", "#dbb4bd",
+                            "#eac3d5", "#e6a4c8", "#db5299", "#cb7c9c",
+                            "#8f3646", "#6d2f34", "#af2933", "#ce2737",
+                            "#c21817", "#c84a66", "#cc42b2", "#bb1ba2",
+                            "#970b94", "#620966", "#6b0646", "#48043c",
+                            "#811ca1", "#223a7b", "#214c9d", "#2676ad",
+                            "#2396b2", "#2ec2c7", "#39c1a1", "#35b880",
+                            "#25943b", "#1d7b11", "#8cd553", "#d1e860",
+                            "#dbdf49", "#ddd638", "#d9bd1f", "#d89723",
+                            "#df7205", "#a34520", "#e7d7a5", "#eae6d5",
+                            "#e2e5e2", "#cccfcd", "#acb0ae", "#5b4d4b",
+                            "#221111", "#7aadb0", "#64839e", "#212d5c",
+                            "#c3ac92", "#9f8876", "#7d5e53", "#46322a"
                         ],
                         i: 0,
                         j: 0
@@ -1512,8 +1512,7 @@ var selectMenu = new Vue({
                 header: "Рыбалка",
                 items: [{
                         text: 'Купить удочку',
-                        i: 0,
-                        values: ["$100"]
+                        i: 0
                     },
                     {
                         text: 'Продать рыбу',
@@ -5560,6 +5559,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                cropsPrice: [],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -5582,6 +5582,8 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmControl");
                         }
+                    } else if (eventName == 'onItemValueChanged') {
+                        this.items[1].values[0] = this.cropsPrice[e.valueIndex];
                     } else if (eventName == 'onBackspacePressed' && this.i != 1)
                         selectMenu.showByName("farmControl");
                 }
@@ -5655,6 +5657,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                pays: [],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -5677,6 +5680,8 @@ var selectMenu = new Vue({
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("farmControl");
                         }
+                    } else if (eventName == 'onItemValueChanged') {
+                        this.items[1].values[0] = this.pays[e.valueIndex];
                     } else if (eventName == 'onBackspacePressed' && this.i != 1)
                         selectMenu.showByName("farmControl");
                 }
@@ -7031,6 +7036,10 @@ var selectMenu = new Vue({
                         values: ["$100"],
                     },
                     {
+                        text: 'Аптечка',
+                        values: ["$100"],
+                    },
+                    {
                         text: 'Назад'
                     }
                 ],
@@ -7059,6 +7068,9 @@ var selectMenu = new Vue({
                         }
                         if (e.itemName == 'Канистра') {
                             mp.trigger('callRemote', 'supermarket.products.buy', 5);
+                        }
+                        if (e.itemName == 'Аптечка') {
+                            mp.trigger('callRemote', 'supermarket.products.buy', 8);
                         }
                     }
                     if (eventName == 'onBackspacePressed' || eventName == 'onEscapePressed') {
@@ -8019,6 +8031,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Продать') {
+                            selectMenu.show = false;
                             mp.trigger(`callRemote`, `woodman.items.sell`);
                         } else if (e.itemName == 'Вернуться') {
                             selectMenu.showByName("woodman");
@@ -9050,12 +9063,15 @@ var selectMenu = new Vue({
                         text: "Сигареты"
                     },
                     {
+                        text: "Управление"
+                    },
+                    {
                         text: "Закрыть"
                     },
                 ],
                 i: 0,
                 j: 0,
-                name: "",
+                hasControl: false,
                 alcohol: [],
                 snacks: [],
                 smoke: [],
@@ -9063,15 +9079,22 @@ var selectMenu = new Vue({
                     if (typeof data == 'string') data = JSON.parse(data);
 
                     this.header = data.name;
+                    this.hasControl = data.hasControl;
                     this.alcohol = data.alcohol;
                     this.snacks = data.snacks;
                     this.smoke = data.smoke;
+
+                    if (this.hasControl) {
+                        selectMenu.addItem('club', {
+                            text: "Управление"
+                        }, 3);
+                    } else selectMenu.deleteItem('club', "Управление");
 
                     var alcoholItems = [];
                     this.alcohol.forEach(el => {
                         alcoholItems.push({
                             text: el.params.name,
-                            values: [`$${el.price}`],
+                            values: [`$${el.price * data.alcoholPrice}`],
                         });
                     });
                     alcoholItems.push({
@@ -9082,7 +9105,7 @@ var selectMenu = new Vue({
                     this.snacks.forEach(el => {
                         snackItems.push({
                             text: el.params.name,
-                            values: [`$${el.price}`],
+                            values: [`$${el.price * data.alcoholPrice}`],
                         });
                     });
                     snackItems.push({
@@ -9093,7 +9116,7 @@ var selectMenu = new Vue({
                     this.smoke.forEach(el => {
                         smokeItems.push({
                             text: el.params.name,
-                            values: [`$${el.price}`],
+                            values: [`$${el.price * data.alcoholPrice}`],
                         });
                     });
                     smokeItems.push({
@@ -9120,6 +9143,8 @@ var selectMenu = new Vue({
                             selectMenu.showByName("clubSnacks");
                         } else if (e.itemName == 'Сигареты') {
                             selectMenu.showByName("clubSmoke");
+                        } else if (e.itemName == 'Управление') {
+                            selectMenu.showByName("clubControl");
                         } else if (e.itemName == 'Закрыть') {
                             selectMenu.show = false;
                         }
@@ -9242,6 +9267,41 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "clubControl": {
+                name: "clubControl",
+                header: "Управление",
+                items: [{
+                        text: "Двери",
+                        values: [`Открыть`, `Закрыть`]
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("club");
+                        } else if (e.itemName == 'Двери') {
+                            var isOpen = (e.valueIndex) ? false : true;
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `clubs.control.open`, isOpen);
+                        }
+                    } else if (eventName == 'onBackspacePressed') {
+                        selectMenu.showByName("club");
+                    }
+                }
+            },
         },
         // Уведомление
         notification: null,
@@ -9283,7 +9343,11 @@ var selectMenu = new Vue({
                 this.onItemValueChanged();
             } else if (e.keyCode == 13) { // ENTER
                 this.onItemSelected();
-            } else if (e.keyCode == 8) { // BACKSPACE
+            }
+        },
+        onKeyUp(e) {
+            if (!this.show || this.loader) return;
+            if (e.keyCode == 8) { // BACKSPACE
                 this.onBackspacePressed();
             } else if (e.keyCode == 27) { // ESCAPE
                 this.onEscapePressed();
@@ -9490,6 +9554,11 @@ var selectMenu = new Vue({
             if (!self.menu) return;
             if (busy.includes(["inventory", "chat", "terminal", "phone"])) return;
             self.onKeyDown(e);
+        });
+        window.addEventListener('keyup', function(e) {
+            if (!self.menu) return;
+            if (busy.includes(["inventory", "chat", "terminal", "phone"])) return;
+            self.onKeyUp(e);
         });
     }
 });

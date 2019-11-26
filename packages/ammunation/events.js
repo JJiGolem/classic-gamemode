@@ -31,10 +31,11 @@ module.exports = {
         if (!player.character.gunLicenseDate) return player.call('ammunation.weapon.buy.ans', [4]);
         let weaponData = ammunation.weaponsConfig[weaponId];
 
-        let price = weaponData.products * ammunation.productPrice * ammunation.getPriceMultiplier(ammunationId);
+        let price = parseInt(weaponData.products * ammunation.productPrice * ammunation.getPriceMultiplier(ammunationId));
         if (player.character.cash < price) return player.call('ammunation.weapon.buy.ans', [0]);
         let productsAvailable = ammunation.getProductsAmount(ammunationId);
-        if (weaponData.products > productsAvailable) return player.call('ammunation.weapon.buy.ans', [1]);
+        let finalProducts = parseInt(weaponData.products * 0.8);
+        if (finalProducts > productsAvailable) return player.call('ammunation.weapon.buy.ans', [1]);
 
         let params = {
             weaponHash: mp.joaat(weaponData.gameId),
@@ -47,7 +48,7 @@ module.exports = {
 
             money.removeCash(player, price, function (result) {
                 if (result) {
-                    ammunation.removeProducts(ammunationId, weaponData.products);
+                    ammunation.removeProducts(ammunationId, finalProducts);
                     ammunation.updateCashbox(ammunationId, price);
                     player.call('ammunation.weapon.buy.ans', [3, weaponData.name]);
                 } else {
@@ -67,7 +68,7 @@ module.exports = {
         let ammoIndex = values[0];
         let ammoCount = values[1];
 
-        let price = ammunation.ammoProducts * ammoCount * ammunation.productPrice * ammunation.getPriceMultiplier(ammunationId);
+        let price = parseInt(ammunation.ammoProducts * ammoCount * ammunation.productPrice * ammunation.getPriceMultiplier(ammunationId));
         if (player.character.cash < price) return player.call('ammunation.ammo.buy.ans', [0]);
         let productsAvailable = ammunation.getProductsAmount(ammunationId);
         if (ammunation.ammoProducts * ammoCount > productsAvailable) return player.call('ammunation.ammo.buy.ans', [1]);
@@ -98,25 +99,31 @@ module.exports = {
 
         if (!player.character) return;
         
-        let price = ammunation.armourProducts * ammunation.productPrice * ammunation.getPriceMultiplier(ammunationId);
+        let price = parseInt(ammunation.armourProducts * ammunation.productPrice * ammunation.getPriceMultiplier(ammunationId));
         if (player.character.cash < price) return player.call('ammunation.armour.buy.ans', [0]);
+
+       
+
         let productsAvailable = ammunation.getProductsAmount(ammunationId);
-        if (ammunation.armourProducts > productsAvailable) return player.call('ammunation.armour.buy.ans', [1]);
+        let finalProducts = parseInt(ammunation.armourProducts * 0.8);
+        if (finalProducts > productsAvailable) return player.call('ammunation.armour.buy.ans', [1]);
 
         let params = {
             variation: 12,
             texture: armourId,
             health: 100,
             pockets: '[3,3,3,3,3,3,3,3,10,5,3,5,10,3,3,3]',
-            sex: !player.character.gender
+            sex: player.character.gender ? 0 : 1
         };
+
+        
 
         inventory.addItem(player, 3, params, (e) => {
             if (e) return player.call('ammunation.armour.buy.ans', [2, e]);
 
             money.removeCash(player, price, function (result) {
                 if (result) {
-                    ammunation.removeProducts(ammunationId, ammunation.armourProducts);
+                    ammunation.removeProducts(ammunationId, finalProducts);
                     ammunation.updateCashbox(ammunationId, price);
                     player.call('ammunation.armour.buy.ans', [3]);
                 } else {

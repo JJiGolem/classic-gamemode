@@ -192,6 +192,10 @@ mp.events.add({
 
 mp.keys.bind(0x45, true, () => {
     if (!isInShape || !isAbleToEnter) return;
+
+    let isCuffed = mp.players.local.getVariable('cuffs') || false;
+    if (isCuffed) return;
+    
     isAbleToEnter = false;
     mp.events.callRemote('tattoo.shape.enter');
 });

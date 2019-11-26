@@ -1,25 +1,39 @@
 "use strict";
-mp.notify = {};
+mp.notify = {
+    success(text, header) {
+        if (typeof text == 'object') text = JSON.stringify(text);
+        mp.callCEFV(`notifications.success(\`${text}\`, \`${header}\`)`);
+    },
+    warning(text, header) {
+        if (typeof text == 'object') text = JSON.stringify(text);
+        mp.callCEFV(`notifications.warning(\`${text}\`, \`${header}\`)`);
+    },
+    error(text, header) {
+        if (typeof text == 'object') text = JSON.stringify(text);
+        mp.callCEFV(`notifications.error(\`${text}\`, \`${header}\`)`);
+    },
+    info(text, header) {
+        if (typeof text == 'object') text = JSON.stringify(text);
+        mp.callCEFV(`notifications.info(\`${text}\`, \`${header}\`)`);
+    },
+    addCash(text, header) {
+        if (typeof text == 'object') text = JSON.stringify(text);
+        mp.callCEFV(`notifications.addCash(\`${text}\`, \`${header}\`)`);
+    },
+    removeCash(text, header) {
+        if (typeof text == 'object') text = JSON.stringify(text);
+        mp.callCEFV(`notifications.removeCash(\`${text}\`, \`${header}\`)`);
+    },
+    addMoney(text, header) {
+        if (typeof text == 'object') text = JSON.stringify(text);
+        mp.callCEFV(`notifications.addMoney(\`${text}\`, \`${header}\`)`);
+    },
+    removeMoney(text, header) {
+        if (typeof text == 'object') text = JSON.stringify(text);
+        mp.callCEFV(`notifications.removeMoney(\`${text}\`, \`${header}\`)`);
+    },
+};
 
-mp.notify.success = (text, header) => {
-    if (typeof text == 'object') text = JSON.stringify(text);
-    mp.callCEFV(`notifications.push('success', \`${text}\`, \`${header}\`)`);
-}
-
-mp.notify.warning = (text, header) => {
-    if (typeof text == 'object') text = JSON.stringify(text);
-    mp.callCEFV(`notifications.push('warning', \`${text}\`, \`${header}\`)`);
-}
-
-mp.notify.error = (text, header) => {
-    if (typeof text == 'object') text = JSON.stringify(text);
-    mp.callCEFV(`notifications.push('error', \`${text}\`, \`${header}\`)`);
-}
-
-mp.notify.info = (text, header) => {
-    if (typeof text == 'object') text = JSON.stringify(text);
-    mp.callCEFV(`notifications.push('info', \`${text}\`, \`${header}\`)`);
-}
 
 
 mp.events.add({

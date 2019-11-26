@@ -1,4 +1,5 @@
 let bizService = require('./index.js');
+let factions = call('factions');
 
 module.exports = {
     "/createbiz": {
@@ -51,7 +52,9 @@ module.exports = {
             if (biz == null) {
                 return out.error("Подойдите ближе к бизнесу", player);
             }
-            biz.info.factionId = parseInt(args[1]);
+            if (factions.getFaction(args[0]) == null) return out.error("Фракции с таким id не существует", player);
+            biz.info.factionId = args[0];
+            biz.info.save();
         }
     },
     "/gotobiz": {

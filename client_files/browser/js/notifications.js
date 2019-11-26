@@ -35,7 +35,31 @@ var notifications = new Vue({
                 self.messages.shift();
                 /*clearTimeout(message.timer);*/
             }, this.showTime);
-        }
+        },
+        info(text, header) {
+            this.push(`info`, text, header);
+        },
+        warning(text, header) {
+            this.push(`warning`, text, header);
+        },
+        success(text, header) {
+            this.push(`success`, text, header);
+        },
+        error(text, header) {
+            this.push(`error`, text, header);
+        },
+        addCash(text, header) {
+            this.push(`add cash`, text, header);
+        },
+        removeCash(text, header) {
+            this.push(`remove cash`, text, header);
+        },
+        addMoney(text, header) {
+            this.push(`add money`, text, header);
+        },
+        removeMoney(text, header) {
+            this.push(`remove money`, text, header);
+        },
     }
 });
 

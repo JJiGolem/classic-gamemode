@@ -8,7 +8,7 @@ let utils = call('utils');
 
 module.exports = {
     // Место мониторинга складов бизнесов/ферм и заказа товара
-    loadPos: new mp.Vector3(916.1118774414062, -1560.7391357421875, 30.748455047607422 - 10),
+    loadPos: new mp.Vector3(916.1118774414062, -1560.7391357421875, 30.748455047607422 - 13),
     // loadPos: new mp.Vector3(-77.97127532958984, -1784.080810546875, 28.418481826782227 - 1), // for tests
     // Место разгрузки урожая
     cropUnloadPos: new mp.Vector3(85.55198669433594, 6331.1318359375, 31.225765228271484 - 1),
@@ -27,7 +27,7 @@ module.exports = {
     // Заказы бизнесов
     bizOrders: [],
     // Цена урожая при продаже
-    cropPrice: 1,
+    cropPrice: 11,
     // Модели авто и их типы товара
     vehModels: {
         "boxville2": [1, 2, 3, 4, 6, 7, 8],
@@ -44,10 +44,10 @@ module.exports = {
     },
     createLoadMarker() {
         var pos = this.loadPos;
-        var marker = mp.markers.new(1, pos, 10, {
+        var marker = mp.markers.new(1, pos, 15, {
             color: [255, 187, 0, 70]
         });
-        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z + 10, 5);
+        var colshape = mp.colshapes.newSphere(pos.x, pos.y, pos.z + 9, 10);
         colshape.onEnter = (player) => {
             if (player.character.job != 4) return notifs.error(player, `Отказано в доступе`, `Склад`);
             player.call(`carrier.load.info.set`, [this.getLoadData()]);
@@ -125,6 +125,7 @@ module.exports = {
         return this.bizOrders.find(x => x.bizId == bizId);
     },
     addBizOrder(biz) {
+        if (!biz.info.productsOrderPrice) return debug(`[CARRIER] addBizOrder: некорректная цена, обратитесь к разработчикам CRP :) | ${biz.info}`);
         var vdistance = utils.vdist(this.loadPos, new mp.Vector3(biz.info.x, biz.info.y, biz.info.z));
         var order = {
             bizId: biz.info.id,
@@ -132,7 +133,7 @@ module.exports = {
             ownerName: biz.info.characterNick,
             prodName: bizes.getResourceName(biz.info.type),
             prodCount: biz.info.productsOrder,
-            prodPrice: this.productPrice,
+            prodPrice: bizes.getResourcePrice(biz.info.type),
             orderPrice: biz.info.productsOrderPrice,
             distance: +Math.sqrt(vdistance).toFixed(1),
         };
@@ -245,6 +246,11 @@ module.exports = {
         if (!veh.driver) return;
         var d = veh.driver;
         return mp.players.toArray().find(x => x.character && x.id == d.playerId && x.character.id == d.characterId);
+    },
+    getProductsNameByVeh(veh) {
+        if (!veh.products) return null;
+        if (!veh.products.bizOrder) return veh.products.name;
+        return veh.products.bizOrder.prodName;
     },
     // полностью очистить грузовик от товара и водителя
     clearVeh(veh) {

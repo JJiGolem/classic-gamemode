@@ -26,7 +26,7 @@ class AnsOrder extends Component {
         }
         else if (status === 2) {
             closeApp();
-            addApp({ name: 'Error', form: <Error status='Недостаточно денег'/> });
+            addApp({ name: 'Error', form: <Error status='Недостаточно денег в кассе'/> });
         }
 
         else if (status === 3) {

@@ -1,7 +1,9 @@
 /// Базовые админские команды, описание их структуры находится в модуле test
+let admin = require('./index.js');
+
+var chat = call("chat");
 var vehicles = call("vehicles");
 let notify = call('notifications');
-let admin = call('admin');
 let factions = call('factions');
 let timer = call('timer');
 let death = call('death');
@@ -54,6 +56,8 @@ module.exports = {
                 player.backDimension = player.dimension;
                 player.position = new mp.Vector3(target.position.x + 2, target.position.y, target.position.z);
                 player.dimension = target.dimension;
+                player.house.place = target.house.place;
+                player.house.id = target.house.id;
                 mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} телепортировался к ${target.name}`);
                 player.call('chat.message.push', [`!{#ebd13d}Используйте /goback, чтобы вернуться на исходную позицию`]);
             } catch (err) {
@@ -90,6 +94,8 @@ module.exports = {
                 target.returnDimension = target.dimension;
                 target.position = new mp.Vector3(player.position.x + 2, player.position.y, player.position.z);
                 target.dimension = player.dimension;
+                target.house.place = player.house.place;
+                target.house.id = player.house.id;
                 mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} телепортировал к себе ${target.name}`);
                 player.call('chat.message.push', [`!{#ebd13d}Используйте /return, чтобы вернуть игрока обратно`]);
                 target.call('chat.message.push', [`!{#ffffff}${player.name} телепортировал вас к себе`]);
@@ -100,7 +106,7 @@ module.exports = {
     },
     "/return": {
         access: 2,
-        description: "Вернуть игрока на исходную позицию (после /gethere)",
+        description: "Вернуть игрока на исходную позицию (после /gethere или /masstp)",
         args: "[ID]:n",
         handler: (player, args) => {
             let target = mp.players.at(args[0]);
@@ -112,6 +118,28 @@ module.exports = {
             target.returnDimension = null;
             notify.info(player, `Вы вернули игрока на исходную позицию`);
             notify.info(target, `${player.character.name} вернул вас на исходную позицию`);
+        }
+    },
+    "/returnall": {
+        access: 2,
+        description: "Вернуть игроков в радиусе на исходную позицию (после /gethere или /masstp)",
+        args: "[радиус]:n",
+        handler: (player, args) => {
+            let count = 0;
+            mp.players.forEachInRange(player.position, args[0], (target) => {
+                if (!target.character) return;
+                if (target.dimension != player.dimension) return;
+                if (!target.returnPosition) return;
+                if (target.getVariable('knocked')) return;
+                target.position = target.returnPosition;
+                target.dimension = target.returnDimension;
+                target.returnPosition = null;
+                target.returnDimension = null;
+                notify.info(target, `${player.character.name} вернул вас на исходную позицию`);
+                count++;
+            });
+            mp.events.call("admin.notify.all", `!{#edffc2}[A] ${player.name} вернул ${count} чел. на исходную позицию (Радиус: ${args[0]})`);
+            notify.info(player, `Вы вернули ${count} чел. на исходную позицию`);
         }
     },
     "/hp": {
@@ -212,7 +240,7 @@ module.exports = {
                     mileage: 0,
                     plate: vehicles.generateVehiclePlate(),
                     destroys: 0
-                }
+                };
                 veh = await vehicles.spawnVehicle(veh);
                 veh.spawnedBy = player.name;
                 mp.events.call("admin.notify.all", `!{#e0bc43}[A] ${player.name} создал транспорт ${veh.modelName}`);
@@ -324,6 +352,25 @@ module.exports = {
             rec.kick();
         }
     },
+    "/mute": {
+        access: 2,
+        description: "Запретить текстовый + голосовой чат игроку.",
+        args: "[ид_игрока]:n [минуты]:n [причина]",
+        handler: (player, args) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
+
+            args.shift();
+            var mins = args.shift();
+            var reason = args.join(" ");
+            var time = mins * 60 * 1000;
+
+            rec.character.muteTime = time;
+            rec.character.save();
+            chat.setMute(rec, time);
+            mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] выдал мут игроку ${rec.name}[${rec.id}] (${mins} мин): ${reason}`);
+        }
+    },
     "/kick": {
         access: 2,
         description: "Кик игрока",
@@ -332,7 +379,7 @@ module.exports = {
             if (isNaN(parseInt(args[0]))) return; //temp
             let target = mp.players.at(args[0]);
             if (!target || !mp.players.exists(target)) return notify.warning(player, 'Игрок не найден');
-            if (!target.character) return notify.warning(player, 'Игрок не найден');
+            // if (!target.character) return notify.warning(player, 'Игрок не найден');
             args.shift();
             let message = args.join(' ');
             mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] кикнул игрока ${target.name}[${target.id}]: ${message}`);
@@ -347,7 +394,7 @@ module.exports = {
             if (isNaN(parseInt(args[0]))) return; //temp
             let target = mp.players.at(args[0]);
             if (!target || !mp.players.exists(target)) return notify.warning(player, 'Игрок не найден');
-            if (!target.character) return notify.warning(player, 'Игрок не найден');
+            // if (!target.character) return notify.warning(player, 'Игрок не найден');
             mp.events.call('admin.notify.all', `!{#9e9e9e}[A] Администратор ${player.name}[${player.id}] кикнул игрока ${target.name}[${target.id}] без лишнего шума`);
             target.kick("kicked");
         }
@@ -363,7 +410,7 @@ module.exports = {
             var days = Math.clamp(args[1], 1, 30);
             args.splice(0, 2);
 
-            mp.events.call('admin.notify.players', `!{#db5e4a}[A] Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${args.join(" ")} `);
+            mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${args.join(" ")} `);
 
             rec.account.clearBanDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
             rec.account.save();
@@ -393,7 +440,7 @@ module.exports = {
 
             var rec = mp.players.getByName(name);
             if (rec) {
-                mp.events.call('admin.notify.players', `!{#db5e4a}[A] Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${reason} `);
+                mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${reason} `);
                 rec.kick();
             }
 
@@ -409,7 +456,7 @@ module.exports = {
             if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
 
             args.shift();
-            mp.events.call('admin.notify.players', `!{#db5e4a}[A] Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${args.join(" ")} (PERMANENT)`);
+            mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] забанил игрока ${rec.name}[${rec.id}]: ${args.join(" ")} (PERMANENT)`);
 
             db.Models.Ban.create({
                 ip: rec.ip,
@@ -786,12 +833,12 @@ module.exports = {
         access: 4,
         args: "",
         handler: (player, args, out) => {
-            let pos = admin.getMassTeleportPosition();
-            if (pos) {
-                admin.setMassTeleportPosition(null);
+            let data = admin.getMassTeleportData();
+            if (data.position) {
+                admin.setMassTeleportData(null, null);
                 out.info(`${player.character.name} отключил массовый телепорт`);
             } else {
-                admin.setMassTeleportPosition(player.position);
+                admin.setMassTeleportData(player.position, player.dimension);
                 out.info(`${player.character.name} включил массовый телепорт`);
             }
         }

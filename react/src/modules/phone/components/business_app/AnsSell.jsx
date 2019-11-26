@@ -26,7 +26,7 @@ class AnsSell extends Component {
             let area = business.area;
             setApps([
                 { name: 'MainDisplay', form: <MainDisplay /> },
-                { name: 'Success', form: <Success name={name} area={area}  status='Бизнес успешно продан'/> }
+                { name: 'SuccessSell', form: <Success name={name} area={area}  status='Бизнес успешно продан'/> }
             ]);
         }
         else if (status === 2) {
@@ -46,6 +46,18 @@ class AnsSell extends Component {
             closeApp();
             addApp({ name: 'Error', form: <Error status='Нельзя продать бизнес дешевле гос.стоимости'/> });
         }
+
+        else if (status === 5) {
+            closeApp();
+            closeApp();
+            addApp({ name: 'Error', form: <Error status='У покупателя недостаточно денег'/> });
+        }
+
+        else if (status === 6) {
+            closeApp();
+            closeApp();
+            addApp({ name: 'Error', form: <Error status='У покупателя уже есть бизнес'/> });
+        }
     }
 
     render() {
@@ -54,7 +66,7 @@ class AnsSell extends Component {
         return (
             <div className='back_page-phone-react'>
                 {
-                    info.biz[0].sellStatus !== null
+                    info.biz[0].sellStatus != null
                         ? <Fragment>{this.getAnsPage(info.biz[0].sellStatus)}</Fragment>
                         : <div className="loader01" style={{ margin: '10% 5%' }}></div>
                 }

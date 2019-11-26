@@ -32,7 +32,7 @@ mp.weapons = {
         if (!Object.keys(data).length) return;
         // mp.terminal.push(`debug`, `sync weapons ammo:`);
         // mp.terminal.push(`debug`, data);
-        mp.events.callRemote(`weapons.ammo.sync`, JSON.stringify(data));
+        // mp.events.callRemote(`weapons.ammo.sync`, JSON.stringify(data));
     },
     getAmmoWeapon(weaponhash) {
         weaponhash = this.hashToValid(weaponhash);
@@ -49,6 +49,7 @@ mp.weapons = {
     },
     getWeaponName(weaponHash) {
         if (!weaponHash) return null;
+        if (!this.weaponData[weaponHash]) weaponHash = this.hashToValid(weaponHash);
         if (!this.weaponData[weaponHash]) return null;
         return this.weaponData[weaponHash].name;
     },
@@ -59,6 +60,9 @@ mp.weapons = {
         if (hash == 3220176749) return -1074790547; // weapon_assaultrifle
         if (hash == 4019527611) return -275439685; // weapon_dbshotgun
         if (hash == 4208062921) return -86904375; // weapon_carbinerifle_mk2
+        if (hash == 4024951519) return -270015777; // Assult SMG
+        if (hash == 2937143193) return -1357824103; // Advanced Rifle
+        if (hash == 3523564046) return -771403250; // Heavy Pistol
         var hashes = [2210333304];
         if (hashes.includes(hash)) return -2084633992;
         return hash;
@@ -103,12 +107,18 @@ mp.events.add({
         mp.weapons.lastWeapon = weapon;
     },
     "time.main.tick": () => {
-        if (!mp.weapons.needSync) return;
-        if (Date.now() - mp.weapons.lastSync < mp.weapons.waitSync) return;
-        mp.weapons.sync();
+        var player = mp.players.local;
+        // фикс пропажи оружия при достижении 0 патронов
+        if (mp.weapons.hashes.length && player.weapon != mp.weapons.hashes[0] && player.getHealth() > 0) {
+            mp.weapons.setCurrentWeapon(mp.weapons.hashes[0]);
+        }
+
+        // if (!mp.weapons.needSync) return;
+        // if (Date.now() - mp.weapons.lastSync < mp.weapons.waitSync) return;
+        // mp.weapons.sync();
     },
     "playerWeaponShot": (targetPos, targetEntity) => {
-        mp.weapons.needSync = true;
+        // mp.weapons.needSync = true;
     },
     "weapons.giveWeapon": (hash) => {
         hash = parseInt(hash);
@@ -126,17 +136,11 @@ mp.events.add({
         delete mp.weapons.lastData[hash];
     },
     "weapons.ammo.sync": (force = false) => {
-        mp.weapons.sync(force);
+        // mp.weapons.sync(force);
     },
     "weapons.ammo.remove": (sqlId, hash) => {
         hash = parseInt(hash);
         var ammo = mp.weapons.getAmmoWeapon(hash);
         mp.events.callRemote("weapons.ammo.remove", sqlId, ammo);
-    },
-    "time.main.tick": () => {
-        // фикс пропажи оружия при достижении 0 патронов
-        if (mp.weapons.hashes.length && mp.players.local.weapon != mp.weapons.hashes[0]) {
-            mp.weapons.setCurrentWeapon(mp.weapons.hashes[0]);
-        }
     },
 });

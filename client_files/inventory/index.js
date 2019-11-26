@@ -140,6 +140,7 @@ mp.inventory = {
         // поднятие предмета с земли
         if (mp.busy.includes()) return;
         if (mp.players.local.vehicle) return;
+        if (!mp.players.local.getHealth()) return;
         var pos = mp.players.local.getOffsetFromInWorldCoords(0, 0, 0);
         var itemObj = this.getNearGroundItemObject(pos);
         if (!itemObj) return;
@@ -208,8 +209,13 @@ mp.inventory = {
     hands(player, itemId) {
         if (!this.itemsInfo) return;
 
+        player.taskSwapWeapon(true)
         if (player.hands) {
-            if (this.itemsInfo[player.hands.itemId].attachInfo.anim) player.clearTasksImmediately();
+            var oldAnim = this.itemsInfo[player.hands.itemId].attachInfo.anim;
+            if (oldAnim) {
+                if (mp.players.local.remoteId == player.remoteId) player.stopAnimTask(oldAnim.dict, oldAnim.name, 3);
+                else player.clearTasksImmediately();
+            }
             if (mp.objects.exists(player.hands.object)) {
                 player.hands.object.destroy();
                 delete player.hands;
@@ -289,7 +295,7 @@ mp.events.add("characterInit.done", () => {
 });
 
 mp.events.add("click", (x, y, upOrDown, leftOrRight, relativeX, relativeY, worldPosition, hitEntity) => {
-    if (upOrDown != 'down') return;
+    if (upOrDown != 'down' || leftOrRight != 'left') return;
     if (mp.game.ui.isPauseMenuActive()) return;
     if (mp.busy.includes()) return;
     if (!mp.players.local.getVariable("hands")) return;
@@ -358,6 +364,20 @@ mp.events.add("inventory.ground.put", (sqlId) => {
     mp.events.callRemote(`item.ground.put`, sqlId, JSON.stringify(pos));
 });
 
+mp.events.add("inventory.item.adrenalin.use.callRemote", (data) => {
+    if (typeof data == 'string') data = JSON.parse(data);
+
+    var rec = mp.utils.getNearPlayer(mp.players.local.position);
+    if (!rec) return mp.notify.error(`Рядом никого нет`, `Адреналин`);
+    data.recId = rec.remoteId;
+    mp.events.callRemote(`inventory.item.adrenalin.use`, JSON.stringify(data));
+});
+
+mp.events.add("playerEnterVehicle", () => {
+    if (!mp.players.local.getVariable("hands")) return;
+    mp.callCEFV(`inventory.clearHands()`);
+});
+
 mp.events.add("playerEnterVehicleBoot", (player, vehicle) => {
     // mp.notify.info(`enterBoot: #${vehicle.remoteId}`);
     if (!vehicle.getVariable("trunk")) return;
@@ -378,7 +398,7 @@ mp.events.add("playerWeaponShot", (targetPos, targetEntity) => {
 });
 
 mp.events.add("playerWeaponChanged", (weapon, oldWeapon) => {
-    mp.inventory.syncAmmo(oldWeapon);
+    mp.inventory.syncAmmo(weapon);
 });
 
 mp.events.add("entityStreamIn", (entity) => {
@@ -389,22 +409,26 @@ mp.events.add("entityStreamIn", (entity) => {
 
 mp.events.add("entityStreamOut", (entity) => {
     if (entity.type != "player") return;
-    if (!entity.handsObject) return;
+    if (!entity.hands) return;
     mp.inventory.hands(entity, null);
 });
 
 mp.events.add("time.main.tick", () => {
+    var start = Date.now();
     var player = mp.players.local;
     var value = player.getArmour();
     mp.inventory.setArmour(value);
+    if (mp.busy.includes("lostAttach")) return;
     mp.inventory.setHandsBlock(player.vehicle != null);
 
     mp.objects.forEach(obj => {
         if (obj.getVariable("groundItem")) mp.utils.setNoCollision(obj, true);
     });
+    mp.timeMainChecker.modules.inventory = Date.now() - start;
 });
 
 mp.events.add("render", () => {
+    var start = Date.now();
     mp.inventory.disableControlActions();
 
     var player = mp.players.local;
@@ -420,6 +444,7 @@ mp.events.add("render", () => {
         mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
         mp.game.controls.disableControlAction(0, 140, true); /// удары R
     }
+    if (mp.renderChecker) mp.utils.drawText2d(`inventory rend: ${Date.now() - start} ms`, [0.8, 0.59]);
 });
 
 mp.events.addDataHandler("trunk", (vehicle, value) => {

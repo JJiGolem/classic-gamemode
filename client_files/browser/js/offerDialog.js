@@ -293,7 +293,7 @@ var offerDialog = new Vue({
                 text: `Carter Slade предлагает вам сыграть в кости`,
                 price: 999,
                 on(values) {
-                    this.text = `ID: ${values.id} предлагает вам сыграть в кости`;
+                    this.text = `ID: ${values.id} предлагает вам сыграть в кости <br /><span class="money">$${offerDialog.pretty(values.amount)}</span>`;
                     this.price = values.amount;
                 },
                 yes() {
@@ -359,7 +359,7 @@ var offerDialog = new Vue({
     },
     watch: {
         dialog(val) {
-            if (val) busy.add("offerDialog", true, true);
+            if (val) busy.add("offerDialog", false, true);
             else busy.remove("offerDialog", true);
         }
     },

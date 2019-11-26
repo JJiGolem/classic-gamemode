@@ -497,6 +497,14 @@ let helpMessages = [
         answer: `Любой дом или бизнес (кроме фермы) можно оплатить в одном из отделений банка по всей карте.
         Чтобы оплатить ферму, нужно пополнить ее налоговый счет в меню управления фермой.`
     },
+    {
+        question: "Как скрыть чат и/или HUD?",
+        answer: `Чат можно скрыть нажатием клавиши F7, а худ - нажатием F5.`
+    },
+    {
+        question: "Как перезагрузить голосовой чат?",
+        answer: `Если вы не слышите других игроков или игроки не слышат вас, вы можете попробовать перезагрузить войс-чат нажатием клавиши F4.`
+    },
 ];
 
 var playerMenu = new Vue({
@@ -745,8 +753,8 @@ var playerMenu = new Vue({
             skill.value = data.exp;
 
             if (parseInt(skill.value) == parseInt(oldExp)) return;
-            if (parseInt(skill.value) > parseInt(oldExp)) prompt.show(`Навык '${skill.head}' повысился до ${skill.value}%`);
-            else prompt.show(`Навык '${skill.head}' понизился до ${skill.value}%`);
+            if (parseInt(skill.value) > parseInt(oldExp)) prompt.show(`Навык '${skill.head}' повысился до ${parseInt(skill.value)}%`);
+            else prompt.show(`Навык '${skill.head}' понизился до ${parseInt(skill.value)}%`);
         },
         setCash(cash) {
             statistics["cash"].value = cash;
@@ -871,7 +879,7 @@ var playerMenu = new Vue({
     },
     mounted() {
         window.addEventListener('keyup', (e) => {
-            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "inventory", "inputWindow"])) return;
+            if (busy.includes(["chat", "terminal", "interaction", "mapCase", "phone", "inventory", "inputWindow", "playersList"])) return;
             if (selectMenu.isEditing) return;
             if (Date.now() - this.lastShowTime < 500) return;
             if (!this.enable) return;

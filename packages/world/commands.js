@@ -111,4 +111,12 @@ module.exports = {
             player.call(`world.objects.show`, [list]);
         }
     },
+    "/worlddoors": {
+        description: "Вкл/выкл режим контроля дверей (позицию рекомендуется брать ближе к петлям двери).",
+        access: 3,
+        args: "",
+        handler: (player, args, out) => {
+            player.call(`world.doors.control.toggle`);
+        }
+    },
 }

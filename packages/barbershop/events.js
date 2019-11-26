@@ -57,10 +57,11 @@ module.exports = {
         let price = barbershop.hairstyleProducts * barbershop.productPrice * barbershop.getPriceMultiplier(barbershopId);
         if (player.character.cash < price) return player.call('barbershop.hairstyle.buy.ans', [1]);
         let productsAvailable = barbershop.getProductsAmount(barbershopId);
-        if (barbershop.hairstyleProducts > productsAvailable) return player.call('barbershop.hairstyle.buy.ans', [3]);
+        let finalProducts = parseInt(barbershop.hairstyleProducts * barbershop.finalProductsMultiplier);
+        if (finalProducts > productsAvailable) return player.call('barbershop.hairstyle.buy.ans', [3]);
         money.removeCash(player, price, function(result) {
             if (result) {
-                barbershop.removeProducts(barbershopId, barbershop.hairstyleProducts);
+                barbershop.removeProducts(barbershopId, finalProducts);
                 barbershop.updateCashbox(barbershopId, price);
                 player.character.hair = hairstyleId;
                 player.character.save();
@@ -78,10 +79,12 @@ module.exports = {
         let price = barbershop.facialHairProducts * barbershop.productPrice * barbershop.getPriceMultiplier(barbershopId);
         if (player.character.cash < price) return player.call('barbershop.facialHair.buy.ans', [1]);
         let productsAvailable = barbershop.getProductsAmount(barbershopId);
-        if (barbershop.facialHairProducts > productsAvailable) return player.call('barbershop.facialHair.buy.ans', [3]);
+
+        let finalProducts = parseInt(barbershop.facialHairProducts * barbershop.finalProductsMultiplier);
+        if (finalProducts > productsAvailable) return player.call('barbershop.facialHair.buy.ans', [3]);
         money.removeCash(player, price, function (result) {
             if (result) {
-                barbershop.removeProducts(barbershopId, barbershop.facialHairProducts);
+                barbershop.removeProducts(barbershopId, finalProducts);
                 barbershop.updateCashbox(barbershopId, price);
                 player.setHeadOverlay(1, [index, 1.0, player.character.beardColor, 0]);
                 player.character.Appearances[1].value = index;
@@ -100,10 +103,12 @@ module.exports = {
         let price = barbershop.colorChangeProducts * barbershop.productPrice * barbershop.getPriceMultiplier(barbershopId);
         if (player.character.cash < price) return player.call('barbershop.color.buy.ans', [3]);
         let productsAvailable = barbershop.getProductsAmount(barbershopId);
-        if (barbershop.colorChangeProducts > productsAvailable) return player.call('barbershop.color.buy.ans', [5]);
+        let finalProducts = parseInt(barbershop.colorChangeProducts * barbershop.finalProductsMultiplier);
+
+        if (finalProducts > productsAvailable) return player.call('barbershop.color.buy.ans', [5]);
         money.removeCash(player, price, function (result) {
             if (result) {
-                barbershop.removeProducts(barbershopId, barbershop.colorChangeProducts);
+                barbershop.removeProducts(barbershopId, finalProducts);
                 barbershop.updateCashbox(barbershopId, price);
                 switch (type) {
                     case 0:

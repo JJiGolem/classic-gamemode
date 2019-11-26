@@ -51,8 +51,10 @@ global.inited = (dirname) => {
     if (modulesToLoad.length === 0) {
         if (isInited) throw new Error(`Сервер уже был проинициализирован. Попытка повторной инициализации от модуля ${moduleName}`);
         isInited = true;
+        console.log("[BASE] Все модули загружены")
         playersJoinPool.forEach(player => {
             if (player == null) return;
+            if (!mp.players.exists(player)) return;
             player.call('init', [activeClientModules]);
         });
     }
@@ -64,6 +66,12 @@ let playersJoinPool = [];
 // Дебаг
 global.debug = (text) => {
     require('../terminal').debug(text);
+};
+global.d = (text) => {
+    mp.players.forEach(rec => {
+        if (!rec.character) return;
+        require('../notifications').info(rec, text, `Server DEBUG-LOG`);
+    });
 };
 
 if (!isBuild) {
@@ -85,7 +93,7 @@ db.connect(function() {
             if (events["init"] != null) {
                 modulesToLoad.push(file);
             }
-        } 
+        }
     });
 
     fs.readdirSync(path.dirname(__dirname) + "/../client_packages").forEach(file => {
@@ -93,6 +101,10 @@ db.connect(function() {
     });
 
     mp.events.call('init');
+});
+
+mp.events.add("playerJoin", (player) => {
+    player.dimension = player.id + 1;
 });
 
 mp.events.add('player.join', (player) => {

@@ -1,7 +1,7 @@
 let terminal = require('./index.js');
 module.exports = {
-    "init": () => {
-        terminal.init();
+    "init": async () => {
+        await terminal.init();
         inited(__dirname);
     },
     "characterInit.done": (player) => {

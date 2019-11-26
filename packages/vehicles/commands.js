@@ -233,5 +233,17 @@ module.exports = {
                 plate: 'HI228'
             }
         }
-    }
+    },
+    "/repair": {
+        access: 3,
+        description: "Отремонтировать транспорт по ID водителя",
+        args: `[id]:n`,
+        handler: (player, args, out) => {
+            let target = mp.players.at(args[0]);
+            if (!target) return out.error('Игрок не найден', player);
+            if (!target.vehicle) return out.error('Игрок не в транспорте', player);
+            target.vehicle.repair();
+            out.info('Автомобиль игрока отремонтирован', player);
+        }
+    },
 }

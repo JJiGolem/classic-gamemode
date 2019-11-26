@@ -4,8 +4,8 @@ module.exports = {
     "init": () => {
         clubs.init();
     },
-    "bizes.done": () => {
-        clubs.initAfterBiz();
+    "bizes.done": async () => {
+        await clubs.initAfterBiz();
         inited(__dirname);
     },
     "characterInit.done": (player) => {
@@ -15,6 +15,9 @@ module.exports = {
             vfxName: clubs.vfxName,
             drunkennessWaitClear: clubs.drunkennessWaitClear,
         }]);
+    },
+    "clubs.control.open": (player, isOpen) => {
+        clubs.openClub(player, isOpen);
     },
     "clubs.alcohol.buy": (player, index) => {
         clubs.buyAlcohol(player, index);

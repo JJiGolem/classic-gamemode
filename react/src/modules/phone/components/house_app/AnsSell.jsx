@@ -26,7 +26,7 @@ class AnsSell extends Component {
             let area = house.area;
             setApps([
                 { name: 'MainDisplay', form: <MainDisplay /> },
-                { name: 'Success', form: <Success name={name} area={area}/> }
+                { name: 'SuccessSell', form: <Success name={name} area={area}/> }
             ]);
         }
         else if (status == 2) {
@@ -51,6 +51,18 @@ class AnsSell extends Component {
             closeApp();
             closeApp();
             addApp({ name: 'Error', form: <Error status='Вы не можете продать дом с машинами в гараже'/> });
+        }
+
+        else if (status === 6) {
+            closeApp();
+            closeApp();
+            addApp({ name: 'Error', form: <Error status='У покупателя недостаточно денег'/> });
+        }
+
+        else if (status === 7) {
+            closeApp();
+            closeApp();
+            addApp({ name: 'Error', form: <Error status='У покупателя уже есть дом'/> });
         }
     }
 

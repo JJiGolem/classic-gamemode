@@ -93,7 +93,12 @@ module.exports = (sequelize, DataTypes) => {
         minutes: {
             type: DataTypes.INTEGER(11),
             defaultValue: 0,
-            allowNull: false
+            allowNull: false,
+            set(val) {
+                var oldVal = this.getDataValue('minutes');
+                if (val <= oldVal) return;
+                this.setDataValue('minutes', val);
+            }
         },
         creationDate: {
             type: DataTypes.DATE,
@@ -283,6 +288,16 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TINYINT(1),
             defaultValue: 0,
             allowNull: false
+        },
+        // Оставшееся время мута
+        muteTime: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: 0,
+            allowNull: false,
+            set(val) {
+                if (val < 0) val = 0;
+                this.setDataValue('muteTime', val);
+            }
         },
         // Пригласивший персонаж
         inviterId: {

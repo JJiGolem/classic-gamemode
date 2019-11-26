@@ -21,9 +21,9 @@ module.exports = {
     // Подарочные промокоды
     giftPromocodes: [],
 
-    init() {
+    async init() {
         this.fillCodes();
-        this.loadGiftPromocodesFromDB();
+        await this.loadGiftPromocodesFromDB();
     },
     async fillCodes() {
         var codes = [];
@@ -93,7 +93,7 @@ module.exports = {
         if (player.character.inviterId) return out(`Вы уже активировали реферальный промокод`);
         if (!promocode) return out(`Промокод ${code} не найден`);
         if (promocode.Character.accountId == player.account.id) return out(`Нельзя активировать промокод от своего аккаунта`);
-        var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60 % 60) + player.character.minutes;
+        var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60) + player.character.minutes;
         if (minutes > this.completedMinutes) return out(`Вы уже проиграли более ${this.completedMinutes} минут`);
 
         player.character.inviterId = promocode.characterId;
@@ -123,7 +123,7 @@ module.exports = {
         }
     },
     async check(player) {
-        var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60 % 60) + player.character.minutes;
+        var minutes = parseInt((Date.now() - player.authTime) / 1000 / 60) + player.character.minutes;
         if (minutes < this.completedMinutes) return;
         if (player.character.inviteCompleted) return;
         if (!player.character.inviterId) return;

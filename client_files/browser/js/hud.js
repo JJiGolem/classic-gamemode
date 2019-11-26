@@ -2,7 +2,7 @@ var hud = new Vue({
     el: "#hud",
     data: {
         players: 0,
-        maxPlayers: 1000,
+        maxPlayers: 1500,
         build: 0,
         branch: "",
         wanted: 0,
@@ -26,8 +26,9 @@ var hud = new Vue({
         playerId: -1,
         cold: false,
         heat: false,
-        arrestTime: 10, // секунды
-        arrestDescription: "До освобождения 999999 мин.", // TODO: Описание
+        arrestTime: 0, // секунды
+        arrestTimeMax: 0,
+        arrestTimer: null,
         keys: [{
                 key: "I",
                 name: "Инвентарь",
@@ -71,8 +72,12 @@ var hud = new Vue({
             }
         },
         arrestProgress() {
-
-        }
+            return 100 - this.arrestTime / this.arrestTimeMax * 100;
+        },
+        arrestDescription() {
+            var str = (this.arrestTime > 60)? `${parseInt(this.arrestTime / 60)} мин.` : `${this.arrestTime} сек`;
+            return `До освобождения ${str}`;
+        },
     },
     watch: {
         cold(val) {
@@ -88,7 +93,17 @@ var hud = new Vue({
             this.heatTimer = setTimeout(() => {
                 this.heat = false;
             }, 10000);
-        }
+        },
+        arrestTimeMax(val) {
+            this.arrestTime = val;
+            clearInterval(this.arrestTimer);
+            this.arrestTimer = setInterval(() => {
+                this.arrestTime--;
+                if (this.arrestTime <= 0) {
+                    clearInterval(this.arrestTimer);
+                }
+            }, 1000);
+        },
     },
     methods: {
         updateTime() {
@@ -109,7 +124,10 @@ var hud = new Vue({
         pretty(val) {
             return prettyMoney(val);
         },
-
+        isKeyShow(name) {
+            if (name == 'Планшет') return playerMenu.factionId && playerMenu.factionId < 8;
+            return true;
+        },
     },
     mounted() {
         setInterval(this.updateTime, 1000);

@@ -98,6 +98,7 @@ speedometerUpdateTimer = mp.timer.addInterval(() => { /// Обновление �
 
 mp.keys.bind(0x32, true, function() {
     if (mp.busy.includes(['chat', 'cuffs', 'terminal'])) return;
+    if (!mp.players.local.vehicle) return;
     if (mp.players.local.vehicle.getPedInSeat(-1) === mp.players.local.handle) {
         mp.events.callRemote('vehicles.engine.toggle');
     }
@@ -458,15 +459,17 @@ mp.events.add('vehicles.speedometer.enabled', (enabled) => {
     mp.speedometerEnabled = enabled;
 });
 mp.events.add("time.main.tick", () => {
-    var entity = mp.utils.getNearPlayerOrVehicle(mp.players.local.position, 10);
+    var start = Date.now();
+    // var entity = mp.utils.getNearPlayerOrVehicle(mp.players.local.position, 10);
+    var vehicle = mp.utils.getNearVehicle(mp.players.local.position, 10);
 
-    if (entity && entity.type == "vehicle") {
-        var bootPos = mp.utils.getBootPosition(entity);
+    if (vehicle && vehicle.type == "vehicle") {
+        var bootPos = mp.utils.getBootPosition(vehicle);
         var distToBoot = mp.vdist(mp.players.local.position, bootPos);
         if (distToBoot < 1) {
             if (mp.moduleVehicles.nearBootVehicleId == null) {
-                mp.moduleVehicles.nearBootVehicleId = entity.remoteId;
-                mp.events.call("playerEnterVehicleBoot", mp.players.local, entity);
+                mp.moduleVehicles.nearBootVehicleId = vehicle.remoteId;
+                mp.events.call("playerEnterVehicleBoot", mp.players.local, vehicle);
             }
         } else {
             if (mp.moduleVehicles.nearBootVehicleId != null) {
@@ -475,12 +478,12 @@ mp.events.add("time.main.tick", () => {
             }
         }
 
-        var hoodPos = mp.utils.getHoodPosition(entity);
+        var hoodPos = mp.utils.getHoodPosition(vehicle);
         var distToHood = mp.vdist(mp.players.local.position, hoodPos);
         if (distToHood < 1) {
             if (mp.moduleVehicles.nearHoodVehicleId == null) {
-                mp.moduleVehicles.nearHoodVehicleId = entity.remoteId;
-                mp.events.call("playerEnterVehicleHood", mp.players.local, entity);
+                mp.moduleVehicles.nearHoodVehicleId = vehicle.remoteId;
+                mp.events.call("playerEnterVehicleHood", mp.players.local, vehicle);
             }
         } else {
             if (mp.moduleVehicles.nearHoodVehicleId != null) {
@@ -515,11 +518,15 @@ mp.events.add("time.main.tick", () => {
             }
         }
     }
+
+    mp.timeMainChecker.modules.vehicles = Date.now() - start;
 });
 
 mp.moduleVehicles = {
     nearBootVehicleId: null,
     nearHoodVehicleId: null,
+    disabledControl: false,
+
     getSeat(player) {
         if (!player.vehicle) return null;
 
@@ -530,9 +537,15 @@ mp.moduleVehicles = {
 
         return null;
     },
+    disableControl(enable) {
+        this.disabledControl = enable;
+    },
 }
 
 mp.events.add({
+    "vehicles.disableControl": (enable) => {
+        mp.moduleVehicles.disableControl(enable);
+    },
     "playerEnterVehicleBoot": (player, vehicle) => {
         if (player.vehicle) return;
         if (vehicle.getVariable("static")) return;
@@ -563,6 +576,7 @@ mp.events.addDataHandler("hood", (vehicle, value) => {
 });
 
 mp.events.add('render', () => {
+    var start = Date.now();
     mp.vehicles.forEachInStreamRange((vehicle) => {
         if (mp.vdist(mp.players.local.position, vehicle.position) > 10) return;
         if (vehicle.getVariable('label')) {
@@ -586,6 +600,14 @@ mp.events.add('render', () => {
             });
         }
     });
+    if (mp.moduleVehicles.disabledControl) {
+        mp.game.controls.disableControlAction(0, 59, true); /// INPUT_VEH_MOVE_LR
+        mp.game.controls.disableControlAction(0, 60, true); /// INPUT_VEH_MOVE_UD
+        mp.game.controls.disableControlAction(0, 71, true); /// INPUT_VEH_ACCELERATE
+        mp.game.controls.disableControlAction(0, 72, true); /// INPUT_VEH_BRAKE
+        // mp.game.controls.disableControlAction(0, 75, true); /// INPUT_VEH_EXIT
+    }
+    if (mp.renderChecker) mp.utils.drawText2d(`vehicles rend: ${Date.now() - start} ms`, [0.8, 0.67]);
 });
 
 mp.events.add('vehicles.add.menu.show', () => {

@@ -2,6 +2,8 @@
 /// Создание персоонажа
 const Data = require("characterInit/data.js");
 const freemodeCharacters = [mp.game.joaat("mp_m_freemode_01"), mp.game.joaat("mp_f_freemode_01")];
+const creatorPlayerPos = new mp.Vector3(402.8664, -996.4108, -99.00027);
+const creatorPlayerHeading = -185.0;
 const localPlayer = mp.players.local;
 
 let charData;
@@ -19,7 +21,7 @@ mp.events.add("characterInit.camera.head", applyHeadCamera);
 
 function showTorso(state) {
     if (state) {
-        if (charData.gender == 0) {
+        if (charData.gender === 0) {
             localPlayer.setComponentVariation(3, 15, 0, 2);
             localPlayer.setComponentVariation(8, 15, 0, 2);
             localPlayer.setComponentVariation(11, 15, 0, 2);
@@ -32,7 +34,7 @@ function showTorso(state) {
         applyTorsoCamera();
     }
     else {
-        if (charData.gender == 0) {
+        if (charData.gender === 0) {
             localPlayer.setComponentVariation(3, 0, 0, 2);
             localPlayer.setComponentVariation(8, 15, 0, 2);
             localPlayer.setComponentVariation(11, 0, 0, 2);
@@ -48,7 +50,7 @@ function showTorso(state) {
 mp.events.add("characterInit.showTorso", showTorso);
 
 function setDefWear() {
-    if (charData.gender == 0) {
+    if (charData.gender === 0) {
         localPlayer.setComponentVariation(3, 0, 0, 2);
         localPlayer.setComponentVariation(8, 15, 0, 2);
         localPlayer.setComponentVariation(11, 0, 0, 2);
@@ -123,7 +125,7 @@ let rotateLeft = function() {
     }
     localPlayer.setRotation(0, 0, newHeading, 0, true);
     localPlayer.position = localPlayer.position;
-}
+};
 let rotateRight = function() {
     let newHeading = localPlayer.getHeading() + deltaRot;
     if (newHeading > 360) {
@@ -131,7 +133,7 @@ let rotateRight = function() {
     }
     localPlayer.setRotation(0, 0, newHeading, 0, true);
     localPlayer.position = localPlayer.position;
-}
+};
 
 function binding(active) {
     if (active) {
@@ -157,7 +159,7 @@ mp.events.add('characterInit.create.check', (name, surname) => {
 });
 
 mp.events.add('characterInit.create.check.ans', (ans) => {
-    if (ans == 1) {
+    if (ans === 1) {
         mp.callCEFV(`selectMenu.loader = false;`);
         mp.callCEFV(`selectMenu.show = false`);
         mp.events.call('characterInit.create', false);
@@ -175,6 +177,8 @@ mp.events.add("characterInit.create", (active, rawCharData) => {
         mp.gui.cursor.show(true, false);
         mp.utils.disablePlayerMoving(true);
 
+        localPlayer.position = creatorPlayerPos;
+        localPlayer.setHeading(creatorPlayerHeading);
         mp.utils.cam.tpTo(localPlayer.position.x, localPlayer.position.y - 1.25, localPlayer.position.z + 0.5,
             localPlayer.position.x, localPlayer.position.y, localPlayer.position.z + 0.5, 45);
 
@@ -193,6 +197,7 @@ mp.events.add('characterInit.create.exit', () => {
     charData.father = 0;
     charData.skin = 0;
     updateParents();
+    binding(false);
     mp.events.call('characterInit.init');
 });
 
@@ -210,25 +215,21 @@ mp.events.add('characterInit.create.setGender', gender => {
         mp.timer.remove(setGenderTimer);
     }
     setGenderTimer = mp.timer.add(function() {
-        try {
-            charData.gender = parseInt(gender);
-            if (charData.gender == 0 || charData.gender == 1) {
-                mp.players.local.model = freemodeCharacters[charData.gender];
-            }
-            if (charData.gender == 0) {
-                charData.similarity = 1;
-            }
-            else {
-                charData.similarity = 0;
-            }
-            charData.mother = 21;
-            charData.father = 0;
-            charData.skin = 0;
-            updateParents();
-            setDefWear();
-        } catch (error) {
-            mp.console(JSON.stringify(error));
+        charData.gender = parseInt(gender);
+        if (charData.gender === 0 || charData.gender === 1) {
+            mp.players.local.model = freemodeCharacters[charData.gender];
         }
+        if (charData.gender === 0) {
+            charData.similarity = 1;
+        }
+        else {
+            charData.similarity = 0;
+        }
+        charData.mother = 21;
+        charData.father = 0;
+        charData.skin = 0;
+        updateParents();
+        setDefWear();
     }, 100);
 });
 
@@ -353,7 +354,7 @@ const FACE_FETURE_STEP = 0.1;
 //FaceFeatures events
 for (let i = 0; i < Data.faceFeaturesNames.length; i++) {
     const eventName = `characterInit.create.set${Data.faceFeaturesNames[i].replace(' ', '')}`;
-    if ('characterInit.create.setNoseBroken' == eventName) {
+    if ('characterInit.create.setNoseBroken' === eventName) {
         mp.events.add(eventName, value => {
             value = 20 - value;
             value = parseInt(value);
@@ -379,7 +380,7 @@ for (let i = 0; i < Data.faceFeaturesNames.length; i++) {
 //HeadOverlays events
 for (let i = 0; i < Data.headOverlays.length; i++) {
     const eventName = `characterInit.create.set${Data.headOverlays[i].replace(' ', '')}`;
-    mp.events.add(eventName, (value, chest) => {
+    mp.events.add(eventName, (value) => {
         value = parseInt(value);
         const opacityScale = 1.0;
         if (opacityScale >= 0 && opacityScale <= 1 && value >= 0 && value <= Data.headOverlayItems[i].length) {
