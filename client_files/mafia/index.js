@@ -260,9 +260,11 @@ mp.events.add({
         mp.mafia.setStorageInfo(data);
     },
     "render": () => {
-        mp.mafia.mafiaZones.forEach(blip => {
-            mp.game.invoke(mp.mafia.natives.SET_BLIP_ROTATION, blip, 0);
-        });
+        if (mp.mafia.zonesShow) {
+            mp.mafia.mafiaZones.forEach(blip => {
+                mp.game.invoke(mp.mafia.natives.SET_BLIP_ROTATION, blip, 0);
+            });
+        }
 
         if (mp.mafia.followPlayer) {
             mp.game.controls.disableControlAction(0, 21, true); /// бег
