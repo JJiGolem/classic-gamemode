@@ -158,6 +158,7 @@ module.exports = {
 
         delete player.isFollowing;
         player.call(`police.follow.stop`);
+        player.call(`police.arrest.set`, [player.character.arrestType]);
         player.call(`inventory.enable`, [false]);
         player.call(`hud.setData`, [{
             arrestTimeMax: parseInt(player.character.arrestTime / 1000)
@@ -202,6 +203,7 @@ module.exports = {
 
         delete player.isFollowing;
         player.call(`police.follow.stop`);
+        player.call(`police.arrest.set`, [player.character.arrestType]);
         player.call(`inventory.enable`, [false]);
         player.call(`hud.setData`, [{
             arrestTimeMax: parseInt(player.character.arrestTime / 1000)
@@ -223,6 +225,7 @@ module.exports = {
                 }
                 delete rec.jailArrestTimer;
                 rec.call(`inventory.enable`, [true]);
+                rec.call(`police.arrest.set`, [null]);
 
                 rec.position = this.jailExit;
                 rec.heading = this.jailExit.h;
@@ -241,6 +244,7 @@ module.exports = {
         timer.remove(player.cellArrestTimer);
         delete player.cellArrestTimer;
         player.call(`inventory.enable`, [true]);
+        player.call(`police.arrest.set`, [null]);
         player.call(`hud.setData`, [{
             arrestTimeMax: 0
         }]);

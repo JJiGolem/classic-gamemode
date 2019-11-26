@@ -7,6 +7,7 @@
 */
 
 mp.police = {
+    arrestType: null,
     haveCuffs: false,
     followPlayer: null,
     wanted: 0,
@@ -21,6 +22,9 @@ mp.police = {
         SET_BLIP_COLOUR: "0x03D7FB09E75D6B7E",
     },
 
+    setArrest(arrestType) {
+        this.arrestType = arrestType;
+    },
     setCuffs(enable) {
         this.haveCuffs = enable;
         mp.inventory.enable(!enable);
@@ -75,6 +79,9 @@ mp.events.add({
     "characterInit.done": () => {
         mp.police.removeSearchBlip();
     },
+    "police.arrest.set": (arrestType) => {
+        mp.police.setArrest(arrestType);
+    },
     "police.cuffs.set": (enable) => {
         mp.police.setCuffs(enable);
     },
@@ -116,6 +123,12 @@ mp.events.add({
                 mp.game.controls.disableControlAction(0, 72, true); /// INPUT_VEH_BRAKE
                 mp.game.controls.disableControlAction(0, 75, true); /// INPUT_VEH_EXIT
             }
+        }
+        if (mp.police.arrestType != null) {
+            mp.game.controls.disableControlAction(0, 24, true); /// удары
+            mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
+            mp.game.controls.disableControlAction(0, 257, true); /// стрельба
+            mp.game.controls.disableControlAction(0, 140, true); /// удары R
         }
     },
     "police.follow.start": (playerId) => {
