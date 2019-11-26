@@ -459,6 +459,7 @@ mp.events.add('vehicles.speedometer.enabled', (enabled) => {
     mp.speedometerEnabled = enabled;
 });
 mp.events.add("time.main.tick", () => {
+    var start = Date.now();
     // var entity = mp.utils.getNearPlayerOrVehicle(mp.players.local.position, 10);
     var vehicle = mp.utils.getNearVehicle(mp.players.local.position, 10);
 
@@ -517,6 +518,8 @@ mp.events.add("time.main.tick", () => {
             }
         }
     }
+
+    mp.timeMainChecker.modules.vehicles = Date.now() - start;
 });
 
 mp.moduleVehicles = {

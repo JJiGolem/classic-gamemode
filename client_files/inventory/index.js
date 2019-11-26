@@ -414,6 +414,7 @@ mp.events.add("entityStreamOut", (entity) => {
 });
 
 mp.events.add("time.main.tick", () => {
+    var start = Date.now();
     var player = mp.players.local;
     var value = player.getArmour();
     mp.inventory.setArmour(value);
@@ -423,6 +424,7 @@ mp.events.add("time.main.tick", () => {
     mp.objects.forEach(obj => {
         if (obj.getVariable("groundItem")) mp.utils.setNoCollision(obj, true);
     });
+    mp.timeMainChecker.modules.inventory = Date.now() - start;
 });
 
 mp.events.add("render", () => {

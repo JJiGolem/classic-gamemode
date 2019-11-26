@@ -279,6 +279,7 @@ mp.events.add({
         }
     },
     "time.main.tick": () => {
+        var start = Date.now();
         if (mp.mafia.followPlayer) {
             var pos = mp.mafia.followPlayer.position;
             var localPos = mp.players.local.position;
@@ -292,6 +293,7 @@ mp.events.add({
             if (dist < 5) speed = 1;
             mp.players.local.taskFollowNavMeshToCoord(pos.x, pos.y, pos.z, speed, -1, 1, true, 0);
         }
+        mp.timeMainChecker.modules.mafia = Date.now() - start;
     },
     "entityStreamIn": (player) => {
         if (player.type != "player") return;
