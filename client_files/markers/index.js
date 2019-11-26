@@ -14,11 +14,11 @@ mp.moduleMarkers = {
 mp.events.add({
     "time.main.tick": () => {
         var start = Date.now();
-        mp.markers.forEachInStreamRange(marker => {
-            if (marker.ignoreCheckVisible) return;
-            var pos = mp.players.local.position;
-            marker.visible = !(mp.vdist(pos, marker.position) > mp.moduleMarkers.drawRadius);
-        });
+        // mp.markers.forEachInStreamRange(marker => {
+        //     if (marker.ignoreCheckVisible) return;
+        //     var pos = mp.players.local.position;
+        //     marker.visible = !(mp.vdist(pos, marker.position) > mp.moduleMarkers.drawRadius);
+        // });
         mp.timeMainChecker.modules.markers = Date.now() - start;
     },
     "markers.tp.player.teleported": (playerId, pos, heading, markerId) => {
