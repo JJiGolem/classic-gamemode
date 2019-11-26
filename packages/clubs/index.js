@@ -412,12 +412,15 @@ module.exports = {
         var item = alcoholList[index];
         var price = item.price * club.db.alcoholPrice;
         if (player.character.cash < price) return out(`Необходимо $${price}`);
+        if (club.biz.info.productsCount < price) return out(`У клуба недостаточно продуктов`);
 
         var cantAdd = inventory.cantAdd(player, this.alcoholItemId, item.params);
         if (cantAdd) return out(cantAdd);
 
         money.removeCash(player, price, (res) => {
             if (!res) out(`Ошибка списания наличных`);
+            factions.addCash(player.inClub, price);
+            bizes.removeProducts(club.biz.info.id, price);
         }, `Покупка напитка в клубе с bizId #${club.biz.info.id}`);
 
         inventory.addItem(player, this.alcoholItemId, item.params, (e) => {
@@ -439,12 +442,15 @@ module.exports = {
         var item = snackList[index];
         var price = item.price * club.db.alcoholPrice;
         if (player.character.cash < price) return out(`Необходимо $${price}`);
+        if (club.biz.info.productsCount < price) return out(`У клуба недостаточно продуктов`);
 
         var cantAdd = inventory.cantAdd(player, this.snackItemId, item.params);
         if (cantAdd) return out(cantAdd);
 
         money.removeCash(player, price, (res) => {
             if (!res) out(`Ошибка списания наличных`);
+            factions.addCash(player.inClub, price);
+            bizes.removeProducts(club.biz.info.id, price);
         }, `Покупка закуски в клубе с bizId #${club.biz.info.id}`);
 
         inventory.addItem(player, this.snackItemId, item.params, (e) => {
@@ -466,12 +472,15 @@ module.exports = {
         var item = smokeList[index];
         var price = item.price * club.db.alcoholPrice;
         if (player.character.cash < price) return out(`Необходимо $${price}`);
+        if (club.biz.info.productsCount < price) return out(`У клуба недостаточно продуктов`);
 
         var cantAdd = inventory.cantAdd(player, this.smokeItemId, item.params);
         if (cantAdd) return out(cantAdd);
 
         money.removeCash(player, price, (res) => {
             if (!res) out(`Ошибка списания наличных`);
+            factions.addCash(player.inClub, price);
+            bizes.removeProducts(club.biz.info.id, price);
         }, `Покупка сигарет в клубе с bizId #${club.biz.info.id}`);
 
         inventory.addItem(player, this.smokeItemId, item.params, (e) => {

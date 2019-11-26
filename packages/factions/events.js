@@ -29,7 +29,7 @@ module.exports = {
         var model = veh.db.modelName;
         if (veh.db.key != "faction") return notifs.error(player, `Авто ${model} не принадлежит организации`, header);
         var name = factions.getFaction(player.character.factionId).name;
-        if (veh.db.owner != player.character.factionId) return notifs.error(player, `Авто не принадлежит ${name}`, header);
+        // if (veh.db.owner != player.character.factionId) return notifs.error(player, `Авто не принадлежит ${name}`, header);
 
         if (player.hasAttachment("ammoBox")) {
             if (!factions.ammoVehModels.includes(model.toLowerCase())) return notifs.error(player, `Авто не предназначено для перевоза боеприпасов`, header);
@@ -64,7 +64,7 @@ module.exports = {
         var model = veh.db.modelName;
         if (veh.db.key != "faction") return notifs.error(player, `Авто ${model} не принадлежит организации`, header);
         var name = factions.getFaction(player.character.factionId).name;
-        if (veh.db.owner != player.character.factionId) return notifs.error(player, `Авто не принадлежит ${name}`, header);
+        // if (veh.db.owner != player.character.factionId) return notifs.error(player, `Авто не принадлежит ${name}`, header);
         if (!veh.products || !veh.products.count) return notifs.error(player, `Багажник пустой`, header);
         var type = veh.products.type;
         if (type != "ammo" && type != "medicines") return notifs.error(player, `Неверный тип товара`, header);
@@ -110,6 +110,7 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Игрок #${recId} не найден`, `Приглашение`);
         if (player.dist(rec.position) > 10) return notifs.error(player, `${rec.name} далеко`, `Приглашение`);
         if (rec.character.factionId) return notifs.error(player, `${rec.name} уже в организации`, `Приглашение`);
+        if (rec.character.warnNumber) return notifs.error(player, `${rec.name} имеет варн`, `Приглашение`);
         if (!player.character.factionId) return notifs.error(player, `Вы не состоите в организации`, `Приглашение`);
         if (!factions.canInvite(player)) return notifs.error(player, `Недостаточно прав`, `Приглашение`);
         var faction = factions.getFaction(player.character.factionId);

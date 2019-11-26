@@ -261,6 +261,7 @@ mp.events.add({
         }
     },
     "time.main.tick": () => {
+        var start = Date.now();
         var player = mp.players.local;
         if (player.vehicle) return;
         for (let id of player.__attachments) {
@@ -282,5 +283,6 @@ mp.events.add({
                 player.taskPlayAnim(a.dict, a.name, a.speed, 0, -1, a.flag, 0, false, false, false);
             });
         }
+        mp.timeMainChecker.modules.attaches = Date.now() - start;
     },
 });

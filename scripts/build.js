@@ -15,7 +15,7 @@ let buildDirectory;
 
 let DATE_CHANGE = null;
 
-let ignoreModules = ['attaches'];
+let ignoreModules = ['attaches', 'dlcpacks'];
 let ignoreFiles = [ '.listcache', 'babelPolyfill.js' ];
 let changedFiles = [];
 
@@ -35,7 +35,6 @@ function deleteUnusedFiles(currentPath) {
 }
 
 function copyFile(copyPath) {
-
     let finalFilePath = copyPath.toString().replace('client_files', 'client_packages');
 
     if (fs.existsSync(finalFilePath)) {
@@ -94,16 +93,30 @@ function copyChangedBrowserFiles(currentPath) {
     });
 }
 
+function copyFolderRecursive(folderPath) {
+    fs.readdirSync(folderPath).forEach(item => {
+        let updatedPath = path.resolve(folderPath, item);
+        if (fs.lstatSync(updatedPath).isDirectory()) {
+            let finalPahDir = updatedPath.replace('client_files', 'client_packages');
+            if (!fs.existsSync(finalPahDir)) {
+                fs.mkdirSync(finalPahDir)
+            }
+            copyFolderRecursive(updatedPath);
+        } else {
+            if (fs.statSync(updatedPath).mtime > DATE_CHANGE || !fs.existsSync(updatedPath.replace('client_files', 'client_packages'))) {
+                changedFiles.push(updatedPath);
+                copyFile(updatedPath);
+            }
+        }
+    });
+}
+
 function copyIgnoreModules() {
     ignoreModules.forEach(module => {
         if (!fs.existsSync(path.resolve(__dirname, PATHS.finalPath, module))) {
             fs.mkdirSync(path.resolve(__dirname, PATHS.finalPath, module));
         }
-        fs.readdirSync(path.resolve(__dirname, PATHS.basePath, module)).forEach(file => {
-            if (fs.statSync(path.resolve(__dirname, PATHS.basePath, module, file)).mtime > DATE_CHANGE) {
-                copyFile(path.resolve(__dirname, PATHS.basePath, module, file));
-            }
-        });
+        copyFolderRecursive(path.resolve(__dirname, PATHS.basePath, module));
     });
 }
 
@@ -123,7 +136,6 @@ function copyOnlyChangedFiles() {
         fs.mkdirSync(path.resolve(__dirname, PATHS.finalPath, 'browser'));
         fs.mkdirSync(path.resolve(__dirname, PATHS.finalPath, 'browser', 'js'));
         DATE_CHANGE = 0;
-        // entry['babelPolyfill'] = 'babel-polyfill';
     }
 
     wrench.copyDirSyncRecursive(path.resolve(__dirname, PATHS.basePath), path.resolve(__dirname, PATHS.buildPath), {
@@ -165,8 +177,6 @@ function rewriteFile(dir, file) {
 
 function getEntry() {
     buildDirectory = fs.readdirSync(path.resolve(__dirname, PATHS.buildPath));
-
-    // if (!entry.babelPolyfill) entry.babelPolyfill = 'babel-polyfill';
     
     buildDirectory.forEach(dir => {
         if (fs.lstatSync(path.resolve(__dirname, PATHS.buildPath, dir)).isDirectory() && !ignoreModules.includes(dir) && dir != 'browser') {
@@ -193,13 +203,6 @@ function getEntry() {
     console.log('[WEBPACK] ENTRIES CREATE');
 }
 
-// async function start() {
-//     await copyOnlyChangedFiles();
-//     await getEntry();
-// }
-
-// start();
-
 copyOnlyChangedFiles();
 getEntry();
 
@@ -212,18 +215,11 @@ if (Object.keys(entry).length > 0) {
         if (err) console.log(err);
 
         console.log('CHANGED FILES: ', changedFiles.length);
-        // changedFiles.forEach(file => {
-        //     console.log(file);
-        // });
-
     });
 } else {
     if (fs.existsSync(path.resolve(__dirname, PATHS.buildPath))) {
         rimraf.sync(path.resolve(__dirname, PATHS.buildPath));
     }
     console.log('CHANGED FILES: ', changedFiles.length);
-    // changedFiles.forEach(file => {
-    //     console.log(file);
-    // });
     console.log('Webpack не был запущен, поскольку изменений в клиентских файлах, кроме браузера, нет');
 }

@@ -238,6 +238,7 @@ mp.woodman = {
 
 mp.events.add({
     "render": () => {
+        var start = Date.now();
         var player = mp.players.local;
         if (!mp.woodman.isAxInHands(player)) return;
         if (mp.woodman.treePos) {
@@ -253,16 +254,14 @@ mp.events.add({
             endPos = player.getOffsetFromInWorldCoords(0.3, 1, 0);
             // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
 
-            if (mp.woodman.treePos) {
-                startPos = player.position;
-                endPos = mp.woodman.treePos;
-                // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 0, 255, 0, 100);
-            }
-
             if (mp.woodman.isFocusTree()) {
                 var pos2d = mp.game.graphics.world3dToScreen2d(mp.woodman.treePos);
                 if (pos2d) mp.woodman.drawTreeHealthBar(pos2d.x, pos2d.y);
             }
+        } else {
+            mp.game.controls.disableControlAction(0, 24, true); /// удары
+            mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
+            mp.game.controls.disableControlAction(0, 140, true); /// удары R
         }
         if (mp.objects.exists(mp.woodman.logObj) && mp.woodman.logObj) {
             var slots = mp.woodman.getLogSlots(mp.woodman.logObj);
@@ -298,6 +297,8 @@ mp.events.add({
                 mp.events.callRemote(`woodman.trees.hit`);
             }
         }
+
+        if (mp.renderChecker) mp.utils.drawText2d(`woodman rend: ${Date.now() - start} ms`, [0.8, 0.69]);
 
         // if (mp.woodman.logObj) mp.utils.drawText2d(`dist: ${mp.vdist(endPos, mp.woodman.getLogSlots(mp.woodman.logObj)[mp.woodman.logFocusSlotI])}`, [0.8, 0.5]);
         // mp.utils.drawText2d(`tree: ${mp.woodman.currentTreeHash}`, [0.8, 0.5]);
