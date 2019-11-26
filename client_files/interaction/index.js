@@ -67,7 +67,7 @@ function getClosestPlayer(pos, range = INTERACTION_RANGE) {
 
         let isVanished = current.getVariable('isVanished') || false;
         if (isVanished) return;
-        
+
         var distToPlayer = mp.vdist(pos, current.position);
         if (distToPlayer < range) {
             if (distToPlayer < minDist) {
@@ -177,7 +177,7 @@ mp.events.add('characterInit.done', () => { /// E
         if (mp.game.ui.isPauseMenuActive()) return;
         if (mp.busy.includes() && !mp.busy.includes('interaction')) return;
         if (isOpen) return mp.events.call('interaction.menu.close');
-        
+
         if (!mp.players.local.vehicle) {
             personalInteractionEntity = mp.players.local;
             mp.callCEFV(`interactionMenu.left = ${defaultLeft}`);
@@ -210,6 +210,7 @@ mp.events.add('characterInit.done', () => { /// E
 
 
 mp.events.add('render', () => {
+    var start = Date.now();
     if (!isOpen) {
         currentInteractionEntity = getClosestPlayerOrVehicle(mp.players.local.position);
     }
@@ -241,6 +242,7 @@ mp.events.add('render', () => {
     } catch (err) {
         currentInteractionEntity = null;
     }
+    if (mp.renderChecker) mp.utils.drawText2d(`interaction rend: ${Date.now() - start} ms`, [0.8, 0.57]);
 });
 
 mp.events.add('interaction.ejectlist.get', () => {

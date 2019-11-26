@@ -213,8 +213,8 @@ module.exports = {
             notifs.warning(player, `Медики лечат эффективнее`, header);
             return;
         }
-        if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
-        if (mafia.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за бизнес`, header);
+        // if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
+        // if (mafia.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за бизнес`, header);
         if (player.lastUseMed) {
             var diff = Date.now() - player.lastUseMed;
             var wait = 2 * 60 * 1000;
@@ -271,8 +271,8 @@ module.exports = {
             notifs.warning(player, `Медики лечат эффективнее`, header);
             return;
         }
-        if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
-        if (mafia.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за бизнес`, header);
+        // if (bands.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за территорию`, header);
+        // if (mafia.inWar(player.character.factionId)) return notifs.error(player, `Недоступно во время войны за бизнес`, header);
         if (player.lastUsePatch) {
             var diff = Date.now() - player.lastUsePatch;
             var wait = 2 * 60 * 1000;

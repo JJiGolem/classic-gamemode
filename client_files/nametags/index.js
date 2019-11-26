@@ -36,6 +36,8 @@ mp.events.add('render', (nametags) => {
 
     if (!showNametags) return;
 
+    var start = Date.now();
+
     const graphics = mp.game.graphics;
     const screenRes = graphics.getScreenResolution(0, 0);
 
@@ -44,7 +46,7 @@ mp.events.add('render', (nametags) => {
 
         let isVanished = player.getVariable('isVanished') || false;
         if (isVanished) return;
-        
+
         if (distance <= maxDistance) {
             let scale = (distance / maxDistance);
             if (scale < 0.6) scale = 0.6;
@@ -60,7 +62,7 @@ mp.events.add('render', (nametags) => {
 
             let redNick = player.getVariable(`redNick`) || false;
             if (redNick) nameColor = [255, 85, 66, 255];
-            
+
             mp.game.graphics.drawText(playerName, [x, y],
                 {
                     font: FONT,
@@ -101,6 +103,8 @@ mp.events.add('render', (nametags) => {
             }
         }
     })
+
+    if (mp.renderChecker) mp.utils.drawText2d(`nametags rend: ${Date.now() - start} ms`, [0.8, 0.61]);
 })
 
 /*mp.keys.bind(0x75, true, function () { /// Включение/отключение ников на F6

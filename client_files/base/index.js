@@ -24,6 +24,22 @@ mp.events.add('time.minute.tick', () => {
     mp.discord.update('Classic Roleplay', 'classic-rp.ru');
 });
 
+// Чекер нагрузки render'ов в модулях
+mp.renderChecker = false;
+// Чекер нагрузки time.main.tick в модулях
+mp.timeMainChecker = {
+    enable: false,
+    modules: {
+        attaches: 0,
+    }
+};
+mp.events.add("render", () => {
+    if (!mp.timeMainChecker.enable) return;
+    var y = 0.2;
+    for (var name in mp.timeMainChecker.modules) {
+        mp.utils.drawText2d(`${name} tick: ${mp.timeMainChecker.modules[name]} ms`, [0.8, y += 0.02]);
+    }
+});
 
 /// Осноные клиентские события
 /// auth.init

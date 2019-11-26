@@ -414,6 +414,7 @@ mp.events.add("entityStreamOut", (entity) => {
 });
 
 mp.events.add("time.main.tick", () => {
+    var start = Date.now();
     var player = mp.players.local;
     var value = player.getArmour();
     mp.inventory.setArmour(value);
@@ -423,9 +424,11 @@ mp.events.add("time.main.tick", () => {
     mp.objects.forEach(obj => {
         if (obj.getVariable("groundItem")) mp.utils.setNoCollision(obj, true);
     });
+    mp.timeMainChecker.modules.inventory = Date.now() - start;
 });
 
 mp.events.add("render", () => {
+    var start = Date.now();
     mp.inventory.disableControlActions();
 
     var player = mp.players.local;
@@ -441,6 +444,7 @@ mp.events.add("render", () => {
         mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
         mp.game.controls.disableControlAction(0, 140, true); /// удары R
     }
+    if (mp.renderChecker) mp.utils.drawText2d(`inventory rend: ${Date.now() - start} ms`, [0.8, 0.59]);
 });
 
 mp.events.addDataHandler("trunk", (vehicle, value) => {

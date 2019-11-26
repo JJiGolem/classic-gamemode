@@ -613,6 +613,7 @@ mp.events.add({
         });
     },
     "render": () => {
+        var start = Date.now();
         mp.world.debugObjects.forEach(obj => {
             if (!obj.db) return;
             var pos2d = mp.game.graphics.world3dToScreen2d(obj.marker.position);
@@ -630,5 +631,6 @@ mp.events.add({
             }
             mp.utils.drawText2d(text, [0.5, 0.8]);
         }
+        if (mp.renderChecker) mp.utils.drawText2d(`world rend: ${Date.now() - start} ms`, [0.8, 0.71]);
     },
 });
