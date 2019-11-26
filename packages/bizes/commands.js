@@ -52,9 +52,8 @@ module.exports = {
             if (biz == null) {
                 return out.error("Подойдите ближе к бизнесу", player);
             }
-            let factId = parseInt(args[0]);
-            if (factions.getFaction(factId) == null) return out.error("Фракции с таким id не существует", player);
-            biz.info.factionId = factId;
+            if (factions.getFaction(args[0]) == null) return out.error("Фракции с таким id не существует", player);
+            biz.info.factionId = args[0];
             biz.info.save();
         }
     },
