@@ -24,6 +24,8 @@ mp.events.add('time.minute.tick', () => {
     mp.discord.update('Classic Roleplay', 'classic-rp.ru');
 });
 
+// Чекер нагрузки render'ов в модулях
+mp.renderChecker = false;
 
 /// Осноные клиентские события
 /// auth.init

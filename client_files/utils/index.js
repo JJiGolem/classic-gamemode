@@ -479,6 +479,7 @@ mp.events.add("addOverheadText", (playerId, text, color) => {
 
 /// Отключение движения игрока
 mp.events.add('render', () => {
+    var start = Date.now();
     if (playerMovingDisabled) {
         mp.game.controls.disableControlAction(0, 21, true); /// бег
         mp.game.controls.disableControlAction(0, 22, true); /// прыжок
@@ -506,4 +507,5 @@ mp.events.add('render', () => {
             mp.utils.drawText2d(info.text, [pos2d.x, pos2d.y], info.color, info.scale);
         }
     });
+    if (mp.renderChecker) mp.utils.drawText2d(`utils rend: ${Date.now() - start} ms`, [0.8, 0.65]);
 });

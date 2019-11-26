@@ -426,6 +426,7 @@ mp.events.add("time.main.tick", () => {
 });
 
 mp.events.add("render", () => {
+    var start = Date.now();
     mp.inventory.disableControlActions();
 
     var player = mp.players.local;
@@ -441,6 +442,7 @@ mp.events.add("render", () => {
         mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
         mp.game.controls.disableControlAction(0, 140, true); /// удары R
     }
+    if (mp.renderChecker) mp.utils.drawText2d(`inventory rend: ${Date.now() - start} ms`, [0.8, 0.59]);
 });
 
 mp.events.addDataHandler("trunk", (vehicle, value) => {

@@ -573,6 +573,7 @@ mp.events.addDataHandler("hood", (vehicle, value) => {
 });
 
 mp.events.add('render', () => {
+    var start = Date.now();
     mp.vehicles.forEachInStreamRange((vehicle) => {
         if (mp.vdist(mp.players.local.position, vehicle.position) > 10) return;
         if (vehicle.getVariable('label')) {
@@ -603,6 +604,7 @@ mp.events.add('render', () => {
         mp.game.controls.disableControlAction(0, 72, true); /// INPUT_VEH_BRAKE
         // mp.game.controls.disableControlAction(0, 75, true); /// INPUT_VEH_EXIT
     }
+    if (mp.renderChecker) mp.utils.drawText2d(`vehicles rend: ${Date.now() - start} ms`, [0.8, 0.67]);
 });
 
 mp.events.add('vehicles.add.menu.show', () => {

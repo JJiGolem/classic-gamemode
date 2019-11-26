@@ -66,7 +66,7 @@ const checkConditions = () => {
         isHaveRod &&
         !isDead &&
         localPlayer.hands && localPlayer.hands.itemId == 5 &&
-        !isEnter && 
+        !isEnter &&
         !localPlayer.isSwimming() &&
         !localPlayer.vehicle &&
         !localPlayer.getVehicleIsTryingToEnter() &&
@@ -90,6 +90,7 @@ mp.events.add('characterInit.done', () => {
 });
 
 mp.events.add('render', () => {
+    var start = Date.now();
     if (checkConditions()) {
         if (!isIntervalCreated) {
             isIntervalCreated = true;
@@ -129,6 +130,8 @@ mp.events.add('render', () => {
             if (!isEnter) bindButtons(false);
         }
     }
+
+    if (mp.renderChecker) mp.utils.drawText2d(`fishing rend: ${Date.now() - start} ms`, [0.8, 0.55]);
 });
 
 mp.events.add('inventory.initItems', (items) => {
