@@ -58,6 +58,11 @@ class Dialogs extends Component {
 
         if (dialog.PhoneMessages.length !== 0) {
             lastMessage = dialog.PhoneMessages[dialog.PhoneMessages.length - 1].text;
+
+            if (lastMessage.length > 12) {
+                lastMessage = lastMessage.slice(0, 12) + '...';
+            }
+
             countNotReadMessages = dialog.PhoneMessages.filter(message => !message.isRead).length;
         }
 

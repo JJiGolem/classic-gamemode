@@ -11,7 +11,6 @@ package-lock.json
 server.exe
 server
 .listcache
-dlcpacks
 .VSCodeCounter
 .idea
 client_packages
