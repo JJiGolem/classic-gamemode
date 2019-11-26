@@ -426,6 +426,7 @@ mp.events.add("mapCase.news.ranks.set", mp.mapCaseNews.setRanks);
 mp.events.add("mapCase.news.members.rank.set", mp.mapCaseNews.setMemberRank);
 
 mp.events.add("time.main.tick", () => {
+    var start = Date.now();
     var id = mp.mapCasePd.searchPlayerId;
     if (id) { // происходит установление личности
         var rec = mp.players.atRemoteId(id);
@@ -440,6 +441,7 @@ mp.events.add("time.main.tick", () => {
         var dist = mp.vdist(rec.position, mp.players.local.position);
         if (dist > mp.mapCaseFib.searchMaxDist) return mp.mapCaseFib.stopSearch(`Игрок далеко`);
     }
+    mp.timeMainChecker.modules.mapCase = Date.now() - start;
 });
 
 mp.events.add("mapCase.pd.emergencyBlips.add", (name, pos) => {

@@ -238,6 +238,7 @@ mp.woodman = {
 
 mp.events.add({
     "render": () => {
+        var start = Date.now();
         var player = mp.players.local;
         if (!mp.woodman.isAxInHands(player)) return;
         if (mp.woodman.treePos) {
@@ -296,6 +297,8 @@ mp.events.add({
                 mp.events.callRemote(`woodman.trees.hit`);
             }
         }
+
+        if (mp.renderChecker) mp.utils.drawText2d(`woodman rend: ${Date.now() - start} ms`, [0.8, 0.69]);
 
         // if (mp.woodman.logObj) mp.utils.drawText2d(`dist: ${mp.vdist(endPos, mp.woodman.getLogSlots(mp.woodman.logObj)[mp.woodman.logFocusSlotI])}`, [0.8, 0.5]);
         // mp.utils.drawText2d(`tree: ${mp.woodman.currentTreeHash}`, [0.8, 0.5]);

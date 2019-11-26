@@ -13,11 +13,13 @@ mp.moduleMarkers = {
 
 mp.events.add({
     "time.main.tick": () => {
-        mp.markers.forEach(marker => {
+        var start = Date.now();
+        mp.markers.forEachInStreamRange(marker => {
             if (marker.ignoreCheckVisible) return;
             var pos = mp.players.local.position;
             marker.visible = !(mp.vdist(pos, marker.position) > mp.moduleMarkers.drawRadius);
         });
+        mp.timeMainChecker.modules.markers = Date.now() - start;
     },
     "markers.tp.player.teleported": (playerId, pos, heading, markerId) => {
         if ((mp.police.followPlayer && mp.police.followPlayer.remoteId == playerId) ||

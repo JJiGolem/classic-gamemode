@@ -129,6 +129,7 @@ mp.events.add({
         mp.police.searchBlipCreate(name, pos);
     },
     "time.main.tick": () => {
+        var start = Date.now();
         if (mp.police.followPlayer) {
             var pos = mp.police.followPlayer.position;
             var localPos = mp.players.local.position;
@@ -150,6 +151,7 @@ mp.events.add({
                 rec.taskPlayAnim('mp_arresting', 'idle', 1, 0, -1, 49, 0, false, false, false);
             });
         });
+        mp.timeMainChecker.modules.police = Date.now() - start;
     },
     "entityStreamOut": (entity) => {
         if (entity.type != "player") return;
