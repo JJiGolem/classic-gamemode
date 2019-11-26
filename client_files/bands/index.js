@@ -200,6 +200,7 @@ mp.events.add({
         mp.bands.setStorageInfo(data);
     },
     "render": () => {
+        if (!mp.bands.zonesShow) return;
         mp.bands.bandZones.forEach(blip => {
             mp.game.invoke(mp.bands.natives.SET_BLIP_ROTATION, blip, 0);
         });
