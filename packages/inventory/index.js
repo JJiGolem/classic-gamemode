@@ -392,12 +392,12 @@ module.exports = {
     async addPlayerItem(player, item, parentId, pocketIndex, index) {
         // console.log(`addPlayerItem`)
         var nextWeight = this.getCommonWeight(player) + this.getItemWeight(player, item);
-        if (nextWeight > this.maxPlayerWeight) return debug(`Превышение по весу (${nextWeight.toFixed(2)} из ${this.maxPlayerWeight} кг)`);
+        // if (nextWeight > this.maxPlayerWeight) return debug(`Превышение по весу (${nextWeight.toFixed(2)} из ${this.maxPlayerWeight} кг)`);
         var place = player.inventory.place;
         var params = this.getParamsValues(item);
         if (params.weaponHash) {
             var weapon = this.getItemByItemId(player, item.itemId);
-            if (weapon) return notifs.error(player, `Оружие ${this.getName(item.itemId)} уже имеется`, `Инвентарь`);
+            // if (weapon) return notifs.error(player, `Оружие ${this.getName(item.itemId)} уже имеется`, `Инвентарь`);
             // if (parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
         }
         var struct = [];
