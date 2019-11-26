@@ -1,0 +1,73 @@
+#medicalCard {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 23.3vh;
+    width: 39.3vh;
+    transform: translate(-50%, -47%);
+    background-image: url(../img/medicalCard/bg.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: Montserrat;
+}
+
+#medicalCard .identifier {
+    font-weight: 500;
+    font-size: 1.5vh;
+    position: absolute;
+    bottom: 2.2vh;
+    left: 4vh;
+    color: transparent;
+    background: #BFBFBF;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: #F8F8F8aa;
+    -webkit-text-stroke-width: 0.4vh;
+    text-shadow: 0.1vh 0.1vh 0.2vh #000;
+    letter-spacing: 0.5vh;
+}
+
+#medicalCard .sign {
+    position: absolute;
+    bottom: 2vh;
+    right: 4vh;
+    color: #466DD0;
+    font-family: HerrVonMuellerhoff;
+    font-size: 2vh;
+}
+
+#medicalCard .cancel {
+    position: absolute;
+    top: 1.3vh;
+    right: 2.3vh;
+    height: 1vh;
+    width: 1vh;
+}
+
+#medicalCard .cancel:hover path {
+    fill: #E8E8E8;
+}
+
+#medicalCard .info {
+    position: relative;
+    top: 7.6vh;
+    left: 3.8vh;
+}
+
+#medicalCard .info .name {
+    font-weight: 700;
+    font-size: 1.84vh;
+}
+
+#medicalCard .info div:nth-child(2) {
+    margin-top: 1vh;
+}
+
+#medicalCard .info div:nth-child(3),
+#medicalCard .info div:nth-child(4) {
+    margin-top: 0.6vh;
+}
+
+#medicalCard .info span {
+    font-weight: 700;
+    font-size: 1.33vh;
+}

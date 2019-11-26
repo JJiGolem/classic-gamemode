@@ -1,0 +1,94 @@
+#governmentBadge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 55.2vh;
+    width: 39vh;
+    transform: translate(-50%, -50%);
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: Ubuntu;
+}
+
+#governmentBadge .identifier {
+    position: absolute;
+    font-weight: 700;
+    font-size: 2vh;
+    left: 5.1vh;
+    top: 18.4vh;
+}
+
+#governmentBadge .name {
+    position: absolute;
+    font-weight: 500;
+    font-size: 1.7vh;
+    top: 10.4vh;
+    left: 4.9vh;
+}
+
+#governmentBadge .sign {
+    position: absolute;
+    top: 19.1vh;
+    right: 6.3vh;
+    color: #466DD0;
+    font-family: HerrVonMuellerhoff;
+    font-size: 2vh;
+}
+
+#governmentBadge .cancel {
+    position: absolute;
+    top: 1vh;
+    right: 1.1vh;
+    height: 1vh;
+    width: 1vh;
+}
+
+#governmentBadge .info {
+    position: absolute;
+    top: 13.1vh;
+    left: 4.9vh;
+    font-size: 1.4vh;
+    line-height: 2vh;
+}
+
+#governmentBadge .info span {
+    font-weight: 700;
+}
+
+#governmentBadge.fib {
+    background-image: url(../img/governmentBadge/FIB.svg);
+}
+
+#governmentBadge.fib .identifier {
+    right: 5vh;
+    top: 10vh;
+}
+
+#governmentBadge.fib .name {
+    top: 16.7vh;
+    left: 5vh;
+}
+
+#governmentBadge.fib .rank {
+    position: absolute;
+    top: 19.1vh;
+    left: 5vh;
+    font-size: 1.5vh;
+}
+
+#governmentBadge.fib .d-sign {
+    position: absolute;
+    bottom: 6.4vh;
+    left: 8.6vh;
+    color: #466DD0;
+    font-family: HerrVonMuellerhoff;
+    font-size: 2vh;
+}
+
+#governmentBadge.lspd {
+    background-image: url(../img/governmentBadge/LSPD.svg);
+}
+
+#governmentBadge.bcsd {
+    background-image: url(../img/governmentBadge/BCSD.svg);
+}
