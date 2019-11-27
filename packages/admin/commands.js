@@ -21,9 +21,9 @@ module.exports = {
     "/ans": {
         access: 1,
         description: "Ответ игроку",
-        args: "[id] [сообщение]",
+        args: "[id]:n [сообщение]:s",
         handler: (player, args) => {
-            let target = mp.players.at(parseInt(args[0]));
+            let target = mp.players.at(args[0]);
             if (!target) return player.call('notifications.push.error', ['Игрок не найден', 'Ошибка']);
             args.shift();
             mp.events.call('admin.notify.all.split', args.join(' '), `!{#f29f53}[A] ${player.name}[${player.id}] > ${target.name}[${target.id}]: `);

@@ -40,7 +40,7 @@ class CreateOrder extends Component {
         const { business } = this.props;
 
         if (price) {
-            if (!isNaN(price) && parseInt(price) <= business.resourcePriceMax && parseInt(price) >= business.resourcePriceMin) {
+            if (!isNaN(price) && parseFloat(price) <= business.resourcePriceMax && parseFloat(price) >= business.resourcePriceMin) {
                 this.setState({ errorPrice: '' });
                 return true;
             } else {

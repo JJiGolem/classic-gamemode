@@ -244,19 +244,25 @@ module.exports = {
         if (!inventory.isInHands(adrenalin) || adrenalin.itemId != 26) return notifs.error(player, `${inventory.getName(26)} не в руках`, header);
         var count = inventory.getParam(adrenalin, 'count').value;
         if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
+        if (factions.isHospitalFaction(player.character.factionId)) {
+            if (rec.character.cash < hospital.knockedPrice) return notifs.error(player, `Игрок не имеет $${hospital.knockedPrice}`, header);
+            money.moveCash(rec, player, hospital.knockedPrice, (res) => {
+                if (!res) return notifs.error(player, `Ошибка передачи денег`, header);
 
-        rec.spawn(rec.position);
-        rec.health = 10;
-        death.removeKnocked(rec);
-        mp.events.call(`mapCase.ems.calls.remove`, rec, rec.character.id);
+                rec.spawn(rec.position);
+                rec.health = 10;
+                death.removeKnocked(rec);
+                mp.events.call(`mapCase.ems.calls.remove`, rec, rec.character.id);
 
-        count--;
-        if (!count) inventory.deleteItem(player, adrenalin);
-        else inventory.updateParam(player, adrenalin, 'count', count);
+                count--;
+                if (!count) inventory.deleteItem(player, adrenalin);
+                else inventory.updateParam(player, adrenalin, 'count', count);
 
-        notifs.success(player, `${rec.name} реанимирован`, header);
-        notifs.success(rec, `${player.name} вас реанимировал`, header);
-        inventory.notifyOverhead(player, `Использовал '${inventory.getName(adrenalin.itemId)}'`);
+                notifs.success(player, `${rec.name} реанимирован`, header);
+                notifs.success(rec, `${player.name} вас реанимировал`, header);
+                inventory.notifyOverhead(player, `Использовал '${inventory.getName(adrenalin.itemId)}'`);
+            }, `Реанимирован игроком ${player.name}`, `Реанимировал игрока ${rec.name}`);
+        }
     },
     // вылечиться пластырем
     "inventory.item.patch.use": (player, sqlId) => {
@@ -635,6 +641,18 @@ module.exports = {
         mp.events.call("faction.holder.items.destroy", player);
         mp.events.call("faction.holder.items.clear", player);
         mp.events.call("faction.holder.items.init", player);
+    },
+    "playerDeath": (player) => {
+        if (!player.character) return;
+
+        var handsItem = inventory.getHandsItem(player);
+        if (!handsItem || !inventory.isWeaponItem(handsItem)) return;
+
+        var params = inventory.getParamsValues(handsItem);
+        if (params.ammo == null) return;
+        if (player.weapon == params.weaponHash && params.ammo != player.weaponAmmo) {
+            inventory.updateParam(player, handsItem, 'ammo', player.weaponAmmo);
+        }
     },
     "death.spawn": (player, groundZ, dimension) => {
         if (!player.character) return;
