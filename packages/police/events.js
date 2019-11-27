@@ -19,8 +19,9 @@ module.exports = {
         if (!player.character.arrestTime) return;
 
         var time = player.character.arrestTime;
-        if (player.character.arrestType == 0) police.startCellArrest(player, null, time);
+        if (player.character.arrestType == 0) police.startLSCellArrest(player, null, time);
         else if (player.character.arrestType == 1) police.startJailArrest(player, null, time);
+        else if (player.character.arrestType == 2) police.startBCCellArrest(player, null, time);
 
         if (!factions.isPoliceFaction(player.character.factionId)) return;
         mp.events.call(`mapCase.pd.init`, player);
@@ -533,7 +534,8 @@ module.exports = {
 
         if (!rec.character.wanted) return notifs.error(player, `${rec.name} не преступник`, `Арест`);
 
-        var cell = police.getNearCell(player);
+        var cell = police.getNearLSCell(player);
+        if (!cell) police.getNearBCCell(player);
         if (!cell) return notifs.error(player, `Вы далеко от камеры`, `Арест`);
         if (rec.cuffs) {
             var params = {
@@ -547,7 +549,7 @@ module.exports = {
 
         var time = police.arrestTime * rec.character.wanted;
         rec.character.arrestTime = time;
-        police.startCellArrest(rec, cell, time);
+        police.startLSCellArrest(rec, cell, time);
         notifs.info(rec, `${player.name} посадил вас в КПЗ`, `Арест`);
         notifs.success(player, `Вы посадили ${rec.name} к КПЗ`, `Арест`);
 
@@ -601,7 +603,7 @@ module.exports = {
 
         var time = police.arrestTime * player.character.wanted;
         player.character.arrestTime = time;
-        police.startCellArrest(player, null, time);
+        police.startLSCellArrest(player, null, time);
     },
     "police.vehicle.put": (player, recId) => {
         var header = `Посадка`;
@@ -697,7 +699,7 @@ module.exports = {
     "playerQuit": (player) => {
         if (!player.character) return;
         if (!player.character.arrestTime) return;
-        var date = (player.character.arrestType == 0) ? player.cellArrestDate : player.jailArrestDate;
+        var date = ([0, 2].includes(player.character.arrestType)) ? player.cellArrestDate : player.jailArrestDate;
         var time = Date.now() - date;
         player.character.arrestTime -= time;
         player.character.save();
