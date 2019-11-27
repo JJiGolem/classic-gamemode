@@ -421,9 +421,9 @@ mp.events.add("time.main.tick", () => {
     if (mp.busy.includes("lostAttach")) return;
     mp.inventory.setHandsBlock(player.vehicle != null);
 
-    mp.objects.forEach(obj => {
-        if (obj.getVariable("groundItem")) mp.utils.setNoCollision(obj, true);
-    });
+    // mp.objects.forEach(obj => {
+    //     if (obj.getVariable("groundItem")) mp.utils.setNoCollision(obj, true);
+    // });
     mp.timeMainChecker.modules.inventory = Date.now() - start;
 });
 
