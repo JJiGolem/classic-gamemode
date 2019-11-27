@@ -19,7 +19,7 @@ mp.anticheat = {
     checkWeapon() {
         if (!this.weapon) return;
         var player = mp.players.local;
-        if (player.weapon == 2725352035) return;
+        if (player.weapon == 2725352035 || !player.weapon) return;
         if (mp.weapons.hashes.length && mp.weapons.hashes[0] == player.weapon) return;
 
         this.trigger(`weapon`, `Начитерил ган ${mp.weapons.getWeaponName(player.weapon) || ''}`);
