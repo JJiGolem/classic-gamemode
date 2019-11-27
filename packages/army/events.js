@@ -198,8 +198,8 @@ module.exports = {
             };
         }
 
-        params.faction = character.factionId;
-        params.owner = character.id;
+        // params.faction = character.factionId;
+        // params.owner = character.id;
         params.health = 100;
         params.pockets = '[3,3,3,3,3,3,3,3,10,5,3,5,10,3,3,3]';
         params.sex = character.gender ? 0 : 1;
