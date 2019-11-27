@@ -21,9 +21,16 @@
 
 @font-face {
     font-family: Montserrat;
-    src: url("../fonts/Montserrat/Montserrat.ttf");
+    src: url("../fonts/Montserrat/Montserrat-Regular.ttf");
     font-style: normal;
-    font-weight: normal;
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: Montserrat;
+    src: url("../fonts/Montserrat/Montserrat-Medium.ttf");
+    font-style: normal;
+    font-weight: 500;
 }
 
 @font-face {

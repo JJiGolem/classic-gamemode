@@ -276,7 +276,7 @@
     display: grid;
     grid-template-columns: 1fr min-content;
     text-align: right;
-    font-weight: bold;
+    font-weight: 500;
     font-size: 1.5vh;
     line-height: 3.3vh;
 }
@@ -355,7 +355,7 @@
     background-color: #F0F0F0;
     margin: -1px 0px;
     color: #686868;
-    font-weight: bold;
+    font-weight: 500;
     font-size: 1.4vh;
     line-height: 1.9vh;
     overflow: hidden;
@@ -377,7 +377,7 @@
     font-size: 1.5vh;
     width: 90%;
     text-align: center;
-    line-height: 2.6vh;
+    line-height: 2.8vh;
 }
 
 #map-case .body .board .table .tbody .record:hover .btn,
@@ -431,7 +431,7 @@
 #map-case .members .action-modal .btn {
     text-align: center;
     font-size: 1.5vh;
-    font-weight: bold;
+    font-weight: 500;
     height: 3vh;
     border-radius: 0.5vh;
     line-height: 3vh;
