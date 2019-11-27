@@ -14,7 +14,7 @@ module.exports = {
         console.log(`[ANTICHEAT] Параметры загружены (${this.params.length} шт.)`);
     },
     trigger(player, name, reason) {
-        var text = `!{#ff0000} ANTICHEAT (${name}): ${player.name} (${reason})`;
+        var text = `!{#ff0000} ANTICHEAT (${name}): ${player.name}[${player.id}] (${reason})`;
         var param = this.params.find(x => x.name == name);
         if (param) {
             if (param.punish == 'kick') {
