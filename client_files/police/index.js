@@ -21,6 +21,23 @@ mp.police = {
         SET_BLIP_ALPHA: "0x45FF974EEE1C8734",
         SET_BLIP_COLOUR: "0x03D7FB09E75D6B7E",
     },
+    jailInfo: {
+        // КПЗ ЛСПД
+        0: {
+            coords: new mp.Vector3(459.35162353515625, -997.807373046875, 24.914854049682617),
+            radius: 10,
+        },
+        // тюрьма за городом
+        1: {
+            coords: new mp.Vector3(1689.7947998046875, 2598.755859375, 45.56488800048828),
+            radius: 200,
+        },
+        // КПЗ ЛССД
+        2: {
+            coords: new mp.Vector3(-439.4527282714844, 5989.65185546875, 31.716529846191406),
+            radius: 10,
+        },
+    },
 
     setArrest(arrestType) {
         this.arrestType = arrestType;

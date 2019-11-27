@@ -332,7 +332,7 @@
 }
 
 #player-menu .body .skills .arrow img:hover {
-    filter: drop-shadow(0 0 1vh rgba(255, 223, 41, 0.5));
+    filter: drop-shadow(0 0 0.5vh rgba(255, 223, 41, 0.5));
 }
 
 #player-menu .body .skills .arrow .disable {
