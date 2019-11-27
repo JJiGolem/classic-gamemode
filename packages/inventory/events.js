@@ -642,6 +642,18 @@ module.exports = {
         mp.events.call("faction.holder.items.clear", player);
         mp.events.call("faction.holder.items.init", player);
     },
+    "playerDeath": (player) => {
+        if (!player.character) return;
+
+        var handsItem = inventory.getHandsItem(player);
+        if (!handsItem || !inventory.isWeaponItem(handsItem)) return;
+
+        var params = inventory.getParamsValues(handsItem);
+        if (params.ammo == null) return;
+        if (player.weapon == params.weaponHash && params.ammo != player.weaponAmmo) {
+            inventory.updateParam(player, handsItem, 'ammo', player.weaponAmmo);
+        }
+    },
     "death.spawn": (player, groundZ, dimension) => {
         if (!player.character) return;
 
