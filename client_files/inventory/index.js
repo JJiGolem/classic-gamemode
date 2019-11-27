@@ -209,13 +209,13 @@ mp.inventory = {
     hands(player, itemId) {
         if (!this.itemsInfo) return;
 
-        player.taskSwapWeapon(true)
         if (player.hands) {
             var oldAnim = this.itemsInfo[player.hands.itemId].attachInfo.anim;
             if (oldAnim) {
-                if (mp.players.local.remoteId == player.remoteId) player.stopAnimTask(oldAnim.dict, oldAnim.name, 3);
+                var a = this.animData[oldAnim].split(" ");
+                if (mp.players.local.remoteId == player.remoteId) player.stopAnimTask(a[0], a[1], 3);
                 else player.clearTasksImmediately();
-            }
+            } else player.taskSwapWeapon(true)
             if (mp.objects.exists(player.hands.object)) {
                 player.hands.object.destroy();
                 delete player.hands;
@@ -239,7 +239,7 @@ mp.inventory = {
                 mp.utils.requestAnimDict(a[0], () => {
                     player.taskPlayAnim(a[0], a[1], 8, 0, -1, 49, 0, false, false, false);
                 });
-            }
+            } else player.taskSwapWeapon(true)
             player.hands = {
                 object: object,
                 itemId: itemId
