@@ -4,6 +4,7 @@ let inventory = call('inventory');
 let jobs = call('jobs');
 let money = call('money');
 let notifs = call('notifications');
+let timer = call('timer');
 let utils = call('utils');
 
 module.exports = {
@@ -288,6 +289,18 @@ module.exports = {
         logColshape.obj = obj;
         logColshape.tree = colshape.db;
         logColshape.squats = [100, 100, 100, 100, 100];
+
+        var objId = obj.id;
+        obj.isLog = true;
+        obj.destroyTimer = timer.add(() => {
+            try {
+                var obj = mp.objects.at(objId);
+                if (!obj || !obj.isLog) return;
+                obj.destroy();
+            } catch (e) {
+                console.log(e);
+            }
+        }, inventory.groundItemTime);
     },
     hitLog(player, colshape, index) {
         var header = `Лесоруб`;

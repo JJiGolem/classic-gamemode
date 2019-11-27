@@ -397,7 +397,7 @@ module.exports = {
         }, () => {
             var pay = farm.tractorPay;
             player.farmJob.pay += pay;
-            notifs.success(player, `Полея засеяно. Премия $${pay}`, header);
+            notifs.success(player, `Поле засеяно. Премия $${pay}`, header);
             farms.fillField(field, veh.products.type);
             veh.setVariable("label", null);
             delete veh.products;
