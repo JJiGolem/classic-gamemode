@@ -292,10 +292,13 @@ module.exports = {
 
         var objId = obj.id;
         obj.isLog = true;
+        obj.colshape = logColshape;
         obj.destroyTimer = timer.add(() => {
             try {
                 var obj = mp.objects.at(objId);
                 if (!obj || !obj.isLog) return;
+
+                obj.colshape.destroy();
                 obj.destroy();
             } catch (e) {
                 console.log(e);
