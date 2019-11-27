@@ -11,10 +11,10 @@ const MAX_BREAK_LEVEL = 2;
 const NO_BREAK_DAYS = 2;
 
 let breakdownConfig = {
-    engineState: 0.004,
+    engineState: 0.001,
     fuelState: 0.004,
-    steeringState: 0.004,
-    brakeState: 0.004
+    steeringState: 0.003,
+    brakeState: 0.001
 };
 
 let houses;
@@ -390,18 +390,21 @@ module.exports = {
             let date = veh.regDate;
             let now = new Date();
             let diff = (now - date) / (1000 * 60 * 60 * 24);
-            if (diff < NO_BREAK_DAYS) return console.log('[DEBUG] Новая машина, не ломаем')
+            if (diff < NO_BREAK_DAYS) return;
         }
-        //let multiplier = 10;
+        if (veh.mileage < 4000) return;
+        if (veh.properties.price > 100000 && veh.mileage < 8000) return;
+        if (veh.properties.price > 1000000 && veh.mileage < 12000) return;
+
         let toUpdate = false;
         for (let key in breakdownConfig) {
             if (veh[key] < MAX_BREAK_LEVEL) {
-                console.log(`[DEBUG] Пытаемся сломать ${key} у ${veh.properties.name}`);
+                //console.log(`[DEBUG] Пытаемся сломать ${key} у ${veh.properties.name}`);
                 let random = Math.random();
                 if (random < breakdownConfig[key] * multiplier) {
                     veh[key]++;
                     toUpdate = true;
-                    console.log(`[DEBUG] сломали ${key}`);
+                    //console.log(`[DEBUG] сломали ${key}`);
                 }
             }
         }
