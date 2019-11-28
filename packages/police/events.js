@@ -535,7 +535,7 @@ module.exports = {
         if (!rec.character.wanted) return notifs.error(player, `${rec.name} не преступник`, `Арест`);
 
         var cell = police.getNearLSCell(player);
-        if (!cell) police.getNearBCCell(player);
+        if (!cell) cell = police.getNearBCCell(player);
         if (!cell) return notifs.error(player, `Вы далеко от камеры`, `Арест`);
         if (rec.cuffs) {
             var params = {
