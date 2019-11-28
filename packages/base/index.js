@@ -104,6 +104,7 @@ db.connect(function() {
 });
 
 mp.events.add("playerJoin", (player) => {
+    mp.events.call("player.joined", player);
     player.dimension = player.id + 1;
 });
 
