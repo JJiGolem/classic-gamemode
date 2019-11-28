@@ -88,11 +88,11 @@ db.connect(function() {
     fs.readdirSync(path.dirname(__dirname)).forEach(file => {
         if (!ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname)+ "/" + file + "/events.js")) {
             let events = require('../' + file + '/events');
-            mp.events.add(events);
-            activeServerModules.push(file);
-            if (events["init"] != null) {
-                modulesToLoad.push(file);
-            }
+            // mp.events.add(events);
+            // activeServerModules.push(file);
+            // if (events["init"] != null) {
+            //     modulesToLoad.push(file);
+            // }
         }
     });
 
