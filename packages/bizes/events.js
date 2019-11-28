@@ -17,7 +17,7 @@ module.exports = {
         await bizService.init();
         inited(__dirname);
     },
-    "playerJoin": (player) => {
+    "player.joined": (player) => {
         player.biz = {
             at: null,
             buyerId: null,

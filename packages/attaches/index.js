@@ -32,7 +32,7 @@ function _hasAttachment(attachmentName) {
     return this._attachments.indexOf((typeof (attachmentName) === 'string') ? mp.joaat(attachmentName) : attachmentName) !== -1;
 }
 
-mp.events.add("playerJoin", (player) => {
+mp.events.add("player.joined", (player) => {
     player._attachments = [];
 
     player.addAttachment = _addAttachmentWrap;

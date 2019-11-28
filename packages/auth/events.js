@@ -13,7 +13,7 @@ module.exports = {
         inited(__dirname);
     },
     /// Заморозка игрока перед авторизацией
-    'playerJoin': async (player) => {
+    'player.joined': async (player) => {
         player.dimension = player.id + 1;
 
         if (!whitelist.isEmpty) {

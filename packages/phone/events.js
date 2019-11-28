@@ -14,7 +14,7 @@ module.exports = {
         await phone.init();
         inited(__dirname);
     },
-    'playerJoin': player => {
+    'player.joined': player => {
         player.phoneState = {
             talkWithId: null,
             callTimer: null
