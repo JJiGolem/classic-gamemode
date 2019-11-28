@@ -182,6 +182,8 @@ var interactionMenu = new Vue({
                         interactionMenu.menu = interactionMenu.menus["army"];
                     } else if (item.text == 'Weazel News') {
                         interactionMenu.menu = interactionMenu.menus["news"];
+                    } else if (item.text == 'Band') {
+                        interactionMenu.menu = interactionMenu.menus["band"];
                     } else if (item.text == 'Mafia') {
                         interactionMenu.menu = interactionMenu.menus["mafia"];
                     } else if (item.text == 'Бросить кости') {
@@ -430,11 +432,27 @@ var interactionMenu = new Vue({
                     mp.trigger(`interactionMenu.onClick`, this.name, item.text);
                 }
             },
+            "band": {
+                name: "band",
+                items: [{
+                    text: "Ограбить",
+                    icon: "rob.svg"
+                }],
+                handler(index) {
+                    var item = this.items[index];
+                    mp.trigger(`interaction.menu.close`);
+                    mp.trigger(`interactionMenu.onClick`, this.name, item.text);
+                }
+            },
             "mafia": {
                 name: "mafia",
                 items: [{
                         text: "Продать крышу",
                         icon: "roof.svg"
+                    },
+                    {
+                        text: "Ограбить",
+                        icon: "rob.svg"
                     },
                     {
                         text: "Связать",
@@ -517,6 +535,7 @@ var interactionMenu = new Vue({
                 this.deleteItem("player_interaction", "Hospital");
                 this.deleteItem("player_interaction", "Army");
                 this.deleteItem("player_interaction", "Weazel News");
+                this.deleteItem("player_interaction", "Band");
                 this.deleteItem("player_interaction", "Mafia");
                 this.deleteItem("player_ownmenu", "Организация");
                 this.deleteItem("player_ownmenu", "Учения");
@@ -600,12 +619,19 @@ var interactionMenu = new Vue({
             }
 
             if (val >= 8 && val <= 11) { // bands
-                var item = {
+                this.addItems("player_interaction", {
+                    text: "Band",
+                    icon: "band.svg"
+                });
+                this.addItems("player_ownmenu", {
                     text: "Захват",
                     icon: "war.svg"
-                };
-                this.addItems("player_ownmenu", item);
-            } else this.deleteItem("player_ownmenu", "Захват");
+                });
+            } else {
+                this.deleteItem("player_interaction", "Band");
+                this.deleteItem("player_ownmenu", "Захват");
+            }
+
             if (val >= 12 && val <= 14) { // mafia
                 this.addItems("player_interaction", {
                     text: "Mafia",

@@ -148,6 +148,13 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
         if (itemName == 'Эфир') {
             mp.events.callRemote(`news.stream.member`, entity.remoteId);
         }
+    } else if (menuName == "band") {
+        if (!entity) return;
+        if (entity.type != 'player') return;
+
+        if (itemName == 'Ограбить') {
+            mp.events.callRemote(`bands.rob`, entity.remoteId);
+        }
     } else if (menuName == "mafia") {
         if (!entity) return;
         if (entity.type != 'player') return;
@@ -155,6 +162,8 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
         if (itemName == 'Продать крышу') {
             mp.callCEFV(`inputWindow.playerId = ${entity.remoteId}`);
             mp.callCEFV(`inputWindow.showByName('mafia_power_sell')`);
+        } else if (itemName == 'Ограбить') {
+            mp.events.callRemote(`bands.rob`, entity.remoteId);
         } else if (itemName == 'Связать') {
             var data = {
                 recId: entity.remoteId
