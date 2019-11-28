@@ -36,7 +36,7 @@ module.exports = {
 
         if (bands.robLogs[player.character.id]) {
             var diff = Date.now() - bands.robLogs[player.character.id];
-            var wait = bands.robWaitTime;
+            var wait = bands.robBandWaitTime;
             if (diff < wait) return out(`Повторное ограбление доступно через ${parseInt((wait - diff) / 1000)} сек.`);
         }
 
@@ -47,7 +47,7 @@ module.exports = {
 
         if (bands.robLogs[rec.character.id]) {
             var diff = Date.now() - bands.robLogs[rec.character.id];
-            var wait = bands.robWaitTime;
+            var wait = bands.robVictimWaitTime;
             if (diff < wait) return out(`Ограбить игрока можно через ${parseInt((wait - diff) / 1000)} сек.`);
         }
 
