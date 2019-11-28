@@ -255,10 +255,10 @@ module.exports = {
                 money.addCash(player, hospital.knockedPrice, (res) => {
                     if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
                 }, `Реанимировал игрока ${rec.name}`);
+                hospital.knockedLogs[rec.character.id] = Date.now();
             }
         }
 
-        hospital.knockedLogs[rec.character.id] = Date.now();
         rec.spawn(rec.position);
         rec.health = 10;
         death.removeKnocked(rec);
