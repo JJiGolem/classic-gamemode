@@ -140,14 +140,14 @@ module.exports = {
         if (topParams.dTexture == -1) delete topParams.dTexture;
         if (topParams.tTexture == -1) delete topParams.tTexture;
 
-        hatParams.faction = faction.id;
-        topParams.faction = faction.id;
-        legsParams.faction = faction.id;
-        feetsParams.faction = faction.id;
-        earsParams.faction = faction.id;
-        tiesParams.faction = faction.id;
-        masksParams.faction = faction.id;
-        glassesParams.faction = faction.id;
+        // hatParams.faction = faction.id;
+        // topParams.faction = faction.id;
+        // legsParams.faction = faction.id;
+        // feetsParams.faction = faction.id;
+        // earsParams.faction = faction.id;
+        // tiesParams.faction = faction.id;
+        // masksParams.faction = faction.id;
+        // glassesParams.faction = faction.id;
 
         topParams.pockets = '[5,5,5,5,10,5]';
         legsParams.pockets = '[5,5,5,5,10,5]';
@@ -157,15 +157,15 @@ module.exports = {
         feetsParams.clime = '[-5,30]';
         topParams.name = `Рубашка ${faction.name}`;
         legsParams.name = `Брюки ${faction.name}`;
-
-        hatParams.owner = character.id;
-        topParams.owner = character.id;
-        legsParams.owner = character.id;
-        feetsParams.owner = character.id;
-        earsParams.owner = character.id;
-        tiesParams.owner = character.id;
-        masksParams.owner = character.id;
-        glassesParams.owner = character.id;
+        
+        // hatParams.owner = character.id;
+        // topParams.owner = character.id;
+        // legsParams.owner = character.id;
+        // feetsParams.owner = character.id;
+        // earsParams.owner = character.id;
+        // tiesParams.owner = character.id;
+        // masksParams.owner = character.id;
+        // glassesParams.owner = character.id;
 
         var response = (e) => {
             if (e) notifs.error(player, e, header);
