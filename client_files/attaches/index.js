@@ -31,6 +31,7 @@ mp.attachmentMngr = {
                         entity.taskPlayAnim(a.dict, a.name, a.speed, 0, -1, a.flag, 0, false, false, false);
                     });
                 }
+                mp.events.call("attaches.added", entity, id);
             }
         } else {
             //temp
@@ -59,6 +60,7 @@ mp.attachmentMngr = {
                     mp.inventory.setHandsBlock(false);
                 }
             }
+            mp.events.call("attaches.removed", entity, id);
         }
     },
 

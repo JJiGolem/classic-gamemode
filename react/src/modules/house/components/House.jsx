@@ -10,7 +10,8 @@ import {
     setAnswerBuyHouse,
     setHouseFormBlur,
     setLoadingHouse, showEnterMenuHouse,
-    showHouse
+    showHouse,
+    setAnswerEnterHouse
 } from "../actions/action.house";
 
 class House extends Component {
@@ -154,10 +155,11 @@ class House extends Component {
     }
 
     enterHouse() {
-        const { blurForm, setLoading } = this.props;
+        const { blurForm, setLoading, showEnterMenu } = this.props;
 
         blurForm(true);
         setLoading(true);
+
 
         // eslint-disable-next-line no-undef
         mp.trigger('house.enter', 1);
@@ -217,7 +219,14 @@ class House extends Component {
             case 'enter':
                 return (
                     <div className='button-house-react' onClick={() => {
-                        house.garage ? (showEnterMenu(0) && blurForm(true)) : this.enterHouse()
+                        // house.garage ? (showEnterMenu(0) && blurForm(true)) : this.enterHouse()
+
+                        if (house.garage) {
+                            showEnterMenu(0);
+                            blurForm(true);
+                        } else {
+                            this.enterHouse();
+                        }
                     }}
                          onMouseOver={() => this.setState({ colorEnter: 'black' })}
                          onMouseOut={() => this.setState({ colorEnter: '#e1c631' })}
@@ -329,9 +338,10 @@ class House extends Component {
     }
 
     closeMenu() {
-        const { setAnswer, blurForm } = this.props;
+        const { setAnswer, setAnswerEnter, blurForm } = this.props;
 
         setAnswer({ answer: null });
+        setAnswerEnter({ answer: null });
         blurForm(false);
     }
 
@@ -371,6 +381,23 @@ class House extends Component {
                 </div>
             )
         }
+
+        if (answer === 'error') {
+            return (
+                <div className='message_back-house-react' onClick={this.closeMenu}>
+                    <div className='exitEnterHouse' name='exit'></div>
+                    Дверь заперта
+                    <br/>
+                    <div>
+                        <svg style={{ display: 'block', margin: '5% 45%' }} id="Group_10" data-name="Group 10" xmlns="http://www.w3.org/2000/svg" width="10%" height="10%" viewBox="0 0 233.069 233.069">
+                            <path id="Path_26" data-name="Path 26" d="M116.535,0A116.535,116.535,0,1,0,233.069,116.535,116.666,116.666,0,0,0,116.535,0Zm0,224.1A107.57,107.57,0,1,1,224.1,116.535,107.7,107.7,0,0,1,116.535,224.1Z" fill="#e1c631"/>
+                            <path id="Path_27" data-name="Path 27" d="M104.33,17.314a4.477,4.477,0,0,0-6.338,0l-37.17,37.17-37.17-37.17a4.481,4.481,0,1,0-6.338,6.338l37.17,37.17-37.17,37.17a4.481,4.481,0,1,0,6.338,6.338l37.17-37.17,37.17,37.17a4.481,4.481,0,0,0,6.338-6.338L67.16,60.822l37.17-37.17A4.477,4.477,0,0,0,104.33,17.314Z" transform="translate(55.713 55.713)" fill="#e1c631"/>
+                        </svg>
+                    </div>
+                    Нажмите на это сообщение для продолжения
+                </div>
+            )
+        }
     }
 
     render() {
@@ -383,6 +410,7 @@ class House extends Component {
                     <div className='house_form-react'>
                         { Object.keys(house).length > 0 ? this.getForm() : this.getLoader() }
                         { house.answerBuy !== null && this.getMessage(house.answerBuy) }
+                        { house.answerEnter != null && this.getMessage('error') }
                         { isActionsMenu && this.showActionsMenu(house) }
                         { isConfirm && this.showConfirmBuy() }
                     </div>
@@ -406,7 +434,8 @@ const mapDispatchToProps = dispatch => ({
     setAnswer: answer => dispatch(setAnswerBuyHouse(answer)),
     blurForm: flag => dispatch(setHouseFormBlur(flag)),
     closeHouse: () => dispatch(closeHouse()),
-    showEnterMenu: place => dispatch(showEnterMenuHouse(place))
+    showEnterMenu: place => dispatch(showEnterMenuHouse(place)),
+    setAnswerEnter: answer => dispatch(setAnswerEnterHouse(answer)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(House);
