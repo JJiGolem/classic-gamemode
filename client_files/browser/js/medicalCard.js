@@ -5,7 +5,7 @@ var medicalCard = new Vue({
         show: false,
         identifier: 228133744323, // Номер карты
         name: "Darian Rockfall", // Имя
-        age: 28, // Возраст
+        occupation: "LSPD", // Место работы
         gender: "M", // Пол
         time: "18.11.2019", // Срок
         sign: "D.Rockfall", // Подпись
