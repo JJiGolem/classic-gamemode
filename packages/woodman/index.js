@@ -290,13 +290,10 @@ module.exports = {
         logColshape.tree = colshape.db;
         logColshape.squats = [100, 100, 100, 100, 100];
 
-        var objId = obj.id;
-        obj.isLog = true;
         obj.colshape = logColshape;
         obj.destroyTimer = timer.add(() => {
             try {
-                var obj = mp.objects.at(objId);
-                if (!obj || !obj.isLog) return;
+                if (!obj || !mp.objects.exists(obj)) return;
 
                 obj.colshape.destroy();
                 obj.destroy();
