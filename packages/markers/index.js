@@ -91,6 +91,23 @@ module.exports = {
 
         markerA.colshape = colshapeA;
         markerB.colshape = colshapeB;
+
+        if (el.blip && el.blipColor) {
+            markerA.blip = mp.blips.new(el.blip, posA, {
+                color: el.blipColor,
+                shortRange: 10,
+                scale: 1,
+                dimension: markerA.dimension
+            });
+        }
+        if (el.tpBlip && el.tpBlipColor) {
+            markerB.blip = mp.blips.new(el.tpBlip, posB, {
+                color: el.tpBlipColor,
+                shortRange: 10,
+                scale: 1,
+                dimension: markerB.dimension
+            });
+        }
     },
     async addTpMarker(posA, posB) {
         var el = await db.Models.TpMarker.create({
@@ -99,17 +116,24 @@ module.exports = {
             z: posA.z,
             h: posA.h,
             d: posA.d,
+            blip: posA.blip || null,
+            blipColor: posA.blipColor || null,
             tpX: posB.x,
             tpY: posB.y,
             tpZ: posB.z,
             tpH: posB.h,
             tpD: posB.d,
+            tpBlip: posB.blip || null,
+            tpBlipColor: posB.blipColor || null,
         });
 
         this.createTpMarker(el);
     },
     removeTpMarker(id) {
         var marker = mp.markers.at(id);
+
+        if (marker.blip) marker.blip.destroy();
+        if (marker.target.blip) marker.target.blip.destroy();
 
         marker.db.destroy();
         marker.colshape.destroy();

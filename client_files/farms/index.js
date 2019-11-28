@@ -285,6 +285,18 @@ mp.farms = {
 };
 
 mp.events.add({
+    "attaches.added": (entity, id) => {
+        if (entity.type != "player") return;
+        if (entity.remoteId != mp.players.local.remoteId) return;
+        if (id != mp.game.joaat("farmTrowel")) return;
+        mp.busy.add("jobProgress", false);
+    },
+    "attaches.removed": (entity, id) => {
+        if (entity.type != "player") return;
+        if (entity.remoteId != mp.players.local.remoteId) return;
+        if (id != mp.game.joaat("farmTrowel")) return;
+        mp.busy.remove("jobProgress");
+    },
     "characterInit.done": () => {
         mp.keys.bind(69, true, () => { // E
             if (mp.game.ui.isPauseMenuActive()) return;

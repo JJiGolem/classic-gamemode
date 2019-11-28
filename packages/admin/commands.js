@@ -352,6 +352,56 @@ module.exports = {
             rec.kick();
         }
     },
+    "/offwarn": {
+        access: 4,
+        description: "Выдать офлайн варн игроку",
+        args: "[имя]:s [фамилия]:s [причина]",
+        handler: async (player, args, out) => {
+            let name = `${args[0]} ${args[1]}`;
+            let target = mp.players.getByName(name);
+            if (target) return out.error('Игрок в сети, используйте /warn', player);
+
+            let character = await db.Models.Character.findOne({
+                where: {
+                    name: name
+                },
+                include: db.Models.Account
+            });
+            if (!character) return out.error(`Персонаж ${name} не найден`, player);
+            let account = character.Account;
+            args.splice(0, 2);
+            let reason = args.join(" ");
+
+            if (character.factionId) factions.deleteOfflineMember(character);
+            character.warnNumber++;
+            character.warnDate = new Date();
+
+            if (character.warnNumber >= admin.banWarns) { 
+                character.warnNumber = 0;
+                character.warnDate = null;
+                account.clearBanDate = new Date(Date.now() + admin.warnsBanDays * 24 * 60 * 60 * 1000);
+                account.save();
+                mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] забанил игрока ${character.name}: ${reason} (${admin.banWarns} варнов)`);
+            } else {
+                mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] выдал warn игроку ${character.name}: ${reason}`);
+            }
+            character.save();
+        }
+    },
+    "/unwarn": {
+        access: 4,
+        description: "Снять все варны игроку",
+        args: "[id]:n",
+        handler: async (player, args, out) => {
+            let target = mp.players.at(args[0]);
+            if (!target || !target.character) return out.error(`Игрок #${args[0]} не найден`, player);
+            target.character.warnNumber = 0;
+            target.character.warnDate = null;
+            target.character.save();
+            notify.info(player, `${player.name} снял вам все варны`);
+            out.info(`${player.name} снял все варны ${target.name}`)
+        }
+    },
     "/mute": {
         access: 2,
         description: "Запретить текстовый + голосовой чат игроку.",
@@ -417,7 +467,7 @@ module.exports = {
             rec.kick();
         }
     },
-    "/banoff": {
+    "/offban": {
         access: 4,
         description: "Забанить игрока оффлайн.",
         args: "[имя] [фамилия] [дни]:n [причина]",

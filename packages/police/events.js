@@ -240,13 +240,13 @@ module.exports = {
         if (topParams.dTexture == -1) delete topParams.dTexture;
         if (topParams.tTexture == -1) delete topParams.tTexture;
 
-        hatParams.faction = faction.id;
-        topParams.faction = faction.id;
-        legsParams.faction = faction.id;
-        feetsParams.faction = faction.id;
-        tiesParams.faction = faction.id;
-        masksParams.faction = faction.id;
-        glassesParams.faction = faction.id;
+        // hatParams.faction = faction.id;
+        // topParams.faction = faction.id;
+        // legsParams.faction = faction.id;
+        // feetsParams.faction = faction.id;
+        // tiesParams.faction = faction.id;
+        // masksParams.faction = faction.id;
+        // glassesParams.faction = faction.id;
 
         topParams.pockets = '[5,5,5,5,10,5]';
         legsParams.pockets = '[5,5,5,5,10,5]';
@@ -258,13 +258,13 @@ module.exports = {
         legsParams.name = `Брюки ${faction.name}`;
         feetsParams.name = `Ботинки ${faction.name}`;
 
-        hatParams.owner = character.id;
-        topParams.owner = character.id;
-        legsParams.owner = character.id;
-        feetsParams.owner = character.id;
-        tiesParams.owner = character.id;
-        masksParams.owner = character.id;
-        glassesParams.owner = character.id;
+        // hatParams.owner = character.id;
+        // topParams.owner = character.id;
+        // legsParams.owner = character.id;
+        // feetsParams.owner = character.id;
+        // tiesParams.owner = character.id;
+        // masksParams.owner = character.id;
+        // glassesParams.owner = character.id;
 
         var response = (e) => {
             if (e) notifs.error(player, e, header);
@@ -358,8 +358,8 @@ module.exports = {
 
         // inventory.fullDeleteItemsByParams(itemId, ["faction", "owner"], [character.factionId, character.id]);
         var params = {
-            faction: character.factionId,
-            owner: character.id
+            // faction: character.factionId,
+            // owner: character.id
         };
         if (itemId == 24) params.count = 2;
 
@@ -535,7 +535,7 @@ module.exports = {
         if (!rec.character.wanted) return notifs.error(player, `${rec.name} не преступник`, `Арест`);
 
         var cell = police.getNearLSCell(player);
-        if (!cell) police.getNearBCCell(player);
+        if (!cell) cell = police.getNearBCCell(player);
         if (!cell) return notifs.error(player, `Вы далеко от камеры`, `Арест`);
         if (rec.cuffs) {
             var params = {
