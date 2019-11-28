@@ -1,12 +1,12 @@
 "use strict";
 /// Подключение всех модулей на сервере
 
-mp.gui.cursor.show(true, false);
+//mp.gui.cursor.show(true, false);
 
 /// Служебные модули
-require('base');
-require('utils');
-require('browser');
+// require('base');
+// require('utils');
+// require('browser');
 
 let browserLoaded = false;
 let initDone = false;
@@ -22,10 +22,6 @@ let initDone = false;
 //     }
 // });
 
-let activeModules = [];
-activeModules.forEach(moduleName => {
-    require(moduleName);
-});
 /// Автоподключение клиентских модулей
 // mp.events.add('init', (activeModules) => {
 //     activeModules.forEach(moduleName => {
