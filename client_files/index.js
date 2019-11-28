@@ -23,15 +23,15 @@ mp.events.add('render', () => {
 });
 
 /// Автоподключение клиентских модулей
-// mp.events.add('init', (activeModules) => {
-//     activeModules.forEach(moduleName => {
-//         require(moduleName);
-//     });
-//     if (browserLoaded) {
-//         mp.events.callRemote('player.joined');
-//     }
-//     initDone = true;
-// });
+mp.events.add('init', (activeModules) => {
+    activeModules.forEach(moduleName => {
+        require(moduleName);
+    });
+    if (browserLoaded) {
+        mp.events.callRemote('player.joined');
+    }
+    initDone = true;
+});
 
 mp.events.add('browserDomReady', (browser) => {
     if (initDone) {
