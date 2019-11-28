@@ -6,7 +6,7 @@ mp.gui.cursor.show(true, false);
 /// Служебные модули
 require('base');
 require('utils');
-require('browser');
+//require('browser');
 
 let browserLoaded = false;
 let initDone = false;
