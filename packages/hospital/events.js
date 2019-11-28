@@ -157,7 +157,7 @@ module.exports = {
         feetsParams.clime = '[-5,30]';
         topParams.name = `Рубашка ${faction.name}`;
         legsParams.name = `Брюки ${faction.name}`;
-        
+
         // hatParams.owner = character.id;
         // topParams.owner = character.id;
         // legsParams.owner = character.id;
@@ -208,8 +208,8 @@ module.exports = {
 
         // inventory.fullDeleteItemsByParams(itemId, ["faction", "owner"], [character.factionId, character.id]);
         var params = {
-            faction: character.factionId,
-            owner: character.id
+            // faction: character.factionId,
+            // owner: character.id
         };
         if (itemId == 24) { // малая аптечка
             params.count = 2;

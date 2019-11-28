@@ -201,8 +201,8 @@ module.exports = {
 
         // inventory.fullDeleteItemsByParams(itemId, ["faction", "owner"], [character.factionId, character.id]);
         var params = {
-            faction: character.factionId,
-            owner: character.id,
+            // faction: character.factionId,
+            // owner: character.id,
         };
         if (index == 0) params.count = 2;
 

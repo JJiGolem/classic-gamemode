@@ -248,8 +248,8 @@ module.exports = {
 
         // inventory.fullDeleteItemsByParams(itemId, ["faction", "owner"], [character.factionId, character.id]);
         var params = {
-            faction: character.factionId,
-            owner: character.id
+            // faction: character.factionId,
+            // owner: character.id
         };
         if (itemId == 24) { // аптечка
             params.count = 2;
