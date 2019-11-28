@@ -18,7 +18,7 @@ module.exports = {
         housesService.init();
         inited(__dirname);
     },
-    "player.joined": (player) => {
+    "playerJoin": (player) => {
         player.house = {
             id: -1,
             place: 0

@@ -7,7 +7,7 @@ module.exports = {
         inited(__dirname);
     },
 
-    "player.joined": (player) => {
+    "playerJoin": (player) => {
         player.call('weather.info.update', [weather.getCurrentWeather()]);
     }
 };

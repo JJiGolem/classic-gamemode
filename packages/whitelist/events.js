@@ -8,7 +8,7 @@ module.exports = {
         await whitelist.init();
         inited(__dirname);
     },
-    // "player.joined": (player) => {
+    // "playerJoin": (player) => {
     //     if (!whitelist.isEnabled()) return;
 
     //     if (whitelist.isInWhiteList(player.socialClub)) {

@@ -11,7 +11,7 @@ module.exports = {
         //     console.log("TIMER1");
         // }, 5000);
     },
-    "player.joined": (player) => {
+    "playerJoin": (player) => {
         if (timer.getChecker() == null) {
             timer.setChecker(player);
         }

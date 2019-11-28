@@ -2,7 +2,7 @@ var hud = require('./index.js');
 
 module.exports = {
     /// Отображение онлайна в худе
-    "player.joined": (player) => {
+    "playerJoin": (player) => {
         mp.players.forEach((current) => {
             current.call("hud.setData", [{players: mp.players.length}]);
         });
