@@ -25,7 +25,7 @@ mp.events.add('render', () => {
 /// Автоподключение клиентских модулей
 mp.events.add('init', (activeModules) => {
     activeModules.forEach(moduleName => {
-        require(moduleName);
+        //require(moduleName);
     });
     if (browserLoaded) {
         mp.events.callRemote('player.joined');
