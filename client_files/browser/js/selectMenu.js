@@ -6893,14 +6893,14 @@ var selectMenu = new Vue({
                 name: "supermarketFood",
                 header: "Продукты",
                 headerImg: "",
-                items: [{
+                items: [/*{
                         text: 'Бутылка воды',
                         values: ["$100"],
                     },
                     {
                         text: 'Плитка шоколада',
                         values: ["$100"],
-                    },
+                    },*/
                     {
                         text: 'Назад'
                     }
