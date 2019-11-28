@@ -24,7 +24,7 @@ module.exports = {
         player.character.save();
     },
 
-    // "playerJoin": (player) => {
+    // "player.joined": (player) => {
     //     player.call('chat.load');
     //     player.call('chat.message.push', ['!{#00abff} Добро пожаловать на Classic Roleplay!']);
     // },
