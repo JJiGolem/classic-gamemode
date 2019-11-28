@@ -369,6 +369,7 @@ module.exports = {
         if (field.count) return notifs.error(player, `Поле #${field.id} уже засеяно`, header);
         var count = 600;
         if (farm.grains < count) return notifs.error(player, `Недостаточно для загрузки`, header);
+        if (data.grain == 2) return notifs.error(player, `Засев поля данным типом урожая временно не доступен`, header);
 
         farm.grains -= count;
         farm.save();
