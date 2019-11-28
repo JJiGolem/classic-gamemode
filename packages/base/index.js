@@ -86,14 +86,14 @@ if (!isBuild) {
 /// Должен быть ниже объявления глобальных функций, что бы они успели загрузииться
 db.connect(function() {
     fs.readdirSync(path.dirname(__dirname)).forEach(file => {
-        // if (!ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname)+ "/" + file + "/events.js")) {
-        //     let events = require('../' + file + '/events');
-        //     mp.events.add(events);
-        //     activeServerModules.push(file);
-        //     if (events["init"] != null) {
-        //         modulesToLoad.push(file);
-        //     }
-        // }
+        if (!ignoreModules.includes(file) && fs.existsSync(path.dirname(__dirname)+ "/" + file + "/events.js")) {
+            let events = require('../' + file + '/events');
+            mp.events.add(events);
+            activeServerModules.push(file);
+            if (events["init"] != null) {
+                modulesToLoad.push(file);
+            }
+        }
     });
 
     fs.readdirSync(path.dirname(__dirname) + "/../client_packages").forEach(file => {
