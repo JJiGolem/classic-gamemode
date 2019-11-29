@@ -523,6 +523,9 @@ module.exports = {
         notifs.success(player, `Предмет ${itemName} на земле`, header);
         inventory.notifyOverhead(player, `Опрокинул '${itemName}'`);
     },
+    "police.inventory.search.item.take": (player, sqlId) => {
+        notifs.info(player, `Скоро будет доступно :)`);
+    },
     "police.inventory.search.start": (player, recId) => {
         var header = `Обыск`;
         var out = (text) => {
