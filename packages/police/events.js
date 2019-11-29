@@ -502,6 +502,58 @@ module.exports = {
             notifs.info(rec, `Вы не следуете за ${player.name}`, `Следование`);
         }
     },
+    "police.inventory.search.start": (player, recId) => {
+        var header = `Обыск`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var rec = mp.players.at(recId);
+        if (!rec || !rec.character) return out(`Игрок не найден`);
+        var dist = player.dist(rec.position);
+        if (dist > 5) return out(`Игрок далеко`);
+        if (rec.getVariable("afk")) return out(`Игрок не активен`);
+        var character = player.character;
+        var rank = factions.getRank(player.character.factionId, police.searchRank);
+        if (player.inventory.search) return out(`Вы уже обыскиваете игрока`);
+        if (player.character.factionRank < rank.id) return out(`Доступно с ранга ${rank.name}`);
+        if (rec.vehicle) return out(`Игрок находится в авто`);
+        // TODO: check anti-flood
+        if (!police.searchFactions.includes(character.factionId)) return out(`Нет прав для обыска`);
+        if (inventory.getHandsItem(player)) return out(`Освободите руки`);
+
+        var searchItems = inventory.getItemsForSearch(rec);
+        var data = {
+            playerId: rec.id,
+            playerName: rec.name,
+            items: inventory.convertServerToClientItems(searchItems)
+        };
+        player.inventory.search = {
+            recId: rec.id,
+            item: searchItems
+        };
+        player.call(`inventory.initSearchItems`, [data]);
+        inventory.notifyOverhead(player, `Начал обыск`);
+    },
+    "police.inventory.search.stop": (player) => {
+        var header = `Обыск`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.inventory.search) return out(`Вы не обыскиваете игрока`);
+
+        player.inventory.search = null;
+        inventory.notifyOverhead(player, `Завершил обыск`);
+    },
+    "police.inventory.search.found": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+        var header = `Обыск`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.inventory.search) return out(`Вы не обыскиваете игрока`);
+
+        inventory.notifyOverhead(player, `Нашел '${inventory.getName(data.itemId)}'`);
+    },
     "police.wanted": (player, recId) => {
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Следование`);

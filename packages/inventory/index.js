@@ -119,6 +119,7 @@ module.exports = {
             denyUpdateView: false, // запрещено ли обновлять внешний вид игрока
             items: [], // предметы игрока
             ground: [], // объекты на земле, которые выкинул игрок
+            search: null, // обыск игрока
             place: { // багажник/шкаф/холодильник и пр. при взаимодействии
                 type: "",
                 sqlId: 0,
@@ -1370,5 +1371,10 @@ module.exports = {
             if (rec.id == player.id) return;
             rec.call(`addOverheadText`, [player.id, text, [221, 144, 255, 255]]);
         });
+    },
+    // получить предметы для обыска
+    getItemsForSearch(player) {
+        // TODO: вероятность на нахождение предмета
+        return player.inventory.items;
     },
 };
