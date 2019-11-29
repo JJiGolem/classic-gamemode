@@ -502,6 +502,27 @@ module.exports = {
             notifs.info(rec, `Вы не следуете за ${player.name}`, `Следование`);
         }
     },
+    "police.inventory.search.item.putGround": (player, sqlId, pos) => {
+        pos = JSON.parse(pos);
+        var header = `Обыск`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.inventory.search) return out(`Вы не обыскиваете игрока`);
+        var rec = mp.players.at(player.inventory.search.recId);
+        if (!rec) return out(`Игрок не найден`);
+
+        var item = inventory.getItem(rec, sqlId);
+        if (!item) return out(`Предмет #${sqlId} не найден`);
+
+        // if (player.vehicle) return notifs.error(player, `Недоступно в авто`, header);
+        // if (player.cuffs) return notifs.error(player, `Недоступно в наручниках`, header);
+
+        var itemName = inventory.getName(item.itemId);
+        inventory.putGround(rec, item, pos);
+        notifs.success(player, `Предмет ${itemName} на земле`, header);
+        inventory.notifyOverhead(player, `Опрокинул '${itemName}'`);
+    },
     "police.inventory.search.start": (player, recId) => {
         var header = `Обыск`;
         var out = (text) => {

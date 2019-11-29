@@ -396,6 +396,11 @@ mp.events.add("inventory.ground.put", (sqlId) => {
     mp.events.callRemote(`item.ground.put`, sqlId, JSON.stringify(pos));
 });
 
+mp.events.add("police.inventory.search.item.putGround", (sqlId) => {
+    var pos = mp.inventory.getGroundItemPos(mp.players.local);
+    mp.events.callRemote(`police.inventory.search.item.putGround`, sqlId, JSON.stringify(pos));
+});
+
 mp.events.add("inventory.item.adrenalin.use.callRemote", (data) => {
     if (typeof data == 'string') data = JSON.parse(data);
 

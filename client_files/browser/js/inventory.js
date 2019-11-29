@@ -772,11 +772,14 @@ var inventory = new Vue({
             var menu = {
                 'Изъять': {
                     handler(item) {
-                        mp.trigger(`callRemote`, `inventory.search.item.take`, item.sqlId);
+                        mp.trigger(`callRemote`, `police.inventory.search.item.take`, item.sqlId);
                     }
                 },
                 'Выкинуть': {
-                    handler: this.putGroundHandler
+                    handler(item) {
+                        inventory.deleteItem(item.sqlId);
+                        mp.trigger(`police.inventory.search.item.putGround`, item.sqlId);
+                    }
                 }
             };
             return menu;
