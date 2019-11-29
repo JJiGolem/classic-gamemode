@@ -434,6 +434,30 @@ module.exports = {
         await newItem.save();
         player.call(`inventory.setItemSqlId`, [item.id, newItem.id]);
     },
+    // переместить предмет от одного игрока к другому
+    moveItemToPlayer(playerFrom, playerTo, item, callback = () => {}) {
+        if (playerFrom.inventory.items.indexOf(item) == -1) return;
+
+        var cantAdd = this.cantAdd(playerTo, item.itemId, this.getParamsValues(item));
+        if (cantAdd) return callback(cantAdd);
+
+        if (!item.parentId) this.clearView(playerFrom, item.itemId);
+        if (!item.parentId && item.index == 13) this.syncHandsItem(playerFrom, null);
+        playerFrom.call("inventory.deleteItem", [item.id]);
+        this.clearArrayItems(playerFrom, item);
+
+        var slot = this.findFreeSlot(playerTo, item.itemId);
+        item.playerId = playerTo.character.id;
+        item.pocketIndex = slot.pocketIndex;
+        item.index = slot.index;
+        item.parentId = slot.parentId;
+
+        playerTo.inventory.items.push(item);
+        if (!item.parentId) this.updateView(playerTo, item);
+        item.save();
+        playerTo.call("inventory.addItem", [this.convertServerToClientItem(playerTo.inventory.items, item), item.pocketIndex, item.index, item.parentId]);
+        callback();
+    },
     deleteItem(player, item) {
         if (typeof item == 'number') item = this.getItem(player, item);
         if (!item) return console.log(`[inventory.deleteItem] Предмет #${item} у ${player.name} не найден`);

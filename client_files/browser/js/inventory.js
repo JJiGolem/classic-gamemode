@@ -1561,7 +1561,7 @@ var inventory = new Vue({
             Vue.delete(this.hotkeys, key);
         },
         onUseHotkey(key) {
-            if (!this.enable) return;
+            if (!this.enable || !this.controlEnable) return;
             if (Date.now() - this.lastUseHotkey < this.waitUseHotkey) return;
 
             var item = this.hotkeys[key];
@@ -1572,7 +1572,7 @@ var inventory = new Vue({
             this.moveItemToBody(item, 13);
         },
         onUseHandsItem() {
-            if (!this.enable) return;
+            if (!this.enable || !this.controlEnable) return;
             var item = this.equipment[13];
             if (!item) return;
             if (!this.hotkeysList[item.itemId]) return;
@@ -1695,7 +1695,6 @@ var inventory = new Vue({
             if (Date.now() - self.lastShowTime < 500) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;
             if (e.keyCode > 47 && e.keyCode < 57) {
-                if (!self.enable) return;
                 var num = e.keyCode - 48;
                 self.onUseHotkey(num);
             }

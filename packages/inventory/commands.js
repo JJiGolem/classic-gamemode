@@ -391,4 +391,25 @@ module.exports = {
             debug(player.inventory.items.map(x => x.id));
         }
     },
+    "/invmoveitem": {
+        access: 6,
+        description: "Передать предмет от одного игрока к другому.",
+        args: "[ид_игрока_из]:n [ид_игрока_к]:n [ид_предмета]:n",
+        handler: (player, args, out) => {
+            var playerFrom = mp.players.at(args[0]);
+            if (!playerFrom || !playerFrom.character) return out.error(`Игрок_ИЗ не найден`);
+
+            var playerTo = mp.players.at(args[1]);
+            if (!playerTo || !playerTo.character) return out.error(`Игрок_К не найден`);
+
+            var item = inventory.getItem(playerFrom, args[2]);
+            if (!item) return out.error(`Предмет #${args[2]} не найден`);
+
+            inventory.moveItemToPlayer(playerFrom, playerTo, item, (e) => {
+                if (e) return out.error(e);
+
+                out.info(`${player.name} передал ${inventory.getName(item.itemId)} от ${playerFrom.name} к ${playerTo.name}`);
+            });
+        }
+    },
 }
