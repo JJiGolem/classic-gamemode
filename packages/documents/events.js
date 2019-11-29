@@ -209,9 +209,10 @@ module.exports = {
         if (!target) return;
         let data = {
             name: player.character.name,
-            sex: player.character.gender,
-            number: documents.getGunLicIdentificator() + player.character.id,
-            time: player.character.gunLicenseDate
+            gender: player.character.gender ? 'Ж' : 'М',
+            identifier: documents.getMedCardIdentificator() + player.character.id,
+            time: player.character.medCardDate,
+            factionId: player.character.factionId
         }
         if (!data) return;
         if (player.id == target.id) {

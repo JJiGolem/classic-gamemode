@@ -10,6 +10,12 @@ var medicalCard = new Vue({
         time: "18.11.2019", // Срок
         sign: "D.Rockfall", // Подпись
     },
+    methods: {
+        close() {
+            this.show = false;
+            mp.trigger('documents.close');
+        }
+    },
     filters: {
         split(value) {
             console.log(value);
