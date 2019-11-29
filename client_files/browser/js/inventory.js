@@ -493,6 +493,8 @@ var inventory = new Vue({
         show: false,
         // Возможность использования инвентаря
         enable: false,
+        // Возможность взаимодействия с предметами инвентаря
+        controlEnable: true,
         // Время последнего открытия/закрытия (ms)
         lastShowTime: 0,
         // Показ описания предмета на экране
@@ -846,6 +848,7 @@ var inventory = new Vue({
                 },
                 'contextmenu': (e) => {
                     if (this.searchMode && !this.takeSearchList.includes(item.itemId)) return;
+                    if (!this.controlEnable) return;
                     this.itemMenu.item = item;
                     this.itemMenu.x = e.clientX - rect.x;
                     this.itemMenu.y = e.clientY - rect.y;
@@ -853,6 +856,7 @@ var inventory = new Vue({
                 'mousedown': (e) => {
                     if (item.wait) return;
                     if (this.searchMode) return;
+                    if (!this.controlEnable) return;
                     if (e.which == 1) { // Left Mouse Button
                         this.itemDrag.item = item;
                         this.itemDrag.div = e.target;

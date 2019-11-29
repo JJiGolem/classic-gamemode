@@ -556,6 +556,7 @@ module.exports = {
             item: searchItems
         };
         player.call(`inventory.initSearchItems`, [data]);
+        player.call(`inventory.controlEnable`, [false]);
         inventory.notifyOverhead(player, `Начал обыск`);
     },
     "police.inventory.search.stop": (player) => {
@@ -564,6 +565,9 @@ module.exports = {
             notifs.error(player, text, header);
         };
         if (!player.inventory.search) return out(`Вы не обыскиваете игрока`);
+
+        var rec = mp.players.at(player.inventory.search.recId);
+        if (rec) rec.call(`inventory.controlEnable`, [true]);
 
         player.inventory.search = null;
         inventory.notifyOverhead(player, `Завершил обыск`);

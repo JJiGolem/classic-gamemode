@@ -51,6 +51,9 @@ mp.inventory = {
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
     },
+    controlEnable(enable) {
+        mp.callCEFV(`inventory.controlEnable = ${enable}`);
+    },
     debug(enable) {
         mp.callCEFV(`inventory.debug = ${enable}`);
     },
@@ -329,6 +332,8 @@ mp.events.add("click", (x, y, upOrDown, leftOrRight, relativeX, relativeY, world
 });
 
 mp.events.add("inventory.enable", mp.inventory.enable);
+
+mp.events.add("inventory.controlEnable", mp.inventory.controlEnable);
 
 mp.events.add("inventory.debug", mp.inventory.debug);
 
