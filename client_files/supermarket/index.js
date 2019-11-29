@@ -110,7 +110,7 @@ function setPrices(config, multiplier) {
     mp.callCEFV(`selectMenu.menus["supermarketMobile"].items[1].values[0] = '$${config.numberChange}'`);
     mp.callCEFV(`selectMenu.menus["supermarketNumberChange"].items[1].values[0] = '$${config.numberChange}'`);
     mp.callCEFV(`selectMenu.menus["supermarketFood"].items[0].values[0] = '$${config.water}'`);
-    mp.callCEFV(`selectMenu.menus["supermarketFood"].items[1].values[0] = '$${config.chocolate}'`);
+    //mp.callCEFV(`selectMenu.menus["supermarketFood"].items[1].values[0] = '$${config.chocolate}'`);
     mp.callCEFV(`selectMenu.menus["supermarketTobacco"].items[0].values[0] = '$${config.cigarettes}'`);
     mp.callCEFV(`selectMenu.menus["supermarketStuff"].items[0].values[0] = '$${config.rope}'`);
     mp.callCEFV(`selectMenu.menus["supermarketStuff"].items[1].values[0] = '$${config.bag}'`);

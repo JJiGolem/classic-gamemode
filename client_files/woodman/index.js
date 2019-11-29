@@ -126,11 +126,26 @@ mp.woodman = {
     isFocusTree() {
         if (!this.treePos) return false;
         var player = mp.players.local;
-        var raycastToTree = mp.raycasting.testPointToPoint(player.position, this.treePos);
-        if (!raycastToTree || !raycastToTree.entity) return false;
+        var positions = [
+            player.position,
+            player.getOffsetFromInWorldCoords(-1, 0, 0),
+            player.getOffsetFromInWorldCoords(1, 0, 0),
+            player.getOffsetFromInWorldCoords(0, 0, 1),
+            player.getOffsetFromInWorldCoords(0, 0, -1),
+        ];
+        var treeEntity = null;
+        for (var i = 0; i < positions.length; i++) {
+            var raycastToTree = mp.raycasting.testPointToPoint(positions[i], this.treePos);
+            // mp.game.graphics.drawLine(positions[i].x, positions[i].y, positions[i].z, this.treePos.x, this.treePos.y, this.treePos.z, 255, 255, 255, 100);
+            if (raycastToTree && raycastToTree.entity) {
+                treeEntity = raycastToTree.entity;
+                break;
+            }
+        }
+        if (!treeEntity) return false;
         // var frontHash = mp.utils.getFrontObjectHash(player);
         // if (!frontHash || frontHash != raycastToTree.entity) return false;
-        var frontPos = player.getOffsetFromInWorldCoords(0, 1, 0);
+        var frontPos = player.getOffsetFromInWorldCoords(0, 1, this.treePos.z - player.position.z);
 
         return mp.vdist(player.position, this.treePos) > mp.vdist(frontPos, this.treePos);
     },
@@ -156,8 +171,8 @@ mp.woodman = {
     },
     getFreeTreeSlot() {
         var player = mp.players.local;
-        var leftPos = player.getOffsetFromInWorldCoords(2, -this.logSize.width / 2, 0);
-        var rightPos = player.getOffsetFromInWorldCoords(2, this.logSize.width / 2, 0);
+        var leftPos = player.getOffsetFromInWorldCoords(2, -this.logSize.width / 2, 2);
+        var rightPos = player.getOffsetFromInWorldCoords(2, this.logSize.width / 2, 2);
 
         var leftGroundZ = mp.game.gameplay.getGroundZFor3dCoord(leftPos.x, leftPos.y, leftPos.z, false, false);
         var rightGroundZ = mp.game.gameplay.getGroundZFor3dCoord(rightPos.x, rightPos.y, rightPos.z, false, false);
@@ -167,6 +182,13 @@ mp.woodman = {
 
         var alpha = -Math.sin((leftDist - rightDist) / this.logSize.width) * 180 / Math.PI;
 
+        debug(`leftPos: ${JSON.stringify(leftPos)}`)
+        debug(`rightPos: ${JSON.stringify(rightPos)}`)
+        debug(`leftGroundZ: ${leftGroundZ}`)
+        debug(`rightGroundZ: ${rightGroundZ}`)
+        debug(`leftDist: ${leftDist}`)
+        debug(`rightDist: ${rightDist}`)
+        debug(`alpha: ${alpha}`)
 
         var objPos = player.getOffsetFromInWorldCoords(2, 0, 0);
         objPos.z = mp.game.gameplay.getGroundZFor3dCoord(objPos.x, objPos.y, objPos.z, false, false) + this.logSize.height / 2;

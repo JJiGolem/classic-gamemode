@@ -24,6 +24,45 @@ module.exports = {
     "bands.capture.start": (player) => {
         bands.startCapture(player);
     },
+    "bands.rob": (player, recId) => {
+        var header = `Ограбление`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+
+        if (!factions.isBandFaction(player.character.factionId) && !factions.isMafiaFaction(player.character.factionId)) return out(`Вы не член банды/мафии`);
+        var rank = factions.getRank(player.character.factionId, bands.robRank);
+        if (player.character.factionRank < rank.id) return out(`Доступно с ранга ${rank.name}`);
+
+        if (bands.robLogs[player.character.id]) {
+            var diff = Date.now() - bands.robLogs[player.character.id];
+            var wait = bands.robBandWaitTime;
+            if (diff < wait) return out(`Повторное ограбление доступно через ${parseInt((wait - diff) / 1000)} сек.`);
+        }
+
+        var rec = mp.players.at(recId);
+        if (!rec || !rec.character) return out(`Игрок #${recId} не найден`);
+        if (player.dist(rec.position) > 10) return out(`Игрок далеко`);
+        if (factions.isBandFaction(rec.character.factionId) || factions.isMafiaFaction(rec.character.factionId)) return out(`Нельзя ограбить члена банды/мафии`);
+
+        if (bands.robLogs[rec.character.id]) {
+            var diff = Date.now() - bands.robLogs[rec.character.id];
+            var wait = bands.robVictimWaitTime;
+            if (diff < wait) return out(`Ограбить игрока можно через ${parseInt((wait - diff) / 1000)} сек.`);
+        }
+
+        var price = Math.clamp(parseInt(rec.character.cash * bands.robK), 0, bands.robMaxPrice);
+        if (!price) return out(`Игрок нищий`);
+
+        money.moveCash(rec, player, price, (res) => {
+            if (!res) return notifs.error(player, `Ошибка передачи денег`, header);
+        }, `Ограблен игроком ${player.name}`, `Ограбил игрока ${rec.name}`);
+
+        bands.robLogs[player.character.id] = Date.now();
+        bands.robLogs[rec.character.id] = Date.now();
+        notifs.success(player, `Вы ограбили игрока`, header);
+        notifs.warning(rec, `Вас ограбили`, header);
+    },
     "bands.storage.guns.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад банды`);
         if (!factions.isBandFaction(player.character.factionId)) return notifs.error(player, `Вы не член группировки`, `Склад банды`);

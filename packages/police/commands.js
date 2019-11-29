@@ -70,6 +70,32 @@ module.exports = {
             chat.push(rec, `!{#ff8819} Администратор ${player.name} посадил Вас в тюрьму на ${mins} мин. Причина: ${args.join(" ")}`);
         }
     },
+    "/offjail": {
+        access: 4,
+        description: "Выдать офлайн jail игроку",
+        args: "[имя]:s [фамилия]:s [минуты]:n [причина]",
+        handler: async (player, args, out) => {
+            let name = `${args[0]} ${args[1]}`;
+            let target = mp.players.getByName(name);
+            if (target) return out.error('Игрок в сети, используйте /jail', player);
+
+            let character = await db.Models.Character.findOne({
+                where: {
+                    name: name
+                }
+            });
+            if (!character) return out.error(`Персонаж ${name} не найден`, player);
+            let mins = Math.clamp(args[2], 1, 60 * 12); // 12 часов макс.
+            args.splice(0, 3);
+            let reason = args.join(" ");
+
+            character.arrestTime = mins * 60 * 1000;
+            character.arrestType = 1;
+            character.save();
+
+            out.info(`${player.name} посадил ${character.name} в тюрьму на ${mins} мин. Причина: ${reason}`);
+        }
+    },
     "/pwanted": {
         access: 6,
         description: "Изменить розыск игрока.",
