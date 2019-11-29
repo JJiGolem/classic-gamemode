@@ -533,6 +533,11 @@ module.exports = {
                 break;
         }
     },
+    // удалить кидаемое оружие
+    "inventory.throwableWeapon.delete": (player, sqlId) => {
+        var item = inventory.getItem(player, sqlId);
+        if (item) inventory.deleteItem(player, item);
+    },
     // Запрос предметов инвентаря в багажнике авто
     "vehicle.boot.items.request": (player, vehId) => {
         var header = `Багажник`;

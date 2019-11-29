@@ -469,6 +469,8 @@ var inventory = new Vue({
         },
         // Огнестрельные оружия
         weaponsList: [20, 21, 22, 41, 44, 46, 47, 48, 49, 50, 52, 80, 87, 88, 89, 90, 91, 93, 96, 99, 100, 107],
+        // Кидаемые оружия (гранаты, снежки)
+        throwableWeaponsList: [117],
         // Еда
         eatList: [35, 126, 127, 128, 129, 132, 134],
         // Напитки
@@ -1523,8 +1525,14 @@ var inventory = new Vue({
             weaponHash = parseInt(weaponHash);
             var item = this.getItemByParams('weaponHash', weaponHash);
             if (!item) return;
-            if (!this.weaponsList.includes(item.itemId)) return;
-            this.setItemParam(item, 'ammo', ammo);
+            if (this.weaponsList.includes(item.itemId)) this.setItemParam(item, 'ammo', ammo);
+            else if (this.throwableWeaponsList.includes(item.itemId)) {
+                this.setItemParam(item, 'ammo', ammo);
+                if (ammo <= 0) {
+                    this.deleteItem(item.sqlId);
+                    this.callRemote(`inventory.throwableWeapon.delete`, item.sqlId);
+                }
+            }
         },
         getItemName(item) {
             if (!item) return null;

@@ -18,7 +18,6 @@ module.exports = {
         var params = {
             weaponHash: mp.joaat('weapon_snowball'),
             ammo: winter.snowballCount,
-            throwable: true,
         };
         inventory.addItem(player, winter.snowballItemId, params, (e) => {
             if (e) return out(e);
