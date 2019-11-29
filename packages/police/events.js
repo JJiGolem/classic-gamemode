@@ -556,7 +556,7 @@ module.exports = {
             item: searchItems
         };
         player.call(`inventory.initSearchItems`, [data]);
-        player.call(`inventory.controlEnable`, [false]);
+        rec.call(`inventory.controlEnable`, [false]);
         inventory.notifyOverhead(player, `Начал обыск`);
     },
     "police.inventory.search.stop": (player) => {
