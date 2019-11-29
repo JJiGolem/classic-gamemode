@@ -520,6 +520,38 @@ module.exports = {
             rec.kick();
         }
     },
+    "/offpermban": {
+        access: 5,
+        description: "Забанить игрока перманентно офлайн (Account + IP + Social Club).",
+        args: "[имя]:s [фамилия]:s [причина]",
+        handler: async (player, args, out) => {
+            let name = `${args[0]} ${args[1]}`;
+            let target = mp.players.getByName(name);
+            if (target) return out.error('Игрок в сети, используйте /permban', player);
+
+            let character = await db.Models.Character.findOne({
+                where: {
+                    name: name
+                },
+                include: db.Models.Account
+            });
+            if (!character) return out.error(`Персонаж ${name} не найден`, player);
+            let account = character.Account;
+            args.splice(0, 2);
+            let reason = args.join(" ");
+
+            out.info(`${player.name} выдал пермбан в офлайне игроку ${character.name}: ${reason}`);
+
+            db.Models.Ban.create({
+                ip: account.lastIp,
+                socialClub: account.socialClub,
+                reason: reason
+            });
+
+            account.clearBanDate = new Date(Date.now() + 30 * 365 * 24 * 60 * 60 * 1000);
+            account.save();
+        }
+    },
     "/unban": {
         access: 5,
         description: "Разбанить игрока.",
