@@ -115,12 +115,10 @@ mp.events.add('carshow.vehicle.color', (color1, color2) => {
 });
 
 mp.events.add("carshow.car.buy", (carId) => {
-    mp.callCEFV(`loader.show = true;`);
     mp.events.callRemote('carshow.car.buy', list[currentIndex].sqlId, primary, secondary);
 });
 
 mp.events.add("carshow.car.buy.ans", (ans, carInfo, parkingInfo) => {
-    mp.callCEFV(`loader.show = false;`);
     switch (ans) {
         case 0:
             mp.notify.error('Т/с нет в наличии', 'Ошибка');
@@ -155,6 +153,7 @@ mp.events.add("carshow.car.buy.ans", (ans, carInfo, parkingInfo) => {
             mp.notify.error(carInfo.text, `Инвентарь`);
             break;
     }
+    mp.callCEFV(`selectMenu.loader = false;`);
 });
 
 function updateSpecifications(i) {
