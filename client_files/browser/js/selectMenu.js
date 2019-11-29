@@ -1038,6 +1038,7 @@ var selectMenu = new Vue({
                     }
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Купить') {
+                            selectMenu.loader = true;
                             mp.trigger(`carshow.car.buy`);
                         }
                         if (e.itemName == 'Выход') {
@@ -6893,10 +6894,11 @@ var selectMenu = new Vue({
                 name: "supermarketFood",
                 header: "Продукты",
                 headerImg: "",
-                items: [/*{
+                items: [{
                         text: 'Бутылка воды',
                         values: ["$100"],
                     },
+                    /*
                     {
                         text: 'Плитка шоколада',
                         values: ["$100"],
