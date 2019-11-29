@@ -223,11 +223,12 @@ let removeProducts = async function(id, count) {
 };
 let createOrder = async function(biz, count, price) {
     if (biz == null) return 0;
+    if (biz.info.productsOrder != null) return 0;
     if (biz.info.productsCount + count > biz.info.productsMaxCount) return 3;
     let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
     let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
     if (price <= min || price >= max) return 0;
-    if (biz.info.productsOrderPrice > biz.info.cashBox) return 0;
+    if (parseInt(price * count) > biz.info.cashBox) return 0;
     biz.info.productsOrder = count;
     biz.info.productsOrderPrice = parseInt(price * count);
     biz.info.cashBox -= biz.info.productsOrderPrice;
