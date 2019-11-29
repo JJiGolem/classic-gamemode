@@ -641,6 +641,10 @@ var inventory = new Vue({
                 {
                     name: "Занимает",
                     value: this.itemsInfo[item.itemId].width + 'x' + this.itemsInfo[item.itemId].height + " ячейки"
+                },
+                {
+                    name: "Обнаружение",
+                    value: this.itemsInfo[item.itemId].chance + "%"
                 }
             ];
             if (item.params.health != null) params.push({
@@ -1304,7 +1308,9 @@ var inventory = new Vue({
                 var el = this.searchList.shift();
                 if (!el || !this.searchMode) return clearInterval(this.searchTimer);
                 Vue.set(el, 'search', false);
-                if (el.itemId) this.callRemote(`police.inventory.search.found`, {itemId: el.itemId});
+                if (el.itemId) this.callRemote(`police.inventory.search.found`, {
+                    itemId: el.itemId
+                });
             }, this.searchWait);
         },
 

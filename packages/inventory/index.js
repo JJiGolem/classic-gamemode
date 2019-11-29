@@ -93,6 +93,7 @@ module.exports = {
             height: item.height,
             width: item.width,
             weight: item.weight,
+            chance: item.chance,
             model: item.model,
             attachInfo: item.attachInfo,
         };
