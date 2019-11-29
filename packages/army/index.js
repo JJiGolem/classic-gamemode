@@ -96,7 +96,7 @@ module.exports = {
 
         var winTeamId = this.war.teamA.id;
         var loseTeamId = this.war.teamB.id;
-        if (this.war.teamB.score > this.war.teamA.score) {
+        if (this.war.teamB.score >= this.war.teamA.score) {
             winTeamId = this.war.teamB.id;
             loseTeamId = this.war.teamA.id;
         }
