@@ -2,6 +2,7 @@
 
 let notifs = call('notifications');
 let timer = call('timer');
+let utils = call('utils');
 
 module.exports = {
     // Макс. вес предметов, переносимый игроком
@@ -1355,8 +1356,7 @@ module.exports = {
                     ammo = player.weaponAmmo;
                 }
                 this.giveWeapon(player, params.weaponHash, ammo);
-            }
-            else player.setVariable("hands", item.itemId);
+            } else player.setVariable("hands", item.itemId);
         } else { // выкл. синх. предмета/гана в руках
             var handsItem = this.getHandsItem(player);
             if (!handsItem) return;
@@ -1374,7 +1374,18 @@ module.exports = {
     },
     // получить предметы для обыска
     getItemsForSearch(player) {
-        // TODO: вероятность на нахождение предмета
-        return player.inventory.items;
+        var searchItems = [];
+        player.inventory.items.forEach(item => {
+            if (!item.parentId) searchItems.push(item);
+            else {
+                var randChance = utils.randomInteger(1, 100);
+                var itemChance = this.getItemChance(item);
+                if (randChance < itemChance) searchItems.push(item);
+            }
+        });
+        return searchItems;
+    },
+    getItemChance(item) {
+        return this.getInventoryItem(item.itemId).chance;
     },
 };

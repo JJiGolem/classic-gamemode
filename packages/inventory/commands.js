@@ -104,10 +104,10 @@ module.exports = {
         access: 3,
         args: "",
         handler: (player, args, out) => {
-            var text = "ID) Имя (Описание) [вес] [высота X ширина] | модель | DeltaZ | rX | rY<br/>";
+            var text = "ID) Имя (Описание) [вес] [обыск] [высота X ширина] | модель | DeltaZ | rX | rY<br/>";
             for (var i = 0; i < inventory.inventoryItems.length; i++) {
                 var item = inventory.inventoryItems[i];
-                text += `${item.id}) ${item.name} (${item.description}) [${item.weight} кг] [${item.height}x${item.width}] | ${item.model} | ${item.deltaZ} | ${item.rX} | ${item.rY}<br/>`;
+                text += `${item.id}) ${item.name} (${item.description}) [${item.weight} кг] [${item.chance}%] [${item.height}x${item.width}] | ${item.model} | ${item.deltaZ} | ${item.rX} | ${item.rY}<br/>`;
             }
             out.log(text, player);
         }
@@ -170,6 +170,21 @@ module.exports = {
 
             out.info(`${player.name} изменил вес предмета #${item.id} (${item.weight} => ${args[1]})`);
             item.weight = args[1];
+            item.save();
+            inventory.updateItemInfo(item);
+        }
+    },
+    "/invsetitemchance": {
+        description: "Изменить вероятность обнаружения предмета инвентаря при обыске. Чем выше вероятность, тем больше шансов, что предмет будет найден при обыске. Предмет на теле будут найдены 100%.(см. /invlist)",
+        access: 6,
+        args: "[ид_предмета]:n [вероятность]:n",
+        handler: (player, args, out) => {
+            var item = inventory.inventoryItems[args[0] - 1];
+            if (!item) return out.error(`Предмет #${args[0]} не найден`, player);
+            args[1] = Math.clamp(args[1], 0, 100);
+
+            out.info(`${player.name} изменил вероятность при обыске предмета #${item.id} (${item.chance} => ${args[1]})`);
+            item.chance = args[1];
             item.save();
             inventory.updateItemInfo(item);
         }
