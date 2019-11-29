@@ -155,7 +155,7 @@ module.exports = {
         var war = this.wars[zone.id];
         var winMafiaId = war.mafia.id;
         var loseMafiaId = war.enemyMafia.id;
-        if (war.enemyMafia.score > war.mafia.score) {
+        if (war.enemyMafia.score >= war.mafia.score) {
             winMafiaId = war.enemyMafia.id;
             loseMafiaId = war.mafia.id;
         }

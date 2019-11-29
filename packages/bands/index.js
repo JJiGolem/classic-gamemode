@@ -196,7 +196,7 @@ module.exports = {
         var war = this.wars[zone.id];
         var winBandId = war.band.id;
         var loseBandId = war.enemyBand.id;
-        if (war.enemyBand.score > war.band.score) {
+        if (war.enemyBand.score >= war.band.score) {
             winBandId = war.enemyBand.id;
             loseBandId = war.band.id;
         }
