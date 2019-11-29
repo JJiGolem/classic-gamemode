@@ -114,6 +114,9 @@ mp.inventory = {
     setItemParam(sqlId, key, value) {
         mp.callCEFV(`inventory.setItemParam(${sqlId}, \`${key}\`, \`${value}\`)`);
     },
+    setFoundItem(sqlId, enable) {
+        mp.callCEFV(`inventory.setFoundItem(${sqlId}, ${enable})`);
+    },
     addEnvironmentPlace(place) {
         if (typeof place == 'object') place = JSON.stringify(place);
         mp.callCEFV(`inventory.addEnvironmentPlace(${place})`);
@@ -359,6 +362,8 @@ mp.events.add("inventory.setBlackList", mp.inventory.setBlackList);
 mp.events.add("inventory.deleteItem", mp.inventory.deleteItem);
 
 mp.events.add("inventory.setItemSqlId", mp.inventory.setItemSqlId);
+
+mp.events.add("inventory.setFoundItem", mp.inventory.setFoundItem);
 
 mp.events.add("inventory.addItem", mp.inventory.addItem);
 

@@ -551,7 +551,10 @@ module.exports = {
             notifs.error(player, text, header);
         };
         if (!player.inventory.search) return out(`Вы не обыскиваете игрока`);
+        var rec = mp.players.at(player.inventory.search.recId);
+        if (!rec) return out(`Игрок не найден`);
 
+        rec.call(`inventory.setFoundItem`, [data.sqlId, true]);
         inventory.notifyOverhead(player, `Нашел '${inventory.getName(data.itemId)}'`);
     },
     "police.wanted": (player, recId) => {

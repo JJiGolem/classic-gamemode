@@ -474,7 +474,7 @@ var inventory = new Vue({
         // Напитки
         drinkList: [34, 130, 133],
         // Предметы, которые можно изымать при обыске
-        searchList: [1],
+        takeSearchList: [70],
         // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
         environment: [],
         // Предметы на игроке (экипировка)
@@ -552,6 +552,8 @@ var inventory = new Vue({
         searchTimer: null,
         // Список предметов для исследования при обыске
         searchList: [],
+        // Время подсветки предмета как 'найден при обыске'
+        foundTime: 60 * 1000,
     },
     computed: {
         commonWeight() {
@@ -840,7 +842,7 @@ var inventory = new Vue({
                     this.itemDesc.y = y - rect.y;
                 },
                 'contextmenu': (e) => {
-                    if (this.searchMode && !this.searchList.includes(item.itemId)) return;
+                    if (this.searchMode && !this.takeSearchList.includes(item.itemId)) return;
                     this.itemMenu.item = item;
                     this.itemMenu.x = e.clientX - rect.x;
                     this.itemMenu.y = e.clientY - rect.y;
@@ -1282,7 +1284,15 @@ var inventory = new Vue({
         },
         // Предмет был найден при обыске
         setFoundItem(item, enable) {
-            Vue.set(item, 'found', enable);
+            if (typeof item == 'number') item = this.getItem(item);
+            if (item) {
+                Vue.set(item, 'found', enable);
+                if (enable) {
+                    setTimeout(() => {
+                        Vue.set(item, 'found', !enable);
+                    }, this.foundTime);
+                }
+            }
         },
         // Ожидание исследования предметов при обыске
         setSearchItems(items, enable) {
@@ -1309,6 +1319,7 @@ var inventory = new Vue({
                 if (!el || !this.searchMode) return clearInterval(this.searchTimer);
                 Vue.set(el, 'search', false);
                 if (el.itemId) this.callRemote(`police.inventory.search.found`, {
+                    sqlId: el.sqlId,
                     itemId: el.itemId
                 });
             }, this.searchWait);
