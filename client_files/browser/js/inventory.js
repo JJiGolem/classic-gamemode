@@ -1675,6 +1675,9 @@ var inventory = new Vue({
         },
         searchMode(val, oldVal) {
             if (oldVal && !val) {
+                for (var index in this.equipment) {
+                    this.deleteItem(this.equipment[index].sqlId);
+                }
                 this.initItems(oldVal.myEquipment);
                 clearInterval(this.searchTimer);
             }
