@@ -163,13 +163,23 @@ module.exports = {
         }
         var cant = inventory.cantAdd(player, obj.item.itemId, inventory.getParamsValues(obj.item));
         if (cant) return notifs.error(player, cant, header);
-        obj.children.forEach((item) => {
+        var incorrectChild = obj.children.find(item => {
             var params = inventory.getParamsValues(item);
             if (params.weaponHash) {
                 var weapon = inventory.getItemByItemId(player, item.itemId);
-                if (weapon) return notifs.error(player, `Оружие ${inventory.getName(item.itemId)} уже имеется`, header);
+                if (weapon) {
+                    notifs.error(player, `${inventory.getName(obj.item.itemId)} содержит оружие ${inventory.getName(item.itemId)}, которое уже имеется`, header);
+                    return true;
+                }
             }
-
+            if (params.sex != null && params.sex != !player.character.gender) {
+                notifs.error(player, `${inventory.getName(obj.item.itemId)} содержит ${inventory.getName(item.itemId)} противоположного пола`, header);
+                return true;
+            }
+            return false;
+        });
+        if (incorrectChild) return;
+        obj.children.forEach((item) => {
             item.playerId = player.character.id;
             // из-за paranoid: true
             item.restore();
@@ -532,6 +542,11 @@ module.exports = {
                 }
                 break;
         }
+    },
+    // удалить кидаемое оружие
+    "inventory.throwableWeapon.delete": (player, sqlId) => {
+        var item = inventory.getItem(player, sqlId);
+        if (item) inventory.deleteItem(player, item);
     },
     // Запрос предметов инвентаря в багажнике авто
     "vehicle.boot.items.request": (player, vehId) => {

@@ -5,7 +5,7 @@
     color: white;
     width: 60%;
     max-width: 70vw;
-    font-size: 1.1vw;
+    font-size: 1.6vh;
     z-index: -1;
     font-family: Arial, Helvetica, sans-serif
 }
@@ -39,15 +39,15 @@
     color: white;
     display: inline-block;
     margin-left: 1vw;
-    font-size: 1.1vw;
+    font-size: 1.6vh;
 }
 
 .tag-chat-react {
     display: inline-block;
     text-align: center;
     color: white;
-    width: 6vw;
-    font-size: 1.1vw;
+    /* width: 3vw; */
+    /* font-size: 1.6vh; */
 }
 
 .message-chat-react {

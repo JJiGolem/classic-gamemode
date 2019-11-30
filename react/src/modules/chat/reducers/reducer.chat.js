@@ -3,8 +3,11 @@ const initialState = {
     messages: [],
     opacity: 1,
     time: true,
-    tags: [],
-    isFocus: false
+    tags: [
+        // { id: 1, name: 'Сказатьвфцвц' }
+    ],
+    isFocus: false,
+    size: 1
 };
 
 export default function chatList(state = initialState, action) {
@@ -67,6 +70,13 @@ export default function chatList(state = initialState, action) {
                 ...state,
                 time: payload
             };
+
+        case 'SET_SIZE_CHAT':
+            let newSize = 0.5 + 0.25 * payload
+            return {
+                ...state,
+                size: newSize
+            }
 
         default:
             break;
