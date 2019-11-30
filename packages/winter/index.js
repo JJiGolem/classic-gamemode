@@ -381,6 +381,8 @@ module.exports = {
             ]
         ]
     },
+    // Опыт скилла за один круг
+    exp: 0.2,
 
     // получить арендованный трактор игрока
     getVehByDriver(player) {
@@ -488,6 +490,11 @@ module.exports = {
         }, () => {
             notifs.success(player, `Снега стало меньше!`, header);
             jobs.pay(player);
+            this.addJobExp(player);
         });
+    },
+    addJobExp(player) {
+        var skill = jobs.getJobSkill(player, 8);
+        jobs.setJobExp(player, skill, skill.exp + this.exp);
     },
 };
