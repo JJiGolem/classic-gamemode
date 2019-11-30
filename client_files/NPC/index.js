@@ -9,14 +9,13 @@ mp.events.add("NPC.create", (data) => {
     }
 
     if (data.marker) {
-        mp.markers.new(1, new mp.Vector3(data.marker.x, data.marker.y, data.marker.z), 0.4,
-            {
-                direction: new mp.Vector3(data.marker.x, data.marker.y, data.marker.z),
-                rotation: 0,
-                color: data.marker.color,
-                visible: true,
-                dimension: 0
-            });
+        mp.markers.new(1, new mp.Vector3(data.marker.x, data.marker.y, data.marker.z), 0.4, {
+            direction: new mp.Vector3(data.marker.x, data.marker.y, data.marker.z),
+            rotation: 0,
+            color: data.marker.color,
+            visible: true,
+            dimension: 0
+        });
         let shape = mp.colshapes.newSphere(data.marker.x, data.marker.y, data.marker.z + 1, 0.7);
         shape.pos = new mp.Vector3(data.marker.x, data.marker.y, data.marker.z);
         shape.isNPC = true;
@@ -27,6 +26,13 @@ mp.events.add("NPC.create", (data) => {
         if (data.marker.leaveEvent) {
             shape.NPCleaveEvent = data.marker.leaveEvent;
         }
+    }
+    if (data.blip) {
+        mp.blips.new(data.blip.sprite, data.blip.position, {
+            name: data.blip.name,
+            color: data.blip.color,
+            drawDistance: 10
+        });
     }
 });
 

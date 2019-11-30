@@ -20,13 +20,14 @@ mp.winter = {
         return flood;
     },
     createJobPed() {
+        var pos = {
+            x: -629.31494140625,
+            y: -1635.0389404296875,
+            z: 25.974966049194336
+        };
         var pedInfo = {
-            model: "mp_m_counterfeit_01",
-            position: {
-                x: -629.31494140625,
-                y: -1635.0389404296875,
-                z: 25.974966049194336
-            },
+            model: "u_m_m_promourn_01",
+            position: pos,
             heading: 201.21652221679688,
             marker: {
                 x: -629.153564453125,
@@ -36,6 +37,12 @@ mp.winter = {
                 enterEvent: "winter.jobshape.enter",
                 leaveEvent: "winter.jobshape.leave"
             },
+            blip: {
+                sprite: 1,
+                color: 1,
+                position: pos,
+                name: `Снегоуборщик`
+            }
         };
         mp.events.call('NPC.create', pedInfo);
     },
