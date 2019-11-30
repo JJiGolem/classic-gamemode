@@ -14,6 +14,373 @@ module.exports = {
     vehPrice: 100,
     // ЗП за одну точку на тракторе
     pay: 5,
+    // Новогодняя одежда
+    clothes: {
+        0: [ // муж.
+            [{
+                    itemId: 6,
+                    params: {
+                        variation: 2,
+                        texture: 0,
+                        sex: 1,
+                        clime: '[-15,20]',
+                        name: 'Зимняя шапка',
+                    },
+                },
+                {
+                    itemId: 6,
+                    params: {
+                        variation: 2,
+                        texture: 1,
+                        sex: 1,
+                        clime: '[-15,20]',
+                        name: 'Зимняя шапка',
+                    },
+                },
+                {
+                    itemId: 6,
+                    params: {
+                        variation: 2,
+                        texture: 2,
+                        sex: 1,
+                        clime: '[-15,20]',
+                        name: 'Зимняя шапка',
+                    },
+                },
+                {
+                    itemId: 6,
+                    params: {
+                        variation: 2,
+                        texture: 3,
+                        sex: 1,
+                        clime: '[-15,20]',
+                        name: 'Зимняя шапка',
+                    },
+                },
+                {
+                    itemId: 6,
+                    params: {
+                        variation: 34,
+                        texture: 0,
+                        sex: 1,
+                        clime: '[-15,20]',
+                        name: 'Зимняя шапка',
+                    },
+                },
+            ],
+            [{
+                    itemId: 7,
+                    params: {
+                        variation: 124,
+                        texture: 0,
+                        torso: 1,
+                        undershirt: 44,
+                        sex: 1,
+                        pockets: '[7,7,7,7,14,7]',
+                        clime: '[-15,20]',
+                        name: 'Зимняя куртка',
+                    },
+                },
+                {
+                    itemId: 7,
+                    params: {
+                        variation: 153,
+                        texture: 14,
+                        torso: 1,
+                        undershirt: 44,
+                        sex: 1,
+                        pockets: '[7,7,7,7,14,7]',
+                        clime: '[-15,20]',
+                        name: 'Зимняя куртка',
+                    },
+                },
+                {
+                    itemId: 7,
+                    params: {
+                        variation: 168,
+                        texture: 2,
+                        torso: 1,
+                        undershirt: 44,
+                        sex: 1,
+                        pockets: '[7,7,7,7,14,7]',
+                        clime: '[-15,20]',
+                        name: 'Зимняя куртка',
+                    },
+                },
+                {
+                    itemId: 7,
+                    params: {
+                        variation: 153,
+                        texture: 22,
+                        torso: 1,
+                        undershirt: 44,
+                        sex: 1,
+                        pockets: '[7,7,7,7,14,7]',
+                        clime: '[-15,20]',
+                        name: 'Зимняя куртка',
+                    },
+                },
+            ],
+            [{
+                    itemId: 8,
+                    params: {
+                        variation: 9,
+                        texture: 0,
+                        sex: 1,
+                        pockets: '[7,8,7,8,14,8,14,8]',
+                        clime: '[-15,20]',
+                        name: 'Зимние брюки',
+                    },
+                },
+                {
+                    itemId: 8,
+                    params: {
+                        variation: 9,
+                        texture: 5,
+                        sex: 1,
+                        pockets: '[7,8,7,8,14,8,14,8]',
+                        clime: '[-15,20]',
+                        name: 'Зимние брюки',
+                    },
+                },
+                {
+                    itemId: 8,
+                    params: {
+                        variation: 9,
+                        texture: 6,
+                        sex: 1,
+                        pockets: '[7,8,7,8,14,8,14,8]',
+                        clime: '[-15,20]',
+                        name: 'Зимние брюки',
+                    },
+                },
+                {
+                    itemId: 8,
+                    params: {
+                        variation: 9,
+                        texture: 9,
+                        sex: 1,
+                        pockets: '[7,8,7,8,14,8,14,8]',
+                        clime: '[-15,20]',
+                        name: 'Зимние брюки',
+                    },
+                },
+            ],
+            [{
+                    itemId: 9,
+                    params: {
+                        variation: 51,
+                        texture: 0,
+                        sex: 1,
+                        clime: '[-15,20]',
+                        name: 'Зимние ботинки',
+                    },
+                },
+                {
+                    itemId: 9,
+                    params: {
+                        variation: 14,
+                        texture: 0,
+                        sex: 1,
+                        clime: '[-15,20]',
+                        name: 'Зимние ботинки',
+                    },
+                },
+                {
+                    itemId: 9,
+                    params: {
+                        variation: 14,
+                        texture: 1,
+                        sex: 1,
+                        clime: '[-15,20]',
+                        name: 'Зимние ботинки',
+                    },
+                },
+            ]
+        ],
+        1: [ // жен.
+            [{
+                    itemId: 6,
+                    params: {
+                        variation: 5,
+                        texture: 0,
+                        sex: 0,
+                        clime: '[-15,20]',
+                        name: 'Зимняя шапка',
+                    },
+                },
+                {
+                    itemId: 6,
+                    params: {
+                        variation: 5,
+                        texture: 1,
+                        sex: 0,
+                        clime: '[-15,20]',
+                        name: 'Зимняя шапка',
+                    },
+                },
+                {
+                    itemId: 6,
+                    params: {
+                        variation: 5,
+                        texture: 5,
+                        sex: 0,
+                        clime: '[-15,20]',
+                        name: 'Зимняя шапка',
+                    },
+                },
+                {
+                    itemId: 6,
+                    params: {
+                        variation: 5,
+                        texture: 7,
+                        sex: 0,
+                        clime: '[-15,20]',
+                        name: 'Зимняя шапка',
+                    },
+                },
+                {
+                    itemId: 6,
+                    params: {
+                        variation: 33,
+                        texture: 0,
+                        sex: 0,
+                        clime: '[-15,20]',
+                        name: 'Зимняя шапка',
+                    },
+                },
+            ],
+            [{
+                    itemId: 7,
+                    params: {
+                        variation: 150,
+                        texture: 14,
+                        torso: 9,
+                        undershirt: 2,
+                        sex: 0,
+                        pockets: '[7,7,7,7,14,7]',
+                        clime: '[-15,20]',
+                        name: 'Зимняя куртка',
+                    },
+                },
+                {
+                    itemId: 7,
+                    params: {
+                        variation: 150,
+                        texture: 22,
+                        torso: 9,
+                        undershirt: 2,
+                        sex: 0,
+                        pockets: '[7,7,7,7,14,7]',
+                        clime: '[-15,20]',
+                        name: 'Зимняя куртка',
+                    },
+                },
+                {
+                    itemId: 7,
+                    params: {
+                        variation: 150,
+                        texture: 7,
+                        torso: 9,
+                        undershirt: 2,
+                        sex: 0,
+                        pockets: '[7,7,7,7,14,7]',
+                        clime: '[-15,20]',
+                        name: 'Зимняя куртка',
+                    },
+                },
+                {
+                    itemId: 7,
+                    params: {
+                        variation: 150,
+                        texture: 5,
+                        torso: 9,
+                        undershirt: 2,
+                        sex: 0,
+                        pockets: '[7,7,7,7,14,7]',
+                        clime: '[-15,20]',
+                        name: 'Зимняя куртка',
+                    },
+                },
+            ],
+            [{
+                    itemId: 8,
+                    params: {
+                        variation: 45,
+                        texture: 0,
+                        sex: 0,
+                        pockets: '[7,8,7,8,14,8,14,8]',
+                        clime: '[-15,20]',
+                        name: 'Зимние брюки',
+                    },
+                },
+                {
+                    itemId: 8,
+                    params: {
+                        variation: 45,
+                        texture: 1,
+                        sex: 0,
+                        pockets: '[7,8,7,8,14,8,14,8]',
+                        clime: '[-15,20]',
+                        name: 'Зимние брюки',
+                    },
+                },
+                {
+                    itemId: 8,
+                    params: {
+                        variation: 45,
+                        texture: 2,
+                        sex: 0,
+                        pockets: '[7,8,7,8,14,8,14,8]',
+                        clime: '[-15,20]',
+                        name: 'Зимние брюки',
+                    },
+                },
+                {
+                    itemId: 8,
+                    params: {
+                        variation: 45,
+                        texture: 3,
+                        sex: 0,
+                        pockets: '[7,8,7,8,14,8,14,8]',
+                        clime: '[-15,20]',
+                        name: 'Зимние брюки',
+                    },
+                },
+            ],
+            [{
+                    itemId: 9,
+                    params: {
+                        variation: 52,
+                        texture: 0,
+                        sex: 0,
+                        clime: '[-15,20]',
+                        name: 'Зимние ботинки',
+                    },
+                },
+                {
+                    itemId: 9,
+                    params: {
+                        variation: 52,
+                        texture: 1,
+                        sex: 0,
+                        clime: '[-15,20]',
+                        name: 'Зимние ботинки',
+                    },
+                },
+                {
+                    itemId: 9,
+                    params: {
+                        variation: 52,
+                        texture: 2,
+                        sex: 0,
+                        clime: '[-15,20]',
+                        name: 'Зимние ботинки',
+                    },
+                },
+            ]
+        ]
+    },
 
     // получить арендованный трактор игрока
     getVehByDriver(player) {
