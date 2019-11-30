@@ -70,8 +70,9 @@ module.exports = {
                 characterId: player.character.id,
             };
             player.call(`prompt.waitShowByName`, [`winter_job`]);
+            winter.startTractorRoute(player);
+            notifs.success(player, `Удачной работы!`, header);
         }, `Аренда трактора для снегоуборки`);
-        notifs.success(player, `Удачной работы!`, header);
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (!vehicle.db) return;
@@ -94,7 +95,7 @@ module.exports = {
             else return out(`Трактор арендован другим игроком`);
         }
 
-        d(`todo: init route...`)
+        if (!player.route) winter.startTractorRoute(player);
     },
     "playerQuit": (player) => {
         if (!player.character || player.character.job != 8) return;
@@ -107,7 +108,7 @@ module.exports = {
         winter.clearVeh(veh);
     },
     "jobs.leave": (player) => {
-        if (player.character.job != 8) return;
+        // if (player.character.job != 8) return;
         var veh = winter.getVehByDriver(player);
         if (veh) winter.clearVeh(veh);
     },
