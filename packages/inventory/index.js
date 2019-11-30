@@ -325,7 +325,10 @@ module.exports = {
         });
 
         player.inventory.items.push(item);
-        if (!item.parentId) this.updateView(player, item);
+        if (!item.parentId) {
+            if (item.index == 13) this.syncHandsItem(player, item);
+            else this.updateView(player, item);
+        }
         callback();
         await item.save();
         player.call("inventory.addItem", [this.convertServerToClientItem(player.inventory.items, item), item.pocketIndex, item.index, item.parentId]);
@@ -334,7 +337,7 @@ module.exports = {
         var slot = this.findFreeSlot(player, item.itemId);
         if (!slot) return callback(`Свободный слот для ${this.getInventoryItem(item.itemId).name} не найден`);
         var params = this.getParamsValues(item);
-        if (params.sex && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
+        if (params.sex != null && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
         var nextWeight = this.getCommonWeight(player) + this.getItemWeight(player, item);
         if (nextWeight > this.maxPlayerWeight) return callback(`Превышение по весу (${nextWeight.toFixed(2)} из ${this.maxPlayerWeight} кг)`);
         if (params.weaponHash) {
@@ -349,7 +352,10 @@ module.exports = {
         item.parentId = slot.parentId;
 
         player.inventory.items.push(item);
-        if (!item.parentId) this.updateView(player, item);
+        if (!item.parentId) {
+            if (item.index == 13) this.syncHandsItem(player, item);
+            else this.updateView(player, item);
+        }
         item.restore();
         player.call("inventory.addItem", [this.convertServerToClientItem(player.inventory.items, item), item.pocketIndex, item.index, item.parentId]);
         callback();
@@ -357,6 +363,12 @@ module.exports = {
     // при перемещении предмета из игрока в окруж. среду
     async addEnvironmentItem(player, item, pocketIndex, index) {
         // console.log(`addEnvironmentItem`)
+
+        if (!item.parentId) {
+            if (item.index == 13) this.syncHandsItem(player, null);
+            else this.clearView(player, item.itemId);
+        }
+
         var place = player.inventory.place;
         var params = this.getParamsValues(item);
         var struct = [];
@@ -463,8 +475,10 @@ module.exports = {
         if (!item) return console.log(`[inventory.deleteItem] Предмет #${item} у ${player.name} не найден`);
         var params = this.getParamsValues(item);
         // if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
-        if (!item.parentId) this.clearView(player, item.itemId);
-        if (!item.parentId && item.index == 13) this.syncHandsItem(player, null);
+        if (!item.parentId) {
+            if (item.index == 13) this.syncHandsItem(player, null);
+            else this.clearView(player, item.itemId);
+        }
         item.destroy();
         player.call("inventory.deleteItem", [item.id]);
 
@@ -742,6 +756,11 @@ module.exports = {
     findFreeSlot(player, itemId) {
         // debug(`findFreeSlot | itemId: ${itemId}`)
         var items = player.inventory.items;
+        if (!this.getHandsItem(player)) return {
+            pocketIndex: null,
+            index: 13,
+            parentId: null
+        };
         for (var bodyIndex in this.bodyList) {
             var list = this.bodyList[bodyIndex];
             if (!list) continue;
