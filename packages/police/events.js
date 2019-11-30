@@ -781,6 +781,12 @@ module.exports = {
     },
     "playerQuit": (player) => {
         if (!player.character) return;
+
+        if (player.inventory.search) {
+            var rec = mp.players.at(player.inventory.search.recId);
+            if (rec) rec.call(`inventory.controlEnable`, [true]);
+        }
+
         if (!player.character.arrestTime) return;
         var date = ([0, 2].includes(player.character.arrestType)) ? player.cellArrestDate : player.jailArrestDate;
         var time = Date.now() - date;
