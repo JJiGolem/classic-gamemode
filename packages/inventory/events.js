@@ -163,15 +163,22 @@ module.exports = {
         }
         var cant = inventory.cantAdd(player, obj.item.itemId, inventory.getParamsValues(obj.item));
         if (cant) return notifs.error(player, cant, header);
-        var weapon = obj.children.find(item => {
+        var incorrectChild = obj.children.find(item => {
             var params = inventory.getParamsValues(item);
             if (params.weaponHash) {
                 var weapon = inventory.getItemByItemId(player, item.itemId);
-                if (weapon) return true;
+                if (weapon) {
+                    notifs.error(player, `${inventory.getName(obj.item.itemId)} содержит оружие ${inventory.getName(item.itemId)}, которое уже имеется`, header);
+                    return true;
+                }
+            }
+            if (params.sex != null && params.sex != !player.character.gender) {
+                notifs.error(player, `${inventory.getName(obj.item.itemId)} содержит ${inventory.getName(item.itemId)} противоположного пола`, header);
+                return true;
             }
             return false;
         });
-        if (weapon) return notifs.error(player, `Оружие ${inventory.getName(weapon.itemId)} уже имеется`, header);
+        if (incorrectChild) return;
         obj.children.forEach((item) => {
             item.playerId = player.character.id;
             // из-за paranoid: true
