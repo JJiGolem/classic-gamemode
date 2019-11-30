@@ -38,8 +38,8 @@ mp.winter = {
                 leaveEvent: "winter.jobshape.leave"
             },
             blip: {
-                sprite: 1,
-                color: 1,
+                sprite: 599,
+                color: 4,
                 position: pos,
                 name: `Снегоуборщик`
             }
