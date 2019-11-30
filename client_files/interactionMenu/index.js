@@ -142,6 +142,8 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
             mp.events.callRemote(`police.cuffs`, JSON.stringify(data));
         } else if (itemName == 'Следование') {
             mp.events.callRemote(`police.follow`, entity.remoteId);
+        } else if (itemName == 'Обыск') {
+            mp.events.callRemote(`police.inventory.search.start`, entity.remoteId);
         } else if (itemName == 'В авто') {
             mp.events.callRemote(`police.vehicle.put`, entity.remoteId);
         }
