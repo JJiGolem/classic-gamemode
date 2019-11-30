@@ -119,7 +119,7 @@ var selectItems = new Vue({
         window.addEventListener('keydown', function(e) {
             if (e.keyCode != 9 || self.show) return;
             if (busy.includes() || !inventory.enable || inventory.handsBlock) return;
-            if (Date.now() - self.lastShowTime < 1000) return;
+            if (Date.now() - self.lastShowTime < 2000) return;
 
             self.show = true;
         });
