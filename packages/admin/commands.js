@@ -971,11 +971,14 @@ module.exports = {
         }
     },
     "/skin": {
-        access: 1,
+        access: 4,
         description: "Изменить скин.",
-        args: "[модель]",
+        args: "[id]:n [модель]",
         handler: (player, args, out) => {
-            player.model = mp.joaat(args[0]);
+            let target = mp.players.at(args[0]);
+            if (!target) return out.error(`Игрок не найден`, player);;
+            target.model = mp.joaat(args[1]);
+            notify.info(target, `${player.name} установил вам скин`);
             out.log(`Скин изменен`, player);
         }
     },
