@@ -31,7 +31,7 @@ mp.events.add("NPC.create", (data) => {
         mp.blips.new(data.blip.sprite, data.blip.position, {
             name: data.blip.name,
             color: data.blip.color,
-            drawDistance: 10
+            shortRange: 10,
         });
     }
 });
