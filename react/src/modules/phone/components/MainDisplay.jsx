@@ -66,9 +66,11 @@ class MainDisplay extends Component {
 
         let countNotReadMessages = 0;
 
-        for (let i = 0; i < dialogs.list.length; i++) {
-            if (dialogs.list[i].PhoneMessages.some(message => !message.isRead)) {
-                countNotReadMessages++;
+        if (dialogs) {
+            for (let i = 0; i < dialogs.list.length; i++) {
+                if (dialogs.list[i].PhoneMessages.some(message => !message.isRead)) {
+                    countNotReadMessages++;
+                }
             }
         }
 
@@ -110,7 +112,7 @@ class MainDisplay extends Component {
                     }
 
                     {
-                        info.houses.length > 0 &&
+                        info.houses && info.houses.length > 0 &&
                         <div className="menu_panel_app-phone-react" onClick={() => addApp({name: 'HouseApp', form: <HouseApp />})}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="110%" height="110%" viewBox="0 0 88 88">
                                 <g id="house" transform="translate(-1604 -378)">
@@ -127,7 +129,7 @@ class MainDisplay extends Component {
                     }
 
                     {
-                        info.biz.length > 0 &&
+                        info.biz && info.biz.length > 0 &&
                         <div className="menu_panel_app-phone-react"
                              onClick={() => addApp({name: 'BusinessApp', form: <BusinessApp/>})}>
                              <svg xmlns="http://www.w3.org/2000/svg" width="110%" height="110%" viewBox="0 0 88 88">

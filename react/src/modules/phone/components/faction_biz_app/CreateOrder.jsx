@@ -74,10 +74,10 @@ class CreateOrder extends Component {
     }
 
     createOrder() {
-        const { addApp, setOrderStatus, business } = this.props;
+        const { addApp, setOrderStatus, business, apps } = this.props;
         const { productCount, productPrice } = this.state;
 
-        if (this.validateForm()) {
+        if (this.validateForm() && !apps.some(app => app.name === 'AnsOrder')) {
             addApp({ name: 'AnsOrder', form: <AnsOrder
                     productsCount={parseInt(productCount)} productsPrice={productPrice}
                 /> });
@@ -172,7 +172,8 @@ class CreateOrder extends Component {
 
 const mapStateToProps = state => ({
     info: state.info,
-    business: state.info.factionBiz
+    business: state.info.factionBiz,
+    apps: state.apps
 });
 
 const mapDispatchToProps = dispatch => ({

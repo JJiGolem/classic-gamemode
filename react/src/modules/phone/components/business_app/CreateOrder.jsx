@@ -75,13 +75,14 @@ class CreateOrder extends Component {
     }
 
     createOrder() {
-        const { addApp, setOrderStatus, business } = this.props;
+        const { addApp, setOrderStatus, apps, business } = this.props;
         const { productCount, productPrice } = this.state;
 
-        if (this.validateForm()) {
+        if (this.validateForm() && !apps.some(app => app.name === 'AnsOrder')) {
             addApp({ name: 'AnsOrder', form: <AnsOrder
                     productsCount={parseInt(productCount)} productsPrice={productPrice}
                 /> });
+
 
             // eslint-disable-next-line no-undef
             mp.trigger('biz.order.add', business.id, productCount, productPrice);
@@ -173,7 +174,8 @@ class CreateOrder extends Component {
 
 const mapStateToProps = state => ({
     info: state.info,
-    business: state.info.biz[0]
+    business: state.info.biz[0],
+    apps: state.apps
 });
 
 const mapDispatchToProps = dispatch => ({

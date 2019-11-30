@@ -505,13 +505,13 @@ module.exports = {
         var route = [];
         var k = 0;
         pointsLeft.forEach((point) => {
-            point.z = field.p1.z - 1;
+            point.z = field.p1.z + 1;
             route[k] = point;
             k += 2;
         });
         k = 1;
         pointsRight.forEach((point) => {
-            point.z = field.p1.z - 1;
+            point.z = field.p1.z + 1;
             route[k] = point;
             k += 2;
         });

@@ -89,6 +89,12 @@ let settingsmainWindowData = {
             pull: ["Выкл", "Вкл"],
             value: 0,
         },
+        chatSize: {
+            type: 'scroll',
+            head: 'Размер чата',
+            pull: ["Мелкий", "Обычный", "Крупный", "Огромный"],
+            value: 0,
+        },
         nicknames: {
             type: 'scroll',
             head: 'Никнеймы',
@@ -790,6 +796,7 @@ var playerMenu = new Vue({
 
                 settingsmainWindowData.settingsList[key].value = settings[key];
                 if (key == 'chatTimestamp') mp.events.call("setTimeChat", !!settings[key]);
+                else if (key == 'chatSize') mp.events.call('setSizeChat', settings[key] + 1);
                 else if (key == 'nicknames') mp.trigger(`nametags.show`, !!settings[key]);
                 else if (key == 'hudKeys') hud.keysShow = !!settings[key];
                 else if (key == 'ghetto') {

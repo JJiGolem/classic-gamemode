@@ -306,6 +306,17 @@ var offerDialog = new Vue({
                     mp.trigger(`callRemote`, `casino.dice.offer.accept`, 0);
                 },
             },
+            "winter_job": {
+                text: `Вы желаете арендовать рендовать трактор за <span>100 $</span>?`,
+                on(values) {
+                    this.text = `Вы желаете арендовать трактор за <br /><span class="money">${offerDialog.pretty(values.price)} $</span>?`;
+                },
+                yes() {
+                    mp.trigger("callRemote", "winter.vehicle.buy");
+                },
+                no() {},
+                ignore() {},
+            },
         },
         dialog: null,
         timeout: null,

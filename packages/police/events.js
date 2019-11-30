@@ -250,10 +250,10 @@ module.exports = {
 
         topParams.pockets = '[5,5,5,5,10,5]';
         legsParams.pockets = '[5,5,5,5,10,5]';
-        hatParams.clime = '[-5,30]';
-        topParams.clime = '[-5,30]';
-        legsParams.clime = '[-5,30]';
-        feetsParams.clime = '[-5,30]';
+        hatParams.clime = '[-10,15]';
+        topParams.clime = '[-10,15]';
+        legsParams.clime = '[-10,15]';
+        feetsParams.clime = '[-10,15]';
         topParams.name = `Рубашка ${faction.name}`;
         legsParams.name = `Брюки ${faction.name}`;
         feetsParams.name = `Ботинки ${faction.name}`;
@@ -502,6 +502,89 @@ module.exports = {
             notifs.info(rec, `Вы не следуете за ${player.name}`, `Следование`);
         }
     },
+    "police.inventory.search.item.putGround": (player, sqlId, pos) => {
+        pos = JSON.parse(pos);
+        var header = `Обыск`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.inventory.search) return out(`Вы не обыскиваете игрока`);
+        var rec = mp.players.at(player.inventory.search.recId);
+        if (!rec) return out(`Игрок не найден`);
+
+        var item = inventory.getItem(rec, sqlId);
+        if (!item) return out(`Предмет #${sqlId} не найден`);
+
+        // if (player.vehicle) return notifs.error(player, `Недоступно в авто`, header);
+        // if (player.cuffs) return notifs.error(player, `Недоступно в наручниках`, header);
+
+        var itemName = inventory.getName(item.itemId);
+        inventory.putGround(rec, item, pos);
+        notifs.success(player, `Предмет ${itemName} на земле`, header);
+        inventory.notifyOverhead(player, `Опрокинул '${itemName}'`);
+    },
+    "police.inventory.search.item.take": (player, sqlId) => {
+        notifs.info(player, `Скоро будет доступно :)`);
+    },
+    "police.inventory.search.start": (player, recId) => {
+        var header = `Обыск`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var rec = mp.players.at(recId);
+        if (!rec || !rec.character) return out(`Игрок не найден`);
+        var dist = player.dist(rec.position);
+        if (dist > 5) return out(`Игрок далеко`);
+        if (rec.getVariable("afk")) return out(`Игрок не активен`);
+        var character = player.character;
+        var rank = factions.getRank(player.character.factionId, police.searchRank);
+        if (player.inventory.search) return out(`Вы уже обыскиваете игрока`);
+        if (player.character.factionRank < rank.id) return out(`Доступно с ранга ${rank.name}`);
+        if (rec.vehicle) return out(`Игрок находится в авто`);
+        // TODO: check anti-flood
+        if (!police.searchFactions.includes(character.factionId)) return out(`Нет прав для обыска`);
+        if (inventory.getHandsItem(player)) return out(`Освободите руки`);
+
+        var searchItems = inventory.getItemsForSearch(rec);
+        var data = {
+            playerId: rec.id,
+            playerName: rec.name,
+            items: inventory.convertServerToClientItems(searchItems)
+        };
+        player.inventory.search = {
+            recId: rec.id,
+            item: searchItems
+        };
+        player.call(`inventory.initSearchItems`, [data]);
+        rec.call(`inventory.controlEnable`, [false]);
+        inventory.notifyOverhead(player, `Начал обыск`);
+    },
+    "police.inventory.search.stop": (player) => {
+        var header = `Обыск`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.inventory.search) return out(`Вы не обыскиваете игрока`);
+
+        var rec = mp.players.at(player.inventory.search.recId);
+        if (rec) rec.call(`inventory.controlEnable`, [true]);
+
+        player.inventory.search = null;
+        inventory.notifyOverhead(player, `Завершил обыск`);
+    },
+    "police.inventory.search.found": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+        var header = `Обыск`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.inventory.search) return out(`Вы не обыскиваете игрока`);
+        var rec = mp.players.at(player.inventory.search.recId);
+        if (!rec) return out(`Игрок не найден`);
+
+        rec.call(`inventory.setFoundItem`, [data.sqlId, true]);
+        inventory.notifyOverhead(player, `Нашел '${inventory.getName(data.itemId)}'`);
+    },
     "police.wanted": (player, recId) => {
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Следование`);
@@ -698,6 +781,12 @@ module.exports = {
     },
     "playerQuit": (player) => {
         if (!player.character) return;
+
+        if (player.inventory.search) {
+            var rec = mp.players.at(player.inventory.search.recId);
+            if (rec) rec.call(`inventory.controlEnable`, [true]);
+        }
+
         if (!player.character.arrestTime) return;
         var date = ([0, 2].includes(player.character.arrestType)) ? player.cellArrestDate : player.jailArrestDate;
         var time = Date.now() - date;

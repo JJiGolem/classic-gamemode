@@ -300,6 +300,10 @@ var interactionMenu = new Vue({
                         icon: "wanted.svg"
                     },
                     {
+                        text: "Обыск",
+                        icon: "search.svg"
+                    },
+                    {
                         text: "Арест",
                         icon: "arrest.svg"
                     },
@@ -347,6 +351,10 @@ var interactionMenu = new Vue({
                     {
                         text: "Розыск",
                         icon: "wanted.svg"
+                    },
+                    {
+                        text: "Обыск",
+                        icon: "search.svg"
                     },
                     {
                         text: "Арест",
@@ -408,6 +416,10 @@ var interactionMenu = new Vue({
                     {
                         text: "Следование",
                         icon: "follow.svg"
+                    },
+                    {
+                        text: "Обыск",
+                        icon: "search.svg"
                     },
                     {
                         text: "В авто",

@@ -34,6 +34,16 @@ module.exports = (sequelize, DataTypes) => {
                 this.setDataValue('chatTimestamp', val);
             },
         },
+        // Размер чата
+        chatSize: {
+            type: DataTypes.TINYINT(1),
+            defaultValue: 1,
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, 3);
+                this.setDataValue('chatSize', val);
+            },
+        },
         // Ники над головой
         nicknames: {
             type: DataTypes.TINYINT(1),

@@ -418,6 +418,11 @@ mp.utils = {
         }
         return parity;
     },
+    // находится ли сущность в интерьере
+    inInterior(entity) {
+        var pos = entity.position;
+        return mp.game.interior.getInteriorAtCoords(pos.x, pos.y, pos.z) != 0;
+    },
 };
 
 // ребро касается, пересекается или пох

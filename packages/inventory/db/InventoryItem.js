@@ -44,6 +44,15 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 1,
             allowNull: false
         },
+        chance: {
+            type: DataTypes.INTEGER(3),
+            defaultValue: 50,
+            allowNull: false,
+            set(val) {
+                val = Math.clamp(val, 0, 100);
+                this.setDataValue('chance', val);
+            }
+        },
         model: {
             type: DataTypes.STRING(128),
             defaultValue: sequelize.literal("'hei_prop_heist_deposit_box'"),
