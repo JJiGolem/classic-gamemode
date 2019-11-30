@@ -54,7 +54,7 @@ mp.events.add({
             if (mp.game.ui.isPauseMenuActive() || mp.busy.includes()) return;
             if (mp.players.local.vehicle) return;
             if (mp.players.local.dimension) return;
-            if (mp.utils.inInterior(mp.players.local)) return;
+            if (mp.utils.inInterior(mp.players.local)) return mp.notify.warning(`Попробуйте слепить в другом месте`);
             mp.winter.takeSnowball();
         });
         mp.winter.createJobPed();
