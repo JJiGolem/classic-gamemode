@@ -13,7 +13,9 @@ mp.routes = {
 
         var checkpoint;
         if (!data.isMarker) {
-            checkpoint = mp.checkpoints.new(data.type, data.position, data.scale || 1, {
+            var pos = data.position;
+            pos.z = mp.game.gameplay.getGroundZFor3dCoord(pos.x, pos.y, pos.z, false, false);
+            checkpoint = mp.checkpoints.new(data.type, pos, data.scale || 1, {
                 direction: data.direction || data.position,
                 visible: true,
                 dimension: data.dimension || 0,
