@@ -19,6 +19,26 @@ mp.winter = {
         this.lastTakeSnowballTime = Date.now();
         return flood;
     },
+    createJobPed() {
+        var pedInfo = {
+            model: "mp_m_counterfeit_01",
+            position: {
+                x: -629.31494140625,
+                y: -1635.0389404296875,
+                z: 25.974966049194336
+            },
+            heading: 201.21652221679688,
+            marker: {
+                x: -629.153564453125,
+                y: -1635.9073486328125,
+                z: 25.974946975708008 - 1,
+                color: [255, 255, 125, 128],
+                enterEvent: "winter.jobshape.enter",
+                leaveEvent: "winter.jobshape.leave"
+            },
+        };
+        mp.events.call('NPC.create', pedInfo);
+    },
 };
 
 mp.events.add({
@@ -30,5 +50,12 @@ mp.events.add({
             if (mp.utils.inInterior(mp.players.local)) return;
             mp.winter.takeSnowball();
         });
+        mp.winter.createJobPed();
+    },
+    "winter.jobshape.enter": () => {
+        mp.events.call(`selectMenu.show`, `winterJob`);
+    },
+    "winter.jobshape.leave": () => {
+        mp.events.call(`selectMenu.hide`);
     },
 });
