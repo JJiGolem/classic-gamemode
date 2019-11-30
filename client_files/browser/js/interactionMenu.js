@@ -418,6 +418,10 @@ var interactionMenu = new Vue({
                         icon: "follow.svg"
                     },
                     {
+                        text: "Обыск",
+                        icon: "search.svg"
+                    },
+                    {
                         text: "В авто",
                         icon: "vehicle.svg"
                     },
