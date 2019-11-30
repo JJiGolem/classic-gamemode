@@ -474,7 +474,7 @@ var inventory = new Vue({
         // Напитки
         drinkList: [34, 130, 133],
         // Предметы, которые можно изымать при обыске
-        searchList: [1],
+        takeSearchList: [70],
         // Предметы в окружении (земля, шкаф, багажник, холодильник, ...)
         environment: [],
         // Предметы на игроке (экипировка)
@@ -493,6 +493,8 @@ var inventory = new Vue({
         show: false,
         // Возможность использования инвентаря
         enable: false,
+        // Возможность взаимодействия с предметами инвентаря
+        controlEnable: true,
         // Время последнего открытия/закрытия (ms)
         lastShowTime: 0,
         // Показ описания предмета на экране
@@ -552,6 +554,8 @@ var inventory = new Vue({
         searchTimer: null,
         // Список предметов для исследования при обыске
         searchList: [],
+        // Время подсветки предмета как 'найден при обыске'
+        foundTime: 60 * 1000,
     },
     computed: {
         commonWeight() {
@@ -641,6 +645,10 @@ var inventory = new Vue({
                 {
                     name: "Занимает",
                     value: this.itemsInfo[item.itemId].width + 'x' + this.itemsInfo[item.itemId].height + " ячейки"
+                },
+                {
+                    name: "Обнаружение",
+                    value: this.itemsInfo[item.itemId].chance + "%"
                 }
             ];
             if (item.params.health != null) params.push({
@@ -758,7 +766,7 @@ var inventory = new Vue({
             return "#C93D3D88";
         },
         itemGradient(item, transparent) {
-            if (item && item.params && item.params.health)
+            if (item && item.params && item.params.health && !item.search)
                 return `linear-gradient(0deg, ${this.valueColor(item.params.health)} ${item.params.health}%, rgba(255,255,255,${(transparent ? 0 : 0.3)}) ${item.params.health}%)`;
         },
         getItemsMenu(itemId) {
@@ -766,11 +774,14 @@ var inventory = new Vue({
             var menu = {
                 'Изъять': {
                     handler(item) {
-                        mp.trigger(`callRemote`, `inventory.search.item.take`, item.sqlId);
+                        mp.trigger(`callRemote`, `police.inventory.search.item.take`, item.sqlId);
                     }
                 },
                 'Выкинуть': {
-                    handler: this.putGroundHandler
+                    handler(item) {
+                        inventory.deleteItem(item.sqlId);
+                        mp.trigger(`police.inventory.search.item.putGround`, item.sqlId);
+                    }
                 }
             };
             return menu;
@@ -836,7 +847,8 @@ var inventory = new Vue({
                     this.itemDesc.y = y - rect.y;
                 },
                 'contextmenu': (e) => {
-                    if (this.searchMode && !this.searchList.includes(item.itemId)) return;
+                    if (this.searchMode && !this.takeSearchList.includes(item.itemId)) return;
+                    if (!this.controlEnable) return;
                     this.itemMenu.item = item;
                     this.itemMenu.x = e.clientX - rect.x;
                     this.itemMenu.y = e.clientY - rect.y;
@@ -844,6 +856,7 @@ var inventory = new Vue({
                 'mousedown': (e) => {
                     if (item.wait) return;
                     if (this.searchMode) return;
+                    if (!this.controlEnable) return;
                     if (e.which == 1) { // Left Mouse Button
                         this.itemDrag.item = item;
                         this.itemDrag.div = e.target;
@@ -949,7 +962,7 @@ var inventory = new Vue({
         moveItemToBody(item, bodyIndex) {
             var oldItem = this.equipment[bodyIndex];
             var canAdd = true;
-            if (oldItem) {
+            if (oldItem && oldItem != item) {
                 var freeSlot = this.findFreeSlot(oldItem.itemId);
                 if (!freeSlot) {
                     this.notify(`Нет места для ${this.getItemName(oldItem)}`);
@@ -1278,7 +1291,15 @@ var inventory = new Vue({
         },
         // Предмет был найден при обыске
         setFoundItem(item, enable) {
-            Vue.set(item, 'found', enable);
+            if (typeof item == 'number') item = this.getItem(item);
+            if (item) {
+                Vue.set(item, 'found', enable);
+                if (enable) {
+                    setTimeout(() => {
+                        Vue.set(item, 'found', !enable);
+                    }, this.foundTime);
+                }
+            }
         },
         // Ожидание исследования предметов при обыске
         setSearchItems(items, enable) {
@@ -1304,6 +1325,10 @@ var inventory = new Vue({
                 var el = this.searchList.shift();
                 if (!el || !this.searchMode) return clearInterval(this.searchTimer);
                 Vue.set(el, 'search', false);
+                if (el.itemId) this.callRemote(`police.inventory.search.found`, {
+                    sqlId: el.sqlId,
+                    itemId: el.itemId
+                });
             }, this.searchWait);
         },
 
@@ -1416,6 +1441,7 @@ var inventory = new Vue({
         },
         initSearchItems(data) {
             if (this.searchMode) return this.notify(`Режим обыска уже активирован`);
+            if (!this.enable) return this.notify(`Инвентарь не доступен`);
             if (typeof data == 'string') data = JSON.parse(data);
 
             this.searchMode = {
@@ -1432,6 +1458,7 @@ var inventory = new Vue({
                 var item = data.items[index];
                 this.addItem(item, null, index);
             }
+            this.show = true;
         },
         stopSearchMode() {
             if (!this.searchMode) return this.notify(`Режим обыска не активирован`);
@@ -1534,7 +1561,7 @@ var inventory = new Vue({
             Vue.delete(this.hotkeys, key);
         },
         onUseHotkey(key) {
-            if (!this.enable) return;
+            if (!this.enable || !this.controlEnable) return;
             if (Date.now() - this.lastUseHotkey < this.waitUseHotkey) return;
 
             var item = this.hotkeys[key];
@@ -1545,7 +1572,7 @@ var inventory = new Vue({
             this.moveItemToBody(item, 13);
         },
         onUseHandsItem() {
-            if (!this.enable) return;
+            if (!this.enable || !this.controlEnable) return;
             var item = this.equipment[13];
             if (!item) return;
             if (!this.hotkeysList[item.itemId]) return;
@@ -1652,6 +1679,9 @@ var inventory = new Vue({
         },
         searchMode(val, oldVal) {
             if (oldVal && !val) {
+                for (var index in this.equipment) {
+                    this.deleteItem(this.equipment[index].sqlId);
+                }
                 this.initItems(oldVal.myEquipment);
                 clearInterval(this.searchTimer);
             }
@@ -1665,7 +1695,6 @@ var inventory = new Vue({
             if (Date.now() - self.lastShowTime < 500) return;
             if (e.keyCode == 73 && self.enable) self.show = !self.show;
             if (e.keyCode > 47 && e.keyCode < 57) {
-                if (!self.enable) return;
                 var num = e.keyCode - 48;
                 self.onUseHotkey(num);
             }

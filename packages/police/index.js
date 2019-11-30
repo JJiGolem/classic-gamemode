@@ -86,6 +86,8 @@ module.exports = {
     searchTime: 2 * 60 * 1000,
     // Организации, которые могут использовать наручники
     cuffsFactions: [1, 2, 3, 4, 6, 12, 13, 14],
+    // Организации, которые могут производить обыск
+    searchFactions: [2, 3, 4],
     // Стоимость освобождения игрока за 1 ур. розыска (ms)
     unarrestPrice: 1000,
     // Процент адвокату за освобождение (от 0.00 до 1.00)
@@ -94,6 +96,8 @@ module.exports = {
     giveGunLicenseRank: 10,
     // Мин. ранг, с которого можно забирать лицению на оружие
     takeGunLicenseRank: 10,
+    // Мин. ранг, с которого можно производить обыск
+    searchRank: 10,
 
 
     setCuffs(player, cuffs) {
@@ -330,8 +334,8 @@ module.exports = {
             arrestTimeMax: 0
         }]);
 
-        player.position = (!player.character.arrestType)? this.lsCellExit : this.bcCellExit;
-        player.heading = (!player.character.arrestType)? this.lsCellExit.h : this.bcCellExit.h;
+        player.position = (!player.character.arrestType) ? this.lsCellExit : this.bcCellExit;
+        player.heading = (!player.character.arrestType) ? this.lsCellExit.h : this.bcCellExit.h;
 
         player.character.arrestTime = 0;
         player.character.arrestType = 0;
