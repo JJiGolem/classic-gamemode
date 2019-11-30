@@ -26,6 +26,7 @@ mp.anticheat = {
     },
     // анти-чит на побег из тюрьмы/КПЗ
     checkJail() {
+        if (!this.jail) return;
         if (mp.police.arrestType != null) {
             var info = mp.police.jailInfo[mp.police.arrestType];
             var dist = mp.vdist(mp.players.local.position, info.coords);
