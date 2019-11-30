@@ -363,6 +363,12 @@ module.exports = {
     // при перемещении предмета из игрока в окруж. среду
     async addEnvironmentItem(player, item, pocketIndex, index) {
         // console.log(`addEnvironmentItem`)
+
+        if (!item.parentId) {
+            if (item.index == 13) this.syncHandsItem(player, null);
+            else this.clearView(player, item.itemId);
+        }
+
         var place = player.inventory.place;
         var params = this.getParamsValues(item);
         var struct = [];
