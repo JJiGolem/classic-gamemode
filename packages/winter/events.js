@@ -90,7 +90,7 @@ module.exports = {
             price: winter.vehPrice
         }]);
         if (vehicle.driver.characterId != characterId) {
-            var driver = carrier.getDriverByVeh(vehicle);
+            var driver = winter.getDriverByVeh(vehicle);
             if (!driver) delete vehicle.driver;
             else return out(`Трактор арендован другим игроком`);
         }
