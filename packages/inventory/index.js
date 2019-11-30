@@ -325,7 +325,10 @@ module.exports = {
         });
 
         player.inventory.items.push(item);
-        if (!item.parentId) this.updateView(player, item);
+        if (!item.parentId) {
+            if (item.index == 13) this.syncHandsItem(player, item);
+            else this.updateView(player, item);
+        }
         callback();
         await item.save();
         player.call("inventory.addItem", [this.convertServerToClientItem(player.inventory.items, item), item.pocketIndex, item.index, item.parentId]);
@@ -349,7 +352,10 @@ module.exports = {
         item.parentId = slot.parentId;
 
         player.inventory.items.push(item);
-        if (!item.parentId) this.updateView(player, item);
+        if (!item.parentId) {
+            if (item.index == 13) this.syncHandsItem(player, item);
+            else this.updateView(player, item);
+        }
         item.restore();
         player.call("inventory.addItem", [this.convertServerToClientItem(player.inventory.items, item), item.pocketIndex, item.index, item.parentId]);
         callback();
@@ -439,8 +445,10 @@ module.exports = {
         if (!item) return console.log(`[inventory.deleteItem] Предмет #${item} у ${player.name} не найден`);
         var params = this.getParamsValues(item);
         // if (params.weaponHash) this.removeWeapon(player, params.weaponHash);
-        if (!item.parentId) this.clearView(player, item.itemId);
-        if (!item.parentId && item.index == 13) this.syncHandsItem(player, null);
+        if (!item.parentId) {
+            if (item.index == 13) this.syncHandsItem(player, null);
+            else this.clearView(player, item.itemId);
+        }
         item.destroy();
         player.call("inventory.deleteItem", [item.id]);
 
@@ -718,6 +726,11 @@ module.exports = {
     findFreeSlot(player, itemId) {
         // debug(`findFreeSlot | itemId: ${itemId}`)
         var items = player.inventory.items;
+        if (!this.getHandsItem(player)) return {
+            pocketIndex: null,
+            index: 13,
+            parentId: null
+        };
         for (var bodyIndex in this.bodyList) {
             var list = this.bodyList[bodyIndex];
             if (!list) continue;
