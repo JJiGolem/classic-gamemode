@@ -146,6 +146,9 @@ var prompt = new Vue({
             "clubs_buy": {
                 text: "Нажмите <span>E</span>, чтобы просмотреть ассортимент",
             },
+            "winter_job": {
+                text: "Очищайте дорогу от снега",
+            },
         },
         text: null
     },
