@@ -32,7 +32,7 @@ mp.events.add({
 
 function setPrices(config, multiplier) {
     for (let key in config) {
-        config[key] *= multiplier;
+        config[key] = parseInt(config[key] * multiplier);
     }
     mp.callCEFV(`selectMenu.menus["eateryMain"].items[0].values[0] = '$${config.hamburger}'`);
     mp.callCEFV(`selectMenu.menus["eateryMain"].items[1].values[0] = '$${config.hotdog}'`);
