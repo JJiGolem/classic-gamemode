@@ -140,6 +140,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE,
             defaultValue: null
         },
+        medCardDate: {
+            type: DataTypes.DATE,
+            defaultValue: null
+        },
         /// Внешность
         gender: {
             type: DataTypes.INTEGER(11),
