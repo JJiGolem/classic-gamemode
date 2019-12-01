@@ -408,6 +408,10 @@ var interactionMenu = new Vue({
                         text: "Реанимировать",
                         icon: "reanimate.svg"
                     },
+                    {
+                        text: "Медкарта",
+                        icon: "doc.png"
+                    },
                 ],
                 handler(index) {
                     var item = this.items[index];
