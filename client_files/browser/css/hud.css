@@ -292,7 +292,7 @@
     position: relative;
     top: 50%;
     left: 50%;
-    transform: translate(-55%, -50%);
+    transform: translate(-50%, -50%);
     width: 35%;
     fill: none;
 }
@@ -316,8 +316,16 @@
     font-size: 1.2vh;
     font-weight: 700;
     top: 55%;
-    left: 65%;
+    left: 60%;
 }
+
+#hud .voice .mute {
+    opacity: 0.4;
+}
+
+/*#hud .voice .mute path {
+    fill: #FF3838;
+}*/
 
 #hud .weather {
     bottom: 1.8vh;
