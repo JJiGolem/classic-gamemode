@@ -8,7 +8,8 @@
     background-image: url(../img/medicalCard/bg.svg);
     background-repeat: no-repeat;
     background-size: cover;
-    font-family: Montserrat;
+    font-family: MontserratNew;
+    opacity: 0;
 }
 
 #medicalCard .identifier {
