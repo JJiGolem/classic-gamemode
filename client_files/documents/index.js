@@ -67,6 +67,17 @@ mp.events.add('documents.show', (type, data) => {
         }
         mp.callCEFV('gunLicense.show = true');
     }
+    if (type == 'medCard') {
+        let newDate = data.time ? data.time.slice(0, 10) : null;
+        data.time = dateFormatter(newDate, 1);
+        data.sign = generateSign(data.name);
+        data.occupation = getFactionName(data.factionId);
+        for (let key in data) {
+            if (typeof data[key] == 'string') data[key] = `'${data[key]}'`;
+            mp.callCEFV(`medicalCard.${key} = ${data[key]}`);
+        }
+        mp.callCEFV('medicalCard.show = true');
+    }
 });
 
 mp.events.add('documents.close', (type, data) => {
@@ -87,6 +98,9 @@ mp.events.add('documents.close', (type, data) => {
             break;
         case 'gunLicense':
             mp.callCEFV('gunLicense.show = false');
+            break;
+        case 'medCard':
+            mp.callCEFV('medicalCard.show = false');
             break;
     }
 
@@ -144,6 +158,9 @@ mp.events.add('documents.showTo', (type) => {
         case "gunLicense":
             mp.events.call('documents.offer', "gunLicense", target.remoteId);
             break;
+        case "medCard":
+            mp.events.call('documents.offer', "medCard", target.remoteId);
+            break;
     }
 });
 
@@ -187,10 +204,37 @@ mp.events.add('documents.carPass.list.choose', (plate) => {
     }
 });
 
-function dateFormatter(date) {
-    if (!date) return '11/09/2001';
+function dateFormatter(date, symbolType = 0) {
+    let c = '/';
+    if (symbolType) c = '.';
+    if (!date) return `11${c}09${c}2001`;
     date = date.split('-');
-    let newDate = `${date[2]}/${date[1]}/${date[0]}`;
-
+    let newDate = `${date[2]}${c}${date[1]}${c}${date[0]}`;
     return newDate;
+}
+
+function generateSign(name) {
+    let arr = name.split(' ');
+    return `${arr[0].charAt(0)}.${arr[1]}`; 
+}
+
+function getFactionName(id) {
+    switch (id) {
+        case 1:
+            return 'Government';
+        case 2:
+            return 'LSPD';
+        case 3:
+            return 'BCSD';
+        case 4:
+            return 'FIB';
+        case 5:
+            return 'EMS';
+        case 6:
+            return 'National Guard';
+        case 7:
+            return 'Weazel News';
+        default:
+            return '-';
+    }
 }
