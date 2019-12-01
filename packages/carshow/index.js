@@ -146,19 +146,11 @@ module.exports = {
         }
     },
     async buyCarFromCarList(player, carId, primaryColor, secondaryColor) {
-        console.log(carId);
         for (var i = 0; i < carList.length; i++) {
             if (carList[i].sqlId == carId) {
-                // проверки на деньги и т д
                 if (player.character.cash < carList[i].properties.price) return player.call('carshow.car.buy.ans', [2]);
                 if (carList[i].count < 1) return player.call('carshow.car.buy.ans', [0]);
                 let hasHouse = houses.isHaveHouse(player.character.id);
-                // if (!hasHouse) {
-                //     if (player.vehicleList.length > 1) return player.call('carshow.car.buy.ans', [5]);
-                // } else {
-                //     if (player.carPlaces.length > 1 && player.vehicleList.length + 1 > player.carPlaces.length - 1) return player.call('carshow.car.buy.ans', [5]);
-                //     if (player.carPlaces.length == 1 && player.vehicleList.length >= player.carPlaces.length) return player.call('carshow.car.buy.ans', [5]);
-                // }
                 if (!vehicles.isAbleToBuyVehicle(player)) return player.call('carshow.car.buy.ans', [5]);
 
                 var cant = inventory.cantAdd(player, 33, {});
@@ -220,7 +212,6 @@ module.exports = {
                             if (!hasHouse) {
                                 mp.events.call('parkings.vehicle.add', veh);
                             } else {
-                                console.log('spawn house');
                                 vehicles.spawnHomeVehicle(player, veh);
                             }
 

@@ -210,6 +210,7 @@ function updateSpecifications(i) {
         mp.callCEFV(`carSpecifications.body.volume.value = '—'`);
         mp.callCEFV(`carSpecifications.body.consumption.value = '—'`);
     }
+    if (list[i].count < 0) list[i].count = 0;
     mp.callCEFV(`carSpecifications.body.class.value = \`${className}\``);
     mp.callCEFV(`carSpecifications.body.count.value = '${list[i].count}'`);
     mp.callCEFV(`carSpecifications.price = '${list[i].properties.price}'`);
