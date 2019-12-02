@@ -21,9 +21,9 @@ module.exports = {
     "/ans": {
         access: 1,
         description: "Ответ игроку",
-        args: "[id] [сообщение]",
+        args: "[id]:n [сообщение]:s",
         handler: (player, args) => {
-            let target = mp.players.at(parseInt(args[0]));
+            let target = mp.players.at(args[0]);
             if (!target) return player.call('notifications.push.error', ['Игрок не найден', 'Ошибка']);
             args.shift();
             mp.events.call('admin.notify.all.split', args.join(' '), `!{#f29f53}[A] ${player.name}[${player.id}] > ${target.name}[${target.id}]: `);
@@ -352,6 +352,56 @@ module.exports = {
             rec.kick();
         }
     },
+    "/offwarn": {
+        access: 4,
+        description: "Выдать офлайн варн игроку",
+        args: "[имя]:s [фамилия]:s [причина]",
+        handler: async (player, args, out) => {
+            let name = `${args[0]} ${args[1]}`;
+            let target = mp.players.getByName(name);
+            if (target) return out.error('Игрок в сети, используйте /warn', player);
+
+            let character = await db.Models.Character.findOne({
+                where: {
+                    name: name
+                },
+                include: db.Models.Account
+            });
+            if (!character) return out.error(`Персонаж ${name} не найден`, player);
+            let account = character.Account;
+            args.splice(0, 2);
+            let reason = args.join(" ");
+
+            if (character.factionId) factions.deleteOfflineMember(character);
+            character.warnNumber++;
+            character.warnDate = new Date();
+
+            if (character.warnNumber >= admin.banWarns) { 
+                character.warnNumber = 0;
+                character.warnDate = null;
+                account.clearBanDate = new Date(Date.now() + admin.warnsBanDays * 24 * 60 * 60 * 1000);
+                account.save();
+                mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] забанил игрока ${character.name}: ${reason} (${admin.banWarns} варнов)`);
+            } else {
+                mp.events.call('admin.notify.players', `!{#db5e4a}Администратор ${player.name}[${player.id}] выдал warn игроку ${character.name}: ${reason}`);
+            }
+            character.save();
+        }
+    },
+    "/unwarn": {
+        access: 4,
+        description: "Снять все варны игроку",
+        args: "[id]:n",
+        handler: async (player, args, out) => {
+            let target = mp.players.at(args[0]);
+            if (!target || !target.character) return out.error(`Игрок #${args[0]} не найден`, player);
+            target.character.warnNumber = 0;
+            target.character.warnDate = null;
+            target.character.save();
+            notify.info(player, `${player.name} снял вам все варны`);
+            out.info(`${player.name} снял все варны ${target.name}`)
+        }
+    },
     "/mute": {
         access: 2,
         description: "Запретить текстовый + голосовой чат игроку.",
@@ -417,7 +467,7 @@ module.exports = {
             rec.kick();
         }
     },
-    "/banoff": {
+    "/offban": {
         access: 4,
         description: "Забанить игрока оффлайн.",
         args: "[имя] [фамилия] [дни]:n [причина]",
@@ -468,6 +518,38 @@ module.exports = {
             rec.account.clearBanDate = new Date(Date.now() + 30 * 365 * 24 * 60 * 60 * 1000);
             rec.account.save();
             rec.kick();
+        }
+    },
+    "/offpermban": {
+        access: 5,
+        description: "Забанить игрока перманентно офлайн (Account + IP + Social Club).",
+        args: "[имя]:s [фамилия]:s [причина]",
+        handler: async (player, args, out) => {
+            let name = `${args[0]} ${args[1]}`;
+            let target = mp.players.getByName(name);
+            if (target) return out.error('Игрок в сети, используйте /permban', player);
+
+            let character = await db.Models.Character.findOne({
+                where: {
+                    name: name
+                },
+                include: db.Models.Account
+            });
+            if (!character) return out.error(`Персонаж ${name} не найден`, player);
+            let account = character.Account;
+            args.splice(0, 2);
+            let reason = args.join(" ");
+
+            out.info(`${player.name} выдал пермбан в офлайне игроку ${character.name}: ${reason}`);
+
+            db.Models.Ban.create({
+                ip: account.lastIp,
+                socialClub: account.socialClub,
+                reason: reason
+            });
+
+            account.clearBanDate = new Date(Date.now() + 30 * 365 * 24 * 60 * 60 * 1000);
+            account.save();
         }
     },
     "/unban": {
@@ -889,11 +971,14 @@ module.exports = {
         }
     },
     "/skin": {
-        access: 1,
+        access: 4,
         description: "Изменить скин.",
-        args: "[модель]",
+        args: "[id]:n [модель]",
         handler: (player, args, out) => {
-            player.model = mp.joaat(args[0]);
+            let target = mp.players.at(args[0]);
+            if (!target) return out.error(`Игрок не найден`, player);;
+            target.model = mp.joaat(args[1]);
+            notify.info(target, `${player.name} установил вам скин`);
             out.log(`Скин изменен`, player);
         }
     },

@@ -163,13 +163,23 @@ module.exports = {
         }
         var cant = inventory.cantAdd(player, obj.item.itemId, inventory.getParamsValues(obj.item));
         if (cant) return notifs.error(player, cant, header);
-        obj.children.forEach((item) => {
+        var incorrectChild = obj.children.find(item => {
             var params = inventory.getParamsValues(item);
             if (params.weaponHash) {
                 var weapon = inventory.getItemByItemId(player, item.itemId);
-                if (weapon) return notifs.error(player, `Оружие ${inventory.getName(item.itemId)} уже имеется`, header);
+                if (weapon) {
+                    notifs.error(player, `${inventory.getName(obj.item.itemId)} содержит оружие ${inventory.getName(item.itemId)}, которое уже имеется`, header);
+                    return true;
+                }
             }
-
+            if (params.sex != null && params.sex != !player.character.gender) {
+                notifs.error(player, `${inventory.getName(obj.item.itemId)} содержит ${inventory.getName(item.itemId)} противоположного пола`, header);
+                return true;
+            }
+            return false;
+        });
+        if (incorrectChild) return;
+        obj.children.forEach((item) => {
             item.playerId = player.character.id;
             // из-за paranoid: true
             item.restore();
@@ -239,11 +249,25 @@ module.exports = {
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, header);
         if (!rec.getVariable("knocked")) return notifs.error(player, `${rec.name} не нуждается в реанимации`, header);
         if (player.dist(rec.position) > 5) return notifs.error(player, `${rec.name} далеко`, header);
+
         var adrenalin = (data.itemSqlId) ? inventory.getItem(player, data.itemSqlId) : inventory.getHandsItem(player);
         if (!adrenalin) return notifs.error(player, `Необходим предмет в руках`, header);
         if (!inventory.isInHands(adrenalin) || adrenalin.itemId != 26) return notifs.error(player, `${inventory.getName(26)} не в руках`, header);
+
         var count = inventory.getParam(adrenalin, 'count').value;
         if (!count) return notifs.error(player, `Количество: 0 ед.`, header);
+
+        if (factions.isHospitalFaction(player.character.factionId)) {
+            var diff = Date.now() - (hospital.knockedLogs[rec.character.id] || 0);
+            var wait = hospital.knockedWaitTime;
+            if (diff < wait) notifs.error(player, `Получение премии за игрока будет доступно через ${parseInt((wait - diff) / 1000)} сек.`, header);
+            else {
+                money.addCash(player, hospital.knockedPrice, (res) => {
+                    if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
+                }, `Реанимировал игрока ${rec.name}`);
+                hospital.knockedLogs[rec.character.id] = Date.now();
+            }
+        }
 
         rec.spawn(rec.position);
         rec.health = 10;
@@ -519,6 +543,11 @@ module.exports = {
                 break;
         }
     },
+    // удалить кидаемое оружие
+    "inventory.throwableWeapon.delete": (player, sqlId) => {
+        var item = inventory.getItem(player, sqlId);
+        if (item) inventory.deleteItem(player, item);
+    },
     // Запрос предметов инвентаря в багажнике авто
     "vehicle.boot.items.request": (player, vehId) => {
         var header = `Багажник`;
@@ -635,6 +664,18 @@ module.exports = {
         mp.events.call("faction.holder.items.destroy", player);
         mp.events.call("faction.holder.items.clear", player);
         mp.events.call("faction.holder.items.init", player);
+    },
+    "playerDeath": (player) => {
+        if (!player.character) return;
+
+        var handsItem = inventory.getHandsItem(player);
+        if (!handsItem || !inventory.isWeaponItem(handsItem)) return;
+
+        var params = inventory.getParamsValues(handsItem);
+        if (params.ammo == null) return;
+        if (player.weapon == params.weaponHash && params.ammo != player.weaponAmmo) {
+            inventory.updateParam(player, handsItem, 'ammo', player.weaponAmmo);
+        }
     },
     "death.spawn": (player, groundZ, dimension) => {
         if (!player.character) return;

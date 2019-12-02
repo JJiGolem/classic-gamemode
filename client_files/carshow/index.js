@@ -115,12 +115,10 @@ mp.events.add('carshow.vehicle.color', (color1, color2) => {
 });
 
 mp.events.add("carshow.car.buy", (carId) => {
-    mp.callCEFV(`loader.show = true;`);
     mp.events.callRemote('carshow.car.buy', list[currentIndex].sqlId, primary, secondary);
 });
 
 mp.events.add("carshow.car.buy.ans", (ans, carInfo, parkingInfo) => {
-    mp.callCEFV(`loader.show = false;`);
     switch (ans) {
         case 0:
             mp.notify.error('Т/с нет в наличии', 'Ошибка');
@@ -155,6 +153,7 @@ mp.events.add("carshow.car.buy.ans", (ans, carInfo, parkingInfo) => {
             mp.notify.error(carInfo.text, `Инвентарь`);
             break;
     }
+    mp.callCEFV(`selectMenu.loader = false;`);
 });
 
 function updateSpecifications(i) {
@@ -211,6 +210,7 @@ function updateSpecifications(i) {
         mp.callCEFV(`carSpecifications.body.volume.value = '—'`);
         mp.callCEFV(`carSpecifications.body.consumption.value = '—'`);
     }
+    if (list[i].count < 0) list[i].count = 0;
     mp.callCEFV(`carSpecifications.body.class.value = \`${className}\``);
     mp.callCEFV(`carSpecifications.body.count.value = '${list[i].count}'`);
     mp.callCEFV(`carSpecifications.price = '${list[i].properties.price}'`);

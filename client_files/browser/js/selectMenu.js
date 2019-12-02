@@ -979,6 +979,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Забрать транспорт') {
+                            selectMenu.show = false;
                             mp.trigger(`parkings.vehicle.get`);
                         }
                         if (e.itemName == 'Закрыть меню') {
@@ -1038,6 +1039,7 @@ var selectMenu = new Vue({
                     }
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Купить') {
+                            selectMenu.loader = true;
                             mp.trigger(`carshow.car.buy`);
                         }
                         if (e.itemName == 'Выход') {
@@ -6897,10 +6899,11 @@ var selectMenu = new Vue({
                         text: 'Бутылка воды',
                         values: ["$100"],
                     },
+                    /*
                     {
                         text: 'Плитка шоколада',
                         values: ["$100"],
-                    },
+                    },*/
                     {
                         text: 'Назад'
                     }
@@ -9299,6 +9302,47 @@ var selectMenu = new Vue({
                         }
                     } else if (eventName == 'onBackspacePressed') {
                         selectMenu.showByName("club");
+                    }
+                }
+            },
+            "winterJob": {
+                name: "winterJob",
+                header: "Работа снегоуборщика",
+                items: [{
+                        text: "Устроиться",
+                    },
+                    {
+                        text: "Уволиться",
+                    },
+                    // {
+                    //     text: "Помощь"
+                    // },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Устроиться') {
+                            mp.trigger(`callRemote`, `winter.job.start`);
+                        } else if (e.itemName == 'Уволиться') {
+                            mp.trigger(`callRemote`, `winter.job.stop`);
+                        } else if (e.itemName == 'Помощь') {
+                            // selectMenu.show = false;
+                            // modal.showByName("carrier_help");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
                     }
                 }
             },

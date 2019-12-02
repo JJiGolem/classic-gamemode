@@ -51,7 +51,7 @@ module.exports = {
     // Время захвата (ms)
     warTime: 5 * 60 * 1000,
     // Промежуток часов, в который можно начать захват
-    bizWarInterval: [12, 23],
+    bizWarInterval: [11, 20],
     // Кол-во боеприпасов, списываемое за выдачу оружия
     gunAmmo: 100,
     // Кол-во боеприпасов, списываемое за выдачу патронов
@@ -155,7 +155,7 @@ module.exports = {
         var war = this.wars[zone.id];
         var winMafiaId = war.mafia.id;
         var loseMafiaId = war.enemyMafia.id;
-        if (war.enemyMafia.score > war.mafia.score) {
+        if (war.enemyMafia.score >= war.mafia.score) {
             winMafiaId = war.enemyMafia.id;
             loseMafiaId = war.mafia.id;
         }

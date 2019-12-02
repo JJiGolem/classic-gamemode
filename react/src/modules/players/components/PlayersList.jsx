@@ -28,7 +28,7 @@ class PlayersList extends Component {
     }
 
     handleChangeInput(e) {
-        this.setState({ search: e.target.value });
+        this.setState({ search: e.target.value.toString().toLowerCase() });
     }
 
     handleChangeSelect(e) {
@@ -54,7 +54,9 @@ class PlayersList extends Component {
                 .filter(player => player[type]
                     .toString()
                     .toLowerCase()
-                    .startsWith(search.toString().toLowerCase()))
+                    .split(' ')
+                    .some(word => word.startsWith(search)))
+                    //.startsWith(search.toString().toLowerCase()))
                 .map((player, index) => <PlayerRow player={player}/>)
         )
     }

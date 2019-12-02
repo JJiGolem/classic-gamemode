@@ -199,9 +199,9 @@ class Chat extends React.Component {
 
         if (chat.isShow) {
             return (
-                <div id="chat-form-react" style={{opacity: chat.opacity}}>
+                <div id="chat-form-react" style={{ opacity: chat.opacity, fontSize: `${chat.size * 1.6}vh` }}>
 
-                    <ul id="message-list-chat-react" ref={(list) => {this.refList = list}}>
+                    <ul id="message-list-chat-react" ref={(list) => {this.refList = list}} style={{ height: `${chat.size * 25}vh` }}>
                         {
                             chat.messages.map((message, index) => (
                                 this.getMessage(index, message)
@@ -210,7 +210,7 @@ class Chat extends React.Component {
                     </ul>
 
                     {chat.isFocus &&
-                    <div className='block-input-chat-react'>
+                    <div className='block-input-chat-react' style={{ width: `${chat.size * 80}%` }}>
                         <div className="tag-chat-react">
                             <span style={{ color: chat.tags[curTagIndex].color }}>
                                 { chat.tags[curTagIndex].name }
@@ -229,6 +229,7 @@ class Chat extends React.Component {
                             onFocus={this.focusInput.bind(this)}
                             onBlur={() => {this.refInput.focus()}}
                             autoFocus={true}
+                            style={{ fontSize: `${chat.size * 1.6}vh` }}
                         >
                         </input>
                     </div>}

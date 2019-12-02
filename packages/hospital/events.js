@@ -140,32 +140,32 @@ module.exports = {
         if (topParams.dTexture == -1) delete topParams.dTexture;
         if (topParams.tTexture == -1) delete topParams.tTexture;
 
-        hatParams.faction = faction.id;
-        topParams.faction = faction.id;
-        legsParams.faction = faction.id;
-        feetsParams.faction = faction.id;
-        earsParams.faction = faction.id;
-        tiesParams.faction = faction.id;
-        masksParams.faction = faction.id;
-        glassesParams.faction = faction.id;
+        // hatParams.faction = faction.id;
+        // topParams.faction = faction.id;
+        // legsParams.faction = faction.id;
+        // feetsParams.faction = faction.id;
+        // earsParams.faction = faction.id;
+        // tiesParams.faction = faction.id;
+        // masksParams.faction = faction.id;
+        // glassesParams.faction = faction.id;
 
         topParams.pockets = '[5,5,5,5,10,5]';
         legsParams.pockets = '[5,5,5,5,10,5]';
-        hatParams.clime = '[-5,30]';
-        topParams.clime = '[-5,30]';
-        legsParams.clime = '[-5,30]';
-        feetsParams.clime = '[-5,30]';
+        hatParams.clime = '[-10,15]';
+        topParams.clime = '[-10,15]';
+        legsParams.clime = '[-10,15]';
+        feetsParams.clime = '[-10,15]';
         topParams.name = `Рубашка ${faction.name}`;
         legsParams.name = `Брюки ${faction.name}`;
 
-        hatParams.owner = character.id;
-        topParams.owner = character.id;
-        legsParams.owner = character.id;
-        feetsParams.owner = character.id;
-        earsParams.owner = character.id;
-        tiesParams.owner = character.id;
-        masksParams.owner = character.id;
-        glassesParams.owner = character.id;
+        // hatParams.owner = character.id;
+        // topParams.owner = character.id;
+        // legsParams.owner = character.id;
+        // feetsParams.owner = character.id;
+        // earsParams.owner = character.id;
+        // tiesParams.owner = character.id;
+        // masksParams.owner = character.id;
+        // glassesParams.owner = character.id;
 
         var response = (e) => {
             if (e) notifs.error(player, e, header);
@@ -208,8 +208,8 @@ module.exports = {
 
         // inventory.fullDeleteItemsByParams(itemId, ["faction", "owner"], [character.factionId, character.id]);
         var params = {
-            faction: character.factionId,
-            owner: character.id
+            // faction: character.factionId,
+            // owner: character.id
         };
         if (itemId == 24) { // малая аптечка
             params.count = 2;
@@ -301,5 +301,26 @@ module.exports = {
         if (!inviter || !inviter.character) return;
         notifs.info(player, `Предложение отклонено`, `Лечение`);
         notifs.info(inviter, `${player.name} отклонил предложение`, `Лечение`);
+    },
+    "hospital.medCard.give": (player, recId) => {
+        var header = `Медкарта`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var rec = mp.players.at(recId);
+        if (!factions.isHospitalFaction(player.character.factionId)) return out(`Вы не медик`);
+
+        var minRank = hospital.giveMedCardRank;
+        var rank = factions.getRankById(player.character.factionId, player.character.factionRank);
+        if (minRank > rank.rank) return out(`Доступно с ранга ${factions.getRank(player.character.factionId, minRank).name}`);
+
+        if (!rec || !rec.character) return out(`Игрок не найден`);
+        var character = rec.character;
+
+        character.medCardDate = new Date(Date.now() + hospital.medCardDays * 24 * 60 * 60 * 1000);
+        character.save();
+
+        notifs.success(player, `Медкарта выдана ${rec.name}`, header);
+        notifs.info(rec, `${player.name} выдал вам медкарту`, header);
     },
 }

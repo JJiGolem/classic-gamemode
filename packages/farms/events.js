@@ -369,6 +369,7 @@ module.exports = {
         if (field.count) return notifs.error(player, `Поле #${field.id} уже засеяно`, header);
         var count = 600;
         if (farm.grains < count) return notifs.error(player, `Недостаточно для загрузки`, header);
+        if (data.grain == 2) return notifs.error(player, `Засев поля данным типом урожая временно не доступен`, header);
 
         farm.grains -= count;
         farm.save();
@@ -397,7 +398,7 @@ module.exports = {
         }, () => {
             var pay = farm.tractorPay;
             player.farmJob.pay += pay;
-            notifs.success(player, `Полея засеяно. Премия $${pay}`, header);
+            notifs.success(player, `Поле засеяно. Премия $${pay}`, header);
             farms.fillField(field, veh.products.type);
             veh.setVariable("label", null);
             delete veh.products;

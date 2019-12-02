@@ -22,7 +22,7 @@ module.exports = {
             mp.events.call(`police.follow`, player, args[0]);
         }
     },
-    "/cell": {
+    "/cellls": {
         access: 6,
         description: "Посадить игрока в КПЗ ЛСПД.",
         args: "[ид_игрока]:n [минуты]:n [причина]",
@@ -31,7 +31,23 @@ module.exports = {
             if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
             var mins = Math.clamp(args[1], 1, 60 * 12); // 12 суток макс.
 
-            police.startCellArrest(rec, null, mins * 60 * 1000);
+            police.startLSCellArrest(rec, null, mins * 60 * 1000);
+            args.shift();
+            args.shift();
+            out.info(`${player.name} посадил ${rec.name} в КПЗ на ${mins} мин. Причина: ${args.join(" ")}`);
+            chat.push(rec, `!{#ff8819} Администратор ${player.name} посадил Вас в КПЗ на ${mins} мин. Причина: ${args.join(" ")}`);
+        }
+    },
+    "/cellbc": {
+        access: 6,
+        description: "Посадить игрока в КПЗ БССД.",
+        args: "[ид_игрока]:n [минуты]:n [причина]",
+        handler: (player, args, out) => {
+            var rec = mp.players.at(args[0]);
+            if (!rec || !rec.character) return out.error(`Игрок #${args[0]} не найден`, player);
+            var mins = Math.clamp(args[1], 1, 60 * 12); // 12 суток макс.
+
+            police.startBCCellArrest(rec, null, mins * 60 * 1000);
             args.shift();
             args.shift();
             out.info(`${player.name} посадил ${rec.name} в КПЗ на ${mins} мин. Причина: ${args.join(" ")}`);
@@ -52,6 +68,32 @@ module.exports = {
             args.shift();
             out.info(`${player.name} посадил ${rec.name} в тюрьму на ${mins} мин. Причина: ${args.join(" ")}`);
             chat.push(rec, `!{#ff8819} Администратор ${player.name} посадил Вас в тюрьму на ${mins} мин. Причина: ${args.join(" ")}`);
+        }
+    },
+    "/offjail": {
+        access: 4,
+        description: "Выдать офлайн jail игроку",
+        args: "[имя]:s [фамилия]:s [минуты]:n [причина]",
+        handler: async (player, args, out) => {
+            let name = `${args[0]} ${args[1]}`;
+            let target = mp.players.getByName(name);
+            if (target) return out.error('Игрок в сети, используйте /jail', player);
+
+            let character = await db.Models.Character.findOne({
+                where: {
+                    name: name
+                }
+            });
+            if (!character) return out.error(`Персонаж ${name} не найден`, player);
+            let mins = Math.clamp(args[2], 1, 60 * 12); // 12 часов макс.
+            args.splice(0, 3);
+            let reason = args.join(" ");
+
+            character.arrestTime = mins * 60 * 1000;
+            character.arrestType = 1;
+            character.save();
+
+            out.info(`${player.name} посадил ${character.name} в тюрьму на ${mins} мин. Причина: ${reason}`);
         }
     },
     "/pwanted": {

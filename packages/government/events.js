@@ -133,32 +133,32 @@ module.exports = {
         if (topParams.uTexture == -1) delete topParams.uTexture;
         if (topParams.tTexture == -1) delete topParams.tTexture;
 
-        hatParams.faction = faction.id;
-        topParams.faction = faction.id;
-        legsParams.faction = faction.id;
-        feetsParams.faction = faction.id;
-        earsParams.faction = faction.id;
-        tiesParams.faction = faction.id;
-        masksParams.faction = faction.id;
-        glassesParams.faction = faction.id;
+        // hatParams.faction = faction.id;
+        // topParams.faction = faction.id;
+        // legsParams.faction = faction.id;
+        // feetsParams.faction = faction.id;
+        // earsParams.faction = faction.id;
+        // tiesParams.faction = faction.id;
+        // masksParams.faction = faction.id;
+        // glassesParams.faction = faction.id;
 
         topParams.pockets = '[5,5,5,5,10,5]';
         legsParams.pockets = '[5,5,5,5,10,5]';
-        hatParams.clime = '[-5,30]';
-        topParams.clime = '[-5,30]';
-        legsParams.clime = '[-5,30]';
-        feetsParams.clime = '[-5,30]';
+        hatParams.clime = '[-10,15]';
+        topParams.clime = '[-10,15]';
+        legsParams.clime = '[-10,15]';
+        feetsParams.clime = '[-10,15]';
         topParams.name = `Рубашка ${faction.name}`;
         legsParams.name = `Брюки ${faction.name}`;
 
-        hatParams.owner = character.id;
-        topParams.owner = character.id;
-        legsParams.owner = character.id;
-        feetsParams.owner = character.id;
-        earsParams.owner = character.id;
-        tiesParams.owner = character.id;
-        masksParams.owner = character.id;
-        glassesParams.owner = character.id;
+        // hatParams.owner = character.id;
+        // topParams.owner = character.id;
+        // legsParams.owner = character.id;
+        // feetsParams.owner = character.id;
+        // earsParams.owner = character.id;
+        // tiesParams.owner = character.id;
+        // masksParams.owner = character.id;
+        // glassesParams.owner = character.id;
 
         var response = (e) => {
             if (e) notifs.error(player, e, header);
@@ -201,8 +201,8 @@ module.exports = {
 
         // inventory.fullDeleteItemsByParams(itemId, ["faction", "owner"], [character.factionId, character.id]);
         var params = {
-            faction: character.factionId,
-            owner: character.id,
+            // faction: character.factionId,
+            // owner: character.id,
         };
         if (index == 0) params.count = 2;
 

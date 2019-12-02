@@ -40,4 +40,11 @@ export default (myEventEmmiter, dispatch) => {
             payload: tags
         });
     });
+
+    myEventEmmiter.on('setSizeChat', (size) => {
+        dispatch({
+            type: 'SET_SIZE_CHAT',
+            payload: size
+        });
+    });
 }

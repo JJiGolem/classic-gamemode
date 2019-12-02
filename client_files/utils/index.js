@@ -137,7 +137,27 @@ mp.utils = {
         mp.game.object.doorControl(110411286, 231.5123, 216.5177, 106.4049, true, 0.0, 0.0, 0.0);
         mp.game.object.doorControl(110411286, 259.9831, 215.2468, 106.4049, true, 0.0, 0.0, 0.0);
         mp.game.object.doorControl(110411286, 259.0879, 212.8062, 106.4049, true, 0.0, 0.0, 0.0);
+        // Банки
+        mp.game.object.doorControl(mp.game.joaat("v_ilev_genbankdoor1"), -2965.821, 481.63, 16.048, false, 0.0, 0.0, 0.0);
+        mp.game.object.doorControl(mp.game.joaat("v_ilev_genbankdoor2"), -2965.71, 484.219, 16.04, false, 0.0, 0.0, 0.0);
 
+        mp.game.object.doorControl(mp.game.joaat("v_ilev_genbankdoor1"), 1176.49, 2703.61, 38.44, false, 0.0, 0.0, 0.0);
+        mp.game.object.doorControl(mp.game.joaat("v_ilev_genbankdoor2"), 1173.9, 2703.61, 38.44, false, 0.0, 0.0, 0.0);
+
+        // mp.game.object.doorControl(mp.game.joaat("v_ilev_genbankdoor1"), 1656.25, 4852.24, 42.35, false, 0.0, 0.0, 0.0);
+        // mp.game.object.doorControl(mp.game.joaat("v_ilev_genbankdoor2"), 1656.57, 4849.66, 42.35, false, 0.0, 0.0, 0.0);
+
+        mp.game.object.doorControl(mp.game.joaat("v_ilev_genbankdoor1"), -1215.39, -328.52, 38.13, false, 0.0, 0.0, 0.0);
+        mp.game.object.doorControl(mp.game.joaat("v_ilev_genbankdoor2"), -1213.07, -327.35, 38.13, false, 0.0, 0.0, 0.0);
+
+        mp.game.object.doorControl(mp.game.joaat("v_ilev_genbankdoor1"), 149.63, -1037.23, 29.72, false, 0.0, 0.0, 0.0);
+        mp.game.object.doorControl(mp.game.joaat("v_ilev_genbankdoor2"), 152.06, -1038.12, 29.72, false, 0.0, 0.0, 0.0);
+
+        mp.game.object.doorControl(mp.game.joaat("v_ilev_genbankdoor1"), 313.96, -275.6, 54.52, false, 0.0, 0.0, 0.0);
+        mp.game.object.doorControl(mp.game.joaat("v_ilev_genbankdoor2"), 316.39, -276.49, 54.52, false, 0.0, 0.0, 0.0);
+
+        mp.game.object.doorControl(mp.game.joaat("v_ilev_genbankdoor1"), -351.2598, -46.4122, 49.3876, false, 0.0, 0.0, 0.0);
+        mp.game.object.doorControl(mp.game.joaat("v_ilev_genbankdoor2"), -348.8109, -47.2621, 49.3876, false, 0.0, 0.0, 0.0);
     },
     /// Загрузка IPL
     requestIpls() {
@@ -397,6 +417,11 @@ mp.utils = {
                 break;
         }
         return parity;
+    },
+    // находится ли сущность в интерьере
+    inInterior(entity) {
+        var pos = entity.position;
+        return mp.game.interior.getInteriorAtCoords(pos.x, pos.y, pos.z) != 0;
     },
 };
 

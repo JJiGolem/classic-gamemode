@@ -17,7 +17,7 @@ module.exports = {
     // Кол-во боеприпасов, списываемое за выдачу патронов (LSPD, LSSD)
     ammoAmmo: 1,
     // Комнаты в КПЗ ЛСПД
-    cells: [{
+    lsCells: [{
             x: 460.03,
             y: -994.1,
             z: 24.91,
@@ -37,7 +37,7 @@ module.exports = {
         }
     ],
     // Выход из КПС ЛСПД
-    cellExit: {
+    lsCellExit: {
         x: 461.64,
         y: -989.16,
         z: 24.91,
@@ -57,6 +57,27 @@ module.exports = {
         z: 45.67,
         h: 271.52
     },
+    // Комнаты в КПЗ БССД
+    bcCells: [{
+            x: -440.97,
+            y: 5986.8,
+            z: 31.71,
+            h: 318.99
+        },
+        {
+            x: -439.34,
+            y: 5992.58,
+            z: 31.71,
+            h: 222.98
+        }
+    ],
+    // Выход из КПС БССД
+    bcCellExit: {
+        x: -433.28,
+        y: 5993.28,
+        z: 31.71,
+        h: 58.50
+    },
     // Бонус ЗП за арест
     arrestPay: 10,
     // Время ареста за 1 ур. розыска (ms)
@@ -65,6 +86,8 @@ module.exports = {
     searchTime: 2 * 60 * 1000,
     // Организации, которые могут использовать наручники
     cuffsFactions: [1, 2, 3, 4, 6, 12, 13, 14],
+    // Организации, которые могут производить обыск
+    searchFactions: [2, 3, 4, 6],
     // Стоимость освобождения игрока за 1 ур. розыска (ms)
     unarrestPrice: 1000,
     // Процент адвокату за освобождение (от 0.00 до 1.00)
@@ -73,6 +96,8 @@ module.exports = {
     giveGunLicenseRank: 10,
     // Мин. ранг, с которого можно забирать лицению на оружие
     takeGunLicenseRank: 10,
+    // Мин. ранг, с которого можно производить обыск
+    searchRank: 10,
 
 
     setCuffs(player, cuffs) {
@@ -113,19 +138,19 @@ module.exports = {
             mapCase.addFibWanted(player);
         }
     },
-    getNearCell(player) {
-        // return this.cells[0]; // tests
-        var min = player.dist(this.cells[0]);
+    getNearLSCell(player) {
+        // return this.lsCells[0]; // tests
+        var min = player.dist(this.lsCells[0]);
         var index = 0;
-        for (var i = 1; i < this.cells.length; i++) {
-            var dist = player.dist(this.cells[i]);
+        for (var i = 1; i < this.lsCells.length; i++) {
+            var dist = player.dist(this.lsCells[i]);
             if (dist < min) {
                 min = dist;
                 index = i;
             }
         }
         if (min > 5) return null;
-        return this.cells[index];
+        return this.lsCells[index];
     },
     getNearJailCell(player) {
         // return this.jailCells[0]; // tests
@@ -141,7 +166,21 @@ module.exports = {
         if (min > 5) return null;
         return this.jailCells[index];
     },
-    startCellArrest(player, cell, time) {
+    getNearBCCell(player) {
+        // return this.bcCells[0]; // tests
+        var min = player.dist(this.bcCells[0]);
+        var index = 0;
+        for (var i = 1; i < this.bcCells.length; i++) {
+            var dist = player.dist(this.bcCells[i]);
+            if (dist < min) {
+                min = dist;
+                index = i;
+            }
+        }
+        if (min > 5) return null;
+        return this.bcCells[index];
+    },
+    startLSCellArrest(player, cell, time) {
         if (player.vehicle) player.removeFromVehicle();
         if (player.cuffs) this.setCuffs(player, null);
         if (player.character.wanted) this.setWanted(player, 0);
@@ -152,8 +191,8 @@ module.exports = {
             arrestType: 0
         });
         if (!cell) {
-            var i = utils.randomInteger(0, this.cells.length - 1);
-            cell = this.cells[i];
+            var i = utils.randomInteger(0, this.lsCells.length - 1);
+            cell = this.lsCells[i];
         }
 
         delete player.isFollowing;
@@ -163,7 +202,7 @@ module.exports = {
         player.call(`hud.setData`, [{
             arrestTimeMax: parseInt(player.character.arrestTime / 1000)
         }]);
-        (!player.health) ? player.spawn(cell) : player.position = cell;
+        (!player.health) ? player.spawn(cell): player.position = cell;
         player.dimension = 0;
         player.heading = cell.h;
         var playerId = player.id;
@@ -186,7 +225,7 @@ module.exports = {
         }, time);
     },
     startJailArrest(player, cell, time) {
-        console.log(`startJailArrest: ${player.name}`)
+        // console.log(`startJailArrest: ${player.name}`)
         if (player.vehicle) player.removeFromVehicle();
         if (player.cuffs) this.setCuffs(player, false);
         if (player.character.wanted) this.setWanted(player, 0);
@@ -208,7 +247,7 @@ module.exports = {
         player.call(`hud.setData`, [{
             arrestTimeMax: parseInt(player.character.arrestTime / 1000)
         }]);
-        (!player.health) ? player.spawn(cell) : player.position = cell;
+        (!player.health) ? player.spawn(cell): player.position = cell;
         player.dimension = 0;
         player.heading = cell.h;
         var playerId = player.id;
@@ -240,6 +279,52 @@ module.exports = {
             }
         }, time);
     },
+    startBCCellArrest(player, cell, time) {
+        // debug(`startBCCellArrest: ${player.name} ${cell} ${time}`)
+        if (player.vehicle) player.removeFromVehicle();
+        if (player.cuffs) this.setCuffs(player, null);
+        if (player.character.wanted) this.setWanted(player, 0);
+        if (player.character.arrestTime != time) player.character.update({
+            arrestTime: time
+        });
+        if (player.character.arrestType != 2) player.character.update({
+            arrestType: 2
+        });
+        if (!cell) {
+            var i = utils.randomInteger(0, this.bcCells.length - 1);
+            cell = this.bcCells[i];
+        }
+        debug(player.character.arrestTime)
+
+        delete player.isFollowing;
+        player.call(`police.follow.stop`);
+        player.call(`police.arrest.set`, [player.character.arrestType]);
+        player.call(`inventory.enable`, [false]);
+        player.call(`hud.setData`, [{
+            arrestTimeMax: parseInt(player.character.arrestTime / 1000)
+        }]);
+        (!player.health) ? player.spawn(cell): player.position = cell;
+        player.dimension = 0;
+        player.heading = cell.h;
+        var playerId = player.id;
+        var characterId = player.character.id;
+        timer.remove(player.cellArrestTimer);
+        timer.remove(player.jailArrestTimer);
+        player.cellArrestDate = Date.now();
+        player.cellArrestTimer = timer.add(() => {
+            try {
+                var rec = mp.players.at(playerId);
+                if (!rec || rec.character.id != characterId || !rec.character.arrestTime) {
+                    timer.remove(player.cellArrestTimer);
+                    return;
+                }
+
+                this.stopCellArrest(rec);
+            } catch (err) {
+                console.log(err.stack);
+            }
+        }, time);
+    },
     stopCellArrest(player) {
         timer.remove(player.cellArrestTimer);
         delete player.cellArrestTimer;
@@ -249,8 +334,8 @@ module.exports = {
             arrestTimeMax: 0
         }]);
 
-        player.position = this.cellExit;
-        player.heading = this.cellExit.h;
+        player.position = (!player.character.arrestType) ? this.lsCellExit : this.bcCellExit;
+        player.heading = (!player.character.arrestType) ? this.lsCellExit.h : this.bcCellExit.h;
 
         player.character.arrestTime = 0;
         player.character.arrestType = 0;

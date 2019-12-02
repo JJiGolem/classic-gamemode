@@ -13,4 +13,14 @@ module.exports = {
     clothesAmmo: 0,
     // Кол-во медикаментов, списываемое за выдачу снаряжения
     itemMedicines: 100,
+    // Цена за реанимацию игрока
+    knockedPrice: 50,
+    // Анти-флуд получения премии за реанимацию
+    knockedWaitTime: 60 * 60 * 1000,
+    // Сохраненные реанимации (characterId : time)
+    knockedLogs: {},
+    // Мин. ранг для выдачи медкарты
+    giveMedCardRank: 5,
+    // Срок действия медкарты (дни)
+    medCardDays: 30,
 };

@@ -25,6 +25,16 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             allowNull: false
         },
+        blip: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: null,
+            allowNull: true
+        },
+        blipColor: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: null,
+            allowNull: true
+        },
         tpX: {
             type: DataTypes.FLOAT,
             allowNull: false
@@ -44,6 +54,16 @@ module.exports = (sequelize, DataTypes) => {
         tpD: {
             type: DataTypes.INTEGER(11),
             allowNull: false
+        },
+        tpBlip: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: null,
+            allowNull: true
+        },
+        tpBlipColor: {
+            type: DataTypes.INTEGER(11),
+            defaultValue: null,
+            allowNull: true
         },
     }, {
         timestamps: false

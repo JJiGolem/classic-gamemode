@@ -45,7 +45,7 @@ module.exports = {
                 productName = 'cola';
                 break;
         }
-        let price = eatery.productsConfig[productName] * eatery.productPrice * eatery.getPriceMultiplier(eateryId);
+        let price = parseInt(eatery.productsConfig[productName] * eatery.productPrice * eatery.getPriceMultiplier(eateryId));
         if (player.character.cash < price) return player.call('eatery.products.buy.ans', [2]);
         let productsAvailable = eatery.getProductsAmount(eateryId);
         if (eatery.defaultProductsAmount > productsAvailable) return player.call('eatery.products.buy.ans', [3]);

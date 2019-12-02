@@ -10,6 +10,8 @@ module.exports = {
     bandZones: [],
     // Мин. ранг, который может каптить
     captureRank: 8,
+    // Мин. ранг, который может грабить
+    robRank: 8,
     // Зоны, на которых происходит капт
     wars: {},
     // Время завершения последнего капта (ms)
@@ -21,7 +23,7 @@ module.exports = {
     // Время захвата территории (ms)
     warTime: 5 * 60 * 1000,
     // Промежуток часов, в который можно начать захват
-    captureInterval: [12, 23],
+    captureInterval: [11, 20],
     // ЗП за владние 100% гетто (PayDay)
     bandZonesPrice: 100,
     // Кол-во боеприпасов, списываемое за выдачу оружия
@@ -44,6 +46,16 @@ module.exports = {
     drugsEffect: ['DrugsDrivingOut', 'RampageOut', 'DrugsMichaelAliensFightOut', 'DrugsTrevorClownsFightOut'],
     // Повторное использование наркотика
     drugsInterval: [10 * 6000, 20 * 6000, 30 * 6000, 60 * 6000],
+    // Процент от грабежа (0.00-1.00)
+    robK: 0.01,
+    // Макс. сумма грабежа с одного игрока
+    robMaxPrice: 500,
+    // Анти-флуд грабежа (вешается на грабителя)
+    robBandWaitTime: 60 * 60 * 1000,
+    // Анти-флуд грабежа (вешается на  жертву)
+    robVictimWaitTime: 60 * 60 * 1000,
+    // Сохраненные грабежи (characterId : time)
+    robLogs: {},
 
     async init() {
         factions = call('factions');
@@ -184,7 +196,7 @@ module.exports = {
         var war = this.wars[zone.id];
         var winBandId = war.band.id;
         var loseBandId = war.enemyBand.id;
-        if (war.enemyBand.score > war.band.score) {
+        if (war.enemyBand.score >= war.band.score) {
             winBandId = war.enemyBand.id;
             loseBandId = war.band.id;
         }

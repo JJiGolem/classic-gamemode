@@ -45,9 +45,14 @@ mp.inventory = {
     },
     lastActionTime: 0,
     waitActionTime: 1000,
+    searchPlayer: null,
+    searchRadius: 2,
 
     enable(enable) {
         mp.callCEFV(`inventory.enable = ${enable}`);
+    },
+    controlEnable(enable) {
+        mp.callCEFV(`inventory.controlEnable = ${enable}`);
     },
     debug(enable) {
         mp.callCEFV(`inventory.debug = ${enable}`);
@@ -62,6 +67,23 @@ mp.inventory = {
     initItems(items) {
         if (typeof items == 'object') items = JSON.stringify(items);
         mp.callCEFV(`inventory.initItems(${items})`);
+    },
+    initSearchItems(data) {
+        var rec = mp.players.atRemoteId(data.playerId);
+        if (!rec) return mp.notify.error(`Игрок #${data.playerId} не найден`, `Обыск`);
+        this.searchPlayer = rec;
+        mp.callCEFV(`inventory.initSearchItems(${JSON.stringify(data)})`);
+    },
+    stopSearchMode() {
+        this.searchPlayer = null;
+        mp.callCEFV(`inventory.stopSearchMode()`);
+        mp.events.callRemote(`police.inventory.search.stop`);
+    },
+    checkSearchPlayer() {
+        if (!this.searchPlayer) return;
+        if (!mp.players.exists(this.searchPlayer)) return this.stopSearchMode();
+        var dist = mp.vdist(mp.players.local.position, this.searchPlayer.position);
+        if (dist > this.searchRadius) return this.stopSearchMode();
     },
     setItemsInfo(itemsInfo) {
         this.itemsInfo = itemsInfo;
@@ -94,6 +116,9 @@ mp.inventory = {
     },
     setItemParam(sqlId, key, value) {
         mp.callCEFV(`inventory.setItemParam(${sqlId}, \`${key}\`, \`${value}\`)`);
+    },
+    setFoundItem(sqlId, enable) {
+        mp.callCEFV(`inventory.setFoundItem(${sqlId}, ${enable})`);
     },
     addEnvironmentPlace(place) {
         if (typeof place == 'object') place = JSON.stringify(place);
@@ -209,13 +234,13 @@ mp.inventory = {
     hands(player, itemId) {
         if (!this.itemsInfo) return;
 
-        player.taskSwapWeapon(true)
         if (player.hands) {
             var oldAnim = this.itemsInfo[player.hands.itemId].attachInfo.anim;
             if (oldAnim) {
-                if (mp.players.local.remoteId == player.remoteId) player.stopAnimTask(oldAnim.dict, oldAnim.name, 3);
+                var a = this.animData[oldAnim].split(" ");
+                if (mp.players.local.remoteId == player.remoteId) player.stopAnimTask(a[0], a[1], 3);
                 else player.clearTasksImmediately();
-            }
+            } else player.taskSwapWeapon(true)
             if (mp.objects.exists(player.hands.object)) {
                 player.hands.object.destroy();
                 delete player.hands;
@@ -239,7 +264,7 @@ mp.inventory = {
                 mp.utils.requestAnimDict(a[0], () => {
                     player.taskPlayAnim(a[0], a[1], 8, 0, -1, 49, 0, false, false, false);
                 });
-            }
+            } else player.taskSwapWeapon(true)
             player.hands = {
                 object: object,
                 itemId: itemId
@@ -308,6 +333,8 @@ mp.events.add("click", (x, y, upOrDown, leftOrRight, relativeX, relativeY, world
 
 mp.events.add("inventory.enable", mp.inventory.enable);
 
+mp.events.add("inventory.controlEnable", mp.inventory.controlEnable);
+
 mp.events.add("inventory.debug", mp.inventory.debug);
 
 mp.events.add("inventory.spin", mp.inventory.spin);
@@ -315,6 +342,14 @@ mp.events.add("inventory.spin", mp.inventory.spin);
 mp.events.add("inventory.initItems", (items) => {
     mp.inventory.initItems(items);
     mp.inventory.loadHotkeys();
+});
+
+mp.events.add("inventory.initSearchItems", (data) => {
+    mp.inventory.initSearchItems(data);
+});
+
+mp.events.add("inventory.stopSearchMode", () => {
+    mp.inventory.stopSearchMode();
 });
 
 mp.events.add("inventory.setItemsInfo", (itemsInfo) => {
@@ -332,6 +367,8 @@ mp.events.add("inventory.setBlackList", mp.inventory.setBlackList);
 mp.events.add("inventory.deleteItem", mp.inventory.deleteItem);
 
 mp.events.add("inventory.setItemSqlId", mp.inventory.setItemSqlId);
+
+mp.events.add("inventory.setFoundItem", mp.inventory.setFoundItem);
 
 mp.events.add("inventory.addItem", mp.inventory.addItem);
 
@@ -362,6 +399,11 @@ mp.events.add("inventory.removeHotkey", mp.inventory.removeHotkey);
 mp.events.add("inventory.ground.put", (sqlId) => {
     var pos = mp.inventory.getGroundItemPos(mp.players.local);
     mp.events.callRemote(`item.ground.put`, sqlId, JSON.stringify(pos));
+});
+
+mp.events.add("police.inventory.search.item.putGround", (sqlId) => {
+    var pos = mp.inventory.getGroundItemPos(mp.players.local);
+    mp.events.callRemote(`police.inventory.search.item.putGround`, sqlId, JSON.stringify(pos));
 });
 
 mp.events.add("inventory.item.adrenalin.use.callRemote", (data) => {
@@ -418,12 +460,13 @@ mp.events.add("time.main.tick", () => {
     var player = mp.players.local;
     var value = player.getArmour();
     mp.inventory.setArmour(value);
+    mp.inventory.checkSearchPlayer();
     if (mp.busy.includes("lostAttach")) return;
     mp.inventory.setHandsBlock(player.vehicle != null);
 
-    mp.objects.forEach(obj => {
-        if (obj.getVariable("groundItem")) mp.utils.setNoCollision(obj, true);
-    });
+    // mp.objects.forEach(obj => {
+    //     if (obj.getVariable("groundItem")) mp.utils.setNoCollision(obj, true);
+    // });
     mp.timeMainChecker.modules.inventory = Date.now() - start;
 });
 

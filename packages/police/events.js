@@ -19,8 +19,9 @@ module.exports = {
         if (!player.character.arrestTime) return;
 
         var time = player.character.arrestTime;
-        if (player.character.arrestType == 0) police.startCellArrest(player, null, time);
+        if (player.character.arrestType == 0) police.startLSCellArrest(player, null, time);
         else if (player.character.arrestType == 1) police.startJailArrest(player, null, time);
+        else if (player.character.arrestType == 2) police.startBCCellArrest(player, null, time);
 
         if (!factions.isPoliceFaction(player.character.factionId)) return;
         mp.events.call(`mapCase.pd.init`, player);
@@ -239,31 +240,31 @@ module.exports = {
         if (topParams.dTexture == -1) delete topParams.dTexture;
         if (topParams.tTexture == -1) delete topParams.tTexture;
 
-        hatParams.faction = faction.id;
-        topParams.faction = faction.id;
-        legsParams.faction = faction.id;
-        feetsParams.faction = faction.id;
-        tiesParams.faction = faction.id;
-        masksParams.faction = faction.id;
-        glassesParams.faction = faction.id;
+        // hatParams.faction = faction.id;
+        // topParams.faction = faction.id;
+        // legsParams.faction = faction.id;
+        // feetsParams.faction = faction.id;
+        // tiesParams.faction = faction.id;
+        // masksParams.faction = faction.id;
+        // glassesParams.faction = faction.id;
 
         topParams.pockets = '[5,5,5,5,10,5]';
         legsParams.pockets = '[5,5,5,5,10,5]';
-        hatParams.clime = '[-5,30]';
-        topParams.clime = '[-5,30]';
-        legsParams.clime = '[-5,30]';
-        feetsParams.clime = '[-5,30]';
+        hatParams.clime = '[-10,15]';
+        topParams.clime = '[-10,15]';
+        legsParams.clime = '[-10,15]';
+        feetsParams.clime = '[-10,15]';
         topParams.name = `Рубашка ${faction.name}`;
         legsParams.name = `Брюки ${faction.name}`;
         feetsParams.name = `Ботинки ${faction.name}`;
 
-        hatParams.owner = character.id;
-        topParams.owner = character.id;
-        legsParams.owner = character.id;
-        feetsParams.owner = character.id;
-        tiesParams.owner = character.id;
-        masksParams.owner = character.id;
-        glassesParams.owner = character.id;
+        // hatParams.owner = character.id;
+        // topParams.owner = character.id;
+        // legsParams.owner = character.id;
+        // feetsParams.owner = character.id;
+        // tiesParams.owner = character.id;
+        // masksParams.owner = character.id;
+        // glassesParams.owner = character.id;
 
         var response = (e) => {
             if (e) notifs.error(player, e, header);
@@ -314,8 +315,8 @@ module.exports = {
             };
         }
 
-        params.faction = character.factionId;
-        params.owner = character.id;
+        // params.faction = character.factionId;
+        // params.owner = character.id;
         params.health = 100;
         //params.pockets = '[2,3,1,3,1,3,6,3,3,2,4,2,2,2,2,2,4,2,3,2]';
         params.pockets = '[3,3,3,3,3,3,3,3,10,5,3,5,10,3,3,3]';
@@ -357,8 +358,8 @@ module.exports = {
 
         // inventory.fullDeleteItemsByParams(itemId, ["faction", "owner"], [character.factionId, character.id]);
         var params = {
-            faction: character.factionId,
-            owner: character.id
+            // faction: character.factionId,
+            // owner: character.id
         };
         if (itemId == 24) params.count = 2;
 
@@ -501,6 +502,89 @@ module.exports = {
             notifs.info(rec, `Вы не следуете за ${player.name}`, `Следование`);
         }
     },
+    "police.inventory.search.item.putGround": (player, sqlId, pos) => {
+        pos = JSON.parse(pos);
+        var header = `Обыск`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.inventory.search) return out(`Вы не обыскиваете игрока`);
+        var rec = mp.players.at(player.inventory.search.recId);
+        if (!rec) return out(`Игрок не найден`);
+
+        var item = inventory.getItem(rec, sqlId);
+        if (!item) return out(`Предмет #${sqlId} не найден`);
+
+        // if (player.vehicle) return notifs.error(player, `Недоступно в авто`, header);
+        // if (player.cuffs) return notifs.error(player, `Недоступно в наручниках`, header);
+
+        var itemName = inventory.getName(item.itemId);
+        inventory.putGround(rec, item, pos);
+        notifs.success(player, `Предмет ${itemName} на земле`, header);
+        inventory.notifyOverhead(player, `Опрокинул '${itemName}'`);
+    },
+    "police.inventory.search.item.take": (player, sqlId) => {
+        notifs.info(player, `Скоро будет доступно :)`);
+    },
+    "police.inventory.search.start": (player, recId) => {
+        var header = `Обыск`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var rec = mp.players.at(recId);
+        if (!rec || !rec.character) return out(`Игрок не найден`);
+        var dist = player.dist(rec.position);
+        if (dist > 5) return out(`Игрок далеко`);
+        if (rec.getVariable("afk")) return out(`Игрок не активен`);
+        var character = player.character;
+        var rank = factions.getRank(player.character.factionId, police.searchRank);
+        if (player.inventory.search) return out(`Вы уже обыскиваете игрока`);
+        if (player.character.factionRank < rank.id) return out(`Доступно с ранга ${rank.name}`);
+        if (rec.vehicle) return out(`Игрок находится в авто`);
+        // TODO: check anti-flood
+        if (!police.searchFactions.includes(character.factionId)) return out(`Нет прав для обыска`);
+        if (inventory.getHandsItem(player)) return out(`Освободите руки`);
+
+        var searchItems = inventory.getItemsForSearch(rec);
+        var data = {
+            playerId: rec.id,
+            playerName: rec.name,
+            items: inventory.convertServerToClientItems(searchItems)
+        };
+        player.inventory.search = {
+            recId: rec.id,
+            item: searchItems
+        };
+        player.call(`inventory.initSearchItems`, [data]);
+        rec.call(`inventory.controlEnable`, [false]);
+        inventory.notifyOverhead(player, `Начал обыск`);
+    },
+    "police.inventory.search.stop": (player) => {
+        var header = `Обыск`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.inventory.search) return out(`Вы не обыскиваете игрока`);
+
+        var rec = mp.players.at(player.inventory.search.recId);
+        if (rec) rec.call(`inventory.controlEnable`, [true]);
+
+        player.inventory.search = null;
+        inventory.notifyOverhead(player, `Завершил обыск`);
+    },
+    "police.inventory.search.found": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+        var header = `Обыск`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (!player.inventory.search) return out(`Вы не обыскиваете игрока`);
+        var rec = mp.players.at(player.inventory.search.recId);
+        if (!rec) return out(`Игрок не найден`);
+
+        rec.call(`inventory.setFoundItem`, [data.sqlId, true]);
+        inventory.notifyOverhead(player, `Нашел '${inventory.getName(data.itemId)}'`);
+    },
     "police.wanted": (player, recId) => {
         var rec = mp.players.at(recId);
         if (!rec || !rec.character) return notifs.error(player, `Гражданин не найден`, `Следование`);
@@ -533,7 +617,8 @@ module.exports = {
 
         if (!rec.character.wanted) return notifs.error(player, `${rec.name} не преступник`, `Арест`);
 
-        var cell = police.getNearCell(player);
+        var cell = police.getNearLSCell(player);
+        if (!cell) cell = police.getNearBCCell(player);
         if (!cell) return notifs.error(player, `Вы далеко от камеры`, `Арест`);
         if (rec.cuffs) {
             var params = {
@@ -547,7 +632,7 @@ module.exports = {
 
         var time = police.arrestTime * rec.character.wanted;
         rec.character.arrestTime = time;
-        police.startCellArrest(rec, cell, time);
+        police.startLSCellArrest(rec, cell, time);
         notifs.info(rec, `${player.name} посадил вас в КПЗ`, `Арест`);
         notifs.success(player, `Вы посадили ${rec.name} к КПЗ`, `Арест`);
 
@@ -601,7 +686,7 @@ module.exports = {
 
         var time = police.arrestTime * player.character.wanted;
         player.character.arrestTime = time;
-        police.startCellArrest(player, null, time);
+        police.startLSCellArrest(player, null, time);
     },
     "police.vehicle.put": (player, recId) => {
         var header = `Посадка`;
@@ -696,8 +781,14 @@ module.exports = {
     },
     "playerQuit": (player) => {
         if (!player.character) return;
+
+        if (player.inventory.search) {
+            var rec = mp.players.at(player.inventory.search.recId);
+            if (rec) rec.call(`inventory.controlEnable`, [true]);
+        }
+
         if (!player.character.arrestTime) return;
-        var date = (player.character.arrestType == 0) ? player.cellArrestDate : player.jailArrestDate;
+        var date = ([0, 2].includes(player.character.arrestType)) ? player.cellArrestDate : player.jailArrestDate;
         var time = Date.now() - date;
         player.character.arrestTime -= time;
         player.character.save();

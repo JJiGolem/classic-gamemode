@@ -143,7 +143,6 @@ mp.events.add('characterInit.done', () => { /// E
         //getClosestPlayer(mp.players.local.position);
         //currentInteractionEntity = getClosestVehicle(mp.players.local.position);
         currentInteractionEntity = getClosestPlayerOrVehicle(mp.players.local.position);
-        //currentInteractionEntity = mp.players.local; // for tests
         if (!currentInteractionEntity) return;
 
         if (currentInteractionEntity.type == 'vehicle') {
