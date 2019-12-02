@@ -68,7 +68,7 @@ class MainDisplay extends Component {
 
         if (dialogs) {
             for (let i = 0; i < dialogs.list.length; i++) {
-                if (dialogs.list[i].PhoneMessages.some(message => !message.isRead)) {
+                if (dialogs.list[i].PhoneMessages && dialogs.list[i].PhoneMessages.some(message => !message.isRead)) {
                     countNotReadMessages++;
                 }
             }
