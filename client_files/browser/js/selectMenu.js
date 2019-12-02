@@ -3497,6 +3497,9 @@ var selectMenu = new Vue({
                         text: "Карабин"
                     },
                     {
+                        text: "Снайперка"
+                    },
+                    {
                         text: "Вернуться"
                     },
                 ],
