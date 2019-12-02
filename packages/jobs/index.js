@@ -4,6 +4,8 @@ let notifs = require('../notifications');
 module.exports = {
     // Работы
     jobs: [],
+    // Бонус к скиллам (1 - x1)
+    bonusSkill: 2,
 
     async init() {
         await this.loadJobsFromDB();
@@ -63,13 +65,15 @@ module.exports = {
     addJobExp(player, exp = 1) {
         if (!player.character.job) return;
         var skill = this.getJobSkill(player);
-        skill.exp += exp;
+        skill.exp += exp * this.bonusSkill;
         skill.save();
 
         mp.events.call("player.jobSkill.changed", player, skill);
     },
     setJobExp(player, skill, exp) {
-        skill.exp = exp;
+        var oldExp = skill.exp;
+
+        skill.exp = (exp - oldExp) * this.bonusSkill;
         skill.save();
 
         mp.events.call("player.jobSkill.changed", player, skill);
