@@ -302,12 +302,13 @@ module.exports = {
         notifs.info(player, `Предложение отклонено`, `Лечение`);
         notifs.info(inviter, `${player.name} отклонил предложение`, `Лечение`);
     },
-    "hospital.medCard.give": (player, recId) => {
+    "hospital.medCard.give": (player, data) => {
+        data = JSON.parse(data);
         var header = `Медкарта`;
         var out = (text) => {
             notifs.error(player, text, header);
         };
-        var rec = mp.players.at(recId);
+        var rec = mp.players.at(data.recId);
         if (!factions.isHospitalFaction(player.character.factionId)) return out(`Вы не медик`);
 
         var minRank = hospital.giveMedCardRank;
