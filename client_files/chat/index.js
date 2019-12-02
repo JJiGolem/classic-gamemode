@@ -174,9 +174,12 @@ mp.events.add('chat.message.get', (type, message) => {
             mp.chat.clearMuteTime = 0;
             mp.notify.success(`Использование чатов снова доступно. Не нарушайте правила сервера.`, `MUTE`);
             mp.events.callRemote(`chat.mute.clear`);
+            mp.events.call("hud.setData", {
+                mute: false
+            });
         } else {
             var mins = Math.ceil((mp.chat.clearMuteTime - Date.now()) / 1000 / 60);
-            return mp.notify.error(`До разблокировка чата осталось ${mins} мин!`);
+            return mp.notify.error(`До разблокировки чата осталось ${mins} мин!`);
         }
     }
     mp.events.callRemote('chat.message.get', type, message);
@@ -247,6 +250,9 @@ mp.events.add('chat.message.split', (message, fixed, color) => {
 
 mp.events.add('chat.mute.set', (time) => {
     mp.chat.clearMuteTime = Date.now() + time;
+    mp.events.call("hud.setData", {
+        mute: time > 0
+    });
 });
 
 function splitChatMessage(message, fixed, color) {
