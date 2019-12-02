@@ -70,8 +70,10 @@ module.exports = {
 
         let price = parseInt(ammunation.ammoProducts * ammoCount * ammunation.productPrice * ammunation.getPriceMultiplier(ammunationId));
         if (player.character.cash < price) return player.call('ammunation.ammo.buy.ans', [0]);
+
         let productsAvailable = ammunation.getProductsAmount(ammunationId);
-        if (ammunation.ammoProducts * ammoCount > productsAvailable) return player.call('ammunation.ammo.buy.ans', [1]);
+        let finalProducts = parseInt(ammunation.ammoProducts * ammoCount * 0.8);
+        if (finalProducts > productsAvailable) return player.call('ammunation.ammo.buy.ans', [1]);
 
         let itemIds = [37, 38, 40, 39];
         let params = {
@@ -84,7 +86,7 @@ module.exports = {
 
             money.removeCash(player, price, function (result) {
                 if (result) {
-                    ammunation.removeProducts(ammunationId, ammunation.ammoProducts * ammoCount);
+                    ammunation.removeProducts(ammunationId, finalProducts);
                     ammunation.updateCashbox(ammunationId, price);
                     player.call('ammunation.ammo.buy.ans', [3]);
                 } else {

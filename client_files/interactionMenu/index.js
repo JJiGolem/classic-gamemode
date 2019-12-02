@@ -130,6 +130,11 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
                 recId: entity.remoteId
             };
             mp.events.callRemote(`inventory.item.adrenalin.use`, JSON.stringify(data));
+        } else if (itemName == 'Медкарта') {
+            var data = {
+                recId: entity.remoteId
+            };
+            mp.events.callRemote(`hospital.medCard.give`, JSON.stringify(data));
         }
     } else if (menuName == "army") {
         if (!entity) return;

@@ -216,7 +216,16 @@ mp.events.add({
                 debugText += `Климат ${item.clime}`
             }
         }
-             
+
+        let notif = '';
+        if (item.clime) {
+            notif += `Климат: от ${item.clime[0]} до ${item.clime[1]} °C`
+        }
+        if (item.pockets) {
+            notif += ` | Вместимость: ${calculateCapacity(item.pockets)} ед.`
+        }
+
+        if (notif.length) mp.callCEFV(`selectMenu.notification = '${notif}'`);     
         setClothes(group, item, textureIndex);
     },
     'clothingShop.inputClothes.set': setInputClothes,
@@ -394,4 +403,13 @@ function initCurrentHair(data) {
 function setHair() {
     player.setComponentVariation(2, hairInfo.hairstyle, 0, 2);
     player.setHairColor(hairInfo.hairColor, hairInfo.hairHighlightColor);
+}
+
+function calculateCapacity(pockets) {
+    let capacity = 0;
+    for (let i = 0; i < pockets.length; i++) {
+        if (i % 2 == 1) continue;
+        capacity += pockets[i] * pockets[i + 1];
+    }
+    return capacity;
 }

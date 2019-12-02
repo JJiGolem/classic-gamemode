@@ -355,7 +355,7 @@
     background-color: #F0F0F0;
     margin: -1px 0px;
     color: #686868;
-    font-weight: 500;
+    font-weight: bold;
     font-size: 1.4vh;
     line-height: 1.9vh;
     overflow: hidden;
@@ -377,7 +377,7 @@
     font-size: 1.5vh;
     width: 90%;
     text-align: center;
-    line-height: 2.8vh;
+    line-height: 2.6vh;
 }
 
 #map-case .body .board .table .tbody .record:hover .btn,
@@ -401,6 +401,37 @@
 #map-case .members .table .head,
 #map-case .members .table .tbody .record {
     grid-template-columns: 4fr 10fr 15vh 8fr;
+}
+
+#map-case .calls .table {
+    position: relative;
+}
+
+#map-case .calls .table .hint {
+    position: absolute;
+    width: 20vh;
+    background: rgba(240, 240, 240, 0.8);
+    padding: 1vh;
+    border-radius: 1vh;
+    pointer-events: none;
+    font-family: MontserratNew;
+    font-weight: 500;
+    font-size: 1.4vh;
+
+}
+
+#map-case .calls .table .hint > div {
+    font-weight: 600;
+    font-size: 1.5vh;
+    margin-bottom: 0.7vh;
+}
+
+#map-case .calls .table .hint img {
+    height: 1.1vh;
+}
+
+#map-case .calls .table .record div {
+    pointer-events: none;
 }
 
 #map-case .members.board .table .tbody .record .btn {
@@ -431,7 +462,7 @@
 #map-case .members .action-modal .btn {
     text-align: center;
     font-size: 1.5vh;
-    font-weight: 500;
+    font-weight: bold;
     height: 3vh;
     border-radius: 0.5vh;
     line-height: 3vh;

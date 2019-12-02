@@ -22,12 +22,12 @@ const initialState = [
     // {
     //     id: 4,
     //     name: 'Sean Muller',
-    //     faction: 'LSPD',
+    //     faction: 'The Ballas',
     //     ping: 9
     // },
     // {
     //     id: 5,
-    //     name: 'Sean Hans',
+    //     name: 'G Dennn',
     //     faction: 'EMS',
     //     ping: 9
     // },

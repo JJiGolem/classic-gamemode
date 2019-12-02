@@ -207,6 +207,10 @@ var interactionMenu = new Vue({
                         icon: "doc.png"
                     },
                     {
+                        text: "Медкарта",
+                        icon: "doc.png"
+                    },
+                    {
                         text: "Лиц. на оружие",
                         icon: "gun.svg"
                     }
@@ -223,6 +227,10 @@ var interactionMenu = new Vue({
                     }
                     if (item.text == 'Паспорт т/с') {
                         mp.trigger(`documents.showTo`, "carPass");
+                        mp.trigger(`interaction.menu.close`);
+                    }
+                    if (item.text == 'Медкарта') {
+                        mp.trigger(`documents.showTo`, "medCard");
                         mp.trigger(`interaction.menu.close`);
                     }
                     if (item.text == 'Лиц. на оружие') {
@@ -399,6 +407,10 @@ var interactionMenu = new Vue({
                     {
                         text: "Реанимировать",
                         icon: "reanimate.svg"
+                    },
+                    {
+                        text: "Медкарта",
+                        icon: "doc.png"
                     },
                 ],
                 handler(index) {

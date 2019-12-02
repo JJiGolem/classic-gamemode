@@ -25,7 +25,7 @@ let convertWindowData = {
         // TODO: Конвертация валюты; amount - СС для обмена.
         if (isNaN(amount) || amount <= 0) return notifications.push("error", "Некорректное значение");
         mp.trigger(`callRemote`, `donate.convert`, parseInt(amount));
-        // playerMenu.coins -= amount;
+        playerMenu.coins -= amount;
     }
 };
 
@@ -65,12 +65,6 @@ let addslotWindowData = {
 
 let settingsmainWindowData = {
     currentWindow: '0',
-    microVolume: 20, // API: Громкость микрофона.
-    spawnSettings: {
-        spawnsPull: ["Улица", "Дом", "Организация"], // API: Варианты спавна.
-        currentSpawn: 1, // API: Индекс варианта спавна.
-    },
-
     settingsList: {
         spawn: {
             type: 'scroll',
@@ -132,11 +126,6 @@ let settingsmainWindowData = {
 
         playerMenu.setSettings(modifiedSettings);
         mp.trigger(`callRemote`, `settings.set`, JSON.stringify(modifiedSettings));
-        /*mp.trigger(`callRemote`, `settings.spawn.set`, currentSpawn);
-
-        settingsmainWindowData.microVolume = microVolume;
-        settingsmainWindowData.spawnSettings.currentSpawn = currentSpawn;
-        console.log(microVolume, currentSpawn);*/
     }
 }
 
@@ -1205,28 +1194,13 @@ Vue.component('player-menu-settings-main', {
     props: {
         currentWindow: String,
         settingsList: Object,
-        /*microVolume: Number,
-        spawnSettings: Object,*/
         saveChanges: Function,
     },
     data: () => ({
-        /*localMicroVolume: 0,
-        localCurrentSpawn: 0,*/
         localSettings: {},
         modifiedSettings: {},
     }),
     computed: {
-        /*localSettings() {
-            let locSet = {};
-            for (key in this.settingsList) {
-                locSet[key] = {...this.settingsList[key]}
-            }
-            return locSet;
-        },*/
-        watcher() {
-            this.localMicroVolume = this.microVolume;
-            this.localCurrentSpawn = this.spawnSettings.currentSpawn;
-        },
         noChanges() {
             let keys = Object.keys(this.localSettings);
             this.modifiedSettings = {};

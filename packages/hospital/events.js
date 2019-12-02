@@ -302,4 +302,25 @@ module.exports = {
         notifs.info(player, `Предложение отклонено`, `Лечение`);
         notifs.info(inviter, `${player.name} отклонил предложение`, `Лечение`);
     },
+    "hospital.medCard.give": (player, recId) => {
+        var header = `Медкарта`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        var rec = mp.players.at(recId);
+        if (!factions.isHospitalFaction(player.character.factionId)) return out(`Вы не медик`);
+
+        var minRank = hospital.giveMedCardRank;
+        var rank = factions.getRankById(player.character.factionId, player.character.factionRank);
+        if (minRank > rank.rank) return out(`Доступно с ранга ${factions.getRank(player.character.factionId, minRank).name}`);
+
+        if (!rec || !rec.character) return out(`Игрок не найден`);
+        var character = rec.character;
+
+        character.medCardDate = new Date(Date.now() + hospital.medCardDays * 24 * 60 * 60 * 1000);
+        character.save();
+
+        notifs.success(player, `Медкарта выдана ${rec.name}`, header);
+        notifs.info(rec, `${player.name} выдал вам медкарту`, header);
+    },
 }
