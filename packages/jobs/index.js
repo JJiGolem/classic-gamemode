@@ -73,7 +73,7 @@ module.exports = {
     setJobExp(player, skill, exp) {
         var oldExp = skill.exp;
 
-        skill.exp = (exp - oldExp) * this.bonusSkill;
+        skill.exp = oldExp + (exp - oldExp) * this.bonusSkill;
         skill.save();
 
         mp.events.call("player.jobSkill.changed", player, skill);
