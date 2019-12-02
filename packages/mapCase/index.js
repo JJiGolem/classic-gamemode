@@ -401,6 +401,10 @@ module.exports = {
         });
         return true;
     },
+    haveNewsAd(player) {
+        return this.newsAds.findIndex(x => x.author == player.name) != -1 ||
+            this.newsAdsEdited.findIndex(x => x.author == player.name) != -1;
+    },
     getNewsAd(player) {
         if (!this.newsAds.length) {
             player.call(`mapCase.news.ads.count.set`, [0])

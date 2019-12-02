@@ -276,7 +276,6 @@ module.exports = {
                     mileage: value,
                     fuel: Math.ceil(veh.fuel)
                 });
-                console.log(`[DEBUG] Обновили пробег для ${veh.properties.name}. Текущий пробег: ${veh.mileage}. К занесению: ${value} км и ${Math.ceil(veh.fuel)} л`);
             } catch (err) {
                 console.log(err);
             }
