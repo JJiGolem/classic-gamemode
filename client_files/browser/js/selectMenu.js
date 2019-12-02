@@ -3505,7 +3505,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
-                itemIds: [17, 80, 48, 21, 22],
+                itemIds: [17, 80, 48, 21, 22, 107],
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
