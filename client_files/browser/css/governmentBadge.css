@@ -62,6 +62,7 @@
 #governmentBadge.fib .identifier {
     right: 5vh;
     top: 10vh;
+    left: auto;
 }
 
 #governmentBadge.fib .name {

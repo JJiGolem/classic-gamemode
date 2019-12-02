@@ -25,7 +25,7 @@ let convertWindowData = {
         // TODO: Конвертация валюты; amount - СС для обмена.
         if (isNaN(amount) || amount <= 0) return notifications.push("error", "Некорректное значение");
         mp.trigger(`callRemote`, `donate.convert`, parseInt(amount));
-        // playerMenu.coins -= amount;
+        playerMenu.coins -= amount;
     }
 };
 

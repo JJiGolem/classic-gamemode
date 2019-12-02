@@ -284,6 +284,7 @@ Vue.component('map-case-calls', {
     },
     data: () => ({
         arrows: mapCaseSvgPaths.tableSortArrows,
+        hint: null,
     }),
     computed: {
         sortedList() {
@@ -301,12 +302,39 @@ Vue.component('map-case-calls', {
         onClickAccept(data) {
             mapCase.showLoad();
             this.accept(data);
+        },
+        mouseout(e) {
+            this.hint = null;
+        },
+        mousemove(e, record) {
+            let offsetX = e.offsetX + 15;
+            let offsetY = e.offsetY + e.target.offsetTop + 15;
+
+            let opacity = 1;
+            if (this.$refs.hint) {
+                if (offsetX + this.$refs.hint.offsetWidth > e.target.offsetWidth)
+                    offsetX = e.offsetX - this.$refs.hint.offsetWidth - 2;
+
+                if (offsetY + this.$refs.hint.offsetHeight > this.$refs.table.offsetHeight)
+                    offsetY = e.offsetY + e.target.offsetTop - this.$refs.hint.offsetHeight - 2;
+            } else
+                opacity = 0;
+
+            this.hint = {
+                description: record.description,
+                dist: `${parseInt(record.dist / 1000)},${record.dist % 1000}`,
+                style: {
+                    top: offsetY + "px",
+                    left: offsetX + "px",
+                    opacity: opacity,
+                }
+            }
         }
     }
 });
 
 // for tests
-/*mapCase.type = "gover";
+/*mapCase.type = "ems";
 mapCase.show = true;
 mapCase.enable = true;
 mapCase.userName = "user"*/
