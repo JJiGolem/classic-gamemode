@@ -774,6 +774,7 @@ module.exports = {
         if (!player.phone) return notifs.error(player, `Необходим телефон`, header);
         var price = news.symbolPrice * text.length;
         if (player.character.cash < price) return notifs.error(player, `Необходимо $${price}`, header);
+        if (mapCase.haveNewsAd(player)) return notifs.error(player, `Ожидайте публикацию пред. объявления`, header);
         if (player.lastAddAd) {
             var diff = Date.now() - player.lastAddAd;
             var wait = news.waitAddAd;
