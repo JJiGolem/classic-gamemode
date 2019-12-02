@@ -4,6 +4,7 @@ const PASS_ID = 2608180000;
 const CARPASS_ID = 1703190000;
 const LIC_ID = 2206180000;
 const GUNLIC_ID = 0;
+const MEDCARD_ID = 221119000000;
 
 module.exports = {
     async init() {
@@ -19,5 +20,8 @@ module.exports = {
     },
     getGunLicIdentificator() {
         return GUNLIC_ID;
+    },
+    getMedCardIdentificator() {
+        return MEDCARD_ID;
     }
 }

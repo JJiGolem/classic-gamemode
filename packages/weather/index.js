@@ -186,7 +186,7 @@ module.exports = {
 
         timer.add(() => {
             try {
-                setWeather();
+                this.setWeather();
             } catch (err) {
                 console.log(err)
             }

@@ -979,6 +979,7 @@ var selectMenu = new Vue({
                     };
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == 'Забрать транспорт') {
+                            selectMenu.show = false;
                             mp.trigger(`parkings.vehicle.get`);
                         }
                         if (e.itemName == 'Закрыть меню') {

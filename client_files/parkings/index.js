@@ -13,7 +13,6 @@ mp.events.add('parkings.menu.close', () => {
 });
 
 mp.events.add('parkings.vehicle.get', () => {
-    mp.events.call('parkings.menu.close');
     mp.events.callRemote('parkings.vehicle.get', currentParkingId);
 });
 

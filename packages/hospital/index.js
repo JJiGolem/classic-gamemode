@@ -19,4 +19,8 @@ module.exports = {
     knockedWaitTime: 60 * 60 * 1000,
     // Сохраненные реанимации (characterId : time)
     knockedLogs: {},
+    // Мин. ранг для выдачи медкарты
+    giveMedCardRank: 5,
+    // Срок действия медкарты (дни)
+    medCardDays: 30,
 };

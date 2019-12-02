@@ -18,11 +18,18 @@ module.exports = {
             }
         }
 
-        if (type == `gunLicense`) {
+        if (type == 'gunLicense') {
             if (!player.character.gunLicenseDate) {
                 return player.call('notifications.push.error', ['У вас нет лицензии на оружие', 'Документы']);
             }
         }
+
+        if (type == 'medCard') {
+            if (!player.character.medCardDate) {
+                return player.call('notifications.push.error', ['У вас нет медкарты', 'Документы']);
+            }
+        }
+
 
         if (player.id == targetId) return mp.events.call("documents.show", player.id, type, targetId, data); /// Если показывает себе, то не кидаем оффер
 
@@ -53,6 +60,9 @@ module.exports = {
                 break;
             case 'gunLicense':
                 docName = 'лицензию на оружие';
+                break;
+            case 'medCard':
+                docName = 'медкарту';
                 break;
         }
         target.call('offerDialog.show', ["documents", {
@@ -97,6 +107,9 @@ module.exports = {
                 break;
             case 'gunLicense':
                 mp.events.call('documents.gunLicense.show', player, targetId);
+                break;
+            case 'medCard':
+                mp.events.call('documents.medCard.show', player, targetId);
                 break;
         }
     },
@@ -190,5 +203,23 @@ module.exports = {
             mp.events.call('/me', player, `показал${player.character.gender ? 'а' : ''} свою лицензию на оружие`);
         }
         target.call('documents.show', ['gunLicense', data]);
+    },
+    "documents.medCard.show": (player, targetId) => {
+        let target = mp.players.at(targetId);
+        if (!target) return;
+        let data = {
+            name: player.character.name,
+            gender: player.character.gender ? 'Ж' : 'М',
+            identifier: documents.getMedCardIdentificator() + player.character.id,
+            time: player.character.medCardDate,
+            factionId: player.character.factionId
+        }
+        if (!data) return;
+        if (player.id == target.id) {
+            mp.events.call('/me', player, `смотрит свою медкарту`);
+        } else {
+            mp.events.call('/me', player, `показал${player.character.gender ? 'а' : ''} свою медкарту`);
+        }
+        target.call('documents.show', ['medCard', data]);
     },
 }
