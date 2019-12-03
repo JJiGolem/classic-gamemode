@@ -288,7 +288,7 @@ mp.mapCaseNews = {
     },
     showAd(ad) {
         if (typeof ad == 'object') ad = JSON.stringify(ad);
-        mp.callCEFV(`mapCaseWnewsAdsData.setAd(\`${ad}\`)`);
+        mp.callCEFV(`mapCaseWnewsAdsData.setAd(${ad})`);
     },
     addMember(members) {
         if (typeof members == 'object') members = JSON.stringify(members);
