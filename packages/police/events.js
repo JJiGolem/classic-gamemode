@@ -3,6 +3,7 @@ var army = require('../army');
 var bands = require('../bands');
 var factions = require('../factions');
 var inventory = require('../inventory');
+var logger = call('logger');
 var mafia = require('../mafia');
 var money = require('../money');
 var notifs = require('../notifications');
@@ -413,6 +414,7 @@ module.exports = {
 
             notifs.success(player, `Вам выдано оружие ${gunName}`, header);
             factions.setAmmo(faction, faction.ammo - police.gunAmmo);
+            logger.log(`Взял оружие ${gunName} со склада ${faction.name}`, `faction`, player);
         });
     },
     "police.storage.ammo.take": (player, values) => {
