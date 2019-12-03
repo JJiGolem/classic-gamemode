@@ -384,6 +384,7 @@
 #map-case .body .board .table .tbody .record.focus .btn {
     background-color: #fff;
     color: #000;
+    pointer-events: auto;
 }
 
 #map-case .body .board .table .tbody .record .stars svg {
