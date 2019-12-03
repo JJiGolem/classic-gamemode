@@ -40,6 +40,8 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
                 recId: entity.remoteId
             };
             mp.events.callRemote(`police.cuffs`, JSON.stringify(data));
+        } else if (itemName == 'Обыск') {
+            mp.events.callRemote(`police.inventory.search.start`, entity.remoteId);
         } else if (itemName == 'Освобождение') {
             mp.events.callRemote(`government.unarrest.offer`, entity.remoteId);
         } else if (itemName == 'Следование') {
