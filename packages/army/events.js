@@ -2,6 +2,7 @@
 var army = require('../army');
 var factions = require('../factions');
 var inventory = require('../inventory');
+var logger = require('../logger');
 var money = require('../money');
 var notifs = require('../notifications');
 
@@ -291,6 +292,7 @@ module.exports = {
 
             notifs.success(player, `Вам выдано оружие ${gunName}`, header);
             factions.setAmmo(faction, faction.ammo - army.gunAmmo);
+            logger.log(`Взял оружие ${gunName} со склада ${faction.name}`, `faction`, player);
         });
     },
     "army.storage.ammo.take": (player, values) => {

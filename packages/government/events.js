@@ -2,6 +2,7 @@
 let government = require('../government');
 let factions = require('../factions');
 let inventory = require('../inventory');
+let logger = call('logger');
 let money = call('money');
 let notifs = require('../notifications');
 let police = call('police');
@@ -251,6 +252,7 @@ module.exports = {
 
             notifs.success(player, `Вам выдано оружие ${gunName}`, header);
             factions.setAmmo(faction, faction.ammo - government.gunAmmo);
+            logger.log(`Взял оружие ${gunName} со склада ${faction.name}`, `faction`, player);
         });
     },
     "government.storage.ammo.take": (player, values) => {
