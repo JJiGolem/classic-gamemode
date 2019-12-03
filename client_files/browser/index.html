@@ -1076,7 +1076,7 @@
             <div class="table" ref="table">
                 <div class="head">
                     <div class="first" @click="onClickSort('num')">
-                        <div>#</div>
+                        <div>Км</div>
                         <svg :class="{focus: sortMod.mod == 'num'}" viewBox="0 0 9 16"><path v-for="path in arrows" :d="path" /></svg>
                     </div>
                     <div @click="onClickSort('name')">
@@ -1088,21 +1088,22 @@
                 </div>
                 <div class="tbody">
                     <div class="record" v-for="record in sortedList" :key="record.num"
-                        @mousemove="mousemove($event, record)"
+                        @mousemove="mousemove($event)"
+                        @mouseover="mouseover($event, record)"
                         @mouseout="mouseout">
-                        <div class="first"><div class="record-align">{{ record.num }}</div></div>
+                        <div class="first"><div class="record-align">{{ getDist(record) | km }}</div></div>
                         <div><div class="record-align">{{ record.name }}</div></div>
                         <div><div class="record-align">{{ record.description | textSplice(32) }}</div></div>
                         <div><div class="record-align btn" @click="onClickAccept(record)">Принять</div></div>
                     </div>
                 </div>
-                <!-- <div v-if="hint" class="hint" :style="hint.style" ref="hint">
+                <div v-if="hint.data" class="hint" :style="hint.style" ref="hint">
                     <div>
                         <img src="img/mapCase/road.svg" />
-                        {{ hint.dist }} км
+                        {{ hint.data.dist }} м
                     </div>
-                    {{ hint.description }}
-                </div> -->
+                    {{ hint.data.description }}
+                </div>
             </div>
         </div>
     </script>
@@ -1362,14 +1363,6 @@
         </div>
     </div>
 
-    <script src="js/mapCaseSvgPaths.js"></script>
-    <script src="js/mapCasePd.js"></script>
-    <script src="js/mapCaseFIB.js"></script>
-    <script src="js/mapCaseEms.js"></script>
-    <script src="js/mapCaseWNews.js"></script>
-    <script src="js/mapCaseNg.js"></script>
-    <script src="js/mapCaseGover.js"></script>
-    <script src="js/mapCase.js"></script>
     <!-- ------------------------ ПЛАНШЕТ ПД ------------------------ -->
 
     <div v-cloak id="fishing" v-if="show">
@@ -1841,6 +1834,14 @@
     <!-- ------------------------------------------------------------- -->
     <script src="js/fontawesome.js"></script>
     <script src="js/hud.js"></script>
+    <script src="js/mapCaseSvgPaths.js"></script>
+    <script src="js/mapCasePd.js"></script>
+    <script src="js/mapCaseFIB.js"></script>
+    <script src="js/mapCaseEms.js"></script>
+    <script src="js/mapCaseWNews.js"></script>
+    <script src="js/mapCaseNg.js"></script>
+    <script src="js/mapCaseGover.js"></script>
+    <script src="js/mapCase.js"></script>
     <script src="js/prompt.js"></script>
     <script src="js/notifications.js"></script>
     <script src="js/offerDialog.js"></script>

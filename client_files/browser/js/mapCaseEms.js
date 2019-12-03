@@ -92,10 +92,9 @@ var mapCaseEmsData =  {
     },
 }
 
-
 //api
 /*
-    mapCaseEmsCallsData.list = [{num, name, description}];
+    mapCaseEmsCallsData.list = [{num, name, description, pos: {x, y}}];
 
     массив, отображающийся в списке вызовов
 */
