@@ -249,7 +249,9 @@ mp.inventory = {
         if (itemId) {
             if (player.vehicle) return;
             var info = this.itemsInfo[itemId];
-            var object = mp.objects.new(mp.game.joaat(info.model), player.position);
+            var object = mp.objects.new(mp.game.joaat(info.model), player.position, {
+                dimension: player.dimension
+            });
             var pos = info.attachInfo.pos;
             var rot = info.attachInfo.rot;
             object.attachTo(player.handle,
