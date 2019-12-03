@@ -146,7 +146,7 @@ module.exports = {
         var vehicles = await db.Models.Vehicle.findAll({
             attributes: ['owner'],
             where: {
-                key: "owner",
+                key: "private",
                 plate: {
                     [Op.like]: `%${plate}%`
                 }
@@ -179,7 +179,7 @@ module.exports = {
         });
         var vehicles = await db.Models.Vehicle.findAll({
             where: {
-                key: "owner",
+                key: "private",
                 owner: recId
             }
         });
@@ -475,7 +475,7 @@ module.exports = {
         var vehicles = await db.Models.Vehicle.findAll({
             attributes: ['owner'],
             where: {
-                key: "owner",
+                key: "private",
                 plate: {
                     [Op.like]: `%${plate}%`
                 }
@@ -508,7 +508,7 @@ module.exports = {
         });
         var vehicles = await db.Models.Vehicle.findAll({
             where: {
-                key: "owner",
+                key: "private",
                 owner: recId
             }
         });
@@ -524,7 +524,7 @@ module.exports = {
         });
         var vehicles = await db.Models.Vehicle.findAll({
             where: {
-                key: "owner",
+                key: "private",
                 owner: id
             }
         });
