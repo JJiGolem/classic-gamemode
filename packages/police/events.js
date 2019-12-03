@@ -17,15 +17,15 @@ module.exports = {
     },
     "characterInit.done": (player) => {
         player.call(`police.wanted.set`, [player.character.wanted]);
-        if (!player.character.arrestTime) return;
-
         var time = player.character.arrestTime;
-        if (player.character.arrestType == 0) police.startLSCellArrest(player, null, time);
-        else if (player.character.arrestType == 1) police.startJailArrest(player, null, time);
-        else if (player.character.arrestType == 2) police.startBCCellArrest(player, null, time);
+        if (time) {
+            if (player.character.arrestType == 0) police.startLSCellArrest(player, null, time);
+            else if (player.character.arrestType == 1) police.startJailArrest(player, null, time);
+            else if (player.character.arrestType == 2) police.startBCCellArrest(player, null, time);
+        }
 
-        if (!factions.isPoliceFaction(player.character.factionId)) return;
-        mp.events.call(`mapCase.pd.init`, player);
+        if (factions.isPoliceFaction(player.character.factionId))
+            mp.events.call(`mapCase.pd.init`, player);
     },
     "police.storage.clothes.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Police`);
