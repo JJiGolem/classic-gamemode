@@ -7,6 +7,7 @@ let fuelstations = call('fuelstations');
 let inventory = require('./index.js');
 let hospital = require('../hospital');
 let houses = call('houses');
+let logger = call('logger');
 let mafia = call('mafia');
 let money = call('money');
 let notifs = require('../notifications');
@@ -82,16 +83,20 @@ module.exports = {
                 var i = player.inventory.place.items.findIndex(x => x.id == data.sqlId);
                 if (i == -1) return notifs.error(player, `Предмет #${data.sqlId} в среде не найден. Сообщите разработчикам CRP. :)`, `Код 1`);
                 var item = player.inventory.place.items[i];
+                var itemName = inventory.getName(item.itemId);
                 inventory.addPlayerItem(player, item, data.placeSqlId, data.pocketI, data.index);
                 item.destroy();
                 player.inventory.place.items.splice(i, 1);
-                inventory.notifyOverhead(player, `Забрал '${inventory.getName(item.itemId)}'`);
+                inventory.notifyOverhead(player, `Забрал '${itemName}'`);
+                logger.log(`Забрал '${itemName}' (#${item.id}) | Среда: ${player.inventory.place.type} #${-player.inventory.place.sqlId}`, `inventory`, player);
             }
         } else { // переместил в окруж. среду
             if (item) { // переместил из своего инвентаря в окруж. среду
+                var itemName = inventory.getName(item.itemId);
                 inventory.addEnvironmentItem(player, item, data.pocketI, data.index);
                 inventory.deleteItem(player, item);
-                inventory.notifyOverhead(player, `Положил '${inventory.getName(item.itemId)}'`);
+                inventory.notifyOverhead(player, `Положил '${itemName}'`);
+                logger.log(`Положил '${itemName}' (#${item.id}) | Среда: ${player.inventory.place.type} #${-player.inventory.place.sqlId}`, `inventory`, player);
             } else { // предмет уже находится в окруж. среде
                 item = player.inventory.place.items.find(x => x.id == data.sqlId);
                 if (!item) return notifs.error(player, `Предмет #${data.sqlId} в среде не найден. Сообщите разработчикам CRP. :)`, `Код 2`);
@@ -134,6 +139,7 @@ module.exports = {
         inventory.putGround(player, item, pos);
         notifs.success(player, `Предмет ${itemName} на земле`, header);
         inventory.notifyOverhead(player, `Выкинул '${itemName}'`);
+        logger.log(`Выкинул '${itemName}' (#${item.id})`, `inventory`, player);
     },
     // срабатывает, когда игрок поднимает предмет
     "item.ground.take": (player, objId) => {
@@ -208,7 +214,9 @@ module.exports = {
                 flag: 1
             }, 1500]);
         });
-        inventory.notifyOverhead(player, `Поднял '${inventory.getName(obj.item.itemId)}'`);
+        var itemName = inventory.getName(obj.item.itemId);
+        inventory.notifyOverhead(player, `Поднял '${itemName}'`);
+        logger.log(`Поднял '${itemName}' (#${obj.item.id})`, `inventory`, player);
     },
     // вылечиться аптечкой
     "inventory.item.med.use": (player, sqlId) => {
