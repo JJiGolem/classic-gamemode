@@ -61,6 +61,12 @@ mp.events.add("time.main.tick", () => {
         street: mp.utils.getStreetName(pos),
         region: mp.utils.getRegionName(pos)
     });
+    if (mp.busy.includes("mapCase")) {
+        mp.events.call("hud.setData", {
+            'localPos.x': parseInt(pos.x),
+            'localPos.y': parseInt(pos.y),
+        });
+    }
 });
 
 mp.events.add('render', () => {
