@@ -318,10 +318,15 @@ module.exports = {
         if (!rec || !rec.character) return out(`Игрок не найден`);
         var character = rec.character;
 
+        if (!character.medCardDate) {
+            notifs.success(player, `Медкарта выдана ${rec.name}`, header);
+            notifs.info(rec, `${player.name} выдал вам медкарту`, header);
+        } else {
+            notifs.success(player, `Медкарта ${rec.name} продлена`, header);
+            notifs.info(rec, `${player.name} продлил вам медкарту`, header);
+        }
+
         character.medCardDate = new Date(Date.now() + hospital.medCardDays * 24 * 60 * 60 * 1000);
         character.save();
-
-        notifs.success(player, `Медкарта выдана ${rec.name}`, header);
-        notifs.info(rec, `${player.name} выдал вам медкарту`, header);
     },
 }
