@@ -136,6 +136,8 @@ module.exports = {
         // this.loadWeapons(player);
         player.call(`inventory.initItems`, [this.convertServerToClientItems(dbItems)]);
         console.log(`[INVENTORY] Для игрока ${player.character.name} загружены предметы (${dbItems.length} шт.)`);
+
+        this.fixIfParentItemDoesntExist(player);
     },
     async initVehicleInventory(vehicle) {
         vehicle.inventory = {
@@ -1431,5 +1433,17 @@ module.exports = {
     },
     getItemChance(item) {
         return this.getInventoryItem(item.itemId).chance;
+    },
+    // фикс ситуации, когда у игрока остаются предметы, которые хранятся в родителе, но родителя больше нет у игрока
+    fixIfParentItemDoesntExist(player) {
+        var items = player.inventory.items;
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            if (!item.parentId) continue;
+            if (items.findIndex(x => x.id == item.parentId) != -1) continue;
+            this.deleteItem(player, item);
+            i--;
+            call("terminal").error(`FIX: У игрока ${player.name} удален предмет #${item.id} (родитель не найден)`);
+        }
     },
 };
