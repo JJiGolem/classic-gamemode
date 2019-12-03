@@ -95,7 +95,7 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
         } else if (itemName == 'Обыск') {
             mp.events.callRemote(`police.inventory.search.start`, entity.remoteId);
         } else if (itemName == 'Арест') {
-            mp.events.callRemote(`police.jail.arrest`, entity.remoteId);
+            mp.events.callRemote(`police.cells.arrest`, entity.remoteId);
         } else if (itemName == 'Следование') {
             mp.events.callRemote(`police.follow`, entity.remoteId);
         } else if (itemName == 'Прослушка') {
