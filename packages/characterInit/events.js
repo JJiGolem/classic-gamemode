@@ -21,7 +21,7 @@ module.exports = {
         let charInfos = await characterInit.init(player);
         if (charInfos.length != 0 && player.account.slots == 1 && charInfos[0].hours >= characterInit.timeForSecondSlot) {
             player.account.slots = 2;
-            player.account.save();
+            await player.account.save();
         }
         player.call('characterInit.init', [charInfos, {
             slots: player.account.slots,
