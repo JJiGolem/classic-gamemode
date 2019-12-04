@@ -9159,6 +9159,58 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "bar": {
+                name: "bar",
+                header: "Название бара",
+                items: [
+                    {
+                        text: "Напитки",
+                    },
+                    {
+                        text: "Закрыть"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                alcohol: [],
+                init(data) {
+                    if (typeof data == 'string') data = JSON.parse(data);
+
+                    this.alcohol = data;
+
+                    var alcoholItems = [];
+                    this.alcohol.forEach(el => {
+                        alcoholItems.push({
+                            text: el.params.name,
+                            values: [`$${el.price}`],
+                        });
+                    });
+                    alcoholItems.push({
+                        text: "Вернуться"
+                    });
+
+                    selectMenu.setItems('barAlcohol', alcoholItems);
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Напитки') {
+                            selectMenu.showByName("barAlcohol");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    } else if (eventName == 'onBackspacePressed') {
+                        selectMenu.show = false;
+                    }
+                }
+            },
             "clubAlcohol": {
                 name: "clubAlcohol",
                 header: "Напитки",
@@ -9190,10 +9242,48 @@ var selectMenu = new Vue({
                             selectMenu.showByName("club");
                         } else {
                             selectMenu.show = false;
-                            mp.trigger(`callRemote`, `clubs.alcohol.buy`, e.itemIndex);
+                            mp.trigger(`callRemote`, `club.alcohol.buy`, e.itemIndex);
                         }
                     } else if (eventName == 'onBackspacePressed') {
                         selectMenu.showByName("club");
+                    }
+                }
+            },
+            "barAlcohol": {
+                name: "barAlcohol",
+                header: "Напитки",
+                items: [{
+                    text: "Напиток 1",
+                    values: [`$999`]
+                },
+                    {
+                        text: "Напиток 2",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("bar");
+                        } else {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `bar.buy`, e.itemIndex);
+                        }
+                    } else if (eventName == 'onBackspacePressed') {
+                        selectMenu.showByName("bar");
                     }
                 }
             },
