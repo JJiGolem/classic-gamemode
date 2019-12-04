@@ -2,6 +2,7 @@
 
 let money;
 let notifs;
+let inventory;
 
 
 let bars = [];
@@ -137,6 +138,7 @@ module.exports = {
     async init() {
         money = call('money');
         notifs = call('notifications');
+        inventory = call('inventory');
 
         let infoBars = await db.Models.Bar.findAll();
         for (let i = 0; i < infoBars.length; i++) {
@@ -170,20 +172,20 @@ module.exports = {
     buyDrink(player, index) {
         index = Math.clamp(index, 0, this.alcohol.length - 1);
         let item = this.alcohol[index];
-        if (player.character.cash < item.price) return notifs.error(player, `Необходимо $${price}`, "Недостаточно средств");
+        if (player.character.cash < item.price) return notifs.error(player, `Необходимо $${item.price}`, "Недостаточно средств");
 
         let cantAdd = inventory.cantAdd(player, this.alcoholItemId, item.params);
         if (cantAdd) return notifs.error(player, cantAdd, "Ошибка");
 
-        money.removeCash(player, price, (res) => {
+        money.removeCash(player, item.price, (res) => {
             if (!res) out(`Ошибка списания наличных`);
 
-        }, `Покупка напитка в баре с id #${club.biz.info.id}`);
+        }, `Покупка напитка в баре`);
 
         inventory.addItem(player, this.alcoholItemId, item.params, (e) => {
             if (e) notifs.error(player, e);
         });
 
-        notifs.success(player, `Вы приобрели ${item.params.name}`, header);
+        notifs.success(player, `Вы приобрели ${item.params.name}`, "Бар");
     }
 }
