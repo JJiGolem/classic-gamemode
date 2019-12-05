@@ -569,7 +569,6 @@ module.exports = {
     },
     isAbleToBuyVehicle(player) {
         let hasHouse = houses.isHaveHouse(player.character.id);
-        console.log(`hasHouse = ${hasHouse}`)
         if (!hasHouse) {
             if (player.vehicleList.length >= 1) return false;
         } else {

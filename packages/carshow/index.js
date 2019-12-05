@@ -127,7 +127,6 @@ module.exports = {
         console.log("[CARSHOW] Запуск обновления автосалонов");
         for (var i = 0; i < carList.length; i++) {
             let randomInt = this.generateRandomInt();
-            console.log(randomInt);
             if (randomInt <= carList[i].percentage) {
                 console.log(`[CARSHOW] В автосалон добавлен т/c ${carList[i].vehiclePropertyModel}`);
                 carList[i].count = carList[i].count + 1;
