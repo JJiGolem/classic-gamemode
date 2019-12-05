@@ -5,6 +5,11 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
+        name: {
+            type: DataTypes.STRING(20),
+            defaultValue: null,
+            allowNull: true
+        },
         x: {
             type: DataTypes.FLOAT,
             allowNull: false

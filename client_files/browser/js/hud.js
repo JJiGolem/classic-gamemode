@@ -63,6 +63,10 @@ var hud = new Vue({
                 name: "Обновления",
             },
         ],
+        localPos: {
+            x: 0,
+            y: 0,
+        },
         coldTimer: -1,
         heatTimer: -1,
     },

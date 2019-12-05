@@ -115,7 +115,11 @@ module.exports = {
             id: player.character.id,
             num: player.id,
             name: player.name,
-            description: description
+            description: description,
+            pos: {
+                x: player.position.x,
+                y: player.position.y,
+            }
         };
         this.policeCalls.push(call);
         notifs.success(player, `Вызов отправлен`, `Police`);
@@ -312,7 +316,11 @@ module.exports = {
             id: player.character.id,
             num: player.id,
             name: player.name,
-            description: description
+            description: description,
+            pos: {
+                x: player.position.x,
+                y: player.position.y,
+            }
         };
         this.hospitalCalls.push(call);
         notifs.success(player, `Вызов отправлен`, `Hospital`);

@@ -10,9 +10,17 @@ module.exports = {
     "characterInit.done": (player) => {
         player.call(`factions.faction.set`, [player.character.factionId, factions.getClientRanks(player.character.factionId), factions.getBlipsPos(player.character.factionId)]);
         player.setVariable("factionId", player.character.factionId);
-        player.call(`factions.info.set`, [{
+
+        var info = {
             vehRespawnPrice: factions.vehRespawnPrice
-        }]);
+        };
+        var faction = factions.getFaction(player.character.factionId);
+        if (faction) {
+            info.inviteRank = faction.inviteRank;
+            info.uvalRank = faction.uvalRank;
+            info.giveRankRank = faction.giveRankRank;
+        }
+        player.call(`factions.info.set`, [info]);
     },
     "factions.warehouse.takeBox": (player, type) => {
         factions.takeBox(player, type);
@@ -250,6 +258,31 @@ module.exports = {
         if (!inviter || !inviter.character) return;
         notifs.info(player, `Предложение отклонено`, `Чек`);
         notifs.info(inviter, `${player.name} отклонил предложение`, `Чек`);
+    },
+    "factions.control.members.access.set": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+
+        var out = (text) => {
+            notifs.error(player, text);
+        };
+        if (!player.character.factionId) return out(`Вы не состоите в организации`);
+        if (!factions.isLeader(player)) return out(`Вы не лидер`);
+
+        var key = ["inviteRank", "uvalRank", "giveRankRank"][data.index];
+
+        var faction = factions.getFaction(player.character.factionId);
+
+        faction[key] = data.rank;
+        faction.save();
+
+        var info = {};
+        info[key] = data.rank;
+
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+            if (rec.character.factionId != player.character.factionId) return;
+            notifs.info(rec, `${player.name} изменил доступ к составу`, faction.name);
+        });
     },
     "factions.control.members.online.show": (player) => {
         var out = (text) => {

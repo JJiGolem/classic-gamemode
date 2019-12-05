@@ -3,11 +3,16 @@
     top: 50%;
     left: 50%;
     height: 55.2vh;
-    width: 39vh;
+    width: 39.1vh;
     transform: translate(-50%, -50%);
     background-repeat: no-repeat;
     background-size: cover;
     font-family: Ubuntu;
+}
+
+#governmentBadge img {
+    position: absolute;
+    width: 100%;
 }
 
 #governmentBadge .identifier {
@@ -55,9 +60,9 @@
     font-weight: 700;
 }
 
-#governmentBadge.fib {
+/*#governmentBadge.fib {
     background-image: url(../img/governmentBadge/FIB.svg);
-}
+}*/
 
 #governmentBadge.fib .identifier {
     right: 5vh;
@@ -86,10 +91,10 @@
     font-size: 2vh;
 }
 
-#governmentBadge.lspd {
+/*#governmentBadge.lspd {
     background-image: url(../img/governmentBadge/LSPD.svg);
 }
 
 #governmentBadge.bcsd {
     background-image: url(../img/governmentBadge/BCSD.svg);
-}
+}*/

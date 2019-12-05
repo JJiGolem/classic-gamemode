@@ -284,7 +284,10 @@ Vue.component('map-case-calls', {
     },
     data: () => ({
         arrows: mapCaseSvgPaths.tableSortArrows,
-        hint: null,
+        hint: {
+            data: null,
+            style: null,
+        },
     }),
     computed: {
         sortedList() {
@@ -304,9 +307,20 @@ Vue.component('map-case-calls', {
             this.accept(data);
         },
         mouseout(e) {
-            this.hint = null;
+            this.hint.data = null;
         },
-        mousemove(e, record) {
+        mouseover(e, record) {
+            if (e.target.className != "record") {
+                this.mouseout();
+                return;
+            }
+
+            this.hint.data = {
+                description: record.description,
+                dist: prettyMoney(record.num),
+            };
+        },
+        mousemove(e) {
             let offsetX = e.offsetX + 15;
             let offsetY = e.offsetY + e.target.offsetTop + 15;
 
@@ -320,15 +334,19 @@ Vue.component('map-case-calls', {
             } else
                 opacity = 0;
 
-            this.hint = {
-                description: record.description,
-                dist: `${parseInt(record.dist / 1000)},${record.dist % 1000}`,
-                style: {
-                    top: offsetY + "px",
-                    left: offsetX + "px",
-                    opacity: opacity,
-                }
+            this.hint.style = {
+                top: offsetY + "px",
+                left: offsetX + "px",
+                opacity: opacity,
             }
+        },
+        getDist(record) {
+            return record.num = parseInt(Math.sqrt(Math.pow(hud.localPos.x - record.pos.x, 2) + Math.pow(hud.localPos.y - record.pos.y, 2)));
+        },
+    },
+    filters: {
+        km(val) {
+            return (val / 1000).toFixed(1);
         }
     }
 });

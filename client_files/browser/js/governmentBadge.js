@@ -11,6 +11,12 @@ var governmentBadge = new Vue({
         sign: "D.Rockfall", // Подпись
         directorSign: "E.Wilkinson", // Подпись лидера (только в fib)
     },
+    methods: {
+        close() {
+            this.show = false;
+            mp.trigger('documents.close');
+        }
+    },
 });
 
 // for tests

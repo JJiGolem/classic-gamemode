@@ -1617,11 +1617,17 @@ var selectMenu = new Vue({
                         text: "Доступ к складу"
                     },
                     {
+                        text: "Доступ к составу"
+                    },
+                    {
                         text: "Закрыть"
                     }
                 ],
                 i: 0,
                 j: 0,
+                inviteRank: 1,
+                uvalRank: 1,
+                giveRankRank: 1,
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -1656,6 +1662,11 @@ var selectMenu = new Vue({
                             if (statistics['factionRank'].value != maxRankName) return selectMenu.notification = "Вы не лидер";
                             selectMenu.loader = true;
                             mp.trigger(`callRemote`, `factions.control.warehouse.show`);
+                        } else if (e.itemName == 'Доступ к составу') {
+                            var ranks = selectMenu.menus["factionControlRanks"].ranks;
+                            var maxRankName = ranks[ranks.length - 1].name;
+                            if (statistics['factionRank'].value != maxRankName) return selectMenu.notification = "Вы не лидер";
+                            selectMenu.menus['factionControlAccessMembers'].show(this.inviteRank, this.uvalRank, this.giveRankRank);
                         }
                     }
                 }
@@ -2322,6 +2333,65 @@ var selectMenu = new Vue({
                             mp.trigger(`callRemote`, `factions.control.items.rank.set`, JSON.stringify(data));
                         }
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControlStorage");
+                }
+            },
+            "factionControlAccessMembers": {
+                name: "factionControlAccessMembers",
+                header: "Доступ к составу",
+                items: [
+                    {
+                        text: "Приглашение",
+                        values: [`Ранг 1`],
+                    },
+                    {
+                        text: "Увольнение",
+                        values: [`Ранг 1`],
+                    },
+                    {
+                        text: "Повышение/понижение",
+                        values: [`Ранг 1`],
+                    },
+                    {
+                    text: "Вернуться"
+                }],
+                i: 0,
+                j: 0,
+                show(inviteRank, uvalRank, giveRankRank) {
+                    var rankNames = selectMenu.menus['factionControlRanks'].ranks.map(x => x.name);
+
+                    Vue.set(this.items[0], 'values', rankNames);
+                    Vue.set(this.items[0], 'i', inviteRank - 1);
+
+                    Vue.set(this.items[1], 'values', rankNames);
+                    Vue.set(this.items[1], 'i', uvalRank - 1);
+
+                    Vue.set(this.items[2], 'values', rankNames);
+                    Vue.set(this.items[2], 'i', giveRankRank - 1);
+
+                    selectMenu.showByName(this.name);
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') selectMenu.showByName("factionControl");
+                        else {
+                            selectMenu.show = false;
+                            var data = {
+                                index: e.itemIndex,
+                                rank: item.i + 1
+                            };
+                            var key = ["inviteRank", "uvalRank", "giveRankRank"][data.index];
+                            selectMenu.menus['factionControl'][key] = data.rank;
+                            mp.trigger(`callRemote`, `factions.control.members.access.set`, JSON.stringify(data));
+                        }
+                    } else if (eventName == 'onBackspacePressed') selectMenu.showByName("factionControl");
                 }
             },
             "governmentStorage": {
@@ -9159,6 +9229,58 @@ var selectMenu = new Vue({
                     }
                 }
             },
+            "bar": {
+                name: "bar",
+                header: "Название бара",
+                items: [
+                    {
+                        text: "Напитки",
+                    },
+                    {
+                        text: "Закрыть"
+                    }
+                ],
+                i: 0,
+                j: 0,
+                alcohol: [],
+                init(data) {
+                    if (typeof data == 'string') data = JSON.parse(data);
+
+                    this.alcohol = data;
+
+                    var alcoholItems = [];
+                    this.alcohol.forEach(el => {
+                        alcoholItems.push({
+                            text: el.params.name,
+                            values: [`$${el.price}`],
+                        });
+                    });
+                    alcoholItems.push({
+                        text: "Вернуться"
+                    });
+
+                    selectMenu.setItems('barAlcohol', alcoholItems);
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Напитки') {
+                            selectMenu.showByName("barAlcohol");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    } else if (eventName == 'onBackspacePressed') {
+                        selectMenu.show = false;
+                    }
+                }
+            },
             "clubAlcohol": {
                 name: "clubAlcohol",
                 header: "Напитки",
@@ -9190,10 +9312,48 @@ var selectMenu = new Vue({
                             selectMenu.showByName("club");
                         } else {
                             selectMenu.show = false;
-                            mp.trigger(`callRemote`, `clubs.alcohol.buy`, e.itemIndex);
+                            mp.trigger(`callRemote`, `club.alcohol.buy`, e.itemIndex);
                         }
                     } else if (eventName == 'onBackspacePressed') {
                         selectMenu.showByName("club");
+                    }
+                }
+            },
+            "barAlcohol": {
+                name: "barAlcohol",
+                header: "Напитки",
+                items: [{
+                    text: "Напиток 1",
+                    values: [`$999`]
+                },
+                    {
+                        text: "Напиток 2",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("bar");
+                        } else {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `bar.buy`, e.itemIndex);
+                        }
+                    } else if (eventName == 'onBackspacePressed') {
+                        selectMenu.showByName("bar");
                     }
                 }
             },

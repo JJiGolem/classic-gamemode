@@ -83,7 +83,6 @@ class CreateOrder extends Component {
                     productsCount={parseInt(productCount)} productsPrice={productPrice}
                 /> });
 
-
             // eslint-disable-next-line no-undef
             mp.trigger('biz.order.add', business.id, productCount, productPrice);
 

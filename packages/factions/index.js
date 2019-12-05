@@ -618,18 +618,21 @@ module.exports = {
     },
     canInvite(player) {
         if (!player.character.factionId) return false;
-        var maxId = this.getMaxRank(player.character.factionId).id;
-        return maxId - player.character.factionRank <= 1;
+        var faction = this.getFaction(player.character.factionId);
+        var rank = this.getRankById(faction, player.character.factionRank);
+        return rank.rank >= faction.inviteRank;
     },
     canUval(player) {
         if (!player.character.factionId) return false;
-        var maxId = this.getMaxRank(player.character.factionId).id;
-        return maxId - player.character.factionRank <= 2;
+        var faction = this.getFaction(player.character.factionId);
+        var rank = this.getRankById(faction, player.character.factionRank);
+        return rank.rank >= faction.uvalRank;
     },
     canGiveRank(player) {
         if (!player.character.factionId) return false;
-        var maxId = this.getMaxRank(player.character.factionId).id;
-        return maxId - player.character.factionRank <= 1;
+        var faction = this.getFaction(player.character.factionId);
+        var rank = this.getRankById(faction, player.character.factionRank);
+        return rank.rank >= faction.giveRankRank;
     },
     sayRadio(player, text) {
         var factionId = player.character.factionId;
