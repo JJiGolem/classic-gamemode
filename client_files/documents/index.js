@@ -78,6 +78,15 @@ mp.events.add('documents.show', (type, data) => {
         }
         mp.callCEFV('medicalCard.show = true');
     }
+    if (type == 'governmentBadge') {
+        data.sign = generateSign(data.name);
+        data.type = getFactionName(data.factionId).toLowerCase();
+        for (let key in data) {
+            if (typeof data[key] == 'string') data[key] = `'${data[key]}'`;
+            mp.callCEFV(`governmentBadge.${key} = ${data[key]}`);
+        }
+        mp.callCEFV('governmentBadge.show = true');
+    }
 });
 
 mp.events.add('documents.close', (type, data) => {
@@ -101,6 +110,9 @@ mp.events.add('documents.close', (type, data) => {
             break;
         case 'medCard':
             mp.callCEFV('medicalCard.show = false');
+            break;
+        case 'governmentBadge':
+            mp.callCEFV('governmentBadge.show = false');
             break;
     }
 
@@ -160,6 +172,9 @@ mp.events.add('documents.showTo', (type) => {
             break;
         case "medCard":
             mp.events.call('documents.offer', "medCard", target.remoteId);
+            break;
+        case "governmentBadge":
+            mp.events.call('documents.offer', "governmentBadge", target.remoteId);
             break;
     }
 });
