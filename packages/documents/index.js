@@ -5,8 +5,10 @@ const CARPASS_ID = 1703190000;
 const LIC_ID = 2206180000;
 const GUNLIC_ID = 0;
 const MEDCARD_ID = 221119000000;
+const BADGE_ID = 10000;
 
 module.exports = {
+    fibLeaderSign: "C.Slade",
     async init() {
     },
     getPassIdentificator() {
@@ -23,5 +25,8 @@ module.exports = {
     },
     getMedCardIdentificator() {
         return MEDCARD_ID;
-    }
+    },
+    getBadgeIdentificator() {
+        return BADGE_ID;
+    },
 }
