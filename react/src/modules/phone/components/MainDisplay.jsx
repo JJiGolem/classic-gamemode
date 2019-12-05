@@ -66,12 +66,16 @@ class MainDisplay extends Component {
 
         let countNotReadMessages = 0;
 
-        if (dialogs) {
-            for (let i = 0; i < dialogs.list.length; i++) {
-                if (dialogs.list[i].PhoneMessages && dialogs.list[i].PhoneMessages.some(message => !message.isRead)) {
-                    countNotReadMessages++;
+        try {
+            if (dialogs) {
+                for (let i = 0; i < dialogs.list.length; i++) {
+                    if (dialogs.list[i].PhoneMessages && dialogs.list[i].PhoneMessages.some(message => !message.isRead)) {
+                        countNotReadMessages++;
+                    }
                 }
             }
+        } catch (e) {
+            console.log(e.message);
         }
 
         return (
