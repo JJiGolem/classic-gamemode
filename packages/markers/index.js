@@ -94,6 +94,7 @@ module.exports = {
 
         if (el.blip && el.blipColor) {
             markerA.blip = mp.blips.new(el.blip, posA, {
+                name: el.name || "ТП",
                 color: el.blipColor,
                 shortRange: 10,
                 scale: 1,
@@ -102,6 +103,7 @@ module.exports = {
         }
         if (el.tpBlip && el.tpBlipColor) {
             markerB.blip = mp.blips.new(el.tpBlip, posB, {
+                name: el.name || "ТП",
                 color: el.tpBlipColor,
                 shortRange: 10,
                 scale: 1,
@@ -109,8 +111,9 @@ module.exports = {
             });
         }
     },
-    async addTpMarker(posA, posB) {
+    async addTpMarker(posA, posB, name) {
         var el = await db.Models.TpMarker.create({
+            name: name,
             x: posA.x,
             y: posA.y,
             z: posA.z,
