@@ -1,6 +1,7 @@
 let bands = call('bands');
 let factions = call('factions');
 let inventory = call('inventory');
+let logger = call('logger');
 let money = call('money');
 let notifs = call('notifications');
 
@@ -103,6 +104,7 @@ module.exports = {
 
             notifs.success(player, `Вам выдано оружие ${gunName}`, header);
             factions.setAmmo(faction, faction.ammo - bands.gunAmmo);
+            logger.log(`Взял оружие ${gunName} со склада ${faction.name}`, `faction`, player);
         });
     },
     "bands.storage.ammo.take": (player, values) => {

@@ -2,6 +2,7 @@
 var army = require('../army');
 var factions = require('../factions');
 var inventory = require('../inventory');
+var logger = require('../logger');
 var money = require('../money');
 var notifs = require('../notifications');
 
@@ -262,10 +263,10 @@ module.exports = {
 
         if (faction.ammo < army.gunAmmo) return notifs.error(player, `Недостаточно боеприпасов`, header);
 
-        var itemIds = [17, 80, 48, 21, 22];
+        var itemIds = [17, 80, 48, 21, 22, 107];
         var weaponIds = ["weapon_nightstick", "weapon_heavypistol",
             "weapon_smg", "weapon_pumpshotgun",
-            "weapon_carbinerifle"
+            "weapon_carbinerifle", "weapon_heavysniper"
         ];
         index = Math.clamp(index, 0, itemIds.length - 1);
         var itemId = itemIds[index];
@@ -291,6 +292,7 @@ module.exports = {
 
             notifs.success(player, `Вам выдано оружие ${gunName}`, header);
             factions.setAmmo(faction, faction.ammo - army.gunAmmo);
+            logger.log(`Взял оружие ${gunName} со склада ${faction.name}`, `faction`, player);
         });
     },
     "army.storage.ammo.take": (player, values) => {

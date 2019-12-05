@@ -384,6 +384,7 @@
 #map-case .body .board .table .tbody .record.focus .btn {
     background-color: #fff;
     color: #000;
+    pointer-events: auto;
 }
 
 #map-case .body .board .table .tbody .record .stars svg {
@@ -401,6 +402,37 @@
 #map-case .members .table .head,
 #map-case .members .table .tbody .record {
     grid-template-columns: 4fr 10fr 15vh 8fr;
+}
+
+#map-case .calls .table {
+    position: relative;
+}
+
+#map-case .calls .table .hint {
+    position: absolute;
+    width: 20vh;
+    background: rgba(240, 240, 240, 0.8);
+    padding: 1vh;
+    border-radius: 1vh;
+    pointer-events: none;
+    font-family: MontserratNew;
+    font-weight: 500;
+    font-size: 1.4vh;
+
+}
+
+#map-case .calls .table .hint > div {
+    font-weight: 600;
+    font-size: 1.5vh;
+    margin-bottom: 0.7vh;
+}
+
+#map-case .calls .table .hint img {
+    height: 1.1vh;
+}
+
+#map-case .calls .table .record div {
+    pointer-events: none;
 }
 
 #map-case .members.board .table .tbody .record .btn {

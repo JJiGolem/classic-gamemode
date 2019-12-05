@@ -115,7 +115,11 @@ module.exports = {
             id: player.character.id,
             num: player.id,
             name: player.name,
-            description: description
+            description: description,
+            pos: {
+                x: player.position.x,
+                y: player.position.y,
+            }
         };
         this.policeCalls.push(call);
         notifs.success(player, `Вызов отправлен`, `Police`);
@@ -312,7 +316,11 @@ module.exports = {
             id: player.character.id,
             num: player.id,
             name: player.name,
-            description: description
+            description: description,
+            pos: {
+                x: player.position.x,
+                y: player.position.y,
+            }
         };
         this.hospitalCalls.push(call);
         notifs.success(player, `Вызов отправлен`, `Hospital`);
@@ -400,6 +408,10 @@ module.exports = {
             rec.call(`mapCase.news.ads.count.set`, [this.newsAds.length])
         });
         return true;
+    },
+    haveNewsAd(player) {
+        return this.newsAds.findIndex(x => x.author == player.name) != -1 ||
+            this.newsAdsEdited.findIndex(x => x.author == player.name) != -1;
     },
     getNewsAd(player) {
         if (!this.newsAds.length) {

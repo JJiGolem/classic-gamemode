@@ -279,6 +279,10 @@ var interactionMenu = new Vue({
                         icon: "cuffs.svg"
                     },
                     {
+                        text: "Обыск",
+                        icon: "search.svg"
+                    },
+                    {
                         text: "Освобождение",
                         icon: "freedom.svg"
                     },

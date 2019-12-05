@@ -14,7 +14,7 @@ var hud = new Vue({
         temperature: 17,
         city: "San Andreas",
         weather: "clear-day",
-        mute: true, // Блокировка голосового чата
+        mute: false, // Блокировка голосового чата
         voice: false,
         show: false,
         showOnline: true,
@@ -63,6 +63,10 @@ var hud = new Vue({
                 name: "Обновления",
             },
         ],
+        localPos: {
+            x: 0,
+            y: 0,
+        },
         coldTimer: -1,
         heatTimer: -1,
     },

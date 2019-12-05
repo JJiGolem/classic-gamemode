@@ -5,7 +5,9 @@ mp.attachmentMngr = {
         if (this.attachments.hasOwnProperty(id)) {
             if (entity && entity.__attachmentObjects && !entity.__attachmentObjects.hasOwnProperty(id)) {
                 let attInfo = this.attachments[id];
-                let object = mp.objects.new(attInfo.model, entity.position);
+                let object = mp.objects.new(attInfo.model, entity.position, {
+                    dimension: entity.dimension
+                });
                 if (attInfo.lost) {
                     object.lost = attInfo.lost;
                     mp.inventory.hands(entity, null);

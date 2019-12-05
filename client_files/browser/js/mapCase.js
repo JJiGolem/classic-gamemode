@@ -284,6 +284,10 @@ Vue.component('map-case-calls', {
     },
     data: () => ({
         arrows: mapCaseSvgPaths.tableSortArrows,
+        hint: {
+            data: null,
+            style: null,
+        },
     }),
     computed: {
         sortedList() {
@@ -301,12 +305,54 @@ Vue.component('map-case-calls', {
         onClickAccept(data) {
             mapCase.showLoad();
             this.accept(data);
+        },
+        mouseout(e) {
+            this.hint.data = null;
+        },
+        mouseover(e, record) {
+            if (e.target.className != "record") {
+                this.mouseout();
+                return;
+            }
+
+            this.hint.data = {
+                description: record.description,
+                dist: prettyMoney(record.num),
+            };
+        },
+        mousemove(e) {
+            let offsetX = e.offsetX + 15;
+            let offsetY = e.offsetY + e.target.offsetTop + 15;
+
+            let opacity = 1;
+            if (this.$refs.hint) {
+                if (offsetX + this.$refs.hint.offsetWidth > e.target.offsetWidth)
+                    offsetX = e.offsetX - this.$refs.hint.offsetWidth - 2;
+
+                if (offsetY + this.$refs.hint.offsetHeight > this.$refs.table.offsetHeight)
+                    offsetY = e.offsetY + e.target.offsetTop - this.$refs.hint.offsetHeight - 2;
+            } else
+                opacity = 0;
+
+            this.hint.style = {
+                top: offsetY + "px",
+                left: offsetX + "px",
+                opacity: opacity,
+            }
+        },
+        getDist(record) {
+            return record.num = parseInt(Math.sqrt(Math.pow(hud.localPos.x - record.pos.x, 2) + Math.pow(hud.localPos.y - record.pos.y, 2)));
+        },
+    },
+    filters: {
+        km(val) {
+            return (val / 1000).toFixed(1);
         }
     }
 });
 
 // for tests
-/*mapCase.type = "gover";
+/*mapCase.type = "ems";
 mapCase.show = true;
 mapCase.enable = true;
 mapCase.userName = "user"*/
