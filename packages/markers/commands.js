@@ -4,7 +4,7 @@ module.exports = {
     "/tpmarkadd": {
         description: "Добавить маркер для телепорта (необходимо указать координаты конечного маркера). Используйте 0 для параметров blip/blipColor, если маркер не имеет блипа на карте.",
         access: 3,
-        args: "[x]:n [y]:n [z]:n [heading]:n [dimension]:n [blipA]:n [colorBlipA]:n [blipB]:n [colorBlipB]:n",
+        args: "[x]:n [y]:n [z]:n [heading]:n [dimension]:n [blipA]:n [colorBlipA]:n [blipB]:n [colorBlipB]:n [name]",
         handler: (player, args, out) => {
             var posA = player.position;
             posA.z--;
@@ -21,7 +21,7 @@ module.exports = {
 
             if (player.dist(posB) < 5) return out.error(`Маркеры расположены слишком близко`, player);
 
-            markers.addTpMarker(posA, posB);
+            markers.addTpMarker(posA, posB, args[9]);
             out.info(`${player.name} добавил ТП-маркер ${JSON.stringify(posA)} => ${JSON.stringify(posB)}`);
         }
     },
