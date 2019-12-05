@@ -193,6 +193,9 @@ module.exports = {
             if (veh.hasOwnProperty('carPlaceIndex')) {
                 veh.isInGarage = true;
             }
+            if (owner.carPlaces.length == 1 && owner.carPlaces[0].d == 0) {
+                veh.isInGarage = false;
+            }
         }
         mp.events.call('vehicles.respawn.full', veh);
         this.spawnVehicle(veh, 1);
