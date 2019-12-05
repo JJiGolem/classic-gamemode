@@ -317,8 +317,8 @@ module.exports = {
         // inventory.fullDeleteItemsByParams(itemIds[index], ["faction", "owner"], [character.factionId, character.id]);
         var params = {
             count: ammo,
-            faction: character.factionId,
-            owner: character.id
+            // faction: character.factionId,
+            // owner: character.id
         };
         inventory.addItem(player, itemIds[index], params, (e) => {
             if (e) return notifs.error(player, e, header);

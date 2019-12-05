@@ -194,6 +194,9 @@ mp.factions = {
         this.vehRespawnPrice = info.vehRespawnPrice;
 
         mp.callCEFV(`selectMenu.setProp('factionControlVehicles', 'respawnPrice', ${this.vehRespawnPrice})`);
+        mp.callCEFV(`selectMenu.setProp('factionControl', 'inviteRank', ${info.inviteRank})`);
+        mp.callCEFV(`selectMenu.setProp('factionControl', 'uvalRank', ${info.uvalRank})`);
+        mp.callCEFV(`selectMenu.setProp('factionControl', 'giveRankRank', ${info.giveRankRank})`);
     },
 };
 
