@@ -37,11 +37,15 @@ mp.familiar = {
 
         mp.playerMenu.setFamiliar(this.list.length);
     },
+    updateName(name, oldName) {
+        var i = this.list.indexOf(oldName);
+        if (i != -1) this.list.splice(i, 1);
+        this.list.push(name);
+    },
 };
 
 mp.events.add({
-    "characterInit.done": () => {
-    },
+    "characterInit.done": () => {},
     "familiar.init": (list) => {
         mp.familiar.init(list);
     },
@@ -50,6 +54,9 @@ mp.events.add({
     },
     "familiar.remove": (name) => {
         mp.familiar.remove(name);
+    },
+    "familiar.name.update": (name, oldName) => {
+        mp.familiar.updateName(name, oldName);
     },
     "entityStreamIn": (player) => {
         if (player.type != "player") return;

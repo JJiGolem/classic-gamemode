@@ -73,7 +73,7 @@ module.exports = {
         this.setDonate(player, player.account.donate - this.nicknamePrice, `Смена ника ${oldName}=>${player.name}`);
         notifs.success(player, `Никнейм персонажа изменен`, header);
         notifs.success(player, `Списано ${this.nicknamePrice} CC`, header);
-        mp.events.call("player.name.changed", player);
+        mp.events.call("player.name.changed", player, oldName);
         // player.kick();
     },
     clearWarn(player) {
