@@ -5,13 +5,15 @@ class ErrorBoundary extends Component {
         super(props);
 
         this.state = {
-            hasError: false
+            hasError: false, info: null
         }
     }
 
     componentDidCatch(error, info) {
-        this.setState({ hasError: true });
-        console.log(error);
+        this.setState({ hasError: true, info: info });
+        
+        // eslint-disable-next-line no-undef
+        mp.trigger('logger.debug', error.message.toString(), 'react');
     }
 
     render() {

@@ -74,8 +74,9 @@ class MainDisplay extends Component {
                     }
                 }
             }
-        } catch (e) {
-            console.log(e.message);
+        } catch (err) {
+            // eslint-disable-next-line no-undef
+            mp.trigger('logger.debug', err.message, 'react');
         }
 
         return (
