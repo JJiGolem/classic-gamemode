@@ -193,9 +193,7 @@ module.exports = {
         mp.vehicles.forEach((current) => {
             if (current.key == "private" && current.owner == player.character.id) {
                 if (!hasHouse) {
-                    console.log("Сохраняем парковочную");
                     let now = new Date();
-                    console.log(now);
                     current.db.update({
                         parkingId: this.getClosestParkingId(player),
                         parkingDate: now

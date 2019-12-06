@@ -221,8 +221,6 @@ module.exports = {
                                 count: carToBuy.count - 1
                             });
                             carToBuy.count = carToBuy.count - 1;
-                            //player.vehiclesCount = player.vehiclesCount + 1;
-                            //console.log(player.vehiclesCount);
                             let props = vehicles.getVehiclePropertiesByModel(data.modelName);
                             player.vehicleList.push({
                                 id: data.id,

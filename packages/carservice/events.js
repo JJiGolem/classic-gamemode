@@ -114,7 +114,6 @@ module.exports = {
 
             money.removeCash(target, price, function (result) {
                 if (result) {
-                    console.log('accept');
                     mp.events.call('carservice.diagnostics.preparation', sender, target);
                     let income = price - salary;
                     carservice.updateCashbox(serviceId, income); /// Начисление денег за диагностику в кассу
@@ -206,21 +205,17 @@ module.exports = {
 
         target.currentMechanic = player;
 
-        console.log(vehicle.bodyHealth);
-
         let multiplier = carservice.getRepairPriceMultiplier(vehicle);
         let serviceId = player.currentCarServiceId;
 
         let priceMultiplier = carservice.getPriceMultiplier(serviceId);
 
-        console.log(multiplier);
         let checkData = {};
         target.repairPrice = 0;
         target.repairProducts = 0;
         if (vehicle.engineState) {
             let products = parseInt(DEFAULT_PRODUCTS.ENGINE * vehicle.engineState * multiplier);
             let price = products * PRODUCT_PRICE * priceMultiplier;
-            console.log(price);
             target.repairPrice += price;
             target.repairProducts += products;
             checkData.engine = {
@@ -231,7 +226,6 @@ module.exports = {
         if (vehicle.fuelState) {
             let products = parseInt(DEFAULT_PRODUCTS.FUEL * vehicle.fuelState * multiplier);
             let price = products * PRODUCT_PRICE * priceMultiplier;
-            console.log(price);
             target.repairPrice += price;
             target.repairProducts += products;
             checkData.fuel = {
@@ -242,7 +236,6 @@ module.exports = {
         if (vehicle.steeringState) {
             let products = parseInt(DEFAULT_PRODUCTS.STEERING * vehicle.steeringState * multiplier);
             let price = products * PRODUCT_PRICE * priceMultiplier;
-            console.log(price);
             target.repairPrice += price;
             target.repairProducts += products;
             checkData.steering = {
@@ -253,7 +246,6 @@ module.exports = {
         if (vehicle.brakeState) {
             let products = parseInt(DEFAULT_PRODUCTS.BRAKE * vehicle.brakeState * multiplier);
             let price = products * PRODUCT_PRICE * priceMultiplier;
-            console.log(price);
             target.repairPrice += price;
             target.repairProducts += products;
             checkData.brake = {
@@ -264,15 +256,12 @@ module.exports = {
         if (vehicle.bodyHealth < 999) {
             let products = parseInt(DEFAULT_PRODUCTS.BODY * multiplier);
             let price = parseInt((1000 - vehicle.bodyHealth) * multiplier * priceMultiplier);
-            console.log(price);
             target.repairPrice += price;
             target.repairProducts += products;
             checkData.body = {
                 price: price
             }
         }
-        console.log(`REPAIR PRICE =` + target.repairPrice);
-        console.log(`REPAIR PRODUCTS = ` + target.repairProducts);
         mp.events.call('animations.stop', player);
         if (Object.keys(checkData).length == 0) {
             target.call('notifications.push.success', ['Т/с не нуждается в ремонте', 'Диагностика']);
@@ -318,7 +307,6 @@ module.exports = {
                     target.call('notifications.push.success', [`Вы заплатили $${target.repairPrice}`, `Автомастерская`]);
                     mechanic.call('notifications.push.success', [`Клиент оплатил ремонт`, `Автомастерская`]);
 
-                    console.log(target.repairPrice);
                     carservice.repairVehicle(vehicle);
                     let salary = parseInt(target.repairPrice * salaryMultiplier);
                     let bonus = carservice.calculateBonus(player);

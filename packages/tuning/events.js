@@ -10,7 +10,6 @@ module.exports = {
     "playerEnterColshape": (player, shape) => {
         if (shape.isCustoms) {
             if (!player.vehicle) return player.call('prompt.show', ['Вы должны находиться в транспорте']);
-            console.log(player.vehicle.key);
             if (player.vehicle.key != 'private') return player.call('prompt.show', ['Этот транспорт нельзя модифицировать']); //temp
             if (player.vehicle.owner != player.character.id) return player.call('prompt.show', ['Нельзя модифицировать чужой транспорт']);
             if (!player.vehicle.tuning || player.vehicle.properties.vehType != 0) return player.call('prompt.show', ['Этот транспорт нельзя модифицировать']);
