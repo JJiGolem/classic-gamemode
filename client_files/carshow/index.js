@@ -206,7 +206,7 @@ function updateSpecifications(i) {
     mp.callCEFV(`carSpecifications.body.name.value = '${list[i].properties.name}'`);
     mp.callCEFV(`carSpecifications.body.volume.value = '${list[i].properties.maxFuel}'`);
     //mp.callCEFV(`carSpecifications.body.consumption.value = '${list[i].properties.consumption}'`);
-    if (className == 'Велосипед') {
+    if (className == 'Велосипед' || list[i].properties.isElectric) {
         mp.callCEFV(`carSpecifications.body.volume.value = '—'`);
         mp.callCEFV(`carSpecifications.body.consumption.value = '—'`);
     }

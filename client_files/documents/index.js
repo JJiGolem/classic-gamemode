@@ -19,13 +19,16 @@ mp.events.add('documents.show', (type, data) => {
     if (type == 'carPass') {
         switch (data.vehType) {
             case 0:
-                data.vehType = 'Автомобиль'
+                data.vehType = 'Автомобиль';
                 break;
             case 1:
-                data.vehType = 'Мотоцикл'
+                data.vehType = 'Мотоцикл';
                 break;
             case 2:
-                data.vehType = 'Велосипед'
+                data.vehType = 'Велосипед';
+                break;
+            case 3:
+                data.vehType = 'Электромобиль';
                 break;
         }
         let newDate = data.regDate ? data.regDate.slice(0, 10) : null;
