@@ -35,7 +35,7 @@ module.exports = {
         if (seat == -1) {
             let enabled = vehicle.properties.vehType == 2 ? false : true;
             player.call('vehicles.speedometer.enabled', [enabled]);
-            player.call('vehicles.speedometer.show', [true]);
+            player.call('vehicles.speedometer.show', [true, vehicle.properties.isElectric]);
             player.call('vehicles.speedometer.max.update', [vehicle.properties.maxFuel]);
             player.call('vehicles.speedometer.sync');
             timer.remove(player.indicatorsUpdateTimer);

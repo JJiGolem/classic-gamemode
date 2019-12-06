@@ -108,12 +108,13 @@ mp.events.add('vehicles.engine.toggle', (state) => {
     mp.callCEFV(`speedometer.isActive = ${state}`);
 })
 
-mp.events.add('vehicles.speedometer.show', (state) => {
+mp.events.add('vehicles.speedometer.show', (state, isElectric) => {
     if (mp.speedometerEnabled) {
         if (state) {
             let vehicle = mp.players.local.vehicle;
             if (!vehicle) return;
             let engine = vehicle.getIsEngineRunning()
+            mp.callCEFV(`speedometer.isElectricCar = ${isElectric}`);
             mp.callCEFV(`speedometer.isActive = ${engine}`);
             mp.callCEFV('speedometer.show = true');
         } else {
