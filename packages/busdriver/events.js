@@ -20,13 +20,11 @@ module.exports = {
     },
     "busdriver.route.add": async (player, data) => {
         data = JSON.parse(data);
-        console.log(data);
         let route = await db.Models.BusRoute.create({
             name: data.name,
             level: data.level,
             salary: data.salary
         });
-        console.log(route.id);
         for (i = 0; i < data.points.length; i++) {
             await db.Models.BusRoutePoint.create({
                 routeId: route.id,
@@ -40,7 +38,6 @@ module.exports = {
     },
     "vehicle.ready": (player, vehicle, seat) => {
         if (vehicle.key == 'job' && vehicle.owner == 3 && seat == -1) {
-            console.log(`${player.name} сел в автобус ${vehicle.id} таксистом`);
             if (!vehicle.isActiveBus) {
                 if (player.hasBusRent) {
                     notify.error(player, 'Вы уже арендуете автобус', 'Автобус');
@@ -80,7 +77,6 @@ module.exports = {
                 vehicle.isActiveBus = true;
                 vehicle.busDriverId = player.id;
                 let routes = bus.getAvailiableRoutes(player);
-                //console.log(routes);
                 player.hasBusRent = true;
                 if (routes.length == 0) notify.warning(player, 'Нет доступных маршрутов', 'Автобус');
                 player.call('busdriver.rent.ans', [0, routes]);
@@ -118,7 +114,6 @@ module.exports = {
     },
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (seat == -1 && player.id == vehicle.busDriverId) {
-            console.log('чистим таймер')
             timer.remove(vehicle.busRespawnTimer);
         }
         if (seat == -1 && vehicle.isActiveBus && vehicle.busDriverId != player.id) {
@@ -168,9 +163,7 @@ module.exports = {
         if (player.busPointsToSave % 10 == 0) {
             player.character.save();
             jobs.addJobExp(player, 0.05);
-            console.log('add skill');
         }
-        console.log(player.character.pay);
         let timeout;
         if (player.busPoints[player.busPointIndex].isStop) {
             notify.info(player, 'Ожидайте пассажиров', 'Остановка');
@@ -197,15 +190,12 @@ module.exports = {
 
         if (vehicle.busDriverId == player.id) {
             if (vehicle.busWorkdayEnded) return;
-            console.log('покинул автобус');
             player.call('notifications.push.warning', [`У вас есть ${bus.getRespawnTimeout() / 1000} секунд, чтобы вернуться в транспорт`, 'Автобус']);
             timer.remove(vehicle.busRespawnTimer);
             vehicle.busRespawnTimer = timer.add(() => {
-                console.log('таймер сработал');
                 vehicles.respawnVehicle(vehicle);
                 mp.events.call('busdriver.route.end', player);
             }, bus.getRespawnTimeout());
-            console.log('BUS RESPAWN TIMER: ' + vehicle.busRespawnTimer);
         }
     },
     "busdriver.route.end": (player) => {
@@ -236,7 +226,6 @@ module.exports = {
         let vehicle = player.vehicle;
         if (!vehicle) return;
         if (vehicle.busDriverId == player.id) {
-            console.log('quit -> respawn')
             vehicles.respawnVehicle(vehicle);
         }
     },

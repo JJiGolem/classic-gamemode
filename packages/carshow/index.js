@@ -89,6 +89,9 @@ module.exports = {
         for (var i = 0; i < carList.length; i++) { /// Устанавливаем характеристики для каждого автомобиля, расположенного в автосалоне
             carList[i] = this.setCarListProperties(carList[i]);
         }
+        carList.sort((a, b) => { 
+            return a.properties.price - b.properties.price;
+        });
         console.log(`[CARSHOW] Загружено моделей авто для автосалонов: ${i}`);
     },
     getCarShowList(carShowId) {
@@ -124,7 +127,6 @@ module.exports = {
         console.log("[CARSHOW] Запуск обновления автосалонов");
         for (var i = 0; i < carList.length; i++) {
             let randomInt = this.generateRandomInt();
-            console.log(randomInt);
             if (randomInt <= carList[i].percentage) {
                 console.log(`[CARSHOW] В автосалон добавлен т/c ${carList[i].vehiclePropertyModel}`);
                 carList[i].count = carList[i].count + 1;

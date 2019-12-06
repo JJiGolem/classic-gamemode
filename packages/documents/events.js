@@ -1,15 +1,12 @@
 "use strict";
 let documents = require("./index.js");
+let factions = call("factions");
 
 module.exports = {
     "init": () => {
         documents.init();
         inited(__dirname);
     },
-    // "documents.showTo": (player, type, targetId, data) => {
-    //     if (player.id == targetId) return mp.events.call('documents.show', player, type, targetId, data);
-    //     /// todo with offer
-    // },
     "documents.offer": (player, type, targetId, data) => {
         console.log('offer');
         if (type == 'driverLicense') {
@@ -30,6 +27,13 @@ module.exports = {
             }
         }
 
+
+        if (type == 'governmentBadge') {
+            let allowedFactionIds = [2, 3, 4];
+            if (!allowedFactionIds.includes(player.character.factionId)) {
+                return player.call('notifications.push.error', ['Вы не сотрудник PD/FIB', 'Документы']);
+            }
+        }
 
         if (player.id == targetId) return mp.events.call("documents.show", player.id, type, targetId, data); /// Если показывает себе, то не кидаем оффер
 
@@ -63,6 +67,9 @@ module.exports = {
                 break;
             case 'medCard':
                 docName = 'медкарту';
+                break;
+            case 'governmentBadge':
+                docName = 'удостоверение';
                 break;
         }
         target.call('offerDialog.show', ["documents", {
@@ -110,6 +117,9 @@ module.exports = {
                 break;
             case 'medCard':
                 mp.events.call('documents.medCard.show', player, targetId);
+                break;
+            case 'governmentBadge':
+                mp.events.call('documents.governmentBadge.show', player, targetId);
                 break;
         }
     },
@@ -221,5 +231,24 @@ module.exports = {
             mp.events.call('/me', player, `показал${player.character.gender ? 'а' : ''} свою медкарту`);
         }
         target.call('documents.show', ['medCard', data]);
+    },
+    "documents.governmentBadge.show": (player, targetId) => {
+        let target = mp.players.at(targetId);
+        if (!target) return;
+        let data = {
+            name: player.character.name,
+            gender: player.character.gender ? 'Женский' : 'Мужской',
+            identifier: documents.getBadgeIdentificator() + player.character.id,
+            factionId: player.character.factionId,
+            directorSign: documents.fibLeaderSign,
+            rank: factions.getRankName(player) || 'Нет'
+        }
+        if (!data) return;
+        if (player.id == target.id) {
+            mp.events.call('/me', player, `смотрит свое удостоверение`);
+        } else {
+            mp.events.call('/me', player, `показал${player.character.gender ? 'а' : ''} свое удостоверение`);
+        }
+        target.call('documents.show', ['governmentBadge', data]);
     },
 }

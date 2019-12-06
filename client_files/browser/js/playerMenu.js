@@ -450,7 +450,7 @@ let helpMessages = [
     {
         question: "Как создать еще одного персонажа?",
         answer: `По умолчанию вам доступен один слот для персонажа. Максимально на аккаунте их доступно 3.
-        Второй слот можно разблокировать, отыграв на сервере 500 часов, либо за донат. Третий слот доступен только за донат-валюту.`
+        Второй слот можно разблокировать, отыграв на сервере 100 часов, либо за донат. Третий слот доступен только за донат-валюту.`
     },
     {
         question: "Как посмотреть свои документы?",
@@ -857,6 +857,11 @@ var playerMenu = new Vue({
             };
             setTime();
             this.dateTimer = setInterval(setTime, 60000);
+
+            setTimeout(() => {
+                if (this.$refs.name)
+                    this.longName = this.$refs.name.offsetHeight > this.$refs.def.offsetHeight * 2;
+            }, 100);
         },
         codeMod(val) {
             if (val) this.code = '';
@@ -864,7 +869,7 @@ var playerMenu = new Vue({
         name(val) {
             setTimeout(() => {
                 if (this.$refs.name)
-                    this.longName = this.$refs.name.offsetHeight > this.$refs.def.offsetHeight;
+                    playerMenu.longName = this.$refs.name.offsetHeight > this.$refs.def.offsetHeight * 2;
             }, 100);
         }
     },
