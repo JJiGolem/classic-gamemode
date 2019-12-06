@@ -294,7 +294,7 @@ Vue.component('map-case-calls', {
             let newList = [...this.list];
 
             mapCaseSortByKey(newList, this.sortMod.mod)
-
+            this.mouseout();
             return newList;
         },
     },
@@ -309,18 +309,19 @@ Vue.component('map-case-calls', {
         mouseout(e) {
             this.hint.data = null;
         },
-        mouseover(e, record) {
-            if (e.target.className != "record") {
-                this.mouseout();
-                return;
+        mousemove(e, record) {
+            if (!this.hint.data) {
+                if (e.target.className != "record") {
+                    this.mouseout();
+                    return;
+                }
+
+                this.hint.data = {
+                    description: record.description,
+                    dist: prettyMoney(record.num),
+                };
             }
 
-            this.hint.data = {
-                description: record.description,
-                dist: prettyMoney(record.num),
-            };
-        },
-        mousemove(e) {
             let offsetX = e.offsetX + 15;
             let offsetY = e.offsetY + e.target.offsetTop + 15;
 

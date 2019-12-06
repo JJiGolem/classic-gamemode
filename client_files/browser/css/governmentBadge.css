@@ -10,6 +10,11 @@
     font-family: Ubuntu;
 }
 
+#governmentBadge img {
+    position: absolute;
+    width: 100%;
+}
+
 #governmentBadge .identifier {
     position: absolute;
     font-weight: 700;
@@ -55,9 +60,9 @@
     font-weight: 700;
 }
 
-#governmentBadge.fib {
+/*#governmentBadge.fib {
     background-image: url(../img/governmentBadge/FIB.svg);
-}
+}*/
 
 #governmentBadge.fib .identifier {
     right: 5vh;
@@ -86,10 +91,10 @@
     font-size: 2vh;
 }
 
-#governmentBadge.lspd {
+/*#governmentBadge.lspd {
     background-image: url(../img/governmentBadge/LSPD.svg);
 }
 
 #governmentBadge.bcsd {
     background-image: url(../img/governmentBadge/BCSD.svg);
-}
+}*/
