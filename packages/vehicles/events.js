@@ -92,7 +92,7 @@ module.exports = {
         if (player.vehicle.properties.vehType == 2) return;
         if (player.vehicle.isBeingRepaired) return player.call('notifications.push.warning', ['Двигатель завести нельзя', 'Ремонт']);
         if (player.vehicle.isBeingTuned) return;
-        if (player.vehicle.fuel <= 0) return player.call('notifications.push.error', ['Нет топлива', 'Транспорт']);
+        if (player.vehicle.fuel <= 0) return player.call('notifications.push.error', [player.vehicle.properties.isElectric ? 'Нет зарядки' :'Нет топлива', 'Транспорт']);
         if (player.vehicle.engine == true) {
             player.vehicle.engine = false;
             player.call('vehicles.engine.toggle', [false]);

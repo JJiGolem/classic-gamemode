@@ -61,7 +61,7 @@ module.exports = {
         mp.labels.forEach((current) => {
             if (current.isChargeStation && current.chargeStationId == id) {
                 let station = this.getChargeStationById(id);
-                current.text = `~y~${station.name}\n~g~$${station.chargePrice} ~w~за литр\nНажмите ~b~E~w~`;
+                current.text = `~y~${station.name}\n~g~$${station.chargePrice} ~w~за ~o~1%~w~\nНажмите ~b~E~w~`;
             }
         });
     },
