@@ -1,7 +1,6 @@
 let isInChargeStationColshape = false;
 
 mp.events.add('chargestations.shape.enter', (enter) => {
-    mp.chat.debug(`enter charge station: ${enter}`);
     isInChargeStationColshape = enter;
 });
 
@@ -16,5 +15,4 @@ mp.keys.bind(0x45, true, () => { /// E
     } else {
         mp.prompt.show('Чтобы зарядить транспортное средство, вы должны находиться в нем');
     }
-
 });

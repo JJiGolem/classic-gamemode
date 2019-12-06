@@ -29,6 +29,9 @@ module.exports = {
         }
         player.call('vehicles.enter.private', [isPrivate]);
 
+        let enableAutopilot = vehicle.properties.isElectric;
+        player.call('vehicles.autopilot.enable', [enableAutopilot]);
+        
         if (!vehicle.engine && seat == -1 && !vehicle.isInGarage && vehicle.properties.vehType != 2) {
             player.call('prompt.showByName', ['vehicle_engine']);
         }

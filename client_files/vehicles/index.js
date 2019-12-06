@@ -615,9 +615,15 @@ mp.events.add('vehicles.add.menu.show', () => {
     mp.events.call('selectMenu.show', 'vehiclePropAdd');
 });
 
+let autopilotIsEnabled = false;
+mp.events.add('vehicles.autopilot.enable', (enable) => {
+    autopilotIsEnabled = enable;
+});
+
 mp.events.add('vehicles.autopilot', () => {
     var player = mp.players.local;
     var veh = player.vehicle;
+    if (!autopilotIsEnabled) return mp.notify.warning("На этот транспорт не установлен автопилот");
     if (!veh) return mp.notify.error("Вы не в авто");
     var pos = mp.utils.getWaypointCoord();
     if (!pos) return mp.notify.warning("Укажите точку на карте");
