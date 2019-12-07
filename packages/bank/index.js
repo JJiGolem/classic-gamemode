@@ -85,5 +85,7 @@ module.exports = {
             info: bankInfo
         });
     },
-
+    updateBank(player) {
+        player.call('bank.update', [this.getInfo(player)]);
+    }
 }
