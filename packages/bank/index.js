@@ -27,7 +27,7 @@ module.exports = {
             number: `${player.character.id}`,
             biz: [],
             houses: []
-        }
+        };
         let biz = bizService.getBizByCharId(player.character.id);
         if (biz != null) {
             bankInfo.biz.push(bizService.getBizInfoForBank(biz));
@@ -36,7 +36,7 @@ module.exports = {
         if (house != null) {
             bankInfo.houses.push(houseService.getHouseInfoForBank(house));
         }
-        player.call("bank.show", [bankInfo]);
+        return bankInfo;
     },
     async createBank(player) {
         let position = player.position;
@@ -86,8 +86,8 @@ module.exports = {
         });
     },
     updateBank(player) {
-        // let info = this.getInfo(player);
-        // if (info == null) return;
-        // player.call('bank.update', [info]);
+        let info = this.getInfo(player);
+        if (info == null) return;
+        player.call('bank.update', [info]);
     }
-}
+};
