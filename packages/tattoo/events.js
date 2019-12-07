@@ -97,7 +97,6 @@ module.exports = {
     },
     "tattoo.delete": (player, tattooId) => {
         let tat = player.character.tattoos.find(x => x.id == tattooId);
-        console.log(tattooId)
         if (!tat) return player.call('tattoo.delete.ans', [1]);
         
         let parlorId = player.currentTattooParlorId;

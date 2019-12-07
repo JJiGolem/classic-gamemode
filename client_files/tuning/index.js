@@ -97,12 +97,14 @@ let tuningParams = {
     rightFender: {
         modType: 9,
         current: -1,
-        name: "Правое крыло"
+        name: "Правое крыло",
+        modelsToIgnore: [mp.game.joaat('imperator')]
     },
     roof: {
         modType: 10,
         current: -1,
-        name: "Крыша"
+        name: "Крыша",
+        modelsToIgnore: [mp.game.joaat('revolter'), mp.game.joaat('imperator')]
     },
     frontWheels: {
         modType: 23,
@@ -176,6 +178,9 @@ mp.events.add('tuning.menu.show', (index = lastIndex) => {
     mp.callCEFV(`selectMenu.menu = cloneObj(selectMenu.menus["tuningMain"])`);
     for (let key in tuningParams) {
         if (tuningParams[key].hasOwnProperty('name')) {
+            if (tuningParams[key].hasOwnProperty('modelsToIgnore')) {
+                if (tuningParams[key].modelsToIgnore.includes(vehicle.model)) continue;
+            }
             if (vehicle.getNumMods(tuningParams[key].modType) > 0) {
                 mp.callCEFV(`selectMenu.menu.items.push({
                     text: '${tuningParams[key].name}',

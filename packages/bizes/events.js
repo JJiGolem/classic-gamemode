@@ -26,7 +26,7 @@ module.exports = {
             sellingBizCost: null
         };
     },
-    "characterInit.done": (player) => {
+    "characterInit.done": async (player) => {
         let biz = bizService.getBizByCharId(player.character.id);
         if (biz != null) {
             if (bizService.getDateDays(biz.info.date) === 1) {
@@ -34,6 +34,10 @@ module.exports = {
             }
             if (bizService.getDateDays(biz.info.date) === 0) {
                 notifications.info(player, "Ваш бизнес будет продан государству сегодня за неуплату налогов", "Внимание");
+            }
+            if (biz.info.characterNick != player.character.name) {
+                biz.info.characterNick = player.character.name;
+                await biz.info.save();
             }
         }
         if (player.character.admin !== 0 || player.character.admin !== 6) return;
@@ -48,10 +52,12 @@ module.exports = {
             }
         }
     },
-    "player.name.changed": (player) => {
+    "player.name.changed": async (player) => {
         let biz = bizService.getBizByCharId(player.character.id);
         if(biz != null) {
             biz.info.characterNick = player.character.name;
+            await biz.info.save();
+            player.call('biz.menu.close',[true]);
         }
     },
     "playerEnterColshape": (player, shape) => {

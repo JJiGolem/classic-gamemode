@@ -31,7 +31,6 @@ module.exports = {
                 }
             });
             if (!tat) return out.error('Тату не найдена', player);
-            console.log(tat)
             await tattoo.addCharacterTattoo(player, tat.collection, tat.hashNameMale, tat.zoneId, tat.name);
             out.info('Тату установлена', player);
         }

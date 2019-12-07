@@ -85,5 +85,9 @@ module.exports = {
             info: bankInfo
         });
     },
-
+    updateBank(player) {
+        let info = this.getInfo(player);
+        if (info == null) return;
+        player.call('bank.update', [info]);
+    }
 }

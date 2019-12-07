@@ -175,7 +175,6 @@ module.exports = {
         if (unload && !state) vehicle.setVariable("unload", null);
     },
     "characterInit.done": (player) => {
-        console.log('init done for vehicles');
         mp.events.call('vehicles.private.load', player);
     },
     "vehicles.private.load": (player) => {
@@ -217,7 +216,6 @@ module.exports = {
         let ejectList = [];
 
         occupants.forEach((current) => {
-            console.log(current.name);
             if ((current.id != player.id) && (current.seat != -1)) {
                 ejectList.push({
                     id: current.id,
@@ -225,7 +223,6 @@ module.exports = {
                 });
             }
         });
-        console.log(ejectList);
         if (ejectList.length == 0) return player.call('notifications.push.error', ['В т/с нет пассажиров', 'Транспорт']);;
         player.call('interaction.ejectlist.show', [ejectList]);
     },
@@ -238,7 +235,6 @@ module.exports = {
         if (!target.vehicle) return;
         if (target.name != playerToEject.name) return;
 
-        console.log(`выкидываем ${target.name} с id ${target.id}`);
         try {
             target.removeFromVehicle();
             target.call('notifications.push.warning', ['Вас вытолкнули из т/с', 'Транспорт']);
@@ -326,7 +322,6 @@ module.exports = {
         let seller = target.sellCarTargetOffer.seller;
 
         if (accept) {
-            console.log('accept');
             let vehicle = seller.vehicle;
             if (!vehicle || vehicle.sqlId != target.sellCarTargetOffer.vehId) {
                 target.call('vehicles.sell.target.final', [2]);
@@ -368,7 +363,6 @@ module.exports = {
             let vehId = target.sellCarTargetOffer.vehId;
             let owners = vehicle.owners;
             money.moveCash(target, seller, price, function(result) {
-                console.log(vehId)
                 if (result) {
                     //target.call('notifications.push.success', ['Вы купили транспорт', 'Успешно']);
                     target.call('vehicles.sell.target.final', [1]);
@@ -399,7 +393,6 @@ module.exports = {
 
                     // TODO на парковке или нет
                     let props = vehicles.getVehiclePropertiesByModel(veh.modelName)
-                    console.log(props)
                     target.vehicleList.push({
                         id: veh.sqlId,
                         name: props.name,

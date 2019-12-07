@@ -8,7 +8,6 @@ module.exports = {
         inited(__dirname);
     },
     "documents.offer": (player, type, targetId, data) => {
-        console.log('offer');
         if (type == 'driverLicense') {
             if (!player.character.carLicense && !player.character.passengerLicense && !player.character.bikeLicense && !player.character.truckLicense && !player.character.airLicense && !player.character.boatLicense) {
                 return player.call('notifications.push.error', ['У вас нет лицензий', 'Документы']);
@@ -85,7 +84,6 @@ module.exports = {
         if (sender.senderDocumentsOffer.targetPlayer != player) return;
 
         if (accept) {
-            console.log('accept');
             mp.events.call('documents.show', offer.playerId, offer.docType, targetId, offer.docData);
             delete player.documentsOffer;
             delete sender.senderDocumentsOffer;
@@ -99,7 +97,6 @@ module.exports = {
         let player = mp.players.at(playerId);
         if (data) {
             data = JSON.parse(data);
-            console.log(data);
         }
         if (!target) return;
         switch (type) {
@@ -188,7 +185,6 @@ module.exports = {
             sex: player.character.gender,
             number: documents.getLicIdentificator() + player.character.id
         }
-        console.log(data.categories);
         if (!data) return;
         if (player.id == target.id) {
             mp.events.call('/me', player, `смотрит свои лицензии на Т/С`);
