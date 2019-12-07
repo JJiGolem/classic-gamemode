@@ -83,6 +83,7 @@ mp.busy.mouses = [];
 /// END LIST
 /// Добавить модуль (true - операция провшла успешно, false - такой модуль уже содержится в массиве)
 mp.busy.add = function(name, mouse = true, nocef = false) {
+    if (mp.game.ui.isPauseMenuActive()) return false;
     if (!nocef) mp.callCEFV(`busy.add(\`${name}\`)`);
     if (mp.busy.list.includes(name)) return false;
     mp.busy.list.push(name);
