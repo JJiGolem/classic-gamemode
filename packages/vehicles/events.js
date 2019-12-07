@@ -29,13 +29,16 @@ module.exports = {
         }
         player.call('vehicles.enter.private', [isPrivate]);
 
+        let enableAutopilot = vehicle.properties.isElectric;
+        player.call('vehicles.autopilot.enable', [enableAutopilot]);
+        
         if (!vehicle.engine && seat == -1 && !vehicle.isInGarage && vehicle.properties.vehType != 2) {
             player.call('prompt.showByName', ['vehicle_engine']);
         }
         if (seat == -1) {
             let enabled = vehicle.properties.vehType == 2 ? false : true;
             player.call('vehicles.speedometer.enabled', [enabled]);
-            player.call('vehicles.speedometer.show', [true]);
+            player.call('vehicles.speedometer.show', [true, vehicle.properties.isElectric]);
             player.call('vehicles.speedometer.max.update', [vehicle.properties.maxFuel]);
             player.call('vehicles.speedometer.sync');
             timer.remove(player.indicatorsUpdateTimer);
@@ -92,7 +95,7 @@ module.exports = {
         if (player.vehicle.properties.vehType == 2) return;
         if (player.vehicle.isBeingRepaired) return player.call('notifications.push.warning', ['Двигатель завести нельзя', 'Ремонт']);
         if (player.vehicle.isBeingTuned) return;
-        if (player.vehicle.fuel <= 0) return player.call('notifications.push.error', ['Нет топлива', 'Транспорт']);
+        if (player.vehicle.fuel <= 0) return player.call('notifications.push.error', [player.vehicle.properties.isElectric ? 'Нет зарядки' :'Нет топлива', 'Транспорт']);
         if (player.vehicle.engine == true) {
             player.vehicle.engine = false;
             player.call('vehicles.engine.toggle', [false]);

@@ -19,6 +19,12 @@ let breakdownConfig = {
 
 let houses;
 
+// vehtypes:
+// 0 - автомобиль
+// 1 - мотоцикл
+// 2 - велосипед
+// 3 - электромобиль
+
 module.exports = {
     // Время простоя авто, после которого оно будет заспавнено (ms) - точность ~0-5 мин
     vehWaitSpawn: 20 * 60 * 1000,
@@ -248,7 +254,8 @@ module.exports = {
                     consumption: dbVehicleProperties[i].consumption,
                     license: dbVehicleProperties[i].license,
                     price: dbVehicleProperties[i].price,
-                    vehType: dbVehicleProperties[i].vehType
+                    vehType: dbVehicleProperties[i].vehType,
+                    isElectric: dbVehicleProperties[i].isElectric
                 }
                 if (properties.name == null) properties.name = modelName;
                 return properties;
@@ -261,7 +268,8 @@ module.exports = {
             consumption: 1.5,
             license: 1,
             price: 100000,
-            vehType: 0
+            vehType: 0,
+            isElectric: 0
         }
 
         return properties;
@@ -388,6 +396,7 @@ module.exports = {
     generateBreakdowns(veh) {
         if (!veh) return;
         let multiplier = veh.multiplier;
+        if (veh.properties.isElectric) return;
         if (veh.regDate) {
             let date = veh.regDate;
             let now = new Date();

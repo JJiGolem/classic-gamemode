@@ -17,6 +17,7 @@ let bizesModules = [];
 /// 8 - Тату-салон
 /// 9 - Los Santos Customs
 /// 10 - Клубы
+/// 11 - Зарядочная станция
 
 
 let utils;
