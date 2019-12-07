@@ -28,60 +28,42 @@ class BankTransfer extends Component {
         this.setState({ [e.target.id]: e.target.value });
     }
 
-    validateForm() {
-        const { user, transferMoney } = this.state;
+    validateUser() {
+        const { user } = this.state;
+
+        if (!user) return this.setState({ errorUser: 'Номер счета не заполнен' });
+        if (isNaN(user) || parseInt(user) < 0) return this.setState({ errorUser: 'Некорректный номер счета' });
+
+        this.setState({ errorUser: '' });
+        return true;
+    }
+
+    validateMoney() {
+        const { transferMoney } = this.state;
         const { bank } = this.props;
 
-        if (user) {
-            this.setState({ errorUser: '' });
+        if (!transferMoney) return this.setState({ errorMoney: 'Сумма перевода не заполнена'});
+        if (isNaN(transferMoney) || parseInt(transferMoney) < 0) return this.setState({ errorMoney: 'Некорректная сумма перевода' });
+        if (parseInt(transferMoney) > bank.money) return this.setState({ errorMoney: 'Недостаточно средств на счете'});
+        if (parseInt(transferMoney) >= 200000) return this.setState({ errorMoney: 'Сумма перевода не должна превышать $200 000'});
 
-            if (transferMoney) {
-                this.setState({ errorMoney: '' });
-
-                if (!isNaN(user) && parseInt(user) > 0) {
-                    this.setState({ errorUser: '' });
-
-                    if (!isNaN(transferMoney) && parseInt(transferMoney) > 0) {
-                        this.setState({ errorMoney: '' });
-
-                        if (parseInt(transferMoney) <= bank.money) {
-                            this.setState({ errorUser: '', errorMoney: '' });
-                            return true;
-                        } else {
-                            this.setState({ errorMoney: 'Недостаточно средств на счете' });
-                            return false;
-                        }
-                    } else {
-                        this.setState({ errorMoney: 'Некорректная сумма перевода' });
-                        return false;
-                    }
-                } else {
-                    this.setState({ errorUser: 'Некорректный номер счета' });
-                    return false;
-                }
-            } else {
-                this.setState({ errorMoney: 'Сумма перевода не заполнена' });
-                return false;
-            }
-        } else {
-            this.setState({ errorUser: 'Номер счета не заполнен' });
-            return false;
-        }
+        this.setState({ errorMoney: '' });
+        return true;
     }
 
     transferMoney() {
         const { transferMoney, user } = this.state;
         const { setLoading, addPage } = this.props;
 
-        if (this.validateForm()) {
+        if (this.validateUser() && this.validateMoney()) {
             addPage(<BankConfirmTransfer money={transferMoney} number={user}/>);
             setLoading(true);
 
             mp.trigger('bank.transfer.ask', parseInt(user), parseInt(transferMoney));
 
             // setTimeout(() => {
-            //     this.props.setAskAnswer(null);
-            // }, 1000)
+            //     this.props.setAskAnswer('Dun Hill');
+            // }, 2000)
         }
     }
 
