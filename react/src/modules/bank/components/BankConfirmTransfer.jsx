@@ -8,6 +8,8 @@ class BankConfirmTransfer extends Component {
     constructor(props) {
         super(props);
         this.state = {};
+
+        this.transfer = this.transfer.bind(this);
     }
 
     back() {
@@ -51,7 +53,7 @@ class BankConfirmTransfer extends Component {
                         <button className='button_panel-bank-react' onClick={this.back.bind(this)}>
                             Назад
                         </button>
-                        <button className='button_panel-bank-react' onClick={this.transfer.bind(this)}>
+                        <button className='button_panel-bank-react' onClick={this.transfer}>
                             Подтвердить
                         </button>
                     </div>
