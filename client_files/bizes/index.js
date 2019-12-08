@@ -41,9 +41,9 @@ mp.events.add("biz.actions", (action) => {
     mp.events.callRemote("biz.actions", action);
 });
 
-mp.events.add("biz.app.update", (cashBox, productsCount) => {
-    mp.callCEFR("biz.cashbox.update", [cashBox]);
-    mp.callCEFR("biz.products.update", [productsCount]);
+mp.events.add("biz.app.update", (cashBox, productsCount, isFaction) => {
+    mp.callCEFR("biz.cashbox.update", [cashBox, isFaction]);
+    mp.callCEFR("biz.products.update", [productsCount, isFaction]);
 });
 
 
@@ -114,19 +114,40 @@ mp.events.add("biz.sell.ans", (result) => {
 mp.events.add("biz.order.add", (id, productCount, productPrice) => {
     mp.events.callRemote("biz.order.add", id, productCount, productPrice);
 });
-mp.events.add("biz.order.ans", (result) => {
-    mp.callCEFR("biz.order.ans", [result]);
+mp.events.add("biz.order.ans", (result, isFactionBis) => {
+    !isFactionBis && mp.callCEFR("biz.order.ans", [result]);
 });
 mp.events.add("biz.order.cancel", (id) => {
     mp.events.callRemote("biz.order.cancel", id);
 });
-mp.events.add("biz.order.complete", (resources, sum) => {
-    mp.callCEFR("biz.order.complete", [resources, sum]);
+mp.events.add("biz.order.complete", (resources, sum, isFactionBis) => {
+    !isFactionBis && mp.callCEFR("biz.order.complete", [resources, sum]);
 });
-mp.events.add("biz.order.take", (flag) => {
-    mp.callCEFR("biz.order.take", [flag]);
+mp.events.add("biz.order.take", (flag, isFactionBis) => {
+    !isFactionBis && mp.callCEFR("biz.order.take", [flag]);
 });
 
-mp.events.add("biz.statistics.update", (date, money) => {
-    mp.callCEFR("biz.statistics.update", [date, money]);
+mp.events.add("biz.statistics.update", (date, money, isFactionBis) => {
+    !isFactionBis && mp.callCEFR("biz.statistics.update", [date, money]);
+});
+
+/// Faction phone app events
+mp.events.add("biz.faction.order.add", (id, productCount, productPrice) => {
+    mp.events.callRemote("biz.order.add", id, productCount, productPrice, true);
+});
+mp.events.add("biz.order.ans", (result, isFactionBis) => {
+    isFactionBis && mp.callCEFR("biz.faction.order.ans", [result]);
+});
+mp.events.add("biz.faction.order.cancel", (id) => {
+    mp.events.callRemote("biz.order.cancel", id, true);
+});
+mp.events.add("biz.order.complete", (resources, sum, isFactionBis) => {
+    isFactionBis && mp.callCEFR("biz.faction.order.complete", [resources, sum]);
+});
+mp.events.add("biz.order.take", (flag, isFactionBis) => {
+    isFactionBis && mp.callCEFR("biz.faction.order.take", [flag]);
+});
+
+mp.events.add("biz.statistics.update", (date, money, isFactionBis) => {
+    isFactionBis && mp.callCEFR("biz.faction.statistics.update", [date, money]);
 });

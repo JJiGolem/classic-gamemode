@@ -40,7 +40,7 @@ module.exports = {
                 await biz.info.save();
             }
         }
-        if (player.character.admin !== 0 || player.character.admin !== 6) return;
+        if (player.character.admin !== 0 && player.character.admin !== 6) return;
         if (factions.isLeader(player)) {
             if (player.character.factionId) {
                 let bizes = bizService.getBizesByFactionId(player.character.factionId);
@@ -253,16 +253,16 @@ module.exports = {
         player.biz.sellingBizId = null;
         player.biz.sellingBizCost = null;
     },
-    "biz.order.add": async (player, id, productCount, productPrice) => {
+    "biz.order.add": async (player, id, productCount, productPrice, isFaction) => {
         productCount = parseInt(productCount);
         productPrice = parseFloat(productPrice);
-        if (isNaN(productCount) || isNaN(productPrice)) return player.call("biz.order.ans", [0]);
+        if (isNaN(productCount) || isNaN(productPrice)) return player.call("biz.order.ans", [0, isFaction]);
         let biz = bizService.getBizById(id);
-        if (biz.info.characterId != player.character.id) return player.call("biz.order.ans", [0]);
-        if (biz.info.cashBox < parseInt(productPrice * productCount)) return player.call("biz.order.ans", [2]);
-        player.call("biz.order.ans", [await bizService.createOrder(biz, productCount, productPrice)]);
+        if (biz.info.characterId !== player.character.id) return player.call("biz.order.ans", [0, isFaction]);
+        if (biz.info.cashBox < parseInt(productPrice * productCount)) return player.call("biz.order.ans", [2, isFaction]);
+        player.call("biz.order.ans", [await bizService.createOrder(biz, productCount, productPrice), isFaction]);
     },
-    "biz.order.cancel": async (player, id) => {
+    "biz.order.cancel": async (player, id, isFaction) => {
         id = parseInt(id);
         await bizService.destroyOrder(id);
     },
