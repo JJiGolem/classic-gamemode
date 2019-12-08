@@ -237,10 +237,18 @@ let createOrder = async function(biz, count, price) {
     let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
     let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
     if (price <= min || price >= max) return 0;
-    if (parseInt(price * count) > biz.info.cashBox) return 0;
+    if (!bizesModules[biz.info.type].business.isFactionOwner) {
+        if (parseInt(price * count) > biz.info.cashBox) return 0;
+        biz.info.cashBox -= biz.info.productsOrderPrice;
+    }
+    else {
+        if (parseInt(price * count) > factions.getFaction(biz.info.factionId).cash) return 0;
+        let faction = factions.getFaction(biz.info.factionId);
+        faction.cash -= biz.info.productsOrderPrice;
+        await faction.save();
+    }
     biz.info.productsOrder = count;
     biz.info.productsOrderPrice = parseInt(price * count);
-    biz.info.cashBox -= biz.info.productsOrderPrice;
     carrier != null && carrier.addBizOrder(biz);
     await biz.info.save();
     return 1;
@@ -249,7 +257,14 @@ let destroyOrder = async function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
     if (!biz.isOrderTaken) return false;
-    biz.info.cashBox += biz.info.productsOrderPrice * dropBizOrderMultiplier;
+    if (!bizesModules[biz.info.type].business.isFactionOwner) {
+        biz.info.cashBox += biz.info.productsOrderPrice * dropBizOrderMultiplier;
+    }
+    else {
+        let faction = factions.getFaction(biz.info.factionId);
+        faction.cash += biz.info.productsOrderPrice * dropBizOrderMultiplier;
+        await faction.save();
+    }
     biz.info.productsOrder = null;
     biz.info.productsOrderPrice = null;
     carrier != null && carrier.removeBizOrderByBizId(biz.info.id);
