@@ -19,7 +19,7 @@ module.exports = {
     },
     "characterInit.start": async (player) => {
         let charInfos = await characterInit.init(player);
-        if (charInfos.length != 0 && player.account.slots == 1 && charInfos[0].hours >= characterInit.timeForSecondSlot) {
+        if (charInfos.length != 0 && player.account.slots == 1 && charInfos[0].charInfo.hours >= characterInit.timeForSecondSlot) {
             player.account.slots = 2;
             await player.account.save();
         }

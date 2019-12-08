@@ -17,6 +17,7 @@ let bizesModules = [];
 /// 8 - Тату-салон
 /// 9 - Los Santos Customs
 /// 10 - Клубы
+/// 11 - Зарядочная станция
 
 
 let utils;
@@ -193,11 +194,19 @@ let bizUpdateCashBox = async function(id, money) {
         biz.info.BizStatistics.unshift(currentDay);
     } else {
         currentDay.money += bizMoney;
-        currentDay.save();
+        await currentDay.save();
     }
     await biz.info.save();
-    let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id === biz.info.characterId);
-    player != null && player.call("biz.app.update", [biz.info.cashBox, biz.info.productsCount]);
+    let isFactionBiz = bizesModules[biz.info.type].business.isFactionOwner;
+    let player;
+    if (!isFactionBiz) {
+        player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id === biz.info.characterId);
+    }
+    else {
+        player = mp.players.toArray().find(player => player != null && player.character != null && factions.isLeader(player) && player.character.factionId === biz.info.factionId);
+    }
+    player != null && player.call("biz.app.update", [biz.info.cashBox, biz.info.productsCount, isFactionBiz]);
+    player != null && player.call("biz.statistics.update", [currentDay.date, currentDay.money, isFactionBiz]);
 };
 let addProducts = async function(id, count) {
     let biz = getBizById(id);
@@ -228,10 +237,20 @@ let createOrder = async function(biz, count, price) {
     let min = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].minProductPriceMultiplier == null ? minProductPriceMultiplier : bizesModules[biz.info.type].minProductPriceMultiplier;
     let max = bizesModules[biz.info.type].productPrice * bizesModules[biz.info.type].maxProductPriceMultiplier == null ? maxProductPriceMultiplier : bizesModules[biz.info.type].maxProductPriceMultiplier;
     if (price <= min || price >= max) return 0;
-    if (parseInt(price * count) > biz.info.cashBox) return 0;
-    biz.info.productsOrder = count;
-    biz.info.productsOrderPrice = parseInt(price * count);
-    biz.info.cashBox -= biz.info.productsOrderPrice;
+    if (!bizesModules[biz.info.type].business.isFactionOwner) {
+        if (parseInt(price * count) > biz.info.cashBox) return 0;
+        biz.info.productsOrder = count;
+        biz.info.productsOrderPrice = parseInt(price * count);
+        biz.info.cashBox -= biz.info.productsOrderPrice;
+    }
+    else {
+        if (parseInt(price * count) > factions.getFaction(biz.info.factionId).cash) return 0;
+        biz.info.productsOrder = count;
+        biz.info.productsOrderPrice = parseInt(price * count);
+        let faction = factions.getFaction(biz.info.factionId);
+        faction.cash -= biz.info.productsOrderPrice;
+        await faction.save();
+    }
     carrier != null && carrier.addBizOrder(biz);
     await biz.info.save();
     return 1;
@@ -239,12 +258,18 @@ let createOrder = async function(biz, count, price) {
 let destroyOrder = async function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
-    if (!biz.isOrderTaken) return false;
-    biz.info.cashBox += biz.info.productsOrderPrice * dropBizOrderMultiplier;
+    if (biz.isOrderTaken) return false;
+    if (!bizesModules[biz.info.type].business.isFactionOwner) {
+        biz.info.cashBox += biz.info.productsOrderPrice * dropBizOrderMultiplier;
+    }
+    else {
+        let faction = factions.getFaction(biz.info.factionId);
+        faction.cash += biz.info.productsOrderPrice * dropBizOrderMultiplier;
+        await faction.save();
+    }
     biz.info.productsOrder = null;
     biz.info.productsOrderPrice = null;
     carrier != null && carrier.removeBizOrderByBizId(biz.info.id);
-    console.log("destroyOrder");
     await biz.info.save();
     return true;
 };
@@ -253,8 +278,15 @@ let getOrder = function(id) {
     if (biz == null) return false;
     if (biz.isOrderTaken) return true;
     biz.isOrderTaken = true;
-    let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
-    player != null && player.call("biz.order.take", [true]);
+    let isFactionBiz = bizesModules[biz.info.type].business.isFactionOwner;
+    let player;
+    if (!isFactionBiz) {
+        player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id === biz.info.characterId);
+    }
+    else {
+        player = mp.players.toArray().find(player => player != null && player.character != null && factions.isLeader(player) && player.character.factionId === biz.info.factionId);
+    }
+    player != null && player.call("biz.order.take", [true, isFactionBiz]);
     return true;
 };
 let dropOrder = function(id) {
@@ -262,8 +294,15 @@ let dropOrder = function(id) {
     if (biz == null) return false;
     if (!biz.isOrderTaken) return true;
     biz.isOrderTaken = false;
-    let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
-    player != null && player.call("biz.order.take", [false]);
+    let isFactionBiz = bizesModules[biz.info.type].business.isFactionOwner;
+    let player;
+    if (!isFactionBiz) {
+        player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id === biz.info.characterId);
+    }
+    else {
+        player = mp.players.toArray().find(player => player != null && player.character != null && factions.isLeader(player) && player.character.factionId === biz.info.factionId);
+    }
+    player != null && player.call("biz.order.take", [false, isFactionBiz]);
     return true;
 };
 let readyOrder = async function(id, productsNumber) {
@@ -294,8 +333,15 @@ let readyOrder = async function(id, productsNumber) {
     }
 
     await biz.info.save();
-    let player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id == biz.info.characterId);
-    player != null && player.call("biz.order.complete", [addedProducts, pay]);
+    let player;
+    let isFactionBiz = bizesModules[biz.info.type].business.isFactionOwner;
+    if (!isFactionBiz) {
+        player = mp.players.toArray().find(player => player != null && player.character != null && player.character.id === biz.info.characterId);
+    }
+    else {
+        player = mp.players.toArray().find(player => player != null && player.character != null && factions.isLeader(player) && player.character.factionId === biz.info.factionId);
+    }
+    player != null && player.call("biz.order.complete", [addedProducts, pay, isFactionBiz]);
     return {productsOrder: biz.info.productsOrder, productsOrderPrice: biz.info.productsOrderPrice, pay: pay};
 };
 

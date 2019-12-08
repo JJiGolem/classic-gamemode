@@ -382,13 +382,13 @@ export default function info(state = initialState, action) {
 
         case 'ORDER_COMPLETE_BUSINESS_FACTION':
                 newState = { ...state };
-                newState.factionBiz[0].resources += payload.count;
+                newState.factionBiz.resources += payload.count;
     
-                if ((newState.factionBiz[0].order.productsCount - payload.count) > 0) {
-                    newState.factionBiz[0].order.productsCount -= payload.count;
-                    newState.factionBiz[0].order.productsPrice -= payload.sum
+                if ((newState.factionBiz.order.productsCount - payload.count) > 0) {
+                    newState.factionBiz.order.productsCount -= payload.count;
+                    newState.factionBiz.order.productsPrice -= payload.sum
                 } else {
-                    newState.factionBiz[0].order = null;
+                    newState.factionBiz.order = null;
                 }
     
                 return newState;

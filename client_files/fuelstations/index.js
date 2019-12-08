@@ -97,6 +97,9 @@ mp.events.add('fuelstations.fill.litres.ans', (ans, data) => {
         case 8:
             mp.notify.error(`На заправке кончилось топливо`, 'АЗС');
             break;
+        case 9:
+            mp.notify.error(`Нельзя заправить электромобиль`, 'АЗС');
+            break;
     }
 });
 
@@ -131,6 +134,9 @@ mp.events.add('fuelstations.fill.fulltank.ans', (ans, data) => {
             break;
         case 6:
             mp.notify.error(`На заправке кончилось топливо`, 'АЗС');
+            break;
+        case 7:
+            mp.notify.error(`Нельзя заправить электромобиль`, 'АЗС');
             break;
     }
 });

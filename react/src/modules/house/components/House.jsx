@@ -410,7 +410,7 @@ class House extends Component {
                     <div className='house_form-react'>
                         { Object.keys(house).length > 0 ? this.getForm() : this.getLoader() }
                         { house.answerBuy !== null && this.getMessage(house.answerBuy) }
-                        { house.answerEnter != null && this.getMessage('error') }
+                        { house.answerEnter != null && !house.garage && this.getMessage('error') }
                         { isActionsMenu && this.showActionsMenu(house) }
                         { isConfirm && this.showConfirmBuy() }
                     </div>

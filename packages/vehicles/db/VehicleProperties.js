@@ -33,7 +33,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(11),
             defaultValue: 1,
 			allowNull: false
-        }
+        },
+        isElectric: {
+            type: DataTypes.TINYINT,
+            defaultValue: 0,
+			allowNull: false
+        },
 	}, {timestamps: false});
 
 

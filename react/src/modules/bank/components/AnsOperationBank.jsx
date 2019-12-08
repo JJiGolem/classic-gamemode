@@ -12,13 +12,24 @@ class AnsOperationBank extends Component {
         this.getAnswer = this.getAnswer.bind(this);
     }
 
+    getTextAnswer(answer) {
+        if (answer == 0) {
+            return 'Ошибка';
+        } else if (answer == 2) {
+            return 'Недостаточно денег на счете';
+        } else if (answer == 3) {
+            return 'Вам требуется отыграть 30 часов';
+        }
+    }
+
     getAnswer() {
         const { bank } = this.props;
 
         if (bank.answer == 1) {
             return <BankSuccess args={bank.args}/>
         } else {
-            return <BankError />
+            let text = this.getTextAnswer(bank.answer);
+            return <BankError text={text} />
         } 
     }
 
