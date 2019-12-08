@@ -112,7 +112,6 @@ mp.events.add("biz.sell.ans", (result) => {
 });
 
 mp.events.add("biz.order.add", (id, productCount, productPrice) => {
-    mp.console("add");
     mp.events.callRemote("biz.order.add", id, productCount, productPrice);
 });
 mp.events.add("biz.order.ans", (result, isFactionBis) => {
@@ -134,13 +133,9 @@ mp.events.add("biz.statistics.update", (date, money, isFactionBis) => {
 
 /// Faction phone app events
 mp.events.add("biz.faction.order.add", (id, productCount, productPrice) => {
-    mp.console("add faction");
     mp.events.callRemote("biz.order.add", id, productCount, productPrice, true);
 });
 mp.events.add("biz.order.ans", (result, isFactionBis) => {
-    mp.console("ans");
-    mp.console(result);
-    mp.console(isFactionBis);
     isFactionBis && mp.callCEFR("biz.faction.order.ans", [result]);
 });
 mp.events.add("biz.faction.order.cancel", (id) => {

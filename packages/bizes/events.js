@@ -268,7 +268,7 @@ module.exports = {
         }
         player.call("biz.order.ans", [await bizService.createOrder(biz, productCount, productPrice), isFaction]);
     },
-    "biz.order.cancel": async (player, id, isFaction) => {
+    "biz.order.cancel": async (player, id) => {
         id = parseInt(id);
         await bizService.destroyOrder(id);
     },

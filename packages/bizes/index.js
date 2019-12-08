@@ -239,16 +239,18 @@ let createOrder = async function(biz, count, price) {
     if (price <= min || price >= max) return 0;
     if (!bizesModules[biz.info.type].business.isFactionOwner) {
         if (parseInt(price * count) > biz.info.cashBox) return 0;
+        biz.info.productsOrder = count;
+        biz.info.productsOrderPrice = parseInt(price * count);
         biz.info.cashBox -= biz.info.productsOrderPrice;
     }
     else {
         if (parseInt(price * count) > factions.getFaction(biz.info.factionId).cash) return 0;
+        biz.info.productsOrder = count;
+        biz.info.productsOrderPrice = parseInt(price * count);
         let faction = factions.getFaction(biz.info.factionId);
         faction.cash -= biz.info.productsOrderPrice;
         await faction.save();
     }
-    biz.info.productsOrder = count;
-    biz.info.productsOrderPrice = parseInt(price * count);
     carrier != null && carrier.addBizOrder(biz);
     await biz.info.save();
     return 1;
@@ -256,7 +258,7 @@ let createOrder = async function(biz, count, price) {
 let destroyOrder = async function(id) {
     let biz = getBizById(id);
     if (biz == null) return false;
-    if (!biz.isOrderTaken) return false;
+    if (biz.isOrderTaken) return false;
     if (!bizesModules[biz.info.type].business.isFactionOwner) {
         biz.info.cashBox += biz.info.productsOrderPrice * dropBizOrderMultiplier;
     }
