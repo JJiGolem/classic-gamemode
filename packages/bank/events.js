@@ -84,7 +84,7 @@ module.exports = {
         if (isNaN(number)) return player.call("bank.transfer.ans", [0]);
         if (number > 200000) return player.call("bank.transfer.ans", [0]);
         if (player.character.bank < number) return player.call("bank.transfer.ans", [2]);
-        if (parseInt(player.characters[i].minutes / 60) < 30) player.call("bank.transfer.ans", [3]);
+        if (parseInt(player.character.minutes / 60) < 30) player.call("bank.transfer.ans", [3]);
         money.moveMoneyById(player.character.id, accountNumber, number, function(result) {
             if (result) {
                 player.call("bank.transfer.ans", [1]);
