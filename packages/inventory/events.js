@@ -498,9 +498,9 @@ module.exports = {
 
                     var params = inventory.getParamsValues(item);
                     if (!params.litres) return out(`Канистра пустая`);
-                    
+
                     if (veh.properties.isElectric) return out(`Нельзя заправить электромобиль`);
-                    
+
                     var vehName = veh.properties.name;
                     if (veh.fuel >= veh.properties.maxFuel) return out(`Авто ${vehName} имеет полный бак`);
 
@@ -722,5 +722,8 @@ module.exports = {
                 inventory.updateParam(player, item, 'ammo', player.weaponAmmo);
             }
         }
+
+        var armourItem = inventory.getBodyItemByIndex(player, 4);
+        if (armourItem) inventory.updateParam(player, armourItem, 'health', parseInt(player.armour));
     },
 };
