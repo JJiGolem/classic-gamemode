@@ -789,12 +789,19 @@ module.exports = {
             if (rec) rec.call(`inventory.controlEnable`, [true]);
         }
 
-        if (!player.character.arrestTime) return;
-        var date = ([0, 2].includes(player.character.arrestType)) ? player.cellArrestDate : player.jailArrestDate;
-        var time = Date.now() - date;
-        player.character.arrestTime -= time;
+        if (!player.character.arrestTime) {
+            if (player.character.wanted && player.getVariable("cuffs")) {
+                player.character.arrestTime = police.arrestTime * player.character.wanted;
+                player.character.arrestType = police.getRandomArrestType();
+                mp.events.call('admin.notify.players', `!{#db5e4a}${player.name}[${player.id}] посажен в тюрьму за уход от ареста`);
+            }
+        } else {
+            var date = ([0, 2].includes(player.character.arrestType)) ? player.cellArrestDate : player.jailArrestDate;
+            var time = Date.now() - date;
+            player.character.arrestTime -= time;
+            timer.remove(player.cellArrestTimer);
+            timer.remove(player.jailArrestTimer);
+        }
         player.character.save();
-        timer.remove(player.cellArrestTimer);
-        timer.remove(player.jailArrestTimer);
     },
 }

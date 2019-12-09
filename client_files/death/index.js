@@ -55,7 +55,8 @@ mp.events.add({
         var arrest = false;
         if (killer && killer.remoteId != mp.players.local.remoteId) {
             var factionId = killer.getVariable("factionId");
-            arrest = (mp.factions.isPoliceFaction(factionId) || mp.factions.isFibFaction(factionId)) && mp.police.wanted;
+            var haveCuffs = mp.busy.includes("cuffs");
+            arrest = (mp.factions.isPoliceFaction(factionId) || mp.factions.isFibFaction(factionId)) && mp.police.wanted && haveCuffs;
         }
         mp.timer.add(() => {
             if (arrest) return mp.events.callRemote(`police.cells.forceArrest`);

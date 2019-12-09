@@ -29,7 +29,7 @@ class Improvements extends Component {
                         <div className={index == activeIndex ? "house_improvement_block_active-react" : "house_improvement_block-react"} 
                             onClick={() => {
                                 if (index == activeIndex && !improvement.isBuyed) {
-                                    mp.trigger('house.improvements.buy', improvement.type);
+                                    mp.trigger('biz.faction.improvements.buy', improvement.type);
                                     disableHome(true);
                                     addApp({ name: 'AnsBuy', form: <AnsBuy type={improvement.type}/> });
                                 } else {
