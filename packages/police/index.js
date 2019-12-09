@@ -359,4 +359,7 @@ module.exports = {
     getSearchPosition(pos) {
         return pos;
     },
+    getRandomArrestType() {
+        return utils.randomInteger(0, 2);
+    },
 };
