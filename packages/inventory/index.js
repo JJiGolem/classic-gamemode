@@ -624,8 +624,11 @@ module.exports = {
         };
         var otherItems = {
             "3": () => {
-                player.armour = parseInt(params.health);
-                player.setClothes(9, params.variation, params.texture, 0);
+                var oldVal = player.getClothes(9);
+                if (oldVal.drawable != params.variation || oldVal.texture != params.texture) {
+                    player.armour = parseInt(params.health);
+                    player.setClothes(9, params.variation, params.texture, 0);
+                }
             },
             "7": () => {
                 var texture = params.tTexture || 0;
