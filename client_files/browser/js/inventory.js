@@ -1569,7 +1569,7 @@ var inventory = new Vue({
             Vue.delete(this.hotkeys, key);
         },
         onUseHotkey(key) {
-            if (!this.enable || !this.controlEnable) return;
+            if (!this.enable || !this.controlEnable || this.handsBlock) return;
             if (Date.now() - this.lastUseHotkey < this.waitUseHotkey) return;
 
             var item = this.hotkeys[key];

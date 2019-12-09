@@ -57,7 +57,7 @@ module.exports = {
     "taxi.driver.orders.take": (player, orderId) => {
         if (player.character.job != 2) return player.call('taxi.driver.orders.take.ans', [3]);;
         if (!player.vehicle) return player.call('taxi.driver.orders.take.ans', [2]);
-        if (player.vehicle.properties.vehType != 0) return player.call('taxi.driver.orders.take.ans', [6]);
+        if (player.vehicle.properties.vehType != 0 && player.vehicle.properties.vehType != 3) return player.call('taxi.driver.orders.take.ans', [6]);
         if (!player.character.carLicense) return player.call('taxi.driver.orders.take.ans', [4]);
         if (!player.vehicle.isActiveTaxi && (player.vehicle.key != 'private' && player.vehicle.owner != player)) return player.call('taxi.driver.orders.take.ans', [2]);
         if (player.currentTaxiDriverOrder || player.taxiDriverDestination) return player.call('taxi.driver.orders.take.ans', [5]);
