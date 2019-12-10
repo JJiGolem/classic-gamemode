@@ -323,7 +323,7 @@ Vue.component('map-case-calls', {
             }
 
             let offsetX = e.offsetX + 15;
-            let offsetY = e.offsetY + e.target.offsetTop + 15;
+            let offsetY = e.offsetY + e.target.offsetTop - e.target.parentElement.scrollTop + 15;
 
             let opacity = 1;
             if (this.$refs.hint) {
@@ -331,7 +331,7 @@ Vue.component('map-case-calls', {
                     offsetX = e.offsetX - this.$refs.hint.offsetWidth - 2;
 
                 if (offsetY + this.$refs.hint.offsetHeight > this.$refs.table.offsetHeight)
-                    offsetY = e.offsetY + e.target.offsetTop - this.$refs.hint.offsetHeight - 2;
+                    offsetY -= this.$refs.hint.offsetHeight + 15;/*e.offsetY + e.target.offsetTop + e.target.parentElement.scrollTop - this.$refs.hint.offsetHeight - 2;*/
             } else
                 opacity = 0;
 
