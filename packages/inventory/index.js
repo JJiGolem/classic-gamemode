@@ -675,7 +675,7 @@ module.exports = {
                 if (player.inventory) {
                     for (var i = 0; i < player.inventory.items.length; i++) {
                         var item = player.inventory.items[i];
-                        if (!item.parentId && item.itemId == itemId) {
+                        if (!item.parentId && item.itemId == itemId && item.index == 4) {
                             this.updateParam(player, item, "health", parseInt(player.armour));
                         }
                     }
