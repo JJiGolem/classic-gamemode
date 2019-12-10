@@ -1091,12 +1091,12 @@
                     <div>Действие</div>
                 </div>
                 <div class="tbody">
-                    <div class="record" v-for="record in sortedList" :key="record.num"
+                    <div class="record" v-for="record in sortedList" :key="record.name"
                         @mousemove="mousemove($event, record)"
                         @mouseout="mouseout">
                         <div class="first"><div class="record-align">{{ getDist(record) | km }}</div></div>
                         <div><div class="record-align">{{ record.name }}</div></div>
-                        <div><div class="record-align">{{ record.description | textSplice(32) }}</div></div>
+                        <div><div class="record-align">{{ record.description | textSplice(25) }}</div></div>
                         <div><div class="record-align btn" @click="onClickAccept(record)">Принять</div></div>
                     </div>
                 </div>

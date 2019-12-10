@@ -91,7 +91,11 @@ var mapCaseEmsData =  {
         },
     },
 }
-
+/*mapCaseEmsCallsData.list.push({num: 32, name: "Cyrus Rader", description: "Раненный, требуется медицинская помощь!", pos: {x: 10, y: 10 }});
+mapCaseEmsCallsData.list.push({num: 32, name: "Cyrus Rader", description: "Раненный, требуется медицинская помощь!", pos: {x: 10, y: 10 }});
+mapCaseEmsCallsData.list.push({num: 32, name: "Cyrus Rader", description: "Раненный, требуется медицинская помощь!", pos: {x: 10, y: 10 }});
+mapCaseEmsCallsData.list.push({num: 32, name: "Cyrus Rader", description: "Раненный, требуется медицинская помощь!", pos: {x: 10, y: 10 }});
+mapCaseEmsCallsData.list.push({num: 32, name: "Cyrus Rader", description: "Раненный, требуется медицинская помощь!", pos: {x: 10, y: 10 }});*/
 //api
 /*
     mapCaseEmsCallsData.list = [{num, name, description, pos: {x, y}}];
