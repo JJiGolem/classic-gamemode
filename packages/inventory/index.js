@@ -1225,6 +1225,7 @@ module.exports = {
     },
     giveWeapon(player, hash, ammo) {
         if (!hash) return;
+        player.setWeaponAmmo(hash, 0);
         player.giveWeapon(hash, 0);
         player.setWeaponAmmo(hash, parseInt(ammo));
         player.call(`weapons.giveWeapon`, [hash.toString()]);
@@ -1400,10 +1401,10 @@ module.exports = {
             var params = this.getParamsValues(item);
             if (params.weaponHash) {
                 var ammo = params.ammo;
-                if (player.weapon == params.weaponHash && ammo != player.weaponAmmo) {
-                    this.updateParam(player, item, 'ammo', player.weaponAmmo);
-                    ammo = player.weaponAmmo;
-                }
+                // if (player.weapon == params.weaponHash && ammo != player.weaponAmmo) {
+                //     this.updateParam(player, item, 'ammo', player.weaponAmmo);
+                //     ammo = player.weaponAmmo;
+                // }
                 this.giveWeapon(player, params.weaponHash, ammo);
             } else player.setVariable("hands", item.itemId);
         } else { // выкл. синх. предмета/гана в руках
