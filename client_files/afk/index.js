@@ -79,7 +79,7 @@ mp.events.add({
         mp.afk.setAfk(player, false);
     },
     "playerQuit": (player) => {
-        if (player.getVariable("afk") && player.vehicle) mp.setAfk(player, false);
+        if (player.getVariable("afk") && player.vehicle) mp.afk.setAfk(player, false);
     },
     "playerWeaponShot": () => {
         var player = mp.players.local;
