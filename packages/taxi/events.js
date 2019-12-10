@@ -49,7 +49,6 @@ module.exports = {
         if (taxi.doesClientHaveOrders(player.id)) return player.call('taxi.client.order.ans', [3]);
         taxi.addOrder(player.id, player.position);
         player.call('taxi.client.order.ans', [4]);
-        console.log(taxi.getOrders());
     },
     "taxi.driver.orders.get": (player) => {
         let orders = taxi.getOrders();
@@ -58,13 +57,11 @@ module.exports = {
     "taxi.driver.orders.take": (player, orderId) => {
         if (player.character.job != 2) return player.call('taxi.driver.orders.take.ans', [3]);;
         if (!player.vehicle) return player.call('taxi.driver.orders.take.ans', [2]);
-        if (player.vehicle.properties.vehType != 0) return player.call('taxi.driver.orders.take.ans', [6]);
+        if (player.vehicle.properties.vehType != 0 && player.vehicle.properties.vehType != 3) return player.call('taxi.driver.orders.take.ans', [6]);
         if (!player.character.carLicense) return player.call('taxi.driver.orders.take.ans', [4]);
         if (!player.vehicle.isActiveTaxi && (player.vehicle.key != 'private' && player.vehicle.owner != player)) return player.call('taxi.driver.orders.take.ans', [2]);
         if (player.currentTaxiDriverOrder || player.taxiDriverDestination) return player.call('taxi.driver.orders.take.ans', [5]);
-        console.log(orderId);
         let order = taxi.getOrderById(orderId);
-        console.log(`order ${order}`)
         if (order) {
             player.currentTaxiDriverOrder = order;
             taxi.deleteOrder(orderId);
@@ -85,7 +82,6 @@ module.exports = {
     },
     "taxi.driver.route.arrive": (player) => {
         let order = player.currentTaxiDriverOrder;
-        console.log(`Прибыли к клиенту ${order.clientId}`);
         let client = mp.players.at(order.clientId);
         if (!client) return;
         if (!player.vehicle || player.vehicle.plate != client.currentTaxiClientOrder.plate) {
@@ -101,20 +97,17 @@ module.exports = {
     "playerEnterVehicle": (player, vehicle, seat) => {
         if (seat != -1 && player.currentTaxiClientOrder) {
             if (player.currentTaxiClientOrder.plate == vehicle.plate) {
-                console.log('клиент сел в авто');
                 player.call('taxi.client.car.enter');
                 let driver = mp.players.at(player.currentTaxiClientOrder.driverId);
                 driver.call('taxi.driver.car.entered');
             }
         }
         if (seat == -1 && player.id == vehicle.taxiDriverId) {
-            console.log('чистим таймер')
             timer.remove(vehicle.taxiRespawnTimer);
         }
     },
     "vehicle.ready": (player, vehicle, seat) => {
         if (vehicle.key == 'job' && vehicle.owner == 2 && seat == -1) {
-            console.log(`${player.name} сел в такси ${vehicle.id} таксистом`);
             if (!vehicle.isActiveTaxi) {
                 player.call('taxi.rent.show', [taxi.getRentPrice()]);
             } else {
@@ -157,7 +150,6 @@ module.exports = {
         let driver = player;
         let client = mp.players.at(driver.taxiDriverDestination.clientId);
         let price = driver.taxiDriverDestination.price;
-        console.log(`водитель ${driver.name} привез игрока ${client.name} за $${price}`);
 
         client.call('taxi.client.destination.reach');
 
@@ -259,7 +251,6 @@ module.exports = {
     },
     "playerExitVehicle": (player, vehicle) => {
         if (vehicle.taxiDriverId == player.id) {
-            console.log('покинул такси');
             player.call('notifications.push.warning', [`У вас есть ${taxi.getRespawnTimeout() / 1000} секунд, чтобы вернуться в транспорт`, 'Такси']);
             timer.remove(vehicle.taxiRespawnTimer);
             vehicle.taxiRespawnTimer = timer.add(() => {
@@ -269,12 +260,9 @@ module.exports = {
                     console.log(err);
                 }
             }, taxi.getRespawnTimeout());
-            console.log('TAXI RESPAWN TIMER: ' + vehicle.taxiRespawnTimer);
         }
         if (player.taxiClientDestination) {
-            console.log(player.taxiClientDestination);
             let dest = Object.assign({}, player.taxiClientDestination);
-            console.log(dest);
             mp.events.call('taxi.client.order.cancel', player);
             player.call('taxi.client.car.leave');
 
@@ -282,15 +270,10 @@ module.exports = {
             let driver = mp.players.at(dest.driverId);
             if (!driver) return console.log('Нет водителя');
             let entireDist = utils.vdistSqr(dest.startPosition, dest.destination);
-            console.log(`entireDist = ${entireDist}`);
             let currentDist = entireDist - utils.vdistSqr({ x: player.position.x, y: player.position.y, z: player.position.z }, dest.destination);
-            console.log(`currentDist = ${currentDist}`);
-            console.log(`currentDist / entireDist = ${currentDist / entireDist}`);
             if (currentDist / entireDist > 0.5) {
                 let sum = Math.round((entireDist / 1000) * 0.5 * taxi.getPricePerKilometer());
-                //let sum = driver.taxiDriverDestination.price * 0.5;
                 if (!sum) return;
-                console.log(`Начисляем деньги водителю ${sum}`);
                 money.moveCash(player, driver, sum, function (result) {
                     if (result) {
                         notify.warning(player, 'Вы покинули такси, с вас списана часть суммы поездки');

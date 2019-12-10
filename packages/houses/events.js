@@ -24,7 +24,7 @@ module.exports = {
             place: 0
         };
     },
-    "characterInit.done": (player) => {
+    "characterInit.done": async (player) => {
         housesService.loadBlips(player);
         let house = housesService.getHouseByCharId(player.character.id);
         if (house != null) {
@@ -34,15 +34,21 @@ module.exports = {
             if (housesService.getDateDays(house.info.date) === 0) {
                 notifications.info(player, "Ваш дом будет продан государству сегодня за неуплату налогов", "Внимание");
             }
+            if (house.info.characterNick != player.character.name) {
+                house.info.characterNick = player.character.name;
+                await house.info.save();
+            }
         }
         if (player.character.admin < 5) return;
         housesService.initHouseAdding(player);
 
     },
-    "player.name.changed": (player) => {
+    "player.name.changed": async (player) => {
         let house = housesService.getHouseByCharId(player.character.id);
         if(house != null) {
             house.info.characterNick = player.character.name;
+            await house.info.save();
+            player.call('house.menu.close',[true]);
         }
     },
     "playerEnterColshape": (player, shape) => {

@@ -411,9 +411,9 @@ module.exports = {
         this.soilsWarehouse.push(marker);
     },
     setJobClothes(player, enable, job) {
+        inventory.clearAllView(player);
+        player.inventory.denyUpdateView = enable;
         if (enable) {
-            inventory.clearAllView(player);
-            player.inventory.denyUpdateView = true;
             if (player.character.gender == 0) {
                 this.maleClothes[job].forEach(item => {
                     var params = item.params;
@@ -428,9 +428,6 @@ module.exports = {
                 });
             }
         } else {
-            // TODO: Clear Clothes.
-            player.inventory.denyUpdateView = false;
-            inventory.clearAllView(player);
             inventory.updateAllView(player);
         }
     },

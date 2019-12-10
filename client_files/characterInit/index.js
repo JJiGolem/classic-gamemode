@@ -92,6 +92,7 @@ mp.events.add('characterInit.init', (characters, accountInfo) => {
     }
 
     mp.players.local.setAlpha(0);
+    mp.events.call("godmode.set", false);
 });
 
 mp.events.add("characterInit.done", () => {

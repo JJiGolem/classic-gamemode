@@ -3,6 +3,7 @@ var army = require('../army');
 var bands = require('../bands');
 var factions = require('../factions');
 var inventory = require('../inventory');
+var logger = call('logger');
 var mafia = require('../mafia');
 var money = require('../money');
 var notifs = require('../notifications');
@@ -16,15 +17,15 @@ module.exports = {
     },
     "characterInit.done": (player) => {
         player.call(`police.wanted.set`, [player.character.wanted]);
-        if (!player.character.arrestTime) return;
-
         var time = player.character.arrestTime;
-        if (player.character.arrestType == 0) police.startLSCellArrest(player, null, time);
-        else if (player.character.arrestType == 1) police.startJailArrest(player, null, time);
-        else if (player.character.arrestType == 2) police.startBCCellArrest(player, null, time);
+        if (time) {
+            if (player.character.arrestType == 0) police.startLSCellArrest(player, null, time);
+            else if (player.character.arrestType == 1) police.startJailArrest(player, null, time);
+            else if (player.character.arrestType == 2) police.startBCCellArrest(player, null, time);
+        }
 
-        if (!factions.isPoliceFaction(player.character.factionId)) return;
-        mp.events.call(`mapCase.pd.init`, player);
+        if (factions.isPoliceFaction(player.character.factionId))
+            mp.events.call(`mapCase.pd.init`, player);
     },
     "police.storage.clothes.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад Police`);
@@ -413,6 +414,7 @@ module.exports = {
 
             notifs.success(player, `Вам выдано оружие ${gunName}`, header);
             factions.setAmmo(faction, faction.ammo - police.gunAmmo);
+            logger.log(`Взял оружие ${gunName} со склада ${faction.name}`, `faction`, player);
         });
     },
     "police.storage.ammo.take": (player, values) => {
@@ -438,8 +440,8 @@ module.exports = {
         // inventory.fullDeleteItemsByParams(itemIds[index], ["faction", "owner"], [character.factionId, character.id]);
         var params = {
             count: ammo,
-            faction: character.factionId,
-            owner: character.id
+            // faction: character.factionId,
+            // owner: character.id
         };
         inventory.addItem(player, itemIds[index], params, (e) => {
             if (e) return notifs.error(player, e, header);
@@ -787,12 +789,19 @@ module.exports = {
             if (rec) rec.call(`inventory.controlEnable`, [true]);
         }
 
-        if (!player.character.arrestTime) return;
-        var date = ([0, 2].includes(player.character.arrestType)) ? player.cellArrestDate : player.jailArrestDate;
-        var time = Date.now() - date;
-        player.character.arrestTime -= time;
+        if (!player.character.arrestTime) {
+            if (player.character.wanted && player.getVariable("cuffs")) {
+                player.character.arrestTime = police.arrestTime * player.character.wanted;
+                player.character.arrestType = police.getRandomArrestType();
+                mp.events.call('admin.notify.players', `!{#db5e4a}${player.name}[${player.id}] посажен в тюрьму за уход от ареста`);
+            }
+        } else {
+            var date = ([0, 2].includes(player.character.arrestType)) ? player.cellArrestDate : player.jailArrestDate;
+            var time = Date.now() - date;
+            player.character.arrestTime -= time;
+            timer.remove(player.cellArrestTimer);
+            timer.remove(player.jailArrestTimer);
+        }
         player.character.save();
-        timer.remove(player.cellArrestTimer);
-        timer.remove(player.jailArrestTimer);
     },
 }

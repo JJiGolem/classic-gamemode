@@ -1,13 +1,15 @@
 /* eslint-disable no-undef */
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
-import {setArgsBank, setAskAnswerBank, setLoadingBank} from "../actions/action.bank";
+import {setArgsBank, setAskAnswerBank, setLoadingBank, setAnswerBank} from "../actions/action.bank";
 import {closeBankPage} from "../actions/action.bankPages";
 
 class BankConfirmTransfer extends Component {
     constructor(props) {
         super(props);
         this.state = {};
+
+        this.transfer = this.transfer.bind(this);
     }
 
     back() {
@@ -18,10 +20,14 @@ class BankConfirmTransfer extends Component {
     }
 
     transfer() {
-        const { closePage, setArgs, setLoading, bank } = this.props;
+        const { setAnswer, setArgs, setLoading, bank } = this.props;
 
         setArgs({ money: this.props.money });
         setLoading(true);
+
+        // setTimeout(() => {
+        //     setAnswer({ answer: 1, type: 'transfer' })
+        // }, 1000)
 
         mp.trigger('bank.transfer');
     }
@@ -47,7 +53,7 @@ class BankConfirmTransfer extends Component {
                         <button className='button_panel-bank-react' onClick={this.back.bind(this)}>
                             Назад
                         </button>
-                        <button className='button_panel-bank-react' onClick={this.transfer.bind(this)}>
+                        <button className='button_panel-bank-react' onClick={this.transfer}>
                             Подтвердить
                         </button>
                     </div>
@@ -83,6 +89,7 @@ const mapDispatchToProps = dispatch => ({
     closePage: () => dispatch(closeBankPage()),
     setLoading: flag => dispatch(setLoadingBank(flag)),
     setArgs: args => dispatch(setArgsBank(args)),
+    setAnswer: ans => dispatch(setAnswerBank(ans))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BankConfirmTransfer);

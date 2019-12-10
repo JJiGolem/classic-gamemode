@@ -211,9 +211,13 @@ var interactionMenu = new Vue({
                         icon: "doc.png"
                     },
                     {
+                        text: "Удостоверение",
+                        icon: "doc.png"
+                    },
+                    {
                         text: "Лиц. на оружие",
                         icon: "gun.svg"
-                    }
+                    },
                 ],
                 handler(index) {
                     var item = this.items[index];
@@ -235,6 +239,10 @@ var interactionMenu = new Vue({
                     }
                     if (item.text == 'Лиц. на оружие') {
                         mp.trigger(`documents.showTo`, "gunLicense");
+                        mp.trigger(`interaction.menu.close`);
+                    }
+                    if (item.text == 'Удостоверение') {
+                        mp.trigger(`documents.showTo`, "governmentBadge");
                         mp.trigger(`interaction.menu.close`);
                     }
                 }
@@ -277,6 +285,10 @@ var interactionMenu = new Vue({
                 items: [{
                         text: "Наручники",
                         icon: "cuffs.svg"
+                    },
+                    {
+                        text: "Обыск",
+                        icon: "search.svg"
                     },
                     {
                         text: "Освобождение",

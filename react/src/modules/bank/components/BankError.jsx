@@ -15,6 +15,8 @@ class BankError extends Component {
     }
 
     render() {
+        const { text } = this.props;
+
         return (
             <Fragment>
                 <div className='answer_form-bank-react' onClick={this.exit.bind(this)}>
@@ -25,7 +27,7 @@ class BankError extends Component {
                             <path id="Path_100" data-name="Path 100" d="M64.935,16.728a2.48,2.48,0,0,0-3.511,0L40.832,37.32,20.239,16.728a2.483,2.483,0,1,0-3.511,3.511L37.32,40.832,16.728,61.424a2.483,2.483,0,1,0,3.511,3.511L40.832,44.343,61.424,64.935a2.483,2.483,0,0,0,3.511-3.511L44.343,40.832,64.935,20.239A2.48,2.48,0,0,0,64.935,16.728Z" transform="translate(23.729 23.729)"/>
                         </svg>
                     </div>
-                    <div className='answer_text-bank-react'>Ошибка</div>
+                    <div className='answer_text-bank-react'>{ text }</div>
                 </div>
             </Fragment>
         );

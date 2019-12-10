@@ -20,8 +20,6 @@ module.exports = {
         var list = carshow.getCarShowList(carShowId);
         player.dimension = player.id + 1;
         let info = carshow.getCarShowInfoById(carShowId);
-        console.log(info.name);
-        console.log(info.sqlId);
         player.call('carshow.list.show', [list, info]);
     },
     "carshow.list.close": (player, carShowId) => {

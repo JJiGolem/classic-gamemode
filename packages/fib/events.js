@@ -2,6 +2,7 @@
 var fib = require('../fib')
 var factions = require('../factions');
 var inventory = require('../inventory');
+var logger = call('logger');
 var notifs = require('../notifications');
 
 module.exports = {
@@ -300,6 +301,7 @@ module.exports = {
 
             notifs.success(player, `Вам выдано оружие ${gunName}`, header);
             factions.setAmmo(faction, faction.ammo - fib.gunAmmo);
+            logger.log(`Взял оружие ${gunName} со склада ${faction.name}`, `faction`, player);
         });
     },
     "fib.storage.ammo.take": (player, values) => {
@@ -324,8 +326,8 @@ module.exports = {
         // inventory.fullDeleteItemsByParams(itemIds[index], ["faction", "owner"], [character.factionId, character.id]);
         var params = {
             count: ammo,
-            faction: character.factionId,
-            owner: character.id
+            // faction: character.factionId,
+            // owner: character.id
         };
         inventory.addItem(player, itemIds[index], params, (e) => {
             if (e) return notifs.error(player, e, header);

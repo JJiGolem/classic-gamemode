@@ -150,10 +150,11 @@ mp.inventory = {
     getNearGroundItemObject(pos) {
         var itemObj, minDist = 9999;
         mp.objects.forEach((obj) => {
+            if (!obj.getVariable("groundItem")) return;
+            if (obj.dimension != mp.players.local.dimension) return;
             var objPos = obj.position;
             let dist = mp.game.system.vdist(pos.x, pos.y, pos.z, objPos.x, objPos.y, objPos.z);
             if (dist > mp.inventory.groundMaxDist) return;
-            if (!obj.getVariable("groundItem")) return;
             if (dist > minDist) return;
 
             minDist = dist;
@@ -249,7 +250,9 @@ mp.inventory = {
         if (itemId) {
             if (player.vehicle) return;
             var info = this.itemsInfo[itemId];
-            var object = mp.objects.new(mp.game.joaat(info.model), player.position);
+            var object = mp.objects.new(mp.game.joaat(info.model), player.position, {
+                dimension: player.dimension
+            });
             var pos = info.attachInfo.pos;
             var rot = info.attachInfo.rot;
             object.attachTo(player.handle,

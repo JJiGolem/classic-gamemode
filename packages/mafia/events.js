@@ -2,6 +2,7 @@ let bizes = call('bizes');
 let mafia = call('mafia');
 let factions = call('factions');
 let inventory = call('inventory');
+let logger = call('logger');
 let money = call('money');
 let notifs = call('notifications');
 let police = call('police');
@@ -79,6 +80,7 @@ module.exports = {
 
             notifs.success(player, `Вам выдано оружие ${gunName}`, header);
             factions.setAmmo(faction, faction.ammo - mafia.gunAmmo);
+            logger.log(`Взял оружие ${gunName} со склада ${faction.name}`, `faction`, player);
         });
     },
     "mafia.storage.ammo.take": (player, values) => {
@@ -106,8 +108,8 @@ module.exports = {
         // inventory.fullDeleteItemsByParams(itemIds[index], ["faction", "owner"], [character.factionId, character.id]);
         var params = {
             count: ammo,
-            faction: character.factionId,
-            owner: character.id
+            // faction: character.factionId,
+            // owner: character.id
         };
         inventory.addItem(player, itemIds[index], params, (e) => {
             if (e) return notifs.error(player, e, header);

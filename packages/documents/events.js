@@ -1,17 +1,13 @@
 "use strict";
 let documents = require("./index.js");
+let factions = call("factions");
 
 module.exports = {
     "init": () => {
         documents.init();
         inited(__dirname);
     },
-    // "documents.showTo": (player, type, targetId, data) => {
-    //     if (player.id == targetId) return mp.events.call('documents.show', player, type, targetId, data);
-    //     /// todo with offer
-    // },
     "documents.offer": (player, type, targetId, data) => {
-        console.log('offer');
         if (type == 'driverLicense') {
             if (!player.character.carLicense && !player.character.passengerLicense && !player.character.bikeLicense && !player.character.truckLicense && !player.character.airLicense && !player.character.boatLicense) {
                 return player.call('notifications.push.error', ['У вас нет лицензий', 'Документы']);
@@ -30,6 +26,13 @@ module.exports = {
             }
         }
 
+
+        if (type == 'governmentBadge') {
+            let allowedFactionIds = [2, 3, 4];
+            if (!allowedFactionIds.includes(player.character.factionId)) {
+                return player.call('notifications.push.error', ['Вы не сотрудник PD/FIB', 'Документы']);
+            }
+        }
 
         if (player.id == targetId) return mp.events.call("documents.show", player.id, type, targetId, data); /// Если показывает себе, то не кидаем оффер
 
@@ -64,6 +67,9 @@ module.exports = {
             case 'medCard':
                 docName = 'медкарту';
                 break;
+            case 'governmentBadge':
+                docName = 'удостоверение';
+                break;
         }
         target.call('offerDialog.show', ["documents", {
             name: player.character.name,
@@ -78,7 +84,6 @@ module.exports = {
         if (sender.senderDocumentsOffer.targetPlayer != player) return;
 
         if (accept) {
-            console.log('accept');
             mp.events.call('documents.show', offer.playerId, offer.docType, targetId, offer.docData);
             delete player.documentsOffer;
             delete sender.senderDocumentsOffer;
@@ -92,7 +97,6 @@ module.exports = {
         let player = mp.players.at(playerId);
         if (data) {
             data = JSON.parse(data);
-            console.log(data);
         }
         if (!target) return;
         switch (type) {
@@ -110,6 +114,9 @@ module.exports = {
                 break;
             case 'medCard':
                 mp.events.call('documents.medCard.show', player, targetId);
+                break;
+            case 'governmentBadge':
+                mp.events.call('documents.governmentBadge.show', player, targetId);
                 break;
         }
     },
@@ -178,7 +185,6 @@ module.exports = {
             sex: player.character.gender,
             number: documents.getLicIdentificator() + player.character.id
         }
-        console.log(data.categories);
         if (!data) return;
         if (player.id == target.id) {
             mp.events.call('/me', player, `смотрит свои лицензии на Т/С`);
@@ -221,5 +227,24 @@ module.exports = {
             mp.events.call('/me', player, `показал${player.character.gender ? 'а' : ''} свою медкарту`);
         }
         target.call('documents.show', ['medCard', data]);
+    },
+    "documents.governmentBadge.show": (player, targetId) => {
+        let target = mp.players.at(targetId);
+        if (!target) return;
+        let data = {
+            name: player.character.name,
+            gender: player.character.gender ? 'Женский' : 'Мужской',
+            identifier: documents.getBadgeIdentificator() + player.character.id,
+            factionId: player.character.factionId,
+            directorSign: documents.fibLeaderSign,
+            rank: factions.getRankName(player) || 'Нет'
+        }
+        if (!data) return;
+        if (player.id == target.id) {
+            mp.events.call('/me', player, `смотрит свое удостоверение`);
+        } else {
+            mp.events.call('/me', player, `показал${player.character.gender ? 'а' : ''} свое удостоверение`);
+        }
+        target.call('documents.show', ['governmentBadge', data]);
     },
 }

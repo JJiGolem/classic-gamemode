@@ -1,6 +1,7 @@
 "use strict";
 
 let logger;
+let bank;
 /// ФОРМАТ ЛОГОВ [MONEY]
 /// `[MONEY] 1000 add cash to | Just because`
 /// `[${moduleName}] ${moneyCount} ${operation} ${moneyType} ${target} | ${reason}`
@@ -15,6 +16,7 @@ let logger;
 module.exports = {
     init() {
         logger = call("logger");
+        bank = call("bank");
     },
     /// player - игрок которому перевести средства
     /// number - количество средств
@@ -468,6 +470,7 @@ module.exports = {
         });
     },
     changing(player) {
+        bank.updateBank(player);
         player.call("money.change", [player.character.cash, player.character.bank]);
     }
 };

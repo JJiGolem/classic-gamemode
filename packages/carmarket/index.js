@@ -100,9 +100,7 @@ module.exports = {
                 return;
             }
         }
-        console.log('Свободных спотов нет');
         let spotIndex = this.getRandomCarSpot();
-        console.log(`Выбрали рандомный спот ${spotIndex}`);
         if (marketSpots[spotIndex].vehicle.db) {
             marketSpots[spotIndex].vehicle.db.destroy();
             this.destroyMarketVehicleById(marketSpots[spotIndex].vehicle.sqlId);
@@ -192,7 +190,6 @@ module.exports = {
             if (veh.key == 'private' && veh.owner == id) {
                 inventory.fullDeleteItemsByParams(33, 'vehId', veh.db.id);
                 if (player) {
-                    // console.log(veh);
                     timer.remove(veh.fuelTimer);
                     veh.destroy();
                     vehicles.removeVehicleFromPlayerVehicleList(player, veh.sqlId);

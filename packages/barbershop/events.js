@@ -30,7 +30,6 @@ module.exports = {
         let shopData = barbershop.getRawBarbershopData(id);
         player.dimension = player.id + 1;
         let gender = player.character.gender;
-        console.log(gender);
         let appearanceData = {
             hairColor: player.character.hairColor,
             hairHighlightColor: player.character.hairHighlightColor,

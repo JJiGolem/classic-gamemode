@@ -19,13 +19,16 @@ mp.events.add('documents.show', (type, data) => {
     if (type == 'carPass') {
         switch (data.vehType) {
             case 0:
-                data.vehType = 'Автомобиль'
+                data.vehType = 'Автомобиль';
                 break;
             case 1:
-                data.vehType = 'Мотоцикл'
+                data.vehType = 'Мотоцикл';
                 break;
             case 2:
-                data.vehType = 'Велосипед'
+                data.vehType = 'Велосипед';
+                break;
+            case 3:
+                data.vehType = 'Электромобиль';
                 break;
         }
         let newDate = data.regDate ? data.regDate.slice(0, 10) : null;
@@ -78,6 +81,15 @@ mp.events.add('documents.show', (type, data) => {
         }
         mp.callCEFV('medicalCard.show = true');
     }
+    if (type == 'governmentBadge') {
+        data.sign = generateSign(data.name);
+        data.type = getFactionName(data.factionId).toLowerCase();
+        for (let key in data) {
+            if (typeof data[key] == 'string') data[key] = `'${data[key]}'`;
+            mp.callCEFV(`governmentBadge.${key} = ${data[key]}`);
+        }
+        mp.callCEFV('governmentBadge.show = true');
+    }
 });
 
 mp.events.add('documents.close', (type, data) => {
@@ -101,6 +113,9 @@ mp.events.add('documents.close', (type, data) => {
             break;
         case 'medCard':
             mp.callCEFV('medicalCard.show = false');
+            break;
+        case 'governmentBadge':
+            mp.callCEFV('governmentBadge.show = false');
             break;
     }
 
@@ -160,6 +175,9 @@ mp.events.add('documents.showTo', (type) => {
             break;
         case "medCard":
             mp.events.call('documents.offer', "medCard", target.remoteId);
+            break;
+        case "governmentBadge":
+            mp.events.call('documents.offer', "governmentBadge", target.remoteId);
             break;
     }
 });

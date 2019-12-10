@@ -14,6 +14,10 @@ mp.events.add('bank.close', (fromServer) => {
     }
     mp.busy.remove('bank');
 });
+mp.events.add('bank.update', (info) => {
+    if (!mp.busy.includes("bank")) return;
+    mp.callCEFR('bank.update', [info]);
+});
 
 mp.events.add('bank.push', (num) => { /// положить деньги на счет; num - кол-во денег
     mp.events.callRemote('bank.push', num);
@@ -43,7 +47,7 @@ mp.events.add('bank.transfer', () => {  /// снять деньги со сче�
     accountNumTransfer = null;
 });
 mp.events.add('bank.transfer.ans', (result) => {
-    mp.callCEFR('bank.transfer.ans', [result]); /// 2 - недостаточно денег на счете; 1 - успешно; 0 - неизвестная ошибка
+    mp.callCEFR('bank.transfer.ans', [result]); /// 3 - вам требуется отыграть 30 часов; 2 - недостаточно денег на счете; 1 - успешно; 0 - неизвестная ошибка
 });
 
 mp.events.add('bank.phone.push', (num) => { /// положить деньги на телефон; num - кол-во денег

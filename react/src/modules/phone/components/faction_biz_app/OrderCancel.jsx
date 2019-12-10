@@ -16,7 +16,7 @@ class OrderCancel extends Component {
         const { business, cancelOrder } = this.props;
 
         // eslint-disable-next-line no-undef
-        mp.trigger('biz.order.cancel', business.id);
+        mp.trigger('biz.faction.order.cancel', business.id);
         cancelOrder();
     }
 

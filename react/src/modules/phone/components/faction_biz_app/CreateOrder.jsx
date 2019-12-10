@@ -83,7 +83,7 @@ class CreateOrder extends Component {
                 /> });
 
             // eslint-disable-next-line no-undef
-            mp.trigger('biz.order.add', business.id, productCount, productPrice);
+            mp.trigger('biz.faction.order.add', business.id, productCount, productPrice);
 
             // setTimeout(() => {
             //     setOrderStatus(1);

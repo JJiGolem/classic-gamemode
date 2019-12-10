@@ -32,6 +32,7 @@ module.exports = {
 
         let vehicle = player.vehicle;
         if (!vehicle) return player.call('fuelstations.fill.fulltank.ans', [1]);
+        if (vehicle.properties.isElectric) return player.call('fuelstations.fill.fulltank.ans', [7]);
         if (vehicle.fuel >= vehicle.properties.maxFuel) return player.call('fuelstations.fill.fulltank.ans', [2]);
 
         let litresToFill = parseInt(vehicle.properties.maxFuel - vehicle.fuel);
@@ -68,6 +69,7 @@ module.exports = {
 
         let vehicle = player.vehicle;
         if (!vehicle) return player.call('fuelstations.fill.litres.ans', [1]);
+        if (vehicle.properties.isElectric) return player.call('fuelstations.fill.litres.ans', [9]);
         if (vehicle.fuel >= vehicle.properties.maxFuel) return player.call('fuelstations.fill.litres.ans', [2]);
 
         litres = parseInt(litres);

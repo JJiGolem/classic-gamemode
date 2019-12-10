@@ -54,4 +54,11 @@ module.exports = {
             });
         }
     },
+    "player.name.changed": (player, oldName) => {
+        mp.players.forEach(rec => {
+            if (!rec.character) return;
+
+            rec.call(`familiar.name.update`, [player.name, oldName]);
+        });
+    },
 };

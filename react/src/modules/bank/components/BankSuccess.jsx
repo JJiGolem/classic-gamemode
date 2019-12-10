@@ -13,6 +13,8 @@ import {
     pushCashBoxBank,
     popCashBoxBank
 } from "../actions/action.bank";
+import { setBankPage } from '../actions/action.bankPages';
+import BankMenu from './BankMenu';
 
 class BankSuccess extends Component {
     constructor(props) {
@@ -59,9 +61,10 @@ class BankSuccess extends Component {
     }
 
     exit() {
-        const { setAnswer } = this.props;
+        const { setAnswer, setPage } = this.props;
 
         setAnswer({ answer: null, type: null });
+        setPage(<BankMenu />);
     }
 
     render() {
@@ -99,6 +102,7 @@ const mapDispatchToProps = dispatch => ({
     pushPhoneBank: money => dispatch(pushPhoneBank(money)),
     pushCashBoxBank: (id, money) => dispatch(pushCashBoxBank(id, money)),
     popCashBoxBank: (id, money) => dispatch(popCashBoxBank(id, money)),
+    setPage: page => dispatch(setBankPage(page))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BankSuccess);

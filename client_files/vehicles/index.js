@@ -108,12 +108,13 @@ mp.events.add('vehicles.engine.toggle', (state) => {
     mp.callCEFV(`speedometer.isActive = ${state}`);
 })
 
-mp.events.add('vehicles.speedometer.show', (state) => {
+mp.events.add('vehicles.speedometer.show', (state, isElectric) => {
     if (mp.speedometerEnabled) {
         if (state) {
             let vehicle = mp.players.local.vehicle;
             if (!vehicle) return;
             let engine = vehicle.getIsEngineRunning()
+            mp.callCEFV(`speedometer.isElectricCar = ${isElectric}`);
             mp.callCEFV(`speedometer.isActive = ${engine}`);
             mp.callCEFV('speedometer.show = true');
         } else {
@@ -614,9 +615,15 @@ mp.events.add('vehicles.add.menu.show', () => {
     mp.events.call('selectMenu.show', 'vehiclePropAdd');
 });
 
+let autopilotIsEnabled = false;
+mp.events.add('vehicles.autopilot.enable', (enable) => {
+    autopilotIsEnabled = enable;
+});
+
 mp.events.add('vehicles.autopilot', () => {
     var player = mp.players.local;
     var veh = player.vehicle;
+    if (!autopilotIsEnabled) return mp.notify.warning("На этот транспорт не установлен автопилот");
     if (!veh) return mp.notify.error("Вы не в авто");
     var pos = mp.utils.getWaypointCoord();
     if (!pos) return mp.notify.warning("Укажите точку на карте");

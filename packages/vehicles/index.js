@@ -19,6 +19,12 @@ let breakdownConfig = {
 
 let houses;
 
+// vehtypes:
+// 0 - автомобиль
+// 1 - мотоцикл
+// 2 - велосипед
+// 3 - электромобиль
+
 module.exports = {
     // Время простоя авто, после которого оно будет заспавнено (ms) - точность ~0-5 мин
     vehWaitSpawn: 20 * 60 * 1000,
@@ -193,6 +199,9 @@ module.exports = {
             if (veh.hasOwnProperty('carPlaceIndex')) {
                 veh.isInGarage = true;
             }
+            if (owner.carPlaces.length == 1 && owner.carPlaces[0].d == 0) {
+                veh.isInGarage = false;
+            }
         }
         mp.events.call('vehicles.respawn.full', veh);
         this.spawnVehicle(veh, 1);
@@ -245,7 +254,8 @@ module.exports = {
                     consumption: dbVehicleProperties[i].consumption,
                     license: dbVehicleProperties[i].license,
                     price: dbVehicleProperties[i].price,
-                    vehType: dbVehicleProperties[i].vehType
+                    vehType: dbVehicleProperties[i].vehType,
+                    isElectric: dbVehicleProperties[i].isElectric
                 }
                 if (properties.name == null) properties.name = modelName;
                 return properties;
@@ -258,7 +268,8 @@ module.exports = {
             consumption: 1.5,
             license: 1,
             price: 100000,
-            vehType: 0
+            vehType: 0,
+            isElectric: 0
         }
 
         return properties;
@@ -276,7 +287,6 @@ module.exports = {
                     mileage: value,
                     fuel: Math.ceil(veh.fuel)
                 });
-                console.log(`[DEBUG] Обновили пробег для ${veh.properties.name}. Текущий пробег: ${veh.mileage}. К занесению: ${value} км и ${Math.ceil(veh.fuel)} л`);
             } catch (err) {
                 console.log(err);
             }
@@ -386,6 +396,7 @@ module.exports = {
     generateBreakdowns(veh) {
         if (!veh) return;
         let multiplier = veh.multiplier;
+        if (veh.properties.isElectric) return;
         if (veh.regDate) {
             let date = veh.regDate;
             let now = new Date();
@@ -567,7 +578,6 @@ module.exports = {
     },
     isAbleToBuyVehicle(player) {
         let hasHouse = houses.isHaveHouse(player.character.id);
-        console.log(`hasHouse = ${hasHouse}`)
         if (!hasHouse) {
             if (player.vehicleList.length >= 1) return false;
         } else {
