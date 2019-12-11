@@ -33,7 +33,6 @@ module.exports = {
         notifs.success(rec, `${player.name} ваш новый знакомый`, header);
 
         if (!player.vehicle && !player.getVariable("knocked")) {
-            player.heading = rec.heading - 180;
             var time = 5000;
             mp.players.forEachInRange(player.position, 20, current => {
                 current.call(`animations.play`, [player.id, {
@@ -45,7 +44,6 @@ module.exports = {
             });
         }
         if (!rec.vehicle && !rec.getVariable("knocked")) {
-            rec.heading = player.heading - 180;
             mp.players.forEachInRange(rec.position, 20, current => {
                 current.call(`animations.play`, [rec.id, {
                     dict: "mp_ped_interaction",
