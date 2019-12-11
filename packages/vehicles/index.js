@@ -651,6 +651,7 @@ module.exports = {
         return dbVehicleProperties;
     },
     respawn(veh) {
+        if (veh.getVariable("robbed")) veh.setVariable("robbed", null);
         var fuel = (veh.db.key == 'job' || veh.db.key == 'newbie') ? veh.properties.maxFuel : Math.max(veh.db.fuel, this.respawnFuel);
 
         veh.engine = false;

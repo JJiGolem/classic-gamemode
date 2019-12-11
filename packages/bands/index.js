@@ -1,6 +1,7 @@
 "use strict";
 
 let factions;
+let inventory;
 let notifs;
 let terminal;
 let timer;
@@ -56,9 +57,12 @@ module.exports = {
     robVictimWaitTime: 60 * 60 * 1000,
     // Сохраненные грабежи (characterId : time)
     robLogs: {},
+    // Организации, авто которых можно грабить
+    robVehFactionIds: [2, 3],
 
     async init() {
         factions = call('factions');
+        inventory = call('inventory');
         notifs = call('notifications');
         terminal = call('terminal');
         timer = call('timer');
@@ -311,5 +315,24 @@ module.exports = {
             data.counts[zone.factionId - 8]++;
         });
         player.call(`bands.storage.info.set`, [data]);
+    },
+    canRobVehicle(veh) {
+        if (!veh.db || veh.db.key != 'faction') return false;
+        return this.robVehFactionIds.includes(veh.db.owner);
+    },
+    giveRobVehItem(player, veh, callback) {
+        var params = {
+            variation: 12,
+            texture: 1
+        };
+        // params.faction = character.factionId;
+        // params.owner = character.id;
+
+        params.health = 100;
+        //params.pockets = '[2,3,1,3,1,3,6,3,3,2,4,2,2,2,2,2,4,2,3,2]';
+        params.pockets = '[3,3,3,3,3,3,3,3,10,5,3,5,10,3,3,3]';
+        params.sex = player.character.gender ? 0 : 1;
+
+        inventory.addItem(player, 3, params, callback);
     },
 };

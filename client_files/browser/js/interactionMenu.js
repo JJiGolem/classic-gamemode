@@ -44,6 +44,10 @@ var interactionMenu = new Vue({
                     if (item.text == 'FIB') {
                         interactionMenu.menu = interactionMenu.menus["fib_vehicle"];
                     }
+                    if (item.text == 'Ограбить') {
+                        mp.trigger(`interaction.menu.close`);
+                    }
+                    mp.trigger(`interactionMenu.onClick`, this.name, item.text);
                 }
             },
             "vehicle_inside": {
@@ -579,6 +583,7 @@ var interactionMenu = new Vue({
                 this.deleteItem("player_ownmenu", "Захват биз.");
                 this.deleteItem("player_ownmenu", "Эфир");
                 this.deleteItem("vehicle", "FIB");
+                this.deleteItem("vehicle", "Ограбить");
                 return;
             }
             this.addItems("player_interaction", {
@@ -663,9 +668,14 @@ var interactionMenu = new Vue({
                     text: "Захват",
                     icon: "war.svg"
                 });
+                this.addItems("vehicle", {
+                    text: "Ограбить",
+                    icon: "rob.svg"
+                });
             } else {
                 this.deleteItem("player_interaction", "Band");
                 this.deleteItem("player_ownmenu", "Захват");
+                this.deleteItem("vehicle", "Ограбить");
             }
 
             if (val >= 12 && val <= 14) { // mafia
