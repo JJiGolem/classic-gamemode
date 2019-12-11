@@ -64,6 +64,33 @@ module.exports = {
         notifs.success(player, `Вы ограбили игрока`, header);
         notifs.warning(rec, `Вас ограбили`, header);
     },
+    "bands.vehicle.rob": (player, vehId) => {
+        var header = `Ограбление`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+
+        if (!factions.isBandFaction(player.character.factionId)) return out(`Вы не член банды`);
+        var rank = factions.getRank(player.character.factionId, bands.robRank);
+        if (player.character.factionRank < rank.id) return out(`Доступно с ранга ${rank.name}`);
+
+        var veh = mp.vehicles.at(vehId);
+        if (!veh) return out(`Авто #${vehId} не найдено`);
+        if (player.dist(veh.position) > 50) return out(`Авто далеко`);
+        if (!bands.canRobVehicle(veh)) return out(`Авто нельзя ограбить`);
+        if (veh.getVariable("robbed")) return out(`Авто уже ограблено`);
+
+        var zone = bands.getZoneByPos(veh.position);
+        if (!zone) return out(`Вы не в гетто`);
+        if (zone.factionId != player.character.factionId) return out(`Нельзя ограбить на территории, захваченной другой бандой`);
+
+        bands.giveRobVehItem(player, veh, (e) => {
+            if (e) return out(e);
+
+            veh.setVariable("robbed", true);
+            notifs.success(player, `Вы ограбили авто`, header);
+        });
+    },
     "bands.storage.guns.take": (player, index) => {
         if (!player.insideFactionWarehouse) return notifs.error(player, `Вы далеко`, `Склад банды`);
         if (!factions.isBandFaction(player.character.factionId)) return notifs.error(player, `Вы не член группировки`, `Склад банды`);
@@ -210,7 +237,7 @@ module.exports = {
         }
 
         storage.isOpen = open;
-        var str = (open)? "открыл" : "закрыл";
+        var str = (open) ? "открыл" : "закрыл";
 
         mp.players.forEach(rec => {
             if (!rec.character) return;

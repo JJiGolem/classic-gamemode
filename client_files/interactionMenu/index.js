@@ -192,5 +192,23 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
         } else if (itemName == 'В авто') {
             mp.events.callRemote(`police.vehicle.put`, entity.remoteId);
         }
+    } else if (menuName == "vehicle") {
+        if (!entity) return;
+        if (entity.type != 'vehicle') return;
+
+        if (itemName == 'Ограбить') {
+            if (mp.moduleVehicles.nearBootVehicleId == null || mp.moduleVehicles.nearBootVehicleId != entity.remoteId)
+                return mp.notify.error(`Необходимо находиться у багажника`, `Ограбление`);
+
+            mp.players.local.setHeading(entity.getHeading());
+            mp.events.callRemote(`animations.playById`, 7412);
+            mp.timer.add(() => {
+                mp.events.callRemote(`animations.stop`);
+                var entity = mp.getCurrentInteractionEntity();
+                if (!entity) return;
+                if (entity.type != 'vehicle') return;
+                mp.events.callRemote(`bands.vehicle.rob`, entity.remoteId);
+            }, 2000);
+        }
     }
 });

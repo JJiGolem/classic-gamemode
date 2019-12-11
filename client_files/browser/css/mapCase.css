@@ -432,6 +432,7 @@
 }
 
 #map-case .calls .table .record div {
+    overflow: hidden;
     pointer-events: none;
 }
 
