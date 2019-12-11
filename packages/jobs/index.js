@@ -6,6 +6,8 @@ module.exports = {
     jobs: [],
     // Бонус к скиллам (1 - x1)
     bonusSkill: 2,
+    // Бонус к ЗП (1 - x1)
+    bonusPay: 1,
 
     async init() {
         await this.loadJobsFromDB();
@@ -81,12 +83,12 @@ module.exports = {
     pay(player) {
         if (!player.character.pay) return;
 
-        money.addMoney(player, player.character.pay, (res) => {
+        money.addMoney(player, player.character.pay * this.bonusPay, (res) => {
             if (!res) return console.log(`[jobs] Ошибка выдачи ЗП для ${player.name}`);
             notifs.info(player, `Получена зарплата`, `Работа`);
             player.character.pay = 0;
             player.character.save();
-        }, `Зарплата работ`);
+        }, `Зарплата работ x${this.bonusPay}`);
     },
     clearJobApps(player) {
         if (!player.character) return;
