@@ -163,14 +163,14 @@ module.exports = {
             else {
                 farm.balance -= player.farmJob.pay;
                 farm.save();
-                money.addCash(player, player.farmJob.pay, (res) => {
+                money.addCash(player, player.farmJob.pay * jobs.bonusPay, (res) => {
                     if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
-                }, `Зарплата на ферме #${farm.id}`);
+                }, `Зарплата на ферме #${farm.id} x${jobs.bonusPay}`);
             }
         } else {
-            money.addCash(player, player.farmJob.pay, (res) => {
+            money.addCash(player, player.farmJob.pay * jobs.bonusPay, (res) => {
                 if (!res) return notifs.error(player, `Ошибка начисления наличных`, header);
-            }, `Зарплата на ферме #${farm.id} без владельца`);
+            }, `Зарплата на ферме #${farm.id} без владельца x${jobs.bonusPay}`);
         }
 
         farms.setJobClothes(player, false);

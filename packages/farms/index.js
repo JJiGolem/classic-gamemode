@@ -1,6 +1,7 @@
 "use strict";
 
 let inventory = call('inventory');
+let jobs = call('jobs');
 let money = call('money');
 let timer = call('timer');
 let utils = call('utils');
@@ -631,14 +632,14 @@ module.exports = {
             else {
                 farm.balance -= player.farmJob.pay;
                 farm.save();
-                money.addCash(player, player.farmJob.pay, (res) => {
+                money.addCash(player, player.farmJob.pay * jobs.bonusPay, (res) => {
                     if (!res) return;
-                }, `Зарплата на ферме #${farm.id}`);
+                }, `Зарплата на ферме #${farm.id} x${jobs.bonusPay}`);
             }
         } else {
-            money.addCash(player, player.farmJob.pay, (res) => {
+            money.addCash(player, player.farmJob.pay * jobs.bonusPay, (res) => {
                 if (!res) return;
-            }, `Зарплата на ферме #${farm.id} без владельца`);
+            }, `Зарплата на ферме #${farm.id} без владельца x${jobs.bonusPay}`);
         }
     }
 };
