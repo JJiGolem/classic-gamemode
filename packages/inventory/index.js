@@ -624,8 +624,11 @@ module.exports = {
         };
         var otherItems = {
             "3": () => {
-                player.armour = parseInt(params.health);
-                player.setClothes(9, params.variation, params.texture, 0);
+                var oldVal = player.getClothes(9);
+                if (oldVal.drawable != params.variation || oldVal.texture != params.texture) {
+                    player.armour = parseInt(params.health);
+                    player.setClothes(9, params.variation, params.texture, 0);
+                }
             },
             "7": () => {
                 var texture = params.tTexture || 0;
@@ -672,7 +675,7 @@ module.exports = {
                 if (player.inventory) {
                     for (var i = 0; i < player.inventory.items.length; i++) {
                         var item = player.inventory.items[i];
-                        if (!item.parentId && item.itemId == itemId) {
+                        if (!item.parentId && item.itemId == itemId && item.index == 4) {
                             this.updateParam(player, item, "health", parseInt(player.armour));
                         }
                     }
@@ -1222,6 +1225,7 @@ module.exports = {
     },
     giveWeapon(player, hash, ammo) {
         if (!hash) return;
+        player.setWeaponAmmo(hash, 0);
         player.giveWeapon(hash, 0);
         player.setWeaponAmmo(hash, parseInt(ammo));
         player.call(`weapons.giveWeapon`, [hash.toString()]);
@@ -1397,10 +1401,10 @@ module.exports = {
             var params = this.getParamsValues(item);
             if (params.weaponHash) {
                 var ammo = params.ammo;
-                if (player.weapon == params.weaponHash && ammo != player.weaponAmmo) {
-                    this.updateParam(player, item, 'ammo', player.weaponAmmo);
-                    ammo = player.weaponAmmo;
-                }
+                // if (player.weapon == params.weaponHash && ammo != player.weaponAmmo) {
+                //     this.updateParam(player, item, 'ammo', player.weaponAmmo);
+                //     ammo = player.weaponAmmo;
+                // }
                 this.giveWeapon(player, params.weaponHash, ammo);
             } else player.setVariable("hands", item.itemId);
         } else { // выкл. синх. предмета/гана в руках

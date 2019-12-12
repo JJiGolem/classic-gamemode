@@ -9312,7 +9312,7 @@ var selectMenu = new Vue({
                             selectMenu.showByName("club");
                         } else {
                             selectMenu.show = false;
-                            mp.trigger(`callRemote`, `club.alcohol.buy`, e.itemIndex);
+                            mp.trigger(`callRemote`, `clubs.alcohol.buy`, e.itemIndex);
                         }
                     } else if (eventName == 'onBackspacePressed') {
                         selectMenu.showByName("club");

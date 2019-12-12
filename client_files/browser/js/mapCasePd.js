@@ -428,14 +428,14 @@ var mapCasePdProfileData = {
             title: 'Номер паспорта: ',
             key: 'pass'
         },
-        {
-            title: 'Работа/Организация: ',
-            key: 'faction'
-        },
-        {
-            title: 'Должность/Звание: ',
-            key: 'rank'
-        },
+        // {
+        //     title: 'Работа/Организация: ',
+        //     key: 'faction'
+        // },
+        // {
+        //     title: 'Должность/Звание: ',
+        //     key: 'rank'
+        // },
         {
             title: 'Транспорт: ',
             key: 'veh'

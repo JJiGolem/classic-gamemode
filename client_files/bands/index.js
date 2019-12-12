@@ -164,6 +164,32 @@ mp.bands = {
         var cash = JSON.stringify([`$${data.cash}`]);
         mp.callCEFV(`selectMenu.setItemValues('bandCash', 'Баланс', \`${cash}\`)`);
     },
+    setRobbedVehicle(vehicle, enable) {
+        if (enable) {
+            vehicle.setTyreBurst(0, true, 1000);
+            vehicle.setTyreBurst(1, true, 1000);
+            vehicle.setTyreBurst(4, true, 1000);
+            vehicle.setTyreBurst(5, true, 1000);
+
+            vehicle.setDoorBroken(0, false);
+            vehicle.setDoorBroken(1, false);
+            vehicle.setDoorBroken(2, false);
+            vehicle.setDoorBroken(3, false);
+            vehicle.setDoorBroken(4, false);
+            vehicle.setDoorBroken(5, false);
+
+            vehicle.setEngineHealth(0);
+            vehicle.setDamage(0, 1, 0, 200, 200, false);
+            vehicle.setDamage(0, -1, 0, 200, 200, false);
+            vehicle.setDamage(1, 0, 0, 200, 200, false);
+            vehicle.setDamage(-1, 0, 0, 200, 200, false);
+
+            vehicle.setDirtLevel(15);
+        } else {
+            vehicle.setFixed();
+            vehicle.setDirtLevel(0);
+        }
+    },
 };
 
 mp.events.add({
@@ -205,15 +231,18 @@ mp.events.add({
             mp.game.invoke(mp.bands.natives.SET_BLIP_ROTATION, blip, 0);
         });
     },
-    "entityStreamIn": (player) => {
-        if (player.type != "player") return;
-
-        mp.bands.createPlayerBlip(player);
+    "entityStreamIn": (entity) => {
+        if (entity.type == "player") mp.bands.createPlayerBlip(entity);
+        else if (entity.type == "vehicle" && entity.getVariable("robbed")) mp.bands.setRobbedVehicle(entity, true);
     },
 });
 
 mp.events.addDataHandler("factionId", (player, value) => {
     if (player.type == "player") player.destroyBlip();
+});
+
+mp.events.addDataHandler("robbed", (vehicle, value) => {
+    if (vehicle.type == "vehicle") mp.bands.setRobbedVehicle(vehicle, value);
 });
 
 // for tests

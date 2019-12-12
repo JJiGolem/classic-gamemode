@@ -63,6 +63,8 @@ module.exports = {
     vehRespawnPrice: 1000,
     // Мин. время простоя, чтобы авто зареспавнилось лидером
     vehWaitSpawn: 5 * 60 * 1000,
+    // Бонус к ЗП (1 - x1)
+    bonusPay: 1,
 
     async init() {
         await this.loadFactionsFromDB();
@@ -665,10 +667,10 @@ module.exports = {
         } else if (this.isBandFaction(faction)) pay += parseInt(bands.bandZonesPrice * bands.getPowerBand(faction.id));
 
         if (!pay) return;
-        money.addMoney(player, pay, (res) => {
+        money.addMoney(player, pay * this.bonusPay, (res) => {
             if (!res) return console.log(`[factions] Ошибка выдачи ЗП для ${player.name}`);
             notifs.info(player, `Получена зарплата`, faction.name);
-        }, `Зарплата организации ${faction.name}`);
+        }, `Зарплата организации x${this.bonusPay} ${faction.name}`);
     },
     fullDeleteItems(owner, faction) {
         if (typeof faction == 'number') faction = this.getFaction(faction);

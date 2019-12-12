@@ -4,6 +4,7 @@ mp.inventory = {
     itemsInfo: null,
     animData: require('animations/data.js'),
     handsBlock: false,
+    handsBlockForce: false,
     groundItemMarker: {},
     // Настройка аттачей на спине
     backAttachInfo: {
@@ -57,9 +58,11 @@ mp.inventory = {
     debug(enable) {
         mp.callCEFV(`inventory.debug = ${enable}`);
     },
-    setHandsBlock(enable) {
+    setHandsBlock(enable, force = false) {
+        if (this.handsBlockForce && !force) return;
         if (this.handsBlock != enable) mp.callCEFV(`inventory.handsBlock = ${enable}`);
         this.handsBlock = enable;
+        this.handsBlockForce = force;
     },
     spin(enable) {
         mp.callCEFV(`inventory.spin = ${enable}`);
@@ -394,6 +397,10 @@ mp.events.add("inventory.registerWeaponAttachments", (list, models) => {
 mp.events.add("inventory.setSatiety", mp.inventory.setSatiety);
 
 mp.events.add("inventory.setThirst", mp.inventory.setThirst);
+
+mp.events.add("inventory.setHandsBlock", (enable, force = false) => {
+    mp.inventory.setHandsBlock(enable, force);
+});
 
 mp.events.add("inventory.saveHotkey", mp.inventory.saveHotkey);
 

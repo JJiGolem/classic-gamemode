@@ -166,6 +166,7 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
         if (entity.type != 'player') return;
 
         if (itemName == 'Ограбить') {
+            if (mp.peaceZones.isInside()) return mp.notify.error(`Недоступно в мирной зоне`);
             mp.events.callRemote(`bands.rob`, entity.remoteId);
         }
     } else if (menuName == "mafia") {
@@ -176,6 +177,7 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
             mp.callCEFV(`inputWindow.playerId = ${entity.remoteId}`);
             mp.callCEFV(`inputWindow.showByName('mafia_power_sell')`);
         } else if (itemName == 'Ограбить') {
+            if (mp.peaceZones.isInside()) return mp.notify.error(`Недоступно в мирной зоне`);
             mp.events.callRemote(`bands.rob`, entity.remoteId);
         } else if (itemName == 'Связать') {
             var data = {
@@ -191,6 +193,25 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
             mp.events.callRemote(`mafia.bag`, JSON.stringify(data));
         } else if (itemName == 'В авто') {
             mp.events.callRemote(`police.vehicle.put`, entity.remoteId);
+        }
+    } else if (menuName == "vehicle") {
+        if (!entity) return;
+        if (entity.type != 'vehicle') return;
+
+        if (itemName == 'Ограбить') {
+            if (mp.peaceZones.isInside()) return mp.notify.error(`Недоступно в мирной зоне`);
+            if (mp.moduleVehicles.nearBootVehicleId == null || mp.moduleVehicles.nearBootVehicleId != entity.remoteId)
+                return mp.notify.error(`Необходимо находиться у багажника`, `Ограбление`);
+
+            mp.players.local.setHeading(entity.getHeading());
+            mp.events.callRemote(`animations.playById`, 7412);
+            mp.timer.add(() => {
+                mp.events.callRemote(`animations.stop`);
+                var entity = mp.getCurrentInteractionEntity();
+                if (!entity) return;
+                if (entity.type != 'vehicle') return;
+                mp.events.callRemote(`bands.vehicle.rob`, entity.remoteId);
+            }, 2000);
         }
     }
 });
