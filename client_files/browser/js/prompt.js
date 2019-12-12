@@ -140,6 +140,12 @@ var prompt = new Vue({
             "woodman_log_start_ax": {
                 text: "Нажмите <span>ЛКМ</span>, чтобы начать рубить бревно",
             },
+            "mason_take_pick": {
+                text: "Достаньте топор, чтобы добыть камень",
+            },
+            "mason_start_pick": {
+                text: "Нажмите <span>ЛКМ</span>, чтобы начать добывать камень",
+            },
             "animations_stop": {
                 text: "Нажмите <span>SPACE</span>, чтобы остановить анимацию",
             },
