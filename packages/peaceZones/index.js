@@ -21,6 +21,15 @@ module.exports = {
             dimension: 0
         },
         {
+            name: "Каменоломня",
+            pos: {
+                x: 2651.89404296875,
+                y: 2847.914306640625,
+            },
+            radius: 135,
+            dimension: 0
+        },
+        {
             name: "Возле больницы",
             pos: {
                 x: -473,
