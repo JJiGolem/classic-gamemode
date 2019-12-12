@@ -5,6 +5,7 @@
 let money;
 let notifs;
 let inventory;
+let jobs;
 
 const ROD_ID = 5;
 
@@ -13,6 +14,7 @@ module.exports = {
         money = call('money');
         notifs = call('notifications');
         inventory = call('inventory');
+        jobs = call('jobs');
         this.initFishersFromDB();
         this.initFishesFromDB();
     },
@@ -116,7 +118,7 @@ module.exports = {
 
             sum = parseInt(sum);
 
-            money.addCash(player, sum, async function (result) {
+            money.addCash(player, sum * jobs.bonusPay, async function (result) {
                 if (result) {
                     fishes.forEach(fish => inventory.deleteItem(player, fish.id));
                     player.call('fishing.fish.sell.ans', [1]);
@@ -125,7 +127,7 @@ module.exports = {
                     player.call('fishing.fish.sell.ans', [0]);
                     return notifs.error(player, 'Ошибка', 'Продажа');
                 }
-            }, `Sell fish by player with id ${player.id}`)
+            }, `Sell fish by player with id ${player.id} x${jobs.bonusPay}`)
         } else {
             player.call('fishing.fish.sell.ans', [0]);
             return notifs.error(player, 'У вас нет рыбы', 'Ошибка');
