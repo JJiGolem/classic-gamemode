@@ -28,7 +28,7 @@ module.exports = {
                     variation: 56,
                     texture: 0,
                     torso: 0,
-                    undershirt: 51,
+                    undershirt: 59,
                     uTexture: 1,
                     sex: 1,
                     pockets: '[5,5,5,5,10,5]',
