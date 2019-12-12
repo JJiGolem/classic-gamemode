@@ -525,7 +525,7 @@ module.exports = {
                 notifs.error(player, `Вы не работаете снегоуборщиком`, header);
                 return false;
             }
-            player.character.pay += this.pay;
+            player.character.pay += this.pay * jobs.bonusPay;
             player.character.save();
             return true;
         }, () => {
