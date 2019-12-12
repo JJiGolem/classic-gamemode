@@ -398,8 +398,12 @@ module.exports = {
     // употребить еду
     "inventory.item.eat.use": (player, sqlId) => {
         var header = `Еда`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+            player.call(`inventory.setHandsBlock`, [false, true]);
+        };
         var eat = inventory.getItem(player, sqlId);
-        if (!eat) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        if (!eat) return out(`Предмет #${sqlId} не найден`);
         // if (!inventory.isInHands(eat)) return notifs.error(player, `${inventory.getName(eat.itemId)} не в руках`, header);
 
         var params = inventory.getParamsValues(eat);
@@ -425,19 +429,25 @@ module.exports = {
                 inventory.notifyOverhead(rec, `Съел '${inventory.getName(eat.itemId)}'`);
                 satiety.set(rec, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
                 notifs.success(rec, `Вы съели ${inventory.getName(eat.itemId)}`, header);
+                player.call(`inventory.setHandsBlock`, [false, true]);
             }, time);
         } else {
             inventory.deleteItem(player, eat);
             inventory.notifyOverhead(player, `Съел '${inventory.getName(eat.itemId)}'`);
             satiety.set(player, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
             notifs.success(player, `Вы съели ${inventory.getName(eat.itemId)}`, header);
+            player.call(`inventory.setHandsBlock`, [false, true]);
         }
     },
     // употребить напиток
     "inventory.item.drink.use": (player, sqlId) => {
         var header = `Напиток`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+            player.call(`inventory.setHandsBlock`, [false, true]);
+        };
         var drink = inventory.getItem(player, sqlId);
-        if (!drink) return notifs.error(player, `Предмет #${sqlId} не найден`, header);
+        if (!drink) return out(`Предмет #${sqlId} не найден`);
         // if (!inventory.isInHands(drink)) return notifs.error(player, `${inventory.getName(drink.itemId)} не в руках`, header);
 
         var params = inventory.getParamsValues(drink);
@@ -464,6 +474,7 @@ module.exports = {
                 if (params.alcohol) clubs.addDrunkenness(rec, params.alcohol);
                 satiety.set(rec, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
                 notifs.success(rec, `Вы выпили ${inventory.getName(drink.itemId)}`, header);
+                player.call(`inventory.setHandsBlock`, [false, true]);
             }, time);
         } else {
             inventory.deleteItem(player, drink);
@@ -471,6 +482,7 @@ module.exports = {
             if (params.alcohol) clubs.addDrunkenness(player, params.alcohol);
             satiety.set(player, character.satiety + (params.satiety || 0), character.thirst + (params.thirst || 0));
             notifs.success(player, `Вы выпили ${inventory.getName(drink.itemId)}`, header);
+            player.call(`inventory.setHandsBlock`, [false, true]);
         }
     },
     // использовать предмет инвентаря

@@ -1364,6 +1364,7 @@ var inventory = new Vue({
                         var wait = inventory.eatWaitTime;
                         if (diff < wait) return notifications.error(`Повторная трапеза доступно через ${parseInt((wait - diff) / 1000)} сек.`, inventory.getItemName(item));
                         inventory.lastUseEat = Date.now();
+                        mp.trigger(`inventory.setHandsBlock`, true, true);
 
                         inventory.deleteItem(item.sqlId);
                         mp.trigger(`callRemote`, `inventory.item.eat.use`, item.sqlId);
@@ -1382,6 +1383,7 @@ var inventory = new Vue({
                         var wait = inventory.drinkWaitTime;
                         if (diff < wait) return notifications.error(`Повторное выпивание доступно через ${parseInt((wait - diff) / 1000)} сек.`, inventory.getItemName(item));
                         inventory.lastUseDrink = Date.now();
+                        mp.trigger(`inventory.setHandsBlock`, true, true);
 
                         inventory.deleteItem(item.sqlId);
                         mp.trigger(`callRemote`, `inventory.item.drink.use`, item.sqlId);
