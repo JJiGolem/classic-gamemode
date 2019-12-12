@@ -23,8 +23,44 @@ module.exports = {
         {
             name: "Возле больницы",
             pos: {
-                x: 327.5782470703125,
-                y: -1386.024169921875,
+                x: -473,
+                y: -339,
+            },
+            radius: 30,
+            dimension: 0
+        },
+        {
+            name: "Грузоперевозки",
+            pos: {
+                x: 913,
+                y: -1562,
+            },
+            radius: 30,
+            dimension: 0
+        },
+        {
+            name: "Таксопарк",
+            pos: {
+                x: 911,
+                y: -175,
+            },
+            radius: 20,
+            dimension: 0
+        },
+        {
+            name: "Снегоуборщики",
+            pos: {
+                x: -630,
+                y: -1653,
+            },
+            radius: 20,
+            dimension: 0
+        },
+        {
+            name: "Автобусы",
+            pos: {
+                x: 421,
+                y: -621,
             },
             radius: 30,
             dimension: 0
