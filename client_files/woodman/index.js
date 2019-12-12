@@ -158,14 +158,6 @@ mp.woodman = {
 
         var alpha = -Math.sin((leftDist - rightDist) / this.logSize.width) * 180 / Math.PI;
 
-        debug(`leftPos: ${JSON.stringify(leftPos)}`)
-        debug(`rightPos: ${JSON.stringify(rightPos)}`)
-        debug(`leftGroundZ: ${leftGroundZ}`)
-        debug(`rightGroundZ: ${rightGroundZ}`)
-        debug(`leftDist: ${leftDist}`)
-        debug(`rightDist: ${rightDist}`)
-        debug(`alpha: ${alpha}`)
-
         var objPos = player.getOffsetFromInWorldCoords(2, 0, 0);
         objPos.z = mp.game.gameplay.getGroundZFor3dCoord(objPos.x, objPos.y, objPos.z, false, false) + this.logSize.height / 2;
 
