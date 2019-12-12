@@ -6,6 +6,8 @@ module.exports = {
     jobs: [],
     // Бонус к скиллам (1 - x1)
     bonusSkill: 2,
+    // Бонус к ЗП (1 - x1)
+    bonusPay: 1,
 
     async init() {
         await this.loadJobsFromDB();

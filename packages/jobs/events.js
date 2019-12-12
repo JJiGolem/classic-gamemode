@@ -9,6 +9,7 @@ module.exports = {
     },
     "characterInit.done": (player) => {
         jobs.initJobSkills(player);
+        if (jobs.bonusPay > 1) player.call('chat.message.push', [`!{#59ff38} На сервере действует х${jobs.bonusPay} бонус на зарплаты!`]);
     },
     "jobs.set": (player, jobId) => {
         var header = `Устройство на работу`;

@@ -491,8 +491,8 @@ module.exports = {
                 new mp.Vector3(106.14624786376953, -182.74363708496094, 70),
                 new mp.Vector3(193.7873992919922, -218.60061645507812, 70),
                 new mp.Vector3(211.18165588378906, -257.3136291503906, 70),
-                // new mp.Vector3(106.86444854736328, -554.551025390625, 70),
-                new mp.Vector3(54.42074203491211, -702.1395874023438, 70),
+                new mp.Vector3(106.86444854736328, -554.551025390625, 70),
+                new mp.Vector3(50.171104431152344, -698.8455810546875, 70),
                 new mp.Vector3(-1.2534703016281128, -827.2343139648438, 70),
                 new mp.Vector3(-98.96192169189453, -1098.341796875, 70),
                 new mp.Vector3(-357.20257568359375, -1130.052001953125, 30), // 30
@@ -525,7 +525,7 @@ module.exports = {
                 notifs.error(player, `Вы не работаете снегоуборщиком`, header);
                 return false;
             }
-            player.character.pay += this.pay;
+            player.character.pay += this.pay * jobs.bonusPay;
             player.character.save();
             return true;
         }, () => {

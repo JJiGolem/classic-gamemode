@@ -166,6 +166,7 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
         if (entity.type != 'player') return;
 
         if (itemName == 'Ограбить') {
+            if (mp.peaceZones.isInside()) return mp.notify.error(`Недоступно в мирной зоне`);
             mp.events.callRemote(`bands.rob`, entity.remoteId);
         }
     } else if (menuName == "mafia") {
@@ -176,6 +177,7 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
             mp.callCEFV(`inputWindow.playerId = ${entity.remoteId}`);
             mp.callCEFV(`inputWindow.showByName('mafia_power_sell')`);
         } else if (itemName == 'Ограбить') {
+            if (mp.peaceZones.isInside()) return mp.notify.error(`Недоступно в мирной зоне`);
             mp.events.callRemote(`bands.rob`, entity.remoteId);
         } else if (itemName == 'Связать') {
             var data = {
@@ -197,6 +199,7 @@ mp.events.add("interactionMenu.onClick", (menuName, itemName) => {
         if (entity.type != 'vehicle') return;
 
         if (itemName == 'Ограбить') {
+            if (mp.peaceZones.isInside()) return mp.notify.error(`Недоступно в мирной зоне`);
             if (mp.moduleVehicles.nearBootVehicleId == null || mp.moduleVehicles.nearBootVehicleId != entity.remoteId)
                 return mp.notify.error(`Необходимо находиться у багажника`, `Ограбление`);
 

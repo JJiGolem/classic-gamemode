@@ -158,7 +158,7 @@ module.exports = {
 
         let bonus = bus.calculateBonus(player);
         let salary = parseInt(player.busRoute.salary * (1 + bonus));
-        player.character.pay += salary;
+        player.character.pay += salary * jobs.bonusPay;
         player.busPointsToSave++;
         if (player.busPointsToSave % 10 == 0) {
             player.character.save();
@@ -205,7 +205,7 @@ module.exports = {
         if (!player.busRoute) return;
         player.call('busdriver.route.end');
         player.call(`chat.message.push`, [`!{#f3c800}Рабочий день окончен. Деньги придут на счет во время зарплаты`]);
-        player.call(`chat.message.push`, [`!{#f3c800}Заработано: !{#80c102}$${player.busPointsToSave*player.busRoute.salary}`]);
+        player.call(`chat.message.push`, [`!{#f3c800}Заработано: !{#80c102}$${player.busPointsToSave * player.busRoute.salary * jobs.bonusPay}`]);
         player.call(`chat.message.push`, [`!{#f3c800}Перевезено пассажиров: !{#009eec}${player.busPassengers}`]);
         delete player.busRoute;
         delete player.busPointIndex;
