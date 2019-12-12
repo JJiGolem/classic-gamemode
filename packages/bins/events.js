@@ -51,9 +51,9 @@ module.exports = {
             inventory.deleteItem(player, item);
         });
         pay *= (1 + bins.priceBonus * (exp / 100));
-        money.addCash(player, pay, (res) => {
+        money.addCash(player, pay * jobs.bonusPay, (res) => {
             if (!res) notifs.error(player, `Ошибка начисления наличных`, header);
-        }, `Сдача мусора на свалке`);
+        }, `Сдача мусора на свалке x${jobs.bonusPay}`);
 
         notifs.success(player, `Мусор сдан на переработку`, header);
     },

@@ -3,7 +3,7 @@ let waitMarker;
 
 let destination;
 
-const PRICE_PER_KM = 60;
+const PRICE_PER_KM = 100;
 
 let lastCallTime;
 let minCallTime = 60*1000; /// промежуток для вызова

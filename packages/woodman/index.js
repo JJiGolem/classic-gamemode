@@ -223,12 +223,12 @@ module.exports = {
         var exp = jobs.getJobSkill(player, 7).exp;
         var pay = items.length * this.treePrice;
         pay *= (1 + this.priceBonus * (exp / 100));
-        money.addCash(player, pay, (res) => {
+        money.addCash(player, pay * jobs.bonusPay, (res) => {
             if (!res) out(`Ошибка начисления наличных`);
 
             items.forEach(item => inventory.deleteItem(player, item));
 
-        }, `Продажа ${items.length} ед. дерева на лесопилке`);
+        }, `Продажа ${items.length} ед. дерева на лесопилке x${jobs.bonusPay}`);
 
         notifs.success(player, `Продано ${items.length} ед. дерева`, header);
     },

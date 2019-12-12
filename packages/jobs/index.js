@@ -83,12 +83,12 @@ module.exports = {
     pay(player) {
         if (!player.character.pay) return;
 
-        money.addMoney(player, player.character.pay * this.bonusPay, (res) => {
+        money.addMoney(player, player.character.pay, (res) => {
             if (!res) return console.log(`[jobs] Ошибка выдачи ЗП для ${player.name}`);
             notifs.info(player, `Получена зарплата`, `Работа`);
             player.character.pay = 0;
             player.character.save();
-        }, `Зарплата работ x${this.bonusPay}`);
+        }, `Зарплата работ`);
     },
     clearJobApps(player) {
         if (!player.character) return;
