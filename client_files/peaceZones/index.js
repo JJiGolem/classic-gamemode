@@ -9,6 +9,7 @@
 mp.peaceZones = {
     inside: false,
     interiors: [60418], // интерьеры в ЗЗ
+    ignoreFactions: [2, 3, 4],
 
     isInside() {
         if (this.inside) return true;
@@ -23,7 +24,7 @@ mp.events.add({
         mp.peaceZones.inside = enable;
     },
     "render": () => {
-        if (mp.peaceZones.isInside()) {
+        if (mp.peaceZones.isInside() && !mp.peaceZones.ignoreFactions.includes(mp.factions.faction)) {
             mp.game.controls.disableControlAction(0, 24, true); /// удары
             mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
             mp.game.controls.disableControlAction(0, 140, true); /// удары R
