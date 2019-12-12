@@ -423,6 +423,11 @@ mp.utils = {
         var pos = entity.position;
         return mp.game.interior.getInteriorAtCoords(pos.x, pos.y, pos.z) != 0;
     },
+    // получить интерьер, в котором находится локальный игрок
+    getLocalInterior() {
+        var pos = mp.players.local.position;
+        return mp.game.interior.getInteriorAtCoords(pos.x, pos.y, pos.z);
+    },
 };
 
 // ребро касается, пересекается или пох

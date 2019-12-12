@@ -8,9 +8,13 @@
 
 mp.peaceZones = {
     inside: false,
+    interiors: [60418], // интерьеры в ЗЗ
 
     isInside() {
-        return this.inside;
+        if (this.inside) return true;
+
+        var interior = mp.utils.getLocalInterior();
+        return interior && this.interiors.includes(interior);
     },
 };
 
