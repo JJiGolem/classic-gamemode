@@ -40,9 +40,6 @@ mp.woodman = {
             return [187, 68, 68, 50];
         },
     },
-    treesInfo: null,
-    treesHash: [],
-    currentTreeHash: null,
     treeHealth: 0,
     treePos: null,
     logSquats: [],
@@ -97,27 +94,6 @@ mp.woodman = {
             scale: textScale,
             outline: false
         });
-    },
-    setTreesInfo(info) {
-        this.treesInfo = info;
-        this.treesHash = info.map(x => x.hash);
-    },
-    setCurrentTree(hash) {
-        if (hash && !this.isTreeHash(hash)) return; // фокус не на дереве
-        if (this.currentTreeHash) { // в пред. кадре был фокус на дереве.
-            if (hash) return; // в тек. кадре есть фокус на дереве
-
-            this.currentTreeHash = hash;
-            // mp.events.call("playerExitTree");
-        } else { // в пред. кадре не было фокуса на дереве
-            if (!hash) return; // в тек. кадре нет фокуса на дереве
-
-            this.currentTreeHash = hash;
-            // mp.events.call("playerEnterTree");
-        }
-    },
-    isTreeHash(hash) {
-        return hash && this.treesHash.includes(hash);
     },
     isAxInHands(player) {
         if (!player) player = mp.players.local;
@@ -321,27 +297,6 @@ mp.events.add({
         }
 
         if (mp.renderChecker) mp.utils.drawText2d(`woodman rend: ${Date.now() - start} ms`, [0.8, 0.69]);
-
-        // if (mp.woodman.logObj) mp.utils.drawText2d(`dist: ${mp.vdist(endPos, mp.woodman.getLogSlots(mp.woodman.logObj)[mp.woodman.logFocusSlotI])}`, [0.8, 0.5]);
-        // mp.utils.drawText2d(`tree: ${mp.woodman.currentTreeHash}`, [0.8, 0.5]);
-        // mp.utils.drawText2d(`hashes: ${mp.woodman.treesHash}`, [0.8, 0.55]);
-        //
-        // var raycast = mp.utils.frontRaycast(player);
-        // if (!raycast) return mp.woodman.setCurrentTree(null);
-        // if (raycast) mp.utils.drawText2d(`raycast: ${JSON.stringify(raycast)}`, [0.5, 0.7]);
-        // var hash = mp.game.invoke('0x9F47B058362C84B5', raycast.entity);
-        // mp.woodman.setCurrentTree(hash);
-        // if (!mp.woodman.currentTreeHash) return;
-        //
-        // var pos2d = mp.game.graphics.world3dToScreen2d(raycast.position);
-        // if (!pos2d) return;
-        // mp.woodman.drawHealthBar(pos2d.x, pos2d.y);
-        // if (hash) mp.utils.drawText2d(`hash: ${hash}`, [0.8, 0.6]);
-        // if (raycast) mp.utils.drawText2d(`raycast: ${JSON.stringify(Object.keys(raycast))}`, [0.5, 0.8]);
-        // if (raycast) mp.utils.drawText2d(`offset: ${JSON.stringify(mp.game.invoke('0x1899F328B0E12848', raycast.entity, 0, 0, 0))}`, [0.5, 0.85]);
-    },
-    "woodman.setTreesInfo": (info) => {
-        mp.woodman.setTreesInfo(info);
     },
     "woodman.storage.inside": (data) => {
         mp.woodman.setInside(data);
