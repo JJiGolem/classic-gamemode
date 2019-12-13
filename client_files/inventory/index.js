@@ -43,6 +43,11 @@ mp.inventory = {
             pos: new mp.Vector3(0.2, -0.165, -0.1),
             rot: new mp.Vector3(13, 180, 10)
         },
+        136: { // кирка
+            bone: 24818,
+            pos: new mp.Vector3(0.35, -0.1, -0.1),
+            rot: new mp.Vector3(0, -90, 10)
+        },
     },
     lastActionTime: 0,
     waitActionTime: 1000,
