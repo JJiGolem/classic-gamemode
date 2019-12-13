@@ -3,7 +3,7 @@ let mason = call('mason');
 
 module.exports = {
     "init": async () => {
-        await mason.init();
+        // await mason.init();
         inited(__dirname);
     },
     "mason.items.buy": (player, index) => {
