@@ -9,7 +9,7 @@ let utils = call('utils');
 
 module.exports = {
     // Позиция каменоломни
-    storagePos: new mp.Vector3(2570.107421875, 2719.483642578125, 42.8704948425293 - 1),
+    storagePos: new mp.Vector3(2569.33203125, 2718.895263671875, 42.85560989379883 - 1),
     // Снаряжение каменоломни
     items: [{
         itemId: 136,
@@ -142,8 +142,8 @@ module.exports = {
             delete player.masonStorage;
         };
         marker.colshape = colshape;
-        mp.blips.new(85, pos, {
-            color: 71,
+        mp.blips.new(618, pos, {
+            color: 31,
             name: `Каменоломня`,
             shortRange: 10,
             scale: 1

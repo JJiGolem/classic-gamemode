@@ -101,7 +101,7 @@ mp.mason = {
     },
     createJobPed() {
         var pedInfo = {
-            model: "mp_m_counterfeit_01",
+            model: "s_m_y_construct_02",
             position: {
                 x: 2568.329833984375,
                 y: 2719.28857421875,
@@ -148,6 +148,9 @@ mp.mason = {
 };
 
 mp.events.add({
+    "characterInit.done": () => {
+        mp.mason.createJobPed();
+    },
     "render": () => {
         var start = Date.now();
         var player = mp.players.local;
@@ -220,5 +223,3 @@ mp.events.add({
         mp.mason.hitRockHandler();
     },
 });
-
-mp.mason.createJobPed();
