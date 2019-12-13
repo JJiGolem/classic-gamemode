@@ -3,10 +3,10 @@ let world = call('world');
 module.exports = {
     "/worldadd": {
         access: 3,
-        description: "Добавить объект мира. Позиция берется от игрока.<br/>Хеш - по-умолчанию ставить 0.<br/>Типы: 1 - дерево",
+        description: "Добавить объект мира. Позиция берется от игрока.<br/>Хеш - по-умолчанию ставить 0.<br/>Типы: 1 - дерево, 2 - камень",
         args: "[тип]:n [радиус]:n [хеш]:n [название]",
         handler: (player, args, out) => {
-            args[0] = Math.clamp(args[0], 0, 1);
+            args[0] = Math.clamp(args[0], 0, 2);
             args[2] = args[2].toString();
             var name = args.slice(3).join(" ");
 
@@ -69,7 +69,7 @@ module.exports = {
     },
     "/worldsetpos": {
         access: 3,
-        description: "Изменить позицию объекта мира. Позиция берется от игрока.<br/>Хеш - по-умолчанию ставить 0.<br/>Типы: 1 - дерево",
+        description: "Изменить позицию объекта мира. Позиция берется от игрока.<br/>Хеш - по-умолчанию ставить 0.<br/>Типы: 1 - дерево, 2 - камень",
         args: "[ид]:n",
         handler: (player, args, out) => {
             if (!world.colshapes[args[0]]) return out.error(`Объект мира #${args[0]} не найден`, player);
