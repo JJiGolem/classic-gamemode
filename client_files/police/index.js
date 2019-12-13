@@ -126,12 +126,14 @@ mp.events.add({
             mp.game.controls.disableControlAction(1, 200, true); // esc
             mp.game.controls.disableControlAction(0, 140, true); /// удары R
             mp.game.controls.disableControlAction(24, 37, true); /// Tab
+            mp.game.controls.disableControlAction(0, 257, true); // INPUT_ATTACK2
         }
         if (mp.police.haveCuffs) {
             mp.game.controls.disableControlAction(0, 24, true); /// удары
             mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
             mp.game.controls.disableControlAction(0, 257, true); /// стрельба
             mp.game.controls.disableControlAction(0, 140, true); /// удары R
+            mp.game.controls.disableControlAction(0, 257, true); // INPUT_ATTACK2
 
             if (mp.players.local.vehicle) {
                 mp.game.controls.disableControlAction(0, 59, true); /// INPUT_VEH_MOVE_LR

@@ -259,5 +259,6 @@ mp.events.add('render', () => {
         mp.game.controls.disableControlAction(0, 31, true); /// вперед назад
         mp.game.controls.disableControlAction(0, 30, true); /// влево вправо
         mp.game.controls.disableControlAction(0, 24, true); /// удары
+        mp.game.controls.disableControlAction(0, 257, true); // INPUT_ATTACK2
     }
 });
