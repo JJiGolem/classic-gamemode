@@ -280,7 +280,6 @@ module.exports = {
         rec.spawn(rec.position);
         rec.health = 10;
         death.removeKnocked(rec);
-        mp.events.call(`mapCase.ems.calls.remove`, rec, rec.character.id);
 
         count--;
         if (!count) inventory.deleteItem(player, adrenalin);

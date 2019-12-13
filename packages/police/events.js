@@ -619,8 +619,13 @@ module.exports = {
 
         if (!rec.character.wanted) return notifs.error(player, `${rec.name} не преступник`, `Арест`);
 
+        var arrestType = "ls";
+
         var cell = police.getNearLSCell(player);
-        if (!cell) cell = police.getNearBCCell(player);
+        if (!cell) {
+            cell = police.getNearBCCell(player);
+            arrestType = "bc";
+        }
         if (!cell) return notifs.error(player, `Вы далеко от камеры`, `Арест`);
         if (rec.cuffs) {
             var params = {
@@ -634,7 +639,8 @@ module.exports = {
 
         var time = police.arrestTime * rec.character.wanted;
         rec.character.arrestTime = time;
-        police.startLSCellArrest(rec, cell, time);
+        if (arrestType == "ls") police.startLSCellArrest(rec, cell, time);
+        else police.startBCCellArrest(rec, cell, time);
         notifs.info(rec, `${player.name} посадил вас в КПЗ`, `Арест`);
         notifs.success(player, `Вы посадили ${rec.name} к КПЗ`, `Арест`);
 

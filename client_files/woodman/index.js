@@ -40,9 +40,6 @@ mp.woodman = {
             return [187, 68, 68, 50];
         },
     },
-    treesInfo: null,
-    treesHash: [],
-    currentTreeHash: null,
     treeHealth: 0,
     treePos: null,
     logSquats: [],
@@ -98,27 +95,6 @@ mp.woodman = {
             outline: false
         });
     },
-    setTreesInfo(info) {
-        this.treesInfo = info;
-        this.treesHash = info.map(x => x.hash);
-    },
-    setCurrentTree(hash) {
-        if (hash && !this.isTreeHash(hash)) return; // фокус не на дереве
-        if (this.currentTreeHash) { // в пред. кадре был фокус на дереве.
-            if (hash) return; // в тек. кадре есть фокус на дереве
-
-            this.currentTreeHash = hash;
-            // mp.events.call("playerExitTree");
-        } else { // в пред. кадре не было фокуса на дереве
-            if (!hash) return; // в тек. кадре нет фокуса на дереве
-
-            this.currentTreeHash = hash;
-            // mp.events.call("playerEnterTree");
-        }
-    },
-    isTreeHash(hash) {
-        return hash && this.treesHash.includes(hash);
-    },
     isAxInHands(player) {
         if (!player) player = mp.players.local;
         return player.weapon == mp.game.joaat('weapon_hatchet');
@@ -171,8 +147,8 @@ mp.woodman = {
     },
     getFreeTreeSlot() {
         var player = mp.players.local;
-        var leftPos = player.getOffsetFromInWorldCoords(2, -this.logSize.width / 2, 2);
-        var rightPos = player.getOffsetFromInWorldCoords(2, this.logSize.width / 2, 2);
+        var leftPos = player.getOffsetFromInWorldCoords(2, -this.logSize.width / 2, 3);
+        var rightPos = player.getOffsetFromInWorldCoords(2, this.logSize.width / 2, 3);
 
         var leftGroundZ = mp.game.gameplay.getGroundZFor3dCoord(leftPos.x, leftPos.y, leftPos.z, false, false);
         var rightGroundZ = mp.game.gameplay.getGroundZFor3dCoord(rightPos.x, rightPos.y, rightPos.z, false, false);
@@ -182,15 +158,7 @@ mp.woodman = {
 
         var alpha = -Math.sin((leftDist - rightDist) / this.logSize.width) * 180 / Math.PI;
 
-        debug(`leftPos: ${JSON.stringify(leftPos)}`)
-        debug(`rightPos: ${JSON.stringify(rightPos)}`)
-        debug(`leftGroundZ: ${leftGroundZ}`)
-        debug(`rightGroundZ: ${rightGroundZ}`)
-        debug(`leftDist: ${leftDist}`)
-        debug(`rightDist: ${rightDist}`)
-        debug(`alpha: ${alpha}`)
-
-        var objPos = player.getOffsetFromInWorldCoords(2, 0, 0);
+        var objPos = player.getOffsetFromInWorldCoords(2, 0, 3);
         objPos.z = mp.game.gameplay.getGroundZFor3dCoord(objPos.x, objPos.y, objPos.z, false, false) + this.logSize.height / 2;
 
         return {
@@ -284,6 +252,7 @@ mp.events.add({
             mp.game.controls.disableControlAction(0, 24, true); /// удары
             mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
             mp.game.controls.disableControlAction(0, 140, true); /// удары R
+            mp.game.controls.disableControlAction(0, 257, true); // INPUT_ATTACK2
         }
         if (mp.objects.exists(mp.woodman.logObj) && mp.woodman.logObj) {
             var slots = mp.woodman.getLogSlots(mp.woodman.logObj);
@@ -307,6 +276,7 @@ mp.events.add({
             mp.game.controls.disableControlAction(0, 24, true); /// удары
             mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
             mp.game.controls.disableControlAction(0, 140, true); /// удары R
+            mp.game.controls.disableControlAction(0, 257, true); // INPUT_ATTACK2
 
             // var startPos = player.getOffsetFromInWorldCoords(0, 0, 0);
             // var endPos = player.getOffsetFromInWorldCoords(0, 0.5, -1);
@@ -321,27 +291,6 @@ mp.events.add({
         }
 
         if (mp.renderChecker) mp.utils.drawText2d(`woodman rend: ${Date.now() - start} ms`, [0.8, 0.69]);
-
-        // if (mp.woodman.logObj) mp.utils.drawText2d(`dist: ${mp.vdist(endPos, mp.woodman.getLogSlots(mp.woodman.logObj)[mp.woodman.logFocusSlotI])}`, [0.8, 0.5]);
-        // mp.utils.drawText2d(`tree: ${mp.woodman.currentTreeHash}`, [0.8, 0.5]);
-        // mp.utils.drawText2d(`hashes: ${mp.woodman.treesHash}`, [0.8, 0.55]);
-        //
-        // var raycast = mp.utils.frontRaycast(player);
-        // if (!raycast) return mp.woodman.setCurrentTree(null);
-        // if (raycast) mp.utils.drawText2d(`raycast: ${JSON.stringify(raycast)}`, [0.5, 0.7]);
-        // var hash = mp.game.invoke('0x9F47B058362C84B5', raycast.entity);
-        // mp.woodman.setCurrentTree(hash);
-        // if (!mp.woodman.currentTreeHash) return;
-        //
-        // var pos2d = mp.game.graphics.world3dToScreen2d(raycast.position);
-        // if (!pos2d) return;
-        // mp.woodman.drawHealthBar(pos2d.x, pos2d.y);
-        // if (hash) mp.utils.drawText2d(`hash: ${hash}`, [0.8, 0.6]);
-        // if (raycast) mp.utils.drawText2d(`raycast: ${JSON.stringify(Object.keys(raycast))}`, [0.5, 0.8]);
-        // if (raycast) mp.utils.drawText2d(`offset: ${JSON.stringify(mp.game.invoke('0x1899F328B0E12848', raycast.entity, 0, 0, 0))}`, [0.5, 0.85]);
-    },
-    "woodman.setTreesInfo": (info) => {
-        mp.woodman.setTreesInfo(info);
     },
     "woodman.storage.inside": (data) => {
         mp.woodman.setInside(data);
@@ -367,7 +316,10 @@ mp.events.add({
     "woodman.items.request": () => {
         if (!mp.woodman.logObj) return
         var slots = mp.woodman.getLogSlots(mp.woodman.logObj);
-        slots.forEach(slot => slot.z -= mp.woodman.logSize.height / 2);
+        slots.forEach(slot => {
+            slot.z -= mp.woodman.logSize.height / 2;
+            slot.rZ = mp.woodman.logObj.rotation.z + 20;
+        });
         mp.events.callRemote(`woodman.items.add`, JSON.stringify(slots));
     },
     "playerWeaponChanged": (weapon) => {
