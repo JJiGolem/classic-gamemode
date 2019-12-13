@@ -13,7 +13,7 @@ mp.police = {
     wanted: 0,
     wantedTimer: null,
     clearWantedTime: 60 * 60 * 1000, // время очищения 1 ур. розыска (ms)
-    searchRadius: 100,
+    searchRadius: 150,
     searchTime: 2 * 60 * 1000, // время жизни блипа поиска преступника
     searchTimer: null,
     natives: {
