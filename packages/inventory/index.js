@@ -29,7 +29,7 @@ module.exports = {
         6: [11],
         7: [10],
         8: [12],
-        9: [21, 22, 48, 49, 50, 52, 70, 91, 93, 96, 99, 100, 107],
+        9: [21, 22, 48, 49, 50, 52, 70, 91, 93, 96, 99, 100, 107, 136],
         10: [13],
         11: [8],
         12: [9],
@@ -1295,7 +1295,7 @@ module.exports = {
             });
         }
         var newObj = mp.objects.new(mp.joaat(info.model), pos, {
-            rotation: new mp.Vector3(info.rX, info.rY, 0),
+            rotation: new mp.Vector3(pos.rX || info.rX, pos.rY || info.rY, pos.rZ || 0),
         });
         var item = await db.Models.CharacterInventory.create({
             playerId: null,

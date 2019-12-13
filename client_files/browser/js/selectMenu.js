@@ -8172,7 +8172,7 @@ var selectMenu = new Vue({
                 name: "masonItems",
                 header: "Снаряжение",
                 items: [{
-                        text: "Топор",
+                        text: "Кирка",
                         values: ['$9999']
                     },
                     {
@@ -8194,7 +8194,7 @@ var selectMenu = new Vue({
                         valueIndex: item.i,
                     };
                     if (eventName == 'onItemSelected') {
-                        if (e.itemName == 'Топор') {
+                        if (e.itemName == 'Кирка') {
                             // selectMenu.show = false;
                             mp.trigger(`callRemote`, `mason.items.buy`, e.itemIndex);
                         } else if (e.itemName == 'Форма') {

@@ -12,10 +12,9 @@ module.exports = {
     storagePos: new mp.Vector3(2570.107421875, 2719.483642578125, 42.8704948425293 - 1),
     // Снаряжение каменоломни
     items: [{
-        itemId: 76,
+        itemId: 136,
         params: {
             health: 100,
-            weaponHash: mp.joaat('weapon_stone_hatchet'),
         },
         price: 100
     }],
@@ -232,10 +231,10 @@ module.exports = {
             notifs.error(player, text, header);
         };
         var pick = inventory.getHandsItem(player);
-        if (!pick || pick.itemId != 76) return out(`Возьмите в руки топор`);
+        if (!pick || pick.itemId != 136) return out(`Возьмите в руки кирку`);
 
         var health = inventory.getParam(pick, 'health');
-        if (!health || health.value <= 0) return out(`Топор сломан`);
+        if (!health || health.value <= 0) return out(`Кирка сломана`);
         if (colshape.health <= 0) return out(`Каменная порода исчерпала свой ресурс`);
 
         health.value = Math.clamp(health.value - this.pickDamage, 0, 100);
@@ -252,12 +251,19 @@ module.exports = {
         });
 
         if (!colshape.health) {
-            d(`todo выдать предмет`)
-            return;
             colshape.destroyTime = Date.now();
-            player.call(`mason.log.request`);
+            player.call(`mason.items.request`);
             this.addJobExp(player);
         }
+    },
+    addRockItems(colshape, slots) {
+        var params = {
+            // name: colshape.tree.name
+        };
+        slots.splice(0, utils.randomInteger(0, slots.length - 1));
+        slots.forEach(slot => {
+            inventory.addGroundItem(135, params, slot);
+        });
     },
     getInventoryDamageBoost(list) {
         var items = inventory.getItemsByParams(list, null, 'rockDamage', null).filter(x => !x.parentId);

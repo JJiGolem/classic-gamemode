@@ -147,8 +147,8 @@ mp.woodman = {
     },
     getFreeTreeSlot() {
         var player = mp.players.local;
-        var leftPos = player.getOffsetFromInWorldCoords(2, -this.logSize.width / 2, 2);
-        var rightPos = player.getOffsetFromInWorldCoords(2, this.logSize.width / 2, 2);
+        var leftPos = player.getOffsetFromInWorldCoords(2, -this.logSize.width / 2, 3);
+        var rightPos = player.getOffsetFromInWorldCoords(2, this.logSize.width / 2, 3);
 
         var leftGroundZ = mp.game.gameplay.getGroundZFor3dCoord(leftPos.x, leftPos.y, leftPos.z, false, false);
         var rightGroundZ = mp.game.gameplay.getGroundZFor3dCoord(rightPos.x, rightPos.y, rightPos.z, false, false);
@@ -158,7 +158,7 @@ mp.woodman = {
 
         var alpha = -Math.sin((leftDist - rightDist) / this.logSize.width) * 180 / Math.PI;
 
-        var objPos = player.getOffsetFromInWorldCoords(2, 0, 0);
+        var objPos = player.getOffsetFromInWorldCoords(2, 0, 3);
         objPos.z = mp.game.gameplay.getGroundZFor3dCoord(objPos.x, objPos.y, objPos.z, false, false) + this.logSize.height / 2;
 
         return {
@@ -314,7 +314,10 @@ mp.events.add({
     "woodman.items.request": () => {
         if (!mp.woodman.logObj) return
         var slots = mp.woodman.getLogSlots(mp.woodman.logObj);
-        slots.forEach(slot => slot.z -= mp.woodman.logSize.height / 2);
+        slots.forEach(slot => {
+            slot.z -= mp.woodman.logSize.height / 2;
+            slot.rZ = mp.woodman.logObj.rotation.z + 20;
+        });
         mp.events.callRemote(`woodman.items.add`, JSON.stringify(slots));
     },
     "playerWeaponChanged": (weapon) => {

@@ -28,6 +28,7 @@ mp.mason = {
     rockPos: null,
     lastStartMelee: 0,
     hitWaitTime: 500,
+    rockTimer: null,
 
 
     drawRockHealthBar(x, y) {
@@ -50,7 +51,7 @@ mp.mason = {
     },
     isPickInHands(player) {
         if (!player) player = mp.players.local;
-        return player.weapon == mp.game.joaat('weapon_stone_hatchet');
+        return player.getVariable("hands") == 136;
     },
     isFocusRock() {
         if (!this.rockPos) return false;
@@ -110,6 +111,40 @@ mp.mason = {
         };
         mp.events.call('NPC.create', pedInfo);
     },
+    hitRockHandler() {
+        if (!this.rockPos || this.rockTimer != null) return;
+        if (!this.isPickInHands()) return;
+        if (this.rockHealth <= 0) return mp.notify.error(`Каменная порода исчерпала свой ресурс`, `Каменщик`);
+
+        // TODO: set correct heading
+        mp.busy.add("jobProcess", false);
+        mp.events.callRemote(`animations.playById`, 5523);
+        this.rockTimer = mp.timer.add(() => {
+            this.stopRockTimer();
+            if (!this.rockPos || this.rockHealth <= 0) return;
+
+            mp.events.callRemote(`mason.rocks.hit`);
+        }, 2000);
+    },
+    stopRockTimer() {
+        mp.timer.remove(this.rockTimer);
+        this.rockTimer = null;
+        mp.busy.remove("jobProcess");
+        mp.events.callRemote(`animations.stop`);
+    },
+    getItemSlots() {
+        var slots = [];
+        var localPos = mp.players.local.position;
+        for (var i = 0; i < 3; i++) {
+            var x = mp.utils.randomFloat(-2, 2);
+            var y = mp.utils.randomFloat(-1, 0);
+            var pos = mp.players.local.getOffsetFromInWorldCoords(x, y, 0);
+            pos.z = mp.game.gameplay.getGroundZFor3dCoord(pos.x, pos.y, localPos.z + 2, false, false);
+            pos.rZ = mp.utils.randomInteger(0, 360);
+            slots.push(pos);
+        }
+        return slots;
+    },
 };
 
 mp.events.add({
@@ -150,6 +185,10 @@ mp.events.add({
 
         if (mp.renderChecker) mp.utils.drawText2d(`mason rend: ${Date.now() - start} ms`, [0.8, 0.69]);
     },
+    "mason.items.request": () => {
+        var slots = mp.mason.getItemSlots();
+        mp.events.callRemote(`mason.items.add`, JSON.stringify(slots));
+    },
     "mason.storage.inside": (data) => {
         mp.mason.setInside(data);
     },
@@ -172,6 +211,13 @@ mp.events.add({
         if (mp.mason.rockHealth <= 0) return mp.notify.error(`Каменная порода исчерпала свой ресурс`);
 
         mp.mason.lastStartMelee = Date.now();
+    },
+    "click": (x, y, upOrDown, leftOrRight, relativeX, relativeY, worldPosition, hitEntity) => {
+        if (upOrDown != 'down' || leftOrRight != 'left') return;
+
+        if (mp.game.ui.isPauseMenuActive()) return;
+        if (mp.busy.includes()) return;
+        mp.mason.hitRockHandler();
     },
 });
 

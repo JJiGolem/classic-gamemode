@@ -24,15 +24,13 @@ module.exports = {
         mason.hitRock(player, player.rock);
     },
     "mason.items.add": (player, slots) => {
-        d(`todo mason.items.add`)
-        return;
         slots = JSON.parse(slots);
         var header = `Каменщик`;
         var out = (text) => {
             notifs.error(player, text, header);
         };
-        if (!player.rockLog) return out(`Вы не у бревна`);
-        mason.addLogItems(player.rockLog, slots);
+        if (!player.rock) return out(`Вы не у каменной породы`);
+        mason.addRockItems(player.rock, slots);
     },
     "playerEnterWorldObject": (player, colshape) => {
         if (colshape.db.type != 2) return;

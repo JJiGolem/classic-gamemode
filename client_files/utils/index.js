@@ -292,6 +292,10 @@ mp.utils = {
         rand = Math.round(rand);
         return rand;
     },
+    randomFloat(min, max) {
+        let rand = min + Math.random() * (max - min);
+        return parseFloat(rand);
+    },
     // Рандомная точка внутри сферы
     randomSpherePoint(pos, radius) {
         var u = Math.random();
