@@ -169,7 +169,9 @@ mp.events.add({
             // mp.game.graphics.drawLine(startPos.x, startPos.y, startPos.z, endPos.x, endPos.y, endPos.z, 255, 255, 255, 100);
 
             if (mp.mason.isFocusRock()) {
-                var pos2d = mp.game.graphics.world3dToScreen2d(mp.mason.rockPos);
+                var barPos = mp.mason.rockPos;
+                barPos.z = mp.game.gameplay.getGroundZFor3dCoord(barPos.x, barPos.y, barPos.z + 2, false, false);
+                var pos2d = mp.game.graphics.world3dToScreen2d(barPos);
                 if (pos2d) mp.mason.drawRockHealthBar(pos2d.x, pos2d.y);
             }
         } else {
