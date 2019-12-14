@@ -25,6 +25,7 @@
     <link rel="stylesheet" type="text/css" href="css/speedometer.css" />
     <link rel="stylesheet" type="text/css" href="css/interactionMenu.css" />
     <link rel="stylesheet" type="text/css" href="css/inventory.css" />
+    <link rel="stylesheet" type="text/css" href="css/craft.css" />
     <link rel="stylesheet" type="text/css" href="css/carSpecifications.css" />
     <link rel="stylesheet" type="text/css" href="css/check.css" />
     <link rel="stylesheet" type="text/css" href="css/inputWindow.css" />
@@ -800,6 +801,165 @@
                 <path d="M16.8557 4.54545C16.8557 3.05494 18.019 1.9656 19.5095 1.9656H30.4187C31.9087 1.9656 33.072 3.05494 33.072 4.54545V7.37101H35.0376V4.54545C35.0376 1.97136 32.9928 0 30.4187 0H19.5095C16.9354 0 14.8901 1.97136 14.8901 4.54545V7.37101H16.8557V4.54545Z" fill="white"/>
                 <path d="M13.341 50.0001H36.5841C38.8252 50.0001 40.5643 48.0287 40.5643 45.5775V15.2335H9.36035V45.5775C9.36035 48.0287 11.0994 50.0001 13.341 50.0001ZM31.2277 19.9263C31.2277 19.3835 31.6677 18.9435 32.2105 18.9435C32.7532 18.9435 33.1933 19.3835 33.1933 19.9263V43.1449C33.1933 43.6877 32.7532 44.1277 32.2105 44.1277C31.6677 44.1277 31.2277 43.6877 31.2277 43.1449V19.9263ZM23.9795 19.9263C23.9795 19.3835 24.4196 18.9435 24.9623 18.9435C25.5051 18.9435 25.9451 19.3835 25.9451 19.9263V43.1449C25.9451 43.6877 25.5051 44.1277 24.9623 44.1277C24.4196 44.1277 23.9795 43.6877 23.9795 43.1449V19.9263ZM16.7314 19.9263C16.7314 19.3835 17.1714 18.9435 17.7142 18.9435C18.2569 18.9435 18.697 19.3835 18.697 19.9263V43.1449C18.697 43.6877 18.2569 44.1277 17.7142 44.1277C17.1714 44.1277 16.7314 43.6877 16.7314 43.1449V19.9263Z" fill="white"/>
                 <path d="M8.353 13.2679H41.5715C42.9286 13.2679 44.0285 12.168 44.0285 10.8109C44.0285 9.45378 42.9286 8.35388 41.5715 8.35388H8.353C6.99589 8.35388 5.896 9.45378 5.896 10.8109C5.896 12.168 6.99589 13.2679 8.353 13.2679Z" fill="white"/>
+        </div>
+    </div>
+
+    <div id="craft" style="display: none">
+        <div class="left">
+            <div class="header">
+                <div class="active">Тип1</div>
+                <div>Тип2</div>
+                <div>Тип3</div>
+            </div>
+            <div class="item-list">
+                <div class="item active">
+                    <div class="icon" style="background-image: url('img/inventory/items/1.png')"></div>
+                    <div class="info">
+                        <div class="name">Имя предмета1</div>
+                        <div class="materials">
+                            <div class="deficit">1дерево/</div>
+                            <div>2камень</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon" style="background-image: url('img/inventory/items/70.png')"></div>
+                    <div class="info">
+                        <div class="name">Имя предмета1</div>
+                        <div class="materials">1дерево/2камень</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon" style="background-image: url('img/inventory/items/13.png')"></div>
+                    <div class="info">
+                        <div class="name">Имя предмета1</div>
+                        <div class="materials">1дерево/2камень</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon" style="background-image: url('img/inventory/items/24.png')"></div>
+                    <div class="info">
+                        <div class="name">Имя предмета1</div>
+                        <div class="materials">1дерево/2камень</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon" style="background-image: url('img/inventory/items/26.png')"></div>
+                    <div class="info">
+                        <div class="name">Имя предмета1</div>
+                        <div class="materials">1дерево/2камень</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon" style="background-image: url('img/inventory/items/34.png')"></div>
+                    <div class="info">
+                        <div class="name">Имя предмета1</div>
+                        <div class="materials">1дерево/2камень</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="icon" style="background-image: url('img/inventory/items/36.png')"></div>
+                    <div class="info">
+                        <div class="name">Имя предмета1</div>
+                        <div class="materials">1дерево/2камень</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="queue" style="display: ">
+                <div class="header">
+                    <div class="title">Станок</div>
+                    <div class="help"><i class="fas fa-info"></i></div>
+                </div>
+                <div class="column-list" style="display: ">
+                    <div class="column">
+                        <div class="item">
+                            <div class="icon" style="background-image: url('img/inventory/items/70.png')"></div>
+                            <div class="info">
+                                <div class="time">99:99</div>
+                                <div class="state">Изготовление</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column completed">
+                        <div class="item">
+                            <div class="icon" style="background-image: url('img/inventory/items/26.png')"></div>
+                            <div class="info">
+                                <!-- <div class="time">99:99</div> -->
+                                <div class="state">Готово</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column unsuccessfully">
+                        <div class="item">
+                            <div class="icon" style="background-image: url('img/inventory/items/36.png')"></div>
+                            <div class="info">
+                                <!-- <div class="time">99:99</div> -->
+                                <div class="state">Неудачно</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column"></div>
+                </div>
+                <div class="help-info" style="display: none">
+                    Используется для изготовления предметов.
+                </div>
+            </div>
+            <div class="craftItem" style="display: none">
+                <div class="icon" style="background-image: url('img/inventory/items/70.png')"></div>
+                <div class="param-list" style="display: none">
+                    <div class="param">
+                        <div class="key">Прочность</div>
+                        <div class="value">100%</div>
+                    </div>
+                    <div class="param">
+                        <div class="name">Параметр2</div>
+                        <div class="count">999</div>
+                    </div>
+                    <div class="param">
+                        <div class="key">Прочность</div>
+                        <div class="value">100%</div>
+                    </div>
+                    <div class="param">
+                        <div class="name">Параметр2</div>
+                        <div class="count">999</div>
+                    </div>
+                </div>
+                <div class="title">
+                    <div class="name">Имя предмета1</div>
+                    <div class="button details"><i class="fas fa-ellipsis-h"></i></div>
+                    <!-- <div class="details active"><i class="fas fa-ellipsis-h"></i></div> -->
+                </div>
+                <div class="description">
+                    <div class="material-list">
+                        <div class="material deficit">
+                            <div class="name">Дерево</div>
+                            <div class="count">99/99</div>
+                        </div>
+                        <div class="material">
+                            <div class="name">Камень</div>
+                            <div class="count">99/99</div>
+                        </div>
+                        <div class="material">
+                            <div class="name">Стекло</div>
+                            <div class="count">99/99</div>
+                        </div>
+                        <div class="material">
+                            <div class="name">Кирпич</div>
+                            <div class="count">99/99</div>
+                        </div>
+                    </div>
+                    <div>
+                        Здесь находится описание предмета среднего размера. Мб где его можно получить, и что им можно делать.
+                        Здесь находится описание предмета среднего размера. Мб где его можно получить, и что им можно делать.
+                        Здесь находится описание предмета среднего размера. Мб где его можно получить, и что им можно делать.
+                    </div>
+                </div>
+                <div class="time">99:99</div>
+                <!-- <div class="button make">Изготовить</div> -->
+                <div class="button materials">Материалы</div>
+            </div>
         </div>
     </div>
 
