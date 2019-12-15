@@ -201,6 +201,13 @@
     border-color: #bb4444;
 }
 
+#craft .right .queue .column .fill {
+    background: linear-gradient(to right, #ffffff00, #32dc1b3b);
+    height: 100%;
+    transform: translate(0, -100%);
+    width: 50%;
+}
+
 #craft .right .queue .header {
     display: flex;
     font-size: 2.2vh;
