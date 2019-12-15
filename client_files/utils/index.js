@@ -173,6 +173,12 @@ mp.utils = {
         mp.game.streaming.requestIpl("vw_casino_garage");
         mp.game.streaming.requestIpl("vw_casino_carpark");
         mp.game.streaming.requestIpl("vw_casino_penthouse");
+
+        mp.game.streaming.removeIpl("rc12b_fixed");
+        mp.game.streaming.removeIpl("rc12b_destroyed");
+        mp.game.streaming.removeIpl("rc12b_default");
+        mp.game.streaming.removeIpl("rc12b_hospitalinterior_lod");
+        mp.game.streaming.removeIpl("rc12b_hospitalinterior");
     },
     // Получить позицию капота авто
     getHoodPosition(veh) {
