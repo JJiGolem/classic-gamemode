@@ -5,6 +5,7 @@
     font-family: Ubuntu;
     font-size: 2vh;
     height: 52vh;
+    opacity: 0;
     padding: 1vh;
     position: absolute;
     right: 0%;
@@ -92,7 +93,7 @@
     background-size: contain;
     /* height: 3vh; */
     /* margin: auto; */
-    width: 100%;
+    width: 30%;
 }
 
 #craft .left .item .info {
@@ -102,6 +103,7 @@
 #craft .left .item .info .materials {
     display: flex;
     font-size: 1.8vh;
+    overflow: hidden;
 }
 
 #craft .left .item-list {

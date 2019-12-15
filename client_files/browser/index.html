@@ -804,18 +804,18 @@
         </div>
     </div>
 
-    <div id="craft" v-if="show && crafter">
+    <div id="craft" v-if="show && crafter" :style="{opacity: 1}">
         <div class="left">
             <div class="header">
-                <div v-for="(type, i) in crafter.types" :class="{active: type == currentType}">{{ type.name }}</div>
+                <div v-for="(type, i) in crafter.types" v-key="i" :class="{active: type == currentType}" @click="crafter.typeI = i">{{ type.name }}</div>
             </div>
             <div class="item-list">
-                <div v-for="(item, i) in currentType.items" :class="{active: currentItem == item}" class="item" @click="onClickItem(i)">
+                <div v-for="(item, i) in currentType.items" v-key="i" :class="{active: currentItem == item}" class="item" @click="onClickItem(i)">
                     <div class="icon" :style="{backgroundImage: `url(${inventory.urlItemImg(item.itemId)})`}"></div>
                     <div class="info">
-                        <div class="name">{{ inventory.itemsInfo[item.itemId].name }}</div>
+                        <div class="name">{{ inventory.itemsInfo[item.itemId].name | itemName }}</div>
                         <div class="materials">
-                            <div v-for="mat in item.materials" :class="{deficit: isDeficit(mat)}">{{ getMaterialName(item, mat) }}</div>
+                            <div v-for="mat in item.materials" v-key="i" :class="{deficit: isDeficit(mat)}">{{ getMaterialName(item, mat) }}</div>
                         </div>
                     </div>
                 </div>
@@ -828,7 +828,7 @@
                     <div class="help" :class="{active: helpShow}" @click="helpShow = !helpShow"><i class="fas fa-info"></i></div>
                 </div>
                 <div class="column-list" v-show="!helpShow">
-                    <div v-for="col in crafter.queue.columns" class="column" :class="[col.state, col.itemId ? '' : 'empty']">
+                    <div v-for="(col, i) in crafter.queue.columns" v-key="i" class="column" :class="[col.state, col.itemId ? '' : 'empty']">
                         <div class="item" v-show="col.itemId">
                             <div class="icon" :style="{backgroundImage: `url(${inventory.urlItemImg(col.itemId)})`}"></div>
                             <div class="info">

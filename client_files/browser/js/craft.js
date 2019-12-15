@@ -44,11 +44,18 @@ var craft = new Vue({
 
             return `${minutes}:${seconds}`;
         },
+        itemName(val) {
+            var len = 20;
+            if (val.length > len) val = val.substr(0, len) + "...";
+            return val;
+        },
     },
     methods: {
         initCrafter(crafter) {
             Vue.set(crafter, 'typeI', 0);
-            Vue.set(crafter.types[0], 'itemI', 0);
+            crafter.types.forEach(type => {
+                Vue.set(type, 'itemI', -1);
+            });
 
             var processList = crafter.queue.columns.filter(x => x.time);
             if (processList.length) this.startQueueTick(processList);
