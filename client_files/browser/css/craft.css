@@ -193,6 +193,10 @@
     /* padding: 1vh; */
 }
 
+#craft .right .queue .column:not(.process):hover {
+    color: #fff;
+}
+
 #craft .right .queue .column:not(.empty) {
     border-color: #808080;
 }

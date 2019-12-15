@@ -76,7 +76,7 @@ var craft = new Vue({
             var items = inventory.getItemsByItemId(itemId);
             var count = items.length;
             items.forEach(item => {
-                if (item.count) count += item.count - 1;
+                if (item.params.count) count += item.params.count - 1;
             });
             return count;
         },
@@ -134,36 +134,76 @@ var craft = new Vue({
 craft.initCrafter({
     name: "Станок",
     types: [{
-        name: "Тип1",
-        items: [{
-                itemId: 1,
-                params: {
-                    health: 100
-                },
-                materials: [{
-                    itemId: 16,
-                    count: 20
-                }],
-                time: 60,
-            },
-            {
-                itemId: 3,
-                params: {
-                    health: 100
-                },
-                materials: [{
-                        itemId: 16,
-                        count: 15
+            name: "Тип1",
+            items: [{
+                    itemId: 1,
+                    params: {
+                        health: 100,
                     },
-                    {
-                        itemId: 7,
-                        count: 2
-                    }
-                ],
-                time: 60,
-            }
-        ],
-    }],
+                    materials: [{
+                        itemId: 16,
+                        count: 20
+                    }],
+                    time: 60,
+                },
+                {
+                    itemId: 3,
+                    params: {
+                        health: 100
+                    },
+                    materials: [{
+                            itemId: 16,
+                            count: 15
+                        },
+                        {
+                            itemId: 7,
+                            count: 2
+                        },
+                        {
+                            itemId: 16,
+                            count: 15
+                        },
+                        {
+                            itemId: 7,
+                            count: 2
+                        },
+                    ],
+                    time: 60,
+                }
+            ],
+        },
+        {
+            name: "Тип2",
+            items: [{
+                    itemId: 18,
+                    params: {
+                        health: 100
+                    },
+                    materials: [{
+                        itemId: 16,
+                        count: 20
+                    }],
+                    time: 60,
+                },
+                {
+                    itemId: 21,
+                    params: {
+                        health: 100
+                    },
+                    materials: [{
+                            itemId: 16,
+                            count: 2
+                        },
+                        {
+                            itemId: 7,
+                            count: 4
+                        }
+                    ],
+                    time: 90,
+                }
+            ],
+        }
+    ],
     queue: {
         columns: [{
                 itemId: 1,
