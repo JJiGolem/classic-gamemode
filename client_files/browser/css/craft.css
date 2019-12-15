@@ -78,11 +78,11 @@
 }
 
 #craft .left .item:hover {
-    border-color: #ccad25
+    border-color: #666;
 }
 
 #craft .left .item.active {
-    border-color: #ccad25
+    border-color: #ccad25;
 }
 
 #craft .left .item .icon {
@@ -152,9 +152,11 @@
 }
 
 #craft .right .craftItem .param-list {
+    font-size: 1.8vh;
     height: 7vh;
     overflow-x: hidden;
     overflow-y: auto;
+    padding-right: 1vh;
 }
 
 #craft .right .craftItem .time {
@@ -170,7 +172,7 @@
     padding: 0.3vh 0;
 }
 
-#craft .right .craftItem .material-list, #craft .right .craftItem .param-list {
+#craft .right .craftItem .material-list {
     font-size: 1.8vh;
     margin: 1vh 0;
 }
@@ -179,7 +181,7 @@
     align-items: center;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1vh;
+    margin: 1vh 0;
 }
 
 #craft .right .queue .column {
@@ -189,7 +191,7 @@
     /* padding: 1vh; */
 }
 
-#craft .right .queue .column:not(:empty) {
+#craft .right .queue .column:not(.empty) {
     border-color: #808080;
 }
 
@@ -205,7 +207,6 @@
     background: linear-gradient(to right, #ffffff00, #32dc1b3b);
     height: 100%;
     transform: translate(0, -100%);
-    width: 50%;
 }
 
 #craft .right .queue .header {

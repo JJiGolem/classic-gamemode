@@ -804,162 +804,69 @@
         </div>
     </div>
 
-    <div id="craft" style="display: none">
+    <div id="craft" v-if="show && crafter">
         <div class="left">
             <div class="header">
-                <div class="active">Тип1</div>
-                <div>Тип2</div>
-                <div>Тип3</div>
+                <div v-for="(type, i) in crafter.types" :class="{active: type == currentType}">{{ type.name }}</div>
             </div>
             <div class="item-list">
-                <div class="item active">
-                    <div class="icon" style="background-image: url('img/inventory/items/1.png')"></div>
+                <div v-for="(item, i) in currentType.items" :class="{active: currentItem == item}" class="item" @click="onClickItem(i)">
+                    <div class="icon" :style="{backgroundImage: `url(${inventory.urlItemImg(item.itemId)})`}"></div>
                     <div class="info">
-                        <div class="name">Имя предмета1</div>
+                        <div class="name">{{ inventory.itemsInfo[item.itemId].name }}</div>
                         <div class="materials">
-                            <div class="deficit">1дерево/</div>
-                            <div>2камень</div>
+                            <div v-for="mat in item.materials" :class="{deficit: isDeficit(mat)}">{{ getMaterialName(item, mat) }}</div>
                         </div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="icon" style="background-image: url('img/inventory/items/70.png')"></div>
-                    <div class="info">
-                        <div class="name">Имя предмета1</div>
-                        <div class="materials">1дерево/2камень</div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="icon" style="background-image: url('img/inventory/items/13.png')"></div>
-                    <div class="info">
-                        <div class="name">Имя предмета1</div>
-                        <div class="materials">1дерево/2камень</div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="icon" style="background-image: url('img/inventory/items/24.png')"></div>
-                    <div class="info">
-                        <div class="name">Имя предмета1</div>
-                        <div class="materials">1дерево/2камень</div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="icon" style="background-image: url('img/inventory/items/26.png')"></div>
-                    <div class="info">
-                        <div class="name">Имя предмета1</div>
-                        <div class="materials">1дерево/2камень</div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="icon" style="background-image: url('img/inventory/items/34.png')"></div>
-                    <div class="info">
-                        <div class="name">Имя предмета1</div>
-                        <div class="materials">1дерево/2камень</div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="icon" style="background-image: url('img/inventory/items/36.png')"></div>
-                    <div class="info">
-                        <div class="name">Имя предмета1</div>
-                        <div class="materials">1дерево/2камень</div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="right">
-            <div class="queue" style="display: ">
+            <div class="queue" v-show="!currentItem">
                 <div class="header">
-                    <div class="title">Станок</div>
-                    <div class="help"><i class="fas fa-info"></i></div>
+                    <div class="title">{{ crafter.name }}</div>
+                    <div class="help" :class="{active: helpShow}" @click="helpShow = !helpShow"><i class="fas fa-info"></i></div>
                 </div>
-                <div class="column-list" style="display: ">
-                    <div class="column">
-                        <div class="item">
-                            <div class="icon" style="background-image: url('img/inventory/items/70.png')"></div>
+                <div class="column-list" v-show="!helpShow">
+                    <div v-for="col in crafter.queue.columns" class="column" :class="[col.state, col.itemId ? '' : 'empty']">
+                        <div class="item" v-show="col.itemId">
+                            <div class="icon" :style="{backgroundImage: `url(${inventory.urlItemImg(col.itemId)})`}"></div>
                             <div class="info">
-                                <div class="time">99:99</div>
-                                <div class="state">Изготовление</div>
+                                <div class="time" v-show="col.time">{{ col.time | time }}</div>
+                                <div class="state">{{ stateName(col.state) }}</div>
                             </div>
                         </div>
-                        <div class="fill"></div>
+                        <div class="fill" v-show="col.state == 'process'" :style="progressStyle(col)"></div>
                     </div>
-                    <div class="column completed">
-                        <div class="item">
-                            <div class="icon" style="background-image: url('img/inventory/items/26.png')"></div>
-                            <div class="info">
-                                <!-- <div class="time">99:99</div> -->
-                                <div class="state">Готово</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column unsuccessfully">
-                        <div class="item">
-                            <div class="icon" style="background-image: url('img/inventory/items/36.png')"></div>
-                            <div class="info">
-                                <!-- <div class="time">99:99</div> -->
-                                <div class="state">Неудачно</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column"></div>
                 </div>
-                <div class="help-info" style="display: none">
+                <div class="help-info" v-show="helpShow">
                     Используется для изготовления предметов.
                 </div>
             </div>
-            <div class="craftItem" style="display: none">
-                <div class="icon" style="background-image: url('img/inventory/items/70.png')"></div>
-                <div class="param-list" style="display: none">
-                    <div class="param">
-                        <div class="key">Прочность</div>
-                        <div class="value">100%</div>
-                    </div>
-                    <div class="param">
-                        <div class="name">Параметр2</div>
-                        <div class="count">999</div>
-                    </div>
-                    <div class="param">
-                        <div class="key">Прочность</div>
-                        <div class="value">100%</div>
-                    </div>
-                    <div class="param">
-                        <div class="name">Параметр2</div>
-                        <div class="count">999</div>
+            <div class="craftItem" v-if="currentItem">
+                <div class="param-list" v-if="paramsShow">
+                    <div v-for="param in currentItemParams" class="param">
+                        <div class="key">{{ param.name }}</div>
+                        <div class="value">{{ param.value }}</div>
                     </div>
                 </div>
+                <div v-else class="icon" :style="{backgroundImage: `url(${inventory.urlItemImg(currentItem.itemId)})`}"></div>
                 <div class="title">
-                    <div class="name">Имя предмета1</div>
-                    <div class="button details"><i class="fas fa-ellipsis-h"></i></div>
-                    <!-- <div class="details active"><i class="fas fa-ellipsis-h"></i></div> -->
+                    <div class="name">{{ inventory.itemsInfo[currentItem.itemId].name }}</div>
+                    <div class="button details" :class="{active: paramsShow}" @click="onClickDetails"><i class="fas fa-ellipsis-h"></i></div>
                 </div>
                 <div class="description">
                     <div class="material-list">
-                        <div class="material deficit">
-                            <div class="name">Дерево</div>
-                            <div class="count">99/99</div>
-                        </div>
-                        <div class="material">
-                            <div class="name">Камень</div>
-                            <div class="count">99/99</div>
-                        </div>
-                        <div class="material">
-                            <div class="name">Стекло</div>
-                            <div class="count">99/99</div>
-                        </div>
-                        <div class="material">
-                            <div class="name">Кирпич</div>
-                            <div class="count">99/99</div>
+                        <div v-for="mat in currentItem.materials" class="material" :class="{deficit: isDeficit(mat)}">
+                            <div class="name">{{ inventory.itemsInfo[mat.itemId].name }}</div>
+                            <div class="count">{{ getMaterialCount(mat.itemId) }}/{{ mat.count }}</div>
                         </div>
                     </div>
-                    <div>
-                        Здесь находится описание предмета среднего размера. Мб где его можно получить, и что им можно делать.
-                        Здесь находится описание предмета среднего размера. Мб где его можно получить, и что им можно делать.
-                        Здесь находится описание предмета среднего размера. Мб где его можно получить, и что им можно делать.
-                    </div>
+                    <div>{{ inventory.itemsInfo[currentItem.itemId].description }}</div>
                 </div>
-                <div class="time">99:99</div>
-                <!-- <div class="button make">Изготовить</div> -->
-                <div class="button materials">Материалы</div>
+                <div class="time" v-show="canCraft">{{ currentItem.time | time }}</div>
+                <div class="button make" v-if="canCraft" @click="onClickCraft">Изготовить</div>
+                <div v-else class="button materials">Материалы</div>
             </div>
         </div>
     </div>
@@ -2021,6 +1928,7 @@
     <script src="js/speedometer.js"></script>
     <script src="js/interactionMenu.js"></script>
     <script src="js/inventory.js"></script>
+    <script src="js/craft.js"></script>
     <script src="js/carSpecifications.js"></script>
     <script src="js/check.js"></script>
     <script src="js/inputWindow.js"></script>
