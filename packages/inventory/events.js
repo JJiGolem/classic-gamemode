@@ -169,6 +169,12 @@ module.exports = {
         }
         var cant = inventory.cantAdd(player, obj.item.itemId, inventory.getParamsValues(obj.item));
         if (cant) return notifs.error(player, cant, header);
+        var nextWeight = inventory.getCommonWeight(player);
+        obj.children.forEach(item => {
+            nextWeight += inventory.getInventoryItem(item.itemId).weight;
+        });
+        if (nextWeight > inventory.maxPlayerWeight) return notifs.error(player, `Превышение по весу (${nextWeight.toFixed(2)} из ${inventory.maxPlayerWeight} кг)`, header);
+
         var incorrectChild = obj.children.find(item => {
             var params = inventory.getParamsValues(item);
             if (params.weaponHash) {
@@ -195,7 +201,16 @@ module.exports = {
         obj.denyTake = true;
         inventory.addOldItem(player, obj.item, (e) => {
             delete obj.denyTake;
-            if (e) return notifs.error(player, e, header);
+            if (e) {
+                obj.children.forEach((item) => {
+                    item.playerId = null;
+                    // из-за paranoid: true
+                    item.destroy();
+                    var i = player.inventory.items.indexOf(item);
+                    if (i != -1) player.inventory.items.splice(item, 1);
+                });
+                return notifs.error(player, e, header);
+            }
 
             notifs.success(player, `Предмет ${inventory.getName(obj.item.itemId)} в инвентаре`, header);
             timer.remove(obj.destroyTimer);
