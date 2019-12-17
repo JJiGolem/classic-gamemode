@@ -8,8 +8,6 @@ let timer = call('timer');
 let utils = call('utils');
 
 module.exports = {
-    // Общая информация о типах деревьев
-    treesInfo: null,
     // Позиция лесопилки
     storagePos: new mp.Vector3(-568.3031616210938, 5253.30322265625, 70.48751831054688 - 1),
     // Снаряжение лесопилки
@@ -131,12 +129,6 @@ module.exports = {
 
     async init() {
         this.createStorageMarker();
-        await this.loadTreesInfoFromDB();
-    },
-    async loadTreesInfoFromDB() {
-        this.treesInfo = await db.Models.Tree.findAll();
-
-        console.log(`[WOODMAN] Общая информация о деревьях загружена (${this.treesInfo.length} шт.)`);
     },
     createStorageMarker() {
         var pos = this.storagePos;

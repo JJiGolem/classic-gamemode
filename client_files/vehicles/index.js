@@ -4,7 +4,7 @@ let garage = require('vehicles/garage.js');
 let radiosync = require('vehicles/radiosync.js');
 let own = require('vehicles/own.js');
 let currentSirenState = false;
-
+let isCurrentVehicleElectric = false;
 mp.speedometerEnabled = true;
 
 mp.events.add("playerLeaveVehicle", () => {
@@ -108,7 +108,8 @@ mp.events.add('vehicles.engine.toggle', (state) => {
     mp.callCEFV(`speedometer.isActive = ${state}`);
 })
 
-mp.events.add('vehicles.speedometer.show', (state, isElectric) => {
+mp.events.add('vehicles.speedometer.show', (state, isElectric = isCurrentVehicleElectric) => {
+    isCurrentVehicleElectric = isElectric;
     if (mp.speedometerEnabled) {
         if (state) {
             let vehicle = mp.players.local.vehicle;

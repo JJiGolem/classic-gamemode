@@ -29,6 +29,7 @@ mp.events.add({
             mp.game.controls.disableControlAction(0, 24, true); /// удары
             mp.game.controls.disableControlAction(0, 25, true); /// INPUT_AIM
             mp.game.controls.disableControlAction(0, 140, true); /// удары R
+            mp.game.controls.disableControlAction(0, 257, true); // INPUT_ATTACK2
         }
     },
 });
