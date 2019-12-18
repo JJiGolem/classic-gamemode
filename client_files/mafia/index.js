@@ -38,7 +38,16 @@ mp.mafia = {
     bizWarTimer: null,
     bizWarFactions: [],
     followPlayer: null,
-
+    attachBootInfo: {
+        3900892662: {
+            pos: new mp.Vector3(0, -2, 1.25),
+            rot: new mp.Vector3(0, 0, 0)
+        },
+        2364918497: {
+            pos: new mp.Vector3(0, -2.8, 1.15),
+            rot: new mp.Vector3(0, 0, 0)
+        },
+    },
 
     initMafiaZones(zones) {
         this.clearMafiaZones();
@@ -201,6 +210,35 @@ mp.mafia = {
         if (!player) player = mp.players.local;
         return player.hasAttachment("headBag");
     },
+    playerPutIntoBoot(player, vehicleId) {
+        if (!player || !mp.players.exists(player)) return;
+
+        var a = require('animations/data.js')[802].split(" ");
+
+        var vehicle = mp.vehicles.atRemoteId(vehicleId);
+        if (vehicle && mp.vehicles.exists(vehicleId)) {
+            var i = this.getAttachBootInfo(vehicle);
+            // debug(`attachInfo:`)
+            // debug(i)
+            player.attachTo(vehicle.handle, 0, i.pos.x, i.pos.y, i.pos.z, i.rot.x, i.rot.y, i.rot.z, false, false, false, false, 2, true);
+            mp.utils.requestAnimDict(a[0], () => {
+                player.taskPlayAnim(a[0], a[1], 8, 0, -1, 1, 0, false, false, false);
+            });
+        } else {
+            if (mp.players.local.remoteId == player.remoteId) player.stopAnimTask(a[0], a[1], 3);
+            else player.clearTasksImmediately();
+            player.detach(true, true);
+        }
+    },
+    getAttachBootInfo(vehicle) {
+        // debug(`model: ${vehicle.model}`)
+        var info = this.attachBootInfo[vehicle.model];
+        if (!info) return {
+            pos: new mp.Vector3(0, -2.3, 1.25),
+            rot: new mp.Vector3(0, 0, 0)
+        };
+        return info;
+    }
 };
 
 mp.events.add({
@@ -266,7 +304,7 @@ mp.events.add({
             });
         }
 
-        if (mp.mafia.followPlayer) {
+        if (mp.mafia.followPlayer || mp.players.local.getVariable("inBoot") != null) {
             mp.game.controls.disableControlAction(0, 21, true); /// бег
             mp.game.controls.disableControlAction(0, 22, true); /// прыжок
             mp.game.controls.disableControlAction(0, 31, true); /// вперед назад
@@ -296,11 +334,20 @@ mp.events.add({
         }
         mp.timeMainChecker.modules.mafia = Date.now() - start;
     },
-    "entityStreamIn": (player) => {
-        if (player.type != "player") return;
-
-        mp.mafia.createPlayerBlip(player);
+    "entityStreamIn": (entity) => {
+        if (entity.type == "player") {
+            mp.mafia.createPlayerBlip(entity);
+            if (entity.getVariable("inBoot") != null) mp.mafia.playerPutIntoBoot(entity, entity.getVariable("inBoot"));
+        } else if (entity.type == 'vehicle') {
+            if (entity.getVariable("inBoot") != null) mp.mafia.playerPutIntoBoot(mp.players.atRemoteId(entity.getVariable("inBoot")), entity.remoteId);
+        }
     },
+});
+
+mp.events.addDataHandler("inBoot", (entity, entityId = null) => {
+    if (entity.type == 'player') {
+        mp.mafia.playerPutIntoBoot(entity, entityId);
+    }
 });
 
 mp.mafia.registerAttachments();
