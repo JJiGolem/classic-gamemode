@@ -2338,8 +2338,7 @@ var selectMenu = new Vue({
             "factionControlAccessMembers": {
                 name: "factionControlAccessMembers",
                 header: "Доступ к составу",
-                items: [
-                    {
+                items: [{
                         text: "Приглашение",
                         values: [`Ранг 1`],
                     },
@@ -2352,8 +2351,9 @@ var selectMenu = new Vue({
                         values: [`Ранг 1`],
                     },
                     {
-                    text: "Вернуться"
-                }],
+                        text: "Вернуться"
+                    }
+                ],
                 i: 0,
                 j: 0,
                 show(inviteRank, uvalRank, giveRankRank) {
@@ -2608,6 +2608,9 @@ var selectMenu = new Vue({
                         text: "Восстановление ключей"
                     },
                     {
+                        text: "Дубликат ключей"
+                    },
+                    {
                         text: "Закрыть"
                     },
                 ],
@@ -2628,6 +2631,11 @@ var selectMenu = new Vue({
                             selectMenu.showByName("governmentServiceFines");
                         } else if (e.itemName == "Восстановление ключей") {
                             if (selectMenu.menus["governmentServiceVehKeys"].items.length <= 1) return selectMenu.notification = `Вы не имеете авто`;
+                            selectMenu.menus["governmentServiceVehKeys"].isDublicate = false;
+                            selectMenu.showByName("governmentServiceVehKeys");
+                        } else if (e.itemName == "Дубликат ключей") {
+                            if (selectMenu.menus["governmentServiceVehKeys"].items.length <= 1) return selectMenu.notification = `Вы не имеете авто`;
+                            selectMenu.menus["governmentServiceVehKeys"].isDublicate = true;
                             selectMenu.showByName("governmentServiceVehKeys");
                         } else selectMenu.show = false;
                     }
@@ -2747,6 +2755,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                isDublicate: false,
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2759,7 +2768,11 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == "Вернуться") selectMenu.showByName("governmentService");
                         else {
-                            mp.trigger(`callRemote`, `government.service.keys.veh.restore`, e.itemIndex);
+                            var data = {
+                                index: e.itemIndex,
+                                isDublicate: this.isDublicate
+                            };
+                            mp.trigger(`callRemote`, `government.service.keys.veh.restore`, JSON.stringify(data));
                             selectMenu.show = false;
                         }
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("governmentService");
@@ -9399,8 +9412,7 @@ var selectMenu = new Vue({
             "bar": {
                 name: "bar",
                 header: "Название бара",
-                items: [
-                    {
+                items: [{
                         text: "Напитки",
                     },
                     {
@@ -9490,9 +9502,9 @@ var selectMenu = new Vue({
                 name: "barAlcohol",
                 header: "Напитки",
                 items: [{
-                    text: "Напиток 1",
-                    values: [`$999`]
-                },
+                        text: "Напиток 1",
+                        values: [`$999`]
+                    },
                     {
                         text: "Напиток 2",
                         values: [`$999`]

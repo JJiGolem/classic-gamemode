@@ -311,20 +311,24 @@ module.exports = {
 
         notifs.success(player, `Штраф #${fine.id} оплачен`, header);
     },
-    "government.service.keys.veh.restore": (player, index) => {
+    "government.service.keys.veh.restore": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+
         var vehicles = player.vehicleList;
         var header = `Восстановление ключей`;
         var out = (text) => {
             notifs.error(player, text, header);
         };
         if (!vehicles.length) return out(`У вас нет авто`);
-        index = Math.clamp(index, 0, vehicles.length - 1);
-        var veh = vehicles[index];
+        data.index = Math.clamp(data.index, 0, vehicles.length - 1);
+        var veh = vehicles[data.index];
         var price = government.restoreVehKeysPrice;
         if (player.character.cash < price) return out(`Необходимо $${price}`);
 
-        var items = inventory.getItemsByParams(player.inventory.items, 33, 'vehId', veh.id);
-        if (items.length) return out(`Вы уже имеете ключи от ${veh.name}`);
+        if (!data.isDublicate) {
+            var items = inventory.getItemsByParams(player.inventory.items, 33, 'vehId', veh.id);
+            if (items.length) return out(`Вы уже имеете ключи от ${veh.name}`);
+        }
 
         var params = {
             owner: player.character.id,
@@ -337,14 +341,14 @@ module.exports = {
         money.removeCash(player, price, (res) => {
             if (!res) return out(`Ошибка списания наличных`);
 
-            inventory.fullDeleteItemsByParams(33, 'vehId', veh.id);
+            if (!data.isDublicate) inventory.fullDeleteItemsByParams(33, 'vehId', veh.id);
             // выдача ключей в инвентарь
             inventory.addItem(player, 33, params, (e) => {
                 if (e) out(e);
             });
         }, `Восстановление ключей от ${veh.name} (#${veh.id})`);
 
-        notifs.success(player, `Ключи от ${veh.name} восстановлены`, header);
+        notifs.success(player, `Получены ключи от ${veh.name}`, header);
     },
     "government.unarrest.offer": (player, recId) => {
         var header = `Освобождение`;
