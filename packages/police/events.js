@@ -796,7 +796,7 @@ module.exports = {
         }
 
         if (!player.character.arrestTime) {
-            if (player.character.wanted && player.getVariable("cuffs")) {
+            if (player.character.wanted && player.cuffs && player.cuffs.itemId == 28) {
                 player.character.arrestTime = police.arrestTime * player.character.wanted;
                 player.character.arrestType = police.getRandomArrestType();
                 mp.events.call('admin.notify.players', `!{#db5e4a}${player.name}[${player.id}] посажен в тюрьму за уход от ареста`);
