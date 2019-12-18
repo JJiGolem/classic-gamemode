@@ -785,6 +785,9 @@ module.exports = {
         if (factions.isPoliceFaction(killer.character.factionId) || factions.isFibFaction(killer.character.factionId) ||
             factions.isArmyFaction(killer.character.factionId)) return;
 
+        // Если убийца находится в авто
+        if (killer.vehicle) return;
+
         police.setWanted(killer, killer.character.wanted + 1, `Убийство мирного жителя`);
     },
     "playerQuit": (player) => {
