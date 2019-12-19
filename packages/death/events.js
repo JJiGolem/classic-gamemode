@@ -25,7 +25,6 @@ module.exports = {
         player.dimension = marker.dimension;
         player.health = 10;
         death.removeKnocked(player);
-        mp.events.call(`mapCase.ems.calls.remove`, player, player.character.id);
     },
     "playerDeath": (player, reason, killer) => {
 

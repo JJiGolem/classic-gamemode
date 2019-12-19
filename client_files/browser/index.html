@@ -1163,7 +1163,7 @@
                         @mousemove="mousemove($event, record)"
                         @mouseout="mouseout">
                         <div class="first"><div class="record-align">{{ getDist(record) | km }}</div></div>
-                        <div><div class="record-align">{{ record.name }}</div></div>
+                        <div><div class="record-align">{{ record.name }}({{ record.num }})</div></div>
                         <div><div class="record-align">{{ record.description | textSplice(25) }}</div></div>
                         <div><div class="record-align btn" @click="onClickAccept(record)">Принять</div></div>
                     </div>

@@ -12,7 +12,10 @@ module.exports = {
         this.knockedList.push(player.character.id);
     },
     removeKnocked(player) {
-        if (mp.players.exists(player)) player.setVariable("knocked", null);
+        if (mp.players.exists(player)) {
+            player.setVariable("knocked", null);
+            mp.events.call(`mapCase.ems.calls.remove`, player, player.character.id);
+        }
         var i = this.knockedList.indexOf(player.character.id);
         if (i != -1) this.knockedList.splice(i, 1);
     }

@@ -195,6 +195,9 @@ module.exports = {
             cell = this.lsCells[i];
         }
 
+        (!player.health) ? player.spawn(cell): player.position = cell;
+        player.dimension = 0;
+        player.heading = cell.h;
         delete player.isFollowing;
         player.call(`police.follow.stop`);
         player.call(`police.arrest.set`, [player.character.arrestType]);
@@ -202,9 +205,6 @@ module.exports = {
         player.call(`hud.setData`, [{
             arrestTimeMax: parseInt(player.character.arrestTime / 1000)
         }]);
-        (!player.health) ? player.spawn(cell): player.position = cell;
-        player.dimension = 0;
-        player.heading = cell.h;
         var playerId = player.id;
         var characterId = player.character.id;
         timer.remove(player.cellArrestTimer);
@@ -240,6 +240,9 @@ module.exports = {
             cell = this.jailCells[i];
         }
 
+        (!player.health) ? player.spawn(cell): player.position = cell;
+        player.dimension = 0;
+        player.heading = cell.h;
         delete player.isFollowing;
         player.call(`police.follow.stop`);
         player.call(`police.arrest.set`, [player.character.arrestType]);
@@ -247,9 +250,6 @@ module.exports = {
         player.call(`hud.setData`, [{
             arrestTimeMax: parseInt(player.character.arrestTime / 1000)
         }]);
-        (!player.health) ? player.spawn(cell): player.position = cell;
-        player.dimension = 0;
-        player.heading = cell.h;
         var playerId = player.id;
         var characterId = player.character.id;
         timer.remove(player.jailArrestTimer);
@@ -294,8 +294,10 @@ module.exports = {
             var i = utils.randomInteger(0, this.bcCells.length - 1);
             cell = this.bcCells[i];
         }
-        debug(player.character.arrestTime)
 
+        (!player.health) ? player.spawn(cell): player.position = cell;
+        player.dimension = 0;
+        player.heading = cell.h;
         delete player.isFollowing;
         player.call(`police.follow.stop`);
         player.call(`police.arrest.set`, [player.character.arrestType]);
@@ -303,9 +305,6 @@ module.exports = {
         player.call(`hud.setData`, [{
             arrestTimeMax: parseInt(player.character.arrestTime / 1000)
         }]);
-        (!player.health) ? player.spawn(cell): player.position = cell;
-        player.dimension = 0;
-        player.heading = cell.h;
         var playerId = player.id;
         var characterId = player.character.id;
         timer.remove(player.cellArrestTimer);

@@ -2338,8 +2338,7 @@ var selectMenu = new Vue({
             "factionControlAccessMembers": {
                 name: "factionControlAccessMembers",
                 header: "Доступ к составу",
-                items: [
-                    {
+                items: [{
                         text: "Приглашение",
                         values: [`Ранг 1`],
                     },
@@ -2352,8 +2351,9 @@ var selectMenu = new Vue({
                         values: [`Ранг 1`],
                     },
                     {
-                    text: "Вернуться"
-                }],
+                        text: "Вернуться"
+                    }
+                ],
                 i: 0,
                 j: 0,
                 show(inviteRank, uvalRank, giveRankRank) {
@@ -2608,6 +2608,9 @@ var selectMenu = new Vue({
                         text: "Восстановление ключей"
                     },
                     {
+                        text: "Дубликат ключей"
+                    },
+                    {
                         text: "Закрыть"
                     },
                 ],
@@ -2628,6 +2631,11 @@ var selectMenu = new Vue({
                             selectMenu.showByName("governmentServiceFines");
                         } else if (e.itemName == "Восстановление ключей") {
                             if (selectMenu.menus["governmentServiceVehKeys"].items.length <= 1) return selectMenu.notification = `Вы не имеете авто`;
+                            selectMenu.menus["governmentServiceVehKeys"].isDublicate = false;
+                            selectMenu.showByName("governmentServiceVehKeys");
+                        } else if (e.itemName == "Дубликат ключей") {
+                            if (selectMenu.menus["governmentServiceVehKeys"].items.length <= 1) return selectMenu.notification = `Вы не имеете авто`;
+                            selectMenu.menus["governmentServiceVehKeys"].isDublicate = true;
                             selectMenu.showByName("governmentServiceVehKeys");
                         } else selectMenu.show = false;
                     }
@@ -2747,6 +2755,7 @@ var selectMenu = new Vue({
                 ],
                 i: 0,
                 j: 0,
+                isDublicate: false,
                 handler(eventName) {
                     var item = this.items[this.i];
                     var e = {
@@ -2759,7 +2768,11 @@ var selectMenu = new Vue({
                     if (eventName == 'onItemSelected') {
                         if (e.itemName == "Вернуться") selectMenu.showByName("governmentService");
                         else {
-                            mp.trigger(`callRemote`, `government.service.keys.veh.restore`, e.itemIndex);
+                            var data = {
+                                index: e.itemIndex,
+                                isDublicate: this.isDublicate
+                            };
+                            mp.trigger(`callRemote`, `government.service.keys.veh.restore`, JSON.stringify(data));
                             selectMenu.show = false;
                         }
                     } else if (eventName == 'onBackspacePressed') selectMenu.showByName("governmentService");
@@ -8116,6 +8129,173 @@ var selectMenu = new Vue({
                         selectMenu.showByName("woodman");
                 }
             },
+            "mason": {
+                name: "mason",
+                header: "Каменоломня",
+                items: [{
+                        text: "Снаряжение",
+                    },
+                    {
+                        text: "Ресурсы"
+                    },
+                    {
+                        text: "Закрыть"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                prices: [],
+                init(data) {
+                    if (typeof data == 'string') data = JSON.parse(data);
+                    var items = selectMenu.menus['masonItems'].items;
+                    items[0].values[0] = `$${data.itemPrices[0]}`;
+
+                    var clothesItems = selectMenu.menus['masonItemsClothes'].items;
+                    for (var i = 0; i < clothesItems.length - 1; i++) {
+                        clothesItems[i].values[0] = `$${data.itemPrices[i + 1]}`;
+                    }
+
+                    this.prices = data.itemPrices;
+
+                    selectMenu.menus['masonSell'].items[0].values[0] = `$${data.rockPrice}`;
+                },
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Работа') {
+
+                        } else if (e.itemName == 'Снаряжение') {
+                            selectMenu.showByName("masonItems");
+                        } else if (e.itemName == 'Ресурсы') {
+                            selectMenu.showByName("masonSell");
+                        } else if (e.itemName == 'Закрыть') {
+                            selectMenu.show = false;
+                        }
+                    }
+                }
+            },
+            "masonItems": {
+                name: "masonItems",
+                header: "Снаряжение",
+                items: [{
+                        text: "Кирка",
+                        values: ['$9999']
+                    },
+                    {
+                        text: "Форма"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Кирка') {
+                            // selectMenu.show = false;
+                            mp.trigger(`callRemote`, `mason.items.buy`, e.itemIndex);
+                        } else if (e.itemName == 'Форма') {
+                            selectMenu.showByName("masonItemsClothes");
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("mason");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("mason");
+                }
+            },
+            "masonItemsClothes": {
+                name: "masonItemsClothes",
+                header: "Форма каменщика",
+                items: [{
+                        text: "Жилетка",
+                        values: ['$9999']
+                    },
+                    {
+                        text: "Штаны",
+                        values: ['$9999']
+                    },
+                    {
+                        text: "Ботинки",
+                        values: ['$9999']
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("masonItems");
+                        } else {
+                            // selectMenu.show = false;
+                            mp.trigger(`callRemote`, `mason.clothes.buy`, e.itemIndex);
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("masonItems");
+                }
+            },
+            "masonSell": {
+                name: "masonSell",
+                header: "Ресурсы",
+                items: [{
+                        text: "Камень",
+                        values: [`$999`]
+                    },
+                    {
+                        text: "Продать"
+                    },
+                    {
+                        text: "Вернуться"
+                    },
+                ],
+                i: 0,
+                j: 0,
+                handler(eventName) {
+                    var item = this.items[this.i];
+                    var e = {
+                        menuName: this.name,
+                        itemName: item.text,
+                        itemIndex: this.i,
+                        itemValue: (item.i != null && item.values) ? item.values[item.i] : null,
+                        valueIndex: item.i,
+                    };
+                    if (eventName == 'onItemSelected') {
+                        if (e.itemName == 'Продать') {
+                            selectMenu.show = false;
+                            mp.trigger(`callRemote`, `mason.items.sell`);
+                        } else if (e.itemName == 'Вернуться') {
+                            selectMenu.showByName("mason");
+                        }
+                    } else if (eventName == 'onBackspacePressed')
+                        selectMenu.showByName("mason");
+                }
+            },
             "tattooMain": {
                 name: "tattooMain",
                 header: "Тату-салон",
@@ -9232,8 +9412,7 @@ var selectMenu = new Vue({
             "bar": {
                 name: "bar",
                 header: "Название бара",
-                items: [
-                    {
+                items: [{
                         text: "Напитки",
                     },
                     {
@@ -9323,9 +9502,9 @@ var selectMenu = new Vue({
                 name: "barAlcohol",
                 header: "Напитки",
                 items: [{
-                    text: "Напиток 1",
-                    values: [`$999`]
-                },
+                        text: "Напиток 1",
+                        values: [`$999`]
+                    },
                     {
                         text: "Напиток 2",
                         values: [`$999`]
