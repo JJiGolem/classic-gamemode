@@ -42,7 +42,10 @@ module.exports = {
             include: [
                 db.Models.PhoneContact, {
                     model: db.Models.PhoneDialog,
-                    include: [db.Models.PhoneMessage]
+                    include: [{
+                        model: db.Models.PhoneMessage,
+                        limit: 20,
+                    }, ]
                 }
             ]
         });
@@ -56,7 +59,7 @@ module.exports = {
                 if (bizes.length === 0) return;
                 let biz = bizes.find(biz => bizService.bizesModules[biz.info.type].business.isFactionOwner);
                 if (biz) {
-                    phone.addApp(player, "factionBiz",bizService.getBizInfoForApp(biz));
+                    phone.addApp(player, "factionBiz", bizService.getBizInfoForApp(biz));
                     return;
                 }
             }
@@ -70,7 +73,7 @@ module.exports = {
                 if (bizes.length === 0) return;
                 let biz = bizes.find(biz => bizService.bizesModules[biz.info.type].business.isFactionOwner);
                 if (biz) {
-                    phone.addApp(player, "factionBiz",bizService.getBizInfoForApp(biz));
+                    phone.addApp(player, "factionBiz", bizService.getBizInfoForApp(biz));
                     return;
                 }
             }
@@ -90,15 +93,14 @@ module.exports = {
         };
         player.phone = await db.Models.Phone.create(player.phone, {
             include: [{
-                    model: db.Models.PhoneContact
-                }, {
-                    model: db.Models.PhoneDialog,
-                    include: [{
-                        model: db.Models.PhoneMessage,
-                        limit: 20
-                    }]
-                }
-            ]
+                model: db.Models.PhoneContact
+            }, {
+                model: db.Models.PhoneDialog,
+                include: [{
+                    model: db.Models.PhoneMessage,
+                    limit: 20
+                }]
+            }]
         });
         phone.loadPhoneOnClient(player);
     },
@@ -112,8 +114,7 @@ module.exports = {
         if (calledPlayer != null) {
             if (calledPlayer.phoneState.talkWithId != null) {
                 player.call('phone.call.start.ans', [2]);
-            }
-            else {
+            } else {
                 player.phoneState.talkWithId = calledPlayer.id;
                 calledPlayer.phoneState.talkWithId = player.id;
                 calledPlayer.call('phone.call.in', [player.phone.number]);
@@ -124,8 +125,7 @@ module.exports = {
                     calledPlayer.call('phone.call.end.in', []);
                 }, 20000);
             }
-        }
-        else {
+        } else {
             player.call('phone.call.start.ans', [4]);
         }
     },
@@ -141,8 +141,7 @@ module.exports = {
             player.call('voiceChat.connect', [callerPlayer.id, 'phone']);
 
             callerPlayer.call('phone.call.start.ans', [0]);
-        }
-        else {
+        } else {
             callerPlayer.call('phone.call.start.ans', [3]);
             player.phoneState.talkWithId = null;
             callerPlayer.phoneState.talkWithId = null;
@@ -177,16 +176,30 @@ module.exports = {
         if (!phone.isExists(number)) return player.call('phone.error', [1]);
 
         /// Работа с отправителем
-        let index = player.phone.PhoneDialogs.findIndex( x => x.number == number);
+        let index = player.phone.PhoneDialogs.findIndex(x => x.number == number);
         if (index === -1) {
-            let newDialog = db.Models.PhoneDialog.build({phoneId: player.phone.id, number: number, PhoneMessages: [
-                {isMine: true, text: message, isRead: true, date: Date.now()}
-            ]}, { include: [db.Models.PhoneMessage]});
+            let newDialog = db.Models.PhoneDialog.build({
+                phoneId: player.phone.id,
+                number: number,
+                PhoneMessages: [{
+                    isMine: true,
+                    text: message,
+                    isRead: true,
+                    date: Date.now()
+                }]
+            }, {
+                include: [db.Models.PhoneMessage]
+            });
             let result = await newDialog.save();
             player.phone.PhoneDialogs.push(result);
-        }
-        else {
-            let newMessage = db.Models.PhoneMessage.build({phoneDialogId: player.phone.PhoneDialogs[index].id, isMine: true, text: message, isRead: true, date: Date.now()});
+        } else {
+            let newMessage = db.Models.PhoneMessage.build({
+                phoneDialogId: player.phone.PhoneDialogs[index].id,
+                isMine: true,
+                text: message,
+                isRead: true,
+                date: Date.now()
+            });
             let result = await newMessage.save();
             player.phone.PhoneDialogs[index].PhoneMessages.push(result);
         }
@@ -195,22 +208,35 @@ module.exports = {
         if (player.phone.number == number) return;
         let getterPlayer = mp.players.toArray().find(x => x.id !== player.id && x.phone != null && x.phone.number === number);
         if (getterPlayer != null) {
-            index = getterPlayer.phone.PhoneDialogs.findIndex( x => x.number == player.phone.number);
+            index = getterPlayer.phone.PhoneDialogs.findIndex(x => x.number == player.phone.number);
             if (index === -1) {
-                let newDialog = db.Models.PhoneDialog.build({phoneId: getterPlayer.phone.id, number: player.phone.number, PhoneMessages: [
-                    {isMine: false, text: message, isRead: false, date: Date.now()}
-                ]}, { include: [db.Models.PhoneMessage]});
+                let newDialog = db.Models.PhoneDialog.build({
+                    phoneId: getterPlayer.phone.id,
+                    number: player.phone.number,
+                    PhoneMessages: [{
+                        isMine: false,
+                        text: message,
+                        isRead: false,
+                        date: Date.now()
+                    }]
+                }, {
+                    include: [db.Models.PhoneMessage]
+                });
                 let result = await newDialog.save();
                 getterPlayer.phone.PhoneDialogs.push(result);
-            }
-            else {
-                let newMessage = db.Models.PhoneMessage.build({phoneDialogId: getterPlayer.phone.PhoneDialogs[index].id, isMine: false, text: message, isRead: false, date: Date.now()});
+            } else {
+                let newMessage = db.Models.PhoneMessage.build({
+                    phoneDialogId: getterPlayer.phone.PhoneDialogs[index].id,
+                    isMine: false,
+                    text: message,
+                    isRead: false,
+                    date: Date.now()
+                });
                 let result = await newMessage.save();
                 getterPlayer.phone.PhoneDialogs[index].PhoneMessages.push(result);
             }
             getterPlayer.call('phone.message.set', [message, player.phone.number]);
-        }
-        else {
+        } else {
             player.call('phone.error', [2]);
         }
     },
@@ -218,7 +244,7 @@ module.exports = {
         if (player == null) return;
         if (player.phone == null) return;
         if (player.phone.PhoneDialogs == null) return;
-        let index = player.phone.PhoneDialogs.findIndex( x => x.number == dialogNumber);
+        let index = player.phone.PhoneDialogs.findIndex(x => x.number == dialogNumber);
         if (index === -1) return;
         if (player.phone.PhoneDialogs[index].PhoneMessages == null) return;
 
@@ -230,29 +256,33 @@ module.exports = {
         }
         if (!isChanged) return;
         await db.Models.PhoneMessage.update({
-                isRead: true
-            },
-            {
-                where: {
-                    phoneDialogId: player.phone.PhoneDialogs[index].id
-                }
+            isRead: true
+        }, {
+            where: {
+                phoneDialogId: player.phone.PhoneDialogs[index].id
             }
-        );
+        });
     },
     'phone.contact.add': async (player, name, number) => {
-        if (player.phone.PhoneContacts.findIndex( x => x.name === name) !== -1) return player.call('phone.error', [3]);
-        let newContact = db.Models.PhoneContact.build({phoneId: player.phone.id, name: name, number: number});
+        if (player.phone.PhoneContacts.findIndex(x => x.name === name) !== -1) return player.call('phone.error', [3]);
+        let newContact = db.Models.PhoneContact.build({
+            phoneId: player.phone.id,
+            name: name,
+            number: number
+        });
         let result = await newContact.save();
         player.phone.PhoneContacts.push(result);
     },
     'phone.contact.rename': async (player, number, name) => {
-        if (player.phone.PhoneContacts.findIndex( x => x.name === name) !== -1) return player.call('phone.error', [3]);
-        let index = player.phone.PhoneContacts.findIndex( x => x.number === number);
+        if (player.phone.PhoneContacts.findIndex(x => x.name === name) !== -1) return player.call('phone.error', [3]);
+        let index = player.phone.PhoneContacts.findIndex(x => x.number === number);
         if (index === -1) return player.call('phone.error', [4]);
-        await player.phone.PhoneContacts[index].update({name: name});
+        await player.phone.PhoneContacts[index].update({
+            name: name
+        });
     },
     'phone.contact.remove': async (player, number) => {
-        let index = player.phone.PhoneContacts.findIndex( x => x.number === number);
+        let index = player.phone.PhoneContacts.findIndex(x => x.number === number);
         if (index === -1) return player.call('phone.error', [4]);
         await player.phone.PhoneContacts[index].destroy();
         player.phone.PhoneContacts.splice(index, 1);
