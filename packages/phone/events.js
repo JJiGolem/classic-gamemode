@@ -93,7 +93,10 @@ module.exports = {
                     model: db.Models.PhoneContact
                 }, {
                     model: db.Models.PhoneDialog,
-                    include: [db.Models.PhoneMessage]
+                    include: [{
+                        model: db.Models.PhoneMessage,
+                        limit: 20
+                    }]
                 }
             ]
         });
