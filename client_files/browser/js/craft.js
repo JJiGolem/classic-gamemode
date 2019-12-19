@@ -52,6 +52,7 @@ var craft = new Vue({
     },
     methods: {
         initCrafter(crafter) {
+            if (typeof crafter == 'string') crafter = JSON.parse(crafter);
             Vue.set(crafter, 'typeI', 0);
             crafter.types.forEach(type => {
                 Vue.set(type, 'itemI', -1);
