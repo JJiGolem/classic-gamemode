@@ -36,6 +36,11 @@
     color: #eee;
 }
 
+#craft .button.disabled {
+    /* border-color: #7b3131; */
+    color: #7b3131;
+}
+
 #craft .deficit {
     color: #bb4444;
 }
