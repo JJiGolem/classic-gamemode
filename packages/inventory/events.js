@@ -747,7 +747,7 @@ module.exports = {
             if (param) {
                 inventory.updateParam(player, item, 'ammo', player.weaponAmmo);
             }
-            if (inventory.isWeaponItem(item)) {
+            if (player.getVariable("knocked") && inventory.isWeaponItem(item)) {
                 var pos = player.position;
                 pos.z--;
                 inventory.putGround(player, item, pos, player.dimension);
