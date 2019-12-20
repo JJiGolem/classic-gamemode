@@ -45,7 +45,7 @@ var craft = new Vue({
             return `${minutes}:${seconds}`;
         },
         itemName(val) {
-            var len = 20;
+            var len = 25;
             if (val.length > len) val = val.substr(0, len) + "...";
             return val;
         },
@@ -131,7 +131,8 @@ var craft = new Vue({
 });
 
 // for tests
-/*craft.show = true;
+/*
+craft.show = true;
 craft.initCrafter({
     name: "Станок",
     types: [{

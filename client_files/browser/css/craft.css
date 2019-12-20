@@ -3,8 +3,8 @@
     color: #b9b9b9;
     display: flex;
     font-family: Ubuntu;
-    font-size: 2vh;
-    height: 52vh;
+    font-size: 1.5vh;
+    height: 46vh;
     opacity: 0;
     padding: 1vh;
     position: absolute;
@@ -21,7 +21,7 @@
 #craft .button {
     background: #0000008c;
     border: 1px solid #444;
-    font-size: 1.8vh;
+    font-size: 1.3vh;
     padding: 0.5vh;
     width: fit-content;
 }
@@ -51,7 +51,7 @@
 
 #craft .left .header {
     display: flex;
-    font-size: 1.8vh;
+    font-size: 1.3vh;
     margin-bottom: 2vh;
 }
 
@@ -107,7 +107,7 @@
 
 #craft .left .item .info .materials {
     display: flex;
-    font-size: 1.8vh;
+    font-size: 1.3vh;
     overflow: hidden;
 }
 
@@ -159,7 +159,7 @@
 }
 
 #craft .right .craftItem .param-list {
-    font-size: 1.8vh;
+    font-size: 1.3vh;
     height: 7vh;
     overflow-x: hidden;
     overflow-y: auto;
@@ -180,7 +180,7 @@
 }
 
 #craft .right .craftItem .material-list {
-    font-size: 1.8vh;
+    font-size: 1.3vh;
     margin: 1vh 0;
 }
 
@@ -222,7 +222,7 @@
 
 #craft .right .queue .header {
     display: flex;
-    font-size: 2.2vh;
+    font-size: 2vh;
     justify-content: space-between;
     margin-bottom: 2.6vh;
 }
@@ -266,7 +266,7 @@
 }
 
 #craft .right .item .state {
-    font-size: 1.5vh;
+    font-size: 1.1vh;
 }
 
 #craft ::-webkit-scrollbar {
