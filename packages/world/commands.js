@@ -104,6 +104,7 @@ module.exports = {
             var list = [];
             for (var objId in world.colshapes) {
                 var el = world.colshapes[objId];
+                if (el.db.type != args[0]) continue;
                 if (player.dist(el.db.pos) < args[1]) list.push(el.db.dataValues);
             }
             out.log(`Объекты показаны на карте в радиусе ${args[1]} м. (${list.length} шт.)`, player);
