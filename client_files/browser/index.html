@@ -839,9 +839,7 @@
                         <div class="fill" v-show="col.state == 'process'" :style="progressStyle(col)"></div>
                     </div>
                 </div>
-                <div class="help-info" v-show="helpShow">
-                    Используется для изготовления предметов.
-                </div>
+                <div class="help-info" v-show="helpShow">{{ crafter.description }}</div>
             </div>
             <div class="craftItem" v-if="currentItem">
                 <div class="param-list" v-if="paramsShow">
@@ -865,8 +863,7 @@
                     <div>{{ inventory.itemsInfo[currentItem.itemId].description }}</div>
                 </div>
                 <div class="time" v-show="canCraft">{{ currentItem.time | time }}</div>
-                <div class="button make" v-if="canCraft" @click="onClickCraft">Изготовить</div>
-                <div v-else class="button materials">Материалы</div>
+                <div class="button make" :class="{disabled: !canCraft}" @click="onClickCraft">Изготовить</div>
             </div>
         </div>
     </div>

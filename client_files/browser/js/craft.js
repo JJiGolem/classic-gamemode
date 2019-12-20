@@ -34,6 +34,19 @@ var craft = new Vue({
             return true;
         },
     },
+    watch: {
+        show(val) {
+            mp.trigger("blur", val, 300);
+            hud.keysShow = !val;
+            if (val) {
+                busy.add("craft", true, true);
+                prompt.showByName("craft_exit");
+            } else {
+                busy.remove("craft", true);
+                prompt.hide();
+            }
+        },
+    },
     filters: {
         time(val) {
             var minutes = parseInt(val / 60);
@@ -66,6 +79,7 @@ var craft = new Vue({
         clearCrafter() {
             clearInterval(this.queueTimer);
             this.crafter = null;
+            this.show = false;
         },
         getMaterialName(item, material) {
             var name = `${material.count}${inventory.itemsInfo[material.itemId].name}`;
@@ -128,6 +142,11 @@ var craft = new Vue({
             // mp.trigger("callRemote", eventName, JSON.stringify(values));
         },
     },
+    mounted() {
+        window.addEventListener('keyup', (e) => {
+            if (e.keyCode == 27 && this.show) this.show = !this.show;
+        });
+    },
 });
 
 // for tests
@@ -135,6 +154,7 @@ var craft = new Vue({
 craft.show = true;
 craft.initCrafter({
     name: "Станок",
+    description: "Используется для изготовления предметов.",
     types: [{
             name: "Тип1",
             items: [{

@@ -4,6 +4,7 @@ module.exports = {
     // Изготовители (станок, верстак и т.п.)
     crafters: [{
             name: "Станок",
+            description: "Используется для работы с деревом.",
             types: [{
                 name: "Материалы",
                 items: [{
@@ -44,6 +45,7 @@ module.exports = {
         },
         {
             name: "Каменоломня",
+            description: "Используется для работы с камнем.",
             types: [{
                 name: "Материалы",
                 items: [{
@@ -111,6 +113,7 @@ module.exports = {
     convertToClientCrafter(crafter) {
         return {
             name: crafter.name,
+            description: crafter.description,
             types: crafter.types,
             queue: crafter.queue,
         };
