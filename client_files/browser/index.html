@@ -828,7 +828,7 @@
                     <div class="help" :class="{active: helpShow}" @click="helpShow = !helpShow"><i class="fas fa-info"></i></div>
                 </div>
                 <div class="column-list" v-show="!helpShow">
-                    <div v-for="(col, i) in crafter.queue.columns" v-key="i" class="column" :class="[col.state, col.itemId ? '' : 'empty']">
+                    <div v-for="(col, i) in crafter.queue.columns" v-key="i" class="column" :class="[col.state, col.itemId ? '' : 'empty']" @click="onClickColumn(i)">
                         <div class="item" v-show="col.itemId">
                             <div class="icon" :style="{backgroundImage: `url(${inventory.urlItemImg(col.itemId)})`}"></div>
                             <div class="info">

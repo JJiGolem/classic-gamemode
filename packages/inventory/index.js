@@ -295,16 +295,9 @@ module.exports = {
         return null;
     },
     async addItem(player, itemId, params, callback = () => {}) {
+        var cantAdd = this.cantAdd(player, itemId, params);
+        if (cantAdd) return callback(cantAdd);
         var slot = this.findFreeSlot(player, itemId);
-        if (!slot) return callback(`Нет места для ${this.getInventoryItem(itemId).name}`);
-        if (params.sex != null && params.sex != !player.character.gender) return callback(`Предмет противоположного пола`);
-        var nextWeight = this.getCommonWeight(player) + this.getInventoryItem(itemId).weight;
-        if (nextWeight > this.maxPlayerWeight) return callback(`Превышение по весу (${nextWeight.toFixed(2)} из ${this.maxPlayerWeight} кг)`);
-        if (params.weaponHash) {
-            var weapon = this.getItemByItemId(player, itemId);
-            if (weapon) return callback(`Оружие ${this.getName(itemId)} уже имеется`);
-            // if (slot.parentId != null) this.giveWeapon(player, params.weaponHash, params.ammo);
-        }
         var struct = [];
         for (var key in params) {
             struct.push({

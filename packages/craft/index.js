@@ -166,4 +166,39 @@ module.exports = {
             }
         });
     },
+    takeItem(player, index) {
+        if (!player.crafter) return notifs.error(player, `Подойдите ближе`);
+        var crafter = player.crafter;
+        var header = crafter.name;
+        var out = (text) => {
+            return notifs.error(player, text, header);
+        };
+        var col = crafter.queue.columns[index];
+        if (!col.itemId) return out(`Предмет не найден`);
+        this.updateQueue(crafter.queue);
+        if (col.state == 'process') return out(`Предмет находится в процессе изготовления`);
+        var item = this.getCraftItemByItemId(crafter, col.itemId);
+
+        inventory.addItem(player, item.itemId, item.params, (e) => {
+            if (e) return out(e);
+
+            crafter.queue.columns[index] = {};
+            mp.players.forEachInRange(player.position, 5, rec => {
+                if (rec.crafter != crafter) return;
+
+                player.call("craft.addItemToQueue", [index, {}]);
+            });
+            notifs.success(player, `Предмет получен`);
+        });
+    },
+    getCraftItemByItemId(crafter, itemId) {
+        for (var i = 0; i < crafter.types.length; i++) {
+            var type = crafter.types[i];
+            for (var j = 0; j < type.items.length; j++) {
+                var item = type.items[j];
+                if (item.itemId == itemId) return item;
+            }
+        }
+        return null;
+    }
 };

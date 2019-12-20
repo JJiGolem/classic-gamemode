@@ -139,6 +139,11 @@ var craft = new Vue({
             });
             this.currentType.itemI = -1;
         },
+        onClickColumn(index) {
+            var col = this.crafter.queue.columns[index];
+            if (!col.itemId || col.state == 'process') return;
+            this.callRemote(`craft.queue.take`, index);
+        },
         callRemote(eventName, data) {
             if (typeof data == 'object') data = JSON.stringify(data);
             // console.log(`callRemote: ${eventName}`);
