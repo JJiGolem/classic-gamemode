@@ -714,7 +714,7 @@ module.exports = {
         }
     },
     "death.spawn": (player, groundZ, dimension) => {
-        if (!player.character) return;
+        if (!player.character || !player.character.inventory) return;
 
         var handsItem = inventory.getHandsItem(player);
         if (!handsItem || !inventory.isWeaponItem(handsItem)) return;
@@ -746,6 +746,11 @@ module.exports = {
             var param = inventory.getParam(item, 'weaponHash');
             if (param) {
                 inventory.updateParam(player, item, 'ammo', player.weaponAmmo);
+            }
+            if (inventory.isWeaponItem(item)) {
+                var pos = player.position;
+                pos.z--;
+                inventory.putGround(player, item, pos, player.dimension);
             }
         }
 
