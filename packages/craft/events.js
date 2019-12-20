@@ -5,4 +5,8 @@ module.exports = {
         craft.init();
         inited(__dirname);
     },
+    "craft.item.craft": (player, data) => {
+        if (typeof data == 'string') data = JSON.parse(data);
+        craft.craftItem(player, data.typeI, data.itemI);
+    },
 };

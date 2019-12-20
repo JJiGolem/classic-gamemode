@@ -9,8 +9,10 @@
 
 mp.craft = {
 
+    addItemToQueue(index, item) {
+        mp.callCEFV(`craft.addItemToQueue(${index}, ${JSON.stringify(item)})`);
+    },
     initCrafter(crafter) {
-        debug(crafter)
         mp.callCEFV(`craft.initCrafter(${JSON.stringify(crafter)})`);
         mp.callCEFV(`craft.show = true`);
     },
@@ -20,6 +22,9 @@ mp.craft = {
 };
 
 mp.events.add({
+    "craft.addItemToQueue": (index, item) => {
+        mp.craft.addItemToQueue(index, item);
+    },
     "craft.initCrafter": (crafter) => {
         mp.craft.initCrafter(crafter);
     },

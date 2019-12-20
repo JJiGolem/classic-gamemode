@@ -132,14 +132,26 @@ var craft = new Vue({
             this.paramsShow = !this.paramsShow;
         },
         onClickCraft() {
-            this.callRemote(`craft.item.craft`, this.currentItem.itemId);
+            if (!this.canCraft) return;
+            this.callRemote(`craft.item.craft`, {
+                typeI: this.crafter.typeI,
+                itemI: this.currentType.itemI
+            });
             this.currentType.itemI = -1;
         },
-        callRemote(eventName, values) {
-            console.log(`callRemote: ${eventName}`);
-            console.log(values)
+        callRemote(eventName, data) {
+            if (typeof data == 'object') data = JSON.stringify(data);
+            // console.log(`callRemote: ${eventName}`);
+            // console.log(data)
 
-            // mp.trigger("callRemote", eventName, JSON.stringify(values));
+            mp.trigger("callRemote", eventName, data);
+        },
+        addItemToQueue(index, item) {
+            if (typeof item == 'string') item = JSON.parse(item);
+            Vue.set(this.crafter.queue.columns, index, item);
+
+            var processList = this.crafter.queue.columns.filter(x => x.time);
+            if (processList.length) this.startQueueTick(processList);
         },
     },
     mounted() {
@@ -232,14 +244,17 @@ craft.initCrafter({
                 state: 'process',
                 time: 10,
                 maxTime: 180,
+                playerName: "Carter Slade",
             },
             {
                 itemId: 3,
                 state: 'completed',
+                playerName: "Carter Slade",
             },
             {
                 itemId: 7,
                 state: 'unsuccessfully'
+                playerName: "Carter Slade",
             },
             {}
         ]
