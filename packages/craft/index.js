@@ -16,9 +16,14 @@ module.exports = {
                         count: 5,
                     },
                     materials: [{
-                        itemId: 131,
-                        count: 1
-                    }],
+                            itemId: 131,
+                            count: 1
+                        },
+                        {
+                            itemId: 137,
+                            count: 3
+                        }
+                    ],
                     time: 10,
                 }]
             }],
@@ -109,6 +114,7 @@ module.exports = {
         if (!this.getQueueFreeSlots(player.crafter.queue)) return out(`Очередь занята`);
 
         if (this.addItemToQueue(player, item)) {
+            this.removeMaterials(player, item.materials);
             notifs.success(player, `Предмет добавлен в очередь`, header);
         } else out(`Ошибка добавления предмета в очередь`);
     },
@@ -120,6 +126,25 @@ module.exports = {
             if (params.count) count += params.count - 1;
         });
         return count;
+    },
+    removeMaterials(player, materials) {
+        materials.forEach(mat => {
+            var count = mat.count;
+            var items = inventory.getArrayByItemId(player, mat.itemId);
+            for (var i = 0; i < items.length; i++) {
+                if (!count) break;
+                var item = items[i];
+                var params = inventory.getParamsValues(item);
+                var del = Math.clamp(params.count || 1, 0, count);
+                count -= del;
+                if (!params.count || params.count - del <= 0) {
+                    inventory.deleteItem(player, item);
+                    i--;
+                } else {
+                    inventory.updateParam(player, item, 'count', params.count - del);
+                }
+            }
+        });
     },
     isDeficit(player, material) {
         return this.getMaterialCount(player, material.itemId) < material.count;
