@@ -119,10 +119,11 @@ var craft = new Vue({
                 width: 100 - col.time / col.maxTime * 100 + '%'
             };
         },
-        stateName(state) {
-            if (state == 'process') return 'Изготовление';
-            if (state == 'completed') return 'Завершено';
-            if (state == 'unsuccessfully') return 'Неудачно';
+        stateName(col) {
+            if (col.playerName != playerMenu.name) return col.playerName;
+            if (col.state == 'process') return 'Изготовление';
+            if (col.state == 'completed') return 'Завершено';
+            if (col.state == 'unsuccessfully') return 'Неудачно';
         },
         onClickItem(itemI) {
             if (this.currentType.itemI == itemI) this.currentType.itemI = -1;
@@ -141,7 +142,7 @@ var craft = new Vue({
         },
         onClickColumn(index) {
             var col = this.crafter.queue.columns[index];
-            if (!col.itemId || col.state == 'process') return;
+            if (!col.itemId || col.state == 'process' || col.playerName != playerMenu.name) return;
             this.callRemote(`craft.queue.take`, index);
         },
         callRemote(eventName, data) {
@@ -254,11 +255,11 @@ craft.initCrafter({
             {
                 itemId: 3,
                 state: 'completed',
-                playerName: "Carter Slade",
+                playerName: "Cyrus Raider",
             },
             {
                 itemId: 7,
-                state: 'unsuccessfully'
+                state: 'unsuccessfully',
                 playerName: "Carter Slade",
             },
             {}

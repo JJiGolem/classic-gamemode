@@ -198,7 +198,7 @@
     /* padding: 1vh; */
 }
 
-#craft .right .queue .column:not(.process):hover {
+#craft .right .queue .column:not(.process):not(.disabled):hover {
     color: #fff;
 }
 
@@ -208,6 +208,10 @@
 
 #craft .right .queue .column.completed {
     border-color: #009200;
+}
+
+#craft .right .queue .column.disabled {
+    opacity: 0.5;
 }
 
 #craft .right .queue .column.unsuccessfully {
