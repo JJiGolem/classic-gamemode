@@ -20,6 +20,7 @@ module.exports = {
                         count: 1
                     }],
                     time: 10,
+                    skill: 0
                 }]
             }],
             queue: {
@@ -50,6 +51,7 @@ module.exports = {
                         count: 1
                     }],
                     time: 10,
+                    skill: 0,
                 }]
             }],
             queue: {

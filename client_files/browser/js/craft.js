@@ -11,6 +11,8 @@ var craft = new Vue({
         crafter: null,
         // Таймер очереди
         queueTimer: null,
+        // Скилл игрока
+        skill: 0,
     },
     computed: {
         currentType() {
@@ -31,7 +33,18 @@ var craft = new Vue({
                 if (this.isDeficit(material)) return false;
             }
 
-            return true;
+            return !this.isDeficitSkill;
+        },
+        isDeficitSkill() {
+            if (!this.currentItem) return false;
+
+            return this.currentItem.skill > this.skill;
+        },
+        progressSkillStyle() {
+            var info = this.skillInfo(this.skill);
+            return {
+                width: (this.skill - info.min) / (info.max - info.min) * 100 + '%'
+            };
         },
     },
     watch: {
@@ -159,6 +172,22 @@ var craft = new Vue({
             var processList = this.crafter.queue.columns.filter(x => x.time);
             if (processList.length) this.startQueueTick(processList);
         },
+        skillInfo(exp) {
+            var info = {
+                min: 0,
+                max: 30 * 60,
+                level: 1
+            };
+            var i = 1;
+            while (i < 100000) {
+                if (exp >= info.min && exp < info.max) return info;
+                i++;
+                info.min = info.max;
+                info.max *= 2;
+                info.level = i;
+            }
+            return null;
+        },
     },
     mounted() {
         window.addEventListener('keyup', (e) => {
@@ -185,6 +214,7 @@ craft.initCrafter({
                         count: 20
                     }],
                     time: 60,
+                    skill: 0,
                 },
                 {
                     itemId: 3,
@@ -209,6 +239,7 @@ craft.initCrafter({
                         },
                     ],
                     time: 60,
+                    skill: 0,
                 }
             ],
         },
@@ -224,6 +255,7 @@ craft.initCrafter({
                         count: 20
                     }],
                     time: 60,
+                    skill: 20,
                 },
                 {
                     itemId: 21,
@@ -240,6 +272,7 @@ craft.initCrafter({
                         }
                     ],
                     time: 90,
+                    skill: 30,
                 }
             ],
         }
