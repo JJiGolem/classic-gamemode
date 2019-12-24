@@ -15,4 +15,8 @@ module.exports = {
     "craft.queue.take": (player, index) => {
         craft.takeItem(player, index);
     },
+    "craft.queue.update": (player) => {
+        if (!player.crafter) return;
+        craft.updateQueue(player.crafter);
+    },
 };

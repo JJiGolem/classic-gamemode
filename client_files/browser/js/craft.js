@@ -117,7 +117,8 @@ var craft = new Vue({
                 for (var i = 0; i < processList.length; i++) {
                     var col = processList[i];
                     if (col.time <= 0) {
-                        col.state = 'completed';
+                        // col.state = 'completed';
+                        this.callRemote(`craft.queue.update`);
                         processList.splice(i, 1);
                         i--;
                         continue;

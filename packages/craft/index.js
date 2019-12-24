@@ -2,6 +2,7 @@
 
 let inventory = call('inventory');
 let notifs = call('notifications');
+let utils = call('utils');
 
 module.exports = {
     // Изготовители (станок, верстак и т.п.)
@@ -195,17 +196,25 @@ module.exports = {
         });
     },
     updateQueue(crafter) {
-        crafter.queue.columns.forEach(col => {
+        crafter.queue.columns.forEach((col, index) => {
             if (!col.itemId) return;
             if (col.state != 'process') {
                 if (Date.now() - col.stopTime > this.destroyItemTime) this.deleteItemFromQueue(crafter, col);
             } else {
                 col.time = col.maxTime - parseInt((Date.now() - col.startTime) / 1000);
                 if (col.time <= 0) {
-                    col.state = "completed";
+                    var rand = utils.randomInteger(0, 9);
+                    col.state = (!rand) ? "unsuccessfully" : "completed";
                     col.time = 0;
                     col.stopTime = col.startTime + col.maxTime * 1000;
                     if (Date.now() - col.stopTime > this.destroyItemTime) this.deleteItemFromQueue(crafter, col);
+                    else {
+                        mp.players.forEachInRange(crafter.pos, 5, rec => {
+                            if (rec.crafter != crafter) return;
+
+                            rec.call("craft.addItemToQueue", [index, col]);
+                        });
+                    }
                 }
             }
         });
@@ -222,6 +231,10 @@ module.exports = {
         if (!col.itemId) return out(`Истек срок готовности предмета`);
         if (col.state == 'process') return out(`Предмет находится в процессе изготовления`);
         if (col.playerName != player.name) return out(`Нельзя забрать чужой предмет`);
+        if (col.state == 'unsuccessfully') {
+            this.deleteItemFromQueue(crafter, col);
+            return out(`Не удалось изготовить предмет`);
+        }
         var item = this.getCraftItemByItemId(crafter, col.itemId);
 
         inventory.addItem(player, item.itemId, item.params, (e) => {
