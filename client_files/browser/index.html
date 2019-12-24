@@ -849,7 +849,7 @@
                         <div class="count">{{ firewoodCount }} ед.</div>
                         <div class="button" @click="onClickUpFirewood">+</div>
                     </div>
-                    <div class="button acceptFirewood">Подкинуть</div>
+                    <div class="button acceptFirewood" @click="onClickAcceptFirewood">Подкинуть</div>
                 </div>
                 <div class="help-info" v-show="helpShow">{{ crafter.description }}</div>
             </div>

@@ -182,6 +182,12 @@ var craft = new Vue({
             var max = this.getMaterialCount(137);
             this.firewoodCount = Math.clamp(this.firewoodCount + 1, 0, max);
         },
+        onClickAcceptFirewood() {
+            if (!this.firewoodCount) return notifications.error(`Укажите количество`);
+            if (this.firewoodCount > this.getMaterialCount(137)) return notifications.error(`Недостаточно древесины`);
+            this.callRemote(`craft.bonfire.addFirewood`, this.firewoodCount);
+            this.firewoodCount = 0;
+        },
         callRemote(eventName, data) {
             if (typeof data == 'object') data = JSON.stringify(data);
             // console.log(`callRemote: ${eventName}`);

@@ -19,6 +19,9 @@ mp.craft = {
     clearCrafter() {
         mp.callCEFV(`craft.clearCrafter()`);
     },
+    setDestroyTime(time) {
+        mp.callCEFV(`craft.crafter.destroyTime = ${time}`);
+    },
     setSkill(exp) {
         mp.callCEFV(`craft.skill = ${exp}`);
     },
@@ -33,6 +36,9 @@ mp.events.add({
     },
     "craft.clearCrafter": () => {
         mp.craft.clearCrafter();
+    },
+    "craft.crafter.setDestroyTime": (time) => {
+        mp.craft.setDestroyTime(time);
     },
     "craft.setSkill": (exp) => {
         mp.craft.setSkill(exp);

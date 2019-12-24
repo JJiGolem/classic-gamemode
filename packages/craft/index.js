@@ -18,10 +18,9 @@ module.exports = {
                         count: 5,
                     },
                     materials: [{
-                            itemId: 131,
-                            count: 1
-                        }
-                    ],
+                        itemId: 131,
+                        count: 1
+                    }],
                     time: 10,
                     skill: 0
                 }]
@@ -303,11 +302,37 @@ module.exports = {
         };
         this.crafters.push(crafter);
         this.initCrafter(crafter);
-        timer.add(() => {
+        crafter.destroyTimer = timer.add(() => {
             var i = this.crafters.indexOf(crafter);
             if (i != -1) this.crafters.splice(i, 1);
             crafter.colshape.destroy();
             crafter.object.destroy();
         }, time);
+    },
+    addFirewood(player, firewoodCount) {
+        var header = `Костер`;
+        var out = (text) => {
+            notifs.error(player, text, header);
+        };
+        if (firewoodCount > this.getMaterialCount(player, this.firewoodItemId)) return out(`Недостаточно древесины`);
+        var crafter = player.crafter;
+        this.removeMaterials(player, [{
+            itemId: this.firewoodItemId,
+            count: firewoodCount
+        }]);
+        var time = 20 * 1000 * firewoodCount;
+        crafter.destroyDate += time;
+        timer.remove(crafter.destroyTimer);
+        crafter.destroyTimer = timer.add(() => {
+            var i = this.crafters.indexOf(crafter);
+            if (i != -1) this.crafters.splice(i, 1);
+            crafter.colshape.destroy();
+            crafter.object.destroy();
+        }, crafter.destroyDate - Date.now());
+        mp.players.forEachInRange(crafter.pos, 5, rec => {
+            if (rec.crafter != crafter) return;
+
+            rec.call("craft.crafter.setDestroyTime", [parseInt((crafter.destroyDate - Date.now()) / 1000)]);
+        });
     },
 };
