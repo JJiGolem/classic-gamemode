@@ -21,7 +21,9 @@
 #craft .button {
     background: #0000008c;
     border: 1px solid #444;
+    display: flex;
     font-size: 1.3vh;
+    justify-content: center;
     padding: 0.5vh;
     width: fit-content;
 }
@@ -211,6 +213,38 @@
     display: flex;
     justify-content: space-between;
     margin: 1vh 0;
+}
+
+#craft .right .queue .bonfire {
+    margin: auto;
+    margin-top: 7vh;
+    width: fit-content;
+}
+
+#craft .right .queue .bonfire .acceptFirewood {
+    margin: auto;
+}
+
+#craft .right .queue .bonfire .count {
+    padding: 1vh;
+}
+
+#craft .right .queue .bonfire .selector {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+#craft .right .queue .bonfire .selector .button {
+    width: 1vh;
+}
+
+#craft .right .queue .bonfire .title {
+    text-align: center;
+}
+
+#craft .right .queue .bonfire .title span {
+    color: #caa41c;
 }
 
 #craft .right .queue .column {

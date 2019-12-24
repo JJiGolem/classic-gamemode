@@ -839,6 +839,18 @@
                         <div class="fill" v-show="col.state == 'process'" :style="progressStyle(col)"></div>
                     </div>
                 </div>
+                <div class="bonfire" v-show="!helpShow && crafter.destroyTime">
+                    <div class="title" :class="{deficit: crafter.destroyTime < 60}">
+                        Горит {{ crafter.destroyTime | time }}
+                        <span v-show="firewoodCount">+{{ firewoodCount * 20 | time }}</span>
+                    </div>
+                    <div class="selector">
+                        <div class="button" @click="onClickDownFirewood">-</div>
+                        <div class="count">{{ firewoodCount }} ед.</div>
+                        <div class="button" @click="onClickUpFirewood">+</div>
+                    </div>
+                    <div class="button acceptFirewood">Подкинуть</div>
+                </div>
                 <div class="help-info" v-show="helpShow">{{ crafter.description }}</div>
             </div>
             <div class="craftItem" v-if="currentItem">

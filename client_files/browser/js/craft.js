@@ -11,8 +11,12 @@ var craft = new Vue({
         crafter: null,
         // Таймер очереди
         queueTimer: null,
+        // Таймер топлива
+        destroyTimer: null,
         // Скилл игрока
         skill: 0,
+        // Кол-во топлива
+        firewoodCount: 0,
     },
     computed: {
         currentType() {
@@ -87,10 +91,13 @@ var craft = new Vue({
             var processList = crafter.queue.columns.filter(x => x.time);
             if (processList.length) this.startQueueTick(processList);
 
+            if (crafter.destroyTime) this.startDestroyTick();
+
             this.crafter = crafter;
         },
         clearCrafter() {
             clearInterval(this.queueTimer);
+            clearInterval(this.destroyTimer);
             this.crafter = null;
             this.show = false;
         },
@@ -128,6 +135,13 @@ var craft = new Vue({
                 if (!processList.length) clearInterval(this.queueTimer);
             }, 1000);
         },
+        startDestroyTick() {
+            clearInterval(this.destroyTimer);
+            this.destroyTimer = setInterval(() => {
+                this.crafter.destroyTime--;
+                if (this.crafter.destroyTime <= 0) this.clearCrafter();
+            }, 1000);
+        },
         progressStyle(col) {
             return {
                 width: 100 - col.time / col.maxTime * 100 + '%'
@@ -158,6 +172,14 @@ var craft = new Vue({
             var col = this.crafter.queue.columns[index];
             if (!col.itemId || col.state == 'process' || col.playerName != playerMenu.name) return;
             this.callRemote(`craft.queue.take`, index);
+        },
+        onClickDownFirewood() {
+            var max = this.getMaterialCount(137);
+            this.firewoodCount = Math.clamp(this.firewoodCount - 1, 0, max);
+        },
+        onClickUpFirewood() {
+            var max = this.getMaterialCount(137);
+            this.firewoodCount = Math.clamp(this.firewoodCount + 1, 0, max);
         },
         callRemote(eventName, data) {
             if (typeof data == 'object') data = JSON.stringify(data);
@@ -203,6 +225,7 @@ craft.show = true;
 craft.initCrafter({
     name: "Станок",
     description: "Используется для изготовления предметов.",
+    destroyTime: 1000,
     types: [{
             name: "Тип1",
             items: [{
