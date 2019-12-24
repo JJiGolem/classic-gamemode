@@ -73,6 +73,8 @@ module.exports = {
             object: null,
         },
     ],
+    // Время ожидания предмета, после которого предмет из очереди уничтожится
+    destroyItemTime: 10 * 60 * 1000,
 
     init() {
         this.initCrafters();
@@ -82,7 +84,7 @@ module.exports = {
             crafter.colshape = mp.colshapes.newSphere(crafter.pos.x, crafter.pos.y, crafter.pos.z, 1.5, 0);
             crafter.colshape.onEnter = (player) => {
                 if (player.vehicle) return;
-                this.updateQueue(crafter.queue);
+                this.updateQueue(crafter);
                 player.call("craft.initCrafter", [this.convertToClientCrafter(crafter)]);
                 player.crafter = crafter;
             };
@@ -175,21 +177,36 @@ module.exports = {
             startTime: Date.now(),
             playerName: player.name,
         };
-        mp.players.forEachInRange(player.position, 5, rec => {
+        mp.players.forEachInRange(player.crafter.pos, 5, rec => {
             if (rec.crafter != player.crafter) return;
 
-            player.call("craft.addItemToQueue", [i, cols[i]]);
+            rec.call("craft.addItemToQueue", [i, cols[i]]);
         });
         return true;
     },
-    updateQueue(queue) {
-        queue.columns.forEach(col => {
-            if (!col.itemId || col.state != 'process') return;
+    deleteItemFromQueue(crafter, col) {
+        var index = crafter.queue.columns.indexOf(col);
+        if (index == -1) return;
+        crafter.queue.columns[index] = {};
+        mp.players.forEachInRange(crafter.pos, 5, rec => {
+            if (rec.crafter != crafter) return;
 
-            col.time = col.maxTime - parseInt((Date.now() - col.startTime) / 1000);
-            if (col.time <= 0) {
-                col.state = "completed";
-                col.time = 0;
+            rec.call("craft.addItemToQueue", [index, {}]);
+        });
+    },
+    updateQueue(crafter) {
+        crafter.queue.columns.forEach(col => {
+            if (!col.itemId) return;
+            if (col.state != 'process') {
+                if (Date.now() - col.stopTime > this.destroyItemTime) this.deleteItemFromQueue(crafter, col);
+            } else {
+                col.time = col.maxTime - parseInt((Date.now() - col.startTime) / 1000);
+                if (col.time <= 0) {
+                    col.state = "completed";
+                    col.time = 0;
+                    col.stopTime = col.startTime + col.maxTime * 1000;
+                    if (Date.now() - col.stopTime > this.destroyItemTime) this.deleteItemFromQueue(crafter, col);
+                }
             }
         });
     },
@@ -200,21 +217,17 @@ module.exports = {
         var out = (text) => {
             return notifs.error(player, text, header);
         };
+        this.updateQueue(crafter);
         var col = crafter.queue.columns[index];
-        if (!col.itemId) return out(`Предмет не найден`);
-        this.updateQueue(crafter.queue);
+        if (!col.itemId) return out(`Истек срок готовности предмета`);
         if (col.state == 'process') return out(`Предмет находится в процессе изготовления`);
+        if (col.playerName != player.name) return out(`Нельзя забрать чужой предмет`);
         var item = this.getCraftItemByItemId(crafter, col.itemId);
 
         inventory.addItem(player, item.itemId, item.params, (e) => {
             if (e) return out(e);
 
-            crafter.queue.columns[index] = {};
-            mp.players.forEachInRange(player.position, 5, rec => {
-                if (rec.crafter != crafter) return;
-
-                player.call("craft.addItemToQueue", [index, {}]);
-            });
+            this.deleteItemFromQueue(crafter, col);
             notifs.success(player, `Предмет получен`);
         });
     },

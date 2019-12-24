@@ -167,6 +167,7 @@
 }
 
 #craft .right .craftItem .skill {
+    font-size: 1.3vh;
     margin-bottom: 1vh;
 }
 
@@ -184,6 +185,7 @@
 #craft .right .craftItem .skill .title {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 0.2vh;
 }
 
 #craft .right .craftItem .time {
